@@ -139,7 +139,9 @@ class IMAPClientFactoryTest extends TestCase {
 
 		$client = $imapClientFactory->getClient($account);
 		self::assertInstanceOf(HordeImapClient::class, $client);
-		foreach ([1, 2, 3] as $attempts) {
+		// Three free attempts arm the throttle, the fourth is the immediately
+		// allowed leaky-bucket retry - all four reach IMAP and fail there
+		foreach ([1, 2, 3, 4] as $attempts) {
 			try {
 				$client->login();
 				$this->fail("Login #$attempts should cause an exception");
@@ -151,6 +153,8 @@ class IMAPClientFactoryTest extends TestCase {
 				// 🔥 This is fine 🔥
 			}
 		}
+		// The fifth attempt within the same 30 second interval is throttled
+		// locally without contacting IMAP
 		$this->expectException(Horde_Imap_Client_Exception::class);
 		$this->expectExceptionCode(Horde_Imap_Client_Exception::LOGIN_AUTHENTICATIONFAILED);
 		$this->expectExceptionMessage('Too many auth attempts');

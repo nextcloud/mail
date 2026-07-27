@@ -186,7 +186,15 @@ class ImapToDbSynchronizer {
 			return $rebuildThreads;
 		}
 
-		$client->login(); // Need to login before fetching capabilities.
+		try {
+			$client->login(); // Need to login before fetching capabilities.
+		} catch (Horde_Imap_Client_Exception $e) {
+			throw new ServiceException(
+				'Sync failed for account ' . $account->getId() . ' mailbox ' . $mailbox->getId() . ': ' . $e->getMessage(),
+				0,
+				$e,
+			);
+		}
 
 		// There is no partial sync when using QRESYNC. As per RFC the client will always pull
 		// all changes. This is a cheap operation when using QRESYNC as the server keeps track

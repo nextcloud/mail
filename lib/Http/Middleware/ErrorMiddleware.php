@@ -12,6 +12,7 @@ namespace OCA\Mail\Http\Middleware;
 use Exception;
 use Horde_Imap_Client_Exception;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\ImapAuthenticationFailedException;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JsonResponse;
@@ -67,6 +68,23 @@ class ErrorMiddleware extends Middleware {
 
 		if ($exception instanceof NotImplemented) {
 			return JSONResponse::fail([], Http::STATUS_NOT_IMPLEMENTED);
+		}
+
+		$authFailure = ImapAuthenticationFailedException::findHordeAuthFailure($exception);
+		if ($authFailure !== null) {
+			$wrapped = ImapAuthenticationFailedException::fromHorde($authFailure);
+			// The client is informed and can react, no need to flood the log
+			$this->logger->info('IMAP authentication failed: ' . $authFailure->getMessage(), [
+				'exception' => $exception,
+			]);
+			return JsonResponse::fail(
+				[
+					'message' => $wrapped->getMessage(),
+					'type' => get_class($wrapped),
+					'reason' => $wrapped->getReason(),
+				],
+				$wrapped->getHttpCode()
+			);
 		}
 
 		$temporary = $this->isTemporaryException($exception);

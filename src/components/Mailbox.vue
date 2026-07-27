@@ -233,7 +233,7 @@ export default {
 			this.error = false
 
 			logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.query}) during cache initalization`)
-			this.sync(true)
+			return this.sync(true)
 				.then(() => {
 					this.loadingCacheInitialization = false
 

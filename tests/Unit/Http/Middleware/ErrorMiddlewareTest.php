@@ -12,6 +12,7 @@ namespace OCA\Mail\Tests\Unit\Http\Middleware;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Exception;
 use Horde_Imap_Client_Exception;
+use OCA\Mail\Exception\ImapAuthenticationFailedException;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\Middleware\ErrorMiddleware;
@@ -127,6 +128,56 @@ class ErrorMiddlewareTest extends TestCase {
 		$response = $this->middleware->afterException($controller, 'foo', $outer);
 
 		$this->assertInstanceOf(JSONResponse::class, $response);
+	}
+
+	public function imapAuthFailureData(): array {
+		return [
+			'raw horde exception' => [
+				new Horde_Imap_Client_Exception('Authentication failed.', Horde_Imap_Client_Exception::LOGIN_AUTHENTICATIONFAILED),
+				ImapAuthenticationFailedException::REASON_AUTHENTICATION_FAILED,
+			],
+			'rate limiter engaged' => [
+				new Horde_Imap_Client_Exception('Too many auth attempts', Horde_Imap_Client_Exception::LOGIN_AUTHENTICATIONFAILED),
+				ImapAuthenticationFailedException::REASON_RATE_LIMITED,
+			],
+			'wrapped in service exception' => [
+				new ServiceException('Could not load message', 0, new Horde_Imap_Client_Exception('Authentication failed.', Horde_Imap_Client_Exception::LOGIN_AUTHENTICATIONFAILED)),
+				ImapAuthenticationFailedException::REASON_AUTHENTICATION_FAILED,
+			],
+			'doubly wrapped' => [
+				new ServiceException('Sync failed', 0, new ServiceException('login failed', 0, new Horde_Imap_Client_Exception('Authentication failed.', Horde_Imap_Client_Exception::LOGIN_AUTHENTICATIONFAILED))),
+				ImapAuthenticationFailedException::REASON_AUTHENTICATION_FAILED,
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider imapAuthFailureData
+	 */
+	public function testTranslatesImapAuthenticationFailures(Throwable $ex, string $expectedReason): void {
+		$request = $this->createStub(IRequest::class);
+		$controller = new class($request) extends Controller {
+			public function __construct(IRequest $request) {
+				parent::__construct('myapp', $request);
+			}
+
+			#[TrapError]
+			public function foo() {
+			}
+		};
+		$this->logger->expects($this->once())
+			->method('info');
+		$this->logger->expects($this->never())
+			->method('error');
+
+		$response = $this->middleware->afterException($controller, 'foo', $ex);
+
+		$this->assertInstanceOf(JSONResponse::class, $response);
+		$this->assertSame(Http::STATUS_FAILED_DEPENDENCY, $response->getStatus());
+		$data = $response->getData();
+		$this->assertSame('fail', $data['status']);
+		$this->assertSame(ImapAuthenticationFailedException::class, $data['data']['type']);
+		$this->assertSame($expectedReason, $data['data']['reason']);
 	}
 
 	public function temporaryExceptionsData(): array {

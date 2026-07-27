@@ -297,6 +297,7 @@ class MessagesController extends Controller {
 	 * @param int $id
 	 * @return JSONResponse
 	 */
+	#[TrapError]
 	public function getDkim(int $id): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
