@@ -414,6 +414,7 @@
     "Download thread data for debugging" : "Stáhnout si data vlákna pro účely ladění",
     "Message body" : "Tělo zprávy",
     "Warning: The S/MIME signature of this message is unverified. The sender might be impersonating someone!" : "Varování: S/MIME podpis této zprávy není ověřen. Odesilatel  se může pokoušet vystupovat jako někdo jiný!",
+    "AI info" : "AI informace",
     "Unnamed" : "Bez názvu",
     "Embedded message" : "Zapouzdřená zpráva",
     "Attachment saved to Files" : "Příloha uložena do Souborů",
