@@ -339,7 +339,7 @@ class Manager {
 			// The password is empty (and not null) when using WebAuthn passwordless login.
 			// Maybe research other providers as well.
 			// Ref \OCA\Mail\Controller\PageController::index()
-			//     -> inital state for password-is-unavailable
+			//     -> initial state for password-is-unavailable
 			if ($provisioning->getMasterPasswordEnabled() === true && $provisioning->getMasterPassword() !== null) {
 				$password = $provisioning->getMasterPassword();
 				$this->logger->debug('Password set to master password for ' . $user->getUID());

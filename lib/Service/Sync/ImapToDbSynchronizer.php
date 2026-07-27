@@ -238,7 +238,7 @@ class ImapToDbSynchronizer {
 					$logger->debug("Running initial sync for {$mailbox->getId()} after cache reset");
 					$this->runInitialSync($client, $account, $mailbox, $logger);
 				} catch (MailboxDoesNotSupportModSequencesException $e) {
-					$logger->warning("Mailbox does not support mod-sequences error occured. Wiping cache and performing full sync for {$mailbox->getId()}", [
+					$logger->warning("Mailbox does not support mod-sequences error occurred. Wiping cache and performing full sync for {$mailbox->getId()}", [
 						'exception' => $e,
 					]);
 					$this->resetCache($account, $mailbox);

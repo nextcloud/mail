@@ -356,7 +356,7 @@ export default {
 						total: filesFromCloud[i].size,
 						sizeString: this.formatBytes(filesFromCloud[i].size),
 						hasPreview: filesFromCloud[i]['has-preview'],
-						// dont know, may be it will be conflict if cloud & local has equal IDs?
+						// don't know, may be it will be conflict if cloud & local has equal IDs?
 						id: filesFromCloud[i].fileid,
 						uploaded: 0,
 					}

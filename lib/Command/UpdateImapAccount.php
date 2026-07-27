@@ -157,7 +157,7 @@ final class UpdateImapAccount extends Command {
 
 		$this->mapper->save($mailAccount);
 
-		$output->writeln('<info>Account ' . $mailAccount->getEmail() . " with ID  $accountId  succesfully updated </info>");
+		$output->writeln('<info>Account ' . $mailAccount->getEmail() . " with ID  $accountId  successfully updated </info>");
 		return self::SUCCESS;
 	}
 }
