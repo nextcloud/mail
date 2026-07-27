@@ -239,12 +239,6 @@
       <code><![CDATA[$client]]></code>
     </PossiblyUndefinedVariable>
   </file>
-  <file src="lib/Service/AiIntegrations/AiIntegrationsService.php">
-    <PossiblyNullArgument>
-      <code><![CDATA[$replies]]></code>
-      <code><![CDATA[$task->getOutput()]]></code>
-    </PossiblyNullArgument>
-  </file>
   <file src="lib/Service/AntiAbuseService.php">
     <PossiblyNullArgument>
       <code><![CDATA[$message->getRecipients()]]></code>

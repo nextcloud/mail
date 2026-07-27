@@ -43,8 +43,8 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\IUserManager;
 use OCP\IUserSession;
-use OCP\TextProcessing\FreePromptTaskType;
-use OCP\TextProcessing\SummaryTaskType;
+use OCP\TaskProcessing\TaskTypes\TextToText;
+use OCP\TaskProcessing\TaskTypes\TextToTextSummary;
 use OCP\User\IAvailabilityCoordinator;
 use Psr\Log\LoggerInterface;
 use Throwable;
@@ -337,7 +337,7 @@ class PageController extends Controller {
 
 		$this->initialStateService->provideInitialState(
 			'llm_summaries_available',
-			$this->aiIntegrationsService->isLlmProcessingEnabled() && $this->aiIntegrationsService->isLlmAvailable(SummaryTaskType::class)
+			$this->aiIntegrationsService->isLlmProcessingEnabled() && $this->aiIntegrationsService->isLlmAvailable(TextToTextSummary::ID)
 		);
 
 		$this->initialStateService->provideInitialState(
@@ -347,13 +347,13 @@ class PageController extends Controller {
 
 		$this->initialStateService->provideInitialState(
 			'llm_freeprompt_available',
-			$this->aiIntegrationsService->isLlmProcessingEnabled() && $this->aiIntegrationsService->isLlmAvailable(FreePromptTaskType::class)
+			$this->aiIntegrationsService->isLlmProcessingEnabled() && $this->aiIntegrationsService->isLlmAvailable(TextToText::ID)
 		);
 
 		$this->initialStateService->provideInitialState(
 			'llm_followup_available',
 			$this->aiIntegrationsService->isLlmProcessingEnabled()
-			&& $this->aiIntegrationsService->isLlmAvailable(FreePromptTaskType::class)
+			&& $this->aiIntegrationsService->isLlmAvailable(TextToText::ID)
 		);
 
 		$this->initialStateService->provideInitialState(
