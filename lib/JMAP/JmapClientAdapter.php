@@ -39,6 +39,7 @@ class JmapClientAdapter implements ClientInterface {
 	) {
 	}
 
+	#[\Override]
 	public function sendRequest(RequestInterface $request): ResponseInterface {
 		// convert PSR-7 request to native transport client request
 		$options = $this->defaultOptions;

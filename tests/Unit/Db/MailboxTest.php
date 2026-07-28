@@ -60,4 +60,16 @@ class MailboxTest extends TestCase {
 		$this->assertArrayHasKey('cacheBuster', $json);
 		$this->assertEquals($expectedCacheBuster, $json['cacheBuster']);
 	}
+
+	public function testHasLocksIgnoresExpiredLock(): void {
+		$this->mailbox->setSyncNewLock(1000);
+
+		$this->assertFalse($this->mailbox->hasLocks(1000 + Mailbox::LOCK_TIMEOUT + 1));
+	}
+
+	public function testHasLocksRespectsFreshLock(): void {
+		$this->mailbox->setSyncNewLock(1000);
+
+		$this->assertTrue($this->mailbox->hasLocks(1000 + Mailbox::LOCK_TIMEOUT - 1));
+	}
 }

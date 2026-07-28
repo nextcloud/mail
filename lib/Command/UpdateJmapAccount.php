@@ -105,7 +105,7 @@ final class UpdateJmapAccount extends Command {
 
 		$this->mapper->save($mailAccount);
 
-		$output->writeln('<info>JMAP account ' . $mailAccount->getEmail() . " with ID $accountId succesfully updated </info>");
+		$output->writeln('<info>JMAP account ' . $mailAccount->getEmail() . " with ID $accountId successfully updated </info>");
 		return self::SUCCESS;
 	}
 }

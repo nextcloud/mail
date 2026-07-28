@@ -34,7 +34,7 @@ The rating depends on the installed text processing backend. See [the rating ove
 
 Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/).
 	]]></description>
-	<version>5.11.0-dev.1</version>
+	<version>5.11.0-beta.1</version>
 	<licence>agpl</licence>
 	<author homepage="https://github.com/ChristophWurst">Christoph Wurst</author>
 	<author homepage="https://github.com/GretaD">GretaD</author>
@@ -79,6 +79,7 @@ Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud
 	<commands>
 		<command>OCA\Mail\Command\AddMissingTags</command>
 		<command>OCA\Mail\Command\CleanUp</command>
+		<command>OCA\Mail\Command\ClearMailboxCache</command>
 		<command>OCA\Mail\Command\CreateImapAccount</command>
 		<command>OCA\Mail\Command\CreateJmapAccount</command>
 		<command>OCA\Mail\Command\CreateTagMigrationJobEntry</command>
@@ -86,6 +87,8 @@ Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud
 		<command>OCA\Mail\Command\DeleteAccount</command>
 		<command>OCA\Mail\Command\ExportAccount</command>
 		<command>OCA\Mail\Command\ExportAccountThreads</command>
+		<command>OCA\Mail\Command\InspectMailbox</command>
+		<command>OCA\Mail\Command\ListMailboxes</command>
 		<command>OCA\Mail\Command\PredictImportance</command>
 		<command>OCA\Mail\Command\TestAccount</command>
 		<command>OCA\Mail\Command\SyncAccount</command>
@@ -93,6 +96,7 @@ Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud
 		<command>OCA\Mail\Command\TrainAccount</command>
 		<command>OCA\Mail\Command\UpdateImapAccount</command>
 		<command>OCA\Mail\Command\UpdateJmapAccount</command>
+		<command>OCA\Mail\Command\UnlockMailbox</command>
 		<command>OCA\Mail\Command\UpdateSystemAutoresponders</command>
 		<command>OCA\Mail\Command\RunMetaEstimator</command>
 	</commands>

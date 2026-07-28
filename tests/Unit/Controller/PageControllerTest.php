@@ -12,6 +12,8 @@ namespace OCA\Mail\Tests\Unit\Controller;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
+use OCA\Mail\AppInfo\Application;
+use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Controller\PageController;
 use OCA\Mail\Db\Mailbox;
@@ -36,6 +38,7 @@ use OCP\AppFramework\Services\IInitialState;
 use OCP\Authentication\LoginCredentials\ICredentials;
 use OCP\Authentication\LoginCredentials\IStore as ICredentialStore;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\IAppConfig;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IURLGenerator;
@@ -62,6 +65,9 @@ class PageControllerTest extends TestCase {
 
 	/** @var IConfig|MockObject */
 	private $config;
+
+	/** @var IAppConfig|MockObject */
+	private $appConfig;
 
 	/** @var AccountService|MockObject */
 	private $accountService;
@@ -128,6 +134,7 @@ class PageControllerTest extends TestCase {
 		$this->request = $this->createMock(IRequest::class);
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
 		$this->config = $this->createMock(IConfig::class);
+		$this->appConfig = $this->createMock(IAppConfig::class);
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->aiIntegrationsService = $this->createMock(AiIntegrationsService::class);
 		$this->aliasesService = $this->createMock(AliasesService::class);
@@ -178,6 +185,7 @@ class PageControllerTest extends TestCase {
 			$this->appManager,
 			$this->contextChatSettingsService,
 			$this->classificationSettingsService,
+			$this->appConfig,
 			$this->oidcIntegration,
 		);
 	}
@@ -292,26 +300,32 @@ class PageControllerTest extends TestCase {
 				['version', '0.0.0', '26.0.0'],
 				['app.mail.attachment-size-limit', 0, 123],
 			]);
-		$this->config->expects($this->exactly(7))
+		$this->config->expects($this->exactly(2))
 			->method('getAppValue')
 			->withConsecutive(
-				[ 'mail', 'installed_version' ],
-				['mail', 'layout_message_view' ],
-				['mail', 'google_oauth_client_id' ],
-				['mail', 'microsoft_oauth_client_id' ],
-				['mail', 'microsoft_oauth_tenant_id' ],
-				['core', 'backgroundjobs_mode', 'ajax' ],
-				['mail', 'allow_new_mail_accounts', 'yes'],
+				['mail', 'installed_version'],
+				['core', 'backgroundjobs_mode', 'ajax'],
 			)->willReturnOnConsecutiveCalls(
-				$this->returnValue('1.2.3'),
-				$this->returnValue('threaded'),
-				$this->returnValue(''),
-				$this->returnValue(''),
-				$this->returnValue(''),
-				$this->returnValue('cron'),
-				$this->returnValue('yes'),
-				$this->returnValue('no')
+				'1.2.3',
+				'cron',
 			);
+		$this->appConfig->expects($this->exactly(4))
+			->method('getValueString')
+			->withConsecutive(
+				[Application::APP_ID, ConfigLexicon::LAYOUT_MESSAGE_VIEW, 'threaded'],
+				[Application::APP_ID, ConfigLexicon::GOOGLE_OAUTH_CLIENT_ID],
+				[Application::APP_ID, ConfigLexicon::MICROSOFT_OAUTH_CLIENT_ID],
+				[Application::APP_ID, ConfigLexicon::MICROSOFT_OAUTH_TENANT_ID, 'common'],
+			)->willReturnOnConsecutiveCalls(
+				'threaded',
+				'',
+				'',
+				'',
+			);
+		$this->appConfig->expects($this->once())
+			->method('getValueBool')
+			->with(Application::APP_ID, ConfigLexicon::ALLOW_NEW_MAIL_ACCOUNTS, true)
+			->willReturn(true);
 		$this->aiIntegrationsService->expects(self::exactly(4))
 			->method('isLlmProcessingEnabled')
 			->willReturn(false);

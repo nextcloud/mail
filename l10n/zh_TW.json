@@ -927,6 +927,7 @@
     "Could not load your message" : "無法載入您的信件",
     "Could not load the desired message" : "無法載入所選的信件",
     "Could not load the message" : "無法載入信件",
+    "Yesterday {time}" : "昨天 {time}",
     "Tag name cannot be empty" : "標籤名稱不可為空白",
     "Tag name is a hidden system tag" : "標籤名稱為隱藏的系統標籤",
     "Tag already exists" : "標籤已經存在",

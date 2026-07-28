@@ -13,6 +13,7 @@ namespace OCA\Mail\Controller;
 use Horde_Imap_Client;
 use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\Mailbox;
@@ -33,6 +34,7 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\IAppConfig;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
@@ -62,6 +64,7 @@ class AccountsController extends Controller {
 		private MailboxSync $mailboxSync,
 		private ITimeFactory $timeFactory,
 		private DelegationService $delegationService,
+		private IAppConfig $appConfig,
 	) {
 		parent::__construct($appName, $request);
 		$this->l10n = $l10n;
@@ -334,7 +337,7 @@ class AccountsController extends Controller {
 		?string $smtpPassword = null,
 		string $authMethod = 'password',
 		?bool $classificationEnabled = null): JSONResponse {
-		if ($this->config->getAppValue(Application::APP_ID, 'allow_new_mail_accounts', 'yes') === 'no') {
+		if (!$this->appConfig->getValueBool(Application::APP_ID, ConfigLexicon::ALLOW_NEW_MAIL_ACCOUNTS, true)) {
 			$this->logger->info('Creating account disabled by admin.');
 			return MailJsonResponse::error('Could not create account');
 		}

@@ -58,6 +58,46 @@ class HtmlTest extends TestCase {
 	}
 
 	/**
+	 * @dataProvider invalidUtf8Provider
+	 */
+	public function testLinkDetectionRepairsInvalidUtf8(string $text, string $expectedSubstring): void {
+		$urlGenerator = Server::get(IURLGenerator::class);
+		$request = Server::get(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$withLinks = $html->convertLinks($text);
+
+		self::assertNotSame('', $withLinks);
+		self::assertStringContainsString($expectedSubstring, $withLinks);
+	}
+
+	public function invalidUtf8Provider(): array {
+		return [
+			'stray latin-1 byte' => ["Hello team,\r\n\r\nSee you n\xFCxt week.\r\n", 'Hello team,'],
+			// The two 3-byte sequences below are a UTF-16 surrogate pair (high D83D,
+			// low DE09) that got UTF-8-encoded one half at a time instead of combined
+			// into one 4-byte sequence - a CESU-8 encoding bug seen from some senders.
+			'cesu-8 surrogate pair' => ["Hello team,\r\n\r\nSee you soon \xED\xA0\xBD\xED\xB8\x89\r\n", 'Hello team,'],
+			'invalid bytes at the very start' => ["\xFF\xFEHello team,\r\n", 'Hello team,'],
+			'only invalid bytes' => ["\xFF\xFE\xFD", '?'],
+		];
+	}
+
+	public function testLinkDetectionLeavesValidMultibyteTextUnchanged(): void {
+		$urlGenerator = Server::get(IURLGenerator::class);
+		$request = Server::get(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$text = "Hello team, \u{1F609}\r\n\r\nÜmlaut test: äöüß";
+		$withLinks = $html->convertLinks($text);
+
+		self::assertStringContainsString('äöüß', $withLinks);
+		self::assertStringContainsString("\u{1F609}", $withLinks);
+	}
+
+	/**
 	 * @dataProvider parseMailBodyProvider
 	 * @param $expected
 	 * @param $text

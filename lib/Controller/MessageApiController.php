@@ -217,7 +217,7 @@ class MessageApiController extends OCSController {
 			LocalMessage::STATUS_NO_SENT_MAILBOX => new DataResponse('Configuration error: Cannot send message without sent mailbox.', Http::STATUS_FORBIDDEN),
 			LocalMessage::STATUS_SMPT_SEND_FAIL => new DataResponse('SMTP error: could not send message. Message sending will be retried. Please check the logs.', Http::STATUS_INTERNAL_SERVER_ERROR),
 			LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL => new DataResponse('Email was sent but could not be copied to sent mailbox. Copying will be retried. Please check the logs.', Http::STATUS_ACCEPTED),
-			default => new DataResponse('An error occured. Please check the logs.', Http::STATUS_INTERNAL_SERVER_ERROR),
+			default => new DataResponse('An error occurred. Please check the logs.', Http::STATUS_INTERNAL_SERVER_ERROR),
 		};
 	}
 
