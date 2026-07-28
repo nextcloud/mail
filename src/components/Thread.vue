@@ -528,7 +528,7 @@ export default {
 	align-items: center;
 	padding: 0 0 calc(var(--default-grid-baseline) * 2) 0;
 	// somehow ios doesn't care about this !important rule
-	// so we have to manually set left/right padding to chidren
+	// so we have to manually set left/right padding to children
 	// for 100% to be used
 	box-sizing: content-box !important;
 	width: 100%;

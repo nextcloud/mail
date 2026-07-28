@@ -89,8 +89,8 @@ class MessageApiController extends OCSController {
 	 * 202: The email was sent but could not be copied to the 'Sent' mailbox
 	 * 202: The email was accepted but not sent by the SMTP server and will be automatically retried
 	 * 400: No recipients
-	 * 400: Recipient fromat invalid
-	 * 400: A recipient array contained no email addresse
+	 * 400: Recipient format invalid
+	 * 400: A recipient array contained no email address
 	 * 400: Recipient email address malformed
 	 * 400: Message could not be processed
 	 * 403: No "Sent" mailbox set for account

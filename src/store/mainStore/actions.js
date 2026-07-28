@@ -1496,7 +1496,7 @@ export default function mainStoreActions() {
 			imapLabel,
 		}) {
 			return handleHttpAuthErrors(async () => {
-				// TODO: fetch tags indepently of envelopes and only send tag id here
+				// TODO: fetch tags independently of envelopes and only send tag id here
 				const tag = await setEnvelopeTag(envelope.databaseId, imapLabel)
 				if (!this.getTag(tag.id)) {
 					this.addTagMutation({ tag })

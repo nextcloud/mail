@@ -88,7 +88,7 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 	}
 
 	/**
-	 * The ID of the app making the provider avaialble
+	 * The ID of the app making the provider available
 	 *
 	 * @return string
 	 * @since 5.2.0
