@@ -1,3 +1,27 @@
+## [5.10.10](https://github.com/nextcloud/mail/compare/v5.10.9...v5.10.10) (2026-07-28)
+
+
+### Bug Fixes
+
+* Adjust relative date display to also use timestamp for yesterday ([5d69b84](https://github.com/nextcloud/mail/commit/5d69b84fa2b8d4a891d0634d48f85c3f00a4427d))
+* **ai-integrations:** check for star/end email in message bodies and validate json output for smart replies ([9f6bfdd](https://github.com/nextcloud/mail/commit/9f6bfddef84608032cd4eeb8dbe5afa9b587a765))
+* **ai:** migrate AiIntegrationsService off deprecated TextProcessing API ([6b31c6b](https://github.com/nextcloud/mail/commit/6b31c6b08d599718faa84eeb1a0759dd662defd4))
+* Correct hasLocks() expiry check ([a5b7b9d](https://github.com/nextcloud/mail/commit/a5b7b9de78f16f4a1ffde942a8830dddf904fc21))
+* **deps:** bump dompurify from ^3.4.8 to v3.4.12 ([dd77514](https://github.com/nextcloud/mail/commit/dd77514aa3489a5ff6c0585a9b4a357631516c1b))
+* **html:** prevent invalid UTF-8 from blanking mail body ([f9412e9](https://github.com/nextcloud/mail/commit/f9412e992a3b8d83f6431daf4db029f3c41b82e3))
+* interactions in actions menu for mailboxes ([0d87e95](https://github.com/nextcloud/mail/commit/0d87e95c50300a561440b663caca9f0a5f21a5e2))
+* **l10n:** Update translations from Transifex ([4660892](https://github.com/nextcloud/mail/commit/4660892e6a3afc3a986f9cb86c184a7babdc7293))
+* **l10n:** Update translations from Transifex ([8fc91b4](https://github.com/nextcloud/mail/commit/8fc91b4fc50d961d62d51ed6a909f16b09af6246))
+* **l10n:** Update translations from Transifex ([f71de6f](https://github.com/nextcloud/mail/commit/f71de6ff0a62f65a53dc1af6338231e44d67538d))
+* **l10n:** Update translations from Transifex ([7e7fa2f](https://github.com/nextcloud/mail/commit/7e7fa2f452377b7aa5c492ae46e5a5de0214a16e))
+* **l10n:** Update translations from Transifex ([bbdb0fe](https://github.com/nextcloud/mail/commit/bbdb0fea7a5732d2a6680d2107b9b9f8ef29e77a))
+* **l10n:** Update translations from Transifex ([e2afe9e](https://github.com/nextcloud/mail/commit/e2afe9e92da71164085fa9b51019f0a5f0ee565a))
+* **settings:** Add loading states ([340cfd3](https://github.com/nextcloud/mail/commit/340cfd3cfeff801a80ae7796829bda285aa01793))
+* **ui:** do not mount favorites list when sorting is off ([6623287](https://github.com/nextcloud/mail/commit/6623287e06b71a9b9970b6c1b5d604c68c6442b1))
+* **ui:** rename beforeUnmount hooks back to beforeDestroy ([c85bfbe](https://github.com/nextcloud/mail/commit/c85bfbe9e176eb815dd1e39138d21577f3984ec1)), closes [#13031](https://github.com/nextcloud/mail/issues/13031)
+
+
+
 ## [5.10.9](https://github.com/nextcloud/mail/compare/v5.10.8...v5.10.9) (2026-07-21)
 
 
