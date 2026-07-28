@@ -203,7 +203,7 @@ export default {
 
 <style lang="scss" scoped>
 // account for 12px (was 8) margin on iframe body
-// should be 12px so it maches the rest of the content
+// should be 12px so it matches the rest of the content
 .html-message-body {
 	margin : 2px calc(var(--default-grid-baseline) * 3) 0 calc(var(--default-grid-baseline) * 14);
 	background-color: #FFFFFF;

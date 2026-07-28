@@ -61,7 +61,7 @@ export function buildRecipients(envelope, ownAddress, replyTo) {
 	const isNotOwnAddress = negate(isOwnAddress)
 
 	// The Reply-To header has higher precedence than the From header.
-	// This re-uses Horde's handling of the reply_to field directly.
+	// This reuses Horde's handling of the reply_to field directly.
 	const from = replyTo !== undefined ? replyTo : envelope.from
 
 	// Locate why we received this envelope

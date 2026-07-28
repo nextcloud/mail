@@ -522,7 +522,7 @@ export default {
 			min-width: 100px;
 			flex: 1 1 10%;
 			font-weight: 500;
-			// we changed the time/date and actions to be alighned with the name
+			// we changed the time/date and actions to be aligned with the name
 			max-width: 78%;
 			line-height: var(--default-line-height);
 

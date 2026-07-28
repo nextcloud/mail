@@ -860,7 +860,7 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 	color: var(--color-main-text);
 }
 
-/* We need the paragraph field a bit smaller so it doesnt break the toolbar for signature */
+/* We need the paragraph field a bit smaller so it doesn't break the toolbar for signature */
 .ck.ck-dropdown.ck-heading-dropdown .ck-dropdown__button .ck-button__label {
 	width: 6em !important;
 }
