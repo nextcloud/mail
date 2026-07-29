@@ -714,7 +714,7 @@ export default {
 
 		.marked-as .modal-inner-inline {
 			display: inline-block;
-			width: 32%;
+			width: 50%;
 
 		}
 		.range {
