@@ -39,6 +39,11 @@ use function str_starts_with;
 class MailboxSync {
 	use TTransactional;
 
+	private const NON_PERSONAL_NAMESPACE_TYPES = [
+		Horde_Imap_Client_Data_Namespace::NS_OTHER,
+		Horde_Imap_Client_Data_Namespace::NS_SHARED,
+	];
+
 	/** @var MailboxMapper */
 	private $mailboxMapper;
 
@@ -253,7 +258,7 @@ class MailboxSync {
 	private function isMailboxShared(?Horde_Imap_Client_Namespace_List $namespaces, Mailbox $mailbox): bool {
 		foreach (($namespaces ?? []) as $namespace) {
 			/** @var Horde_Imap_Client_Data_Namespace $namespace */
-			if ($namespace->type === Horde_Imap_Client_Data_Namespace::NS_OTHER && str_starts_with($mailbox->getName(), $namespace->name)) {
+			if (in_array($namespace->type, self::NON_PERSONAL_NAMESPACE_TYPES, true) && str_starts_with($mailbox->getName(), $namespace->name)) {
 				return true;
 			}
 		}
