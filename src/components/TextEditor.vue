@@ -131,12 +131,12 @@ export default {
 			Mention,
 			Link,
 			FindAndReplace,
-			GeneralHtmlSupport,
 		]
 		const toolbar = ['undo', 'redo']
 
 		if (this.html) {
 			plugins.push(...[
+				GeneralHtmlSupport,
 				Heading,
 				Alignment,
 				Bold,
