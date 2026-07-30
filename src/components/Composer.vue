@@ -546,7 +546,7 @@ import { EDITOR_MODE_HTML, EDITOR_MODE_TEXT } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
 import { parseEmailList } from '../util/emailAddress.js'
 import { formatDateTime } from '../util/formatDateTime.js'
-import { detect, html, toHtml, toPlain } from '../util/text.js'
+import { containsImage, detect, html, toHtml, toPlain } from '../util/text.js'
 import textBlockSvg from './../../img/text_snippet.svg'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
@@ -1211,7 +1211,10 @@ export default {
 			}
 			// Only overwrite editormode if body is empty
 			if (previous === NO_ALIAS_SET && (!this.body || this.body.value === '')) {
-				this.editorMode = this.selectedAlias.editorMode
+				// Pick the mode before the editor exists so insertSignature doesn't have to re-create it
+				this.editorMode = containsImage(toHtml(detect(this.selectedAlias.signature)).value)
+					? EDITOR_MODE_HTML
+					: this.selectedAlias.editorMode
 			}
 		},
 
@@ -1300,6 +1303,22 @@ export default {
 		},
 
 		insertSignature() {
+			const signature = toHtml(detect(this.selectedAlias.signature)).value
+
+			/**
+			 * Plain text can't carry the images of a signature, they would be
+			 * dropped when the body is converted on submit. Switch to rich text
+			 * instead of losing them.
+			 *
+			 * As editorMode is the key for the TextEditor component the change
+			 * destroys the current instance and the signature is inserted via
+			 * the onEditorReady event of the new instance.
+			 */
+			if (this.editorPlainText && containsImage(signature)) {
+				this.editorMode = EDITOR_MODE_HTML
+				return
+			}
+
 			let trigger
 
 			if (this.changeSignature) {
@@ -1311,7 +1330,7 @@ export default {
 			this.$refs.editor.editorExecute(
 				'insertSignature',
 				trigger,
-				toHtml(detect(this.selectedAlias.signature)).value,
+				signature,
 				this.selectedAlias.signatureAboveQuote,
 			)
 
