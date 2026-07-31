@@ -1123,7 +1123,7 @@ export default {
 		}
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		window.removeEventListener('mailvelope', this.onMailvelopeLoaded)
 	},
 
