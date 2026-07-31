@@ -81,7 +81,7 @@
 				</AppNavigationItem>
 			</div>
 		</template>
-		<AppSettingsMenu :open.sync="showSettings" />
+		<AppSettingsMenu v-model:open="showSettings" />
 	</AppNavigation>
 </template>
 

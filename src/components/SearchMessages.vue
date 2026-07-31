@@ -279,19 +279,19 @@
 				:no-close="true"
 				:variant="hasAttachmentActive ? 'primary' : 'secondary'"
 				:aria-label="t('mail', 'Has attachment')"
-				@click.native="toggleGetAttachments" />
+				@click="toggleGetAttachments" />
 			<NcChip
 				:text="t('mail', 'Unread')"
 				:no-close="true"
 				:variant="hasUnreadActive ? 'primary' : 'secondary'"
 				:aria-label="t('mail', 'Unread')"
-				@click.native="toggleUnread" />
+				@click="toggleUnread" />
 			<NcChip
 				:text="t('mail', 'To me')"
 				:no-close="true"
 				:variant="hasToMeActive ? 'primary' : 'secondary'"
 				:aria-label="t('mail', 'To me')"
-				@click.native="toggleCurrentUser" />
+				@click="toggleCurrentUser" />
 		</div>
 	</div>
 </template>
