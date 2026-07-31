@@ -31,7 +31,6 @@ import {
 	tap,
 	where,
 } from 'ramda'
-import Vue from 'vue'
 import MailboxLockedError from '../../errors/MailboxLockedError.js'
 import { matchError } from '../../errors/match.js'
 import SyncIncompleteError from '../../errors/SyncIncompleteError.js'
@@ -161,11 +160,11 @@ function combineEnvelopeLists(sortOrder) {
 const addMailboxToState = curry((mailboxes, account, mailbox) => {
 	mailbox.accountId = account.id
 	mailbox.mailboxes = []
-	Vue.set(mailbox, 'envelopeLists', {})
+	mailbox.envelopeLists = {}
 
 	transformMailboxName(account, mailbox)
 
-	Vue.set(mailboxes, mailbox.databaseId, mailbox)
+	mailboxes[mailbox.databaseId] = mailbox
 	const parent = Object.values(mailboxes)
 		.filter((mb) => mb.accountId === account.id)
 		.find((mb) => mb.name === mailbox.path)
@@ -248,7 +247,7 @@ export default function mainStoreActions() {
 			logger.debug(`Fetching mailboxes for account ${account.id},  …`, { account })
 			account.mailboxes = await fetchAllMailboxes(account.id, true)
 			const mailboxes = sortMailboxes(account.mailboxes || [], account)
-			Vue.set(account, 'mailboxes', [])
+			account.mailboxes = []
 			mailboxes.map(addMailboxToState(this.mailboxes, account))
 		},
 		async finishAccountSetup({ account }) {
@@ -1860,7 +1859,7 @@ export default function mainStoreActions() {
 				.entries(envelope.tags ?? {})
 				.map(([imapLabel, tag]) => {
 					if (!this.tags[tag.id]) {
-						Vue.set(this.tags, tag.id, tag)
+						this.tags[tag.id] = tag
 					}
 					if (!this.tagList.includes(tag.id)) {
 						this.tagList.push(tag.id)
@@ -1868,7 +1867,7 @@ export default function mainStoreActions() {
 					return tag.id
 				})
 
-			Vue.set(envelope, 'tags', tags)
+			envelope.tags = tags
 		},
 
 		/**
@@ -1899,7 +1898,7 @@ export default function mainStoreActions() {
 			key,
 			value,
 		}) {
-			Vue.set(this.preferences, key, value)
+			this.preferences[key] = value
 		},
 		setSessionExpiredMutation() {
 			this.isExpiredSession = true
@@ -1907,7 +1906,7 @@ export default function mainStoreActions() {
 		addAccountMutation(account) {
 			account.collapsed = account.collapsed ?? true
 
-			Vue.set(this.accountsUnmapped, account.id, account)
+			this.accountsUnmapped[account.id] = account
 
 			this.accountList.push(account.id)
 
@@ -1916,25 +1915,25 @@ export default function mainStoreActions() {
 
 			// Save the mailboxes to the store, but only keep IDs in the account's mailboxes list
 			const mailboxes = sortMailboxes(account.mailboxes || [], account)
-			Vue.set(account, 'mailboxes', [])
-			Vue.set(account, 'aliases', account.aliases ?? [])
+			account.mailboxes = []
+			account.aliases = account.aliases ?? []
 
 			mailboxes.map(addMailboxToState(this.mailboxes, account))
 		},
 		editAccountMutation(account) {
-			Vue.set(this.accountsUnmapped, account.id, { ...this.accountsUnmapped[account.id], ...account })
+			this.accountsUnmapped[account.id] = { ...this.accountsUnmapped[account.id], ...account }
 		},
 		patchAccountMutation({
 			account,
 			data,
 		}) {
-			Vue.set(this.accountsUnmapped, account.id, { ...this.accountsUnmapped[account.id], ...data })
+			this.accountsUnmapped[account.id] = { ...this.accountsUnmapped[account.id], ...data }
 		},
 		saveAccountsOrderMutation({
 			account,
 			order,
 		}) {
-			Vue.set(account, 'order', order)
+			account.order = order
 			this.accountList = this
 				.sortAccounts(this.accountList.map((id) => this.accountsUnmapped[id]))
 				.map((a) => a.id)
@@ -1973,7 +1972,7 @@ export default function mainStoreActions() {
 					return this.attributes?.includes('\\subscribed') ?? false
 				},
 			})
-			Vue.set(this.mailboxes, mailbox.databaseId, mailbox)
+			this.mailboxes[mailbox.databaseId] = mailbox
 		},
 		removeMailboxMutation({ id }) {
 			const mailbox = this.mailboxes[id]
@@ -1984,7 +1983,7 @@ export default function mainStoreActions() {
 			if (account === undefined) {
 				throw new Error(`Account ${mailbox.accountId} of mailbox ${id} is unknown`)
 			}
-			Vue.delete(this.mailboxes, id)
+			delete this.mailboxes[id]
 
 			// Travers through the account and the full mailbox tree to find any dangling pointers
 			const removeRec = (parent) => {
@@ -2068,8 +2067,8 @@ export default function mainStoreActions() {
 				// If the message is dispatched in the background there is no newMessage data in state
 				return
 			}
-			Vue.set(this.newMessage, 'type', 'outbox')
-			Vue.set(this.newMessage.data, 'id', message.id)
+			this.newMessage.type = 'outbox'
+			this.newMessage.data.id = message.id
 		},
 		addEnvelopesMutation({
 			query,
@@ -2089,9 +2088,9 @@ export default function mainStoreActions() {
 				const mailbox = this.mailboxes[envelope.mailboxId]
 				const existing = mailbox.envelopeLists[listId] || []
 				this.normalizeTags(envelope)
-				Vue.set(this.envelopes, envelope.databaseId, { ...this.envelopes[envelope.databaseId] || {}, ...envelope })
-				Vue.set(envelope, 'accountId', mailbox.accountId)
-				Vue.set(mailbox.envelopeLists, listId, uniq(orderByDateInt(this.appendOrReplaceEnvelopeId(existing, envelope))))
+				this.envelopes[envelope.databaseId] = { ...this.envelopes[envelope.databaseId] || {}, ...envelope }
+				envelope.accountId = mailbox.accountId
+				mailbox.envelopeLists[listId] = uniq(orderByDateInt(this.appendOrReplaceEnvelopeId(existing, envelope)))
 				if (!addToUnifiedMailboxes) {
 					return
 				}
@@ -2101,11 +2100,7 @@ export default function mainStoreActions() {
 					.filter((mb) => mb.specialRole && mb.specialRole === mailbox.specialRole)
 					.forEach((mailbox) => {
 						const existing = mailbox.envelopeLists[listId] || []
-						Vue.set(
-							mailbox.envelopeLists,
-							listId,
-							uniq(orderByDateInt(existing.concat([envelope.databaseId]))),
-						)
+						mailbox.envelopeLists[listId] = uniq(orderByDateInt(existing.concat([envelope.databaseId])))
 					})
 			})
 		},
@@ -2115,8 +2110,8 @@ export default function mainStoreActions() {
 				return
 			}
 			this.normalizeTags(envelope)
-			Vue.set(existing, 'flags', envelope.flags)
-			Vue.set(existing, 'tags', envelope.tags)
+			existing.flags = envelope.flags
+			existing.tags = envelope.tags
 		},
 		flagEnvelopeMutation({
 			envelope,
@@ -2127,32 +2122,32 @@ export default function mainStoreActions() {
 			if (mailbox && flag === 'seen') {
 				const unread = mailbox.unread ?? 0
 				if (envelope.flags[flag] && !value) {
-					Vue.set(mailbox, 'unread', unread + 1)
+					mailbox.unread = unread + 1
 				} else if (!envelope.flags[flag] && value) {
-					Vue.set(mailbox, 'unread', Math.max(unread - 1, 0))
+					mailbox.unread = Math.max(unread - 1, 0)
 				}
 			}
-			Vue.set(envelope.flags, flag, value)
+			envelope.flags[flag] = value
 		},
 		addTagMutation({ tag }) {
-			Vue.set(this.tags, tag.id, tag)
+			this.tags[tag.id] = tag
 			this.tagList.push(tag.id)
 		},
 		addInternalAddressMutation(address) {
-			Vue.set(this.internalAddress, address.id, address)
+			this.internalAddress[address.id] = address
 		},
 		removeInternalAddressMutation({ addressId }) {
 			this.internalAddress = this.internalAddress.filter((address) => address.id !== addressId)
 		},
 		deleteTagMutation({ tagId }) {
 			this.tagList = this.tagList.filter((id) => id !== tagId)
-			Vue.delete(this.tags, tagId)
+			delete this.tags[tagId]
 		},
 		addEnvelopeTagMutation({
 			envelope,
 			tagId,
 		}) {
-			Vue.set(envelope, 'tags', uniq([...envelope.tags, tagId]))
+			envelope.tags = uniq([...envelope.tags, tagId])
 		},
 		updateTagMutation({
 			tag,
@@ -2166,7 +2161,7 @@ export default function mainStoreActions() {
 			envelope,
 			tagId,
 		}) {
-			Vue.set(envelope, 'tags', envelope.tags.filter((id) => id !== tagId))
+			envelope.tags = envelope.tags.filter((id) => id !== tagId)
 		},
 		removeEnvelopeMutation({ id }) {
 			const envelope = this.envelopes[id]
@@ -2189,7 +2184,7 @@ export default function mainStoreActions() {
 			}
 
 			if (!envelope.seen && mailbox.unread) {
-				Vue.set(mailbox, 'unread', mailbox.unread - 1)
+				mailbox.unread = mailbox.unread - 1
 			}
 
 			this.accountsUnmapped[UNIFIED_ACCOUNT_ID].mailboxes
@@ -2218,17 +2213,17 @@ export default function mainStoreActions() {
 				}
 
 				const thread = env.thread.filter((threadId) => threadId !== id)
-				Vue.set(this.envelopes[key], 'thread', thread)
+				this.envelopes[key].thread = thread
 			}
 
-			Vue.delete(this.envelopes, id)
+			delete this.envelopes[id]
 		},
 		removeEnvelopesMutation({ id }) {
-			Vue.set(this.mailboxes[id], 'envelopeLists', {})
+			this.mailboxes[id].envelopeLists = {}
 		},
 		removeAllEnvelopesMutation() {
 			Object.keys(this.mailboxes).forEach((id) => {
-				Vue.set(this.mailboxes[id], 'envelopeLists', {})
+				this.mailboxes[id].envelopeLists = {}
 			})
 		},
 		removeEnvelopeFromFollowUpMailboxMutation({ id }) {
@@ -2238,10 +2233,10 @@ export default function mainStoreActions() {
 				filteredLists[listId] = mailbox.envelopeLists[listId]
 					.filter((idInList) => id !== idInList)
 			}
-			Vue.set(this.mailboxes[FOLLOW_UP_MAILBOX_ID], 'envelopeLists', filteredLists)
+			this.mailboxes[FOLLOW_UP_MAILBOX_ID].envelopeLists = filteredLists
 		},
 		addMessageMutation({ message }) {
-			Vue.set(this.messages, message.databaseId, message)
+			this.messages[message.databaseId] = message
 		},
 		addMessageItinerariesMutation({
 			id,
@@ -2251,7 +2246,7 @@ export default function mainStoreActions() {
 			if (!message) {
 				return
 			}
-			Vue.set(message, 'itineraries', itineraries)
+			message.itineraries = itineraries
 		},
 		addMessageDkimMutation({
 			id,
@@ -2261,7 +2256,7 @@ export default function mainStoreActions() {
 			if (!message) {
 				return
 			}
-			Vue.set(message, 'dkimValid', result.valid)
+			message.dkimValid = result.valid
 		},
 		addEnvelopeThreadMutation({
 			id,
@@ -2271,21 +2266,21 @@ export default function mainStoreActions() {
 			thread.forEach((e) => {
 				this.normalizeTags(e)
 				const mailbox = this.mailboxes[e.mailboxId]
-				Vue.set(e, 'accountId', mailbox.accountId)
+				e.accountId = mailbox.accountId
 				const existing = this.envelopes[e.databaseId] || {}
 				const merged = { ...existing, ...e }
 				// preserve attachments
 				if (existing.attachments && existing.attachments.length > 0) {
 					merged.attachments = existing.attachments
 				}
-				Vue.set(this.envelopes, e.databaseId, merged)
+				this.envelopes[e.databaseId] = merged
 			})
 
 			// Store the references
-			Vue.set(this.envelopes[id], 'thread', thread.map((e) => e.databaseId))
+			this.envelopes[id].thread = thread.map((e) => e.databaseId)
 		},
 		removeMessageMutation({ id }) {
-			Vue.delete(this.messages, id)
+			delete this.messages[id]
 		},
 		createAliasMutation({
 			account,
@@ -2316,7 +2311,7 @@ export default function mainStoreActions() {
 			id,
 			unread,
 		}) {
-			Vue.set(this.mailboxes[id], 'unread', unread ?? 0)
+			this.mailboxes[id].unread = unread ?? 0
 		},
 		setScheduledSendingDisabledMutation(value) {
 			this.isScheduledSendingDisabled = value
@@ -2328,7 +2323,7 @@ export default function mainStoreActions() {
 			accountId,
 			scriptData,
 		}) {
-			Vue.set(this.sieveScript, accountId, scriptData)
+			this.sieveScript[accountId] = scriptData
 		},
 		setCurrentUserPrincipalMutation({ currentUserPrincipal }) {
 			this.currentUserPrincipal = currentUserPrincipal
@@ -2355,7 +2350,7 @@ export default function mainStoreActions() {
 			this.smimeCertificates = [...this.smimeCertificates, certificate]
 		},
 		setOneLineLayoutMutation({ list }) {
-			Vue.set(this, 'list', list)
+			this.list = list
 		},
 		setHasFetchedInitialEnvelopesMutation(hasFetchedInitialEnvelopes) {
 			this.hasFetchedInitialEnvelopes = hasFetchedInitialEnvelopes
@@ -2396,7 +2391,7 @@ export default function mainStoreActions() {
 		patchTextBlockLocally(textBlock) {
 			const index = this.myTextBlocks.findIndex((s) => s.id === textBlock.id)
 			if (index !== -1) {
-				Vue.set(this.myTextBlocks, index, textBlock)
+				this.myTextBlocks[index] = textBlock
 			}
 		},
 		setQuickActions(quickActions) {
@@ -2405,15 +2400,13 @@ export default function mainStoreActions() {
 		patchQuickActionLocally(quickAction) {
 			const index = this.quickActions.findIndex((s) => s.id === quickAction.id)
 			if (index !== -1) {
-				Vue.set(this.quickActions, index, quickAction)
+				this.quickActions[index] = quickAction
 			}
 		},
 		patchActionStepsLocally(id, steps) {
 			const index = this.quickActions.findIndex((s) => s.id === id)
 			if (index !== -1) {
-				const updatedQuickAction = this.quickActions[index]
-				updatedQuickAction.actionSteps = steps
-				Vue.set(this.quickActions, index, updatedQuickAction)
+				this.quickActions[index] = { ...this.quickActions[index], actionSteps: steps }
 			}
 		},
 		deleteQuickActionLocally(id) {
