@@ -27,16 +27,23 @@
 			@option:selected="changeIdentity" />
 		<!-- Added wrapper to give the signature editor a clear input-style border -->
 		<div class="signature-editor-wrapper">
+			<!-- Plugins are picked when the editor is created, so re-create it whenever html changes -->
 			<TextEditor
+				:key="allowHtml"
 				v-model="signature"
-				:html="true"
+				:html="allowHtml"
 				:placeholder="t('mail', 'Signature …')"
 				:bus="bus"
 				class="signature-editor-wrapper__editor" />
 		</div>
-		<p v-if="isLargeSignature" class="warning-large-signature">
-			{{ t('mail', 'Your signature is larger than 2 MB. This may affect the performance of your editor.') }}
-		</p>
+		<NcNoteCard v-if="isLargeSignature" type="warning">
+			<!-- TRANSLATORS: "It is added to every message" refers to the signature, not to the image -->
+			<p>{{ t('mail', 'This signature is larger than 2 MB, usually because an image is embedded in it. It is added to every message you send and may slow down the editor.') }}</p>
+		</NcNoteCard>
+		<NcNoteCard v-if="overridesPlainText" type="warning">
+			<!-- TRANSLATORS: "writing mode", "rich text" and "plain text" are labels of the Writing mode setting -->
+			<p>{{ t('mail', 'This signature contains images. New messages will use rich text, even though your writing mode is set to plain text.') }}</p>
+		</NcNoteCard>
 		<ButtonVue
 			type="primary"
 			:disabled="loading"
@@ -60,19 +67,21 @@
 </template>
 
 <script>
-import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcSelect } from '@nextcloud/vue'
+import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcNoteCard, NcSelect } from '@nextcloud/vue'
 import mitt from 'mitt'
 import { mapStores } from 'pinia'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import TextEditor from './TextEditor.vue'
 import logger from '../logger.js'
+import { EDITOR_MODE_HTML } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
-import { detect, toHtml } from '../util/text.js'
+import { containsImage, detect, toHtml } from '../util/text.js'
 
 export default {
 	name: 'SignatureSettings',
 	components: {
 		TextEditor,
+		NcNoteCard,
 		NcSelect,
 		ButtonVue,
 		IconLoading,
@@ -92,6 +101,9 @@ export default {
 			bus: mitt(),
 			identity: null,
 			signature: '',
+			// Snapshot from the loaded signature: deleting the image while editing must
+			// not swap the editor under the cursor
+			signatureEnforcesHtml: false,
 			signatureAboveQuote: this.account.signatureAboveQuote,
 		}
 	},
@@ -114,6 +126,30 @@ export default {
 			})
 
 			return identities
+		},
+
+		/**
+		 * Plain text accounts get the plain text editor so they can't add images to
+		 * their signature in the first place. Signatures that already contain one
+		 * keep the rich text editor, otherwise the image would be stripped on load
+		 * and silently lost on save.
+		 *
+		 * @return {boolean}
+		 */
+		allowHtml() {
+			return this.account.editorMode === EDITOR_MODE_HTML || this.signatureEnforcesHtml
+		},
+
+		/**
+		 * Unlike allowHtml this follows the current content so the warning disappears
+		 * as soon as the image is gone.
+		 *
+		 * @return {boolean}
+		 */
+		overridesPlainText() {
+			return this.account.editorMode !== EDITOR_MODE_HTML
+				&& !!this.signature
+				&& containsImage(this.signature)
 		},
 
 		isLargeSignature() {
@@ -149,6 +185,7 @@ export default {
 			this.signature = identity.signature
 				? toHtml(detect(identity.signature)).value
 				: ''
+			this.signatureEnforcesHtml = containsImage(this.signature)
 		},
 
 		async deleteSignature() {
@@ -252,10 +289,6 @@ export default {
 .button-vue:deep() {
 	display: inline-block !important;
 	margin-top: 4px !important;
-}
-
-.warning-large-signature {
-	color: darkorange;
 }
 
 /* it's a bit hard to make it work without this max-width in the modal because it overlaps with the sidebar of the modal */
