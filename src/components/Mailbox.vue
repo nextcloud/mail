@@ -219,7 +219,7 @@ export default {
 		this.mainStore.setHasFetchedInitialEnvelopesMutation(true)
 	},
 
-	destroyed() {
+	unmounted() {
 		this.bus.off('load-more', this.onScroll)
 		this.bus.off('delete', this.onDelete)
 		this.bus.off('archive', this.onArchive)

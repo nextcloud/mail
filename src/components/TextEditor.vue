@@ -272,7 +272,7 @@ export default {
 		this.loadEditorTranslations(getLanguage())
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		this.unregisterSourceEditingInputListener()
 
 		if (this.editorInstance?.plugins.has('SourceEditing') && this.sourceEditingModeHandler) {
