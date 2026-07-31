@@ -90,8 +90,16 @@ export default {
 	watch: {
 		recipients: {
 			immediate: true,
-			handler() {
-				this.expandedRecipients = this.recipients.map(() => false)
+			handler(newRecipients) {
+				const next = newRecipients.length
+				const current = this.expandedRecipients.length
+				if (next > current) {
+					for (let i = current; i < next; i++) {
+						this.$set(this.expandedRecipients, i, false)
+					}
+				} else if (next < current) {
+					this.expandedRecipients = this.expandedRecipients.slice(0, next)
+				}
 			},
 		},
 	},
@@ -132,7 +140,7 @@ export default {
 
 	&__avatar {
 		display: flex;
-		justify-content: center;
+		justify-content: flex-start;
 		flex-shrink: 0;
 	}
 

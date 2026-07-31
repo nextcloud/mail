@@ -1849,8 +1849,7 @@ export default {
 	z-index: 100;
 	display: flex;
 	flex-direction: column;
-	height: 100%;
-	max-height: 100%;
+	min-height: 100%;
 }
 
 .composer-actions {
@@ -1935,7 +1934,7 @@ export default {
 
 // Make composer editor expand
 .message-editor {
-	flex: 1 1 100%;
+	flex: 1 1 auto;
 	min-height: 200px;
 	border-top: 1px solid var(--color-border);
 }
@@ -1964,6 +1963,17 @@ export default {
 .to-select :deep(.vs__selected-options) {
 	padding-inline-end: calc(var(--default-grid-baseline) * 10);
 }
+
+// NcSelect caps the toggle at 100px with overflow-y:auto, preventing expanded
+// chips from pushing CC/BCC down. The no-wrap/select--no-wrap CSS already
+// controls whether chips wrap (flex-wrap:nowrap on vs__selected-options), so
+// removing the height cap here is safe for both collapsed and expanded states.
+:deep(.v-select.select .vs__dropdown-toggle) {
+	max-height: none;
+	overflow-y: visible;
+}
+
+
 
 .recipient-overflow {
 	display: inline-flex;

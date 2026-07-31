@@ -686,11 +686,11 @@ export default {
 
 <style lang="scss" scoped>
 $composer-width: 600px;
-$recipient-pane-width: 300px;
+$recipient-pane-width: 400px;
 $composer-height: 500px;
 $header-height: calc(var(--default-clickable-area) + calc(var(--default-grid-baseline) * 2));
-$bottom-offset: calc(var(--body-container-margin, 0px) + var(--default-grid-baseline) * 2 + 52px);
-$panel-max-height: calc(100vh - (var(--body-container-margin, 0px) + var(--default-grid-baseline) * 3 + 52px));
+$bottom-offset: calc(var(--body-container-margin, 0px) + var(--default-grid-baseline));
+$panel-max-height: calc(100vh - (var(--body-container-margin, 0px) + var(--default-grid-baseline) * 3) - 40px);
 
 .floating-composer {
 	position: fixed;
@@ -700,8 +700,10 @@ $panel-max-height: calc(100vh - (var(--body-container-margin, 0px) + var(--defau
 
 	width: $composer-width;
 	max-width: calc(100vw - 2 * var(--default-grid-baseline));
-	height: $composer-height;
+	height: auto;
+	min-height: $composer-height;
 	max-height: $panel-max-height;
+	overflow: hidden;
 
 	display: flex;
 	flex-direction: column;
