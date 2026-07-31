@@ -760,8 +760,12 @@ class MessageMapper {
 		// TODO: compare logic and merge with getAttachments()
 
 		$query = new Horde_Imap_Client_Fetch_Query();
-		$query->bodyPart($attachmentId);
-		$query->mimeHeader($attachmentId);
+		$query->bodyPart($attachmentId, [
+			'peek' => true,
+		]);
+		$query->mimeHeader($attachmentId, [
+			'peek' => true,
+		]);
 		$this->smimeService->addEncryptionCheckQueries($query);
 
 		$uids = new Horde_Imap_Client_Ids($messageUid);
@@ -845,7 +849,7 @@ class MessageMapper {
 	 */
 	private function buildAttachmentsPartsQuery(Horde_Mime_Part $structure, array $attachmentIds) : Horde_Imap_Client_Fetch_Query {
 		$partsQuery = new Horde_Imap_Client_Fetch_Query();
-		$partsQuery->fullText();
+		$partsQuery->fullText(['peek' => true]);
 		foreach ($structure->partIterator() as $part) {
 			/** @var Horde_Mime_Part $part */
 			if ($part->getMimeId() === '0') {
