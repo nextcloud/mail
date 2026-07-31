@@ -1890,7 +1890,6 @@ export default {
 			margin-bottom: 0;
 			background-color: transparent;
 			border: none;
-			opacity: 0.5;
 			padding: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 4);
 		}
 
