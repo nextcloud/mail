@@ -9,7 +9,6 @@ import { generateFilePath } from '@nextcloud/router'
 import { createPinia, PiniaVuePlugin } from 'pinia'
 import vToolTip from 'v-tooltip'
 import Vue from 'vue'
-import VueShortKey from 'vue-shortkey'
 import App from './App.vue'
 import Nextcloud from './mixins/Nextcloud.js'
 import router from './router.js'
@@ -26,7 +25,6 @@ const pinia = createPinia()
 
 Vue.mixin(Nextcloud)
 
-Vue.use(VueShortKey, { prevent: ['input', 'div', 'textarea'] })
 Vue.use(vToolTip)
 
 registerDavProperty('nc:share-attributes', { nc: 'http://nextcloud.org/ns' })

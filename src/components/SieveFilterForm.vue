@@ -7,7 +7,6 @@
 		<textarea
 			id="sieve-text-area"
 			v-model="script"
-			v-shortkey.avoid
 			rows="20"
 			:disabled="loading" />
 		<p v-if="errorMessage">

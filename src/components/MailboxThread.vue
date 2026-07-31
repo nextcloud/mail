@@ -20,15 +20,13 @@
 				</div>
 				<AppContentList
 					v-infinite-scroll="onScroll"
-					v-shortkey.once="shortkeys"
 					class="envelope-list"
 					infinite-scroll-immediate-check="false"
 					:show-details="showThread"
 					:infinite-scroll-disabled="false"
 					:infinite-scroll-distance="300"
 					role="heading"
-					:aria-level="2"
-					@shortkey.native="onShortcut">
+					:aria-level="2">
 					<template v-if="!mailbox.isPriorityInbox">
 						<div
 							v-if="sortFavorites"
@@ -268,16 +266,6 @@ export default {
 			followupInfo: t('mail', 'AI identifies messages sent by you that likely require a reply but did not receive one after a couple of days and shows them here'),
 			bus: mitt(),
 			searchQuery: undefined,
-			shortkeys: {
-				del: ['del'],
-				arch: ['a'],
-				flag: ['s'],
-				next: ['arrowright'],
-				prev: ['arrowleft'],
-				refresh: ['r'],
-				unseen: ['u'],
-			},
-
 			priorityImportantQuery,
 			priorityOtherQuery,
 			favoriteQuery: 'is:starred',
@@ -471,10 +459,12 @@ export default {
 		if (this.isThreadShown) {
 			await this.fetchEnvelopes()
 		}
+		document.addEventListener('keydown', this.onKeyDown)
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		clearTimeout(this.startMailboxTimer)
+		document.removeEventListener('keydown', this.onKeyDown)
 	},
 
 	methods: {
@@ -508,8 +498,29 @@ export default {
 			this.bus.emit('load-more')
 		},
 
-		onShortcut(e) {
-			this.bus.emit('shortcut', e)
+		onKeyDown(e) {
+			// Replicate vue-shortkey's prevent list (input, div, textarea).
+			const tag = document.activeElement?.tagName?.toUpperCase()
+			if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'DIV') {
+				return
+			}
+			// Mirror .once: ignore repeated keydown events from a held key.
+			if (e.repeat) {
+				return
+			}
+			const KEY_MAP = {
+				Delete: 'del',
+				a: 'arch',
+				s: 'flag',
+				ArrowRight: 'next',
+				ArrowLeft: 'prev',
+				r: 'refresh',
+				u: 'unseen',
+			}
+			const srcKey = KEY_MAP[e.key]
+			if (srcKey) {
+				this.bus.emit('shortcut', { srcKey })
+			}
 		},
 
 		appendToSearch(str) {
