@@ -61,7 +61,6 @@
     "node-forge": "^1.4.0",
     "p-limit": "^6.2.0",
     "pinia": "^2.3.1",
-    "printscout": "2.0.3",
     "process": "^0.11.10",
     "ramda": "^0.32.0",
     "raw-loader": "^4.0.2",
