@@ -431,7 +431,6 @@ OC.L10N.register(
     "Could not create task" : "Tehtävää ei voitu luoda",
     "Could not load your message thread" : "Viestiketjua ei voitu ladata",
     "The thread doesn't exist or has been deleted" : "Ketjua ei ole olemassa tai se on poistettu",
-    "Print" : "Tulosta",
     "Could not print message" : "Viestiä ei voitu tulostaa",
     "Loading thread" : "Ladataan ketjua",
     "Not found" : "Ei löytynyt",
@@ -608,11 +607,13 @@ OC.L10N.register(
     "Could not load your message" : "Viestiä ei voitu ladata",
     "Could not load the desired message" : "Haluttua viestiä ei voitu ladata",
     "Could not load the message" : "Viestiä ei voitu ladata",
+    "Date:" : "Päivämäärä:",
     "Tag name is a hidden system tag" : "Tunnisteen nimi on piilotettu järjestelmätunniste",
     "Tag already exists" : "Tunniste on jo olemassa",
     "Error loading message" : "Virhe viestiä ladatessa",
     "Choose a file to add as attachment" : "Valitse liitteeksi lisättävä tiedosto",
     "Choose a file to share as a link" : "Valitse tiedosto, joka jaetaan linkkinä",
-    "This summary was AI generated" : "Tämä yhteenveto on tekoälyn luoma"
+    "This summary was AI generated" : "Tämä yhteenveto on tekoälyn luoma",
+    "Print" : "Tulosta"
 },
 "nplurals=2; plural=(n != 1);");

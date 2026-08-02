@@ -272,6 +272,7 @@ OC.L10N.register(
     "Could not load your message" : "לא ניתן לטעון את ההודעה שלך",
     "Could not load the desired message" : "לא ניתן לטעון את ההודעה המבוקשת",
     "Could not load the message" : "לא ניתן לטעון את ההודעה",
+    "Date:" : "בתאריך:",
     "Tag already exists" : "תגית כבר קיימת",
     "Error loading message" : "שגיאה בהעלאת הודעה",
     "Choose a file to add as attachment" : "בחירת קובץ להוספה כקובץ מצורף",

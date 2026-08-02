@@ -625,7 +625,6 @@ OC.L10N.register(
     "Could not load your message thread" : "امکان بارگذاری موضوع پیام شما وجود نداشت",
     "The thread doesn't exist or has been deleted" : "موضوع وجود ندارد یا حذف شده است",
     "Email was not able to be opened" : "ایمیل قابل باز شدن نبود",
-    "Print" : "چاپ",
     "Could not print message" : "امکان چاپ پیام وجود نداشت",
     "Loading thread" : "در حال بارگذاری موضوع",
     "Not found" : "پیدا نشد",
@@ -911,6 +910,7 @@ OC.L10N.register(
     "Could not load your message" : "امکان بارگذاری پیام شما وجود ندارد",
     "Could not load the desired message" : "امکان بارگذاری پیام مورد نظر وجود ندارد",
     "Could not load the message" : "امکان بارگذاری پیام وجود ندارد",
+    "Date:" : "تاریخ:",
     "Tag name cannot be empty" : "نام برچسب نمی‌تواند خالی باشد",
     "Tag name is a hidden system tag" : "نام برچسب یک برچسب سیستمی مخفی است",
     "Tag already exists" : "برچسب از قبل وجود دارد",
@@ -921,6 +921,7 @@ OC.L10N.register(
     "Delegated access to {userId}" : "دسترسی واگذار شده به {userId}",
     "Revoked access for {userId}" : "دسترسی {userId} لغو شد",
     "This summary was AI generated" : "این خلاصه توسط هوش مصنوعی تولید شده است",
+    "Print" : "چاپ",
     "This summary is AI generated and may contain mistakes." : "این خلاصه توسط هوش مصنوعی تولید شده و ممکن است حاوی اشتباه باشد"
 },
 "nplurals=2; plural=(n > 1);");

@@ -522,7 +522,6 @@ OC.L10N.register(
     "Summarizing thread failed." : "Falha ao resumir o fio.",
     "Could not load your message thread" : "Não foi possível carregar seu fio de mensagem",
     "Email was not able to be opened" : "Não foi possível abrir o e-mail",
-    "Print" : "Imprimir",
     "Could not print message" : "Não foi possível imprimir a mensagem",
     "Not found" : "Não  encontrado",
     "Signature verified" : "Assinatura verificada",
@@ -751,6 +750,7 @@ OC.L10N.register(
     "Could not load your message" : "Não foi possível carregar a sua mensagem",
     "Could not load the desired message" : "Não foi possível carregar a mensagem escolhida",
     "Could not load the message" : "Não foi possível carregar a mensagem",
+    "Date:" : "Data:",
     "Tag name cannot be empty" : "O nome da etiqueta não pode ficar vazio",
     "Tag already exists" : "A etiqueta já existe",
     "Error loading message" : "Erro ao carregar a mensagem",
@@ -759,6 +759,7 @@ OC.L10N.register(
     "Choose a file to share as a link" : "Escolha um arquivo para compartilhar como link",
     "Delegated access to {userId}" : "Delegar acesso a {userId}",
     "Revoked access for {userId}" : "Acesso revogado de {userId}",
-    "This summary was AI generated" : "Este resumo foi gerado por IA"
+    "This summary was AI generated" : "Este resumo foi gerado por IA",
+    "Print" : "Imprimir"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

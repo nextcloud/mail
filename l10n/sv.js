@@ -642,7 +642,6 @@ OC.L10N.register(
     "Could not load your message thread" : "Det gick inte att ladda meddelandetråden",
     "The thread doesn't exist or has been deleted" : "Tråden finns inte eller har raderats",
     "Email was not able to be opened" : "Det gick inte att öppna e-postmeddelandet",
-    "Print" : "Skriv ut",
     "Could not print message" : "Det gick inte att skriva ut meddelandet",
     "Loading thread" : "Hämta tråd",
     "Not found" : "Hittades inte",
@@ -929,6 +928,7 @@ OC.L10N.register(
     "Could not load your message" : "Det gick inte att läsa in ditt meddelande",
     "Could not load the desired message" : "Det gick inte att läsa in det önskade meddelandet",
     "Could not load the message" : "Det gick inte att läsa in meddelandet",
+    "Date:" : "Datum:",
     "Tag name cannot be empty" : "Taggnamnet får inte vara tomt",
     "Tag name is a hidden system tag" : "Taggnamnet är en dold systemtagg",
     "Tag already exists" : "Taggen finns redan",
@@ -939,6 +939,7 @@ OC.L10N.register(
     "Delegated access to {userId}" : "Åtkomst delegerades till {userId}",
     "Revoked access for {userId}" : "Åtkomsten återkallades för {userId}",
     "This summary was AI generated" : "Den här sammanfattningen har genererats av AI",
+    "Print" : "Skriv ut",
     "This summary is AI generated and may contain mistakes." : "Den här sammanfattningen har genererats av AI och kan innehålla fel."
 },
 "nplurals=2; plural=(n != 1);");

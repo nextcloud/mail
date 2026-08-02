@@ -575,7 +575,6 @@ OC.L10N.register(
     "Could not load your message thread" : "Не могу да учитам ток дискусије поруке",
     "The thread doesn't exist or has been deleted" : "Нит не постоји или је обрисана",
     "Email was not able to be opened" : "И-мејл није могао да се отвори",
-    "Print" : "Штампај",
     "Could not print message" : "Порука није могла да се одштампа",
     "Loading thread" : "Учитава се нит",
     "Not found" : "Није нађено",
@@ -852,6 +851,7 @@ OC.L10N.register(
     "Could not load your message" : "Неуспело учитавање поруке",
     "Could not load the desired message" : "Неуспело учитавање жељене поруке",
     "Could not load the message" : "Неуспело учитавање поруке",
+    "Date:" : "Датум:",
     "Tag name cannot be empty" : "Назив ознаке не може бити празан",
     "Tag name is a hidden system tag" : "Назив ознаке је скривена системска ознака",
     "Tag already exists" : "Ознака већ постоји",
@@ -860,6 +860,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Изаберите фајл за прилог",
     "Choose a file to share as a link" : "Одаберите фајл који желите да поделите као везу",
     "This summary was AI generated" : "Резиме је генерисала AI",
+    "Print" : "Штампај",
     "This summary is AI generated and may contain mistakes." : "Овај резиме је генерисала AI и може да садржи грешке."
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");

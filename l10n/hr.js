@@ -603,7 +603,6 @@ OC.L10N.register(
     "Could not load your message thread" : "Učitavanje vaše dretve poruka nije uspjelo",
     "The thread doesn't exist or has been deleted" : "Nit ne postoji ili je izbrisana",
     "Email was not able to be opened" : "Poruku e-pošte nije moguće otvoriti",
-    "Print" : "Ispiši",
     "Could not print message" : "Nije moguće ispisati poruku",
     "Loading thread" : "Učitavanje niti",
     "Not found" : "Nije pronađeno",
@@ -886,6 +885,7 @@ OC.L10N.register(
     "Could not load your message" : "Učitavanje vaše poruke nije uspjelo",
     "Could not load the desired message" : "Ne može se učitati željena poruka",
     "Could not load the message" : "Poruku nije moguće učitati",
+    "Date:" : "Datum:",
     "Tag name cannot be empty" : "Naziv oznake ne može biti prazan",
     "Tag name is a hidden system tag" : "Naziv oznake je skrivena sistemska oznaka",
     "Tag already exists" : "Oznaka već postoji",
@@ -894,6 +894,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Izaberi datoteku kao privitak",
     "Choose a file to share as a link" : "Izaberi datoteku za dijeljenje putem poveznice",
     "This summary was AI generated" : "Ovaj sažetak generirala je umjetna inteligencija",
+    "Print" : "Ispiši",
     "This summary is AI generated and may contain mistakes." : "Ovaj sažetak generirala je umjetna inteligencija i može sadržavati pogreške."
 },
 "nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;");

@@ -642,7 +642,6 @@ OC.L10N.register(
     "Could not load your message thread" : "Sinu kirjade jutulõnga ei õnnestunud alla laadida",
     "The thread doesn't exist or has been deleted" : "Jutulõnga pole olemas või on kustutatud",
     "Email was not able to be opened" : "E-kirja polnud võimalik avada",
-    "Print" : "Prindi",
     "Could not print message" : "Kirja printimine ei õnnestunud",
     "Loading thread" : "Laadin jutulõnga",
     "Not found" : "Ei leidu",
@@ -929,6 +928,7 @@ OC.L10N.register(
     "Could not load your message" : "Sinu kirja laadimine ei õnnestunud",
     "Could not load the desired message" : "Soovitud kirja laadimine ei õnnestunud",
     "Could not load the message" : "Kirja laadimine ei õnnestunud",
+    "Date:" : "Kuupäev:",
     "Yesterday {time}" : "Eile {time}",
     "Tag name cannot be empty" : "Sildi nimi ei saa jääda tühjaks",
     "Tag name is a hidden system tag" : "Sildi nimi on peidetud süsteemne silt",
@@ -940,6 +940,7 @@ OC.L10N.register(
     "Delegated access to {userId}" : "Sa volitasid ligipääsu kasutajale {userId}",
     "Revoked access for {userId}" : "Kasutaja {userId} volitus on eemaldatud",
     "This summary was AI generated" : "See koond on loodud tehisaru poolt",
+    "Print" : "Prindi",
     "This summary is AI generated and may contain mistakes." : "See kokkuvõte on tehisaru koostatud ja võib sisaldada vigu."
 },
 "nplurals=2; plural=(n != 1);");

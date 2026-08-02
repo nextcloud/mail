@@ -522,6 +522,7 @@ OC.L10N.register(
     "Could not load your message" : "Sporočila ni mogoče naložiti",
     "Could not load the desired message" : "Želenega sporočila ni mogoče naložiti",
     "Could not load the message" : "Sporočila ni mogoče naložiti",
+    "Date:" : "Datum:",
     "Tag name is a hidden system tag" : "Ime oznake je skrita sistemska oznaka",
     "Tag already exists" : "Oznaka že obstaja",
     "Error loading message" : "Napaka nalaganja sporočila",
