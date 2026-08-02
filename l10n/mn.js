@@ -584,7 +584,6 @@ OC.L10N.register(
     "Could not load your message thread" : "Таны зурвасын яриаг ачаалах боломжгүй",
     "The thread doesn't exist or has been deleted" : "Яриа байхгүй эсвэл устгагдсан байна",
     "Email was not able to be opened" : "И-мэйлийг нээх боломжгүй байлаа",
-    "Print" : "Хэвлэх",
     "Could not print message" : "Зурвас хэвлэх боломжгүй",
     "Loading thread" : "Яриа ачааллаж байна",
     "Not found" : "Олдсонгүй",
@@ -863,6 +862,7 @@ OC.L10N.register(
     "Could not load your message" : "Таны зурвасыг ачаалах боломжгүй",
     "Could not load the desired message" : "Хүссэн зурвасыг ачаалах боломжгүй",
     "Could not load the message" : "Зурвас ачаалах боломжгүй",
+    "Date:" : "–û–≥–Ω–æ–æ:",
     "Tag name cannot be empty" : "Тагийн нэр хоосон байж болохгүй",
     "Tag name is a hidden system tag" : "Тагийн нэр нуугдсан системийн таг байна",
     "Tag already exists" : "Таг аль хэдийн байна",
@@ -871,6 +871,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Хавсралт болгох файл сонгоно уу",
     "Choose a file to share as a link" : "Холбоосоор хуваалцах файл сонгоно уу",
     "This summary was AI generated" : "Энэ хураангуйг AI үүсгэсэн",
+    "Print" : "Хэвлэх",
     "This summary is AI generated and may contain mistakes." : "Энэ хураангуйг AI үүсгэсэн бөгөөд алдаа агуулж болно."
 },
 "nplurals=2; plural=(n != 1);");

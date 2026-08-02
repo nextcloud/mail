@@ -604,7 +604,6 @@
     "Could not load your message thread" : "Nepodařilo se načíst vlákno s danou zprávou",
     "The thread doesn't exist or has been deleted" : "Vlákno neexistuje nebo bylo smazáno",
     "Email was not able to be opened" : "E-mail nebylo možné otevřít",
-    "Print" : "Tisk",
     "Could not print message" : "Nebylo možné vytisknout zprávu",
     "Loading thread" : "Načítání vlákna",
     "Not found" : "Nenalezeno",
@@ -889,6 +888,7 @@
     "Could not load your message" : "Vaši zprávu se nedaří načíst",
     "Could not load the desired message" : "Nedaří se načíst vyžádanou zprávu",
     "Could not load the message" : "Zprávu se nedaří načíst",
+    "Date:" : "Datum:",
     "Tag name cannot be empty" : "Štítek je třeba nějak nazvat",
     "Tag name is a hidden system tag" : "Takto nazvaný štítek už existuje v podobě skrytého systémového štítku",
     "Tag already exists" : "Štítek už existuje",
@@ -897,6 +897,7 @@
     "Choose a file to add as attachment" : "Vyberte soubor k přiložení",
     "Choose a file to share as a link" : "Zvolte soubor, který sdílet jako odkaz",
     "This summary was AI generated" : "Toto shrnutí bylo vytvořeno AI",
+    "Print" : "Tisk",
     "This summary is AI generated and may contain mistakes." : "Toto shrnutí je vytvářeno AI a může obsahovat chyby"
 },"pluralForm" :"nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;"
 }

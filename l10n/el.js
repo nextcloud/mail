@@ -642,7 +642,6 @@ OC.L10N.register(
     "Could not load your message thread" : "Δεν ήταν δυνατή η φόρτωση της συζήτησης μηνυμάτων σας",
     "The thread doesn't exist or has been deleted" : "Η συζήτηση δεν υπάρχει ή έχει διαγραφεί",
     "Email was not able to be opened" : "Το email δεν ήταν δυνατό να ανοιχτεί",
-    "Print" : "Εκτύπωση",
     "Could not print message" : "Δεν ήταν δυνατή η εκτύπωση του μηνύματος",
     "Loading thread" : "Φόρτωση συζήτησης",
     "Not found" : "Δεν βρέθηκε",
@@ -929,6 +928,7 @@ OC.L10N.register(
     "Could not load your message" : "Δεν ήταν δυνατή η φόρτωση του μηνύματός σας",
     "Could not load the desired message" : "Αδυναμία φόρτωσης του προτιμώμενου μηνύματος",
     "Could not load the message" : "Δεν ήταν δυνατή η φόρτωση του μηνύματος",
+    "Date:" : "Ημερομηνία:",
     "Yesterday {time}" : "Εχθές {time}",
     "Tag name cannot be empty" : "Το όνομα ετικέτας δεν μπορεί να είναι κενό",
     "Tag name is a hidden system tag" : "Το όνομα ετικέτας είναι κρυφή ετικέτα συστήματος",
@@ -940,6 +940,7 @@ OC.L10N.register(
     "Delegated access to {userId}" : "Εκχωρήθηκε πρόσβαση στον/στην {userId}",
     "Revoked access for {userId}" : "Ανακλήθηκε η πρόσβαση για τον/την {userId}",
     "This summary was AI generated" : "Αυτή η σύνοψη δημιουργήθηκε από ΤΝ",
+    "Print" : "Εκτύπωση",
     "This summary is AI generated and may contain mistakes." : "Αυτή η σύνοψη δημιουργήθηκε από τεχνητή νοημοσύνη και μπορεί να περιέχει λάθη."
 },
 "nplurals=2; plural=(n != 1);");

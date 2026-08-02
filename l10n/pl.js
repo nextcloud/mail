@@ -624,7 +624,6 @@ OC.L10N.register(
     "Could not load your message thread" : "Nie można wczytać wątku wiadomości",
     "The thread doesn't exist or has been deleted" : "Wątek nie istnieje lub został usunięty",
     "Email was not able to be opened" : "Nie udało się otworzyć wiadomości e-mail",
-    "Print" : "Drukuj",
     "Could not print message" : "Nie można wydrukować wiadomości",
     "Loading thread" : "Wczytywanie wątku",
     "Not found" : "Nie znaleziono",
@@ -910,6 +909,7 @@ OC.L10N.register(
     "Could not load your message" : "Nie można wczytać wiadomości",
     "Could not load the desired message" : "Nie można wczytać żądanej wiadomości",
     "Could not load the message" : "Nie można wczytać wiadomości",
+    "Date:" : "Data:",
     "Tag name cannot be empty" : "Nazwa etykiety nie może być pusta",
     "Tag name is a hidden system tag" : "Nazwa etykiety jest ukrytej etykiety systemowej",
     "Tag already exists" : "Tag już istnieje",
@@ -920,6 +920,7 @@ OC.L10N.register(
     "Delegated access to {userId}" : "Dostęp został delegowany do {userId}",
     "Revoked access for {userId}" : "Cofnięto dostęp dla {userId}",
     "This summary was AI generated" : "To podsumowanie zostało wygenerowane przez AI",
+    "Print" : "Drukuj",
     "This summary is AI generated and may contain mistakes." : "To podsumowanie zostało wygenerowane przez AI i może zawierać błędy"
 },
 "nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);");

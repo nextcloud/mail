@@ -126,6 +126,7 @@ OC.L10N.register(
     "Error while sharing file" : "Error pendent lo partiment del fichièr",
     "{from}\n{subject}" : "{from}\n{subject}",
     "Message sent" : "Messatge mandat",
+    "Date:" : "Data :",
     "Error loading message" : "Error al moment del cargament del messatge",
     "Choose a file to add as attachment" : "Causissètz un fichièr de jónher al messatge"
 },

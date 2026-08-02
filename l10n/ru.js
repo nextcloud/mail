@@ -627,7 +627,6 @@ OC.L10N.register(
     "Could not load your message thread" : "Ошибка загрузки ветки переписки",
     "The thread doesn't exist or has been deleted" : "Тема не существует или была удалена",
     "Email was not able to be opened" : "Не удалось открыть email",
-    "Print" : "Печать",
     "Could not print message" : "Не удалось напечатать сообщение",
     "Loading thread" : "Загрузка потока",
     "Not found" : "Не найдено",
@@ -913,6 +912,7 @@ OC.L10N.register(
     "Could not load your message" : "Ошибка получения вашего сообщения",
     "Could not load the desired message" : "Ошибка получения указанного сообщения",
     "Could not load the message" : "Ошибка получения этого сообщения",
+    "Date:" : "Дата:",
     "Tag name cannot be empty" : "Имя тега не может быть пустым",
     "Tag name is a hidden system tag" : "Имя тега является скрытым системным тегом",
     "Tag already exists" : "Метка уже существует",
@@ -923,6 +923,7 @@ OC.L10N.register(
     "Delegated access to {userId}" : "Делегированный доступ к {userId}",
     "Revoked access for {userId}" : "Отменён доступ для {userId}",
     "This summary was AI generated" : "Это резюме было создано ИИ",
+    "Print" : "Печать",
     "This summary is AI generated and may contain mistakes." : "Это резюме создано ИИ и может содержать ошибки."
 },
 "nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);");

@@ -640,7 +640,6 @@
     "Could not load your message thread" : "Nachrichtenverlauf konnte nicht geöffnet werden",
     "The thread doesn't exist or has been deleted" : "Die Unterhaltung existiert nicht oder wurde gelöscht",
     "Email was not able to be opened" : "Die E-Mail konnte nicht geöffnet werden",
-    "Print" : "Drucken",
     "Could not print message" : "Nachricht konnte nicht gedruckt werden",
     "Loading thread" : "Unterhaltung wird geladen",
     "Not found" : "Nicht gefunden",
@@ -938,6 +937,7 @@
     "Delegated access to {userId}" : "Zugriff delegiert an {userId}",
     "Revoked access for {userId}" : "Zugriff für {userId} widerrufen",
     "This summary was AI generated" : "Diese Zusammenfassung wurde von KI generiert",
+    "Print" : "Drucken",
     "This summary is AI generated and may contain mistakes." : "Diese Zusammenfassung wurde von KI erstellt und kann Fehler enthalten."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

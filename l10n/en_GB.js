@@ -642,7 +642,6 @@ OC.L10N.register(
     "Could not load your message thread" : "Could not load your message thread",
     "The thread doesn't exist or has been deleted" : "The thread doesn't exist or has been deleted",
     "Email was not able to be opened" : "Email cannot be opened",
-    "Print" : "Print",
     "Could not print message" : "Could not print message",
     "Loading thread" : "Loading thread",
     "Not found" : "Not found",
@@ -929,6 +928,7 @@ OC.L10N.register(
     "Could not load your message" : "Could not load your message",
     "Could not load the desired message" : "Could not load the desired message",
     "Could not load the message" : "Could not load the message",
+    "Date:" : "Date:",
     "Tag name cannot be empty" : "Tag name cannot be empty",
     "Tag name is a hidden system tag" : "Tag name is a hidden system tag",
     "Tag already exists" : "Tag already exists",
@@ -939,6 +939,7 @@ OC.L10N.register(
     "Delegated access to {userId}" : "Delegated access to {userId}",
     "Revoked access for {userId}" : "Revoked access for {userId}",
     "This summary was AI generated" : "This summary was AI generated",
+    "Print" : "Print",
     "This summary is AI generated and may contain mistakes." : "This summary is AI generated and may contain mistakes."
 },
 "nplurals=2; plural=(n != 1);");

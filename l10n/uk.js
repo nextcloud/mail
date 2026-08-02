@@ -557,7 +557,6 @@ OC.L10N.register(
     "Could not load your message thread" : "Не вдалось завантажити ваш ланцюжок повідомлень",
     "The thread doesn't exist or has been deleted" : "Ланцюжок відсутній або його було вилучено",
     "Email was not able to be opened" : "Не вдалося відкрити електронну пошту",
-    "Print" : "Друк",
     "Could not print message" : "Не вдалося надрукувати повідомлення",
     "Loading thread" : "Завантаження ланцюжка",
     "Not found" : "Не знайдено",
@@ -834,6 +833,7 @@ OC.L10N.register(
     "Could not load your message" : "Неможливо завантажити повідомлення",
     "Could not load the desired message" : "Неможливо завантажити обране повідомлення",
     "Could not load the message" : "Неможливо завантажити повідомлення",
+    "Date:" : "Дата:",
     "Tag name cannot be empty" : "Назва мітки не може бути порожньою",
     "Tag name is a hidden system tag" : "Назва мітки - це прихована системна мітка",
     "Tag already exists" : "Мітка вже існує",
@@ -842,6 +842,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Виберіть файл для вкладення",
     "Choose a file to share as a link" : "Виберіть файл, яким ви поділитеся через посилання",
     "This summary was AI generated" : "Це резюме було згенеровано штучним інтелектом",
+    "Print" : "Друк",
     "This summary is AI generated and may contain mistakes." : "Це резюме згенероване штучним інтелектом і може містити помилки."
 },
 "nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);");

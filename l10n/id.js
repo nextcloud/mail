@@ -598,7 +598,6 @@ OC.L10N.register(
     "Could not load your message thread" : "Tidak dapat memuat utas pesan Anda",
     "The thread doesn't exist or has been deleted" : "Utas tidak ada atau telah dihapus",
     "Email was not able to be opened" : "Email tidak dapat dibuka",
-    "Print" : "Cetak",
     "Could not print message" : "Tidak dapat mencetak pesan",
     "Loading thread" : "Memuat utas",
     "Not found" : "Tidak ditemukan",
@@ -879,6 +878,7 @@ OC.L10N.register(
     "Could not load your message" : "Tidak dapat memuat pesan Anda",
     "Could not load the desired message" : "Tidak dapat memuat pesan yang diinginkan",
     "Could not load the message" : "Tidak dapat memuat pesan",
+    "Date:" : "Tanggal:",
     "Tag name cannot be empty" : "Nama tag tidak boleh kosong",
     "Tag name is a hidden system tag" : "Nama tag adalah tag sistem tersembunyi",
     "Tag already exists" : "Tag sudah ada",
@@ -887,6 +887,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Pilih berkas untuk ditambahkan sebagai lampiran",
     "Choose a file to share as a link" : "Pilih berkas untuk dibagikan sebagai tautan",
     "This summary was AI generated" : "Ringkasan ini dibuat oleh AI",
+    "Print" : "Cetak",
     "This summary is AI generated and may contain mistakes." : "Ringkasan ini dibuat oleh AI dan mungkin mengandung kesalahan."
 },
 "nplurals=1; plural=0;");

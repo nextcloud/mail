@@ -635,7 +635,6 @@ OC.L10N.register(
     "Could not load your message thread" : "Kon je berichten niet laden",
     "The thread doesn't exist or has been deleted" : "De conversatie bestaat niet of is verwijderd",
     "Email was not able to be opened" : "E-mail kon niet worden geopend",
-    "Print" : "Afdrukken",
     "Could not print message" : "Kon bericht niet afdrukken",
     "Loading thread" : "Conversatie laden",
     "Not found" : "Niet gevonden",
@@ -921,6 +920,7 @@ OC.L10N.register(
     "Could not load your message" : "Kon je bericht niet laden",
     "Could not load the desired message" : "Kon het gewenste bericht niet laden",
     "Could not load the message" : "Kon het bericht niet laden",
+    "Date:" : "Datum:",
     "Tag name cannot be empty" : "Etiketnaam kan niet leeg zijn",
     "Tag name is a hidden system tag" : "Labelnaam is een verborgen systeemlabel",
     "Tag already exists" : "Markering bestaat al",
@@ -931,6 +931,7 @@ OC.L10N.register(
     "Delegated access to {userId}" : "Toegang gedelegeerd aan {userId}",
     "Revoked access for {userId}" : "Toegang ingetrokken voor {userId}",
     "This summary was AI generated" : "Deze samenvatting is door AI gegenereerd",
+    "Print" : "Afdrukken",
     "This summary is AI generated and may contain mistakes." : "Deze samenvatting is door AI gegenereerd en kan fouten bevatten."
 },
 "nplurals=2; plural=(n != 1);");

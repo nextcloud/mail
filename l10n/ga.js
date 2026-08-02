@@ -642,7 +642,6 @@ OC.L10N.register(
     "Could not load your message thread" : "Níorbh fhéidir snáithe do theachtaireachtaí a lódáil",
     "The thread doesn't exist or has been deleted" : "Níl an snáithe ann nó scriosadh é",
     "Email was not able to be opened" : "Níorbh fhéidir an ríomhphost a oscailt",
-    "Print" : "Priontáil",
     "Could not print message" : "Níorbh fhéidir an teachtaireacht a phriontáil",
     "Loading thread" : "Snáithe á lódáil",
     "Not found" : "Ní bhfuarthas",
@@ -929,6 +928,7 @@ OC.L10N.register(
     "Could not load your message" : "Níorbh fhéidir do theachtaireacht a lódáil",
     "Could not load the desired message" : "Níorbh fhéidir an teachtaireacht atá uait a luchtú",
     "Could not load the message" : "Níorbh fhéidir an teachtaireacht a luchtú",
+    "Date:" : "Dáta:",
     "Yesterday {time}" : "Inné {time}",
     "Tag name cannot be empty" : "Ní féidir ainm na clibe a bheith folamh",
     "Tag name is a hidden system tag" : "Is clib córais ceilte é an t-ainm clibe",
@@ -940,6 +940,7 @@ OC.L10N.register(
     "Delegated access to {userId}" : "Rochtain tarmligthe chuig {userId}",
     "Revoked access for {userId}" : "Rochtain curtha ar ceal do {userId}",
     "This summary was AI generated" : "Gineadh AI san achoimre seo",
+    "Print" : "Priontáil",
     "This summary is AI generated and may contain mistakes." : "Is achoimre í seo a ghintear le hintleacht shaorga agus d’fhéadfadh botúin a bheith inti."
 },
 "nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);");
