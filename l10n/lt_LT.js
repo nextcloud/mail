@@ -642,7 +642,6 @@ OC.L10N.register(
     "Could not load your message thread" : "Nepavyko įkelti jūsų susirašinėjimo",
     "The thread doesn't exist or has been deleted" : "Šis susirašinėjimas neegzistuoja arba buvo ištrintas",
     "Email was not able to be opened" : "Nepavyko atidaryti el. laiško",
-    "Print" : "Spausdinti",
     "Could not print message" : "Nepavyko atspausdinti pranešimo",
     "Loading thread" : "Įkeliamas susirašinėjimas",
     "Not found" : "Nerasta",
@@ -929,6 +928,7 @@ OC.L10N.register(
     "Could not load your message" : "Nepavyko įkelti jūsų laiško",
     "Could not load the desired message" : "Nepavyko įkelti pageidaujamo laiško",
     "Could not load the message" : "Nepavyko įkelti laiško",
+    "Date:" : "Data:",
     "Yesterday {time}" : "Vakar {time}",
     "Tag name cannot be empty" : "Žymos pavadinimas negali būti tuščias",
     "Tag name is a hidden system tag" : "Žymos pavadinimas yra paslėpta sistemos žyma",
@@ -940,6 +940,7 @@ OC.L10N.register(
     "Delegated access to {userId}" : "Deleguota prieiga prie {userId}",
     "Revoked access for {userId}" : "Atšaukta prieiga {userId}",
     "This summary was AI generated" : "Šią santrauką sukūrė DI",
+    "Print" : "Spausdinti",
     "This summary is AI generated and may contain mistakes." : "Šią santrauką sugeneravo DI ir joje gali būti klaidų."
 },
 "nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);");

@@ -181,6 +181,7 @@ OC.L10N.register(
     "Discard unsaved changes" : "Atmest nesaglabātās izmaiņas",
     "Could not load {tag}{name}{endtag}" : "Nevarēja ielādēt {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Radusies problēma, ielādējot {tag}{name}{endtag}",
+    "Date:" : "Datums:",
     "Tag name is a hidden system tag" : "Birkas nosaukums ir slēpta sistēmas birka",
     "Tag already exists" : "Birka jau pastāv",
     "Error loading message" : "Kļūda ielādējot vēstuli",

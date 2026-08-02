@@ -618,7 +618,6 @@
     "Could not load your message thread" : "Impossibile caricare la tua discussione",
     "The thread doesn't exist or has been deleted" : "La conversazione non esiste oppure è stata eliminata",
     "Email was not able to be opened" : "Non è stato possibile aprire l’email",
-    "Print" : "Stampa",
     "Could not print message" : "Impossibile stampare il messaggio",
     "Loading thread" : "Caricamento conversazione in corso",
     "Not found" : "Non trovato",
@@ -904,6 +903,7 @@
     "Could not load your message" : "Impossibile caricare il tuo messaggio",
     "Could not load the desired message" : "Impossibile caricare messaggio desiderato",
     "Could not load the message" : "Impossibile caricare il messaggio",
+    "Date:" : "Data:",
     "Tag name cannot be empty" : "Il nome dell’etichetta non può essere vuoto",
     "Tag name is a hidden system tag" : "Questo nome è riservato a un’etichetta di sistema nascosta",
     "Tag already exists" : "L'etichetta esiste già",
@@ -914,6 +914,7 @@
     "Delegated access to {userId}" : "Accesso delegato a {userId}",
     "Revoked access for {userId}" : "Revoca l'accesso a {userId}",
     "This summary was AI generated" : "Questo riepilogo è stato generato tramite IA",
+    "Print" : "Stampa",
     "This summary is AI generated and may contain mistakes." : "Questo riepilogo è stato generato tramite IA e potrebbe contenere imprecisioni."
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

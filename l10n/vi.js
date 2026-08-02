@@ -272,6 +272,7 @@ OC.L10N.register(
     "Could not load your message" : "Không thể tải tin nhắn của bạn",
     "Could not load the desired message" : "Không thể tải tin nhắn mong muốn",
     "Could not load the message" : "Không thể tải tin nhắn",
+    "Date:" : "Ngày:",
     "Tag already exists" : "Thẻ đã tồn tại",
     "Error loading message" : "Lỗi khi tải tin nhắn",
     "Choose a file to add as attachment" : "Chọn một tệp để thêm dưới dạng tệp đính kèm",

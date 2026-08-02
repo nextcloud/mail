@@ -627,7 +627,6 @@ OC.L10N.register(
     "Could not load your message thread" : "无法加载您的邮件线程",
     "The thread doesn't exist or has been deleted" : "线程不存在或已被删除",
     "Email was not able to be opened" : "无法打开电子邮件",
-    "Print" : "打印",
     "Could not print message" : "无法打印邮件",
     "Loading thread" : "加载线程",
     "Not found" : "未找到",
@@ -913,6 +912,7 @@ OC.L10N.register(
     "Could not load your message" : "无法加载您的邮件",
     "Could not load the desired message" : "无法加载所需邮件",
     "Could not load the message" : "无法加载邮件",
+    "Date:" : "日期：",
     "Tag name cannot be empty" : "标签名称不能为空",
     "Tag name is a hidden system tag" : "标记名称是一个隐藏的系统标记",
     "Tag already exists" : "标签已存在",
@@ -923,6 +923,7 @@ OC.L10N.register(
     "Delegated access to {userId}" : "已向 {userId} 委派访问权限",
     "Revoked access for {userId}" : "已撤销 {userId} 的访问权限",
     "This summary was AI generated" : "此摘要由 AI 生成",
+    "Print" : "打印",
     "This summary is AI generated and may contain mistakes." : "此摘要是 AI 生成的，可能包含错误。"
 },
 "nplurals=1; plural=0;");

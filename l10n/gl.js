@@ -605,7 +605,6 @@ OC.L10N.register(
     "Could not load your message thread" : "Non foi posíbel cargar o fío da mensaxe",
     "The thread doesn't exist or has been deleted" : "O fío non existe ou foi eliminado",
     "Email was not able to be opened" : "Non foi posíbel abrir o correo",
-    "Print" : "Imprimir",
     "Could not print message" : "Non foi posíbel imprimir a mensaxe",
     "Loading thread" : "Cargando o fío",
     "Not found" : "Non atopado",
@@ -888,6 +887,7 @@ OC.L10N.register(
     "Could not load your message" : "Non foi posíbel cargar a súa mensaxe",
     "Could not load the desired message" : "Non foi posíbel cargar a mensaxe desexada",
     "Could not load the message" : "Non foi posíbel cargar a mensaxe",
+    "Date:" : "Data:",
     "Tag name cannot be empty" : "O nome da etiqueta non pode estar baleiro",
     "Tag name is a hidden system tag" : "O nome da etiqueta é unha etiqueta agochada do sistema",
     "Tag already exists" : "Xa existe a etiqueta",
@@ -896,6 +896,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Escolla un ficheiro para engadir como anexo",
     "Choose a file to share as a link" : "Escolla un ficheiro para compartir como ligazón",
     "This summary was AI generated" : "Este resumo foi xerado por IA",
+    "Print" : "Imprimir",
     "This summary is AI generated and may contain mistakes." : "Este resumo é xerado por IA e pode conter erros."
 },
 "nplurals=2; plural=(n != 1);");

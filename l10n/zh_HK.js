@@ -642,7 +642,6 @@ OC.L10N.register(
     "Could not load your message thread" : "無法載入您的郵件串",
     "The thread doesn't exist or has been deleted" : "話題不存在或已被刪除",
     "Email was not able to be opened" : "無法打開電子郵件",
-    "Print" : "打印",
     "Could not print message" : "無法列印訊息",
     "Loading thread" : "主題加載中",
     "Not found" : "找不到",
@@ -929,6 +928,7 @@ OC.L10N.register(
     "Could not load your message" : "無法載入您的信件",
     "Could not load the desired message" : "無法載入所選的信件",
     "Could not load the message" : "無法載入信件",
+    "Date:" : "日期：",
     "Tag name cannot be empty" : "標籤名稱不可為空白",
     "Tag name is a hidden system tag" : "標籤名稱是隱藏的系統標籤",
     "Tag already exists" : "標籤已經存在",
@@ -939,6 +939,7 @@ OC.L10N.register(
     "Delegated access to {userId}" : "已向 {userId} 委派存取權限",
     "Revoked access for {userId}" : "已撤銷 {userId} 的存取權限",
     "This summary was AI generated" : "此摘要為人工智能產生",
+    "Print" : "打印",
     "This summary is AI generated and may contain mistakes." : "此摘要為人工智能產生，可能有錯"
 },
 "nplurals=1; plural=0;");

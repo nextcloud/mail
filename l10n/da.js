@@ -493,7 +493,6 @@ OC.L10N.register(
     "Message source" : "Beskedens kildekode",
     "Add tag" : "Tilføj tag",
     "Task created" : "Opgave oprettet",
-    "Print" : "Udskriv",
     "Could not print message" : "Kunne ikke udskrive besked",
     "Loading thread" : "Indlæser tråd",
     "Not found" : "Ikke fundet",
@@ -586,11 +585,13 @@ OC.L10N.register(
     "Could not load your message" : "Din besked kunne ikke indlæses",
     "Could not load the desired message" : "Den ønskede besked kunne ikke indlæses",
     "Could not load the message" : "Beskeden kunne ikke indlæses",
+    "Date:" : "Dato:",
     "Tag already exists" : "Mærket eksisterer allerede",
     "Error loading message" : "Fejl under indlæsning af besked",
     "Add share link from Files" : "Tilføj delingslink fra Filer",
     "Choose a file to add as attachment" : "Vælg en fil, der skal tilføjes som vedhæftning",
     "Choose a file to share as a link" : "Vælg en fil der skal deles som link",
-    "This summary was AI generated" : "Dette sammendrag blev genereret af AI"
+    "This summary was AI generated" : "Dette sammendrag blev genereret af AI",
+    "Print" : "Udskriv"
 },
 "nplurals=2; plural=(n != 1);");

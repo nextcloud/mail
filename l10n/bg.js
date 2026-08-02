@@ -550,6 +550,7 @@ OC.L10N.register(
     "Could not load your message" : "Вашето съобщение не може да бъде заредено",
     "Could not load the desired message" : "Желаното съобщение не може да бъде заредено",
     "Could not load the message" : "Съобщението не може да бъде заредено",
+    "Date:" : "Дата:",
     "Tag name is a hidden system tag" : "Името на етикета е скрит системен етикет",
     "Tag already exists" : "Етикетът вече съществува",
     "Error loading message" : "Грешка при зареждане съобщението",

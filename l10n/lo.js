@@ -582,7 +582,6 @@ OC.L10N.register(
     "Could not load your message thread" : "Could not load your message thread",
     "The thread doesn't exist or has been deleted" : "The thread doesn't exist or has been deleted",
     "Email was not able to be opened" : "Email was not able to be opened",
-    "Print" : "Print",
     "Could not print message" : "Could not print message",
     "Loading thread" : "Loading thread",
     "Not found" : "Not found",
@@ -859,6 +858,7 @@ OC.L10N.register(
     "Could not load your message" : "Could not load your message",
     "Could not load the desired message" : "Could not load the desired message",
     "Could not load the message" : "Could not load the message",
+    "Date:" : "ວັນທີ:",
     "Tag name cannot be empty" : "Tag name cannot be empty",
     "Tag name is a hidden system tag" : "Tag name is a hidden system tag",
     "Tag already exists" : "Tag already exists",
@@ -867,6 +867,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Choose a file to add as attachment",
     "Choose a file to share as a link" : "Choose a file to share as a link",
     "This summary was AI generated" : "This summary was AI generated",
+    "Print" : "Print",
     "This summary is AI generated and may contain mistakes." : "This summary is AI generated and may contain mistakes."
 },
 "nplurals=1; plural=0;");

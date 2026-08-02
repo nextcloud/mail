@@ -611,6 +611,7 @@ OC.L10N.register(
     "Could not load your message" : "Could not load your message",
     "Could not load the desired message" : "Could not load the desired message",
     "Could not load the message" : "Could not load the message",
+    "Date:" : "Date:",
     "Tag name cannot be empty" : "Tag name cannot be empty",
     "Tag name is a hidden system tag" : "Tag name is a hidden system tag",
     "Tag already exists" : "Tag already exists",

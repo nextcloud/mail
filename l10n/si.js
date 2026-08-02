@@ -55,6 +55,7 @@ OC.L10N.register(
     "Host" : " ධාරකය",
     "Certificate" : "සහතිකය",
     "Shares" : "බෙදාගැනීම්",
-    "All" : "සියල්ල"
+    "All" : "සියල්ල",
+    "Date:" : "දිනය:"
 },
 "nplurals=2; plural=(n != 1);");
