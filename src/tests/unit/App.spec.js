@@ -3,14 +3,10 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import App from '../../App.vue'
-import Nextcloud from '../../mixins/Nextcloud.js'
 import useMainStore from '../../store/mainStore.js'
-
-const localVue = createLocalVue()
-localVue.mixin(Nextcloud)
 
 vi.mock('../../service/AutoConfigService.js')
 
@@ -24,10 +20,7 @@ describe('App', () => {
 		store = useMainStore()
 		store.isExpiredSession = false
 
-		view = shallowMount(App, {
-			store,
-			localVue,
-		})
+		view = shallowMount(App)
 	})
 
 	it('handles session expiry', async () => {

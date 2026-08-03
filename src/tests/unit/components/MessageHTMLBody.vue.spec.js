@@ -3,25 +3,20 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import MessageHTMLBody from '../../../components/MessageHTMLBody.vue'
-import Nextcloud from '../../../mixins/Nextcloud.js'
 
 vi.mock('@iframe-resizer/parent', () => ({ default: vi.fn() }))
 vi.mock('@nextcloud/initial-state', () => ({ loadState: vi.fn().mockReturnValue(false) }))
 vi.mock('../../../service/AiIntergrationsService.js', () => ({ needsTranslation: vi.fn().mockResolvedValue(false) }))
 vi.mock('../../../service/TrustedSenderService.js', () => ({ trustSender: vi.fn() }))
 
-const localVue = createLocalVue()
-
-localVue.mixin(Nextcloud)
-
 describe('MessageHTMLBody', () => {
 	// Attached, because only an iframe that is part of a document has a
 	// `contentDocument` to listen on.
 	const mountBody = () => shallowMount(MessageHTMLBody, {
 		attachTo: document.body,
-		propsData: {
+		props: {
 			url: 'https://cloud.example.com/apps/mail/api/messages/1/html',
 			message: {
 				databaseId: 1,
@@ -29,7 +24,6 @@ describe('MessageHTMLBody', () => {
 				isSenderTrusted: false,
 			},
 		},
-		localVue,
 	})
 
 	const keydown = (key, modifiers = { ctrlKey: true }) => new KeyboardEvent('keydown', {
@@ -87,7 +81,7 @@ describe('MessageHTMLBody', () => {
 			const doc = view.vm.getIframeDoc()
 			view.vm.$refs.iframe.iFrameResizer = { close: vi.fn() }
 
-			view.destroy()
+			view.unmount()
 			doc.dispatchEvent(keydown('p'))
 
 			expect(view.emitted('print-shortcut')).toBeUndefined()

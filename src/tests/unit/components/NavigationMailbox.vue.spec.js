@@ -4,16 +4,10 @@
  */
 
 import { createTestingPinia } from '@pinia/testing'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { PiniaVuePlugin, setActivePinia } from 'pinia'
+import { shallowMount } from '@vue/test-utils'
+import { setActivePinia } from 'pinia'
 import NavigationMailbox from '../../../components/NavigationMailbox.vue'
-import Nextcloud from '../../../mixins/Nextcloud.js'
 import useMainStore from '../../../store/mainStore.js'
-
-const localVue = createLocalVue()
-localVue.use(PiniaVuePlugin)
-
-localVue.mixin(Nextcloud)
 
 describe('NavigationMailbox', () => {
 	const subMailboxes = []
@@ -28,13 +22,12 @@ describe('NavigationMailbox', () => {
 
 	it('shows no counter', () => {
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			props: {
 				account: {},
 				mailbox: {
 					unread: 0,
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.showUnreadCounter).toBe(false)
@@ -46,13 +39,12 @@ describe('NavigationMailbox', () => {
 			unread: 0,
 		})
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			props: {
 				account: {},
 				mailbox: {
 					unread: 3,
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.showUnreadCounter).toBe(true)
@@ -71,13 +63,12 @@ describe('NavigationMailbox', () => {
 		})
 		store.getSubMailboxes = vi.fn().mockReturnValue(subMailboxes)
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			props: {
 				account: {},
 				mailbox: {
 					unread: 0,
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.showUnreadCounter).toBe(true)
@@ -86,13 +77,12 @@ describe('NavigationMailbox', () => {
 
 	it('allows rename with no ACLs set', () => {
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: undefined,
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasRenameAcl).toBe(true)
@@ -103,13 +93,12 @@ describe('NavigationMailbox', () => {
 			myAcls: undefined,
 		})
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: 'x',
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasRenameAcl).toBe(true)
@@ -117,13 +106,12 @@ describe('NavigationMailbox', () => {
 
 	it('allows rename with x ACL right', () => {
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: 'x',
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasRenameAcl).toBe(true)
@@ -131,13 +119,12 @@ describe('NavigationMailbox', () => {
 
 	it('disallows rename without x ACL right', () => {
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: 's',
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasRenameAcl).toBe(false)
@@ -149,13 +136,12 @@ describe('NavigationMailbox', () => {
 		})
 
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: 'x',
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasRenameAcl).toBe(false)
@@ -163,13 +149,12 @@ describe('NavigationMailbox', () => {
 
 	it('allows rename with k ACL right on parent', () => {
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: 'x',
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasRenameAcl).toBe(true)
@@ -177,13 +162,12 @@ describe('NavigationMailbox', () => {
 
 	it('allows toggling seen flag without ACLs', () => {
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: undefined,
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasSeenAcl).toBe(true)
@@ -191,13 +175,12 @@ describe('NavigationMailbox', () => {
 
 	it('disallows toggling seen flag without s ACL right', () => {
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: 'x',
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasSeenAcl).toBe(false)
@@ -205,52 +188,48 @@ describe('NavigationMailbox', () => {
 
 	it('allows toggling seen flag with s ACL right', () => {
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: 's',
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasSeenAcl).toBe(true)
 	})
 	it('allows toggling submailbox action without ACLs', () => {
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: undefined,
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasSubmailboxActionAcl).toBe(true)
 	})
 	it('disallows toggling submailbox action without k ACL right', () => {
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: 'x',
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasSubmailboxActionAcl).toBe(false)
 	})
 	it('allows toggling submailbox action with k ACL right', () => {
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: 'k',
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasSubmailboxActionAcl).toBe(true)
@@ -258,39 +237,36 @@ describe('NavigationMailbox', () => {
 
 	it('allows toggling delete action without ACLs', () => {
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: undefined,
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasDeleteAcl).toBe(true)
 	})
 	it('disallows toggling delete action without x ACL right', () => {
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: 's',
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasDeleteAcl).toBe(false)
 	})
 	it('allows toggling delete action with x ACL right', () => {
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: 'x',
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasDeleteAcl).toBe(true)
