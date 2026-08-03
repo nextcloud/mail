@@ -21,7 +21,7 @@
 						<AccountForm
 							:display-name="displayName"
 							:email="email"
-							:error.sync="error"
+							v-model:error="error"
 							class="setup__form-content__form"
 							@account-created="onAccountCreated" />
 					</template>
