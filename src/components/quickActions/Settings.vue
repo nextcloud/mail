@@ -34,20 +34,25 @@
 			<div class="modal-content">
 				<NcTextField v-model="localAction.name" :label="t('mail', 'Quick action name')" />
 				<h3>{{ t('mail', 'Do the following actions') }}</h3>
-				<Container @onDrop="onDrop">
-					<Draggable
-						v-for="item in actions"
-						:key="item.id"
-						class="modal-content__action"
-						:drag-not-allowed="item.name === 'deleteThread' || item.name === 'moveThread'">
-						<Action
-							:action="item"
-							:account="account"
-							:draggable="item.name !== 'deleteThread' && item.name !== 'moveThread'"
-							@update="(payload) => updateAction(payload, item)"
-							@delete="deleteAction(item)" />
-					</Draggable>
-				</Container>
+				<VueDraggable
+					v-model="actions"
+					item-key="order"
+					filter=".drag-not-allowed"
+					:prevent-on-filter="true"
+					@end="onReorder">
+					<template #item="{ element: item }">
+						<div
+							class="modal-content__action"
+							:class="{ 'drag-not-allowed': item.name === 'deleteThread' || item.name === 'moveThread' }">
+							<Action
+								:action="item"
+								:account="account"
+								:draggable="item.name !== 'deleteThread' && item.name !== 'moveThread'"
+								@update="(payload) => updateAction(payload, item)"
+								@delete="deleteAction(item)" />
+						</div>
+					</template>
+				</VueDraggable>
 				<NcActions :menu-name="t('mail', 'Add another action')">
 					<template #icon>
 						<PlusIcon :size="20" />
@@ -119,7 +124,7 @@
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { NcActionButton, NcActions, NcButton, NcListItem, NcLoadingIcon, NcModal, NcTextField } from '@nextcloud/vue'
-import { Container, Draggable } from 'vue-dndrop'
+import VueDraggable from 'vuedraggable'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
 import IconEmailFast from 'vue-material-design-icons/EmailFastOutline.vue'
 import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
@@ -149,8 +154,7 @@ export default {
 		IconEdit,
 		Action,
 		IconEmailFast,
-		Container,
-		Draggable,
+		VueDraggable,
 		AlertOctagonIcon,
 		TagIcon,
 		OpenInNewIcon,
@@ -336,14 +340,14 @@ export default {
 			this.actions.splice(index, 1, updated)
 		},
 
-		onDrop(e) {
-			const { removedIndex, addedIndex } = e
-			if (this.deletionAndMovingDisabled && (addedIndex === this.actions.length - 1 || removedIndex === this.actions.length - 1)) {
+		onReorder(e) {
+			// Prevent moving to/from the protected last position when delete/move actions are present
+			if (this.deletionAndMovingDisabled
+				&& (e.newIndex === this.actions.length - 1 || e.oldIndex === this.actions.length - 1)) {
+				const item = this.actions.splice(e.newIndex, 1)[0]
+				this.actions.splice(e.oldIndex, 0, item)
 				return
 			}
-			const movedItem = this.actions[removedIndex]
-			this.actions.splice(removedIndex, 1)
-			this.actions.splice(addedIndex, 0, movedItem)
 			this.actions = this.actions.map((action, index) => ({ ...action, order: index + 1 }))
 		},
 
