@@ -4,11 +4,8 @@
 -->
 <template>
 	<form id="account-form" @submit.prevent="onSubmit">
-		<Tabs
-			:options="{ useUrlFragment: false, defaultTabHash: settingsPage ? 'manual' : 'auto' }"
-			cache-lifetime="0"
-			@changed="onModeChanged">
-			<Tab id="auto" key="auto" :name="t('mail', 'Auto')">
+		<NcTabs v-model="mode" @update:modelValue="onModeChanged">
+			<NcTab id="auto" :name="t('mail', 'Auto')">
 				<NcInputField
 					id="auto-name"
 					v-model="accountName"
@@ -43,8 +40,8 @@
 					:disabled="loading">
 					{{ t('mail', 'Enable mark as important classification') }}
 				</NcCheckboxRadioSwitch>
-			</Tab>
-			<Tab id="manual" key="manual" :name="t('mail', 'Manual')">
+			</NcTab>
+			<NcTab id="manual" :name="t('mail', 'Manual')">
 				<NcInputField
 					id="man-name"
 					v-model="accountName"
@@ -231,8 +228,8 @@
 					:disabled="loading">
 					{{ t('mail', 'Enable mark as important classification') }}
 				</NcCheckboxRadioSwitch>
-			</Tab>
-		</Tabs>
+			</NcTab>
+		</NcTabs>
 		<div v-if="isGoogleAccount && !googleOauthUrl" class="account-form__google-sso">
 			{{ t('mail', 'Google requires OAuth authentication. If your Nextcloud admin has not configured Google OAuth, you can use a Google App Password instead.') }}
 		</div>
@@ -278,9 +275,8 @@
 <script>
 import { loadState } from '@nextcloud/initial-state'
 import { translate as t } from '@nextcloud/l10n'
-import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcCheckboxRadioSwitch, NcInputField, NcPasswordField } from '@nextcloud/vue'
+import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcCheckboxRadioSwitch, NcInputField, NcPasswordField, NcTab, NcTabs } from '@nextcloud/vue'
 import { mapState, mapStores } from 'pinia'
-import { Tab, Tabs } from 'vue-tabs-component'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import { CONSENT_ABORTED, getUserConsent } from '../integration/oauth.js'
 import logger from '../logger.js'
@@ -298,8 +294,8 @@ export default {
 		NcPasswordField,
 		NcInputField,
 		NcCheckboxRadioSwitch,
-		Tab,
-		Tabs,
+		NcTab,
+		NcTabs,
 		ButtonVue,
 		IconLoading,
 		IconCheck,
@@ -335,7 +331,7 @@ export default {
 		return {
 			loading: false,
 			loadingMessage: undefined,
-			mode: 'auto',
+			mode: this.account !== undefined ? 'manual' : 'auto',
 			accountName: this.displayName,
 			emailAddress: this.email,
 			classificationEnabled: fromAccountOr('classificationEnabled', loadState('mail', 'importance_classification_default', true)),
@@ -442,10 +438,8 @@ export default {
 	},
 
 	methods: {
-		onModeChanged(e) {
-			this.mode = e.tab.id
-
-			if (this.mode === 'manual') {
+		onModeChanged(tabId) {
+			if (tabId === 'manual') {
 				// IMAP
 				if (this.manualConfig.imapUser === '') {
 					this.manualConfig.imapUser = this.emailAddress
@@ -739,39 +733,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-:deep(.tabs-component-tabs) {
-	display: flex;
-}
-
-:deep(.tabs-component-tab) {
-	flex-grow: 1;
-	text-align: center;
-	color: var(--color-text-lighter);
-	margin-bottom: calc(var(--default-grid-baseline) * 2 + var(--default-grid-baseline) / 2);
-}
-
-:deep(.tabs-component-tab.is-active) {
-	border-bottom: var(--border-width-input) solid black;
-	font-weight: bold;
-}
-
 :deep(.input-field) {
 	margin: calc(var(--default-grid-baseline) * 3) 0;
-}
-
-.tabs-component-panels {
-	padding-top: calc(var(--default-grid-baseline) * 5);
-}
-
-.tabs-component-panels label {
-	text-align: start;
-	width: 100%;
-	display: inline-block;
-}
-
-.tabs-component-panels input,
-.tabs-component-panels select {
-	margin-bottom: calc(var(--default-grid-baseline) * 2);
 }
 </style>
 
