@@ -242,7 +242,7 @@
 							:mailbox="mailbox"
 							:with-select="false"
 							:with-show-source="true"
-							:more-actions-open.sync="moreActionsOpen"
+							v-model:more-actions-open="moreActionsOpen"
 							@reply="onReply('', false, false)"
 							@delete="$emit('delete', envelope.databaseId)"
 							@show-source-modal="onShowSourceModal"
