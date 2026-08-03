@@ -204,6 +204,7 @@ import { NcAppContent as AppContent, NcAppContentList as AppContentList, NcButto
 import addressParser from 'address-rfc2822'
 import mitt from 'mitt'
 import { mapStores } from 'pinia'
+import { markRaw } from 'vue'
 import IconInfo from 'vue-material-design-icons/InformationOutline.vue'
 import Mailbox from './Mailbox.vue'
 import NoMessageSelected from './NoMessageSelected.vue'
@@ -266,7 +267,7 @@ export default {
 			importantInfo: t('mail', 'Messages will automatically be marked as important using AI. The system learns from which messages you interact with or mark as important. In the beginning you might have to manually change the importance to teach it, but it will improve over time'),
 			favoritesInfo: t('mail', 'Messages that you marked as favorite will be shown at the top of folders. You can disable this behavior in the app settings'),
 			followupInfo: t('mail', 'AI identifies messages sent by you that likely require a reply but did not receive one after a couple of days and shows them here'),
-			bus: mitt(),
+			bus: markRaw(mitt()),
 			searchQuery: undefined,
 			shortkeys: {
 				del: ['del'],

@@ -513,8 +513,7 @@ import trimStart from 'lodash/fp/trimCharsStart.js'
 import uniqBy from 'lodash/fp/uniqBy.js'
 import mitt from 'mitt'
 import { mapState, mapStores } from 'pinia'
-import Vue from 'vue'
-import Autosize from 'vue-autosize'
+import { markRaw } from 'vue'
 import { NcReferencePickerModal } from '@nextcloud/vue/components/NcRichText'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
 import IconFolder from 'vue-material-design-icons/FolderOutline.vue'
@@ -548,8 +547,6 @@ import textBlockSvg from './../../img/text_snippet.svg'
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
 const NO_ALIAS_SET = -1
-
-Vue.use(Autosize)
 
 export default {
 	name: 'Composer',
@@ -739,7 +736,7 @@ export default {
 			selectTo: this.to,
 			selectCc: this.cc,
 			selectBcc: this.bcc,
-			bus: mitt(),
+			bus: markRaw(mitt()),
 			encrypt: false,
 			mailvelope: {
 				available: false,

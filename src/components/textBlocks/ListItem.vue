@@ -118,6 +118,7 @@ import { NcActionButton, NcAvatar, NcButton, NcDialog, NcInputField, NcListItem,
 import debounce from 'lodash/fp/debounce.js'
 import mitt from 'mitt'
 import { mapStores } from 'pinia'
+import { markRaw } from 'vue'
 import AccountMultiple from 'vue-material-design-icons/AccountMultiple.vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import IconClose from 'vue-material-design-icons/Close.vue'
@@ -176,7 +177,7 @@ export default {
 			saveLoading: false,
 			share: null,
 			suggestions: [],
-			bus: mitt(),
+			bus: markRaw(mitt()),
 		}
 	},
 

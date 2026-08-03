@@ -308,6 +308,7 @@ import {
 } from '@nextcloud/vue'
 import mitt from 'mitt'
 import { mapState, mapStores } from 'pinia'
+import { markRaw } from 'vue'
 import IconArrow from 'vue-material-design-icons/ArrowRight.vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import IconClose from 'vue-material-design-icons/Close.vue'
@@ -390,7 +391,7 @@ export default {
 			selectedAccount: null,
 			mailvelopeIsAvailable: false,
 			trapElements: [],
-			bus: mitt(),
+			bus: markRaw(mitt()),
 			textBlockDialogOpen: false,
 			localTextBlock: {
 				title: '',

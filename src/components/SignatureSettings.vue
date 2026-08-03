@@ -63,6 +63,7 @@
 import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcSelect } from '@nextcloud/vue'
 import mitt from 'mitt'
 import { mapStores } from 'pinia'
+import { markRaw } from 'vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import TextEditor from './TextEditor.vue'
 import logger from '../logger.js'
@@ -89,7 +90,7 @@ export default {
 	data() {
 		return {
 			loading: false,
-			bus: mitt(),
+			bus: markRaw(mitt()),
 			identity: null,
 			signature: '',
 			signatureAboveQuote: this.account.signatureAboveQuote,

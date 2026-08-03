@@ -75,6 +75,12 @@ const mimes = [
 
 export default {
 	name: 'ComposerAttachments',
+
+	model: {
+		prop: 'modelValue',
+		event: 'update:modelValue',
+	},
+
 	components: {
 		FilePicker,
 		ComposerAttachment,
@@ -83,7 +89,7 @@ export default {
 	},
 
 	props: {
-		value: {
+		modelValue: {
 			type: Array,
 			required: true,
 		},
@@ -184,7 +190,7 @@ export default {
 		this.bus.on('on-add-cloud-attachment', this.openAttachementPicker)
 		this.bus.on('on-add-message-as-attachment', this.onAddMessageAsAttachment)
 		this.bus.on('on-add-local-files', this.addLocalFiles)
-		this.value.map((attachment) => {
+		this.modelValue.map((attachment) => {
 			this.attachments.push({
 				id: attachment.id,
 				fileName: attachment.fileName,
@@ -215,11 +221,11 @@ export default {
 		},
 
 		emitNewAttachments(attachments) {
-			this.$emit('input', this.value.concat(attachments))
+			this.$emit('update:modelValue', this.modelValue.concat(attachments))
 		},
 
 		totalSizeOfUpload() {
-			return Object.values(this.value).reduce((acc, upload) => {
+			return Object.values(this.modelValue).reduce((acc, upload) => {
 				if (!upload.type === 'local') {
 					// Ignore link shares
 					return acc
@@ -430,8 +436,8 @@ export default {
 			this.attachments = this.attachments.filter((a) => a !== attachment)
 
 			this.$emit(
-				'input',
-				this.value.filter((a) => {
+				'update:modelValue',
+				this.modelValue.filter((a) => {
 					if (val.type === 'cloud') {
 						return a.fileName !== val.fileName
 					} else {

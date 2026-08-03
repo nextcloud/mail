@@ -124,6 +124,7 @@ import { generateUrl } from '@nextcloud/router'
 import { NcButton as ButtonVue, NcDateTimePicker as DatetimePicker } from '@nextcloud/vue'
 import mitt from 'mitt'
 import { mapStores } from 'pinia'
+import { markRaw } from 'vue'
 import CheckIcon from 'vue-material-design-icons/Check.vue'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
 import TextEditor from './TextEditor.vue'
@@ -171,7 +172,7 @@ export default {
 			errorMessage: '',
 			hasPersonalAbsenceSettings: nextcloudVersion >= 28 && enableSystemOutOfOffice,
 			personalAbsenceSettingsUrl: generateUrl('/settings/user/availability'),
-			textEditorDummyBus: mitt(),
+			textEditorDummyBus: markRaw(mitt()),
 		}
 	},
 
