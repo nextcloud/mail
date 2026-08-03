@@ -713,6 +713,7 @@ OC.L10N.register(
     "Could not load your message" : "تعذّر تحميل رسالتك",
     "Could not load the desired message" : "تعذّر تحميل الرسالة المطلوبة",
     "Could not load the message" : "تعذّر تحميل الرسالة",
+    "Date:" : "التاريخ:",
     "Tag name cannot be empty" : "اسم السِّمَة لا يمكن أن يكون فارغاً",
     "Tag name is a hidden system tag" : "اسم الوَسْم هو وَسْمٌ نِظَامِيٌّ مَخْفِيٌّ hidden system tag",
     "Tag already exists" : "الوَسْمُ موجود سلفاً",

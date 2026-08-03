@@ -929,6 +929,8 @@ OC.L10N.register(
     "Could not load the desired message" : "Não foi possível carregar a mensagem desejada",
     "Could not load the message" : "Não foi possível carregar a mensagem",
     "Date:" : "Data:",
+    "Printing from the browser menu is not supported" : "A impressão a partir do menu do navegador não é compatível",
+    "To print this email, press {shortcut}, or use the \"Print message\" action in the message menu." : "Para imprimir este e-mail, pressione {shortcut} ou use a opção “Imprimir mensagem” no menu da mensagem.",
     "Yesterday {time}" : "Ontem, {time}",
     "Tag name cannot be empty" : "O nome da etiqueta não pode ficar vazio",
     "Tag name is a hidden system tag" : "O nome da etiqueta é uma etiqueta de sistema oculta",
