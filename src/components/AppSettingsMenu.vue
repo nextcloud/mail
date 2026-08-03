@@ -13,12 +13,17 @@
 			:open.sync="showSettings">
 			<NcAppSettingsSection id="general" :name="t('mail', 'General')">
 				<NcButton
+					v-if="canRegisterProtocolHandler === true"
 					variant="secondary"
 					:aria-label="t('mail', 'Set as default mail app')"
 					wide
 					@click="registerProtocolHandler">
 					{{ t('mail', 'Set as default mail app') }}
 				</NcButton>
+				<NcNoteCard
+					v-else
+					type="warning"
+					:text="canRegisterProtocolHandler" />
 
 				<NcFormGroup :label="t('mail', 'Account settings')">
 					<NcFormBox>
@@ -409,6 +414,18 @@ export default {
 			'getSharedTextBlocks',
 		]),
 
+		canRegisterProtocolHandler() {
+			if (window.navigator.registerProtocolHandler !== undefined) {
+				return true
+			} else {
+				if (window.location.protocol !== 'https:') {
+					return t('mail', 'To use Nextcloud as your default mail application, your instance has to be secured with HTTPS')
+				} else {
+					return t('mail', "It looks like your browser doesn't support the application registration feature.")
+				}
+			}
+		},
+
 		useBottomReplies() {
 			return this.mainStore.getPreference('reply-mode', 'top') === 'bottom'
 		},
@@ -772,14 +789,12 @@ export default {
 		},
 
 		registerProtocolHandler() {
-			if (window.navigator.registerProtocolHandler) {
-				const url
-					= window.location.protocol + '//' + window.location.host + generateUrl('apps/mail/compose?uri=%s')
-				try {
-					window.navigator.registerProtocolHandler('mailto', url, OC.theme.name + ' Mail')
-				} catch (err) {
-					Logger.error('could not register protocol handler', { err })
-				}
+			const url = new URL(generateUrl('apps/mail/compose?uri=%s'), window.location.origin).href
+			try {
+				window.navigator.registerProtocolHandler('mailto', url, OC.theme.name + ' Mail')
+			} catch (err) {
+				showError(t('mail', 'Could not register protocol handler'))
+				Logger.error('could not register protocol handler', { err })
 			}
 		},
 
