@@ -13,6 +13,7 @@
 			:open.sync="showSettings">
 			<NcAppSettingsSection id="general" :name="t('mail', 'General')">
 				<NcButton
+					v-if="canRegisterProtocolHandler"
 					variant="secondary"
 					:aria-label="t('mail', 'Set as default mail app')"
 					wide
@@ -409,6 +410,10 @@ export default {
 			'getSharedTextBlocks',
 		]),
 
+		canRegisterProtocolHandler() {
+			return window.navigator.registerProtocolHandler !== undefined
+		},
+
 		useBottomReplies() {
 			return this.mainStore.getPreference('reply-mode', 'top') === 'bottom'
 		},
@@ -772,14 +777,13 @@ export default {
 		},
 
 		registerProtocolHandler() {
-			if (window.navigator.registerProtocolHandler) {
-				const url
-					= window.location.protocol + '//' + window.location.host + generateUrl('apps/mail/compose?uri=%s')
-				try {
-					window.navigator.registerProtocolHandler('mailto', url, OC.theme.name + ' Mail')
-				} catch (err) {
-					Logger.error('could not register protocol handler', { err })
-				}
+			const url
+				= window.location.protocol + '//' + window.location.host + generateUrl('apps/mail/compose?uri=%s')
+			try {
+				window.navigator.registerProtocolHandler('mailto', url, OC.theme.name + ' Mail')
+			} catch (err) {
+				showError(t('mail', 'Could not register protocol handler'))
+				Logger.error('could not register protocol handler', { err })
 			}
 		},
 
