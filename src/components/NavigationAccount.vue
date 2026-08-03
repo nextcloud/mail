@@ -4,8 +4,7 @@
 -->
 
 <template>
-	<Fragment>
-		<NcAppNavigationCaption
+	<NcAppNavigationCaption
 			v-if="visible"
 			:id="id"
 			:key="id"
@@ -102,7 +101,6 @@
 			:scroll-to-section="showSettingsSection"
 			@update:open="showAccountSettings($event)" />
 		<DelegationModal v-if="showDelegationModal" :account="account" @close="showDelegationModal = false" />
-	</Fragment>
 </template>
 
 <script>
@@ -111,7 +109,6 @@ import { formatFileSize } from '@nextcloud/files'
 import { generateUrl } from '@nextcloud/router'
 import { NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionText as ActionText, NcLoadingIcon as IconLoading, NcAppNavigationCaption, NcIconSvgWrapper } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
-import { Fragment } from 'vue-frag'
 import MenuDown from 'vue-material-design-icons/ChevronDown.vue'
 import MenuUp from 'vue-material-design-icons/ChevronUp.vue'
 import IconSettings from 'vue-material-design-icons/CogOutline.vue'
@@ -127,7 +124,6 @@ export default {
 	name: 'NavigationAccount',
 	components: {
 		NcAppNavigationCaption,
-		Fragment,
 		ActionButton,
 		ActionCheckbox,
 		ActionInput,
