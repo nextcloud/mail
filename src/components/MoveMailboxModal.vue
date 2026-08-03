@@ -5,7 +5,7 @@
 <template>
 	<MailboxPicker
 		:account="account"
-		:selected.sync="destMailboxId"
+		v-model:selected="destMailboxId"
 		:loading="moving"
 		:picked-mailbox="mailbox"
 		:allow-root="true"
