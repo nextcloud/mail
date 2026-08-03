@@ -11,18 +11,18 @@
 
 		<Ckeditor
 			v-if="ready"
-			:value="value"
+			:model-value="value"
 			:config="config"
 			:editor="editor"
 			:disabled="disabled"
 			class="editor"
-			@input="onEditorInput"
+			@update:model-value="onEditorInput"
 			@ready="onEditorReady" />
 	</div>
 </template>
 
 <script>
-import CKEditor from '@ckeditor/ckeditor5-vue2'
+import { Ckeditor } from '@ckeditor/ckeditor5-vue'
 import { getLanguage } from '@nextcloud/l10n'
 import { emojiAddRecent, emojiSearch } from '@nextcloud/vue'
 import {
@@ -67,7 +67,7 @@ import 'ckeditor5/ckeditor5.css'
 export default {
 	name: 'TextEditor',
 	components: {
-		Ckeditor: CKEditor.component,
+		Ckeditor,
 	},
 
 	inject: {

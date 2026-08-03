@@ -23,7 +23,7 @@
     "extends @nextcloud/browserslist-config"
   ],
   "dependencies": {
-    "@ckeditor/ckeditor5-vue2": "^3.0.1",
+    "@ckeditor/ckeditor5-vue": "^8.2.0",
     "@iframe-resizer/child": "^5.5.9",
     "@iframe-resizer/parent": "^5.5.9",
     "@mdi/svg": "^7.4.47",
