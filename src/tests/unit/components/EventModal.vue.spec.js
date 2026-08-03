@@ -4,14 +4,9 @@
  */
 
 import { createTestingPinia } from '@pinia/testing'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { PiniaVuePlugin, setActivePinia } from 'pinia'
+import { shallowMount } from '@vue/test-utils'
+import { setActivePinia } from 'pinia'
 import EventModal from '../../../components/EventModal.vue'
-import Nextcloud from '../../../mixins/Nextcloud.js'
-
-const localVue = createLocalVue()
-localVue.use(PiniaVuePlugin)
-localVue.mixin(Nextcloud)
 
 describe('EventModal', () => {
 	beforeEach(() => {
@@ -20,8 +15,7 @@ describe('EventModal', () => {
 
 	it('renders default values', () => {
 		const view = shallowMount(EventModal, {
-			localVue,
-			propsData: {
+			props: {
 				envelope: {
 					subject: 'Sub?',
 					previewText: 'prev',

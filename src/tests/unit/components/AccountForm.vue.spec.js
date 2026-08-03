@@ -3,18 +3,11 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { createPinia, PiniaVuePlugin } from 'pinia'
+import { shallowMount } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
 import AccountForm from '../../../components/AccountForm.vue'
-import Nextcloud from '../../../mixins/Nextcloud.js'
 import { queryIspdb, queryMx, testConnectivity } from '../../../service/AutoConfigService.js'
 import useMainStore from '../../../store/mainStore.js'
-
-const localVue = createLocalVue()
-
-localVue.mixin(Nextcloud)
-localVue.use(PiniaVuePlugin)
-const pinia = createPinia()
 
 vi.mock('../../../service/AutoConfigService.js')
 
@@ -24,17 +17,16 @@ describe('AccountForm', () => {
 	let view
 
 	beforeEach(() => {
+		setActivePinia(createPinia())
+
 		save = vi.fn()
 
 		view = shallowMount(AccountForm, {
-			propsData: {
+			props: {
 				displayName: 'Tom Turbo',
 				email: 'tom@tom.turbo',
 				save,
 			},
-			localVue,
-			pinia,
-			store,
 		})
 
 		store = useMainStore()

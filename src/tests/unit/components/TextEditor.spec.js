@@ -3,24 +3,18 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import { Paragraph } from 'ckeditor5'
 import mitt from 'mitt'
 import { vi } from 'vitest'
 import TextEditor from '../../../components/TextEditor.vue'
 import MailPlugin from '../../../ckeditor/mail/MailPlugin.js'
-import Nextcloud from '../../../mixins/Nextcloud.js'
 import VirtualTestEditor from '../../virtualtesteditor.js'
-
-const localVue = createLocalVue()
-
-localVue.mixin(Nextcloud)
 
 describe('TextEditor', () => {
 	it('shallow mounts', async () => {
-		const wrapper = shallowMount(TextEditor, {
-			localVue,
-			propsData: {
+		shallowMount(TextEditor, {
+			props: {
 				value: 'bonjour',
 				bus: mitt(),
 			},
@@ -29,8 +23,7 @@ describe('TextEditor', () => {
 
 	it('throw when editor not ready', async () => {
 		const wrapper = shallowMount(TextEditor, {
-			localVue,
-			propsData: {
+			props: {
 				value: 'bonjour',
 				bus: mitt(),
 			},
@@ -43,8 +36,7 @@ describe('TextEditor', () => {
 
 	it('emit event on input', async () => {
 		const wrapper = shallowMount(TextEditor, {
-			localVue,
-			propsData: {
+			props: {
 				value: 'bonjour',
 				bus: mitt(),
 			},
@@ -58,8 +50,7 @@ describe('TextEditor', () => {
 
 	it('emit event on ready', async () => {
 		const wrapper = shallowMount(TextEditor, {
-			localVue,
-			propsData: {
+			props: {
 				value: 'bonjour',
 				bus: mitt(),
 			},
@@ -92,8 +83,7 @@ describe('TextEditor', () => {
 	})
 	it('register conversion to add margin: 0px to every <p> element', async () => {
 		const wrapper = shallowMount(TextEditor, {
-			localVue,
-			propsData: {
+			props: {
 				value: '',
 				bus: mitt(),
 			},
@@ -130,11 +120,12 @@ describe('TextEditor', () => {
 		vi.useFakeTimers()
 
 		const wrapper = shallowMount(TextEditor, {
-			localVue,
-			provide: {
-				addToFocusTrap: vi.fn(),
+			global: {
+				provide: {
+					addToFocusTrap: vi.fn(),
+				},
 			},
-			propsData: {
+			props: {
 				value: '<p>bonjour</p>',
 				html: true,
 				bus: mitt(),

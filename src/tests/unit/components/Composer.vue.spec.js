@@ -3,23 +3,40 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { createPinia, PiniaVuePlugin } from 'pinia'
+import { shallowMount } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
 import Composer from '../../../components/Composer.vue'
-import Nextcloud from '../../../mixins/Nextcloud.js'
 import useMainStore from '../../../store/mainStore.js'
-
-const localVue = createLocalVue()
-
-localVue.mixin(Nextcloud)
-localVue.use(PiniaVuePlugin)
-const pinia = createPinia()
 
 const $route = {
 	params: {
 		mailboxId: '123', // String because it comes from URL params
 	},
 }
+
+const defaultAccount = {
+	id: 123,
+	editorMode: 'plaintext',
+	isUnified: false,
+	aliases: [],
+	connectionStatus: true,
+	emailAddress: 'test@example.com',
+	name: 'Test Account',
+}
+
+const mountComposer = (extraProps = {}, computedOverrides = {}) => shallowMount(
+	Object.keys(computedOverrides).length
+		? { extends: Composer, computed: computedOverrides }
+		: Composer,
+	{
+		props: {
+			isFirstOpen: true,
+			accounts: [defaultAccount],
+			...extraProps,
+		},
+		global: { mocks: { $route } },
+	},
+)
 
 describe('Composer', () => {
 	let store
@@ -29,28 +46,9 @@ describe('Composer', () => {
 			value: 0,
 		})
 
-		const defaultAccount = {
-			id: 123,
-			editorMode: 'plaintext',
-			isUnified: false,
-			aliases: [],
-			connectionStatus: true,
-			emailAddress: 'test@example.com',
-			name: 'Test Account',
-		}
+		setActivePinia(createPinia())
 
-		shallowMount(Composer, {
-			propsData: {
-				isFirstOpen: true,
-				accounts: [defaultAccount],
-			},
-			mocks: {
-				$route,
-			},
-			localVue,
-			pinia,
-			store,
-		})
+		mountComposer()
 		store = useMainStore()
 
 		// Add a mailbox to the store for the route param to reference
@@ -67,25 +65,7 @@ describe('Composer', () => {
 	})
 
 	it('does not drop the reply message ID', () => {
-		const view = shallowMount(Composer, {
-			propsData: {
-				inReplyToMessageId: 'abc123',
-				isFirstOpen: true,
-				accounts: [
-					{
-						id: 123,
-						editorMode: 'plaintext',
-						isUnified: false,
-						aliases: [],
-					},
-				],
-			},
-			mocks: {
-				$route,
-			},
-			store,
-			localVue,
-		})
+		const view = mountComposer({ inReplyToMessageId: 'abc123' })
 
 		const composerData = view.vm.getMessageData()
 
@@ -93,25 +73,7 @@ describe('Composer', () => {
 	})
 
 	it('disabled the send button', () => {
-		const view = shallowMount(Composer, {
-			propsData: {
-				inReplyToMessageId: 'abc123',
-				isFirstOpen: true,
-				accounts: [
-					{
-						id: 123,
-						editorMode: 'plaintext',
-						isUnified: false,
-						aliases: [],
-					},
-				],
-			},
-			mocks: {
-				$route,
-			},
-			store,
-			localVue,
-		})
+		const view = mountComposer({ inReplyToMessageId: 'abc123' })
 
 		const canSend = view.vm.canSend
 
@@ -119,27 +81,9 @@ describe('Composer', () => {
 	})
 
 	it('enables the send button if data is entered', () => {
-		const view = shallowMount(Composer, {
-			propsData: {
-				inReplyToMessageId: 'abc123',
-				to: [
-					{ label: 'test', email: 'test@domain.tld' },
-				],
-				isFirstOpen: true,
-				accounts: [
-					{
-						id: 123,
-						editorMode: 'plaintext',
-						isUnified: false,
-						aliases: [],
-					},
-				],
-			},
-			mocks: {
-				$route,
-			},
-			store,
-			localVue,
+		const view = mountComposer({
+			inReplyToMessageId: 'abc123',
+			to: [{ label: 'test', email: 'test@domain.tld' }],
 		})
 
 		const canSend = view.vm.canSend
@@ -148,28 +92,8 @@ describe('Composer', () => {
 	})
 
 	it('should not S/MIME sign messages if there are no certs', () => {
-		const view = shallowMount(Composer, {
-			propsData: {
-				isFirstOpen: true,
-				accounts: [
-					{
-						id: 123,
-						editorMode: 'plaintext',
-						isUnified: false,
-						aliases: [],
-					},
-				],
-			},
-			mocks: {
-				$route,
-			},
-			computed: {
-				smimeCertificateForCurrentAlias() {
-					return undefined
-				},
-			},
-			store,
-			localVue,
+		const view = mountComposer({}, {
+			smimeCertificateForCurrentAlias() { return undefined },
 		})
 
 		view.vm.wantsSmimeSign = false
@@ -180,28 +104,8 @@ describe('Composer', () => {
 	})
 
 	it('should S/MIME sign messages if there are certs', () => {
-		const view = shallowMount(Composer, {
-			propsData: {
-				isFirstOpen: true,
-				accounts: [
-					{
-						id: 123,
-						editorMode: 'plaintext',
-						isUnified: false,
-						aliases: [],
-					},
-				],
-			},
-			mocks: {
-				$route,
-			},
-			computed: {
-				smimeCertificateForCurrentAlias() {
-					return { foo: 'bar' }
-				},
-			},
-			store,
-			localVue,
+		const view = mountComposer({}, {
+			smimeCertificateForCurrentAlias() { return { foo: 'bar' } },
 		})
 
 		view.vm.wantsSmimeSign = true
@@ -212,28 +116,8 @@ describe('Composer', () => {
 	})
 
 	it('should not S/MIME encrypt messages if there are no certs', () => {
-		const view = shallowMount(Composer, {
-			propsData: {
-				isFirstOpen: true,
-				accounts: [
-					{
-						id: 123,
-						editorMode: 'plaintext',
-						isUnified: false,
-						aliases: [],
-					},
-				],
-			},
-			mocks: {
-				$route,
-			},
-			computed: {
-				smimeCertificateForCurrentAlias() {
-					return undefined
-				},
-			},
-			store,
-			localVue,
+		const view = mountComposer({}, {
+			smimeCertificateForCurrentAlias() { return undefined },
 		})
 
 		view.vm.wantsSmimeEncrypt = false
@@ -244,31 +128,9 @@ describe('Composer', () => {
 	})
 
 	it('should not S/MIME encrypt messages if there are missing recipient certs', () => {
-		const view = shallowMount(Composer, {
-			propsData: {
-				isFirstOpen: true,
-				accounts: [
-					{
-						id: 123,
-						editorMode: 'plaintext',
-						isUnified: false,
-						aliases: [],
-					},
-				],
-			},
-			mocks: {
-				$route,
-			},
-			computed: {
-				smimeCertificateForCurrentAlias() {
-					return { foo: 'bar' }
-				},
-				missingSmimeCertificatesForRecipients() {
-					return ['john@foo.bar']
-				},
-			},
-			store,
-			localVue,
+		const view = mountComposer({}, {
+			smimeCertificateForCurrentAlias() { return { foo: 'bar' } },
+			missingSmimeCertificatesForRecipients() { return ['john@foo.bar'] },
 		})
 
 		view.vm.wantsSmimeEncrypt = false
@@ -279,31 +141,9 @@ describe('Composer', () => {
 	})
 
 	it('should S/MIME sign messages if there are certs', () => {
-		const view = shallowMount(Composer, {
-			propsData: {
-				isFirstOpen: true,
-				accounts: [
-					{
-						id: 123,
-						editorMode: 'plaintext',
-						isUnified: false,
-						aliases: [],
-					},
-				],
-			},
-			mocks: {
-				$route,
-			},
-			computed: {
-				smimeCertificateForCurrentAlias() {
-					return { foo: 'bar' }
-				},
-				missingSmimeCertificatesForRecipients() {
-					return []
-				},
-			},
-			store,
-			localVue,
+		const view = mountComposer({}, {
+			smimeCertificateForCurrentAlias() { return { foo: 'bar' } },
+			missingSmimeCertificatesForRecipients() { return [] },
 		})
 
 		view.vm.wantsSmimeEncrypt = true
@@ -314,24 +154,7 @@ describe('Composer', () => {
 	})
 
 	it('generate title for submit button', () => {
-		const view = shallowMount(Composer, {
-			propsData: {
-				isFirstOpen: true,
-				accounts: [
-					{
-						id: 123,
-						editorMode: 'plaintext',
-						isUnified: false,
-						aliases: [],
-					},
-				],
-			},
-			mocks: {
-				$route,
-			},
-			store,
-			localVue,
-		})
+		const view = mountComposer()
 
 		expect(view.vm.submitButtonTitle).toEqual('Send')
 
@@ -346,24 +169,7 @@ describe('Composer', () => {
 	})
 
 	it('generate title for submit button (send later)', () => {
-		const view = shallowMount(Composer, {
-			propsData: {
-				isFirstOpen: true,
-				accounts: [
-					{
-						id: 123,
-						editorMode: 'plaintext',
-						isUnified: false,
-						aliases: [],
-					},
-				],
-			},
-			mocks: {
-				$route,
-			},
-			store,
-			localVue,
-		})
+		const view = mountComposer()
 
 		view.vm.sendAtVal = '2023-01-01 14:00'
 
@@ -380,24 +186,7 @@ describe('Composer', () => {
 	})
 
 	it('does not open the recipient dropdown on focus without a search term', () => {
-		const view = shallowMount(Composer, {
-			propsData: {
-				isFirstOpen: true,
-				accounts: [
-					{
-						id: 123,
-						editorMode: 'plaintext',
-						isUnified: false,
-						aliases: [],
-					},
-				],
-			},
-			mocks: {
-				$route,
-			},
-			store,
-			localVue,
-		})
+		const view = mountComposer()
 
 		expect(view.vm.shouldOpenRecipientDropdown({
 			noDrop: false,
@@ -407,24 +196,7 @@ describe('Composer', () => {
 	})
 
 	it('opens the recipient dropdown once a search term is entered', () => {
-		const view = shallowMount(Composer, {
-			propsData: {
-				isFirstOpen: true,
-				accounts: [
-					{
-						id: 123,
-						editorMode: 'plaintext',
-						isUnified: false,
-						aliases: [],
-					},
-				],
-			},
-			mocks: {
-				$route,
-			},
-			store,
-			localVue,
-		})
+		const view = mountComposer()
 
 		expect(view.vm.shouldOpenRecipientDropdown({
 			noDrop: false,
@@ -434,25 +206,7 @@ describe('Composer', () => {
 	})
 
 	it('inserts the signature when composing a new message', () => {
-		const view = shallowMount(Composer, {
-			propsData: {
-				isFirstOpen: true,
-				isDraft: false,
-				accounts: [
-					{
-						id: 123,
-						editorMode: 'plaintext',
-						isUnified: false,
-						aliases: [],
-					},
-				],
-			},
-			mocks: {
-				$route,
-			},
-			store,
-			localVue,
-		})
+		const view = mountComposer({ isDraft: false })
 		const insertSignature = vi.spyOn(view.vm, 'insertSignature').mockImplementation(() => {})
 
 		view.vm.onEditorReady({ getData: () => '' })
@@ -461,25 +215,7 @@ describe('Composer', () => {
 	})
 
 	it('does not insert the signature when opening a draft', () => {
-		const view = shallowMount(Composer, {
-			propsData: {
-				isFirstOpen: true,
-				isDraft: true,
-				accounts: [
-					{
-						id: 123,
-						editorMode: 'plaintext',
-						isUnified: false,
-						aliases: [],
-					},
-				],
-			},
-			mocks: {
-				$route,
-			},
-			store,
-			localVue,
-		})
+		const view = mountComposer({ isDraft: true })
 		const insertSignature = vi.spyOn(view.vm, 'insertSignature').mockImplementation(() => {})
 
 		view.vm.onEditorReady({ getData: () => '' })
@@ -488,25 +224,7 @@ describe('Composer', () => {
 	})
 
 	it('inserts the signature on alias change even when opening a draft', () => {
-		const view = shallowMount(Composer, {
-			propsData: {
-				isFirstOpen: true,
-				isDraft: true,
-				accounts: [
-					{
-						id: 123,
-						editorMode: 'plaintext',
-						isUnified: false,
-						aliases: [],
-					},
-				],
-			},
-			mocks: {
-				$route,
-			},
-			store,
-			localVue,
-		})
+		const view = mountComposer({ isDraft: true })
 		const insertSignature = vi.spyOn(view.vm, 'insertSignature').mockImplementation(() => {})
 		view.vm.changeSignature = true
 
