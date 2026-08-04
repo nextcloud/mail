@@ -121,7 +121,7 @@ class SyncJob extends TimedJob {
 				->syncAll($account, true);
 			$this->protocolFactory
 				->messageConnector($account)
-				->syncAll($account, true);
+				->syncAll($account, false);
 		} catch (IncompleteSyncException $e) {
 			$this->logger->warning($e->getMessage(), [
 				'exception' => $e,
