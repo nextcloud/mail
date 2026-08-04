@@ -125,10 +125,13 @@ class Mailbox extends Entity implements JsonSerializable {
 	}
 
 	public function isCached(): bool {
-		return $this->getSyncNewToken() !== null
+		return (
+			$this->getSyncNewToken() !== null
 			&& $this->getSyncChangedToken() !== null
 			&& $this->getSyncVanishedToken() !== null
-			|| $this->getState() !== null;
+		) || (
+			$this->getState() !== null
+		);
 	}
 
 	private function isLockActive(?int $lock, int $now): bool {
