@@ -929,6 +929,8 @@ OC.L10N.register(
     "Could not load the desired message" : "無法載入所選的信件",
     "Could not load the message" : "無法載入信件",
     "Date:" : "日期：",
+    "Printing from the browser menu is not supported" : "不支援透過瀏覽器選單進行列印",
+    "To print this email, press {shortcut}, or use the \"Print message\" action in the message menu." : "要列印此電子郵件，請按 {shortcut}，或使用訊息選單內的「列印訊息」動作。",
     "Yesterday {time}" : "昨天 {time}",
     "Tag name cannot be empty" : "標籤名稱不可為空白",
     "Tag name is a hidden system tag" : "標籤名稱為隱藏的系統標籤",
