@@ -193,6 +193,11 @@ class Html {
 
 		$purifier = new HTMLPurifier($config);
 
+		// Downlevel-revealed conditionals are not comments, so no HTMLPurifier comment
+		// setting covers them and some libxml versions leave them as visible text.
+		// Keep the original on a PCRE error; purify(null) would silently return an empty body.
+		$mailBody = preg_replace('/<!\[\s*(?:end)?if\b[^\]]*\]\s*>/i', '', $mailBody) ?? $mailBody;
+
 		$result = $purifier->purify($mailBody);
 		// eat xml parse errors within HTMLPurifier
 		libxml_clear_errors();
