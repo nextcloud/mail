@@ -21,17 +21,17 @@
 			:name="t('mail', 'Alias to S/MIME certificate mapping')">
 			<CertificateSettings :account="account" />
 		</AppSettingsSection>
-		<AppSettingsSection id="signature" :name="t('mail', 'Signature')">
-			<p class="settings-hint">
-				{{ t('mail', 'A signature is added to the text of new messages and replies.') }}
-			</p>
-			<SignatureSettings :account="account" />
-		</AppSettingsSection>
 		<AppSettingsSection id="writing-mode" :name="t('mail', 'Writing mode')">
 			<p class="settings-hint">
 				{{ t('mail', 'Preferred writing mode for new messages and replies.') }}
 			</p>
 			<EditorSettings :account="account" />
+		</AppSettingsSection>
+		<AppSettingsSection id="signature" :name="t('mail', 'Signature')">
+			<p class="settings-hint">
+				{{ t('mail', 'A signature is added to the text of new messages and replies.') }}
+			</p>
+			<SignatureSettings :account="account" />
 		</AppSettingsSection>
 		<AppSettingsSection id="default-folders" :name=" t('mail', 'Default folders')">
 			<p class="settings-hint">
