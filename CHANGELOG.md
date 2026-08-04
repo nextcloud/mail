@@ -1,3 +1,24 @@
+## [5.10.11](https://github.com/nextcloud/mail/compare/v5.10.10...v5.10.11) (2026-08-04)
+
+
+### Bug Fixes
+
+* **composer:** keep signature images by switching to rich text ([15ffd98](https://github.com/nextcloud/mail/commit/15ffd9814afe59283f3eac810c53578905431c1f))
+* **dns:** Update public suffix list ([5addb4c](https://github.com/nextcloud/mail/commit/5addb4c35dce898780fd5384a90353a41fe782f4))
+* **imap:** use PEEK when fetching attachment/body content ([2199647](https://github.com/nextcloud/mail/commit/21996476643ad42391e80707e59baf0229bea266))
+* **imip:** log why an iMIP message was flagged as failed ([1d1adc0](https://github.com/nextcloud/mail/commit/1d1adc0e2e381125efe9c2e8040b9299116ad595))
+* **l10n:** Update translations from Transifex ([9f6f710](https://github.com/nextcloud/mail/commit/9f6f710807c4498165ca7ddeb621c031fd6bcc65))
+* **l10n:** Update translations from Transifex ([10d2c69](https://github.com/nextcloud/mail/commit/10d2c69064938bce660936c85342fe26425cdac2))
+* **l10n:** Update translations from Transifex ([b41564e](https://github.com/nextcloud/mail/commit/b41564e171221193e41246a7ebf8804d7d2a9274))
+* **l10n:** Update translations from Transifex ([7e741df](https://github.com/nextcloud/mail/commit/7e741df3a56c6e4ebfa7e5217af59c52c06c697e))
+* **l10n:** Update translations from Transifex ([c6df005](https://github.com/nextcloud/mail/commit/c6df005fe178d2da49e98306d73567d2da4e4e8c))
+* **mailbox:** Flag shared mailboxes as shared ([bdab249](https://github.com/nextcloud/mail/commit/bdab2499484c0e5edd5ad05425ce306098f64cf9))
+* **mailbox:** Ignore prefix-less namespaces in shared detection ([e87ae9f](https://github.com/nextcloud/mail/commit/e87ae9f8f0616701cf34ccf8981fdf34b41a36e9))
+* **settings:** bind signature editor to the account writing mode ([c9acf09](https://github.com/nextcloud/mail/commit/c9acf09cee21b34efe32bf6b0a65eaf20adbd1d6))
+* unify mail printing ([5350aac](https://github.com/nextcloud/mail/commit/5350aace31c02c6549ec3b4dde359e08481d420f))
+
+
+
 ## [5.10.10](https://github.com/nextcloud/mail/compare/v5.10.9...v5.10.10) (2026-07-28)
 
 
