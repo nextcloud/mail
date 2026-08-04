@@ -258,6 +258,10 @@ class MailboxSync {
 	private function isMailboxShared(?Horde_Imap_Client_Namespace_List $namespaces, Mailbox $mailbox): bool {
 		foreach (($namespaces ?? []) as $namespace) {
 			/** @var Horde_Imap_Client_Data_Namespace $namespace */
+			// An empty prefix would match every mailbox
+			if ($namespace->name === '') {
+				continue;
+			}
 			if (in_array($namespace->type, self::NON_PERSONAL_NAMESPACE_TYPES, true) && str_starts_with($mailbox->getName(), $namespace->name)) {
 				return true;
 			}
