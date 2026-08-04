@@ -158,6 +158,70 @@ class HtmlTest extends TestCase {
 		$this->assertStringContainsString('data-cid="image001@example.com"', $result);
 	}
 
+	/**
+	 * Non-Outlook renderers ignore the <![if !mso]> markers and show the content
+	 * between them. Some libxml versions leave the markers in as visible text.
+	 */
+	public function testSanitizeHtmlMailBodyStripsDownlevelRevealedConditionals(): void {
+		$urlGenerator = $this->createStub(IURLGenerator::class);
+		$request = $this->createStub(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+		$mailBody = <<<'HTML'
+			<!DOCTYPE html>
+			<html>
+			<head><meta charset="utf-8"><title>MSO conditional rendering test</title></head>
+			<body style="font-family: Arial, sans-serif;">
+			<p>Hello,</p>
+			<p>There is a new announcement from EXAMPLE ORGANISATION.</p>
+			<![if !mso]>
+			<p><span>EXAMPLE INFORMATION SHEET</span></p>
+			<![endif]>
+			<!--[if mso]>
+			<p>Alternative content for Microsoft Outlook.</p>
+			<![endif]-->
+			<![if !mso]>
+			<a href="https://example.com/announcement">Review announcement</a>
+			<![endif]>
+			</body>
+			</html>
+			HTML;
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$result = $html->sanitizeHtmlMailBody(42, $mailBody, []);
+
+		self::assertStringNotContainsString('[if !mso]', $result);
+		self::assertStringNotContainsString('[endif]', $result);
+		self::assertStringContainsString('EXAMPLE INFORMATION SHEET', $result);
+		self::assertStringContainsString('Review announcement', $result);
+		self::assertStringNotContainsString('Alternative content', $result);
+	}
+
+	/**
+	 * @dataProvider downlevelRevealedConditionalProvider
+	 */
+	public function testSanitizeHtmlMailBodyStripsConditionalVariants(string $conditional): void {
+		$urlGenerator = $this->createStub(IURLGenerator::class);
+		$request = $this->createStub(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$result = $html->sanitizeHtmlMailBody(42, "$conditional<p>Kept</p>", []);
+
+		self::assertDoesNotMatchRegularExpression('/<!\[\s*(?:end)?if\b/i', $result);
+		self::assertStringNotContainsString('&lt;!', $result);
+		self::assertStringContainsString('<p>Kept</p>', $result);
+	}
+
+	public function downlevelRevealedConditionalProvider(): array {
+		return [
+			'revealed if' => ['<![if !mso]>'],
+			'revealed endif' => ['<![endif]>'],
+			'uppercase' => ['<![IF !MSO]>'],
+			'padded brackets' => ['<![ endif ]>'],
+			'version gate' => ['<![if gte mso 9]>'],
+		];
+	}
+
 	public function testSanitizeStyleSheet() {
 		$blockedUrl = '/apps/mail/img/blocked-image.png';
 		$urlGenerator = self::createMock(IURLGenerator::class);
