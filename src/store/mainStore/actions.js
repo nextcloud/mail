@@ -2034,6 +2034,7 @@ export default function mainStoreActions() {
 			this.composerSessionId = undefined
 			this.newMessage = undefined
 			this.showMessageComposer = false
+			this.composerFlyIn = false
 		},
 		/**
 		 * Show composer modal if there is an ongoing session.

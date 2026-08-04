@@ -184,6 +184,9 @@ export default defineStore('outbox', {
 						logger.info('Attempting to stop sending message ' + message.id)
 						const stopped = await this.stopMessage({ message })
 						logger.info('Message ' + message.id + ' stopped', { message: stopped })
+						if (!window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches) {
+							this.mainStore.composerFlyIn = true
+						}
 						await this.mainStore.startComposerSession({
 							type: 'outbox',
 							data: { ...message },
