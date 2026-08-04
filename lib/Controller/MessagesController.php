@@ -225,7 +225,7 @@ class MessagesController extends Controller {
 
 		$json = $imapMessage->getFullMessage($id);
 
-		$itineraries = $this->itineraryService->getCached($account, $mailbox, $message->getUid());
+		$itineraries = $this->itineraryService->getCached($account, $mailbox, $message->getId());
 		if ($itineraries) {
 			$json['itineraries'] = $itineraries;
 		}
@@ -244,7 +244,7 @@ class MessagesController extends Controller {
 		}
 		$json['smime'] = $smimeData;
 
-		$dkimResult = $this->dkimService->getCached($account, $mailbox, $message->getUid());
+		$dkimResult = $this->dkimService->getCached($account, $mailbox, $message->getId());
 		if (is_bool($dkimResult)) {
 			$json['dkimValid'] = $dkimResult;
 		}
