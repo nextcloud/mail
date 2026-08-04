@@ -927,6 +927,8 @@
     "Could not load the desired message" : "Impossible de charger le message souhaité",
     "Could not load the message" : "Impossible de charger le message",
     "Date:" : "Date :",
+    "Printing from the browser menu is not supported" : "L'impression depuis le menu du navigateur n'est pas supportée.",
+    "To print this email, press {shortcut}, or use the \"Print message\" action in the message menu." : "Pour imprimer cet email, appuyez sur {shortcut}, ou cliquez sur \"Imprimer le message\" dans le menu du message.",
     "Yesterday {time}" : "Hier à {time}",
     "Tag name cannot be empty" : "Le nom de l'étiquette ne peut pas être vide",
     "Tag name is a hidden system tag" : "Le nom de l'étiquette est celui d'une étiquette système cachée",
