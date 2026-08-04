@@ -4,7 +4,8 @@
 -->
 
 <template>
-	<div class="mailbox"
+	<div
+		class="mailbox"
 		:class="{ 'empty-content': (!hasMessages && !loadingEnvelopes) || error }">
 		<Error
 			v-if="error"
@@ -232,7 +233,7 @@ export default {
 			this.loadingCacheInitialization = true
 			this.error = false
 
-			logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.query}) during cache initalization`)
+			logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.query}) during cache initialization`)
 			this.sync(true)
 				.then(() => {
 					this.loadingCacheInitialization = false

@@ -205,7 +205,7 @@ class PageControllerTest extends TestCase {
 		$oidcProvider->setSmtpPort(587);
 		$oidcProvider->setSmtpSslMode('tls');
 		$this->oidcIntegration->method('getProviders')->willReturn([$oidcProvider]);
-		$this->preferences->expects($this->exactly(14))
+		$this->preferences->expects($this->exactly(15))
 			->method('getPreference')
 			->willReturnMap([
 				[$this->userId, 'account-settings', '[]', json_encode([])],
@@ -222,6 +222,7 @@ class PageControllerTest extends TestCase {
 				[$this->userId, 'smime-sign-aliases', '[]', '[]'],
 				[$this->userId, 'sort-favorites', 'false', 'false'],
 				[$this->userId, 'compact-mode', 'false', 'false'],
+				[$this->userId, 'auto-mark-as-read', '3000', '3000'],
 			]);
 		$this->accountService->expects($this->once())
 			->method('findByUserId')
@@ -390,7 +391,8 @@ class PageControllerTest extends TestCase {
 					'follow-up-reminders' => 'true',
 					'sort-favorites' => 'false',
 					'index-context-chat' => 'true',
-					'compact-mode' => 'false'
+					'compact-mode' => 'false',
+					'auto-mark-as-read' => '3000',
 				]],
 				['prefill_displayName', 'Jane Doe'],
 				['importance_classification_default', true],

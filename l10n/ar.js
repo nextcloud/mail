@@ -498,7 +498,6 @@ OC.L10N.register(
     "Could not load your message thread" : "تعذر تحميل نَظْمَة thread  رسائلك",
     "The thread doesn't exist or has been deleted" : " النَّظْمَة thread غير موجودة أو تمّ حذفها",
     "Email was not able to be opened" : "تعذّر فتح الإيميل",
-    "Print" : "طباعة",
     "Loading thread" : "تحميل النَّظْمَة thread ",
     "Not found" : "غير موجود",
     "Encrypted & verified " : "مَشَفَّرٌ و مُتَحَقَّقٌ مِنه",
@@ -714,6 +713,7 @@ OC.L10N.register(
     "Could not load your message" : "تعذّر تحميل رسالتك",
     "Could not load the desired message" : "تعذّر تحميل الرسالة المطلوبة",
     "Could not load the message" : "تعذّر تحميل الرسالة",
+    "Date:" : "التاريخ:",
     "Tag name cannot be empty" : "اسم السِّمَة لا يمكن أن يكون فارغاً",
     "Tag name is a hidden system tag" : "اسم الوَسْم هو وَسْمٌ نِظَامِيٌّ مَخْفِيٌّ hidden system tag",
     "Tag already exists" : "الوَسْمُ موجود سلفاً",
@@ -721,6 +721,7 @@ OC.L10N.register(
     "Add share link from Files" : "إضافة رابط المشاركة من الملفات",
     "Choose a file to add as attachment" : "إختَر ملفاً لإضافته كمُرفَقٍ",
     "Choose a file to share as a link" : "إختَر ملفاً لمُشاركته كرابطٍ",
-    "This summary was AI generated" : "المخلص تمّ توليده عن طريق الذكاء الاصطناعي"
+    "This summary was AI generated" : "المخلص تمّ توليده عن طريق الذكاء الاصطناعي",
+    "Print" : "طباعة"
 },
 "nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;");

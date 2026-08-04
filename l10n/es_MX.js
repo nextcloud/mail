@@ -374,6 +374,7 @@ OC.L10N.register(
     "Could not load your message" : "No fue posible cargar tu mensaje",
     "Could not load the desired message" : "No fue posible cargar el mensaje deseado",
     "Could not load the message" : "No fue posible cargar el mensaje",
+    "Date:" : "Fecha:",
     "Tag already exists" : "La etiqueta ya existe",
     "Error loading message" : "Se presentó un error al cargar el mensaje",
     "Add share link from Files" : "Agregar un enlace adjunto desde Archivos",

@@ -192,7 +192,7 @@ class Synchronizer {
 	 * @return array
 	 */
 	private function getVanishedMessageUids(Horde_Imap_Client_Base $imapClient, Horde_Imap_Client_Mailbox $mailbox, Request $request): array {
-		// Without QRESYNC we need to specify the known ids and in oder to avoid
+		// Without QRESYNC we need to specify the known ids and in order to avoid
 		// overly long IMAP commands they have to be chunked.
 		return array_merge(
 			[], // for php<7.4 https://www.php.net/manual/en/function.array-merge.php

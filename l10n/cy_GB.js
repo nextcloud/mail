@@ -129,6 +129,7 @@ OC.L10N.register(
     "Could not load your message" : "Methu llwytho'ch neges",
     "Could not load the desired message" : "Methu llwytho'r neges a ddewiswyd",
     "Could not load the message" : "Methu llwytho'r neges",
+    "Date:" : "Dyddiad:",
     "Error loading message" : "Gwall wrth lwytho neges",
     "Choose a file to add as attachment" : "Dewiswch ffeil i'w hychwanegu fel atodiad"
 },

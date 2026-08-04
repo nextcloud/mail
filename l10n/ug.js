@@ -595,7 +595,6 @@ OC.L10N.register(
     "Could not load your message thread" : "ئۇچۇر تېمىڭىزنى يۈكلىيەلمىدى",
     "The thread doesn't exist or has been deleted" : "بۇ تېما مەۋجۇت ئەمەس ياكى ئۆچۈرۈلگەن",
     "Email was not able to be opened" : "ئېلخەتنى ئاچقىلى بولمىدى",
-    "Print" : "بېسىش",
     "Could not print message" : "ئۇچۇرنى بېسىپ چىقىرالمىدى",
     "Loading thread" : "تېما يۈكلەۋاتىدۇ",
     "Not found" : "تېپىلمىدى",
@@ -876,6 +875,7 @@ OC.L10N.register(
     "Could not load your message" : "ئۇچۇرىڭىزنى يۈكلىيەلمىدى",
     "Could not load the desired message" : "لازىملىق ئۇچۇرنى يۈكلىيەلمىدى",
     "Could not load the message" : "ئۇچۇرنى يۈكلىيەلمىدى",
+    "Date:" : "چېسلا:",
     "Tag name cannot be empty" : "بەلگە ئىسمى قۇرۇق بولمايدۇ",
     "Tag name is a hidden system tag" : "بەلگە ئىسمى يوشۇرۇن سىستېما بەلگىسى",
     "Tag already exists" : "خەتكۈچ مەۋجۇت",
@@ -884,6 +884,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "قوشۇمچە قىلىپ قوشماقچى بولغان ھۆججەتنى تاللاڭ",
     "Choose a file to share as a link" : "ئۇلىنىش سۈپىتىدە ھەمبەھىرلىنىدىغان ھۆججەتنى تاللاڭ",
     "This summary was AI generated" : "بۇ خۇلاسە AI تەرىپىدىن يېزىلغان",
+    "Print" : "بېسىش",
     "This summary is AI generated and may contain mistakes." : "بۇ خۇلاسە سۈنئىي ئەقىل ئارقىلىق ھاسىل قىلىنغان بولۇپ، خاتالىقلارنى ئۆز ئىچىگە ئېلىشى مۇمكىن."
 },
 "nplurals=2; plural=(n != 1);");

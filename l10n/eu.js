@@ -704,6 +704,7 @@ OC.L10N.register(
     "Could not load your message" : "Ezin izan da zure mezua kargatu",
     "Could not load the desired message" : "Ezin izan da kargatu nahi zen mezu hori",
     "Could not load the message" : "Ezin izan da mezua kargatu",
+    "Date:" : "Data:",
     "Tag name cannot be empty" : "Etiketaren izena ezin da hutsik egon",
     "Tag name is a hidden system tag" : "Etiketaren izena ezkutatutako sistema-etiketa da",
     "Tag already exists" : "Etiketa dagoeneko existitzen da",

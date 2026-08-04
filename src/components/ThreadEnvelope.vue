@@ -344,6 +344,7 @@
 			:smart-replies="showFollowUpHeader ? [] : smartReplies"
 			:reply-button-label="replyButtonLabel"
 			@load="onMessageLoaded"
+			@print-shortcut="$emit('print-shortcut')"
 			@translate="onOpenTranslationModal"
 			@reply="(body) => onReply(body, showFollowUpHeader)" />
 		<Error
@@ -580,6 +581,17 @@ export default {
 
 		account() {
 			return this.mainStore.getAccount(this.envelope.accountId)
+		},
+
+		/**
+		 * Whether this message is rendered and can therefore be printed. The
+		 * message body is only in the DOM once the message itself has been
+		 * fetched and its loading state has settled.
+		 *
+		 * @return {boolean}
+		 */
+		printable() {
+			return this.loading === Loading.Done && this.message !== undefined
 		},
 
 		senderEmailColor() {
@@ -853,12 +865,17 @@ export default {
 					clearTimeout(loadingTimeout)
 				}
 
-				if (!this.envelope.flags.seen && this.hasSeenAcl) {
-					logger.info('Starting timer to mark message as seen/read')
+				const autoMarkReadSetting = this.mainStore.getPreference('auto-mark-as-read', '3000')
+				const delay = parseInt(autoMarkReadSetting, 10)
+
+				if (!this.envelope.flags.seen && this.hasSeenAcl && delay >= 0) {
+					logger.info(`Starting timer (${delay}ms) to mark message as seen/read`)
 					this.seenTimer = setTimeout(() => {
-						this.mainStore.toggleEnvelopeSeen({ envelope: this.envelope })
+						if (!this.envelope.flags.seen) {
+							this.mainStore.toggleEnvelopeSeen({ envelope: this.envelope })
+						}
 						this.seenTimer = undefined
-					}, 2000)
+					}, delay)
 				}
 
 				if (this.message.hasHtmlBody) {

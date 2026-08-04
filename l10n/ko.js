@@ -633,6 +633,7 @@ OC.L10N.register(
     "Could not load your message" : "메시지를 불러올 수 없음",
     "Could not load the desired message" : "원하는 메시지를 불러올 수 없음",
     "Could not load the message" : "메시지를 불러올 수 없음",
+    "Date:" : "날짜:",
     "Tag name cannot be empty" : "태그 이름을 비울 수 없음",
     "Tag name is a hidden system tag" : "태그 이름이 숨겨진 시스템 태그입니다",
     "Tag already exists" : "태그가 이미 존재합니다.",

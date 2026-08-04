@@ -488,6 +488,7 @@ OC.L10N.register(
     "Could not load your message" : "Mesajul nu s-a putut încărca",
     "Could not load the desired message" : "Nu s-a putut încărca mesajul dorit",
     "Could not load the message" : "Nu s-a putut încărca mesajul",
+    "Date:" : "Data:",
     "Tag name is a hidden system tag" : "Numele este al unei etichete de sistem ascunsă",
     "Tag already exists" : "Eticheta deja există",
     "Error loading message" : "Eroare la încărcarea mesajelor",

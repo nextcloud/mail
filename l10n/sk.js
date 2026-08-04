@@ -603,7 +603,6 @@ OC.L10N.register(
     "Could not load your message thread" : "Nepodarilo sa načítať vlákno vašich správ",
     "The thread doesn't exist or has been deleted" : "Vlákno neexistuje alebo bolo zmazané",
     "Email was not able to be opened" : "E-mail nie je možné otvoriť",
-    "Print" : "Vytlačiť",
     "Could not print message" : "Nepodarilo sa vytlačiť správu",
     "Loading thread" : "Načítavam vlákno",
     "Not found" : "Nenájdené",
@@ -887,6 +886,7 @@ OC.L10N.register(
     "Could not load your message" : "Nepodarilo sa načítať vašu správu",
     "Could not load the desired message" : "Nepodarilo sa načítať požadovanú správu",
     "Could not load the message" : "Správu sa nepodarilo sa načítať",
+    "Date:" : "Dátum:",
     "Tag name cannot be empty" : "Názov štítka nemôže byť prázdny",
     "Tag name is a hidden system tag" : "Názov štítku už existuje ako skrytý systémový štítok",
     "Tag already exists" : "Štítok už existuje",
@@ -895,6 +895,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Vyberte súbor, ktorý chcete pridať ako prílohu.",
     "Choose a file to share as a link" : "Vyberte súbor, ktorý chcete sprístupniť pomocou odkazu",
     "This summary was AI generated" : "Tento súhrn bol vygenerovaný AI",
+    "Print" : "Vytlačiť",
     "This summary is AI generated and may contain mistakes." : "Tento súhrn je generovaný úomocou AI a môže obsahovať chyby."
 },
 "nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);");

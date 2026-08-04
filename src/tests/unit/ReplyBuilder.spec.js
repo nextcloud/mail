@@ -163,7 +163,7 @@ describe('ReplyBuilder', () => {
 		assertSameAddressList(reply.cc, [dani])
 	})
 
-	it("handles jan's reply to nina's mesage to a mailing list", () => {
+	it("handles jan's reply to nina's message to a mailing list", () => {
 		const nina = createAddress('nina@nc.com')
 		const list = createAddress('list@nc.com')
 		const jan = createAddress('jan@nc.com')

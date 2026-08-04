@@ -75,7 +75,7 @@
 					:placeholder="t('mail', 'IMAP Host')"
 					:disabled="loading"
 					required
-					@change="clearFeedback" />
+					@change="syncCredentials" />
 				<h4 class="account-form__heading--required">
 					{{ t('mail', 'IMAP Security') }}
 				</h4>
@@ -134,7 +134,7 @@
 					:placeholder="t('mail', 'IMAP User')"
 					:disabled="loading"
 					required
-					@change="clearFeedback" />
+					@change="syncCredentials" />
 				<NcPasswordField
 					v-if="!useOauth"
 					id="man-imap-password"
@@ -143,12 +143,11 @@
 					:label="t('mail', 'IMAP Password')"
 					:disabled="loading"
 					required
-					@change="clearFeedback" />
+					@change="syncCredentials" />
 
 				<h4>{{ t('mail', 'SMTP Settings') }}</h4>
 				<NcInputField
 					id="man-smtp-host"
-					ref="smtpHost"
 					v-model="manualConfig.smtpHost"
 					:label="t('mail', 'SMTP Host')"
 					type="text"
@@ -156,7 +155,7 @@
 					:placeholder="t('mail', 'SMTP Host')"
 					:disabled="loading"
 					required
-					@change="clearFeedback" />
+					@change="unsyncCredentials" />
 				<h4 class="account-form__heading--required">
 					{{ t('mail', 'SMTP Security') }}
 				</h4>
@@ -215,7 +214,7 @@
 					:placeholder="t('mail', 'SMTP User')"
 					:disabled="loading"
 					required
-					@change="clearFeedback" />
+					@change="unsyncCredentials" />
 				<NcPasswordField
 					v-if="!useOauth"
 					id="man-smtp-password"
@@ -224,7 +223,7 @@
 					type="password"
 					:disabled="loading"
 					required
-					@change="clearFeedback" />
+					@change="unsyncCredentials" />
 				<NcCheckboxRadioSwitch
 					v-if="isSetup"
 					id="auto-classification-enabled"
@@ -359,6 +358,7 @@ export default {
 				smtpSslMode: fromAccountOr('smtpSslMode', 'tls'),
 				smtpUser: fromAccountOr('smtpUser', ''),
 				smtpPassword: '',
+				syncSmtpCredentials: true,
 			},
 
 			feedback: null,
@@ -574,6 +574,21 @@ export default {
 
 		clearFeedback() {
 			this.feedback = null
+		},
+
+		syncCredentials() {
+			if (this.manualConfig.syncSmtpCredentials) {
+				this.manualConfig.smtpHost = this.manualConfig.imapHost
+				this.manualConfig.smtpUser = this.manualConfig.imapUser
+				this.manualConfig.smtpPassword = this.manualConfig.imapPassword
+			}
+
+			this.clearFeedback()
+		},
+
+		unsyncCredentials() {
+			this.manualConfig.syncSmtpCredentials = false
+			this.clearFeedback()
 		},
 
 		applyAutoConfig(config) {

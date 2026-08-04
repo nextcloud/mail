@@ -640,7 +640,6 @@
     "Could not load your message thread" : "Impossible de charger le fil de discussion",
     "The thread doesn't exist or has been deleted" : "Le fil de discussion n'existe pas ou a été supprimé",
     "Email was not able to be opened" : "L'e-mail n'a pas pu être ouvert",
-    "Print" : "Imprimer",
     "Could not print message" : "Impossible d'imprimer le message",
     "Loading thread" : "Chargement du fil de discussion",
     "Not found" : "Non trouvé",
@@ -927,6 +926,9 @@
     "Could not load your message" : "Impossible de charger votre message",
     "Could not load the desired message" : "Impossible de charger le message souhaité",
     "Could not load the message" : "Impossible de charger le message",
+    "Date:" : "Date :",
+    "Printing from the browser menu is not supported" : "L'impression depuis le menu du navigateur n'est pas supportée.",
+    "To print this email, press {shortcut}, or use the \"Print message\" action in the message menu." : "Pour imprimer cet email, appuyez sur {shortcut}, ou cliquez sur \"Imprimer le message\" dans le menu du message.",
     "Yesterday {time}" : "Hier à {time}",
     "Tag name cannot be empty" : "Le nom de l'étiquette ne peut pas être vide",
     "Tag name is a hidden system tag" : "Le nom de l'étiquette est celui d'une étiquette système cachée",
@@ -938,6 +940,7 @@
     "Delegated access to {userId}" : "Déléguer l'accès à {userId}",
     "Revoked access for {userId}" : "Accès révoqué pour {userId}",
     "This summary was AI generated" : "Ce résumé a été généré par IA",
+    "Print" : "Imprimer",
     "This summary is AI generated and may contain mistakes." : "Ce résumé est généré par IA et peut contenir des erreurs."
 },"pluralForm" :"nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

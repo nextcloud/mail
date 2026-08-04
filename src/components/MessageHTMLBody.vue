@@ -52,7 +52,6 @@
 import iframeResize from '@iframe-resizer/parent'
 import { loadState } from '@nextcloud/initial-state'
 import { NcActionButton as ActionButton, NcActions as Actions } from '@nextcloud/vue'
-import PrintScout from 'printscout'
 import IconDomain from 'vue-material-design-icons/Domain.vue'
 import IconMail from 'vue-material-design-icons/EmailOutline.vue'
 import IconImage from 'vue-material-design-icons/ImageSizeSelectActual.vue'
@@ -61,8 +60,7 @@ import NeedsTranslationInfo from './NeedsTranslationInfo.vue'
 import logger from '../logger.js'
 import { needsTranslation } from '../service/AiIntergrationsService.js'
 import { trustSender } from '../service/TrustedSenderService.js'
-
-const scout = new PrintScout()
+import { isPrintShortcut } from '../util/printMessage.ts'
 
 export default {
 	name: 'MessageHTMLBody',
@@ -100,7 +98,6 @@ export default {
 			isSenderTrusted: this.message.isSenderTrusted,
 			needsTranslation: false,
 			enabledFreePrompt: loadState('mail', 'llm_freeprompt_available', false),
-			printOriginalHeight: null,
 		}
 	},
 
@@ -112,11 +109,6 @@ export default {
 		domain() {
 			return this.sender?.split('@').pop()
 		},
-	},
-
-	beforeMount() {
-		scout.on('beforeprint', this.onBeforePrint)
-		scout.on('afterprint', this.onAfterPrint)
 	},
 
 	async mounted() {
@@ -132,19 +124,30 @@ export default {
 	},
 
 	beforeDestroy() {
-		scout.off('beforeprint', this.onBeforePrint)
-		scout.off('afterprint', this.onAfterPrint)
-		this.$refs.iframe.iFrameResizer.close()
+		// The frame's document goes away with the frame, so this is housekeeping
+		// rather than a fix for a leak. It is done because the listener is added
+		// to a document this component does not own: nothing guarantees the frame
+		// is torn down right away, and until it is, a keydown in it would still
+		// reach a destroyed component.
+		this.getIframeDoc()?.removeEventListener('keydown', this.onFrameKeyDown)
+		this.$refs.iframe?.iFrameResizer?.close()
 	},
 
 	methods: {
 		getIframeDoc() {
 			const iframe = this.$refs.iframe
-			return iframe.contentDocument || iframe.contentWindow.document
+			return iframe?.contentDocument ?? iframe?.contentWindow?.document ?? null
 		},
 
 		onMessageFrameLoad() {
 			const iframeDoc = this.getIframeDoc()
+
+			// A frame has a window of its own, and a keydown is delivered to the
+			// window of whatever is focused. So while the reader has the message
+			// focused, the app's own window listener never sees the print
+			// shortcut and the browser would take it instead.
+			iframeDoc.addEventListener('keydown', this.onFrameKeyDown)
+
 			this.hasBlockedContent
 				= iframeDoc.querySelectorAll('[data-original-src]').length > 0
 					|| iframeDoc.querySelectorAll('[data-original-style]').length > 0
@@ -156,17 +159,17 @@ export default {
 			}
 		},
 
-		onBeforePrint() {
-			const iframe = this.$refs.iframe
-			this.printOriginalHeight = iframe.style.height
-			iframe.style.setProperty('height', `${this.getIframeDoc().body.scrollHeight}px`, 'important')
-		},
-
-		onAfterPrint() {
-			if (this.printOriginalHeight !== null) {
-				this.$refs.iframe.style.height = this.printOriginalHeight
-				this.printOriginalHeight = null
+		/**
+		 * Hand the print shortcut to the app, from inside the message frame.
+		 *
+		 * @param {KeyboardEvent} event the frame's keydown event
+		 */
+		onFrameKeyDown(event) {
+			if (!isPrintShortcut(event)) {
+				return
 			}
+			event.preventDefault()
+			this.$emit('print-shortcut')
 		},
 
 		displayIframe() {
@@ -203,7 +206,7 @@ export default {
 
 <style lang="scss" scoped>
 // account for 12px (was 8) margin on iframe body
-// should be 12px so it maches the rest of the content
+// should be 12px so it matches the rest of the content
 .html-message-body {
 	margin : 2px calc(var(--default-grid-baseline) * 3) 0 calc(var(--default-grid-baseline) * 14);
 	background-color: #FFFFFF;

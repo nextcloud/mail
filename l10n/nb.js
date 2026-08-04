@@ -491,7 +491,6 @@ OC.L10N.register(
     "Summarizing thread failed." : "Sammendrag av tråd feilet",
     "Could not load your message thread" : "Kunne ikke laste meldingstråden din",
     "The thread doesn't exist or has been deleted" : "Tråden finnes ikke eller er slettet",
-    "Print" : "Skriv ut",
     "Loading thread" : "Laster tråd",
     "Not found" : "Ikke funnet",
     "Encrypted & verified " : "Kryptert og verifisert",
@@ -693,12 +692,14 @@ OC.L10N.register(
     "Could not load your message" : "Kunne ikke laste meldingene dine",
     "Could not load the desired message" : "Kunne ikke laste den ønskede meldingen",
     "Could not load the message" : "Kunne ikke laste meldingen",
+    "Date:" : "Dato:",
     "Tag name cannot be empty" : "Navn for merkelapp kan ikke være tom",
     "Tag name is a hidden system tag" : "Tagnavn er en skjult systemtag",
     "Tag already exists" : "Merkelappen finnes allerede",
     "Error loading message" : "Feil ved innlasting av melding",
     "Add share link from Files" : "Legg til delingskobling fra Filer",
     "Choose a file to add as attachment" : "Velg en fil å legge til som vedlegg",
-    "Choose a file to share as a link" : "Velg en fil du vil dele som en lenke"
+    "Choose a file to share as a link" : "Velg en fil du vil dele som en lenke",
+    "Print" : "Skriv ut"
 },
 "nplurals=2; plural=(n != 1);");

@@ -142,7 +142,6 @@ OC.L10N.register(
     "Custom" : "Udmawan",
     "Add tag" : "Rnu tabzimt",
     "Task created" : "Tawuri tettwarna",
-    "Print" : "Siggez",
     "Not found" : "Ulac-it",
     "Reply all" : "Err-assen akk",
     "Unsubscribe" : "Ffeɣ seg ujerred",
@@ -194,6 +193,8 @@ OC.L10N.register(
     "Trash" : "Iḍumman",
     "Nextcloud Mail" : "Imayl n Nextcloud",
     "Discard changes" : "Sefsex ibeddilen",
-    "Message sent" : "Izen yettwazen"
+    "Message sent" : "Izen yettwazen",
+    "Date:" : "Azemz:",
+    "Print" : "Siggez"
 },
 "nplurals=2; plural=(n != 1);");

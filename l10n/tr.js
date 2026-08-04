@@ -627,7 +627,6 @@ OC.L10N.register(
     "Could not load your message thread" : "İleti yazışmanız yüklenemedi",
     "The thread doesn't exist or has been deleted" : "Bu yazışma bulunamadı ya da silinmiş",
     "Email was not able to be opened" : "E-posta açılamadı",
-    "Print" : "Yazdır",
     "Could not print message" : "İleti yazdırılamadı",
     "Loading thread" : "Yazışma yükleniyor",
     "Not found" : "Bulunamadı",
@@ -913,6 +912,7 @@ OC.L10N.register(
     "Could not load your message" : "İletiniz yüklenemedi",
     "Could not load the desired message" : "İstenilen ileti yüklenemedi",
     "Could not load the message" : "İleti yüklenemedi",
+    "Date:" : "Tarih:",
     "Tag name cannot be empty" : "Etiket adı boş olamaz",
     "Tag name is a hidden system tag" : "Etiket adı sistem tarafından kullanılan bir gizli ad",
     "Tag already exists" : "Etiket zaten var",
@@ -923,6 +923,7 @@ OC.L10N.register(
     "Delegated access to {userId}" : "Yetki {userId} kullanıcısına devredildi",
     "Revoked access for {userId}" : "{userId} yetki devri geri alındı",
     "This summary was AI generated" : "Bu özet yapay zeka ile oluşturulmuştur",
+    "Print" : "Yazdır",
     "This summary is AI generated and may contain mistakes." : "Bu özet yapay zeka ile oluşturulmuştur ve hatalar olabilir"
 },
 "nplurals=2; plural=(n > 1);");

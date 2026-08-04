@@ -642,7 +642,6 @@ OC.L10N.register(
     "Could not load your message thread" : "Nachrichtenverlauf konnte nicht geöffnet werden",
     "The thread doesn't exist or has been deleted" : "Die Unterhaltung existiert nicht oder wurde gelöscht",
     "Email was not able to be opened" : "Die E-Mail konnte nicht geöffnet werden",
-    "Print" : "Drucken",
     "Could not print message" : "Nachricht konnte nicht gedruckt werden",
     "Loading thread" : "Unterhaltung wird geladen",
     "Not found" : "Nicht gefunden",
@@ -929,6 +928,9 @@ OC.L10N.register(
     "Could not load your message" : "Deine Nachricht konnte nicht geladen werden",
     "Could not load the desired message" : "Gewünschte Nachricht konnte nicht geladen werden",
     "Could not load the message" : "Nachricht konnte nicht geladen werden",
+    "Date:" : "Datum:",
+    "Printing from the browser menu is not supported" : "Das Drucken über das Browsermenü wird nicht unterstützt.",
+    "To print this email, press {shortcut}, or use the \"Print message\" action in the message menu." : "Um diese E-Mail auszudrucken, {shortcut} drücken oder die Option “Nachricht drucken“ im Nachrichtenmenü verwenden.",
     "Yesterday {time}" : "Gestern {time}",
     "Tag name cannot be empty" : "Schlagwort darf nicht leer sein",
     "Tag name is a hidden system tag" : "Name des Schlagworts ist ein verstecktes System-Schlagwort.",
@@ -940,6 +942,7 @@ OC.L10N.register(
     "Delegated access to {userId}" : "Zugriff delegiert an {userId}",
     "Revoked access for {userId}" : "Zugriff für {userId} widerrufen",
     "This summary was AI generated" : "Diese Zusammenfassung wurde von KI generiert",
+    "Print" : "Drucken",
     "This summary is AI generated and may contain mistakes." : "Diese Zusammenfassung wurde von KI erstellt und kann Fehler enthalten."
 },
 "nplurals=2; plural=(n != 1);");

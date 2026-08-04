@@ -692,6 +692,7 @@ OC.L10N.register(
     "Could not load your message" : "Gat ekki hlaðið inn skilaboðunum þínum",
     "Could not load the desired message" : "Gat ekki hlaðið inn umbeðnum skilaboðum",
     "Could not load the message" : "Gat ekki hlaðið inn skilaboðunum",
+    "Date:" : "Dagsetning:",
     "Tag name cannot be empty" : "Nafn merkis má ekki vera tómt",
     "Tag name is a hidden system tag" : "Heiti merkis er falið merki kerfisins",
     "Tag already exists" : "Merki er þegar til",

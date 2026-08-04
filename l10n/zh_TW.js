@@ -642,7 +642,6 @@ OC.L10N.register(
     "Could not load your message thread" : "無法載入您的郵件串",
     "The thread doesn't exist or has been deleted" : "討論串不存在或已被刪除",
     "Email was not able to be opened" : "無法開啟電子郵件",
-    "Print" : "列印",
     "Could not print message" : "無法列印訊息",
     "Loading thread" : "正在載入討論串",
     "Not found" : "找不到",
@@ -929,6 +928,9 @@ OC.L10N.register(
     "Could not load your message" : "無法載入您的信件",
     "Could not load the desired message" : "無法載入所選的信件",
     "Could not load the message" : "無法載入信件",
+    "Date:" : "日期：",
+    "Printing from the browser menu is not supported" : "不支援透過瀏覽器選單進行列印",
+    "To print this email, press {shortcut}, or use the \"Print message\" action in the message menu." : "要列印此電子郵件，請按 {shortcut}，或使用訊息選單內的「列印訊息」動作。",
     "Yesterday {time}" : "昨天 {time}",
     "Tag name cannot be empty" : "標籤名稱不可為空白",
     "Tag name is a hidden system tag" : "標籤名稱為隱藏的系統標籤",
@@ -940,6 +942,7 @@ OC.L10N.register(
     "Delegated access to {userId}" : "已向 {userId} 委派存取權",
     "Revoked access for {userId}" : "已撤銷對 {userId} 的存取",
     "This summary was AI generated" : "此摘要為人工智慧產生",
+    "Print" : "列印",
     "This summary is AI generated and may contain mistakes." : "此摘要為人工智慧產生，可能會出錯。"
 },
 "nplurals=1; plural=0;");
