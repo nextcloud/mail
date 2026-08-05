@@ -32,6 +32,7 @@ OC.L10N.register(
     "Add mail account" : "Agregar cuenta de correo",
     "Newest first" : "Más reciente primero",
     "Oldest first" : "Más antiguo primero",
+    "Manually" : "Manualmente",
     "Security" : "Seguridad",
     "Compose new message" : "Escribir mensaje nuevo",
     "Newer message" : "Mensaje más nuevo",

@@ -72,10 +72,10 @@ OC.L10N.register(
     "Account settings" : "Account settings",
     "Aliases" : "Aliases",
     "Alias to S/MIME certificate mapping" : "Alias to S/MIME certificate mapping",
-    "Signature" : "Signature",
-    "A signature is added to the text of new messages and replies." : "A signature is added to the text of new messages and replies.",
     "Writing mode" : "Writing mode",
     "Preferred writing mode for new messages and replies." : "Preferred writing mode for new messages and replies.",
+    "Signature" : "Signature",
+    "A signature is added to the text of new messages and replies." : "A signature is added to the text of new messages and replies.",
     "Default folders" : "Default folders",
     "The folders to use for drafts, sent messages, deleted messages, archived messages and junk messages." : "The folders to use for drafts, sent messages, deleted messages, archived messages and junk messages.",
     "Automatic trash deletion" : "Automatic trash deletion",
@@ -104,6 +104,7 @@ OC.L10N.register(
     "Newest first" : "Newest first",
     "Oldest first" : "Oldest first",
     "Ok" : "Ok",
+    "Manually" : "Manually",
     "Shared with me" : "Shared with me",
     "Privacy" : "Privacy",
     "Security" : "Security",
@@ -407,7 +408,6 @@ OC.L10N.register(
     "Save sieve settings" : "Save sieve settings",
     "The syntax seems to be incorrect:" : "The syntax seems to be incorrect:",
     "Save sieve script" : "Save sieve script",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Your signature is larger than 2 MB. This may affect the performance of your editor.",
     "Save signature" : "Save signature",
     "Place signature above quoted text" : "Place signature above quoted text",
     "Message source" : "Message source",
@@ -617,6 +617,7 @@ OC.L10N.register(
     "Tag already exists" : "Tag already exists",
     "Error loading message" : "Error loading message",
     "Choose a file to add as attachment" : "Choose a file to add as attachment",
-    "Choose a file to share as a link" : "Choose a file to share as a link"
+    "Choose a file to share as a link" : "Choose a file to share as a link",
+    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Your signature is larger than 2 MB. This may affect the performance of your editor."
 },
 "nplurals=2; plural=(n!=1);");

@@ -54,6 +54,7 @@ OC.L10N.register(
     "Newest first" : "Jaunākie pirms",
     "Oldest first" : "Vecākie pirms",
     "Ok" : "Labi",
+    "Manually" : "Pašrocīgi",
     "Privacy" : "Privātums",
     "Security" : "Drošība",
     "Archive" : "Arhīvi",
