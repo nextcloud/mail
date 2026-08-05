@@ -44,15 +44,15 @@ class JmapTransmissionConnector implements ITransmissionConnector {
 		$cc = $this->transmissionService->getAddressList($lMessage, Recipient::TYPE_CC);
 		$bcc = $this->transmissionService->getAddressList($lMessage, Recipient::TYPE_BCC);
 
-		$name = $account->getName();
-		$emailAddress = $account->getEMailAddress();
+		$senderName = $account->getName();
+		$senderAddress = $account->getEMailAddress();
 
 		$aliasId = $lMessage->getAliasId();
 		if ($aliasId !== null) {
 			try {
 				$alias = $this->aliasesService->find($aliasId, $account->getUserId());
-				$name = ($alias->getName() ?? $name);
-				$emailAddress = $alias->getAlias();
+				$senderName = ($alias->getName() ?? $senderName);
+				$senderAddress = $alias->getAlias();
 			} catch (DoesNotExistException) {
 				$this->logger->debug('The assigned alias no longer exists. Falling back to the default name and email address.', [
 					'aliasId' => $lMessage->getAliasId(),
@@ -61,7 +61,7 @@ class JmapTransmissionConnector implements ITransmissionConnector {
 			}
 		}
 
-		$from = Address::fromRaw($name, $emailAddress);
+		$from = Address::fromRaw($senderName, $senderAddress);
 
 		$sentMailboxRid = $sentMailbox->getRemoteId();
 		if ($sentMailboxRid === null) {
@@ -80,7 +80,7 @@ class JmapTransmissionConnector implements ITransmissionConnector {
 		}
 
 		try {
-			$identityId = $this->resolveIdentityId($emailAddress);
+			$identityId = $this->resolveIdentityId($senderAddress);
 		} catch (Exception $e) {
 			$this->logger->error('Could not resolve JMAP identity for send: ' . $e->getMessage(), ['exception' => $e]);
 			$lMessage->setStatus(LocalMessage::STATUS_ERROR);
@@ -90,6 +90,7 @@ class JmapTransmissionConnector implements ITransmissionConnector {
 		$rcptTo = $this->collectEnvelopeRecipients($to, $cc, $bcc);
 		$attachments = $this->collectAttachments($account, $lMessage);
 		$jMessage = $this->convertLocalMessage($from, $to, $cc, $bcc, $lMessage);
+		$jMessage->draft(true)->seen(true);
 
 		try {
 			$this->jmapOperationsService->entitySend(
@@ -97,7 +98,7 @@ class JmapTransmissionConnector implements ITransmissionConnector {
 				$jMessage,
 				$draftsMailboxRid,
 				$sentMailboxRid,
-				$from->getEmail() ?? $emailAddress,
+				$from->getEmail() ?? $senderAddress,
 				$rcptTo,
 				$attachments,
 			);
@@ -123,6 +124,7 @@ class JmapTransmissionConnector implements ITransmissionConnector {
 
 		$attachments = $this->collectAttachments($account, $lMessage);
 		$jMessage = $this->convertLocalMessage($from, $to, $cc, $bcc, $lMessage);
+		$jMessage->draft(true)->seen(true);
 
 		// Apply mailbox location and keyword flags
 		$keywords = [];
