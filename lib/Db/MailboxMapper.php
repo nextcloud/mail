@@ -201,16 +201,6 @@ class MailboxMapper extends QBMapper {
 		}
 	}
 
-	public function findSpecialUseMailbox(Account $account, string $specialUse): ?Mailbox {
-		foreach ($this->findAll($account) as $mailbox) {
-			if ($mailbox->isSpecialUse($specialUse) || ($specialUse === 'inbox' && $mailbox->isInbox())) {
-				return $mailbox;
-			}
-		}
-
-		return null;
-	}
-
 	/**
 	 * @throws MailboxLockedException
 	 */
