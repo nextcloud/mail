@@ -86,10 +86,10 @@
     "Account settings" : "إعدادت الحساب",
     "Aliases" : "أسماء مسعارة",
     "Alias to S/MIME certificate mapping" : "أسماء مُستعارة Alias لربط شهادات S/MIME",
-    "Signature" : "التوقيع",
-    "A signature is added to the text of new messages and replies." : "تم إضافة توقيع إلى نص الرسائل والردود الجديدة.",
     "Writing mode" : "وضع الكتابة",
     "Preferred writing mode for new messages and replies." : "وضع الكتابة المفضل للرسائل والردود الجديدة.",
+    "Signature" : "التوقيع",
+    "A signature is added to the text of new messages and replies." : "تم إضافة توقيع إلى نص الرسائل والردود الجديدة.",
     "Default folders" : "المجلدات التلقائية",
     "The folders to use for drafts, sent messages, deleted messages, archived messages and junk messages." : "المجلدات المستخدمة لحفظ المسودات، و الرسائل الصادرة، و الرسائل المحذوفة، و الرسائل المؤرشفة، و الرسائل العشوائية.",
     "Automatic trash deletion" : "الحذف التلقائي للمهملات",
@@ -477,7 +477,6 @@
     "Save sieve settings" : "إعدادات تطبيق \"الغربال\" Sieve",
     "The syntax seems to be incorrect:" : "بناء الجملة syntax يبدو غير صحيح:",
     "Save sieve script" : "حفظ سكربتات تطبيق \"الغربال\" Sieve",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "توقيعُك يشغَل أكثر من 2 ميغا بايت. قد يؤثر هذا على أداء المحرر الخاص بك.",
     "Save signature" : "حفظ التوقيع",
     "Place signature above quoted text" : "ضع التوقيع فوق النص المقتبس",
     "Message source" : "مصدر الرسالة",
@@ -720,6 +719,7 @@
     "Choose a file to add as attachment" : "إختَر ملفاً لإضافته كمُرفَقٍ",
     "Choose a file to share as a link" : "إختَر ملفاً لمُشاركته كرابطٍ",
     "This summary was AI generated" : "المخلص تمّ توليده عن طريق الذكاء الاصطناعي",
+    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "توقيعُك يشغَل أكثر من 2 ميغا بايت. قد يؤثر هذا على أداء المحرر الخاص بك.",
     "Print" : "طباعة"
 },"pluralForm" :"nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;"
 }

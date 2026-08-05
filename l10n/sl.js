@@ -66,10 +66,10 @@ OC.L10N.register(
     "SMTP Password" : "Geslo SMTP",
     "Account settings" : "Nastavitve računa",
     "Aliases" : "Vzdevki",
-    "Signature" : "Podpis",
-    "A signature is added to the text of new messages and replies." : "K besedilu novih sporočil in odgovorov je dodan podpis.",
     "Writing mode" : "Način pisanja",
     "Preferred writing mode for new messages and replies." : "Prednostni način pisanja sporočil za nova sporočila in odgovore.",
+    "Signature" : "Podpis",
+    "A signature is added to the text of new messages and replies." : "K besedilu novih sporočil in odgovorov je dodan podpis.",
     "Default folders" : "Privzete mape",
     "Calendar settings" : "Nastavitve koledarja",
     "Filters" : "Filtri",
@@ -94,6 +94,7 @@ OC.L10N.register(
     "Newest first" : "najprej najnovejše",
     "Oldest first" : "najprej najstarejše",
     "Ok" : "Sprejemljivo",
+    "Manually" : "Ročno",
     "Shared with me" : "V souporabi z mano",
     "Privacy" : "Zasebnost",
     "Security" : "Varnostna opozorila",
@@ -366,7 +367,6 @@ OC.L10N.register(
     "Save sieve settings" : "Shrani nastavitve sieve",
     "The syntax seems to be incorrect:" : "Skladnja je videti nepravilna:",
     "Save sieve script" : "Shrani skript sieve",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Nastavljen podpis je večji od 2 MB. Velikost lahko vpliva na delovanje urejevalnika.",
     "Save signature" : "Shrani podpis",
     "Place signature above quoted text" : "Postavi podpis nad navedeno besedilo.",
     "Message source" : "Vir sporočila",
@@ -527,6 +527,7 @@ OC.L10N.register(
     "Tag already exists" : "Oznaka že obstaja",
     "Error loading message" : "Napaka nalaganja sporočila",
     "Choose a file to add as attachment" : "Izbor datoteke za prilogo",
-    "Choose a file to share as a link" : "Izberite datoteko, ki jo želite dati v skupno rabo kot povezavo"
+    "Choose a file to share as a link" : "Izberite datoteko, ki jo želite dati v skupno rabo kot povezavo",
+    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Nastavljen podpis je večji od 2 MB. Velikost lahko vpliva na delovanje urejevalnika."
 },
 "nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);");

@@ -34,6 +34,7 @@ OC.L10N.register(
     "Sorting" : "Orden",
     "Newest first" : "El más reciente primero",
     "Oldest first" : "Los más viejos primero",
+    "Manually" : "Manualmente",
     "Security" : "Seguridad",
     "Compose new message" : "Redactar nuevo mensaje",
     "Newer message" : "Mensaje mas nuevo",

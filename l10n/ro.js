@@ -68,10 +68,10 @@ OC.L10N.register(
     "SMTP Password" : "Parolă SMTP",
     "Account settings" : "Setări cont",
     "Aliases" : "Aliasuri",
-    "Signature" : "Semnătură",
-    "A signature is added to the text of new messages and replies." : "O semnătură a fost adăugată la noile mesaje trimise și la răspunsuri.",
     "Writing mode" : "Mod de scriere",
     "Preferred writing mode for new messages and replies." : "Modul de scriere preferat pentru mesajele și răspunsurile noi.",
+    "Signature" : "Semnătură",
+    "A signature is added to the text of new messages and replies." : "O semnătură a fost adăugată la noile mesaje trimise și la răspunsuri.",
     "Default folders" : "Dosare implicite",
     "The folders to use for drafts, sent messages, deleted messages, archived messages and junk messages." : "Folderele pentru schițe, mesaje trimise, mesaje șterse, arhivate și mesaje nesolicitate.",
     "Automatic trash deletion" : "Golirea automată a coșului",
@@ -374,7 +374,6 @@ OC.L10N.register(
     "Enable mail body search" : "Activează căutarea în textul mesajelor",
     "Custom" : "Particularizat",
     "The syntax seems to be incorrect:" : "Sintaxa pare incorectă:",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Semnătura este mai mare de 2 MB. Aceasta poate afecta performanța editorului.",
     "Save signature" : "Salvează semnătura",
     "Place signature above quoted text" : "Plasează semnătura deasupra textului citat",
     "Message source" : "Sursa mesajului",
@@ -493,6 +492,7 @@ OC.L10N.register(
     "Tag already exists" : "Eticheta deja există",
     "Error loading message" : "Eroare la încărcarea mesajelor",
     "Choose a file to add as attachment" : "Selectați un fișier ca atașament",
-    "Choose a file to share as a link" : "Selectați un fișier pentru partajare ca link"
+    "Choose a file to share as a link" : "Selectați un fișier pentru partajare ca link",
+    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Semnătura este mai mare de 2 MB. Aceasta poate afecta performanța editorului."
 },
 "nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));");

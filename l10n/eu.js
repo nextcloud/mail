@@ -82,10 +82,10 @@ OC.L10N.register(
     "Account settings" : "Kontuaren ezarpenak",
     "Aliases" : "Aliasak",
     "Alias to S/MIME certificate mapping" : "S/MIME ziurtagiriaren esleipenerako aliasa",
-    "Signature" : "Sinadura",
-    "A signature is added to the text of new messages and replies." : "Sinadura bat gehitzen zaio mezu berri eta erantzunen testuari.",
     "Writing mode" : "Editatzeko aukera gaituta",
     "Preferred writing mode for new messages and replies." : "Hobetsitako idazteko modua, mezu berri eta erantzunak idazteko.",
+    "Signature" : "Sinadura",
+    "A signature is added to the text of new messages and replies." : "Sinadura bat gehitzen zaio mezu berri eta erantzunen testuari.",
     "Default folders" : "Lehenetsitako karpetak",
     "The folders to use for drafts, sent messages, deleted messages, archived messages and junk messages." : "Zirriborro, bidalitako, ezabatutako, artxibatutako eta zabor mezuentzako erabilitako karpeta.",
     "Automatic trash deletion" : "Zaborraren ezabatze automatikoa",
@@ -122,6 +122,7 @@ OC.L10N.register(
     "Newest first" : "Berrienak lehenengo ",
     "Oldest first" : "Zaharrenak lehenengo",
     "Ok" : "Ados",
+    "Manually" : "Eskuz",
     "Shared with me" : "Nirekin partekatuta",
     "Privacy" : "Pribatutasuna",
     "Security" : "Segurtasuna",
@@ -473,7 +474,6 @@ OC.L10N.register(
     "Save sieve settings" : "Gorde sieve ezarpenak",
     "The syntax seems to be incorrect:" : "Sintaxia baliogabea dirudi:",
     "Save sieve script" : "Gorde sieve scripta",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Zure sinadurak 2MB baino gehiago ditu. Honek editorearen errendimendua gutxitu dezake.",
     "Save signature" : "Gorde sinadura",
     "Place signature above quoted text" : "Jarri sinadura aipatutako testuaren gainean",
     "Message source" : "Mezuaren iturburua",
@@ -711,6 +711,7 @@ OC.L10N.register(
     "Error loading message" : "Errorea mezua kargatzerakoan",
     "Add share link from Files" : "Gehitu partekatze esteka Fitxategiak-etik",
     "Choose a file to add as attachment" : "Aukeratu fitxategia eranskin gisa gehitzeko",
-    "Choose a file to share as a link" : "Aukeratu fitxategi bat esteka bezala partekatzeko"
+    "Choose a file to share as a link" : "Aukeratu fitxategi bat esteka bezala partekatzeko",
+    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Zure sinadurak 2MB baino gehiago ditu. Honek editorearen errendimendua gutxitu dezake."
 },
 "nplurals=2; plural=(n != 1);");

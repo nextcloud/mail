@@ -64,10 +64,10 @@
     "Account settings" : "Настройки на профила",
     "Aliases" : "Псевдоними",
     "Alias to S/MIME certificate mapping" : "Съпоставка на псевдоним със S/MIME сертификат",
-    "Signature" : "Подпис",
-    "A signature is added to the text of new messages and replies." : "Подписът се добавя в края на текста, на изходящите съобщения.",
     "Writing mode" : "Режим на писане",
     "Preferred writing mode for new messages and replies." : "Предпочитан режим на писане за нови съобщения и отговори.",
+    "Signature" : "Подпис",
+    "A signature is added to the text of new messages and replies." : "Подписът се добавя в края на текста, на изходящите съобщения.",
     "Default folders" : "Папки по подразбиране",
     "Autoresponder" : "Автоматичен отговор",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Автоматичен отговор на входящите съобщения. Ако някой ви изпрати няколко съобщения, този автоматичен отговор ще бъде изпращан най-много веднъж на всеки 4 дни.",
@@ -94,6 +94,7 @@
     "Newest first" : "Първо най-новият",
     "Oldest first" : "Първо най-старият",
     "Ok" : "Добре",
+    "Manually" : "Ръчно",
     "Shared with me" : "Споделено с мен",
     "Privacy" : "Поверителност",
     "Security" : "Сигурност",
@@ -369,7 +370,6 @@
     "Sieve Password" : "Парола за Сито",
     "Save sieve settings" : "Записване на настройките на ситото",
     "Save sieve script" : "Записване на скрипт за сито",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Подписът ви е по-голям от 2 MB. Това може да се отрази на работата на  вашия редактор.",
     "Save signature" : "Запис на подпис",
     "Place signature above quoted text" : "Поставяне на подпис над цитирания текст",
     "Message source" : "Източник на съобщение",
@@ -554,6 +554,7 @@
     "Error loading message" : "Грешка при зареждане съобщението",
     "Add share link from Files" : "Сподели връзка от \"Файлове\"",
     "Choose a file to add as attachment" : "Избери файл за прикачване",
-    "Choose a file to share as a link" : "Изберете файл, който да споделите като връзка"
+    "Choose a file to share as a link" : "Изберете файл, който да споделите като връзка",
+    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Подписът ви е по-голям от 2 MB. Това може да се отрази на работата на  вашия редактор."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

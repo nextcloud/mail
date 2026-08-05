@@ -33,6 +33,7 @@ OC.L10N.register(
     "Newest first" : "ჯერ ახალი",
     "Oldest first" : "ჯერ ძველი",
     "Ok" : "კარგი",
+    "Manually" : "ხელით",
     "Security" : "უსაფრთხოება",
     "Compose new message" : "ახალი წერილის შედგენა",
     "Newer message" : "უფრო ახალი წერილი",

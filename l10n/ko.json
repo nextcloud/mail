@@ -68,10 +68,10 @@
     "Account settings" : "계정 설정",
     "Aliases" : "별칭",
     "Alias to S/MIME certificate mapping" : "S/MIME 인증 매핑을 위한 별칭",
-    "Signature" : "서명",
-    "A signature is added to the text of new messages and replies." : "서명이 새로운 메시지 및 전달 메시지의 텍스트에 추가됩니다.",
     "Writing mode" : "쓰기 모드",
     "Preferred writing mode for new messages and replies." : "새 메시지 및 답장을 위한 기본 쓰기 모드입니다.",
+    "Signature" : "서명",
+    "A signature is added to the text of new messages and replies." : "서명이 새로운 메시지 및 전달 메시지의 텍스트에 추가됩니다.",
     "Default folders" : "기본 폴더",
     "The folders to use for drafts, sent messages, deleted messages, archived messages and junk messages." : "임시 보관함, 보낸 편지함, 휴지통, 보관 및 스팸 메일함으로 지정할 폴더입니다.",
     "Automatic trash deletion" : "자동 휴지통 비우기",
@@ -108,6 +108,7 @@
     "Title of the text block" : "텍스트 블록의 제목",
     "Content of the text block" : "텍스트 블록의 내용",
     "Ok" : "확인",
+    "Manually" : "수동으로",
     "Text blocks" : "텍스트 블록",
     "Privacy" : "프라이버시",
     "Security" : "보안",
@@ -417,7 +418,6 @@
     "Save sieve settings" : "Sieve 설정 저장",
     "The syntax seems to be incorrect:" : "문법이 잘못된 것 같습니다:",
     "Save sieve script" : "Sieve 스크립트 저장",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "서명이 2 MB를 초과합니다. 편집기의 성능에 영향을 미칠 수 있습니다.",
     "Save signature" : "서명 저장",
     "Place signature above quoted text" : "인용 문구 상단에 서명 삽입",
     "Message source" : "메시지 원본",
@@ -637,6 +637,7 @@
     "Tag already exists" : "태그가 이미 존재합니다.",
     "Error loading message" : "메시지 불러오기 오류",
     "Choose a file to add as attachment" : "첨부할 파일을 선택하십시오",
-    "Choose a file to share as a link" : "공유할 링크 파일을 선택하세요."
+    "Choose a file to share as a link" : "공유할 링크 파일을 선택하세요.",
+    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "서명이 2 MB를 초과합니다. 편집기의 성능에 영향을 미칠 수 있습니다."
 },"pluralForm" :"nplurals=1; plural=0;"
 }

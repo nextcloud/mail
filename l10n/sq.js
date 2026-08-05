@@ -33,6 +33,7 @@ OC.L10N.register(
     "Newest first" : "Më i riu i pari",
     "Oldest first" : "Më i vjetri i pari",
     "Ok" : "Në rregull",
+    "Manually" : "Dorazi",
     "Privacy" : "Privatësi",
     "Security" : "Siguria",
     "Manage certificates" : "Menaxhoni certifikatat",
