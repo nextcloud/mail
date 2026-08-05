@@ -30,6 +30,7 @@ OC.L10N.register(
     "Newest first" : "Mpya kwanza",
     "Oldest first" : "Ya zamani kwanza",
     "Ok" : "Sawa",
+    "Manually" : "ya kawaida",
     "Shared with me" : "Shared with me",
     "Privacy" : "Faragha",
     "Security" : "Ulinzi",

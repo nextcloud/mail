@@ -72,10 +72,10 @@ OC.L10N.register(
     "Account settings" : "Fiókbeállítások",
     "Aliases" : "Álnevek",
     "Alias to S/MIME certificate mapping" : "Álnév az S/MIME tanúsítvány-hozzárendeléshez",
-    "Signature" : "Aláírás",
-    "A signature is added to the text of new messages and replies." : "Az aláírás hozzáadásra kerül az új levelekhez és válaszokhoz.",
     "Writing mode" : "Írási mód",
     "Preferred writing mode for new messages and replies." : "Előnyben részesített írási stílus az új levelekhez.",
+    "Signature" : "Aláírás",
+    "A signature is added to the text of new messages and replies." : "Az aláírás hozzáadásra kerül az új levelekhez és válaszokhoz.",
     "Default folders" : "Alapértelmezett mappák",
     "The folders to use for drafts, sent messages, deleted messages, archived messages and junk messages." : "A piszkozatokhoz, az elküldött, a törölt és az archivált levelekhez használandó mappák.",
     "Automatic trash deletion" : "Automata szemét törlés",
@@ -105,6 +105,7 @@ OC.L10N.register(
     "Newest first" : "Legújabb elöl",
     "Oldest first" : "Régebbiek elöl",
     "Ok" : "Rendben",
+    "Manually" : "Kézileg",
     "Text blocks" : "Szövegblokkok",
     "Shared with me" : "Megosztva velem",
     "Privacy" : "Adatvédelem",
@@ -418,7 +419,6 @@ OC.L10N.register(
     "Save sieve settings" : "Levélszűrő beállítások mentése",
     "The syntax seems to be incorrect:" : "A szintaxis helytelennek tűnik:",
     "Save sieve script" : "Levélszűrő parancsfájl mentése",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Az aláírás 2 MB-nál nagyobb. Ez hatással lehet a szerkesztő teljesítményére",
     "Save signature" : "Aláírás mentése",
     "Place signature above quoted text" : "Az aláírás az idézett szöveg fölé helyezése",
     "Message source" : "Üzenet forrása",
@@ -633,6 +633,7 @@ OC.L10N.register(
     "Tag already exists" : "A címke már létezik",
     "Error loading message" : "Hiba történt az üzenet betöltése közben",
     "Choose a file to add as attachment" : "Válasszon mellékletként hozzáadandó fájlt",
-    "Choose a file to share as a link" : "Válasszon fájlt a hivatkozással történő megosztáshoz"
+    "Choose a file to share as a link" : "Válasszon fájlt a hivatkozással történő megosztáshoz",
+    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Az aláírás 2 MB-nál nagyobb. Ez hatással lehet a szerkesztő teljesítményére"
 },
 "nplurals=2; plural=(n != 1);");

@@ -24,6 +24,7 @@ OC.L10N.register(
     "Newest first" : "ใหม่ที่สุดก่อน",
     "Oldest first" : "เก่าที่สุดก่อน",
     "Ok" : "ตกลง",
+    "Manually" : "ด้วยตนเอง",
     "Privacy" : "ความเป็นส่วนตัว",
     "Security" : "ความปลอดภัย",
     "Archive" : "ที่เก็บถาวร",
