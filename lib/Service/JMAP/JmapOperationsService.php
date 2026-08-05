@@ -1024,14 +1024,15 @@ class JmapOperationsService {
 		}
 		// construct save request
 		$r0 = new MailSet($this->dataAccount);
-		$r0->create('1', $message)->in($preSendLocation);
+		$r0->create('1', $message)
+		   ->in($preSendLocation);
 		// construct submission request
 		$r1 = new MailSubmissionSet($this->dataAccount);
-		$e1 = $r1->create('2');
-		$e1->identity($identity);
-		$e1->message('#1');
-		$e1->from($from);
-		$e1->to($rcptTo);
+		$r1->create('2')
+		   ->identity($identity)
+		   ->message('#1')
+		   ->from($from)
+		   ->to($rcptTo);
 		$r1->completionUpdate('#2', [
 			'mailboxIds/' . $postSentLocation => true,
 			'mailboxIds/' . $preSendLocation => null,
