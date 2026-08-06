@@ -2437,13 +2437,13 @@ export default function mainStoreActions() {
 		getMailboxes(accountId) {
 			return this.accountsUnmapped[accountId].mailboxes.map((id) => this.mailboxes[id])
 		},
-		* getRecursiveMailboxIterator(accountId) {
-			for (const mailbox of this.getMailboxes(accountId)) {
+		* getRecursiveMailboxIterator(accountId, parentMailboxId = null) {
+			const mailboxes = parentMailboxId === null
+				? this.getMailboxes(accountId)
+				: this.getSubMailboxes(parentMailboxId)
+			for (const mailbox of mailboxes) {
 				yield mailbox
-
-				for (const subMailboxId of mailbox.mailboxes) {
-					yield this.getMailbox(subMailboxId)
-				}
+				yield* this.getRecursiveMailboxIterator(accountId, mailbox.databaseId)
 			}
 		},
 		getSubMailboxes(id) {
@@ -2451,12 +2451,30 @@ export default function mainStoreActions() {
 			return mailbox.mailboxes.map((id) => this.mailboxes[id])
 		},
 		getParentMailbox(id) {
-			for (const mailbox of this.getMailboxes(this.getMailbox(id).accountId)) {
-				if (mailbox.mailboxes.includes(id)) {
-					return mailbox
-				}
+			const mailbox = this.getMailbox(id)
+			if (!mailbox) {
+				return undefined
 			}
-			return undefined
+
+			const accountId = mailbox.accountId
+			let mailboxes = this.getMailboxes(accountId)
+
+			const hierarchy = mailbox.path.split(mailbox.delimiter)
+			const relativePaths = []
+			let prev = undefined
+
+			for (const path of hierarchy) {
+				relativePaths.push(path)
+				const relative = relativePaths.join(mailbox.delimiter)
+				prev = mailboxes.find((mb) => mb.name === relative)
+				if (!prev) {
+					return undefined
+				}
+
+				mailboxes = this.getSubMailboxes(prev.databaseId)
+			}
+
+			return prev
 		},
 		getUnifiedMailbox(specialRole) {
 			return head(this.accountsUnmapped[UNIFIED_ACCOUNT_ID].mailboxes
