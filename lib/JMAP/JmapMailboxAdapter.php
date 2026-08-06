@@ -135,31 +135,31 @@ class JmapMailboxAdapter {
 
 		/** @var string $acls */
 		$acls = '';
-		if ($rights->readItems() === true) {
+		if ($rights->readItems()) {
 			$acls .= 'lr';
 		}
-		if ($rights->addItems() === true) {
+		if ($rights->addItems()) {
 			$acls .= 'i';
 		}
-		if ($rights->removeItems() === true) {
+		if ($rights->removeItems()) {
 			$acls .= 'te';
 		}
-		if ($rights->setSeen() === true) {
+		if ($rights->setSeen()) {
 			$acls .= 's';
 		}
-		if ($rights->setKeywords() === true) {
+		if ($rights->setKeywords()) {
 			$acls .= 'w';
 		}
-		if ($rights->createChild() === true) {
+		if ($rights->createChild()) {
 			$acls .= 'k';
 		}
-		if ($rights->rename() === true || $rights->delete() === true) {
+		if ($rights->rename() || $rights->delete()) {
 			$acls .= 'x';
 		}
-		if ($rights->submit() === true) {
+		if ($rights->submit()) {
 			$acls .= 'p';
 		}
-		if ($rights->createChild() === true && $rights->rename() === true && $rights->delete() === true) {
+		if ($rights->createChild() && $rights->rename() && $rights->delete()) {
 			$acls .= 'a';
 		}
 
