@@ -120,7 +120,7 @@
 			</NcActionButton>
 			<NcActionInput
 				v-if="subfolderInput"
-				:value.sync="createMailboxName"
+				v-model="createMailboxName"
 				@submit.prevent.stop="createMailbox">
 				<template #icon>
 					<IconAdd :size="20" />
@@ -142,7 +142,7 @@
 			</NcActionButton>
 			<NcActionInput
 				v-if="renameInput"
-				:value.sync="mailboxName"
+				v-model="mailboxName"
 				@submit.prevent.stop="renameMailbox">
 				<template #icon>
 					<IconEdit
@@ -188,7 +188,7 @@
 
 			<NcActionCheckbox
 				v-if="notVirtual"
-				:checked="mailbox.isSubscribed"
+				:model-value="mailbox.isSubscribed"
 				:disabled="changeSubscription"
 				@update:checked="changeFolderSubscription">
 				{{ t('mail', 'Subscribed') }}
@@ -196,7 +196,7 @@
 
 			<NcActionCheckbox
 				v-if="notVirtual && notInbox"
-				:checked="mailbox.syncInBackground"
+				:model-value="mailbox.syncInBackground"
 				:disabled="changingSyncInBackground"
 				@update:checked="changeSyncInBackground">
 				{{ t('mail', 'Sync in background') }}
@@ -326,7 +326,7 @@ export default {
 		IconInboxOutline,
 		IconWrench,
 		ImportantIcon,
-		IconLoading,
+		NcLoadingIcon,
 		MoveMailboxModal,
 		AlarmIcon,
 	},

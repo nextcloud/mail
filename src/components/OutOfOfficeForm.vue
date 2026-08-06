@@ -106,8 +106,8 @@
 		</p>
 
 		<NcButton
-			type="primary"
-			native-type="submit"
+			variant="primary"
+			type="submit"
 			:aria-label="t('mail', 'Save autoresponder')"
 			:disabled="loading || !valid">
 			<template #icon>

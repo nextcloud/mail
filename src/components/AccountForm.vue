@@ -243,8 +243,8 @@
 				v-if="mode === 'auto'"
 				:aria-label="submitButtonText"
 				class="account-form__submit-button"
-				type="primary"
-				native-type="submit"
+				variant="primary"
+				type="submit"
 				:disabled="isDisabledAuto || loading"
 				@click.prevent="onSubmit">
 				<template #icon>
@@ -257,8 +257,8 @@
 				v-else-if="mode === 'manual'"
 				:aria-label="submitButtonText"
 				class="account-form__submit-button"
-				type="primary"
-				native-type="submit"
+				variant="primary"
+				type="submit"
 				:disabled="isDisabledManual || loading"
 				@click.prevent="onSubmit">
 				<template #icon>
@@ -277,7 +277,7 @@
 <script>
 import { loadState } from '@nextcloud/initial-state'
 import { t } from '@nextcloud/l10n'
-import { NcButton, NcLoadingIcon, NcCheckboxRadioSwitch, NcInputField, NcPasswordField } from '@nextcloud/vue'
+import { NcButton, NcCheckboxRadioSwitch, NcInputField, NcLoadingIcon, NcPasswordField } from '@nextcloud/vue'
 import { mapState, mapStores } from 'pinia'
 import { Tab, Tabs } from 'vue-tabs-component'
 import IconCheck from 'vue-material-design-icons/Check.vue'

@@ -57,7 +57,7 @@
 			{{ errorMessage }}
 		</p>
 		<NcButton
-			type="primary"
+			variant="primary"
 			:disabled="loading"
 			:aria-label="t('mail', 'Save sieve settings')"
 			@click.prevent="onSubmit">

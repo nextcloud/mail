@@ -123,9 +123,9 @@
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { t } from '@nextcloud/l10n'
 import {
+	NcButton,
 	NcEmptyContent,
 	NcModal,
-	NcButton,
 } from '@nextcloud/vue'
 import { mapActions, mapState, mapStores } from 'pinia'
 import DefaultComposerIcon from 'vue-material-design-icons/ArrowCollapse.vue'

@@ -20,7 +20,7 @@
 				</p>
 				<NcButton
 					v-if="contactsWithEmail && contactsWithEmail.length > 0"
-					type="tertiary-no-background"
+					variant="tertiary-no-background"
 					:aria-label="t('mail', 'Contacts with this address')"
 					class="contact-existing">
 					<template #icon>
@@ -31,7 +31,7 @@
 				<div v-if="selection === ContactSelectionStateEnum.select" class="contact-menu">
 					<NcButton
 						:aria-label="t('mail', 'Reply')"
-						type="tertiary-no-background"
+						variant="tertiary-no-background"
 						@click="onClickReply">
 						<template #icon>
 							<IconReply :size="20" />
@@ -39,7 +39,7 @@
 						{{ t('mail', 'Reply') }}
 					</NcButton>
 					<NcButton
-						type="tertiary-no-background"
+						variant="tertiary-no-background"
 						:aria-label="t('mail', 'Add to Contact')"
 						@click="selection = ContactSelectionStateEnum.existing">
 						<template #icon>
@@ -48,7 +48,7 @@
 						{{ t('mail', 'Add to Contact') }}
 					</NcButton>
 					<NcButton
-						type="tertiary-no-background"
+						variant="tertiary-no-background"
 						:aria-label="t('mail', 'New Contact')"
 						@click="selection = ContactSelectionStateEnum.new">
 						<template #icon>
@@ -57,7 +57,7 @@
 						{{ t('mail', 'New Contact') }}
 					</NcButton>
 					<NcButton
-						type="tertiary-no-background"
+						variant="tertiary-no-background"
 						:aria-label="t('mail', 'Copy to clipboard')"
 						@click="onClickCopyToClipboard">
 						<template #icon>
@@ -86,7 +86,7 @@
 				</div>
 				<div v-if="selection !== ContactSelectionStateEnum.select">
 					<NcButton
-						type="tertiary-no-background"
+						variant="tertiary-no-background"
 						:aria-label="t('mail', 'Go back')"
 						@click="selection = ContactSelectionStateEnum.select">
 						<template #icon>
@@ -98,7 +98,7 @@
 					<NcButton
 						v-close-popover
 						:disabled="addButtonDisabled"
-						type="tertiary-no-background"
+						variant="tertiary-no-background"
 						:aria-label="t('mail', 'Add')"
 						@click="onClickAddToContact">
 						<template #icon>
