@@ -230,7 +230,7 @@ class MailManager {
 	 * @todo evaluate if we should sync mailboxes first
 	 */
 	public function deleteMessage(Account $account, Mailbox $mailbox, Message $message): void {
-		$this->deleteMessages($account, $mailbox, ...[$message]);
+		$this->deleteMessages($account, $mailbox, $message);
 	}
 
 	public function deleteMessages(Account $account, Mailbox $sourceMailbox, Message ...$messages): void {

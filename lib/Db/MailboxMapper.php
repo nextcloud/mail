@@ -169,28 +169,6 @@ class MailboxMapper extends QBMapper {
 		return (int)$row['account_id'];
 	}
 
-	/**
-	 * @throws DoesNotExistException
-	 * @throws ServiceException
-	 */
-	public function findByName(Account $account, string $name): Mailbox {
-		$qb = $this->db->getQueryBuilder();
-
-		$select = $qb->select('*')
-			->from($this->getTableName())
-			->where(
-				$qb->expr()->eq('account_id', $qb->createNamedParameter($account->getId())),
-				$qb->expr()->eq('name', $qb->createNamedParameter($name))
-			);
-
-		try {
-			return $this->findEntity($select);
-		} catch (MultipleObjectsReturnedException $e) {
-			// Not possible due to DB constraints
-			throw new ServiceException('The impossible has happened', 42, $e);
-		}
-	}
-
 	public function findSpecialUseMailbox(Account $account, string $specialUse): ?Mailbox {
 		foreach ($this->findAll($account) as $mailbox) {
 			if ($mailbox->isSpecialUse($specialUse) || ($specialUse === 'inbox' && $mailbox->isInbox())) {
