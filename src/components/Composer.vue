@@ -47,9 +47,9 @@
 				<label class="to-label" for="to">
 					{{ t('mail', 'To') }}
 				</label>
-				<ButtonVue size="small" type="tertiary-no-background" @click.prevent="toggleViewMode">
+				<NcButton size="small" type="tertiary-no-background" @click.prevent="toggleViewMode">
 					{{ t('mail', 'Cc/Bcc') }}
-				</ButtonVue>
+				</NcButton>
 			</div>
 			<div class="composer-fields--custom">
 				<NcSelect
@@ -92,7 +92,7 @@
 					</template>
 					<template #option="option">
 						<div>
-							<ListItemIcon
+							<NcListItemIcon
 								:no-margin="true"
 								:name="option.label"
 								:subname="getSubnameForRecipient(option)"
@@ -150,7 +150,7 @@
 					</template>
 					<template #option="option">
 						<div>
-							<ListItemIcon
+							<NcListItemIcon
 								:no-margin="true"
 								:name="option.label"
 								:subname="getSubnameForRecipient(option)"
@@ -209,7 +209,7 @@
 					</template>
 					<template #option="option">
 						<div>
-							<ListItemIcon
+							<NcListItemIcon
 								:no-margin="true"
 								:name="option.label"
 								:subname="getSubnameForRecipient(option)"
@@ -292,7 +292,7 @@
 					<span v-else-if="!canSaveDraft" class="draft-status">{{ t('mail', 'Error saving draft') }}</span>
 					<span v-else-if="draftSaved" class="draft-status">{{ t('mail', 'Draft saved') }}</span>
 				</p>
-				<ButtonVue
+				<NcButton
 					v-if="!savingDraft && !canSaveDraft"
 					class="button"
 					type="tertiary"
@@ -301,8 +301,8 @@
 					<template #icon>
 						<Download :size="20" :title="t('mail', 'Save draft')" />
 					</template>
-				</ButtonVue>
-				<ButtonVue
+				</NcButton>
+				<NcButton
 					v-if="!savingDraft && draftSaved"
 					class="button"
 					type="tertiary"
@@ -311,10 +311,10 @@
 					<template #icon>
 						<Delete :size="20" :title="t('mail', 'Discard & close draft')" />
 					</template>
-				</ButtonVue>
+				</NcButton>
 			</div>
 			<div class="composer-actions--secondary-actions">
-				<ButtonVue
+				<NcButton
 					v-if="!encrypt && editorPlainText"
 					type="tertiary"
 					:aria-label="t('mail', 'Enable formatting')"
@@ -322,8 +322,8 @@
 					<template #icon>
 						<IconFormat :size="20" :title="t('mail', 'Enable formatting')" />
 					</template>
-				</ButtonVue>
-				<ButtonVue
+				</NcButton>
+				<NcButton
 					v-if="!encrypt && !editorPlainText"
 					type="tertiary"
 					:pressed="true"
@@ -332,43 +332,43 @@
 					<template #icon>
 						<IconFormat :size="20" :title="t('mail', 'Disable formatting')" />
 					</template>
-				</ButtonVue>
+				</NcButton>
 
-				<Actions :open.sync="isAddAttachmentsOpen">
+				<NcActions :open.sync="isAddAttachmentsOpen">
 					<template #icon>
 						<Paperclip :size="20" />
 					</template>
-					<ActionButton :close-after-click="true" @click="onAddLocalAttachment">
+					<NcActionButton :close-after-click="true" @click="onAddLocalAttachment">
 						<template #icon>
 							<IconUpload :size="20" />
 						</template>
 						{{
 							t('mail', 'Upload attachment')
 						}}
-					</ActionButton>
-					<ActionButton :close-after-click="true" @click="onAddCloudAttachment">
+					</NcActionButton>
+					<NcActionButton :close-after-click="true" @click="onAddCloudAttachment">
 						<template #icon>
 							<IconFolder :size="20" />
 						</template>
 						{{
 							t('mail', 'Add attachment from Files')
 						}}
-					</ActionButton>
-				</Actions>
+					</NcActionButton>
+				</NcActions>
 
-				<Actions
+				<NcActions
 					:open.sync="isActionsOpen"
 					@close="isMoreActionsOpen = false">
 					<template v-if="!isMoreActionsOpen">
-						<ActionButton v-if="isPickerAvailable" :close-after-click="true" @click="openPicker">
+						<NcActionButton v-if="isPickerAvailable" :close-after-click="true" @click="openPicker">
 							<template #icon>
 								<IconLinkPicker :size="20" />
 							</template>
 							{{
 								t('mail', 'Smart picker')
 							}}
-						</ActionButton>
-						<ActionButton :close-after-click="true" @click="openTextBlockPicker">
+						</NcActionButton>
+						<NcActionButton :close-after-click="true" @click="openTextBlockPicker">
 							<template #icon>
 								<NcIconSvgWrapper
 									:size="20"
@@ -378,8 +378,8 @@
 							{{
 								t('mail', 'Text blocks')
 							}}
-						</ActionButton>
-						<ActionButton
+						</NcActionButton>
+						<NcActionButton
 							v-if="!isScheduledSendingDisabled"
 							:close-after-click="false"
 							@click="isMoreActionsOpen = true">
@@ -389,29 +389,29 @@
 							{{
 								t('mail', 'Send later')
 							}}
-						</ActionButton>
-						<ActionCheckbox
+						</NcActionButton>
+						<NcActionCheckbox
 							:checked="requestMdnVal"
 							@check="requestMdnVal = true"
 							@uncheck="requestMdnVal = false">
 							{{ t('mail', 'Request a read receipt') }}
-						</ActionCheckbox>
-						<ActionCheckbox
+						</NcActionCheckbox>
+						<NcActionCheckbox
 							v-if="smimeCertificateForCurrentAlias"
 							:checked="wantsSmimeSign"
 							@check="smimeSignCheck(true)"
 							@uncheck="smimeSignCheck(false)">
 							{{ t('mail', 'Sign message with S/MIME') }}
-						</ActionCheckbox>
-						<ActionCheckbox
+						</NcActionCheckbox>
+						<NcActionCheckbox
 							v-if="smimeCertificateForCurrentAlias"
 							:checked="wantsSmimeEncrypt"
 							:disabled="encrypt"
 							@check="wantsSmimeEncrypt = true"
 							@uncheck="wantsSmimeEncrypt = false">
 							{{ t('mail', 'Encrypt message with S/MIME') }}
-						</ActionCheckbox>
-						<ActionCheckbox
+						</NcActionCheckbox>
+						<NcActionCheckbox
 							v-if="mailvelope.available"
 							:checked="encrypt"
 							:disabled="wantsSmimeEncrypt"
@@ -419,10 +419,10 @@
 							@check="encrypt = true"
 							@uncheck="encrypt = false">
 							{{ t('mail', 'Encrypt message with Mailvelope') }}
-						</ActionCheckbox>
+						</NcActionCheckbox>
 					</template>
 					<template v-if="isMoreActionsOpen">
-						<ActionButton
+						<NcActionButton
 							:close-after-click="false"
 							@click="isMoreActionsOpen = false">
 							<template #icon>
@@ -431,43 +431,43 @@
 									:size="20" />
 								{{ t('mail', 'Send later') }}
 							</template>
-						</ActionButton>
-						<ActionRadio
+						</NcActionButton>
+						<NcActionRadio
 							v-model="sendAtVal"
 							:value="0"
 							:name="sendAtVal.toString()"
 							class="send-action-radio">
 							{{ t('mail', 'Send now') }}
-						</ActionRadio>
-						<ActionRadio
+						</NcActionRadio>
+						<NcActionRadio
 							v-model="sendAtVal"
 							:value="dateTomorrowMorning"
 							:name="sendAtVal.toString()"
 							class="send-action-radio send-action-radio--multiline">
 							{{ t('mail', 'Tomorrow morning') }} - {{ convertToLocalDate(dateTomorrowMorning) }}
-						</ActionRadio>
-						<ActionRadio
+						</NcActionRadio>
+						<NcActionRadio
 							v-model="sendAtVal"
 							:value="dateTomorrowAfternoon"
 							:name="sendAtVal.toString()"
 							class="send-action-radio send-action-radio--multiline">
 							{{ t('mail', 'Tomorrow afternoon') }} - {{ convertToLocalDate(dateTomorrowAfternoon) }}
-						</ActionRadio>
-						<ActionRadio
+						</NcActionRadio>
+						<NcActionRadio
 							v-model="sendAtVal"
 							:value="dateMondayMorning"
 							:name="sendAtVal.toString()"
 							class="send-action-radio send-action-radio--multiline">
 							{{ t('mail', 'Monday morning') }} - {{ convertToLocalDate(dateMondayMorning) }}
-						</ActionRadio>
-						<ActionRadio
+						</NcActionRadio>
+						<NcActionRadio
 							v-model="sendAtVal"
 							:name="sendAtVal.toString()"
 							class="send-action-radio"
 							:value="customSendTime">
 							{{ t('mail', 'Custom date and time') }}
-						</ActionRadio>
-						<ActionInput
+						</NcActionRadio>
+						<NcActionInput
 							v-model="selectedDate"
 							:is-native-picker="true"
 							:min="dateToday"
@@ -480,11 +480,11 @@
 							:minute-step="5"
 							@change="onChangeSendLater(customSendTime)">
 							{{ t('mail', 'Enter a date') }}
-						</ActionInput>
+						</NcActionInput>
 					</template>
-				</Actions>
+				</NcActions>
 
-				<ButtonVue
+				<NcButton
 					:disabled="!canSend || sending"
 					native-type="submit"
 					type="primary"
@@ -496,7 +496,7 @@
 							:size="20" />
 					</template>
 					{{ submitButtonTitle }}
-				</ButtonVue>
+				</NcButton>
 			</div>
 		</div>
 	</div>
@@ -504,9 +504,9 @@
 
 <script>
 import { showError, showWarning } from '@nextcloud/dialogs'
-import { getCanonicalLocale, getFirstDay, getLocale, translate as t } from '@nextcloud/l10n'
+import { getCanonicalLocale, getFirstDay, getLocale, t } from '@nextcloud/l10n'
 import moment from '@nextcloud/moment'
-import { NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionRadio as ActionRadio, NcActions as Actions, NcButton as ButtonVue, NcListItemIcon as ListItemIcon, NcIconSvgWrapper, NcSelect } from '@nextcloud/vue'
+import { NcActionButton, NcActionCheckbox, NcActionInput, NcActionRadio, NcActions, NcButton, NcListItemIcon, NcIconSvgWrapper, NcSelect } from '@nextcloud/vue'
 import debouncePromise from 'debounce-promise'
 import debounce from 'lodash/fp/debounce.js'
 import trimStart from 'lodash/fp/trimCharsStart.js'
@@ -555,12 +555,12 @@ export default {
 	name: 'Composer',
 	components: {
 		MailvelopeEditor,
-		Actions,
-		ActionButton,
-		ActionCheckbox,
-		ActionInput,
-		ActionRadio,
-		ButtonVue,
+		NcActions,
+		NcActionButton,
+		NcActionCheckbox,
+		NcActionInput,
+		NcActionRadio,
+		NcButton,
 		ComposerAttachments,
 		TextBlockModal,
 		ChevronLeft,
@@ -573,7 +573,7 @@ export default {
 		NcIconSvgWrapper,
 		Paperclip,
 		TextEditor,
-		ListItemIcon,
+		NcListItemIcon,
 		RecipientListItem,
 		Send,
 		SendClock,

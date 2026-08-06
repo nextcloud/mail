@@ -77,42 +77,42 @@
 					</NcButton>
 				</div>
 
-				<Actions class="app-content-list-item-menu" menu-align="right">
-					<ActionButton
+				<NcActions class="app-content-list-item-menu" menu-align="right">
+					<NcActionButton
 						v-if="isAtLeastOneSelectedNotJunk"
 						@click.prevent="markSelectionJunk">
 						<template #icon>
 							<AlertOctagonIcon :size="20" />
 						</template>
 						{{ n('mail', 'Mark {number} as spam', 'Mark {number} as spam', selection.length, { number: selection.length }) }}
-					</ActionButton>
-					<ActionButton
+					</NcActionButton>
+					<NcActionButton
 						v-if="isAtLeastOneSelectedJunk"
 						@click.prevent="markSelectionNotJunk">
 						<template #icon>
 							<AlertOctagonIcon :size="20" />
 						</template>
 						{{ n('mail', 'Mark {number} as not spam', 'Mark {number} as not spam', selection.length, { number: selection.length }) }}
-					</ActionButton>
-					<ActionButton :close-after-click="true" @click.prevent="onOpenTagModal">
+					</NcActionButton>
+					<NcActionButton :close-after-click="true" @click.prevent="onOpenTagModal">
 						<template #icon>
 							<TagIcon :size="20" />
 						</template>
 						{{ n('mail', 'Edit tags for {number}', 'Edit tags for {number}', selection.length, { number: selection.length }) }}
-					</ActionButton>
-					<ActionButton v-if="!account.isUnified" :close-after-click="true" @click.prevent="onOpenMoveModal">
+					</NcActionButton>
+					<NcActionButton v-if="!account.isUnified" :close-after-click="true" @click.prevent="onOpenMoveModal">
 						<template #icon>
 							<OpenInNewIcon :size="20" />
 						</template>
 						{{ n('mail', 'Move {number} thread', 'Move {number} threads', selection.length, { number: selection.length }) }}
-					</ActionButton>
-					<ActionButton :close-after-click="true" @click.prevent="forwardSelectedAsAttachment">
+					</NcActionButton>
+					<NcActionButton :close-after-click="true" @click.prevent="forwardSelectedAsAttachment">
 						<template #icon>
 							<ShareIcon :size="20" />
 						</template>
 						{{ n('mail', 'Forward {number} as attachment', 'Forward {number} as attachment', selection.length, { number: selection.length }) }}
-					</ActionButton>
-				</Actions>
+					</NcActionButton>
+				</NcActions>
 			</div>
 		</transition>
 
@@ -167,7 +167,7 @@
 
 <script>
 import { showError } from '@nextcloud/dialogs'
-import { NcActionButton as ActionButton, NcActions as Actions, NcButton, NcDialog } from '@nextcloud/vue'
+import { NcActionButton, NcActions, NcButton, NcDialog } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import { differenceWith } from 'ramda'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
@@ -200,11 +200,11 @@ export default {
 		IconUnFavorite,
 		EmailUnread,
 		EmailRead,
-		Actions,
+		NcActions,
 		AddIcon,
 		NcButton,
 		NcDialog,
-		ActionButton,
+		NcActionButton,
 		Envelope,
 		IconDelete,
 		ImportantIcon,

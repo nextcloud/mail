@@ -61,7 +61,7 @@
 				@click="() => isFilePickerOpen = true">
 				<template #icon>
 					<CloudDownload v-if="!savingToCloud" />
-					<IconLoading v-else class="spin" />
+					<NcLoadingIcon v-else class="spin" />
 				</template>
 				{{ t('mail', 'Save all to Files') }}
 			</NcButton>
@@ -84,7 +84,7 @@
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
 import { generateUrl } from '@nextcloud/router'
-import { NcLoadingIcon as IconLoading, NcButton } from '@nextcloud/vue'
+import { NcLoadingIcon, NcButton } from '@nextcloud/vue'
 import ChevronDown from 'vue-material-design-icons/ChevronDown.vue'
 import ChevronUp from 'vue-material-design-icons/ChevronUp.vue'
 import CloudDownload from 'vue-material-design-icons/CloudDownloadOutline.vue'
@@ -99,7 +99,7 @@ export default {
 	components: {
 		NcButton,
 		MessageAttachment,
-		IconLoading,
+		NcLoadingIcon,
 		Download,
 		CloudDownload,
 		ChevronDown,

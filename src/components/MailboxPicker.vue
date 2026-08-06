@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<Modal @close="onClose">
+	<NcModal @close="onClose">
 		<div ref="content" class="modal-content">
 			<h2 class="oc-dialog-title">
 				{{ t('mail', 'Choose target folder') }}
@@ -54,24 +54,24 @@
 				<h2>{{ t('mail', 'No more submailboxes in here') }}</h2>
 			</div>
 			<div class="buttons">
-				<ButtonVue
+				<NcButton
 					type="primary"
 					:disabled="loading || (!allowRoot && !selectedMailboxId)"
 					:aria-label="loading ? labelSelectLoading : labelSelect"
 					@click="onSelect">
 					<template #icon>
-						<IconLoading v-if="loading" :size="20" />
+						<NcLoadingIcon v-if="loading" :size="20" />
 					</template>
 					{{ loading ? labelSelectLoading : labelSelect }}
-				</ButtonVue>
+				</NcButton>
 			</div>
 		</div>
-	</Modal>
+	</NcModal>
 </template>
 
 <script>
-import { translate as t } from '@nextcloud/l10n'
-import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcModal as Modal } from '@nextcloud/vue'
+import { t } from '@nextcloud/l10n'
+import { NcButton, NcLoadingIcon, NcModal } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import IconArchive from 'vue-material-design-icons/ArchiveArrowDownOutline.vue'
 import IconBreadcrumb from 'vue-material-design-icons/ChevronRight.vue'
@@ -87,8 +87,8 @@ import { mailboxHasRights } from '../util/acl.js'
 export default {
 	name: 'MailboxPicker',
 	components: {
-		ButtonVue,
-		Modal,
+		NcButton,
+		NcModal,
 		IconInbox,
 		IconDraft,
 		IconSent,
@@ -96,7 +96,7 @@ export default {
 		IconTrash,
 		IconFolder,
 		IconBreadcrumb,
-		IconLoading,
+		NcLoadingIcon,
 	},
 
 	props: {

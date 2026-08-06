@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<Modal
+	<NcModal
 		v-if="showMessageComposer"
 		:size="modalSize"
 		:name="modalTitle"
@@ -34,7 +34,7 @@
 				</NcButton>
 
 				<KeepAlive>
-					<EmptyContent
+					<NcEmptyContent
 						v-if="error"
 						:name="t('mail', 'Error sending your message')"
 						class="empty-content"
@@ -48,8 +48,8 @@
 								{{ t('mail', 'Retry') }}
 							</NcButton>
 						</template>
-					</EmptyContent>
-					<EmptyContent
+					</NcEmptyContent>
+					<NcEmptyContent
 						v-else-if="warning"
 						:name="t('mail', 'Warning sending your message')"
 						class="empty-content"
@@ -65,7 +65,7 @@
 								{{ t('mail', 'Send anyway') }}
 							</NcButton>
 						</template>
-					</EmptyContent>
+					</NcEmptyContent>
 
 					<Composer
 						ref="composer"
@@ -116,15 +116,15 @@
 				<RecipientInfo />
 			</div>
 		</div>
-	</Modal>
+	</NcModal>
 </template>
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import { translate as t } from '@nextcloud/l10n'
+import { t } from '@nextcloud/l10n'
 import {
-	NcEmptyContent as EmptyContent,
-	NcModal as Modal,
+	NcEmptyContent,
+	NcModal,
 	NcButton,
 } from '@nextcloud/vue'
 import { mapActions, mapState, mapStores } from 'pinia'
@@ -151,8 +151,8 @@ export default {
 	components: {
 		NcButton,
 		Composer,
-		EmptyContent,
-		Modal,
+		NcEmptyContent,
+		NcModal,
 		MinimizeIcon,
 		MaximizeIcon,
 		DefaultComposerIcon,
