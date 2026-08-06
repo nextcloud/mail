@@ -43,9 +43,14 @@
 			</div>
 		</div>
 		<div class="composer-fields">
-			<label class="to-label" for="to">
-				{{ t('mail', 'To') }}
-			</label>
+			<div class="composer-fields__label">
+				<label class="to-label" for="to">
+					{{ t('mail', 'To') }}
+				</label>
+				<NcButton size="small" type="tertiary-no-background" @click.prevent="toggleViewMode">
+					{{ t('mail', 'Cc/Bcc') }}
+				</NcButton>
+			</div>
 			<div class="composer-fields--custom">
 				<NcSelect
 					id="to"
@@ -543,7 +548,7 @@
 
 <script>
 import { showError, showWarning } from '@nextcloud/dialogs'
-import { getCanonicalLocale, getFirstDay, getLocale, translate as t } from '@nextcloud/l10n'
+import { getCanonicalLocale, getFirstDay, getLocale, t } from '@nextcloud/l10n'
 import moment from '@nextcloud/moment'
 import { NcActionButton, NcActionCheckbox, NcActionInput, NcActionRadio, NcActions, NcButton, NcListItemIcon, NcIconSvgWrapper, NcSelect } from '@nextcloud/vue'
 import debouncePromise from 'debounce-promise'
