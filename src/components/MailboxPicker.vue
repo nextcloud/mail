@@ -106,6 +106,11 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+
+		select: {
+			type: Function,
+			required: true,
+		},
 	},
 
 	data() {
@@ -159,7 +164,7 @@ export default {
 				{
 					variant: 'primary',
 					disabled: this.loading || (!this.allowRoot && !this.selectedMailboxId),
-					callback: this.onSelect,
+					callback: () => this.select(this.selectedMailboxId),
 					label: this.loading ? this.labelSelectLoading : this.labelSelect,
 				},
 			]
@@ -218,12 +223,6 @@ export default {
 
 			this.selectedMailboxId = mailbox.databaseId
 			this.$emit('update:selected', this.selectedMailboxId)
-		},
-
-		async onSelect() {
-			return new Promise((resolve) => {
-				this.$emit('select', this.selectedMailboxId, () => resolve())
-			})
 		},
 
 		onClose() {
