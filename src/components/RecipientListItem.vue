@@ -4,7 +4,7 @@
 -->
 <template>
 	<div :class="isInternal ? 'ncselect__tag--recipient' : 'ncselect__tag--recipient external'" :title="option.email">
-		<ListItemIcon
+		<NcListItemIcon
 			:no-margin="true"
 			:name="option.label || option.displayName || option.email"
 			:url="option.photo"
@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { NcListItemIcon as ListItemIcon } from '@nextcloud/vue'
+import { NcListItemIcon } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import Close from 'vue-material-design-icons/Close.vue'
 import useMainStore from '../store/mainStore.js'
@@ -25,7 +25,7 @@ import useMainStore from '../store/mainStore.js'
 export default {
 	name: 'RecipientListItem',
 	components: {
-		ListItemIcon,
+		NcListItemIcon,
 		Close,
 	},
 
