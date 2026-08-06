@@ -78,7 +78,7 @@ class PreviewEnhancer {
 			return $messages;
 		}
 
-		if ($account->getMailAccount()->getProtocol() !== MailAccount::PROTOCOL_IMAP) {
+		if ($account->getMailAccount()->getProtocol() === MailAccount::PROTOCOL_JMAP) {
 			foreach ($messages as $message) {
 				if ($message->getStructureAnalyzed()) {
 					continue;

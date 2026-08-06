@@ -125,13 +125,18 @@ class Mailbox extends Entity implements JsonSerializable {
 	}
 
 	public function isCached(): bool {
-		return (
-			$this->getSyncNewToken() !== null
+		if ($this->getSyncNewToken() !== null
 			&& $this->getSyncChangedToken() !== null
 			&& $this->getSyncVanishedToken() !== null
-		) || (
-			$this->getState() !== null
-		);
+		) {
+			return true;
+		}
+
+		if ($this->getState() !== null) {
+			return true;
+		}
+
+		return false;
 	}
 
 	private function isLockActive(?int $lock, int $now): bool {
@@ -164,6 +169,14 @@ class Mailbox extends Entity implements JsonSerializable {
 	}
 
 	public function getCacheBuster(): string {
+		$state = $this->getState();
+		if ($state !== null) {
+			return hash('md5', implode('|', [
+				(string)$this->getId(),
+				$state,
+			]));
+		}
+
 		return hash('md5', implode('|', [
 			(string)$this->getId(),
 			$this->getSyncNewToken() ?? 'null',
