@@ -1951,17 +1951,13 @@ export default {
 .bcc-label {
 	width: calc(var(--default-grid-baseline) * 12);
 	flex-shrink: 0;
-	padding-top: calc(var(--default-grid-baseline) * 1.5 + 1px);
+	padding-top: calc(var(--default-grid-baseline) * 4 + 1px);
 	color: var(--color-text-maxcontrast);
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
 
-// Scope extra padding only to the To select so Cc/Bcc selects are unaffected
-.to-select :deep(.vs__selected-options) {
-	padding-inline-end: calc(var(--default-grid-baseline) * 10);
-}
 
 // NcSelect caps the toggle at 100px with overflow-y:auto, preventing expanded
 // chips from pushing CC/BCC down. The no-wrap/select--no-wrap CSS already
@@ -1970,6 +1966,15 @@ export default {
 :deep(.v-select.select .vs__dropdown-toggle) {
 	max-height: none;
 	overflow-y: visible;
+	border-radius: var(--border-radius-large);
+}
+
+// NcSelect adds a rectangular outline on focus/active/open — override with none
+// so the rounded border-radius is not broken by a sharp outline.
+:deep(.v-select.select:not(.vs--disabled, .vs--open) .vs__dropdown-toggle:active),
+:deep(.v-select.select:not(.vs--disabled, .vs--open) .vs__dropdown-toggle:focus-within),
+:deep(.v-select.select.vs--open .vs__dropdown-toggle) {
+	outline: none;
 }
 
 
@@ -1994,12 +1999,16 @@ export default {
 	}
 }
 
+// Reserve space for the toggle only in the search row — chips on other rows fill full width
+.to-select :deep(.vs__search) {
+	padding-inline-end: calc(var(--default-grid-baseline) * 10);
+}
+
 .copy-toggle {
-	// Absolute so it sits inside the To field visually without adding to its height
+	// Absolute so it overlays the bottom-right of the To field without affecting chip layout
 	position: absolute;
 	inset-inline-end: 0;
-	top: 50%;
-	transform: translateY(-50%);
+	bottom: 0;
 	z-index: 1;
 	// Override the .composer-fields--custom button rule
 	opacity: 1;
@@ -2091,7 +2100,7 @@ export default {
 .composer-actions--secondary-actions {
 	display: flex;
 	flex-direction: row;
-	padding: 12px;
+	padding: calc(var(--default-grid-baseline) * 2);
 	gap: 5px;
 }
 
@@ -2104,7 +2113,7 @@ export default {
 }
 
 .composer-actions-draft-status {
-	padding-inline-start: 10px;
+	padding-inline-start: 0;
 }
 
 :deep(.vs__selected-options .vs__dropdown-toggle .vs--multiple ){
