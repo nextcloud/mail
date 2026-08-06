@@ -57,7 +57,7 @@
 
 <script>
 import { showError, showInfo } from '@nextcloud/dialogs'
-import { NcActionInput, NcActionText, NcLoadingIcon, NcModal, NcButton } from '@nextcloud/vue'
+import { NcActionInput, NcActionText, NcButton, NcLoadingIcon, NcModal } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconTag from 'vue-material-design-icons/TagOutline.vue'

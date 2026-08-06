@@ -55,7 +55,7 @@
 			</div>
 			<div class="buttons">
 				<NcButton
-					type="primary"
+					variant="primary"
 					:disabled="loading || (!allowRoot && !selectedMailboxId)"
 					:aria-label="loading ? labelSelectLoading : labelSelect"
 					@click="onSelect">
