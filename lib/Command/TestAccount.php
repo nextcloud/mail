@@ -201,7 +201,7 @@ final class TestAccount extends Command {
 
 		$mailAccount = $account->getMailAccount();
 		$sslMode = $mailAccount->getInboundSslMode();
-		$scheme = ($sslMode === 'none') ? 'http' : 'https';
+		$scheme = ($sslMode === 'yes') ? 'https' : 'http';
 		$host = $mailAccount->getInboundHost() ?? '(not set)';
 		$port = $mailAccount->getInboundPort();
 		$path = $mailAccount->getPath() ?? '/.well-known/jmap';
@@ -310,7 +310,7 @@ final class TestAccount extends Command {
 			return;
 		}
 
-		$this->renderMessageTable($io, $this->buildImapMessageRows($messages), 'No recent messages found in INBOX.');
+		$this->renderMessageTable($io, $this->buildImapMessageRows($messages));
 	}
 
 	/**
@@ -392,7 +392,7 @@ final class TestAccount extends Command {
 
 		/** @var list<Message> $messageList */
 		$messageList = $messages['list'] ?? [];
-		$this->renderMessageTable($io, $this->buildJmapMessageRows($messageList), 'No recent messages found in INBOX.');
+		$this->renderMessageTable($io, $this->buildJmapMessageRows($messageList));
 	}
 
 	/**
@@ -449,9 +449,9 @@ final class TestAccount extends Command {
 	/**
 	 * @param list<array<int, string>> $rows
 	 */
-	private function renderMessageTable(SymfonyStyle $io, array $rows, string $emptyMessage): void {
+	private function renderMessageTable(SymfonyStyle $io, array $rows): void {
 		if ($rows === []) {
-			$io->note($emptyMessage);
+			$io->note('No recent messages found in INBOX.');
 			return;
 		}
 

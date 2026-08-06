@@ -117,7 +117,7 @@ class JmapMailboxConnector implements IMailboxConnector {
 		// find the parent mailbox to retrieve remote mailbox id for remote operation
 		if ($parentName !== null) {
 			try {
-				$location = $this->mailboxMapper->findByName($account, $parentName);
+				$location = $this->mailboxMapper->find($account, $parentName);
 			} catch (DoesNotExistException $e) {
 				throw new ServiceException('JMAP parent mailbox does not exist: ' . $parentName);
 			}
@@ -145,6 +145,7 @@ class JmapMailboxConnector implements IMailboxConnector {
 		}
 		// create in local store, using the full path name
 		$mailbox->setName($name);
+		$mailbox->setNameHash(md5($name));
 		$mailbox = $this->mailboxMapper->insert($mailbox);
 
 		return $mailbox;
@@ -175,6 +176,7 @@ class JmapMailboxConnector implements IMailboxConnector {
 		// update local store, with the full path name
 		try {
 			$mailbox->setName($newName);
+			$mailbox->setNameHash(md5($newName));
 			return $this->mailboxMapper->update($mailbox);
 		} catch (DoesNotExistException $e) {
 			throw new ServiceException("The renamed mailbox $newName does not exist", 0, $e);
