@@ -810,6 +810,21 @@ describe('Vuex store actions', () => {
 			}))
 		})
 
+		it('uses From when Reply-To is empty', async () => {
+			MessageService.fetchMessage.mockResolvedValue(makeOriginal({ replyTo: [] }))
+
+			await store.startComposerSession({
+				reply: {
+					mode: 'reply',
+					data: makeEnvelope(),
+				},
+			})
+
+			expect(store.startComposerSessionMutation).toHaveBeenCalledWith(expect.objectContaining({
+				data: expect.objectContaining({ to: from }),
+			}))
+		})
+
 		it('uses To for own sent messages (isOwnMessage follow-up)', async () => {
 			const ownFrom = [{ email: 'me@example.com', label: 'Me' }]
 			MessageService.fetchMessage.mockResolvedValue(makeOriginal())

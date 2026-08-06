@@ -526,7 +526,7 @@ export default function mainStoreActions() {
 						// Reply-To points to the list address, not the original sender.
 						// For regular emails, honor Reply-To if the sender set one.
 						const isMailingList = !!(original.unsubscribeUrl || original.unsubscribeMailto)
-						let to = (!isMailingList && original.replyTo !== undefined)
+						let to = (!isMailingList && original.replyTo?.length > 0)
 							? original.replyTo
 							: reply.data.from
 						if (reply.followUp) {
