@@ -23,8 +23,9 @@ class MailboxTest extends TestCase {
 
 	public static function provideCacheBusterData(): array {
 		return [
-			['new', 'changed', 'vanished', 'bbddae86e09069fc10c9f2ac401363b4'],
-			[null, null, null, 'dca1f7641c34734a8cd1c7b1c45abf73'],
+			['new', 'changed', 'vanished', null, 'bbddae86e09069fc10c9f2ac401363b4'],
+			[null, null, null, null, 'dca1f7641c34734a8cd1c7b1c45abf73'],
+			[null, null, null, 'state', '3cc6800869b5dcd6495d309a4bd16273'],
 		];
 	}
 
@@ -33,12 +34,14 @@ class MailboxTest extends TestCase {
 		?string $syncNewToken,
 		?string $syncChangedToken,
 		?string $syncVanishedToken,
+		?string $state,
 		string $expectedCacheBuster,
 	): void {
 		$this->mailbox->setId(100);
 		$this->mailbox->setSyncNewToken($syncNewToken);
 		$this->mailbox->setSyncChangedToken($syncChangedToken);
 		$this->mailbox->setSyncVanishedToken($syncVanishedToken);
+		$this->mailbox->setState($state);
 
 		$this->assertEquals($expectedCacheBuster, $this->mailbox->getCacheBuster());
 	}
@@ -48,17 +51,44 @@ class MailboxTest extends TestCase {
 		?string $syncNewToken,
 		?string $syncChangedToken,
 		?string $syncVanishedToken,
+		?string $state,
 		string $expectedCacheBuster,
 	): void {
 		$this->mailbox->setId(100);
 		$this->mailbox->setSyncNewToken($syncNewToken);
 		$this->mailbox->setSyncChangedToken($syncChangedToken);
 		$this->mailbox->setSyncVanishedToken($syncVanishedToken);
+		$this->mailbox->setState($state);
 		$this->mailbox->setName('INBOX');
 
 		$json = $this->mailbox->jsonSerialize();
 		$this->assertArrayHasKey('cacheBuster', $json);
 		$this->assertEquals($expectedCacheBuster, $json['cacheBuster']);
+	}
+
+	public static function provideCachedData(): array {
+		return [
+			['new', 'changed', 'vanished', null, true],
+			[null, null, null, 'state', true],
+			['new', null, 'vanished', null, false],
+			[null, null, null, null, false],
+		];
+	}
+
+	/** @dataProvider provideCachedData */
+	public function testIsCached(
+		?string $syncNewToken,
+		?string $syncChangedToken,
+		?string $syncVanishedToken,
+		?string $state,
+		bool $expected,
+	): void {
+		$this->mailbox->setSyncNewToken($syncNewToken);
+		$this->mailbox->setSyncChangedToken($syncChangedToken);
+		$this->mailbox->setSyncVanishedToken($syncVanishedToken);
+		$this->mailbox->setState($state);
+
+		$this->assertSame($expected, $this->mailbox->isCached());
 	}
 
 	public function testHasLocksIgnoresExpiredLock(): void {
