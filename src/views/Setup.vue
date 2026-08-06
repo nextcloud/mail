@@ -39,7 +39,7 @@
 <script>
 import { loadState } from '@nextcloud/initial-state'
 import { generateFilePath } from '@nextcloud/router'
-import { NcAppContent, NcEmptyContent, NcContent } from '@nextcloud/vue'
+import { NcAppContent, NcContent, NcEmptyContent } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import AccountForm from '../components/AccountForm.vue'
 import Navigation from '../components/Navigation.vue'

@@ -40,7 +40,7 @@
 							<NcPopover trigger="hover focus">
 								<template #trigger>
 									<NcButton
-										type="tertiary-no-background"
+										variant="tertiary-no-background"
 										:aria-label="t('mail', 'Favorites info')"
 										class="button">
 										<template #icon>
@@ -87,7 +87,7 @@
 							<NcPopover trigger="hover focus">
 								<template #trigger>
 									<NcButton
-										type="tertiary-no-background"
+										variant="tertiary-no-background"
 										:aria-label="t('mail', 'Favorites info')"
 										class="button">
 										<template #icon>
@@ -121,7 +121,7 @@
 							<NcPopover trigger="hover focus">
 								<template #trigger>
 									<NcButton
-										type="tertiary-no-background"
+										variant="tertiary-no-background"
 										:aria-label="t('mail', 'Follow up info')"
 										class="button">
 										<template #icon>
@@ -152,7 +152,7 @@
 							<NcPopover trigger="hover focus">
 								<template #trigger>
 									<NcButton
-										type="tertiary-no-background"
+										variant="tertiary-no-background"
 										:aria-label="t('mail', 'Important info')"
 										class="button">
 										<template #icon>
@@ -200,7 +200,7 @@
 </template>
 
 <script>
-import { NcAppContent, NcAppContentList, NcButton, isMobile, NcPopover } from '@nextcloud/vue'
+import { isMobile, NcAppContent, NcAppContentList, NcButton, NcPopover } from '@nextcloud/vue'
 import addressParser from 'address-rfc2822'
 import mitt from 'mitt'
 import { mapStores } from 'pinia'

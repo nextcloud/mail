@@ -50,7 +50,7 @@
 		</NcListItem>
 
 		<NcButton
-			type="secondary"
+			variant="secondary"
 			wide
 			@click="openDialog = true">
 			<template #icon>
@@ -73,7 +73,7 @@
 import IconCancel from '@mdi/svg/svg/cancel.svg'
 import IconCheck from '@mdi/svg/svg/check.svg'
 import { showError } from '@nextcloud/dialogs'
-import { NcButton, NcActionButton, NcDialog, NcListItem, NcTextField } from '@nextcloud/vue'
+import { NcActionButton, NcButton, NcDialog, NcListItem, NcTextField } from '@nextcloud/vue'
 import prop from 'lodash/fp/prop.js'
 import sortBy from 'lodash/fp/sortBy.js'
 import { mapStores } from 'pinia'
