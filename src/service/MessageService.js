@@ -61,7 +61,7 @@ export function fetchEnvelopes(accountId, mailboxId, query, cursor, limit, sort,
 			params,
 		})
 		.then((resp) => resp.data)
-		.then((envelopes) => envelopes.map(amendEnvelopeWithIds(accountId)))
+		.then((data) => data.map((envelopes) => envelopes.map(amendEnvelopeWithIds(accountId))))
 		.catch((error) => {
 			throw convertAxiosError(error)
 		})
@@ -94,7 +94,7 @@ export async function syncEnvelopes(accountId, id, ids, lastMessageTimestamp, qu
 
 		const amend = amendEnvelopeWithIds(accountId)
 		return {
-			newMessages: response.data.newMessages.map(amend),
+			newMessages: response.data.newMessages.map((envelopes) => envelopes.map(amend)),
 			changedMessages: response.data.changedMessages.map(amend),
 			vanishedMessages: response.data.vanishedMessages,
 			stats: response.data.stats,
