@@ -436,7 +436,6 @@ import useOutboxStore from '../store/outboxStore.js'
 import { mailboxHasRights } from '../util/acl.js'
 import { translateTagDisplayName } from '../util/tag.js'
 import { Text, toPlain } from '../util/text.js'
-import { hiddenTags } from './tags.js'
 
 // Ternary loading state
 const Loading = Object.seal({
@@ -637,7 +636,7 @@ export default {
 		},
 
 		tags() {
-			return this.mainStore.getEnvelopeTags(this.envelope.databaseId).filter((tag) => tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags))
+			return this.mainStore.getEnvelopeExposedTags(this.envelope.databaseId)
 		},
 
 		hasChangedSubject() {

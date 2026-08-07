@@ -66,7 +66,6 @@ import TagItem from './TagItem.vue'
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 import { validateTag } from '../util/tag.js'
-import { hiddenTags } from './tags.js'
 
 function randomColor() {
 	let randomHexColor = ((1 << 24) * Math.random() | 0).toString(16)
@@ -114,7 +113,7 @@ export default {
 	computed: {
 		...mapStores(useMainStore),
 		tags() {
-			return this.mainStore.getTags.filter((tag) => tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags)).sort((a, b) => {
+			return this.mainStore.getExposedTags().sort((a, b) => {
 				if (a.isDefaultTag && !b.isDefaultTag) {
 					return -1
 				}
