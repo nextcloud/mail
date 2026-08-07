@@ -14,6 +14,7 @@
 			<div :class="{ list__wrapper: !showThread || !isMobile }">
 				<div v-if="!showThread || !isMobile" class="sticky-header">
 					<SearchMessages
+						ref="searchMessages"
 						:mailbox="mailbox"
 						:account-id="account.accountId"
 						@search-changed="onUpdateSearchQuery" />
@@ -219,6 +220,7 @@ import {
 	UNIFIED_INBOX_ID,
 } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
+import eventBus from '../util/eventBus.js'
 import { groupEnvelopesByDate } from '../util/groupedEnvelopes.js'
 import {
 	priorityImportantQuery,
@@ -270,12 +272,14 @@ export default {
 			searchQuery: undefined,
 			shortkeys: {
 				del: ['del'],
+				backspace: ['backspace'],
 				arch: ['a'],
 				flag: ['s'],
 				next: ['arrowright'],
 				prev: ['arrowleft'],
 				refresh: ['r'],
 				unseen: ['u'],
+				compose: ['c'],
 			},
 
 			priorityImportantQuery,
@@ -461,6 +465,7 @@ export default {
 
 	created() {
 		this.handleMailto()
+		document.addEventListener('keydown', this.handleSearchShortcut, true)
 	},
 
 	async mounted() {
@@ -475,6 +480,7 @@ export default {
 
 	beforeDestroy() {
 		clearTimeout(this.startMailboxTimer)
+		document.removeEventListener('keydown', this.handleSearchShortcut, true)
 	},
 
 	methods: {
@@ -509,7 +515,29 @@ export default {
 		},
 
 		onShortcut(e) {
+			// Handled here because the bus fans out to multiple Mailbox instances
+			if (e.srcKey === 'compose') {
+				this.mainStore.startComposerSession({
+					isBlankMessage: true,
+				})
+				return
+			}
+			// Refresh through NewMessageButtonHeader so its spinner animates
+			if (e.srcKey === 'refresh') {
+				eventBus.emit('mail:refresh')
+				return
+			}
 			this.bus.emit('shortcut', e)
+		},
+
+		handleSearchShortcut(event) {
+			if (event.target instanceof Element && event.target.matches('input, textarea, [contenteditable]')) {
+				return
+			}
+			if (event.key === 'f' && (event.metaKey || event.ctrlKey) && this.$refs.searchMessages) {
+				event.preventDefault()
+				this.$refs.searchMessages.focusInput()
+			}
 		},
 
 		appendToSearch(str) {
