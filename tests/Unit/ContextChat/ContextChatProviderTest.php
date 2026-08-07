@@ -86,7 +86,9 @@ class ContextChatProviderTest extends TestCase {
 	}
 
 	public function provideEvents(): array {
-		$account = new Account(new MailAccount());
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(3);
+		$account = new Account($mailAccount);
 		$mailbox = new Mailbox();
 		$mailbox->setId(1);
 		$messages = [];
@@ -144,6 +146,23 @@ class ContextChatProviderTest extends TestCase {
 			$this->contentManager->expects($this->once())
 				->method('deleteContent');
 		}
+
+		$this->contextChatProvider->handle($event);
+	}
+
+	public function testHandleMessageDeletedUsesTheIndexedItemId(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(3);
+		$account = new Account($mailAccount);
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$event = new MessageDeletedEvent($account, $mailbox, 4711);
+		$this->contentManager->expects($this->once())
+			->method('isContextChatAvailable')
+			->willReturn(true);
+		$this->contentManager->expects($this->once())
+			->method('deleteContent')
+			->with('mail', $this->anything(), ['3:1:4711']);
 
 		$this->contextChatProvider->handle($event);
 	}

@@ -35,6 +35,17 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 	public const CONTEXT_CHAT_IMPORT_MAX_ITEMS = 1000;
 	public const CONTEXT_CHAT_JOB_INTERVAL = 300; // 60 * 5 (5 minutes)
 
+	/**
+	 * Identifier of a message in the context chat knowledge base.
+	 *
+	 * Keyed by the IMAP uid rather than the database id because the uid is all
+	 * MessageDeletedEvent carries, and the cached message row is already gone by
+	 * the time this provider handles that event.
+	 */
+	public static function itemId(int $accountId, int $mailboxId, int $uid): string {
+		return "$accountId:$mailboxId:$uid";
+	}
+
 	public function __construct(
 		private TaskService $taskService,
 		private AccountService $accountService,
@@ -72,7 +83,12 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 		}
 
 		if ($event instanceof MessageDeletedEvent) {
-			$this->contentManager->deleteContent($this->getAppId(), $this->getId(), [strval($event->getMessageId())]);
+			$itemId = self::itemId(
+				$event->getAccount()->getId(),
+				$event->getMailbox()->getId(),
+				$event->getMessageId(),
+			);
+			$this->contentManager->deleteContent($this->getAppId(), $this->getId(), [$itemId]);
 			return;
 		}
 	}
