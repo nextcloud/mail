@@ -110,7 +110,7 @@ class ImapMessageConnector implements IMessageConnector {
 	}
 
 	#[\Override]
-	public function fetchMessageRaw(Account $account, Mailbox $mailbox, Message $message): ?string {
+	public function fetchMessageRaw(Account $account, Mailbox $mailbox, Message $message, bool $decrypt = false): ?string {
 		$client = $this->protocolFactory->imapClient($account);
 		try {
 			return $this->imapMessageMapper->getFullText(
@@ -118,7 +118,7 @@ class ImapMessageConnector implements IMessageConnector {
 				$mailbox->getName(),
 				$message->getUid(),
 				$account->getUserId(),
-				false,
+				$decrypt,
 			);
 		} finally {
 			$client->logout();
