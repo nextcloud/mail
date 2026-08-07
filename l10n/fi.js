@@ -281,6 +281,7 @@ OC.L10N.register(
     "Loading messages …" : "Ladataan viestejä …",
     "Indexing your messages. This can take a bit longer for larger folders." : "Viestejäsi indeksoidaan. Tämä saattaa kestää hetken varsinkin suurikokoisten kansioiden kohdalla.",
     "Choose target folder" : "Valitse kohdekansio",
+    "No results" : "Ei tuloksia",
     "Favorites" : "Suosikit",
     "Important info" : "Tärkeää tietoa",
     "Other" : "Muu",

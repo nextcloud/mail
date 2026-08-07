@@ -131,6 +131,7 @@ OC.L10N.register(
     "Last month" : "Tháng trước",
     "Choose target folder" : "Chọn thư mục đích",
     "No more submailboxes in here" : "Không còn hộp thư con nào ở đây",
+    "No results" : "Không có kết quả",
     "Favorites" : "Ưa thích",
     "Important info" : "Thông tin quan trọng",
     "Other" : "Khác",

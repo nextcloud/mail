@@ -274,6 +274,7 @@ OC.L10N.register(
     "Last month" : "Last month",
     "Choose target folder" : "Choose target folder",
     "No more submailboxes in here" : "No more submailboxes in here",
+    "No results" : "No results",
     "Favorites" : "Favorites",
     "Important info" : "Important info",
     "Other" : "Other",

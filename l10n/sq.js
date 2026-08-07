@@ -74,6 +74,7 @@ OC.L10N.register(
     "Decline" : "Refuzo",
     "Remove" : "Hiq",
     "Today" : "Sot",
+    "No results" : "Asnjë rezultat",
     "Favorites" : "Favorites",
     "Other" : "Tjetër",
     "Forward" : "Përpara",

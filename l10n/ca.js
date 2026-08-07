@@ -311,6 +311,7 @@ OC.L10N.register(
     "Yesterday" : "Ahir",
     "Choose target folder" : "Trieu la carpeta de destinació",
     "No more submailboxes in here" : "No hi ha més subbústies aquí",
+    "No results" : "Sense resultats",
     "Favorites" : "Preferits",
     "Follow up" : "Seguiment",
     "Follow up info" : "Informació de seguiment",

@@ -95,6 +95,7 @@ OC.L10N.register(
     "Last week" : "Wiki iliyopita",
     "Last month" : "Mwezi uliopita",
     "Choose target folder" : "Chagua kasha lililolengwa",
+    "No results" : "Hakuna matokeo",
     "Favorites" : "Vipendwa",
     "Other" : "Mengine",
     "Direct link copied to clipboard" : "Kiungio cha moja kwa moja kimenakiliwa kwenye ubao wa kunakili",

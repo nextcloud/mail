@@ -67,6 +67,7 @@ OC.L10N.register(
     "Yesterday" : "Ièr",
     "Last week" : "La setmana passada",
     "Last month" : "Lo mes passat",
+    "No results" : "Cap de resultat",
     "Favorites" : "Favorits",
     "Other" : "Autre",
     "Link copied" : "Ligam copiat",

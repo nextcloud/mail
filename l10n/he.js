@@ -141,6 +141,7 @@ OC.L10N.register(
     "Last week" : "שבוע שעבר",
     "Last month" : "חודש שעבר",
     "Choose target folder" : "נא לבחור תיקיית יעד",
+    "No results" : "אין תוצאות",
     "Favorites" : "מועדפים",
     "Important info" : "מידע חשוב",
     "Other" : "אחר",

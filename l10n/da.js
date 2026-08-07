@@ -338,6 +338,7 @@ OC.L10N.register(
     "Indexing your messages. This can take a bit longer for larger folders." : "Indekserer dine beskeder. Dette kan tage en smule længere for større mapper.",
     "Choose target folder" : "Vælg destinationsmappe",
     "No more submailboxes in here" : "Ikke flere underpostkasser herinde",
+    "No results" : "Ingen resultater",
     "Favorites" : "Favoritter",
     "Follow up" : "Opfølgning",
     "Follow up info" : "Opfølgningsinfo",

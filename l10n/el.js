@@ -414,6 +414,7 @@ OC.L10N.register(
     "Indexing your messages. This can take a bit longer for larger folders." : "Δημιουργία ευρετηρίου για τα μηνύματά σας. Αυτό μπορεί να πάρει λίγο περισσότερο χρόνο για μεγαλύτερους φακέλους.",
     "Choose target folder" : "Επιλογή φακέλου προορισμού",
     "No more submailboxes in here" : "Δεν υπάρχουν άλλα υπο-γραμματοκιβώτια εδώ",
+    "No results" : "Κανένα αποτέλεσμα",
     "Messages will automatically be marked as important using AI. The system learns from which messages you interact with or mark as important. In the beginning you might have to manually change the importance to teach it, but it will improve over time" : "Τα μηνύματα θα επισημαίνονται αυτόματα ως σημαντικά με τη χρήση ΤΝ. Το σύστημα μαθαίνει από τα μηνύματα με τα οποία αλληλεπιδράτε ή επισημαίνετε ως σημαντικά. Στην αρχή μπορεί να χρειαστεί να αλλάξετε χειροκίνητα τη σημαντικότητα για να το εκπαιδεύσετε, αλλά θα βελτιωθεί με τον χρόνο",
     "Messages that you marked as favorite will be shown at the top of folders. You can disable this behavior in the app settings" : "Τα μηνύματα που έχετε επισημάνει ως αγαπημένα θα εμφανίζονται στην κορυφή των φακέλων. Μπορείτε να απενεργοποιήσετε αυτή τη συμπεριφορά στις ρυθμίσεις της εφαρμογής",
     "AI identifies messages sent by you that likely require a reply but did not receive one after a couple of days and shows them here" : "Η ΤΝ εντοπίζει μηνύματα που έχετε στείλει εσείς και πιθανώς απαιτούν απάντηση αλλά δεν έλαβαν καμία μετά από μερικές ημέρες και τα εμφανίζει εδώ",

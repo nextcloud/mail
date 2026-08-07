@@ -281,6 +281,7 @@ OC.L10N.register(
     "Last month" : "Előző hónap",
     "Choose target folder" : "Válasszon célmappát",
     "No more submailboxes in here" : "Nem találhatók további alpostafiókok",
+    "No results" : "Nincs találat",
     "Favorites" : "Kedvencek",
     "Follow up" : "Emlékeztető",
     "Follow up info" : "Emlékeztető információ",

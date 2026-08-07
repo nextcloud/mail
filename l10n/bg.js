@@ -249,6 +249,7 @@ OC.L10N.register(
     "Last month" : "Миналия месец",
     "Choose target folder" : "Избор на папка",
     "No more submailboxes in here" : "Тук няма повече допълнителни пощенски кутии",
+    "No results" : "Няма резултат",
     "Favorites" : "Любими",
     "Important info" : "Важна информация",
     "Other" : "Друг",

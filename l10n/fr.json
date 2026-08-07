@@ -415,6 +415,7 @@
     "Indexing your messages. This can take a bit longer for larger folders." : "Indexation de vos messages. Cela peut prendre un peu plus de temps pour les dossiers volumineux.",
     "Choose target folder" : "Sélectionner le dossier cible",
     "No more submailboxes in here" : "Plus aucun sous-dossier ici",
+    "No results" : "Aucun résultat",
     "Messages will automatically be marked as important using AI. The system learns from which messages you interact with or mark as important. In the beginning you might have to manually change the importance to teach it, but it will improve over time" : "Les messages seront automatiquement marqués comme important en utilisant l'IA. Le système apprend des messages avec lesquels vous interagissez ou marquez comme important. Au départ, vous devez changer manuellement l'importance pour lui apprendre, mais il s'améliorera avec le temps",
     "Messages that you marked as favorite will be shown at the top of folders. You can disable this behavior in the app settings" : "Les messages que vous avez marqués comme favoris seront affichés en haut des dossiers. Vous pouvez désactiver ce comportement dans les paramètres de l'application",
     "AI identifies messages sent by you that likely require a reply but did not receive one after a couple of days and shows them here" : "L'IA identifie les messages envoyés par vous qui attendent une réponse mais n'en ont pas encore reçu après quelques jours et les montrent ici.",

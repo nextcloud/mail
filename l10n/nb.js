@@ -312,6 +312,7 @@ OC.L10N.register(
     "Last month" : "Forrige måned",
     "Choose target folder" : "Velg målmappe",
     "No more submailboxes in here" : "Ingen flere underpostbokser her",
+    "No results" : "Ingen resultater",
     "Favorites" : "Favoritter",
     "Follow up" : "Følg opp",
     "Follow up info" : "Følg opp info",

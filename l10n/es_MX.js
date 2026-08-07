@@ -280,6 +280,7 @@ OC.L10N.register(
     "Last month" : "Mes pasado",
     "Choose target folder" : "Elegir carpeta destino",
     "No more submailboxes in here" : "No hay más sub-buzones aquí",
+    "No results" : "Sin resultados",
     "Favorites" : "Favoritos",
     "Follow up" : "Seguimiento",
     "Follow up info" : "Información de seguimiento",
