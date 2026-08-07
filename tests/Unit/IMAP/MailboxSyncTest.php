@@ -23,9 +23,9 @@ use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Events\MailboxesSynchronizedEvent;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MailboxStats;
 use OCA\Mail\IMAP\MailboxSync;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IDBConnection;
@@ -42,8 +42,8 @@ class MailboxSyncTest extends TestCase {
 	/** @var MailAccountMapper|MockObject */
 	private $mailAccountMapper;
 
-	/** @var IMAPClientFactory|MockObject */
-	private $imapClientFactory;
+	/** @var ProtocolFactory|MockObject */
+	private $protocolFactory;
 
 	/** @var TimeFactory|MockObject */
 	private $timeFactory;
@@ -62,7 +62,7 @@ class MailboxSyncTest extends TestCase {
 		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
 		$this->folderMapper = $this->createMock(FolderMapper::class);
 		$this->mailAccountMapper = $this->createMock(MailAccountMapper::class);
-		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
+		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
 		$this->dispatcher = $this->createMock(IEventDispatcher::class);
 		$this->dbConnection = $this->createMock(IDBConnection::class);
@@ -71,7 +71,7 @@ class MailboxSyncTest extends TestCase {
 			$this->mailboxMapper,
 			$this->folderMapper,
 			$this->mailAccountMapper,
-			$this->imapClientFactory,
+			$this->protocolFactory,
 			$this->timeFactory,
 			$this->dispatcher,
 			$this->dbConnection,
@@ -81,11 +81,11 @@ class MailboxSyncTest extends TestCase {
 	public function testSyncSkipped() {
 		$account = $this->createMock(Account::class);
 		$mailAccount = new MailAccount();
-		$mailAccount->setLastMailboxSync(100000 - 2000);
+		$mailAccount->setLastMailboxSync(100000 - 100);
 		$account->method('getMailAccount')->willReturn($mailAccount);
 		$this->timeFactory->method('getTime')->willReturn(100000);
-		$this->imapClientFactory->expects($this->never())
-			->method('getClient');
+		$this->protocolFactory->expects($this->never())
+			->method('imapClient');
 		$this->dispatcher->expects($this->never())->method('dispatchTyped');
 
 		$this->sync->sync($account, new NullLogger());
@@ -98,8 +98,8 @@ class MailboxSyncTest extends TestCase {
 		$account->method('getMailAccount')->willReturn($mailAccount);
 		$this->timeFactory->method('getTime')->willReturn(100000);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-		$this->imapClientFactory->expects($this->once())
-			->method('getClient')
+		$this->protocolFactory->expects($this->once())
+			->method('imapClient')
 			->with($account)
 			->willReturn($client);
 		$client->expects($this->once())
@@ -156,8 +156,8 @@ class MailboxSyncTest extends TestCase {
 		$account->method('getMailAccount')->willReturn($mailAccount);
 		$this->timeFactory->method('getTime')->willReturn(100000);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-		$this->imapClientFactory->expects($this->once())
-			->method('getClient')
+		$this->protocolFactory->expects($this->once())
+			->method('imapClient')
 			->with($account)
 			->willReturn($client);
 		$personal = new Horde_Imap_Client_Data_Namespace();

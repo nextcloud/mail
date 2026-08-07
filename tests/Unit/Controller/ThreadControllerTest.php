@@ -11,7 +11,6 @@ namespace OCA\Mail\Tests\Unit\Controller;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Controller\ThreadController;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
@@ -21,6 +20,7 @@ use OCA\Mail\Model\EventData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\DelegationService;
+use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\SnoozeService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -41,7 +41,7 @@ class ThreadControllerTest extends TestCase {
 	/** @var AccountService|MockObject */
 	private $accountService;
 
-	/** @var IMailManager|MockObject */
+	/** @var MailManager|MockObject */
 	private $mailManager;
 
 	/** @var SnoozeService|MockObject */
@@ -66,7 +66,7 @@ class ThreadControllerTest extends TestCase {
 		$this->request = $this->getMockBuilder(IRequest::class)->getMock();
 		$this->userId = 'john';
 		$this->accountService = $this->createMock(AccountService::class);
-		$this->mailManager = $this->createMock(IMailManager::class);
+		$this->mailManager = $this->createMock(MailManager::class);
 		$this->snoozeService = $this->createMock(SnoozeService::class);
 		$this->aiIntergrationsService = $this->createMock(AiIntegrationsService::class);
 		$this->logger = $this->createMock(LoggerInterface::class);

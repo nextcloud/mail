@@ -12,8 +12,8 @@ namespace OCA\Mail\Controller;
 
 use Horde_Imap_Client;
 use OCA\Mail\AppInfo\Application;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
+use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\IncompleteSyncException;
 use OCA\Mail\Exception\MailboxNotCachedException;
@@ -22,6 +22,7 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\DelegationService;
+use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -41,11 +42,12 @@ class MailboxesController extends Controller {
 		IRequest $request,
 		private AccountService $accountService,
 		private ?string $userId,
-		private IMailManager $mailManager,
+		private MailManager $mailManager,
 		private SyncService $syncService,
 		private readonly IConfig $config,
 		private readonly ITimeFactory $timeFactory,
 		private DelegationService $delegationService,
+		private MailboxMapper $mailboxMapper,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -127,10 +129,8 @@ class MailboxesController extends Controller {
 
 		}
 		if ($syncInBackground !== null) {
-			$mailbox = $this->mailManager->enableMailboxBackgroundSync(
-				$mailbox,
-				$syncInBackground
-			);
+			$mailbox->setSyncInBackground($syncInBackground);
+			$this->mailboxMapper->update($mailbox);
 			$syncVerb = $syncInBackground ? 'enabled' : 'disabled';
 			$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId $syncVerb background sync for mailbox: $id on behalf of $effectiveUserId");
 		}
