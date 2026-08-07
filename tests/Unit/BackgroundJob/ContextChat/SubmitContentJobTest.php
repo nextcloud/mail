@@ -169,6 +169,7 @@ class SubmitContentJobTest extends TestCase {
 			->with($mailbox, 0, 0, ContextChatProvider::CONTEXT_CHAT_IMPORT_MAX_ITEMS)->willReturn([2]);
 		$account = $this->createMock(Account::class);
 		$account->expects($this->any())->method('getUserId')->willReturn('user123');
+		$account->expects($this->any())->method('getId')->willReturn(5);
 		$this->accountService->expects($this->once())->method('findById')->willReturn($account);
 		$message = new Message();
 		$message->setId(2);
@@ -187,7 +188,10 @@ class SubmitContentJobTest extends TestCase {
 		$client->expects($this->once())->method('close');
 		$this->contextChatProvider->expects($this->once())->method('getAppId')->willReturn('mail');
 		$this->contextChatProvider->expects($this->once())->method('getId')->willReturn('mail');
-		$this->contentManager->expects($this->once())->method('submitContent');
+		$this->contentManager->expects($this->once())->method('submitContent')
+			->with('mail', $this->callback(
+				static fn (array $items) => count($items) === 1 && $items[0]->itemId === '5:1:2'
+			));
 		$this->taskService->expects($this->once())->method('setLastMessage')->with($task->getMailboxId(), 2);
 
 		$this->submitContentJob->setLastRun(0);
@@ -261,6 +265,7 @@ class SubmitContentJobTest extends TestCase {
 			->with($mailbox, 0, 0, ContextChatProvider::CONTEXT_CHAT_IMPORT_MAX_ITEMS)->willReturn([1]);
 		$account = $this->createMock(Account::class);
 		$account->expects($this->any())->method('getUserId')->willReturn('user123');
+		$account->expects($this->any())->method('getId')->willReturn(5);
 		$this->accountService->expects($this->once())->method('findById')->with()->willReturn($account);
 		$message = new Message();
 		$this->messageMapper->expects($this->once())->method('findByIds')->willReturn([$message]);
@@ -305,6 +310,7 @@ class SubmitContentJobTest extends TestCase {
 			->with($mailbox, 0, 0, ContextChatProvider::CONTEXT_CHAT_IMPORT_MAX_ITEMS)->willReturn([1]);
 		$account = $this->createMock(Account::class);
 		$account->expects($this->any())->method('getUserId')->willReturn('user123');
+		$account->expects($this->any())->method('getId')->willReturn(5);
 		$this->accountService->expects($this->once())->method('findById')->with()->willReturn($account);
 		$message = new Message();
 		$message->setId(1);
