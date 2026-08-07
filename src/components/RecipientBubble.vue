@@ -282,6 +282,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+:deep(.v-popper__inner) {
+	box-sizing: border-box;
+}
+
 .user-bubble__title {
 	max-width: 30vw;
 }

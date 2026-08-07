@@ -612,6 +612,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+:deep(.v-popper__inner) {
+	box-sizing: border-box;
+}
+
 .section-title {
 	:deep(h2) {
 		margin: 0 !important;

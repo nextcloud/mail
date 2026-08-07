@@ -204,6 +204,7 @@ export default {
 
 <style lang="scss" scoped>
 :deep(.modal-container) {
+	box-sizing: border-box;
 	width: calc(100vw - 120px) !important;
 	height: calc(100vh - 120px) !important;
 	max-width: 600px !important;

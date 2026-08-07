@@ -260,6 +260,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+:deep(.modal-wrapper .modal-container) {
+	box-sizing: border-box;
+}
+
 .empty-content{
 	height: 100%;
 	display: flex;

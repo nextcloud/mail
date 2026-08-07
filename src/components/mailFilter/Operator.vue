@@ -74,6 +74,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+:deep(.v-popper__inner) {
+	box-sizing: border-box;
+}
+
 .operator {
 	display: flex;
 	margin-bottom: calc(var(--default-grid-baseline) * 2);

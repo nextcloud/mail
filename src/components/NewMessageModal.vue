@@ -657,6 +657,7 @@ export default {
 }
 
 :deep(.modal-wrapper .modal-container) {
+	box-sizing: border-box;
 	overflow-y: auto !important;
 	overflow-x: auto !important;
 	// from original Modal max-height

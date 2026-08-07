@@ -749,6 +749,7 @@ export default {
 <style lang="scss" scoped>
 	.source-modal {
 		:deep(.modal-container) {
+			box-sizing: border-box;
 			height: 800px;
 		}
 

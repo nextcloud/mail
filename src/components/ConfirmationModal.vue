@@ -73,6 +73,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+:deep(.modal-wrapper .modal-container) {
+	box-sizing: border-box;
+}
+
 .confirm-modal {
 	padding: 20px;
 

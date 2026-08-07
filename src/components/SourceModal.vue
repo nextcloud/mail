@@ -36,6 +36,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+:deep(.modal-wrapper .modal-container) {
+	box-sizing: border-box;
+}
+
 .message-source {
 	padding: 0 calc(var(--default-grid-baseline) * 4);
 

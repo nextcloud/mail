@@ -200,6 +200,10 @@ export default {
 <style lang="scss" scoped>
 @use '../../css/variables.scss';
 
+:deep(.v-popper__inner) {
+	box-sizing: border-box;
+}
+
 .v-popover > .trigger > .action-item {
 	border-radius: 22px;
 	background-color: var(--color-background-darker);

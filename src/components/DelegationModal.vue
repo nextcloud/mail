@@ -294,6 +294,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+:deep(.modal-wrapper .modal-container) {
+	box-sizing: border-box;
+}
+
 .delegation-modal {
 	padding: var(--default-grid-baseline) calc(var(--default-grid-baseline) * 3) calc(var(--default-grid-baseline) * 3);
 	h2 {

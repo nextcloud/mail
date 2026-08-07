@@ -204,6 +204,7 @@ export default {
 }
 
 :deep(.modal-container) {
+	box-sizing: border-box;
 	width: auto !important;
 }
 
