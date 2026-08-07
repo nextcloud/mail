@@ -477,7 +477,7 @@ export default {
 			}
 
 			this.match = 'anyof'
-			this.searchInMessageBody = this.searchBody ? this.query : null
+			this.searchInMessageBody = this.query
 			this.searchInSubject = this.query
 			this.searchInFrom = [{ email: this.query, label: this.query }]
 			this.searchInTo = [{ email: this.query, label: this.query }]
