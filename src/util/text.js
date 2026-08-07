@@ -113,9 +113,10 @@ export function toPlain(text) {
 		return text
 	}
 
-	// Build shared options for all block tags
-	const blockTags = ['p', 'div', 'header', 'footer', 'form', 'article', 'aside', 'main', 'nav', 'section']
-	const blockSelectors = blockTags.map((tag) => ({
+	// Build shared options for non-paragraph block tags.
+	// <p> is handled separately by customParagraph below.
+	const nonParagraphBlockTags = ['div', 'header', 'footer', 'form', 'article', 'aside', 'main', 'nav', 'section']
+	const blockSelectors = nonParagraphBlockTags.map((tag) => ({
 		selector: tag,
 		format: 'customBlock',
 		options: {
@@ -141,6 +142,23 @@ export function toPlain(text) {
 				// Instead, we add a forced line break here because otherwise multiple
 				// line breaks might be merged. But we want exactly one line break for
 				// each closing tag.
+				builder.addLineBreak()
+			},
+			// <p> is a paragraph element: two forced line breaks produce the blank
+			// line that separates paragraphs in plain text, matching email convention
+			// where a paragraph break equals one blank line (i.e. \n\n).
+			customParagraph(elem, walk, builder, formatOptions) {
+				builder.openBlock({
+					isPre: formatOptions.preserveLeadingWhitespace,
+					leadingLineBreaks: 0,
+				})
+				walk(elem.children, builder)
+				builder.closeBlock({
+					trailingLineBreaks: 0,
+					blockTransform: (text) => text
+						.replace(/^ {2,}/gm, ' '),
+				})
+				builder.addLineBreak()
 				builder.addLineBreak()
 			},
 			customBlockQuote(elem, walk, builder, formatOptions) {
@@ -174,6 +192,13 @@ export function toPlain(text) {
 				options: {
 					leadingLineBreaks: 0,
 					trailingLineBreaks: 1,
+				},
+			},
+			{
+				selector: 'p',
+				format: 'customParagraph',
+				options: {
+					preserveLeadingWhitespace: true,
 				},
 			},
 			...blockSelectors,

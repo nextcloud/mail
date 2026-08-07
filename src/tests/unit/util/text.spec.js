@@ -87,9 +87,9 @@ describe('text', () => {
 			expect(actual).toEqual(expected)
 		})
 
-		it('produces a single line break between paragraphs', () => {
+		it('produces a blank line between paragraphs', () => {
 			const source = html('<p>hello</p><p>world</p>')
-			const expected = plain('hello\nworld')
+			const expected = plain('hello\n\nworld')
 
 			const actual = toPlain(source)
 
@@ -106,7 +106,7 @@ describe('text', () => {
 		})
 
 		it('produces a single line break after each block element', () => {
-			const selectors = ['p', 'div', 'header', 'footer', 'form', 'article', 'aside', 'main', 'nav', 'section']
+			const selectors = ['div', 'header', 'footer', 'form', 'article', 'aside', 'main', 'nav', 'section']
 			const source = html(selectors
 				.map((tag) => `<${tag}>foobar</${tag}>`)
 				.join(''))
@@ -118,7 +118,7 @@ describe('text', () => {
 		})
 
 		it('produces exactly one line break for each closing block element', () => {
-			const selectors = ['p', 'div', 'header', 'footer', 'form', 'article', 'aside', 'main', 'nav', 'section']
+			const selectors = ['div', 'header', 'footer', 'form', 'article', 'aside', 'main', 'nav', 'section']
 			const source = html(selectors
 				.map((tag) => `<${tag}><${tag}>foobar</${tag}></${tag}>`)
 				.join(''))
@@ -142,7 +142,7 @@ describe('text', () => {
 			const source = html('<html>'
 				+ '<body><p>Hello!</p><p>this <i>is</i> <b>some</b> random <strong>text</strong></p></body>'
 				+ '</html>')
-			const expected = plain('Hello!\nthis is some random text')
+			const expected = plain('Hello!\n\nthis is some random text')
 
 			const actual = toPlain(source)
 
