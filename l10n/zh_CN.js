@@ -402,6 +402,7 @@ OC.L10N.register(
     "Indexing your messages. This can take a bit longer for larger folders." : "正在索引您的邮件。对于较大的文件夹，这可能需要更长时间。",
     "Choose target folder" : "选择目标文件夹",
     "No more submailboxes in here" : "这里已经没有更多子邮箱",
+    "No results" : "没有结果",
     "Messages will automatically be marked as important using AI. The system learns from which messages you interact with or mark as important. In the beginning you might have to manually change the importance to teach it, but it will improve over time" : "系统将使用 AI 自动将邮件标记为重要邮件。系统会根据您互动或标记为重要邮件进行学习。起初，您可能需要手动更改邮件的重要程度来训练系统，但随着时间的推移，系统会不断改进",
     "Messages that you marked as favorite will be shown at the top of folders. You can disable this behavior in the app settings" : "您标记为收藏的邮件将显示在文件夹顶部。您可以在应用设置中禁用此行为",
     "AI identifies messages sent by you that likely require a reply but did not receive one after a couple of days and shows them here" : "AI 会识别出您发送的可能需要回复但几天后仍未收到回复的邮件，并在此处显示",

@@ -327,6 +327,7 @@ OC.L10N.register(
     "Last month" : "先月",
     "Choose target folder" : "ターゲットフォルダーを選択",
     "No more submailboxes in here" : "サブメールボックスはありません",
+    "No results" : "該当なし",
     "Favorites" : "お気に入り",
     "Follow up" : "フォローアップ",
     "Follow up info" : "フォローアップ情報",

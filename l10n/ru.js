@@ -402,6 +402,7 @@ OC.L10N.register(
     "Indexing your messages. This can take a bit longer for larger folders." : "Индексирование ваших сообщений. Для больших папок это может занять немного больше времени.",
     "Choose target folder" : "Выбор папки назначения",
     "No more submailboxes in here" : "Вложенные папки отсутствуют",
+    "No results" : "Нет результатов",
     "Messages will automatically be marked as important using AI. The system learns from which messages you interact with or mark as important. In the beginning you might have to manually change the importance to teach it, but it will improve over time" : "Сообщения будут автоматически помечены как важные с помощью ИИ. Система узнает, с какими сообщениями вы взаимодействуете или отмечаете их как важные. Вначале вам, возможно, придется вручную изменить важность, чтобы научить её, но со временем она улучшится.",
     "Messages that you marked as favorite will be shown at the top of folders. You can disable this behavior in the app settings" : "Сообщения, отмеченные вами как избранные, будут отображаться вверху папок. Вы можете отключить это поведение в настройках приложения",
     "AI identifies messages sent by you that likely require a reply but did not receive one after a couple of days and shows them here" : "ИИ определяет отправленные вами сообщения, которые, вероятно, требуют ответа, но не получили его через пару дней, и показывает их здесь",

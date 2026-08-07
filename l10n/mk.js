@@ -239,6 +239,7 @@ OC.L10N.register(
     "Last week" : "Минатата недела",
     "Choose target folder" : "Избери папка",
     "No more submailboxes in here" : "Нема повеќе подсандачиња тука",
+    "No results" : "Нема резултати",
     "Favorites" : "Омилени",
     "Important info" : "Важна информација",
     "Other" : "Останато",

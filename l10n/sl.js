@@ -246,6 +246,7 @@ OC.L10N.register(
     "Last month" : "Zadnji mesec",
     "Choose target folder" : "Izbor ciljne mape",
     "No more submailboxes in here" : "V tem predalu ni drugih predalov",
+    "No results" : "Ni zadetkov",
     "Favorites" : "Priljubljene",
     "Important info" : "Pomembno",
     "Other" : "Drugo",

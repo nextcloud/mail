@@ -8,6 +8,7 @@
     "Name" : "Namn",
     "Password" : "Passord",
     "None" : "Ingen",
+    "Account settings" : "Kontoinnstillingar",
     "Signature" : "Signatur",
     "Filters" : "Filter",
     "Cancel" : "Avbryt",
@@ -17,6 +18,7 @@
     "Oldest first" : "Eldste fyrst",
     "Ok" : "Greitt",
     "Privacy" : "Personvern",
+    "Archive" : "Arkiver",
     "Delete" : "Ta bort",
     "Search" : "Search",
     "Send" : "Send",
@@ -47,8 +49,10 @@
     "Close" : "Lat att",
     "Date" : "Dato",
     "Tags" : "Emneord",
+    "Custom" : "Sjølvvald",
     "Not found" : "Ikkje funne",
     "From:" : "Frå:",
+    "To:" : "Til:",
     "Deleted" : "Sletta",
     "Recipient" : "Mottakar",
     "Help" : "Hjelp",
@@ -67,6 +71,7 @@
     "Shares" : "Delingar",
     "All" : "Alle",
     "Sent" : "Sendt",
+    "Trash" : "Papirkorg",
     "Message sent" : "Melding sendt"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

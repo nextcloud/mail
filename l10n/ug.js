@@ -377,6 +377,7 @@ OC.L10N.register(
     "Indexing your messages. This can take a bit longer for larger folders." : "ئۇچۇرلىرىڭىز ئىندېكسلىنىۋاتىدۇ. چوڭراق قىسقۇچلار ئۈچۈن بۇ بىر ئاز ئۇزۇنراق ۋاقىت ئېلىشى مۇمكىن.",
     "Choose target folder" : "نىشان ھۆججەت قىسقۇچىنى تاللاڭ",
     "No more submailboxes in here" : "بۇ يەردە باشقا خەت ساندۇقى يوق",
+    "No results" : "ھېچقانداق نەتىجە يوق",
     "Favorites" : "يىغقۇچ",
     "Favorites info" : "ياقتۇردىغان ئۇچۇرلار",
     "Load more favorites" : "تېخىمۇ كۆپ ياقتۇردىغاننى يۈكلە",

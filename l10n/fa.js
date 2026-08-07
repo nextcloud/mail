@@ -400,6 +400,7 @@ OC.L10N.register(
     "Indexing your messages. This can take a bit longer for larger folders." : "در حال نمایه‌سازی پیام‌های شما. این فرآیند برای پوشه‌های بزرگ‌تر ممکن است کمی بیشتر طول بکشد",
     "Choose target folder" : "انتخاب پوشه مقصد",
     "No more submailboxes in here" : "زیرصندوق پستی دیگری در اینجا وجود ندارد",
+    "No results" : "نتیجه‌ای یافت نشد",
     "Messages will automatically be marked as important using AI. The system learns from which messages you interact with or mark as important. In the beginning you might have to manually change the importance to teach it, but it will improve over time" : "پیام‌ها به‌طور خودکار با استفاده از هوش مصنوعی به‌عنوان مهم علامت‌گذاری می‌شوند. سیستم از پیام‌هایی که با آن‌ها تعامل دارید یا به‌عنوان مهم علامت‌گذاری می‌کنید، یاد می‌گیرد. در ابتدا ممکن است مجبور باشید اهمیت را به‌صورت دستی تغییر دهید تا به سیستم آموزش دهید، اما با گذشت زمان بهبود می‌یابد",
     "Messages that you marked as favorite will be shown at the top of folders. You can disable this behavior in the app settings" : "پیام‌هایی که به‌عنوان موردعلاقه علامت‌گذاری کرده‌اید، در بالای پوشه‌ها نمایش داده می‌شوند. می‌توانید این رفتار را در تنظیمات برنامه غیرفعال کنید",
     "AI identifies messages sent by you that likely require a reply but did not receive one after a couple of days and shows them here" : "هوش مصنوعی پیام‌های ارسالی شما را که احتمالاً نیاز به پاسخ دارند اما پس از چند روز پاسخی دریافت نکرده‌اند، شناسایی کرده و در اینجا نمایش می‌دهد",

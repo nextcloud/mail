@@ -97,6 +97,7 @@ OC.L10N.register(
     "Last week" : "Amalas yezrin",
     "Last month" : "Ayyur yezrin",
     "Choose target folder" : "Fren akaram aniccan",
+    "No results" : "Ulac igmad",
     "Favorites" : "Imenyafen",
     "Other" : "Wayeḍ",
     "Forward" : "Avancer",

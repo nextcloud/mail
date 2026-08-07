@@ -43,6 +43,7 @@ OC.L10N.register(
     "Today" : "Hiziv",
     "Yesterday" : "Dec'h",
     "Choose target folder" : "Dibab an teuliad moned",
+    "No results" : "Disoc'h ebet",
     "Favorites" : "Pennrolloù",
     "Important info" : "Titouroù pouezus",
     "Other" : "All",

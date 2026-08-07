@@ -73,6 +73,7 @@ OC.L10N.register(
     "Decline" : "ურაყოფა",
     "Remove" : "წაშლა",
     "Today" : "დღეს",
+    "No results" : "შედეგები არაა",
     "Favorites" : "რჩეულები",
     "Other" : "სხვა",
     "Forward" : "წინ",

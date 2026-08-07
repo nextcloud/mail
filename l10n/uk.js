@@ -349,6 +349,7 @@ OC.L10N.register(
     "Indexing your messages. This can take a bit longer for larger folders." : "Індексація ваших повідомлень. Для великих папок це може зайняти трохи більше часу.",
     "Choose target folder" : "Виберіть каталог призначення",
     "No more submailboxes in here" : "Жодних вкладених поштових скриньок більше не знайдено тут",
+    "No results" : "Нічого не знайдено",
     "Favorites" : "Із зірочкою",
     "Follow up" : "Подальші дії",
     "Follow up info" : "Подальша інформація",

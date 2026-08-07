@@ -154,6 +154,7 @@ OC.L10N.register(
     "Last week" : "Sa chida passada",
     "Choose target folder" : "Sèbera cartella de destinatzione",
     "No more submailboxes in here" : "Non b'at àteras suta-cartellas inoghe",
+    "No results" : "Perunu resurtadu",
     "Favorites" : "Preferidos",
     "Important info" : "Informatzione importante",
     "Other" : "Àteru",

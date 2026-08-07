@@ -367,6 +367,7 @@ OC.L10N.register(
     "Indexing your messages. This can take a bit longer for larger folders." : "Indexing your messages. This can take a bit longer for larger folders.",
     "Choose target folder" : "Choose target folder",
     "No more submailboxes in here" : "No more submailboxes in here",
+    "No results" : "ບໍ່ມີຜົນ",
     "Favorites" : "ລາຍການທີ່ມັກ",
     "Follow up" : "Follow up",
     "Follow up info" : "Follow up info",

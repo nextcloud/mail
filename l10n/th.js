@@ -53,6 +53,7 @@ OC.L10N.register(
     "Last week" : "สัปดาห์ที่แล้ว",
     "Last month" : "เดือนที่แล้ว",
     "Choose target folder" : "เลือกโฟลเดอร์เป้าหมาย",
+    "No results" : "ไม่มีผลลัพธ์",
     "Favorites" : "รายการโปรด",
     "Other" : "อื่น ๆ",
     "Forward" : "ส่งต่อ",

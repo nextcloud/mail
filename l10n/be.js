@@ -129,6 +129,7 @@ OC.L10N.register(
     "Last month" : "Мінулы месяц",
     "Loading messages …" : "Загрузка паведамленняў …",
     "Choose target folder" : "Выберыце мэтавую папку",
+    "No results" : "Няма вынікаў",
     "Favorites" : "Абранае",
     "Other" : "Іншае",
     "Direct link copied to clipboard" : "Прамая спасылка скапіявана ў буфер абмену",

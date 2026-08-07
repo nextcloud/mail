@@ -395,6 +395,7 @@ OC.L10N.register(
     "Indexing your messages. This can take a bit longer for larger folders." : "Indicizzazione dei messaggi in corso. Per le cartelle più grandi l’operazione potrebbe richiedere più tempo.",
     "Choose target folder" : "Scegli la cartella di destinazione",
     "No more submailboxes in here" : "Qui non ci sono altre sotto-caselle di posta",
+    "No results" : "Nessun risultato",
     "Messages will automatically be marked as important using AI. The system learns from which messages you interact with or mark as important. In the beginning you might have to manually change the importance to teach it, but it will improve over time" : "I messaggi verranno contrassegnati automaticamente come importanti tramite l’IA. Il sistema impara dai messaggi con cui interagisci o che segni come importanti. All’inizio potresti dover modificare manualmente il livello di importanza per addestrarlo, ma la precisione migliorerà nel tempo.",
     "Messages that you marked as favorite will be shown at the top of folders. You can disable this behavior in the app settings" : "I messaggi che hai aggiunto ai preferiti verranno mostrati in cima alle cartelle. Puoi disattivare questa opzione dalle impostazioni di Posta.",
     "AI identifies messages sent by you that likely require a reply but did not receive one after a couple of days and shows them here" : "L’IA identifica i messaggi inviati da te che probabilmente richiedono una risposta ma che non ne hanno ricevuta dopo alcuni giorni, e li mostra qui.",
