@@ -14,10 +14,12 @@ use OCA\Mail\Account;
 use OCA\Mail\ContextChat\ContextChatProvider;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\NewMessagesSynchronized;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\ContextChat\TaskService;
 use OCA\Mail\Service\MailManager;
@@ -41,6 +43,9 @@ class ContextChatProviderTest extends TestCase {
 
 	/** @var MessageMapper|MockObject */
 	private $messageMapper;
+
+	/** @var MailboxMapper|MockObject */
+	private $mailboxMapper;
 
 	/** @var IURLGenerator|MockObject */
 	private $urlGenerator;
@@ -68,6 +73,7 @@ class ContextChatProviderTest extends TestCase {
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->mailManager = $this->createMock(MailManager::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
+		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
 		$this->userManager = $this->createMock(IUserManager::class);
 		$this->contentManager = $this->createMock(IContentManager::class);
@@ -78,6 +84,7 @@ class ContextChatProviderTest extends TestCase {
 			$this->accountService,
 			$this->mailManager,
 			$this->messageMapper,
+			$this->mailboxMapper,
 			$this->urlGenerator,
 			$this->userManager,
 			$this->contentManager,
@@ -176,13 +183,45 @@ class ContextChatProviderTest extends TestCase {
 	}
 
 	public function testGetItemUrl(): void {
-		$this->urlGenerator->expects($this->once())->method('linkToRouteAbsolute')->willReturnCallback(function ($route, $args) {
-			$this->assertEquals('mail.page.thread', $route);
-			$this->assertEquals(1, $args['mailboxId']);
-			$this->assertEquals(2, $args['id']);
-			return 'http://localhost/apps/mail/box/1/thread/2';
-		});
-		$itemUrl = $this->contextChatProvider->getItemUrl('1:2');
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$this->mailboxMapper->expects($this->once())->method('findById')->with(1)->willReturn($mailbox);
+		$this->messageMapper->expects($this->once())->method('getIdForUid')->with($mailbox, 4711)->willReturn(2);
+		$this->urlGenerator->expects($this->once())->method('linkToRouteAbsolute')
+			->with('mail.page.thread', ['mailboxId' => 1, 'id' => 2])
+			->willReturn('http://localhost/apps/mail/box/1/thread/2');
+
+		$itemUrl = $this->contextChatProvider->getItemUrl(ContextChatProvider::itemId(3, 1, 4711));
+
 		$this->assertEquals('http://localhost/apps/mail/box/1/thread/2', $itemUrl);
+	}
+
+	public function testGetItemUrlNeverThrows(): void {
+		$this->mailboxMapper->expects($this->once())->method('findById')
+			->willThrowException(new ServiceException('database on fire'));
+		$this->urlGenerator->expects($this->once())->method('linkToRouteAbsolute')
+			->with('mail.page.index', [])
+			->willReturn('http://localhost/apps/mail/');
+
+		$this->assertEquals('http://localhost/apps/mail/', $this->contextChatProvider->getItemUrl('3:1:4711'));
+	}
+
+	public function testGetItemUrlWithDeletedMessage(): void {
+		$this->mailboxMapper->expects($this->once())->method('findById')->willReturn(new Mailbox());
+		$this->messageMapper->expects($this->once())->method('getIdForUid')->willReturn(null);
+		$this->urlGenerator->expects($this->once())->method('linkToRouteAbsolute')
+			->with('mail.page.index', [])
+			->willReturn('http://localhost/apps/mail/');
+
+		$this->assertEquals('http://localhost/apps/mail/', $this->contextChatProvider->getItemUrl('3:1:4711'));
+	}
+
+	public function testGetItemUrlWithMalformedId(): void {
+		$this->mailboxMapper->expects($this->never())->method('findById');
+		$this->urlGenerator->expects($this->once())->method('linkToRouteAbsolute')
+			->with('mail.page.index', [])
+			->willReturn('http://localhost/apps/mail/');
+
+		$this->assertEquals('http://localhost/apps/mail/', $this->contextChatProvider->getItemUrl('nonsense'));
 	}
 }

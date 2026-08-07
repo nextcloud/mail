@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\ContextChat;
 
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Events\MessageDeletedEvent;
@@ -38,9 +39,7 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 	/**
 	 * Identifier of a message in the context chat knowledge base.
 	 *
-	 * Keyed by the IMAP uid rather than the database id because the uid is all
-	 * MessageDeletedEvent carries, and the cached message row is already gone by
-	 * the time this provider handles that event.
+	 * Keyed by uid because that is all MessageDeletedEvent carries.
 	 */
 	public static function itemId(int $accountId, int $mailboxId, int $uid): string {
 		return "$accountId:$mailboxId:$uid";
@@ -51,6 +50,7 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 		private AccountService $accountService,
 		private MailManager $mailManager,
 		private MessageMapper $messageMapper,
+		private MailboxMapper $mailboxMapper,
 		private IURLGenerator $urlGenerator,
 		private IUserManager $userManager,
 		private IContentManager $contentManager,
@@ -121,11 +121,29 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 	 * @since 5.2.0
 	 */
 	public function getItemUrl(string $id): string {
-		[$mailboxId, $messageId] = explode(':', $id);
-		if (!$mailboxId || !$messageId) {
-			return $this->urlGenerator->linkToRouteAbsolute('mail.page.thread', [ 'mailboxId' => $mailboxId, 'id' => 'error']);
+		[, $mailboxId, $uid] = array_pad(explode(':', $id), 3, null);
+		if (!$mailboxId || !$uid) {
+			return $this->urlGenerator->linkToRouteAbsolute('mail.page.index', []);
 		}
-		return $this->urlGenerator->linkToRouteAbsolute('mail.page.thread', [ 'mailboxId' => $mailboxId, 'id' => $messageId ]);
+
+		// Context chat calls this when it renders the sources of an answer, so the
+		// message id is looked up on demand rather than baked into the item id.
+		try {
+			$mailbox = $this->mailboxMapper->findById((int)$mailboxId);
+			$messageId = $this->messageMapper->getIdForUid($mailbox, (int)$uid);
+		} catch (\Throwable) {
+			// Context chat fails the whole answer if this throws
+			$messageId = null;
+		}
+
+		if ($messageId === null) {
+			return $this->urlGenerator->linkToRouteAbsolute('mail.page.index', []);
+		}
+
+		return $this->urlGenerator->linkToRouteAbsolute(
+			'mail.page.thread',
+			['mailboxId' => (int)$mailboxId, 'id' => $messageId],
+		);
 	}
 
 	/**
