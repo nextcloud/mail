@@ -28,7 +28,7 @@
 					:infinite-scroll-distance="300"
 					role="heading"
 					:aria-level="2"
-					@shortkey.native="onShortcut">
+					@shortkey="onShortcut">
 					<template v-if="!mailbox.isPriorityInbox">
 						<div
 							v-if="sortFavorites"
