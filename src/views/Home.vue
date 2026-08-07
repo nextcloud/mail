@@ -15,6 +15,8 @@
 			<ComposerSessionIndicator @close="onCloseMessageModal" />
 			<NewMessageModal ref="newMessageModal" :accounts="accounts" />
 		</template>
+
+		<OidcReauthDialog />
 	</NcContent>
 </template>
 
@@ -24,6 +26,7 @@ import { mapState, mapStores } from 'pinia'
 import ComposerSessionIndicator from '../components/ComposerSessionIndicator.vue'
 import MailboxThread from '../components/MailboxThread.vue'
 import Navigation from '../components/Navigation.vue'
+import OidcReauthDialog from '../components/OidcReauthDialog.vue'
 import Outbox from '../components/Outbox.vue'
 import logger from '../logger.js'
 import { testAccountConnection } from '../service/AccountService.js'
@@ -38,6 +41,7 @@ export default {
 		MailboxThread,
 		Navigation,
 		NewMessageModal: () => import(/* webpackChunkName: "new-message-modal" */ '../components/NewMessageModal.vue'),
+		OidcReauthDialog,
 		Outbox,
 		ComposerSessionIndicator,
 	},
@@ -90,6 +94,11 @@ export default {
 				account,
 				data: { connectionStatus: await testAccountConnection(account.accountId) },
 			})
+			// Testing the connection creates an IMAP client, which runs the token refresh
+			// on the server; that may flag the account for re-authentication (even when the
+			// still-valid access token means the test itself passed). Re-read the flag so
+			// the reconnect dialog can show. checkOidcReauth ignores non-OIDC accounts.
+			await this.mainStore.checkOidcReauth(account)
 		}
 	},
 
