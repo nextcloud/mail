@@ -31,6 +31,7 @@ export default defineStore('main', {
 					name: '',
 					showSubscribedOnly: false,
 					signatureAboveQuote: false,
+					signatureSeparator: true,
 				},
 			},
 			accountList: [UNIFIED_ACCOUNT_ID],

@@ -199,6 +199,7 @@ class AccountsController extends Controller {
 	 * @param int|null $archiveMailboxId
 	 * @param int|null $snoozeMailboxId
 	 * @param bool|null $signatureAboveQuote
+	 * @param bool|null $signatureSeparator
 	 * @param bool|null $classificationEnabled
 	 *
 	 * @return JSONResponse
@@ -216,6 +217,7 @@ class AccountsController extends Controller {
 		?int $archiveMailboxId = null,
 		?int $snoozeMailboxId = null,
 		?bool $signatureAboveQuote = null,
+		?bool $signatureSeparator = null,
 		?int $trashRetentionDays = null,
 		?int $junkMailboxId = null,
 		?bool $searchBody = null,
@@ -258,6 +260,9 @@ class AccountsController extends Controller {
 		}
 		if ($signatureAboveQuote !== null) {
 			$dbAccount->setSignatureAboveQuote($signatureAboveQuote);
+		}
+		if ($signatureSeparator !== null) {
+			$dbAccount->setSignatureSeparator($signatureSeparator);
 		}
 		if ($trashRetentionDays !== null) {
 			// Passing 0 (or lower) disables retention
