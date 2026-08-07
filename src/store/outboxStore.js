@@ -6,7 +6,6 @@
 import { showError, showSuccess, showUndo } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 import { defineStore } from 'pinia'
-import Vue from 'vue'
 import logger from '../logger.js'
 import * as OutboxService from '../service/OutboxService.js'
 import { UNDO_DELAY } from './constants.js'
@@ -30,7 +29,7 @@ export default defineStore('outbox', {
 
 		addMessageMutation({ message }) {
 			const existing = this.messages[message.id] ?? {}
-			Vue.set(this.messages, message.id, { ...existing, ...message })
+			this.messages[message.id] = { ...existing, ...message }
 			// Add the message only if it's new
 			if (this.messageList.indexOf(message.id) === -1) {
 				this.messageList.unshift(message.id)
@@ -39,16 +38,16 @@ export default defineStore('outbox', {
 
 		deleteMessageMutation({ id }) {
 			this.messageList = this.messageList.filter((i) => i !== id)
-			Vue.delete(this.messages, id)
+			delete this.messages[id]
 		},
 
 		stopMessageMutation({ message }) {
-			Vue.delete(message, 'sendAt')
+			delete message.sendAt
 		},
 
 		updateMessageMutation({ message }) {
 			const existing = this.messages[message.id] ?? {}
-			Vue.set(this.messages, message.id, Object.assign(existing, message))
+			this.messages[message.id] = Object.assign(existing, message)
 			// Add the message only if it's new
 			if (this.messageList.indexOf(message.id) === -1) {
 				this.messageList.unshift(message.id)
