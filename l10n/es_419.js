@@ -70,6 +70,7 @@ OC.L10N.register(
     "Decline" : "Declinar",
     "Remove" : "Eliminar",
     "Today" : "Hoy",
+    "No results" : "No hay resultados",
     "Favorites" : "Favoritos",
     "Other" : "Otro",
     "Forward" : "Reenviar",

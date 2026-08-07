@@ -45,6 +45,7 @@ OC.L10N.register(
     "Add mail account" : "Voeg posrekening toe",
     "Newest first" : "Nuutste eerste",
     "Oldest first" : "Oudste eerste",
+    "Manually" : "Handmatig",
     "Security" : "Sekuriteit",
     "Archive" : "Argief",
     "Delete" : "Skrap",

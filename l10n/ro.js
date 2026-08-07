@@ -252,6 +252,7 @@ OC.L10N.register(
     "Today" : "Azi",
     "Choose target folder" : "Alege directorul destinație",
     "No more submailboxes in here" : "Nu mai sunt subfoldere",
+    "No results" : "Niciun rezultat",
     "Favorites" : "Favorite",
     "Important info" : "Informații importante",
     "Other" : "Altele",

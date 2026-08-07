@@ -305,6 +305,7 @@ OC.L10N.register(
     "Last month" : "Joan den hilabetean",
     "Choose target folder" : "Aukeratu helburuko karpeta",
     "No more submailboxes in here" : "Azpipostontzi gehiagorik ez hemen",
+    "No results" : "Emaitzarik ez",
     "Favorites" : "Gogokoak",
     "Follow up" : "Segimendua egin",
     "Follow up info" : "Segimenduaren informazioa",

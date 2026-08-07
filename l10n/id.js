@@ -379,6 +379,7 @@ OC.L10N.register(
     "Indexing your messages. This can take a bit longer for larger folders." : "Mengindeks pesan Anda. Ini dapat memakan waktu sedikit lebih lama untuk folder yang lebih besar.",
     "Choose target folder" : "Pilih folder tujuan",
     "No more submailboxes in here" : "Tidak ada sub-kotak surat lagi di sini",
+    "No results" : "Tidak ada hasil",
     "Messages that you marked as favorite will be shown at the top of folders. You can disable this behavior in the app settings" : "Pesan yang Anda tandai sebagai favorit akan ditampilkan di bagian atas folder. Anda dapat menonaktifkan perilaku ini di pengaturan aplikasi",
     "Favorites" : "Favorit",
     "Favorites info" : "Info favorit",

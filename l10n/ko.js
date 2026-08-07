@@ -278,6 +278,7 @@ OC.L10N.register(
     "Last week" : "지난 주",
     "Choose target folder" : "폴더 선택",
     "No more submailboxes in here" : "더 이상의 하위 편지함 없음",
+    "No results" : "검색 결과 없음",
     "Favorites" : "즐겨찾기",
     "Important info" : "중요 정보",
     "Other" : "기타",

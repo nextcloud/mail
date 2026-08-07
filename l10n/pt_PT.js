@@ -338,6 +338,7 @@ OC.L10N.register(
     "Loading messages …" : "Carregando a mensagem …",
     "Indexing your messages. This can take a bit longer for larger folders." : "Indexação de suas mensagens. Isso pode demorar um pouco mais para pastas maiores.",
     "Choose target folder" : "Escolher pasta de destino",
+    "No results" : "Sem resultados",
     "Messages will automatically be marked as important using AI. The system learns from which messages you interact with or mark as important. In the beginning you might have to manually change the importance to teach it, but it will improve over time" : "As mensagens serão automaticamente marcadas como importantes usando IA. O sistema aprende com quais mensagens você interage ou marca como importantes. No início, talvez seja necessário alterar manualmente a importância para ensiná-lo, mas ele irá melhorar com o tempo",
     "Messages that you marked as favorite will be shown at the top of folders. You can disable this behavior in the app settings" : "As mensagens que você marcou como favoritas serão exibidas na parte superior das pastas. Você pode desativar esse comportamento nas configurações do aplicativo",
     "AI identifies messages sent by you that likely require a reply but did not receive one after a couple of days and shows them here" : "A IA identifica as mensagens enviadas por você que provavelmente exigem uma resposta, mas não receberam nenhuma após alguns dias, e as exibe aqui.",

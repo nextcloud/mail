@@ -412,6 +412,7 @@
     "Indexing your messages. This can take a bit longer for larger folders." : "Indexerar dina meddelanden. Detta kan ta tid för större mappar.",
     "Choose target folder" : "Välj målmapp",
     "No more submailboxes in here" : "Inga fler undermappar här",
+    "No results" : "Inga resultat",
     "Messages will automatically be marked as important using AI. The system learns from which messages you interact with or mark as important. In the beginning you might have to manually change the importance to teach it, but it will improve over time" : "Meddelanden markeras automatiskt som viktiga med hjälp av AI. Systemet lär sig av vilka meddelanden du interagerar med eller markerar som viktiga. I början kan du behöva ändra prioriteten manuellt för att lära systemet, men det förbättras med tiden",
     "Messages that you marked as favorite will be shown at the top of folders. You can disable this behavior in the app settings" : "Meddelanden som du har markerat som favoriter visas högst upp i mappar. Du kan ändra detta beteende i inställningarna.",
     "AI identifies messages sent by you that likely require a reply but did not receive one after a couple of days and shows them here" : "AI identifierar meddelanden som du har skickat och som sannolikt behöver ett svar men inte har fått något efter några dagar, och visar dem här",

@@ -363,6 +363,7 @@ OC.L10N.register(
     "Indexing your messages. This can take a bit longer for larger folders." : "Ваше поруке се индексирају. Када се обрађују већи фолдери, ово може потрајати.",
     "Choose target folder" : "Одаберите одредишну фасциклу",
     "No more submailboxes in here" : "Овде нема још више нема подсандучета",
+    "No results" : "Нема резултата",
     "Favorites" : "Омиљене",
     "Follow up" : "Дорада",
     "Follow up info" : "Информације о доради",

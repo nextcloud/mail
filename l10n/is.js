@@ -307,6 +307,7 @@ OC.L10N.register(
     "Last month" : "Í síðasta mánuði",
     "Choose target folder" : "Veldu úttaksmöppu",
     "No more submailboxes in here" : "Engin fleiri undirpósthólf hér",
+    "No results" : "Engar niðurstöður",
     "Favorites" : "Eftirlæti",
     "Follow up" : "Fylgja eftir",
     "Follow up info" : "Upplýsingar um eftirfylgni",
