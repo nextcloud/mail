@@ -26,7 +26,7 @@
 					required
 					type="email"
 					@change="clearFeedback" />
-				<p v-if="!isValidEmail(emailAddress)" class="account-form--error">
+				<p v-if="!validEmail(emailAddress)" class="account-form--error">
 					{{ t('mail', 'Please enter an email of the format name@example.com') }}
 				</p>
 				<NcPasswordField
@@ -61,7 +61,7 @@
 					:disabled="loading"
 					required
 					@change="clearFeedback" />
-				<p v-if="!isValidEmail(emailAddress)" class="account-form--error">
+				<p v-if="!validEmail(emailAddress)" class="account-form--error">
 					{{ t('mail', 'Please enter an email of the format name@example.com') }}
 				</p>
 
@@ -290,6 +290,7 @@ import {
 } from '../service/AutoConfigService.js'
 import { generateOauthState } from '../service/OauthStateService.js'
 import useMainStore from '../store/mainStore.js'
+import { isValidEmail } from '../util/emailAddress.js'
 
 export default {
 	name: 'AccountForm',
@@ -385,7 +386,7 @@ export default {
 				return this.loading
 			}
 
-			return !this.emailAddress || !this.isValidEmail(this.emailAddress)
+			return !this.emailAddress || !this.validEmail(this.emailAddress)
 				|| (!this.googleOauthUrl && !this.autoConfig.password)
 				|| (!this.microsoftOauthUrl && !this.autoConfig.password)
 		},
@@ -399,7 +400,7 @@ export default {
 				return this.loading
 			}
 
-			return !this.emailAddress || !this.isValidEmail(this.emailAddress)
+			return !this.emailAddress || !this.validEmail(this.emailAddress)
 				|| !this.manualConfig.imapHost || !this.manualConfig.imapPort
 				|| !this.manualConfig.imapUser || (!this.useOauth && !this.manualConfig.imapPassword)
 				|| !this.manualConfig.smtpHost || !this.manualConfig.smtpPort
@@ -745,9 +746,8 @@ export default {
 			}
 		},
 
-		isValidEmail(email) {
-			const regExpEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(localhost|((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})))$/
-			return regExpEmail.test(email)
+		validEmail(email) {
+			return isValidEmail(email)
 		},
 	},
 }
