@@ -260,6 +260,16 @@
 					}}
 				</ActionText>
 				<NcActionSeparator />
+				<ActionButton
+					v-if="withReply"
+					class="action--primary"
+					:close-after-click="true"
+					@click.prevent="onReply()">
+					<template #icon>
+						<Reply :size="24" />
+					</template>
+					{{ t('mail', 'Reply') }}
+				</ActionButton>
 				<ActionButton :is-menu="true" @click="showQuickActionsMenu">
 					<template #icon>
 						<IconEmailFast :size="20" />
@@ -763,7 +773,7 @@ export default {
 					accountId: this.data.accountId,
 				})
 			}
-			const recipients = buildReplyRecipients(this.envelope, {
+			const recipients = buildReplyRecipients(this.data, {
 				label: this.account.name,
 				email: this.account.emailAddress,
 			})
@@ -1504,6 +1514,17 @@ export default {
 				this.overwriteOneLineMobile = false
 			}
 			this.countPossibleAttachements()
+		},
+
+		onReply(body = '', followUp = false, replySenderOnly = false) {
+			this.mainStore.startComposerSession({
+				reply: {
+					mode: (this.hasMultipleRecipients && !replySenderOnly) ? 'replyAll' : 'reply',
+					data: this.data,
+					smartReply: body,
+					followUp,
+				},
+			})
 		},
 	},
 }
