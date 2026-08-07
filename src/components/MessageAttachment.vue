@@ -19,6 +19,7 @@
 			</span>
 			<span class="attachment-size">{{ humanReadable(size) }}</span>
 		</div>
+
 		<FilePicker
 			v-if="isFilePickerOpen"
 			:name="t('mail', 'Choose a folder to store the attachment in')"
@@ -27,6 +28,17 @@
 			:multiselect="false"
 			:mimetype-filter="['httpd/unix-directory']"
 			@close="() => isFilePickerOpen = false" />
+
+		<NcDialog
+			:open.sync="isRenameOpen"
+			:name="t('mail', 'Rename')"
+			:buttons="renameButtons">
+			<NcInputField
+				v-model="newFileName"
+				:label="t('mail', 'Filename')"
+				required />
+		</NcDialog>
+
 		<Actions :boundaries-element="boundariesElement">
 			<template v-if="!showCalendarPopover">
 				<ActionButton
@@ -85,7 +97,7 @@ import { showError, showSuccess } from '@nextcloud/dialogs'
 import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
 import { formatFileSize } from '@nextcloud/files'
 import { translate as t } from '@nextcloud/l10n'
-import { NcActionButton as ActionButton, NcActions as Actions, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import { NcActionButton as ActionButton, NcActions as Actions, NcLoadingIcon as IconLoading, NcDialog, NcInputField } from '@nextcloud/vue'
 import IconArrow from 'vue-material-design-icons/ArrowLeft.vue'
 import IconSave from 'vue-material-design-icons/FolderOutline.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
@@ -98,6 +110,8 @@ export default {
 	name: 'MessageAttachment',
 	components: {
 		FilePicker,
+		NcDialog,
+		NcInputField,
 		Actions,
 		ActionButton,
 		IconAdd,
@@ -163,13 +177,32 @@ export default {
 			showCalendarPopover: false,
 			saveAttachementButtons: [
 				{
-					label: t('mail', 'Choose'),
+					label: t('mail', 'Rename and save'),
+					callback: this.openRename,
+					type: 'secondary',
+				},
+				{
+					label: t('mail', 'Save as {filename}', {
+						filename: this.fileName,
+					}),
+
 					callback: this.saveToCloud,
 					type: 'primary',
 				},
 			],
 
+			renameButtons: [
+				{
+					label: t('mail', 'Save'),
+					callback: this.saveRename,
+					type: 'primary',
+				},
+			],
+
+			path: '',
 			isFilePickerOpen: false,
+			newFileName: this.fileName,
+			isRenameOpen: false,
 		}
 	},
 
@@ -225,13 +258,29 @@ export default {
 			return formatFileSize(size)
 		},
 
-		async saveToCloud(dest) {
-			const path = dest[0].path
+		openRename(dest) {
+			this.path = dest[0].path
+			this.newFileName = this.fileName
+			this.isRenameOpen = true
+		},
+
+		saveRename() {
+			this.isRenameOpen = false
+			this.realSave()
+		},
+
+		saveToCloud(dest) {
+			this.path = dest[0].path
+			this.newFileName = this.fileName
+			this.realSave()
+		},
+
+		async realSave() {
 			this.savingToCloud = true
 			const id = this.$route.params.threadId
 
 			try {
-				await saveAttachmentToFiles(id, this.id, path)
+				await saveAttachmentToFiles(id, this.id, this.path, this.newFileName)
 				Logger.info('saved')
 				showSuccess(t('mail', 'Attachment saved to Files'))
 			} catch (e) {
