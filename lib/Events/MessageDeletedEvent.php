@@ -18,7 +18,7 @@ class MessageDeletedEvent extends Event implements IWebhookCompatibleEvent {
 	public function __construct(
 		private Account $account,
 		private Mailbox $mailbox,
-		private int $messageId,
+		private int $uid,
 	) {
 		parent::__construct();
 	}
@@ -31,15 +31,15 @@ class MessageDeletedEvent extends Event implements IWebhookCompatibleEvent {
 		return $this->mailbox;
 	}
 
-	public function getMessageId(): int {
-		return $this->messageId;
+	public function getUid(): int {
+		return $this->uid;
 	}
 
 	public function getWebhookSerializable(): array {
 		return [
 			'accountId' => $this->account->getId(),
 			'mailboxId' => $this->mailbox->getId(),
-			'messageId' => $this->messageId,
+			'uid' => $this->uid,
 		];
 	}
 }

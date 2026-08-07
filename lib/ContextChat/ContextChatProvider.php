@@ -72,7 +72,7 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 		}
 
 		if ($event instanceof MessageDeletedEvent) {
-			$this->contentManager->deleteContent($this->getAppId(), $this->getId(), [strval($event->getMessageId())]);
+			$this->contentManager->deleteContent($this->getAppId(), $this->getId(), [strval($event->getUid())]);
 			return;
 		}
 	}

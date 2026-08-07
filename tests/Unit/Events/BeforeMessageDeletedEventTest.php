@@ -17,12 +17,12 @@ class BeforeMessageDeletedEventTest extends TestCase {
 	public function testConstructorAndGetters(): void {
 		$account = $this->createStub(Account::class);
 		$folderId = 'INBOX';
-		$messageId = 123;
+		$uid = 123;
 
-		$event = new BeforeMessageDeletedEvent($account, $folderId, $messageId);
+		$event = new BeforeMessageDeletedEvent($account, $folderId, $uid);
 
 		$this->assertSame($account, $event->getAccount());
 		$this->assertSame($folderId, $event->getFolderId());
-		$this->assertSame($messageId, $event->getMessageId());
+		$this->assertSame($uid, $event->getUid());
 	}
 }

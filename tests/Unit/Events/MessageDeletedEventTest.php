@@ -18,13 +18,13 @@ class MessageDeletedEventTest extends TestCase {
 	public function testConstructorAndGetters(): void {
 		$account = $this->createStub(Account::class);
 		$mailbox = $this->createStub(Mailbox::class);
-		$messageId = 42;
+		$uid = 42;
 
-		$event = new MessageDeletedEvent($account, $mailbox, $messageId);
+		$event = new MessageDeletedEvent($account, $mailbox, $uid);
 
 		$this->assertSame($account, $event->getAccount());
 		$this->assertSame($mailbox, $event->getMailbox());
-		$this->assertSame($messageId, $event->getMessageId());
+		$this->assertSame($uid, $event->getUid());
 	}
 
 	public function testGetWebhookSerializable(): void {
@@ -38,7 +38,7 @@ class MessageDeletedEventTest extends TestCase {
 		$this->assertSame([
 			'accountId' => 7,
 			'mailboxId' => 13,
-			'messageId' => 42,
+			'uid' => 42,
 		], $event->getWebhookSerializable());
 	}
 }

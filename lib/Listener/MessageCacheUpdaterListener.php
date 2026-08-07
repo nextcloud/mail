@@ -35,7 +35,7 @@ class MessageCacheUpdaterListener implements IEventListener {
 		} elseif ($event instanceof MessageDeletedEvent) {
 			$this->mapper->deleteByUid(
 				$event->getMailbox(),
-				$event->getMessageId()
+				$event->getUid()
 			);
 		}
 	}
