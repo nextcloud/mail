@@ -18,7 +18,7 @@ class BeforeMessageDeletedEvent extends Event {
 	public function __construct(
 		private Account $account,
 		string $mailbox,
-		private int $messageId,
+		private int $uid,
 	) {
 		parent::__construct();
 		$this->folderId = $mailbox;
@@ -32,7 +32,7 @@ class BeforeMessageDeletedEvent extends Event {
 		return $this->folderId;
 	}
 
-	public function getMessageId(): int {
-		return $this->messageId;
+	public function getUid(): int {
+		return $this->uid;
 	}
 }
