@@ -298,7 +298,7 @@ class MailManager implements IMailManager {
 		Horde_Imap_Client_Socket $client,
 	): void {
 		$this->eventDispatcher->dispatchTyped(
-			new BeforeMessageDeletedEvent($account, $mailbox->getName(), $messageUid)
+			new BeforeMessageDeletedEvent($account, $mailbox, $messageUid)
 		);
 
 		try {

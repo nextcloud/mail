@@ -11,18 +11,24 @@ namespace OCA\Mail\Tests\Unit\Events;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
+use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Events\BeforeMessageDeletedEvent;
 
 class BeforeMessageDeletedEventTest extends TestCase {
 	public function testConstructorAndGetters(): void {
 		$account = $this->createStub(Account::class);
-		$folderId = 'INBOX';
+
+		$mailbox = new Mailbox();
+		$mailbox->setId(42);
+		$mailbox->setName('INBOX');
+
 		$uid = 123;
 
-		$event = new BeforeMessageDeletedEvent($account, $folderId, $uid);
+		$event = new BeforeMessageDeletedEvent($account, $mailbox, $uid);
 
 		$this->assertSame($account, $event->getAccount());
-		$this->assertSame($folderId, $event->getFolderId());
+		$this->assertSame($mailbox, $event->getMailbox());
+		$this->assertSame('INBOX', $event->getFolderId());
 		$this->assertSame($uid, $event->getUid());
 	}
 }
