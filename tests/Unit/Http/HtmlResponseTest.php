@@ -21,10 +21,12 @@ class HtmlResponseTest extends TestCase {
 	public function testIt($content) {
 		$nonce = 'abc123';
 		$scriptUrl = 'next.cloud/script.js';
+		$stylesheetUrl = 'next.cloud/stylesheet.css';
 		$plainResp = HtmlResponse::plain($content);
-		$richResp = HtmlResponse::withResizer($content, $nonce, $scriptUrl);
+		$richResp = HtmlResponse::withResizer($content, $nonce, $scriptUrl, $stylesheetUrl);
 
 		$this->assertStringContainsString("<script nonce=\"$nonce\" src=\"$scriptUrl\"></script>", $richResp->render());
+		$this->assertStringContainsString("<link rel=\"stylesheet\" href=\"$stylesheetUrl\" />", $richResp->render());
 		$this->assertEquals($content, $plainResp->render());
 	}
 

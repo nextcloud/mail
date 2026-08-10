@@ -70,8 +70,8 @@
 
 <script>
 
-import IconCancel from '@mdi/svg/svg/cancel.svg'
-import IconCheck from '@mdi/svg/svg/check.svg'
+import IconCancel from '@mdi/svg/svg/cancel.svg?raw'
+import IconCheck from '@mdi/svg/svg/check.svg?raw'
 import { showError } from '@nextcloud/dialogs'
 import { NcButton as ButtonVue, NcActionButton, NcDialog, NcListItem, NcTextField } from '@nextcloud/vue'
 import prop from 'lodash/fp/prop.js'

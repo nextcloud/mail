@@ -297,8 +297,8 @@
 </template>
 
 <script>
-import IconClose from '@mdi/svg/svg/close.svg'
-import IconMagnify from '@mdi/svg/svg/magnify.svg'
+import IconClose from '@mdi/svg/svg/close.svg?raw'
+import IconMagnify from '@mdi/svg/svg/magnify.svg?raw'
 import { translate as t } from '@nextcloud/l10n'
 import moment from '@nextcloud/moment'
 import debouncePromise from 'debounce-promise'

@@ -22,12 +22,14 @@ class HtmlResponse extends Response {
 	 * @param bool $plain do not inject scripts if true (default=false)
 	 * @param string|null $nonce
 	 * @param string|null $scriptUrl
+	 * @param string|null $stylesheetUrl
 	 */
 	private function __construct(
 		private string $content,
 		private bool $plain = false,
 		private ?string $nonce = null,
 		private ?string $scriptUrl = null,
+		private ?string $stylesheetUrl = null,
 	) {
 		parent::__construct();
 	}
@@ -38,12 +40,14 @@ class HtmlResponse extends Response {
 
 	public static function withResizer(string $content,
 		string $nonce,
-		string $scriptUrl): self {
+		string $scriptUrl,
+		string $stylesheetUrl): self {
 		return new self(
 			$content,
 			false,
 			$nonce,
-			$scriptUrl
+			$scriptUrl,
+			$stylesheetUrl,
 		);
 	}
 
@@ -58,6 +62,6 @@ class HtmlResponse extends Response {
 			return $this->content;
 		}
 
-		return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><script nonce="' . $this->nonce . '" src="' . $this->scriptUrl . '"></script></head><body>' . $this->content . '<div data-iframe-size></div></body></html>';
+		return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><link rel="stylesheet" href="' . $this->stylesheetUrl . '" /><script nonce="' . $this->nonce . '" src="' . $this->scriptUrl . '"></script></head><body>' . $this->content . '<div data-iframe-size></div></body></html>';
 	}
 }

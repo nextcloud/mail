@@ -265,18 +265,24 @@ class MessagesControllerTest extends TestCase {
 		$nonce = 'abc123';
 		$relativeScriptUrl = '/script.js';
 		$scriptUrl = 'next.cloud/script.js';
+		$relativeStylesheetUrl = '/stylesheet.css';
+		$stylesheetUrl = 'next.cloud/stylesheet.css';
 		$this->nonceManager->expects($this->once())
 			->method('getNonce')
 			->willReturn($nonce);
-		$this->urlGenerator->expects($this->once())
+		$this->urlGenerator->expects($this->exactly(2))
 			->method('linkTo')
-			->with('mail', 'js/htmlresponse.js')
-			->willReturn($relativeScriptUrl);
-		$this->urlGenerator->expects($this->once())
+			->willReturnCallback(static fn (string $appName, string $file, array $args = []): string => match ([$appName, $file, $args]) {
+				['mail', 'js/htmlresponse.js', []] => $relativeScriptUrl,
+				['mail', 'css/htmlresponse.css', []] => $relativeStylesheetUrl,
+			});
+		$this->urlGenerator->expects($this->exactly(2))
 			->method('getAbsoluteURL')
-			->with($relativeScriptUrl)
-			->willReturn($scriptUrl);
-		$expectedRichResponse = HtmlResponse::withResizer('', $nonce, $scriptUrl);
+			->willReturnCallback(static fn (string $url): string => match ($url) {
+				$relativeScriptUrl => $scriptUrl,
+				$relativeStylesheetUrl => $stylesheetUrl,
+			});
+		$expectedRichResponse = HtmlResponse::withResizer('', $nonce, $scriptUrl, $stylesheetUrl);
 		$expectedRichResponse->cacheFor(3600);
 
 		$policy = new ContentSecurityPolicy();
