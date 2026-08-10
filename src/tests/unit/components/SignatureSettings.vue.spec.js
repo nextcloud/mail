@@ -18,7 +18,7 @@ describe('SignatureSettings', () => {
 			propsData: {
 				account: {
 					aliases: [],
-					signature: String('<p>Lorem ipsum</p>').repeat(120000),
+					signature: '<p>Lorem ipsum</p><img src="data:image/png;base64,' + 'A'.repeat(2 * 1024 * 1024) + '">',
 				},
 			},
 		})
