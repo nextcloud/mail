@@ -49,6 +49,23 @@ class SvgSanitizerTest extends TestCase {
 		$this->assertStringContainsString('<rect', $result);
 	}
 
+	public function testRemovesExternalReferenceWithCustomNamespacePrefix(): void {
+		$svg = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:fo_B1-ar="http://www.w3.org/1999/xlink">'
+			. '<a fo_B1-ar:href="https://evil.example"><rect/></a></svg>';
+
+		$result = $this->sanitizer->sanitize($svg);
+
+		$this->assertStringNotContainsString('evil.example', $result);
+		$this->assertStringContainsString('<rect', $result);
+	}
+
+	public function testRemovesExternalReferenceWithUndeclaredNamespacePrefix(): void {
+		$svg = '<svg xmlns="http://www.w3.org/2000/svg">'
+			. '<a foo:href="https://evil.example"><rect/></a></svg>';
+
+		$this->assertStringNotContainsString('evil.example', $this->sanitizer->sanitize($svg));
+	}
+
 	public function testKeepsSameDocumentReference(): void {
 		$svg = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
 			. '<use xlink:href="#icon"/></svg>';
@@ -61,6 +78,22 @@ class SvgSanitizerTest extends TestCase {
 	public function testRejectsDoctypeAndEntities(): void {
 		$svg = '<!DOCTYPE svg [<!ENTITY xxe SYSTEM "file:///etc/passwd">]>'
 			. '<svg xmlns="http://www.w3.org/2000/svg"><rect/></svg>';
+
+		$this->assertSame('', $this->sanitizer->sanitize($svg));
+	}
+
+	public function testRejectsDoctypeHiddenByControlCharacters(): void {
+		$svg = "<!DOCT\x00YPE svg [<!ENT\x00ITY xxe SYSTEM \"file:///etc/passwd\">]>"
+			. '<svg xmlns="http://www.w3.org/2000/svg"><rect/></svg>';
+
+		$this->assertSame('', $this->sanitizer->sanitize($svg));
+	}
+
+	public function testRejectsDoctypeSmuggledViaUtf16Encoding(): void {
+		$markup = '<?xml version="1.0" encoding="UTF-16"?>'
+			. '<!DOCTYPE svg [<!ENTITY xxe SYSTEM "file:///etc/passwd">]>'
+			. '<svg xmlns="http://www.w3.org/2000/svg"><rect/></svg>';
+		$svg = "\xFF\xFE" . mb_convert_encoding($markup, 'UTF-16LE', 'UTF-8');
 
 		$this->assertSame('', $this->sanitizer->sanitize($svg));
 	}

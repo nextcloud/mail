@@ -30,8 +30,15 @@ class SvgSanitizer {
 		'set',
 	];
 
-	/** Attributes that carry URL references and must not point off-document. */
-	private const URL_ATTRIBUTES = ['href', 'xlink:href', 'src', 'action', 'formaction'];
+	/**
+	 * Local names of attributes that carry URL references and must not point
+	 * off-document. Matched without their namespace prefix because a reference
+	 * can be bound to any prefix, not just the conventional xlink one.
+	 */
+	private const URL_ATTRIBUTES = ['href', 'src', 'action', 'formaction'];
+
+	/** Encodings accepted for inspection; anything else is rejected outright. */
+	private const ALLOWED_ENCODINGS = ['UTF-8', 'ISO-2022-JP', 'ISO-8859-1'];
 
 	/** Reject payloads larger than this to prevent DoS via oversized documents. */
 	private const MAX_SVG_BYTES = 2 * 1024 * 1024;
@@ -46,16 +53,24 @@ class SvgSanitizer {
 			return '';
 		}
 
+		// The checks below compare plain strings, so they run on a normalised
+		// copy of the payload: an exotic encoding or an embedded control
+		// character would otherwise hide markup that the XML parser still sees.
+		$inspectable = $this->normalize($svg);
+		if ($inspectable === null) {
+			return '';
+		}
+
 		// A DOCTYPE or entity declaration is not needed for plain SVG graphics
 		// and is a common XXE / entity-expansion vector. Reject such documents.
-		if (preg_match('/<!DOCTYPE|<!ENTITY/i', $svg) === 1) {
+		if (preg_match('/<!DOCTYPE|<!ENTITY/i', $inspectable) === 1) {
 			return '';
 		}
 
 		// An XSL/Transform namespace signals a client-side transformation
 		// stylesheet that can execute JavaScript in some browsers. Reject the
 		// document outright, matching server-side hardening in nextcloud/server.
-		if (str_contains($svg, 'http://www.w3.org/1999/XSL/Transform')) {
+		if (str_contains($inspectable, 'http://www.w3.org/1999/XSL/Transform')) {
 			return '';
 		}
 
@@ -72,9 +87,10 @@ class SvgSanitizer {
 
 		$xpath = new DOMXPath($dom);
 
-		// Remove processing instructions (e.g. <?xml-stylesheet type="text/xsl"?>).
-		// Document-level PIs are already excluded by saveXML($dom->documentElement),
-		// but PIs nested inside the root element are handled here.
+		// Remove processing instructions, e.g. an xml-stylesheet PI pointing at an
+		// XSL sheet. Document-level PIs are already excluded by
+		// saveXML($dom->documentElement), but PIs nested inside the root element
+		// are handled here.
 		$pis = $xpath->query('//processing-instruction()');
 		if ($pis !== false) {
 			foreach (iterator_to_array($pis) as $pi) {
@@ -127,21 +143,47 @@ class SvgSanitizer {
 		return $hasSvgPrologue && stripos($content, '<svg') !== false;
 	}
 
+	/**
+	 * Normalise the payload for the textual checks: decode it to UTF-8 and drop
+	 * the control characters that a plain string comparison would trip over but
+	 * the XML parser ignores. Mirrors the hardening of nextcloud/server#62162.
+	 *
+	 * @return string|null Null if the payload is not in an accepted encoding
+	 */
+	private function normalize(string $svg): ?string {
+		$encoding = mb_detect_encoding($svg, self::ALLOWED_ENCODINGS, true);
+		if ($encoding === false) {
+			return null;
+		}
+		if ($encoding !== 'UTF-8') {
+			$converted = mb_convert_encoding($svg, 'UTF-8', $encoding);
+			if (!is_string($converted)) {
+				return null;
+			}
+			$svg = $converted;
+		}
+
+		// Strip non-printable characters, but keep tab, newline and carriage
+		// return as those are legal XML whitespace.
+		return preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', '', $svg);
+	}
+
 	private function stripDangerousAttributes(DOMElement $element): void {
 		/** @var DOMAttr $attribute */
 		foreach (iterator_to_array($element->attributes) as $attribute) {
 			$name = strtolower($attribute->nodeName);
+			$localName = $this->stripNamespacePrefix($name);
 			$value = trim($attribute->nodeValue ?? '');
 
 			// Inline event handlers (onload, onclick, …).
-			if (str_starts_with($name, 'on')) {
+			if (str_starts_with($localName, 'on')) {
 				$element->removeAttributeNode($attribute);
 				continue;
 			}
 
 			// Only allow same-document references; strip javascript:, external
 			// and data: URLs from links and resource references.
-			if (in_array($name, self::URL_ATTRIBUTES, true) && !str_starts_with($value, '#')) {
+			if (in_array($localName, self::URL_ATTRIBUTES, true) && !str_starts_with($value, '#')) {
 				$element->removeAttributeNode($attribute);
 				continue;
 			}
@@ -151,6 +193,16 @@ class SvgSanitizer {
 				$element->setAttribute('style', $this->stripCssUrls($value));
 			}
 		}
+	}
+
+	/**
+	 * Drop the namespace prefix of an attribute name. A prefix can be bound to
+	 * any name (xlink:href, foo:href, …) and libxml keeps unresolved prefixes as
+	 * part of the node name, so matching has to happen on the local name.
+	 */
+	private function stripNamespacePrefix(string $name): string {
+		$separator = strrpos($name, ':');
+		return $separator === false ? $name : substr($name, $separator + 1);
 	}
 
 	/**
