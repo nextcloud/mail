@@ -158,6 +158,7 @@ class SvgSanitizer {
 	 * Fragment references (url(#…)) are preserved for gradients and masks.
 	 */
 	private function stripCssUrls(string $css): string {
-		return preg_replace('/url\s*\((?!\s*[\'"]?#)[^)]*\)/i', 'none', $css) ?? $css;
+		$css = preg_replace('/@import[^;]*;?/i', '', $css) ?? $css;
+		return preg_replace('/url\s*\((?!\s*[\'\"]?#)[^)]*\)/i', 'none', $css) ?? $css;
 	}
 }
