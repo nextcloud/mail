@@ -103,15 +103,11 @@ class ProxyControllerTest extends TestCase {
 		$this->assertInstanceOf(ProxyDownloadResponse::class, $response);
 	}
 
-	public function testProxyReadsResourceBody(): void {
+	public function testProxy(): void {
 		$src = 'http://example.com';
 		$id = 1;
 		$validHmac = 'valid-hmac-hash';
 		$content = '🐵🐵🐵';
-		$stream = fopen('php://memory', 'r+');
-		$this->assertIsResource($stream);
-		fwrite($stream, $content);
-		rewind($stream);
 		$httpResponse = $this->createMock(IResponse::class);
 		$this->request->expects(self::once())
 			->method('passesStrictCookieCheck')
@@ -135,7 +131,11 @@ class ProxyControllerTest extends TestCase {
 			->willReturn($httpResponse);
 		$httpResponse->expects($this->once())
 			->method('getBody')
-			->willReturn($stream);
+			->willReturn($content);
+		$this->svgSanitizer->expects($this->once())
+			->method('looksLikeSvg')
+			->with($content)
+			->willReturn(false);
 		$this->controller = new ProxyController(
 			$this->appName,
 			$this->request,
@@ -150,7 +150,6 @@ class ProxyControllerTest extends TestCase {
 		);
 
 		$response = $this->controller->proxy($src, $id, $validHmac);
-		fclose($stream);
 
 		$this->assertInstanceOf(ProxyDownloadResponse::class, $response);
 		$this->assertSame($content, $response->render());
