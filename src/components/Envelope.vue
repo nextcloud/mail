@@ -248,6 +248,31 @@
 					}}
 				</ActionText>
 				<NcActionSeparator />
+				<ActionButton
+					v-if="withReply"
+					class="action--primary"
+					:close-after-click="true"
+					@click.prevent="onReply('', showFollowUpHeader)">
+					<template #icon>
+						<ReplyAllIcon
+							v-if="hasMultipleRecipients"
+							:size="24" />
+						<Reply
+							v-else
+							:size="24" />
+					</template>
+					{{ replyButtonLabel }}
+				</ActionButton>
+				<ActionButton
+					v-if="withReply && hasMultipleRecipients"
+					class="action--primary"
+					:close-after-click="true"
+					@click.prevent="onReply('', showFollowUpHeader, true)">
+					<template #icon>
+						<Reply :size="24" />
+					</template>
+					{{ t('mail', 'Reply to sender only') }}
+				</ActionButton>
 				<ActionButton :is-menu="true" @click="showQuickActionsMenu">
 					<template #icon>
 						<IconEmailFast :size="20" />
@@ -547,6 +572,7 @@ import ImportantOutlineIcon from 'vue-material-design-icons/LabelVariantOutline.
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
 import IconAttachment from 'vue-material-design-icons/Paperclip.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
+import ReplyAllIcon from 'vue-material-design-icons/ReplyAllOutline.vue'
 import Reply from 'vue-material-design-icons/ReplyOutline.vue'
 import Star from 'vue-material-design-icons/Star.vue'
 import StarOutline from 'vue-material-design-icons/StarOutline.vue'
@@ -624,6 +650,7 @@ export default {
 		CogIcon,
 		IconEmailFast,
 		Icon,
+		ReplyAllIcon,
 	},
 
 	directives: {
@@ -721,7 +748,7 @@ export default {
 					accountId: this.data.accountId,
 				})
 			}
-			const recipients = buildReplyRecipients(this.envelope, {
+			const recipients = buildReplyRecipients(this.data, {
 				label: this.account.name,
 				email: this.account.emailAddress,
 			})
@@ -977,6 +1004,23 @@ export default {
 				}
 			}
 			return filteredQuickActions
+		},
+
+		showFollowUpHeader() {
+			const tags = this.mainStore.getEnvelopeTags(this.data.databaseId)
+			return tags.some((tag) => tag.imapLabel === FOLLOW_UP_TAG_LABEL)
+		},
+
+		replyButtonLabel() {
+			if (this.showFollowUpHeader) {
+				return t('mail', 'Follow up')
+			}
+
+			if (this.hasMultipleRecipients) {
+				return t('mail', 'Reply all')
+			}
+
+			return t('mail', 'Reply')
 		},
 	},
 
@@ -1440,6 +1484,17 @@ export default {
 				this.overwriteOneLineMobile = false
 			}
 			this.countPossibleAttachements()
+		},
+
+		onReply(body = '', followUp = false, replySenderOnly = false) {
+			this.mainStore.startComposerSession({
+				reply: {
+					mode: (this.hasMultipleRecipients && !replySenderOnly) ? 'replyAll' : 'reply',
+					data: this.data,
+					smartReply: body,
+					followUp,
+				},
+			})
 		},
 	},
 }
