@@ -68,7 +68,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use '../../css/variables.scss';
+@use '../styles/variables.scss';
 
 .phishing-warning {
 	background-color: rgba(var(--color-warning-rgb), 0.2);

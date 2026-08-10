@@ -531,7 +531,7 @@ export default {
 </script>
 
 <style lang="scss">
-@use '../../css/variables.scss';
+@use '../styles/variables.scss';
 
 #mail-message {
 	width: 100%;
