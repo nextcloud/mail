@@ -4,7 +4,7 @@
  */
 
 // Extracted styles
-import '../css/html-response.scss'
+import './styles/html-response.scss'
 import '@iframe-resizer/child'
 
 // Fix width of some newsletter mails

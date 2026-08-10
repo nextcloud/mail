@@ -648,7 +648,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use '../../css/variables.scss';
+@use '../styles/variables.scss';
 
 @media only screen and (max-width: 600px) {
 	:deep(.modal-container) {

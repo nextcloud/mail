@@ -29,7 +29,7 @@ import logger from '../logger.js'
 import { testAccountConnection } from '../service/AccountService.js'
 import useMainStore from '../store/mainStore.js'
 
-import '../../css/mail.scss'
+import '../styles/mail.scss'
 
 export default {
 	name: 'Home',
