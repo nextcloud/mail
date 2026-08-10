@@ -23,11 +23,13 @@ use JmapClient\Requests\Mail\MailQueryChanges;
 use JmapClient\Requests\Mail\MailSet;
 use JmapClient\Responses\Mail\MailboxParameters as MailboxParametersResponse;
 use JmapClient\Responses\Mail\MailParameters as MailParametersResponse;
+use JmapClient\Responses\ResponseBundle;
 use JmapClient\Responses\ResponseException;
 use OCA\Mail\Account;
 use OCA\Mail\Attachment;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\JMAP\Exception\JmapUnknownMethod;
 use OCA\Mail\JMAP\JmapMailboxAdapter;
 use OCA\Mail\JMAP\JmapMessageAdapter;
@@ -65,18 +67,23 @@ class JmapOperationsService {
 	 * Establish connection to remote storage for given account
 	 *
 	 * @return bool true if connection was successful, false otherwise
+	 * @throws ServiceException
 	 */
 	public function connect(Account $account): bool {
 		$this->dataStore = $this->protocolFactory->jmapClient($account);
-		// evaluate if client was already connected
-		if (!$this->dataStore->sessionStatus()) {
-			$this->dataStore->connect();
+		try {
+			// evaluate if client was already connected
+			if (!$this->dataStore->sessionStatus()) {
+				$this->dataStore->connect();
+			}
+		} catch (Exception $e) {
+			throw new ServiceException('Could not connect to JMAP server: ' . $e->getMessage(), 0, $e);
 		}
 		// determine account
 		if ($this->dataAccount === null) {
 			$account = $this->dataStore->sessionAccountDefault('mail');
 			if ($account === null) {
-				throw new Exception('JMAP session does not provide a default mail account', 1);
+				throw new ServiceException('JMAP session does not provide a default mail account', 1);
 			}
 			$this->dataAccount = $account->id();
 		}
@@ -93,9 +100,35 @@ class JmapOperationsService {
 	 */
 	private function account(): string {
 		if ($this->dataAccount === null) {
-			throw new Exception('JMAP data store is not connected', 1);
+			throw new ServiceException('JMAP data store is not connected', 1);
 		}
 		return $this->dataAccount;
+	}
+
+	/**
+	 * Transmits one or more JMAP commands and returns the response bundle.
+	 *
+	 * @throws ServiceException
+	 */
+	private function transceive(array $commands): ResponseBundle {
+		try {
+			return $this->dataStore->perform($commands);
+		} catch (Exception $e) {
+			throw new ServiceException('JMAP request failed: ' . $e->getMessage(), 0, $e);
+		}
+	}
+
+	/**
+	 * Downloads a blob from remote storage into $data.
+	 *
+	 * @throws ServiceException
+	 */
+	private function download(string $account, string $identifier, &$data, string $type = 'application/octet-stream', string $name = 'file.bin'): void {
+		try {
+			$this->dataStore->download($account, $identifier, $data, $type, $name);
+		} catch (Exception $e) {
+			throw new ServiceException('JMAP download failed: ' . $e->getMessage(), 0, $e);
+		}
 	}
 
 	/**
@@ -143,7 +176,7 @@ class JmapOperationsService {
 		$r1 = new MailboxGet($this->account());
 		$r1->targetFromRequest($r0, '/ids');
 		// transceive
-		$bundle = $this->dataStore->perform([$r0, $r1]);
+		$bundle = $this->transceive([$r0, $r1]);
 		// extract response
 		$response = $bundle->response(1);
 		// check for command error
@@ -151,7 +184,7 @@ class JmapOperationsService {
 			if ($response->type() === 'unknownMethod') {
 				throw new JmapUnknownMethod($response->description(), 1);
 			} else {
-				throw new Exception($response->type() . ': ' . $response->description(), 1);
+				throw new ServiceException($response->type() . ': ' . $response->description(), 1);
 			}
 		}
 		// convert collection objects
@@ -180,7 +213,7 @@ class JmapOperationsService {
 		$r0->target(...$identifiers);
 		$r0->property('id');
 		// transceive
-		$bundle = $this->dataStore->perform([$r0]);
+		$bundle = $this->transceive([$r0]);
 		// extract response
 		$response = $bundle->first();
 		// check for command error
@@ -188,7 +221,7 @@ class JmapOperationsService {
 			if ($response->type() === 'unknownMethod') {
 				throw new JmapUnknownMethod($response->description(), 1);
 			} else {
-				throw new Exception($response->type() . ': ' . $response->description(), 1);
+				throw new ServiceException($response->type() . ': ' . $response->description(), 1);
 			}
 		}
 		// construct map of extant collection identifiers
@@ -217,7 +250,7 @@ class JmapOperationsService {
 		$r0 = new MailboxGet($this->account());
 		$r0->target($identifier);
 		// transceive
-		$bundle = $this->dataStore->perform([$r0]);
+		$bundle = $this->transceive([$r0]);
 		// extract response
 		$response = $bundle->first();
 		// check for command error
@@ -225,7 +258,7 @@ class JmapOperationsService {
 			if ($response->type() === 'unknownMethod') {
 				throw new JmapUnknownMethod($response->description(), 1);
 			} else {
-				throw new Exception($response->type() . ': ' . $response->description(), 1);
+				throw new ServiceException($response->type() . ': ' . $response->description(), 1);
 			}
 		}
 		// convert collection objects
@@ -256,7 +289,7 @@ class JmapOperationsService {
 		$r0 = new MailboxSet($this->account());
 		$r0->create($id, $to);
 		// transceive
-		$bundle = $this->dataStore->perform([$r0]);
+		$bundle = $this->transceive([$r0]);
 		// extract response
 		$response = $bundle->first();
 		// check for command error
@@ -264,7 +297,7 @@ class JmapOperationsService {
 			if ($response->type() === 'unknownMethod') {
 				throw new JmapUnknownMethod($response->description(), 1);
 			} else {
-				throw new Exception($response->type() . ': ' . $response->description(), 1);
+				throw new ServiceException($response->type() . ': ' . $response->description(), 1);
 			}
 		}
 		// check for success
@@ -279,7 +312,7 @@ class JmapOperationsService {
 		if ($result !== null) {
 			$type = $result['type'] ?? 'unknownError';
 			$description = $result['description'] ?? 'An unknown error occurred during collection creation.';
-			throw new Exception("$type: $description", 1);
+			throw new ServiceException("$type: $description", 1);
 		}
 		// return null if creation failed without failure reason
 		return null;
@@ -300,7 +333,7 @@ class JmapOperationsService {
 		$r0 = new MailboxSet($this->account());
 		$r0->update($identifier, $to);
 		// transceive
-		$bundle = $this->dataStore->perform([$r0]);
+		$bundle = $this->transceive([$r0]);
 		// extract response
 		$response = $bundle->first();
 		// check for command error
@@ -308,7 +341,7 @@ class JmapOperationsService {
 			if ($response->type() === 'unknownMethod') {
 				throw new JmapUnknownMethod($response->description(), 1);
 			} else {
-				throw new Exception($response->type() . ': ' . $response->description(), 1);
+				throw new ServiceException($response->type() . ': ' . $response->description(), 1);
 			}
 		}
 		// check for success
@@ -321,7 +354,7 @@ class JmapOperationsService {
 		if ($result !== null) {
 			$type = $result['type'] ?? 'unknownError';
 			$description = $result['description'] ?? 'An unknown error occurred during collection modification.';
-			throw new Exception("$type: $description", 1);
+			throw new ServiceException("$type: $description", 1);
 		}
 		// return null if modification failed without failure reason
 		return null;
@@ -343,7 +376,7 @@ class JmapOperationsService {
 			$r0->destroyContents(true);
 		}
 		// transceive
-		$bundle = $this->dataStore->perform([$r0]);
+		$bundle = $this->transceive([$r0]);
 		// extract response
 		$response = $bundle->first();
 		// check for command error
@@ -351,7 +384,7 @@ class JmapOperationsService {
 			if ($response->type() === 'unknownMethod') {
 				throw new JmapUnknownMethod($response->description(), 1);
 			} else {
-				throw new Exception($response->type() . ': ' . $response->description(), 1);
+				throw new ServiceException($response->type() . ': ' . $response->description(), 1);
 			}
 		}
 		// check for success
@@ -364,7 +397,7 @@ class JmapOperationsService {
 		if ($result !== null) {
 			$type = $result['type'] ?? 'unknownError';
 			$description = $result['description'] ?? 'An unknown error occurred during collection deletion.';
-			throw new Exception("$type: $description", 1);
+			throw new ServiceException("$type: $description", 1);
 		}
 		// return null if deletion failed without failure reason
 		return null;
@@ -452,7 +485,7 @@ class JmapOperationsService {
 			$r1->bodyAll(true);
 		}
 		// transceive
-		$bundle = $this->dataStore->perform([$r0, $r1]);
+		$bundle = $this->transceive([$r0, $r1]);
 		// extract response
 		$response = $bundle->response(1);
 		// convert json objects to message objects
@@ -482,7 +515,7 @@ class JmapOperationsService {
 		$r0->target(...$identifiers);
 		$r0->property('id');
 		// transmit request and receive response
-		$bundle = $this->dataStore->perform([$r0]);
+		$bundle = $this->transceive([$r0]);
 		// extract response
 		$response = $bundle->first();
 		// construct map of extant collection identifiers
@@ -556,7 +589,7 @@ class JmapOperationsService {
 			$r0->state('0');
 		}
 		// transceive
-		$bundle = $this->dataStore->perform([$r0]);
+		$bundle = $this->transceive([$r0]);
 		// extract response
 		$response = $bundle->first();
 		// check for command error
@@ -564,7 +597,7 @@ class JmapOperationsService {
 			if ($response->type() === 'unknownMethod') {
 				throw new JmapUnknownMethod($response->description(), 1);
 			} else {
-				throw new Exception($response->type() . ': ' . $response->description(), 1);
+				throw new ServiceException($response->type() . ': ' . $response->description(), 1);
 			}
 		}
 		return $this->constructDeltaResult(
@@ -590,7 +623,7 @@ class JmapOperationsService {
 			$r0->state('');
 		}
 		// transceive
-		$bundle = $this->dataStore->perform([$r0]);
+		$bundle = $this->transceive([$r0]);
 		// extract response
 		$response = $bundle->first();
 		// check for command error
@@ -598,7 +631,7 @@ class JmapOperationsService {
 			if ($response->type() === 'unknownMethod') {
 				throw new JmapUnknownMethod($response->description(), 1);
 			} else {
-				throw new Exception($response->type() . ': ' . $response->description(), 1);
+				throw new ServiceException($response->type() . ': ' . $response->description(), 1);
 			}
 		}
 
@@ -690,7 +723,7 @@ class JmapOperationsService {
 		$r0->property(...$this->entityPropertiesDefault);
 		$r0->bodyAll(true);
 		// transceive
-		$bundle = $this->dataStore->perform([$r0]);
+		$bundle = $this->transceive([$r0]);
 		// extract response
 		$response = $bundle->first();
 		// convert json objects to message objects
@@ -729,7 +762,7 @@ class JmapOperationsService {
 		}
 
 		$rawMessage = null;
-		$this->dataStore->download($this->account(), $blobId, $rawMessage, 'message/rfc822', 'message.eml');
+		$this->download($this->account(), $blobId, $rawMessage, 'message/rfc822', 'message.eml');
 
 		return is_string($rawMessage) ? $rawMessage : null;
 	}
@@ -747,7 +780,7 @@ class JmapOperationsService {
 		$r0 = new MailSet($this->account());
 		$r0->create($id, $to);
 		// transceive
-		$bundle = $this->dataStore->perform([$r0]);
+		$bundle = $this->transceive([$r0]);
 		// extract response
 		$response = $bundle->first();
 		// check for command error
@@ -755,7 +788,7 @@ class JmapOperationsService {
 			if ($response->type() === 'unknownMethod') {
 				throw new JmapUnknownMethod($response->description(), 1);
 			} else {
-				throw new Exception($response->type() . ': ' . $response->description(), 1);
+				throw new ServiceException($response->type() . ': ' . $response->description(), 1);
 			}
 		}
 		// check for success
@@ -768,7 +801,7 @@ class JmapOperationsService {
 		if ($result !== null) {
 			$type = $result['type'] ?? 'unknownError';
 			$description = $result['description'] ?? 'An unknown error occurred during collection creation.';
-			throw new Exception("$type: $description", 1);
+			throw new ServiceException("$type: $description", 1);
 		}
 		// return null if creation failed without failure reason
 		return null;
@@ -787,7 +820,7 @@ class JmapOperationsService {
 		$r0 = new MailSet($this->account());
 		$r0->update($id, $to);
 		// transceive
-		$bundle = $this->dataStore->perform([$r0]);
+		$bundle = $this->transceive([$r0]);
 		// extract response
 		$response = $bundle->first();
 		// check for command error
@@ -795,7 +828,7 @@ class JmapOperationsService {
 			if ($response->type() === 'unknownMethod') {
 				throw new JmapUnknownMethod($response->description(), 1);
 			} else {
-				throw new Exception($response->type() . ': ' . $response->description(), 1);
+				throw new ServiceException($response->type() . ': ' . $response->description(), 1);
 			}
 		}
 		$results = [];
@@ -821,7 +854,7 @@ class JmapOperationsService {
 			$r0->patch($id, $patch);
 		}
 		// transceive
-		$bundle = $this->dataStore->perform([$r0]);
+		$bundle = $this->transceive([$r0]);
 		// extract response
 		$response = $bundle->first();
 		// check for command error
@@ -829,7 +862,7 @@ class JmapOperationsService {
 			if ($response->type() === 'unknownMethod') {
 				throw new JmapUnknownMethod($response->description(), 1);
 			} else {
-				throw new Exception($response->type() . ': ' . $response->description(), 1);
+				throw new ServiceException($response->type() . ': ' . $response->description(), 1);
 			}
 		}
 		$results = [];
@@ -878,7 +911,7 @@ class JmapOperationsService {
 			$r0->delete($id);
 		}
 		// transceive
-		$bundle = $this->dataStore->perform([$r0]);
+		$bundle = $this->transceive([$r0]);
 		// extract response
 		$response = $bundle->first();
 		// check for command error
@@ -886,7 +919,7 @@ class JmapOperationsService {
 			if ($response->type() === 'unknownMethod') {
 				throw new JmapUnknownMethod($response->description(), 1);
 			} else {
-				throw new Exception($response->type() . ': ' . $response->description(), 1);
+				throw new ServiceException($response->type() . ': ' . $response->description(), 1);
 			}
 		}
 
@@ -917,7 +950,7 @@ class JmapOperationsService {
 			$r0->update($id)->in($target);
 		}
 		// transceive
-		$bundle = $this->dataStore->perform([$r0]);
+		$bundle = $this->transceive([$r0]);
 		// extract response
 		$response = $bundle->first();
 		// check for command error
@@ -925,7 +958,7 @@ class JmapOperationsService {
 			if ($response->type() === 'unknownMethod') {
 				throw new JmapUnknownMethod($response->description(), 1);
 			} else {
-				throw new Exception($response->type() . ': ' . $response->description(), 1);
+				throw new ServiceException($response->type() . ': ' . $response->description(), 1);
 			}
 		}
 
@@ -952,7 +985,7 @@ class JmapOperationsService {
 		foreach ($entity->attachments() as $attachment) {
 			if ($blobId === [] || in_array($attachment->blob(), $blobId, true)) {
 				$content = '';
-				$this->dataStore->download($this->account(), $attachment->blob(), $content);
+				$this->download($this->account(), $attachment->blob(), $content);
 
 				$attachments[] = new Attachment(
 					$attachment->blob(),
@@ -981,7 +1014,7 @@ class JmapOperationsService {
 		// construct set request
 		$r0 = new MailIdentityGet($this->account());
 		// transmit request and receive response
-		$bundle = $this->dataStore->perform([$r0]);
+		$bundle = $this->transceive([$r0]);
 		// extract response
 		$response = $bundle->first();
 		// convert json object to message object and return
