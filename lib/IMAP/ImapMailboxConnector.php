@@ -71,6 +71,12 @@ class ImapMailboxConnector implements IMailboxConnector {
 		try {
 			$this->folderMapper->renameFolder($client, $mailbox->getName(), $newName);
 			$this->mailboxSync->sync($account, $this->logger, true, $client);
+		} catch (Horde_Imap_Client_Exception $e) {
+			throw new ServiceException(
+				'Could not rename mailbox ' . $mailbox->getId() . ' on IMAP: ' . $e->getMessage(),
+				$e->getCode(),
+				$e,
+			);
 		} finally {
 			$client->logout();
 		}

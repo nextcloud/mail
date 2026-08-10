@@ -28,7 +28,6 @@ use OCA\Mail\Events\BeforeMessageDeletedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\ImapFlag;
-use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -42,9 +41,6 @@ class MailManagerTest extends TestCase {
 
 	/** @var MailboxMapper|MockObject */
 	private $mailboxMapper;
-
-	/** @var ImapMessageMapper|MockObject */
-	private $imapMessageMapper;
 
 	/** @var DbMessageMapper|MockObject */
 	private $dbMessageMapper;
@@ -72,7 +68,6 @@ class MailManagerTest extends TestCase {
 
 		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
 		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
-		$this->imapMessageMapper = $this->createMock(ImapMessageMapper::class);
 		$this->dbMessageMapper = $this->createMock(DbMessageMapper::class);
 		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
@@ -82,7 +77,6 @@ class MailManagerTest extends TestCase {
 
 		$this->manager = new MailManager(
 			$this->mailboxMapper,
-			$this->imapMessageMapper,
 			$this->dbMessageMapper,
 			$this->eventDispatcher,
 			$this->logger,
