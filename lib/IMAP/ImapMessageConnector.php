@@ -13,6 +13,7 @@ use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Exception_NoSupportExtension;
 use Horde_Imap_Client_Search_Query;
+use Horde_Mime_Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Attachment;
 use OCA\Mail\Contracts\IMessageConnector;
@@ -20,6 +21,7 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper as ImapMailboxMapper;
 use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
@@ -28,6 +30,7 @@ use OCA\Mail\Protocol\SyncResult;
 use OCA\Mail\Service\Quota;
 use OCA\Mail\Service\Search\SearchQuery;
 use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
+use OCP\AppFramework\Db\DoesNotExistException;
 use Psr\Log\LoggerInterface;
 use function array_map;
 use function array_merge;
@@ -75,6 +78,10 @@ class ImapMessageConnector implements IMessageConnector {
 		);
 	}
 
+	/**
+	 * @throws ServiceException
+	 * @throws SmimeDecryptException
+	 */
 	#[\Override]
 	public function fetchMessages(Account $account, Mailbox $mailbox, bool $loadBody = false, Message ...$messages): array {
 		$client = $this->protocolFactory->imapClient($account);
@@ -87,6 +94,8 @@ class ImapMessageConnector implements IMessageConnector {
 				$account->getUserId(),
 				true
 			);
+		} catch (DoesNotExistException|Horde_Mime_Exception|Horde_Imap_Client_Exception $e) {
+			throw new ServiceException('Could not load messages: ' . $e->getMessage(), $e->getCode(), $e);
 		} finally {
 			$client->logout();
 		}
@@ -127,6 +136,8 @@ class ImapMessageConnector implements IMessageConnector {
 
 	/**
 	 * @return Attachment[]
+	 * @throws DoesNotExistException
+	 * @throws ServiceException
 	 */
 	#[\Override]
 	public function fetchAttachments(Account $account, Mailbox $mailbox, Message $message): array {
@@ -138,11 +149,17 @@ class ImapMessageConnector implements IMessageConnector {
 				$message->getUid(),
 				$account->getUserId(),
 			);
+		} catch (Horde_Imap_Client_Exception_NoSupportExtension|Horde_Imap_Client_Exception|Horde_Mime_Exception $e) {
+			throw new ServiceException('Could not load attachments from IMAP: ' . $e->getMessage(), $e->getCode(), $e);
 		} finally {
 			$client->logout();
 		}
 	}
 
+	/**
+	 * @throws DoesNotExistException
+	 * @throws ServiceException
+	 */
 	#[\Override]
 	public function fetchAttachment(Account $account, Mailbox $mailbox, Message $message, string $attachmentId): Attachment {
 		$client = $this->protocolFactory->imapClient($account);
@@ -154,6 +171,8 @@ class ImapMessageConnector implements IMessageConnector {
 				$attachmentId,
 				$account->getUserId(),
 			);
+		} catch (Horde_Imap_Client_Exception|Horde_Mime_Exception $e) {
+			throw new ServiceException('Could not load attachment from IMAP: ' . $e->getMessage(), $e->getCode(), $e);
 		} finally {
 			$client->logout();
 		}
@@ -304,6 +323,8 @@ class ImapMessageConnector implements IMessageConnector {
 			);
 		} catch (Horde_Imap_Client_Exception_NoSupportExtension) {
 			return null;
+		} catch (Horde_Imap_Client_Exception $e) {
+			throw new ServiceException('Could not get quota from IMAP: ' . $e->getMessage(), $e->getCode(), $e);
 		} finally {
 			$client->logout();
 		}

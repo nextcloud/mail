@@ -4,7 +4,15 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+<<<<<<< HEAD
     "content-hash": "cdd58581c15c472459833f69357420a9",
+=======
+<<<<<<< HEAD
+    "content-hash": "b5da21087a50ee288a4a2337ec4fdf11",
+=======
+    "content-hash": "2fb927ba5f110787127f6be85127cb0f",
+>>>>>>> 03ce482fe (fixup! feat: jmap support - part 2)
+>>>>>>> 394a3f85e (fixup! feat: jmap support - part 2)
     "packages": [
         {
             "name": "amphp/amp",
