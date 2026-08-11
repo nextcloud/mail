@@ -4,8 +4,10 @@
  */
 
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+import BlockedContentWarning from '../../../components/BlockedContentWarning.vue'
 import MessageHTMLBody from '../../../components/MessageHTMLBody.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
+import { trustSender } from '../../../service/TrustedSenderService.js'
 
 vi.mock('@iframe-resizer/parent', () => ({ default: vi.fn() }))
 vi.mock('@nextcloud/initial-state', () => ({ loadState: vi.fn().mockReturnValue(false) }))
@@ -37,6 +39,77 @@ describe('MessageHTMLBody', () => {
 		code: `Key${key.toUpperCase()}`,
 		cancelable: true,
 		...modifiers,
+	})
+
+	// The frame starts out empty here, because jsdom does not fetch its source
+	const loadFrameWithBlockedImage = (view) => {
+		const doc = view.vm.getIframeDoc()
+		doc.write('<img data-original-src="https://example.com/tracker.gif">')
+		doc.close()
+		view.vm.onMessageFrameLoad()
+	}
+
+	describe('blocked content', () => {
+		beforeEach(() => {
+			trustSender.mockClear()
+		})
+
+		it('warns about images the message would have loaded', async () => {
+			const view = mountBody()
+
+			loadFrameWithBlockedImage(view)
+			await view.vm.$nextTick()
+
+			expect(view.findComponent(BlockedContentWarning).exists()).toBe(true)
+		})
+
+		it('keeps the warning out of the message body, where it would sit on the message\'s own background', async () => {
+			const view = mountBody()
+
+			loadFrameWithBlockedImage(view)
+			await view.vm.$nextTick()
+
+			const body = view.find('.html-message-body__content')
+			expect(body.findComponent(BlockedContentWarning).exists()).toBe(false)
+		})
+
+		it('reveals the images for this message only', async () => {
+			const view = mountBody()
+			loadFrameWithBlockedImage(view)
+			await view.vm.$nextTick()
+
+			view.findComponent(BlockedContentWarning).vm.$emit('show')
+			await view.vm.$nextTick()
+
+			expect(view.vm.getIframeDoc().querySelector('img').getAttribute('src'))
+				.toBe('https://example.com/tracker.gif')
+			expect(trustSender).not.toHaveBeenCalled()
+			expect(view.findComponent(BlockedContentWarning).exists()).toBe(false)
+		})
+
+		it('remembers a sender the reader trusts', async () => {
+			const view = mountBody()
+			loadFrameWithBlockedImage(view)
+			await view.vm.$nextTick()
+
+			view.findComponent(BlockedContentWarning).vm.$emit('trust-sender')
+			await view.vm.$nextTick()
+
+			expect(trustSender).toHaveBeenCalledWith('alice@example.com', 'individual', true)
+			expect(view.findComponent(BlockedContentWarning).exists()).toBe(false)
+		})
+
+		it('remembers a domain the reader trusts', async () => {
+			const view = mountBody()
+			loadFrameWithBlockedImage(view)
+			await view.vm.$nextTick()
+
+			view.findComponent(BlockedContentWarning).vm.$emit('trust-domain')
+			await view.vm.$nextTick()
+
+			expect(trustSender).toHaveBeenCalledWith('example.com', 'domain', true)
+			expect(view.findComponent(BlockedContentWarning).exists()).toBe(false)
+		})
 	})
 
 	describe('print shortcut', () => {

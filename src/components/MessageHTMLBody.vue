@@ -4,46 +4,28 @@
 -->
 <template>
 	<div class="html-message-body">
-		<MdnRequest :message="message" />
-		<NeedsTranslationInfo
-			v-if="needsTranslation"
-			:is-html="true"
-			@translate="$emit('translate')" />
-		<div v-if="hasBlockedContent" id="mail-message-has-blocked-content" style="color: #000000">
-			{{ t('mail', 'The images have been blocked to protect your privacy.') }}
-			<Actions type="tertiary" :menu-name="t('mail', 'Show images')">
-				<ActionButton @click="displayIframe">
-					<template #icon>
-						<IconImage :size="20" />
-					</template>
-					{{ t('mail', 'Show images temporarily') }}
-				</ActionButton>
-				<ActionButton
-					v-if="sender"
-					@click="onShowBlockedContent">
-					<template #icon>
-						<IconMail :size="20" />
-					</template>
-					{{ t('mail', 'Always show images from {sender}', { sender }) }}
-				</ActionButton>
-				<ActionButton
-					v-if="domain"
-					@click="onShowBlockedContentForDomain">
-					<template #icon>
-						<IconDomain :size="20" />
-					</template>
-					{{ t('mail', 'Always show images from {domain}', { domain }) }}
-				</ActionButton>
-			</Actions>
-		</div>
-		<div id="message-container" :class="{ scroll: !fullHeight }">
-			<iframe
-				ref="iframe"
-				class="message-frame"
-				:title="t('mail', 'Message frame')"
-				:src="url"
-				seamless
-				@load="onMessageFrameLoad" />
+		<BlockedContentWarning
+			v-if="hasBlockedContent"
+			:sender="sender"
+			:domain="domain"
+			@show="displayIframe"
+			@trust-sender="onShowBlockedContent"
+			@trust-domain="onShowBlockedContentForDomain" />
+		<div class="html-message-body__content">
+			<MdnRequest :message="message" />
+			<NeedsTranslationInfo
+				v-if="needsTranslation"
+				:is-html="true"
+				@translate="$emit('translate')" />
+			<div id="message-container" :class="{ scroll: !fullHeight }">
+				<iframe
+					ref="iframe"
+					class="message-frame"
+					:title="t('mail', 'Message frame')"
+					:src="url"
+					seamless
+					@load="onMessageFrameLoad" />
+			</div>
 		</div>
 	</div>
 </template>
@@ -51,10 +33,7 @@
 <script>
 import iframeResize from '@iframe-resizer/parent'
 import { loadState } from '@nextcloud/initial-state'
-import { NcActionButton as ActionButton, NcActions as Actions } from '@nextcloud/vue'
-import IconDomain from 'vue-material-design-icons/Domain.vue'
-import IconMail from 'vue-material-design-icons/EmailOutline.vue'
-import IconImage from 'vue-material-design-icons/ImageSizeSelectActual.vue'
+import BlockedContentWarning from './BlockedContentWarning.vue'
 import MdnRequest from './MdnRequest.vue'
 import NeedsTranslationInfo from './NeedsTranslationInfo.vue'
 import logger from '../logger.js'
@@ -65,13 +44,9 @@ import { isPrintShortcut } from '../util/printMessage.ts'
 export default {
 	name: 'MessageHTMLBody',
 	components: {
+		BlockedContentWarning,
 		MdnRequest,
 		NeedsTranslationInfo,
-		Actions,
-		ActionButton,
-		IconImage,
-		IconMail,
-		IconDomain,
 	},
 
 	props: {
@@ -208,19 +183,19 @@ export default {
 // account for 12px (was 8) margin on iframe body
 // should be 12px so it matches the rest of the content
 .html-message-body {
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--default-grid-baseline) * 2);
 	margin : 2px calc(var(--default-grid-baseline) * 3) 0 calc(var(--default-grid-baseline) * 14);
-	background-color: #FFFFFF;
-	border-radius: var(--border-radius-element);
 
 	@media (max-width: 600px) {
         margin-inline: calc(var(--default-grid-baseline) * 3);
     }
-}
 
-#mail-message-has-blocked-content {
-	margin-inline-start: 10px;
-	color: var(--color-text-maxcontrast) !important;
-	padding-top: 5px;
+	&__content {
+		background-color: #FFFFFF;
+		border-radius: var(--border-radius-element);
+	}
 }
 
 #message-container {
@@ -237,23 +212,8 @@ export default {
 	}
 }
 
-:deep(.button-vue__text) {
-	border: none !important;
-	font-weight: normal !important;
-	padding-inline: 14px 10px !important;
-	text-decoration: underline !important;
-}
-
 .message-frame {
 	width: 100%;
 	border-radius: var(--border-radius-element);
-}
-
-:deep(.button-vue__icon) {
-	display: none !important;
-}
-
-:deep(.button-vue--vue-tertiary) {
-	color: var(--color-text-maxcontrast);
 }
 </style>
