@@ -34,6 +34,7 @@ OC.L10N.register(
     "Today" : "Danas",
     "Yesterday" : "јуче",
     "Last month" : "Prošlog meseca",
+    "No results" : "Nema rezultata",
     "Favorites" : "Omiljene",
     "Other" : "Ostali",
     "Forward" : "Prosledi",

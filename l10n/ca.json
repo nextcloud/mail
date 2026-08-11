@@ -85,10 +85,10 @@
     "Account settings" : "Paràmetres del compte",
     "Aliases" : "Àlies",
     "Alias to S/MIME certificate mapping" : "Mapeig d'àlies a certificat S/MIME",
-    "Signature" : "Signatura",
-    "A signature is added to the text of new messages and replies." : "S'afegeix una signatura al text dels missatges nous i de les respostes.",
     "Writing mode" : "Mode d'escriptura",
     "Preferred writing mode for new messages and replies." : "Mode d'escriptura preferit per a missatges nous i respostes.",
+    "Signature" : "Signatura",
+    "A signature is added to the text of new messages and replies." : "S'afegeix una signatura al text dels missatges nous i de les respostes.",
     "Default folders" : "Carpetes per defecte",
     "The folders to use for drafts, sent messages, deleted messages, archived messages and junk messages." : "Les carpetes a utilitzar per als esborranys, missatges enviats, missatges suprimits, missatges arxivats i missatges brossa.",
     "Automatic trash deletion" : "Eliminació automàtica de la paperera",
@@ -127,6 +127,7 @@
     "Newest first" : "Més nou primer",
     "Oldest first" : "Més antic primer",
     "Ok" : "D'acord",
+    "Manually" : "Manualment",
     "Privacy" : "Privadesa",
     "Security" : "Seguretat",
     "S/MIME" : "S/MIME",
@@ -308,6 +309,7 @@
     "Yesterday" : "Ahir",
     "Choose target folder" : "Trieu la carpeta de destinació",
     "No more submailboxes in here" : "No hi ha més subbústies aquí",
+    "No results" : "Sense resultats",
     "Favorites" : "Preferits",
     "Follow up" : "Seguiment",
     "Follow up info" : "Informació de seguiment",
@@ -479,7 +481,6 @@
     "Save sieve settings" : "Desa els paràmetres de Sieve",
     "The syntax seems to be incorrect:" : "La sintaxi sembla incorrecta:",
     "Save sieve script" : "Guarda instruccions de Sieve",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "La teva signatura supera els 2 MB. Això pot afectar el rendiment del vostre editor.",
     "Save signature" : "Desa la signatura",
     "Place signature above quoted text" : "Col·loqueu la signatura a sobre del text citat",
     "Message source" : "Font de missatge",
@@ -722,7 +723,6 @@
     "Error loading message" : "S'ha produït un error mentre es carregava el missatge",
     "Add share link from Files" : "Afegeix un enllaç de compartició des de Fitxers",
     "Choose a file to add as attachment" : "Trieu un fitxer per afegir als adjunts",
-    "Choose a file to share as a link" : "Tria un fitxer per compartir-lo com a enllaç",
-    "This summary was AI generated" : "Aquest resum es va generar amb IA"
+    "Choose a file to share as a link" : "Tria un fitxer per compartir-lo com a enllaç"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

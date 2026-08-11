@@ -84,10 +84,10 @@ OC.L10N.register(
     "SMTP Password" : "SMTP kodeord",
     "Account settings" : "Kontoindstillinger",
     "Aliases" : "Aliases",
-    "Signature" : "Underskrift",
-    "A signature is added to the text of new messages and replies." : "En signatur tilføjes til teksten i nye meddelelser og svar.",
     "Writing mode" : "Skrivestil",
     "Preferred writing mode for new messages and replies." : "Foretrukken skrivemåde for nye meddelelser og svar.",
+    "Signature" : "Underskrift",
+    "A signature is added to the text of new messages and replies." : "En signatur tilføjes til teksten i nye meddelelser og svar.",
     "Default folders" : "Standardmapper",
     "Autoresponder" : "Autosvar",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Automatisk svar på indgående beskeder. Hvis nogen sender dig flere beskeder, sendes dette automatiske svar højst en gang hver 4. dag.",
@@ -128,6 +128,7 @@ OC.L10N.register(
     "Title of the text block" : "Titel på ny tekstblok",
     "Content of the text block" : "Indhold i tekstblok",
     "Ok" : "OK",
+    "Manually" : "Manuelt",
     "Top" : "Top",
     "Bottom" : "Bund",
     "Text blocks" : "Tekstblokke",
@@ -337,6 +338,7 @@ OC.L10N.register(
     "Indexing your messages. This can take a bit longer for larger folders." : "Indekserer dine beskeder. Dette kan tage en smule længere for større mapper.",
     "Choose target folder" : "Vælg destinationsmappe",
     "No more submailboxes in here" : "Ikke flere underpostkasser herinde",
+    "No results" : "Ingen resultater",
     "Favorites" : "Favoritter",
     "Follow up" : "Opfølgning",
     "Follow up info" : "Opfølgningsinfo",
@@ -590,8 +592,6 @@ OC.L10N.register(
     "Error loading message" : "Fejl under indlæsning af besked",
     "Add share link from Files" : "Tilføj delingslink fra Filer",
     "Choose a file to add as attachment" : "Vælg en fil, der skal tilføjes som vedhæftning",
-    "Choose a file to share as a link" : "Vælg en fil der skal deles som link",
-    "This summary was AI generated" : "Dette sammendrag blev genereret af AI",
-    "Print" : "Udskriv"
+    "Choose a file to share as a link" : "Vælg en fil der skal deles som link"
 },
 "nplurals=2; plural=(n != 1);");

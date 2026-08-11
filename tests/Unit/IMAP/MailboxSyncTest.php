@@ -254,6 +254,62 @@ class MailboxSyncTest extends TestCase {
 		$this->assertFalse($inbox->isShared());
 	}
 
+	public function testSyncWithClient(): void {
+		$account = $this->createMock(Account::class);
+		$mailAccount = new MailAccount();
+		$mailAccount->setLastMailboxSync(0);
+		$account->method('getMailAccount')->willReturn($mailAccount);
+		$this->timeFactory->method('getTime')->willReturn(100000);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$personal = new Horde_Imap_Client_Data_Namespace();
+		$personal->name = '';
+		$personal->type = Horde_Imap_Client_Data_Namespace::NS_PERSONAL;
+		$client->method('getNamespaces')
+			->willReturn(new Horde_Imap_Client_Namespace_List([$personal]));
+		$this->folderMapper->method('getFolders')
+			->with($account, $client)
+			->willReturn([]);
+		$this->mailboxMapper->method('findAll')
+			->with($account)
+			->willReturn([]);
+
+		$this->imapClientFactory->expects($this->never())
+			->method('getClient');
+		$client->expects($this->never())
+			->method('logout');
+
+		$this->sync->sync($account, new NullLogger(), false, $client);
+	}
+
+	public function testSyncWithoutClient(): void {
+		$account = $this->createMock(Account::class);
+		$mailAccount = new MailAccount();
+		$mailAccount->setLastMailboxSync(0);
+		$account->method('getMailAccount')->willReturn($mailAccount);
+		$this->timeFactory->method('getTime')->willReturn(100000);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$personal = new Horde_Imap_Client_Data_Namespace();
+		$personal->name = '';
+		$personal->type = Horde_Imap_Client_Data_Namespace::NS_PERSONAL;
+		$client->method('getNamespaces')
+			->willReturn(new Horde_Imap_Client_Namespace_List([$personal]));
+		$this->folderMapper->method('getFolders')
+			->with($account, $client)
+			->willReturn([]);
+		$this->mailboxMapper->method('findAll')
+			->with($account)
+			->willReturn([]);
+
+		$this->imapClientFactory->expects($this->once())
+			->method('getClient')
+			->with($account)
+			->willReturn($client);
+		$client->expects($this->once())
+			->method('logout');
+
+		$this->sync->sync($account, new NullLogger(), false);
+	}
+
 	public function testSyncStats(): void {
 		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$stats = new MailboxStats(42, 10, null);

@@ -51,6 +51,7 @@ OC.L10N.register(
     "Yesterday" : "Kecha",
     "Last week" : "O`tgan yil",
     "Last month" : "Oxirgi oy",
+    "No results" : "Natija yo'q",
     "Favorites" : "Favorites",
     "Other" : "Boshqa",
     "Direct link copied to clipboard" : "Klipbordga nusxa olish",

@@ -18,6 +18,7 @@ OC.L10N.register(
     "Go back" : "Retornar",
     "Cancel" : "Cancellar",
     "General" : "General",
+    "Manually" : "Manualmente",
     "Delete" : "Deler",
     "Search" : "Cercar",
     "Send" : "Inviar",

@@ -86,10 +86,10 @@
     "Account settings" : "إعدادت الحساب",
     "Aliases" : "أسماء مسعارة",
     "Alias to S/MIME certificate mapping" : "أسماء مُستعارة Alias لربط شهادات S/MIME",
-    "Signature" : "التوقيع",
-    "A signature is added to the text of new messages and replies." : "تم إضافة توقيع إلى نص الرسائل والردود الجديدة.",
     "Writing mode" : "وضع الكتابة",
     "Preferred writing mode for new messages and replies." : "وضع الكتابة المفضل للرسائل والردود الجديدة.",
+    "Signature" : "التوقيع",
+    "A signature is added to the text of new messages and replies." : "تم إضافة توقيع إلى نص الرسائل والردود الجديدة.",
     "Default folders" : "المجلدات التلقائية",
     "The folders to use for drafts, sent messages, deleted messages, archived messages and junk messages." : "المجلدات المستخدمة لحفظ المسودات، و الرسائل الصادرة، و الرسائل المحذوفة، و الرسائل المؤرشفة، و الرسائل العشوائية.",
     "Automatic trash deletion" : "الحذف التلقائي للمهملات",
@@ -128,6 +128,7 @@
     "Newest first" : "الأحدث أولاً",
     "Oldest first" : "الأقدم أولاً",
     "Ok" : "موافق",
+    "Manually" : "يدويّاً",
     "Shared with me" : "تمّت مُشاركته معي",
     "Privacy" : "الخصوصية",
     "Security" : "الأمان",
@@ -308,6 +309,7 @@
     "Yesterday" : "أمس",
     "Choose target folder" : "اختر مكان المجلد",
     "No more submailboxes in here" : "لم تعُد هناك أيّ صناديق بريد فرعية هنا",
+    "No results" : "لا توجد أي نتيجة",
     "Favorites" : "المفضلة",
     "Follow up" : "المتابعة",
     "Follow up info" : "معلومات المتابعة",
@@ -477,7 +479,6 @@
     "Save sieve settings" : "إعدادات تطبيق \"الغربال\" Sieve",
     "The syntax seems to be incorrect:" : "بناء الجملة syntax يبدو غير صحيح:",
     "Save sieve script" : "حفظ سكربتات تطبيق \"الغربال\" Sieve",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "توقيعُك يشغَل أكثر من 2 ميغا بايت. قد يؤثر هذا على أداء المحرر الخاص بك.",
     "Save signature" : "حفظ التوقيع",
     "Place signature above quoted text" : "ضع التوقيع فوق النص المقتبس",
     "Message source" : "مصدر الرسالة",
@@ -718,8 +719,6 @@
     "Error loading message" : "حدث خطأ أثناء تحميل الرسالة",
     "Add share link from Files" : "إضافة رابط المشاركة من الملفات",
     "Choose a file to add as attachment" : "إختَر ملفاً لإضافته كمُرفَقٍ",
-    "Choose a file to share as a link" : "إختَر ملفاً لمُشاركته كرابطٍ",
-    "This summary was AI generated" : "المخلص تمّ توليده عن طريق الذكاء الاصطناعي",
-    "Print" : "طباعة"
+    "Choose a file to share as a link" : "إختَر ملفاً لمُشاركته كرابطٍ"
 },"pluralForm" :"nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;"
 }

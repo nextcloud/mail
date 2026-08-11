@@ -11,6 +11,11 @@ All notable changes to this project will be documented in this file.
 * Heading shortcuts in the editor
 * Save draft with Ctrl+S in the composer
 * Preserve custom font sizes and families in the editor
+* Configurable auto mark-as-read delay
+* Sync IMAP and SMTP credentials while filling in the new account form
+* Filter folders in the mailbox picker
+* Empty state for text blocks
+* Webhook-compatible events
 ### Changed
 * Translations
 ### Fixed
@@ -19,6 +24,8 @@ All notable changes to this project will be documented in this file.
 * Rate limit all IMAP server authentication rejections
 * Favorites list no longer mounted when sorting is off
 * Search shortcut buttons no longer taking up their own space
+* Open messages from search via deep link
+* Handle empty reply-to address list properly
 
 ## 5.10.0 – 2026-06-18
 ### Added

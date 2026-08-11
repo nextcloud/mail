@@ -97,6 +97,7 @@ OC.L10N.register(
     "Last week" : "Amalas yezrin",
     "Last month" : "Ayyur yezrin",
     "Choose target folder" : "Fren akaram aniccan",
+    "No results" : "Ulac igmad",
     "Favorites" : "Imenyafen",
     "Other" : "Wayeḍ",
     "Forward" : "Avancer",
@@ -194,7 +195,6 @@ OC.L10N.register(
     "Nextcloud Mail" : "Imayl n Nextcloud",
     "Discard changes" : "Sefsex ibeddilen",
     "Message sent" : "Izen yettwazen",
-    "Date:" : "Azemz:",
-    "Print" : "Siggez"
+    "Date:" : "Azemz:"
 },
 "nplurals=2; plural=(n != 1);");

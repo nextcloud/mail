@@ -32,6 +32,7 @@ OC.L10N.register(
     "Decline" : "ප්‍රතික්ෂේප",
     "Remove" : "ඉවත් කරන්න",
     "Today" : "අද",
+    "No results" : "ප්‍රතිථල නැත",
     "Favorites" : "ප්‍රියතම",
     "Other" : "වෙනත්",
     "Link copied" : "සබැඳිය පිටපත් කළා",
