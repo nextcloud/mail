@@ -50,6 +50,8 @@ class MessageMapper extends QBMapper {
 
 	use TTransactional;
 
+	public const ORACLE_MAX_CHUNK_SIZE = 1000;
+
 	/** @var ITimeFactory */
 	private $timeFactory;
 
@@ -1136,7 +1138,7 @@ class MessageMapper extends QBMapper {
 			return array_flat_map(function (array $chunk) use ($select) {
 				$select->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 				return array_map(static fn (Message $message) => $message->getId(), $this->findEntities($select));
-			}, array_chunk($uids, 1000));
+			}, array_chunk($uids, self::ORACLE_MAX_CHUNK_SIZE));
 		}
 
 		return array_map(static fn (Message $message) => $message->getId(), $this->findEntities($select));
