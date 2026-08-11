@@ -944,12 +944,6 @@ OC.L10N.register(
     "Add share link from Files" : "Adicionar link de compartilhamento de Arquivos",
     "Choose a file to add as attachment" : "Escolha um arquivo para adicionar como anexo",
     "Choose a file to share as a link" : "Escolher um arquivo para compartilhar como link",
-    "Insert text block" : "Inserir bloco de texto",
-    "Delegated access to {userId}" : "Delegar acesso a {userId}",
-    "Revoked access for {userId}" : "Acesso revogado de {userId}",
-    "This summary was AI generated" : "Este resumo foi gerado por IA",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Sua assinatura tem mais de 2 MB. Isso pode afetar o desempenho de seu editor.",
-    "Print" : "Imprimir",
-    "This summary is AI generated and may contain mistakes." : "Este resumo foi gerado por IA e pode conter erros."
+    "Insert text block" : "Inserir bloco de texto"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

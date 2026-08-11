@@ -920,12 +920,6 @@ OC.L10N.register(
     "Add share link from Files" : "Добавить ссылку для общего доступа из Файлов",
     "Choose a file to add as attachment" : "Выбрать файл для вложения",
     "Choose a file to share as a link" : "Выберите файл для публикации ссылкой",
-    "Insert text block" : "Вставить блок текста",
-    "Delegated access to {userId}" : "Делегированный доступ к {userId}",
-    "Revoked access for {userId}" : "Отменён доступ для {userId}",
-    "This summary was AI generated" : "Это резюме было создано ИИ",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Размер вашей подписи превышает 2 МБ. Это может повлиять на производительность вашего редактора.",
-    "Print" : "Печать",
-    "This summary is AI generated and may contain mistakes." : "Это резюме создано ИИ и может содержать ошибки."
+    "Insert text block" : "Вставить блок текста"
 },
 "nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);");

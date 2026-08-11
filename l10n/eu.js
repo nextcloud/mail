@@ -712,7 +712,6 @@ OC.L10N.register(
     "Error loading message" : "Errorea mezua kargatzerakoan",
     "Add share link from Files" : "Gehitu partekatze esteka Fitxategiak-etik",
     "Choose a file to add as attachment" : "Aukeratu fitxategia eranskin gisa gehitzeko",
-    "Choose a file to share as a link" : "Aukeratu fitxategi bat esteka bezala partekatzeko",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Zure sinadurak 2MB baino gehiago ditu. Honek editorearen errendimendua gutxitu dezake."
+    "Choose a file to share as a link" : "Aukeratu fitxategi bat esteka bezala partekatzeko"
 },
 "nplurals=2; plural=(n != 1);");

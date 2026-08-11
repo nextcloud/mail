@@ -493,7 +493,6 @@ OC.L10N.register(
     "Tag already exists" : "Eticheta deja există",
     "Error loading message" : "Eroare la încărcarea mesajelor",
     "Choose a file to add as attachment" : "Selectați un fișier ca atașament",
-    "Choose a file to share as a link" : "Selectați un fișier pentru partajare ca link",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Semnătura este mai mare de 2 MB. Aceasta poate afecta performanța editorului."
+    "Choose a file to share as a link" : "Selectați un fișier pentru partajare ca link"
 },
 "nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));");

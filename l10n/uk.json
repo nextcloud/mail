@@ -839,10 +839,6 @@
     "Add share link from Files" : "Додати посилання на спільний доступ з Файлів",
     "Choose a file to add as attachment" : "Виберіть файл для вкладення",
     "Choose a file to share as a link" : "Виберіть файл, яким ви поділитеся через посилання",
-    "Insert text block" : "Вставити текстовий блок",
-    "This summary was AI generated" : "Це резюме було згенеровано штучним інтелектом",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Ваш підпис перевищує 2 МБ. Це може вплинути на продуктивність вашого редактора.",
-    "Print" : "Друк",
-    "This summary is AI generated and may contain mistakes." : "Це резюме згенероване штучним інтелектом і може містити помилки."
+    "Insert text block" : "Вставити текстовий блок"
 },"pluralForm" :"nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);"
 }

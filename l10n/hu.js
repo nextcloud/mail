@@ -634,7 +634,6 @@ OC.L10N.register(
     "Tag already exists" : "A címke már létezik",
     "Error loading message" : "Hiba történt az üzenet betöltése közben",
     "Choose a file to add as attachment" : "Válasszon mellékletként hozzáadandó fájlt",
-    "Choose a file to share as a link" : "Válasszon fájlt a hivatkozással történő megosztáshoz",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Az aláírás 2 MB-nál nagyobb. Ez hatással lehet a szerkesztő teljesítményére"
+    "Choose a file to share as a link" : "Válasszon fájlt a hivatkozással történő megosztáshoz"
 },
 "nplurals=2; plural=(n != 1);");

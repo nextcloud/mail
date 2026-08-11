@@ -896,6 +896,7 @@
     "Search for users or groups" : "Ieškoti vartotojų arba grupių",
     "Insert" : "Įterpti",
     "Choose a text block to insert at the cursor" : "Pasirinkite teksto bloką, kurį norite įterpti ties žymekliu",
+    "Text blocks are reusable pieces of text that can be inserted in messages. Visit the Settings panel to create your own." : "Teksto blokai – tai pakartotinai naudojamos teksto dalys, kurias galima įterpti į pranešimus. Norėdami sukurti savus, eikite į nustatymų skiltį.",
     "Account connected" : "Paskyra prijungta",
     "You can close this window" : "Galite užverti šį langą",
     "Connect your mail account" : "Pridėti elektroninio pašto paskyrą",
@@ -942,12 +943,6 @@
     "Add share link from Files" : "Pridėti bendrinimo nuorodą iš Failų",
     "Choose a file to add as attachment" : "Pasirinkite failą, kurį prisegsite prie laiško",
     "Choose a file to share as a link" : "Pasirinkite failą, kurį bendrinsite kaip nuorodą",
-    "Insert text block" : "Įterpti teksto bloką",
-    "Delegated access to {userId}" : "Deleguota prieiga prie {userId}",
-    "Revoked access for {userId}" : "Atšaukta prieiga {userId}",
-    "This summary was AI generated" : "Šią santrauką sukūrė DI",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Jūsų parašas yra didesnis nei 2 MB. Tai gali paveikti redaktoriaus našumą.",
-    "Print" : "Spausdinti",
-    "This summary is AI generated and may contain mistakes." : "Šią santrauką sugeneravo DI ir joje gali būti klaidų."
+    "Insert text block" : "Įterpti teksto bloką"
 },"pluralForm" :"nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);"
 }

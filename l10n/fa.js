@@ -918,12 +918,6 @@ OC.L10N.register(
     "Add share link from Files" : "افزودن لینک اشتراک‌گذاری از Files",
     "Choose a file to add as attachment" : "فایلی را برای افزودن به عنوان پیوست انتخاب کنید",
     "Choose a file to share as a link" : "فایلی را برای اشتراک‌گذاری به عنوان پیوند انتخاب کنید",
-    "Insert text block" : "درج بلوک متنی",
-    "Delegated access to {userId}" : "دسترسی واگذار شده به {userId}",
-    "Revoked access for {userId}" : "دسترسی {userId} لغو شد",
-    "This summary was AI generated" : "این خلاصه توسط هوش مصنوعی تولید شده است",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "امضای شما بزرگ‌تر از ۲ مگابایت است. این ممکن است بر عملکرد ویرایشگر شما تأثیر بگذارد.",
-    "Print" : "چاپ",
-    "This summary is AI generated and may contain mistakes." : "این خلاصه توسط هوش مصنوعی تولید شده و ممکن است حاوی اشتباه باشد"
+    "Insert text block" : "درج بلوک متنی"
 },
 "nplurals=2; plural=(n > 1);");

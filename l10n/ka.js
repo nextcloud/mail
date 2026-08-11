@@ -618,7 +618,6 @@ OC.L10N.register(
     "Tag already exists" : "Tag already exists",
     "Error loading message" : "Error loading message",
     "Choose a file to add as attachment" : "Choose a file to add as attachment",
-    "Choose a file to share as a link" : "Choose a file to share as a link",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Your signature is larger than 2 MB. This may affect the performance of your editor."
+    "Choose a file to share as a link" : "Choose a file to share as a link"
 },
 "nplurals=2; plural=(n!=1);");

@@ -944,12 +944,6 @@ OC.L10N.register(
     "Add share link from Files" : "Dosyalar uygulamasına paylaşım bağlantısı ekle",
     "Choose a file to add as attachment" : "Eklenecek ek dosyasını seçin",
     "Choose a file to share as a link" : "Bağlantı olarak paylaşılacak bir dosya seçin",
-    "Insert text block" : "Yazı bloğu ekle",
-    "Delegated access to {userId}" : "Yetki {userId} kullanıcısına devredildi",
-    "Revoked access for {userId}" : "{userId} yetki devri geri alındı",
-    "This summary was AI generated" : "Bu özet yapay zeka ile oluşturulmuştur",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "İmzanız 2 MB boyutundan büyük. Bu durum düzenleyici başarımını olumsuz etkileyebilir.",
-    "Print" : "Yazdır",
-    "This summary is AI generated and may contain mistakes." : "Bu özet yapay zeka ile oluşturulmuştur ve hatalar olabilir"
+    "Insert text block" : "Yazı bloğu ekle"
 },
 "nplurals=2; plural=(n > 1);");

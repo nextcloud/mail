@@ -571,7 +571,6 @@ OC.L10N.register(
     "Tag already exists" : "La etiqueta ya existe",
     "Error loading message" : "Se presentó un error al cargar el mensaje",
     "Choose a file to add as attachment" : "Selecciona el archivo a agregar como adjunto",
-    "Choose a file to share as a link" : "Elige un archivo para compartir como enlace",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Tu firma tiene un tamaño mayor de 2 MB. Esto puede afectar el rendimiento de tu editor."
+    "Choose a file to share as a link" : "Elige un archivo para compartir como enlace"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

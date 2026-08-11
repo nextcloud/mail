@@ -698,8 +698,6 @@
     "Error loading message" : "Feil ved innlasting av melding",
     "Add share link from Files" : "Legg til delingskobling fra Filer",
     "Choose a file to add as attachment" : "Velg en fil å legge til som vedlegg",
-    "Choose a file to share as a link" : "Velg en fil du vil dele som en lenke",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Signaturen din er større enn 2 MB. Dette kan påvirke ytelsen til redigeringsprogrammet ditt.",
-    "Print" : "Skriv ut"
+    "Choose a file to share as a link" : "Velg en fil du vil dele som en lenke"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

@@ -934,12 +934,6 @@
     "Add share link from Files" : "Lägg till delningslänk från Filer",
     "Choose a file to add as attachment" : "Välj en fil att lägga som bilaga",
     "Choose a file to share as a link" : "Välj en fil att dela som länk",
-    "Insert text block" : "Infoga textblock",
-    "Delegated access to {userId}" : "Åtkomst delegerades till {userId}",
-    "Revoked access for {userId}" : "Åtkomsten återkallades för {userId}",
-    "This summary was AI generated" : "Den här sammanfattningen har genererats av AI",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Din signatur är större än 2MB, detta kan påverka editorns prestanda",
-    "Print" : "Skriv ut",
-    "This summary is AI generated and may contain mistakes." : "Den här sammanfattningen har genererats av AI och kan innehålla fel."
+    "Insert text block" : "Infoga textblock"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

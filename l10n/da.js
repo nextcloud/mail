@@ -592,8 +592,6 @@ OC.L10N.register(
     "Error loading message" : "Fejl under indlæsning af besked",
     "Add share link from Files" : "Tilføj delingslink fra Filer",
     "Choose a file to add as attachment" : "Vælg en fil, der skal tilføjes som vedhæftning",
-    "Choose a file to share as a link" : "Vælg en fil der skal deles som link",
-    "This summary was AI generated" : "Dette sammendrag blev genereret af AI",
-    "Print" : "Udskriv"
+    "Choose a file to share as a link" : "Vælg en fil der skal deles som link"
 },
 "nplurals=2; plural=(n != 1);");

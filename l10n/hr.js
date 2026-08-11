@@ -893,10 +893,6 @@ OC.L10N.register(
     "Add share link from Files" : "Dodaj poveznicu za dijeljenje iz aplikacije Datoteke",
     "Choose a file to add as attachment" : "Izaberi datoteku kao privitak",
     "Choose a file to share as a link" : "Izaberi datoteku za dijeljenje putem poveznice",
-    "Insert text block" : "Umetni tekstualni blok",
-    "This summary was AI generated" : "Ovaj sažetak generirala je umjetna inteligencija",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Vaš potpis veći je od 2 MB. To može utjecati na performanse uređivača.",
-    "Print" : "Ispiši",
-    "This summary is AI generated and may contain mistakes." : "Ovaj sažetak generirala je umjetna inteligencija i može sadržavati pogreške."
+    "Insert text block" : "Umetni tekstualni blok"
 },
 "nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;");

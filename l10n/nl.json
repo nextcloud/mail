@@ -926,12 +926,6 @@
     "Add share link from Files" : "Voeg een gedeelde koppeling toe vanuit Bestanden",
     "Choose a file to add as attachment" : "Kies een bestand om als bijlage toe te voegen",
     "Choose a file to share as a link" : "Kies een bestand om als link te delen",
-    "Insert text block" : "Voeg een tekstblok in",
-    "Delegated access to {userId}" : "Toegang gedelegeerd aan {userId}",
-    "Revoked access for {userId}" : "Toegang ingetrokken voor {userId}",
-    "This summary was AI generated" : "Deze samenvatting is door AI gegenereerd",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Je handtekening is groter dan 2 MB. Dit kan de prestaties van je editor beïnvloeden.",
-    "Print" : "Afdrukken",
-    "This summary is AI generated and may contain mistakes." : "Deze samenvatting is door AI gegenereerd en kan fouten bevatten."
+    "Insert text block" : "Voeg een tekstblok in"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
