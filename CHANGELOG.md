@@ -1,3 +1,22 @@
+## [5.10.12](https://github.com/nextcloud/mail/compare/v5.10.11...v5.10.12) (2026-08-11)
+
+
+### Bug Fixes
+
+* configurable timeout for connectivity tester ([785d996](https://github.com/nextcloud/mail/commit/785d996f2bea6a34df7cde7ec59f05c12223fffd))
+* **deps:** bump dompurify from ^3.4.8 to v3.4.13 ([51dc6c6](https://github.com/nextcloud/mail/commit/51dc6c651d476bcec6177eeb49da808b02d8cd9b))
+* **deps:** bump postcss from ^8.5.13 to v8.5.23 ([1bc535e](https://github.com/nextcloud/mail/commit/1bc535e1c838fd7bdf122ef286cfd4616dc8dcea))
+* force user identifier when saving tags ([b941a44](https://github.com/nextcloud/mail/commit/b941a447480ef9f7c760ab404f4381ac8441a13e))
+* **html:** strip conditional markup from html mail bodies ([ef746a3](https://github.com/nextcloud/mail/commit/ef746a3ecca0019c1ba96007c4ddf59de5e900f8))
+* **l10n:** Update translations from Transifex ([36385c5](https://github.com/nextcloud/mail/commit/36385c5b6f3e1f71372a1e9cd9f1867e21aab7e6))
+* **l10n:** Update translations from Transifex ([e769da7](https://github.com/nextcloud/mail/commit/e769da73169865fc9afc1b83df7cf0d24bafbd94))
+* **l10n:** Update translations from Transifex ([e6650bf](https://github.com/nextcloud/mail/commit/e6650bf4f1b503a2b0a523189e3778aa5333a1c8))
+* **l10n:** Update translations from Transifex ([6933eb0](https://github.com/nextcloud/mail/commit/6933eb00e95f07085486b8c5f4321f3190fc2d56))
+* **l10n:** Update translations from Transifex ([e445a34](https://github.com/nextcloud/mail/commit/e445a34154c6be7498497858d94701dd985e0d91))
+* **l10n:** Update translations from Transifex ([9200acd](https://github.com/nextcloud/mail/commit/9200acdf87920caa59441fb694744e0faaa00300))
+
+
+
 ## [5.10.11](https://github.com/nextcloud/mail/compare/v5.10.10...v5.10.11) (2026-08-04)
 
 
