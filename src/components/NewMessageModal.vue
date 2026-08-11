@@ -6,6 +6,7 @@
 	<Modal
 		v-if="showMessageComposer"
 		:size="modalSize"
+		:class="{ 'composer-modal--large': largerModal }"
 		:name="modalTitle"
 		:additional-trap-elements="additionalTrapElements"
 		@close="$event.type === 'click' ? onClose() : onMinimize()">
@@ -663,6 +664,23 @@ export default {
 	height: 90%;
 	// Max editor + modal height
 	max-height: 700px !important;
+}
+
+@media (min-width: #{variables.$breakpoint-mobile}) {
+	.composer-modal--large :deep(.modal-wrapper .modal-container) {
+		width: 75vw;
+		max-width: 75vw !important;
+		height: 90vh;
+		max-height: 90vh !important;
+	}
+}
+
+// Let the Modal go full screen where it does so on its own
+@media only screen and (max-width: 512px), only screen and (max-height: 400px) {
+	:deep(.modal-wrapper .modal-container) {
+		height: calc(100% - var(--header-height));
+		max-height: none !important;
+	}
 }
 
 .minimize-button {
