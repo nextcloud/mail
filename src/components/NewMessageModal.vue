@@ -562,10 +562,23 @@ export default {
 		},
 
 		async discardDraft() {
-			let id = await this.draftsPromise
-			const isOutbox = this.composerMessage.type === 'outbox'
+			let id = null
+			let isOutbox = false
+			let isRemote = false
+
+			isOutbox = this.composerMessage.type === 'outbox'
 			if (isOutbox) {
 				id = this.composerMessage.data.id
+			} else {
+				// composerMessage.data.id refers to the local copy of the
+				// draft; if it doesn't exists, there is not a local copy and
+				// must intervene on the message stored on remote server
+				isRemote = (this.composerData.id === undefined && this.composerData.draftId !== undefined)
+				if (isRemote) {
+					id = this.composerData.draftId
+				} else {
+					id = await this.draftsPromise
+				}
 			}
 
 			// It's safe to stop the session and ultimately destroy this component as only data
@@ -573,10 +586,14 @@ export default {
 			await this.mainStore.stopComposerSession()
 
 			try {
-				if (isOutbox) {
-					await this.outboxStore.deleteMessage({ id })
-				} else {
-					deleteDraft(id)
+				if (id !== undefined) {
+					if (isOutbox) {
+						await this.outboxStore.deleteMessage({ id })
+					} else if (isRemote) {
+						this.mainStore.deleteMessage({ id })
+					} else {
+						deleteDraft(id)
+					}
 				}
 				showSuccess(t('mail', 'Message discarded'))
 			} catch (error) {
