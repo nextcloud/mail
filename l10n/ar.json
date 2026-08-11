@@ -719,9 +719,6 @@
     "Error loading message" : "حدث خطأ أثناء تحميل الرسالة",
     "Add share link from Files" : "إضافة رابط المشاركة من الملفات",
     "Choose a file to add as attachment" : "إختَر ملفاً لإضافته كمُرفَقٍ",
-    "Choose a file to share as a link" : "إختَر ملفاً لمُشاركته كرابطٍ",
-    "This summary was AI generated" : "المخلص تمّ توليده عن طريق الذكاء الاصطناعي",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "توقيعُك يشغَل أكثر من 2 ميغا بايت. قد يؤثر هذا على أداء المحرر الخاص بك.",
-    "Print" : "طباعة"
+    "Choose a file to share as a link" : "إختَر ملفاً لمُشاركته كرابطٍ"
 },"pluralForm" :"nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;"
 }

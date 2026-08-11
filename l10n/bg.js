@@ -557,7 +557,6 @@ OC.L10N.register(
     "Error loading message" : "Грешка при зареждане съобщението",
     "Add share link from Files" : "Сподели връзка от \"Файлове\"",
     "Choose a file to add as attachment" : "Избери файл за прикачване",
-    "Choose a file to share as a link" : "Изберете файл, който да споделите като връзка",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Подписът ви е по-голям от 2 MB. Това може да се отрази на работата на  вашия редактор."
+    "Choose a file to share as a link" : "Изберете файл, който да споделите като връзка"
 },
 "nplurals=2; plural=(n != 1);");

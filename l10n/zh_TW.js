@@ -898,6 +898,7 @@ OC.L10N.register(
     "Search for users or groups" : "搜尋使用者或群組",
     "Insert" : "插入",
     "Choose a text block to insert at the cursor" : "選擇文字區塊以在游標處插入",
+    "Text blocks are reusable pieces of text that can be inserted in messages. Visit the Settings panel to create your own." : "文字區塊是可重複使用的文字片段，可插入至訊息中。請前往「設定」面板建立您自己的文字區塊。",
     "Account connected" : "已連結帳號",
     "You can close this window" : "您可以關閉此視窗",
     "Connect your mail account" : "連結您的郵件帳號",
@@ -944,12 +945,6 @@ OC.L10N.register(
     "Add share link from Files" : "新增來自檔案的分享連結",
     "Choose a file to add as attachment" : "選擇要作為附件的檔案",
     "Choose a file to share as a link" : "選擇要作為連結分享的檔案",
-    "Insert text block" : "插入文字區塊",
-    "Delegated access to {userId}" : "已向 {userId} 委派存取權",
-    "Revoked access for {userId}" : "已撤銷對 {userId} 的存取",
-    "This summary was AI generated" : "此摘要為人工智慧產生",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "您的簽名檔大於 2 MB。這可能會影響編輯器的效能。",
-    "Print" : "列印",
-    "This summary is AI generated and may contain mistakes." : "此摘要為人工智慧產生，可能會出錯。"
+    "Insert text block" : "插入文字區塊"
 },
 "nplurals=1; plural=0;");

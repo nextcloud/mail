@@ -894,10 +894,6 @@ OC.L10N.register(
     "Add share link from Files" : "Pridať zdieľaný odkaz zo Súborov",
     "Choose a file to add as attachment" : "Vyberte súbor, ktorý chcete pridať ako prílohu.",
     "Choose a file to share as a link" : "Vyberte súbor, ktorý chcete sprístupniť pomocou odkazu",
-    "Insert text block" : "Vložiť textový blok",
-    "This summary was AI generated" : "Tento súhrn bol vygenerovaný AI",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Váš podpis je väčší ako 2 MB. Môže to ovplyvniť výkon vášho editora.",
-    "Print" : "Vytlačiť",
-    "This summary is AI generated and may contain mistakes." : "Tento súhrn je generovaný úomocou AI a môže obsahovať chyby."
+    "Insert text block" : "Vložiť textový blok"
 },
 "nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);");

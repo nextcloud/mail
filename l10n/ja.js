@@ -746,8 +746,6 @@ OC.L10N.register(
     "Error loading message" : "メッセージ読み込みエラー",
     "Add share link from Files" : "ファイル から共有リンクを追加",
     "Choose a file to add as attachment" : "添付として追加するファイルを選択",
-    "Choose a file to share as a link" : "共有リンクにして送信するファイルを選択",
-    "This summary was AI generated" : "この要約はAIによって作成されました",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "あなたの署名は2MBを超えています。エディターのパフォーマンスに影響する可能性があります。"
+    "Choose a file to share as a link" : "共有リンクにして送信するファイルを選択"
 },
 "nplurals=1; plural=0;");

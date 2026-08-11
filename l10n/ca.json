@@ -723,8 +723,6 @@
     "Error loading message" : "S'ha produït un error mentre es carregava el missatge",
     "Add share link from Files" : "Afegeix un enllaç de compartició des de Fitxers",
     "Choose a file to add as attachment" : "Trieu un fitxer per afegir als adjunts",
-    "Choose a file to share as a link" : "Tria un fitxer per compartir-lo com a enllaç",
-    "This summary was AI generated" : "Aquest resum es va generar amb IA",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "La teva signatura supera els 2 MB. Això pot afectar el rendiment del vostre editor."
+    "Choose a file to share as a link" : "Tria un fitxer per compartir-lo com a enllaç"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

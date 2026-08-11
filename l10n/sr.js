@@ -859,10 +859,6 @@ OC.L10N.register(
     "Add share link from Files" : "Додај везу дељења из Фајлова",
     "Choose a file to add as attachment" : "Изаберите фајл за прилог",
     "Choose a file to share as a link" : "Одаберите фајл који желите да поделите као везу",
-    "Insert text block" : "Уметни блок текста",
-    "This summary was AI generated" : "Резиме је генерисала AI",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Ваш потпис је већи од 2 MB. Ово може да утиче на перформансе вашег едитора.",
-    "Print" : "Штампај",
-    "This summary is AI generated and may contain mistakes." : "Овај резиме је генерисала AI и може да садржи грешке."
+    "Insert text block" : "Уметни блок текста"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");

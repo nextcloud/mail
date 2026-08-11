@@ -611,9 +611,6 @@
     "Error loading message" : "Virhe viestiä ladatessa",
     "Choose a file to add as attachment" : "Valitse liitteeksi lisättävä tiedosto",
     "Choose a file to share as a link" : "Valitse tiedosto, joka jaetaan linkkinä",
-    "Insert text block" : "Lisää tekstilohko",
-    "This summary was AI generated" : "Tämä yhteenveto on tekoälyn luoma",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Allekirjoituksesi koko on yli kaksi megatavua. Tämä saattaa vaikuttaa muokkaimen suorituskykyyn.",
-    "Print" : "Tulosta"
+    "Insert text block" : "Lisää tekstilohko"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

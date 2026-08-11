@@ -913,12 +913,6 @@ OC.L10N.register(
     "Add share link from Files" : "Aggiungi link condiviso da Files",
     "Choose a file to add as attachment" : "Scegli un file da aggiungere come allegato",
     "Choose a file to share as a link" : "Scegli un file da condividere come un collegamento",
-    "Insert text block" : "Inserisci testo di blocco",
-    "Delegated access to {userId}" : "Accesso delegato a {userId}",
-    "Revoked access for {userId}" : "Revoca l'accesso a {userId}",
-    "This summary was AI generated" : "Questo riepilogo è stato generato tramite IA",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "La firma supera i 2 MB e potrebbe rallentare l’editor.",
-    "Print" : "Stampa",
-    "This summary is AI generated and may contain mistakes." : "Questo riepilogo è stato generato tramite IA e potrebbe contenere imprecisioni."
+    "Insert text block" : "Inserisci testo di blocco"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

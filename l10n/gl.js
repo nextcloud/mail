@@ -895,10 +895,6 @@ OC.L10N.register(
     "Add share link from Files" : "Engadir ligazón para compartir desde Ficheiros",
     "Choose a file to add as attachment" : "Escolla un ficheiro para engadir como anexo",
     "Choose a file to share as a link" : "Escolla un ficheiro para compartir como ligazón",
-    "Insert text block" : "Inserir o bloque de texto",
-    "This summary was AI generated" : "Este resumo foi xerado por IA",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "A súa sinatura supera os 2 MB. Isto pode afectar ao rendemento do seu editor.",
-    "Print" : "Imprimir",
-    "This summary is AI generated and may contain mistakes." : "Este resumo é xerado por IA e pode conter erros."
+    "Insert text block" : "Inserir o bloque de texto"
 },
 "nplurals=2; plural=(n != 1);");
