@@ -870,10 +870,6 @@ OC.L10N.register(
     "Add share link from Files" : "Файлуудаас хуваалцах холбоос нэмэх",
     "Choose a file to add as attachment" : "Хавсралт болгох файл сонгоно уу",
     "Choose a file to share as a link" : "Холбоосоор хуваалцах файл сонгоно уу",
-    "Insert text block" : "Текст блок оруулах",
-    "This summary was AI generated" : "Энэ хураангуйг AI үүсгэсэн",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Таны гарын үсэг 2 MB-ээс их байна. Энэ нь засварлагчийн гүйцэтгэлд нөлөөлж болзошгүй.",
-    "Print" : "Хэвлэх",
-    "This summary is AI generated and may contain mistakes." : "Энэ хураангуйг AI үүсгэсэн бөгөөд алдаа агуулж болно."
+    "Insert text block" : "Текст блок оруулах"
 },
 "nplurals=2; plural=(n != 1);");

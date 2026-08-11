@@ -898,10 +898,6 @@ OC.L10N.register(
     "Add share link from Files" : "Přidat odkaz na sdílení ze Souborů",
     "Choose a file to add as attachment" : "Vyberte soubor k přiložení",
     "Choose a file to share as a link" : "Zvolte soubor, který sdílet jako odkaz",
-    "Insert text block" : "Vložit textový blok",
-    "This summary was AI generated" : "Toto shrnutí bylo vytvořeno AI",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Váš podpis je větší než 2 MB. To může zpomalovat editor.",
-    "Print" : "Tisk",
-    "This summary is AI generated and may contain mistakes." : "Toto shrnutí je vytvářeno AI a může obsahovat chyby"
+    "Insert text block" : "Vložit textový blok"
 },
 "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;");

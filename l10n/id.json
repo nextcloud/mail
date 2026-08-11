@@ -884,10 +884,6 @@
     "Add share link from Files" : "Tambahkan tautan berbagi dari Berkas",
     "Choose a file to add as attachment" : "Pilih berkas untuk ditambahkan sebagai lampiran",
     "Choose a file to share as a link" : "Pilih berkas untuk dibagikan sebagai tautan",
-    "Insert text block" : "Sisipkan blok teks",
-    "This summary was AI generated" : "Ringkasan ini dibuat oleh AI",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Tanda tangan Anda lebih besar dari 2 MB. Ini dapat memengaruhi kinerja editor Anda.",
-    "Print" : "Cetak",
-    "This summary is AI generated and may contain mistakes." : "Ringkasan ini dibuat oleh AI dan mungkin mengandung kesalahan."
+    "Insert text block" : "Sisipkan blok teks"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

@@ -917,12 +917,6 @@ OC.L10N.register(
     "Add share link from Files" : "Dodaj link do udostępnienia z Plików",
     "Choose a file to add as attachment" : "Wybierz plik, aby dodać jako załącznik",
     "Choose a file to share as a link" : "Wybierz plik do udostępnienia przez link",
-    "Insert text block" : "Wstaw blok tekstowy",
-    "Delegated access to {userId}" : "Dostęp został delegowany do {userId}",
-    "Revoked access for {userId}" : "Cofnięto dostęp dla {userId}",
-    "This summary was AI generated" : "To podsumowanie zostało wygenerowane przez AI",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Twój podpis jest większy niż 2 MB. Może to wpłynąć na wydajność Twojego edytora.",
-    "Print" : "Drukuj",
-    "This summary is AI generated and may contain mistakes." : "To podsumowanie zostało wygenerowane przez AI i może zawierać błędy"
+    "Insert text block" : "Wstaw blok tekstowy"
 },
 "nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);");

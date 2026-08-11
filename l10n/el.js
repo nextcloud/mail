@@ -937,12 +937,6 @@ OC.L10N.register(
     "Add share link from Files" : "Προσθήκη συνδέσμου κοινής χρήσης από Αρχεία",
     "Choose a file to add as attachment" : "Επιλέξτε ένα αρχείο για να προσθέσετε ως συνημμένο",
     "Choose a file to share as a link" : "Επιλέξτε ένα αρχείο για κοινή χρήση ως σύνδεσμο",
-    "Insert text block" : "Εισαγωγή μπλοκ κειμένου",
-    "Delegated access to {userId}" : "Εκχωρήθηκε πρόσβαση στον/στην {userId}",
-    "Revoked access for {userId}" : "Ανακλήθηκε η πρόσβαση για τον/την {userId}",
-    "This summary was AI generated" : "Αυτή η σύνοψη δημιουργήθηκε από ΤΝ",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Η υπογραφή σας είναι μεγαλύτερη από 2 MB. Αυτό μπορεί να επηρεάσει την απόδοση του επεξεργαστή σας.",
-    "Print" : "Εκτύπωση",
-    "This summary is AI generated and may contain mistakes." : "Αυτή η σύνοψη δημιουργήθηκε από τεχνητή νοημοσύνη και μπορεί να περιέχει λάθη."
+    "Insert text block" : "Εισαγωγή μπλοκ κειμένου"
 },
 "nplurals=2; plural=(n != 1);");

@@ -626,7 +626,7 @@ OC.L10N.register(
     "The syntax seems to be incorrect:" : "Die Syntax scheint falsch zu sein:",
     "Save sieve script" : "Sieve-Skript speichern",
     "Signature …" : "Signatur …",
-    "This signature is larger than 2 MB, usually because an image is embedded in it. It is added to every message you send and may slow down the editor." : "Diese Signatur ist größer als 2 MB, zumeist weil ein Bild darin eingebettet ist. Sie wird jeder Nachricht hinzugefügt, die Sie senden, und kann den Editor verlangsamen.",
+    "This signature is larger than 2 MB, usually because an image is embedded in it. It is added to every message you send and may slow down the editor." : "Diese Signatur ist größer als 2 MB, zumeist weil ein Bild darin eingebettet ist. Sie wird jeder Nachricht hinzugefügt, die du sendest, und kann den Editor verlangsamen.",
     "This signature contains images. New messages will use rich text, even though your writing mode is set to plain text." : "Diese Signatur enthält Bilder. Neue Nachrichten werden im formatierten Text angezeigt, auch wenn dein Schreibmodus auf Nur-Text eingestellt ist.",
     "Save signature" : "Signatur speichern",
     "Place signature above quoted text" : "Signatur über dem zitierten Text platzieren",
@@ -898,6 +898,7 @@ OC.L10N.register(
     "Search for users or groups" : "Suche nach Benutzern oder Gruppen",
     "Insert" : "Einfügen",
     "Choose a text block to insert at the cursor" : "Textblock wählen, der am Cursor eingefügt werden soll",
+    "Text blocks are reusable pieces of text that can be inserted in messages. Visit the Settings panel to create your own." : "Textblöcke sind wiederverwendbare Textschnipsel, die in Nachrichten eingefügt werden können. Das Einstellungsfenster besuchen, um eigene Textschnipsel zu erstellen.",
     "Account connected" : "Konto verbunden",
     "You can close this window" : "Du kannst dieses Fenster schließen.",
     "Connect your mail account" : "Verbinde dein E-Mail-Konto",
@@ -944,12 +945,6 @@ OC.L10N.register(
     "Add share link from Files" : "Link zum Teilen aus Dateien hinzufügen",
     "Choose a file to add as attachment" : "Wähle eine Datei, die als Anhang angefügt werden soll",
     "Choose a file to share as a link" : "Datei auswählen welche als Link geteilt wird",
-    "Insert text block" : "Textblock einfügen",
-    "Delegated access to {userId}" : "Zugriff delegiert an {userId}",
-    "Revoked access for {userId}" : "Zugriff für {userId} widerrufen",
-    "This summary was AI generated" : "Diese Zusammenfassung wurde von KI generiert",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Deine Signatur ist größer als 2 MB. Dies kann die Leistung deines Editors beeinträchtigen.",
-    "Print" : "Drucken",
-    "This summary is AI generated and may contain mistakes." : "Diese Zusammenfassung wurde von KI erstellt und kann Fehler enthalten."
+    "Insert text block" : "Textblock einfügen"
 },
 "nplurals=2; plural=(n != 1);");

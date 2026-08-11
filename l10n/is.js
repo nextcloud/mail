@@ -700,8 +700,6 @@ OC.L10N.register(
     "Error loading message" : "Villa við hleðslu á skilaboðum",
     "Add share link from Files" : "Bæta við deilitengli úr skrám",
     "Choose a file to add as attachment" : "Veldu skrá til að setja sem viðhengi",
-    "Choose a file to share as a link" : "Veldu skrá til að deila sem tengli",
-    "This summary was AI generated" : "Þessi samantekt var útbúin með AI-gervigreind",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Undirskriftin þín er stærri en 2 MB. Þetta gæti haft áhrif á afköst ritilsins þíns."
+    "Choose a file to share as a link" : "Veldu skrá til að deila sem tengli"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

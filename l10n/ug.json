@@ -881,10 +881,6 @@
     "Add share link from Files" : "ھۆججەتلەردىن ھەمبەھىر ئۇلانمىسىنى قوشۇڭ",
     "Choose a file to add as attachment" : "قوشۇمچە قىلىپ قوشماقچى بولغان ھۆججەتنى تاللاڭ",
     "Choose a file to share as a link" : "ئۇلىنىش سۈپىتىدە ھەمبەھىرلىنىدىغان ھۆججەتنى تاللاڭ",
-    "Insert text block" : "تىكىست بۆلىكى قىستۇر",
-    "This summary was AI generated" : "بۇ خۇلاسە AI تەرىپىدىن يېزىلغان",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "ئىمزاسىڭىز 2 MB دىن چوڭ. بۇ بەلكىم تەھرىرىڭىزنىڭ ئىقتىدارىغا تەسىر كۆرسىتىشى مۇمكىن.",
-    "Print" : "بېسىش",
-    "This summary is AI generated and may contain mistakes." : "بۇ خۇلاسە سۈنئىي ئەقىل ئارقىلىق ھاسىل قىلىنغان بولۇپ، خاتالىقلارنى ئۆز ئىچىگە ئېلىشى مۇمكىن."
+    "Insert text block" : "تىكىست بۆلىكى قىستۇر"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

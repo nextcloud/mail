@@ -944,12 +944,6 @@ OC.L10N.register(
     "Add share link from Files" : "Cuir nasc comhroinnte leis ó Chomhaid",
     "Choose a file to add as attachment" : "Roghnaigh comhad le cur leis mar cheangaltán",
     "Choose a file to share as a link" : "Roghnaigh comhad le roinnt mar nasc",
-    "Insert text block" : "Cuir bloc téacs isteach",
-    "Delegated access to {userId}" : "Rochtain tarmligthe chuig {userId}",
-    "Revoked access for {userId}" : "Rochtain curtha ar ceal do {userId}",
-    "This summary was AI generated" : "Gineadh AI san achoimre seo",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Tá do shíniú níos mó ná 2 MB. D’fhéadfadh sé seo cur isteach ar fheidhmíocht d’eagarthóra.",
-    "Print" : "Priontáil",
-    "This summary is AI generated and may contain mistakes." : "Is achoimre í seo a ghintear le hintleacht shaorga agus d’fhéadfadh botúin a bheith inti."
+    "Insert text block" : "Cuir bloc téacs isteach"
 },
 "nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);");

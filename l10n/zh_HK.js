@@ -944,12 +944,6 @@ OC.L10N.register(
     "Add share link from Files" : "新增來自檔案的分享連結",
     "Choose a file to add as attachment" : "選擇要作為附件的檔案",
     "Choose a file to share as a link" : "選擇要作為連結分享的檔案",
-    "Insert text block" : "插入文本區塊",
-    "Delegated access to {userId}" : "已向 {userId} 委派存取權限",
-    "Revoked access for {userId}" : "已撤銷 {userId} 的存取權限",
-    "This summary was AI generated" : "此摘要為人工智能產生",
-    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "您的簽名大於 2 MB。這可能會影響編輯器的性能。",
-    "Print" : "打印",
-    "This summary is AI generated and may contain mistakes." : "此摘要為人工智能產生，可能有錯"
+    "Insert text block" : "插入文本區塊"
 },
 "nplurals=1; plural=0;");
