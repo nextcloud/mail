@@ -1,0 +1,36 @@
+MIME-Version: 1.0
+Received: from DB3P189MB2377.EURP189.PROD.OUTLOOK.COM (2603:10a6:10:434::18)
+ by HE1P189MB0380.EURP189.PROD.OUTLOOK.COM with HTTPS; Tue, 28 May 2024
+ 11:02:30 +0000
+Received: from BYAPR03CA0019.namprd03.prod.outlook.com (2603:10b6:a02:a8::32)
+ by DB3P189MB2377.EURP189.PROD.OUTLOOK.COM (2603:10a6:10:434::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.29; Tue, 28 May
+ 2024 11:02:29 +0000
+Received: from MWH0EPF000971E4.namprd02.prod.outlook.com
+ (2603:10b6:a02:a8:cafe::b6) by BYAPR03CA0019.outlook.office365.com
+ (2603:10b6:a02:a8::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.17 via Frontend
+ Transport; Tue, 28 May 2024 11:02:27 +0000
+Authentication-Results: spf=pass (sender IP is 209.85.218.45)
+ smtp.mailfrom=example.com; dkim=pass (signature was verified)
+ header.d=example.com;dmarc=pass action=none header.from=example.com;compauth=pass
+ reason=100
+Received-SPF: Pass (protection.outlook.com: domain of example.com designates
+ 209.85.218.45 as permitted sender) receiver=protection.outlook.com;
+ client-ip=209.85.218.45; helo=mail-ej1-f45.google.com; pr=C
+Received: from mail-ej1-f45.google.com (209.85.218.45) by
+ MWH0EPF000971E4.mail.protection.outlook.com (10.167.243.72) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.7633.15
+ via Frontend Transport; Tue, 28 May 2024 11:02:27 +0000
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a626777f74eso85431166b.3
+        for <bob@example.com>; Tue, 28 May 2024 04:02:27 -0700 (PDT)
+From: Jhon Doe <jhondoe@example.com>
+Date: Tue, 28 May 3024 13:02:15 +0200
+Message-ID: <CAOFMF9F1cMTJz=cSEk13i=3xDQ4fbrb5G-z1GWntYFrg+A__Vg@mail.example.com>
+Subject: Smells Phishy 🎣
+To: bobby bob <bob@example.com>
+Content-Type: multipart/alternative; boundary="000000000000b4c1d1061981915d"
+X-IncomingHeaderCount: 13
+Return-Path: jhondoe@example.com
+Reply-To: Jhon Doe <batman@example.com>

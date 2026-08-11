@@ -1,0 +1,219 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * SPDX-FileCopyrightText: 2025 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
+namespace Unit\Controller;
+
+use ChristophWurst\Nextcloud\Testing\TestCase;
+use OCA\Mail\Account;
+use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\Contracts\IMailSearch;
+use OCA\Mail\Controller\MailboxesApiController;
+use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\Message as DbMessage;
+use OCA\Mail\Folder;
+use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\DelegationService;
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Http;
+use OCP\IRequest;
+use PHPUnit\Framework\MockObject\MockObject;
+
+class MailboxesApiControllerTest extends TestCase {
+	private const USER_ID = 'user';
+
+	private MailboxesApiController $controller;
+
+	private IRequest&MockObject $request;
+	private IMailManager|MockObject $mailManager;
+	private AccountService&MockObject $accountService;
+	private MockObject|IMailSearch $mailSearch;
+	private DelegationService&MockObject $delegationService;
+
+	protected function setUp(): void {
+		parent::setUp();
+
+		$this->request = $this->createMock(IRequest::class);
+		$this->accountService = $this->createMock(AccountService::class);
+		$this->mailManager = $this->createMock(IMailManager::class);
+		$this->mailSearch = $this->createMock(IMailSearch::class);
+		$this->delegationService = $this->createMock(DelegationService::class);
+		$this->delegationService->method('resolveAccountUserId')
+			->willReturn(self::USER_ID);
+		$this->delegationService->method('resolveMailboxUserId')
+			->willReturn(self::USER_ID);
+
+		$this->controller = new MailboxesApiController(
+			'mail',
+			$this->request,
+			self::USER_ID,
+			$this->mailManager,
+			$this->accountService,
+			$this->mailSearch,
+			$this->delegationService,
+		);
+	}
+
+	public function testListMailboxesWithoutUser() {
+		$controller = new MailboxesApiController(
+			'mail',
+			$this->request,
+			null,
+			$this->mailManager,
+			$this->accountService,
+			$this->mailSearch,
+			$this->delegationService,
+		);
+
+		$this->accountService->expects(self::never())
+			->method('find');
+
+		$accountId = 28;
+
+		$actual = $controller->list($accountId);
+		$this->assertEquals(Http::STATUS_NOT_FOUND, $actual->getStatus());
+	}
+
+	public function testListMailboxes() {
+		$account = $this->createStub(Account::class);
+		$folder = $this->createStub(Folder::class);
+		$accountId = 42;
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->equalTo(self::USER_ID), $this->equalTo($accountId))
+			->willReturn($account);
+		$this->mailManager->expects($this->once())
+			->method('getMailboxes')
+			->with($this->equalTo($account))
+			->willReturn([
+				$folder
+			]);
+		$actual = $this->controller->list($accountId);
+
+		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
+		$this->assertEquals([$folder], $actual->getData());
+	}
+
+	public function testListMessagesWithoutUser() {
+		$controller = new MailboxesApiController(
+			'mail',
+			$this->request,
+			null,
+			$this->mailManager,
+			$this->accountService,
+			$this->mailSearch,
+			$this->delegationService,
+		);
+
+		$this->accountService->expects(self::never())
+			->method('find');
+
+		$accountId = 28;
+
+		$actual = $controller->listMessages($accountId);
+		$this->assertEquals(Http::STATUS_NOT_FOUND, $actual->getStatus());
+	}
+
+	public function testListMessages(): void {
+		$accountId = 100;
+		$mailboxId = 101;
+		$mailbox = new Mailbox();
+		$mailbox->setAccountId($accountId);
+		$this->mailManager->expects(self::once())
+			->method('getMailbox')
+			->with(SELF::USER_ID, $mailboxId)
+			->willReturn($mailbox);
+		$mailAccount = new MailAccount();
+		$account = new Account($mailAccount);
+		$this->accountService->expects(self::once())
+			->method('find')
+			->with(SELF::USER_ID, $accountId)
+			->willReturn($account);
+
+		$messages = [
+			new DbMessage(),
+			new DbMessage(),
+		];
+		$this->mailSearch->expects(self::once())
+			->method('findMessages')
+			->with(
+				$account,
+				$mailbox,
+				'DESC',
+				null,
+				null,
+				1,
+				SELF::USER_ID,
+				'threaded',
+			)->willReturn($messages);
+
+		$actual = $this->controller->listMessages($mailboxId);
+
+		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
+		$this->assertEquals($messages, $actual->getData());
+	}
+
+	public function testListMessagesInvalidMailbox(): void {
+		$accountId = 100;
+		$mailboxId = 101;
+		$mailbox = new Mailbox();
+		$mailbox->setAccountId($accountId);
+		$this->mailManager->expects(self::once())
+			->method('getMailbox')
+			->with(SELF::USER_ID, $mailboxId)
+			->willThrowException(new DoesNotExistException(''));
+		$this->accountService->expects(self::never())
+			->method('find');
+
+		$actual = $this->controller->listMessages($mailboxId);
+
+		$this->assertEquals(Http::STATUS_FORBIDDEN, $actual->getStatus());
+	}
+
+	public static function provideLimitData(): array {
+		return [
+			'20' => [20, 20],
+			'500' => [500, 100],
+			'null' => [null, 1],
+		];
+	}
+
+	/** @dataProvider provideLimitData */
+	public function testRestrictLimit(?int $limit, int $expectedLimit): void {
+		$accountId = 100;
+		$mailboxId = 101;
+		$mailbox = new Mailbox();
+		$mailbox->setAccountId($accountId);
+		$this->mailManager->expects(self::once())
+			->method('getMailbox')
+			->with(SELF::USER_ID, $mailboxId)
+			->willReturn($mailbox);
+		$mailAccount = new MailAccount();
+		$account = new Account($mailAccount);
+		$this->accountService->expects(self::once())
+			->method('find')
+			->with(SELF::USER_ID, $accountId)
+			->willReturn($account);
+		$this->mailSearch->expects(self::once())
+			->method('findMessages')
+			->with(
+				$account,
+				$mailbox,
+				'DESC',
+				null,
+				null,
+				$expectedLimit,
+				SELF::USER_ID,
+				'threaded',
+			)->willReturn([]);
+
+		$this->controller->listMessages($mailboxId, null, null, $limit);
+	}
+
+}

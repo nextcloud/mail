@@ -1,0 +1,212 @@
+{
+	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
+	"extends": [
+		"config:recommended",
+		"helpers:pinGitHubActionDigests",
+		":dependencyDashboard",
+		":semanticCommits",
+		":gitSignOff"
+	],
+	"timezone": "Europe/Vienna",
+	"schedule": [
+		"before 5am on wednesday"
+	],
+	"labels": [
+		"dependencies",
+		"3. to review"
+	],
+	"commitMessageAction": "Bump",
+	"commitMessageTopic": "{{depName}}",
+	"commitMessageExtra": "from {{currentValue}} to {{#if isPinDigest}}{{{newDigestShort}}}{{else}}{{#if isMajor}}{{prettyNewMajor}}{{else}}{{#if isSingleVersion}}{{prettyNewVersion}}{{else}}{{#if newValue}}{{{newValue}}}{{else}}{{{newDigestShort}}}{{/if}}{{/if}}{{/if}}{{/if}}",
+	"rangeStrategy": "bump",
+	"minimumReleaseAge": "7 days",
+	"rebaseWhen": "conflicted",
+	"ignoreUnstable": false,
+	"baseBranchPatterns": [
+		"main",
+		"stable5.11",
+		"stable5.10"
+	],
+	"enabledManagers": [
+		"composer",
+		"github-actions",
+		"npm"
+	],
+	"ignoreDeps": [
+		"node",
+		"npm",
+		"php",
+		"postcss-loader"
+	],
+	"ignorePaths": [
+		".github/workflows/appstore-build-publish.yml",
+		".github/workflows/fixup.yml",
+		".github/workflows/block-unconventional-commits.yml",
+		".github/workflows/fixup.yml",
+		".github/workflows/lint-eslint.yml",
+		".github/workflows/lint-eslint-when-unrelated.yml",
+		".github/workflows/lint-info-xml.yml",
+		".github/workflows/lint-php.yml",
+		".github/workflows/lint-php-cs.yml",
+		".github/workflows/lint-stylelint.yml",
+		".github/workflows/npm-audit-fix.yml",
+		".github/workflows/npm-audit-fix-selective.yml",
+		".github/workflows/openapi.yml",
+		".github/workflows/pr-feedback.yml",
+		".github/workflows/psalm-matrix.yml",
+		".github/workflows/reuse.yml"
+	],
+	"packageRules": [
+		{
+			"description": "Request JavaScript reviews",
+			"matchManagers": [
+				"npm"
+			],
+			"reviewers": [
+				"@ChristophWurst",
+				"@GretaD"
+			]
+		},
+		{
+			"description": "Ignore Vue 3 packages",
+			"matchManagers": [
+				"npm"
+			],
+			"matchPackageNames": [
+				"vue"
+			],
+			"allowedVersions": "<3.0"
+		},
+		{
+			"description": "Ignore Vue 3 packages",
+			"matchManagers": [
+				"npm"
+			],
+			"matchPackageNames": [
+				"vue-router"
+			],
+			"allowedVersions": "<4.0"
+		},
+		{
+			"description": "Ignore Vue 3 packages",
+			"matchManagers": [
+				"npm"
+			],
+			"matchPackageNames": [
+				"@vue/test-utils"
+			],
+			"allowedVersions": "<2.0"
+		},
+		{
+			"description": "Ignore Vue 3 packages",
+			"matchManagers": [
+				"npm"
+			],
+			"matchPackageNames": [
+				"vuex"
+			],
+			"allowedVersions": "<4.1.0"
+		},
+		{
+			"description": "Ignore Vue 3 packages",
+			"matchManagers": [
+				"npm"
+			],
+			"matchPackageNames": [
+				"vue-loader"
+			],
+			"allowedVersions": "<16.0.0"
+		},
+		{
+			"description": "Request PHP reviews",
+			"matchManagers": [
+				"composer"
+			],
+			"reviewers": [
+				"@ChristophWurst",
+				"@kesselb"
+			]
+		},
+		{
+			"description": "Bump Github actions monthly and request reviews",
+			"matchManagers": [
+				"github-actions"
+			],
+			"extends": [
+				"schedule:monthly"
+			],
+			"reviewers": [
+				"ChristophWurst",
+				"kesselb"
+			]
+		},
+		{
+			"matchUpdateTypes": [
+				"minor",
+				"patch"
+			],
+			"matchCurrentVersion": "!/^0/",
+			"automerge": true,
+			"automergeType": "pr",
+			"platformAutomerge": true,
+			"labels": [
+				"dependencies",
+				"4. to release"
+			],
+			"reviewers": []
+		},
+		{
+			"description": "Disable minimum release age checks for internal dependencies",
+			"matchPackageNames": ["@nextcloud/*"],
+			"minimumReleaseAge": null
+		},
+		{
+			"description": "Only automerge packages that follow semver",
+			"matchPackageNames": [
+				"@nextcloud/vue",
+				"friendsofphp/php-cs-fixer",
+				"php-cs-fixer/shim"
+			],
+			"automerge": false,
+			"labels": [
+				"dependencies",
+				"3. to review"
+			],
+			"reviewers": [
+				"@ChristophWurst",
+				"@GretaD"
+			]
+		},
+		{
+			"enabled": false,
+			"matchBaseBranches": "/^stable(.)+/"
+		},
+		{
+			"matchBaseBranches": [
+				"main"
+			],
+			"matchDepTypes": [
+				"devDependencies"
+			],
+			"extends": [
+				"schedule:monthly"
+			]
+		},
+		{
+			"groupName": "calendar-js and timezones",
+			"matchPackageNames": [
+				"@nextcloud/calendar-js",
+				"@nextcloud/timezones"
+			],
+			"automerge": false
+		}
+	],
+	"vulnerabilityAlerts": {
+		"enabled": true,
+		"semanticCommitType": "fix",
+		"schedule": "before 7am every weekday",
+		"dependencyDashboardApproval": false,
+		"commitMessageSuffix": ""
+	},
+	"osvVulnerabilityAlerts": true
+}

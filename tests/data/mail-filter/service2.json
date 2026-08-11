@@ -1,0 +1,23 @@
+[
+	{
+		"name": "Add flag for emails with subject Hello",
+		"enable": true,
+		"operator": "allof",
+		"tests": [
+			{
+				"operator": "contains",
+				"values": [
+					"Hello"
+				],
+				"field": "subject"
+			}
+		],
+		"actions": [
+			{
+				"type": "addflag",
+				"flag": "Test 123"
+			}
+		],
+		"priority": 10
+	}
+]

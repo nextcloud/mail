@@ -1,0 +1,577 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * SPDX-FileCopyrightText: 2023 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
+namespace OCA\Mail\IMAP;
+
+use Horde_Imap_Client_Base;
+use Horde_Imap_Client_Data_Envelope;
+use Horde_Imap_Client_Data_Fetch;
+use Horde_Imap_Client_Exception;
+use Horde_Imap_Client_Exception_NoSupportExtension;
+use Horde_Imap_Client_Fetch_Query;
+use Horde_Imap_Client_Ids;
+use Horde_ListHeaders;
+use Horde_Mail_Rfc822_Identification;
+use Horde_Mime_Exception;
+use Horde_Mime_Headers;
+use Horde_Mime_Part;
+use OCA\Mail\AddressList;
+use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Exception\SmimeDecryptException;
+use OCA\Mail\IMAP\Charset\Converter;
+use OCA\Mail\Model\IMAPMessage;
+use OCA\Mail\Service\Html;
+use OCA\Mail\Service\PhishingDetection\PhishingDetectionService;
+use OCA\Mail\Service\SmimeService;
+use OCP\AppFramework\Db\DoesNotExistException;
+use function str_starts_with;
+use function strtolower;
+
+/**
+ * @psalm-import-type IMAPAttachment from IMAPMessage
+ */
+class ImapMessageFetcher {
+	/** @var string[] */
+	private array $attachmentsToIgnore = ['signature.asc', 'smime.p7s'];
+
+	private bool $runPhishingCheck = false;
+	// Conditional fetching/parsing
+	private bool $loadBody = false;
+	private string $htmlMessage = '';
+	private string $plainMessage = '';
+	/** @var list<IMAPAttachment> */
+	private array $attachments = [];
+	/** @var list<IMAPAttachment> */
+	private array $inlineAttachments = [];
+	private bool $hasAnyAttachment = false;
+	private array $scheduling = [];
+	private bool $hasHtmlMessage = false;
+	private string $rawReferences = '';
+	private string $dispositionNotificationTo = '';
+	private bool $hasDkimSignature = false;
+	private array $phishingDetails = [];
+	private ?string $unsubscribeUrl = null;
+	private bool $isOneClickUnsubscribe = false;
+	private ?string $unsubscribeMailto = null;
+	private bool $isPgpMimeEncrypted = false;
+
+	public function __construct(
+		private int $uid,
+		private string $mailbox,
+		private Horde_Imap_Client_Base $client,
+		private string $userId,
+		private Html $htmlService,
+		private SmimeService $smimeService,
+		private Converter $converter,
+		private PhishingDetectionService $phishingDetectionService,
+	) {
+	}
+
+	/**
+	 * Configure the fetcher to fetch the body of the message.
+	 *
+	 * @param bool $value
+	 * @return $this
+	 */
+	public function withBody(bool $value): ImapMessageFetcher {
+		$this->loadBody = $value;
+		return $this;
+	}
+
+	/**
+	 * Configure the fetcher to check for phishing.
+	 *
+	 * @param bool $value
+	 * @return $this
+	 */
+	public function withPhishingCheck(bool $value): ImapMessageFetcher {
+		$this->runPhishingCheck = $value;
+		return $this;
+	}
+
+	/**
+	 * @param Horde_Imap_Client_Data_Fetch|null $fetch
+	 *                                                 Will be reused if no body is requested.
+	 *                                                 It should at least contain envelope, flags, imapDate and headerText.
+	 *                                                 Otherwise, some data might not be parsed correctly.
+	 * @return IMAPMessage
+	 *
+	 * @throws DoesNotExistException
+	 * @throws Horde_Imap_Client_Exception
+	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
+	 * @throws Horde_Mime_Exception
+	 * @throws ServiceException
+	 * @throws SmimeDecryptException
+	 */
+	public function fetchMessage(?Horde_Imap_Client_Data_Fetch $fetch = null): IMAPMessage {
+		$ids = new Horde_Imap_Client_Ids($this->uid);
+
+		$isSigned = false;
+		$signatureIsValid = false;
+		$isEncrypted = false;
+
+		if ($this->loadBody) {
+			// Ignore given query because lots of data needs to be fetched anyway
+			// TODO: reuse given query if beneficial for performance and worth the refactoring effort
+			$query = new Horde_Imap_Client_Fetch_Query();
+			$query->envelope();
+			$query->structure();
+			$query->flags();
+			$query->imapDate();
+			$query->headerText([
+				'peek' => true,
+			]);
+			$this->smimeService->addEncryptionCheckQueries($query);
+
+			$headers = $this->client->fetch($this->mailbox, $query, ['ids' => $ids]);
+			/** @var Horde_Imap_Client_Data_Fetch $fetch */
+			$fetch = $headers[$this->uid];
+			if (is_null($fetch)) {
+				throw new DoesNotExistException("This email ($this->uid) can't be found. Probably it was deleted from the server recently. Please reload.");
+			}
+
+			// analyse the body part
+			$structure = $fetch->getStructure();
+
+			$this->isPgpMimeEncrypted = ($structure->getType() === 'multipart/encrypted'
+				&& $structure->getContentTypeParameter('protocol') === 'application/pgp-encrypted');
+			if ($this->isPgpMimeEncrypted) {
+				$this->plainMessage = $this->loadBodyData($structure, '2', false);
+				$attachmentName = $structure->getPartByIndex(1)?->getName();
+				if ($attachmentName !== null) {
+					$this->attachmentsToIgnore[] = $attachmentName;
+				}
+			}
+
+			$this->hasAnyAttachment = $this->hasAttachments($structure);
+
+			$isEncrypted = $this->smimeService->isEncrypted($fetch);
+			$isOpaqueSigned = $structure->getContentTypeParameter('smime-type') === 'signed-data'
+				&& ($structure->getType() === 'application/pkcs7-mime'
+					|| $structure->getType() === 'application/x-pkcs7-mime');
+			if ($isEncrypted) {
+				// Fetch and parse full text if message is encrypted in order to analyze the
+				// structure. Conditional fetching doesn't work for encrypted messages.
+
+				$query = new Horde_Imap_Client_Fetch_Query();
+				$this->smimeService->addDecryptQueries($query, true);
+
+				$headers = $this->client->fetch($this->mailbox, $query, ['ids' => $ids]);
+				/** @var Horde_Imap_Client_Data_Fetch $fullTextFetch */
+				$fullTextFetch = $headers[$this->uid];
+				if (is_null($fullTextFetch)) {
+					throw new DoesNotExistException("This email ($this->uid) can't be found. Probably it was deleted from the server recently. Please reload.");
+				}
+
+				$decryptionResult = $this->smimeService->decryptDataFetch($fullTextFetch, $this->userId);
+				$isSigned = $decryptionResult->isSigned();
+				$signatureIsValid = $decryptionResult->isSignatureValid();
+
+				$structure = Horde_Mime_Part::parseMessage(
+					$decryptionResult->getDecryptedMessage(),
+					['forcemime' => true],
+				);
+			} elseif ($isOpaqueSigned || $structure->getType() === 'multipart/signed') {
+				$query = new Horde_Imap_Client_Fetch_Query();
+				$query->fullText([
+					'peek' => true,
+				]);
+
+				$headers = $this->client->fetch($this->mailbox, $query, ['ids' => $ids]);
+				/** @var Horde_Imap_Client_Data_Fetch $fullTextFetch */
+				$fullTextFetch = $headers[$this->uid];
+				if (is_null($fullTextFetch)) {
+					throw new DoesNotExistException("This email ($this->uid) can't be found. Probably it was deleted from the server recently. Please reload.");
+				}
+
+				$signedText = $fullTextFetch->getFullMsg();
+				$isSigned = true;
+				$signatureIsValid = $this->smimeService->verifyMessage($signedText);
+
+				// Extract opaque signed content (smime-type="signed-data")
+				if ($isOpaqueSigned) {
+					$signedText = $this->smimeService->extractSignedContent($signedText);
+				}
+
+				$structure = Horde_Mime_Part::parseMessage($signedText, [
+					'forcemime' => true,
+				]);
+			}
+
+			// debugging below
+			$structure_type = $structure->getPrimaryType();
+			if ($structure_type === 'multipart') {
+				$i = 1;
+				foreach ($structure->getParts() as $p) {
+					$this->getPart($p, (string)$i++, $isEncrypted || $isSigned);
+				}
+			} else {
+				$bodyPartId = $structure->findBody();
+				if (!is_null($bodyPartId)) {
+					$this->getPart($structure[$bodyPartId], $bodyPartId, $isEncrypted || $isSigned);
+				}
+			}
+		} elseif (is_null($fetch)) {
+			// Reuse given query or construct a new minimal one
+			$query = new Horde_Imap_Client_Fetch_Query();
+			$query->envelope();
+			$query->flags();
+			$query->imapDate();
+			$query->headerText([
+				'peek' => true,
+			]);
+
+			$result = $this->client->fetch($this->mailbox, $query, ['ids' => $ids]);
+			$fetch = $result[$this->uid];
+			if (is_null($fetch)) {
+				throw new DoesNotExistException("This email ($this->uid) can't be found. Probably it was deleted from the server recently. Please reload.");
+			}
+		}
+
+		$this->parseHeaders($fetch);
+
+		$envelope = $fetch->getEnvelope();
+
+		$messageId = new Horde_Mail_Rfc822_Identification($envelope->message_id);
+		$inReplyTo = new Horde_Mail_Rfc822_Identification($envelope->in_reply_to);
+
+		return new IMAPMessage(
+			$this->uid,
+			$messageId->ids[0] ?? '',
+			$fetch->getFlags(),
+			AddressList::fromHorde($envelope->from),
+			AddressList::fromHorde($envelope->to),
+			AddressList::fromHorde($envelope->cc),
+			AddressList::fromHorde($envelope->bcc),
+			AddressList::fromHorde($envelope->reply_to),
+			$this->decodeSubject($envelope),
+			$this->plainMessage,
+			$this->htmlMessage,
+			$this->hasHtmlMessage,
+			$this->attachments,
+			$this->inlineAttachments,
+			$this->hasAnyAttachment,
+			$this->scheduling,
+			$fetch->getImapDate(),
+			$this->rawReferences,
+			$this->dispositionNotificationTo,
+			$this->hasDkimSignature,
+			$this->phishingDetails,
+			$this->unsubscribeUrl,
+			$this->isOneClickUnsubscribe,
+			$this->unsubscribeMailto,
+			$inReplyTo->ids[0] ?? '',
+			$isEncrypted,
+			$isSigned,
+			$signatureIsValid,
+			$this->htmlService, // TODO: drop the html service dependency
+			$this->isPgpMimeEncrypted,
+		);
+	}
+
+	/**
+	 * @param Horde_Mime_Part $p
+	 * @param string $partNo
+	 * @param bool $isFetched Body is already fetched and contained within the mime part object
+	 * @return void
+	 *
+	 * @throws DoesNotExistException
+	 * @throws Horde_Imap_Client_Exception
+	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
+	 */
+	private function getPart(Horde_Mime_Part $p, string $partNo, bool $isFetched): void {
+		// iMIP messages
+		// Handle text/calendar parts first because they might be attachments at the same time.
+		// Otherwise, some of the following if-conditions might break the handling and treat iMIP
+		// data like regular attachments.
+		$allContentTypeParameters = $p->getAllContentTypeParameters();
+		if ($p->getType() === 'text/calendar') {
+			// Handle event data like a regular attachment
+			// Outlook doesn't set a content disposition
+			// We work around this by checking for the name only
+			if ($p->getName() !== null) {
+				$this->attachments[] = [
+					'id' => $p->getMimeId(),
+					'messageId' => $this->uid,
+					'fileName' => $p->getName(),
+					'mime' => $p->getType(),
+					'size' => $p->getBytes(),
+					'cid' => $p->getContentId(),
+					'disposition' => $p->getDisposition()
+				];
+			}
+
+			// return if this is an event attachment only
+			// the method parameter determines if this is a iMIP message
+			if (!isset($allContentTypeParameters['method'])) {
+				return;
+			}
+
+			if (in_array(strtoupper($allContentTypeParameters['method']), ['REQUEST', 'REPLY', 'CANCEL'])) {
+				$this->scheduling[] = [
+					'id' => $p->getMimeId(),
+					'messageId' => $this->uid,
+					'method' => strtoupper($allContentTypeParameters['method']),
+					'contents' => $this->loadBodyData($p, $partNo, $isFetched),
+				];
+				return;
+			}
+		}
+
+		$isAttachment = ($p->isAttachment() || $p->getType() === 'message/rfc822')
+			&& !in_array($p->getType(), ['application/pgp-signature', 'application/pkcs7-signature', 'application/x-pkcs7-signature']);
+
+		// Regular attachments
+		if ($isAttachment) {
+			$this->attachments[] = [
+				'id' => $p->getMimeId(),
+				'messageId' => $this->uid,
+				'fileName' => $p->getName(),
+				'mime' => $p->getType(),
+				'size' => $p->getBytes(),
+				'cid' => $p->getContentId(),
+				'disposition' => $p->getDisposition()
+			];
+			return;
+		}
+
+		// Inline attachments
+		// Horde doesn't consider parts with content-disposition set to inline as attachments,
+		// so we detect them ourselves to render the message's html body in $this->getHtmlBody().
+		// A part qualifies when it has a filename, is an embedded message, or carries a Content-ID.
+		// The Content-ID case covers clients (e.g. IBM Notes/HCL Domino) that reference inline
+		// images solely by Content-ID, without a filename or content-disposition. text/* and
+		// multipart parts are excluded from it so the body parts still reach the handlers below.
+		$filename = $p->getName();
+		$primaryType = $p->getPrimaryType();
+
+		$hasContentId = $p->getContentId() !== null && !in_array($primaryType, ['text', 'multipart'], true);
+		$hasFilename = isset($filename);
+		$isEmbeddedMessage = $p->getType() === 'message/rfc822';
+
+		if ($hasContentId || $hasFilename || $isEmbeddedMessage) {
+			if (in_array($filename, $this->attachmentsToIgnore)) {
+				return;
+			}
+			$this->inlineAttachments[] = [
+				'id' => $p->getMimeId(),
+				'messageId' => $this->uid,
+				'fileName' => $filename,
+				'mime' => $p->getType(),
+				'size' => $p->getBytes(),
+				'cid' => $p->getContentId(),
+				'disposition' => $p->getDisposition()
+			];
+			return;
+		}
+
+		if ($primaryType === 'multipart') {
+			$this->handleMultiPartMessage($p, $partNo, $isFetched);
+			return;
+		}
+
+		if ($p->getType() === 'text/plain') {
+			$this->handleTextMessage($p, $partNo, $isFetched);
+			return;
+		}
+
+		if ($p->getType() === 'text/html') {
+			$this->handleHtmlMessage($p, $partNo, $isFetched);
+			return;
+		}
+
+		// EMBEDDED MESSAGE
+		// Many bounce notifications embed the original message as type 2,
+		// but AOL uses type 1 (multipart), which is not handled here.
+		// There are no PHP functions to parse embedded messages,
+		// so this just appends the raw source to the main message.
+		if ($p[0] === 'message') {
+			$data = $this->loadBodyData($p, $partNo, $isFetched);
+			if ($this->plainMessage !== '') {
+				$this->plainMessage .= "\n\n";
+			}
+			$this->plainMessage .= $data;
+		}
+	}
+
+	/**
+	 * @param Horde_Mime_Part $part
+	 * @param string $partNo
+	 * @param bool $isFetched Body is already fetched and contained within the mime part object
+	 * @return void
+	 *
+	 * @throws DoesNotExistException
+	 * @throws Horde_Imap_Client_Exception
+	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
+	 */
+	private function handleMultiPartMessage(Horde_Mime_Part $part, string $partNo, bool $isFetched): void {
+		$i = 1;
+		foreach ($part->getParts() as $p) {
+			$this->getPart($p, "$partNo.$i", $isFetched);
+			$i++;
+		}
+	}
+
+	/**
+	 * @param Horde_Mime_Part $p
+	 * @param string $partNo
+	 * @param bool $isFetched Body is already fetched and contained within the mime part object
+	 * @return void
+	 *
+	 * @throws DoesNotExistException
+	 * @throws Horde_Imap_Client_Exception
+	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
+	 */
+	private function handleTextMessage(Horde_Mime_Part $p, string $partNo, bool $isFetched): void {
+		$data = $this->loadBodyData($p, $partNo, $isFetched);
+		if ($this->plainMessage !== '') {
+			$this->plainMessage .= "\n\n";
+		}
+		$this->plainMessage .= $data;
+	}
+
+	/**
+	 * @param Horde_Mime_Part $p
+	 * @param string $partNo
+	 * @param bool $isFetched Body is already fetched and contained within the mime part object
+	 * @return void
+	 *
+	 * @throws DoesNotExistException
+	 * @throws Horde_Imap_Client_Exception
+	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
+	 */
+	private function handleHtmlMessage(Horde_Mime_Part $p, string $partNo, bool $isFetched): void {
+		$this->hasHtmlMessage = true;
+		$data = $this->loadBodyData($p, $partNo, $isFetched);
+		if ($this->htmlMessage !== '') {
+			$this->htmlMessage .= '<br><br>';
+		}
+		$this->htmlMessage .= $data;
+	}
+
+	/**
+	 * @param Horde_Mime_Part $p
+	 * @param string $partNo
+	 * @param bool $isFetched Body is already fetched and contained within the mime part object
+	 * @return string
+	 *
+	 * @throws DoesNotExistException
+	 * @throws Horde_Imap_Client_Exception
+	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
+	 * @throws ServiceException
+	 */
+	private function loadBodyData(Horde_Mime_Part $p, string $partNo, bool $isFetched): string {
+		if (!$isFetched) {
+			$fetch_query = new Horde_Imap_Client_Fetch_Query();
+			$ids = new Horde_Imap_Client_Ids($this->uid);
+
+			$fetch_query->bodyPart($partNo, [
+				'peek' => true
+			]);
+			$fetch_query->mimeHeader($partNo, [
+				'peek' => true
+			]);
+
+			$headers = $this->client->fetch($this->mailbox, $fetch_query, ['ids' => $ids]);
+			/* @var $fetch Horde_Imap_Client_Data_Fetch */
+			$fetch = $headers[$this->uid];
+			if (is_null($fetch)) {
+				throw new DoesNotExistException("Mail body for this mail($this->uid) could not be loaded");
+			}
+
+			$mimeHeaders = $fetch->getMimeHeader($partNo, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
+			if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
+				$p->setTransferEncoding($enc);
+			}
+
+			$data = $fetch->getBodyPart($partNo);
+			$p->setContents($data);
+		}
+
+		return $this->converter->convert($p);
+	}
+
+	private function hasAttachments(Horde_Mime_Part $part): bool {
+		foreach ($part->getParts() as $p) {
+			if ($p->isAttachment() || $p->getType() === 'message/rfc822') {
+				return true;
+			}
+			if ($this->hasAttachments($p)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private function decodeSubject(Horde_Imap_Client_Data_Envelope $envelope): string {
+		// Try a soft conversion first (some installations, eg: Alpine linux,
+		// have issues with the '//IGNORE' option)
+		$subject = $envelope->subject;
+		$utf8 = iconv('UTF-8', 'UTF-8', $subject);
+		if ($utf8 !== false) {
+			return $utf8;
+		}
+		$utf8Ignored = iconv('UTF-8', 'UTF-8//IGNORE', $subject);
+		if ($utf8Ignored === false) {
+			// Give up
+			return $subject;
+		}
+		return $utf8Ignored;
+	}
+
+	private function parseHeaders(Horde_Imap_Client_Data_Fetch $fetch): void {
+		/** @var resource $headersStream */
+		$headersStream = $fetch->getHeaderText('0', Horde_Imap_Client_Data_Fetch::HEADER_STREAM);
+		$parsedHeaders = Horde_Mime_Headers::parseHeaders($headersStream);
+		fclose($headersStream);
+
+		$references = $parsedHeaders->getHeader('references');
+		if ($references !== null) {
+			$this->rawReferences = $references->value_single;
+		}
+
+		$dispositionNotificationTo = $parsedHeaders->getHeader('disposition-notification-to');
+		if ($dispositionNotificationTo !== null) {
+			$this->dispositionNotificationTo = $dispositionNotificationTo->value_single;
+		}
+
+		$dkimSignatureHeader = $parsedHeaders->getHeader('dkim-signature');
+		$this->hasDkimSignature = $dkimSignatureHeader !== null;
+
+		if ($this->runPhishingCheck) {
+			$this->phishingDetails = $this->phishingDetectionService->checkHeadersForPhishing($this->userId, $parsedHeaders, $fetch->getFlags(), $this->hasHtmlMessage, $this->htmlMessage);
+		}
+
+		$listUnsubscribeHeader = $parsedHeaders->getHeader('list-unsubscribe');
+		if ($listUnsubscribeHeader !== null) {
+			$listHeaders = new Horde_ListHeaders();
+			$headers = $listHeaders->parse($listUnsubscribeHeader->name, $listUnsubscribeHeader->value_single);
+			if (!$headers) {
+				// Unable to parse headers
+				return;
+			}
+			foreach ($headers as $header) {
+				if (str_starts_with($header->url, 'http')) {
+					$this->unsubscribeUrl = $header->url;
+
+					$unsubscribePostHeader = $parsedHeaders->getHeader('List-Unsubscribe-Post');
+					if ($unsubscribePostHeader !== null) {
+						$this->isOneClickUnsubscribe = strtolower($unsubscribePostHeader->value_single) === 'list-unsubscribe=one-click';
+					}
+					break;
+				}
+				if (str_starts_with($header->url, 'mailto')) {
+					$this->unsubscribeMailto = $header->url;
+					break;
+				}
+			}
+		}
+	}
+}

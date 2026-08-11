@@ -1,0 +1,42 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
+namespace OCA\Mail\Events;
+
+use OCA\Mail\Account;
+use OCA\Mail\Db\LocalMessage;
+use OCP\EventDispatcher\Event;
+use OCP\EventDispatcher\IWebhookCompatibleEvent;
+
+class MessageSentEvent extends Event implements IWebhookCompatibleEvent {
+	public function __construct(
+		private Account $account,
+		private LocalMessage $localMessage,
+	) {
+		parent::__construct();
+	}
+
+	public function getAccount(): Account {
+		return $this->account;
+	}
+
+	public function getLocalMessage(): LocalMessage {
+		return $this->localMessage;
+	}
+
+	public function getWebhookSerializable(): array {
+		// No local message id: the row is deleted right after a successful send
+		return [
+			'accountId' => $this->account->getId(),
+			'inReplyToRfcMessageId' => $this->localMessage->getInReplyToMessageId(),
+			'sendAt' => $this->localMessage->getSendAt(),
+			'subject' => $this->localMessage->getSubject(),
+		];
+	}
+}

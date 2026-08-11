@@ -1,0 +1,19 @@
+Return-Path: <debug@imap.localhost>
+Delivered-To: user@imap.localhost
+Received: from 0531f16fe281
+	by 0531f16fe281 (Dovecot) with LMTP id zUFELGRr1GXMJgEAcWVang
+	for <user@imap.localhost>; Tue, 20 Feb 2024 09:05:40 +0000
+Received: from anton.vpn (unknown [172.17.0.1])
+	by 0531f16fe281 (Postfix) with ESMTP id A3E481E52
+	for <user@imap.localhost>; Tue, 20 Feb 2024 09:05:40 +0000 (UTC)
+From: debug@imap.localhost
+To: user@imap.localhost
+Cc: 
+Subject: Opaque Signed Message
+Message-ID: <20240220090540.Horde.AWcFPHcfoZONOg_XJ-ynBU3@anton.vpn>
+User-Agent: Horde Application Framework 5
+Date: Tue, 20 Feb 2024 09:05:40 +0000
+Content-Type: text/plain; charset=utf-8
+MIME-Version: 1.0
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.

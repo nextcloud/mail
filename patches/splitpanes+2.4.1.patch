@@ -1,0 +1,12 @@
+diff --git a/node_modules/splitpanes/package.json b/node_modules/splitpanes/package.json
+index 1d595ec..955bbcb 100644
+--- a/node_modules/splitpanes/package.json
++++ b/node_modules/splitpanes/package.json
+@@ -9,6 +9,7 @@
+     "build-bundle": "BUNDLE=true vite build && mv ./dist/style.css ./dist/splitpanes.css",
+     "serve": "vite preview --base /splitpanes/"
+   },
++  "type": "module",
+   "main": "./dist/splitpanes.umd.js",
+   "unpkg": "dist/splitpanes.umd.js",
+   "jsdelivr": "dist/splitpanes.umd.js",

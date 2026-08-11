@@ -1,0 +1,9 @@
+# SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
+# SPDX-License-Identifier: AGPL-3.0-or-later
+[package]
+before_cmds = [
+	"composer install --no-dev -o",
+	"npm ci",
+	"npm run build",
+	"composer openapi"
+]

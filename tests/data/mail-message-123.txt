@@ -1,0 +1,9000 @@
+Return-Path: <bounces+778210-b3d2-thomas.mueller=example.com@sendgrid.me>
+Delivered-To: thomas@example.com
+Received: from localhost (localhost [127.0.0.1])
+	by mail.example.com (Postfix) with ESMTP id C251A200A4
+	for <thomas.mueller@example.com>; Tue, 19 May 2015 14:36:10 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at mail.example.com
+Received: from mail.example.com ([127.0.0.1])
+	by localhost (mail.example.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id UrlWBWNQsfXa for <thomas.mueller@example.com>;
+	Tue, 19 May 2015 14:36:01 +0200 (CEST)
+Received: from o3.bn.sendgrid.net (o3.bn.sendgrid.net [198.21.6.101])
+	by mail.example.com (Postfix) with ESMTPS id 42046200A3
+	for <thomas.mueller@example.com>; Tue, 19 May 2015 14:36:00 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=sendgrid.me;
+	h=from:sender:reply-to:to:subject:mime-version:content-type;
+	s=smtpapi; bh=+KblwZi2GFGLOPVuzVDGwe4w/vg=; b=sRhaykqD6jrhv2u/7+
+	hZIb+dUXkj6AwYSxP6e627wrkubf63PqhrvZnF9RT9cCg9InSPKJ63olIW0iuOtN
+	lFfsBStLB443qNryWlaL5LoNMzS/J5SCadPQDrJoomAaCotmI+Ll3C802OLju8dl
+	wN48SCOUtt6XnrAeSqSFRKFgo=
+Received: by filter0334p1mdw1.sendgrid.net with SMTP id filter0334p1mdw1.5764.555B2E2119
+        2015-05-19 12:35:47.827077181 +0000 UTC
+Received: from ismtpd-016.ams1.sendgrid.net ([UNAVAILABLE]. [10.42.2.98])
+	by 10.42.243.12:2500 (trex/5.2.13);
+	Tue, 19 May 2015 12:35:52 GMT
+Received: from localhost (unknown [10.68.181.194])
+	by ismtpd-016 (SG) with ESMTP id 14d6c2c34ad.5d5f.311cd4
+	for <thomas.mueller@example.com>; Tue, 19 May 2015 12:35:45 +0000 (UTC)
+Date: Tue, 19 May 2015 12:35:46 +0000 (UTC)
+From: Codacy <notification@codacy.com>
+Sender: notification@codacy.com
+Reply-To: notification@codacy.com
+To: thomas.mueller@example.com
+Message-ID: <1576747741.9.1432038946316.JavaMail.root@ip-172-32-11-10>
+Subject: core/master has new results
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----=_Part_8_244674049.1432038946255"
+X-SG-EID: fl/7HX0MlpS5sm8GXizO8Oh075/jLMsy5kHoDg5+yqyynMoiJHHKuymojo4uYgWfZtY3jlRmydiNvL
+ YV7ZYekmQI2E80+cH45PLihrn1MXXeXTp31ZKjbsNdu+D6XIUVYNlWLqrPiJ7Dw/n4lIK1vW1880Hr
+ SM4zm0GQBTHFOMW4ppI5L+CiCEnCNVK8XrLK
+
+
+
+------=_Part_8_244674049.1432038946255
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+
+
+Report for core/master
+
+0 fixed issues.
+2 new issues.
+
+Current grade: B
+
+Affected files:
+
+application.php
+ 0 new results
+ 0 fixed results
+
+
+app.php
+ 0 new results
+ 0 fixed results
+
+
+register_command.php
+ 0 new results
+ 0 fixed results
+
+
+routes.php
+ 0 new results
+ 0 fixed results
+
+
+migratekeys.php
+ 0 new results
+ 0 fixed results
+
+
+recoverycontroller.php
+ 0 new results
+ 0 fixed results
+
+
+settingscontroller.php
+ 0 new results
+ 0 fixed results
+
+
+statuscontroller.php
+ 0 new results
+ 0 fixed results
+
+
+settings-admin.css
+ 0 new results
+ 0 fixed results
+
+
+settings-personal.css
+ 0 new results
+ 0 fixed results
+
+
+ihook.php
+ 0 new results
+ 0 fixed results
+
+
+userhooks.php
+ 0 new results
+ 0 fixed results
+
+
+encryption.js
+ 0 new results
+ 0 fixed results
+
+
+settings-admin.js
+ 0 new results
+ 0 fixed results
+
+
+settings-personal.js
+ 0 new results
+ 0 fixed results
+
+
+crypt.php
+ 0 new results
+ 0 fixed results
+
+
+encryption.php
+ 0 new results
+ 0 fixed results
+
+
+multikeydecryptexception.php
+ 0 new results
+ 0 fixed results
+
+
+multikeyencryptexception.php
+ 0 new results
+ 0 fixed results
+
+
+privatekeymissingexception.php
+ 0 new results
+ 0 fixed results
+
+
+publickeymissingexception.php
+ 0 new results
+ 0 fixed results
+
+
+hookmanager.php
+ 0 new results
+ 0 fixed results
+
+
+keymanager.php
+ 0 new results
+ 0 fixed results
+
+
+migration.php
+ 0 new results
+ 0 fixed results
+
+
+recovery.php
+ 0 new results
+ 0 fixed results
+
+
+session.php
+ 0 new results
+ 0 fixed results
+
+
+setup.php
+ 0 new results
+ 0 fixed results
+
+
+util.php
+ 0 new results
+ 0 fixed results
+
+
+settings-admin.php
+ 0 new results
+ 0 fixed results
+
+
+settings-personal.php
+ 0 new results
+ 0 fixed results
+
+
+settings-admin.php
+ 0 new results
+ 0 fixed results
+
+
+settings-personal.php
+ 0 new results
+ 0 fixed results
+
+
+RecoveryControllerTest.php
+ 0 new results
+ 0 fixed results
+
+
+SettingsControllerTest.php
+ 0 new results
+ 0 fixed results
+
+
+UserHooksTest.php
+ 0 new results
+ 0 fixed results
+
+
+cryptTest.php
+ 0 new results
+ 0 fixed results
+
+
+encryptionTest.php
+ 0 new results
+ 0 fixed results
+
+
+HookManagerTest.php
+ 0 new results
+ 0 fixed results
+
+
+KeyManagerTest.php
+ 0 new results
+ 0 fixed results
+
+
+MigrationTest.php
+ 0 new results
+ 0 fixed results
+
+
+RecoveryTest.php
+ 0 new results
+ 0 fixed results
+
+
+SessionTest.php
+ 0 new results
+ 0 fixed results
+
+
+SetupTest.php
+ 0 new results
+ 0 fixed results
+
+
+UtilTest.php
+ 0 new results
+ 0 fixed results
+
+
+admin.php
+ 0 new results
+ 0 fixed results
+
+
+delete.php
+ 0 new results
+ 0 fixed results
+
+
+download.php
+ 0 new results
+ 0 fixed results
+
+
+getstoragestats.php
+ 0 new results
+ 0 fixed results
+
+
+list.php
+ 0 new results
+ 0 fixed results
+
+
+mimeicon.php
+ 0 new results
+ 0 fixed results
+
+
+move.php
+ 0 new results
+ 0 fixed results
+
+
+newfile.php
+ 0 new results
+ 0 fixed results
+
+
+newfolder.php
+ 0 new results
+ 0 fixed results
+
+
+rename.php
+ 0 new results
+ 0 fixed results
+
+
+scan.php
+ 0 new results
+ 0 fixed results
+
+
+upload.php
+ 0 new results
+ 0 fixed results
+
+
+application.php
+ 0 new results
+ 0 fixed results
+
+
+app.php
+ 0 new results
+ 0 fixed results
+
+
+register_command.php
+ 0 new results
+ 0 fixed results
+
+
+remote.php
+ 0 new results
+ 0 fixed results
+
+
+routes.php
+ 0 new results
+ 0 fixed results
+
+
+deleteorphanedfiles.php
+ 0 new results
+ 0 fixed results
+
+
+scan.php
+ 0 new results
+ 0 fixed results
+
+
+apicontroller.php
+ 0 new results
+ 0 fixed results
+
+
+files.css
+ 0 new results
+ 0 fixed results
+
+
+mobile.css
+ 0 new results
+ 0 fixed results
+
+
+upload.css
+ 0 new results
+ 0 fixed results
+
+
+download.php
+ 0 new results
+ 0 fixed results
+
+
+applicable.php
+ 0 new results
+ 0 fixed results
+
+
+dropbox.php
+ 0 new results
+ 0 fixed results
+
+
+google.php
+ 0 new results
+ 0 fixed results
+
+
+application.php
+ 0 new results
+ 0 fixed results
+
+
+app.php
+ 0 new results
+ 0 fixed results
+
+
+routes.php
+ 0 new results
+ 0 fixed results
+
+
+ajaxcontroller.php
+ 0 new results
+ 0 fixed results
+
+
+globalstoragescontroller.php
+ 0 new results
+ 0 fixed results
+
+
+storagescontroller.php
+ 0 new results
+ 0 fixed results
+
+
+userstoragescontroller.php
+ 0 new results
+ 0 fixed results
+
+
+settings.css
+ 0 new results
+ 0 fixed results
+
+
+app.js
+ 0 new results
+ 0 fixed results
+
+
+dropbox.js
+ 0 new results
+ 0 fixed results
+
+
+google.js
+ 0 new results
+ 0 fixed results
+
+
+mountsfilelist.js
+ 0 new results
+ 0 fixed results
+
+
+settings.js
+ 0 new results
+ 0 fixed results
+
+
+sftp_key.js
+ 0 new results
+ 0 fixed results
+
+
+af_ZA.js
+ 0 new results
+ 0 fixed results
+
+
+ar.js
+ 0 new results
+ 0 fixed results
+
+
+ast.js
+ 0 new results
+ 0 fixed results
+
+
+az.js
+ 0 new results
+ 0 fixed results
+
+
+bg_BG.js
+ 0 new results
+ 0 fixed results
+
+
+bn_BD.js
+ 0 new results
+ 0 fixed results
+
+
+bn_IN.js
+ 0 new results
+ 0 fixed results
+
+
+bs.js
+ 0 new results
+ 0 fixed results
+
+
+ca.js
+ 0 new results
+ 0 fixed results
+
+
+cs_CZ.js
+ 0 new results
+ 0 fixed results
+
+
+cy_GB.js
+ 0 new results
+ 0 fixed results
+
+
+da.js
+ 0 new results
+ 0 fixed results
+
+
+de_AT.js
+ 0 new results
+ 0 fixed results
+
+
+de_CH.js
+ 0 new results
+ 0 fixed results
+
+
+de_DE.js
+ 0 new results
+ 0 fixed results
+
+
+de.js
+ 0 new results
+ 0 fixed results
+
+
+el.js
+ 0 new results
+ 0 fixed results
+
+
+en_GB.js
+ 0 new results
+ 0 fixed results
+
+
+en@pirate.js
+ 0 new results
+ 0 fixed results
+
+
+eo.js
+ 0 new results
+ 0 fixed results
+
+
+es_AR.js
+ 0 new results
+ 0 fixed results
+
+
+es_CL.js
+ 0 new results
+ 0 fixed results
+
+
+es.js
+ 0 new results
+ 0 fixed results
+
+
+es_MX.js
+ 0 new results
+ 0 fixed results
+
+
+et_EE.js
+ 0 new results
+ 0 fixed results
+
+
+eu_ES.js
+ 0 new results
+ 0 fixed results
+
+
+eu.js
+ 0 new results
+ 0 fixed results
+
+
+fa.js
+ 0 new results
+ 0 fixed results
+
+
+fi_FI.js
+ 0 new results
+ 0 fixed results
+
+
+fi.js
+ 0 new results
+ 0 fixed results
+
+
+fr.js
+ 0 new results
+ 0 fixed results
+
+
+gl.js
+ 0 new results
+ 0 fixed results
+
+
+he.js
+ 0 new results
+ 0 fixed results
+
+
+hi.js
+ 0 new results
+ 0 fixed results
+
+
+hr.js
+ 0 new results
+ 0 fixed results
+
+
+hu_HU.js
+ 0 new results
+ 0 fixed results
+
+
+hy.js
+ 0 new results
+ 0 fixed results
+
+
+ia.js
+ 0 new results
+ 0 fixed results
+
+
+id.js
+ 0 new results
+ 0 fixed results
+
+
+is.js
+ 0 new results
+ 0 fixed results
+
+
+it.js
+ 0 new results
+ 0 fixed results
+
+
+ja.js
+ 0 new results
+ 0 fixed results
+
+
+jv.js
+ 0 new results
+ 0 fixed results
+
+
+ka_GE.js
+ 0 new results
+ 0 fixed results
+
+
+km.js
+ 0 new results
+ 0 fixed results
+
+
+kn.js
+ 0 new results
+ 0 fixed results
+
+
+ko.js
+ 0 new results
+ 0 fixed results
+
+
+ku_IQ.js
+ 0 new results
+ 0 fixed results
+
+
+lb.js
+ 0 new results
+ 0 fixed results
+
+
+lt_LT.js
+ 0 new results
+ 0 fixed results
+
+
+lv.js
+ 0 new results
+ 0 fixed results
+
+
+mk.js
+ 0 new results
+ 0 fixed results
+
+
+mn.js
+ 0 new results
+ 0 fixed results
+
+
+ms_MY.js
+ 0 new results
+ 0 fixed results
+
+
+my_MM.js
+ 0 new results
+ 0 fixed results
+
+
+nb_NO.js
+ 0 new results
+ 0 fixed results
+
+
+nl.js
+ 0 new results
+ 0 fixed results
+
+
+nn_NO.js
+ 0 new results
+ 0 fixed results
+
+
+oc.js
+ 0 new results
+ 0 fixed results
+
+
+pa.js
+ 0 new results
+ 0 fixed results
+
+
+pl.js
+ 0 new results
+ 0 fixed results
+
+
+pt_BR.js
+ 0 new results
+ 0 fixed results
+
+
+pt_PT.js
+ 0 new results
+ 0 fixed results
+
+
+ro.js
+ 0 new results
+ 0 fixed results
+
+
+ru.js
+ 0 new results
+ 0 fixed results
+
+
+si_LK.js
+ 0 new results
+ 0 fixed results
+
+
+sk.js
+ 0 new results
+ 0 fixed results
+
+
+sk_SK.js
+ 0 new results
+ 0 fixed results
+
+
+sl.js
+ 0 new results
+ 0 fixed results
+
+
+sq.js
+ 0 new results
+ 0 fixed results
+
+
+sr.js
+ 0 new results
+ 0 fixed results
+
+
+sr@latin.js
+ 0 new results
+ 0 fixed results
+
+
+sv.js
+ 0 new results
+ 0 fixed results
+
+
+ta_LK.js
+ 0 new results
+ 0 fixed results
+
+
+te.js
+ 0 new results
+ 0 fixed results
+
+
+th_TH.js
+ 0 new results
+ 0 fixed results
+
+
+tr.js
+ 0 new results
+ 0 fixed results
+
+
+ug.js
+ 0 new results
+ 0 fixed results
+
+
+uk.js
+ 0 new results
+ 0 fixed results
+
+
+ur_PK.js
+ 0 new results
+ 0 fixed results
+
+
+vi.js
+ 0 new results
+ 0 fixed results
+
+
+zh_CN.js
+ 0 new results
+ 0 fixed results
+
+
+zh_HK.js
+ 0 new results
+ 0 fixed results
+
+
+zh_TW.js
+ 0 new results
+ 0 fixed results
+
+
+amazons3.php
+ 0 new results
+ 0 fixed results
+
+
+api.php
+ 0 new results
+ 0 fixed results
+
+
+configadapter.php
+ 0 new results
+ 0 fixed results
+
+
+config.php
+ 0 new results
+ 0 fixed results
+
+
+dropbox.php
+ 0 new results
+ 0 fixed results
+
+
+etagpropagator.php
+ 0 new results
+ 0 fixed results
+
+
+ftp.php
+ 0 new results
+ 0 fixed results
+
+
+google.php
+ 0 new results
+ 0 fixed results
+
+
+notfoundexception.php
+ 0 new results
+ 0 fixed results
+
+
+nextcloud.php
+ 0 new results
+ 0 fixed results
+
+
+personalmount.php
+ 0 new results
+ 0 fixed results
+
+
+sftp_key.php
+ 0 new results
+ 0 fixed results
+
+
+sftp.php
+ 0 new results
+ 0 fixed results
+
+
+smb_oc.php
+ 0 new results
+ 0 fixed results
+
+
+smb.php
+ 0 new results
+ 0 fixed results
+
+
+storageconfig.php
+ 0 new results
+ 0 fixed results
+
+
+streamwrapper.php
+ 0 new results
+ 0 fixed results
+
+
+swift.php
+ 0 new results
+ 0 fixed results
+
+
+list.php
+ 0 new results
+ 0 fixed results
+
+
+personal.php
+ 0 new results
+ 0 fixed results
+
+
+globalstoragesservice.php
+ 0 new results
+ 0 fixed results
+
+
+storagesservice.php
+ 0 new results
+ 0 fixed results
+
+
+userstoragesservice.php
+ 0 new results
+ 0 fixed results
+
+
+settings.php
+ 0 new results
+ 0 fixed results
+
+
+list.php
+ 0 new results
+ 0 fixed results
+
+
+settings.php
+ 0 new results
+ 0 fixed results
+
+
+amazons3migration.php
+ 0 new results
+ 0 fixed results
+
+
+appSpec.js
+ 0 new results
+ 0 fixed results
+
+
+amazons3.php
+ 0 new results
+ 0 fixed results
+
+
+dropbox.php
+ 0 new results
+ 0 fixed results
+
+
+ftp.php
+ 0 new results
+ 0 fixed results
+
+
+google.php
+ 0 new results
+ 0 fixed results
+
+
+nextcloud.php
+ 0 new results
+ 0 fixed results
+
+
+sftp_key.php
+ 0 new results
+ 0 fixed results
+
+
+sftp.php
+ 0 new results
+ 0 fixed results
+
+
+smb.php
+ 0 new results
+ 0 fixed results
+
+
+swift.php
+ 0 new results
+ 0 fixed results
+
+
+webdav.php
+ 0 new results
+ 0 fixed results
+
+
+config.php
+ 0 new results
+ 0 fixed results
+
+
+globalstoragescontrollertest.php
+ 0 new results
+ 0 fixed results
+
+
+storagescontrollertest.php
+ 0 new results
+ 0 fixed results
+
+
+userstoragescontrollertest.php
+ 0 new results
+ 0 fixed results
+
+
+dynamicmountconfig.php
+ 0 new results
+ 0 fixed results
+
+
+etagpropagator.php
+ 0 new results
+ 0 fixed results
+
+
+mountsfilelistSpec.js
+ 0 new results
+ 0 fixed results
+
+
+settingsSpec.js
+ 0 new results
+ 0 fixed results
+
+
+mountconfig.php
+ 0 new results
+ 0 fixed results
+
+
+nextcloudfunctions.php
+ 0 new results
+ 0 fixed results
+
+
+globalstoragesservicetest.php
+ 0 new results
+ 0 fixed results
+
+
+storagesservicetest.php
+ 0 new results
+ 0 fixed results
+
+
+userstoragesservicetest.php
+ 0 new results
+ 0 fixed results
+
+
+storageconfigtest.php
+ 0 new results
+ 0 fixed results
+
+
+index.php
+ 0 new results
+ 0 fixed results
+
+
+admin.js
+ 0 new results
+ 0 fixed results
+
+
+app.js
+ 0 new results
+ 0 fixed results
+
+
+breadcrumb.js
+ 0 new results
+ 0 fixed results
+
+
+favoritesfilelist.js
+ 0 new results
+ 0 fixed results
+
+
+favoritesplugin.js
+ 0 new results
+ 0 fixed results
+
+
+fileactions.js
+ 0 new results
+ 0 fixed results
+
+
+filelist.js
+ 0 new results
+ 0 fixed results
+
+
+files.js
+ 0 new results
+ 0 fixed results
+
+
+filesummary.js
+ 0 new results
+ 0 fixed results
+
+
+file-upload.js
+ 0 new results
+ 0 fixed results
+
+
+keyboardshortcuts.js
+ 0 new results
+ 0 fixed results
+
+
+navigation.js
+ 0 new results
+ 0 fixed results
+
+
+search.js
+ 0 new results
+ 0 fixed results
+
+
+tagsplugin.js
+ 0 new results
+ 0 fixed results
+
+
+upload.js
+ 0 new results
+ 0 fixed results
+
+
+activityhelper.php
+ 0 new results
+ 0 fixed results
+
+
+activity.php
+ 0 new results
+ 0 fixed results
+
+
+app.php
+ 0 new results
+ 0 fixed results
+
+
+capabilities.php
+ 0 new results
+ 0 fixed results
+
+
+helper.php
+ 0 new results
+ 0 fixed results
+
+
+list.php
+ 0 new results
+ 0 fixed results
+
+
+tagservice.php
+ 0 new results
+ 0 fixed results
+
+
+external.php
+ 0 new results
+ 0 fixed results
+
+
+list.php
+ 0 new results
+ 0 fixed results
+
+
+publicpreview.php
+ 0 new results
+ 0 fixed results
+
+
+shareinfo.php
+ 0 new results
+ 0 fixed results
+
+
+testremote.php
+ 0 new results
+ 0 fixed results
+
+
+local.php
+ 0 new results
+ 0 fixed results
+
+
+server2server.php
+ 0 new results
+ 0 fixed results
+
+
+application.php
+ 0 new results
+ 0 fixed results
+
+
+app.php
+ 0 new results
+ 0 fixed results
+
+
+routes.php
+ 0 new results
+ 0 fixed results
+
+
+update.php
+ 0 new results
+ 0 fixed results
+
+
+404.css
+ 0 new results
+ 0 fixed results
+
+
+authenticate.css
+ 0 new results
+ 0 fixed results
+
+
+mobile.css
+ 0 new results
+ 0 fixed results
+
+
+public.css
+ 0 new results
+ 0 fixed results
+
+
+sharedfilelist.css
+ 0 new results
+ 0 fixed results
+
+
+app.js
+ 0 new results
+ 0 fixed results
+
+
+external.js
+ 0 new results
+ 0 fixed results
+
+
+public.js
+ 0 new results
+ 0 fixed results
+
+
+settings-admin.js
+ 0 new results
+ 0 fixed results
+
+
+sharedfilelist.js
+ 0 new results
+ 0 fixed results
+
+
+share.js
+ 0 new results
+ 0 fixed results
+
+
+activity.php
+ 0 new results
+ 0 fixed results
+
+
+cache.php
+ 0 new results
+ 0 fixed results
+
+
+capabilities.php
+ 0 new results
+ 0 fixed results
+
+
+publicauth.php
+ 0 new results
+ 0 fixed results
+
+
+externalsharescontroller.php
+ 0 new results
+ 0 fixed results
+
+
+sharecontroller.php
+ 0 new results
+ 0 fixed results
+
+
+deleteorphanedsharesjob.php
+ 0 new results
+ 0 fixed results
+
+
+exceptions.php
+ 0 new results
+ 0 fixed results
+
+
+cache.php
+ 0 new results
+ 0 fixed results
+
+
+manager.php
+ 0 new results
+ 0 fixed results
+
+
+mount.php
+ 0 new results
+ 0 fixed results
+
+
+scanner.php
+ 0 new results
+ 0 fixed results
+
+
+storage.php
+ 0 new results
+ 0 fixed results
+
+
+helper.php
+ 0 new results
+ 0 fixed results
+
+
+hooks.php
+ 0 new results
+ 0 fixed results
+
+
+isharedstorage.php
+ 0 new results
+ 0 fixed results
+
+
+maintainer.php
+ 0 new results
+ 0 fixed results
+
+
+sharingcheckmiddleware.php
+ 0 new results
+ 0 fixed results
+
+
+migration.php
+ 0 new results
+ 0 fixed results
+
+
+mountprovider.php
+ 0 new results
+ 0 fixed results
+
+
+changewatcher.php
+ 0 new results
+ 0 fixed results
+
+
+propagationmanager.php
+ 0 new results
+ 0 fixed results
+
+
+recipientpropagator.php
+ 0 new results
+ 0 fixed results
+
+
+readonlywrapper.php
+ 0 new results
+ 0 fixed results
+
+
+scanner.php
+ 0 new results
+ 0 fixed results
+
+
+sharedmount.php
+ 0 new results
+ 0 fixed results
+
+
+sharedstorage.php
+ 0 new results
+ 0 fixed results
+
+
+file.php
+ 0 new results
+ 0 fixed results
+
+
+folder.php
+ 0 new results
+ 0 fixed results
+
+
+updater.php
+ 0 new results
+ 0 fixed results
+
+
+watcher.php
+ 0 new results
+ 0 fixed results
+
+
+list.php
+ 0 new results
+ 0 fixed results
+
+
+public.php
+ 0 new results
+ 0 fixed results
+
+
+publicwebdav.php
+ 0 new results
+ 0 fixed results
+
+
+settings-admin.php
+ 0 new results
+ 0 fixed results
+
+
+authenticate.php
+ 0 new results
+ 0 fixed results
+
+
+list.php
+ 0 new results
+ 0 fixed results
+
+
+part.404.php
+ 0 new results
+ 0 fixed results
+
+
+public.php
+ 0 new results
+ 0 fixed results
+
+
+settings-admin.php
+ 0 new results
+ 0 fixed results
+
+
+activity.php
+ 0 new results
+ 0 fixed results
+
+
+api.php
+ 0 new results
+ 0 fixed results
+
+
+backend.php
+ 0 new results
+ 0 fixed results
+
+
+cache.php
+ 0 new results
+ 0 fixed results
+
+
+capabilities.php
+ 0 new results
+ 0 fixed results
+
+
+sharecontroller.php
+ 0 new results
+ 0 fixed results
+
+
+deleteorphanedsharesjobtest.php
+ 0 new results
+ 0 fixed results
+
+
+etagpropagation.php
+ 0 new results
+ 0 fixed results
+
+
+cache.php
+ 0 new results
+ 0 fixed results
+
+
+managertest.php
+ 0 new results
+ 0 fixed results
+
+
+externalstorage.php
+ 0 new results
+ 0 fixed results
+
+
+helper.php
+ 0 new results
+ 0 fixed results
+
+
+appSpec.js
+ 0 new results
+ 0 fixed results
+
+
+externalSpec.js
+ 0 new results
+ 0 fixed results
+
+
+sharedfilelistSpec.js
+ 0 new results
+ 0 fixed results
+
+
+shareSpec.js
+ 0 new results
+ 0 fixed results
+
+
+sharingcheckmiddleware.php
+ 0 new results
+ 0 fixed results
+
+
+migrationtest.php
+ 0 new results
+ 0 fixed results
+
+
+permissions.php
+ 0 new results
+ 0 fixed results
+
+
+server2server.php
+ 0 new results
+ 0 fixed results
+
+
+sharedmount.php
+ 0 new results
+ 0 fixed results
+
+
+sharedstorage.php
+ 0 new results
+ 0 fixed results
+
+
+share.php
+ 0 new results
+ 0 fixed results
+
+
+sizepropagation.php
+ 0 new results
+ 0 fixed results
+
+
+testcase.php
+ 0 new results
+ 0 fixed results
+
+
+unsharechildren.php
+ 0 new results
+ 0 fixed results
+
+
+updater.php
+ 0 new results
+ 0 fixed results
+
+
+watcher.php
+ 0 new results
+ 0 fixed results
+
+
+simplelist.php
+ 0 new results
+ 0 fixed results
+
+
+admin.php
+ 0 new results
+ 0 fixed results
+
+
+appnavigation.php
+ 0 new results
+ 0 fixed results
+
+
+index.php
+ 0 new results
+ 0 fixed results
+
+
+list.php
+ 0 new results
+ 0 fixed results
+
+
+simplelist.php
+ 0 new results
+ 0 fixed results
+
+
+activitytest.php
+ 0 new results
+ 0 fixed results
+
+
+ajax_rename.php
+ 0 new results
+ 0 fixed results
+
+
+deleteorphanedfilestest.php
+ 0 new results
+ 0 fixed results
+
+
+apicontrollertest.php
+ 0 new results
+ 0 fixed results
+
+
+helper.php
+ 0 new results
+ 0 fixed results
+
+
+appSpec.js
+ 0 new results
+ 0 fixed results
+
+
+breadcrumbSpec.js
+ 0 new results
+ 0 fixed results
+
+
+favoritesfilelistspec.js
+ 0 new results
+ 0 fixed results
+
+
+favoritespluginspec.js
+ 0 new results
+ 0 fixed results
+
+
+fileactionsSpec.js
+ 0 new results
+ 0 fixed results
+
+
+filelistSpec.js
+ 0 new results
+ 0 fixed results
+
+
+filesSpec.js
+ 0 new results
+ 0 fixed results
+
+
+filesummarySpec.js
+ 0 new results
+ 0 fixed results
+
+
+fileUploadSpec.js
+ 0 new results
+ 0 fixed results
+
+
+tagspluginspec.js
+ 0 new results
+ 0 fixed results
+
+
+tagservice.php
+ 0 new results
+ 0 fixed results
+
+
+delete.php
+ 0 new results
+ 0 fixed results
+
+
+isEmpty.php
+ 0 new results
+ 0 fixed results
+
+
+list.php
+ 0 new results
+ 0 fixed results
+
+
+preview.php
+ 0 new results
+ 0 fixed results
+
+
+undelete.php
+ 0 new results
+ 0 fixed results
+
+
+app.php
+ 0 new results
+ 0 fixed results
+
+
+routes.php
+ 0 new results
+ 0 fixed results
+
+
+update.php
+ 0 new results
+ 0 fixed results
+
+
+expire.php
+ 0 new results
+ 0 fixed results
+
+
+trash.css
+ 0 new results
+ 0 fixed results
+
+
+app.js
+ 0 new results
+ 0 fixed results
+
+
+filelist.js
+ 0 new results
+ 0 fixed results
+
+
+capabilities.php
+ 0 new results
+ 0 fixed results
+
+
+copyrecursiveexception.php
+ 0 new results
+ 0 fixed results
+
+
+helper.php
+ 0 new results
+ 0 fixed results
+
+
+hooks.php
+ 0 new results
+ 0 fixed results
+
+
+storage.php
+ 0 new results
+ 0 fixed results
+
+
+trashbin.php
+ 0 new results
+ 0 fixed results
+
+
+list.php
+ 0 new results
+ 0 fixed results
+
+
+index.php
+ 0 new results
+ 0 fixed results
+
+
+appSpec.js
+ 0 new results
+ 0 fixed results
+
+
+filelistSpec.js
+ 0 new results
+ 0 fixed results
+
+
+storage.php
+ 0 new results
+ 0 fixed results
+
+
+trashbin.php
+ 0 new results
+ 0 fixed results
+
+
+getVersions.php
+ 0 new results
+ 0 fixed results
+
+
+preview.php
+ 0 new results
+ 0 fixed results
+
+
+rollbackVersion.php
+ 0 new results
+ 0 fixed results
+
+
+app.php
+ 0 new results
+ 0 fixed results
+
+
+routes.php
+ 0 new results
+ 0 fixed results
+
+
+update.php
+ 0 new results
+ 0 fixed results
+
+
+expire.php
+ 0 new results
+ 0 fixed results
+
+
+versions.css
+ 0 new results
+ 0 fixed results
+
+
+download.php
+ 0 new results
+ 0 fixed results
+
+
+versions.js
+ 0 new results
+ 0 fixed results
+
+
+capabilities.php
+ 0 new results
+ 0 fixed results
+
+
+hooks.php
+ 0 new results
+ 0 fixed results
+
+
+storage.php
+ 0 new results
+ 0 fixed results
+
+
+versions.php
+ 0 new results
+ 0 fixed results
+
+
+app.php
+ 0 new results
+ 0 fixed results
+
+
+routes.php
+ 0 new results
+ 0 fixed results
+
+
+apps.php
+ 0 new results
+ 0 fixed results
+
+
+groups.php
+ 0 new results
+ 0 fixed results
+
+
+users.php
+ 0 new results
+ 0 fixed results
+
+
+appstest.php
+ 0 new results
+ 0 fixed results
+
+
+groupstest.php
+ 0 new results
+ 0 fixed results
+
+
+testcase.php
+ 0 new results
+ 0 fixed results
+
+
+userstest.php
+ 0 new results
+ 0 fixed results
+
+
+clearMappings.php
+ 0 new results
+ 0 fixed results
+
+
+deleteConfiguration.php
+ 0 new results
+ 0 fixed results
+
+
+getConfiguration.php
+ 0 new results
+ 0 fixed results
+
+
+getNewServerConfigPrefix.php
+ 0 new results
+ 0 fixed results
+
+
+setConfiguration.php
+ 0 new results
+ 0 fixed results
+
+
+testConfiguration.php
+ 0 new results
+ 0 fixed results
+
+
+wizard.php
+ 0 new results
+ 0 fixed results
+
+
+app.php
+ 0 new results
+ 0 fixed results
+
+
+install.php
+ 0 new results
+ 0 fixed results
+
+
+register_command.php
+ 0 new results
+ 0 fixed results
+
+
+routes.php
+ 0 new results
+ 0 fixed results
+
+
+checkuser.php
+ 0 new results
+ 0 fixed results
+
+
+createemptyconfig.php
+ 0 new results
+ 0 fixed results
+
+
+deleteconfig.php
+ 0 new results
+ 0 fixed results
+
+
+search.php
+ 0 new results
+ 0 fixed results
+
+
+setconfig.php
+ 0 new results
+ 0 fixed results
+
+
+showconfig.php
+ 0 new results
+ 0 fixed results
+
+
+showremnants.php
+ 0 new results
+ 0 fixed results
+
+
+testconfig.php
+ 0 new results
+ 0 fixed results
+
+
+settings.css
+ 0 new results
+ 0 fixed results
+
+
+group_ldap.php
+ 0 new results
+ 0 fixed results
+
+
+group_proxy.php
+ 0 new results
+ 0 fixed results
+
+
+configModel.js
+ 0 new results
+ 0 fixed results
+
+
+controller.js
+ 0 new results
+ 0 fixed results
+
+
+view.js
+ 0 new results
+ 0 fixed results
+
+
+wizardDetectorAvailableAttributes.js
+ 0 new results
+ 0 fixed results
+
+
+wizardDetectorBaseDN.js
+ 0 new results
+ 0 fixed results
+
+
+wizardDetectorClearGroupMappings.js
+ 0 new results
+ 0 fixed results
+
+
+wizardDetectorClearUserMappings.js
+ 0 new results
+ 0 fixed results
+
+
+wizardDetectorEmailAttribute.js
+ 0 new results
+ 0 fixed results
+
+
+wizardDetectorFeatureAbstract.js
+ 0 new results
+ 0 fixed results
+
+
+wizardDetectorFilterGroup.js
+ 0 new results
+ 0 fixed results
+
+
+wizardDetectorFilterLogin.js
+ 0 new results
+ 0 fixed results
+
+
+wizardDetectorFilterUser.js
+ 0 new results
+ 0 fixed results
+
+
+wizardDetectorGeneric.js
+ 0 new results
+ 0 fixed results
+
+
+wizardDetectorGroupCount.js
+ 0 new results
+ 0 fixed results
+
+
+wizardDetectorGroupObjectClasses.js
+ 0 new results
+ 0 fixed results
+
+
+wizardDetectorGroupsForGroups.js
+ 0 new results
+ 0 fixed results
+
+
+wizardDetectorGroupsForUsers.js
+ 0 new results
+ 0 fixed results
+
+
+wizardDetectorPort.js
+ 0 new results
+ 0 fixed results
+
+
+wizardDetectorQueue.js
+ 0 new results
+ 0 fixed results
+
+
+wizardDetectorSimpleRequestAbstract.js
+ 0 new results
+ 0 fixed results
+
+
+wizardDetectorTestAbstract.js
+ 0 new results
+ 0 fixed results
+
+
+wizardDetectorTestBaseDN.js
+ 0 new results
+ 0 fixed results
+
+
+wizardDetectorTestConfiguration.js
+ 0 new results
+ 0 fixed results
+
+
+wizardDetectorTestLoginName.js
+ 0 new results
+ 0 fixed results
+
+
+wizardDetectorUserCount.js
+ 0 new results
+ 0 fixed results
+
+
+wizardDetectorUserDisplayNameAttribute.js
+ 0 new results
+ 0 fixed results
+
+
+wizardDetectorUserGroupAssociation.js
+ 0 new results
+ 0 fixed results
+
+
+wizardDetectorUserObjectClasses.js
+ 0 new results
+ 0 fixed results
+
+
+wizardFilterOnTypeFactory.js
+ 0 new results
+ 0 fixed results
+
+
+wizardFilterOnType.js
+ 0 new results
+ 0 fixed results
+
+
+wizard.js
+ 0 new results
+ 0 fixed results
+
+
+wizardObject.js
+ 0 new results
+ 0 fixed results
+
+
+wizardTabAbstractFilter.js
+ 0 new results
+ 0 fixed results
+
+
+wizardTabAdvanced.js
+ 0 new results
+ 0 fixed results
+
+
+wizardTabElementary.js
+ 0 new results
+ 0 fixed results
+
+
+wizardTabExpert.js
+ 0 new results
+ 0 fixed results
+
+
+wizardTabGeneric.js
+ 0 new results
+ 0 fixed results
+
+
+wizardTabGroupFilter.js
+ 0 new results
+ 0 fixed results
+
+
+wizardTabLoginFilter.js
+ 0 new results
+ 0 fixed results
+
+
+wizardTabUserFilter.js
+ 0 new results
+ 0 fixed results
+
+
+access.php
+ 0 new results
+ 0 fixed results
+
+
+backendutility.php
+ 0 new results
+ 0 fixed results
+
+
+configuration.php
+ 0 new results
+ 0 fixed results
+
+
+connection.php
+ 0 new results
+ 0 fixed results
+
+
+filesystemhelper.php
+ 0 new results
+ 0 fixed results
+
+
+helper.php
+ 0 new results
+ 0 fixed results
+
+
+ildapwrapper.php
+ 0 new results
+ 0 fixed results
+
+
+cleanup.php
+ 0 new results
+ 0 fixed results
+
+
+jobs.php
+ 0 new results
+ 0 fixed results
+
+
+ldap.php
+ 0 new results
+ 0 fixed results
+
+
+ldaputility.php
+ 0 new results
+ 0 fixed results
+
+
+logwrapper.php
+ 0 new results
+ 0 fixed results
+
+
+abstractmapping.php
+ 0 new results
+ 0 fixed results
+
+
+groupmapping.php
+ 0 new results
+ 0 fixed results
+
+
+usermapping.php
+ 0 new results
+ 0 fixed results
+
+
+proxy.php
+ 0 new results
+ 0 fixed results
+
+
+deletedusersindex.php
+ 0 new results
+ 0 fixed results
+
+
+iusertools.php
+ 0 new results
+ 0 fixed results
+
+
+manager.php
+ 0 new results
+ 0 fixed results
+
+
+offlineuser.php
+ 0 new results
+ 0 fixed results
+
+
+user.php
+ 0 new results
+ 0 fixed results
+
+
+wizard.php
+ 0 new results
+ 0 fixed results
+
+
+wizardresult.php
+ 0 new results
+ 0 fixed results
+
+
+settings.php
+ 0 new results
+ 0 fixed results
+
+
+part.settingcontrols.php
+ 0 new results
+ 0 fixed results
+
+
+part.wizardcontrols.php
+ 0 new results
+ 0 fixed results
+
+
+part.wizard-groupfilter.php
+ 0 new results
+ 0 fixed results
+
+
+part.wizard-loginfilter.php
+ 0 new results
+ 0 fixed results
+
+
+part.wizard-server.php
+ 0 new results
+ 0 fixed results
+
+
+part.wizard-userfilter.php
+ 0 new results
+ 0 fixed results
+
+
+settings.php
+ 0 new results
+ 0 fixed results
+
+
+access.php
+ 0 new results
+ 0 fixed results
+
+
+connection.php
+ 0 new results
+ 0 fixed results
+
+
+group_ldap.php
+ 2 new results
+ 0 fixed results
+
+
+exceptionOnLostConnection.php
+ 0 new results
+ 0 fixed results
+
+
+cleanup.php
+ 0 new results
+ 0 fixed results
+
+
+abstractmappingtest.php
+ 0 new results
+ 0 fixed results
+
+
+groupmapping.php
+ 0 new results
+ 0 fixed results
+
+
+usermapping.php
+ 0 new results
+ 0 fixed results
+
+
+user_ldap.php
+ 0 new results
+ 0 fixed results
+
+
+manager.php
+ 0 new results
+ 0 fixed results
+
+
+user.php
+ 0 new results
+ 0 fixed results
+
+
+wizard.php
+ 0 new results
+ 0 fixed results
+
+
+user_ldap.php
+ 0 new results
+ 0 fixed results
+
+
+user_proxy.php
+ 0 new results
+ 0 fixed results
+
+
+app.php
+ 0 new results
+ 0 fixed results
+
+
+settings.php
+ 0 new results
+ 0 fixed results
+
+
+settings.php
+ 0 new results
+ 0 fixed results
+
+
+user_webdavauth.php
+ 0 new results
+ 0 fixed results
+
+
+console.php
+ 0 new results
+ 0 fixed results
+
+
+appconfig.php
+ 0 new results
+ 0 fixed results
+
+
+preview.php
+ 0 new results
+ 0 fixed results
+
+
+share.php
+ 0 new results
+ 0 fixed results
+
+
+update.php
+ 0 new results
+ 0 fixed results
+
+
+application.php
+ 0 new results
+ 0 fixed results
+
+
+avatarcontroller.php
+ 0 new results
+ 0 fixed results
+
+
+checkcode.php
+ 0 new results
+ 0 fixed results
+
+
+disable.php
+ 0 new results
+ 0 fixed results
+
+
+enable.php
+ 0 new results
+ 0 fixed results
+
+
+listapps.php
+ 0 new results
+ 0 fixed results
+
+
+ajax.php
+ 0 new results
+ 0 fixed results
+
+
+base.php
+ 0 new results
+ 0 fixed results
+
+
+cron.php
+ 0 new results
+ 0 fixed results
+
+
+webcron.php
+ 0 new results
+ 0 fixed results
+
+
+base.php
+ 0 new results
+ 0 fixed results
+
+
+check.php
+ 0 new results
+ 0 fixed results
+
+
+converttype.php
+ 0 new results
+ 0 fixed results
+
+
+generatechangescript.php
+ 0 new results
+ 0 fixed results
+
+
+disable.php
+ 0 new results
+ 0 fixed results
+
+
+enable.php
+ 0 new results
+ 0 fixed results
+
+
+listmodules.php
+ 0 new results
+ 0 fixed results
+
+
+setdefaultmodule.php
+ 0 new results
+ 0 fixed results
+
+
+status.php
+ 0 new results
+ 0 fixed results
+
+
+createjs.php
+ 0 new results
+ 0 fixed results
+
+
+install.php
+ 0 new results
+ 0 fixed results
+
+
+mode.php
+ 0 new results
+ 0 fixed results
+
+
+repair.php
+ 0 new results
+ 0 fixed results
+
+
+singleuser.php
+ 0 new results
+ 0 fixed results
+
+
+status.php
+ 0 new results
+ 0 fixed results
+
+
+upgrade.php
+ 0 new results
+ 0 fixed results
+
+
+add.php
+ 0 new results
+ 0 fixed results
+
+
+delete.php
+ 0 new results
+ 0 fixed results
+
+
+lastseen.php
+ 0 new results
+ 0 fixed results
+
+
+report.php
+ 0 new results
+ 0 fixed results
+
+
+resetpassword.php
+ 0 new results
+ 0 fixed results
+
+
+apps.css
+ 0 new results
+ 0 fixed results
+
+
+fixes.css
+ 0 new results
+ 0 fixed results
+
+
+fonts.css
+ 0 new results
+ 0 fixed results
+
+
+header.css
+ 0 new results
+ 0 fixed results
+
+
+icons.css
+ 0 new results
+ 0 fixed results
+
+
+jquery.ocdialog.css
+ 0 new results
+ 0 fixed results
+
+
+jquery-tipsy.css
+ 0 new results
+ 0 fixed results
+
+
+jquery-ui-fixes.css
+ 0 new results
+ 0 fixed results
+
+
+mobile.css
+ 0 new results
+ 0 fixed results
+
+
+multiselect.css
+ 0 new results
+ 0 fixed results
+
+
+share.css
+ 0 new results
+ 0 fixed results
+
+
+styles.css
+ 0 new results
+ 0 fixed results
+
+
+apps.js
+ 0 new results
+ 0 fixed results
+
+
+avatar.js
+ 0 new results
+ 0 fixed results
+
+
+backgroundjobs.js
+ 0 new results
+ 0 fixed results
+
+
+compatibility.js
+ 0 new results
+ 0 fixed results
+
+
+config.js
+ 0 new results
+ 0 fixed results
+
+
+config.php
+ 0 new results
+ 0 fixed results
+
+
+eventsource.js
+ 0 new results
+ 0 fixed results
+
+
+installation.js
+ 0 new results
+ 0 fixed results
+
+
+jquery.avatar.js
+ 0 new results
+ 0 fixed results
+
+
+jquery.ocdialog.js
+ 0 new results
+ 0 fixed results
+
+
+jquery-showpassword.js
+ 0 new results
+ 0 fixed results
+
+
+js.js
+ 0 new results
+ 0 fixed results
+
+
+l10n.js
+ 0 new results
+ 0 fixed results
+
+
+lostpassword.js
+ 0 new results
+ 0 fixed results
+
+
+maintenance-check.js
+ 0 new results
+ 0 fixed results
+
+
+multiselect.js
+ 0 new results
+ 0 fixed results
+
+
+oc-dialogs.js
+ 0 new results
+ 0 fixed results
+
+
+oc-requesttoken.js
+ 0 new results
+ 0 fixed results
+
+
+octemplate.js
+ 0 new results
+ 0 fixed results
+
+
+placeholder.js
+ 0 new results
+ 0 fixed results
+
+
+placeholders.js
+ 0 new results
+ 0 fixed results
+
+
+setupchecks.js
+ 0 new results
+ 0 fixed results
+
+
+setup.js
+ 0 new results
+ 0 fixed results
+
+
+share.js
+ 0 new results
+ 0 fixed results
+
+
+singleselect.js
+ 0 new results
+ 0 fixed results
+
+
+tags.js
+ 0 new results
+ 0 fixed results
+
+
+sinon-1.7.3.js
+ 0 new results
+ 0 fixed results
+
+
+specHelper.js
+ 0 new results
+ 0 fixed results
+
+
+coreSpec.js
+ 0 new results
+ 0 fixed results
+
+
+l10nSpec.js
+ 0 new results
+ 0 fixed results
+
+
+setupchecksSpec.js
+ 0 new results
+ 0 fixed results
+
+
+shareSpec.js
+ 0 new results
+ 0 fixed results
+
+
+update.js
+ 0 new results
+ 0 fixed results
+
+
+update-notification.js
+ 0 new results
+ 0 fixed results
+
+
+visitortimezone.js
+ 0 new results
+ 0 fixed results
+
+
+lostcontroller.php
+ 0 new results
+ 0 fixed results
+
+
+lostpassword.css
+ 0 new results
+ 0 fixed results
+
+
+resetpassword.css
+ 0 new results
+ 0 fixed results
+
+
+email.php
+ 0 new results
+ 0 fixed results
+
+
+resetpassword.php
+ 0 new results
+ 0 fixed results
+
+
+register_command.php
+ 0 new results
+ 0 fixed results
+
+
+routes.php
+ 0 new results
+ 0 fixed results
+
+
+search.php
+ 0 new results
+ 0 fixed results
+
+
+results.css
+ 0 new results
+ 0 fixed results
+
+
+search.js
+ 0 new results
+ 0 fixed results
+
+
+controller.php
+ 0 new results
+ 0 fixed results
+
+
+strings.php
+ 0 new results
+ 0 fixed results
+
+
+controller.php
+ 0 new results
+ 0 fixed results
+
+
+403.php
+ 0 new results
+ 0 fixed results
+
+
+404.php
+ 0 new results
+ 0 fixed results
+
+
+altmail.php
+ 0 new results
+ 0 fixed results
+
+
+error.php
+ 0 new results
+ 0 fixed results
+
+
+exception.php
+ 0 new results
+ 0 fixed results
+
+
+installation.php
+ 0 new results
+ 0 fixed results
+
+
+layout.base.php
+ 0 new results
+ 0 fixed results
+
+
+layout.guest.php
+ 0 new results
+ 0 fixed results
+
+
+layout.noscript.warning.php
+ 0 new results
+ 0 fixed results
+
+
+layout.user.php
+ 0 new results
+ 0 fixed results
+
+
+login.php
+ 0 new results
+ 0 fixed results
+
+
+mail.php
+ 0 new results
+ 0 fixed results
+
+
+singleuser.user.php
+ 0 new results
+ 0 fixed results
+
+
+untrustedDomain.php
+ 0 new results
+ 0 fixed results
+
+
+update.admin.php
+ 0 new results
+ 0 fixed results
+
+
+update.user.php
+ 0 new results
+ 0 fixed results
+
+
+usercontroller.php
+ 0 new results
+ 0 fixed results
+
+
+cron.php
+ 0 new results
+ 0 fixed results
+
+
+index.php
+ 0 new results
+ 0 fixed results
+
+
+autoloader.php
+ 0 new results
+ 0 fixed results
+
+
+base.php
+ 0 new results
+ 0 fixed results
+
+
+activitymanager.php
+ 0 new results
+ 0 fixed results
+
+
+allconfig.php
+ 0 new results
+ 0 fixed results
+
+
+api.php
+ 0 new results
+ 0 fixed results
+
+
+appmanager.php
+ 0 new results
+ 0 fixed results
+
+
+codechecker.php
+ 0 new results
+ 0 fixed results
+
+
+codecheckvisitor.php
+ 0 new results
+ 0 fixed results
+
+
+appconfig.php
+ 0 new results
+ 0 fixed results
+
+
+dependencyanalyzer.php
+ 0 new results
+ 0 fixed results
+
+
+app.php
+ 0 new results
+ 0 fixed results
+
+
+api.php
+ 0 new results
+ 0 fixed results
+
+
+db.php
+ 0 new results
+ 0 fixed results
+
+
+dicontainer.php
+ 0 new results
+ 0 fixed results
+
+
+dispatcher.php
+ 0 new results
+ 0 fixed results
+
+
+output.php
+ 0 new results
+ 0 fixed results
+
+
+http.php
+ 0 new results
+ 0 fixed results
+
+
+request.php
+ 0 new results
+ 0 fixed results
+
+
+middlewaredispatcher.php
+ 0 new results
+ 0 fixed results
+
+
+corsmiddleware.php
+ 0 new results
+ 0 fixed results
+
+
+securityexception.php
+ 0 new results
+ 0 fixed results
+
+
+securitymiddleware.php
+ 0 new results
+ 0 fixed results
+
+
+sessionmiddleware.php
+ 0 new results
+ 0 fixed results
+
+
+routeactionhandler.php
+ 0 new results
+ 0 fixed results
+
+
+routeconfig.php
+ 0 new results
+ 0 fixed results
+
+
+controllermethodreflector.php
+ 0 new results
+ 0 fixed results
+
+
+simplecontainer.php
+ 0 new results
+ 0 fixed results
+
+
+timefactory.php
+ 0 new results
+ 0 fixed results
+
+
+apphelper.php
+ 0 new results
+ 0 fixed results
+
+
+infoparser.php
+ 0 new results
+ 0 fixed results
+
+
+app.php
+ 0 new results
+ 0 fixed results
+
+
+platform.php
+ 0 new results
+ 0 fixed results
+
+
+platformrepository.php
+ 0 new results
+ 0 fixed results
+
+
+archive.php
+ 0 new results
+ 0 fixed results
+
+
+tar.php
+ 0 new results
+ 0 fixed results
+
+
+zip.php
+ 0 new results
+ 0 fixed results
+
+
+arrayparser.php
+ 0 new results
+ 0 fixed results
+
+
+separatorfilter.php
+ 0 new results
+ 0 fixed results
+
+
+avatarmanager.php
+ 0 new results
+ 0 fixed results
+
+
+avatar.php
+ 0 new results
+ 0 fixed results
+
+
+joblist.php
+ 0 new results
+ 0 fixed results
+
+
+job.php
+ 0 new results
+ 0 fixed results
+
+
+queuedjob.php
+ 0 new results
+ 0 fixed results
+
+
+regularjob.php
+ 0 new results
+ 0 fixed results
+
+
+queuedjob.php
+ 0 new results
+ 0 fixed results
+
+
+timedjob.php
+ 0 new results
+ 0 fixed results
+
+
+broker.php
+ 0 new results
+ 0 fixed results
+
+
+fileglobalgc.php
+ 0 new results
+ 0 fixed results
+
+
+fileglobal.php
+ 0 new results
+ 0 fixed results
+
+
+file.php
+ 0 new results
+ 0 fixed results
+
+
+cache.php
+ 0 new results
+ 0 fixed results
+
+
+usercache.php
+ 0 new results
+ 0 fixed results
+
+
+asyncbus.php
+ 0 new results
+ 0 fixed results
+
+
+callablejob.php
+ 0 new results
+ 0 fixed results
+
+
+closurejob.php
+ 0 new results
+ 0 fixed results
+
+
+commandjob.php
+ 0 new results
+ 0 fixed results
+
+
+fileaccess.php
+ 0 new results
+ 0 fixed results
+
+
+queuebus.php
+ 0 new results
+ 0 fixed results
+
+
+config.php
+ 0 new results
+ 0 fixed results
+
+
+appenabledplugin.php
+ 0 new results
+ 0 fixed results
+
+
+auth.php
+ 0 new results
+ 0 fixed results
+
+
+blocklegacyclientplugin.php
+ 0 new results
+ 0 fixed results
+
+
+copyetagheaderplugin.php
+ 0 new results
+ 0 fixed results
+
+
+custompropertiesbackend.php
+ 0 new results
+ 0 fixed results
+
+
+directory.php
+ 0 new results
+ 0 fixed results
+
+
+dummygetresponseplugin.php
+ 0 new results
+ 0 fixed results
+
+
+entitytoolarge.php
+ 0 new results
+ 0 fixed results
+
+
+filelocked.php
+ 0 new results
+ 0 fixed results
+
+
+invalidpath.php
+ 0 new results
+ 0 fixed results
+
+
+exceptionloggerplugin.php
+ 0 new results
+ 0 fixed results
+
+
+unsupportedmediatype.php
+ 0 new results
+ 0 fixed results
+
+
+file.php
+ 0 new results
+ 0 fixed results
+
+
+filesplugin.php
+ 0 new results
+ 0 fixed results
+
+
+maintenanceplugin.php
+ 0 new results
+ 0 fixed results
+
+
+node.php
+ 0 new results
+ 0 fixed results
+
+
+objecttree.php
+ 0 new results
+ 0 fixed results
+
+
+principal.php
+ 0 new results
+ 0 fixed results
+
+
+quotaplugin.php
+ 0 new results
+ 0 fixed results
+
+
+server.php
+ 0 new results
+ 0 fixed results
+
+
+taglist.php
+ 0 new results
+ 0 fixed results
+
+
+tagsplugin.php
+ 0 new results
+ 0 fixed results
+
+
+application.php
+ 0 new results
+ 0 fixed results
+
+
+localaddressbook.php
+ 0 new results
+ 0 fixed results
+
+
+contactsmanager.php
+ 0 new results
+ 0 fixed results
+
+
+databaseexception.php
+ 0 new results
+ 0 fixed results
+
+
+databasesetupexception.php
+ 0 new results
+ 0 fixed results
+
+
+datetimeformatter.php
+ 0 new results
+ 0 fixed results
+
+
+datetimezone.php
+ 0 new results
+ 0 fixed results
+
+
+adaptermysql.php
+ 0 new results
+ 0 fixed results
+
+
+adapteroci8.php
+ 0 new results
+ 0 fixed results
+
+
+adapterpgsql.php
+ 0 new results
+ 0 fixed results
+
+
+adapter.php
+ 0 new results
+ 0 fixed results
+
+
+adaptersqlite.php
+ 0 new results
+ 0 fixed results
+
+
+adaptersqlsrv.php
+ 0 new results
+ 0 fixed results
+
+
+connectionfactory.php
+ 0 new results
+ 0 fixed results
+
+
+connection.php
+ 0 new results
+ 0 fixed results
+
+
+mdb2schemamanager.php
+ 0 new results
+ 0 fixed results
+
+
+mdb2schemareader.php
+ 0 new results
+ 0 fixed results
+
+
+mdb2schemawriter.php
+ 0 new results
+ 0 fixed results
+
+
+migrationexception.php
+ 0 new results
+ 0 fixed results
+
+
+migrator.php
+ 0 new results
+ 0 fixed results
+
+
+mssqlmigrator.php
+ 0 new results
+ 0 fixed results
+
+
+mysqlmigrator.php
+ 0 new results
+ 0 fixed results
+
+
+nocheckmigrator.php
+ 0 new results
+ 0 fixed results
+
+
+ocsqliteplatform.php
+ 0 new results
+ 0 fixed results
+
+
+oracleconnection.php
+ 0 new results
+ 0 fixed results
+
+
+oraclemigrator.php
+ 0 new results
+ 0 fixed results
+
+
+pgsqltools.php
+ 0 new results
+ 0 fixed results
+
+
+db.php
+ 0 new results
+ 0 fixed results
+
+
+sqlitemigrator.php
+ 0 new results
+ 0 fixed results
+
+
+sqlitesessioninit.php
+ 0 new results
+ 0 fixed results
+
+
+statementwrapper.php
+ 0 new results
+ 0 fixed results
+
+
+defaults.php
+ 0 new results
+ 0 fixed results
+
+
+eventlogger.php
+ 0 new results
+ 0 fixed results
+
+
+event.php
+ 0 new results
+ 0 fixed results
+
+
+nulleventlogger.php
+ 0 new results
+ 0 fixed results
+
+
+nullquerylogger.php
+ 0 new results
+ 0 fixed results
+
+
+querylogger.php
+ 0 new results
+ 0 fixed results
+
+
+query.php
+ 0 new results
+ 0 fixed results
+
+
+decryptionfailedexception.php
+ 0 new results
+ 0 fixed results
+
+
+emptyencryptiondataexception.php
+ 0 new results
+ 0 fixed results
+
+
+encryptionfailedexception.php
+ 0 new results
+ 0 fixed results
+
+
+encryptionheaderkeyexistsexception.php
+ 0 new results
+ 0 fixed results
+
+
+encryptionheadertolargeexception.php
+ 0 new results
+ 0 fixed results
+
+
+modulealreadyexistsexception.php
+ 0 new results
+ 0 fixed results
+
+
+moduledoesnotexistsexception.php
+ 0 new results
+ 0 fixed results
+
+
+unknowncipherexception.php
+ 0 new results
+ 0 fixed results
+
+
+file.php
+ 0 new results
+ 0 fixed results
+
+
+hookmanager.php
+ 0 new results
+ 0 fixed results
+
+
+storage.php
+ 0 new results
+ 0 fixed results
+
+
+manager.php
+ 0 new results
+ 0 fixed results
+
+
+update.php
+ 0 new results
+ 0 fixed results
+
+
+util.php
+ 0 new results
+ 0 fixed results
+
+
+eventsource.php
+ 0 new results
+ 0 fixed results
+
+
+filechunking.php
+ 0 new results
+ 0 fixed results
+
+
+cache.php
+ 0 new results
+ 0 fixed results
+
+
+changepropagator.php
+ 0 new results
+ 0 fixed results
+
+
+homecache.php
+ 0 new results
+ 0 fixed results
+
+
+scanner.php
+ 0 new results
+ 0 fixed results
+
+
+storage.php
+ 0 new results
+ 0 fixed results
+
+
+updater.php
+ 0 new results
+ 0 fixed results
+
+
+watcher.php
+ 0 new results
+ 0 fixed results
+
+
+cachejail.php
+ 0 new results
+ 0 fixed results
+
+
+cachepermissionsmask.php
+ 0 new results
+ 0 fixed results
+
+
+cachewrapper.php
+ 0 new results
+ 0 fixed results
+
+
+mountprovidercollection.php
+ 0 new results
+ 0 fixed results
+
+
+fileinfo.php
+ 0 new results
+ 0 fixed results
+
+
+filesystem.php
+ 0 new results
+ 0 fixed results
+
+
+mapper.php
+ 0 new results
+ 0 fixed results
+
+
+manager.php
+ 0 new results
+ 0 fixed results
+
+
+mountpoint.php
+ 0 new results
+ 0 fixed results
+
+
+moveablemount.php
+ 0 new results
+ 0 fixed results
+
+
+file.php
+ 0 new results
+ 0 fixed results
+
+
+folder.php
+ 0 new results
+ 0 fixed results
+
+
+node.php
+ 0 new results
+ 0 fixed results
+
+
+nonexistingfile.php
+ 0 new results
+ 0 fixed results
+
+
+nonexistingfolder.php
+ 0 new results
+ 0 fixed results
+
+
+root.php
+ 0 new results
+ 0 fixed results
+
+
+homeobjectstorestorage.php
+ 0 new results
+ 0 fixed results
+
+
+noopscanner.php
+ 0 new results
+ 0 fixed results
+
+
+objectstorestorage.php
+ 0 new results
+ 0 fixed results
+
+
+swift.php
+ 0 new results
+ 0 fixed results
+
+
+files.php
+ 0 new results
+ 0 fixed results
+
+
+common.php
+ 0 new results
+ 0 fixed results
+
+
+commontest.php
+ 0 new results
+ 0 fixed results
+
+
+dav.php
+ 0 new results
+ 0 fixed results
+
+
+home.php
+ 0 new results
+ 0 fixed results
+
+
+local.php
+ 0 new results
+ 0 fixed results
+
+
+localtempfiletrait.php
+ 0 new results
+ 0 fixed results
+
+
+mappedlocal.php
+ 0 new results
+ 0 fixed results
+
+
+storagefactory.php
+ 0 new results
+ 0 fixed results
+
+
+storage.php
+ 0 new results
+ 0 fixed results
+
+
+temporary.php
+ 0 new results
+ 0 fixed results
+
+
+encryption.php
+ 0 new results
+ 0 fixed results
+
+
+jail.php
+ 0 new results
+ 0 fixed results
+
+
+permissionsmask.php
+ 0 new results
+ 0 fixed results
+
+
+quota.php
+ 0 new results
+ 0 fixed results
+
+
+wrapper.php
+ 0 new results
+ 0 fixed results
+
+
+close.php
+ 0 new results
+ 0 fixed results
+
+
+dir.php
+ 0 new results
+ 0 fixed results
+
+
+encryption.php
+ 0 new results
+ 0 fixed results
+
+
+oc.php
+ 0 new results
+ 0 fixed results
+
+
+quota.php
+ 0 new results
+ 0 fixed results
+
+
+staticstream.php
+ 0 new results
+ 0 fixed results
+
+
+detection.php
+ 0 new results
+ 0 fixed results
+
+
+templatemanager.php
+ 0 new results
+ 0 fixed results
+
+
+scanner.php
+ 0 new results
+ 0 fixed results
+
+
+view.php
+ 0 new results
+ 0 fixed results
+
+
+forbiddenexception.php
+ 0 new results
+ 0 fixed results
+
+
+backend.php
+ 0 new results
+ 0 fixed results
+
+
+database.php
+ 0 new results
+ 0 fixed results
+
+
+dummy.php
+ 0 new results
+ 0 fixed results
+
+
+example.php
+ 0 new results
+ 0 fixed results
+
+
+group.php
+ 0 new results
+ 0 fixed results
+
+
+interface.php
+ 0 new results
+ 0 fixed results
+
+
+manager.php
+ 0 new results
+ 0 fixed results
+
+
+metadata.php
+ 0 new results
+ 0 fixed results
+
+
+group.php
+ 0 new results
+ 0 fixed results
+
+
+helper.php
+ 0 new results
+ 0 fixed results
+
+
+hintexception.php
+ 0 new results
+ 0 fixed results
+
+
+hook.php
+ 0 new results
+ 0 fixed results
+
+
+basicemitter.php
+ 0 new results
+ 0 fixed results
+
+
+emitter.php
+ 0 new results
+ 0 fixed results
+
+
+forwardingemitter.php
+ 0 new results
+ 0 fixed results
+
+
+legacyemitter.php
+ 0 new results
+ 0 fixed results
+
+
+publicemitter.php
+ 0 new results
+ 0 fixed results
+
+
+client.php
+ 0 new results
+ 0 fixed results
+
+
+clientservice.php
+ 0 new results
+ 0 fixed results
+
+
+response.php
+ 0 new results
+ 0 fixed results
+
+
+httphelper.php
+ 0 new results
+ 0 fixed results
+
+
+image.php
+ 0 new results
+ 0 fixed results
+
+
+installer.php
+ 0 new results
+ 0 fixed results
+
+
+json.php
+ 0 new results
+ 0 fixed results
+
+
+factory.php
+ 0 new results
+ 0 fixed results
+
+
+l10n.php
+ 0 new results
+ 0 fixed results
+
+
+string.php
+ 0 new results
+ 0 fixed results
+
+
+largefilehelper.php
+ 0 new results
+ 0 fixed results
+
+
+appconfig.php
+ 0 new results
+ 0 fixed results
+
+
+config.php
+ 0 new results
+ 0 fixed results
+
+
+log.php
+ 0 new results
+ 0 fixed results
+
+
+search.php
+ 0 new results
+ 0 fixed results
+
+
+file.php
+ 0 new results
+ 0 fixed results
+
+
+provider.php
+ 0 new results
+ 0 fixed results
+
+
+result.php
+ 0 new results
+ 0 fixed results
+
+
+memcachelockingprovider.php
+ 0 new results
+ 0 fixed results
+
+
+errorhandler.php
+ 0 new results
+ 0 fixed results
+
+
+errorlog.php
+ 0 new results
+ 0 fixed results
+
+
+nextcloud.php
+ 0 new results
+ 0 fixed results
+
+
+log.php
+ 0 new results
+ 0 fixed results
+
+
+rotate.php
+ 0 new results
+ 0 fixed results
+
+
+syslog.php
+ 0 new results
+ 0 fixed results
+
+
+mailer.php
+ 0 new results
+ 0 fixed results
+
+
+message.php
+ 0 new results
+ 0 fixed results
+
+
+apc.php
+ 0 new results
+ 0 fixed results
+
+
+apcu.php
+ 0 new results
+ 0 fixed results
+
+
+arraycache.php
+ 0 new results
+ 0 fixed results
+
+
+cache.php
+ 0 new results
+ 0 fixed results
+
+
+castrait.php
+ 0 new results
+ 0 fixed results
+
+
+factory.php
+ 0 new results
+ 0 fixed results
+
+
+memcached.php
+ 0 new results
+ 0 fixed results
+
+
+null.php
+ 0 new results
+ 0 fixed results
+
+
+redis.php
+ 0 new results
+ 0 fixed results
+
+
+xcache.php
+ 0 new results
+ 0 fixed results
+
+
+mimetypes.list.php
+ 0 new results
+ 0 fixed results
+
+
+naturalsort_defaultcollator.php
+ 0 new results
+ 0 fixed results
+
+
+naturalsort.php
+ 0 new results
+ 0 fixed results
+
+
+navigationmanager.php
+ 0 new results
+ 0 fixed results
+
+
+needsupdateexception.php
+ 0 new results
+ 0 fixed results
+
+
+notsquareexception.php
+ 0 new results
+ 0 fixed results
+
+
+ocsclient.php
+ 0 new results
+ 0 fixed results
+
+
+cloud.php
+ 0 new results
+ 0 fixed results
+
+
+config.php
+ 0 new results
+ 0 fixed results
+
+
+person.php
+ 0 new results
+ 0 fixed results
+
+
+ocs.php
+ 0 new results
+ 0 fixed results
+
+
+privatedata.php
+ 0 new results
+ 0 fixed results
+
+
+result.php
+ 0 new results
+ 0 fixed results
+
+
+bitmap.php
+ 0 new results
+ 0 fixed results
+
+
+bmp.php
+ 0 new results
+ 0 fixed results
+
+
+font.php
+ 0 new results
+ 0 fixed results
+
+
+gif.php
+ 0 new results
+ 0 fixed results
+
+
+illustrator.php
+ 0 new results
+ 0 fixed results
+
+
+image.php
+ 0 new results
+ 0 fixed results
+
+
+jpeg.php
+ 0 new results
+ 0 fixed results
+
+
+previewmanager.php
+ 0 new results
+ 0 fixed results
+
+
+markdown.php
+ 0 new results
+ 0 fixed results
+
+
+movie.php
+ 0 new results
+ 0 fixed results
+
+
+mp3.php
+ 0 new results
+ 0 fixed results
+
+
+msoffice2003.php
+ 0 new results
+ 0 fixed results
+
+
+msoffice2007.php
+ 0 new results
+ 0 fixed results
+
+
+msofficedoc.php
+ 0 new results
+ 0 fixed results
+
+
+office.php
+ 0 new results
+ 0 fixed results
+
+
+opendocument.php
+ 0 new results
+ 0 fixed results
+
+
+pdf.php
+ 0 new results
+ 0 fixed results
+
+
+photoshop.php
+ 0 new results
+ 0 fixed results
+
+
+preview.php
+ 0 new results
+ 0 fixed results
+
+
+png.php
+ 0 new results
+ 0 fixed results
+
+
+postscript.php
+ 0 new results
+ 0 fixed results
+
+
+provider.php
+ 0 new results
+ 0 fixed results
+
+
+staroffice.php
+ 0 new results
+ 0 fixed results
+
+
+svg.php
+ 0 new results
+ 0 fixed results
+
+
+tiff.php
+ 0 new results
+ 0 fixed results
+
+
+txt.php
+ 0 new results
+ 0 fixed results
+
+
+xbitmap.php
+ 0 new results
+ 0 fixed results
+
+
+repairexception.php
+ 0 new results
+ 0 fixed results
+
+
+repair.php
+ 0 new results
+ 0 fixed results
+
+
+repairstep.php
+ 0 new results
+ 0 fixed results
+
+
+response.php
+ 0 new results
+ 0 fixed results
+
+
+cachingrouter.php
+ 0 new results
+ 0 fixed results
+
+
+route.php
+ 0 new results
+ 0 fixed results
+
+
+router.php
+ 0 new results
+ 0 fixed results
+
+
+search.php
+ 0 new results
+ 0 fixed results
+
+
+file.php
+ 0 new results
+ 0 fixed results
+
+
+audio.php
+ 0 new results
+ 0 fixed results
+
+
+file.php
+ 0 new results
+ 0 fixed results
+
+
+folder.php
+ 0 new results
+ 0 fixed results
+
+
+image.php
+ 0 new results
+ 0 fixed results
+
+
+certificatemanager.php
+ 0 new results
+ 0 fixed results
+
+
+certificate.php
+ 0 new results
+ 0 fixed results
+
+
+crypto.php
+ 0 new results
+ 0 fixed results
+
+
+hasher.php
+ 0 new results
+ 0 fixed results
+
+
+securerandom.php
+ 0 new results
+ 0 fixed results
+
+
+stringutils.php
+ 0 new results
+ 0 fixed results
+
+
+trusteddomainhelper.php
+ 0 new results
+ 0 fixed results
+
+
+servernotavailableexception.php
+ 0 new results
+ 0 fixed results
+
+
+server.php
+ 0 new results
+ 0 fixed results
+
+
+serviceunavailableexception.php
+ 0 new results
+ 0 fixed results
+
+
+internal.php
+ 0 new results
+ 0 fixed results
+
+
+memory.php
+ 0 new results
+ 0 fixed results
+
+
+session.php
+ 0 new results
+ 0 fixed results
+
+
+abstractdatabase.php
+ 0 new results
+ 0 fixed results
+
+
+mssql.php
+ 0 new results
+ 0 fixed results
+
+
+mysql.php
+ 0 new results
+ 0 fixed results
+
+
+oci.php
+ 0 new results
+ 0 fixed results
+
+
+setup.php
+ 0 new results
+ 0 fixed results
+
+
+postgresql.php
+ 0 new results
+ 0 fixed results
+
+
+sqlite.php
+ 0 new results
+ 0 fixed results
+
+
+constants.php
+ 0 new results
+ 0 fixed results
+
+
+helper.php
+ 0 new results
+ 0 fixed results
+
+
+hooks.php
+ 0 new results
+ 0 fixed results
+
+
+mailnotifications.php
+ 0 new results
+ 0 fixed results
+
+
+searchresultsorter.php
+ 0 new results
+ 0 fixed results
+
+
+share.php
+ 0 new results
+ 0 fixed results
+
+
+subadmin.php
+ 0 new results
+ 0 fixed results
+
+
+systemconfig.php
+ 0 new results
+ 0 fixed results
+
+
+tagmapper.php
+ 0 new results
+ 0 fixed results
+
+
+tag.php
+ 0 new results
+ 0 fixed results
+
+
+tagmanager.php
+ 0 new results
+ 0 fixed results
+
+
+tags.php
+ 0 new results
+ 0 fixed results
+
+
+base.php
+ 0 new results
+ 0 fixed results
+
+
+cssresourcelocator.php
+ 0 new results
+ 0 fixed results
+
+
+functions.php
+ 0 new results
+ 0 fixed results
+
+
+jsresourcelocator.php
+ 0 new results
+ 0 fixed results
+
+
+templatelayout.php
+ 0 new results
+ 0 fixed results
+
+
+template.php
+ 0 new results
+ 0 fixed results
+
+
+resourcelocator.php
+ 0 new results
+ 0 fixed results
+
+
+resourcenotfoundexception.php
+ 0 new results
+ 0 fixed results
+
+
+templatefilelocator.php
+ 0 new results
+ 0 fixed results
+
+
+tempmanager.php
+ 0 new results
+ 0 fixed results
+
+
+updater.php
+ 0 new results
+ 0 fixed results
+
+
+urlgenerator.php
+ 0 new results
+ 0 fixed results
+
+
+backend.php
+ 0 new results
+ 0 fixed results
+
+
+database.php
+ 0 new results
+ 0 fixed results
+
+
+dummy.php
+ 0 new results
+ 0 fixed results
+
+
+interface.php
+ 0 new results
+ 0 fixed results
+
+
+loginexception.php
+ 0 new results
+ 0 fixed results
+
+
+manager.php
+ 0 new results
+ 0 fixed results
+
+
+nouserexception.php
+ 0 new results
+ 0 fixed results
+
+
+user.php
+ 0 new results
+ 0 fixed results
+
+
+session.php
+ 0 new results
+ 0 fixed results
+
+
+user.php
+ 0 new results
+ 0 fixed results
+
+
+util.php
+ 0 new results
+ 0 fixed results
+
+
+iconsumer.php
+ 0 new results
+ 0 fixed results
+
+
+iextension.php
+ 0 new results
+ 0 fixed results
+
+
+imanager.php
+ 0 new results
+ 0 fixed results
+
+
+api.php
+ 0 new results
+ 0 fixed results
+
+
+apicontroller.php
+ 0 new results
+ 0 fixed results
+
+
+app.php
+ 0 new results
+ 0 fixed results
+
+
+controller.php
+ 0 new results
+ 0 fixed results
+
+
+doesnotexistexception.php
+ 0 new results
+ 0 fixed results
+
+
+entity.php
+ 0 new results
+ 0 fixed results
+
+
+mapper.php
+ 0 new results
+ 0 fixed results
+
+
+multipleobjectsreturnedexception.php
+ 0 new results
+ 0 fixed results
+
+
+contentsecuritypolicy.php
+ 0 new results
+ 0 fixed results
+
+
+datadisplayresponse.php
+ 0 new results
+ 0 fixed results
+
+
+datadownloadresponse.php
+ 0 new results
+ 0 fixed results
+
+
+dataresponse.php
+ 0 new results
+ 0 fixed results
+
+
+downloadresponse.php
+ 0 new results
+ 0 fixed results
+
+
+icallbackresponse.php
+ 0 new results
+ 0 fixed results
+
+
+ioutput.php
+ 0 new results
+ 0 fixed results
+
+
+jsonresponse.php
+ 0 new results
+ 0 fixed results
+
+
+notfoundresponse.php
+ 0 new results
+ 0 fixed results
+
+
+ocsresponse.php
+ 0 new results
+ 0 fixed results
+
+
+http.php
+ 0 new results
+ 0 fixed results
+
+
+redirectresponse.php
+ 0 new results
+ 0 fixed results
+
+
+response.php
+ 0 new results
+ 0 fixed results
+
+
+streamresponse.php
+ 0 new results
+ 0 fixed results
+
+
+templateresponse.php
+ 0 new results
+ 0 fixed results
+
+
+iapi.php
+ 0 new results
+ 0 fixed results
+
+
+iappcontainer.php
+ 0 new results
+ 0 fixed results
+
+
+middleware.php
+ 0 new results
+ 0 fixed results
+
+
+ocscontroller.php
+ 0 new results
+ 0 fixed results
+
+
+queryexception.php
+ 0 new results
+ 0 fixed results
+
+
+icontrollermethodreflector.php
+ 0 new results
+ 0 fixed results
+
+
+itimefactory.php
+ 0 new results
+ 0 fixed results
+
+
+iappmanager.php
+ 0 new results
+ 0 fixed results
+
+
+app.php
+ 0 new results
+ 0 fixed results
+
+
+iapachebackend.php
+ 0 new results
+ 0 fixed results
+
+
+ijoblist.php
+ 0 new results
+ 0 fixed results
+
+
+ijob.php
+ 0 new results
+ 0 fixed results
+
+
+backgroundjob.php
+ 0 new results
+ 0 fixed results
+
+
+ibus.php
+ 0 new results
+ 0 fixed results
+
+
+icommand.php
+ 0 new results
+ 0 fixed results
+
+
+config.php
+ 0 new results
+ 0 fixed results
+
+
+constants.php
+ 0 new results
+ 0 fixed results
+
+
+imanager.php
+ 0 new results
+ 0 fixed results
+
+
+contacts.php
+ 0 new results
+ 0 fixed results
+
+
+db.php
+ 0 new results
+ 0 fixed results
+
+
+defaults.php
+ 0 new results
+ 0 fixed results
+
+
+ieventlogger.php
+ 0 new results
+ 0 fixed results
+
+
+ievent.php
+ 0 new results
+ 0 fixed results
+
+
+iquerylogger.php
+ 0 new results
+ 0 fixed results
+
+
+iquery.php
+ 0 new results
+ 0 fixed results
+
+
+genericencryptionexception.php
+ 0 new results
+ 0 fixed results
+
+
+iencryptionmodule.php
+ 0 new results
+ 0 fixed results
+
+
+ifile.php
+ 0 new results
+ 0 fixed results
+
+
+imanager.php
+ 0 new results
+ 0 fixed results
+
+
+istorage.php
+ 0 new results
+ 0 fixed results
+
+
+alreadyexistsexception.php
+ 0 new results
+ 0 fixed results
+
+
+imountprovidercollection.php
+ 0 new results
+ 0 fixed results
+
+
+imountprovider.php
+ 0 new results
+ 0 fixed results
+
+
+entitytoolargeexception.php
+ 0 new results
+ 0 fixed results
+
+
+fileinfo.php
+ 0 new results
+ 0 fixed results
+
+
+filenametoolongexception.php
+ 0 new results
+ 0 fixed results
+
+
+file.php
+ 0 new results
+ 0 fixed results
+
+
+folder.php
+ 0 new results
+ 0 fixed results
+
+
+ihomestorage.php
+ 0 new results
+ 0 fixed results
+
+
+invalidcharacterinpathexception.php
+ 0 new results
+ 0 fixed results
+
+
+invalidcontentexception.php
+ 0 new results
+ 0 fixed results
+
+
+invalidpathexception.php
+ 0 new results
+ 0 fixed results
+
+
+irootfolder.php
+ 0 new results
+ 0 fixed results
+
+
+locknotacquiredexception.php
+ 0 new results
+ 0 fixed results
+
+
+imountpoint.php
+ 0 new results
+ 0 fixed results
+
+
+node.php
+ 0 new results
+ 0 fixed results
+
+
+notenoughspaceexception.php
+ 0 new results
+ 0 fixed results
+
+
+notfoundexception.php
+ 0 new results
+ 0 fixed results
+
+
+notpermittedexception.php
+ 0 new results
+ 0 fixed results
+
+
+iobjectstore.php
+ 0 new results
+ 0 fixed results
+
+
+files.php
+ 0 new results
+ 0 fixed results
+
+
+reservedwordexception.php
+ 0 new results
+ 0 fixed results
+
+
+storageinvalidexception.php
+ 0 new results
+ 0 fixed results
+
+
+istoragefactory.php
+ 0 new results
+ 0 fixed results
+
+
+storagenotavailableexception.php
+ 0 new results
+ 0 fixed results
+
+
+storage.php
+ 0 new results
+ 0 fixed results
+
+
+groupinterface.php
+ 0 new results
+ 0 fixed results
+
+
+iclient.php
+ 0 new results
+ 0 fixed results
+
+
+iclientservice.php
+ 0 new results
+ 0 fixed results
+
+
+iresponse.php
+ 0 new results
+ 0 fixed results
+
+
+iaddressbook.php
+ 0 new results
+ 0 fixed results
+
+
+iappconfig.php
+ 0 new results
+ 0 fixed results
+
+
+iavatarmanager.php
+ 0 new results
+ 0 fixed results
+
+
+iavatar.php
+ 0 new results
+ 0 fixed results
+
+
+icachefactory.php
+ 0 new results
+ 0 fixed results
+
+
+icache.php
+ 0 new results
+ 0 fixed results
+
+
+icertificatemanager.php
+ 0 new results
+ 0 fixed results
+
+
+icertificate.php
+ 0 new results
+ 0 fixed results
+
+
+iconfig.php
+ 0 new results
+ 0 fixed results
+
+
+icontainer.php
+ 0 new results
+ 0 fixed results
+
+
+idatetimeformatter.php
+ 0 new results
+ 0 fixed results
+
+
+idatetimezone.php
+ 0 new results
+ 0 fixed results
+
+
+idbconnection.php
+ 0 new results
+ 0 fixed results
+
+
+idb.php
+ 0 new results
+ 0 fixed results
+
+
+ieventsource.php
+ 0 new results
+ 0 fixed results
+
+
+igroupmanager.php
+ 0 new results
+ 0 fixed results
+
+
+igroup.php
+ 0 new results
+ 0 fixed results
+
+
+ihelper.php
+ 0 new results
+ 0 fixed results
+
+
+iimage.php
+ 0 new results
+ 0 fixed results
+
+
+il10n.php
+ 0 new results
+ 0 fixed results
+
+
+ilogger.php
+ 0 new results
+ 0 fixed results
+
+
+image.php
+ 0 new results
+ 0 fixed results
+
+
+imemcache.php
+ 0 new results
+ 0 fixed results
+
+
+inavigationmanager.php
+ 0 new results
+ 0 fixed results
+
+
+ipreview.php
+ 0 new results
+ 0 fixed results
+
+
+irequest.php
+ 0 new results
+ 0 fixed results
+
+
+isearch.php
+ 0 new results
+ 0 fixed results
+
+
+iservercontainer.php
+ 0 new results
+ 0 fixed results
+
+
+isession.php
+ 0 new results
+ 0 fixed results
+
+
+itagmanager.php
+ 0 new results
+ 0 fixed results
+
+
+itags.php
+ 0 new results
+ 0 fixed results
+
+
+itempmanager.php
+ 0 new results
+ 0 fixed results
+
+
+iurlgenerator.php
+ 0 new results
+ 0 fixed results
+
+
+iuserbackend.php
+ 0 new results
+ 0 fixed results
+
+
+iusermanager.php
+ 0 new results
+ 0 fixed results
+
+
+iuser.php
+ 0 new results
+ 0 fixed results
+
+
+iusersession.php
+ 0 new results
+ 0 fixed results
+
+
+json.php
+ 0 new results
+ 0 fixed results
+
+
+ilockingprovider.php
+ 0 new results
+ 0 fixed results
+
+
+lockedexception.php
+ 0 new results
+ 0 fixed results
+
+
+imailer.php
+ 0 new results
+ 0 fixed results
+
+
+preconditionnotmetexception.php
+ 0 new results
+ 0 fixed results
+
+
+iprovider.php
+ 0 new results
+ 0 fixed results
+
+
+response.php
+ 0 new results
+ 0 fixed results
+
+
+iroute.php
+ 0 new results
+ 0 fixed results
+
+
+irouter.php
+ 0 new results
+ 0 fixed results
+
+
+pagedprovider.php
+ 0 new results
+ 0 fixed results
+
+
+provider.php
+ 0 new results
+ 0 fixed results
+
+
+result.php
+ 0 new results
+ 0 fixed results
+
+
+icrypto.php
+ 0 new results
+ 0 fixed results
+
+
+ihasher.php
+ 0 new results
+ 0 fixed results
+
+
+isecurerandom.php
+ 0 new results
+ 0 fixed results
+
+
+stringutils.php
+ 0 new results
+ 0 fixed results
+
+
+share_backend_collection.php
+ 0 new results
+ 0 fixed results
+
+
+share_backend_file_dependent.php
+ 0 new results
+ 0 fixed results
+
+
+share_backend.php
+ 0 new results
+ 0 fixed results
+
+
+share.php
+ 0 new results
+ 0 fixed results
+
+
+template.php
+ 0 new results
+ 0 fixed results
+
+
+userinterface.php
+ 0 new results
+ 0 fixed results
+
+
+user.php
+ 0 new results
+ 0 fixed results
+
+
+util.php
+ 0 new results
+ 0 fixed results
+
+
+assetcache.php
+ 0 new results
+ 0 fixed results
+
+
+cleantags.php
+ 0 new results
+ 0 fixed results
+
+
+collation.php
+ 0 new results
+ 0 fixed results
+
+
+dropoldtables.php
+ 0 new results
+ 0 fixed results
+
+
+filletags.php
+ 0 new results
+ 0 fixed results
+
+
+innodb.php
+ 0 new results
+ 0 fixed results
+
+
+preview.php
+ 0 new results
+ 0 fixed results
+
+
+repairconfig.php
+ 0 new results
+ 0 fixed results
+
+
+repairlegacystorages.php
+ 0 new results
+ 0 fixed results
+
+
+repairmimetypes.php
+ 0 new results
+ 0 fixed results
+
+
+searchlucenetables.php
+ 0 new results
+ 0 fixed results
+
+
+sqliteautoincrement.php
+ 0 new results
+ 0 fixed results
+
+
+updatecertificatestore.php
+ 0 new results
+ 0 fixed results
+
+
+providers.php
+ 0 new results
+ 0 fixed results
+
+
+routes.php
+ 0 new results
+ 0 fixed results
+
+
+v1.php
+ 0 new results
+ 0 fixed results
+
+
+public.php
+ 0 new results
+ 0 fixed results
+
+
+remote.php
+ 0 new results
+ 0 fixed results
+
+
+admin.php
+ 0 new results
+ 0 fixed results
+
+
+changedisplayname.php
+ 0 new results
+ 0 fixed results
+
+
+disableapp.php
+ 0 new results
+ 0 fixed results
+
+
+enableapp.php
+ 0 new results
+ 0 fixed results
+
+
+geteveryonecount.php
+ 0 new results
+ 0 fixed results
+
+
+installapp.php
+ 0 new results
+ 0 fixed results
+
+
+navigationdetect.php
+ 0 new results
+ 0 fixed results
+
+
+setlanguage.php
+ 0 new results
+ 0 fixed results
+
+
+setquota.php
+ 0 new results
+ 0 fixed results
+
+
+togglegroups.php
+ 0 new results
+ 0 fixed results
+
+
+togglesubadmins.php
+ 0 new results
+ 0 fixed results
+
+
+uninstallapp.php
+ 0 new results
+ 0 fixed results
+
+
+updateapp.php
+ 0 new results
+ 0 fixed results
+
+
+application.php
+ 0 new results
+ 0 fixed results
+
+
+controller.php
+ 0 new results
+ 0 fixed results
+
+
+appsettingscontroller.php
+ 0 new results
+ 0 fixed results
+
+
+certificatecontroller.php
+ 0 new results
+ 0 fixed results
+
+
+checksetupcontroller.php
+ 0 new results
+ 0 fixed results
+
+
+encryptioncontroller.php
+ 0 new results
+ 0 fixed results
+
+
+groupscontroller.php
+ 0 new results
+ 0 fixed results
+
+
+logsettingscontroller.php
+ 0 new results
+ 0 fixed results
+
+
+mailsettingscontroller.php
+ 0 new results
+ 0 fixed results
+
+
+securitysettingscontroller.php
+ 0 new results
+ 0 fixed results
+
+
+userscontroller.php
+ 0 new results
+ 0 fixed results
+
+
+settings.css
+ 0 new results
+ 0 fixed results
+
+
+subadminfactory.php
+ 0 new results
+ 0 fixed results
+
+
+help.php
+ 0 new results
+ 0 fixed results
+
+
+admin.js
+ 0 new results
+ 0 fixed results
+
+
+apps.js
+ 0 new results
+ 0 fixed results
+
+
+log.js
+ 0 new results
+ 0 fixed results
+
+
+old-apps.js
+ 0 new results
+ 0 fixed results
+
+
+personal.js
+ 0 new results
+ 0 fixed results
+
+
+settings.js
+ 0 new results
+ 0 fixed results
+
+
+deleteHandler.js
+ 0 new results
+ 0 fixed results
+
+
+filter.js
+ 0 new results
+ 0 fixed results
+
+
+groups.js
+ 0 new results
+ 0 fixed results
+
+
+users.js
+ 0 new results
+ 0 fixed results
+
+
+languageCodes.php
+ 0 new results
+ 0 fixed results
+
+
+subadminmiddleware.php
+ 0 new results
+ 0 fixed results
+
+
+personal.php
+ 0 new results
+ 0 fixed results
+
+
+routes.php
+ 0 new results
+ 0 fixed results
+
+
+admin.php
+ 0 new results
+ 0 fixed results
+
+
+apps.php
+ 0 new results
+ 0 fixed results
+
+
+email.new_user.php
+ 0 new results
+ 0 fixed results
+
+
+email.new_user_plain_text.php
+ 0 new results
+ 0 fixed results
+
+
+help.php
+ 0 new results
+ 0 fixed results
+
+
+personal.php
+ 0 new results
+ 0 fixed results
+
+
+settings.development.notice.php
+ 0 new results
+ 0 fixed results
+
+
+settings.php
+ 0 new results
+ 0 fixed results
+
+
+main.php
+ 0 new results
+ 0 fixed results
+
+
+part.createuser.php
+ 0 new results
+ 0 fixed results
+
+
+part.grouplist.php
+ 0 new results
+ 0 fixed results
+
+
+part.setquota.php
+ 0 new results
+ 0 fixed results
+
+
+part.userlist.php
+ 0 new results
+ 0 fixed results
+
+
+appsSpec.js
+ 0 new results
+ 0 fixed results
+
+
+deleteHandlerSpec.js
+ 0 new results
+ 0 fixed results
+
+
+users.php
+ 0 new results
+ 0 fixed results
+
+
+status.php
+ 0 new results
+ 0 fixed results
+
+
+protractor_conf.js
+ 0 new results
+ 0 fixed results
+
+
+apps_spec.js
+ 0 new results
+ 0 fixed results
+
+
+folder_spec.js
+ 0 new results
+ 0 fixed results
+
+
+rename_spec.js
+ 0 new results
+ 0 fixed results
+
+
+restore_spec.js
+ 0 new results
+ 0 fixed results
+
+
+search_spec.js
+ 0 new results
+ 0 fixed results
+
+
+sort_spec.js
+ 0 new results
+ 0 fixed results
+
+
+txt_spec.js
+ 0 new results
+ 0 fixed results
+
+
+page.js
+ 0 new results
+ 0 fixed results
+
+
+screenshot.js
+ 0 new results
+ 0 fixed results
+
+
+install_spec.js
+ 0 new results
+ 0 fixed results
+
+
+authentication_spec.js
+ 0 new results
+ 0 fixed results
+
+
+change_password_spec.js
+ 0 new results
+ 0 fixed results
+
+
+new_user_spec.js
+ 0 new results
+ 0 fixed results
+
+
+username_cases_spec.js
+ 0 new results
+ 0 fixed results
+
+
+apps.page.js
+ 0 new results
+ 0 fixed results
+
+
+files.page.js
+ 0 new results
+ 0 fixed results
+
+
+firstRunWizard.page.js
+ 0 new results
+ 0 fixed results
+
+
+install.page.js
+ 0 new results
+ 0 fixed results
+
+
+login.page.js
+ 0 new results
+ 0 fixed results
+
+
+personal.page.js
+ 0 new results
+ 0 fixed results
+
+
+shareApi.page.js
+ 0 new results
+ 0 fixed results
+
+
+user.page.js
+ 0 new results
+ 0 fixed results
+
+
+webdav_api.page.js
+ 0 new results
+ 0 fixed results
+
+
+share_api_spec.js
+ 0 new results
+ 0 fixed results
+
+
+share_spec.js
+ 0 new results
+ 0 fixed results
+
+
+apps.php
+ 0 new results
+ 0 fixed results
+
+
+bootstrap.php
+ 0 new results
+ 0 fixed results
+
+
+avatarcontrollertest.php
+ 0 new results
+ 0 fixed results
+
+
+disabletest.php
+ 0 new results
+ 0 fixed results
+
+
+enabletest.php
+ 0 new results
+ 0 fixed results
+
+
+setdefaultmoduletest.php
+ 0 new results
+ 0 fixed results
+
+
+deletetest.php
+ 0 new results
+ 0 fixed results
+
+
+lastseentest.php
+ 0 new results
+ 0 fixed results
+
+
+lostcontrollertest.php
+ 0 new results
+ 0 fixed results
+
+
+test-const.php
+ 0 new results
+ 0 fixed results
+
+
+test-equal.php
+ 0 new results
+ 0 fixed results
+
+
+test-extends.php
+ 0 new results
+ 0 fixed results
+
+
+test-identical-operator.php
+ 0 new results
+ 0 fixed results
+
+
+test-implements.php
+ 0 new results
+ 0 fixed results
+
+
+test-new.php
+ 0 new results
+ 0 fixed results
+
+
+test-not-equal.php
+ 0 new results
+ 0 fixed results
+
+
+test-static-call.php
+ 0 new results
+ 0 fixed results
+
+
+enable_all.php
+ 0 new results
+ 0 fixed results
+
+
+karma.config.js
+ 0 new results
+ 0 fixed results
+
+
+activitymanager.php
+ 0 new results
+ 0 fixed results
+
+
+allconfig.php
+ 0 new results
+ 0 fixed results
+
+
+api.php
+ 0 new results
+ 0 fixed results
+
+
+codechecker.php
+ 0 new results
+ 0 fixed results
+
+
+appconfig.php
+ 0 new results
+ 0 fixed results
+
+
+dependencyanalyzer.php
+ 0 new results
+ 0 fixed results
+
+
+AppTest.php
+ 0 new results
+ 0 fixed results
+
+
+ApiControllerTest.php
+ 0 new results
+ 0 fixed results
+
+
+ControllerTest.php
+ 0 new results
+ 0 fixed results
+
+
+OCSControllerTest.php
+ 0 new results
+ 0 fixed results
+
+
+EntityTest.php
+ 0 new results
+ 0 fixed results
+
+
+mappertest.php
+ 0 new results
+ 0 fixed results
+
+
+mappertestutility.php
+ 0 new results
+ 0 fixed results
+
+
+DIContainerTest.php
+ 0 new results
+ 0 fixed results
+
+
+ContentSecurityPolicyTest.php
+ 0 new results
+ 0 fixed results
+
+
+DataResponseTest.php
+ 0 new results
+ 0 fixed results
+
+
+DispatcherTest.php
+ 0 new results
+ 0 fixed results
+
+
+DownloadResponseTest.php
+ 0 new results
+ 0 fixed results
+
+
+HttpTest.php
+ 0 new results
+ 0 fixed results
+
+
+JSONResponseTest.php
+ 0 new results
+ 0 fixed results
+
+
+OCSResponseTest.php
+ 0 new results
+ 0 fixed results
+
+
+RedirectResponseTest.php
+ 0 new results
+ 0 fixed results
+
+
+requeststream.php
+ 0 new results
+ 0 fixed results
+
+
+RequestTest.php
+ 0 new results
+ 0 fixed results
+
+
+ResponseTest.php
+ 0 new results
+ 0 fixed results
+
+
+StreamResponseTest.php
+ 0 new results
+ 0 fixed results
+
+
+TemplateResponseTest.php
+ 0 new results
+ 0 fixed results
+
+
+MiddlewareDispatcherTest.php
+ 0 new results
+ 0 fixed results
+
+
+MiddlewareTest.php
+ 0 new results
+ 0 fixed results
+
+
+CORSMiddlewareTest.php
+ 0 new results
+ 0 fixed results
+
+
+SecurityMiddlewareTest.php
+ 0 new results
+ 0 fixed results
+
+
+sessionmiddlewaretest.php
+ 0 new results
+ 0 fixed results
+
+
+RoutingTest.php
+ 0 new results
+ 0 fixed results
+
+
+ControllerMethodReflectorTest.php
+ 0 new results
+ 0 fixed results
+
+
+SimpleContainerTest.php
+ 0 new results
+ 0 fixed results
+
+
+infoparser.php
+ 0 new results
+ 0 fixed results
+
+
+manager.php
+ 0 new results
+ 0 fixed results
+
+
+app.php
+ 0 new results
+ 0 fixed results
+
+
+platformrepository.php
+ 0 new results
+ 0 fixed results
+
+
+archive.php
+ 0 new results
+ 0 fixed results
+
+
+tar.php
+ 0 new results
+ 0 fixed results
+
+
+zip.php
+ 0 new results
+ 0 fixed results
+
+
+autoloader.php
+ 0 new results
+ 0 fixed results
+
+
+avatar.php
+ 0 new results
+ 0 fixed results
+
+
+dummyjoblist.php
+ 0 new results
+ 0 fixed results
+
+
+joblist.php
+ 0 new results
+ 0 fixed results
+
+
+job.php
+ 0 new results
+ 0 fixed results
+
+
+queuedjob.php
+ 0 new results
+ 0 fixed results
+
+
+testjob.php
+ 0 new results
+ 0 fixed results
+
+
+timedjob.php
+ 0 new results
+ 0 fixed results
+
+
+fileglobalgc.php
+ 0 new results
+ 0 fixed results
+
+
+file.php
+ 0 new results
+ 0 fixed results
+
+
+cache.php
+ 0 new results
+ 0 fixed results
+
+
+usercache.php
+ 0 new results
+ 0 fixed results
+
+
+asyncbus.php
+ 0 new results
+ 0 fixed results
+
+
+background.php
+ 0 new results
+ 0 fixed results
+
+
+config.php
+ 0 new results
+ 0 fixed results
+
+
+BlockLegacyClientPluginTest.php
+ 0 new results
+ 0 fixed results
+
+
+copyetagheaderplugintest.php
+ 0 new results
+ 0 fixed results
+
+
+custompropertiesbackend.php
+ 0 new results
+ 0 fixed results
+
+
+directory.php
+ 0 new results
+ 0 fixed results
+
+
+DummyGetResponsePluginTest.php
+ 0 new results
+ 0 fixed results
+
+
+invalidpathtest.php
+ 0 new results
+ 0 fixed results
+
+
+exceptionloggerplugin.php
+ 0 new results
+ 0 fixed results
+
+
+file.php
+ 0 new results
+ 0 fixed results
+
+
+filesplugin.php
+ 0 new results
+ 0 fixed results
+
+
+node.php
+ 0 new results
+ 0 fixed results
+
+
+objecttree.php
+ 0 new results
+ 0 fixed results
+
+
+principal.php
+ 0 new results
+ 0 fixed results
+
+
+quotaplugin.php
+ 0 new results
+ 0 fixed results
+
+
+tagsplugin.php
+ 0 new results
+ 0 fixed results
+
+
+localadressbook.php
+ 0 new results
+ 0 fixed results
+
+
+contactsmanager.php
+ 0 new results
+ 0 fixed results
+
+
+datetimeformatter.php
+ 0 new results
+ 0 fixed results
+
+
+connection.php
+ 0 new results
+ 0 fixed results
+
+
+mdb2schemamanager.php
+ 0 new results
+ 0 fixed results
+
+
+mdb2schemareader.php
+ 0 new results
+ 0 fixed results
+
+
+migrator.php
+ 0 new results
+ 0 fixed results
+
+
+mysqlmigration.php
+ 0 new results
+ 0 fixed results
+
+
+db.php
+ 0 new results
+ 0 fixed results
+
+
+dbschema.php
+ 0 new results
+ 0 fixed results
+
+
+sqlitemigration.php
+ 0 new results
+ 0 fixed results
+
+
+storage.php
+ 0 new results
+ 0 fixed results
+
+
+managertest.php
+ 0 new results
+ 0 fixed results
+
+
+updatetest.php
+ 0 new results
+ 0 fixed results
+
+
+utiltest.php
+ 0 new results
+ 0 fixed results
+
+
+errorHandler.php
+ 0 new results
+ 0 fixed results
+
+
+cache.php
+ 0 new results
+ 0 fixed results
+
+
+changepropagator.php
+ 0 new results
+ 0 fixed results
+
+
+homecache.php
+ 0 new results
+ 0 fixed results
+
+
+scanner.php
+ 0 new results
+ 0 fixed results
+
+
+updaterlegacy.php
+ 0 new results
+ 0 fixed results
+
+
+updater.php
+ 0 new results
+ 0 fixed results
+
+
+watcher.php
+ 0 new results
+ 0 fixed results
+
+
+cachejail.php
+ 0 new results
+ 0 fixed results
+
+
+cachepermissionsmask.php
+ 0 new results
+ 0 fixed results
+
+
+etagtest.php
+ 0 new results
+ 0 fixed results
+
+
+filesystem.php
+ 0 new results
+ 0 fixed results
+
+
+mapper.php
+ 0 new results
+ 0 fixed results
+
+
+manager.php
+ 0 new results
+ 0 fixed results
+
+
+mount.php
+ 0 new results
+ 0 fixed results
+
+
+mountpoint.php
+ 0 new results
+ 0 fixed results
+
+
+file.php
+ 0 new results
+ 0 fixed results
+
+
+folder.php
+ 0 new results
+ 0 fixed results
+
+
+integration.php
+ 0 new results
+ 0 fixed results
+
+
+node.php
+ 0 new results
+ 0 fixed results
+
+
+root.php
+ 0 new results
+ 0 fixed results
+
+
+noopscanner.php
+ 0 new results
+ 0 fixed results
+
+
+swift.php
+ 0 new results
+ 0 fixed results
+
+
+pathverificationtest.php
+ 0 new results
+ 0 fixed results
+
+
+commontest.php
+ 0 new results
+ 0 fixed results
+
+
+home.php
+ 0 new results
+ 0 fixed results
+
+
+local.php
+ 0 new results
+ 0 fixed results
+
+
+mappedlocal.php
+ 0 new results
+ 0 fixed results
+
+
+mappedlocalwithdotteddatadir.php
+ 0 new results
+ 0 fixed results
+
+
+storagefactory.php
+ 0 new results
+ 0 fixed results
+
+
+storage.php
+ 0 new results
+ 0 fixed results
+
+
+encryption.php
+ 0 new results
+ 0 fixed results
+
+
+jail.php
+ 0 new results
+ 0 fixed results
+
+
+permissionsmask.php
+ 0 new results
+ 0 fixed results
+
+
+quota.php
+ 0 new results
+ 0 fixed results
+
+
+wrapper.php
+ 0 new results
+ 0 fixed results
+
+
+encryption.php
+ 0 new results
+ 0 fixed results
+
+
+quota.php
+ 0 new results
+ 0 fixed results
+
+
+staticstream.php
+ 0 new results
+ 0 fixed results
+
+
+scanner.php
+ 0 new results
+ 0 fixed results
+
+
+view.php
+ 0 new results
+ 0 fixed results
+
+
+backend.php
+ 0 new results
+ 0 fixed results
+
+
+database.php
+ 0 new results
+ 0 fixed results
+
+
+dummy.php
+ 0 new results
+ 0 fixed results
+
+
+group.php
+ 0 new results
+ 0 fixed results
+
+
+manager.php
+ 0 new results
+ 0 fixed results
+
+
+metadata.php
+ 0 new results
+ 0 fixed results
+
+
+group.php
+ 0 new results
+ 0 fixed results
+
+
+helper.php
+ 0 new results
+ 0 fixed results
+
+
+helperstorage.php
+ 0 new results
+ 0 fixed results
+
+
+hookhelper.php
+ 0 new results
+ 0 fixed results
+
+
+basicemitter.php
+ 0 new results
+ 0 fixed results
+
+
+forwardingemitter.php
+ 0 new results
+ 0 fixed results
+
+
+legacyemitter.php
+ 0 new results
+ 0 fixed results
+
+
+clientservicetest.php
+ 0 new results
+ 0 fixed results
+
+
+clienttest.php
+ 0 new results
+ 0 fixed results
+
+
+responsetest.php
+ 0 new results
+ 0 fixed results
+
+
+httphelper.php
+ 0 new results
+ 0 fixed results
+
+
+image.php
+ 0 new results
+ 0 fixed results
+
+
+installer.php
+ 0 new results
+ 0 fixed results
+
+
+l10n.php
+ 0 new results
+ 0 fixed results
+
+
+largefilehelpergetfilesize.php
+ 0 new results
+ 0 fixed results
+
+
+largefilehelper.php
+ 0 new results
+ 0 fixed results
+
+
+lockingprovider.php
+ 0 new results
+ 0 fixed results
+
+
+memcachelockingprovider.php
+ 0 new results
+ 0 fixed results
+
+
+logger.php
+ 0 new results
+ 0 fixed results
+
+
+mailer.php
+ 0 new results
+ 0 fixed results
+
+
+message.php
+ 0 new results
+ 0 fixed results
+
+
+apc.php
+ 0 new results
+ 0 fixed results
+
+
+apcu.php
+ 0 new results
+ 0 fixed results
+
+
+arraycache.php
+ 0 new results
+ 0 fixed results
+
+
+cache.php
+ 0 new results
+ 0 fixed results
+
+
+castrait.php
+ 0 new results
+ 0 fixed results
+
+
+factory.php
+ 0 new results
+ 0 fixed results
+
+
+memcached.php
+ 0 new results
+ 0 fixed results
+
+
+redis.php
+ 0 new results
+ 0 fixed results
+
+
+xcache.php
+ 0 new results
+ 0 fixed results
+
+
+naturalsort.php
+ 0 new results
+ 0 fixed results
+
+
+navigationmanagertest.php
+ 0 new results
+ 0 fixed results
+
+
+ocsclienttest.php
+ 0 new results
+ 0 fixed results
+
+
+privatedata.php
+ 0 new results
+ 0 fixed results
+
+
+preview.php
+ 0 new results
+ 0 fixed results
+
+
+contacts.php
+ 0 new results
+ 0 fixed results
+
+
+ocpconfig.php
+ 0 new results
+ 0 fixed results
+
+
+cleantags.php
+ 0 new results
+ 0 fixed results
+
+
+dropoldtables.php
+ 0 new results
+ 0 fixed results
+
+
+repair.php
+ 0 new results
+ 0 fixed results
+
+
+repaircollation.php
+ 0 new results
+ 0 fixed results
+
+
+repairinnodb.php
+ 0 new results
+ 0 fixed results
+
+
+repairlegacystorage.php
+ 0 new results
+ 0 fixed results
+
+
+repairmimetypes.php
+ 0 new results
+ 0 fixed results
+
+
+repairsqliteautoincrement.php
+ 0 new results
+ 0 fixed results
+
+
+certificatemanager.php
+ 0 new results
+ 0 fixed results
+
+
+certificate.php
+ 0 new results
+ 0 fixed results
+
+
+crypto.php
+ 0 new results
+ 0 fixed results
+
+
+hasher.php
+ 0 new results
+ 0 fixed results
+
+
+securerandom.php
+ 0 new results
+ 0 fixed results
+
+
+stringutils.php
+ 0 new results
+ 0 fixed results
+
+
+trusteddomainhelper.php
+ 0 new results
+ 0 fixed results
+
+
+memory.php
+ 0 new results
+ 0 fixed results
+
+
+session.php
+ 0 new results
+ 0 fixed results
+
+
+setup.php
+ 0 new results
+ 0 fixed results
+
+
+backend.php
+ 0 new results
+ 0 fixed results
+
+
+helper.php
+ 0 new results
+ 0 fixed results
+
+
+MailNotificationsTest.php
+ 0 new results
+ 0 fixed results
+
+
+searchresultsorter.php
+ 0 new results
+ 0 fixed results
+
+
+share.php
+ 0 new results
+ 0 fixed results
+
+
+streamwrappers.php
+ 0 new results
+ 0 fixed results
+
+
+tags.php
+ 0 new results
+ 0 fixed results
+
+
+template.php
+ 0 new results
+ 0 fixed results
+
+
+resourcelocator.php
+ 0 new results
+ 0 fixed results
+
+
+tempmanager.php
+ 0 new results
+ 0 fixed results
+
+
+testcase.php
+ 0 new results
+ 0 fixed results
+
+
+updater.php
+ 0 new results
+ 0 fixed results
+
+
+urlgenerator.php
+ 0 new results
+ 0 fixed results
+
+
+avataruserdummy.php
+ 0 new results
+ 0 fixed results
+
+
+backend.php
+ 0 new results
+ 0 fixed results
+
+
+database.php
+ 0 new results
+ 0 fixed results
+
+
+dummy.php
+ 0 new results
+ 0 fixed results
+
+
+manager.php
+ 0 new results
+ 0 fixed results
+
+
+user.php
+ 0 new results
+ 0 fixed results
+
+
+session.php
+ 0 new results
+ 0 fixed results
+
+
+user.php
+ 0 new results
+ 0 fixed results
+
+
+utilcheckserver.php
+ 0 new results
+ 0 fixed results
+
+
+util.php
+ 0 new results
+ 0 fixed results
+
+
+preseed-config.php
+ 0 new results
+ 0 fixed results
+
+
+AppSettingsControllerTest.php
+ 0 new results
+ 0 fixed results
+
+
+CertificateControllerTest.php
+ 0 new results
+ 0 fixed results
+
+
+CheckSetupControllerTest.php
+ 0 new results
+ 0 fixed results
+
+
+groupscontrollertest.php
+ 0 new results
+ 0 fixed results
+
+
+logsettingscontrollertest.php
+ 0 new results
+ 0 fixed results
+
+
+mailsettingscontrollertest.php
+ 0 new results
+ 0 fixed results
+
+
+securitysettingscontrollertest.php
+ 0 new results
+ 0 fixed results
+
+
+userscontrollertest.php
+ 0 new results
+ 0 fixed results
+
+
+subadminmiddlewaretest.php
+ 0 new results
+ 0 fixed results
+
+
+startsessionlistener.php
+ 0 new results
+ 0 fixed results
+
+
+version.php
+ 0 new results
+ 0 fixed results
+
+
+
+See more details at https://www.codacy.com/p/8146
+
+
+Thank you,
+The Codacy team
+
+------=_Part_8_244674049.1432038946255
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w=
+3.org/TR/REC-html40/loose.dtd">
+<html style=3D"margin-top: 0px !important; padding-top: 0px !important">
+    <head>
+        <title>core/master has new results</title>
+        <style type=3D"text/css">
+        html, body{ margin-top: 0px !important; padding-top: 0px !important=
+; }
+        body{ background-color:#F2F2F2; margin-top: 0px !important; padding=
+-top: 0px !important; font-family:sans-serif; }
+        table{ margin-top: 0px !important; padding-top: 0px !important; }
+        a img{ color:#000001 !important; }
+        a.black{color:#000000 !important;}
+
+        body{ padding-top:0; padding-right:0; padding-bottom:0; padding-lef=
+t:0; margin-top:0; margin-right:0; margin-bottom:0; margin-left:0; color:#0=
+00000 !important; font-family:Arial, 'Helvetica Neue', Helvetica, sans-seri=
+f; font-size:13px; line-height:17px; }
+        h1, .faux_h1{ padding-top:0; padding-right:0; padding-bottom:0; pad=
+ding-left:0; margin-top:0; margin-right:0; margin-bottom:0; margin-left:0; =
+color:#FFFFFF !important; font-family:Arial, 'Helvetica Neue', Helvetica, s=
+ans-serif; font-size:20px; font-weight:normal; line-height:normal; }
+        .faux_h1_color_color{ color:#FFFFFF; }
+        h2, .faux_h2{ padding-top:0; padding-right:0; padding-bottom:0; pad=
+ding-left:0; margin-top:0; margin-right:0; margin-bottom:0; margin-left:0; =
+color:#000000 !important; font-family:Arial, 'Helvetica Neue', Helvetica, s=
+ans-serif; font-size:14px; font-weight:normal; line-height:20px; text-decor=
+ation:none; }
+        .faux_h2_color_color{ color:#000000; }
+        p, .faux_p{ padding-top:0; padding-right:0; padding-bottom:0; paddi=
+ng-left:0; margin-top:0; margin-right:0; margin-bottom:0; margin-left:0; co=
+lor:#000000 !important; font-family:Arial, 'Helvetica Neue', Helvetica, san=
+s-serif; font-size:12px; line-height:17px; }
+        .faux_p_color_color{ color:#000000; }
+        a, .faux_a{ padding-top:0; padding-right:0; padding-bottom:0; paddi=
+ng-left:0; margin-top:0; margin-right:0; margin-bottom:0; margin-left:0; co=
+lor:#FFFFFF !important; font-family:Arial, 'Helvetica Neue', Helvetica, san=
+s-serif; font-style:normal; font-size:12px; font-weight:lighter; line-heigh=
+t:normal; text-decoration:none; }
+        .faux_a_color_color{ color:#FFFFFF; }
+        .wysiwyg-text-align-right{ text-align: right; }
+        .wysiwyg-text-align-center { text-align: center; }
+        .wysiwyg-text-align-left{ text-align: left; }
+        .wysiwyg-text-align-justify{ text-align: justify; }
+
+
+
+        .mi-all{ display: block; }
+        .mi-desktop{ display: block; }
+
+        .mi-mobile{
+        display: none;
+        font-size: 0;
+        max-height: 0;
+        line-height: 0;
+        padding: 0;
+        float: left;
+        overflow: hidden;
+        mso-hide: all; /* hide elements in Outlook 2007-2013 */
+        }
+
+
+
+        </style>
+        <style type=3D"text/css" >
+
+            @media only screen and (max-device-width: 480px), screen and (m=
+ax-width: 480px), screen and (orientation: landscape) and (max-width: 630px=
+) {
+
+        /* very important! all except 'all' and this current type get a dis=
+play:none; */
+        .mi-desktop{ display: none !important; }
+
+        /* then show the mobile one */
+        .mi-mobile{
+        display: block !important;
+        font-size: 12px !important;
+        max-height: none !important;
+        line-height: 1.5 !important;
+        float: none !important;
+        overflow: visible !important;
+        }
+        }
+
+        </style>
+        <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Du=
+tf-8">
+    </head>
+    <body style=3D"background: #F2F2F2; color: #000000 !important; font-fam=
+ily: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 13px; line-=
+height: 17px; margin: 0px 0 0 0px; padding: 0px 0 0" bgcolor=3D"#F2F2F2">
+        <style type=3D"text/css">
+        body {
+        margin-top: 0px !important; padding-top: 0px !important;
+        }
+        body {
+        background-color: #F2F2F2; margin-top: 0px !important; padding-top:=
+ 0px !important; font-family: sans-serif;
+        }
+        body {
+        padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: =
+0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; color:=
+ #000000 !important; font-family: Arial, 'Helvetica Neue', Helvetica, sans-=
+serif; font-size: 13px; line-height: 17px;
+        }
+        </style>
+        <div class=3D"mi-desktop" style=3D"display: block">
+        <table width=3D"100%" cellspacing=3D"0" cellpadding=3D"0" align=3D"=
+center" style=3D"background: #F2F2F2; border-collapse: collapse; border-spa=
+cing: 0px; border: 0px none; margin: 0px; padding: 0px" bgcolor=3D"#F2F2F2"=
+><tbody><tr align=3D"center" style=3D"border-collapse: collapse; border-spa=
+cing: 0px; border: 0px none">
+            <td valign=3D"top" align=3D"center" style=3D"border-collapse: c=
+ollapse; border-spacing: 0px; border: 0px none">
+                <table width=3D"100%" cellspacing=3D"0" cellpadding=3D"0" b=
+order=3D"0" align=3D"center" style=3D"border-collapse: collapse; border-spa=
+cing: 0px; border: 0px none; margin: 0px; padding: 0px"><tbody><tr align=3D=
+"left" style=3D"border-collapse: collapse; border-spacing: 0px; border: 0px=
+ none">
+                    <td width=3D"100%">
+                        <table width=3D"100%" cellspacing=3D"0" cellpadding=
+=3D"0" border=3D"0" style=3D"border-collapse: collapse; border-spacing: 0px=
+; border: 0px none; margin-top: 0px !important; padding-top: 0px !important=
+"><tbody><tr align=3D"left" style=3D"border-collapse: collapse; border-spac=
+ing: 0px; border: 0px none">
+                            <td width=3D"100%">
+                                <table width=3D"100%" cellspacing=3D"0" cel=
+lpadding=3D"0" border=3D"0" style=3D"border-collapse: collapse; border-spac=
+ing: 0px; border: 0px none; margin-top: 0px !important; padding-top: 0px !i=
+mportant"><tbody><tr style=3D"border-collapse: collapse; border-spacing: 0p=
+x; border: 0; height: 50px">
+                                    <td width=3D"100%" valign=3D"top" heigh=
+t=3D"50" align=3D"left" style=3D"background: #F2F2F2" bgcolor=3D"#F2F2F2"><=
+img width=3D"1" height=3D"50" style=3D"border: 0; display: block; line-heig=
+ht: 1; opacity: 0; padding: 0px" src=3D"https://www.codacy.com/assets/email=
+/commit/clear.gif" alt=3D""></td>
+                                </tr></tbody></table>
+                            </td>
+                        </tr></tbody></table>
+                    </td>
+                </tr></tbody></table>
+            </td>
+        </tr></tbody></table>
+    </div>
+        <table align=3D"center" cellpadding=3D"0" cellspacing=3D"0" width=
+=3D"100%" style=3D"background: #F2F2F2; border-collapse: collapse; border-s=
+pacing: 0; border: 0; margin: 0px 0 0; padding: 0px 0 0" bgcolor=3D"#F2F2F2=
+"><tr align=3D"center" style=3D"border-collapse: collapse; border-spacing: =
+0; border: 0">
+            <td align=3D"center" valign=3D"top" style=3D"border-collapse: c=
+ollapse; border-spacing: 0; border: 0">
+                <div class=3D"mi-all" style=3D"display: block">
+                    <table class=3D"mi-all" width=3D"640" align=3D"center" =
+cellspacing=3D"0" cellpadding=3D"0" border=3D"0" style=3D"background-color:=
+#FFFFFF; border-collapse: collapse; border-spacing: 0; border: 0; display: =
+block; margin: 0px 0 0; padding: 0px 0 0"><tbody>
+                        <tr align=3D"left" style=3D"border-collapse: collap=
+se; border-spacing: 0; border: 0">
+                            <td width=3D"640">
+                                <table width=3D"640" cellspacing=3D"0" cell=
+padding=3D"0" border=3D"0" style=3D"border-collapse: collapse; border-spaci=
+ng: 0; border: 0; margin-top: 0px !important; padding-top: 0px !important">=
+<tbody><tr style=3D"border-collapse: collapse; border-spacing: 0; border: 0=
+">
+                                    <td width=3D"640" height=3D"17" align=
+=3D"left" valign=3D"top" style=3D"">
+                                        <img height=3D"17" src=3D"https://w=
+ww.codacy.com/assets/email/commit/image-d2124f2923144189c80255ca8c56af325fc=
+7ba5b.jpg" style=3D"border: 0; display: block; height: 17px; line-height: 1=
+; max-height: 17px; max-width: 640px; min-height: 17px; min-width: 640px; w=
+idth: 640px" width=3D"640">
+                                    </td>
+                                </tr></tbody></table>
+                            </td>
+                        </tr>
+                        <tr align=3D"left" style=3D"border-collapse: collap=
+se; border-spacing: 0; border: 0">
+                            <td width=3D"640">
+                                <table width=3D"640" cellspacing=3D"0" cell=
+padding=3D"0" border=3D"0" style=3D"border-collapse: collapse; border-spaci=
+ng: 0; border: 0; margin-top: 0px !important; padding-top: 0px !important">=
+<tbody><tr style=3D"border-collapse: collapse; border-spacing: 0; border: 0=
+">
+                                    <td width=3D"130" height=3D"5" align=3D=
+"left" valign=3D"top" style=3D"">
+                                        <img height=3D"5" src=3D"https://ww=
+w.codacy.com/assets/email/commit/image-36b068bb2ebfc187e41a41de47bb822087e3=
+c6a0.jpg" style=3D"border: 0; display: block; height: 5px; line-height: 1; =
+max-height: 5px; max-width: 130px; min-height: 5px; min-width: 130px; width=
+: 130px" width=3D"130">
+                                    </td>
+                                    <td width=3D"409" height=3D"5" align=3D=
+"left" valign=3D"top" style=3D"">
+                                        <img height=3D"5" src=3D"https://ww=
+w.codacy.com/assets/email/commit/image-bd35393256fa1ef667f9dc0030cd3afa8f11=
+6d63.jpg" style=3D"border: 0; display: block; height: 5px; line-height: 1; =
+max-height: 5px; max-width: 409px; min-height: 5px; min-width: 409px; width=
+: 409px" width=3D"409">
+                                    </td>
+                                    <td width=3D"101" height=3D"5" align=3D=
+"left" valign=3D"top" style=3D"">
+                                        <img height=3D"5" src=3D"https://ww=
+w.codacy.com/assets/email/commit/image-09a457a2abb3e75fd4276b957c21a9c0e35d=
+1216.jpg" style=3D"border: 0; display: block; height: 5px; line-height: 1; =
+max-height: 5px; max-width: 101px; min-height: 5px; min-width: 101px; width=
+: 101px" width=3D"101">
+                                    </td>
+                                </tr></tbody></table>
+                            </td>
+                        </tr>
+                        <tr align=3D"left" style=3D"border-collapse: collap=
+se; border-spacing: 0; border: 0">
+                            <td width=3D"640">
+                                <table width=3D"640" cellspacing=3D"0" cell=
+padding=3D"0" border=3D"0" style=3D"border-collapse: collapse; border-spaci=
+ng: 0; border: 0; margin-top: 0px !important; padding-top: 0px !important">=
+<tbody><tr style=3D"border-collapse: collapse; border-spacing: 0; border: 0=
+">
+                                    <td width=3D"130" height=3D"19" align=
+=3D"left" valign=3D"top" style=3D"">
+                                        <a href=3D"https://www.codacy.com" =
+target=3D"_blank" style=3D"border: none; color: #FFFFFF !important; display=
+: block; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-=
+size: 10px; font-style: normal; font-weight: lighter; height: 19px; line-he=
+ight: normal;  margin-top:0; padding-top:0; margin-right:0; padding-right:0=
+; margin-bottom:0; padding-bottom:0; margin-left:0; padding-left:0;  text-d=
+ecoration: none; width: 130px">
+                                            <img height=3D"19" src=3D"https=
+://www.codacy.com/assets/email/commit/image-1f062d6196343c293d2cfb28c5dde87=
+6e63b2a29.jpg" style=3D"border: 0; color: #000001 !important; display: bloc=
+k; height: 19px; line-height: 1; max-height: 19px; max-width: 130px; min-he=
+ight: 19px; min-width: 130px; width: 130px" width=3D"130"></a>
+                                    </td>
+                                    <td width=3D"409" height=3D"19" align=
+=3D"left" valign=3D"top" style=3D"">
+                                        <img height=3D"19" src=3D"https://w=
+ww.codacy.com/assets/email/commit/image-c313d44b2952802ad949efd50f82c3e4e55=
+33fcd.jpg" style=3D"border: 0; display: block; height: 19px; line-height: 1=
+; max-height: 19px; max-width: 409px; min-height: 19px; min-width: 409px; w=
+idth: 409px" width=3D"409">
+                                    </td>
+                                    <td width=3D"23" height=3D"19" align=3D=
+"left" valign=3D"top" style=3D"">
+                                        <img height=3D"19" src=3D"https://w=
+ww.codacy.com/assets/email/commit/image-d4f4d00821f5e23a961fbdf1119d40af7d3=
+04689.jpg" style=3D"border: 0; display: block; height: 19px; line-height: 1=
+; max-height: 19px; max-width: 23px; min-height: 19px; min-width: 23px; wid=
+th: 23px" width=3D"23">
+                                    </td>
+                                    <td width=3D"78" align=3D"left" valign=
+=3D"middle" style=3D"background: #F2F2F2" height=3D"19" bgcolor=3D"#F2F2F2">
+                                        <div class=3D"faux_p " style=3D"col=
+or: #000000 !important; font-family: Arial, 'Helvetica Neue', Helvetica, sa=
+ns-serif; font-size: 12px; line-height: 17px; margin: 0; padding: 0"><span =
+class=3D"faux_p_color">=A014 Apr 2015</span></div>
+                                    </td>
+                                </tr></tbody></table>
+                            </td>
+                        </tr>
+                        <tr align=3D"left" style=3D"border-collapse: collap=
+se; border-spacing: 0; border: 0">
+                            <td width=3D"640">
+                                <table width=3D"640" cellspacing=3D"0" cell=
+padding=3D"0" border=3D"0" style=3D"border-collapse: collapse; border-spaci=
+ng: 0; border: 0; margin-top: 0px !important; padding-top: 0px !important">=
+<tbody><tr style=3D"border-collapse: collapse; border-spacing: 0; border: 0=
+">
+                                    <td width=3D"130" height=3D"22" align=
+=3D"left" valign=3D"top" style=3D"">
+                                        <a href=3D"https://www.codacy.com" =
+target=3D"_blank" style=3D"border: none; color: #FFFFFF !important; display=
+: block; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-=
+size: 10px; font-style: normal; font-weight: lighter; height: 22px; line-he=
+ight: normal;  margin-top:0; padding-top:0; margin-right:0; padding-right:0=
+; margin-bottom:0; padding-bottom:0; margin-left:0; padding-left:0;  text-d=
+ecoration: none; width: 130px">
+                                            <img height=3D"22" src=3D"https=
+://www.codacy.com/assets/email/commit/image-3710326d0bca0805b2c6e8a1761a22d=
+ebebb120d.jpg" style=3D"border: 0; color: #000001 !important; display: bloc=
+k; height: 22px; line-height: 1; max-height: 22px; max-width: 130px; min-he=
+ight: 22px; min-width: 130px; width: 130px" width=3D"130"></a>
+                                    </td>
+                                    <td width=3D"409" height=3D"22" align=
+=3D"left" valign=3D"top" style=3D"">
+                                        <img height=3D"22" src=3D"https://w=
+ww.codacy.com/assets/email/commit/image-f5aef64c6dd402be9f5b8bca09b9a65ca3d=
+c1090.jpg" style=3D"border: 0; display: block; height: 22px; line-height: 1=
+; max-height: 22px; max-width: 409px; min-height: 22px; min-width: 409px; w=
+idth: 409px" width=3D"409">
+                                    </td>
+                                    <td width=3D"23" height=3D"22" align=3D=
+"left" valign=3D"top" style=3D"">
+                                        <img height=3D"22" src=3D"https://w=
+ww.codacy.com/assets/email/commit/image-e09c9aaf512f2c234778e61eb49a96c9efb=
+cf3a6.jpg" style=3D"border: 0; display: block; height: 22px; line-height: 1=
+; max-height: 22px; max-width: 23px; min-height: 22px; min-width: 23px; wid=
+th: 23px" width=3D"23">
+                                    </td>
+                                    <td width=3D"78" align=3D"left" valign=
+=3D"middle" style=3D"background: #F2F2F2" height=3D"22" bgcolor=3D"#F2F2F2">
+                                        <div class=3D"faux_p " style=3D"col=
+or: #000000 !important; font-family: Arial, 'Helvetica Neue', Helvetica, sa=
+ns-serif; font-size: 12px; line-height: 17px; margin: 0; padding: 0"><span =
+class=3D"faux_p_color">=A012:40</span></div>
+                                    </td>
+                                </tr></tbody></table>
+                            </td>
+                        </tr>
+                        <tr align=3D"left" style=3D"border-collapse: collap=
+se; border-spacing: 0; border: 0">
+                            <td width=3D"640">
+                                <table width=3D"640" cellspacing=3D"0" cell=
+padding=3D"0" border=3D"0" style=3D"border-collapse: collapse; border-spaci=
+ng: 0; border: 0; margin-top: 0px !important; padding-top: 0px !important">=
+<tbody><tr style=3D"border-collapse: collapse; border-spacing: 0; border: 0=
+">
+                                    <td width=3D"130" height=3D"20" align=
+=3D"left" valign=3D"top" style=3D"">
+                                        <img height=3D"20" src=3D"https://w=
+ww.codacy.com/assets/email/commit/image-bceecf148642b2c12a73891ea7be811293b=
+b28de.jpg" style=3D"border: 0; display: block; height: 20px; line-height: 1=
+; max-height: 20px; max-width: 130px; min-height: 20px; min-width: 130px; w=
+idth: 130px" width=3D"130">
+                                    </td>
+                                    <td width=3D"409" height=3D"20" align=
+=3D"left" valign=3D"top" style=3D"">
+                                        <img height=3D"20" src=3D"https://w=
+ww.codacy.com/assets/email/commit/image-008b4174eeb7bced556927a72e601f3b03a=
+3bdd1.jpg" style=3D"border: 0; display: block; height: 20px; line-height: 1=
+; max-height: 20px; max-width: 409px; min-height: 20px; min-width: 409px; w=
+idth: 409px" width=3D"409">
+                                    </td>
+                                    <td width=3D"101" height=3D"20" align=
+=3D"left" valign=3D"top" style=3D"">
+                                        <img height=3D"20" src=3D"https://w=
+ww.codacy.com/assets/email/commit/image-84ae0ea40a17384644a87e6d088a21abb14=
+78bce.jpg" style=3D"border: 0; display: block; height: 20px; line-height: 1=
+; max-height: 20px; max-width: 101px; min-height: 20px; min-width: 101px; w=
+idth: 101px" width=3D"101">
+                                    </td>
+                                </tr></tbody></table>
+                            </td>
+                        </tr>
+                        <tr align=3D"left" style=3D"background: #000000; bo=
+rder-collapse: collapse; border-spacing: 0; border: 0" bgcolor=3D"#000000">
+                            <td width=3D"640">
+                                <table width=3D"640" cellspacing=3D"0" cell=
+padding=3D"0" border=3D"0" style=3D"border-collapse: collapse; border-spaci=
+ng: 0; border: 0; margin-top: 0px !important; padding-top: 0px !important">=
+<tbody><tr style=3D"border-collapse: collapse; border-spacing: 0; border: 0=
+">
+                                    <td width=3D"640" align=3D"left" valign=
+=3D"top" style=3D"background: #000000" height=3D"17" bgcolor=3D"#000000"><i=
+mg height=3D"17" src=3D"https://www.codacy.com/assets/email/commit/clear.gi=
+f" style=3D"border: 0; color: #FFFFFF !important; display: block; height: 1=
+7px; line-height: 1; max-height: 17px; max-width: 640px; min-height: 17px; =
+min-width: 640px; opacity: 0; width: 640px" width=3D"640"></td>
+                                </tr></tbody></table>
+                            </td>
+                        </tr>
+                        <tr align=3D"left" style=3D"border-collapse: collap=
+se; border-spacing: 0; border: 0">
+                            <td width=3D"640">
+                                <table width=3D"640" cellspacing=3D"0" cell=
+padding=3D"0" border=3D"0" style=3D"border-collapse: collapse; border-spaci=
+ng: 0; border: 0; margin-top: 0px !important; padding-top: 0px !important">=
+<tbody><tr style=3D"border-collapse: collapse; border-spacing: 0; border: 0=
+">
+                                    <td width=3D"404" align=3D"left" valign=
+=3D"middle" style=3D"background: #000000" height=3D"39" bgcolor=3D"#000000">
+                                        <div class=3D"faux_h1 " style=3D"co=
+lor: #FFFFFF !important; font-family: Arial, 'Helvetica Neue', Helvetica, s=
+ans-serif; font-size: 20px; font-weight: normal; line-height: normal; margi=
+n: 0; margin-left: 10px; padding: 0"><span class=3D"faux_h1_color">
+                                           <b> core </b> has new results</s=
+pan></div>
+                                    </td>
+                                    <td width=3D"20" align=3D"left" valign=
+=3D"top" style=3D"background: #000000" height=3D"39" bgcolor=3D"#000000"><i=
+mg height=3D"39" src=3D"https://www.codacy.com/assets/email/commit/clear.gi=
+f" style=3D"border: 0; color: #FFFFFF !important; display: block; height: 3=
+9px; line-height: 1; max-height: 39px; max-width: 20px; min-height: 39px; m=
+in-width: 20px; opacity: 0; width: 20px" width=3D"20"></td>
+                                    <td width=3D"200" height=3D"39" align=
+=3D"left" valign=3D"top" style=3D"">
+                                        <a href=3D"https://www.codacy.com/a=
+pp/thomas-mueller/core/commit?cid=3D10081544&amp;utm_campaign=3Dnew_commit&=
+amp;utm_medium=3DEmail&amp;utm_source=3DInternal" target=3D"_blank" style=
+=3D"border: none; color: #FFFFFF !important; display: block; font-family: A=
+rial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 10px; font-style:=
+ normal; font-weight: lighter; height: 39px; line-height: normal;  margin-t=
+op:0; padding-top:0; margin-right:0; padding-right:0; margin-bottom:0; padd=
+ing-bottom:0; margin-left:0; padding-left:0;  text-decoration: none; width:=
+ 200px">
+                                            <img height=3D"39" src=3D"https=
+://www.codacy.com/assets/email/commit/image-0624b06df7b4915fe5bfc10cd9c37b6=
+3ce131f4b.jpg" style=3D"border: 0; color: #000001 !important; display: bloc=
+k; height: 39px; line-height: 1; max-height: 39px; max-width: 200px; min-he=
+ight: 39px; min-width: 200px; width: 200px" width=3D"200"></a>
+                                    </td>
+                                    <td width=3D"16" align=3D"left" valign=
+=3D"top" style=3D"background: #000000" height=3D"39" bgcolor=3D"#000000"><i=
+mg height=3D"39" src=3D"https://www.codacy.com/assets/email/commit/clear.gi=
+f" style=3D"border: 0; color: #FFFFFF !important; display: block; height: 3=
+9px; line-height: 1; max-height: 39px; max-width: 16px; min-height: 39px; m=
+in-width: 16px; opacity: 0; width: 16px" width=3D"16"></td>
+                                </tr></tbody></table>
+                            </td>
+                        </tr>
+                        <tr align=3D"left" style=3D"background: #000000; bo=
+rder-collapse: collapse; border-spacing: 0; border: 0" bgcolor=3D"#000000">
+                            <td width=3D"640">
+                                <table width=3D"640" cellspacing=3D"0" cell=
+padding=3D"0" border=3D"0" style=3D"border-collapse: collapse; border-spaci=
+ng: 0; border: 0; margin-top: 0px !important; padding-top: 0px !important">=
+<tbody><tr style=3D"border-collapse: collapse; border-spacing: 0; border: 0=
+">
+                                    <td width=3D"640" align=3D"left" valign=
+=3D"top" style=3D"background: #000000" height=3D"17" bgcolor=3D"#000000"><i=
+mg height=3D"17" src=3D"https://www.codacy.com/assets/email/commit/clear.gi=
+f" style=3D"border: 0; color: #FFFFFF !important; display: block; height: 1=
+7px; line-height: 1; max-height: 17px; max-width: 640px; min-height: 17px; =
+min-width: 640px; opacity: 0; width: 640px" width=3D"640"></td>
+                                </tr></tbody></table>
+                            </td>
+                        </tr>
+                        <tr align=3D"left" style=3D"border-collapse: collap=
+se; border-spacing: 0; border: 0">
+                            <td width=3D"640">
+                                <table width=3D"640" cellspacing=3D"0" cell=
+padding=3D"0" border=3D"0" style=3D"border-collapse: collapse; border-spaci=
+ng: 0; border: 0; margin-top: 0px !important; padding-top: 0px !important">=
+<tbody><tr style=3D"border-collapse: collapse; border-spacing: 0; border: 0=
+">
+                                    <td width=3D"192" height=3D"17" align=
+=3D"left" valign=3D"top" style=3D"">
+                                        <img height=3D"17" src=3D"https://w=
+ww.codacy.com/assets/email/commit/image-55f814a2e5ee1a8d3d6b02d20e92064d211=
+5d145.jpg" style=3D"border: 0; display: block; height: 17px; line-height: 1=
+; max-height: 17px; max-width: 192px; min-height: 17px; min-width: 192px; w=
+idth: 192px" width=3D"192">
+                                    </td>
+                                    <td width=3D"448" height=3D"17" align=
+=3D"left" valign=3D"top" style=3D"">
+                                        <img height=3D"17" src=3D"https://w=
+ww.codacy.com/assets/email/commit/image-39b33f871a27fb73d31b9723f37348579af=
+8c081.jpg" style=3D"border: 0; display: block; height: 17px; line-height: 1=
+; max-height: 17px; max-width: 448px; min-height: 17px; min-width: 448px; w=
+idth: 448px" width=3D"448">
+                                    </td>
+                                </tr></tbody></table>
+                            </td>
+                        </tr>
+                        <tr align=3D"left" style=3D"background: #FFFFFF; bo=
+rder-collapse: collapse; border-spacing: 0; border: 0" bgcolor=3D"#FFFFFF">
+                            <td width=3D"640">
+                                <table width=3D"640" cellspacing=3D"0" cell=
+padding=3D"0" border=3D"0" style=3D"border-collapse: collapse; border-spaci=
+ng: 0; border: 0; margin-top: 0px !important; padding-top: 0px !important">=
+<tbody><tr style=3D"border-collapse: collapse; border-spacing: 0; border: 0=
+">
+                                    <td width=3D"192" align=3D"left" valign=
+=3D"top" style=3D"background: #FFFFFF" height=3D"30" bgcolor=3D"#FFFFFF"><i=
+mg height=3D"30" src=3D"https://www.codacy.com/assets/email/commit/clear.gi=
+f" style=3D"border: 0; display: block; height: 30px; line-height: 1; max-he=
+ight: 30px; max-width: 192px; min-height: 30px; min-width: 192px; opacity: =
+0; width: 192px" width=3D"192"></td>
+                                    <td width=3D"448" align=3D"left" valign=
+=3D"top" style=3D"background: #FFFFFF" height=3D"30" bgcolor=3D"#FFFFFF"><i=
+mg height=3D"30" src=3D"https://www.codacy.com/assets/email/commit/clear.gi=
+f" style=3D"border: 0; display: block; height: 30px; line-height: 1; max-he=
+ight: 30px; max-width: 448px; min-height: 30px; min-width: 448px; opacity: =
+0; width: 448px" width=3D"448"></td>
+                                </tr></tbody></table>
+                            </td>
+                        </tr>
+                        <tr align=3D"left" style=3D"border-collapse: collap=
+se; border-spacing: 0; border: 0">
+                            <td width=3D"640">
+                                <table width=3D"640" cellspacing=3D"0" cell=
+padding=3D"0" border=3D"0" style=3D"border-collapse: collapse; border-spaci=
+ng: 0; border: 0; margin-top: 0px !important; padding-top: 0px !important">=
+<tbody><tr style=3D"border-collapse: collapse; border-spacing: 0; border: 0=
+">
+                                    <td width=3D"192" align=3D"left" valign=
+=3D"top">
+                                        <table width=3D"192" align=3D"cente=
+r" cellspacing=3D"0" cellpadding=3D"0" border=3D"0" style=3D"border-collaps=
+e: collapse; border-spacing: 0; border: 0; margin: 0px 0 0; padding: 0px 0 =
+0"><tbody>
+                                            <tr align=3D"left" style=3D"bor=
+der-collapse: collapse; border-spacing: 0; border: 0">
+                                                <td width=3D"192">
+                                                    <table width=3D"192" ce=
+llspacing=3D"0" cellpadding=3D"0" border=3D"0" style=3D"border-collapse: co=
+llapse; border-spacing: 0; border: 0; margin-top: 0px !important; padding-t=
+op: 0px !important"><tbody><tr style=3D"border-collapse: collapse; border-s=
+pacing: 0; border: 0">
+                                                        <td width=3D"20" he=
+ight=3D"21" align=3D"left" valign=3D"top" style=3D"">
+                                                            <img height=3D"=
+21" src=3D"https://www.codacy.com/assets/email/commit/clear.gif" style=3D"b=
+order: 0; display: block; height: 21px; line-height: 1; max-height: 21px; m=
+ax-width: 20px; min-height: 21px; min-width: 20px; width: 20px" width=3D"20=
+">
+                                                        </td>
+                                                        <td width=3D"22" he=
+ight=3D"21" align=3D"left" valign=3D"top" style=3D"background: #FFFFFF" bgc=
+olor=3D"#FFFFFF">
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20
+
+
+
+
+
+    <img src=3D"https://secure.gravatar.com/avatar/1898b25a9cb3aa1a0f0febd1=
+359910b9?s=3D256&d=3Dretro" width=3D"21" height=3D"21" class=3D"">
+
+                                                        </td>
+                                                        <td width=3D"150" a=
+lign=3D"left" valign=3D"middle" style=3D"background: #FFFFFF" height=3D"21"=
+ bgcolor=3D"#FFFFFF">
+                                                            <div class=3D"f=
+aux_h2 " style=3D"color: #000000 !important; font-family: Arial, 'Helvetica=
+ Neue', Helvetica, sans-serif; font-size: 14px; font-weight: normal; line-h=
+eight: 20px;  margin-top:0; padding-top:0; margin-right:0; padding-right:0;=
+ margin-bottom:0; padding-bottom:0; margin-left:0; padding-left:0;  text-de=
+coration: none"><span class=3D"faux_h2_color">&nbsp;Arthur Schiwon</span></=
+div>
+                                                        </td>
+                                                    </tr></tbody></table>
+                                                </td>
+                                            </tr>
+                                            <tr align=3D"left" style=3D"bor=
+der-collapse: collapse; border-spacing: 0; border: 0">
+                                                <td width=3D"192">
+                                                    <table width=3D"192" ce=
+llspacing=3D"0" cellpadding=3D"0" border=3D"0" style=3D"border-collapse: co=
+llapse; border-spacing: 0; border: 0; margin-top: 0px !important; padding-t=
+op: 0px !important"><tbody><tr style=3D"border-collapse: collapse; border-s=
+pacing: 0; border: 0">
+                                                        <td width=3D"22" he=
+ight=3D"31" align=3D"left" valign=3D"top" style=3D"">
+                                                            <img height=3D"=
+31" src=3D"https://www.codacy.com/assets/email/commit/clear.gif" style=3D"b=
+order: 0; display: block; height: 31px; line-height: 1; max-height: 31px; m=
+ax-width: 22px; min-height: 31px; min-width: 22px; width: 22px" width=3D"22=
+">
+                                                        </td>
+                                                        <td width=3D"170" a=
+lign=3D"left" valign=3D"bottom" style=3D"background: #FFFFFF" height=3D"31"=
+ bgcolor=3D"#FFFFFF">
+                                                            <div class=3D"f=
+aux_h2 wysiwyg-text-align-left" style=3D"color: #000000 !important; font-fa=
+mily: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 14px; font=
+-weight: normal; line-height: 20px;  margin-top:0; padding-top:0; margin-ri=
+ght:0; padding-right:0; margin-bottom:0; padding-bottom:0; margin-left:0; p=
+adding-left:0;  text-align: left; text-decoration: none" align=3D"left"><sp=
+an class=3D"faux_h2_color wysiwyg-text-align-left_color"><img height=3D"31"=
+ src=3D"https://www.codacy.com/assets/email/commit/image-c31c28fe3029aa1a1b=
+90d953b4d53cff3fcfd583.jpg" style=3D"border: 0; height: 18px; line-height: =
+1; max-height: 18px; max-width: 13px; min-height: 18px; min-width: 13px; wi=
+dth: 13px" width=3D"13"><b>&nbsp;master</b></span></div>
+                                                        </td>
+                                                    </tr></tbody></table>
+                                                </td>
+                                            </tr>
+                                            <tr align=3D"left" style=3D"bor=
+der-collapse: collapse; border-spacing: 0; border: 0">
+                                                <td width=3D"192">
+                                                    <table width=3D"192" ce=
+llspacing=3D"0" cellpadding=3D"0" border=3D"0" style=3D"border-collapse: co=
+llapse; border-spacing: 0; border: 0; margin-top: 0px !important; padding-t=
+op: 0px !important"><tbody><tr style=3D"border-collapse: collapse; border-s=
+pacing: 0; border: 0">
+                                                        <td width=3D"22" he=
+ight=3D"31" align=3D"left" valign=3D"top" style=3D"">
+                                                            <img height=3D"=
+31" src=3D"https://www.codacy.com/assets/email/commit/clear.gif" style=3D"b=
+order: 0; display: block; height: 31px; line-height: 1; max-height: 31px; m=
+ax-width: 22px; min-height: 31px; min-width: 22px; width: 22px" width=3D"22=
+">
+                                                        </td>
+                                                        <td width=3D"170" a=
+lign=3D"left" valign=3D"bottom" style=3D"background: #FFFFFF" height=3D"31"=
+ bgcolor=3D"#FFFFFF">
+                                                            <div class=3D"f=
+aux_h2 wysiwyg-text-align-left" style=3D"color: #000000 !important; font-fa=
+mily: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 14px; font=
+-weight: normal; line-height: 20px;  margin-top:0; padding-top:0; margin-ri=
+ght:0; padding-right:0; margin-bottom:0; padding-bottom:0; margin-left:0; p=
+adding-left:0;  text-align: left; text-decoration: none" align=3D"left"><sp=
+an class=3D"faux_h2_color wysiwyg-text-align-left_color"><b>6b218039ba</b><=
+/span></div>
+                                                        </td>
+                                                    </tr></tbody></table>
+                                                </td>
+                                            </tr>
+                                            <tr align=3D"left" style=3D"bor=
+der-collapse: collapse; border-spacing: 0; border: 0">
+                                                <td width=3D"192">
+                                                    <table width=3D"192" ce=
+llspacing=3D"0" cellpadding=3D"0" border=3D"0" style=3D"border-collapse: co=
+llapse; border-spacing: 0; border: 0; margin-top: 0px !important; padding-t=
+op: 0px !important"><tbody><tr style=3D"border-collapse: collapse; border-s=
+pacing: 0; border: 0">
+                                                        <td width=3D"192" h=
+eight=3D"49" align=3D"left" valign=3D"top" style=3D"">
+                                                            <img height=3D"=
+49" src=3D"https://www.codacy.com/assets/email/commit/clear.gif" style=3D"b=
+order: 0; display: block; height: 49px; line-height: 1; max-height: 49px; m=
+ax-width: 192px; min-height: 49px; min-width: 192px; width: 192px" width=3D=
+"192">
+                                                        </td>
+                                                    </tr></tbody></table>
+                                                </td>
+                                            </tr>
+                                        </tbody></table>
+                                    </td>
+                                    <td width=3D"34" align=3D"left" valign=
+=3D"top" style=3D"background-color: #F3F3F3;">
+                                        <table width=3D"34" align=3D"center=
+" cellspacing=3D"0" cellpadding=3D"0" border=3D"0" style=3D"border-collapse=
+: collapse; border-spacing: 0; border: 0; margin: 0px 0 0; padding: 0px 0 0=
+"><tbody>
+                                            <tr align=3D"left" style=3D"bor=
+der-collapse: collapse; border-spacing: 0; border: 0">
+                                                <td width=3D"34">
+                                                    <table width=3D"34" cel=
+lspacing=3D"0" cellpadding=3D"0" border=3D"0" style=3D"border-collapse: col=
+lapse; border-spacing: 0; border: 0; margin-top: 0px !important; padding-to=
+p: 0px !important"><tbody><tr style=3D"border-collapse: collapse; border-sp=
+acing: 0; border: 0">
+                                                        <td width=3D"34" he=
+ight=3D"30" align=3D"left" valign=3D"top" style=3D"">
+                                                            <img height=3D"=
+30" src=3D"https://www.codacy.com/assets/email/commit/image-26214f7b88da71a=
+db12773da4a03065c41e3c0de.jpg" style=3D"border: 0; display: block; height: =
+30px; line-height: 1; max-height: 30px; max-width: 34px; min-height: 30px; =
+min-width: 34px; width: 34px" width=3D"34">
+                                                        </td>
+                                                    </tr></tbody></table>
+                                                </td>
+                                            </tr>
+                                            <tr align=3D"left" style=3D"bor=
+der-collapse: collapse; border-spacing: 0; border: 0">
+                                                <td width=3D"34">
+                                                    <table width=3D"34" cel=
+lspacing=3D"0" cellpadding=3D"0" border=3D"0" style=3D"border-collapse: col=
+lapse; border-spacing: 0; border: 0; margin-top: 0px !important; padding-to=
+p: 0px !important"><tbody><tr style=3D"border-collapse: collapse; border-sp=
+acing: 0; border: 0">
+                                                        <td width=3D"34" he=
+ight=3D"71" align=3D"left" valign=3D"top" style=3D"">
+                                                            <img height=3D"=
+18" src=3D"https://www.codacy.com/assets/email/commit/image-e12f78c553452ce=
+c8302ec656128270c2bfa8bd1.jpg" style=3D"border: 0; display: block; height: =
+71px; line-height: 1; max-height: 71px; max-width: 34px; min-height: 18px; =
+min-width: 34px; width: 34px" width=3D"34">
+                                                        </td>
+                                                    </tr></tbody></table>
+                                                </td>
+                                            </tr>
+                                        </tbody></table>
+                                    </td>
+                                    <td width=3D"395" align=3D"left" valign=
+=3D"top" style=3D"background: #F3F3F3" height=3D"101" bgcolor=3D"#F3F3F3">
+                                        <div class=3D"faux_h2 " style=3D"co=
+lor: #000000 !important; font-family: Arial, 'Helvetica Neue', Helvetica, s=
+ans-serif; font-size: 14px; font-weight: normal; line-height: 20px;  margin=
+-top:10px; padding-top:0; margin-right:0; padding-right:0; margin-bottom:0;=
+ padding-bottom:0; margin-left:0; padding-left:0;  text-decoration: none"><=
+span class=3D"faux_h2_color">=A0Fixes returns of group memberships and coun=
+ting if all members have the specific groups as primary set.</span></div>
+                                    </td>
+                                    <td width=3D"19" align=3D"left" valign=
+=3D"top" style=3D"background: #FFFFFF" height=3D"101" bgcolor=3D"#FFFFFF"><=
+img height=3D"101" src=3D"https://www.codacy.com/assets/email/commit/clear.=
+gif" style=3D"border: 0; display: block; height: 101px; line-height: 1; max=
+-height: 101px; max-width: 19px; min-height: 101px; min-width: 19px; opacit=
+y: 0; width: 19px" width=3D"19"></td>
+                                </tr></tbody></table>
+                            </td>
+                        </tr>
+                        <tr align=3D"left" style=3D"border-collapse: collap=
+se; border-spacing: 0; border: 0">
+                            <td width=3D"640">
+                                <table width=3D"640" cellspacing=3D"0" cell=
+padding=3D"0" border=3D"0" style=3D"border-collapse: collapse; border-spaci=
+ng: 0; border: 0; margin-top: 0px !important; padding-top: 0px !important">=
+<tbody><tr style=3D"border-collapse: collapse; border-spacing: 0; border: 0=
+">
+                                    <td width=3D"640" height=3D"68" align=
+=3D"left" valign=3D"top" style=3D"">
+                                        <img height=3D"68" src=3D"https://w=
+ww.codacy.com/assets/email/commit/image-ac8507120e216db510bf87062c17d674862=
+56812.jpg" style=3D"border: 0; display: block; height: 68px; line-height: 1=
+; max-height: 68px; max-width: 640px; min-height: 68px; min-width: 640px; w=
+idth: 640px" width=3D"640">
+                                    </td>
+                                </tr></tbody></table>
+                            </td>
+                        </tr>
+                        <tr align=3D"left" style=3D"border-collapse: collap=
+se; border-spacing: 0; border: 0">
+                            <td width=3D"640">
+                                <table width=3D"640" cellspacing=3D"0" cell=
+padding=3D"0" border=3D"0" style=3D"border-collapse: collapse; border-spaci=
+ng: 0; border: 0; margin-top: 0px !important; padding-top: 0px !important">=
+<tbody><tr style=3D"border-collapse: collapse; border-spacing: 0; border: 0=
+">
+                                    <td width=3D"337" align=3D"left" valign=
+=3D"top">
+                                        <table width=3D"337" align=3D"cente=
+r" cellspacing=3D"0" cellpadding=3D"0" border=3D"0" style=3D"border-collaps=
+e: collapse; border-spacing: 0; border: 0; margin: 0px 0 0; padding: 0px 0 =
+0"><tbody><tr align=3D"left" style=3D"border-collapse: collapse; border-spa=
+cing: 0; border: 0">
+                                            <td width=3D"337">
+                                                <table width=3D"337" cellsp=
+acing=3D"0" cellpadding=3D"0" border=3D"0" style=3D"border-collapse: collap=
+se; border-spacing: 0; border: 0; margin-top: 0px !important; padding-top: =
+0px !important"><tbody><tr style=3D"border-collapse: collapse; border-spaci=
+ng: 0; border: 0">
+                                                    <td width=3D"17" height=
+=3D"21" align=3D"left" valign=3D"top" style=3D"">
+                                                        <img height=3D"21" =
+src=3D"https://www.codacy.com/assets/email/commit/clear.gif" style=3D"borde=
+r: 0; display: block; height: 21px; line-height: 1; max-height: 21px; max-w=
+idth: 17px; min-height: 21px; min-width: 17px; width: 17px" width=3D"17">
+                                                    </td>
+                                                    <td width=3D"288" align=
+=3D"left" valign=3D"middle" style=3D"background: #FFFFFF" height=3D"21" bgc=
+olor=3D"#FFFFFF">
+                                                        <div class=3D"faux_=
+h2 " style=3D"color: #000000 !important; font-family: Arial, 'Helvetica Neu=
+e', Helvetica, sans-serif; font-size: 14px; font-weight: normal; line-heigh=
+t: 20px;  margin-top:0; padding-top:0; margin-right:0; padding-right:0; mar=
+gin-bottom:0; padding-bottom:0; margin-left:0; padding-left:0;  text-decora=
+tion: none"><span class=3D"faux_h2_color">
+                                                            <b></b>Commit g=
+rade<br></span></div>
+                                                    </td>
+                                                    <td width=3D"32" height=
+=3D"21" align=3D"left" valign=3D"top" style=3D"">
+                                                        <img height=3D"21" =
+src=3D"https://www.codacy.com/assets/email/commit/image-ff061aa4203b50c9aac=
+586222d3d942ac9e305fd.jpg" style=3D"border: 0; display: block; height: 21px=
+; line-height: 1; max-height: 21px; max-width: 32px; min-height: 21px; min-=
+width: 32px; width: 32px" width=3D"32">
+                                                    </td>
+                                                </tr></tbody></table>
+                                            </td>
+                                        </tr></tbody></table>
+                                    </td>
+                                    <td width=3D"303" align=3D"left" valign=
+=3D"middle" style=3D"background: #FFFFFF" height=3D"21" bgcolor=3D"#FFFFFF">
+                                        <div class=3D"faux_h2 " style=3D"co=
+lor: #000000 !important; font-family: Arial, 'Helvetica Neue', Helvetica, s=
+ans-serif; font-size: 14px; font-weight: normal; line-height: 20px;  margin=
+-top:0; padding-top:0; margin-right:0; padding-right:0; margin-bottom:0; pa=
+dding-bottom:0; margin-left:0; padding-left:0;  text-decoration: none"><spa=
+n class=3D"faux_h2_color">New/fixed issues per category</span></div>
+                                    </td>
+                                </tr></tbody></table>
+                            </td>
+                        </tr>
+<!--Grade + Categories-->
+                        <tr align=3D"left" style=3D"border-collapse: collap=
+se; border-spacing: 0; border: 0">
+                            <td width=3D"640">
+                                <table width=3D"640" cellspacing=3D"0" cell=
+padding=3D"0" border=3D"0" style=3D"border-collapse: collapse; border-spaci=
+ng: 0; border: 0; margin-top: 0px !important; padding-top: 0px !important">=
+<tbody><tr style=3D"border-collapse: collapse; border-spacing: 0; border: 0=
+">
+                                    <td width=3D"340" align=3D"left" valign=
+=3D"top">
+                                        <table width=3D"340" align=3D"cente=
+r" cellspacing=3D"0" cellpadding=3D"0" border=3D"0" style=3D"border-collaps=
+e: collapse; border-spacing: 0; border: 0; margin: 0px 0 0; padding: 0px 0 =
+0"><tbody>
+                                            <tr align=3D"left" style=3D"bor=
+der-collapse: collapse; border-spacing: 0; border: 0">
+                                                <td width=3D"340">
+                                                    <table width=3D"340" ce=
+llspacing=3D"0" cellpadding=3D"0" border=3D"0" style=3D"border-collapse: co=
+llapse; border-spacing: 0; border: 0; margin-top: 0px !important; padding-t=
+op: 0px !important"><tbody><tr style=3D"border-collapse: collapse; border-s=
+pacing: 0; border: 0">
+                                                        <td width=3D"308" h=
+eight=3D"33" align=3D"left" valign=3D"top" style=3D"">
+                                                            <img height=3D"=
+33" src=3D"https://www.codacy.com/assets/email/commit/clear.gif" style=3D"b=
+order: 0; display: block; height: 33px; line-height: 1; max-height: 33px; m=
+ax-width: 308px; min-height: 33px; min-width: 308px; width: 308px" width=3D=
+"308">
+                                                        </td>
+                                                        <td width=3D"32" he=
+ight=3D"33" align=3D"left" valign=3D"top" style=3D"">
+                                                            <img height=3D"=
+33" src=3D"https://www.codacy.com/assets/email/commit/image-d9f1eb48de8dfc3=
+0837ad087f4299827e17a2e27.jpg" style=3D"border: 0; display: block; height: =
+33px; line-height: 1; max-height: 33px; max-width: 32px; min-height: 33px; =
+min-width: 32px; width: 32px" width=3D"32">
+                                                        </td>
+                                                    </tr></tbody></table>
+                                                </td>
+                                            </tr>
+                                            <tr align=3D"left" style=3D"bor=
+der-collapse: collapse; border-spacing: 0; border: 0">
+                                                <td width=3D"340">
+                                                    <table width=3D"340" ce=
+llspacing=3D"0" cellpadding=3D"0" border=3D"0" style=3D"border-collapse: co=
+llapse; border-spacing: 0; border: 0; margin-top: 0px !important; padding-t=
+op: 0px !important"><tbody><tr style=3D"border-collapse: collapse; border-s=
+pacing: 0; border: 0">
+                                                        <td width=3D"106" h=
+eight=3D"127" align=3D"left" valign=3D"top" style=3D"">
+                                                            <img height=3D"=
+127" src=3D"https://www.codacy.com/assets/email/commit/clear.gif" style=3D"=
+border: 0; display: block; height: 127px; line-height: 1; max-height: 127px=
+; max-width: 106px; min-height: 127px; min-width: 106px; width: 106px" widt=
+h=3D"106">
+                                                        </td>
+                                                        <td width=3D"126" h=
+eight=3D"127" align=3D"left" valign=3D"top" style=3D"">
+                                                            <img height=3D"=
+127" src=3D"https://www.codacy.com/assets/email/grade-b.jpg" style=3D"borde=
+r: 0; display: block; height: 127px; line-height: 1; max-height: 127px; max=
+-width: 126px; min-height: 127px; min-width: 126px; width: 126px" width=3D"=
+126">
+                                                        </td>
+                                                        <td width=3D"74" he=
+ight=3D"127" align=3D"left" valign=3D"top" style=3D"">
+                                                            <img height=3D"=
+127" src=3D"https://www.codacy.com/assets/email/commit/clear.gif" style=3D"=
+border: 0; display: block; height: 127px; line-height: 1; max-height: 127px=
+; max-width: 74px; min-height: 127px; min-width: 74px; width: 74px" width=
+=3D"74">
+                                                        </td>
+                                                        <td width=3D"34" he=
+ight=3D"127" align=3D"left" valign=3D"top" style=3D"">
+                                                            <img height=3D"=
+127" src=3D"https://www.codacy.com/assets/email/commit/image-ee95f12113e1aa=
+fb10a67ebf20c8b1390885f2bf.jpg" style=3D"border: 0; display: block; height:=
+ 127px; line-height: 1; max-height: 127px; max-width: 34px; min-height: 127=
+px; min-width: 34px; width: 34px" width=3D"34">
+                                                        </td>
+                                                    </tr></tbody></table>
+                                                </td>
+                                            </tr>
+                                            <tr align=3D"left" style=3D"bor=
+der-collapse: collapse; border-spacing: 0; border: 0">
+                                                <td width=3D"340">
+                                                    <table width=3D"340" ce=
+llspacing=3D"0" cellpadding=3D"0" border=3D"0" style=3D"border-collapse: co=
+llapse; border-spacing: 0; border: 0; margin-top: 0px !important; padding-t=
+op: 0px !important"><tbody><tr style=3D"border-collapse: collapse; border-s=
+pacing: 0; border: 0">
+                                                        <td width=3D"307" a=
+lign=3D"left" valign=3D"top" style=3D"background: #FFFFFF" height=3D"43" bg=
+color=3D"#FFFFFF"><img height=3D"43" src=3D"https://www.codacy.com/assets/e=
+mail/commit/clear.gif" style=3D"border: 0; display: block; height: 43px; li=
+ne-height: 1; max-height: 43px; max-width: 307px; min-height: 43px; min-wid=
+th: 307px; opacity: 0; width: 307px" width=3D"307"></td>
+                                                        <td width=3D"33" he=
+ight=3D"43" align=3D"left" valign=3D"top" style=3D"">
+                                                            <img height=3D"=
+43" src=3D"https://www.codacy.com/assets/email/commit/image-5f70f55384accb7=
+c8aada776ef3a84c61356a5f0.jpg" style=3D"border: 0; display: block; height: =
+43px; line-height: 1; max-height: 43px; max-width: 33px; min-height: 43px; =
+min-width: 33px; width: 33px" width=3D"33">
+                                                        </td>
+                                                    </tr></tbody></table>
+                                                </td>
+                                            </tr>
+                                            <tr align=3D"left" style=3D"bor=
+der-collapse: collapse; border-spacing: 0; border: 0">
+                                                <td width=3D"340">
+                                                    <table width=3D"340" ce=
+llspacing=3D"0" cellpadding=3D"0" border=3D"0" style=3D"border-collapse: co=
+llapse; border-spacing: 0; border: 0; margin-top: 0px !important; padding-t=
+op: 0px !important"><tbody><tr style=3D"border-collapse: collapse; border-s=
+pacing: 0; border: 0">
+                                                        <td width=3D"71" al=
+ign=3D"left" valign=3D"top" style=3D"background: #FFFFFF" height=3D"26" bgc=
+olor=3D"#FFFFFF"><img height=3D"26" src=3D"https://www.codacy.com/assets/em=
+ail/commit/clear.gif" style=3D"border: 0; display: block; height: 26px; lin=
+e-height: 1; max-height: 26px; max-width: 71px; min-height: 26px; min-width=
+: 71px; opacity: 0; width: 71px" width=3D"71"></td>
+                                                        <td width=3D"86" al=
+ign=3D"left" valign=3D"middle" style=3D"background: #3DD89B" height=3D"26" =
+bgcolor=3D"#3DD89B">
+                                                            <div class=3D"w=
+ysiwyg-text-align-center" style=3D"text-align: center" align=3D"center"><sp=
+an style=3D"color: #FFFFFF !important; font-family: Arial, 'Helvetica Neue'=
+, Helvetica, sans-serif; font-size: 12px; font-style: normal; font-weight: =
+lighter; line-height: normal;  margin-top:0; padding-top:0; margin-right:0;=
+ padding-right:0; margin-bottom:0; padding-bottom:0; margin-left:0; padding=
+-left:0;  text-decoration: none">0 fixed issues</span></div>
+                                                        </td>
+                                                        <td width=3D"27" al=
+ign=3D"left" valign=3D"top" style=3D"background: #FFFFFF" height=3D"26" bgc=
+olor=3D"#FFFFFF"><img height=3D"26" src=3D"https://www.codacy.com/assets/em=
+ail/commit/clear.gif" style=3D"border: 0; display: block; height: 26px; lin=
+e-height: 1; max-height: 26px; max-width: 27px; min-height: 26px; min-width=
+: 27px; opacity: 0; width: 27px" width=3D"27"></td>
+                                                        <td width=3D"92" al=
+ign=3D"left" valign=3D"middle" style=3D"background: #F86155" height=3D"26" =
+bgcolor=3D"#F86155">
+                                                            <div class=3D"w=
+ysiwyg-text-align-center" style=3D"text-align: center" align=3D"center"><sp=
+an style=3D"color: #FFFFFF !important; font-family: Arial, 'Helvetica Neue'=
+, Helvetica, sans-serif; font-size: 12px; font-style: normal; font-weight: =
+lighter; line-height: normal;  margin-top:0; padding-top:0; margin-right:0;=
+ padding-right:0; margin-bottom:0; padding-bottom:0; margin-left:0; padding=
+-left:0;  text-decoration: none">2 new issues</span></div>
+                                                        </td>
+                                                        <td width=3D"32" al=
+ign=3D"left" valign=3D"top" style=3D"background: #FFFFFF" height=3D"26" bgc=
+olor=3D"#FFFFFF"><img height=3D"26" src=3D"https://www.codacy.com/assets/em=
+ail/commit/clear.gif" style=3D"border: 0; display: block; height: 26px; lin=
+e-height: 1; max-height: 26px; max-width: 32px; min-height: 26px; min-width=
+: 32px; opacity: 0; width: 32px" width=3D"32"></td>
+                                                        <td width=3D"32" he=
+ight=3D"26" align=3D"left" valign=3D"top" style=3D"">
+                                                            <img height=3D"=
+26" src=3D"https://www.codacy.com/assets/email/commit/image-5cc073619bca696=
+38beecaeaf4f9a31d808db902.jpg" style=3D"border: 0; display: block; height: =
+26px; line-height: 1; max-height: 26px; max-width: 32px; min-height: 26px; =
+min-width: 32px; width: 32px" width=3D"32">
+                                                        </td>
+                                                    </tr></tbody></table>
+                                                </td>
+                                            </tr>
+                                            <tr align=3D"left" style=3D"bor=
+der-collapse: collapse; border-spacing: 0; border: 0">
+                                                <td width=3D"340">
+                                                    <table width=3D"340" ce=
+llspacing=3D"0" cellpadding=3D"0" border=3D"0" style=3D"border-collapse: co=
+llapse; border-spacing: 0; border: 0; margin-top: 0px !important; padding-t=
+op: 0px !important"><tbody><tr style=3D"border-collapse: collapse; border-s=
+pacing: 0; border: 0">
+                                                        <td width=3D"310" a=
+lign=3D"left" valign=3D"top" style=3D"background: #FFFFFF" height=3D"36" bg=
+color=3D"#FFFFFF"><img height=3D"36" src=3D"https://www.codacy.com/assets/e=
+mail/commit/clear.gif" style=3D"border: 0; display: block; height: 36px; li=
+ne-height: 1; max-height: 36px; max-width: 310px; min-height: 36px; min-wid=
+th: 310px; opacity: 0; width: 310px" width=3D"310"></td>
+
+                                                        <td width=3D"30" he=
+ight=3D"36" align=3D"left" valign=3D"top" style=3D"">
+
+
+
+                                                            <img height=3D"=
+36" src=3D"https://www.codacy.com/assets/email/commit/image-83b732692dea2b1=
+ad98b16f01bc027c626ec1d3a.jpg" style=3D"border: 0; display: block; height: =
+36px; line-height: 1; max-height: 36px; max-width: 30px; min-height: 36px; =
+min-width: 30px; width: 30px" width=3D"30">
+                                                        </td>
+
+                                                    </tr></tbody></table>
+                                                </td>
+                                            </tr>
+                                        </tbody></table>
+                                    </td>
+                                    <td width=3D"182" align=3D"left" valign=
+=3D"top">
+                                        <table width=3D"182" align=3D"cente=
+r" cellspacing=3D"0" cellpadding=3D"0" border=3D"0" style=3D"border-collaps=
+e: collapse; border-spacing: 0; border: 0; margin: 0px 0 0; padding: 0px 0 =
+0"><tbody>
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20
+                                                <tr align=3D"left" style=3D=
+"background: #FFFFFF; border-collapse: collapse; border-spacing: 0; border:=
+ 0" bgcolor=3D"#FFFFFF">
+                                                    <td width=3D"100">
+                                                        <table width=3D"100=
+" cellspacing=3D"0" cellpadding=3D"0" border=3D"0" style=3D"border-collapse=
+: collapse; border-spacing: 0; border: 0; margin-top: 0px !important; paddi=
+ng-top: 0px !important"><tbody><tr style=3D"border-collapse: collapse; bord=
+er-spacing: 0; border: 0">
+                                                            <td width=3D"10=
+0" align=3D"left" valign=3D"top" style=3D"background: #FFFFFF" height=3D"10=
+px" bgcolor=3D"#FFFFFF"><img height=3D"27" src=3D"https://www.codacy.com/as=
+sets/email/commit/clear.gif" style=3D"border: 0; display: block; height: 10=
+px; line-height: 1; max-height: 10px; max-width: 100px; min-height: 10px; m=
+in-width: 100px; opacity: 0; width: 100px" width=3D"100"></td>
+                                                        </tr></tbody></tabl=
+e>
+                                                    </td>
+                                                </tr>
+                                                <tr align=3D"left" style=3D=
+"background: #FFFFFF; border-collapse: collapse; border-spacing: 0; border:=
+ 0" bgcolor=3D"#FFFFFF">
+                                                <td width=3D"100">
+                                                    <table width=3D"100" ce=
+llspacing=3D"0" cellpadding=3D"0" border=3D"0" style=3D"border-collapse: co=
+llapse; border-spacing: 0; border: 0; margin-top: 0px !important; padding-t=
+op: 0px !important"><tbody><tr style=3D"border-collapse: collapse; border-s=
+pacing: 0; border: 0">
+                                                        <td width=3D"100" a=
+lign=3D"left" valign=3D"top" style=3D"background: #FFFFFF" height=3D"21" bg=
+color=3D"#FFFFFF">
+                                                            <div class=3D"f=
+aux_h2 " style=3D"color: #000000 !important; font-family: Arial, 'Helvetica=
+ Neue', Helvetica, sans-serif; font-size: 14px; font-weight: normal; line-h=
+eight: 20px;  margin-top:0; padding-top:0; margin-right:0; padding-right:0;=
+ margin-bottom:0; padding-bottom:0; margin-left:0; padding-left:0;  text-de=
+coration: none"><span class=3D"faux_h2_color"><b>Unused Code</b></span></di=
+v>
+                                                        </td>
+                                                    </tr></tbody></table>
+                                                </td>
+                                            </tr>
+                                            <tr align=3D"left" style=3D"bor=
+der-collapse: collapse; border-spacing: 0; border: 0">
+                                                <td width=3D"182">
+                                                    <table width=3D"182" ce=
+llspacing=3D"0" cellpadding=3D"0" border=3D"0" style=3D"border-collapse: co=
+llapse; border-spacing: 0; border: 0; margin-top: 0px !important; padding-t=
+op: 0px !important"><tbody><tr style=3D"border-collapse: collapse; border-s=
+pacing: 0; border: 0">
+                                                        <td width=3D"86" al=
+ign=3D"left" valign=3D"middle" style=3D"background: #3FD99D" height=3D"25" =
+bgcolor=3D"#3FD99D">
+                                                            <div class=3D" =
+wysiwyg-text-align-center" style=3D"text-align: center" align=3D"center"><s=
+pan style=3D"color: #FFFFFF !important; font-family: Arial, 'Helvetica Neue=
+', Helvetica, sans-serif; font-size: 12px; font-style: normal; font-weight:=
+ lighter; line-height: normal;  margin-top:0; padding-top:0; margin-right:0=
+; padding-right:0; margin-bottom:0; padding-bottom:0; margin-left:0; paddin=
+g-left:0;  text-decoration: none">0 fixed issues</span></div>
+                                                        </td>
+
+                                                        <td width=3D"14" al=
+ign=3D"left" valign=3D"top" style=3D"background: #FFFFFF" height=3D"25" bgc=
+olor=3D"#FFFFFF"><img height=3D"25" src=3D"https://www.codacy.com/assets/em=
+ail/commit/clear.gif" style=3D"border: 0; display: block; height: 25px; lin=
+e-height: 1; max-height: 25px; max-width: 14px; min-height: 25px; min-width=
+: 14px; opacity: 0; width: 14px" width=3D"14"></td>
+                                                        <td width=3D"82" al=
+ign=3D"left" valign=3D"middle" style=3D"background: #F86155" height=3D"25" =
+bgcolor=3D"#F86155">
+                                                            <div class=3D" =
+wysiwyg-text-align-center" style=3D"text-align: center" align=3D"center"><s=
+pan style=3D"color: #FFFFFF !important; font-family: Arial, 'Helvetica Neue=
+', Helvetica, sans-serif; font-size: 12px; font-style: normal; font-weight:=
+ lighter; line-height: normal;  margin-top:0; padding-top:0; margin-right:0=
+; padding-right:0; margin-bottom:0; padding-bottom:0; margin-left:0; paddin=
+g-left:0;  text-decoration: none">2 new issues</span></div>
+                                                        </td>
+                                                    </tr></tbody></table>
+                                                </td>
+                                            </tr>
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20
+                                        </tbody></table>
+                                    </td>
+                                    <td width=3D"118" align=3D"left" valign=
+=3D"top" style=3D"background: #FFFFFF" height=3D"265" bgcolor=3D"#FFFFFF"><=
+img height=3D"265" src=3D"https://www.codacy.com/assets/email/commit/clear.=
+gif" style=3D"border: 0; display: block; height: 265px; line-height: 1; max=
+-height: 265px; max-width: 118px; min-height: 265px; min-width: 118px; opac=
+ity: 0; width: 118px" width=3D"118"></td>
+
+                                </tr></tbody></table>
+                            </td>
+                        </tr>
+<!--Separator-->
+                        <tr align=3D"left" style=3D"border-collapse: collap=
+se; border-spacing: 0; border: 0">
+                            <td width=3D"640">
+                                <table width=3D"640" cellspacing=3D"0" cell=
+padding=3D"0" border=3D"0" style=3D"border-collapse: collapse; border-spaci=
+ng: 0; border: 0; margin-top: 0px !important; padding-top: 0px !important">=
+<tbody><tr style=3D"border-collapse: collapse; border-spacing: 0; border: 0=
+">
+                                    <td width=3D"640" height=3D"53" align=
+=3D"left" valign=3D"top" style=3D"">
+
+
+
+                                        <img height=3D"53" src=3D"https://w=
+ww.codacy.com/assets/email/commit/image-5bf83e27bd3bf32b447f7e4f0f0891f652c=
+0f34d.jpg" style=3D"border: 0; display: block; height: 53px; line-height: 1=
+; max-height: 53px; max-width: 640px; min-height: 53px; min-width: 640px; w=
+idth: 640px" width=3D"640">
+                                    </td>
+
+                                </tr></tbody></table>
+                            </td>
+                        </tr>
+                        <tr align=3D"left" style=3D"border-collapse: collap=
+se; border-spacing: 0; border: 0">
+                            <td width=3D"640">
+                                <table width=3D"640" cellspacing=3D"0" cell=
+padding=3D"0" border=3D"0" style=3D"border-collapse: collapse; border-spaci=
+ng: 0; border: 0; margin-top: 0px !important; padding-top: 0px !important">=
+<tbody><tr style=3D"border-collapse: collapse; border-spacing: 0; border: 0=
+">
+                                    <td width=3D"640" align=3D"left" valign=
+=3D"top">
+                                        <table width=3D"640" align=3D"cente=
+r" cellspacing=3D"0" cellpadding=3D"0" border=3D"0" style=3D"border-collaps=
+e: collapse; border-spacing: 0; border: 0; margin: 0px 0 0; padding: 0px 0 =
+0"><tbody><tr align=3D"left" style=3D"border-collapse: collapse; border-spa=
+cing: 0; border: 0">
+                                            <td width=3D"640">
+                                                <table width=3D"640" cellsp=
+acing=3D"0" cellpadding=3D"0" border=3D"0" style=3D"border-collapse: collap=
+se; border-spacing: 0; border: 0; margin-top: 0px !important; padding-top: =
+0px !important"><tbody><tr style=3D"border-collapse: collapse; border-spaci=
+ng: 0; border: 0">
+                                                    <td width=3D"17" height=
+=3D"21" align=3D"left" valign=3D"top" style=3D"">
+
+
+
+                                                        <img height=3D"21" =
+src=3D"https://www.codacy.com/assets/email/commit/clear.gif" style=3D"borde=
+r: 0; display: block; height: 21px; line-height: 1; max-height: 21px; max-w=
+idth: 17px; min-height: 21px; min-width: 17px; width: 17px" width=3D"17">
+                                                    </td>
+
+
+                                                    <td width=3D"623" align=
+=3D"left" valign=3D"middle" style=3D"background: #FFFFFF" height=3D"21" bgc=
+olor=3D"#FFFFFF">
+                                                        <div class=3D"faux_=
+h2 " style=3D"color: #000000 !important; font-family: Arial, 'Helvetica Neu=
+e', Helvetica, sans-serif; font-size: 14px; font-weight: normal; line-heigh=
+t: 20px;  margin-top:0; padding-top:0; margin-right:0; padding-right:0; mar=
+gin-bottom:0; padding-bottom:0; margin-left:0; padding-left:0;  text-decora=
+tion: none"><span class=3D"faux_h2_color">Affected files</span></div>
+                                                    </td>
+
+                                                </tr></tbody></table>
+                                            </td>
+                                        </tr></tbody></table>
+                                    </td>
+
+                                </tr></tbody></table>
+                            </td>
+                        </tr>
+
+
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20
+                        <tr align=3D"left" style=3D"background: #FFFFFF; bo=
+rder-collapse: collapse; border-spacing: 0; border: 0" bgcolor=3D"#FFFFFF">
+                            <td width=3D"640">
+                                <table width=3D"640" cellspacing=3D"0" cell=
+padding=3D"0" border=3D"0" style=3D"border-collapse: collapse; border-spaci=
+ng: 0; border: 0; margin-top: 0px !important; padding-top: 0px !important">=
+<tbody><tr style=3D"border-collapse: collapse; border-spacing: 0; border: 0=
+">
+                                    <td width=3D"640" align=3D"left" valign=
+=3D"top" style=3D"background: #FFFFFF" height=3D"20" bgcolor=3D"#FFFFFF"><i=
+mg height=3D"20" src=3D"https://www.codacy.com/assets/email/commit/clear.gi=
+f" style=3D"border: 0; display: block; height: 20px; line-height: 1; max-he=
+ight: 20px; max-width: 640px; min-height: 20px; min-width: 640px; opacity: =
+0; width: 640px" width=3D"640"></td>
+
+                                </tr></tbody></table>
+                            </td>
+                        </tr>
+                        <tr align=3D"left" style=3D"border-collapse: collap=
+se; border-spacing: 0; border: 0">
+                            <td width=3D"640">
+                                <table width=3D"640" cellspacing=3D"0" cell=
+padding=3D"0" border=3D"0" style=3D"border-collapse: collapse; border-spaci=
+ng: 0; border: 0; margin-top: 0px !important; padding-top: 0px !important">=
+<tbody><tr style=3D"border-collapse: collapse; border-spacing: 0; border: 0=
+">
+                                    <td width=3D"640" align=3D"left" valign=
+=3D"top">
+                                        <table width=3D"640" align=3D"cente=
+r" cellspacing=3D"0" cellpadding=3D"0" border=3D"0" style=3D"border-collaps=
+e: collapse; border-spacing: 0; border: 0; margin: 0px 0 0; padding: 0px 0 =
+0"><tbody><tr align=3D"left" style=3D"border-collapse: collapse; border-spa=
+cing: 0; border: 0">
+                                            <td width=3D"640">
+                                                <table width=3D"640" cellsp=
+acing=3D"0" cellpadding=3D"0" border=3D"0" style=3D"border-collapse: collap=
+se; border-spacing: 0; border: 0; margin-top: 0px !important; padding-top: =
+0px !important"><tbody><tr style=3D"border-collapse: collapse; border-spaci=
+ng: 0; border: 0">
+                                                    <td width=3D"19" height=
+=3D"23" align=3D"left" valign=3D"top" style=3D"">
+
+
+
+                                                        <img height=3D"23" =
+src=3D"https://www.codacy.com/assets/email/commit/clear.gif" style=3D"borde=
+r: 0; display: block; height: 23px; line-height: 1; max-height: 23px; max-w=
+idth: 19px; min-height: 23px; min-width: 19px; width: 19px" width=3D"19">
+                                                    </td>
+
+
+                                                    <td width=3D"421" align=
+=3D"left" valign=3D"middle" style=3D"background: #FFFFFF" height=3D"23" bgc=
+olor=3D"#FFFFFF">
+                                                        <div class=3D"faux_=
+h2 " style=3D"color: #000000 !important; font-family: Arial, 'Helvetica Neu=
+e', Helvetica, sans-serif; font-size: 14px; font-weight: normal; line-heigh=
+t: 20px;  margin-top:0; padding-top:0; margin-right:0; padding-right:0; mar=
+gin-bottom:0; padding-bottom:0; margin-left:0; padding-left:0;  text-decora=
+tion: none"><span class=3D"faux_h2_color">
+                                                            <b>group_ldap.p=
+hp</b>
+                                                        </span></div>
+                                                    </td>
+
+
+                                                    <td width=3D"86" align=
+=3D"left" valign=3D"middle" style=3D"background: #3FD99D" height=3D"23" bgc=
+olor=3D"#3FD99D">
+                                                        <div class=3D" wysi=
+wyg-text-align-center" style=3D"text-align: center" align=3D"center"><span =
+style=3D"color: #FFFFFF !important; font-family: Arial, 'Helvetica Neue', H=
+elvetica, sans-serif; font-size: 12px; font-style: normal; font-weight: lig=
+hter; line-height: normal;  margin-top:0; padding-top:0; margin-right:0; pa=
+dding-right:0; margin-bottom:0; padding-bottom:0; margin-left:0; padding-le=
+ft:0;  text-decoration: none">0 fixed issues</span></div>
+                                                    </td>
+
+                                                    <td width=3D"13" align=
+=3D"left" valign=3D"top" style=3D"background: #FFFFFF" height=3D"23" bgcolo=
+r=3D"#FFFFFF"><img height=3D"23" src=3D"https://www.codacy.com/assets/email=
+/commit/clear.gif" style=3D"border: 0; display: block; height: 23px; line-h=
+eight: 1; max-height: 23px; max-width: 13px; min-height: 23px; min-width: 1=
+3px; opacity: 0; width: 13px" width=3D"13"></td>
+
+
+                                                    <td width=3D"82" align=
+=3D"left" valign=3D"middle" style=3D"background: #F86155" height=3D"23" bgc=
+olor=3D"#F86155">
+                                                        <div class=3D" wysi=
+wyg-text-align-center" style=3D"text-align: center" align=3D"center"><span =
+style=3D"color: #FFFFFF !important; font-family: Arial, 'Helvetica Neue', H=
+elvetica, sans-serif; font-size: 12px; font-style: normal; font-weight: lig=
+hter; line-height: normal;  margin-top:0; padding-top:0; margin-right:0; pa=
+dding-right:0; margin-bottom:0; padding-bottom:0; margin-left:0; padding-le=
+ft:0;  text-decoration: none">2 new issues</span></div>
+                                                    </td>
+
+                                                    <td width=3D"19" align=
+=3D"left" valign=3D"top" style=3D"background: #FFFFFF" height=3D"23" bgcolo=
+r=3D"#FFFFFF"><img height=3D"23" src=3D"https://www.codacy.com/assets/email=
+/commit/clear.gif" style=3D"border: 0; display: block; height: 23px; line-h=
+eight: 1; max-height: 23px; max-width: 19px; min-height: 23px; min-width: 1=
+9px; opacity: 0; width: 19px" width=3D"19"></td>
+
+                                                </tr></tbody></table>
+                                            </td>
+                                        </tr></tbody></table>
+                                    </td>
+
+                                </tr></tbody></table>
+                            </td>
+                        </tr>
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20
+
+
+                        <tr align=3D"left" style=3D"border-collapse: collap=
+se; border-spacing: 0; border: 0">
+                            <td width=3D"640">
+                                <table width=3D"640" cellspacing=3D"0" cell=
+padding=3D"0" border=3D"0" style=3D"border-collapse: collapse; border-spaci=
+ng: 0; border: 0; margin-top: 0px !important; padding-top: 0px !important">=
+<tbody><tr style=3D"border-collapse: collapse; border-spacing: 0; border: 0=
+">
+                                    <td width=3D"640" height=3D"67" align=
+=3D"left" valign=3D"top" style=3D"">
+
+
+
+                                        <img height=3D"67" src=3D"https://w=
+ww.codacy.com/assets/email/commit/image-bad045d2dc89ea357247a3a608893f1b0a3=
+9cc80.jpg" style=3D"border: 0; display: block; height: 67px; line-height: 1=
+; max-height: 67px; max-width: 640px; min-height: 67px; min-width: 640px; w=
+idth: 640px" width=3D"640">
+                                    </td>
+
+                                </tr></tbody></table>
+                            </td>
+                        </tr>
+                        <tr align=3D"left" style=3D"border-collapse: collap=
+se; border-spacing: 0; border: 0">
+                            <td width=3D"640">
+                                <table width=3D"640" cellspacing=3D"0" cell=
+padding=3D"0" border=3D"0" style=3D"border-collapse: collapse; border-spaci=
+ng: 0; border: 0; margin-top: 0px !important; padding-top: 0px !important">=
+<tbody><tr style=3D"border-collapse: collapse; border-spacing: 0; border: 0=
+">
+                                    <td width=3D"221" height=3D"40" align=
+=3D"left" valign=3D"top" style=3D"">
+
+
+
+                                        <img height=3D"40" src=3D"https://w=
+ww.codacy.com/assets/email/commit/clear.gif" style=3D"border: 0; display: b=
+lock; height: 40px; line-height: 1; max-height: 40px; max-width: 221px; min=
+-height: 40px; min-width: 221px; width: 221px" width=3D"221">
+                                    </td>
+
+                                    <td width=3D"201" height=3D"40" align=
+=3D"left" valign=3D"top" style=3D"">
+
+                                        <a href=3D"https://www.codacy.com/a=
+pp/thomas-mueller/core?utm_campaign=3Dnew_commit&amp;utm_medium=3DEmail&amp=
+;utm_source=3DInternal" target=3D"_blank" style=3D"border: none; color: #FF=
+FFFF !important; display: block; font-family: Arial, 'Helvetica Neue', Helv=
+etica, sans-serif; font-size: 10px; font-style: normal; font-weight: lighte=
+r; height: 40px; line-height: normal;  margin-top:0; padding-top:0; margin-=
+right:0; padding-right:0; margin-bottom:0; padding-bottom:0; margin-left:0;=
+ padding-left:0;  text-decoration: none; width: 201px">
+
+                                            <img height=3D"40" src=3D"https=
+://www.codacy.com/assets/email/commit/image-9542c254bca1da699cb16e04cb93b3a=
+47f39b1d4.jpg" style=3D"border: 0; color: #000001 !important; display: bloc=
+k; height: 40px; line-height: 1; max-height: 40px; max-width: 201px; min-he=
+ight: 40px; min-width: 201px; width: 201px" width=3D"201"></a>
+
+                                    </td>
+
+                                    <td width=3D"218" height=3D"40" align=
+=3D"left" valign=3D"top" style=3D"">
+
+
+
+                                        <img height=3D"40" src=3D"https://w=
+ww.codacy.com/assets/email/commit/clear.gif" style=3D"border: 0; display: b=
+lock; height: 40px; line-height: 1; max-height: 40px; max-width: 218px; min=
+-height: 40px; min-width: 218px; width: 218px" width=3D"218">
+                                    </td>
+
+                                </tr></tbody></table>
+                            </td>
+                        </tr>
+                        <tr align=3D"left" style=3D"background: #FFFFFF; bo=
+rder-collapse: collapse; border-spacing: 0; border: 0" bgcolor=3D"#FFFFFF">
+                            <td width=3D"640">
+                                <table width=3D"640" cellspacing=3D"0" cell=
+padding=3D"0" border=3D"0" style=3D"border-collapse: collapse; border-spaci=
+ng: 0; border: 0; margin-top: 0px !important; padding-top: 0px !important">=
+<tbody><tr style=3D"border-collapse: collapse; border-spacing: 0; border: 0=
+">
+                                    <td width=3D"640" align=3D"left" valign=
+=3D"top" style=3D"background: #FFFFFF" height=3D"56" bgcolor=3D"#FFFFFF"><i=
+mg height=3D"56" src=3D"https://www.codacy.com/assets/email/commit/clear.gi=
+f" style=3D"border: 0; display: block; height: 56px; line-height: 1; max-he=
+ight: 56px; max-width: 640px; min-height: 56px; min-width: 640px; opacity: =
+0; width: 640px" width=3D"640"></td>
+
+                                </tr></tbody></table>
+                            </td>
+                        </tr>
+                        <tr align=3D"left" style=3D"border-collapse: collap=
+se; border-spacing: 0; border: 0">
+                            <td width=3D"640">
+                                <table width=3D"640" cellspacing=3D"0" cell=
+padding=3D"0" border=3D"0" style=3D"border-collapse: collapse; border-spaci=
+ng: 0; border: 0; margin-top: 0px !important; padding-top: 0px !important">=
+<tbody><tr style=3D"border-collapse: collapse; border-spacing: 0; border: 0=
+">
+                                    <td width=3D"640" height=3D"42" align=
+=3D"left" valign=3D"top" style=3D"">
+
+
+
+                                        <img height=3D"42" src=3D"https://w=
+ww.codacy.com/assets/email/commit/image-8efddbcbdf9a8a04f27633e9be8b865ba01=
+23f38.jpg" style=3D"border: 0; display: block; height: 42px; line-height: 1=
+; max-height: 42px; max-width: 640px; min-height: 42px; min-width: 640px; w=
+idth: 640px" width=3D"640">
+                                    </td>
+
+                                </tr></tbody></table>
+                            </td>
+                        </tr>
+                        <tr align=3D"left" style=3D"border-collapse: collap=
+se; border-spacing: 0; border: 0">
+                            <td width=3D"640">
+                                <table width=3D"640" cellspacing=3D"0" cell=
+padding=3D"0" border=3D"0" style=3D"border-collapse: collapse; border-spaci=
+ng: 0; border: 0; margin-top: 0px !important; padding-top: 0px !important">=
+<tbody><tr style=3D"border-collapse: collapse; border-spacing: 0; border: 0=
+">
+                                    <td width=3D"640" align=3D"left" valign=
+=3D"top">
+                                        <table width=3D"640" align=3D"cente=
+r" cellspacing=3D"0" cellpadding=3D"0" border=3D"0" style=3D"border-collaps=
+e: collapse; border-spacing: 0; border: 0; margin: 0px 0 0; padding: 0px 0 =
+0"><tbody><tr align=3D"left" style=3D"border-collapse: collapse; border-spa=
+cing: 0; border: 0">
+                                            <td width=3D"640">
+                                                <table width=3D"640" cellsp=
+acing=3D"0" cellpadding=3D"0" border=3D"0" style=3D"border-collapse: collap=
+se; border-spacing: 0; border: 0; margin-top: 0px !important; padding-top: =
+0px !important"><tbody><tr style=3D"border-collapse: collapse; border-spaci=
+ng: 0; border: 0">
+                                                    <td width=3D"202" align=
+=3D"left" valign=3D"top" style=3D"background: #F2F2F2" height=3D"52" bgcolo=
+r=3D"#F2F2F2"><img height=3D"52" src=3D"https://www.codacy.com/assets/email=
+/commit/clear.gif" style=3D"border: 0; display: block; height: 52px; line-h=
+eight: 1; max-height: 52px; max-width: 202px; min-height: 52px; min-width: =
+202px; opacity: 0; width: 202px" width=3D"202"></td>
+
+                                                    <td width=3D"29" height=
+=3D"52" align=3D"left" valign=3D"top" style=3D"">
+
+                                                        <a href=3D"https://=
+www.facebook.com/codacy?fref=3Dts" target=3D"_blank" style=3D"border: none;=
+ color: #FFFFFF !important; display: block; font-family: Arial, 'Helvetica =
+Neue', Helvetica, sans-serif; font-size: 10px; font-style: normal; font-wei=
+ght: lighter; height: 52px; line-height: normal;  margin-top:0; padding-top=
+:0; margin-right:0; padding-right:0; margin-bottom:0; padding-bottom:0; mar=
+gin-left:0; padding-left:0;  text-decoration: none; width: 29px">
+
+                                                            <img height=3D"=
+52" src=3D"https://www.codacy.com/assets/email/commit/image-aae6270978debab=
+a4f944b9cc858a1ec23c3bfa2.jpg" style=3D"border: 0; color: #000001 !importan=
+t; display: block; height: 52px; line-height: 1; max-height: 52px; max-widt=
+h: 29px; min-height: 52px; min-width: 29px; width: 29px" width=3D"29"></a>
+
+                                                    </td>
+
+                                                    <td width=3D"36" align=
+=3D"left" valign=3D"top" style=3D"background: #F2F2F2" height=3D"52" bgcolo=
+r=3D"#F2F2F2"><img height=3D"52" src=3D"https://www.codacy.com/assets/email=
+/commit/clear.gif" style=3D"border: 0; display: block; height: 52px; line-h=
+eight: 1; max-height: 52px; max-width: 36px; min-height: 52px; min-width: 3=
+6px; opacity: 0; width: 36px" width=3D"36"></td>
+
+                                                    <td width=3D"32" height=
+=3D"52" align=3D"left" valign=3D"top" style=3D"">
+
+                                                        <a href=3D"https://=
+twitter.com/codacy" target=3D"_blank" style=3D"border: none; color: #FFFFFF=
+ !important; display: block; font-family: Arial, 'Helvetica Neue', Helvetic=
+a, sans-serif; font-size: 10px; font-style: normal; font-weight: lighter; h=
+eight: 52px; line-height: normal;  margin-top:0; padding-top:0; margin-righ=
+t:0; padding-right:0; margin-bottom:0; padding-bottom:0; margin-left:0; pad=
+ding-left:0;  text-decoration: none; width: 32px">
+
+                                                            <img height=3D"=
+52" src=3D"https://www.codacy.com/assets/email/commit/image-0e067838c2b7f73=
+f3dffbf628eefb8720961c804.jpg" style=3D"border: 0; color: #000001 !importan=
+t; display: block; height: 52px; line-height: 1; max-height: 52px; max-widt=
+h: 32px; min-height: 52px; min-width: 32px; width: 32px" width=3D"32"></a>
+
+                                                    </td>
+
+                                                    <td width=3D"36" align=
+=3D"left" valign=3D"top" style=3D"background: #F2F2F2" height=3D"52" bgcolo=
+r=3D"#F2F2F2"><img height=3D"52" src=3D"https://www.codacy.com/assets/email=
+/commit/clear.gif" style=3D"border: 0; display: block; height: 52px; line-h=
+eight: 1; max-height: 52px; max-width: 36px; min-height: 52px; min-width: 3=
+6px; opacity: 0; width: 36px" width=3D"36"></td>
+
+                                                    <td width=3D"29" height=
+=3D"52" align=3D"left" valign=3D"top" style=3D"">
+
+                                                        <a href=3D"https://=
+www.linkedin.com/company/qamine" target=3D"_blank" style=3D"border: none; c=
+olor: #FFFFFF !important; display: block; font-family: Arial, 'Helvetica Ne=
+ue', Helvetica, sans-serif; font-size: 10px; font-style: normal; font-weigh=
+t: lighter; height: 52px; line-height: normal;  margin-top:0; padding-top:0=
+; margin-right:0; padding-right:0; margin-bottom:0; padding-bottom:0; margi=
+n-left:0; padding-left:0;  text-decoration: none; width: 29px">
+
+                                                            <img height=3D"=
+52" src=3D"https://www.codacy.com/assets/email/commit/image-ec3c8689b47d3f5=
+5bb97961e3a11ad436530e4dc.jpg" style=3D"border: 0; color: #000001 !importan=
+t; display: block; height: 52px; line-height: 1; max-height: 52px; max-widt=
+h: 29px; min-height: 52px; min-width: 29px; width: 29px" width=3D"29"></a>
+
+                                                    </td>
+
+                                                    <td width=3D"36" align=
+=3D"left" valign=3D"top" style=3D"background: #F2F2F2" height=3D"52" bgcolo=
+r=3D"#F2F2F2"><img height=3D"52" src=3D"https://www.codacy.com/assets/email=
+/commit/clear.gif" style=3D"border: 0; display: block; height: 52px; line-h=
+eight: 1; max-height: 52px; max-width: 36px; min-height: 52px; min-width: 3=
+6px; opacity: 0; width: 36px" width=3D"36"></td>
+
+                                                    <td width=3D"33" height=
+=3D"52" align=3D"left" valign=3D"top" style=3D"">
+
+                                                        <a href=3D"https://=
+github.com/codacy" target=3D"_blank" style=3D"border: none; color: #FFFFFF =
+!important; display: block; font-family: Arial, 'Helvetica Neue', Helvetica=
+, sans-serif; font-size: 10px; font-style: normal; font-weight: lighter; he=
+ight: 52px; line-height: normal;  margin-top:0; padding-top:0; margin-right=
+:0; padding-right:0; margin-bottom:0; padding-bottom:0; margin-left:0; padd=
+ing-left:0;  text-decoration: none; width: 33px">
+
+                                                            <img height=3D"=
+52" src=3D"https://www.codacy.com/assets/email/commit/image-b13e7391e150b85=
+99b7e31e2512f50e83be9e770.jpg" style=3D"border: 0; color: #000001 !importan=
+t; display: block; height: 52px; line-height: 1; max-height: 52px; max-widt=
+h: 33px; min-height: 52px; min-width: 33px; width: 33px" width=3D"33"></a>
+
+                                                    </td>
+
+                                                    <td width=3D"207" align=
+=3D"left" valign=3D"top" style=3D"background: #F2F2F2" height=3D"52" bgcolo=
+r=3D"#F2F2F2"><img height=3D"52" src=3D"https://www.codacy.com/assets/email=
+/commit/clear.gif" style=3D"border: 0; display: block; height: 52px; line-h=
+eight: 1; max-height: 52px; max-width: 207px; min-height: 52px; min-width: =
+207px; opacity: 0; width: 207px" width=3D"207"></td>
+
+                                                </tr></tbody></table>
+                                            </td>
+                                        </tr></tbody></table>
+                                    </td>
+
+                                </tr></tbody></table>
+                            </td>
+                        </tr>
+                        <tr align=3D"left" style=3D"border-collapse: collap=
+se; border-spacing: 0; border: 0">
+                            <td width=3D"640">
+                                <table width=3D"640" cellspacing=3D"0" cell=
+padding=3D"0" border=3D"0" style=3D"border-collapse: collapse; border-spaci=
+ng: 0; border: 0; margin-top: 0px !important; padding-top: 0px !important">=
+<tbody><tr style=3D"border-collapse: collapse; border-spacing: 0; border: 0=
+">
+                                    <td width=3D"640" height=3D"43" align=
+=3D"left" valign=3D"top" style=3D"">
+
+
+
+                                        <img height=3D"43" src=3D"https://w=
+ww.codacy.com/assets/email/commit/image-3b1b5fefd2610dcb06dd6e0d43116ba5437=
+88c3c.jpg" style=3D"border: 0; display: block; height: 43px; line-height: 1=
+; max-height: 43px; max-width: 640px; min-height: 43px; min-width: 640px; w=
+idth: 640px" width=3D"640">
+                                    </td>
+
+                                </tr></tbody></table>
+                            </td>
+                        </tr>
+                    </tbody></table>
+                </div>
+
+
+            </td>
+        </tr></table>
+        <p style=3D"color: #000000 !important; font-family: Arial, 'Helveti=
+ca Neue', Helvetica, sans-serif; font-size: 11px; line-height: 17px;  margi=
+n-top:0; padding-top:0; margin-right:0; padding-right:0; margin-bottom:0; p=
+adding-bottom:0; margin-left:0; padding-left:0;  text-align: center" align=
+=3D"center">
+            <br><br>
+            If you are no longer interested, you can <unsubscribe><a style=
+=3D"color: #000000 !important; font-family: Arial, 'Helvetica Neue', Helvet=
+ica, sans-serif; font-size: 11px; line-height: 17px;" href=3D"https://www.c=
+odacy.com/account">unsubscribe here</a></unsubscribe>.
+            <singleline></singleline><br><br></p>
+
+    </body>
+</html>
+
+
+------=_Part_8_244674049.1432038946255--

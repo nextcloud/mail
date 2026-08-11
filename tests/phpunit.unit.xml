@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 bootstrap="bootstrap.php"
+		 verbose="true"
+		 xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.6/phpunit.xsd">
+	<testsuite name="Mail app tests">
+    	<directory suffix="Test.php">Unit</directory>
+	</testsuite>
+	<coverage>
+		<include>
+			<directory suffix=".php">../lib</directory>
+		</include>
+		<exclude>
+			<directory suffix=".php">../mail/lib/Migration</directory>
+			<directory suffix=".php">../mail/lib/Vendor</directory>
+		</exclude>
+		<report>
+			<clover outputFile="./clover.unit.xml"/>
+		</report>
+	</coverage>
+</phpunit>

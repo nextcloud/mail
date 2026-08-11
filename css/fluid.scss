@@ -1,0 +1,14 @@
+/*!
+ * SPDX-FileCopyrightText: 2025 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
+@mixin background {
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: right 100% bottom 40%;
+}
+
+@mixin gradient-background {
+	background: radial-gradient(100% 100% at 100% 100%, var(--color-primary-element) 0%, rgba(var(--color-main-background-rgb), 0) 100%), var(--color-main-background);
+}

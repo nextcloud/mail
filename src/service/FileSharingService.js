@@ -1,0 +1,48 @@
+/**
+ * SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
+// File originally from https://github.com/nextcloud/spreed/blob/bc22c21cf70a6243e7df7d838d49018c61468050/src/services/filesSharingServices.js
+// Slightly modified for use in Mail
+
+import axios from '@nextcloud/axios'
+import { showError } from '@nextcloud/dialogs'
+import { generateOcsUrl } from '@nextcloud/router'
+import logger from '../logger.js'
+
+/**
+ * Makes a share link for a given file or directory.
+ *
+ * @param {string} path The file path from the user's root directory. e.g. `/myfile.txt`
+ * @param {string} token The conversation's token
+ * @return {string} url share link
+ */
+async function shareFile(path, token) {
+	try {
+		const res = await axios.post(generateOcsUrl('apps/files_sharing/api/v1/', 2) + 'shares', {
+			shareType: 3, // OC.Share.SHARE_TYPE_LINK,
+			path,
+			shareWith: token,
+		})
+		return res.data.ocs.data.url
+	} catch (error) {
+		if (
+			error.response
+			&& error.response.data
+			&& error.response.data.ocs
+			&& error.response.data.ocs.meta
+			&& error.response.data.ocs.meta.message
+		) {
+			logger.error(`Error while sharing file: ${error.response.data.ocs.meta.message || 'Unknown error'}`, { error })
+			showError(error.response.data.ocs.meta.message)
+			throw error
+		} else {
+			logger.error('Error while sharing file: Unknown error', { error })
+			showError(t('mail', 'Error while sharing file'))
+			throw error
+		}
+	}
+}
+
+export { shareFile }

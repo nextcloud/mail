@@ -1,0 +1,249 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2016 ownCloud, Inc.
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
+namespace OCA\Mail\Tests\Unit\Service;
+
+use ChristophWurst\Nextcloud\Testing\TestCase;
+use OCA\Mail\Html\ProxyHmacGenerator;
+use OCA\Mail\Service\Html;
+use OCP\IRequest;
+use OCP\IURLGenerator;
+use OCP\Server;
+
+class HtmlTest extends TestCase {
+	/**
+	 * @dataProvider linkDetectionProvider
+	 * @param $expected
+	 * @param $text
+	 */
+	public function testLinkDetection(string $expected, string $text) {
+		$urlGenerator = Server::get(IURLGenerator::class);
+		$request = Server::get(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$withLinks = $html->convertLinks($text);
+
+		self::assertSame($expected, $withLinks);
+	}
+
+	public function linkDetectionProvider() {
+		return [
+			['abc', 'abc'],
+			['&lt;&gt;', '<>'],
+			['&lt;&gt;', '&lt;&gt;'], // no double encoding
+			['foo&amp;bar', 'foo&bar'],
+			['<a href="http://google.com" rel="noreferrer noopener" target="_blank">http://google.com</a>', 'http://google.com'],
+			['<a href="https://google.com" rel="noreferrer noopener" target="_blank">https://google.com</a>', 'https://google.com'],
+			['<a href="ftp://google.com" rel="noreferrer noopener" target="_blank">ftp://google.com</a>', 'ftp://google.com'],
+			['<a href="http://www.themukt.com/2014/07/23/take-control-cloud-owncloud-7/" rel="noreferrer noopener" target="_blank">http://www.themukt.com/2014/07/23/take-control-cloud-owncloud-7/</a>', 'http://www.themukt.com/2014/07/23/take-control-cloud-owncloud-7/'],
+			['<a href="https://travis-ci.org/owncloud/music/builds/22037091" rel="noreferrer noopener" target="_blank">https://travis-ci.org/owncloud/music/builds/22037091</a>', 'https://travis-ci.org/owncloud/music/builds/22037091'],
+			['(<a href="ftp://google.com" rel="noreferrer noopener" target="_blank">ftp://google.com</a>)', '(ftp://google.com)'],
+			['<a href="https://build.opensuse.org/package/view_file/isv:ownCloud:community:7.0/owncloud/debian.changelog?expand=1" rel="noreferrer noopener" target="_blank">https://build.opensuse.org/package/view_file/isv:ownCloud:community:7.0/owncloud/debian.changelog?expand=1</a>', 'https://build.opensuse.org/package/view_file/isv:ownCloud:community:7.0/owncloud/debian.changelog?expand=1'],
+			['(<a href="https://build.opensuse.org/package/view_file/isv:ownCloud:community:7.0/owncloud/debian.changelog?expand=1" rel="noreferrer noopener" target="_blank">https://build.opensuse.org/package/view_file/isv:ownCloud:community:7.0/owncloud/debian.changelog?expand=1</a>)', '(https://build.opensuse.org/package/view_file/isv:ownCloud:community:7.0/owncloud/debian.changelog?expand=1)'],
+			['<a href="http://apps.owncloud.com/content/show.php/Music?content=160485" rel="noreferrer noopener" target="_blank">http://apps.owncloud.com/content/show.php/Music?content=160485</a>', 'http://apps.owncloud.com/content/show.php/Music?content=160485'],
+			['<a href="https://groups.google.com/forum/#!forum/ctpug" rel="noreferrer noopener" target="_blank">https://groups.google.com/forum/#!forum/ctpug</a>', 'https://groups.google.com/forum/#!forum/ctpug'],
+			['<a href="http://www.amazon.de/s/ref=nb_sb_noss?__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&amp;url=search-alias%3Daps&amp;field-keywords=Fax%2C+Kopierer+scanner+Laser&amp;rh=i%3Aaps%2Ck%3AFax%5Cc+Kopierer+scanner+Laser" rel="noreferrer noopener" target="_blank">http://www.amazon.de/s/ref=nb_sb_noss?__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&amp;url=search-alias%3Daps&amp;field-keywords=Fax%2C+Kopierer+scanner+Laser&amp;rh=i%3Aaps%2Ck%3AFax%5Cc+Kopierer+scanner+Laser</a>', 'http://www.amazon.de/s/ref=nb_sb_noss?__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&url=search-alias%3Daps&field-keywords=Fax%2C+Kopierer+scanner+Laser&rh=i%3Aaps%2Ck%3AFax%5Cc+Kopierer+scanner+Laser'],
+			['<a href="https://ci.owncloud.org/job/ownCloud-Documentation(7.0)/504/changes" rel="noreferrer noopener" target="_blank">https://ci.owncloud.org/job/ownCloud-Documentation(7.0)/504/changes</a>', 'https://ci.owncloud.org/job/ownCloud-Documentation(7.0)/504/changes'],
+			['<a href="https://communities.coverity.com/community/scan-(open-source)/content" rel="noreferrer noopener" target="_blank">https://communities.coverity.com/community/scan-(open-source)/content</a>', 'https://communities.coverity.com/community/scan-(open-source)/content'],
+			['<a href="https://ma.ellak.gr/events/5%CE%BF%CF%82-%CE%B5%CE%BA%CF%80%CE%B1%CE%B9%CE%B4%CE%B5%CF%85%CF%84%CE%B9%CE%BA%CF%8C%CF%82-%CE%BA%CF%8D%CE%BA%CE%BB%CE%BF%CF%82-%CF%83%CE%B5%CE%BC%CE%B9%CE%BD%CE%B1%CF%81%CE%AF%CF%89%CE%BD-%CE%B5-5/" rel="noreferrer noopener" target="_blank">https://ma.ellak.gr/events/5ος-εκπαιδευτικός-κύκλος-σεμιναρίων-ε-5/</a>', 'https://ma.ellak.gr/events/5ος-εκπαιδευτικός-κύκλος-σεμιναρίων-ε-5/'],
+		];
+	}
+
+	/**
+	 * @dataProvider invalidUtf8Provider
+	 */
+	public function testLinkDetectionRepairsInvalidUtf8(string $text, string $expectedSubstring): void {
+		$urlGenerator = Server::get(IURLGenerator::class);
+		$request = Server::get(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$withLinks = $html->convertLinks($text);
+
+		self::assertNotSame('', $withLinks);
+		self::assertStringContainsString($expectedSubstring, $withLinks);
+	}
+
+	public function invalidUtf8Provider(): array {
+		return [
+			'stray latin-1 byte' => ["Hello team,\r\n\r\nSee you n\xFCxt week.\r\n", 'Hello team,'],
+			// The two 3-byte sequences below are a UTF-16 surrogate pair (high D83D,
+			// low DE09) that got UTF-8-encoded one half at a time instead of combined
+			// into one 4-byte sequence - a CESU-8 encoding bug seen from some senders.
+			'cesu-8 surrogate pair' => ["Hello team,\r\n\r\nSee you soon \xED\xA0\xBD\xED\xB8\x89\r\n", 'Hello team,'],
+			'invalid bytes at the very start' => ["\xFF\xFEHello team,\r\n", 'Hello team,'],
+			'only invalid bytes' => ["\xFF\xFE\xFD", '?'],
+		];
+	}
+
+	public function testLinkDetectionLeavesValidMultibyteTextUnchanged(): void {
+		$urlGenerator = Server::get(IURLGenerator::class);
+		$request = Server::get(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$text = "Hello team, \u{1F609}\r\n\r\nÜmlaut test: äöüß";
+		$withLinks = $html->convertLinks($text);
+
+		self::assertStringContainsString('äöüß', $withLinks);
+		self::assertStringContainsString("\u{1F609}", $withLinks);
+	}
+
+	/**
+	 * @dataProvider parseMailBodyProvider
+	 * @param $expected
+	 * @param $text
+	 */
+	public function testParseMailBody($expectedBody, $expectedSignature, $text) {
+		$urlGenerator = \OCP\Server::get(\OCP\IURLGenerator::class);
+		$request = \OCP\Server::get(\OCP\IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		[$b, $s] = $html->parseMailBody($text);
+		$this->assertSame($expectedBody, $b);
+		$this->assertSame($expectedSignature, $s);
+	}
+
+	public function parseMailBodyProvider() {
+		return [
+			['abc', null, 'abc'],
+			['abc', 'def', "abc-- \r\ndef"],
+			["abc-- \r\ndef", 'ghi', "abc-- \r\ndef-- \r\nghi"],
+		];
+	}
+
+	public function testSanitizeHtmlMailBodyRewritesCidToUrl(): void {
+		$attachmentUrl = 'https://mail.example.com/index.php/apps/mail/api/messages/42/attachment/7';
+		$urlGenerator = $this->createMock(IURLGenerator::class);
+		$urlGenerator->expects(self::once())
+			->method('linkToRouteAbsolute')
+			->with('mail.messages.downloadAttachment', ['id' => 42, 'attachmentId' => '7'])
+			->willReturn($attachmentUrl);
+		$request = $this->createStub(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$inlineAttachments = [['id' => '7', 'cid' => 'image001@example.com']];
+
+		$result = $html->sanitizeHtmlMailBody(42, '<img src="cid:image001@example.com">', $inlineAttachments);
+
+		$this->assertStringContainsString($attachmentUrl, $result);
+		$this->assertStringNotContainsString('src="cid:', $result);
+	}
+
+	public function testSanitizeHtmlMailBodySetsDataCidOnInlineImage(): void {
+		$attachmentUrl = 'https://mail.example.com/index.php/apps/mail/api/messages/42/attachment/7';
+		$urlGenerator = $this->createMock(IURLGenerator::class);
+		$urlGenerator->expects(self::once())
+			->method('linkToRouteAbsolute')
+			->with('mail.messages.downloadAttachment', ['id' => 42, 'attachmentId' => '7'])
+			->willReturn($attachmentUrl);
+		$request = $this->createStub(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$inlineAttachments = [['id' => '7', 'cid' => 'image001@example.com']];
+
+		$result = $html->sanitizeHtmlMailBody(42, '<img src="cid:image001@example.com">', $inlineAttachments);
+
+		$this->assertStringContainsString('data-cid="image001@example.com"', $result);
+	}
+
+	/**
+	 * Non-Outlook renderers ignore the <![if !mso]> markers and show the content
+	 * between them. Some libxml versions leave the markers in as visible text.
+	 */
+	public function testSanitizeHtmlMailBodyStripsDownlevelRevealedConditionals(): void {
+		$urlGenerator = $this->createStub(IURLGenerator::class);
+		$request = $this->createStub(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+		$mailBody = <<<'HTML'
+			<!DOCTYPE html>
+			<html>
+			<head><meta charset="utf-8"><title>MSO conditional rendering test</title></head>
+			<body style="font-family: Arial, sans-serif;">
+			<p>Hello,</p>
+			<p>There is a new announcement from EXAMPLE ORGANISATION.</p>
+			<![if !mso]>
+			<p><span>EXAMPLE INFORMATION SHEET</span></p>
+			<![endif]>
+			<!--[if mso]>
+			<p>Alternative content for Microsoft Outlook.</p>
+			<![endif]-->
+			<![if !mso]>
+			<a href="https://example.com/announcement">Review announcement</a>
+			<![endif]>
+			</body>
+			</html>
+			HTML;
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$result = $html->sanitizeHtmlMailBody(42, $mailBody, []);
+
+		self::assertStringNotContainsString('[if !mso]', $result);
+		self::assertStringNotContainsString('[endif]', $result);
+		self::assertStringContainsString('EXAMPLE INFORMATION SHEET', $result);
+		self::assertStringContainsString('Review announcement', $result);
+		self::assertStringNotContainsString('Alternative content', $result);
+	}
+
+	/**
+	 * @dataProvider downlevelRevealedConditionalProvider
+	 */
+	public function testSanitizeHtmlMailBodyStripsConditionalVariants(string $conditional): void {
+		$urlGenerator = $this->createStub(IURLGenerator::class);
+		$request = $this->createStub(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$result = $html->sanitizeHtmlMailBody(42, "$conditional<p>Kept</p>", []);
+
+		self::assertDoesNotMatchRegularExpression('/<!\[\s*(?:end)?if\b/i', $result);
+		self::assertStringNotContainsString('&lt;!', $result);
+		self::assertStringContainsString('<p>Kept</p>', $result);
+	}
+
+	public function downlevelRevealedConditionalProvider(): array {
+		return [
+			'revealed if' => ['<![if !mso]>'],
+			'revealed endif' => ['<![endif]>'],
+			'uppercase' => ['<![IF !MSO]>'],
+			'padded brackets' => ['<![ endif ]>'],
+			'version gate' => ['<![if gte mso 9]>'],
+		];
+	}
+
+	public function testSanitizeStyleSheet() {
+		$blockedUrl = '/apps/mail/img/blocked-image.png';
+		$urlGenerator = self::createMock(IURLGenerator::class);
+		$urlGenerator->expects(self::any())
+			->method('imagePath')
+			->with('mail', 'blocked-image.png')
+			->willReturn($blockedUrl);
+		$request = Server::get(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+
+		$styleSheet = implode(' ', [
+			'big { background-image: url(https://tracker.com/script.png); }',
+			'ul { list-style: url(https://tracker.com/script.png) outside; }',
+		]);
+		$expected = implode('', [
+			"<style type=\"text/css\" data-original-content=\"$styleSheet\">",
+			"big{background-image:url(\"$blockedUrl\")}ul{list-style:url(\"$blockedUrl\") outside}",
+			'</style>',
+		]);
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$sanitizedStyleSheet = $html->sanitizeStyleSheet($styleSheet);
+		self::assertSame($expected, $sanitizedStyleSheet);
+	}
+}

@@ -1,0 +1,55 @@
+# SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+# SPDX-FileCopyrightText: 2013-2016 ownCloud, Inc.
+# SPDX-License-Identifier: AGPL-3.0-only
+# Composer
+composer.phar
+/lib/Vendor
+/vendor/
+/vendor-bin/*/vendor
+
+# Mac OS
+.DS_Store
+
+# test coverage
+tests/clover*.xml
+
+# Node.js modules
+node_modules/
+
+/js
+
+# packaged app
+build/artifacts
+
+# NetBeans project
+nbproject/
+
+translations.js
+
+# JS coverage
+coverage/
+
+# vim
+.*.sw?
+
+
+# PHPunit temp file
+tests/.phpunit.result.cache
+
+/.php_cs.cache
+/.php-cs-fixer.cache
+
+# VSCode / VSCodium
+.vscode/
+*.code-workspace
+
+# PhpStorm
+.idea
+
+# Playwright
+/playwright
+/playwright-report
+/test-results
+
+# Agents 
+.claude/

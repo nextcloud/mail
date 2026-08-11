@@ -1,0 +1,425 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * SPDX-FileCopyrightText: 2017-2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
+namespace OCA\Mail\Service\Attachment;
+
+use finfo;
+use InvalidArgumentException;
+use OCA\Files_Sharing\SharedStorage;
+use OCA\Mail\Account;
+use OCA\Mail\Contracts\IAttachmentService;
+use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\Db\LocalAttachment;
+use OCA\Mail\Db\LocalAttachmentMapper;
+use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\Message;
+use OCA\Mail\Exception\AttachmentNotFoundException;
+use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Exception\SmimeDecryptException;
+use OCA\Mail\Exception\UploadException;
+use OCA\Mail\IMAP\MessageMapper;
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\Files\File;
+use OCP\Files\Folder;
+use OCP\Files\IMimeTypeDetector;
+use OCP\Files\NotFoundException;
+use OCP\Files\NotPermittedException;
+use OCP\Files\SimpleFS\ISimpleFile;
+use OCP\ICacheFactory;
+use OCP\IURLGenerator;
+use Psr\Log\LoggerInterface;
+
+class AttachmentService implements IAttachmentService {
+	/**
+	 * @var Folder
+	 */
+	private $userFolder;
+
+	/**
+	 * @param Folder $userFolder
+	 */
+	public function __construct(
+		$userFolder,
+		private LocalAttachmentMapper $mapper,
+		private AttachmentStorage $storage,
+		private IMailManager $mailManager,
+		private MessageMapper $messageMapper,
+		private ICacheFactory $cacheFactory,
+		private IURLGenerator $urlGenerator,
+		private IMimeTypeDetector $mimeTypeDetector,
+		private LoggerInterface $logger,
+		private ITimeFactory $timeFactory,
+	) {
+		$this->userFolder = $userFolder;
+	}
+
+	/**
+	 * @param string $userId
+	 * @param UploadedFile $file
+	 * @return LocalAttachment
+	 */
+	#[\Override]
+	public function addFile(string $userId, UploadedFile $file): LocalAttachment {
+		$attachment = new LocalAttachment();
+		$attachment->setUserId($userId);
+		$attachment->setFileName($file->getFileName());
+		$attachment->setMimeType($file->getMimeType());
+		$attachment->setContentId(null);
+		$attachment->setDisposition(LocalAttachment::DISPOSITION_ATTACHMENT);
+		$attachment->setCreatedAt($this->timeFactory->getTime());
+
+		$persisted = $this->mapper->insert($attachment);
+		try {
+			$this->storage->save($userId, $persisted->id, $file);
+		} catch (UploadException $ex) {
+			// Clean-up
+			$this->mapper->delete($persisted);
+			throw $ex;
+		}
+
+		return $attachment;
+	}
+
+	public function addFileFromString(
+		string $userId,
+		string $name,
+		string $mime,
+		string $fileContents,
+		?string $contentId,
+		?string $disposition,
+	): LocalAttachment {
+		$attachment = new LocalAttachment();
+		$attachment->setUserId($userId);
+		$attachment->setFileName($name);
+		$attachment->setMimeType($mime);
+		$attachment->setContentId($contentId);
+		$attachment->setDisposition($disposition);
+		$attachment->setCreatedAt($this->timeFactory->getTime());
+
+		$persisted = $this->mapper->insert($attachment);
+		try {
+			$this->storage->saveContent($userId, $persisted->id, $fileContents);
+		} catch (NotFoundException|NotPermittedException $e) {
+			// Clean-up
+			$this->mapper->delete($persisted);
+			throw new UploadException($e->getMessage(), $e->getCode(), $e);
+		}
+
+		return $attachment;
+	}
+
+	/**
+	 * Try to get an attachment by id
+	 *
+	 * @return array{0: LocalAttachment, 1: ISimpleFile}
+	 * @throws AttachmentNotFoundException
+	 */
+	#[\Override]
+	public function getAttachment(string $userId, int $id): array {
+		try {
+			$attachment = $this->mapper->find($userId, $id);
+			$file = $this->storage->retrieve($userId, $id);
+			return [$attachment, $file];
+		} catch (DoesNotExistException $ex) {
+			throw new AttachmentNotFoundException();
+		}
+	}
+
+	/**
+	 * @param string $userId
+	 * @param int $id
+	 *
+	 * @return void
+	 */
+	#[\Override]
+	public function deleteAttachment(string $userId, int $id) {
+		try {
+			$attachment = $this->mapper->find($userId, $id);
+			$this->mapper->delete($attachment);
+		} catch (DoesNotExistException $ex) {
+			// Nothing to do then
+		}
+		$this->storage->delete($userId, $id);
+	}
+
+	public function deleteLocalMessageAttachments(string $userId, int $localMessageId): void {
+		$attachments = $this->mapper->findByLocalMessageId($userId, $localMessageId);
+		// delete db entries
+		$this->mapper->deleteForLocalMessage($userId, $localMessageId);
+		// delete storage
+		foreach ($attachments as $attachment) {
+			$this->storage->delete($userId, $attachment->getId());
+		}
+	}
+
+	public function deleteLocalMessageAttachmentsById(string $userId, int $localMessageId, array $attachmentIds): void {
+		$attachments = $this->mapper->findByIds($userId, $attachmentIds);
+		// delete storage
+		foreach ($attachments as $attachment) {
+			$this->mapper->delete($attachment);
+			$this->storage->delete($userId, $attachment->getId());
+		}
+	}
+
+	/**
+	 * @param int[] $attachmentIds
+	 * @return LocalAttachment[]
+	 */
+	public function saveLocalMessageAttachments(string $userId, int $messageId, array $attachmentIds): array {
+		if ($attachmentIds === []) {
+			return [];
+		}
+		$this->mapper->saveLocalMessageAttachments($userId, $messageId, $attachmentIds);
+		return $this->mapper->findByLocalMessageId($userId, $messageId);
+	}
+
+	/**
+	 * @return LocalAttachment[]
+	 */
+	public function updateLocalMessageAttachments(string $userId, LocalMessage $message, array $newAttachmentIds): array {
+		// no attachments any more. Delete any old ones and we're done
+		if ($newAttachmentIds === []) {
+			$this->deleteLocalMessageAttachments($userId, $message->getId());
+			return [];
+		}
+
+		// no need to diff, no old attachments
+		if (empty($message->getAttachments())) {
+			$this->mapper->saveLocalMessageAttachments($userId, $message->getId(), $newAttachmentIds);
+			return $this->mapper->findByLocalMessageId($userId, $message->getId());
+		}
+
+		$oldAttachmentIds = array_map(static fn ($attachment) => $attachment->getId(), $message->getAttachments());
+
+		$add = array_diff($newAttachmentIds, $oldAttachmentIds);
+		if ($add !== []) {
+			$this->mapper->saveLocalMessageAttachments($userId, $message->getId(), $add);
+		}
+
+		$delete = array_diff($oldAttachmentIds, $newAttachmentIds);
+		if ($delete !== []) {
+			$this->deleteLocalMessageAttachmentsById($userId, $message->getId(), $delete);
+		}
+
+		return $this->mapper->findByLocalMessageId($userId, $message->getId());
+	}
+
+	/**
+	 * @param array $attachments
+	 * @return int[]
+	 */
+	public function handleAttachments(Account $account, array $attachments, \Horde_Imap_Client_Socket $client): array {
+		$attachmentIds = [];
+
+		if ($attachments === []) {
+			return $attachmentIds;
+		}
+
+		foreach ($attachments as $attachment) {
+			if (!isset($attachment['type'])) {
+				throw new InvalidArgumentException('Attachment does not have a type');
+			}
+
+			if ($attachment['type'] === 'local' && isset($attachment['id'])) {
+				// attachment already exists, only return the id
+				$attachmentIds[] = (int)$attachment['id'];
+				continue;
+			}
+			if ($attachment['type'] === 'message' || $attachment['type'] === 'message/rfc822') {
+				// Adds another message as attachment
+				$attachmentIds[] = $this->handleForwardedMessageAttachment($account, $attachment, $client);
+				continue;
+			}
+			if ($attachment['type'] === 'message-attachment' || $attachment['type'] === 'message-attachment-inline') {
+				// Adds an attachment from another email (use case is, eg., a mail forward)
+				$attachmentIds[] = $this->handleForwardedAttachment($account, $attachment, $client);
+				continue;
+			}
+
+			$attachmentIds[] = $this->handleCloudAttachment($account, $attachment);
+		}
+		return array_values(array_filter($attachmentIds));
+	}
+
+	/**
+	 * @return list<array{id: string, fileName: string|null, mime: string, downloadUrl: string, mimeUrl: string}>
+	 */
+	public function getAttachmentNames(Account $account, Mailbox $mailbox, Message $message, \Horde_Imap_Client_Socket $client): array {
+		if ($message->getStructureAnalyzed() === true && $message->getFlagAttachments() === false) {
+			// Structure analysis already confirmed no attachments, nothing to fetch.
+			return [];
+		}
+
+		$cache = $this->cacheFactory->createDistributed('mail_attachment_names');
+
+		$cacheKey = hash('xxh128', implode('_', [
+			$account->getUserId(),
+			(string)$account->getId(),
+			(string)$mailbox->getId(),
+			(string)$message->getId()
+		]));
+
+		$cached = $cache->get($cacheKey);
+		if (is_array($cached)) {
+			/** @var list<array{id: string, fileName: string|null, mime: string, downloadUrl: string, mimeUrl: string}> $cached */
+			return $cached;
+		}
+
+		$attachments = [];
+		try {
+			$imapMessage = $this->mailManager->getImapMessage(
+				$client,
+				$account,
+				$mailbox,
+				$message->getUid(),
+				true
+			);
+			$attachments = $imapMessage->getAttachments();
+		} catch (SmimeDecryptException $e) {
+			$this->logger->debug('Could not get attachment names for S/MIME encrypted message', ['exception' => $e, 'messageId' => $message->getUid()]);
+		} catch (ServiceException $e) {
+			$this->logger->warning('Could not get attachment names', ['exception' => $e, 'messageId' => $message->getUid()]);
+		}
+
+		$result = array_values(array_map(function ($attachment) use ($message) {
+			$downloadUrl = $this->urlGenerator->linkToRouteAbsolute('mail.messages.downloadAttachment', [
+				'id' => $message->getId(),
+				'attachmentId' => $attachment['id'],
+			]);
+			$mimeUrl = $this->mimeTypeDetector->mimeTypeIcon($attachment['mime']);
+			return ['id' => $attachment['id'], 'fileName' => $attachment['fileName'], 'mime' => $attachment['mime'], 'downloadUrl' => $downloadUrl, 'mimeUrl' => $mimeUrl];
+		}, $attachments));
+
+		$cache->set($cacheKey, $result, 604800);
+		return $result;
+	}
+
+	/**
+	 * Add a message as attachment
+	 *
+	 * @param Account $account
+	 * @param mixed[] $attachment
+	 * @param \Horde_Imap_Client_Socket $client
+	 * @return int|null
+	 */
+	private function handleForwardedMessageAttachment(Account $account, array $attachment, \Horde_Imap_Client_Socket $client): ?int {
+		$attachmentMessage = $this->mailManager->getMessage($account->getUserId(), (int)$attachment['id']);
+		$mailbox = $this->mailManager->getMailbox($account->getUserId(), $attachmentMessage->getMailboxId());
+		$fullText = $this->messageMapper->getFullText(
+			$client,
+			$mailbox->getName(),
+			$attachmentMessage->getUid(),
+			$account->getUserId()
+		);
+
+		// detect mime type
+		$mime = 'application/octet-stream';
+		if (extension_loaded('fileinfo')) {
+			$finfo = new finfo(FILEINFO_MIME_TYPE);
+			$detectedMime = $finfo->buffer($fullText);
+			if ($detectedMime !== false) {
+				$mime = $detectedMime;
+			}
+		}
+
+		try {
+			$localAttachment = $this->addFileFromString($account->getUserId(), $attachment['fileName'] ?? $attachmentMessage->getSubject() . '.eml', $mime, $fullText, null, LocalAttachment::DISPOSITION_ATTACHMENT);
+		} catch (UploadException $e) {
+			$this->logger->error('Could not create attachment', ['exception' => $e]);
+			return null;
+		}
+		return $localAttachment->getId();
+	}
+
+	/**
+	 * Adds an emails attachments
+	 *
+	 * @param Account $account
+	 * @param mixed[] $attachment
+	 * @param \Horde_Imap_Client_Socket $client
+	 * @return int
+	 * @throws DoesNotExistException
+	 */
+	private function handleForwardedAttachment(Account $account, array $attachment, \Horde_Imap_Client_Socket $client): ?int {
+		$mailbox = $this->mailManager->getMailbox($account->getUserId(), $attachment['mailboxId']);
+
+		$imapAttachment = $this->messageMapper->getAttachment(
+			$client,
+			$mailbox->getName(),
+			(int)$attachment['uid'],
+			$attachment['id'],
+			$account->getUserId(),
+		);
+
+		try {
+			$localAttachment = $this->addFileFromString(
+				$account->getUserId(),
+				$imapAttachment->getName() ?? 'unknown',
+				$imapAttachment->getType(),
+				$imapAttachment->getContent(),
+				$imapAttachment->contentId,
+				$imapAttachment->disposition,
+			);
+		} catch (UploadException $e) {
+			$this->logger->error('Could not create attachment', ['exception' => $e]);
+			return null;
+		}
+		return $localAttachment->getId();
+	}
+
+	private function hasDownloadPermissions(File $file, string $fileName): bool {
+		$storage = $file->getStorage();
+		if ($storage->instanceOfStorage(SharedStorage::class)) {
+
+			/** @var SharedStorage $storage */
+			$share = $storage->getShare();
+			$attributes = $share->getAttributes();
+
+			if ($attributes->getAttribute('permissions', 'download') === false) {
+				$this->logger->warning('Could not create attachment, no download permission for file: ' . $fileName);
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * @param Account $account
+	 * @param array $attachment
+	 * @return int|null
+	 */
+	private function handleCloudAttachment(Account $account, array $attachment): ?int {
+		if (!isset($attachment['fileName'])) {
+			return null;
+		}
+
+		$fileName = $attachment['fileName'];
+		if (!$this->userFolder->nodeExists($fileName)) {
+			return null;
+		}
+
+		$file = $this->userFolder->get($fileName);
+		if (!$file instanceof File) {
+			return null;
+		}
+		if (!$this->hasDownloadPermissions($file, $fileName)) {
+			return null;
+		}
+
+		try {
+			$localAttachment = $this->addFileFromString($account->getUserId(), $file->getName(), $file->getMimeType(), $file->getContent(), null, LocalAttachment::DISPOSITION_ATTACHMENT);
+		} catch (UploadException $e) {
+			$this->logger->error('Could not create attachment', ['exception' => $e]);
+			return null;
+		}
+		return $localAttachment->getId();
+	}
+}

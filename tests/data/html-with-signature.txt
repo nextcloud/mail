@@ -1,0 +1,27 @@
+Content-Type: multipart/alternative; boundary="=_OCjivB0eKOELIVVHw6KUaJG"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+
+This message is in MIME format.
+
+--=_OCjivB0eKOELIVVHw6KUaJG
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+This is a test message ...
+ 
+... with empty lines.
+--  
+This is a signature.
+ 
+With rich text.
+--=_OCjivB0eKOELIVVHw6KUaJG
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html>
+<html><meta http-equiv="content-type" content="text/html; charset=UTF-8"><body>
+<p style="margin:0;">This is a test message ...</p><p style="margin:0;"> </p><p style="margin:0;">... with empty lines.</p><div class="signature">-- <p style="margin:0;"> </p><p style="margin:0;">This is a signature.</p><p style="margin:0;"> </p><p style="margin:0;"><strong>With</strong> <i>rich</i> <span style="color:hsl(0,75%,60%);">text</span>.</p></div>
+</body></html>
+
+--=_OCjivB0eKOELIVVHw6KUaJG--

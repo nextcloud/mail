@@ -1,0 +1,486 @@
+/*!
+ * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2013-2016 ownCLoud, Inc.
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+.loading {
+	position: absolute;
+	inset-inline-start: 50%;
+	top: 50%;
+}
+
+.emptycontent {
+	margin-top: 24px;
+	margin-bottom: 10px;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	inset-inline: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.container {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+.folders .ui-droppable-active {
+	background-color: rgb(240, 240, 240);
+}
+
+.folder.no-select {
+	cursor: not-allowed;
+}
+
+/* ACCOUNT FORM */
+#account-form {
+	z-index: 1001;
+	width: 250px;
+	top: 15%;
+	padding-bottom: 50px;
+	margin: 0 auto;
+	padding-top: 30px;
+}
+
+#mail-settings {
+	#account-form {
+		margin: 0;
+		padding-top: 0;
+	}
+}
+@media only screen and (max-height: 400px) {
+	#account-form #emptycontent {
+		margin-top: 0px;
+	}
+}
+@media only screen and (min-height: 401px) and (max-height: 600px) {
+	#account-form #emptycontent {
+		margin-top: 2vh;
+	}
+}
+@media only screen and (min-height: 601px) {
+	#account-form #emptycontent {
+		margin-top: 10vh;
+	}
+}
+
+#account-form h2 {
+	text-align: center;
+	position: relative;
+	width: 300%;
+	inset-inline-start: -100%;
+	margin-bottom: 20px;
+}
+
+#account-form input {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+#account-form .toggle-manual-mode {
+	background-position: right;
+	padding-inline-end: 16px;
+	margin-inline-start: 6px;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+	opacity: .3;
+}
+
+#setup-imap-ssl-mode,
+#setup-smtp-ssl-mode {
+	position: absolute;
+	top: 0;
+	inset-inline-end: 0;
+	margin: 0;
+	background-color: transparent;
+	border: none;
+	z-index: 100;
+}
+
+#connect-loading {
+	position: absolute;
+	top: 206px;
+	inset-inline: 0;
+	margin-inline: auto;
+	height: 30px;
+}
+
+/* app navigation */
+
+/* do not display empty folders in the sidebar */
+.app-navigation .empty {
+	display: none;
+}
+
+.app-navigation .navigation-account:not(:first-child) {
+    margin-top: 22px;
+}
+
+
+/* do not overlap collapse icon with special use icon */
+.app-navigation .special-inbox .collapse,
+.app-navigation .special-drafts .collapse,
+.app-navigation .special-sent .collapse,
+.app-navigation .special-trash .collapse {
+	display: none !important;
+}
+
+.app-navigation .special-inbox:hover .collapse,
+.app-navigation .special-inbox:focus .collapse,
+.app-navigation .special-drafts:hover .collapse,
+.app-navigation .special-drafts:focus .collapse,
+.app-navigation .special-sent:hover .collapse,
+.app-navigation .special-sent:focus .collapse,
+.app-navigation .special-trash:hover .collapse,
+.app-navigation .special-trash:focus .collapse {
+	display: inline-block !important;
+}
+
+#accounts-list li.collapse-folders a {
+	color: var(--color-text-maxcontrast);
+}
+
+#emptycontent,
+#mail-messages #emptycontent.emptycontent-search {
+	position: static;
+}
+
+#mail-messages #emptycontent.emptycontent-search h2 {
+	line-height: 150%;
+}
+
+#mail-messages #emptycontent {
+	position: absolute;
+}
+
+.mail-account-email {
+	display: inline-block;
+	opacity: .5;
+	padding: 20px 0 10px 25px;
+	width: calc(100% - 50px);
+	margin: initial;
+	font-size: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.mail-account-email:first-child {
+	display: none;
+}
+
+.account-toggle-collapse {
+	opacity: .5;
+}
+
+
+/* settings */
+
+.mailaccount-list li {
+	padding: 10px 0;
+}
+
+.mailaccount-list .mail-account-name {
+	display: inline-block;
+	width: 90%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.mailaccount-list .actions {
+	display: inline-flex;
+	position: absolute;
+	inset-inline-end: 0;
+	min-height: 16px;
+	min-width: 16px;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=25)";
+	opacity: .5;
+}
+
+.mailaccount-list .actions:hover,
+.mailaccount-list .actions:focus {
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+	opacity: .5;
+}
+
+
+/* app content*/
+
+#mail-messages {
+	position: relative;
+	width: 30%;
+	height: 100%;
+	overflow-x: hidden;
+	overflow-y: auto;
+	border-inline-end: 1px solid var(--color-border);
+}
+
+#mail-message-list-loading {
+	position: sticky;
+	height: 40px;
+	z-index: 1;
+	background: -moz-radial-gradient(top, ellipse cover, var(--color-main-background), rgba(255,255,255,0) 70%);
+	background: -webkit-radial-gradient(top, ellipse cover, var(--color-main-background),rgba(255,255,255,0) 70%);
+	background: radial-gradient(ellipse at top, var(--color-main-background),rgba(255,255,255,0) 70%);
+}
+
+.app-navigation .msg.success {
+	color: #fff;
+	background-color: var(--color-success);
+	padding: 3px;
+}
+
+.app-navigation .msg.error {
+	color: #fff;
+	background-color: var(--color-error);
+	padding: 3px;
+}
+
+/* autocomplete list */
+.ui-autocomplete .ui-menu-item a.mail-recipient-autocomplete {
+	margin: 0px;
+	font-weight: normal !important;
+	display: flex;
+	align-content: center;
+	align-items: center;
+	border: none;
+}
+
+.ui-autocomplete .ui-menu-item a.mail-recipient-autocomplete span {
+	margin-inline-start: 10px;
+}
+
+.ui-autocomplete {
+	padding-inline-start: 16px !important;
+	border-radius: 0 !important;
+	border-inline-start: none;
+	border-inline-end: none;
+	z-index: 1000;
+}
+
+.icon-starred[data-starred="false"]:hover {
+	background-image: var(--icon-star-dark-fc0) !important;
+}
+
+.icon-starred[data-starred="false"]:not(:hover) {
+	background-image: var(--icon-star-000) !important;
+}
+
+.unread {
+	font-weight: bold;
+}
+/* make sure subfolders of unread folders are not bolded as well */
+.unread ul {
+	font-weight: normal;
+}
+
+.star {
+	padding: 20px;
+	background-size: 16px;
+	display: inline-block;
+	position: absolute;
+	inset-inline-start: 16px;
+	top: 28px;
+	z-index: 10;
+}
+/* only show star on hover of row */
+.star.icon-star {
+	display: none;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+	opacity: .3;
+}
+
+.star.icon-star:hover,
+.star.icon-star:focus {
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+	opacity: 1;
+}
+
+.icon-add {
+	display: inline-block;
+	vertical-align: text-top;
+}
+
+.transparency {
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
+	opacity: .6;
+}
+
+.app-settings .modal-wrapper .modal-container {
+	overflow: visible !important;
+
+	.modal-container__content {
+		border-radius: var(--border-radius-container, var(--border-radius-rounded));
+	}
+}
+
+/* compose (handling mailto links) */
+
+.compose {
+	width: 60%;
+	margin: 0 auto;
+}
+
+// FIXES for core apps.scss
+
+.app-navigation {
+	> ul {
+		> .navigation-account > li,
+		> .navigation-account > .folders > li,
+		> .navigation-account > .folders > li > .folders > .folders > li {
+			position: relative;
+			width: 100%;
+			box-sizing: border-box;
+			display: inline-flex;
+			flex-wrap: wrap;
+			order: 1;
+			flex-shrink: 0;
+
+			/* hide icons if loading */
+			&.icon-loading-small {
+				> a,
+				> .app-navigation-entry-bullet {
+					background: none !important;
+				}
+			}
+			/* Main entry link */
+			> a {
+				background-size: 16px 16px;
+				background-position: 14px center;
+				background-repeat: no-repeat;
+				display: block;
+				justify-content: space-between;
+				line-height: 44px;
+				min-height: 44px;
+				padding: 0 12px;
+				overflow: hidden;
+				box-sizing: border-box;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				color: var(--color-main-text);
+				opacity: .57;
+				flex: 1 1 0;
+				z-index: 100; /* above the bullet */
+				/* TODO: forbid using img as icon in menu? */
+				&:first-child img {
+				    margin-inline: -30px 11px;
+				    width: 16px;
+				}
+			}
+
+			/* Bullet icon */
+			> .app-navigation-entry-bullet {
+				position: absolute;
+				display: block;
+				margin: 16px;
+				width: 12px;
+				height: 12px;
+				border: none;
+				border-radius: 50%;
+				cursor: pointer;
+			}
+
+			/* popover fix the flex positionning of the li parent */
+			> .app-navigation-entry-menu {
+				top: 44px;
+			}
+
+			/* Pinned-to-bottom entries */
+			&.pinned {
+				order: 2;
+				&.first-pinned {
+					margin-top: auto !important;
+				}
+			}
+
+			> a,
+			> .app-navigation-entry-deleted {
+				/* Ugly hack for overriding the main entry link */
+				padding-inline-start: 44px !important;
+			}
+			> .app-navigation-entry-edit {
+				/* Ugly hack for overriding the main entry link */
+				/* align the input correctly with the link text
+				   44px-6px padding for the input */
+				padding-inline-start: 38px !important;
+			}
+
+			&:focus,
+			&:hover,
+			&.active,
+			a.selected {
+				&,
+				> a {
+					opacity: 1;
+					box-shadow: inset 2px 0 var(--color-primary-element);
+				}
+			}
+
+			/* align loader */
+			&.icon-loading-small:after {
+				inset-inline-start: 22px;
+				top: 22px;
+			}
+
+			/* hide and animate deletion/collapse of subitems */
+			&.deleted,
+			&.collapsible:not(.open) {
+				> ul,
+				> .folders {
+					opacity: 0;
+					max-height: 0;
+					/* bezier override the hide/slow effect due to the 2000 max-height */
+					transition: max-height 1000ms cubic-bezier(0, 1, 0, 1),
+								opacity 250ms ease-in-out;
+				}
+			}
+
+			/* Second level nesting for lists */
+			> ul {
+				flex: 1 0 100%;
+				padding-inline-start: 62px;
+				width: inherit;
+				transition: max-height 2000ms ease-in-out,
+							opacity 250ms ease-in-out;
+				max-height: 9999px;
+				opacity: 1;
+				> li {
+					display: inline-flex;
+					flex-wrap: wrap;
+					&:focus,
+					&:hover,
+					&.active,
+					a.selected {
+						&,
+						> a {
+							opacity: 1;
+						}
+					}
+
+					/* align loader */
+					&.icon-loading-small:after {
+						inset-inline-start: -10px;
+					}
+
+					/* Submenu fix for icon */
+					> a[class*='icon-'],
+					> a[style*='background-image'],
+					.app-navigation-entry-bullet {
+						margin-inline-start: -32px; /* 44px padding - 12px padding */
+					}
+
+					/* Submenu fix for bullet */
+					> .app-navigation-entry-bullet {
+						inset-inline-start: -32px;/* 44px padding - 12px padding */
+					}
+				}
+			}
+		}
+	}
+	.collapsible > .collapse {
+		z-index: 500;
+	}
+}

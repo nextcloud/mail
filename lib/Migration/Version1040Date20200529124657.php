@@ -1,0 +1,43 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
+namespace OCA\Mail\Migration;
+
+use Closure;
+use OCP\DB\ISchemaWrapper;
+use OCP\Migration\IOutput;
+use OCP\Migration\SimpleMigrationStep;
+
+/**
+ * @psalm-api
+ */
+class Version1040Date20200529124657 extends SimpleMigrationStep {
+	/**
+	 * @param IOutput $output
+	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
+	 * @param array $options
+	 *
+	 * @return ISchemaWrapper
+	 */
+	#[\Override]
+	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options) {
+		/** @var ISchemaWrapper $schema */
+		$schema = $schemaClosure();
+
+		$messagesTable = $schema->getTable('mail_messages');
+		/**
+		 * @see https://stackoverflow.com/questions/30079128/maximum-internet-email-message-id-length/34811337#34811337
+		 */
+		$messagesTable
+			->getColumn('message_id')
+			->setLength(1024);
+
+		return $schema;
+	}
+}

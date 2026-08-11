@@ -1,0 +1,77 @@
+/*!
+ * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+[droppable-mailbox] {
+	a.app-navigation-entry-link {
+		position: relative;
+
+		&:before,
+		&:after {
+			transition: .1s border-color ease-in-out;
+		}
+	}
+
+	a {
+		&:before {
+			content: '';
+			position: absolute;
+			top: 0;
+			inset-inline: 2px 0;
+			bottom: 0;
+			transition: .1s opacity ease-in-out;
+			border: 2px solid transparent;
+			pointer-events: none;
+			border-radius: 20px;
+		}
+
+		&:after {
+			content: '';
+			position: absolute;
+			width: 0;
+			height: 0;
+			border-top: 5px solid transparent;
+			border-inline-start: 5px solid transparent;
+			border-bottom: 5px solid transparent;
+			inset-inline-start: 4px;
+			top: 50%;
+			margin-top: -5px;
+		}
+	}
+}
+
+[droppable-mailbox="disabled"] {
+	> div > a {
+		pointer-events: none;
+		opacity: .3;
+	}
+}
+
+[droppable-mailbox="dragover"] {
+	> div > a {
+		&:before {
+			content: '';
+			position: absolute;
+			top: 0;
+			inset-inline: 2px 0;
+			bottom: 0;
+			transition: .1s opacity ease-in-out;
+			border: 2px solid var(--color-primary-element);
+			pointer-events: none;
+			border-radius: 20px;
+		}
+
+		&:after {
+			content: '';
+			position: absolute;
+			width: 0;
+			height: 0;
+			border-top: 5px solid transparent;
+			border-inline-start: 5px solid var(--color-primary-element);
+			border-bottom: 5px solid transparent;
+			inset-inline-start: 4px;
+			top: 50%;
+			margin-top: -5px;
+		}
+	}
+}

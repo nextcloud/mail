@@ -1,0 +1,27 @@
+From: user@imap.localhost
+To: user@domain.tld
+Subject: Teszt =?utf-8?b?bGV2w6ls?=
+Message-ID: <20250514132452.Horde.JRGbr8cAk7ysMOeEx0jMBn0>
+Date: Wed, 14 May 2025 13:24:52 +0000
+Content-Type: multipart/alternative; boundary="=_shItsjsi03fQs0CAoN2y-EA"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+
+This message is in MIME format.
+
+--=_shItsjsi03fQs0CAoN2y-EA
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Teszt levél
+--=_shItsjsi03fQs0CAoN2y-EA
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html>
+<html><meta http-equiv="content-type" content="text/html; charset=UTF-8"><body>
+<p style="margin:0;">Teszt levél</p>
+</body></html>
+
+--=_shItsjsi03fQs0CAoN2y-EA--
+

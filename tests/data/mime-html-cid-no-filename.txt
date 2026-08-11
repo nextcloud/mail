@@ -1,0 +1,29 @@
+From: debug@imap.localhost
+To: user@imap.localhost
+Subject: Inline image without filename
+Message-ID: <inline-cid-no-filename@imap.localhost>
+X-Mailer: IBM Notes Release 9.0.1FP4 June 08, 2015
+Date: Wed, 25 Jun 2026 08:54:28 +0000
+MIME-Version: 1.0
+Content-Type: multipart/related; boundary="=_related 0038DE9FC1258E02_="
+
+--=_related 0038DE9FC1258E02_=
+Content-Type: multipart/alternative; boundary="=_alternative 0038DE9FC1258E02_="
+
+--=_alternative 0038DE9FC1258E02_=
+Content-Type: text/plain; charset="US-ASCII"
+
+Hello
+
+--=_alternative 0038DE9FC1258E02_=
+Content-Type: text/html; charset="US-ASCII"
+
+<img src=cid:_1_0FAD84280FACDD0C0038DE9FC1258E02 style="border:0px solid;">
+--=_alternative 0038DE9FC1258E02_=--
+--=_related 0038DE9FC1258E02_=
+Content-Type: image/gif
+Content-ID: <_1_0FAD84280FACDD0C0038DE9FC1258E02>
+Content-Transfer-Encoding: base64
+
+R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+--=_related 0038DE9FC1258E02_=--

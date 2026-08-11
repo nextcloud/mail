@@ -1,0 +1,23 @@
+[
+	{
+		"name": "Marketing",
+		"enable": true,
+		"operator": "allof",
+		"tests": [
+			{
+				"operator": "is",
+				"values": [
+					"marketing@mail.internal"
+				],
+				"field": "from"
+			}
+		],
+		"actions": [
+			{
+				"type": "fileinto",
+				"mailbox": "Marketing"
+			}
+		],
+		"priority": 10
+	}
+]

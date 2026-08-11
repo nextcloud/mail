@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<!--
+  - SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-FileCopyrightText: 2013-2016 ownCloud, Inc.
+  - SPDX-License-Identifier: AGPL-3.0-only
+-->
+<info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+	<id>mail</id>
+	<name>Mail</name>
+	<summary>💌 A mail app for Nextcloud</summary>
+	<description><![CDATA[**💌 A mail app for Nextcloud**
+
+- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.
+- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.
+- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.
+- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://www.horde.org) libraries.
+- **📬 Want to host your own mail server?** We do not have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!
+
+## Ethical AI Rating
+
+### Priority Inbox
+
+Positive:
+* The software for training and inferencing of this model is open source.
+* The model is created and trained on-premises based on the user's own data.
+* The training data is accessible to the user, making it possible to check or correct for bias or optimise the performance and CO2 usage.
+
+### Thread Summaries (opt-in)
+
+**Rating:** 🟢/🟡/🟠/🔴
+
+The rating depends on the installed text processing backend. See [the rating overview](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) for details.
+
+Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/).
+	]]></description>
+	<version>5.12.0-alpha.1</version>
+	<licence>agpl</licence>
+	<author homepage="https://github.com/ChristophWurst">Christoph Wurst</author>
+	<author homepage="https://github.com/GretaD">GretaD</author>
+	<author homepage="https://github.com/kesselb">kesselb</author>
+	<namespace>Mail</namespace>
+	<documentation>
+		<user>https://docs.nextcloud.com/server/stable/user_manual/en/groupware/mail.html</user>
+		<admin>https://docs.nextcloud.com/server/stable/admin_manual/groupware/mail.html</admin>
+		<developer>https://github.com/nextcloud/mail/blob/main/doc/developer.md</developer>
+	</documentation>
+	<category>social</category>
+	<category>office</category>
+	<website>https://github.com/nextcloud/mail#readme</website>
+	<bugs>https://github.com/nextcloud/mail/issues</bugs>
+	<repository type="git">https://github.com/nextcloud/mail.git</repository>
+	<screenshot>https://user-images.githubusercontent.com/12728974/266270227-86b99bbb-03ea-468b-8408-e248e1730bed.png</screenshot>
+	<dependencies>
+		<php min-version="8.1" max-version="8.5" />
+		<nextcloud min-version="32" max-version="35" />
+	</dependencies>
+	<background-jobs>
+		<job>OCA\Mail\BackgroundJob\CleanupJob</job>
+		<job>OCA\Mail\BackgroundJob\ContextChat\SubmitContentJob</job>
+		<job>OCA\Mail\BackgroundJob\OutboxWorkerJob</job>
+		<job>OCA\Mail\BackgroundJob\IMipMessageJob</job>
+		<job>OCA\Mail\BackgroundJob\DraftsJob</job>
+		<job>OCA\Mail\BackgroundJob\TrashRetentionJob</job>
+		<job>OCA\Mail\BackgroundJob\WakeJob</job>
+	</background-jobs>
+	<repair-steps>
+		<post-migration>
+			<step>OCA\Mail\Migration\AddMissingDefaultTags</step>
+			<step>OCA\Mail\Migration\AddMissingMessageIds</step>
+			<step>OCA\Mail\Migration\FixCollectedAddresses</step>
+			<step>OCA\Mail\Migration\FixBackgroundJobs</step>
+			<step>OCA\Mail\Migration\MakeItineraryExtractorExecutable</step>
+			<step>OCA\Mail\Migration\ProvisionAccounts</step>
+			<step>OCA\Mail\Migration\RepairMailTheads</step>
+			<step>OCA\Mail\Migration\DeleteDuplicateUids</step>
+		</post-migration>
+	</repair-steps>
+	<commands>
+		<command>OCA\Mail\Command\AddMissingTags</command>
+		<command>OCA\Mail\Command\CleanUp</command>
+		<command>OCA\Mail\Command\ClearMailboxCache</command>
+		<command>OCA\Mail\Command\CreateImapAccount</command>
+		<command>OCA\Mail\Command\CreateJmapAccount</command>
+		<command>OCA\Mail\Command\CreateTagMigrationJobEntry</command>
+		<command>OCA\Mail\Command\DebugAccount</command>
+		<command>OCA\Mail\Command\DeleteAccount</command>
+		<command>OCA\Mail\Command\ExportAccount</command>
+		<command>OCA\Mail\Command\ExportAccountThreads</command>
+		<command>OCA\Mail\Command\InspectMailbox</command>
+		<command>OCA\Mail\Command\ListMailboxes</command>
+		<command>OCA\Mail\Command\PredictImportance</command>
+		<command>OCA\Mail\Command\TestAccount</command>
+		<command>OCA\Mail\Command\SyncAccount</command>
+		<command>OCA\Mail\Command\Thread</command>
+		<command>OCA\Mail\Command\TrainAccount</command>
+		<command>OCA\Mail\Command\UpdateImapAccount</command>
+		<command>OCA\Mail\Command\UpdateJmapAccount</command>
+		<command>OCA\Mail\Command\UnlockMailbox</command>
+		<command>OCA\Mail\Command\UpdateSystemAutoresponders</command>
+		<command>OCA\Mail\Command\RunMetaEstimator</command>
+	</commands>
+	<settings>
+		<admin>OCA\Mail\Settings\AdminSettings</admin>
+	</settings>
+	<navigations>
+		<navigation>
+			<name>Mail</name>
+			<route>mail.page.index</route>
+			<icon>mail.svg</icon>
+			<order>3</order>
+		</navigation>
+	</navigations>
+</info>

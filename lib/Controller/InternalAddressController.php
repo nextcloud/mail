@@ -1,0 +1,94 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
+namespace OCA\Mail\Controller;
+
+use OCA\Mail\AppInfo\Application;
+use OCA\Mail\Http\JsonResponse;
+use OCA\Mail\Http\TrapError;
+use OCA\Mail\Service\InternalAddressService;
+use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\IRequest;
+
+class InternalAddressController extends Controller {
+	public function __construct(
+		IRequest $request,
+		private ?string $userId,
+		private InternalAddressService $internalAddressService,
+	) {
+		parent::__construct(Application::APP_ID, $request);
+	}
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @param string $address
+	 * @param string $type
+	 * @return JsonResponse
+	 */
+	#[TrapError]
+	public function setAddress(string $address, string $type): JsonResponse {
+		if ($this->userId === null) {
+			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
+		}
+
+		$internalAddress = $this->internalAddressService->add(
+			$this->userId,
+			$address,
+			$type
+		);
+		if ($internalAddress === null) {
+			return JsonResponse::success(null);
+		}
+
+		return JsonResponse::success($internalAddress->jsonSerialize(), Http::STATUS_CREATED);
+	}
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @param string $address
+	 * @param string $type
+	 * @return JsonResponse
+	 */
+	#[TrapError]
+	public function removeAddress(string $address, string $type): JsonResponse {
+		if ($this->userId === null) {
+			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
+		}
+
+		$this->internalAddressService->add(
+			$this->userId,
+			$address,
+			$type,
+			false
+		);
+
+		return JsonResponse::success();
+	}
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @return JsonResponse
+	 */
+	#[TrapError]
+	public function list(): JsonResponse {
+		if ($this->userId === null) {
+			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
+		}
+		$list = $this->internalAddressService->getInternalAddresses(
+			$this->userId
+		);
+
+		return JsonResponse::success($list);
+	}
+}

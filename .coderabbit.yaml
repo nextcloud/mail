@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 Nextcloud GmbH and Nextcloud contributors
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+reviews:
+  auto_review:
+    enabled: false
+    auto_incremental_review: false
+    base_branches:
+      - stable*
+  enable_prompt_for_ai_agents: false
+  review_status: false
