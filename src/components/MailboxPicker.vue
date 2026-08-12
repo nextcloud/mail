@@ -26,22 +26,9 @@
 					:name="getMailboxTitle(box)"
 					@click.prevent="onClickMailbox(box)">
 					<template #icon>
-						<IconInbox v-if="box.specialRole === 'inbox'" :size="20" />
-						<IconDraft
-							v-else-if="box.specialRole === 'drafts'"
-							:size="20" />
-						<IconSent
-							v-else-if="box.specialRole === 'sent'"
-							:size="20" />
-						<IconArchive
-							v-else-if="box.specialRole === 'archive'"
-							:size="20" />
-						<IconTrash
-							v-else-if="box.specialRole === 'trash'"
-							:size="20" />
-						<IconFolder
-							v-else
-							:size="20" />
+						<MailboxIcon
+							:mailbox="box"
+							:account="account" />
 					</template>
 				</NcListItem>
 			</ul>
@@ -62,12 +49,8 @@
 import { translate as t } from '@nextcloud/l10n'
 import { NcBreadcrumb, NcBreadcrumbs, NcDialog, NcEmptyContent, NcInputField, NcListItem } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
-import IconArchive from 'vue-material-design-icons/ArchiveArrowDownOutline.vue'
 import IconFolder from 'vue-material-design-icons/FolderOutline.vue'
-import IconInbox from 'vue-material-design-icons/HomeOutline.vue'
-import IconDraft from 'vue-material-design-icons/PencilOutline.vue'
-import IconSent from 'vue-material-design-icons/SendOutline.vue'
-import IconTrash from 'vue-material-design-icons/TrashCanOutline.vue'
+import MailboxIcon from './icons/MailboxIcon.vue'
 import { translate as translateMailboxName } from '../i18n/MailboxTranslator.js'
 import useMainStore from '../store/mainStore.js'
 import { mailboxHasRights } from '../util/acl.js'
@@ -81,12 +64,8 @@ export default {
 		NcBreadcrumb,
 		NcInputField,
 		NcListItem,
-		IconInbox,
-		IconDraft,
-		IconSent,
-		IconArchive,
-		IconTrash,
 		IconFolder,
+		MailboxIcon,
 	},
 
 	props: {
