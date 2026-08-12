@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /**
  * SPDX-FileCopyrightText: 2019-2024 Nextcloud GmbH and Nextcloud contributors
- * SPDX-License-Identifier: AGPL-3.0-only
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Tests\Integration\Db;
@@ -54,16 +54,31 @@ class ImipDataMapperTest extends TestCase {
 		return $qb->getLastInsertId();
 	}
 
+	private function findImipRow(int $id): ?array {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('*')
+			->from('mail_messages_imip')
+			->where(
+				$qb->expr()->eq('id', $qb->createNamedParameter($id, IQueryBuilder::PARAM_INT))
+			);
+
+		$result = $qb->executeQuery();
+		$row = $result->fetch();
+		$result->closeCursor();
+
+		return $row === false ? null : $row;
+	}
+
 	public function testMarkAsImipMessage(): void {
 		$messageId = $this->insertMessage(100, 1);
 
 		$this->mapper->markAsImipMessage($messageId);
 
-		$row = $this->mapper->findByMessageId($messageId);
+		$row = $this->findImipRow($messageId);
 		$this->assertNotNull($row);
-		$this->assertSame($messageId, $row->getImipMessageId());
-		$this->assertFalse($row->getError());
-		$this->assertNull($row->getProcessedAt());
+		$this->assertSame($messageId, (int)$row['id']);
+		$this->assertFalse((bool)$row['error']);
+		$this->assertNull($row['processed_at']);
 	}
 
 	public function testMarkProcessed(): void {
@@ -72,10 +87,10 @@ class ImipDataMapperTest extends TestCase {
 
 		$this->mapper->markProcessed($messageId, true);
 
-		$row = $this->mapper->findByMessageId($messageId);
+		$row = $this->findImipRow($messageId);
 		$this->assertNotNull($row);
-		$this->assertTrue($row->getError());
-		$this->assertSame($this->timestamp, $row->getProcessedAt());
+		$this->assertTrue((bool)$row['error']);
+		$this->assertSame($this->timestamp, (int)$row['processed_at']);
 	}
 
 	public function testMarkProcessedBulk(): void {
@@ -95,11 +110,11 @@ class ImipDataMapperTest extends TestCase {
 
 		$this->mapper->markProcessedBulk($message1, $message2);
 
-		$row1 = $this->mapper->findByMessageId($messageId1);
-		$this->assertNotNull($row1->getProcessedAt(), 'Message with an updated field should be marked processed');
+		$row1 = $this->findImipRow($messageId1);
+		$this->assertNotNull($row1['processed_at'], 'Message with an updated field should be marked processed');
 
-		$row2 = $this->mapper->findByMessageId($messageId2);
-		$this->assertNull($row2->getProcessedAt(), 'Message with no updated fields should not be marked processed');
+		$row2 = $this->findImipRow($messageId2);
+		$this->assertNull($row2['processed_at'], 'Message with no updated fields should not be marked processed');
 	}
 
 

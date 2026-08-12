@@ -30,11 +30,8 @@ class Version5201Date20260720120000 extends SimpleMigrationStep {
 
 		if (!$schema->hasTable('mail_messages_imip')) {
 			$table = $schema->createTable('mail_messages_imip');
-			$table->addColumn('id', Types::INTEGER, [
-				'autoincrement' => true,
-				'notnull' => true,
-			]);
-			$table->addColumn('imip_message_id', Types::BIGINT, [
+			$table->addColumn('id', Types::BIGINT, [
+				'autoincrement' => false,
 				'notnull' => true,
 			]);
 			$table->addColumn('error', Types::BOOLEAN, [
@@ -46,13 +43,12 @@ class Version5201Date20260720120000 extends SimpleMigrationStep {
 				'default' => null,
 			]);
 			$table->setPrimaryKey(['id']);
-			$table->addUniqueIndex(['imip_message_id'], 'mail_msg_imip_msg_uniq');
 			$table->addIndex(['error', 'processed_at'], 'mail_msg_imip_unproc_idx');
 
 			if ($schema->hasTable('mail_messages')) {
 				$table->addForeignKeyConstraint(
 					$schema->getTable('mail_messages'),
-					['imip_message_id'],
+					['id'],
 					['id'],
 					[
 						'onDelete' => 'CASCADE',

@@ -12,16 +12,13 @@ namespace OCA\Mail\Db;
 use OCP\AppFramework\Db\Entity;
 
 /**
- * @method void setImipMessageId(int $messageId)
- * @method int getImipMessageId()
  * @method void setError(bool $error)
  * @method bool getError()
  * @method void setProcessedAt(?int $processedAt)
  * @method int|null getProcessedAt()
+ * @method string|null getErrorMessage()
  */
 class ImipData extends Entity {
-	/** @var int */
-	protected $imipMessageId;
 
 	/** @var bool */
 	protected $error;
@@ -29,9 +26,12 @@ class ImipData extends Entity {
 	/** @var int|null */
 	protected $processedAt;
 
+	/** @var string */
+	protected $errorMessage;
+
 	public function __construct() {
-		$this->addType('imipMessageId', 'integer');
 		$this->addType('error', 'boolean');
 		$this->addType('processedAt', 'integer');
+		$this->addType('errorMessage', 'string');
 	}
 }

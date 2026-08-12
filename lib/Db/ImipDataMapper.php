@@ -37,7 +37,7 @@ class ImipDataMapper extends QBMapper {
 		$qb->select('*')
 			->from($this->getTableName())
 			->where(
-				$qb->expr()->eq('imip_message_id', $qb->createNamedParameter($messageId, IQueryBuilder::PARAM_INT))
+				$qb->expr()->eq('id', $qb->createNamedParameter($messageId, IQueryBuilder::PARAM_INT))
 			);
 
 		try {
@@ -47,16 +47,31 @@ class ImipDataMapper extends QBMapper {
 		}
 	}
 
+	private function hasImipData(int $id): bool {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select($qb->func()->count('*'))
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->eq('id', $qb->createNamedParameter($id, IQueryBuilder::PARAM_INT))
+			);
+
+		$result = $qb->executeQuery();
+		$count = (int)$result->fetchOne();
+		$result->closeCursor();
+
+		return $count > 0;
+	}
+
 	/**
 	 * @throws Exception
 	 */
 	public function markAsImipMessage(int $messageId): void {
-		if ($this->findByMessageId($messageId) !== null) {
+		if ($this->hasImipData($messageId)) {
 			return;
 		}
 
 		$imipData = new ImipData();
-		$imipData->setImipMessageId($messageId);
+		$imipData->setId($messageId);
 		$imipData->setError(false);
 		$imipData->setProcessedAt(null);
 		$this->insert($imipData);
@@ -71,7 +86,7 @@ class ImipDataMapper extends QBMapper {
 			->set('error', $qb->createNamedParameter($error, IQueryBuilder::PARAM_BOOL))
 			->set('processed_at', $qb->createNamedParameter($this->timeFactory->getTime(), IQueryBuilder::PARAM_INT))
 			->where(
-				$qb->expr()->eq('imip_message_id', $qb->createNamedParameter($messageId, IQueryBuilder::PARAM_INT))
+				$qb->expr()->eq('id', $qb->createNamedParameter($messageId, IQueryBuilder::PARAM_INT))
 			);
 
 		$update->executeStatement();
