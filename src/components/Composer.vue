@@ -43,20 +43,15 @@
 			</div>
 		</div>
 		<div class="composer-fields">
-			<div class="composer-fields__label">
-				<label class="to-label" for="to">
-					{{ t('mail', 'To') }}
-				</label>
-				<ButtonVue size="small" type="tertiary-no-background" @click.prevent="toggleViewMode">
-					{{ t('mail', 'Cc/Bcc') }}
-				</ButtonVue>
-			</div>
+			<label class="to-label" for="to">
+				{{ t('mail', 'To') }}
+			</label>
 			<div class="composer-fields--custom">
 				<NcSelect
 					id="to"
 					ref="toLabel"
 					:model-value="selectTo"
-					class="select"
+					class="select to-select"
 					:options="selectableRecipients.filter(recipient => !selectTo.some(to => to.email === recipient.email))"
 					:get-option-key="(option) => option.email"
 					:taggable="true"
@@ -68,7 +63,7 @@
 					:loading="loadingIndicatorTo"
 					:reducible="true"
 					:clearable="true"
-					:no-wrap="false"
+					:no-wrap="!toExpanded"
 					:append-to-body="false"
 					:create-option="createRecipientOption"
 					:clear-search-on-blur="() => clearOnBlur('to')"
@@ -83,12 +78,30 @@
 							class="vs__search"
 							v-bind="attributes"
 							v-on="events">
+						<ButtonVue
+							size="small"
+							type="tertiary-no-background"
+							class="copy-toggle"
+							@mousedown.stop
+							@click.prevent="toggleViewMode">
+							{{ t('mail', 'Cc/Bcc') }}
+						</ButtonVue>
 					</template>
 					<template #selected-option-container="{ option }">
 						<RecipientListItem
+							v-if="toExpanded || getRecipientIndex(selectTo, option) === 0"
 							:option="option"
 							class="vs__selected selected"
 							@remove-recipient="onRemoveRecipient(option, 'to')" />
+						<ButtonVue
+							v-else-if="getRecipientIndex(selectTo, option) === 1"
+							:key="option.email"
+							variant="tertiary"
+							class="vs__selected recipient-overflow"
+							@click.prevent.stop="toExpanded = true">
+							+{{ selectTo.length - 1 }}
+						</ButtonVue>
+						<span v-else />
 					</template>
 					<template #option="option">
 						<div>
@@ -122,7 +135,7 @@
 					:class="{ opened: !autoLimit }"
 					:options="selectableRecipients.filter(recipient => !selectCc.some(cc => cc.email === recipient.email))"
 					:get-option-key="(option) => option.email"
-					:no-wrap="false"
+					:no-wrap="!ccExpanded"
 					:filter-by="(option, label, search) => filterOption(option, label, search, 'cc')"
 					:dropdown-should-open="shouldOpenRecipientDropdown"
 					:taggable="true"
@@ -150,9 +163,19 @@
 					</template>
 					<template #selected-option-container="{ option }">
 						<RecipientListItem
+							v-if="ccExpanded || getRecipientIndex(selectCc, option) === 0"
 							:option="option"
 							class="vs__selected"
 							@remove-recipient="onRemoveRecipient(option, 'cc')" />
+						<ButtonVue
+							v-else-if="getRecipientIndex(selectCc, option) === 1"
+							:key="option.email"
+							variant="tertiary"
+							class="vs__selected recipient-overflow"
+							@click.prevent.stop="ccExpanded = true">
+							+{{ selectCc.length - 1 }}
+						</ButtonVue>
+						<span v-else />
 					</template>
 					<template #option="option">
 						<div>
@@ -178,7 +201,7 @@
 					:model-value="selectBcc"
 					class="select"
 					:class="{ opened: !autoLimit }"
-					:no-wrap="false"
+					:no-wrap="!bccExpanded"
 					:filter-by="(option, label, search) => filterOption(option, label, search, 'bcc')"
 					:options="selectableRecipients.filter(recipient => !selectBcc.some(bcc => bcc.email === recipient.email))"
 					:get-option-key="(option) => option.email"
@@ -209,9 +232,19 @@
 					</template>
 					<template #selected-option-container="{ option }">
 						<RecipientListItem
+							v-if="bccExpanded || getRecipientIndex(selectBcc, option) === 0"
 							:option="option"
 							class="vs__selected"
 							@remove-recipient="onRemoveRecipient(option, 'bcc')" />
+						<ButtonVue
+							v-else-if="getRecipientIndex(selectBcc, option) === 1"
+							:key="option.email"
+							variant="tertiary"
+							class="vs__selected recipient-overflow"
+							@click.prevent.stop="bccExpanded = true">
+							+{{ selectBcc.length - 1 }}
+						</ButtonVue>
+						<span v-else />
 					</template>
 					<template #option="option">
 						<div>
@@ -776,6 +809,9 @@ export default {
 			},
 
 			autoLimit: true,
+			toExpanded: false,
+			ccExpanded: false,
+			bccExpanded: false,
 			wantsSmimeSign: this.smimeSign,
 			wantsSmimeEncrypt: this.smimeEncrypt,
 			isPickerOpen: false,
@@ -1686,6 +1722,10 @@ export default {
 			this.showBCC = !(this.showBCC && this.selectBcc.length === 0 && this.autoLimit)
 		},
 
+		getRecipientIndex(recipients, option) {
+			return recipients.findIndex((r) => r.email === option.email)
+		},
+
 		setEditorModeHtml() {
 			this.editorMode = EDITOR_MODE_HTML
 		},
@@ -1825,8 +1865,7 @@ export default {
 	z-index: 100;
 	display: flex;
 	flex-direction: column;
-	height: 100%;
-	max-height: 100%;
+	min-height: 100%;
 }
 
 .composer-actions {
@@ -1835,23 +1874,15 @@ export default {
 }
 
 .composer-fields {
-	padding: var(--default-grid-baseline) calc(var(--default-grid-baseline) * 2) 0 calc(var(--default-grid-baseline) * 2);
-
-	&__label {
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		align-items: flex-end;
-
-		/** NcButton does not allow font weight styling */
-		:deep(.button-vue__text) {
-			font-weight: normal;
-		}
-	}
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	padding: 0 calc(var(--default-grid-baseline) * 2);
+	min-height: calc(var(--default-clickable-area) + calc(var(--default-grid-baseline) * 2));
 
 	&.mail-account {
 		border-top: none;
-		padding-top: calc(var(--default-grid-baseline) * 2);
+		padding-top: var(--default-grid-baseline);
 	}
 
 	input,
@@ -1863,17 +1894,18 @@ export default {
 	}
 
 	.composer-fields--custom {
+		flex: 1;
+		min-width: 0;
 		display: flex;
 		align-items: flex-start;
 		justify-content: space-between;
-		padding-top: calc(var(--default-grid-baseline) * 0.5);
+		padding: calc(var(--default-grid-baseline) * 1.5) 0;
 
 		button {
 			margin-top: 0;
 			margin-bottom: 0;
 			background-color: transparent;
 			border: none;
-			opacity: 0.5;
 			padding: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 4);
 		}
 
@@ -1924,8 +1956,8 @@ export default {
 
 // Make composer editor expand
 .message-editor {
-	flex: 1 1 100%;
-	min-height: 0;
+	flex: 1 1 auto;
+	min-height: 200px;
 	border-top: 1px solid var(--color-border);
 }
 
@@ -1938,26 +1970,77 @@ export default {
 
 .from-label,
 .to-label,
-.copy-toggle,
 .cc-label,
 .bcc-label {
+	width: calc(var(--default-grid-baseline) * 12);
+	flex-shrink: 0;
+	padding-top: calc(var(--default-grid-baseline) * 4 + 1px);
 	color: var(--color-text-maxcontrast);
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
 
-.bcc-label {
-	top: initial;
-	bottom: 0;
+// NcSelect caps the toggle at 100px with overflow-y:auto, preventing expanded
+// chips from pushing CC/BCC down. The no-wrap/select--no-wrap CSS already
+// controls whether chips wrap (flex-wrap:nowrap on vs__selected-options), so
+// removing the height cap here is safe for both collapsed and expanded states.
+:deep(.v-select.select .vs__dropdown-toggle) {
+	max-height: none;
+	overflow-y: visible;
+	border-radius: var(--border-radius-large);
+}
+
+// NcSelect adds a rectangular outline on focus/active/open — override with none
+// so the rounded border-radius is not broken by a sharp outline.
+:deep(.v-select.select:not(.vs--disabled, .vs--open) .vs__dropdown-toggle:active),
+:deep(.v-select.select:not(.vs--disabled, .vs--open) .vs__dropdown-toggle:focus-within),
+:deep(.v-select.select.vs--open .vs__dropdown-toggle) {
+	outline: none;
+}
+
+.recipient-overflow {
+	display: inline-flex;
+	align-items: center;
+	align-self: center;
+	padding: 0 calc(var(--default-grid-baseline) * 2);
+	height: calc(var(--default-clickable-area-small, 28px));
+	border-radius: var(--border-radius-pill);
+	background-color: var(--color-background-dark);
+	white-space: nowrap;
+	font-size: var(--default-font-size);
+	flex-shrink: 0;
+	border: none;
+	cursor: pointer;
+	color: var(--color-main-text);
+
+	&:hover {
+		background-color: var(--color-background-darker);
+	}
+}
+
+// Reserve space for the toggle only in the search row — chips on other rows fill full width
+.to-select :deep(.vs__search) {
+	padding-inline-end: calc(var(--default-grid-baseline) * 10);
 }
 
 .copy-toggle {
+	// Absolute so it overlays the bottom-right of the To field without affecting chip layout
+	position: absolute;
+	inset-inline-end: 0;
+	bottom: 0;
+	z-index: 1;
+	// Override the .composer-fields--custom button rule
+	opacity: 1;
 	cursor: pointer;
-	width: initial;
 
-	&:hover,
-	&:focus {
+	:deep(.button-vue__text) {
+		font-weight: normal;
+		color: var(--color-text-maxcontrast);
+	}
+
+	&:hover :deep(.button-vue__text),
+	&:focus :deep(.button-vue__text) {
 		color: var(--color-main-text);
 	}
 }
@@ -2037,7 +2120,7 @@ export default {
 .composer-actions--secondary-actions {
 	display: flex;
 	flex-direction: row;
-	padding: 12px;
+	padding: calc(var(--default-grid-baseline) * 2);
 	gap: 5px;
 }
 
@@ -2050,7 +2133,7 @@ export default {
 }
 
 .composer-actions-draft-status {
-	padding-inline-start: 10px;
+	padding-inline-start: 0;
 }
 
 :deep(.vs__selected-options .vs__dropdown-toggle .vs--multiple ){
