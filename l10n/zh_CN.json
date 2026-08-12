@@ -896,6 +896,7 @@
     "Search for users or groups" : "搜索用户或组",
     "Insert" : "插入",
     "Choose a text block to insert at the cursor" : "选择要在光标处插入的文本块",
+    "Text blocks are reusable pieces of text that can be inserted in messages. Visit the Settings panel to create your own." : "文本块是可重复使用的文本片段，可以插入到邮件中。请访问“设置”面板创建您自己的文本块。",
     "Account connected" : "账号已连接",
     "You can close this window" : "您可以关闭此窗口",
     "Connect your mail account" : "连接您的邮件账号",
