@@ -74,7 +74,7 @@
 					:clear-search-on-blur="() => clearOnBlur('to')"
 					@input="saveDraftDebounced"
 					@option:selecting="onNewToAddr"
-					@search:blur="onNewToAddr"
+					@search:blur="onToFieldBlur"
 					@search="onAutocomplete($event, 'to')">
 					<template #search="{ events, attributes }">
 						<input
@@ -102,6 +102,12 @@
 					</template>
 				</NcSelect>
 			</div>
+			<p
+				v-if="displayMissingToWarning"
+				role="alert"
+				class="composer-fields__helper-text">
+				{{ t('mail', 'Messages with no \'To\' recipients may be rejected by some mail providers.') }}
+			</p>
 		</div>
 		<div v-if="showCC" class="composer-fields">
 			<label for="cc" class="cc-label">
@@ -776,6 +782,7 @@ export default {
 			isTextBlockPickerOpen: false,
 			recipientSearchTerms: {},
 			smimeSignAliases: [],
+			toFieldTouched: false,
 		}
 	},
 
@@ -996,6 +1003,10 @@ export default {
 		textBlocks() {
 			return this.mainStore.getSharedTextBlocks()?.map((textBlock) => ({ title: textBlock.title, content: textBlock.content }))
 				.concat(this.mainStore.getMyTextBlocks().map((textBlock) => ({ title: textBlock.title, content: textBlock.content })))
+		},
+
+		displayMissingToWarning() {
+			return this.toFieldTouched && this.selectTo.length === 0
 		},
 	},
 
@@ -1587,7 +1598,7 @@ export default {
 			this.requestMdnVal = false
 			this.changeSignature = false
 			this.sendAtVal = 0
-
+			this.toFieldTouched = false
 			this.setAlias()
 			this.initBody()
 		},
@@ -1800,6 +1811,11 @@ export default {
 			this.saveDraftDebounced()
 		},
 
+		onToFieldBlur(option) {
+			this.toFieldTouched = true
+			this.onNewToAddr(option)
+		},
+
 	},
 }
 </script>
@@ -1896,6 +1912,13 @@ export default {
 		// boundaries in safari
 		-webkit-user-select: text;
 		user-select: text;
+	}
+
+	&__helper-text {
+		margin-top: calc(var(--default-grid-baseline) * 0.5);
+		margin-bottom: calc(var(--default-grid-baseline) * 0.5);
+		color: var(--color-text-maxcontrast);
+		font-size: var(--font-size-small);
 	}
 }
 
