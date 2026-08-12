@@ -287,7 +287,11 @@ export default {
  }
 
 .button-vue:deep() {
-	display: inline-block !important;
+	/* Keep the buttons inline but restore NcButton's own flex centering,
+	   otherwise the icon-and-text button ends up taller than the text-only
+	   one and they align on their text baseline instead of their center. */
+	display: inline-flex !important;
+	align-items: center;
 	margin-top: 4px !important;
 }
 
