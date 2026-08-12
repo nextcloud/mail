@@ -42,6 +42,10 @@ class Version5201Date20260720120000 extends SimpleMigrationStep {
 				'notnull' => false,
 				'default' => null,
 			]);
+			$table->addColumn('error_message', Types::STRING, [
+				'notnull' => true,
+				'default' => '',
+			]);
 			$table->setPrimaryKey(['id']);
 			$table->addIndex(['error', 'processed_at'], 'mail_msg_imip_unproc_idx');
 
