@@ -209,7 +209,7 @@ import { translate as translateMailboxName } from '../i18n/MailboxTranslator.js'
 import logger from '../logger.js'
 import { getMailboxStatus, repairMailbox } from '../service/MailboxService.js'
 import { clearCache } from '../service/MessageService.js'
-import { PRIORITY_INBOX_ID, UNIFIED_INBOX_ID } from '../store/constants.js'
+import { PRIORITY_INBOX_ID } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
 import { mailboxHasRights } from '../util/acl.js'
 
@@ -277,7 +277,6 @@ export default {
 			mailboxName: this.mailbox.displayName,
 			showMoveModal: false,
 			hasDelimiter: !!this.mailbox.delimiter,
-			UNIFIED_INBOX_ID,
 			createMailboxName: '',
 			repairing: false,
 		}
