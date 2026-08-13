@@ -176,8 +176,8 @@ OC.L10N.register(
     "From" : "Fra",
     "Select account" : "Vælg konto",
     "To" : "Til",
-    "Cc/Bcc" : "Cc/Bcc",
     "Select recipient" : "Vælg modtager",
+    "Cc/Bcc" : "Cc/Bcc",
     "Cc" : "Cc",
     "Bcc" : "Bcc",
     "Subject" : "Emne",
@@ -464,8 +464,8 @@ OC.L10N.register(
     "New Contact" : "Ny kontakt",
     "Copy to clipboard" : "Kopier til udklipsholder",
     "Add" : "Tilføj",
-    "Show less" : "Vis mindre",
-    "Show more" : "Vis mere",
+    "Collapse" : "Sammenfold",
+    "Expand" : "Udvid",
     "Clear" : "Ryd",
     "Search in folder" : "Søg i mappe",
     "Open search modal" : "Åbn søgemodal",
@@ -592,6 +592,8 @@ OC.L10N.register(
     "Error loading message" : "Fejl under indlæsning af besked",
     "Add share link from Files" : "Tilføj delingslink fra Filer",
     "Choose a file to add as attachment" : "Vælg en fil, der skal tilføjes som vedhæftning",
-    "Choose a file to share as a link" : "Vælg en fil der skal deles som link"
+    "Choose a file to share as a link" : "Vælg en fil der skal deles som link",
+    "Show less" : "Vis mindre",
+    "Show more" : "Vis mere"
 },
 "nplurals=2; plural=(n != 1);");

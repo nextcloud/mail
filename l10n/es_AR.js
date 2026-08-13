@@ -95,6 +95,7 @@ OC.L10N.register(
     "Message" : "Mensaje",
     "Copy to clipboard" : "Copiar al portapapeles",
     "Add" : "Añadir",
+    "Collapse" : "Colapsar",
     "Clear" : "Borrar",
     "Close" : "Cerrar",
     "Date" : "Fecha",

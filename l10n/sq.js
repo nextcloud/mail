@@ -104,6 +104,7 @@ OC.L10N.register(
     "Message" : "Mesazh",
     "Copy to clipboard" : "Kopjo në dërrasë ",
     "Add" : "Shto",
+    "Collapse" : "Tkurre",
     "Clear" : "Pastro",
     "Close" : "Mbylleni",
     "Date" : "Data",

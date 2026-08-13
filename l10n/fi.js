@@ -399,8 +399,8 @@ OC.L10N.register(
     "New Contact" : "Uusi yhteystieto",
     "Copy to clipboard" : "Kopioi leikepöydälle",
     "Add" : "Lisää",
-    "Show less" : "Näytä vähemmän",
-    "Show more" : "Näytä enemmän",
+    "Collapse" : "Kutista näkymää",
+    "Expand" : "Laajenna",
     "Clear" : "Tyhjennä",
     "Search in folder" : "Etsi kansiosta",
     "Close" : "Sulje",
@@ -613,6 +613,8 @@ OC.L10N.register(
     "Error loading message" : "Virhe viestiä ladatessa",
     "Choose a file to add as attachment" : "Valitse liitteeksi lisättävä tiedosto",
     "Choose a file to share as a link" : "Valitse tiedosto, joka jaetaan linkkinä",
+    "Show less" : "Näytä vähemmän",
+    "Show more" : "Näytä enemmän",
     "Insert text block" : "Lisää tekstilohko"
 },
 "nplurals=2; plural=(n != 1);");
