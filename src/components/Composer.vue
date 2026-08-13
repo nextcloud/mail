@@ -1876,6 +1876,7 @@ export default {
 .composer-fields {
 	display: flex;
 	flex-direction: row;
+	flex-wrap: wrap;
 	align-items: flex-start;
 	padding: 0 calc(var(--default-grid-baseline) * 2);
 	min-height: calc(var(--default-clickable-area) + calc(var(--default-grid-baseline) * 2));
@@ -1947,6 +1948,8 @@ export default {
 	}
 
 	&__helper-text {
+		flex-basis: 100%;
+		padding-inline-start: calc(var(--default-grid-baseline) * 12);
 		margin-top: calc(var(--default-grid-baseline) * 0.5);
 		margin-bottom: calc(var(--default-grid-baseline) * 0.5);
 		color: var(--color-text-maxcontrast);
