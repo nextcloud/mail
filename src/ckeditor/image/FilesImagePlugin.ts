@@ -57,8 +57,17 @@ export default class FilesImagePlugin extends Plugin {
 			const nodes = await getFilePickerBuilder(t('mail', 'Choose an image'))
 				.setMimeTypeFilter(MIME_TYPES)
 				.setMultiSelect(false)
-				// TRANSLATORS: button of the file picker to insert the selected image
-				.addButton({ label: t('mail', 'Insert'), type: 'primary', callback: () => {} })
+				.setCanPick((node) => (node.size ?? 0) <= SIZE_LIMIT)
+				.setButtonFactory((selection) => [{
+					label: selection.length === 0
+						// TRANSLATORS: call to action of the file picker while nothing is selected
+						? t('mail', 'Select an image')
+						// TRANSLATORS: button of the file picker to insert the selected image, {name} is a file name
+						: t('mail', 'Insert {name}', { name: selection[0].basename }, { escape: false, sanitize: false }),
+					disabled: selection.length === 0,
+					variant: 'primary',
+					callback: (nodes) => logger.debug('picked an image from Files', { nodes }),
+				}])
 				.build()
 				.pickNodes()
 			node = nodes[0]
