@@ -54,6 +54,7 @@ import {
 } from 'ckeditor5'
 import { getLinkWithPicker, searchProvider } from '@nextcloud/vue/components/NcRichText'
 import TextDirectionPlugin from '../ckeditor/direction/TextDirectionPlugin.js'
+import FilesImagePlugin from '../ckeditor/image/FilesImagePlugin.ts'
 import MailPlugin from '../ckeditor/mail/MailPlugin.js'
 import QuotePlugin from '../ckeditor/quote/QuotePlugin.js'
 import SignaturePlugin from '../ckeditor/signature/SignaturePlugin.js'
@@ -150,6 +151,7 @@ export default {
 				Image,
 				ImageUpload,
 				ImageResize,
+				FilesImagePlugin,
 				Font,
 				RemoveFormat,
 				Base64UploadAdapter,
