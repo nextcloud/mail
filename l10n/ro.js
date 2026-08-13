@@ -355,6 +355,8 @@ OC.L10N.register(
     "New Contact" : "Persoană de contact nouă",
     "Copy to clipboard" : "Copiază în clipboard",
     "Add" : "Adaugă",
+    "Collapse" : "Restrânge",
+    "Expand" : "Extinde",
     "Clear" : "Șterge ",
     "Close" : "Închide",
     "Search parameters" : "Parametri de căutare",

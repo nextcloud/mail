@@ -48,6 +48,7 @@ OC.L10N.register(
     "Rename" : "Renominar",
     "Reply" : "Responder",
     "Add" : "Adder",
+    "Collapse" : "Collaber",
     "Close" : "Clauder",
     "Date" : "Date",
     "Tags" : "Etiquettas",
