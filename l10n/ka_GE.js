@@ -101,6 +101,7 @@ OC.L10N.register(
     "Message" : "წერილი",
     "Copy to clipboard" : "კოპირება ბუფერში",
     "Add" : "დამატება",
+    "Collapse" : "აკეცვა",
     "Clear" : "გასუფთავება",
     "Close" : "დახურვა",
     "Date" : "თარიღი",

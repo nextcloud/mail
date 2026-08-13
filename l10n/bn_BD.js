@@ -40,6 +40,7 @@ OC.L10N.register(
     "Clear cache" : "ক্যাশে পরিষ্কার কর",
     "Reply" : "জবাব",
     "Add" : "যোগ করুন",
+    "Collapse" : "ভাঙো",
     "Close" : "বন্ধ",
     "Date" : "Date",
     "Tags" : "ট্যাগ",

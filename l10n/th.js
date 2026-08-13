@@ -74,6 +74,7 @@ OC.L10N.register(
     "Reply" : "ตอบกลับ",
     "Copy to clipboard" : "คัดลอกไปยังคลิปบอร์ด",
     "Add" : "เพิ่ม",
+    "Collapse" : "ย่อ",
     "Clear" : "ล้าง",
     "Close" : "ปิด",
     "Date" : "วันที่",

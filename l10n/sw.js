@@ -128,8 +128,8 @@ OC.L10N.register(
     "Message" : "Message",
     "Copy to clipboard" : "Nakili kwenye ubao wa kunakili",
     "Add" : "Ongeza",
-    "Show less" : "Show less",
-    "Show more" : "Show more",
+    "Collapse" : "Vunja",
+    "Expand" : "Panua",
     "Clear" : "Futa",
     "Close" : "Funga",
     "Body" : "Body",
@@ -186,6 +186,8 @@ OC.L10N.register(
     "Message sent" : "Ujumbe umetumwa",
     "Date:" : "Tarehe:",
     "Choose a file to add as attachment" : "Chagua faili kuongeza kama kiambatanisho",
-    "Choose a file to share as a link" : "Chagua faili kushirikisha kama kiungo"
+    "Choose a file to share as a link" : "Chagua faili kushirikisha kama kiungo",
+    "Show less" : "Show less",
+    "Show more" : "Show more"
 },
 "nplurals=2; plural=(n != 1);");

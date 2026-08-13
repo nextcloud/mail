@@ -382,8 +382,8 @@ OC.L10N.register(
     "New Contact" : "New Contact",
     "Copy to clipboard" : "Copy to clipboard",
     "Add" : "Add",
-    "Show less" : "Show less",
-    "Show more" : "Show more",
+    "Collapse" : "Collapse",
+    "Expand" : "Expand",
     "Clear" : "Clear",
     "Close" : "Close",
     "Search parameters" : "Search parameters",
@@ -618,6 +618,8 @@ OC.L10N.register(
     "Tag already exists" : "Tag already exists",
     "Error loading message" : "Error loading message",
     "Choose a file to add as attachment" : "Choose a file to add as attachment",
-    "Choose a file to share as a link" : "Choose a file to share as a link"
+    "Choose a file to share as a link" : "Choose a file to share as a link",
+    "Show less" : "Show less",
+    "Show more" : "Show more"
 },
 "nplurals=2; plural=(n!=1);");
