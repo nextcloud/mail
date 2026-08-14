@@ -44,25 +44,27 @@
 			<!-- TRANSLATORS: "writing mode", "rich text" and "plain text" are labels of the Writing mode setting -->
 			<p>{{ t('mail', 'This signature contains images. New messages will use rich text, even though your writing mode is set to plain text.') }}</p>
 		</NcNoteCard>
-		<ButtonVue
-			type="primary"
-			:disabled="loading"
-			:aria-label="t('mail', 'Save signature')"
-			@click="saveSignature">
-			<template #icon>
-				<IconLoading v-if="loading" :size="20" fill-color="white" />
-				<IconCheck v-else :size="20" />
-			</template>
-			{{ t('mail', 'Save signature') }}
-		</ButtonVue>
-		<ButtonVue
-			v-if="signature"
-			:aria-label="t('mail', 'Delete')"
-			type="tertiary-no-background"
-			class="button-text"
-			@click="deleteSignature">
-			{{ t('mail', 'Delete') }}
-		</ButtonVue>
+		<div class="signature-actions">
+			<ButtonVue
+				type="primary"
+				:disabled="loading"
+				:aria-label="t('mail', 'Save signature')"
+				@click="saveSignature">
+				<template #icon>
+					<IconLoading v-if="loading" :size="20" fill-color="white" />
+					<IconCheck v-else :size="20" />
+				</template>
+				{{ t('mail', 'Save signature') }}
+			</ButtonVue>
+			<ButtonVue
+				v-if="signature"
+				:aria-label="t('mail', 'Delete')"
+				type="tertiary-no-background"
+				class="button-text"
+				@click="deleteSignature">
+				{{ t('mail', 'Delete') }}
+			</ButtonVue>
+		</div>
 	</div>
 </template>
 
@@ -282,18 +284,17 @@ export default {
   margin-bottom: 23px;
 }
 
+.signature-actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 4px;
+	margin-top: 4px;
+}
+
 .ck-balloon-panel {
 	 z-index: 10000 !important;
  }
-
-.button-vue:deep() {
-	/* Keep the buttons inline but restore NcButton's own flex centering,
-	   otherwise the icon-and-text button ends up taller than the text-only
-	   one and they align on their text baseline instead of their center. */
-	display: inline-flex !important;
-	align-items: center;
-	margin-top: 4px !important;
-}
 
 /* it's a bit hard to make it work without this max-width in the modal because it overlaps with the sidebar of the modal */
 :deep(.ck.ck-toolbar-dropdown>.ck-dropdown__panel) {
