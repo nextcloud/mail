@@ -180,6 +180,8 @@ OC.L10N.register(
     "Copy to clipboard" : "Капіяваць у буфер абмену",
     "Contact name …" : "Імя кантакту …",
     "Add" : "Дадаць",
+    "Collapse" : "Згарнуць",
+    "Expand" : "Разгарнуць",
     "Clear" : "Ачысціць",
     "Search in folder" : "Пошук у папцы",
     "Close" : "Закрыць",

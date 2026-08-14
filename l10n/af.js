@@ -101,6 +101,7 @@ OC.L10N.register(
     "Reply" : "Antwoord",
     "Retry" : "Herprobeer",
     "Add" : "Voeg by",
+    "Collapse" : "Vou In",
     "Close" : "Close",
     "Date" : "Datum",
     "Tags" : "Etikette",

@@ -207,6 +207,8 @@ OC.L10N.register(
     "New Contact" : "Contautu nuevu",
     "Copy to clipboard" : "Copiar nel cartafueyu",
     "Add" : "Amestar",
+    "Collapse" : "Contrayer",
+    "Expand" : "Espander",
     "Clear" : "Borrar",
     "Close" : "Zarrar",
     "Search parameters" : "Parámetros de busca",
