@@ -65,15 +65,23 @@ class AttachmentStorage {
 		}
 
 		try {
-			$fileContent = @file_get_contents($tmpPath);
+			$source = @fopen($tmpPath, 'rb');
 		} catch (Throwable $ex) {
-			$fileContent = false;
+			$source = false;
 		}
 
-		if ($fileContent === false) {
+		if ($source === false) {
 			throw new UploadException('could not read uploaded file');
 		}
-		$file->putContent($fileContent);
+
+		try {
+			$file->putContent($source);
+		} finally {
+			/** @psalm-suppress RedundantCondition putContent() closes the stream after a successful write */
+			if (is_resource($source)) {
+				fclose($source);
+			}
+		}
 	}
 
 	/**
