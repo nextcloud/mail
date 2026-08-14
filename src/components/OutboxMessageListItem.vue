@@ -57,7 +57,7 @@
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import { getLanguage, translate as t } from '@nextcloud/l10n'
+import { getLanguage, t } from '@nextcloud/l10n'
 import moment from '@nextcloud/moment'
 import { NcActionButton as ActionButton, NcListItem as ListItem } from '@nextcloud/vue'
 import { mapStores } from 'pinia'

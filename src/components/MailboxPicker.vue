@@ -46,12 +46,12 @@
 </template>
 
 <script>
-import { translate as t } from '@nextcloud/l10n'
+import { t } from '@nextcloud/l10n'
 import { NcBreadcrumb, NcBreadcrumbs, NcDialog, NcEmptyContent, NcInputField, NcListItem } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import IconFolder from 'vue-material-design-icons/FolderOutline.vue'
 import MailboxIcon from './icons/MailboxIcon.vue'
-import { translate as translateMailboxName } from '../i18n/MailboxTranslator.js'
+import { translateMailboxName } from '../i18n/MailboxTranslator.js'
 import useMainStore from '../store/mainStore.js'
 import { mailboxHasRights } from '../util/acl.js'
 

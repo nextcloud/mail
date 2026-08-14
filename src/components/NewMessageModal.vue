@@ -147,7 +147,7 @@
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import { translate as t } from '@nextcloud/l10n'
+import { t } from '@nextcloud/l10n'
 import {
 	NcEmptyContent as EmptyContent,
 	NcButton,

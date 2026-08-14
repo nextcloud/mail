@@ -543,7 +543,7 @@
 
 <script>
 import { showError, showWarning } from '@nextcloud/dialogs'
-import { getCanonicalLocale, getFirstDay, getLocale, translate as t } from '@nextcloud/l10n'
+import { getCanonicalLocale, getFirstDay, getLocale, t } from '@nextcloud/l10n'
 import moment from '@nextcloud/moment'
 import { NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionRadio as ActionRadio, NcActions as Actions, NcButton as ButtonVue, NcListItemIcon as ListItemIcon, NcIconSvgWrapper, NcSelect } from '@nextcloud/vue'
 import debouncePromise from 'debounce-promise'
