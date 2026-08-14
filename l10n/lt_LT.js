@@ -901,6 +901,7 @@ OC.L10N.register(
     "You can close this window" : "Galite užverti šį langą",
     "Connect your mail account" : "Pridėti elektroninio pašto paskyrą",
     "To add a mail account, please contact your administrator." : "Norėdami pridėti pašto paskyrą, susisiekite su savo administratoriumi.",
+    "Choose an image" : "Pasirinkite paveikslėlį",
     "All" : "Visos",
     "Drafts" : "Juodraščiai",
     "Priority inbox" : "Prioritetinių laiškų dėžutė",

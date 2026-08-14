@@ -900,6 +900,7 @@ OC.L10N.register(
     "You can close this window" : "You can close this window",
     "Connect your mail account" : "Connect your mail account",
     "To add a mail account, please contact your administrator." : "To add a mail account, please contact your administrator.",
+    "Choose an image" : "Choose an image",
     "All" : "All",
     "Drafts" : "Drafts",
     "Priority inbox" : "Priority inbox",
