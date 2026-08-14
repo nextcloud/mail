@@ -900,6 +900,7 @@ OC.L10N.register(
     "You can close this window" : "可以關閉此視窗",
     "Connect your mail account" : "連結您的郵件賬號",
     "To add a mail account, please contact your administrator." : "要添加電郵帳戶，請聯繫您的管理員。",
+    "Choose an image" : "選擇圖像",
     "All" : "全部",
     "Drafts" : "草稿",
     "Priority inbox" : "優先收件匣",

@@ -900,6 +900,7 @@ OC.L10N.register(
     "You can close this window" : "Is féidir leat an fhuinneog seo a dhúnadh",
     "Connect your mail account" : "Ceangail do chuntas ríomhphoist",
     "To add a mail account, please contact your administrator." : "Chun cuntas ríomhphoist a chur leis, déan teagmháil le do riarthóir.",
+    "Choose an image" : "Roghnaigh íomhá",
     "All" : "Gach",
     "Drafts" : "Dréachtaí",
     "Priority inbox" : "Bosca isteach tosaíochta",

@@ -445,6 +445,8 @@ OC.L10N.register(
     "New Contact" : "جهة اتصال جديدة",
     "Copy to clipboard" : "نسخ الرابط إلى الحافظة",
     "Add" : "إضافة",
+    "Collapse" : "طوي",
+    "Expand" : "توسيع",
     "Clear" : "إمحُ",
     "Close" : "إغلاق",
     "Search parameters" : "بحث المعاملات",

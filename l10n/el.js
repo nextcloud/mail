@@ -895,6 +895,7 @@ OC.L10N.register(
     "You can close this window" : "Μπορείτε να κλείσετε αυτό το παράθυρο",
     "Connect your mail account" : "Συνδέστε το λογαριασμό αλληλογραφίας σας",
     "To add a mail account, please contact your administrator." : "Για να προσθέσετε έναν λογαριασμό αλληλογραφίας, παρακαλούμε επικοινωνήστε με τον διαχειριστή σας.",
+    "Choose an image" : "Επιλέξτε μια εικόνα",
     "All" : "Όλα",
     "Drafts" : "Πρόχειρα",
     "Priority inbox" : "Εισερχόμενα προτεραιότητας",
