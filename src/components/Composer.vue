@@ -1042,7 +1042,9 @@ export default {
 		},
 
 		displayMissingToWarning() {
-			return this.toFieldTouched && this.selectTo.length === 0
+			return this.toFieldTouched
+				&& this.selectTo.length === 0
+				&& (this.selectCc.length > 0 || this.selectBcc.length > 0)
 		},
 	},
 
