@@ -514,4 +514,94 @@ describe('Composer', () => {
 
 		expect(insertSignature).toHaveBeenCalled()
 	})
+	it('starts in rich text when the signature contains an image', () => {
+		const view = shallowMount(Composer, {
+			propsData: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+						connectionStatus: true,
+						signature: '<p>Regards<img src="cid:logo"></p>',
+					},
+				],
+			},
+			mocks: {
+				$route,
+			},
+			store,
+			localVue,
+		})
+
+		expect(view.vm.editorMode).toEqual('richtext')
+	})
+
+	it('switches to rich text when the signature contains an image', () => {
+		const view = shallowMount(Composer, {
+			propsData: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			mocks: {
+				$route,
+			},
+			store,
+			localVue,
+		})
+		const editorExecute = vi.fn()
+		view.vm.$refs.editor = { editorExecute }
+		view.vm.selectedAlias = {
+			id: 123,
+			signature: '<p>Regards<img src="cid:logo"></p>',
+			signatureAboveQuote: false,
+		}
+
+		view.vm.insertSignature()
+
+		expect(view.vm.editorMode).toEqual('richtext')
+		expect(editorExecute).not.toHaveBeenCalled()
+	})
+
+	it('keeps plain text when the signature contains no image', () => {
+		const view = shallowMount(Composer, {
+			propsData: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			mocks: {
+				$route,
+			},
+			store,
+			localVue,
+		})
+		const editorExecute = vi.fn()
+		view.vm.$refs.editor = { editorExecute }
+		view.vm.selectedAlias = {
+			id: 123,
+			signature: '<p>Regards</p>',
+			signatureAboveQuote: false,
+		}
+
+		view.vm.insertSignature()
+
+		expect(view.vm.editorMode).toEqual('plaintext')
+		expect(editorExecute).toHaveBeenCalled()
+	})
 })

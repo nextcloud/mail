@@ -23,7 +23,6 @@ use OCP\IRequest;
 class ContactIntegrationController extends Controller {
 	private ICache $cache;
 
-
 	public function __construct(
 		string $appName,
 		IRequest $request,

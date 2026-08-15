@@ -8,10 +8,8 @@
 namespace OCA\Mail\Tests\Unit\Service\Phishing;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-
 use OCA\Mail\Service\PhishingDetection\CustomEmailCheck;
 use OCP\IL10N;
-
 use PHPUnit\Framework\MockObject\MockObject;
 
 class CustomEmailCheckTest extends TestCase {

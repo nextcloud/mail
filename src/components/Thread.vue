@@ -21,6 +21,7 @@
 			<ThreadSummary v-if="showSummaryBox" :loading="summaryLoading" :summary="summaryText" />
 			<ThreadEnvelope
 				v-for="(env, index) in thread"
+				ref="envelopeRefs"
 				:key="env.databaseId"
 				:envelope="env"
 				:mailbox-id="$route.params.mailboxId"
@@ -29,8 +30,8 @@
 				:full-height="thread.length === 1"
 				:thread-index="index"
 				@delete="$emit('delete', env.databaseId)"
-				@loaded="addLoadedThread"
 				@move="onMove(env.databaseId)"
+				@print-shortcut="printThread"
 				@toggle-expand="toggleExpand(env.databaseId)"
 				@print="print" />
 		</template>
@@ -50,7 +51,33 @@ import logger from '../logger.js'
 import { summarizeThread } from '../service/AiIntergrationsService.js'
 import useMainStore from '../store/mainStore.js'
 import { getRandomMessageErrorMessage } from '../util/ErrorMessageFactory.js'
-import { formatDateTimeFromUnix } from '../util/formatDateTime.js'
+import {
+	BROWSER_PRINT_NOTICE_ID,
+	buildBrowserPrintNotice,
+	buildMessageHeader,
+	isPrintShortcut,
+	PRINT_CONTENT_HEIGHT,
+	PRINT_DOCUMENT_STYLE,
+	PRINT_FRAME_ID,
+	PRINT_STAGING_STYLE,
+	renderHtmlMessage,
+	renderPlainTextMessage,
+	waitForImages,
+} from '../util/printMessage.ts'
+import { wait } from '../util/wait.js'
+
+/**
+ * How long Ctrl/Cmd+P waits for the messages it expanded to render before it
+ * prints the ones that did.
+ */
+const THREAD_RENDER_TIMEOUT = 30000
+const THREAD_RENDER_POLL_INTERVAL = 100
+
+/**
+ * How long a print rendering is kept around in case the browser emits no
+ * `afterprint`. Long enough not to interrupt a print dialog that is still open.
+ */
+const PRINT_CLEANUP_TIMEOUT = 60000
 
 export default {
 	name: 'Thread',
@@ -73,7 +100,7 @@ export default {
 			enabledThreadSummary: loadState('mail', 'llm_summaries_available', false),
 			summaryText: '',
 			summaryError: false,
-			loadedThreads: 0,
+			isolatedPrint: false,
 		}
 	},
 
@@ -135,22 +162,21 @@ export default {
 			return thread[0].subject || this.t('mail', 'No subject')
 		},
 
-		threadParticipants() {
-			const seen = new Set()
-			return this.thread.flatMap((envelope) => [
-				...(envelope.from ?? []),
-				...(envelope.to ?? []),
-			]).filter(({ email }) => {
-				if (seen.has(email)) {
-					return false
-				}
-				seen.add(email)
-				return true
-			})
-		},
-
 		showSummaryBox() {
 			return this.thread.length > 2 && this.enabledThreadSummary && !this.summaryError
+		},
+
+		/**
+		 * Thread indices of the currently expanded messages, in thread order.
+		 * Those are the messages that are rendered, and therefore the ones that
+		 * can be printed.
+		 *
+		 * @return {number[]}
+		 */
+		expandedIndices() {
+			return this.thread.flatMap((envelope, index) => (
+				this.expandedThreads.includes(envelope.databaseId) ? [index] : []
+			))
 		},
 	},
 
@@ -175,8 +201,20 @@ export default {
 		window.addEventListener('keydown', this.handleKeyDown)
 	},
 
-	beforeUnmount() {
+	mounted() {
+		// A print started from the browser itself (its menu, or right-click →
+		// Print) cannot be served, see `buildBrowserPrintNotice`. The notice that
+		// says so is put up once and shown for print media only, rather than
+		// staged from a `beforeprint` handler, so that it is also there for a
+		// print the browser announces late or not at all.
+		if (!document.getElementById(BROWSER_PRINT_NOTICE_ID)) {
+			document.body.appendChild(buildBrowserPrintNotice(document))
+		}
+	},
+
+	beforeDestroy() {
 		window.removeEventListener('keydown', this.handleKeyDown)
+		document.getElementById(BROWSER_PRINT_NOTICE_ID)?.remove()
 	},
 
 	methods: {
@@ -232,7 +270,6 @@ export default {
 				await this.fetchThread()
 			}
 			this.updateSummary()
-			this.loadedThreads = 0
 		},
 
 		async fetchThread() {
@@ -277,224 +314,217 @@ export default {
 			}
 		},
 
+		/**
+		 * Take the print shortcut while the app itself has the focus. A message
+		 * has a window of its own and its keydowns never reach here, so
+		 * `MessageHTMLBody` listens in its frame and emits `print-shortcut`
+		 * instead — both end up in `printThread`.
+		 *
+		 * @param {KeyboardEvent} event the app window's keydown event
+		 */
 		async handleKeyDown(event) {
-			if ((event.ctrlKey || event.metaKey) && event.key === 'p') {
-				event.preventDefault()
+			if (!isPrintShortcut(event)) {
+				return
+			}
+			event.preventDefault()
 
-				try {
-					this.thread.forEach((thread) => {
-						if (!this.expandedThreads.includes(thread.databaseId)) {
-							this.expandedThreads.push(thread.databaseId)
-						}
-					})
+			await this.printThread()
+		},
 
-					while (true) {
-						if (this.loadedThreads === this.thread.length) {
-							break
-						}
-						await new Promise((resolve) => setTimeout(resolve, 100))
-					}
+		/**
+		 * Print every message of the thread, expanding the ones that are still
+		 * collapsed so that there is something to print of them.
+		 *
+		 * @return {Promise<void>}
+		 */
+		async printThread() {
+			// Asking again while the previous print is still being prepared, or
+			// while its dialog is still open, would stage the thread a second time
+			// and expand it all over again.
+			if (this.isolatedPrint) {
+				return
+			}
 
-					const virtualIframe = document.createElement('iframe')
-					virtualIframe.style.position = 'absolute'
-					document.body.appendChild(virtualIframe)
-					const virtualIframeDocument = virtualIframe.contentDocument || virtualIframe.contentWindow.document
-					virtualIframeDocument.open()
-					virtualIframeDocument.write(`<html><head><title>${t('mail', 'Print')}</title></head><body></body></html>`)
-					virtualIframeDocument.close()
-
-					virtualIframeDocument.body.appendChild(this.addThreadInfo(virtualIframeDocument))
-
-					const messageContainers = document.querySelectorAll('#message-container')
-					for (const [index, messageContainer] of messageContainers.entries()) {
-						const iframe = messageContainer.querySelector('iframe')
-
-						this.addMessageInfo(virtualIframeDocument, index)
-
-						if (!iframe) {
-							const div = virtualIframeDocument.createElement('div')
-							div.innerHTML = messageContainer.innerHTML
-							virtualIframeDocument.body.appendChild(div)
-							continue
-						}
-
-						if (iframe.contentWindow.document.readyState !== 'complete') {
-							await new Promise((resolve) => {
-								iframe.contentWindow.onload = resolve
-							})
-						}
-
-						const iframeDocument = iframe.contentDocument || iframe.contentWindow.document
-						const iframeContent = iframeDocument.body.innerHTML
-						const div = virtualIframeDocument.createElement('div')
-
-						div.innerHTML = iframeContent
-						virtualIframeDocument.body.appendChild(div)
-					}
-
-					const images = virtualIframeDocument.querySelectorAll('img')
-					let imagesLoaded = 0
-
-					images.forEach((img) => {
-						img.addEventListener('load', () => {
-							imagesLoaded++
-							if (imagesLoaded === images.length) {
-								virtualIframe.contentWindow.print()
-								this.removeIframe(virtualIframe)
-							}
-						})
-						img.addEventListener('error', () => {
-							imagesLoaded++
-							if (imagesLoaded === images.length) {
-								virtualIframe.contentWindow.print()
-								this.removeIframe(virtualIframe)
-							}
-						})
-					})
-
-					if (images.length === 0) {
-						virtualIframe.contentWindow.print()
-						this.removeIframe(virtualIframe)
-					}
-				} catch (error) {
-					logger.error('Could not print message', { error })
-					showError(t('mail', 'Could not print message'))
+			this.thread.forEach((envelope) => {
+				if (!this.expandedThreads.includes(envelope.databaseId)) {
+					this.expandedThreads.push(envelope.databaseId)
 				}
+			})
+
+			// Expanding a message loads it from the backend, and only a rendered
+			// message can be printed. Give up eventually so that one message
+			// failing to load doesn't hold the print back for good.
+			const deadline = Date.now() + THREAD_RENDER_TIMEOUT
+			while (!this.threadPrintable() && Date.now() < deadline) {
+				await wait(THREAD_RENDER_POLL_INTERVAL)
+			}
+
+			await this.printMessages(this.expandedIndices)
+		},
+
+		/**
+		 * Whether every message of the thread is rendered and can be printed.
+		 *
+		 * The messages are asked themselves rather than counted as they report
+		 * being loaded: a message emits `loaded` whenever its loading state
+		 * settles, which is neither once per message nor once per thread.
+		 *
+		 * @return {boolean}
+		 */
+		threadPrintable() {
+			const envelopes = this.$refs.envelopeRefs
+			return envelopes?.length === this.thread.length
+				&& envelopes.every((component) => component.printable)
+		},
+
+		async print(threadIndex) {
+			await this.printMessages([threadIndex])
+		},
+
+		/**
+		 * Print the given thread messages by rendering them into a dedicated,
+		 * hidden iframe and printing that iframe's own document.
+		 *
+		 * This is deliberately isolated from the main document: the app layout is
+		 * never mutated, so nothing needs to be reloaded afterwards, and the
+		 * messages are printed as a standalone page instead of inside the
+		 * surrounding UI. The frame is only a container for that document — what
+		 * the browser prints and paginates is the document itself, so the print
+		 * still follows the paper size and orientation of the print dialog.
+		 *
+		 * @param {number[]} indices thread indices to print, in order
+		 * @return {Promise<void>}
+		 */
+		async printMessages(indices) {
+			// Set for as long as a print of our own is being prepared or is
+			// waiting on its dialog, so that a second print does not stage the
+			// thread once more on top of the first.
+			if (this.isolatedPrint) {
+				return
+			}
+			this.isolatedPrint = true
+
+			const frame = document.createElement('iframe')
+			frame.id = PRINT_FRAME_ID
+			// The frame is parked off-screen rather than hidden, see
+			// `PRINT_STAGING_STYLE`, so it stays in the accessibility tree and
+			// would be announced without this.
+			frame.setAttribute('aria-hidden', 'true')
+			// The messages are copied in from the sanitized message frames, but
+			// unlike those this frame is not protected by the backend's
+			// Content-Security-Policy. The sandbox stands in for it: without
+			// `allow-scripts` no script or inline event handler in the content can
+			// run. The two capabilities that are granted are the ones this frame
+			// needs — `allow-same-origin` to let us populate it, `allow-modals` to
+			// let it open the print dialog.
+			frame.setAttribute('sandbox', 'allow-same-origin allow-modals')
+			frame.style.cssText = `${PRINT_STAGING_STYLE} height: ${PRINT_CONTENT_HEIGHT}; border: 0;`
+			document.body.appendChild(frame)
+
+			let cleanupTimeout = null
+			let cleanedUp = false
+			const cleanup = () => {
+				if (cleanedUp) {
+					return
+				}
+				cleanedUp = true
+				clearTimeout(cleanupTimeout)
+				this.isolatedPrint = false
+				frame.remove()
+			}
+
+			try {
+				const doc = frame.contentDocument
+				doc.open()
+				doc.write('<!DOCTYPE html><html><head><meta charset="utf-8"></head><body></body></html>')
+				doc.close()
+				doc.title = this.threadSubject
+
+				const style = doc.createElement('style')
+				style.textContent = PRINT_DOCUMENT_STYLE
+				doc.head.appendChild(style)
+
+				indices.forEach((index) => this.appendPrintMessage(doc.body, index))
+
+				if (!await waitForImages(doc)) {
+					logger.warn('Printing without the images that did not load in time')
+				}
+
+				frame.contentWindow.addEventListener('afterprint', cleanup, { once: true })
+				// A backstop for a browser that never delivers `afterprint`, armed
+				// only now: it must not be able to take the frame away while the
+				// print is still being prepared. Long enough not to interrupt a
+				// print dialog that is still open.
+				cleanupTimeout = setTimeout(cleanup, PRINT_CLEANUP_TIMEOUT)
+
+				// Firefox prints whatever window has the focus, and would print the
+				// app around the frame without this.
+				frame.contentWindow.focus()
+				// Blocking in every browser that matters, but `afterprint` is what
+				// the cleanup waits for: the spec allows `print()` to return before
+				// the dialog is dismissed, and removing the frame while its
+				// document is still being printed empties the print.
+				frame.contentWindow.print()
+			} catch (error) {
+				cleanup()
+				logger.error('Could not print message', { error })
+				showError(t('mail', 'Could not print message'))
 			}
 		},
 
-		removeIframe(virtualIframe) {
-			setTimeout(() => {
-				document.body.removeChild(virtualIframe)
-			}, 500)
-		},
+		/**
+		 * Append the printable rendering of one thread message to `parent`: its
+		 * print header followed by the message body as it is currently rendered.
+		 *
+		 * The body goes into a shadow root of its own, so that the messages of a
+		 * thread cannot restyle one another while all of them still share — and
+		 * paginate over — the pages of one print document. The header stays
+		 * outside of it, out of reach of the message's own CSS.
+		 *
+		 * `parent` always belongs to the sandboxed print frame's document: the
+		 * email markup is never copied into the app's own document.
+		 *
+		 * @param {HTMLElement} parent element to append the message to
+		 * @param {number} index thread index of the message to append
+		 */
+		appendPrintMessage(parent, index) {
+			const envelope = this.thread[index]
+			// Looked up by envelope rather than by index: a `ref` in a `v-for`
+			// collects the components as they render, in an order Vue does not
+			// promise to be the one of the source array.
+			const envelopeComponent = this.$refs.envelopeRefs?.find((component) => component.envelope?.databaseId === envelope?.databaseId)
+			if (!envelope || !envelopeComponent) {
+				return
+			}
 
-		addMessageInfo(virtualIframeDocument, index) {
-			const hr = virtualIframeDocument.createElement('hr')
-			hr.style.border = '1px solid black'
+			const doc = parent.ownerDocument
+			const messageEl = envelopeComponent.$el
+			const message = doc.createElement('div')
+			message.className = 'print-message'
+			message.appendChild(buildMessageHeader(doc, envelope))
+			parent.appendChild(message)
 
-			const subjectSpan = virtualIframeDocument.createElement('p')
-			subjectSpan.style.fontWeight = 'bold'
-			subjectSpan.textContent = t('mail', 'Subject') + ': ' + this.thread[index].subject
+			const iframe = messageEl.querySelector('iframe')
+			if (iframe?.contentDocument) {
+				renderHtmlMessage(message, iframe.contentDocument)
+				return
+			}
+			if (iframe) {
+				// Mailvelope renders a decrypted PGP message into a frame of
+				// its own, served from the extension. That document belongs to
+				// another origin and cannot be read, let alone copied, so such
+				// a message prints as its header alone rather than taking the
+				// print of the whole thread down with it.
+				logger.warn('Message body is in a frame of another origin and cannot be printed', {
+					databaseId: envelope.databaseId,
+				})
+				return
+			}
 
-			const senderSpan = virtualIframeDocument.createElement('p')
-			senderSpan.style.fontWeight = 'bold'
-			senderSpan.textContent = t('mail', 'From') + ': ' + this.thread[index].from[0].label + ' <' + this.thread[index].from[0].email + '>'
-
-			const dateSpan = virtualIframeDocument.createElement('p')
-			dateSpan.style.fontWeight = 'bold'
-			dateSpan.textContent = t('mail', 'Date') + ': ' + formatDateTimeFromUnix(this.thread[index].dateInt)
-
-			const recipientSpan = virtualIframeDocument.createElement('p')
-			recipientSpan.style.fontWeight = 'bold'
-			recipientSpan.textContent = t('mail', 'To') + ': ' + this.thread[index].to[0].label + this.thread[index].to[0].email
-
-			virtualIframeDocument.body.appendChild(hr)
-			virtualIframeDocument.body.appendChild(subjectSpan)
-			virtualIframeDocument.body.appendChild(senderSpan)
-			virtualIframeDocument.body.appendChild(dateSpan)
-			virtualIframeDocument.body.appendChild(recipientSpan)
-		},
-
-		addThreadInfo(document) {
-			const threadInfo = document.createElement('div')
-			threadInfo.style.marginTop = '20px'
-			threadInfo.style.marginBottom = '20px'
-			threadInfo.className = 'mail-thread-info'
-
-			const subjectLine = document.createElement('h2')
-			subjectLine.textContent = `${this.threadSubject}`
-			threadInfo.appendChild(subjectLine)
-
-			const participantsLine = document.createElement('p')
-			participantsLine.textContent = this.threadParticipants
-				.map((participant) => `${participant.label} <${participant.email}>`)
-				.join(', ')
-			threadInfo.appendChild(participantsLine)
-
-			return threadInfo
-		},
-
-		addLoadedThread() {
-			this.loadedThreads++
-		},
-
-		print(threadIndex) {
-			setTimeout(() => {
-				try {
-					const messages = Array.from(document.querySelectorAll('.html-message-body, .mail-message-body'))
-
-					let message
-
-					if (threadIndex !== undefined) {
-						message = messages[threadIndex * 2] ?? messages.pop()
-					} else {
-						// By default, we print the last opened message in the thread
-						message = messages.pop()
-					}
-
-					const iframe = message.querySelector('iframe')
-
-					if (iframe === null) {
-						// Handle plain text messages
-						const messageContainer = message.querySelector('#message-container')
-
-						if (messageContainer) {
-							// Create a new iframe
-							const newIframe = document.createElement('iframe')
-							newIframe.style.display = 'none' // Hide the iframe
-							document.body.appendChild(newIframe)
-
-							// Insert the message content into the iframe
-							const iframeDocument = newIframe.contentDocument || newIframe.contentWindow.document
-							iframeDocument.open()
-							iframeDocument.write(`
-								<html>
-									<head>
-										<title></title>
-									</head>
-									<body>
-										<div class="message-container">${messageContainer.innerHTML}</div>
-									</body>
-								</html>
-							`)
-							iframeDocument.title = this.threadSubject
-
-							const threadInfo = this.addThreadInfo(iframeDocument)
-							iframeDocument.body.insertBefore(threadInfo, iframeDocument.body.firstChild)
-
-							setTimeout(() => {
-								threadInfo.remove()
-							}, 5000)
-
-							iframeDocument.close()
-
-							newIframe.contentWindow.print()
-
-							// Clean up: remove the iframe after printing
-							setTimeout(() => {
-								document.body.removeChild(newIframe)
-							}, 500)
-						}
-
-						return
-					}
-
-					const iframeDocument = iframe.contentDocument || iframe.contentWindow.document
-
-					const threadInfo = this.addThreadInfo(iframeDocument)
-					iframeDocument.body.insertBefore(threadInfo, iframeDocument.body.firstChild)
-
-					setTimeout(() => {
-						threadInfo.remove()
-					}, 200)
-
-					iframe.contentWindow.print()
-				} catch (error) {
-					logger.error('Could not print message', { error })
-					showError(t('mail', 'Could not print message'))
-				}
-			}, 100)
+			const messageContainer = messageEl.querySelector('#message-container')
+			if (messageContainer) {
+				renderPlainTextMessage(message, messageContainer)
+			}
 		},
 	},
 }
@@ -528,7 +558,7 @@ export default {
 	align-items: center;
 	padding: 0 0 calc(var(--default-grid-baseline) * 2) 0;
 	// somehow ios doesn't care about this !important rule
-	// so we have to manually set left/right padding to chidren
+	// so we have to manually set left/right padding to children
 	// for 100% to be used
 	box-sizing: content-box !important;
 	width: 100%;
@@ -565,8 +595,8 @@ export default {
 	// initial width
 	width: 0;
 	// while scrolling, the back button overlaps with subject on small screen
-	// 66px to allign with the sender Envelope -> 8px margin + 2px border+ avatar -> 40px width  + envelope__header -> 8px padding + sender-> margin 8px
-	padding-inline-start: 66px;
+	// envelope margin (2×baseline) + border (2px) + header padding (--border-radius-container) + avatar (10×baseline) + sender margin (2×baseline)
+	padding-inline-start: calc(var(--default-grid-baseline) * 14 + var(--border-radius-container) + 2px);
 	// grow and try to fill 100%
 	flex: 1 1 auto;
 	background: var(--color-main-background);

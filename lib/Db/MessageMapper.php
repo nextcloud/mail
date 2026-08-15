@@ -468,7 +468,6 @@ class MessageMapper extends QBMapper {
 			}
 		}
 
-
 		try {
 			// UPDATE messages SET flag true/false WHERE uid in (uids) -> for each flag
 			// => total of 20 queries
@@ -948,7 +947,6 @@ class MessageMapper extends QBMapper {
 				$qb->expr()->lte('m.sent_at', $qb->createNamedParameter($query->getEnd()), IQueryBuilder::PARAM_INT)
 			);
 		}
-
 
 		if ($query->getHasAttachments()) {
 			$select->andWhere(

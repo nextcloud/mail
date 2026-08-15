@@ -27,11 +27,9 @@ OC.L10N.register(
     "About" : "About",
     "From" : "Dan",
     "To" : "Gacha",
-    "Choose" : "Choose",
-    "Choose a file to add as attachment" : "Ilova sifatida qo'shish uchun faylni tanlang",
-    "Choose a file to share as a link" : "Havola sifatida almashish uchun faylni tanlang",
     "_{count} attachment_::_{count} attachments_" : ["{count} qo'shimchalar"],
     "Confirm" : "Confirm",
+    "Choose" : "Choose",
     "Favorite" : "Favorite",
     "More actions" : "Ko'proq harakatlar",
     "Back" : "Orqaga",
@@ -53,6 +51,7 @@ OC.L10N.register(
     "Yesterday" : "Kecha",
     "Last week" : "O`tgan yil",
     "Last month" : "Oxirgi oy",
+    "No results" : "Natija yo'q",
     "Favorites" : "Favorites",
     "Other" : "Boshqa",
     "Direct link copied to clipboard" : "Klipbordga nusxa olish",
@@ -95,6 +94,9 @@ OC.L10N.register(
     "Account connected" : "Akkaunt ulangan",
     "All" : "All",
     "Error while sharing file" : "Fayl almashishda xatolik yuz berdi",
-    "Discard changes" : "O'zgarishlarni bekor qilish"
+    "Discard changes" : "O'zgarishlarni bekor qilish",
+    "Date:" : "Sana:",
+    "Choose a file to add as attachment" : "Ilova sifatida qo'shish uchun faylni tanlang",
+    "Choose a file to share as a link" : "Havola sifatida almashish uchun faylni tanlang"
 },
 "nplurals=1; plural=0;");

@@ -59,6 +59,14 @@ class Html {
 	 * @return string
 	 */
 	public function convertLinks(string $data): string {
+		if (!mb_check_encoding($data, 'UTF-8')) {
+			// Some senders (e.g. Lotus Notes/Domino) declare a message as UTF-8 while
+			// actually sending a different charset. UrlLinker's escapeHtml() calls
+			// htmlspecialchars() without ENT_SUBSTITUTE/ENT_IGNORE, which returns an
+			// empty string for the whole input on the first invalid byte it hits.
+			$data = mb_convert_encoding($data, 'UTF-8', 'UTF-8');
+		}
+
 		$linker = new UrlLinker([
 			'allowFtpAddresses' => true,
 			'allowUpperCaseUrlSchemes' => false,
@@ -184,6 +192,11 @@ class Html {
 		$uriSchemeRegistry->register('data', $uriSchemaData);
 
 		$purifier = new HTMLPurifier($config);
+
+		// Downlevel-revealed conditionals are not comments, so no HTMLPurifier comment
+		// setting covers them and some libxml versions leave them as visible text.
+		// Keep the original on a PCRE error; purify(null) would silently return an empty body.
+		$mailBody = preg_replace('/<!\[\s*(?:end)?if\b[^\]]*\]\s*>/i', '', $mailBody) ?? $mailBody;
 
 		$result = $purifier->purify($mailBody);
 		// eat xml parse errors within HTMLPurifier

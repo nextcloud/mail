@@ -55,7 +55,6 @@ class InternalAddressMapperTest extends TestCase {
 				'user_id' => $qb->createNamedParameter($uid),
 				'address' => $qb->createNamedParameter('hamza@next.cloud'),
 				'type' => $qb->createNamedParameter('individual')
-
 			])
 			->executeStatement();
 
@@ -72,7 +71,6 @@ class InternalAddressMapperTest extends TestCase {
 				'user_id' => $qb->createNamedParameter($uid),
 				'address' => $qb->createNamedParameter('next.cloud'),
 				'type' => $qb->createNamedParameter('domain'),
-
 			])
 			->executeStatement();
 

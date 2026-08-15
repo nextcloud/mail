@@ -206,7 +206,7 @@ export default {
 		document.addEventListener('click', this.handleClickOutside)
 	},
 
-	beforeUnmount() {
+	beforeDestroy() {
 		document.removeEventListener('click', this.handleClickOutside)
 	},
 

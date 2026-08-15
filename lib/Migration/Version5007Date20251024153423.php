@@ -81,7 +81,7 @@ class Version5007Date20251024153423 extends SimpleMigrationStep {
 
 		}
 		// Then if classification is disabled by default, we re-enable it for users who did so previously
-		// If classification is enabled by default, we disbale it users who did so previously
+		// If classification is enabled by default, we disable it users who did so previously
 		$qb = $this->db->getQueryBuilder();
 		$qb->update('mail_accounts')
 			->set('classification_enabled', $qb->createNamedParameter(!$isEnabledBydefault, IQueryBuilder::PARAM_BOOL))

@@ -314,7 +314,7 @@ export default {
 						event.addProperty(new AttendeeProperty('ATTENDEE', `mailto:${att}`))
 					})
 
-					event.addProperty(new AttendeeProperty('ORGANIZER', organizerEmail))
+					event.addProperty(new AttendeeProperty('ORGANIZER', `mailto:${organizerEmail}`))
 				}
 
 				for (const vObject of calendar.getVObjectIterator()) {

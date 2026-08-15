@@ -240,7 +240,6 @@ class DraftServiceIntegrationTest extends TestCase {
 		$this->assertEquals(LocalMessage::TYPE_OUTGOING, $saved->getType());
 	}
 
-
 	public function testSaveAndSendMessage(): void {
 		$message = new LocalMessage();
 		$message->setType(LocalMessage::TYPE_DRAFT);

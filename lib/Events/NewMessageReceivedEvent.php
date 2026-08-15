@@ -8,10 +8,17 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Events;
 
+use OCA\Mail\Account;
+use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\Message;
 use OCP\EventDispatcher\Event;
+use OCP\EventDispatcher\IWebhookCompatibleEvent;
 
-class NewMessageReceivedEvent extends Event {
+class NewMessageReceivedEvent extends Event implements IWebhookCompatibleEvent {
 	public function __construct(
+		private Account $account,
+		private Mailbox $mailbox,
+		private Message $message,
 		private string $uri,
 	) {
 		parent::__construct();
@@ -19,5 +26,19 @@ class NewMessageReceivedEvent extends Event {
 
 	public function getUri(): string {
 		return $this->uri;
+	}
+
+	public function getWebhookSerializable(): array {
+		return [
+			'accountId' => $this->account->getId(),
+			'inReplyToRfcMessageId' => $this->message->getInReplyTo(),
+			'mailboxId' => $this->mailbox->getId(),
+			'messageId' => $this->message->getId(),
+			'messageUri' => $this->uri,
+			'rfcMessageId' => $this->message->getMessageId(),
+			'sentAt' => $this->message->getSentAt(),
+			'subject' => $this->message->getSubject(),
+			'threadRootId' => $this->message->getThreadRootId(),
+		];
 	}
 }

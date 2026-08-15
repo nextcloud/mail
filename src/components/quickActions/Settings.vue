@@ -43,6 +43,7 @@
 						<Action
 							:action="item"
 							:account="account"
+							:draggable="item.name !== 'deleteThread' && item.name !== 'moveThread'"
 							@update="(payload) => updateAction(payload, item)"
 							@delete="deleteAction(item)" />
 					</Draggable>
@@ -370,9 +371,10 @@ export default {
 <style lang="scss" scoped>
 
 .modal-content{
-	padding: 30px;
+	padding: 0 30px 30px 30px;
+
 	&__action{
-		padding: 9px;
+		padding: 6px 0;
 	}
 	&__save {
 		position: absolute;
@@ -382,9 +384,16 @@ export default {
 }
 
 :deep(.v-select){
-	display: flex;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	flex-grow: 1;
     align-items: center;
     justify-content: space-between;
+	margin: 0;
+
+	.select__label {
+		margin: 0;
+	}
 }
 
 .modal-name{

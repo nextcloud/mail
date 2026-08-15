@@ -519,7 +519,6 @@ class OutboxControllerTest extends TestCase {
 		$this->service->expects(self::never())
 			->method('updateMessage');
 
-
 		$this->expectException(DoesNotExistException::class);
 		$expected = JsonResponse::fail('', Http::STATUS_NOT_FOUND);
 		$actual = $this->controller->update(
@@ -611,7 +610,6 @@ class OutboxControllerTest extends TestCase {
 		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
 		$cc = [['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']];
 
-
 		$this->smimeService
 			->method('findCertificate')
 			->willThrowException(new DoesNotExistException('No such certificate'));
@@ -659,7 +657,6 @@ class OutboxControllerTest extends TestCase {
 		$message->setFailed(false);
 		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
 		$cc = [['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']];
-
 
 		$this->smimeService
 			->method('findCertificate')

@@ -7,7 +7,6 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-
 namespace OCA\Mail\Tests\Unit\Controller;
 
 use OCA\Mail\Controller\TextBlockController;
@@ -26,7 +25,6 @@ final class TextBlockControllerTest extends TestCase {
 
 	/** @var string */
 	private $userId;
-
 
 	protected function setUp(): void {
 		$this->textBlockService = $this->createMock(TextBlockService::class);
@@ -151,7 +149,6 @@ final class TextBlockControllerTest extends TestCase {
 		$this->textBlockService->expects($this->once())
 			->method('delete')
 			->with(1, $this->userId);
-
 
 		$controller = new TextBlockController($this->createStub(\OCP\IRequest::class), $this->userId, $this->textBlockService);
 

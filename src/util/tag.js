@@ -4,6 +4,7 @@
  */
 
 import { translate as t } from '@nextcloud/l10n'
+import { hiddenTags } from '../components/tags.js'
 import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
 
 /**
@@ -18,4 +19,22 @@ export function translateTagDisplayName(tag) {
 	}
 
 	return tag.displayName
+}
+
+export function validateTag(tagId, tagName, otherTags) {
+	const testableDisplayName = tagName.toLowerCase().trim()
+
+	if (testableDisplayName === '') {
+		return t('mail', 'Tag name cannot be empty')
+	}
+
+	if (Object.keys(hiddenTags).some((tag) => tag.toLowerCase() === testableDisplayName)) {
+		return t('mail', 'Tag name is a hidden system tag')
+	}
+
+	if (otherTags.some((tag) => tagId !== tag.id && tag.displayName.toLowerCase() === testableDisplayName)) {
+		return t('mail', 'Tag already exists')
+	}
+
+	return true
 }

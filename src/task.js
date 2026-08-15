@@ -643,7 +643,7 @@ export default class Task {
 	 * @return {boolean} If the task matches
 	 */
 	matches(searchQuery) {
-		// If the search query maches the previous search, we don't have to search again.
+		// If the search query matches the previous search, we don't have to search again.
 		if (this._searchQuery === searchQuery) {
 			return this._matchesSearchQuery
 		}

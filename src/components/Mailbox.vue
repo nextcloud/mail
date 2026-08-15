@@ -4,7 +4,8 @@
 -->
 
 <template>
-	<div class="mailbox"
+	<div
+		class="mailbox"
 		:class="{ 'empty-content': (!hasMessages && !loadingEnvelopes) || error }">
 		<Error
 			v-if="error"
@@ -29,6 +30,7 @@
 					:loading-more="false"
 					:load-more-button="false"
 					:skip-transition="skipListTransition"
+					:date-grouped="true"
 					@delete="onDelete" />
 			</div>
 		</template>
@@ -218,7 +220,7 @@ export default {
 		this.mainStore.setHasFetchedInitialEnvelopesMutation(true)
 	},
 
-	unmounted() {
+	destroyed() {
 		this.bus.off('load-more', this.onScroll)
 		this.bus.off('delete', this.onDelete)
 		this.bus.off('archive', this.onArchive)
@@ -231,7 +233,7 @@ export default {
 			this.loadingCacheInitialization = true
 			this.error = false
 
-			logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.query}) during cache initalization`)
+			logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.query}) during cache initialization`)
 			this.sync(true)
 				.then(() => {
 					this.loadingCacheInitialization = false
@@ -434,10 +436,14 @@ export default {
 					}
 
 					break
-				case 'arch':
+				case 'arch': {
 					logger.debug('archiving via shortcut')
 
-					if (this.account.archiveMailboxId === null) {
+					// In unified mailboxes this.account is the unified account which
+					// has no archive mailbox, so resolve the envelope's actual account
+					const account = this.mainStore.getAccount(env.accountId)
+
+					if (account.archiveMailboxId === null) {
 						showWarning(t('mail', 'To archive a message please configure an archive folder in account settings'))
 						return
 					}
@@ -447,7 +453,7 @@ export default {
 						return
 					}
 
-					if (env.mailboxId === this.account.archiveMailboxId) {
+					if (env.mailboxId === account.archiveMailboxId) {
 						logger.debug('message is already in archive folder')
 						return
 					}
@@ -457,7 +463,7 @@ export default {
 					try {
 						await this.mainStore.moveThread({
 							envelope: env,
-							destMailboxId: this.account.archiveMailboxId,
+							destMailboxId: account.archiveMailboxId,
 						})
 					} catch (error) {
 						logger.error('could not archive envelope', {
@@ -468,6 +474,7 @@ export default {
 						showError(t('mail', 'Could not archive message'))
 					}
 					break
+				}
 				case 'flag':
 					logger.debug('flagging envelope via shortkey', { env })
 					this.mainStore.toggleEnvelopeFlagged(env).catch((error) => logger.error('could not flag envelope via shortkey', {

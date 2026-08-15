@@ -239,7 +239,6 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		return $this->imapDate;
 	}
 
-
 	/**
 	 * @param int $id
 	 *

@@ -3,7 +3,11 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div class="message-composer">
+	<div
+		class="message-composer"
+		@dragover.prevent
+		@drop="onDrop"
+		@paste="onPaste">
 		<NcReferencePickerModal
 			v-if="isPickerAvailable && isPickerOpen"
 			id="reference-picker"
@@ -39,20 +43,15 @@
 			</div>
 		</div>
 		<div class="composer-fields">
-			<div class="composer-fields__label">
-				<label class="to-label" for="to">
-					{{ t('mail', 'To') }}
-				</label>
-				<ButtonVue size="small" type="tertiary-no-background" @click.prevent="toggleViewMode">
-					{{ t('mail', 'Cc/Bcc') }}
-				</ButtonVue>
-			</div>
+			<label class="to-label" for="to">
+				{{ t('mail', 'To') }}
+			</label>
 			<div class="composer-fields--custom">
 				<NcSelect
 					id="to"
 					ref="toLabel"
 					:model-value="selectTo"
-					class="select"
+					class="select to-select"
 					:options="selectableRecipients.filter(recipient => !selectTo.some(to => to.email === recipient.email))"
 					:get-option-key="(option) => option.email"
 					:taggable="true"
@@ -64,13 +63,13 @@
 					:loading="loadingIndicatorTo"
 					:reducible="true"
 					:clearable="true"
-					:no-wrap="false"
+					:no-wrap="!toExpanded"
 					:append-to-body="false"
 					:create-option="createRecipientOption"
 					:clear-search-on-blur="() => clearOnBlur('to')"
 					@input="saveDraftDebounced"
 					@option:selecting="onNewToAddr"
-					@search:blur="onNewToAddr"
+					@search:blur="onToFieldBlur"
 					@search="onAutocomplete($event, 'to')">
 					<template #search="{ events, attributes }">
 						<input
@@ -79,12 +78,30 @@
 							class="vs__search"
 							v-bind="attributes"
 							v-on="events">
+						<ButtonVue
+							size="small"
+							type="tertiary-no-background"
+							class="copy-toggle"
+							@mousedown.stop
+							@click.prevent="toggleViewMode">
+							{{ t('mail', 'Cc/Bcc') }}
+						</ButtonVue>
 					</template>
 					<template #selected-option-container="{ option }">
 						<RecipientListItem
+							v-if="toExpanded || getRecipientIndex(selectTo, option) === 0"
 							:option="option"
 							class="vs__selected selected"
 							@remove-recipient="onRemoveRecipient(option, 'to')" />
+						<ButtonVue
+							v-else-if="getRecipientIndex(selectTo, option) === 1"
+							:key="option.email"
+							variant="tertiary"
+							class="vs__selected recipient-overflow"
+							@click.prevent.stop="toExpanded = true">
+							+{{ selectTo.length - 1 }}
+						</ButtonVue>
+						<span v-else />
 					</template>
 					<template #option="option">
 						<div>
@@ -98,6 +115,12 @@
 					</template>
 				</NcSelect>
 			</div>
+			<p
+				v-if="displayMissingToWarning"
+				role="alert"
+				class="composer-fields__helper-text">
+				{{ t('mail', 'Messages with no \'To\' recipients may be rejected by some mail providers.') }}
+			</p>
 		</div>
 		<div v-if="showCC" class="composer-fields">
 			<label for="cc" class="cc-label">
@@ -112,7 +135,7 @@
 					:class="{ opened: !autoLimit }"
 					:options="selectableRecipients.filter(recipient => !selectCc.some(cc => cc.email === recipient.email))"
 					:get-option-key="(option) => option.email"
-					:no-wrap="false"
+					:no-wrap="!ccExpanded"
 					:filter-by="(option, label, search) => filterOption(option, label, search, 'cc')"
 					:dropdown-should-open="shouldOpenRecipientDropdown"
 					:taggable="true"
@@ -140,9 +163,19 @@
 					</template>
 					<template #selected-option-container="{ option }">
 						<RecipientListItem
+							v-if="ccExpanded || getRecipientIndex(selectCc, option) === 0"
 							:option="option"
 							class="vs__selected"
 							@remove-recipient="onRemoveRecipient(option, 'cc')" />
+						<ButtonVue
+							v-else-if="getRecipientIndex(selectCc, option) === 1"
+							:key="option.email"
+							variant="tertiary"
+							class="vs__selected recipient-overflow"
+							@click.prevent.stop="ccExpanded = true">
+							+{{ selectCc.length - 1 }}
+						</ButtonVue>
+						<span v-else />
 					</template>
 					<template #option="option">
 						<div>
@@ -168,7 +201,7 @@
 					:model-value="selectBcc"
 					class="select"
 					:class="{ opened: !autoLimit }"
-					:no-wrap="false"
+					:no-wrap="!bccExpanded"
 					:filter-by="(option, label, search) => filterOption(option, label, search, 'bcc')"
 					:options="selectableRecipients.filter(recipient => !selectBcc.some(bcc => bcc.email === recipient.email))"
 					:get-option-key="(option) => option.email"
@@ -199,9 +232,19 @@
 					</template>
 					<template #selected-option-container="{ option }">
 						<RecipientListItem
+							v-if="bccExpanded || getRecipientIndex(selectBcc, option) === 0"
 							:option="option"
 							class="vs__selected"
 							@remove-recipient="onRemoveRecipient(option, 'bcc')" />
+						<ButtonVue
+							v-else-if="getRecipientIndex(selectBcc, option) === 1"
+							:key="option.email"
+							variant="tertiary"
+							class="vs__selected recipient-overflow"
+							@click.prevent.stop="bccExpanded = true">
+							+{{ selectBcc.length - 1 }}
+						</ButtonVue>
+						<span v-else />
 					</template>
 					<template #option="option">
 						<div>
@@ -348,14 +391,6 @@
 						</template>
 						{{
 							t('mail', 'Add attachment from Files')
-						}}
-					</ActionButton>
-					<ActionButton :close-after-click="true" :disabled="encrypt" @click="onAddCloudAttachmentLink">
-						<template #icon>
-							<IconPublic :size="20" />
-						</template>
-						{{
-							t('mail', 'Add share link from Files')
 						}}
 					</ActionButton>
 				</Actions>
@@ -523,7 +558,6 @@ import { NcReferencePickerModal } from '@nextcloud/vue/components/NcRichText'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
 import IconFolder from 'vue-material-design-icons/FolderOutline.vue'
 import IconFormat from 'vue-material-design-icons/FormatSize.vue'
-import IconPublic from 'vue-material-design-icons/Link.vue'
 import Paperclip from 'vue-material-design-icons/Paperclip.vue'
 import SendClock from 'vue-material-design-icons/SendClockOutline.vue'
 import Send from 'vue-material-design-icons/SendOutline.vue'
@@ -547,7 +581,7 @@ import { EDITOR_MODE_HTML, EDITOR_MODE_TEXT } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
 import { parseEmailList } from '../util/emailAddress.js'
 import { formatDateTime } from '../util/formatDateTime.js'
-import { detect, html, toHtml, toPlain } from '../util/text.js'
+import { containsImage, detect, html, toHtml, toPlain } from '../util/text.js'
 import textBlockSvg from './../../img/text_snippet.svg'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
@@ -573,7 +607,6 @@ export default {
 		Download,
 		IconUpload,
 		IconFolder,
-		IconPublic,
 		IconLinkPicker,
 		NcSelect,
 		NcIconSvgWrapper,
@@ -776,12 +809,16 @@ export default {
 			},
 
 			autoLimit: true,
+			toExpanded: false,
+			ccExpanded: false,
+			bccExpanded: false,
 			wantsSmimeSign: this.smimeSign,
 			wantsSmimeEncrypt: this.smimeEncrypt,
 			isPickerOpen: false,
 			isTextBlockPickerOpen: false,
 			recipientSearchTerms: {},
 			smimeSignAliases: [],
+			toFieldTouched: false,
 		}
 	},
 
@@ -1003,6 +1040,10 @@ export default {
 			return this.mainStore.getSharedTextBlocks()?.map((textBlock) => ({ title: textBlock.title, content: textBlock.content }))
 				.concat(this.mainStore.getMyTextBlocks().map((textBlock) => ({ title: textBlock.title, content: textBlock.content })))
 		},
+
+		displayMissingToWarning() {
+			return this.toFieldTouched && this.selectTo.length === 0
+		},
 	},
 
 	watch: {
@@ -1129,7 +1170,7 @@ export default {
 		}
 	},
 
-	beforeUnmount() {
+	beforeDestroy() {
 		window.removeEventListener('mailvelope', this.onMailvelopeLoaded)
 	},
 
@@ -1212,7 +1253,10 @@ export default {
 			}
 			// Only overwrite editormode if body is empty
 			if (previous === NO_ALIAS_SET && (!this.body || this.body.value === '')) {
-				this.editorMode = this.selectedAlias.editorMode
+				// Pick the mode before the editor exists so insertSignature doesn't have to re-create it
+				this.editorMode = containsImage(toHtml(detect(this.selectedAlias.signature)).value)
+					? EDITOR_MODE_HTML
+					: this.selectedAlias.editorMode
 			}
 		},
 
@@ -1301,6 +1345,22 @@ export default {
 		},
 
 		insertSignature() {
+			const signature = toHtml(detect(this.selectedAlias.signature)).value
+
+			/**
+			 * Plain text can't carry the images of a signature, they would be
+			 * dropped when the body is converted on submit. Switch to rich text
+			 * instead of losing them.
+			 *
+			 * As editorMode is the key for the TextEditor component the change
+			 * destroys the current instance and the signature is inserted via
+			 * the onEditorReady event of the new instance.
+			 */
+			if (this.editorPlainText && containsImage(signature)) {
+				this.editorMode = EDITOR_MODE_HTML
+				return
+			}
+
 			let trigger
 
 			if (this.changeSignature) {
@@ -1312,7 +1372,7 @@ export default {
 			this.$refs.editor.editorExecute(
 				'insertSignature',
 				trigger,
-				toHtml(detect(this.selectedAlias.signature)).value,
+				signature,
 				this.selectedAlias.signatureAboveQuote,
 			)
 
@@ -1411,10 +1471,6 @@ export default {
 		onAddCloudAttachment() {
 			this.bus.emit('on-add-cloud-attachment')
 			this.saveDraftDebounced()
-		},
-
-		onAddCloudAttachmentLink() {
-			this.bus.emit('on-add-cloud-attachment-link')
 		},
 
 		onAutocomplete(term, addressType) {
@@ -1578,7 +1634,7 @@ export default {
 			this.requestMdnVal = false
 			this.changeSignature = false
 			this.sendAtVal = 0
-
+			this.toFieldTouched = false
 			this.setAlias()
 			this.initBody()
 		},
@@ -1664,6 +1720,10 @@ export default {
 			this.autoLimit = !this.autoLimit
 			this.showCC = !(this.showCC && this.selectCc.length === 0 && this.autoLimit)
 			this.showBCC = !(this.showBCC && this.selectBcc.length === 0 && this.autoLimit)
+		},
+
+		getRecipientIndex(recipients, option) {
+			return recipients.findIndex((r) => r.email === option.email)
 		},
 
 		setEditorModeHtml() {
@@ -1755,6 +1815,47 @@ export default {
 			return option.email
 		},
 
+		onDrop(event) {
+			event.preventDefault()
+
+			const files = Array.from(event.dataTransfer.files)
+
+			if (!files.length) {
+				return
+			}
+
+			this.bus.emit('on-add-local-files', files)
+			this.saveDraftDebounced()
+		},
+
+		onPaste(event) {
+			const files = []
+
+			for (const item of event.clipboardData.items) {
+				if (item.kind === 'file') {
+					const file = item.getAsFile()
+
+					if (file) {
+						files.push(file)
+					}
+				}
+			}
+
+			if (!files.length) {
+				return
+			}
+
+			event.preventDefault()
+
+			this.bus.emit('on-add-local-files', files)
+			this.saveDraftDebounced()
+		},
+
+		onToFieldBlur(option) {
+			this.toFieldTouched = true
+			this.onNewToAddr(option)
+		},
+
 	},
 }
 </script>
@@ -1764,8 +1865,7 @@ export default {
 	z-index: 100;
 	display: flex;
 	flex-direction: column;
-	height: 100%;
-	max-height: 100%;
+	min-height: 100%;
 }
 
 .composer-actions {
@@ -1774,23 +1874,16 @@ export default {
 }
 
 .composer-fields {
-	padding: var(--default-grid-baseline) calc(var(--default-grid-baseline) * 2) 0 calc(var(--default-grid-baseline) * 2);
-
-	&__label {
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		align-items: flex-end;
-
-		/** NcButton does not allow font weight styling */
-		:deep(.button-vue__text) {
-			font-weight: normal;
-		}
-	}
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	padding: 0 calc(var(--default-grid-baseline) * 2);
+	min-height: calc(var(--default-clickable-area) + calc(var(--default-grid-baseline) * 2));
 
 	&.mail-account {
 		border-top: none;
-		padding-top: calc(var(--default-grid-baseline) * 2);
+		padding-top: var(--default-grid-baseline);
 	}
 
 	input,
@@ -1802,17 +1895,18 @@ export default {
 	}
 
 	.composer-fields--custom {
+		flex: 1;
+		min-width: 0;
 		display: flex;
 		align-items: flex-start;
 		justify-content: space-between;
-		padding-top: calc(var(--default-grid-baseline) * 0.5);
+		padding: calc(var(--default-grid-baseline) * 1.5) 0;
 
 		button {
 			margin-top: 0;
 			margin-bottom: 0;
 			background-color: transparent;
 			border: none;
-			opacity: 0.5;
 			padding: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 4);
 		}
 
@@ -1852,12 +1946,21 @@ export default {
 		-webkit-user-select: text;
 		user-select: text;
 	}
+
+	&__helper-text {
+		flex-basis: 100%;
+		padding-inline-start: calc(var(--default-grid-baseline) * 12);
+		margin-top: calc(var(--default-grid-baseline) * 0.5);
+		margin-bottom: calc(var(--default-grid-baseline) * 0.5);
+		color: var(--color-text-maxcontrast);
+		font-size: var(--font-size-small);
+	}
 }
 
 // Make composer editor expand
 .message-editor {
-	flex: 1 1 100%;
-	min-height: 0;
+	flex: 1 1 auto;
+	min-height: 200px;
 	border-top: 1px solid var(--color-border);
 }
 
@@ -1870,26 +1973,77 @@ export default {
 
 .from-label,
 .to-label,
-.copy-toggle,
 .cc-label,
 .bcc-label {
+	width: calc(var(--default-grid-baseline) * 12);
+	flex-shrink: 0;
+	padding-top: calc(var(--default-grid-baseline) * 4 + 1px);
 	color: var(--color-text-maxcontrast);
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
 
-.bcc-label {
-	top: initial;
-	bottom: 0;
+// NcSelect caps the toggle at 100px with overflow-y:auto, preventing expanded
+// chips from pushing CC/BCC down. The no-wrap/select--no-wrap CSS already
+// controls whether chips wrap (flex-wrap:nowrap on vs__selected-options), so
+// removing the height cap here is safe for both collapsed and expanded states.
+:deep(.v-select.select .vs__dropdown-toggle) {
+	max-height: none;
+	overflow-y: visible;
+	border-radius: var(--border-radius-large);
+}
+
+// NcSelect adds a rectangular outline on focus/active/open — override with none
+// so the rounded border-radius is not broken by a sharp outline.
+:deep(.v-select.select:not(.vs--disabled, .vs--open) .vs__dropdown-toggle:active),
+:deep(.v-select.select:not(.vs--disabled, .vs--open) .vs__dropdown-toggle:focus-within),
+:deep(.v-select.select.vs--open .vs__dropdown-toggle) {
+	outline: none;
+}
+
+.recipient-overflow {
+	display: inline-flex;
+	align-items: center;
+	align-self: center;
+	padding: 0 calc(var(--default-grid-baseline) * 2);
+	height: calc(var(--default-clickable-area-small, 28px));
+	border-radius: var(--border-radius-pill);
+	background-color: var(--color-background-dark);
+	white-space: nowrap;
+	font-size: var(--default-font-size);
+	flex-shrink: 0;
+	border: none;
+	cursor: pointer;
+	color: var(--color-main-text);
+
+	&:hover {
+		background-color: var(--color-background-darker);
+	}
+}
+
+// Reserve space for the toggle only in the search row — chips on other rows fill full width
+.to-select :deep(.vs__search) {
+	padding-inline-end: calc(var(--default-grid-baseline) * 10);
 }
 
 .copy-toggle {
+	// Absolute so it overlays the bottom-right of the To field without affecting chip layout
+	position: absolute;
+	inset-inline-end: 0;
+	bottom: 0;
+	z-index: 1;
+	// Override the .composer-fields--custom button rule
+	opacity: 1;
 	cursor: pointer;
-	width: initial;
 
-	&:hover,
-	&:focus {
+	:deep(.button-vue__text) {
+		font-weight: normal;
+		color: var(--color-text-maxcontrast);
+	}
+
+	&:hover :deep(.button-vue__text),
+	&:focus :deep(.button-vue__text) {
 		color: var(--color-main-text);
 	}
 }
@@ -1969,7 +2123,7 @@ export default {
 .composer-actions--secondary-actions {
 	display: flex;
 	flex-direction: row;
-	padding: 12px;
+	padding: calc(var(--default-grid-baseline) * 2);
 	gap: 5px;
 }
 
@@ -1982,7 +2136,7 @@ export default {
 }
 
 .composer-actions-draft-status {
-	padding-inline-start: 10px;
+	padding-inline-start: 0;
 }
 
 :deep(.vs__selected-options .vs__dropdown-toggle .vs--multiple ){

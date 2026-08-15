@@ -127,6 +127,7 @@
 				:has-multiple-accounts="hasMultipleAccounts"
 				:selected-envelopes="selectedEnvelopes"
 				:compact-mode="compactMode"
+				:date-grouped="dateGrouped"
 				@delete="$emit('delete', env.databaseId)"
 				@update:selected="onEnvelopeSelectToggle(env, index, $event)"
 				@select-multiple="onEnvelopeSelectMultiple(env, index)"
@@ -266,6 +267,11 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+
+		dateGrouped: {
+			type: Boolean,
+			default: false,
+		},
 	},
 
 	data() {
@@ -377,7 +383,7 @@ export default {
 		dragEventBus.on('envelopes-dropped', this.unselectAll)
 	},
 
-	beforeUnmount() {
+	beforeDestroy() {
 		dragEventBus.off('envelopes-dropped', this.unselectAll)
 	},
 

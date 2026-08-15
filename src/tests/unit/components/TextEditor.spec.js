@@ -4,7 +4,7 @@
  */
 
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { Paragraph } from 'ckeditor5'
+import { GeneralHtmlSupport, Paragraph } from 'ckeditor5'
 import mitt from 'mitt'
 import { vi } from 'vitest'
 import TextEditor from '../../../components/TextEditor.vue'
@@ -25,6 +25,35 @@ describe('TextEditor', () => {
 				bus: mitt(),
 			},
 		})
+	})
+
+	it('does not support additional html elements in plain text mode', async () => {
+		const wrapper = shallowMount(TextEditor, {
+			localVue,
+			propsData: {
+				value: 'bonjour',
+				bus: mitt(),
+			},
+		})
+
+		expect(wrapper.vm.config.plugins).not.toContain(GeneralHtmlSupport)
+	})
+
+	it('supports additional html elements in html mode', async () => {
+		const wrapper = shallowMount(TextEditor, {
+			localVue,
+			provide: {
+				addToFocusTrap: vi.fn(),
+			},
+			propsData: {
+				value: 'bonjour',
+				html: true,
+				bus: mitt(),
+			},
+		})
+
+		expect(wrapper.vm.config.plugins).toContain(GeneralHtmlSupport)
+		expect(wrapper.vm.config.htmlSupport.allow.some((rule) => rule.name === 'img')).toBe(true)
 	})
 
 	it('throw when editor not ready', async () => {

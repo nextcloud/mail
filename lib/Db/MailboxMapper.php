@@ -128,7 +128,6 @@ class MailboxMapper extends QBMapper {
 		return $this->findEntities($select);
 	}
 
-
 	/**
 	 * @param int $id
 	 * @param string $uid

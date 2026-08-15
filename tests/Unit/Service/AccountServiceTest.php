@@ -139,7 +139,6 @@ class AccountServiceTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-
 	public function testDelete() {
 		$accountId = 33;
 

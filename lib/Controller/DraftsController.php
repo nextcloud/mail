@@ -28,7 +28,6 @@ use OCP\IRequest;
 class DraftsController extends Controller {
 	private ITimeFactory $timeFactory;
 
-
 	public function __construct(
 		string $appName,
 		private string $userId,

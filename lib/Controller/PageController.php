@@ -12,6 +12,7 @@ namespace OCA\Mail\Controller;
 
 use OCA\Contacts\Event\LoadContactsOcaApiEvent;
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Db\SmimeCertificate;
@@ -38,13 +39,14 @@ use OCP\Authentication\Exceptions\PasswordUnavailableException;
 use OCP\Authentication\LoginCredentials\IStore as ICredentialStore;
 use OCP\Collaboration\Reference\RenderReferenceEvent;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\IAppConfig;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\IUserManager;
 use OCP\IUserSession;
-use OCP\TextProcessing\FreePromptTaskType;
-use OCP\TextProcessing\SummaryTaskType;
+use OCP\TaskProcessing\TaskTypes\TextToText;
+use OCP\TaskProcessing\TaskTypes\TextToTextSummary;
 use OCP\User\IAvailabilityCoordinator;
 use Psr\Log\LoggerInterface;
 use Throwable;
@@ -89,6 +91,7 @@ class PageController extends Controller {
 		private IAppManager $appManager,
 		private ContextChatSettingsService $contextChatSettingsService,
 		private ClassificationSettingsService $classificationSettingsService,
+		private IAppConfig $appConfig,
 	) {
 		parent::__construct($appName, $request);
 
@@ -228,7 +231,7 @@ class PageController extends Controller {
 			'app-version' => $this->config->getAppValue('mail', 'installed_version'),
 			'external-avatars' => $this->preferences->getPreference($this->userId, 'external-avatars', 'true'),
 			'layout-mode' => $this->preferences->getPreference($this->userId, 'layout-mode', 'vertical-split'),
-			'layout-message-view' => $this->preferences->getPreference($this->userId, 'layout-message-view', $this->config->getAppValue('mail', 'layout_message_view', 'threaded')),
+			'layout-message-view' => $this->preferences->getPreference($this->userId, 'layout-message-view', $this->appConfig->getValueString(Application::APP_ID, ConfigLexicon::LAYOUT_MESSAGE_VIEW, 'threaded')),
 			'reply-mode' => $this->preferences->getPreference($this->userId, 'reply-mode', 'top'),
 			'collect-data' => $this->preferences->getPreference($this->userId, 'collect-data', 'true'),
 			'search-priority-body' => $this->preferences->getPreference($this->userId, 'search-priority-body', 'false'),
@@ -237,6 +240,7 @@ class PageController extends Controller {
 			'sort-favorites' => $this->preferences->getPreference($this->userId, 'sort-favorites', 'false'),
 			'index-context-chat' => $this->contextChatSettingsService->isIndexingEnabled($this->userId) ? 'true' : 'false',
 			'compact-mode' => $this->preferences->getPreference($this->userId, 'compact-mode', 'false'),
+			'auto-mark-as-read' => $this->preferences->getPreference($this->userId, 'auto-mark-as-read', '3000'),
 		]);
 		$this->initialStateService->provideInitialState(
 			'prefill_displayName',
@@ -259,7 +263,7 @@ class PageController extends Controller {
 			'quick-actions',
 			$this->quickActionsService->findAll($this->userId),
 		);
-		$googleOauthclientId = $this->config->getAppValue(Application::APP_ID, 'google_oauth_client_id');
+		$googleOauthclientId = $this->appConfig->getValueString(Application::APP_ID, ConfigLexicon::GOOGLE_OAUTH_CLIENT_ID);
 		if (!empty($googleOauthclientId)) {
 			$this->initialStateService->provideInitialState(
 				'google-oauth-url',
@@ -275,8 +279,8 @@ class PageController extends Controller {
 				]),
 			);
 		}
-		$microsoftOauthClientId = $this->config->getAppValue(Application::APP_ID, 'microsoft_oauth_client_id');
-		$microsoftOauthTenantId = $this->config->getAppValue(Application::APP_ID, 'microsoft_oauth_tenant_id', 'common');
+		$microsoftOauthClientId = $this->appConfig->getValueString(Application::APP_ID, ConfigLexicon::MICROSOFT_OAUTH_CLIENT_ID);
+		$microsoftOauthTenantId = $this->appConfig->getValueString(Application::APP_ID, ConfigLexicon::MICROSOFT_OAUTH_TENANT_ID, 'common');
 		if (!empty($microsoftOauthClientId) && !empty($microsoftOauthTenantId)) {
 			$this->initialStateService->provideInitialState(
 				'microsoft-oauth-url',
@@ -306,12 +310,12 @@ class PageController extends Controller {
 
 		$this->initialStateService->provideInitialState(
 			'allow-new-accounts',
-			$this->config->getAppValue('mail', 'allow_new_mail_accounts', 'yes') === 'yes'
+			$this->appConfig->getValueBool(Application::APP_ID, ConfigLexicon::ALLOW_NEW_MAIL_ACCOUNTS, true)
 		);
 
 		$this->initialStateService->provideInitialState(
 			'llm_summaries_available',
-			$this->aiIntegrationsService->isLlmProcessingEnabled() && $this->aiIntegrationsService->isLlmAvailable(SummaryTaskType::class)
+			$this->aiIntegrationsService->isLlmProcessingEnabled() && $this->aiIntegrationsService->isLlmAvailable(TextToTextSummary::ID)
 		);
 
 		$this->initialStateService->provideInitialState(
@@ -321,13 +325,13 @@ class PageController extends Controller {
 
 		$this->initialStateService->provideInitialState(
 			'llm_freeprompt_available',
-			$this->aiIntegrationsService->isLlmProcessingEnabled() && $this->aiIntegrationsService->isLlmAvailable(FreePromptTaskType::class)
+			$this->aiIntegrationsService->isLlmProcessingEnabled() && $this->aiIntegrationsService->isLlmAvailable(TextToText::ID)
 		);
 
 		$this->initialStateService->provideInitialState(
 			'llm_followup_available',
 			$this->aiIntegrationsService->isLlmProcessingEnabled()
-			&& $this->aiIntegrationsService->isLlmAvailable(FreePromptTaskType::class)
+			&& $this->aiIntegrationsService->isLlmAvailable(TextToText::ID)
 		);
 
 		$this->initialStateService->provideInitialState(

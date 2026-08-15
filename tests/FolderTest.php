@@ -4,6 +4,7 @@
  * SPDX-FileCopyrightText: 2017-2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+
 namespace OCA\Mail\Tests;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;

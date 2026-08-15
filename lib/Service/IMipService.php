@@ -21,7 +21,6 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Calendar\IManager;
 use Psr\Log\LoggerInterface;
 use Throwable;
-
 use function array_filter;
 
 class IMipService {
@@ -113,10 +112,23 @@ class IMipService {
 			$systemVersion = $this->serverVersion->getMajorVersion();
 
 			foreach ($filteredMessages as $message) {
-				/** @var IMAPMessage $imapMessage */
+				$logContext = [
+					'messageId' => $message->getId(),
+					'mailboxId' => $mailbox->getId(),
+				];
+
 				$imapMessage = current(array_filter($imapMessages, static fn (IMAPMessage $imapMessage) => $message->getUid() === $imapMessage->getUid()));
+				if ($imapMessage === false) {
+					// the message vanished from the mailbox, the row is removed by the next sync run
+					$this->logger->debug('iMIP message could not be processed because it is no longer available on the IMAP server', $logContext);
+					$message->setImipProcessed(true);
+					$message->setImipError(true);
+					continue;
+				}
+
 				if (empty($imapMessage->scheduling)) {
-					// No scheduling info, maybe the DB is wrong
+					// the message advertises a scheduling method we do not support, see ImapMessageFetcher
+					$this->logger->warning('iMIP message could not be processed because it does not contain a supported scheduling method', $logContext);
 					$message->setImipProcessed(true);
 					$message->setImipError(true);
 					continue;
@@ -124,6 +136,7 @@ class IMipService {
 
 				$sender = $imapMessage->getFrom()->first()?->getEmail();
 				if ($sender === null) {
+					$this->logger->warning('iMIP message could not be processed because it does not contain a sender', $logContext);
 					$message->setImipProcessed(true);
 					$message->setImipError(true);
 					continue;
@@ -131,7 +144,9 @@ class IMipService {
 
 				try {
 					// an IMAP message could contain more than one iMIP object
+					$allProcessed = true;
 					foreach ($imapMessage->scheduling as $schedulingInfo) {
+						$logContext['method'] = $schedulingInfo['method'];
 						$processed = false;
 						if ($systemVersion < 33) {
 							$principalUri = 'principals/users/' . $userId;
@@ -145,7 +160,8 @@ class IMipService {
 							}
 						} else {
 							if (!method_exists($this->calendarManager, 'handleIMip')) {
-								$this->logger->error('iMIP handling is not supported by server version installed.');
+								$this->logger->error('iMIP handling is not supported by server version installed', $logContext);
+								$allProcessed = false;
 								continue;
 							}
 							$processed = $this->calendarManager->handleIMip(
@@ -155,19 +171,23 @@ class IMipService {
 									'recipient' => $recipient,
 									'absent' => $imipCreate ? 'create' : 'ignore',
 									'absentCreateStatus' => 'tentative',
+									'mailMessageId' => $message->getId(),
 								],
 							);
 						}
 
-						$message->setImipProcessed($processed);
-						$message->setImipError(!$processed);
+						if (!$processed) {
+							$this->logger->warning('iMIP message could not be processed by the calendar app, see the preceding log entry for the reason', $logContext);
+						}
+
+						$allProcessed = $allProcessed && $processed;
 					}
+
+					$message->setImipProcessed($allProcessed);
+					$message->setImipError(!$allProcessed);
 				} catch (Throwable $e) {
-					$this->logger->error('iMIP message processing failed', [
-						'exception' => $e,
-						'messageId' => $message->getId(),
-						'mailboxId' => $mailbox->getId(),
-					]);
+					$logContext['exception'] = $e;
+					$this->logger->error('iMIP message processing failed', $logContext);
 					$message->setImipProcessed(true);
 					$message->setImipError(true);
 				}
