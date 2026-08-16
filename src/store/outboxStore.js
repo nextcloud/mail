@@ -117,7 +117,7 @@ export default defineStore('outbox', {
 			this.stopMessageMutation({ message })
 			const updatedMessage = await OutboxService.updateMessage({
 				...message,
-				sentAt: undefined,
+				sendAt: null,
 			}, message.id)
 			this.updateMessageMutation({ message: updatedMessage })
 			return updatedMessage
