@@ -29,6 +29,7 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message as DbMessage;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\DelegationForbiddenException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
@@ -1792,5 +1793,56 @@ class MessagesControllerTest extends TestCase {
 		$actualResponse = $this->controller->smartReply(100);
 		$expectedResponse = new JSONResponse([], Http::STATUS_NO_CONTENT);
 		$this->assertEquals($expectedResponse, $actualResponse);
+	}
+
+	public function testMoveDestinationMailboxNotDelegated(): void {
+		$this->mockMoveDestination();
+		$this->delegationService->expects($this->once())
+			->method('assertMailboxAccess')
+			->with(40, $this->userId)
+			->willThrowException(new DelegationForbiddenException('no access'));
+		$this->mailManager->expects($this->never())
+			->method('moveMessage');
+
+		$this->expectException(DelegationForbiddenException::class);
+
+		$this->controller->move(300, 40);
+	}
+
+	public function testSnoozeDestinationMailboxNotDelegated(): void {
+		$this->mockMoveDestination();
+		$this->delegationService->expects($this->once())
+			->method('assertMailboxAccess')
+			->with(40, $this->userId)
+			->willThrowException(new DelegationForbiddenException('no access'));
+		$this->snoozeService->expects($this->never())
+			->method('snoozeMessage');
+
+		$this->expectException(DelegationForbiddenException::class);
+
+		$this->controller->snooze(300, 1234567890, 40);
+	}
+
+	private function mockMoveDestination(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1);
+		$this->accountService->method('find')
+			->willReturn(new Account($mailAccount));
+		$srcMailbox = new Mailbox();
+		$srcMailbox->setId(20);
+		$srcMailbox->setAccountId(1);
+		$dstMailbox = new Mailbox();
+		$dstMailbox->setId(40);
+		$dstMailbox->setAccountId(2);
+		$this->mailManager->method('getMailbox')
+			->willReturnMap([
+				[$this->userId, 20, $srcMailbox],
+				[$this->userId, 40, $dstMailbox],
+			]);
+		$message = new DbMessage();
+		$message->setId(300);
+		$message->setMailboxId(20);
+		$this->mailManager->method('getMessage')
+			->willReturn($message);
 	}
 }
