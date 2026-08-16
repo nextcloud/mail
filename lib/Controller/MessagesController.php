@@ -841,6 +841,37 @@ class MessagesController extends Controller {
 		return $zip;
 	}
 
+	private function moveAttachmentToFiles(Attachment $attachment, string $targetPath, ?string $fileName): void {
+		if ($this->userFolder === null) {
+			return;
+		}
+
+		if ($fileName === null) {
+			$fileName = '';
+		} else {
+			$fileName = trim($fileName);
+		}
+
+		if ($fileName === '') {
+			$fileName = $attachment->getName() ?? $this->l10n->t('Embedded message %s', [
+				$attachment->getId(),
+			]) . '.eml';
+		}
+
+		$fileParts = pathinfo($fileName);
+		$fileName = $fileParts['filename'];
+		$fileExtension = $fileParts['extension'] ?? '';
+		$fullPath = "$targetPath/$fileName.$fileExtension";
+		$counter = 2;
+		while ($this->userFolder->nodeExists($fullPath)) {
+			$fullPath = "$targetPath/$fileName ($counter).$fileExtension";
+			$counter++;
+		}
+
+		$newFile = $this->userFolder->newFile($fullPath);
+		$newFile->putContent($attachment->getContent());
+	}
+
 	/**
 	 * @NoAdminRequired
 	 *
@@ -858,7 +889,8 @@ class MessagesController extends Controller {
 	#[TrapError]
 	public function saveAttachment(int $id,
 		string $attachmentId,
-		string $targetPath) {
+		string $targetPath,
+		?string $fileName) {
 		if ($this->userId === null) {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
 		}
@@ -880,40 +912,27 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		/** @var Attachment[] $attachments */
-		$attachments = [];
 		if ($attachmentId === '0') {
 			$attachments = $this->mailManager->getMailAttachments(
 				$account,
 				$mailbox,
 				$message,
 			);
+
+			foreach ($attachments as $attachment) {
+				$this->moveAttachmentToFiles($attachment, $targetPath, null);
+			}
 		} else {
-			$attachments[] = $this->mailManager->getMailAttachment(
+			$attachment = $this->mailManager->getMailAttachment(
 				$account,
 				$mailbox,
 				$message,
 				$attachmentId,
 			);
+
+			$this->moveAttachmentToFiles($attachment, $targetPath, $fileName);
 		}
 
-		foreach ($attachments as $attachment) {
-			$fileName = $attachment->getName() ?? $this->l10n->t('Embedded message %s', [
-				$attachment->getId(),
-			]) . '.eml';
-			$fileParts = pathinfo($fileName);
-			$fileName = $fileParts['filename'];
-			$fileExtension = $fileParts['extension'] ?? '';
-			$fullPath = "$targetPath/$fileName.$fileExtension";
-			$counter = 2;
-			while ($this->userFolder->nodeExists($fullPath)) {
-				$fullPath = "$targetPath/$fileName ($counter).$fileExtension";
-				$counter++;
-			}
-
-			$newFile = $this->userFolder->newFile($fullPath);
-			$newFile->putContent($attachment->getContent());
-		}
 		return new JSONResponse();
 	}
 

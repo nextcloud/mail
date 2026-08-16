@@ -408,7 +408,71 @@ class MessagesControllerTest extends TestCase {
 		$response = $this->controller->saveAttachment(
 			$id,
 			$attachmentId,
-			$targetPath
+			$targetPath,
+			null
+		);
+
+		$this->assertEquals($expected, $response);
+	}
+
+	public function testSaveAndRenameSingleAttachment() {
+		$accountId = 17;
+		$mailboxId = 987;
+		$id = 123;
+		$uid = 321;
+		$attachmentId = '2.2';
+		$targetPath = 'Downloads';
+		$message = new \OCA\Mail\Db\Message();
+		$message->setMailboxId($mailboxId);
+		$message->setUid($uid);
+		$mailbox = new \OCA\Mail\Db\Mailbox();
+		$mailbox->setName('INBOX');
+		$mailbox->setAccountId($accountId);
+		$this->mailManager->expects($this->once())
+			->method('getMessage')
+			->with($this->userId, $id)
+			->willReturn($message);
+		$this->mailManager->expects($this->once())
+			->method('getMailbox')
+			->with($this->userId, $mailboxId)
+			->willReturn($mailbox);
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->will($this->returnValue($this->account));
+		$this->mailManager->expects($this->once())
+			->method('getMailAttachment')
+			->with($this->account, $mailbox, $message, $attachmentId)
+			->will($this->returnValue($this->attachment));
+		$folderNode = $this->createStub(Folder::class);
+		$this->userFolder->expects($this->once())
+			->method('get')
+			->with('Downloads')
+			->willReturn($folderNode);
+		$this->userFolder->expects($this->exactly(2))
+			->method('nodeExists')
+			->withConsecutive(['Downloads'], ['Downloads/foobar.jpg'])
+			->willReturnOnConsecutiveCalls(true, false);
+		$file = $this->getMockBuilder('\OCP\Files\File')
+			->disableOriginalConstructor()
+			->getMock();
+		$this->userFolder->expects($this->once())
+			->method('newFile')
+			->with('Downloads/foobar.jpg')
+			->will($this->returnValue($file));
+		$file->expects($this->once())
+			->method('putContent')
+			->with('abcdefg');
+		$this->attachment->expects($this->once())
+			->method('getContent')
+			->will($this->returnValue('abcdefg'));
+
+		$expected = new JSONResponse();
+		$response = $this->controller->saveAttachment(
+			$id,
+			$attachmentId,
+			$targetPath,
+			'foobar.jpg'
 		);
 
 		$this->assertEquals($expected, $response);
@@ -476,7 +540,8 @@ class MessagesControllerTest extends TestCase {
 		$response = $this->controller->saveAttachment(
 			$id,
 			$attachmentId,
-			$targetPath
+			$targetPath,
+			null
 		);
 
 		$this->assertEquals($expected, $response);
@@ -488,7 +553,7 @@ class MessagesControllerTest extends TestCase {
 			->with('NoSuchFolder')
 			->willReturn(false);
 
-		$response = $this->controller->saveAttachment(123, '1', 'NoSuchFolder');
+		$response = $this->controller->saveAttachment(123, '1', 'NoSuchFolder', null);
 
 		$this->assertSame(Http::STATUS_BAD_REQUEST, $response->getStatus());
 	}
@@ -506,7 +571,7 @@ class MessagesControllerTest extends TestCase {
 			->with('some/file.txt')
 			->willReturn($fileNode);
 
-		$response = $this->controller->saveAttachment(123, '1', 'some/file.txt');
+		$response = $this->controller->saveAttachment(123, '1', 'some/file.txt', null);
 
 		$this->assertSame(Http::STATUS_BAD_REQUEST, $response->getStatus());
 	}
