@@ -18,6 +18,7 @@ use OCA\Mail\Controller\AccountsController;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\DelegationForbiddenException;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\Sync\Response;
 use OCA\Mail\Service\AccountService;
@@ -447,6 +448,26 @@ class AccountsControllerTest extends TestCase {
 		$response = $this->controller->patchAccount($this->accountId, 'plaintext');
 
 		self::assertEquals(new JSONResponse(new Account($mailAccount)), $response);
+	}
+
+	public function testPatchAccountSpecialMailboxNotDelegated(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId($this->accountId);
+		$mailAccount->setUserId($this->userId);
+		$this->accountService->expects(self::once())
+			->method('find')
+			->with($this->userId, $this->accountId)
+			->willReturn(new Account($mailAccount));
+		$this->delegationService->expects(self::once())
+			->method('assertMailboxAccess')
+			->with(40, $this->userId)
+			->willThrowException(new DelegationForbiddenException('no access'));
+		$this->accountService->expects(self::never())
+			->method('save');
+
+		$this->expectException(DelegationForbiddenException::class);
+
+		$this->controller->patchAccount($this->accountId, null, null, null, 40);
 	}
 
 	public function testUpdateSmimeCertificateLogsDelegatedAction(): void {
