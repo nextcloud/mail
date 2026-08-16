@@ -897,6 +897,7 @@ class MessagesController extends Controller {
 			);
 		}
 
+		$lastFile = null;
 		foreach ($attachments as $attachment) {
 			$fileName = $attachment->getName() ?? $this->l10n->t('Embedded message %s', [
 				$attachment->getId(),
@@ -913,8 +914,17 @@ class MessagesController extends Controller {
 
 			$newFile = $this->userFolder->newFile($fullPath);
 			$newFile->putContent($attachment->getContent());
+			$lastFile = $newFile;
 		}
-		return new JSONResponse();
+
+		if ($lastFile === null) {
+			return new JSONResponse(['fileId' => null, 'path' => null]);
+		}
+
+		return new JSONResponse([
+			'fileId' => $lastFile->getId(),
+			'path' => $targetPath,
+		]);
 	}
 
 	/**
