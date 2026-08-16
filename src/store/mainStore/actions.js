@@ -619,7 +619,7 @@ export default function mainStoreActions() {
 				if (type === 'outbox' && data.id && data.sendAt) {
 					originalSendAt = data.sendAt
 					const outboxStore = useOutboxStore()
-					await outboxStore.stopMessage({ message: { ...data } })
+					data = await outboxStore.stopMessage({ message: { ...data } })
 				}
 
 				this.startComposerSessionMutation({
