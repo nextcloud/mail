@@ -44,7 +44,7 @@
 			</ActionText>
 
 			<ActionButton
-				v-if="mailbox.specialRole !== 'flagged' && !account.isUnified && hasSeenAcl"
+				v-if="notVirtual && hasSeenAcl"
 				:name="t('mail', 'Mark all as read')"
 				:disabled="loadingMarkAsRead"
 				@click="markAsRead">
@@ -53,7 +53,7 @@
 				</template>
 			</ActionButton>
 			<ActionButton
-				v-if="subfolderLabel && !account.isUnified && hasDelimiter && mailbox.specialRole !== 'flagged' && hasSubmailboxActionAcl"
+				v-if="subfolderLabel && notVirtual && hasDelimiter && hasSubmailboxActionAcl"
 				@click="openCreateMailbox">
 				<template #icon>
 					<IconAdd :size="20" />
@@ -75,7 +75,7 @@
 				{{ t('mail', 'Saving') }}
 			</ActionText>
 			<ActionButton
-				v-if="renameLabel && !hasSubMailboxes && !account.isUnified && hasRenameAcl"
+				v-if="renameLabel && notVirtual && !hasSubMailboxes && hasRenameAcl"
 				@click.prevent.stop="openRenameInput">
 				<template #icon>
 					<IconEdit :size="20" />
@@ -99,7 +99,7 @@
 				{{ t('mail', 'Saving') }}
 			</ActionText>
 			<ActionButton
-				v-if="!account.isUnified && hasDelimiter && !mailbox.specialRole && !hasSubMailboxes && hasDeleteAcl"
+				v-if="notVirtualOrSpecial && hasDelimiter && !hasSubMailboxes && hasDeleteAcl"
 				:id="genId(mailbox)"
 				:close-after-click="true"
 				@click.prevent="onOpenMoveModal">
@@ -109,7 +109,7 @@
 				{{ t('mail', 'Move folder') }}
 			</ActionButton>
 			<ActionButton
-				v-if="!account.isUnified && mailbox.specialRole !== 'flagged'"
+				v-if="notVirtual"
 				:disabled="repairing"
 				@click="repair">
 				<template #icon>
@@ -118,7 +118,7 @@
 				{{ t('mail', 'Repair folder') }}
 			</ActionButton>
 			<ActionButton
-				v-if="debug && !account.isUnified && mailbox.specialRole !== 'flagged'"
+				v-if="debug && notVirtual"
 				:name="t('mail', 'Clear cache')"
 				:disabled="clearingCache"
 				@click="clearCache">
@@ -145,7 +145,7 @@
 			</ActionCheckbox>
 
 			<ActionButton
-				v-if="mailbox.specialRole !== 'flagged' && !account.isUnified && hasClearMailboxAcl"
+				v-if="notVirtual && hasClearMailboxAcl"
 				:close-after-click="true"
 				@click="clearMailbox">
 				<template #icon>
@@ -155,7 +155,7 @@
 			</ActionButton>
 
 			<ActionButton
-				v-if="!account.isUnified && !mailbox.specialRole && !hasSubMailboxes && hasDeleteAcl"
+				v-if="notVirtualOrSpecial && !hasSubMailboxes && hasDeleteAcl"
 				@click="deleteMailbox">
 				<template #icon>
 					<IconDeleteOutline :size="20" />
@@ -292,11 +292,15 @@ export default {
 		},
 
 		notInbox() {
-			return this.mailbox.name.toLowerCase() !== 'inbox'
+			return this.mailbox.specialRole !== 'inbox'
 		},
 
 		notVirtual() {
 			return !this.account.isUnified && this.mailbox.specialRole !== 'flagged' && !this.filter
+		},
+
+		notVirtualOrSpecial() {
+			return this.notVirtual && !this.mailbox.specialRole
 		},
 
 		title() {
