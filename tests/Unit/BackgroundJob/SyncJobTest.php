@@ -16,6 +16,7 @@ use OCA\Mail\Account;
 use OCA\Mail\BackgroundJob\SyncJob;
 use OCA\Mail\Db\MailAccount;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\IConfig;
 use OCP\IUser;
 
 class SyncJobTest extends TestCase {
@@ -137,5 +138,24 @@ class SyncJobTest extends TestCase {
 			'accountId' => 123,
 		]);
 		$this->job->start($this->createMock(JobList::class));
+	}
+
+	public function testDisabledJob(): void {
+		$config = $this->createMock(IConfig::class);
+
+		$config->expects(self::once())
+			->method('getSystemValueInt')
+			->with('app.mail.background-sync-interval')
+			->willReturn(-1);
+
+		$serviceMock = $this->createServiceMock(SyncJob::class, [
+			'config' => $config,
+		]);
+
+		$serviceMock->getParameter('accountService')
+			->expects(self::never())
+			->method('findById');
+
+		$serviceMock->getService()->start($this->createMock(JobList::class));
 	}
 }
