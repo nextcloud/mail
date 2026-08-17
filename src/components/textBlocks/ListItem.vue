@@ -29,7 +29,7 @@
 			</template>
 		</NcListItem>
 		<NcDialog
-			:open.sync="editModalOpen"
+			v-model:open="editModalOpen"
 			:name="t('mail', 'Edit text block')"
 			size="normal"
 			:is-form="true">

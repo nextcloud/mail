@@ -373,7 +373,7 @@
 					</template>
 				</ButtonVue>
 
-				<Actions :open.sync="isAddAttachmentsOpen">
+				<Actions v-model:open="isAddAttachmentsOpen">
 					<template #icon>
 						<Paperclip :size="20" />
 					</template>
@@ -396,7 +396,7 @@
 				</Actions>
 
 				<Actions
-					:open.sync="isActionsOpen"
+					v-model:open="isActionsOpen"
 					@close="isMoreActionsOpen = false">
 					<template v-if="!isMoreActionsOpen">
 						<ActionButton v-if="isPickerAvailable" :close-after-click="true" @click="openPicker">
