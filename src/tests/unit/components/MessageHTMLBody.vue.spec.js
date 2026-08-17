@@ -9,7 +9,7 @@ import Nextcloud from '../../../mixins/Nextcloud.js'
 
 vi.mock('@iframe-resizer/parent', () => ({ default: vi.fn() }))
 vi.mock('@nextcloud/initial-state', () => ({ loadState: vi.fn().mockReturnValue(false) }))
-vi.mock('../../../service/AiIntergrationsService.js', () => ({ needsTranslation: vi.fn().mockResolvedValue(false) }))
+vi.mock('../../../util/languageDetection.ts', () => ({ detectForeignLanguage: vi.fn().mockResolvedValue(null) }))
 vi.mock('../../../service/TrustedSenderService.js', () => ({ trustSender: vi.fn() }))
 
 const localVue = createLocalVue()

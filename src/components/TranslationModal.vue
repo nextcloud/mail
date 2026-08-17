@@ -116,6 +116,11 @@ export default {
 			type: Object,
 			required: true,
 		},
+
+		detectedForeignLanguage: {
+			type: String,
+			default: null,
+		},
 	},
 
 	emits: ['close'],
@@ -154,6 +159,8 @@ export default {
 	async mounted() {
 		this.selectedTo = this.availableOutputLanguages.find((language) => language.value === this.userLanguage) || null
 		this.selectedFrom = this.availableInputLanguages.find((language) => language.value === 'detect_language')
+			?? this.availableInputLanguages.find((language) => language.value.split(/[-_]/)[0] === this.detectedForeignLanguage)
+			?? null
 		this.$nextTick(() => {
 			// FIXME trick to avoid focusTrap() from activating on NcSelect
 			this.isMounted = !!this.$refs.translateDialog.navigationId
