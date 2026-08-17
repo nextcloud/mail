@@ -66,7 +66,7 @@
 
 <script>
 import { showInfo } from '@nextcloud/dialogs'
-import { NcActionInput, NcActions, NcActionText, NcLoadingIcon, NcActionButton, NcColorPicker } from '@nextcloud/vue'
+import { NcActionButton, NcActionInput, NcActions, NcActionText, NcColorPicker, NcLoadingIcon } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import IconEdit from 'vue-material-design-icons/PencilOutline.vue'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'

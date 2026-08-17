@@ -542,10 +542,10 @@ import moment from '@nextcloud/moment'
 import { generateUrl } from '@nextcloud/router'
 import {
 	NcActionButton,
-	NcActionLink,
-	NcActionText,
 	NcActionInput,
+	NcActionLink,
 	NcActionSeparator,
+	NcActionText,
 	NcAssistantIcon,
 	NcCheckboxRadioSwitch,
 } from '@nextcloud/vue'

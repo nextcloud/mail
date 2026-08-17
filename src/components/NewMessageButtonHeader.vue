@@ -6,7 +6,7 @@
 	<div class="header">
 		<NcButton
 			:aria-label="t('mail', 'New message')"
-			type="secondary"
+			variant="secondary"
 			button-id="mail_new_message"
 			:wide="true"
 			@click="onNewMessage">
@@ -18,7 +18,7 @@
 		<NcButton
 			v-if="showRefresh && currentMailbox"
 			:aria-label="t('mail', 'Refresh')"
-			type="tertiary-no-background"
+			variant="tertiary-no-background"
 			class="refresh__button"
 			:disabled="refreshing"
 			@click="refreshMailbox">
@@ -26,7 +26,7 @@
 				<IconRefresh
 					v-if="!refreshing"
 					:size="20" />
-				<IconLoading
+				<NcLoadingIcon
 					v-if="refreshing"
 					:size="20" />
 			</template>
@@ -37,7 +37,7 @@
 <script>
 import { NcButton } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
-import IconLoading from '@nextcloud/vue/components/NcLoadingIcon'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconRefresh from 'vue-material-design-icons/Refresh.vue'
 import logger from '../logger.js'
@@ -49,7 +49,7 @@ export default {
 		NcButton,
 		IconAdd,
 		IconRefresh,
-		IconLoading,
+		NcLoadingIcon,
 	},
 
 	props: {

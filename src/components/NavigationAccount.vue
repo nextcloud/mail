@@ -49,7 +49,7 @@
 						{{ t('mail', 'Delegate account') }}
 					</NcActionButton>
 					<NcActionCheckbox
-						:checked="account.showSubscribedOnly"
+						:model-value="account.showSubscribedOnly"
 						:disabled="savingShowOnlySubscribed"
 						@update:checked="changeShowSubscribedOnly">
 						{{ t('mail', 'Show only subscribed folders') }}
@@ -62,7 +62,7 @@
 					</NcActionButton>
 					<NcActionInput
 						v-if="editing && nameInput"
-						:value.sync="createMailboxName"
+						v-model="createMailboxName"
 						@submit.prevent.stop="createMailbox">
 						<template #icon>
 							<IconFolderAdd :size="20" />
@@ -109,7 +109,7 @@
 import { DialogBuilder, showError } from '@nextcloud/dialogs'
 import { formatFileSize } from '@nextcloud/files'
 import { generateUrl } from '@nextcloud/router'
-import { NcActionButton, NcActionCheckbox, NcActionInput, NcActionText, NcLoadingIcon, NcAppNavigationCaption, NcIconSvgWrapper } from '@nextcloud/vue'
+import { NcActionButton, NcActionCheckbox, NcActionInput, NcActionText, NcAppNavigationCaption, NcIconSvgWrapper, NcLoadingIcon } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import { Fragment } from 'vue-frag'
 import MenuDown from 'vue-material-design-icons/ChevronDown.vue'

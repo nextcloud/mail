@@ -36,10 +36,10 @@
 							type="email">
 						<br>
 						<NcButton
-							type="secondary"
+							variant="secondary"
 							:aria-label="t('mail', 'Save')"
 							:disabled="loading"
-							native-type="submit"
+							type="submit"
 							class="config-button">
 							<template #icon>
 								<IconUpload :size="20" />
@@ -50,7 +50,7 @@
 							:disabled="loading"
 							:aria-label="t('mail', 'Reset')"
 							class="config-button"
-							type="secondary"
+							variant="secondary"
 							@click="resetForm()">
 							<template #icon>
 								<IconDelete :size="20" />

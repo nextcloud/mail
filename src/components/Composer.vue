@@ -43,9 +43,14 @@
 			</div>
 		</div>
 		<div class="composer-fields">
-			<label class="to-label" for="to">
-				{{ t('mail', 'To') }}
-			</label>
+			<div class="composer-fields__label">
+				<label class="to-label" for="to">
+					{{ t('mail', 'To') }}
+				</label>
+				<NcButton size="small" variant="tertiary-no-background" @click.prevent="toggleViewMode">
+					{{ t('mail', 'Cc/Bcc') }}
+				</NcButton>
+			</div>
 			<div class="composer-fields--custom">
 				<NcSelect
 					id="to"
@@ -80,7 +85,7 @@
 							v-on="events">
 						<NcButton
 							size="small"
-							type="tertiary-no-background"
+							variant="tertiary-no-background"
 							class="copy-toggle"
 							@mousedown.stop
 							@click.prevent="toggleViewMode">
@@ -334,7 +339,7 @@
 				<NcButton
 					v-if="!savingDraft && !canSaveDraft"
 					class="button"
-					type="tertiary"
+					variant="tertiary"
 					:aria-label="t('mail', 'Save draft')"
 					@click="saveDraft">
 					<template #icon>
@@ -344,7 +349,7 @@
 				<NcButton
 					v-if="!savingDraft && draftSaved"
 					class="button"
-					type="tertiary"
+					variant="tertiary"
 					:aria-label="t('mail', 'Discard & close draft')"
 					@click="$emit('discard-draft')">
 					<template #icon>
@@ -355,7 +360,7 @@
 			<div class="composer-actions--secondary-actions">
 				<NcButton
 					v-if="!encrypt && editorPlainText"
-					type="tertiary"
+					variant="tertiary"
 					:aria-label="t('mail', 'Enable formatting')"
 					@click="setEditorModeHtml()">
 					<template #icon>
@@ -364,7 +369,7 @@
 				</NcButton>
 				<NcButton
 					v-if="!encrypt && !editorPlainText"
-					type="tertiary"
+					variant="tertiary"
 					:pressed="true"
 					:aria-label="t('mail', 'Disable formatting')"
 					@click="setEditorModeText()">
@@ -430,21 +435,21 @@
 							}}
 						</NcActionButton>
 						<NcActionCheckbox
-							:checked="requestMdnVal"
+							:model-value="requestMdnVal"
 							@check="requestMdnVal = true"
 							@uncheck="requestMdnVal = false">
 							{{ t('mail', 'Request a read receipt') }}
 						</NcActionCheckbox>
 						<NcActionCheckbox
 							v-if="smimeCertificateForCurrentAlias"
-							:checked="wantsSmimeSign"
+							:model-value="wantsSmimeSign"
 							@check="smimeSignCheck(true)"
 							@uncheck="smimeSignCheck(false)">
 							{{ t('mail', 'Sign message with S/MIME') }}
 						</NcActionCheckbox>
 						<NcActionCheckbox
 							v-if="smimeCertificateForCurrentAlias"
-							:checked="wantsSmimeEncrypt"
+							:model-value="wantsSmimeEncrypt"
 							:disabled="encrypt"
 							@check="wantsSmimeEncrypt = true"
 							@uncheck="wantsSmimeEncrypt = false">
@@ -452,7 +457,7 @@
 						</NcActionCheckbox>
 						<NcActionCheckbox
 							v-if="mailvelope.available"
-							:checked="encrypt"
+							:model-value="encrypt"
 							:disabled="wantsSmimeEncrypt"
 							@change="isActionsOpen = false"
 							@check="encrypt = true"
@@ -525,8 +530,8 @@
 
 				<NcButton
 					:disabled="!canSend || sending"
-					native-type="submit"
-					type="primary"
+					type="submit"
+					variant="primary"
 					:aria-label="submitButtonTitle"
 					@click="onSend">
 					<template #icon>
@@ -543,9 +548,9 @@
 
 <script>
 import { showError, showWarning } from '@nextcloud/dialogs'
-import { getCanonicalLocale, getFirstDay, getLocale, translate as t } from '@nextcloud/l10n'
+import { getCanonicalLocale, getFirstDay, getLocale, t } from '@nextcloud/l10n'
 import moment from '@nextcloud/moment'
-import { NcActionButton, NcActionCheckbox, NcActionInput, NcActionRadio, NcActions, NcButton, NcListItemIcon, NcIconSvgWrapper, NcSelect } from '@nextcloud/vue'
+import { NcActionButton, NcActionCheckbox, NcActionInput, NcActionRadio, NcActions, NcButton, NcIconSvgWrapper, NcListItemIcon, NcSelect } from '@nextcloud/vue'
 import debouncePromise from 'debounce-promise'
 import debounce from 'lodash/fp/debounce.js'
 import trimStart from 'lodash/fp/trimCharsStart.js'

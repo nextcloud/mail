@@ -45,7 +45,7 @@
 			<p>{{ t('mail', 'This signature contains images. New messages will use rich text, even though your writing mode is set to plain text.') }}</p>
 		</NcNoteCard>
 		<NcButton
-			type="primary"
+			variant="primary"
 			:disabled="loading"
 			:aria-label="t('mail', 'Save signature')"
 			@click="saveSignature">
@@ -58,7 +58,7 @@
 		<NcButton
 			v-if="signature"
 			:aria-label="t('mail', 'Delete')"
-			type="tertiary-no-background"
+			variant="tertiary-no-background"
 			class="button-text"
 			@click="deleteSignature">
 			{{ t('mail', 'Delete') }}

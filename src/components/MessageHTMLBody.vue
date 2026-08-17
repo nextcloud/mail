@@ -11,7 +11,7 @@
 			@translate="$emit('translate')" />
 		<div v-if="hasBlockedContent" id="mail-message-has-blocked-content" style="color: #000000">
 			{{ t('mail', 'The images have been blocked to protect your privacy.') }}
-			<NcActions type="tertiary" :menu-name="t('mail', 'Show images')">
+			<NcActions variant="tertiary" :menu-name="t('mail', 'Show images')">
 				<NcActionButton @click="displayIframe">
 					<template #icon>
 						<IconImage :size="20" />
