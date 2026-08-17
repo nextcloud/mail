@@ -190,7 +190,7 @@
 <script>
 
 import { showError, showInfo } from '@nextcloud/dialogs'
-import { translatePlural as n } from '@nextcloud/l10n'
+import { n } from '@nextcloud/l10n'
 import { NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionText as ActionText, NcAppNavigationItem as AppNavigationItem, NcCounterBubble as CounterBubble, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import IconEmailCheck from 'vue-material-design-icons/EmailCheckOutline.vue'

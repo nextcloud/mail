@@ -276,7 +276,7 @@
 
 <script>
 import { loadState } from '@nextcloud/initial-state'
-import { translate as t } from '@nextcloud/l10n'
+import { t } from '@nextcloud/l10n'
 import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcCheckboxRadioSwitch, NcInputField, NcPasswordField } from '@nextcloud/vue'
 import { mapState, mapStores } from 'pinia'
 import { Tab, Tabs } from 'vue-tabs-component'
