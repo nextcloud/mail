@@ -14,7 +14,7 @@
 					</div>
 					<div class="group-inputs">
 						<br>
-						<label :for="'mail-provision-domain' + setting.id"> {{ t('mail', 'Provisioning domain') }}* </label>
+						<label :for="'mail-provision-domain' + setting.id"> {{ t('mail', 'Provisioning domain') }} </label>
 						<br>
 						<input
 							:id="'mail-provision-domain' + setting.id"
@@ -309,7 +309,7 @@
 						</div>
 						<div>
 							<label :for="'mail-provision-ldap-aliases-attribute' + setting.id">
-								{{ t('mail', 'LDAP attribute for aliases') }}*
+								{{ t('mail', 'LDAP attribute for aliases') }}
 								<br>
 								<input
 									:id="'mail-provision-ldap-aliases-attribute' + setting.id"
@@ -350,7 +350,7 @@
 						</ButtonVue>
 						<br>
 						<small>{{
-							t('mail', '* %USERID% and %EMAIL% will be replaced with the user\'s UID and email')
+							t('mail', '* %USERID% and %EMAIL% will be replaced with the user\'s UID and email. {ldapPlaceholder} will be replaced with the value of that LDAP attribute', { ldapPlaceholder: '%LDAP:sAMAccountName%' })
 						}}</small>
 					</div>
 				</div>
