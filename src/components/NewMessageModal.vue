@@ -62,7 +62,7 @@
 			</div>
 			<div class="floating-composer__body">
 				<KeepAlive>
-					<EmptyContent
+					<NcEmptyContent
 						v-if="error"
 						:name="t('mail', 'Error sending your message')"
 						class="empty-content"
@@ -78,8 +78,8 @@
 								{{ t('mail', 'Retry') }}
 							</NcButton>
 						</template>
-					</EmptyContent>
-					<EmptyContent
+					</NcEmptyContent>
+					<NcEmptyContent
 						v-else-if="warning"
 						:name="t('mail', 'Warning sending your message')"
 						class="empty-content"
@@ -95,7 +95,8 @@
 								{{ t('mail', 'Send anyway') }}
 							</NcButton>
 						</template>
-					</EmptyContent>
+					</NcEmptyContent>
+
 					<Composer
 						v-else
 						ref="composer"
@@ -147,9 +148,9 @@
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import { translate as t } from '@nextcloud/l10n'
+import { t } from '@nextcloud/l10n'
 import {
-	NcEmptyContent as EmptyContent,
+	NcEmptyContent,
 	NcButton,
 } from '@nextcloud/vue'
 import { mapActions, mapState, mapStores } from 'pinia'
@@ -177,7 +178,7 @@ export default {
 	components: {
 		NcButton,
 		Composer,
-		EmptyContent,
+		NcEmptyContent,
 		MinimizeIcon,
 		RecipientInfo,
 		MaximizeIcon,

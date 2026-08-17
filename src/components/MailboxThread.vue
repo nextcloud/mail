@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<AppContent
+	<NcAppContent
 		:pane-config-key="'mail-' + layoutMode"
 		:layout="layoutMode"
 		:show-details="isThreadShown"
@@ -18,7 +18,7 @@
 						:account-id="account.accountId"
 						@search-changed="onUpdateSearchQuery" />
 				</div>
-				<AppContentList
+				<NcAppContentList
 					v-infinite-scroll="onScroll"
 					v-shortkey.once="shortkeys"
 					class="envelope-list"
@@ -39,14 +39,14 @@
 								:name="t('mail', 'Favorites')" />
 							<NcPopover trigger="hover focus">
 								<template #trigger>
-									<ButtonVue
+									<NcButton
 										type="tertiary-no-background"
 										:aria-label="t('mail', 'Favorites info')"
 										class="button">
 										<template #icon>
 											<IconInfo :size="20" />
 										</template>
-									</ButtonVue>
+									</NcButton>
 								</template>
 								<p class="section-header-info">
 									{{ favoritesInfo }}
@@ -86,14 +86,14 @@
 								:name="t('mail', 'Favorites')" />
 							<NcPopover trigger="hover focus">
 								<template #trigger>
-									<ButtonVue
+									<NcButton
 										type="tertiary-no-background"
 										:aria-label="t('mail', 'Favorites info')"
 										class="button">
 										<template #icon>
 											<IconInfo :size="20" />
 										</template>
-									</ButtonVue>
+									</NcButton>
 								</template>
 								<p class="section-header-info">
 									{{ favoritesInfo }}
@@ -120,14 +120,14 @@
 								:name="t('mail', 'Follow up')" />
 							<NcPopover trigger="hover focus">
 								<template #trigger>
-									<ButtonVue
+									<NcButton
 										type="tertiary-no-background"
 										:aria-label="t('mail', 'Follow up info')"
 										class="button">
 										<template #icon>
 											<IconInfo :size="20" />
 										</template>
-									</ButtonVue>
+									</NcButton>
 								</template>
 								<p class="section-header-info">
 									{{ followupInfo }}
@@ -151,14 +151,14 @@
 								:name="t('mail', 'Important')" />
 							<NcPopover trigger="hover focus">
 								<template #trigger>
-									<ButtonVue
+									<NcButton
 										type="tertiary-no-background"
 										:aria-label="t('mail', 'Important info')"
 										class="button">
 										<template #icon>
 											<IconInfo :size="20" />
 										</template>
-									</ButtonVue>
+									</NcButton>
 								</template>
 								<p class="section-header-info">
 									{{ importantInfo }}
@@ -190,17 +190,17 @@
 							:is-priority-inbox="true"
 							:bus="bus" />
 					</template>
-				</AppContentList>
+				</NcAppContentList>
 			</div>
 		</template>
 
 		<Thread v-if="showThread" @delete="deleteMessage" />
 		<NoMessageSelected v-else-if="hasEnvelopes" />
-	</AppContent>
+	</NcAppContent>
 </template>
 
 <script>
-import { NcAppContent as AppContent, NcAppContentList as AppContentList, NcButton as ButtonVue, isMobile, NcPopover } from '@nextcloud/vue'
+import { NcAppContent, NcAppContentList, NcButton, isMobile, NcPopover } from '@nextcloud/vue'
 import addressParser from 'address-rfc2822'
 import mitt from 'mitt'
 import { mapStores } from 'pinia'
@@ -235,9 +235,9 @@ export default {
 	},
 
 	components: {
-		AppContent,
-		AppContentList,
-		ButtonVue,
+		NcAppContent,
+		NcAppContentList,
+		NcButton,
 		IconInfo,
 		Mailbox,
 		NoMessageSelected,

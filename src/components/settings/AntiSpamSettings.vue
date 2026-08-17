@@ -35,7 +35,7 @@
 							name="ham"
 							type="email">
 						<br>
-						<ButtonVue
+						<NcButton
 							type="secondary"
 							:aria-label="t('mail', 'Save')"
 							:disabled="loading"
@@ -45,8 +45,8 @@
 								<IconUpload :size="20" />
 							</template>
 							{{ t('mail', 'Save') }}
-						</ButtonVue>
-						<ButtonVue
+						</NcButton>
+						<NcButton
 							:disabled="loading"
 							:aria-label="t('mail', 'Reset')"
 							class="config-button"
@@ -56,7 +56,7 @@
 								<IconDelete :size="20" />
 							</template>
 							{{ t('mail', 'Reset') }}
-						</ButtonVue>
+						</NcButton>
 					</div>
 				</div>
 			</form>
@@ -67,7 +67,7 @@
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
-import ButtonVue from '@nextcloud/vue/components/NcButton'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 import IconUpload from 'vue-material-design-icons/TrayArrowUp.vue'
 import logger from '../../logger.js'
@@ -78,7 +78,7 @@ const email = loadState('mail', 'antispam_setting', '[]')
 export default {
 	name: 'AntiSpamSettings',
 	components: {
-		ButtonVue,
+		NcButton,
 		IconUpload,
 		IconDelete,
 	},

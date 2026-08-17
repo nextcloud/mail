@@ -6,7 +6,7 @@
 <template>
 	<NcPopover popup-role="dialog" class="contact-popover">
 		<template #trigger="{ attrs }">
-			<UserBubble
+			<NcUserBubble
 				v-bind="attrs"
 				:display-name="label"
 				:avatar-image="avatarUrlAbsolute"
@@ -18,7 +18,7 @@
 				<p class="contact-popover__email">
 					{{ email }}
 				</p>
-				<ButtonVue
+				<NcButton
 					v-if="contactsWithEmail && contactsWithEmail.length > 0"
 					type="tertiary-no-background"
 					:aria-label="t('mail', 'Contacts with this address')"
@@ -27,9 +27,9 @@
 						<IconDetails :size="20" />
 					</template>
 					{{ t('mail', 'Contacts with this address') }}: {{ contactsWithEmailComputed }}
-				</ButtonVue>
+				</NcButton>
 				<div v-if="selection === ContactSelectionStateEnum.select" class="contact-menu">
-					<ButtonVue
+					<NcButton
 						:aria-label="t('mail', 'Reply')"
 						type="tertiary-no-background"
 						@click="onClickReply">
@@ -37,8 +37,8 @@
 							<IconReply :size="20" />
 						</template>
 						{{ t('mail', 'Reply') }}
-					</ButtonVue>
-					<ButtonVue
+					</NcButton>
+					<NcButton
 						type="tertiary-no-background"
 						:aria-label="t('mail', 'Add to Contact')"
 						@click="selection = ContactSelectionStateEnum.existing">
@@ -46,8 +46,8 @@
 							<IconUser :size="20" />
 						</template>
 						{{ t('mail', 'Add to Contact') }}
-					</ButtonVue>
-					<ButtonVue
+					</NcButton>
+					<NcButton
 						type="tertiary-no-background"
 						:aria-label="t('mail', 'New Contact')"
 						@click="selection = ContactSelectionStateEnum.new">
@@ -55,8 +55,8 @@
 							<IconAdd :size="20" />
 						</template>
 						{{ t('mail', 'New Contact') }}
-					</ButtonVue>
-					<ButtonVue
+					</NcButton>
+					<NcButton
 						type="tertiary-no-background"
 						:aria-label="t('mail', 'Copy to clipboard')"
 						@click="onClickCopyToClipboard">
@@ -64,7 +64,7 @@
 							<IconClipboard :size="20" />
 						</template>
 						{{ t('mail', 'Copy to clipboard') }}
-					</ButtonVue>
+					</NcButton>
 				</div>
 				<div v-else class="contact-input-wrapper">
 					<NcSelect
@@ -85,7 +85,7 @@
 					<input v-else-if="selection === ContactSelectionStateEnum.new" v-model="newContactName">
 				</div>
 				<div v-if="selection !== ContactSelectionStateEnum.select">
-					<ButtonVue
+					<NcButton
 						type="tertiary-no-background"
 						:aria-label="t('mail', 'Go back')"
 						@click="selection = ContactSelectionStateEnum.select">
@@ -93,9 +93,9 @@
 							<IconClose :size="20" />
 						</template>
 						{{ t('mail', 'Go back') }}
-					</ButtonVue>
+					</NcButton>
 
-					<ButtonVue
+					<NcButton
 						v-close-popover
 						:disabled="addButtonDisabled"
 						type="tertiary-no-background"
@@ -105,7 +105,7 @@
 							<IconCheck :size="20" />
 						</template>
 						{{ t('mail', 'Add') }}
-					</ButtonVue>
+					</NcButton>
 				</div>
 			</div>
 		</template>
@@ -115,7 +115,7 @@
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { generateUrl } from '@nextcloud/router'
-import { NcButton as ButtonVue, NcPopover, NcSelect, NcUserBubble as UserBubble } from '@nextcloud/vue'
+import { NcButton, NcPopover, NcSelect, NcUserBubble } from '@nextcloud/vue'
 import debouncePromise from 'debounce-promise'
 import uniqBy from 'lodash/fp/uniqBy.js'
 import IconUser from 'vue-material-design-icons/AccountOutline.vue'
@@ -136,8 +136,8 @@ const ContactSelectionStateEnum = Object.freeze({ new: 1, existing: 2, select: 3
 export default {
 	name: 'RecipientBubble',
 	components: {
-		ButtonVue,
-		UserBubble,
+		NcButton,
+		NcUserBubble,
 		NcPopover,
 		NcSelect,
 		IconReply,

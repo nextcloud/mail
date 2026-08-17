@@ -4,7 +4,7 @@
 -->
 
 <template>
-	<AppNavigationItem
+	<NcAppNavigationItem
 		id="navigation-outbox"
 		key="navigation-outbox"
 		:name="t('mail', 'Outbox')"
@@ -14,17 +14,17 @@
 				:size="20" />
 		</template>
 		<template #counter>
-			<CounterBubble
+			<NcCounterBubble
 				v-if="count"
 				class="navigation-outbox__unread-counter">
 				{{ count }}
-			</CounterBubble>
+			</NcCounterBubble>
 		</template>
-	</AppNavigationItem>
+	</NcAppNavigationItem>
 </template>
 
 <script>
-import { NcAppNavigationItem as AppNavigationItem, NcCounterBubble as CounterBubble } from '@nextcloud/vue'
+import { NcAppNavigationItem, NcCounterBubble } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import IconOutbox from 'vue-material-design-icons/InboxArrowUp.vue'
 import useOutboxStore from '../store/outboxStore.js'
@@ -32,8 +32,8 @@ import useOutboxStore from '../store/outboxStore.js'
 export default {
 	name: 'NavigationOutbox',
 	components: {
-		AppNavigationItem,
-		CounterBubble,
+		NcAppNavigationItem,
+		NcCounterBubble,
 		IconOutbox,
 	},
 

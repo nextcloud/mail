@@ -12,7 +12,7 @@
 			}">
 			{{ translateTagDisplayName(tag) }}
 		</button>
-		<Actions :force-menu="true" @close="closeEditTag">
+		<NcActions :force-menu="true" @close="closeEditTag">
 			<NcActionButton
 				v-if="renameTagLabel"
 				@click="openEditTag">
@@ -28,18 +28,18 @@
 				@submit="updateColor">
 				<div :style="{ backgroundColor: editColor }" class="color0 app-navigation-entry-bullet" />
 			</NcColorPicker>
-			<ActionInput
+			<NcActionInput
 				v-if="renameTagInput"
 				v-model="currentTagName"
 				:error="hasError()"
 				:helper-text="errorMessage"
 				@submit="renameTag(tag, $event)" />
-			<ActionText v-if="showSaving">
+			<NcActionText v-if="showSaving">
 				<template #icon>
-					<IconLoading :size="22" />
+					<NcLoadingIcon :size="22" />
 				</template>
 				{{ t('mail', 'Saving new tag name …') }}
-			</ActionText>
+			</NcActionText>
 			<NcActionButton
 				v-if="!tag.isDefaultTag || !renameTagLabel"
 				@click="deleteTag">
@@ -48,7 +48,7 @@
 				</template>
 				{{ t('mail', 'Delete tag') }}
 			</NcActionButton>
-		</Actions>
+		</NcActions>
 		<button
 			v-if="!isSet(tag.imapLabel)"
 			class="tag-actions"
@@ -66,7 +66,7 @@
 
 <script>
 import { showInfo } from '@nextcloud/dialogs'
-import { NcActionInput as ActionInput, NcActions as Actions, NcActionText as ActionText, NcLoadingIcon as IconLoading, NcActionButton, NcColorPicker } from '@nextcloud/vue'
+import { NcActionInput, NcActions, NcActionText, NcLoadingIcon, NcActionButton, NcColorPicker } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import IconEdit from 'vue-material-design-icons/PencilOutline.vue'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
@@ -78,11 +78,11 @@ export default {
 	name: 'TagItem',
 	components: {
 		NcColorPicker,
-		Actions,
+		NcActions,
 		NcActionButton,
-		ActionText,
-		ActionInput,
-		IconLoading,
+		NcActionText,
+		NcActionInput,
+		NcLoadingIcon,
 		DeleteIcon,
 		IconEdit,
 	},

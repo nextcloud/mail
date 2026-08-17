@@ -4,11 +4,11 @@
 -->
 
 <template>
-	<AppNavigationItem :name="title" @click="toggleCollapse" />
+	<NcAppNavigationItem :name="title" @click="toggleCollapse" />
 </template>
 
 <script>
-import { NcAppNavigationItem as AppNavigationItem } from '@nextcloud/vue'
+import { NcAppNavigationItem } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
@@ -16,7 +16,7 @@ import useMainStore from '../store/mainStore.js'
 export default {
 	name: 'NavigationAccountExpandCollapse',
 	components: {
-		AppNavigationItem,
+		NcAppNavigationItem,
 	},
 
 	props: {
