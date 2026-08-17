@@ -207,12 +207,18 @@ class Manager {
 			return false;
 		}
 
+		$ldapValues = $this->resolveLdapPlaceholders($provisioning, $user);
+		if ($ldapValues === null) {
+			// Persisting the raw templates would break an already working account
+			return false;
+		}
+
 		try {
 			// TODO: match by UID only, catch multiple objects returned below and delete all those accounts
 			$mailAccount = $this->mailAccountMapper->findProvisionedAccount($user);
 
 			$mailAccount = $this->mailAccountMapper->update(
-				$this->updateAccount($user, $mailAccount, $provisioning)
+				$this->updateAccount($user, $mailAccount, $provisioning, $ldapValues)
 			);
 		} catch (DoesNotExistException|MultipleObjectsReturnedException $e) {
 			if ($e instanceof MultipleObjectsReturnedException) {
@@ -226,7 +232,7 @@ class Manager {
 			$mailAccount->setUserId($user->getUID());
 			$mailAccount->setClassificationEnabled($this->classificationSettingsService->isClassificationEnabledByDefault());
 			$mailAccount = $this->mailAccountMapper->insert(
-				$this->updateAccount($user, $mailAccount, $provisioning)
+				$this->updateAccount($user, $mailAccount, $provisioning, $ldapValues)
 			);
 
 			$this->accountService->scheduleBackgroundJobs($mailAccount->getId());
@@ -283,24 +289,91 @@ class Manager {
 		}
 	}
 
-	private function updateAccount(IUser $user, MailAccount $account, Provisioning $config): MailAccount {
+	/**
+	 * Resolved values become login names and the account email address. Commas and
+	 * angle brackets would let the directory value break out of the templated domain,
+	 * spaces and control characters yield a login that can never authenticate, and 64
+	 * is the narrowest account column.
+	 */
+	private const LDAP_VALUE_REGEX = '/^[A-Za-z0-9._+@-]{1,64}$/D';
+
+	/**
+	 * Resolve the %LDAP:attr% placeholders of a config for a user.
+	 *
+	 * @return array<string, string>|null the token => value map, or null if a
+	 *                                    placeholder could not be resolved
+	 */
+	private function resolveLdapPlaceholders(Provisioning $config, IUser $user): ?array {
+		$attributes = $config->ldapAttributesInTemplates();
+		if ($attributes === []) {
+			return [];
+		}
+
+		if ($user->getBackendClassName() !== 'LDAP') {
+			// Expected in mixed setups, where a wildcard config also matches local users
+			$this->logger->debug('Provisioning config uses LDAP placeholders but user ' . $user->getUID() . ' is not an LDAP user');
+			return null;
+		}
+
+		if ($this->ldapProviderFactory->isAvailable() === false) {
+			$this->logger->warning('Provisioning config uses LDAP placeholders but LDAP is not available');
+			return null;
+		}
+
+		try {
+			$provider = $this->ldapProviderFactory->getLDAPProvider();
+		} catch (\Throwable $e) {
+			$this->logger->warning('LDAP provider unavailable for mail provisioning placeholders', ['exception' => $e]);
+			return null;
+		}
+
+		$fetched = [];
+		$values = [];
+		foreach ($attributes as $attribute) {
+			$key = strtolower($attribute);
+			if (!array_key_exists($key, $fetched)) {
+				try {
+					$fetched[$key] = $provider->getUserAttribute($user->getUID(), $attribute);
+				} catch (\Throwable $e) {
+					$this->logger->warning('Could not read LDAP attribute ' . $attribute . ' of user ' . $user->getUID() . ', skipping provisioning', ['exception' => $e]);
+					return null;
+				}
+			}
+			$value = $fetched[$key];
+			if ($value === null || $value === '') {
+				$this->logger->warning('LDAP attribute ' . $attribute . ' of user ' . $user->getUID() . ' is empty, skipping provisioning');
+				return null;
+			}
+			if (preg_match(self::LDAP_VALUE_REGEX, $value) !== 1) {
+				$this->logger->warning('LDAP attribute ' . $attribute . ' of user ' . $user->getUID() . ' contains unsupported characters or is too long, skipping provisioning');
+				return null;
+			}
+			$values['%LDAP:' . $attribute . '%'] = $value;
+		}
+		return $values;
+	}
+
+	/**
+	 * @param array<string, string> $ldapValues
+	 */
+	private function updateAccount(IUser $user, MailAccount $account, Provisioning $config, array $ldapValues): MailAccount {
 		// Set the ID to make sure it reflects when the account switches from one config to another
 		$account->setProvisioningId($config->getId());
 
-		$account->setEmail($config->buildEmail($user));
+		$account->setEmail($config->buildEmail($user, $ldapValues));
 		$account->setName($this->userManager->getDisplayName($user->getUID()));
-		$account->setInboundUser($config->buildImapUser($user));
+		$account->setInboundUser($config->buildImapUser($user, $ldapValues));
 		$account->setInboundHost($config->getImapHost());
 		$account->setInboundPort($config->getImapPort());
 		$account->setInboundSslMode($config->getImapSslMode());
-		$account->setOutboundUser($config->buildSmtpUser($user));
+		$account->setOutboundUser($config->buildSmtpUser($user, $ldapValues));
 		$account->setOutboundHost($config->getSmtpHost());
 		$account->setOutboundPort($config->getSmtpPort());
 		$account->setOutboundSslMode($config->getSmtpSslMode());
 		$account->setSieveEnabled($config->getSieveEnabled());
 
 		if ($config->getSieveEnabled()) {
-			$account->setSieveUser($config->buildSieveUser($user));
+			$account->setSieveUser($config->buildSieveUser($user, $ldapValues));
 			$account->setSieveHost($config->getSieveHost());
 			$account->setSievePort($config->getSievePort());
 			$account->setSieveSslMode($config->getSieveSslMode());
