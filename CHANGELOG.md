@@ -1,3 +1,18 @@
+## [5.10.13](https://github.com/nextcloud/mail/compare/v5.10.12...v5.10.13) (2026-08-18)
+
+
+### Bug Fixes
+
+* **l10n:** Update translations from Transifex ([c4351e2](https://github.com/nextcloud/mail/commit/c4351e2a0e35a253fff6a84ad5ace945afe1ce70))
+* **l10n:** Update translations from Transifex ([ccceb28](https://github.com/nextcloud/mail/commit/ccceb28be5635dce16a08ec2778e3feeeef21129))
+* **l10n:** Update translations from Transifex ([b0ca679](https://github.com/nextcloud/mail/commit/b0ca679b7c8bbd1169f8e1656c1985a8b5cdb4d9))
+* **l10n:** Update translations from Transifex ([8421d04](https://github.com/nextcloud/mail/commit/8421d042d885e4605c5f24a1ff62009a0fbe3906))
+* **l10n:** Update translations from Transifex ([8fc47d5](https://github.com/nextcloud/mail/commit/8fc47d5937f0db8dc5db525bc3c1ba63902c243c))
+* **l10n:** Update translations from Transifex ([cb04b1b](https://github.com/nextcloud/mail/commit/cb04b1b2b93066af644fe8c7f479c77a050d8825))
+* **l10n:** Update translations from Transifex ([7161e12](https://github.com/nextcloud/mail/commit/7161e1204fc9f943721cd9fddde852280e1f8986))
+
+
+
 ## [5.10.12](https://github.com/nextcloud/mail/compare/v5.10.11...v5.10.12) (2026-08-11)
 
 
