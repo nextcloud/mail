@@ -488,4 +488,45 @@ class MessageApiController extends OCSController {
 
 		return $messageAttachments;
 	}
+
+	/**
+	 * Set flags (e.g. seen/unseen) on a mail message
+	 *
+	 * @param int $id the message id
+	 * @param array<string, bool> $flags Flags to set, e.g. {"seen": true} to mark as read, {"seen": false} to mark as unread
+	 * @return DataResponse<Http::STATUS_OK, string, array{}>|DataResponse<Http::STATUS_NOT_FOUND, string, array{}>
+	 *
+	 * 200: Flags updated successfully
+	 * 404: User, Message, Account or Mailbox not found
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	#[ApiRoute(verb: 'POST', url: '/message/{id}/flags')]
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
+	#[TrapError]
+	public function setFlags(int $id, array $flags): DataResponse {
+		if ($this->userId === null) {
+			return new DataResponse('Account not found.', Http::STATUS_NOT_FOUND);
+		}
+		try {
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
+		} catch (DoesNotExistException $e) {
+			$this->logger->error('Message, Account or Mailbox not found', ['exception' => $e->getMessage()]);
+			return new DataResponse('Message, Account or Mailbox not found', Http::STATUS_NOT_FOUND);
+		}
+
+		$flagChanges = [];
+		foreach ($flags as $flag => $value) {
+			$value = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+			$this->mailManager->flagMessage($account, $mailbox->getName(), $message->getUid(), $flag, $value);
+			$flagChanges[] = "$flag=" . ($value ? 'true' : 'false');
+		}
+		$flagsSummary = implode(', ', $flagChanges);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated flags on message <$id> with [$flagsSummary] on behalf of $effectiveUserId");
+		return new DataResponse('', Http::STATUS_OK);
+	}
 }
