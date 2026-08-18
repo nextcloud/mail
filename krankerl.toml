@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 [package]
 before_cmds = [
+	"make clean",
 	"composer install --no-dev -o",
 	"npm ci",
 	"npm run build",

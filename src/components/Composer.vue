@@ -587,7 +587,7 @@ import useMainStore from '../store/mainStore.js'
 import { parseEmailList } from '../util/emailAddress.js'
 import { formatDateTime } from '../util/formatDateTime.js'
 import { containsImage, detect, html, toHtml, toPlain } from '../util/text.js'
-import textBlockSvg from './../../img/text_snippet.svg'
+import textBlockSvg from './../../img/text_snippet.svg?raw'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 

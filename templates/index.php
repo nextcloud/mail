@@ -6,3 +6,4 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 script('mail', 'mail');
+style('mail', 'mail');

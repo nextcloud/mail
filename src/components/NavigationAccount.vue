@@ -121,7 +121,7 @@ import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 import logger from '../logger.js'
 import { fetchQuota } from '../service/AccountService.js'
 import useMainStore from '../store/mainStore.js'
-import IconDelegation from './../../img/delegation.svg'
+import IconDelegation from './../../img/delegation.svg?raw'
 
 export default {
 	name: 'NavigationAccount',

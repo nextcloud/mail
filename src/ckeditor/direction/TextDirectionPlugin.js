@@ -4,8 +4,8 @@
  */
 
 import { ButtonView, Plugin } from 'ckeditor5'
-import ltrIcon from '../../../img/format-pilcrow-arrow-left.svg'
-import rtlIcon from '../../../img/format-pilcrow-arrow-right.svg'
+import ltrIcon from '../../../img/format-pilcrow-arrow-left.svg?raw'
+import rtlIcon from '../../../img/format-pilcrow-arrow-right.svg?raw'
 import TextDirectionCommand from './TextDirectionCommand.js'
 
 const ATTRIBUTE = 'textDirection'

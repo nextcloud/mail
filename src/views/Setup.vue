@@ -43,7 +43,7 @@ import { NcAppContent, NcContent, NcEmptyContent } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import AccountForm from '../components/AccountForm.vue'
 import Navigation from '../components/Navigation.vue'
-import FluidMail from '../../img/mail-fluid.svg'
+import FluidMail from '../../img/mail-fluid.svg?raw'
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 
