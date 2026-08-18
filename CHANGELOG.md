@@ -26,6 +26,7 @@ All notable changes to this project will be documented in this file.
 * Search shortcut buttons no longer taking up their own space
 * Open messages from search via deep link
 * Handle empty reply-to address list properly
+* Attaching files from Files and listing calendars broken by the webdav 5 upgrade
 
 ## 5.10.0 – 2026-06-18
 ### Added
