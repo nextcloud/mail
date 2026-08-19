@@ -35,6 +35,7 @@ class MessageDeletedEvent extends Event implements IWebhookCompatibleEvent {
 		return $this->uid;
 	}
 
+	#[\Override]
 	public function getWebhookSerializable(): array {
 		return [
 			'accountId' => $this->account->getId(),
