@@ -58,6 +58,15 @@ class RepairSyncJob extends TimedJob {
 			return;
 		}
 
+		if ($account->getMailAccount()->getProtocol() !== MailAccount::PROTOCOL_IMAP) {
+			$this->logger->debug(sprintf(
+				'Account %d uses %s, skipping IMAP repair sync after mailbox refresh',
+				$account->getId(),
+				$account->getMailAccount()->getProtocol(),
+			));
+			return;
+		}
+
 		$user = $this->userManager->get($account->getUserId());
 		if ($user === null || !$user->isEnabled()) {
 			$this->logger->debug(sprintf(
@@ -71,15 +80,6 @@ class RepairSyncJob extends TimedJob {
 		$this->protocolFactory
 			->mailboxConnector($account)
 			->syncAll($account, true);
-
-		if ($account->getMailAccount()->getProtocol() !== MailAccount::PROTOCOL_IMAP) {
-			$this->logger->debug(sprintf(
-				'Account %d uses %s, skipping IMAP repair sync after mailbox refresh',
-				$account->getId(),
-				$account->getMailAccount()->getProtocol(),
-			));
-			return;
-		}
 
 		$rebuildThreads = false;
 		$trashMailboxId = $account->getMailAccount()->getTrashMailboxId();
