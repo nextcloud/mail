@@ -23,7 +23,6 @@ use OCA\Mail\Exception\AttachmentNotFoundException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\Exception\UploadException;
-use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -51,7 +50,6 @@ class AttachmentService implements IAttachmentService {
 		private LocalAttachmentMapper $mapper,
 		private AttachmentStorage $storage,
 		private MailManager $mailManager,
-		private MessageMapper $messageMapper,
 		private ICacheFactory $cacheFactory,
 		private IURLGenerator $urlGenerator,
 		private IMimeTypeDetector $mimeTypeDetector,
@@ -216,7 +214,7 @@ class AttachmentService implements IAttachmentService {
 	 * @param array $attachments
 	 * @return int[]
 	 */
-	public function handleAttachments(Account $account, array $attachments, \Horde_Imap_Client_Socket $client): array {
+	public function handleAttachments(Account $account, array $attachments): array {
 		$attachmentIds = [];
 
 		if ($attachments === []) {
@@ -235,12 +233,12 @@ class AttachmentService implements IAttachmentService {
 			}
 			if ($attachment['type'] === 'message' || $attachment['type'] === 'message/rfc822') {
 				// Adds another message as attachment
-				$attachmentIds[] = $this->handleForwardedMessageAttachment($account, $attachment, $client);
+				$attachmentIds[] = $this->handleForwardedMessageAttachment($account, $attachment);
 				continue;
 			}
 			if ($attachment['type'] === 'message-attachment' || $attachment['type'] === 'message-attachment-inline') {
 				// Adds an attachment from another email (use case is, eg., a mail forward)
-				$attachmentIds[] = $this->handleForwardedAttachment($account, $attachment, $client);
+				$attachmentIds[] = $this->handleForwardedAttachment($account, $attachment);
 				continue;
 			}
 
@@ -306,18 +304,12 @@ class AttachmentService implements IAttachmentService {
 	 *
 	 * @param Account $account
 	 * @param mixed[] $attachment
-	 * @param \Horde_Imap_Client_Socket $client
 	 * @return int|null
 	 */
-	private function handleForwardedMessageAttachment(Account $account, array $attachment, \Horde_Imap_Client_Socket $client): ?int {
+	private function handleForwardedMessageAttachment(Account $account, array $attachment): ?int {
 		$attachmentMessage = $this->mailManager->getMessage($account->getUserId(), (int)$attachment['id']);
 		$mailbox = $this->mailManager->getMailbox($account->getUserId(), $attachmentMessage->getMailboxId());
-		$fullText = $this->messageMapper->getFullText(
-			$client,
-			$mailbox->getName(),
-			$attachmentMessage->getUid(),
-			$account->getUserId()
-		);
+		$fullText = $this->mailManager->getRawMessage($account, $mailbox, $attachmentMessage, true);
 
 		// detect mime type
 		$mime = 'application/octet-stream';
@@ -343,19 +335,23 @@ class AttachmentService implements IAttachmentService {
 	 *
 	 * @param Account $account
 	 * @param mixed[] $attachment
-	 * @param \Horde_Imap_Client_Socket $client
 	 * @return int
 	 * @throws DoesNotExistException
 	 */
-	private function handleForwardedAttachment(Account $account, array $attachment, \Horde_Imap_Client_Socket $client): ?int {
+	private function handleForwardedAttachment(Account $account, array $attachment): ?int {
 		$mailbox = $this->mailManager->getMailbox($account->getUserId(), $attachment['mailboxId']);
 
-		$imapAttachment = $this->messageMapper->getAttachment(
-			$client,
-			$mailbox->getName(),
-			(int)$attachment['uid'],
+		$messageId = $this->mailManager->getMessageIdForUid($mailbox, (int)$attachment['uid']);
+		if ($messageId === null) {
+			throw new DoesNotExistException('Unable to load the attachment.');
+		}
+		$message = $this->mailManager->getMessage($account->getUserId(), $messageId);
+
+		$imapAttachment = $this->mailManager->getMailAttachment(
+			$account,
+			$mailbox,
+			$message,
 			$attachment['id'],
-			$account->getUserId(),
 		);
 
 		try {
