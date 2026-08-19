@@ -35,6 +35,22 @@ use OCA\Mail\JMAP\JmapMailboxAdapter;
 use OCA\Mail\JMAP\JmapMessageAdapter;
 use OCA\Mail\Protocol\ProtocolFactory;
 
+/**
+ * @psalm-type JmapEntityListFilter = array{
+ *     attribute: '*'|'in'|'inOmit'|'from'|'to'|'cc'|'bcc'|'subject'|'body'|'attachmentPresent'|'tagPresent'|'tagAbsent'|'before'|'after'|'min'|'max',
+ *     value: mixed,
+ * }
+ * @psalm-type JmapEntityListSort = array{
+ *     attribute: 'from'|'to'|'subject'|'received'|'sent'|'size'|'tag',
+ *     direction: bool,
+ * }
+ * @psalm-type JmapEntityListRange = array{
+ *     anchor: 'absolute'|'relative',
+ *     position: int,
+ *     tally: int,
+ * }
+ * @psalm-type JmapEntityListGranularity = 'basic'|'default'
+ */
 class JmapOperationsService {
 	protected Client $dataStore;
 	protected ?string $dataAccount = null;
@@ -407,21 +423,6 @@ class JmapOperationsService {
 
 	/**
 	 * Retrieve entities from remote storage
-	 *
-	 * @psalm-type JmapEntityListFilter = array{
-	 *     attribute: '*'|'in'|'inOmit'|'from'|'to'|'cc'|'bcc'|'subject'|'body'|'attachmentPresent'|'tagPresent'|'tagAbsent'|'before'|'after'|'min'|'max',
-	 *     value: mixed,
-	 * }
-	 * @psalm-type JmapEntityListSort = array{
-	 *     attribute: 'from'|'to'|'subject'|'received'|'sent'|'size'|'tag',
-	 *     direction: bool,
-	 * }
-	 * @psalm-type JmapEntityListRange = array{
-	 *     anchor: 'absolute'|'relative',
-	 *     position: int,
-	 *     tally: int,
-	 * }
-	 * @psalm-type JmapEntityListGranularity = 'basic'|'default'
 	 *
 	 * @param string|null $location optional location constraint
 	 * @param list<JmapEntityListFilter> $filter optional filter conditions
