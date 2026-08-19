@@ -1,0 +1,6 @@
+{
+	"require-dev": {
+		"psalm/phar": "^6.16.0",
+		"psr/log": "^3.0.2"
+	}
+}
