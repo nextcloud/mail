@@ -3,7 +3,11 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<MailboxInlinePicker :account="account" :value="mailbox" @input="onInput" />
+	<MailboxInlinePicker
+		ariaLabelCombobox="t('mail', 'Choose target folder')"
+		:account="account"
+		:value="mailbox"
+		@update="onInput" />
 </template>
 
 <script>
@@ -52,13 +56,3 @@ export default {
 	},
 }
 </script>
-
-<style lang="scss" scoped>
-:deep(.vue-treeselect__control) {
-	width: 100%; /* todo: fix MailboxInlinePicker.vue styling instead */
-}
-
-:deep(.vue-treeselect__input-container) {
-	padding-inline-end: 0; /* todo: fix MailboxInlinePicker.vue styling instead */
-}
-</style>

@@ -130,9 +130,6 @@ export default {
 		width: 100%;
 		&__column {
 			flex: 0 1 auto;
-			&__select {
-				margin: 0
-			}
 		}
 	}
 	&__delete {
