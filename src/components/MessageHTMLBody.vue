@@ -11,30 +11,30 @@
 			@translate="$emit('translate')" />
 		<div v-if="hasBlockedContent" id="mail-message-has-blocked-content" style="color: #000000">
 			{{ t('mail', 'The images have been blocked to protect your privacy.') }}
-			<Actions type="tertiary" :menu-name="t('mail', 'Show images')">
-				<ActionButton @click="displayIframe">
+			<NcActions variant="tertiary" :menu-name="t('mail', 'Show images')">
+				<NcActionButton @click="displayIframe">
 					<template #icon>
 						<IconImage :size="20" />
 					</template>
 					{{ t('mail', 'Show images temporarily') }}
-				</ActionButton>
-				<ActionButton
+				</NcActionButton>
+				<NcActionButton
 					v-if="sender"
 					@click="onShowBlockedContent">
 					<template #icon>
 						<IconMail :size="20" />
 					</template>
 					{{ t('mail', 'Always show images from {sender}', { sender }) }}
-				</ActionButton>
-				<ActionButton
+				</NcActionButton>
+				<NcActionButton
 					v-if="domain"
 					@click="onShowBlockedContentForDomain">
 					<template #icon>
 						<IconDomain :size="20" />
 					</template>
 					{{ t('mail', 'Always show images from {domain}', { domain }) }}
-				</ActionButton>
-			</Actions>
+				</NcActionButton>
+			</NcActions>
 		</div>
 		<div id="message-container" :class="{ scroll: !fullHeight }">
 			<iframe
@@ -51,7 +51,7 @@
 <script>
 import iframeResize from '@iframe-resizer/parent'
 import { loadState } from '@nextcloud/initial-state'
-import { NcActionButton as ActionButton, NcActions as Actions } from '@nextcloud/vue'
+import { NcActionButton, NcActions } from '@nextcloud/vue'
 import IconDomain from 'vue-material-design-icons/Domain.vue'
 import IconMail from 'vue-material-design-icons/EmailOutline.vue'
 import IconImage from 'vue-material-design-icons/ImageSizeSelectActual.vue'
@@ -67,8 +67,8 @@ export default {
 	components: {
 		MdnRequest,
 		NeedsTranslationInfo,
-		Actions,
-		ActionButton,
+		NcActions,
+		NcActionButton,
 		IconImage,
 		IconMail,
 		IconDomain,

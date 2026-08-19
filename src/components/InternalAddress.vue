@@ -49,15 +49,15 @@
 			</template>
 		</NcListItem>
 
-		<ButtonVue
-			type="secondary"
+		<NcButton
+			variant="secondary"
 			wide
 			@click="openDialog = true">
 			<template #icon>
 				<IconAdd :size="20" />
 			</template>
 			{{ t('mail', 'Add internal address') }}
-		</ButtonVue>
+		</NcButton>
 		<NcDialog
 			:open.sync="openDialog"
 			:buttons="buttons"
@@ -73,7 +73,7 @@
 import IconCancel from '@mdi/svg/svg/cancel.svg'
 import IconCheck from '@mdi/svg/svg/check.svg'
 import { showError } from '@nextcloud/dialogs'
-import { NcButton as ButtonVue, NcActionButton, NcDialog, NcListItem, NcTextField } from '@nextcloud/vue'
+import { NcActionButton, NcButton, NcDialog, NcListItem, NcTextField } from '@nextcloud/vue'
 import prop from 'lodash/fp/prop.js'
 import sortBy from 'lodash/fp/sortBy.js'
 import { mapStores } from 'pinia'
@@ -89,7 +89,7 @@ const sortByAddress = sortBy(prop('address'))
 export default {
 	name: 'InternalAddress',
 	components: {
-		ButtonVue,
+		NcButton,
 		NcDialog,
 		NcTextField,
 		NcActionButton,

@@ -55,6 +55,7 @@ import {
 import { getLinkWithPicker, searchProvider } from '@nextcloud/vue/components/NcRichText'
 import TextDirectionPlugin from '../ckeditor/direction/TextDirectionPlugin.js'
 import FilesImagePlugin from '../ckeditor/image/FilesImagePlugin.ts'
+import ImageDowncastPlugin from '../ckeditor/image/ImageDowncastPlugin.ts'
 import MailPlugin from '../ckeditor/mail/MailPlugin.js'
 import QuotePlugin from '../ckeditor/quote/QuotePlugin.js'
 import SignaturePlugin from '../ckeditor/signature/SignaturePlugin.js'
@@ -152,6 +153,7 @@ export default {
 				ImageUpload,
 				ImageResize,
 				FilesImagePlugin,
+				ImageDowncastPlugin,
 				Font,
 				RemoveFormat,
 				Base64UploadAdapter,
@@ -201,6 +203,11 @@ export default {
 				plugins,
 				toolbar,
 				language: 'en',
+				image: {
+					// A percentage would be relative to the recipient's unknown viewport.
+					resizeUnit: 'px',
+				},
+
 				mention: {
 					feeds: [
 						{

@@ -44,30 +44,30 @@
 			<!-- TRANSLATORS: "writing mode", "rich text" and "plain text" are labels of the Writing mode setting -->
 			<p>{{ t('mail', 'This signature contains images. New messages will use rich text, even though your writing mode is set to plain text.') }}</p>
 		</NcNoteCard>
-		<ButtonVue
-			type="primary"
+		<NcButton
+			variant="primary"
 			:disabled="loading"
 			:aria-label="t('mail', 'Save signature')"
 			@click="saveSignature">
 			<template #icon>
-				<IconLoading v-if="loading" :size="20" fill-color="white" />
+				<NcLoadingIcon v-if="loading" :size="20" fill-color="white" />
 				<IconCheck v-else :size="20" />
 			</template>
 			{{ t('mail', 'Save signature') }}
-		</ButtonVue>
-		<ButtonVue
+		</NcButton>
+		<NcButton
 			v-if="signature"
 			:aria-label="t('mail', 'Delete')"
-			type="tertiary-no-background"
+			variant="tertiary-no-background"
 			class="button-text"
 			@click="deleteSignature">
 			{{ t('mail', 'Delete') }}
-		</ButtonVue>
+		</NcButton>
 	</div>
 </template>
 
 <script>
-import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcNoteCard, NcSelect } from '@nextcloud/vue'
+import { NcButton, NcLoadingIcon, NcNoteCard, NcSelect } from '@nextcloud/vue'
 import mitt from 'mitt'
 import { mapStores } from 'pinia'
 import IconCheck from 'vue-material-design-icons/Check.vue'
@@ -83,8 +83,8 @@ export default {
 		TextEditor,
 		NcNoteCard,
 		NcSelect,
-		ButtonVue,
-		IconLoading,
+		NcButton,
+		NcLoadingIcon,
 		IconCheck,
 	},
 
