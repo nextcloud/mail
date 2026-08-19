@@ -38,7 +38,7 @@ use OCA\Mail\Protocol\ProtocolFactory;
 class JmapOperationsService {
 	protected Client $dataStore;
 	protected ?string $dataAccount = null;
-
+	private ?int $sessionAccountId = null;
 	private bool $supportsBlob = false;
 
 	protected array $entityPropertiesBasic = [
@@ -79,17 +79,14 @@ class JmapOperationsService {
 		} catch (Exception $e) {
 			throw new ServiceException('Could not connect to JMAP server: ' . $e->getMessage(), 0, $e);
 		}
-		// determine account
-		if ($this->dataAccount === null) {
-			$account = $this->dataStore->sessionAccountDefault('mail');
-			if ($account === null) {
+		if ($this->sessionAccountId !== $account->getId()) {
+			$sessionAccount = $this->dataStore->sessionAccountDefault('mail');
+			if ($sessionAccount === null) {
 				throw new ServiceException('JMAP session does not provide a default mail account', 1);
 			}
-			$this->dataAccount = $account->id();
-		}
-		// determine if blob support is available
-		if ($this->dataStore->sessionCapable('blob')) {
-			$this->supportsBlob = true;
+			$this->sessionAccountId = $account->getId();
+			$this->dataAccount = $sessionAccount->id();
+			$this->supportsBlob = $this->dataStore->sessionCapable('blob');
 		}
 
 		return true;
@@ -134,13 +131,22 @@ class JmapOperationsService {
 	/**
 	 * List of collections in remote storage
 	 *
+	 * @psalm-type JmapCollectionListFilter = array{
+	 *     attribute: 'in'|'name'|'role'|'hasRoles'|'subscribed',
+	 *     value: mixed,
+	 * }
+	 * @psalm-type JmapCollectionListSort = array{
+	 *     attribute: 'name'|'order',
+	 *     direction: bool,
+	 * }
+	 *
 	 * @param string|null $location optional location constraint (e.g. parent collection id)
-	 * @param array<array{attribute:string,value:mixed}>|null $filter optional filter conditions
-	 * @param array<array{attribute:string,direction:string}>|null $sort optional sort conditions
+	 * @param list<JmapCollectionListFilter> $filter optional filter conditions
+	 * @param list<JmapCollectionListSort> $sort optional sort conditions
 	 *
 	 * @return Mailbox[]
 	 */
-	public function collectionList(?string $location = null, ?array $filter = null, ?array $sort = null): array {
+	public function collectionList(?string $location = null, array $filter = [], array $sort = []): array {
 		// construct request
 		$r0 = new MailboxQuery($this->account());
 		// define location
@@ -148,29 +154,25 @@ class JmapOperationsService {
 			$r0->filter()->in($location);
 		}
 		// define filter
-		if ($filter !== null) {
-			foreach ($filter as $condition) {
-				$value = $condition['value'];
-				match($condition['attribute']) {
-					'in' => $r0->filter()->in($value),
-					'name' => $r0->filter()->name($value),
-					'role' => $r0->filter()->role($value),
-					'hasRoles' => $r0->filter()->hasRoles($value),
-					'subscribed' => $r0->filter()->isSubscribed($value),
-					default => null
-				};
-			}
+		foreach ($filter as $condition) {
+			$value = $condition['value'];
+			match($condition['attribute']) {
+				'in' => $r0->filter()->in($value),
+				'name' => $r0->filter()->name($value),
+				'role' => $r0->filter()->role($value),
+				'hasRoles' => $r0->filter()->hasRoles($value),
+				'subscribed' => $r0->filter()->isSubscribed($value),
+				default => null
+			};
 		}
 		// define order
-		if ($sort !== null) {
-			foreach ($sort as $condition) {
-				$ascending = !in_array($condition['direction'], ['desc', 'descending'], true);
-				match($condition['attribute']) {
-					'name' => $r0->sort()->name($ascending),
-					'order' => $r0->sort()->order($ascending),
-					default => null
-				};
-			}
+		foreach ($sort as $condition) {
+			$ascending = $condition['direction'];
+			match($condition['attribute']) {
+				'name' => $r0->sort()->name($ascending),
+				'order' => $r0->sort()->order($ascending),
+				default => null
+			};
 		}
 		// construct request
 		$r1 = new MailboxGet($this->account());
@@ -406,15 +408,30 @@ class JmapOperationsService {
 	/**
 	 * Retrieve entities from remote storage
 	 *
+	 * @psalm-type JmapEntityListFilter = array{
+	 *     attribute: '*'|'in'|'inOmit'|'from'|'to'|'cc'|'bcc'|'subject'|'body'|'attachmentPresent'|'tagPresent'|'tagAbsent'|'before'|'after'|'min'|'max',
+	 *     value: mixed,
+	 * }
+	 * @psalm-type JmapEntityListSort = array{
+	 *     attribute: 'from'|'to'|'subject'|'received'|'sent'|'size'|'tag',
+	 *     direction: bool,
+	 * }
+	 * @psalm-type JmapEntityListRange = array{
+	 *     anchor: 'absolute'|'relative',
+	 *     position: int,
+	 *     tally: int,
+	 * }
+	 * @psalm-type JmapEntityListGranularity = 'basic'|'default'
+	 *
 	 * @param string|null $location optional location constraint
-	 * @param array|null $filter optional filter conditions
-	 * @param array|null $sort optional sort conditions
-	 * @param array|null $range optional range conditions
-	 * @param string|null $granularity optional granularity level
+	 * @param list<JmapEntityListFilter> $filter optional filter conditions
+	 * @param list<JmapEntityListSort> $sort optional sort conditions
+	 * @param JmapEntityListRange|null $range optional range conditions
+	 * @param JmapEntityListGranularity|null $granularity optional granularity level; 'basic' returns entityPropertiesBasic, 'default' returns entityPropertiesDefault with full body
 	 *
 	 * @return array{state:string, list:array<string, Message>}
 	 */
-	public function entityList(?string $location = null, ?array $filter = null, ?array $sort = null, ?array $range = null, ?string $granularity = null): array {
+	public function entityList(?string $location = null, array $filter = [], array $sort = [], ?array $range = null, ?string $granularity = null): array {
 		// construct first request
 		$r0 = new MailQuery($this->account());
 		// define location
@@ -422,45 +439,41 @@ class JmapOperationsService {
 			$r0->filter()->in($location);
 		}
 		// define filter
-		if ($filter !== null) {
-			foreach ($filter as $condition) {
-				$value = $condition['value'];
-				match($condition['attribute']) {
-					'*' => $r0->filter()->text($value),
-					'in' => $r0->filter()->in($value),
-					'inOmit' => $r0->filter()->inOmit($value),
-					'from' => $r0->filter()->from($value),
-					'to' => $r0->filter()->to($value),
-					'cc' => $r0->filter()->cc($value),
-					'bcc' => $r0->filter()->bcc($value),
-					'subject' => $r0->filter()->subject($value),
-					'body' => $r0->filter()->body($value),
-					'attachmentPresent' => $r0->filter()->hasAttachment($value),
-					'tagPresent' => $r0->filter()->keywordPresent($value),
-					'tagAbsent' => $r0->filter()->keywordAbsent($value),
-					'before' => $r0->filter()->receivedBefore($value),
-					'after' => $r0->filter()->receivedAfter($value),
-					'min' => $r0->filter()->sizeMin((int)$value),
-					'max' => $r0->filter()->sizeMax((int)$value),
-					default => null
-				};
-			}
+		foreach ($filter as $condition) {
+			$value = $condition['value'];
+			match($condition['attribute']) {
+				'*' => $r0->filter()->text($value),
+				'in' => $r0->filter()->in($value),
+				'inOmit' => $r0->filter()->inOmit($value),
+				'from' => $r0->filter()->from($value),
+				'to' => $r0->filter()->to($value),
+				'cc' => $r0->filter()->cc($value),
+				'bcc' => $r0->filter()->bcc($value),
+				'subject' => $r0->filter()->subject($value),
+				'body' => $r0->filter()->body($value),
+				'attachmentPresent' => $r0->filter()->hasAttachment($value),
+				'tagPresent' => $r0->filter()->keywordPresent($value),
+				'tagAbsent' => $r0->filter()->keywordAbsent($value),
+				'before' => $r0->filter()->receivedBefore($value),
+				'after' => $r0->filter()->receivedAfter($value),
+				'min' => $r0->filter()->sizeMin((int)$value),
+				'max' => $r0->filter()->sizeMax((int)$value),
+				default => null
+			};
 		}
 		// define order
-		if ($sort !== null) {
-			foreach ($sort as $condition) {
-				$direction = $condition['direction'];
-				match($condition['attribute']) {
-					'from' => $r0->sort()->from($direction),
-					'to' => $r0->sort()->to($direction),
-					'subject' => $r0->sort()->subject($direction),
-					'received' => $r0->sort()->received($direction),
-					'sent' => $r0->sort()->sent($direction),
-					'size' => $r0->sort()->size($direction),
-					'tag' => $r0->sort()->keyword($direction),
-					default => null
-				};
-			}
+		foreach ($sort as $condition) {
+			$direction = $condition['direction'];
+			match($condition['attribute']) {
+				'from' => $r0->sort()->from($direction),
+				'to' => $r0->sort()->to($direction),
+				'subject' => $r0->sort()->subject($direction),
+				'received' => $r0->sort()->received($direction),
+				'sent' => $r0->sort()->sent($direction),
+				'size' => $r0->sort()->size($direction),
+				'tag' => $r0->sort()->keyword($direction),
+				default => null
+			};
 		}
 		// define range
 		if ($range !== null) {
@@ -543,7 +556,7 @@ class JmapOperationsService {
 	public function entityDelta(?string $location, string $state): array {
 		// if no state is given, return all entities as additions
 		if (empty($state)) {
-			$results = $this->entityList($location, null, null, null, 'B');
+			$results = $this->entityList($location, [], [], null, 'basic');
 			$delta = [
 				'state' => $results['state'],
 				'additions' => [],

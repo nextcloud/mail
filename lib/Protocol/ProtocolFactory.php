@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Protocol;
 
+use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Socket;
 use JmapClient\Client as JmapClient;
 use OCA\Mail\Account;
@@ -21,6 +22,7 @@ use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\ImapMailboxConnector;
 use OCA\Mail\IMAP\ImapMessageConnector;
 use OCA\Mail\IMAP\ImapTransmissionConnector;
+use OCA\Mail\JMAP\Exception\JmapTransportException;
 use OCA\Mail\JMAP\JmapClientFactory;
 use OCA\Mail\JMAP\JmapMailboxConnector;
 use OCA\Mail\JMAP\JmapMessageConnector;
@@ -69,6 +71,8 @@ class ProtocolFactory {
 
 	/**
 	 * @throws ServiceException
+	 * @throws Horde_Imap_Client_Exception
+	 * @throws JmapTransportException
 	 */
 	public function testConnection(Account $account): void {
 		$protocol = $account->getMailAccount()->getProtocol();
