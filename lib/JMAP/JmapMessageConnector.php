@@ -27,7 +27,7 @@ use OCP\EventDispatcher\IEventDispatcher;
 use Psr\Log\LoggerInterface;
 
 /**
- * @psalm-import-type JmapEntityListFilter from JmapOperationsService::entityList
+ * @psalm-import-type JmapEntityListFilter from JmapOperationsService
  */
 class JmapMessageConnector implements IMessageConnector {
 	public function __construct(
