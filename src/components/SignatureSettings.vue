@@ -4,17 +4,10 @@
 -->
 
 <template>
-	<div class="section">
-		<div>
-			<input
-				id="signature-above-quote-toggle"
-				v-model="signatureAboveQuote"
-				type="checkbox"
-				class="checkbox">
-			<label for="signature-above-quote-toggle">
-				{{ t("mail", "Place signature above quoted text") }}
-			</label>
-		</div>
+	<div>
+		<NcCheckboxRadioSwitch v-model="signatureAboveQuote">
+			{{ t("mail", "Place signature above quoted text") }}
+		</NcCheckboxRadioSwitch>
 		<NcSelect
 			v-if="identities.length > 1"
 			:allow-empty="false"
@@ -44,30 +37,32 @@
 			<!-- TRANSLATORS: "writing mode", "rich text" and "plain text" are labels of the Writing mode setting -->
 			<p>{{ t('mail', 'This signature contains images. New messages will use rich text, even though your writing mode is set to plain text.') }}</p>
 		</NcNoteCard>
-		<NcButton
-			variant="primary"
-			:disabled="loading"
-			:aria-label="t('mail', 'Save signature')"
-			@click="saveSignature">
-			<template #icon>
-				<NcLoadingIcon v-if="loading" :size="20" fill-color="white" />
-				<IconCheck v-else :size="20" />
-			</template>
-			{{ t('mail', 'Save signature') }}
-		</NcButton>
-		<NcButton
-			v-if="signature"
-			:aria-label="t('mail', 'Delete')"
-			variant="tertiary-no-background"
-			class="button-text"
-			@click="deleteSignature">
-			{{ t('mail', 'Delete') }}
-		</NcButton>
+
+		<div class="mail-button-row">
+			<NcButton
+				variant="primary"
+				:disabled="loading"
+				:aria-label="t('mail', 'Save signature')"
+				@click="saveSignature">
+				<template #icon>
+					<NcLoadingIcon v-if="loading" :size="20" fill-color="white" />
+					<IconCheck v-else :size="20" />
+				</template>
+				{{ t('mail', 'Save signature') }}
+			</NcButton>
+			<NcButton
+				v-if="signature"
+				:aria-label="t('mail', 'Delete')"
+				variant="tertiary-no-background"
+				@click="deleteSignature">
+				{{ t('mail', 'Delete') }}
+			</NcButton>
+		</div>
 	</div>
 </template>
 
 <script>
-import { NcButton, NcLoadingIcon, NcNoteCard, NcSelect } from '@nextcloud/vue'
+import { NcButton, NcCheckboxRadioSwitch, NcLoadingIcon, NcNoteCard, NcSelect } from '@nextcloud/vue'
 import mitt from 'mitt'
 import { mapStores } from 'pinia'
 import IconCheck from 'vue-material-design-icons/Check.vue'
@@ -84,6 +79,7 @@ export default {
 		NcNoteCard,
 		NcSelect,
 		NcButton,
+		NcCheckboxRadioSwitch,
 		NcLoadingIcon,
 		IconCheck,
 	},
@@ -189,7 +185,7 @@ export default {
 		},
 
 		async deleteSignature() {
-			this.signature = null
+			this.signature = ''
 			await this.saveSignature()
 		},
 
@@ -254,42 +250,9 @@ export default {
 	}
 }
 
-.primary {
-  padding-inline-start: 26px;
-  background-position: 6px;
-  color: var(--color-main-background);
-
-  &:after {
-    inset-inline-start: 14px;
-  }
-}
-
-.button-text {
-  background-color: transparent;
-  border: none;
-  color: var(--color-text-maxcontrast);
-  font-weight: normal;
-
-  &:hover,
-  &:focus {
-    color: var(--color-main-text);
-  }
-}
-
-.section {
-  display: block;
-  padding: 0;
-  margin-bottom: 23px;
-}
-
 .ck-balloon-panel {
 	 z-index: 10000 !important;
  }
-
-.button-vue:deep() {
-	display: inline-block !important;
-	margin-top: 4px !important;
-}
 
 /* it's a bit hard to make it work without this max-width in the modal because it overlaps with the sidebar of the modal */
 :deep(.ck.ck-toolbar-dropdown>.ck-dropdown__panel) {
