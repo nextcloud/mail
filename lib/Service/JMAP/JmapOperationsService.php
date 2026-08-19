@@ -36,20 +36,29 @@ use OCA\Mail\JMAP\JmapMessageAdapter;
 use OCA\Mail\Protocol\ProtocolFactory;
 
 /**
+ * @psalm-type JmapCollectionListFilter = array{
+ *     attribute: 'in'|'name'|'role'|'hasRoles'|'subscribed',
+ *     value: mixed,
+ * }
+ * @psalm-type JmapCollectionListSort = array{
+ *     attribute: 'name'|'order',
+ *     direction: bool,
+ * }
+ *
  * @psalm-type JmapEntityListFilter = array{
  *     attribute: '*'|'in'|'inOmit'|'from'|'to'|'cc'|'bcc'|'subject'|'body'|'attachmentPresent'|'tagPresent'|'tagAbsent'|'before'|'after'|'min'|'max',
  *     value: mixed,
  * }
- * @psalm-type JmapEntityListSort = array{
- *     attribute: 'from'|'to'|'subject'|'received'|'sent'|'size'|'tag',
- *     direction: bool,
- * }
+ * @psalm-type JmapEntityListGranularity = 'basic'|'default'
  * @psalm-type JmapEntityListRange = array{
  *     anchor: 'absolute'|'relative',
  *     position: int,
  *     tally: int,
  * }
- * @psalm-type JmapEntityListGranularity = 'basic'|'default'
+ * @psalm-type JmapEntityListSort = array{
+ *     attribute: 'from'|'to'|'subject'|'received'|'sent'|'size'|'tag',
+ *     direction: bool,
+ * }
  */
 class JmapOperationsService {
 	protected Client $dataStore;
@@ -146,15 +155,6 @@ class JmapOperationsService {
 
 	/**
 	 * List of collections in remote storage
-	 *
-	 * @psalm-type JmapCollectionListFilter = array{
-	 *     attribute: 'in'|'name'|'role'|'hasRoles'|'subscribed',
-	 *     value: mixed,
-	 * }
-	 * @psalm-type JmapCollectionListSort = array{
-	 *     attribute: 'name'|'order',
-	 *     direction: bool,
-	 * }
 	 *
 	 * @param string|null $location optional location constraint (e.g. parent collection id)
 	 * @param list<JmapCollectionListFilter> $filter optional filter conditions
