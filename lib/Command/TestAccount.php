@@ -351,7 +351,7 @@ final class TestAccount extends Command {
 
 	private function renderJmapMailboxPreview(SymfonyStyle $io, int $mailboxLimit, int $messageLimit): void {
 		$io->section('Mailboxes');
-		$mailboxes = $this->jmapOperationsService->collectionList(null, null, [
+		$mailboxes = $this->jmapOperationsService->collectionList(null, [], [
 			['attribute' => 'order', 'direction' => true],
 			['attribute' => 'name', 'direction' => true],
 		]);
@@ -385,7 +385,7 @@ final class TestAccount extends Command {
 
 		$messages = $this->jmapOperationsService->entityList(
 			$inbox->getRemoteId(),
-			null,
+			[],
 			[['attribute' => 'received', 'direction' => true]],
 			['anchor' => 'absolute', 'position' => 0, 'tally' => $messageLimit]
 		);
