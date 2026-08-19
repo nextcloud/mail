@@ -26,6 +26,9 @@ use OCA\Mail\Service\Search\SearchQuery;
 use OCP\EventDispatcher\IEventDispatcher;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @psalm-import-type JmapEntityListFilter from JmapOperationsService::entityList
+ */
 class JmapMessageConnector implements IMessageConnector {
 	public function __construct(
 		private readonly JmapOperationsService $jmapOperationsService,
@@ -151,7 +154,7 @@ class JmapMessageConnector implements IMessageConnector {
 		$results = $this->jmapOperationsService->entityList(
 			$mailbox->getRemoteId(),
 			$this->convertSearchQueryToFilters($searchQuery),
-			null,
+			[],
 			null,
 			'basic',
 		);
@@ -302,6 +305,9 @@ class JmapMessageConnector implements IMessageConnector {
 		return true;
 	}
 
+	/**
+	 * @return list<JmapEntityListFilter>
+	 */
 	private function convertSearchQueryToFilters(SearchQuery $searchQuery): array {
 		$filters = [];
 		foreach ($searchQuery->getBodies() as $textToken) {
@@ -314,6 +320,9 @@ class JmapMessageConnector implements IMessageConnector {
 		return $filters;
 	}
 
+   /**
+	 * @return array<string, Message>
+	 */
 	private function mapMessagesByRemoteId(Message ...$messages): array {
 		$mapped = [];
 		foreach ($messages as $message) {
