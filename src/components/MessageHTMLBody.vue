@@ -6,9 +6,9 @@
 	<div class="html-message-body">
 		<MdnRequest :message="message" />
 		<NeedsTranslationInfo
-			v-if="needsTranslation"
+			v-if="detectedForeignLanguage"
 			:is-html="true"
-			@translate="$emit('translate')" />
+			@translate="$emit('translate', detectedForeignLanguage)" />
 		<div v-if="hasBlockedContent" id="mail-message-has-blocked-content" style="color: #000000">
 			{{ t('mail', 'The images have been blocked to protect your privacy.') }}
 			<NcActions variant="tertiary" :menu-name="t('mail', 'Show images')">
@@ -50,7 +50,6 @@
 
 <script>
 import iframeResize from '@iframe-resizer/parent'
-import { loadState } from '@nextcloud/initial-state'
 import { NcActionButton, NcActions } from '@nextcloud/vue'
 import IconDomain from 'vue-material-design-icons/Domain.vue'
 import IconMail from 'vue-material-design-icons/EmailOutline.vue'
@@ -58,8 +57,8 @@ import IconImage from 'vue-material-design-icons/ImageSizeSelectActual.vue'
 import MdnRequest from './MdnRequest.vue'
 import NeedsTranslationInfo from './NeedsTranslationInfo.vue'
 import logger from '../logger.js'
-import { needsTranslation } from '../service/AiIntergrationsService.js'
 import { trustSender } from '../service/TrustedSenderService.js'
+import { detectForeignLanguage } from '../util/languageDetection.ts'
 import { isPrintShortcut } from '../util/printMessage.ts'
 
 export default {
@@ -96,8 +95,7 @@ export default {
 		return {
 			hasBlockedContent: false,
 			isSenderTrusted: this.message.isSenderTrusted,
-			needsTranslation: false,
-			enabledFreePrompt: loadState('mail', 'llm_freeprompt_available', false),
+			detectedForeignLanguage: null,
 		}
 	},
 
@@ -118,9 +116,7 @@ export default {
 			scrolling: true,
 		}, this.$refs.iframe)
 
-		if (this.enabledFreePrompt && this.message) {
-			this.needsTranslation = await needsTranslation(this.message.databaseId)
-		}
+		this.detectedForeignLanguage = await detectForeignLanguage(this.message.body ?? '')
 	},
 
 	beforeDestroy() {

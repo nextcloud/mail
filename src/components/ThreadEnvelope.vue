@@ -281,6 +281,7 @@
 						v-if="showTranslationModal"
 						:rich-parameters="{}"
 						:message="plainTextBody"
+						:detected-foreign-language="detectedForeignLanguage"
 						@close="onCloseTranslationModal" />
 					<MailFilterFromEnvelope
 						v-if="showMailFilterFromEnvelope"
@@ -548,6 +549,7 @@ export default {
 			showTaskModal: false,
 			showTagModal: false,
 			showTranslationModal: false,
+			detectedForeignLanguage: null,
 			plainTextBody: '',
 			rawMessage: '', // Will hold the raw source of the message when requested
 			isInternal: true,
@@ -1170,7 +1172,8 @@ export default {
 			this.showTagModal = false
 		},
 
-		onOpenTranslationModal() {
+		onOpenTranslationModal(detectedForeignLanguage = null) {
+			this.detectedForeignLanguage = typeof detectedForeignLanguage === 'string' ? detectedForeignLanguage : null
 			try {
 				if (this.message.hasHtmlBody) {
 					let text = new Text('html', this.message.body)
