@@ -34,6 +34,7 @@ use OCA\Mail\JMAP\Exception\JmapUnknownMethod;
 use OCA\Mail\JMAP\JmapMailboxAdapter;
 use OCA\Mail\JMAP\JmapMessageAdapter;
 use OCA\Mail\Protocol\ProtocolFactory;
+use Throwable;
 
 /**
  * @psalm-type JmapCollectionListFilter = array{
@@ -101,7 +102,7 @@ class JmapOperationsService {
 			if (!$this->dataStore->sessionStatus()) {
 				$this->dataStore->connect();
 			}
-		} catch (Exception $e) {
+		} catch (Throwable $e) {
 			throw new ServiceException('Could not connect to JMAP server: ' . $e->getMessage(), 0, $e);
 		}
 		if ($this->sessionAccountId !== $account->getId()) {
@@ -135,7 +136,7 @@ class JmapOperationsService {
 	private function transceive(array $commands): ResponseBundle {
 		try {
 			return $this->dataStore->perform($commands);
-		} catch (Exception $e) {
+		} catch (Throwable $e) {
 			throw new ServiceException('JMAP request failed: ' . $e->getMessage(), 0, $e);
 		}
 	}
@@ -148,7 +149,7 @@ class JmapOperationsService {
 	private function download(string $account, string $identifier, &$data, string $type = 'application/octet-stream', string $name = 'file.bin'): void {
 		try {
 			$this->dataStore->download($account, $identifier, $data, $type, $name);
-		} catch (Exception $e) {
+		} catch (Throwable $e) {
 			throw new ServiceException('JMAP download failed: ' . $e->getMessage(), 0, $e);
 		}
 	}
