@@ -1262,13 +1262,14 @@ class MessageMapper extends QBMapper {
 		if ($ids === []) {
 			return [];
 		}
+		$direction = strtoupper($sortOrder) === 'DESC' ? 'DESC' : 'ASC';
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('*')
 			->from($this->getTableName())
 			->where(
 				$qb->expr()->in('id', $qb->createParameter('ids'))
 			)
-			->orderBy($orderBy, $sortOrder);
+			->orderBy($orderBy, $direction);
 
 		$results = [];
 		foreach (array_chunk($ids, 1000) as $chunk) {

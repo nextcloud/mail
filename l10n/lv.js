@@ -131,7 +131,7 @@ OC.L10N.register(
     "Could not open outbox" : "Nevarēja atvērt izsūtni",
     "Copy to clipboard" : "Kopēt starpliktuvē",
     "Add" : "Pievienot",
-    "Show more" : "Parādīt vairāk",
+    "Collapse" : "Sakļaut",
     "Clear" : "Notīrīt",
     "Close" : "Aizvērt",
     "Date" : "Datums",
@@ -188,6 +188,7 @@ OC.L10N.register(
     "Tag already exists" : "Birka jau pastāv",
     "Error loading message" : "Kļūda ielādējot vēstuli",
     "Choose a file to add as attachment" : "Izvēlēties datni, ko pievienot kā pielikumu",
-    "Choose a file to share as a link" : "Jāizvēlas datne, ko kopīgot kā saiti"
+    "Choose a file to share as a link" : "Jāizvēlas datne, ko kopīgot kā saiti",
+    "Show more" : "Parādīt vairāk"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);");

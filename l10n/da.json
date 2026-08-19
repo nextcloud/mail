@@ -462,8 +462,8 @@
     "New Contact" : "Ny kontakt",
     "Copy to clipboard" : "Kopier til udklipsholder",
     "Add" : "Tilføj",
-    "Show less" : "Vis mindre",
-    "Show more" : "Vis mere",
+    "Collapse" : "Sammenfold",
+    "Expand" : "Udvid",
     "Clear" : "Ryd",
     "Search in folder" : "Søg i mappe",
     "Open search modal" : "Åbn søgemodal",
@@ -590,6 +590,8 @@
     "Error loading message" : "Fejl under indlæsning af besked",
     "Add share link from Files" : "Tilføj delingslink fra Filer",
     "Choose a file to add as attachment" : "Vælg en fil, der skal tilføjes som vedhæftning",
-    "Choose a file to share as a link" : "Vælg en fil der skal deles som link"
+    "Choose a file to share as a link" : "Vælg en fil der skal deles som link",
+    "Show less" : "Vis mindre",
+    "Show more" : "Vis mere"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

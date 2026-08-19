@@ -4,7 +4,7 @@
 -->
 
 <template>
-	<AppNavigationItem
+	<NcAppNavigationItem
 		v-if="visible"
 		:id="genId(mailbox)"
 		:key="genId(mailbox)"
@@ -32,7 +32,7 @@
 		</template>
 		<!-- actions -->
 		<template #actions>
-			<ActionText
+			<NcActionText
 				v-if="!account.isUnified && mailbox.specialRole !== 'flagged'"
 				:name="mailbox.name">
 				<template #icon>
@@ -41,9 +41,9 @@
 						:size="20" />
 				</template>
 				{{ statsText }}
-			</ActionText>
+			</NcActionText>
 
-			<ActionButton
+			<NcActionButton
 				v-if="mailbox.specialRole !== 'flagged' && !account.isUnified && hasSeenAcl"
 				:name="t('mail', 'Mark all as read')"
 				:disabled="loadingMarkAsRead"
@@ -51,54 +51,54 @@
 				<template #icon>
 					<IconEmailCheck :size="20" />
 				</template>
-			</ActionButton>
-			<ActionButton
+			</NcActionButton>
+			<NcActionButton
 				v-if="subfolderLabel && !account.isUnified && hasDelimiter && mailbox.specialRole !== 'flagged' && hasSubmailboxActionAcl"
 				@click="openCreateMailbox">
 				<template #icon>
 					<IconAdd :size="20" />
 				</template>
 				{{ t('mail', 'Add subfolder') }}
-			</ActionButton>
-			<ActionInput
+			</NcActionButton>
+			<NcActionInput
 				v-if="subfolderInput"
-				:value.sync="createMailboxName"
+				v-model="createMailboxName"
 				@submit.prevent.stop="createMailbox">
 				<template #icon>
 					<IconAdd :size="20" />
 				</template>
-			</ActionInput>
-			<ActionText v-if="subfolderSaving">
+			</NcActionInput>
+			<NcActionText v-if="subfolderSaving">
 				<template #icon>
-					<IconLoading :size="20" />
+					<NcLoadingIcon :size="20" />
 				</template>
 				{{ t('mail', 'Saving') }}
-			</ActionText>
-			<ActionButton
+			</NcActionText>
+			<NcActionButton
 				v-if="renameLabel && !hasSubMailboxes && !account.isUnified && hasRenameAcl"
 				@click.prevent.stop="openRenameInput">
 				<template #icon>
 					<IconEdit :size="20" />
 				</template>
 				{{ t('mail', 'Rename') }}
-			</ActionButton>
-			<ActionInput
+			</NcActionButton>
+			<NcActionInput
 				v-if="renameInput"
-				:value.sync="mailboxName"
+				v-model="mailboxName"
 				@submit.prevent.stop="renameMailbox">
 				<template #icon>
 					<IconEdit
 						:title="t('mail', 'Rename')"
 						:size="20" />
 				</template>
-			</ActionInput>
-			<ActionText v-if="renameSaving">
+			</NcActionInput>
+			<NcActionText v-if="renameSaving">
 				<template #icon>
-					<IconLoading :size="20" />
+					<NcLoadingIcon :size="20" />
 				</template>
 				{{ t('mail', 'Saving') }}
-			</ActionText>
-			<ActionButton
+			</NcActionText>
+			<NcActionButton
 				v-if="!account.isUnified && hasDelimiter && !mailbox.specialRole && !hasSubMailboxes && hasDeleteAcl"
 				:id="genId(mailbox)"
 				:close-after-click="true"
@@ -107,8 +107,8 @@
 					<IconExternal :size="20" />
 				</template>
 				{{ t('mail', 'Move folder') }}
-			</ActionButton>
-			<ActionButton
+			</NcActionButton>
+			<NcActionButton
 				v-if="!account.isUnified && mailbox.specialRole !== 'flagged'"
 				:disabled="repairing"
 				@click="repair">
@@ -116,8 +116,8 @@
 					<IconWrench :size="20" />
 				</template>
 				{{ t('mail', 'Repair folder') }}
-			</ActionButton>
-			<ActionButton
+			</NcActionButton>
+			<NcActionButton
 				v-if="debug && !account.isUnified && mailbox.specialRole !== 'flagged'"
 				:name="t('mail', 'Clear cache')"
 				:disabled="clearingCache"
@@ -126,25 +126,25 @@
 					<IconFolderSync :size="20" />
 				</template>
 				{{ t('mail', 'Clear locally cached data, in case there are issues with synchronization.') }}
-			</ActionButton>
+			</NcActionButton>
 
-			<ActionCheckbox
+			<NcActionCheckbox
 				v-if="notVirtual"
-				:checked="mailbox.isSubscribed"
+				:model-value="mailbox.isSubscribed"
 				:disabled="changeSubscription"
 				@update:checked="changeFolderSubscription">
 				{{ t('mail', 'Subscribed') }}
-			</ActionCheckbox>
+			</NcActionCheckbox>
 
-			<ActionCheckbox
+			<NcActionCheckbox
 				v-if="notVirtual && notInbox"
-				:checked="mailbox.syncInBackground"
+				:model-value="mailbox.syncInBackground"
 				:disabled="changingSyncInBackground"
 				@update:checked="changeSyncInBackground">
 				{{ t('mail', 'Sync in background') }}
-			</ActionCheckbox>
+			</NcActionCheckbox>
 
-			<ActionButton
+			<NcActionButton
 				v-if="mailbox.specialRole !== 'flagged' && !account.isUnified && hasClearMailboxAcl"
 				:close-after-click="true"
 				@click="clearMailbox">
@@ -152,24 +152,24 @@
 					<IconDeleteOutline :size="20" />
 				</template>
 				{{ t('mail', 'Delete all messages') }}
-			</ActionButton>
+			</NcActionButton>
 
-			<ActionButton
+			<NcActionButton
 				v-if="!account.isUnified && !mailbox.specialRole && !hasSubMailboxes && hasDeleteAcl"
 				@click="deleteMailbox">
 				<template #icon>
 					<IconDeleteOutline :size="20" />
 				</template>
 				{{ t('mail', 'Delete folder') }}
-			</ActionButton>
+			</NcActionButton>
 		</template>
 		<template #counter>
-			<CounterBubble v-if="showUnreadCounter && subCounter">
+			<NcCounterBubble v-if="showUnreadCounter && subCounter">
 				{{ mailbox.unread }}&nbsp;({{ subCounter }})
-			</CounterBubble>
-			<CounterBubble v-else-if="showUnreadCounter">
+			</NcCounterBubble>
+			<NcCounterBubble v-else-if="showUnreadCounter">
 				{{ mailbox.unread }}
-			</CounterBubble>
+			</NcCounterBubble>
 		</template>
 		<template #extra>
 			<MoveMailboxModal
@@ -184,14 +184,14 @@
 			:key="genId(subMailbox)"
 			:account="account"
 			:mailbox="subMailbox" />
-	</AppNavigationItem>
+	</NcAppNavigationItem>
 </template>
 
 <script>
 
 import { showError, showInfo } from '@nextcloud/dialogs'
-import { translatePlural as n } from '@nextcloud/l10n'
-import { NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionText as ActionText, NcAppNavigationItem as AppNavigationItem, NcCounterBubble as CounterBubble, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import { n } from '@nextcloud/l10n'
+import { NcActionButton, NcActionCheckbox, NcActionInput, NcActionText, NcAppNavigationItem, NcCounterBubble, NcLoadingIcon } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import IconEmailCheck from 'vue-material-design-icons/EmailCheckOutline.vue'
 import IconFolderSync from 'vue-material-design-icons/FolderSyncOutline.vue'
@@ -209,19 +209,19 @@ import { translate as translateMailboxName } from '../i18n/MailboxTranslator.js'
 import logger from '../logger.js'
 import { getMailboxStatus, repairMailbox } from '../service/MailboxService.js'
 import { clearCache } from '../service/MessageService.js'
-import { PRIORITY_INBOX_ID, UNIFIED_INBOX_ID } from '../store/constants.js'
+import { PRIORITY_INBOX_ID } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
 import { mailboxHasRights } from '../util/acl.js'
 
 export default {
 	name: 'NavigationMailbox',
 	components: {
-		AppNavigationItem,
-		CounterBubble,
-		ActionText,
-		ActionButton,
-		ActionCheckbox,
-		ActionInput,
+		NcAppNavigationItem,
+		NcCounterBubble,
+		NcActionText,
+		NcActionButton,
+		NcActionCheckbox,
+		NcActionInput,
 		IconDeleteOutline,
 		IconEmailCheck,
 		IconExternal,
@@ -230,7 +230,6 @@ export default {
 		IconFolderSync,
 		IconInfo,
 		IconWrench,
-		IconLoading,
 		MailboxIcon,
 		MoveMailboxModal,
 	},
@@ -277,7 +276,6 @@ export default {
 			mailboxName: this.mailbox.displayName,
 			showMoveModal: false,
 			hasDelimiter: !!this.mailbox.delimiter,
-			UNIFIED_INBOX_ID,
 			createMailboxName: '',
 			repairing: false,
 		}

@@ -439,8 +439,8 @@ OC.L10N.register(
     "New Contact" : "Kontaktu berria",
     "Copy to clipboard" : "Kopiatu arbelera",
     "Add" : "Gehitu",
-    "Show less" : "Erakutsi gutxiago",
-    "Show more" : "Erakutsi gehiago",
+    "Collapse" : "Tolestu",
+    "Expand" : "Zabaldu",
     "Clear" : "Garbitu",
     "Close" : "Itxi",
     "Search parameters" : "Bilaketa parametroak",
@@ -712,6 +712,8 @@ OC.L10N.register(
     "Error loading message" : "Errorea mezua kargatzerakoan",
     "Add share link from Files" : "Gehitu partekatze esteka Fitxategiak-etik",
     "Choose a file to add as attachment" : "Aukeratu fitxategia eranskin gisa gehitzeko",
-    "Choose a file to share as a link" : "Aukeratu fitxategi bat esteka bezala partekatzeko"
+    "Choose a file to share as a link" : "Aukeratu fitxategi bat esteka bezala partekatzeko",
+    "Show less" : "Erakutsi gutxiago",
+    "Show more" : "Erakutsi gehiago"
 },
 "nplurals=2; plural=(n != 1);");

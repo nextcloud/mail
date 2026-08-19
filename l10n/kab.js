@@ -132,8 +132,8 @@ OC.L10N.register(
     "New Contact" : "Anermis amaynut",
     "Copy to clipboard" : "Nɣel-it ar tecfawit",
     "Add" : "Rnu",
-    "Show less" : "Ssken cwiṭ",
-    "Show more" : "Sken ugar",
+    "Collapse" : "Seggelmes",
+    "Expand" : "Simɣur",
     "Clear" : "Ṣfeḍ",
     "Close" : "Mdel",
     "Body" : "Tafekka",
@@ -195,6 +195,8 @@ OC.L10N.register(
     "Nextcloud Mail" : "Imayl n Nextcloud",
     "Discard changes" : "Sefsex ibeddilen",
     "Message sent" : "Izen yettwazen",
-    "Date:" : "Azemz:"
+    "Date:" : "Azemz:",
+    "Show less" : "Ssken cwiṭ",
+    "Show more" : "Sken ugar"
 },
 "nplurals=2; plural=(n != 1);");

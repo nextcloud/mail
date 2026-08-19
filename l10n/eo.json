@@ -126,8 +126,7 @@
     "Message" : "Mesaĝo",
     "Copy to clipboard" : "Kopii tondejen",
     "Add" : "Aldoni",
-    "Show less" : "Montri malpli",
-    "Show more" : "Montri pli",
+    "Collapse" : "Maletendi",
     "Clear" : "Viŝi",
     "Close" : "Malfermi",
     "Date" : "Date",
@@ -194,6 +193,8 @@
     "Date:" : "Dato:",
     "Tag already exists" : "La etikedo jam ekzistas",
     "Error loading message" : "Eraris ŝargi mesaĝon",
-    "Choose a file to add as attachment" : "Elektu dosieron aldonotan kiel kunsendaĵon"
+    "Choose a file to add as attachment" : "Elektu dosieron aldonotan kiel kunsendaĵon",
+    "Show less" : "Montri malpli",
+    "Show more" : "Montri pli"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

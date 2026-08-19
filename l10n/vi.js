@@ -191,6 +191,8 @@ OC.L10N.register(
     "New Contact" : "ĐỊa chỉ liên hệ mới",
     "Copy to clipboard" : "Sao chép vào clipboard",
     "Add" : "Thêm",
+    "Collapse" : "Thu gọn",
+    "Expand" : "Mở rộng",
     "Clear" : "Xóa",
     "Close" : "Đóng",
     "Body" : "Thân",

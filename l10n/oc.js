@@ -85,6 +85,7 @@ OC.L10N.register(
     "Retry" : "Tornar ensajar",
     "Copy to clipboard" : "Copiar dins lo quichapapièrs",
     "Add" : "Apondre",
+    "Collapse" : "Replegar",
     "Clear" : "Escafar",
     "Close" : "Tampar",
     "Body" : "Còs",

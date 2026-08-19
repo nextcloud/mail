@@ -27,20 +27,20 @@
 			:multiselect="false"
 			:mimetype-filter="['httpd/unix-directory']"
 			@close="() => isFilePickerOpen = false" />
-		<Actions :boundaries-element="boundariesElement">
+		<NcActions :boundaries-element="boundariesElement">
 			<template v-if="!showCalendarPopover">
-				<ActionButton
+				<NcActionButton
 					v-if="isCalendarEvent"
 					class="attachment-import calendar"
 					:disabled="loadingCalendars"
 					@click.stop="loadCalendars">
 					<template #icon>
 						<IconAdd v-if="!loadingCalendars" :size="20" />
-						<IconLoading v-else-if="loadingCalendars" :size="20" />
+						<NcLoadingIcon v-else-if="loadingCalendars" :size="20" />
 					</template>
 					{{ t('mail', 'Import into calendar') }}
-				</ActionButton>
-				<ActionButton
+				</NcActionButton>
+				<NcActionButton
 					class="attachment-download"
 					:close-after-click="true"
 					@click="download">
@@ -48,34 +48,34 @@
 						<IconDownload :size="20" />
 					</template>
 					{{ t('mail', 'Download attachment') }}
-				</ActionButton>
-				<ActionButton
+				</NcActionButton>
+				<NcActionButton
 					class="attachment-save-to-cloud"
 					:disabled="savingToCloud"
 					:close-after-click="true"
 					@click="() => isFilePickerOpen = true">
 					<template #icon>
 						<IconSave v-if="!savingToCloud" :size="20" />
-						<IconLoading v-else-if="savingToCloud" :size="20" />
+						<NcLoadingIcon v-else-if="savingToCloud" :size="20" />
 					</template>
 					{{ t('mail', 'Save to Files') }}
-				</ActionButton>
+				</NcActionButton>
 			</template>
 			<template v-else>
-				<ActionButton @click="closeCalendarPopover">
+				<NcActionButton @click="closeCalendarPopover">
 					<template #icon>
 						<IconArrow :size="20" />
 					</template>
 					{{ t('mail', 'Go back') }}
-				</ActionButton>
-				<ActionButton
+				</NcActionButton>
+				<NcActionButton
 					v-for="entry in calendarMenuEntries"
 					:key="entry.text"
 					@click="entry.action">
 					{{ entry.text }}
-				</ActionButton>
+				</NcActionButton>
 			</template>
-		</Actions>
+		</NcActions>
 	</div>
 </template>
 
@@ -84,8 +84,8 @@
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
 import { formatFileSize } from '@nextcloud/files'
-import { translate as t } from '@nextcloud/l10n'
-import { NcActionButton as ActionButton, NcActions as Actions, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import { t } from '@nextcloud/l10n'
+import { NcActionButton, NcActions, NcLoadingIcon } from '@nextcloud/vue'
 import IconArrow from 'vue-material-design-icons/ArrowLeft.vue'
 import IconSave from 'vue-material-design-icons/FolderOutline.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
@@ -98,11 +98,11 @@ export default {
 	name: 'MessageAttachment',
 	components: {
 		FilePicker,
-		Actions,
-		ActionButton,
+		NcActions,
+		NcActionButton,
 		IconAdd,
 		IconArrow,
-		IconLoading,
+		NcLoadingIcon,
 		IconSave,
 		IconDownload,
 	},

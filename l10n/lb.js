@@ -43,6 +43,7 @@ OC.L10N.register(
     "Rename" : "Ëmbenennen",
     "Reply" : "Äntwerten",
     "Add" : "Derbäimaachen",
+    "Collapse" : "Zesumme falen",
     "Close" : "Zoumaachen",
     "Date" : "Date",
     "Tags" : "Tags",

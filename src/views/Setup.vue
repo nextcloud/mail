@@ -5,12 +5,12 @@
 <template>
 	<NcContent app-name="mail">
 		<Navigation v-if="hasAccounts" />
-		<AppContent>
+		<NcAppContent>
 			<div
 				class="setup"
 				:class="{ 'setup--themed': isThemed }"
 				:style="{ backgroundImage: isThemed ? undefined : backgroundImgSrc }">
-				<EmptyContent
+				<NcEmptyContent
 					v-if="allowNewMailAccounts"
 					class="setup__form-content"
 					:name="t('mail', 'Connect your mail account')">
@@ -25,21 +25,21 @@
 							class="setup__form-content__form"
 							@account-created="onAccountCreated" />
 					</template>
-				</EmptyContent>
-				<EmptyContent v-else :name="t('mail', 'To add a mail account, please contact your administrator.')">
+				</NcEmptyContent>
+				<NcEmptyContent v-else :name="t('mail', 'To add a mail account, please contact your administrator.')">
 					<template #icon>
 						<div class="setup__form-content__svg-wrapper" v-html="FluidMail" />
 					</template>
-				</EmptyContent>
+				</NcEmptyContent>
 			</div>
-		</AppContent>
+		</NcAppContent>
 	</NcContent>
 </template>
 
 <script>
 import { loadState } from '@nextcloud/initial-state'
 import { generateFilePath } from '@nextcloud/router'
-import { NcAppContent as AppContent, NcEmptyContent as EmptyContent, NcContent } from '@nextcloud/vue'
+import { NcAppContent, NcContent, NcEmptyContent } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import AccountForm from '../components/AccountForm.vue'
 import Navigation from '../components/Navigation.vue'
@@ -50,10 +50,10 @@ import useMainStore from '../store/mainStore.js'
 export default {
 	name: 'Setup',
 	components: {
-		AppContent,
+		NcAppContent,
 		AccountForm,
 		NcContent,
-		EmptyContent,
+		NcEmptyContent,
 		Navigation,
 	},
 

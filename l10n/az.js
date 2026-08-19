@@ -52,6 +52,7 @@ OC.L10N.register(
     "Clear cache" : "Keşi təmizlə",
     "Reply" : "Cavab",
     "Add" : "Əlavə etmək",
+    "Collapse" : "Yığılma",
     "Close" : "Bağla",
     "Date" : "Date",
     "Tags" : "Işarələr",

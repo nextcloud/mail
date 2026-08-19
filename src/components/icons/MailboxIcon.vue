@@ -143,6 +143,12 @@ export default {
 			required: false,
 		},
 	},
+
+	data() {
+		return {
+			UNIFIED_INBOX_ID,
+		}
+	},
 }
 
 </script>
