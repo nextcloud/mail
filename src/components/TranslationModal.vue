@@ -92,6 +92,26 @@ import logger from '../logger.js'
 import { translateText } from '../service/translationService.js'
 import useMainStore from '../store/mainStore.js'
 
+const normalize = (code) => code?.toLowerCase().replace(/_/g, '-')
+const primarySubtag = (code) => normalize(code)?.split('-')[0]
+
+/**
+ * Find the option closest to a language code.
+ *
+ * The interface reports `pt-BR` while providers list `pt_BR`, and either side
+ * may omit the region the other one has, so neither separators nor regions can
+ * be compared verbatim.
+ *
+ * @param {Array} languages options offered by the provider
+ * @param {string|null} code language code to look for
+ * @return {object|null} the matching option, or null when the provider has none
+ */
+function findLanguage(languages, code) {
+	return languages.find((language) => normalize(language.value) === normalize(code))
+		?? languages.find((language) => primarySubtag(language.value) === primarySubtag(code))
+		?? null
+}
+
 export default {
 	name: 'TranslationModal',
 
@@ -157,10 +177,9 @@ export default {
 	},
 
 	async mounted() {
-		this.selectedTo = this.availableOutputLanguages.find((language) => language.value === this.userLanguage) || null
+		this.selectedTo = findLanguage(this.availableOutputLanguages, this.userLanguage)
 		this.selectedFrom = this.availableInputLanguages.find((language) => language.value === 'detect_language')
-			?? this.availableInputLanguages.find((language) => language.value.split(/[-_]/)[0] === this.detectedForeignLanguage)
-			?? null
+			?? findLanguage(this.availableInputLanguages, this.detectedForeignLanguage)
 		this.$nextTick(() => {
 			// FIXME trick to avoid focusTrap() from activating on NcSelect
 			this.isMounted = !!this.$refs.translateDialog.navigationId
