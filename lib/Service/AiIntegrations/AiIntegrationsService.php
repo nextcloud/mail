@@ -337,64 +337,6 @@ class AiIntegrationsService {
 		return preg_match('/{\s*"expectsReply"\s*:\s*true\s*}/i', $output) === 1;
 	}
 
-	/**
-	 * Analyze whether an email is written in a specific language.
-	 *
-	 * @throws ServiceException
-	 */
-	public function requiresTranslation(
-		Account $account,
-		Mailbox $mailbox,
-		Message $message,
-		string $currentUserId,
-	): ?bool {
-		if (!isset($this->taskProcessingManager->getAvailableTaskTypes()[TextToText::ID])) {
-			$this->logger->info('No language model available for checking translation needs');
-			return null;
-		}
-
-		$language = explode('_', $this->l->getLanguageCode())[0];
-		$messageId = $message->getId();
-		$cachedValue = $this->cache->getValue("needsTranslation_{$language}{$messageId}");
-		if ($cachedValue) {
-			return  $cachedValue === 'true' ? true : false;
-		}
-
-		$imapMessage = $this->mailManager->getImapMessage(
-			$account,
-			$mailbox,
-			$message,
-			true,
-		);
-
-		if (!$this->isPersonalEmail($imapMessage)) {
-			return false;
-		}
-
-		$messageBody = $imapMessage->getPlainBody();
-		try {
-			self::assertNoPromptInjection($messageBody);
-		} catch (PotentialPromptInjectionException $e) {
-			$this->logger->warning('Skipped translation check: potential prompt injection', ['exception' => $e, 'messageId' => $messageId]);
-			return false;
-		}
-		$messageBody = str_replace('"', '\"', $messageBody);
-
-		$prompt = sprintf(DefaultPrompts::REQUIRES_TRANSLATION, $messageBody, $language);
-		$task = new TaskProcessingTask(TextToText::ID, ['input' => $prompt], Application::APP_ID, $currentUserId);
-
-		$task = $this->runTask($task);
-		$output = $task->getOutput()['output'] ?? null;
-		if ($task->getStatus() === TaskProcessingTask::STATUS_FAILED || !is_string($output) || trim($output) === '') {
-			$this->logger->warning('Translation check task returned no usable output', ['status' => $task->getStatus(), 'errorMessage' => $task->getErrorMessage()]);
-			throw new ServiceException('Translation check task returned no usable output');
-		}
-		// Can't use json_decode() here because the output contains additional garbage
-		$result = preg_match('/{\s*"needsTranslation"\s*:\s*true\s*}/i', $output) === 1;
-		$this->cache->addValue("needsTranslation_{$language}{$messageId}", $result ? 'true' : 'false');
-		return $result;
-	}
-
 	public function isLlmAvailable(string $taskType): bool {
 		return array_key_exists($taskType, $this->taskProcessingManager->getAvailableTaskTypes());
 	}
