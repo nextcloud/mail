@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\JMAP;
 
-use Exception;
 use JmapClient\Client;
 use JmapClient\Requests\Mail\MailboxGet;
 use JmapClient\Requests\Mail\MailboxQuery;

@@ -320,7 +320,7 @@ class JmapMessageConnector implements IMessageConnector {
 		return $filters;
 	}
 
-   /**
+	/**
 	 * @return array<string, Message>
 	 */
 	private function mapMessagesByRemoteId(Message ...$messages): array {

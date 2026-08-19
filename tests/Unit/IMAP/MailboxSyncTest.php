@@ -218,7 +218,7 @@ class MailboxSyncTest extends TestCase {
 		$account->method('getMailAccount')->willReturn($mailAccount);
 		$this->timeFactory->method('getTime')->willReturn(100000);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-		$this->imapClientFactory->method('getClient')
+		$this->protocolFactory->method('imapClient')
 			->with($account)
 			->willReturn($client);
 		$personal = new Horde_Imap_Client_Data_Namespace();
@@ -273,8 +273,8 @@ class MailboxSyncTest extends TestCase {
 			->with($account)
 			->willReturn([]);
 
-		$this->imapClientFactory->expects($this->never())
-			->method('getClient');
+		$this->protocolFactory->expects($this->never())
+			->method('imapClient');
 		$client->expects($this->never())
 			->method('logout');
 
@@ -300,8 +300,8 @@ class MailboxSyncTest extends TestCase {
 			->with($account)
 			->willReturn([]);
 
-		$this->imapClientFactory->expects($this->once())
-			->method('getClient')
+		$this->protocolFactory->expects($this->once())
+			->method('imapClient')
 			->with($account)
 			->willReturn($client);
 		$client->expects($this->once())
