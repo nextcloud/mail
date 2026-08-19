@@ -87,7 +87,15 @@ export default {
 		},
 
 		isPreviewable() {
-			return this.attachment.finished && !!this.attachment.previewBlobUrl && !!OCA?.Viewer
+			if (!this.attachment.finished || !OCA?.Viewer) {
+				return false
+			}
+
+			if (this.attachment.type === 'cloud') {
+				return !!this.attachment.hasPreview && !!this.attachment.davSource
+			}
+
+			return !!this.attachment.previewBlobUrl
 		},
 
 		extension() {

@@ -70,7 +70,7 @@ import ChevronUp from 'vue-material-design-icons/ChevronUp.vue'
 import ComposerAttachment from './ComposerAttachment.vue'
 import logger from '../logger.js'
 import { uploadLocalAttachment } from '../service/AttachmentService.js'
-import { getFileData } from '../service/FileService.js'
+import { getFileData, getFileDavUrl } from '../service/FileService.js'
 import { shareFile } from '../service/FileSharingService.js'
 
 const mimes = [
@@ -162,7 +162,7 @@ export default {
 		previewableFilesInfos() {
 			return this.attachments
 				.filter((attachment) => {
-					const mime = attachment.mime || attachment.fileType
+					const mime = attachment?.mime || attachment?.fileType
 					return mime
 						&& (
 							mime.startsWith('image/')
@@ -172,13 +172,12 @@ export default {
 						)
 				})
 				.map((attachment) => ({
-					filename: attachment.previewBlobUrl,
-					source: attachment.previewBlobUrl,
-					basename: attachment.fileName,
-					mime: attachment.mime || attachment.fileType,
-					etag: 'fixme',
-					hasPreview: false,
-					fileid: parseInt(attachment.id, 10),
+					filename: attachment?.previewBlobUrl || attachment?.davSource,
+					source: attachment?.previewBlobUrl || attachment?.davSource,
+					basename: attachment?.fileName,
+					mime: attachment?.mime || attachment?.fileType,
+					etag: attachment?.etag || 'fixme',
+					hasPreview: attachment?.hasPreview || false,
 				}))
 		},
 	},
@@ -390,6 +389,10 @@ export default {
 						// dont know, may be it will be conflict if cloud & local has equal IDs?
 						id: filesFromCloud[i].fileid,
 						uploaded: 0,
+						mime: filesFromCloud[i].getcontenttype,
+						etag: filesFromCloud[i].getetag,
+						davSource: getFileDavUrl(name),
+
 					}
 
 					this.attachments.push(Object.assign(_toAttachmentData, _cloudFile))
@@ -549,21 +552,24 @@ export default {
 				return
 			}
 
-			if (!attachment.previewBlobUrl) {
-				return
-			}
+			const isCloudPreviewable = attachment?.type === 'cloud' && attachment?.hasPreview && attachment?.davSource
+			const isLocalPreviewable = attachment?.type !== 'cloud' && attachment?.previewBlobUrl
 
-			const fileInfo = {
-				filename: attachment?.previewBlobUrl,
-				source: attachment?.previewBlobUrl,
-				basename: attachment?.fileName,
-				mime: attachment?.mime || attachment?.fileType,
-				etag: 'fixme',
-				hasPreview: false,
+			if (!isCloudPreviewable && !isLocalPreviewable) {
+				return
 			}
 
 			if (!OCA.Viewer) {
 				return
+			}
+
+			const fileInfo = {
+				filename: attachment?.previewBlobUrl || attachment?.davSource,
+				source: attachment?.previewBlobUrl || attachment?.davSource,
+				basename: attachment?.fileName,
+				mime: attachment?.mime || attachment?.fileType,
+				etag: attachment?.etag || 'fixme',
+				hasPreview: attachment?.hasPreview || false,
 			}
 
 			OCA.Viewer.open({
