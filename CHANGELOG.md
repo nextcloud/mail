@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 5.11.0 – unreleased
+## 5.11.0 – 2026-08-20
 ### Added
 * Initial JMAP protocol support
 * Attach files from Files as an attachment or as a link
@@ -28,6 +28,9 @@ All notable changes to this project will be documented in this file.
 * Handle empty reply-to address list properly
 * Attaching files from Files and listing calendars broken by the webdav 5 upgrade
 * Database migrations broken on Nextcloud 35 by the new schema API
+* Preserve resized image dimensions in sent messages
+* Attachment preview no longer offered when the Viewer app is disabled
+* Sandbox iframes in rendered HTML messages
 
 ## 5.10.0 – 2026-06-18
 ### Added
