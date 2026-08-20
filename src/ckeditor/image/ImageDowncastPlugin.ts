@@ -62,10 +62,13 @@ export default class ImageDowncastPlugin extends Plugin {
 			const writer = new UpcastWriter(fragment.document)
 
 			for (const { item } of writer.createRangeIn(fragment)) {
+				if (item.is('element', 'figure') && item.hasClass('image')) {
+					this._inlineAlignment(writer, item)
+				}
+
 				// A block image carries the resized width on its figure, an inline
 				// one on the img itself.
 				if ((item.is('element', 'figure') && item.hasClass('image')) || item.is('element', 'img')) {
-					this._inlineAlignment(writer, item)
 					this._mirrorResizedWidth(writer, item)
 				}
 			}
@@ -81,11 +84,25 @@ export default class ImageDowncastPlugin extends Plugin {
 	 * @param figure the figure to align
 	 */
 	_inlineAlignment(writer: UpcastWriter, figure: ViewElement): void {
-		// Without an alignment class the figure keeps the client's own margins.
+		// Fall back to left: without a class the figure keeps the client's own margins.
 		const className = Object.keys(ALIGNMENTS).find((candidate) => figure.hasClass(candidate))
 			?? 'image-style-block-align-left'
+		const alignment = ALIGNMENTS[className]
 
-		writer.setStyle(ALIGNMENTS[className], figure)
+		writer.setStyle(alignment, figure)
+
+		const image = this.editor.plugins.get('ImageUtils').findViewImgElement(figure)
+		if (image === undefined) {
+			return
+		}
+
+		// Clients that predate <figure> drop the tag and keep the img, so the img
+		// has to align itself. Auto margins only move a block element.
+		writer.setStyle({
+			display: 'block',
+			'margin-left': alignment['margin-left'],
+			'margin-right': alignment['margin-right'],
+		}, image)
 	}
 
 	/**

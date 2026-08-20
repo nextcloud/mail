@@ -138,6 +138,19 @@ describe('ImageDowncastPlugin', () => {
 		expect(data).toContain('text-align:left;')
 	})
 
+	it('aligns the img itself so it survives a stripped figure', async () => {
+		const data = await downcast('<figure class="image image-style-block-align-right"><img src="test.png"></figure>')
+
+		expect(data).toContain('<img style="display:block;margin-left:auto;margin-right:0;"')
+	})
+
+	it('leaves an inline image unaligned', async () => {
+		const data = await downcast('<p>text <img src="test.png"></p>')
+
+		expect(data).not.toContain('margin-left')
+		expect(data).not.toContain('text-align')
+	})
+
 	it('keeps the alignment when the message is reopened and sent again', async () => {
 		const sent = await downcast('<figure class="image image-style-align-center"><img src="test.png"></figure>')
 		const resent = await downcast(sent)
