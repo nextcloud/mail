@@ -28,6 +28,13 @@
 	height: 100%;
 }
 
+.mail-button-row {
+	display: flex;
+	flex-direction: row;
+	gap: var(--default-grid-baseline);
+	margin-top: var(--default-grid-baseline);
+}
+
 .folders .ui-droppable-active {
 	background-color: rgb(240, 240, 240);
 }
