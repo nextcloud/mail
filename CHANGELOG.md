@@ -1,3 +1,16 @@
+## [5.10.14](https://github.com/nextcloud/mail/compare/v5.10.13...v5.10.14) (2026-08-20)
+
+
+### Bug Fixes
+
+* **deps:** Fix npm audit ([1f10d3a](https://github.com/nextcloud/mail/commit/1f10d3a9c7b901c32368f69c78dfe01674b01fe5))
+* **l10n:** Update translations from Transifex ([38799b6](https://github.com/nextcloud/mail/commit/38799b639cc29948c1b6f4ad21e4138aaec2276e))
+* **l10n:** Update translations from Transifex ([9fe1f74](https://github.com/nextcloud/mail/commit/9fe1f749983a1ccf1cf932f2a9a2df30b33d58b0))
+* **migration:** support the new OCP DB schema API ([#13513](https://github.com/nextcloud/mail/issues/13513)) ([5edddf5](https://github.com/nextcloud/mail/commit/5edddf5d5f0bb0458d586e35b59bbbeac060ee4e))
+* reply to sender only ([4aba67a](https://github.com/nextcloud/mail/commit/4aba67ac0dc3fb3844e11b4f60bb07406d19ab8f))
+
+
+
 ## [5.10.13](https://github.com/nextcloud/mail/compare/v5.10.12...v5.10.13) (2026-08-18)
 
 
