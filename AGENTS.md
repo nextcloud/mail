@@ -156,7 +156,10 @@ Some proxies drop UIDVALIDITY, which made us discard the local
 cache and force a full resync on every run. Treat a missing
 value as unchanged instead.
 
-Assisted-by: Claude:claude-sonnet-4-6
+Assisted-by: Devstral:devstral-small-2507
+Assisted-by: ClaudeCode:claude-sonnet-4-6
+Assisted-by: Qwen:qwen3-coder-32b
+Assisted-by: Copilot:gpt-4o
 Signed-off-by: Name <email>
 ```
 
