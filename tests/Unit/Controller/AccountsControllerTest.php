@@ -16,6 +16,7 @@ use OCA\Mail\Controller\AccountsController;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\DelegationForbiddenException;
+use OCA\Mail\Exception\DuplicateEmailAddress;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
@@ -320,6 +321,9 @@ class AccountsControllerTest extends TestCase {
 	}
 
 	public function testCreateManualNoDuplicate(): void {
+		$this->appConfig->expects(self::once())
+			->method('getValueBool')
+			->willReturn(true);
 		$email = 'user@domain.tld';
 		$accountName = 'Mail';
 		$imapHost = 'localhost';
@@ -332,17 +336,15 @@ class AccountsControllerTest extends TestCase {
 		$smtpSslMode = 'none';
 		$smtpUser = 'user@domain.tld';
 		$smtpPassword = 'mypassword';
-		$this->appConfig->expects(self::once())
-			->method('getValueBool')
-			->willReturn(true);
-		$this->accountService->expects(self::once())
-			->method('findByUserIdAndAddress')
-			->willReturn(['existing account']);
-		$this->setupService->expects(self::never())
-			->method('createNewAccount');
+		$this->setupService->expects(self::once())
+			->method('createNewAccount')
+			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, 'password')
+			->willThrowException(new DuplicateEmailAddress());
 
-		$expectedResponse = \OCA\Mail\Http\JsonResponse::fail(['error' => 'ACCOUNT_EXISTS']);
-		$response = $this->controller->create($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $imapPassword, $smtpPassword);
+		$expectedResponse = \OCA\Mail\Http\JsonResponse::fail([
+			'error' => 'ACCOUNT_EXISTS',
+		]);
+		$response = $this->controller->create($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $imapPassword, $smtpPassword, 'password');
 
 		self::assertEquals($expectedResponse, $response);
 	}
