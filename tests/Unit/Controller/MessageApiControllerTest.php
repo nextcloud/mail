@@ -32,6 +32,7 @@ use OCA\Mail\Service\DkimService;
 use OCA\Mail\Service\ItineraryService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\OutboxService;
+use OCA\Mail\Service\SnoozeService;
 use OCA\Mail\Service\TrustedSenderService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -60,6 +61,7 @@ class MessageApiControllerTest extends TestCase {
 	private MockObject|ItineraryService $itineraryService;
 	private TrustedSenderService|MockObject $trustedSenderService;
 	private DelegationService|MockObject $delegationService;
+	private SnoozeService|MockObject $snoozeService;
 	private MessageApiController $controller;
 	private string $fromEmail = 'john@test.com';
 	private int $accountId = 1;
@@ -87,6 +89,7 @@ class MessageApiControllerTest extends TestCase {
 		$this->itineraryService = $this->createMock(ItineraryService::class);
 		$this->trustedSenderService = $this->createMock(TrustedSenderService::class);
 		$this->delegationService = $this->createMock(DelegationService::class);
+		$this->snoozeService = $this->createMock(SnoozeService::class);
 		$this->delegationService->method('resolveAccountUserId')->willReturn($this->userId);
 		$this->delegationService->method('resolveMessageUserId')->willReturn($this->userId);
 
@@ -106,6 +109,7 @@ class MessageApiControllerTest extends TestCase {
 			$this->itineraryService,
 			$this->trustedSenderService,
 			$this->delegationService,
+			$this->snoozeService,
 		);
 
 		$mailAccount = new MailAccount();
@@ -132,6 +136,7 @@ class MessageApiControllerTest extends TestCase {
 		$mailbox->setAccountId($this->accountId);
 		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
 		$imapMessage = $this->createMock(IMAPMessage::class);
+
 
 		$this->logger->expects(self::never())
 			->method('warning');
@@ -759,6 +764,50 @@ class MessageApiControllerTest extends TestCase {
 			true,
 			[]
 		);
+
+		$this->assertEquals($expected, $actual);
+	}
+
+	public function testSnooze(): void {
+		$destMailboxId = 99;
+		$unixTimestamp = 1755600000;
+
+		$message = new Message();
+		$message->setId($this->messageId);
+		$message->setMailboxId($this->mailboxId);
+		$message->setUid(1);
+
+		$srcMailbox = new Mailbox();
+		$srcMailbox->setId($this->mailboxId);
+		$srcMailbox->setAccountId($this->accountId);
+
+		$dstMailbox = new Mailbox();
+		$dstMailbox->setId($destMailboxId);
+		$dstMailbox->setAccountId($this->accountId);
+
+		$this->mailManager->expects(self::once())
+			->method('getMessage')
+			->with($this->userId, $this->messageId)
+			->willReturn($message);
+		$this->mailManager->expects(self::exactly(2))
+			->method('getMailbox')
+			->willReturnMap([
+				[$this->userId, $this->mailboxId, $srcMailbox],
+				[$this->userId, $destMailboxId, $dstMailbox],
+			]);
+		$this->accountService->expects(self::exactly(2))
+			->method('find')
+			->with($this->userId, $this->accountId)
+			->willReturn($this->account);
+		$this->snoozeService->expects(self::once())
+			->method('snoozeMessage')
+			->with($message, $unixTimestamp, $this->account, $srcMailbox, $this->account, $dstMailbox);
+		$this->delegationService->expects(self::once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId snoozed message <$this->messageId> to <$unixTimestamp> on behalf of $this->userId");
+
+		$expected = new DataResponse('', Http::STATUS_OK);
+		$actual = $this->controller->snooze($this->messageId, $unixTimestamp, $destMailboxId);
 
 		$this->assertEquals($expected, $actual);
 	}
