@@ -19,8 +19,8 @@ OC.L10N.register(
     "Search" : "සොයන්න",
     "Send" : "යවන්න",
     "About" : "පිළිබඳ",
-    "Choose" : "තෝරන්න",
     "Confirm" : "තහවුරු කරන්න",
+    "Choose" : "තෝරන්න",
     "Favorite" : "ප්‍රියතම",
     "Read" : "කියවීම",
     "Back" : "ආපසු",
@@ -32,6 +32,7 @@ OC.L10N.register(
     "Decline" : "ප්‍රතික්ෂේප",
     "Remove" : "ඉවත් කරන්න",
     "Today" : "අද",
+    "No results" : "ප්‍රතිථල නැත",
     "Favorites" : "ප්‍රියතම",
     "Other" : "වෙනත්",
     "Link copied" : "සබැඳිය පිටපත් කළා",
@@ -44,7 +45,6 @@ OC.L10N.register(
     "Retry" : "නැවත උත්සාහ කරන්න",
     "Message" : "පණිවිඩය",
     "Add" : "එකතු කරන්න",
-    "Show more" : "තව පෙන්වන්න",
     "Close" : "වසන්න",
     "Body" : "අන්තර්ගතය",
     "Date" : "දිනය",
@@ -55,6 +55,8 @@ OC.L10N.register(
     "Host" : " ධාරකය",
     "Certificate" : "සහතිකය",
     "Shares" : "බෙදාගැනීම්",
-    "All" : "සියල්ල"
+    "All" : "සියල්ල",
+    "Date:" : "දිනය:",
+    "Show more" : "තව පෙන්වන්න"
 },
 "nplurals=2; plural=(n != 1);");

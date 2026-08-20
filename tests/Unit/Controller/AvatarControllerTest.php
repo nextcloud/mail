@@ -107,7 +107,7 @@ class AvatarControllerTest extends TestCase {
 
 		$expected = new Response();
 		$expected->setStatus(Http::STATUS_NOT_FOUND);
-		$expected->cacheFor(0);
+		$expected->cacheFor(60 * 60, false, true);
 		$this->assertEquals($expected, $resp);
 	}
 }

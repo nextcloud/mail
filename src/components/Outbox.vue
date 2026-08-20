@@ -4,14 +4,14 @@
 -->
 
 <template>
-	<AppContent
+	<NcAppContent
 		pane-config-key="mail-outbox"
 		:show-details="isMessageShown"
 		@update:showDetails="hideMessage">
 		<OutboxMessageContent />
 		<!-- List -->
 		<template #list>
-			<AppContentList class="outbox-list">
+			<NcAppContentList class="outbox-list">
 				<Error
 					v-if="error"
 					:error="t('mail', 'Could not open outbox')"
@@ -24,13 +24,13 @@
 					v-else
 					:key="message.id"
 					:message="message" />
-			</AppContentList>
+			</NcAppContentList>
 		</template>
-	</AppContent>
+	</NcAppContent>
 </template>
 
 <script>
-import { NcAppContent as AppContent, NcAppContentList as AppContentList } from '@nextcloud/vue'
+import { NcAppContent, NcAppContentList } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import EmptyMailbox from './EmptyMailbox.vue'
 import Error from './Error.vue'
@@ -43,8 +43,8 @@ import useOutboxStore from '../store/outboxStore.js'
 export default {
 	name: 'Outbox',
 	components: {
-		AppContent,
-		AppContentList,
+		NcAppContent,
+		NcAppContentList,
 		Error,
 		LoadingSkeleton,
 		EmptyMailbox,
@@ -90,7 +90,7 @@ export default {
 		await this.fetchMessages()
 	},
 
-	unmounted() {
+	destroyed() {
 		clearInterval(this.refreshInterval)
 	},
 

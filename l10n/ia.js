@@ -18,11 +18,11 @@ OC.L10N.register(
     "Go back" : "Retornar",
     "Cancel" : "Cancellar",
     "General" : "General",
+    "Manually" : "Manualmente",
     "Delete" : "Deler",
     "Search" : "Cercar",
     "Send" : "Inviar",
     "Refresh" : "Refrescar",
-    "Choose a file to add as attachment" : "Selectiona un file pro adder como attachamento",
     "Confirm" : "Confirmar",
     "Revoke" : "Revocar",
     "Favorite" : "Favorite",
@@ -48,6 +48,7 @@ OC.L10N.register(
     "Rename" : "Renominar",
     "Reply" : "Responder",
     "Add" : "Adder",
+    "Collapse" : "Collaber",
     "Close" : "Clauder",
     "Date" : "Date",
     "Tags" : "Etiquettas",
@@ -70,6 +71,7 @@ OC.L10N.register(
     "All" : "Tote",
     "All inboxes" : "Tote cassas de entrata",
     "Could not load {tag}{name}{endtag}" : "Impossibile cargar {tag}{name}{endtag}",
-    "There was a problem loading {tag}{name}{endtag}" : "Un problema occurreva durante le carga de {tag}{name}{endtag}"
+    "There was a problem loading {tag}{name}{endtag}" : "Un problema occurreva durante le carga de {tag}{name}{endtag}",
+    "Choose a file to add as attachment" : "Selectiona un file pro adder como attachamento"
 },
 "nplurals=2; plural=(n != 1);");

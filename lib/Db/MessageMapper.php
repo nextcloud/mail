@@ -468,7 +468,6 @@ class MessageMapper extends QBMapper {
 			}
 		}
 
-
 		try {
 			// UPDATE messages SET flag true/false WHERE uid in (uids) -> for each flag
 			// => total of 20 queries
@@ -949,7 +948,6 @@ class MessageMapper extends QBMapper {
 			);
 		}
 
-
 		if ($query->getHasAttachments()) {
 			$select->andWhere(
 				$qb->expr()->eq('m.flag_attachments', $qb->createNamedParameter($query->getHasAttachments(), IQueryBuilder::PARAM_INT))
@@ -1264,13 +1262,14 @@ class MessageMapper extends QBMapper {
 		if ($ids === []) {
 			return [];
 		}
+		$direction = strtoupper($sortOrder) === 'DESC' ? 'DESC' : 'ASC';
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('*')
 			->from($this->getTableName())
 			->where(
 				$qb->expr()->in('id', $qb->createParameter('ids'))
 			)
-			->orderBy($orderBy, $sortOrder);
+			->orderBy($orderBy, $direction);
 
 		$results = [];
 		foreach (array_chunk($ids, 1000) as $chunk) {

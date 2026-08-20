@@ -91,9 +91,6 @@ class AttachmentStorage {
 		$file->putContent($fileContent);
 	}
 
-
-
-
 	/**
 	 * @param string $userId
 	 * @param int $attachmentId

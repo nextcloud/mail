@@ -16,42 +16,51 @@
 						:disable-menu="true"
 						:avatar="getAvatarForRecipient(recipients[0])" />
 				</div>
-				<div class="recipient-info__details">
-					<DisplayContactDetails :email="recipients[0].email" />
+				<div class="recipient-info__contact">
+					<strong class="recipient-info__contact-name">{{ recipients[0].label }}</strong>
+					<span v-if="recipients[0].email !== recipients[0].label" class="recipient-info__contact-email">
+						{{ recipients[0].email }}
+					</span>
 				</div>
+			</div>
+			<div class="recipient-info__details">
+				<DisplayContactDetails :email="recipients[0].email" />
 			</div>
 		</div>
 
 		<!-- For multiple recipients -->
 		<div v-else-if="recipients && recipients.length > 1" class="recipient-info__multiple">
 			<div v-for="(recipient, index) in recipients" :key="recipient.email" class="recipient-info__item">
+				<NcButton
+					class="recipient-info__expand-toggle"
+					variant="tertiary-no-background"
+					:aria-label="isExpanded(index) ? t('mail', 'Collapse') : t('mail', 'Expand')"
+					@click="toggleExpand(index)">
+					<template #icon>
+						<IconArrowUp v-if="isExpanded(index)" :size="20" />
+						<IconArrowDown v-else :size="20" />
+					</template>
+				</NcButton>
 				<div class="recipient-info__header">
-					<div class="recipient-info__avatar">
+					<div class="recipient-info__avatar recipient-info__avatar--small">
 						<Avatar
 							:display-name="recipient.label"
 							:email="recipient.email"
-							:size="55"
+							:size="36"
 							:disable-tooltip="true"
 							:disable-menu="true"
 							:avatar="getAvatarForRecipient(recipient)" />
 					</div>
-					<div v-if="!expandedRecipients[index]" class="recipient-info__name">
-						<h6>{{ recipient.email }}</h6>
-					</div>
-					<div class="recipient-info__expand-toggle" @click="toggleExpand(index)">
-						<template v-if="isExpanded(index)">
-							<div class="recipient-info__show-less">
-								<IconArrowUp :size="20" />
-								<span>{{ t('mail', 'Show less') }}</span>
-							</div>
-						</template>
-						<template v-else>
-							<IconArrowDown :size="20" />
-							<span>{{ t('mail', 'Show more') }}</span>
-						</template>
+					<div class="recipient-info__contact">
+						<strong class="recipient-info__contact-name">{{ recipient.label }}</strong>
+						<span v-if="recipient.email !== recipient.label" class="recipient-info__contact-email">
+							{{ recipient.email }}
+						</span>
 					</div>
 				</div>
-				<div v-if="expandedRecipients[index]" class="recipient-info__details">
+				<div
+					class="recipient-info__details recipient-info__details--multiple"
+					:class="{ 'recipient-info__details--expanded': isExpanded(index) }">
 					<DisplayContactDetails :email="recipient.email" />
 				</div>
 			</div>
@@ -60,6 +69,8 @@
 </template>
 
 <script>
+import { translate as t } from '@nextcloud/l10n'
+import { NcButton } from '@nextcloud/vue'
 import { mapGetters } from 'pinia'
 import IconArrowDown from 'vue-material-design-icons/ArrowDown.vue'
 import IconArrowUp from 'vue-material-design-icons/ArrowUp.vue'
@@ -73,6 +84,7 @@ export default {
 		IconArrowDown,
 		IconArrowUp,
 		DisplayContactDetails,
+		NcButton,
 	},
 
 	data() {
@@ -91,8 +103,16 @@ export default {
 	watch: {
 		recipients: {
 			immediate: true,
-			handler() {
-				this.expandedRecipients = this.recipients.map(() => false)
+			handler(newRecipients) {
+				const next = newRecipients.length
+				const current = this.expandedRecipients.length
+				if (next > current) {
+					for (let i = current; i < next; i++) {
+						this.$set(this.expandedRecipients, i, false)
+					}
+				} else if (next < current) {
+					this.expandedRecipients = this.expandedRecipients.slice(0, next)
+				}
 			},
 		},
 	},
@@ -121,51 +141,100 @@ export default {
 
 <style scoped lang="scss">
 .recipient-info {
-	display: inline;
 	width: 100%;
 
 	&__single {
-		width: 370px;
-		display: inline-block;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: calc(var(--default-grid-baseline) * 2);
 	}
 
 	&__avatar {
-		margin-top: 20px;
-		display: inline;
-		float: inline-start;
-		padding: 20px;
-	}
-
-	&__details {
-		max-width: 100%;
-	}
-
-	&__multiple {
-		margin-top: 10px;
 		display: flex;
-		flex-direction: column;
+		flex-shrink: 0;
 	}
 
-	&__item {
-		margin-bottom: 10px;
-	}
-
-	&__expand-toggle {
-		cursor: pointer;
-		display: flex;
-		gap: 5px;
+	&__avatar--small {
+		flex-shrink: 0;
 	}
 
 	&__header {
-		display: contents;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: calc(var(--default-grid-baseline) * 2);
 	}
 
-	&__name {
-		margin-top: 50px;
+	&__contact {
+		display: flex;
+		flex-direction: column;
+		gap: var(--default-grid-baseline);
+		min-width: 0;
+		overflow: hidden;
 	}
 
-	&__show-less {
-		margin-top: 40px;
+	&__contact-name {
+		display: block;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	&__contact-email {
+		display: block;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		color: var(--color-text-maxcontrast);
+	}
+
+	&__details {
+		width: 100%;
+		overflow: hidden;
+
+		:deep(.contact-title) {
+			display: none;
+		}
+
+		&--multiple {
+			:deep(.contact-details-wrapper) {
+				display: none;
+			}
+
+			&.recipient-info__details--expanded {
+				:deep(.contact-details-wrapper) {
+					display: block;
+				}
+			}
+		}
+	}
+
+	&__multiple {
+		display: flex;
+		flex-direction: column;
+		gap: calc(var(--default-grid-baseline) * 2);
+	}
+
+	&__item {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--default-grid-baseline);
+		border-bottom: 1px solid var(--color-border);
+		padding-bottom: calc(var(--default-grid-baseline) * 2);
+		padding-inline-end: calc(var(--default-clickable-area) + var(--default-grid-baseline));
+
+		&:last-child {
+			border-bottom: none;
+		}
+	}
+
+	&__expand-toggle {
+		position: absolute;
+		top: 0;
+		inset-inline-end: 0;
 	}
 }
 </style>

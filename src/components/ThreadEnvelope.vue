@@ -66,6 +66,10 @@
 				<div class="envelope__header__left__sender-subject-tags">
 					<div class="sender" :class="{ 'sender--expanded': expanded }">
 						{{ envelope.from && envelope.from[0] ? envelope.from[0].label : '' }}
+						<span v-if="hasAiGeneratedContent" class="ai-generated-label">
+							<AiIcon :size="14" />
+							{{ t('mail', 'Contains AI content') }}
+						</span>
 					</div>
 					<NcButton
 						v-if="expanded && hasRecipients"
@@ -82,12 +86,11 @@
 							<ChevronDownIcon v-else :size="16" />
 						</template>
 					</NcButton>
-					<p
-						v-else-if="expanded"
-						class="sender__email"
-						:style="{ color: senderEmailColor }">
-						{{ senderEmail }}
-					</p>
+					<RecipientBubble
+						v-else-if="expanded && envelope.from && envelope.from[0]"
+						:email="envelope.from[0].email"
+						:label="envelope.from[0].label"
+						:size="24" />
 					<div v-if="hasChangedSubject" class="subline">
 						{{ cleanSubject }}
 					</div>
@@ -282,6 +285,7 @@
 						v-if="showTranslationModal"
 						:rich-parameters="{}"
 						:message="plainTextBody"
+						:detected-foreign-language="detectedForeignLanguage"
 						@close="onCloseTranslationModal" />
 					<MailFilterFromEnvelope
 						v-if="showMailFilterFromEnvelope"
@@ -292,6 +296,15 @@
 			</div>
 		</div>
 		<div v-if="expanded && showRecipients" class="envelope__recipients">
+			<div v-if="envelope.from && envelope.from.length" class="recipients">
+				<span class="recipients__label">{{ t('mail', 'From:') }}</span>
+				<RecipientBubble
+					v-for="recipient in envelope.from"
+					:key="recipient.email"
+					:email="recipient.email"
+					:label="recipient.label"
+					:size="24" />
+			</div>
 			<div v-if="envelope.to && envelope.to.length" class="recipients">
 				<span class="recipients__label">{{ t('mail', 'To:') }}</span>
 				<div class="recipients__list">
@@ -336,6 +349,7 @@
 			:smart-replies="showFollowUpHeader ? [] : smartReplies"
 			:reply-button-label="replyButtonLabel"
 			@load="onMessageLoaded"
+			@print-shortcut="$emit('print-shortcut')"
 			@translate="onOpenTranslationModal"
 			@reply="(body) => onReply(body, showFollowUpHeader)" />
 		<Error
@@ -384,6 +398,7 @@ import { NcActionButton, NcButton } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import NcActions from '@nextcloud/vue/components/NcActions'
 import NcActionText from '@nextcloud/vue/components/NcActionText'
+import AiIcon from '@nextcloud/vue/components/NcAssistantIcon'
 import ArchiveIcon from 'vue-material-design-icons/ArchiveArrowDownOutline.vue'
 import ChevronDownIcon from 'vue-material-design-icons/ChevronDown.vue'
 import ChevronUpIcon from 'vue-material-design-icons/ChevronUp.vue'
@@ -439,6 +454,7 @@ const Loading = Object.seal({
 export default {
 	name: 'ThreadEnvelope',
 	components: {
+		AiIcon,
 		MailFilterFromEnvelope,
 		EventModal,
 		TaskModal,
@@ -539,6 +555,7 @@ export default {
 			showTaskModal: false,
 			showTagModal: false,
 			showTranslationModal: false,
+			detectedForeignLanguage: null,
 			plainTextBody: '',
 			rawMessage: '', // Will hold the raw source of the message when requested
 			isInternal: true,
@@ -572,6 +589,17 @@ export default {
 
 		account() {
 			return this.mainStore.getAccount(this.envelope.accountId)
+		},
+
+		/**
+		 * Whether this message is rendered and can therefore be printed. The
+		 * message body is only in the DOM once the message itself has been
+		 * fetched and its loading state has settled.
+		 *
+		 * @return {boolean}
+		 */
+		printable() {
+			return this.loading === Loading.Done && this.message !== undefined
 		},
 
 		senderEmailColor() {
@@ -608,6 +636,10 @@ export default {
 		isEncrypted() {
 			return this.envelope.previewText
 				&& isPgpText(this.envelope.previewText)
+		},
+
+		hasAiGeneratedContent() {
+			return this.message?.hasAiGeneratedHeader === true
 		},
 
 		isImportant() {
@@ -795,7 +827,7 @@ export default {
 		}, 100)
 	},
 
-	beforeUnmount() {
+	beforeDestroy() {
 		if (this.seenTimer !== undefined) {
 			logger.info('Navigating away before seenTimer delay, will not mark message as seen/read')
 			clearTimeout(this.seenTimer)
@@ -845,12 +877,17 @@ export default {
 					clearTimeout(loadingTimeout)
 				}
 
-				if (!this.envelope.flags.seen && this.hasSeenAcl) {
-					logger.info('Starting timer to mark message as seen/read')
+				const autoMarkReadSetting = this.mainStore.getPreference('auto-mark-as-read', '3000')
+				const delay = parseInt(autoMarkReadSetting, 10)
+
+				if (!this.envelope.flags.seen && this.hasSeenAcl && delay >= 0) {
+					logger.info(`Starting timer (${delay}ms) to mark message as seen/read`)
 					this.seenTimer = setTimeout(() => {
-						this.mainStore.toggleEnvelopeSeen({ envelope: this.envelope })
+						if (!this.envelope.flags.seen) {
+							this.mainStore.toggleEnvelopeSeen({ envelope: this.envelope })
+						}
 						this.seenTimer = undefined
-					}, 2000)
+					}, delay)
 				}
 
 				if (this.message.hasHtmlBody) {
@@ -1145,7 +1182,8 @@ export default {
 			this.showTagModal = false
 		},
 
-		onOpenTranslationModal() {
+		onOpenTranslationModal(detectedForeignLanguage = null) {
+			this.detectedForeignLanguage = typeof detectedForeignLanguage === 'string' ? detectedForeignLanguage : null
 			try {
 				if (this.message.hasHtmlBody) {
 					let text = new Text('html', this.message.body)
@@ -1189,6 +1227,10 @@ export default {
 <style lang="scss" scoped>
 	.sender {
 		margin-inline-start: calc(var(--default-grid-baseline) * 3);
+		display: flex;
+		align-items: center;
+		gap: calc(var(--default-grid-baseline) * 1.5);
+		min-width: 0;
 
 		&--expanded {
 			color: var(--color-text-maxcontrast);
@@ -1317,7 +1359,7 @@ export default {
 				margin-inline-start: auto;
 				display: flex;
 				align-items: center;
-				gap: 4px;
+				gap: var(--default-grid-baseline);
 			}
 
 			&__avatar {
@@ -1484,5 +1526,12 @@ export default {
 		font-weight: normal;
 		display: inline;
 		align-items: center;
+	}
+
+	.ai-generated-label {
+		display: flex;
+		align-items: center;
+		gap: var(--default-grid-baseline);
+		opacity: 0.8;
 	}
 </style>

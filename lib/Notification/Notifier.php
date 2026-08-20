@@ -40,7 +40,6 @@ class Notifier implements INotifier {
 		return $this->factory->get(Application::APP_ID)->t('Mail');
 	}
 
-
 	#[\Override]
 	public function prepare(INotification $notification, string $languageCode): INotification {
 		if ($notification->getApp() !== Application::APP_ID) {

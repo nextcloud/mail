@@ -71,7 +71,6 @@ class ProxyControllerTest extends TestCase {
 		$this->logger = new NullLogger();
 	}
 
-
 	public function testProxyWithoutCookies(): void {
 		$src = 'http://example.com';
 		$this->request->expects($this->once())

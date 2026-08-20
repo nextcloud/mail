@@ -19,7 +19,6 @@ class AvatarServiceIntegrationTest extends TestCase {
 	/** @var IAvatarService */
 	private $service;
 
-
 	private function clearCache() {
 		/* @var $cacheFactory ICacheFactory */
 		$cacheFactory = Server::get(ICacheFactory::class);
@@ -38,7 +37,6 @@ class AvatarServiceIntegrationTest extends TestCase {
 	public function testJansGravatar() {
 		$this->markTestSkipped('Unreliable test');
 		return;
-
 		$avatar = $this->service->getAvatar('hey@jancborchardt.net', 'john');
 		$this->assertNotNull($avatar);
 		$this->assertEquals('https://secure.gravatar.com/avatar/2fd3f4d5d762955e5b603794a888fa97?size=128&d=404', $avatar->getUrl());

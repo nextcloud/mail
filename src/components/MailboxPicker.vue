@@ -3,83 +3,54 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<Modal @close="onClose">
-		<div ref="content" class="modal-content">
-			<h2 class="oc-dialog-title">
-				{{ t('mail', 'Choose target folder') }}
-			</h2>
-			<span class="crumbs">
-				<div @click.prevent="onClickHome">
-					<IconInbox :size="20" />
-				</div>
-				<div
-					v-for="(box, index) in mailboxCrumbs"
+	<NcDialog
+		:name="t('mail', 'Choose target folder')"
+		:buttons="saveButtons"
+		@closing="onClose">
+		<NcInputField
+			v-model="filterName"
+			:label="t('mail', 'Search')" />
+		<NcBreadcrumbs v-if="!filtering">
+			<NcBreadcrumb
+				v-for="(box, index) in mailboxCrumbs"
+				:key="box.databaseId"
+				:name="getMailboxTitle(box)"
+				@click="onClickCrumb(index)" />
+		</NcBreadcrumbs>
+		<div v-if="filteredMailboxes.length > 0">
+			<ul>
+				<NcListItem
+					v-for="box in filteredMailboxes"
+					compact
 					:key="box.databaseId"
-					class="level">
-					<IconBreadcrumb :size="20" />
-					<a @click.prevent="onClickCrumb(index)">
-						{{ getMailboxTitle(box) }}
-					</a>
-				</div>
-			</span>
-			<div class="mailbox-list">
-				<ul v-if="filteredMailboxes.length > 0">
-					<li
-						v-for="box in filteredMailboxes "
-						:key="box.databaseId"
-						@click.prevent="onClickMailbox(box)">
-						<IconInbox v-if="box.specialRole === 'inbox'" :size="20" />
-						<IconDraft
-							v-else-if="box.specialRole === 'drafts'"
-							:size="20" />
-						<IconSent
-							v-else-if="box.specialRole === 'sent'"
-							:size="20" />
-						<IconArchive
-							v-else-if="box.specialRole === 'archive'"
-							:size="20" />
-						<IconTrash
-							v-else-if="box.specialRole === 'trash'"
-							:size="20" />
-						<IconFolder
-							v-else
-							:size="20" />
-						<div class="mailbox-title">
-							{{ getMailboxTitle(box) }}
-						</div>
-					</li>
-				</ul>
-				<IconFolder v-else :size="65" />
-				<div class="empty-icon empty" />
-				<h2>{{ t('mail', 'No more submailboxes in here') }}</h2>
-			</div>
-			<div class="buttons">
-				<ButtonVue
-					type="primary"
-					:disabled="loading || (!allowRoot && !selectedMailboxId)"
-					:aria-label="loading ? labelSelectLoading : labelSelect"
-					@click="onSelect">
+					:name="getMailboxTitle(box)"
+					@click.prevent="onClickMailbox(box)">
 					<template #icon>
-						<IconLoading v-if="loading" :size="20" />
+						<MailboxIcon
+							:mailbox="box"
+							:account="account" />
 					</template>
-					{{ loading ? labelSelectLoading : labelSelect }}
-				</ButtonVue>
-			</div>
+				</NcListItem>
+			</ul>
 		</div>
-	</Modal>
+		<NcEmptyContent v-else>
+			<template #icon>
+				<IconFolder />
+			</template>
+			<template #description>
+				<p v-if="filterName == ''">{{ t('mail', 'No more submailboxes in here') }}</p>
+				<p v-else>{{ t('mail', 'No results') }}</p>
+			</template>
+		</NcEmptyContent>
+	</NcDialog>
 </template>
 
 <script>
 import { translate as t } from '@nextcloud/l10n'
-import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcModal as Modal } from '@nextcloud/vue'
+import { NcBreadcrumb, NcBreadcrumbs, NcDialog, NcEmptyContent, NcInputField, NcListItem } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
-import IconArchive from 'vue-material-design-icons/ArchiveArrowDownOutline.vue'
-import IconBreadcrumb from 'vue-material-design-icons/ChevronRight.vue'
 import IconFolder from 'vue-material-design-icons/FolderOutline.vue'
-import IconInbox from 'vue-material-design-icons/HomeOutline.vue'
-import IconDraft from 'vue-material-design-icons/PencilOutline.vue'
-import IconSent from 'vue-material-design-icons/SendOutline.vue'
-import IconTrash from 'vue-material-design-icons/TrashCanOutline.vue'
+import MailboxIcon from './icons/MailboxIcon.vue'
 import { translate as translateMailboxName } from '../i18n/MailboxTranslator.js'
 import useMainStore from '../store/mainStore.js'
 import { mailboxHasRights } from '../util/acl.js'
@@ -87,16 +58,14 @@ import { mailboxHasRights } from '../util/acl.js'
 export default {
 	name: 'MailboxPicker',
 	components: {
-		ButtonVue,
-		Modal,
-		IconInbox,
-		IconDraft,
-		IconSent,
-		IconArchive,
-		IconTrash,
+		NcDialog,
+		NcEmptyContent,
+		NcBreadcrumbs,
+		NcBreadcrumb,
+		NcInputField,
+		NcListItem,
 		IconFolder,
-		IconBreadcrumb,
-		IconLoading,
+		MailboxIcon,
 	},
 
 	props: {
@@ -142,14 +111,36 @@ export default {
 	data() {
 		return {
 			selectedMailboxId: undefined,
-			mailboxCrumbs: [],
+			filterName: '',
+			mailboxCrumbs: [
+				{
+					databaseId: undefined,
+					specialUse: [],
+					displayName: '/',
+				},
+			],
 		}
 	},
 
 	computed: {
 		...mapStores(useMainStore),
+
+		filtering() {
+			return this.filterName !== ''
+		},
+
 		mailboxes() {
-			if (!this.selectedMailboxId) {
+			if (this.filtering) {
+				const actualFilter = this.filterName.toLowerCase().trim()
+				const mailboxes = []
+				for (const mailbox of this.mainStore.getRecursiveMailboxIterator(this.account.accountId)) {
+					const mailboxName = translateMailboxName(mailbox)
+					if (mailboxName.toLowerCase().includes(actualFilter)) {
+						mailboxes.push(mailbox)
+					}
+				}
+				return mailboxes
+			} else if (!this.selectedMailboxId) {
 				return this.mainStore.getMailboxes(this.account.accountId)
 			} else {
 				return this.mainStore.getSubMailboxes(this.selectedMailboxId)
@@ -162,37 +153,77 @@ export default {
 			}
 			return this.mailboxes.filter((mailbox) => mailboxHasRights(mailbox, 'i'))
 		},
+
+		saveButtons() {
+			return [
+				{
+					variant: 'primary',
+					disabled: this.loading || (!this.allowRoot && !this.selectedMailboxId),
+					callback: this.onSelect,
+					label: this.loading ? this.labelSelectLoading : this.labelSelect,
+				},
+			]
+		},
 	},
 
 	methods: {
-		getMailboxIcon(mailbox) {
-			return mailbox.specialRole ? 'icon-' + mailbox.specialRole : 'icon-folder'
+		translateMailboxPath(mailbox) {
+			const fullname = []
+
+			let parent = mailbox
+			while (parent) {
+				fullname.push(translateMailboxName(parent))
+				parent = this.mainStore.getParentMailbox(parent.databaseId)
+			}
+
+			return fullname.reverse().join(' / ')
 		},
 
 		getMailboxTitle(mailbox) {
-			return translateMailboxName(mailbox)
-		},
-
-		onClickHome() {
-			this.selectedMailboxId = undefined
-			this.$emit('update:selected', undefined)
-			this.mailboxCrumbs = []
+			if (this.filtering) {
+				return this.translateMailboxPath(mailbox)
+			} else {
+				return translateMailboxName(mailbox)
+			}
 		},
 
 		onClickCrumb(index) {
+			this.filterName = ''
 			this.selectedMailboxId = this.mailboxCrumbs[index].databaseId
 			this.$emit('update:selected', this.selectedMailboxId)
 			this.mailboxCrumbs = this.mailboxCrumbs.slice(0, index + 1)
 		},
 
-		onClickMailbox(mailbox) {
-			this.selectedMailboxId = mailbox.databaseId
-			this.$emit('update:selected', this.selectedMailboxId)
-			this.mailboxCrumbs.push(mailbox)
+		rebuildBreadcrumb(mailbox) {
+			const newBreadcrumb = []
+
+			let parent = mailbox
+			while (parent) {
+				newBreadcrumb.push(parent)
+				parent = this.mainStore.getParentMailbox(parent.databaseId)
+			}
+
+			newBreadcrumb.push(this.mailboxCrumbs[0])
+
+			this.mailboxCrumbs = newBreadcrumb.reverse()
 		},
 
-		onSelect() {
-			this.$emit('select', this.selectedMailboxId)
+		onClickMailbox(mailbox) {
+			if (this.filtering) {
+				this.filterName = ''
+				this.rebuildBreadcrumb(mailbox)
+			} else {
+				this.mailboxCrumbs.push(mailbox)
+			}
+
+			this.selectedMailboxId = mailbox.databaseId
+			this.$emit('update:selected', this.selectedMailboxId)
+		},
+
+		async onSelect() {
+			return new Promise((resolve) => {
+				this.$emit('select', this.selectedMailboxId, () => resolve())
+			})
 		},
 
 		onClose() {
@@ -201,122 +232,3 @@ export default {
 	},
 }
 </script>
-
-<style lang="scss" scoped>
-:deep(.modal-container) {
-	width: calc(100vw - 120px) !important;
-	height: calc(100vh - 120px) !important;
-	max-width: 600px !important;
-	max-height: 500px !important;
-}
-
-.modal-content {
-	display: flex;
-	box-sizing: border-box;
-	width: 100%;
-	height: 100%;
-	flex-direction: column;
-	padding: calc(var(--default-grid-baseline) * 4);
-}
-
-.crumbs {
-	display: inline-flex;
-	padding-inline-end: 0;
-	flex-wrap: wrap;
-
-	.level {
-		display: inline-flex;
-		height: 44px;
-		min-width: 0px;
-		flex: 0 0 auto;
-		order: 1;
-		padding-inline-end: calc(var(--default-grid-baseline) * 2);
-		background-position: right center;
-		background-size: auto 24px;
-		margin-top: calc(var(--default-grid-baseline) * -2.5);
-	}
-
-	a {
-		position: relative;
-		padding: calc(var(--default-grid-baseline) * 3);
-		opacity: 0.5;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-		overflow: hidden;
-		flex: 0 0 auto;
-		min-width: 0px;
-		max-width: 200px;
-
-		&:hover {
-			opacity: 0.7;
-		}
-	}
-
-	a.icon-home {
-		width: 0px;
-		background-position: left center;
-	}
-}
-
-.mailbox-list {
-	display: inline-block;
-	width: 100%;
-	height: 100%;
-	overflow-y: auto;
-	flex: 1;
-
-	li {
-		display: flex;
-		cursor: pointer;
-
-		&:hover {
-			background-color: var(--color-background-hover);
-		}
-
-		&:not(:last-child) {
-			border-bottom: var(--border-width-input) solid var(--color-border);
-		}
-	}
-
-	h2 {
-		width: 100%;
-		color: var(--color-text-maxcontrast);
-		text-align: center;
-		margin-top: 80px;
-		opacity: 0.4;
-		background-size: 64px;
-		height: 64px;
-	}
-
-	.mailbox-icon {
-		width: 24px;
-		height: 24px;
-		padding: calc(var(--default-grid-baseline) * 3);
-		opacity: 0.9;
-		background-size: 24px;
-	}
-
-	.mailbox-title {
-		padding: calc(var(--default-grid-baseline) * 3) calc(var(--default-grid-baseline) * 3) calc(var(--default-grid-baseline) * 3) 0;
-		flex: 1;
-		overflow: hidden;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-	}
-}
-
-.buttons {
-	display: flex;
-	justify-content: flex-end;
-	padding-top: calc(var(--default-grid-baseline) * 2);
-
-	.spinner {
-		margin-inline-end: var(--default-grid-baseline);
-	}
-}
-
-.material-design-icon {
-	opacity: .7;
-	margin-inline-end: calc(var(--default-grid-baseline) * 1.5);
-}
-</style>

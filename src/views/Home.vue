@@ -12,7 +12,7 @@
 			:mailbox="activeMailbox" />
 
 		<template v-if="hasComposerSession && accounts !== null">
-			<ComposerSessionIndicator @close="onCloseMessageModal" />
+			<ComposerSessionIndicator v-if="!showMessageComposer" @close="onCloseMessageModal" />
 			<NewMessageModal ref="newMessageModal" :accounts="accounts" />
 		</template>
 	</NcContent>
@@ -50,7 +50,7 @@ export default {
 
 	computed: {
 		...mapStores(useMainStore),
-		...mapState(useMainStore, ['composerSessionId']),
+		...mapState(useMainStore, ['composerSessionId', 'showMessageComposer']),
 		accounts() {
 			return this.mainStore.getAccounts.filter((a) => !a.isUnified)
 		},
@@ -177,28 +177,7 @@ export default {
 
 </script>
 
-<style lang="scss">
-@media print {
-	body {
-		/*
-		 * Nextcloud uses an inner scrolling but we need the
-		 * full page to scroll for print
-		 */
-		position: relative;
-		height: initial;
-	}
-}
-</style>
-
 <style lang="scss" scoped>
-@media print {
-	.mail-content {
-		height: initial;
-		/* needs important because of a more specific selector */
-		position: relative !important;
-	}
-}
-
 :deep(.app-content-details) {
 	margin: 0 auto;
 	display: flex;

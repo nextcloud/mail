@@ -68,6 +68,15 @@ Single-page Vue 2 app. All routes render through `views/Home.vue`.
   ```
 - **OpenAPI**: `ResponseDefinitions.php` documents API types; run `composer openapi` to regenerate the spec.
 
+### Code comments
+
+The diff shows *what* changed and *how*; a comment exists only to capture *why* — intent the code and names can't convey on their own.
+
+- **Default to none.** Most changes need zero comments; express intent through clear names and small functions. This codebase uses essentially none.
+- **Comment the *why*, never the *how*.** Legitimate reasons: a non-obvious workaround (link the issue/ticket), a subtle business rule, a deliberate deviation from the expected. Never narrate what the next lines do.
+- **No multi-line explanatory blocks, AI-style walkthroughs, or section banners.**
+- **Remove a stale comment** only when you're already editing that code for the task at hand — no drive-by cleanups.
+
 ## Testing
 
 ### Unit Tests
@@ -124,6 +133,13 @@ The branch will be rebased and squashed into a clean history before merge (CI en
 
 ### Commit Message Format
 
+Commit messages are the project's durable record — read years later through `git log` and `git blame`. The diff already shows *what* changed and *how*; the message exists to capture **intent**: the *why*.
+
+- **Subject**: conventional-commit, imperative, concise — aim for under 60 characters, or GitHub truncates it.
+- **Body**: state the facts plainly — the problem and the reason for this approach. Keep it matter-of-fact; no storytelling, filler, or marketing tone. Omit it only when the subject already conveys the intent.
+- **Record what was intentionally left out.** Note deliberate omissions and deferrals (and why) so a later reader can tell a conscious decision from an oversight.
+- **Don't restate the diff.** Avoid mechanical bullet lists that echo the changed lines.
+
 All commits must include two trailers at the end:
 1. Agent/model attribution: `Assisted-by: <AgentName>:<model-id>`
 2. DCO sign-off: Use `git commit -s` to add automatically
@@ -134,12 +150,16 @@ This ensures the sign-off includes your configured Git user email.
 
 Example:
 ```
-fix(deps): update package dependencies
+fix(imap): tolerate servers that omit UIDVALIDITY on SELECT
 
-- update package X to latest stable version
-- verify all tests pass
+Some proxies drop UIDVALIDITY, which made us discard the local
+cache and force a full resync on every run. Treat a missing
+value as unchanged instead.
 
-Assisted-by: Claude:claude-sonnet-4-6
+Assisted-by: Devstral:devstral-small-2507
+Assisted-by: ClaudeCode:claude-sonnet-4-6
+Assisted-by: Qwen:qwen3-coder-32b
+Assisted-by: Copilot:gpt-4o
 Signed-off-by: Name <email>
 ```
 

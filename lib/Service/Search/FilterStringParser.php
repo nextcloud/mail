@@ -127,7 +127,6 @@ class FilterStringParser {
 					}
 				}
 
-
 				return true;
 		}
 

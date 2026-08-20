@@ -27,9 +27,9 @@ OC.L10N.register(
     "Search" : "Klask",
     "Send" : "Kas",
     "Refresh" : "Freskaat",
-    "Choose" : "Dibab",
     "Confirm" : "Kadarnañ",
     "Revoke" : "Digargañ",
+    "Choose" : "Dibab",
     "Unfavorite" : "Digaretañ",
     "Favorite" : "Pennrollañ",
     "Back" : "Distro",
@@ -43,6 +43,7 @@ OC.L10N.register(
     "Today" : "Hiziv",
     "Yesterday" : "Dec'h",
     "Choose target folder" : "Dibab an teuliad moned",
+    "No results" : "Disoc'h ebet",
     "Favorites" : "Pennrolloù",
     "Important info" : "Titouroù pouezus",
     "Other" : "All",
@@ -66,6 +67,7 @@ OC.L10N.register(
     "Close" : "Serriñ",
     "Date" : "Deiz",
     "Tags" : "Klavioù",
+    "From:" : "Eus :",
     "To:" : "Da :",
     "Translate to" : "Treiñ e",
     "Deleted" : "Dilamet",
@@ -82,6 +84,7 @@ OC.L10N.register(
     "Shares" : "Rannañ",
     "Account connected" : "Kont kenstaged",
     "All" : "Pep tra",
-    "Error while sharing file" : "Ur fazi a zo bet en ur rannañ ar restr"
+    "Error while sharing file" : "Ur fazi a zo bet en ur rannañ ar restr",
+    "Date:" : "Deiziad:"
 },
 "nplurals=5; plural=((n%10 == 1) && (n%100 != 11) && (n%100 !=71) && (n%100 !=91) ? 0 :(n%10 == 2) && (n%100 != 12) && (n%100 !=72) && (n%100 !=92) ? 1 :(n%10 ==3 || n%10==4 || n%10==9) && (n%100 < 10 || n% 100 > 19) && (n%100 < 70 || n%100 > 79) && (n%100 < 90 || n%100 > 99) ? 2 :(n != 0 && n % 1000000 == 0) ? 3 : 4);");

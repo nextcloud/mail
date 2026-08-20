@@ -5,9 +5,9 @@
 <template>
 	<div id="mail-content">
 		<NeedsTranslationInfo
-			v-if="needsTranslation"
+			v-if="detectedForeignLanguage"
 			:is-html="false"
-			@translate="$emit('translate')" />
+			@translate="$emit('translate', detectedForeignLanguage)" />
 		<MdnRequest :message="message" />
 		<div id="message-container" v-html="nl2br(enhancedBody)" />
 		<details v-if="signature" class="mail-signature">
@@ -18,10 +18,9 @@
 </template>
 
 <script>
-import { loadState } from '@nextcloud/initial-state'
 import MdnRequest from './MdnRequest.vue'
 import NeedsTranslationInfo from './NeedsTranslationInfo.vue'
-import { needsTranslation } from '../service/AiIntergrationsService.js'
+import { detectForeignLanguage } from '../util/languageDetection.ts'
 
 const regFirstParagraph = /(.+\n\r?)+(\n\r?)+/
 
@@ -47,8 +46,7 @@ export default {
 
 	data() {
 		return {
-			needsTranslation: false,
-			enabledFreePrompt: loadState('mail', 'llm_freeprompt_available', false),
+			detectedForeignLanguage: null,
 		}
 	},
 
@@ -82,9 +80,7 @@ export default {
 	},
 
 	async mounted() {
-		if (this.enabledFreePrompt && this.message) {
-			this.needsTranslation = await needsTranslation(this.message.databaseId)
-		}
+		this.detectedForeignLanguage = await detectForeignLanguage(this.body ?? '')
 	},
 
 	methods: {
@@ -106,7 +102,7 @@ export default {
 </style>
 
 <style lang="scss" scoped>
-.message-container,
+#message-container,
 .mail-signature {
 	white-space: pre-wrap;
 }

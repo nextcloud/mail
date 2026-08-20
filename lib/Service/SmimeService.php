@@ -40,7 +40,6 @@ class SmimeService {
 	private ICertificateManager $certificateManager;
 	private ICrypto $crypto;
 
-
 	public function __construct(
 		ITempManager $tempManager,
 		ICertificateManager $certificateManager,

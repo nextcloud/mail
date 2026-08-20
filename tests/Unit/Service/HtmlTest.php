@@ -58,6 +58,46 @@ class HtmlTest extends TestCase {
 	}
 
 	/**
+	 * @dataProvider invalidUtf8Provider
+	 */
+	public function testLinkDetectionRepairsInvalidUtf8(string $text, string $expectedSubstring): void {
+		$urlGenerator = Server::get(IURLGenerator::class);
+		$request = Server::get(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$withLinks = $html->convertLinks($text);
+
+		self::assertNotSame('', $withLinks);
+		self::assertStringContainsString($expectedSubstring, $withLinks);
+	}
+
+	public function invalidUtf8Provider(): array {
+		return [
+			'stray latin-1 byte' => ["Hello team,\r\n\r\nSee you n\xFCxt week.\r\n", 'Hello team,'],
+			// The two 3-byte sequences below are a UTF-16 surrogate pair (high D83D,
+			// low DE09) that got UTF-8-encoded one half at a time instead of combined
+			// into one 4-byte sequence - a CESU-8 encoding bug seen from some senders.
+			'cesu-8 surrogate pair' => ["Hello team,\r\n\r\nSee you soon \xED\xA0\xBD\xED\xB8\x89\r\n", 'Hello team,'],
+			'invalid bytes at the very start' => ["\xFF\xFEHello team,\r\n", 'Hello team,'],
+			'only invalid bytes' => ["\xFF\xFE\xFD", '?'],
+		];
+	}
+
+	public function testLinkDetectionLeavesValidMultibyteTextUnchanged(): void {
+		$urlGenerator = Server::get(IURLGenerator::class);
+		$request = Server::get(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$text = "Hello team, \u{1F609}\r\n\r\nÜmlaut test: äöüß";
+		$withLinks = $html->convertLinks($text);
+
+		self::assertStringContainsString('äöüß', $withLinks);
+		self::assertStringContainsString("\u{1F609}", $withLinks);
+	}
+
+	/**
 	 * @dataProvider parseMailBodyProvider
 	 * @param $expected
 	 * @param $text
@@ -118,6 +158,70 @@ class HtmlTest extends TestCase {
 		$this->assertStringContainsString('data-cid="image001@example.com"', $result);
 	}
 
+	/**
+	 * Non-Outlook renderers ignore the <![if !mso]> markers and show the content
+	 * between them. Some libxml versions leave the markers in as visible text.
+	 */
+	public function testSanitizeHtmlMailBodyStripsDownlevelRevealedConditionals(): void {
+		$urlGenerator = $this->createStub(IURLGenerator::class);
+		$request = $this->createStub(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+		$mailBody = <<<'HTML'
+			<!DOCTYPE html>
+			<html>
+			<head><meta charset="utf-8"><title>MSO conditional rendering test</title></head>
+			<body style="font-family: Arial, sans-serif;">
+			<p>Hello,</p>
+			<p>There is a new announcement from EXAMPLE ORGANISATION.</p>
+			<![if !mso]>
+			<p><span>EXAMPLE INFORMATION SHEET</span></p>
+			<![endif]>
+			<!--[if mso]>
+			<p>Alternative content for Microsoft Outlook.</p>
+			<![endif]-->
+			<![if !mso]>
+			<a href="https://example.com/announcement">Review announcement</a>
+			<![endif]>
+			</body>
+			</html>
+			HTML;
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$result = $html->sanitizeHtmlMailBody(42, $mailBody, []);
+
+		self::assertStringNotContainsString('[if !mso]', $result);
+		self::assertStringNotContainsString('[endif]', $result);
+		self::assertStringContainsString('EXAMPLE INFORMATION SHEET', $result);
+		self::assertStringContainsString('Review announcement', $result);
+		self::assertStringNotContainsString('Alternative content', $result);
+	}
+
+	/**
+	 * @dataProvider downlevelRevealedConditionalProvider
+	 */
+	public function testSanitizeHtmlMailBodyStripsConditionalVariants(string $conditional): void {
+		$urlGenerator = $this->createStub(IURLGenerator::class);
+		$request = $this->createStub(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$result = $html->sanitizeHtmlMailBody(42, "$conditional<p>Kept</p>", []);
+
+		self::assertDoesNotMatchRegularExpression('/<!\[\s*(?:end)?if\b/i', $result);
+		self::assertStringNotContainsString('&lt;!', $result);
+		self::assertStringContainsString('<p>Kept</p>', $result);
+	}
+
+	public function downlevelRevealedConditionalProvider(): array {
+		return [
+			'revealed if' => ['<![if !mso]>'],
+			'revealed endif' => ['<![endif]>'],
+			'uppercase' => ['<![IF !MSO]>'],
+			'padded brackets' => ['<![ endif ]>'],
+			'version gate' => ['<![if gte mso 9]>'],
+		];
+	}
+
 	public function testSanitizeStyleSheet() {
 		$blockedUrl = '/apps/mail/img/blocked-image.png';
 		$urlGenerator = self::createMock(IURLGenerator::class);
@@ -141,5 +245,16 @@ class HtmlTest extends TestCase {
 		$html = new Html($urlGenerator, $request, $hmacGenerator);
 		$sanitizedStyleSheet = $html->sanitizeStyleSheet($styleSheet);
 		self::assertSame($expected, $sanitizedStyleSheet);
+	}
+
+	public function testSanitizeHtmlMailBodyPreservesId(): void {
+		$urlGenerator = $this->createStub(IURLGenerator::class);
+		$request = $this->createStub(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$result = $html->sanitizeHtmlMailBody(42, '<p id="target">hello</p>', []);
+
+		$this->assertStringContainsString('id="target"', $result);
 	}
 }

@@ -49,6 +49,7 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\ZipResponse;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\Folder;
+use OCP\Files\IFilenameValidator;
 use OCP\Files\IMimeTypeDetector;
 use OCP\ICacheFactory;
 use OCP\IL10N;
@@ -171,6 +172,10 @@ class MessagesControllerTest extends TestCase {
 		$this->delegationService->method('resolveMessageUserId')->willReturn($this->userId);
 		$this->delegationService->method('resolveMailboxUserId')->willReturn($this->userId);
 
+		$this->filenameValidator = $this->createMock(IFilenameValidator::class);
+		$this->filenameValidator->method('sanitizeFilename')
+			->willReturn('core_master has new results');
+
 		$timeFactory = $this->createMocK(ITimeFactory::class);
 		$timeFactory->expects($this->any())
 			->method('getTime')
@@ -187,6 +192,7 @@ class MessagesControllerTest extends TestCase {
 			$this->itineraryService,
 			$this->userId,
 			$this->userFolder,
+			$this->filenameValidator,
 			$this->logger,
 			$this->l10n,
 			$this->mimeTypeDetector,
@@ -605,7 +611,6 @@ class MessagesControllerTest extends TestCase {
 			->method('find')
 			->willThrowException(new ClientException());
 
-
 		// test our json error response
 		$this->expectException(ClientException::class);
 		$response = $this->controller->downloadAttachments(
@@ -667,7 +672,6 @@ class MessagesControllerTest extends TestCase {
 
 		$this->assertInstanceOf(JSONResponse::class, $response);
 	}
-
 
 	public function testSetFlagsUnseen() {
 		$accountId = 17;
@@ -1191,6 +1195,66 @@ class MessagesControllerTest extends TestCase {
 		$this->assertEquals($expectedResponse, $actualResponse);
 	}
 
+	public function testSaveFile() {
+		$accountId = 17;
+		$mailboxId = 13;
+		$folderId = 'testfolder';
+		$messageId = 4321;
+		$targetPath = 'Downloads';
+		$this->account
+			->method('getId')
+			->willReturn($accountId);
+		$mailbox = new \OCA\Mail\Db\Mailbox();
+		$message = new \OCA\Mail\Db\Message();
+		$message->setMailboxId($mailboxId);
+		$message->setUid(123);
+		$message->setSubject('core/master has new results');
+		$mailbox->setAccountId($accountId);
+		$mailbox->setName($folderId);
+		$this->mailManager->expects($this->exactly(1))
+			->method('getMessage')
+			->with($this->userId, $messageId)
+			->willReturn($message);
+		$this->mailManager->expects($this->exactly(1))
+			->method('getMailbox')
+			->with($this->userId, $mailboxId)
+			->willReturn($mailbox);
+		$this->accountService->expects($this->exactly(1))
+			->method('find')
+			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->will($this->returnValue($this->account));
+		$source = file_get_contents(__DIR__ . '/../../data/mail-message-123.txt');
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
+		$this->mailManager->expects($this->exactly(1))
+			->method('getSource')
+			->with($client, $this->account, $folderId, 123)
+			->willReturn($source);
+		$folderNode = $this->createStub(Folder::class);
+		$this->userFolder->expects($this->once())
+			->method('get')
+			->with('Downloads')
+			->willReturn($folderNode);
+		$this->userFolder->expects($this->exactly(2))
+			->method('nodeExists')
+			->withConsecutive(['Downloads'], ['Downloads/core_master has new results.eml'])
+			->willReturnOnConsecutiveCalls(true, false);
+		$file = $this->getMockBuilder('\OCP\Files\File')
+			->disableOriginalConstructor()
+			->getMock();
+		$this->userFolder->expects($this->once())
+			->method('newFile')
+			->with('Downloads/core_master has new results.eml')
+			->will($this->returnValue($file));
+		$this->clientFactory->expects($this->once())
+			->method('getClient')
+			->willReturn($client);
+
+		$expectedResponse = new JSONResponse();
+		$actualResponse = $this->controller->saveFile($messageId, $targetPath);
+
+		$this->assertEquals($expectedResponse, $actualResponse);
+	}
+
 	public function testGetDkim() {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(100);
@@ -1207,7 +1271,6 @@ class MessagesControllerTest extends TestCase {
 		$message->setMailboxId($mailbox->getId());
 		$message->setUid(123);
 		$message->setSubject('core/master has new results');
-
 
 		$this->mailManager->expects($this->exactly(1))
 			->method('getMessage')
@@ -1288,137 +1351,6 @@ class MessagesControllerTest extends TestCase {
 		}
 	}
 
-	public function testNeedsTranslationNoUser() {
-		$controller = new MessagesController(
-			$this->appName,
-			$this->request,
-			$this->accountService,
-			$this->mailManager,
-			$this->mailSearch,
-			$this->itineraryService,
-			null,
-			$this->userFolder,
-			$this->logger,
-			$this->l10n,
-			$this->mimeTypeDetector,
-			$this->urlGenerator,
-			$this->nonceManager,
-			$this->trustedSenderService,
-			$this->mailTransmission,
-			$this->smimeService,
-			$this->clientFactory,
-			$this->dkimService,
-			$this->userPreferences,
-			$this->snoozeService,
-			$this->aiIntegrationsService,
-			$this->cacheFactory,
-			$this->delegationService,
-		);
-
-		$actualResponse = $controller->needsTranslation(100);
-		$expectedResponse = new JSONResponse([], Http::STATUS_FORBIDDEN);
-		$this->assertEquals($expectedResponse, $actualResponse);
-	}
-	public function testNeedsTranslationNoMessage() {
-		$this->mailManager->expects($this->once())
-			->method('getMessage')
-			->with($this->userId, 100)
-			->willThrowException(new DoesNotExistException(''));
-		$actualResponse = $this->controller->needsTranslation(100);
-		$expectedResponse = new JSONResponse([], Http::STATUS_FORBIDDEN);
-		$this->assertEquals($expectedResponse, $actualResponse);
-	}
-	public function testNeedsTranslationNoBackend() {
-		$message = new \OCA\Mail\Db\Message();
-		$message->setId(100);
-		$message->setMailboxId(1);
-		$mailbox = new Mailbox();
-		$mailbox->setId(1);
-		$mailbox->setAccountId(1);
-		$this->mailManager->expects($this->once())
-			->method('getMessage')
-			->with($this->userId, 100)
-			->willReturn($message);
-		$this->mailManager->expects($this->once())
-			->method(('getMailbox'))
-			->with($this->userId, $message->getMailboxId())
-			->willReturn($mailbox);
-		$this->accountService->expects($this->once())
-			->method('find')
-			->with($this->userId, $mailbox->getAccountId())
-			->willReturn(new Account(new MailAccount()));
-		$this->aiIntegrationsService->expects($this->once())
-			->method('isLlmProcessingEnabled')
-			->willReturn(false);
-		$actualResponse = $this->controller->needsTranslation(100);
-		$expectedResponse = new JSONResponse([], Http::STATUS_NOT_IMPLEMENTED);
-		$expectedResponse->cacheFor(60 * 60 * 24, false, true);
-		$this->assertEquals($expectedResponse, $actualResponse);
-
-	}
-
-	public function testNeedsTranslationNull() {
-		$message = new \OCA\Mail\Db\Message();
-		$message->setId(100);
-		$message->setMailboxId(1);
-		$mailbox = new Mailbox();
-		$mailbox->setId(1);
-		$mailbox->setAccountId(1);
-		$this->mailManager->expects($this->once())
-			->method('getMessage')
-			->with($this->userId, 100)
-			->willReturn($message);
-		$this->mailManager->expects($this->once())
-			->method(('getMailbox'))
-			->with($this->userId, $message->getMailboxId())
-			->willReturn($mailbox);
-		$this->accountService->expects($this->once())
-			->method('find')
-			->with($this->userId, $mailbox->getAccountId())
-			->willReturn(new Account(new MailAccount()));
-		$this->aiIntegrationsService->expects($this->once())
-			->method('isLlmProcessingEnabled')
-			->willReturn(true);
-		$this->aiIntegrationsService->expects($this->once())
-			->method('requiresTranslation')
-			->willReturn(null);
-		$actualResponse = $this->controller->needsTranslation(100);
-		$expectedResponse = new JSONResponse(['requiresTranslation' => false]);
-		$expectedResponse->cacheFor(60 * 60 * 24, false, true);
-		$this->assertEquals($expectedResponse, $actualResponse);
-	}
-
-	public function testNeedsTranslation() {
-		$message = new \OCA\Mail\Db\Message();
-		$message->setId(100);
-		$message->setMailboxId(1);
-		$mailbox = new Mailbox();
-		$mailbox->setId(1);
-		$mailbox->setAccountId(1);
-		$this->mailManager->expects($this->once())
-			->method('getMessage')
-			->with($this->userId, 100)
-			->willReturn($message);
-		$this->mailManager->expects($this->once())
-			->method(('getMailbox'))
-			->with($this->userId, $message->getMailboxId())
-			->willReturn($mailbox);
-		$this->accountService->expects($this->once())
-			->method('find')
-			->with($this->userId, $mailbox->getAccountId())
-			->willReturn(new Account(new MailAccount()));
-		$this->aiIntegrationsService->expects($this->once())
-			->method('isLlmProcessingEnabled')
-			->willReturn(true);
-		$this->aiIntegrationsService->expects($this->once())
-			->method('requiresTranslation')
-			->willReturn(true);
-		$actualResponse = $this->controller->needsTranslation(100);
-		$expectedResponse = new JSONResponse(['requiresTranslation' => true]);
-		$expectedResponse->cacheFor(60 * 60 * 24, false, true);
-		$this->assertEquals($expectedResponse, $actualResponse);
-	}
-
 	public static function provideLimitData(): array {
 		return [
 			'20' => [20, 20],
@@ -1471,6 +1403,7 @@ class MessagesControllerTest extends TestCase {
 			$this->itineraryService,
 			null,
 			$this->userFolder,
+			$this->filenameValidator,
 			$this->logger,
 			$this->l10n,
 			$this->mimeTypeDetector,

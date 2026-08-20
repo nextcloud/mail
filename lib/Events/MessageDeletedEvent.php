@@ -12,12 +12,13 @@ namespace OCA\Mail\Events;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCP\EventDispatcher\Event;
+use OCP\EventDispatcher\IWebhookCompatibleEvent;
 
-class MessageDeletedEvent extends Event {
+class MessageDeletedEvent extends Event implements IWebhookCompatibleEvent {
 	public function __construct(
 		private Account $account,
 		private Mailbox $mailbox,
-		private int $messageId,
+		private int $uid,
 	) {
 		parent::__construct();
 	}
@@ -30,7 +31,16 @@ class MessageDeletedEvent extends Event {
 		return $this->mailbox;
 	}
 
-	public function getMessageId(): int {
-		return $this->messageId;
+	public function getUid(): int {
+		return $this->uid;
+	}
+
+	#[\Override]
+	public function getWebhookSerializable(): array {
+		return [
+			'accountId' => $this->account->getId(),
+			'mailboxId' => $this->mailbox->getId(),
+			'uid' => $this->uid,
+		];
 	}
 }

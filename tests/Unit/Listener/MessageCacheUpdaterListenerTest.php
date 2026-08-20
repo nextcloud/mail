@@ -42,44 +42,18 @@ class MessageCacheUpdaterListenerTest extends TestCase {
 		$this->listener->handle($event);
 	}
 
-	public function testHandleMessageFlaggedNotCached() {
-		$account = $this->createStub(Account::class);
-		$mailbox = $this->createStub(Mailbox::class);
-		$event = new MessageFlaggedEvent(
-			$account,
-			$mailbox,
-			123,
-			Tag::LABEL_IMPORTANT,
-			true
-		);
-		$this->serviceMock->getParameter('mapper')
-			->expects($this->once())
-			->method('findByUids')
-			->with($event->getMailbox(), [123])
-			->willReturn([]);
-		$this->serviceMock->getParameter('mapper')
-			->expects($this->never())
-			->method('update');
-
-		$this->listener->handle($event);
-	}
-
 	public function testHandleMessageFlagged() {
 		$account = $this->createStub(Account::class);
 		$mailbox = $this->createStub(Mailbox::class);
+		$message = new Message();
+		$message->setUid(123);
 		$event = new MessageFlaggedEvent(
 			$account,
 			$mailbox,
-			123,
+			$message,
 			'$junk',
 			true
 		);
-		$message = new Message();
-		$this->serviceMock->getParameter('mapper')
-			->expects($this->once())
-			->method('findByUids')
-			->with($event->getMailbox(), [123])
-			->willReturn([$message]);
 		$this->serviceMock->getParameter('mapper')
 			->expects($this->once())
 			->method('update')
@@ -88,5 +62,27 @@ class MessageCacheUpdaterListenerTest extends TestCase {
 		$this->listener->handle($event);
 
 		$this->assertTrue($message->getFlagJunk());
+	}
+
+	public function testHandleMessageFlaggedTag() {
+		$account = $this->createStub(Account::class);
+		$mailbox = $this->createStub(Mailbox::class);
+		$message = new Message();
+		$message->setUid(123);
+		$event = new MessageFlaggedEvent(
+			$account,
+			$mailbox,
+			$message,
+			Tag::LABEL_IMPORTANT,
+			true
+		);
+		$this->serviceMock->getParameter('mapper')
+			->expects($this->once())
+			->method('update')
+			->with($message);
+
+		$this->listener->handle($event);
+
+		$this->assertTrue($message->getFlagImportant());
 	}
 }

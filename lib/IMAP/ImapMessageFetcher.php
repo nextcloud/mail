@@ -22,6 +22,7 @@ use Horde_Mime_Exception;
 use Horde_Mime_Headers;
 use Horde_Mime_Part;
 use OCA\Mail\AddressList;
+use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\IMAP\Charset\Converter;
@@ -55,6 +56,7 @@ class ImapMessageFetcher {
 	private string $rawReferences = '';
 	private string $dispositionNotificationTo = '';
 	private bool $hasDkimSignature = false;
+	private bool $hasAiGeneratedHeader = false;
 	private array $phishingDetails = [];
 	private ?string $unsubscribeUrl = null;
 	private bool $isOneClickUnsubscribe = false;
@@ -72,7 +74,6 @@ class ImapMessageFetcher {
 		private PhishingDetectionService $phishingDetectionService,
 	) {
 	}
-
 
 	/**
 	 * Configure the fetcher to fetch the body of the message.
@@ -170,7 +171,6 @@ class ImapMessageFetcher {
 					throw new DoesNotExistException("This email ($this->uid) can't be found. Probably it was deleted from the server recently. Please reload.");
 				}
 
-
 				$decryptionResult = $this->smimeService->decryptDataFetch($fullTextFetch, $this->userId);
 				$isSigned = $decryptionResult->isSigned();
 				$signatureIsValid = $decryptionResult->isSignatureValid();
@@ -264,6 +264,7 @@ class ImapMessageFetcher {
 			$this->rawReferences,
 			$this->dispositionNotificationTo,
 			$this->hasDkimSignature,
+			$this->hasAiGeneratedHeader,
 			$this->phishingDetails,
 			$this->unsubscribeUrl,
 			$this->isOneClickUnsubscribe,
@@ -546,6 +547,9 @@ class ImapMessageFetcher {
 
 		$dkimSignatureHeader = $parsedHeaders->getHeader('dkim-signature');
 		$this->hasDkimSignature = $dkimSignatureHeader !== null;
+
+		$aiGeneratedHeader = $parsedHeaders->getHeader(LocalMessage::HEADER_AI_GENERATED);
+		$this->hasAiGeneratedHeader = $aiGeneratedHeader !== null && trim($aiGeneratedHeader->value_single) === '1';
 
 		if ($this->runPhishingCheck) {
 			$this->phishingDetails = $this->phishingDetectionService->checkHeadersForPhishing($this->userId, $parsedHeaders, $fetch->getFlags(), $this->hasHtmlMessage, $this->htmlMessage);

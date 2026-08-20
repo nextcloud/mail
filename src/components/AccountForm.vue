@@ -74,7 +74,7 @@
 					:placeholder="t('mail', 'IMAP Host')"
 					:disabled="loading"
 					required
-					@change="clearFeedback" />
+					@change="syncCredentials" />
 				<h4 class="account-form__heading--required">
 					{{ t('mail', 'IMAP Security') }}
 				</h4>
@@ -133,7 +133,7 @@
 					:placeholder="t('mail', 'IMAP User')"
 					:disabled="loading"
 					required
-					@change="clearFeedback" />
+					@change="syncCredentials" />
 				<NcPasswordField
 					v-if="!useOauth"
 					id="man-imap-password"
@@ -142,12 +142,11 @@
 					:label="t('mail', 'IMAP Password')"
 					:disabled="loading"
 					required
-					@change="clearFeedback" />
+					@change="syncCredentials" />
 
 				<h4>{{ t('mail', 'SMTP Settings') }}</h4>
 				<NcInputField
 					id="man-smtp-host"
-					ref="smtpHost"
 					v-model="manualConfig.smtpHost"
 					:label="t('mail', 'SMTP Host')"
 					type="text"
@@ -155,7 +154,7 @@
 					:placeholder="t('mail', 'SMTP Host')"
 					:disabled="loading"
 					required
-					@change="clearFeedback" />
+					@change="unsyncCredentials" />
 				<h4 class="account-form__heading--required">
 					{{ t('mail', 'SMTP Security') }}
 				</h4>
@@ -214,7 +213,7 @@
 					:placeholder="t('mail', 'SMTP User')"
 					:disabled="loading"
 					required
-					@change="clearFeedback" />
+					@change="unsyncCredentials" />
 				<NcPasswordField
 					v-if="!useOauth"
 					id="man-smtp-password"
@@ -223,7 +222,7 @@
 					type="password"
 					:disabled="loading"
 					required
-					@change="clearFeedback" />
+					@change="unsyncCredentials" />
 				<NcCheckboxRadioSwitch
 					v-if="isSetup"
 					id="auto-classification-enabled"
@@ -240,34 +239,34 @@
 			{{ t('mail', 'Microsoft requires OAuth authentication. Ask your Nextcloud admin to configure Microsoft OAuth in the admin settings.') }}
 		</div>
 		<div class="account-form__submit-buttons">
-			<ButtonVue
+			<NcButton
 				v-if="mode === 'auto'"
 				:aria-label="submitButtonText"
 				class="account-form__submit-button"
-				type="primary"
-				native-type="submit"
+				variant="primary"
+				type="submit"
 				:disabled="isDisabledAuto || loading"
 				@click.prevent="onSubmit">
 				<template #icon>
-					<IconLoading v-if="loading" :size="20" />
+					<NcLoadingIcon v-if="loading" :size="20" />
 					<IconCheck v-else :size="20" />
 				</template>
 				{{ submitButtonText }}
-			</ButtonVue>
-			<ButtonVue
+			</NcButton>
+			<NcButton
 				v-else-if="mode === 'manual'"
 				:aria-label="submitButtonText"
 				class="account-form__submit-button"
-				type="primary"
-				native-type="submit"
+				variant="primary"
+				type="submit"
 				:disabled="isDisabledManual || loading"
 				@click.prevent="onSubmit">
 				<template #icon>
-					<IconLoading v-if="loading" :size="20" />
+					<NcLoadingIcon v-if="loading" :size="20" />
 					<IconCheck v-else :size="20" />
 				</template>
 				{{ submitButtonText }}
-			</ButtonVue>
+			</NcButton>
 		</div>
 		<div v-if="feedback" class="account-form--feedback">
 			{{ feedback }}
@@ -277,8 +276,8 @@
 
 <script>
 import { loadState } from '@nextcloud/initial-state'
-import { translate as t } from '@nextcloud/l10n'
-import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcCheckboxRadioSwitch, NcInputField, NcPasswordField } from '@nextcloud/vue'
+import { t } from '@nextcloud/l10n'
+import { NcButton, NcCheckboxRadioSwitch, NcInputField, NcLoadingIcon, NcPasswordField } from '@nextcloud/vue'
 import { mapState, mapStores } from 'pinia'
 import { Tab, Tabs } from 'vue-tabs-component'
 import IconCheck from 'vue-material-design-icons/Check.vue'
@@ -289,6 +288,7 @@ import {
 	queryMx,
 	testConnectivity,
 } from '../service/AutoConfigService.js'
+import { generateOauthState } from '../service/OauthStateService.js'
 import useMainStore from '../store/mainStore.js'
 
 export default {
@@ -299,8 +299,8 @@ export default {
 		NcCheckboxRadioSwitch,
 		Tab,
 		Tabs,
-		ButtonVue,
-		IconLoading,
+		NcButton,
+		NcLoadingIcon,
 		IconCheck,
 	},
 
@@ -353,6 +353,7 @@ export default {
 				smtpSslMode: fromAccountOr('smtpSslMode', 'tls'),
 				smtpUser: fromAccountOr('smtpUser', ''),
 				smtpPassword: '',
+				syncSmtpCredentials: true,
 			},
 
 			feedback: null,
@@ -495,6 +496,21 @@ export default {
 			this.feedback = null
 		},
 
+		syncCredentials() {
+			if (this.manualConfig.syncSmtpCredentials) {
+				this.manualConfig.smtpHost = this.manualConfig.imapHost
+				this.manualConfig.smtpUser = this.manualConfig.imapUser
+				this.manualConfig.smtpPassword = this.manualConfig.imapPassword
+			}
+
+			this.clearFeedback()
+		},
+
+		unsyncCredentials() {
+			this.manualConfig.syncSmtpCredentials = false
+			this.clearFeedback()
+		},
+
 		applyAutoConfig(config) {
 			if (!config) {
 				return false
@@ -631,12 +647,12 @@ export default {
 							if (this.isGoogleAccount) {
 								this.feedback = t('mail', 'Account created. Please follow the pop-up instructions to link your Google account')
 								await getUserConsent(this.googleOauthUrl
-									.replace('_accountId_', account.id)
+									.replace('_state_', await generateOauthState(account.id))
 									.replace('_email_', encodeURIComponent(account.emailAddress)))
 							} else {
 								this.feedback = t('mail', 'Account created. Please follow the pop-up instructions to link your Microsoft account')
 								await getUserConsent(this.microsoftOauthUrl
-									.replace('_accountId_', account.id)
+									.replace('_state_', await generateOauthState(account.id))
 									.replace('_email_', encodeURIComponent(account.emailAddress)))
 							}
 						} catch (e) {
@@ -662,12 +678,12 @@ export default {
 							if (this.isGoogleAccount) {
 								this.feedback = t('mail', 'Account updated. Please follow the pop-up instructions to reconnect your Google account')
 								await getUserConsent(this.googleOauthUrl
-									.replace('_accountId_', account.id)
+									.replace('_state_', await generateOauthState(account.id))
 									.replace('_email_', encodeURIComponent(account.emailAddress)))
 							} else {
 								this.feedback = t('mail', 'Account updated. Please follow the pop-up instructions to reconnect your Microsoft account')
 								await getUserConsent(this.microsoftOauthUrl
-									.replace('_accountId_', account.id)
+									.replace('_state_', await generateOauthState(account.id))
 									.replace('_email_', encodeURIComponent(account.emailAddress)))
 							}
 						} catch (e) {

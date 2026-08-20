@@ -54,6 +54,8 @@ import {
 } from 'ckeditor5'
 import { getLinkWithPicker, searchProvider } from '@nextcloud/vue/components/NcRichText'
 import TextDirectionPlugin from '../ckeditor/direction/TextDirectionPlugin.js'
+import FilesImagePlugin from '../ckeditor/image/FilesImagePlugin.ts'
+import ImageDowncastPlugin from '../ckeditor/image/ImageDowncastPlugin.ts'
 import MailPlugin from '../ckeditor/mail/MailPlugin.js'
 import QuotePlugin from '../ckeditor/quote/QuotePlugin.js'
 import SignaturePlugin from '../ckeditor/signature/SignaturePlugin.js'
@@ -131,12 +133,12 @@ export default {
 			Mention,
 			Link,
 			FindAndReplace,
-			GeneralHtmlSupport,
 		]
 		const toolbar = ['undo', 'redo']
 
 		if (this.html) {
 			plugins.push(...[
+				GeneralHtmlSupport,
 				Heading,
 				Alignment,
 				Bold,
@@ -150,6 +152,8 @@ export default {
 				Image,
 				ImageUpload,
 				ImageResize,
+				FilesImagePlugin,
+				ImageDowncastPlugin,
 				Font,
 				RemoveFormat,
 				Base64UploadAdapter,
@@ -199,6 +203,11 @@ export default {
 				plugins,
 				toolbar,
 				language: 'en',
+				image: {
+					// A percentage would be relative to the recipient's unknown viewport.
+					resizeUnit: 'px',
+				},
+
 				mention: {
 					feeds: [
 						{
@@ -246,6 +255,22 @@ export default {
 							styles: true,
 						},
 					],
+				},
+
+				// Preserve arbitrary font sizes/families on inserted or pasted
+				// HTML (e.g. app-generated signatures). Without supportAllValues
+				// the Font plugins drop any value not in their preset list, so
+				// raw-HTML signatures lose font-size/font-family on send.
+				// NOTE: supportAllValues is incompatible with the default *named*
+				// presets ('tiny'/'big'/…) — it requires numeric options, or
+				// CKEditor throws at init and the editor fails to mount.
+				fontSize: {
+					options: [9, 10, 11, 12, 13, 14, 16, 18, 24, 'default'],
+					supportAllValues: true,
+				},
+
+				fontFamily: {
+					supportAllValues: true,
 				},
 
 			},
@@ -572,6 +597,13 @@ export default {
 				this.$emit('submit', editor)
 			})
 
+			editor.keystrokes.set('Ctrl+S', (event) => {
+				event.preventDefault()
+				event.stopPropagation()
+				logger.debug('Detected Ctrl+S/Cmd+S', event)
+				this.$emit('save', editor)
+			})
+
 			this.editorInstance = editor
 
 			if (this.focus) {
@@ -837,7 +869,7 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 	color: var(--color-main-text);
 }
 
-/* We need the paragraph field a bit smaller so it doesnt break the toolbar for signature */
+/* We need the paragraph field a bit smaller so it doesn't break the toolbar for signature */
 .ck.ck-dropdown.ck-heading-dropdown .ck-dropdown__button .ck-button__label {
 	width: 6em !important;
 }

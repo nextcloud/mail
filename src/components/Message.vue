@@ -35,7 +35,8 @@
 			:message="message"
 			:full-height="fullHeight"
 			@load="$emit('load', $event)"
-			@translate="$emit('translate')" />
+			@print-shortcut="$emit('print-shortcut')"
+			@translate="$emit('translate', $event)" />
 		<MessageEncryptedBody
 			v-else-if="isEncrypted || isPgpMimeEncrypted"
 			:body="message.body"
@@ -46,7 +47,7 @@
 			:body="message.body"
 			:signature="message.signature"
 			:message="message"
-			@translate="$emit('translate')" />
+			@translate="$emit('translate', $event)" />
 		<MessageAttachments :attachments="message.attachments" :envelope="envelope" />
 		<div id="reply-composer" />
 		<div class="reply-buttons">

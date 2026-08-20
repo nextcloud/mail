@@ -522,8 +522,19 @@ export default function mainStoreActions() {
 
 					if (reply.mode === 'reply') {
 						logger.debug('Show simple reply composer', { reply })
-						let to = original.replyTo !== undefined ? original.replyTo : reply.data.from
-						if (reply.followUp) {
+						const account = this.getAccount(reply.data.accountId)
+						// For mailing list emails, "Reply to sender" must use From because
+						// Reply-To points to the list address, not the original sender.
+						// For regular emails, honor Reply-To if the sender set one.
+						const isMailingList = !!(original.unsubscribeUrl || original.unsubscribeMailto)
+						let to = (!isMailingList && original.replyTo?.length > 0)
+							? original.replyTo
+							: reply.data.from
+						// Replying to a message we sent ourselves: follow up with the
+						// original recipient(s) instead of addressing ourselves.
+						const isOwnMessage = to.length > 0
+							&& to.every((addr) => addr.email === account.emailAddress)
+						if (reply.followUp || isOwnMessage) {
 							to = reply.data.to
 						}
 						this.startComposerSessionMutation({
@@ -586,6 +597,7 @@ export default function mainStoreActions() {
 					data = {
 						...data,
 						message,
+						isAiGenerated: data.isAiGenerated ?? message.hasAiGeneratedHeader ?? false,
 					}
 
 					// Fetch and transform the body into a rich text object
@@ -1485,7 +1497,7 @@ export default function mainStoreActions() {
 			imapLabel,
 		}) {
 			return handleHttpAuthErrors(async () => {
-				// TODO: fetch tags indepently of envelopes and only send tag id here
+				// TODO: fetch tags independently of envelopes and only send tag id here
 				const tag = await setEnvelopeTag(envelope.databaseId, imapLabel)
 				if (!this.getTag(tag.id)) {
 					this.addTagMutation({ tag })
@@ -1557,13 +1569,11 @@ export default function mainStoreActions() {
 			destMailboxId,
 		}) {
 			return handleHttpAuthErrors(async () => {
-				this.removeEnvelopeMutation({ id: envelope.databaseId })
-
 				try {
 					await ThreadService.moveThread(envelope.databaseId, destMailboxId)
+					this.removeEnvelopeMutation({ id: envelope.databaseId })
 					logger.debug('thread moved')
 				} catch (e) {
-					this.addEnvelopesMutation({ envelopes: [envelope] })
 					logger.error('could not move thread', { error: e })
 					throw e
 				}

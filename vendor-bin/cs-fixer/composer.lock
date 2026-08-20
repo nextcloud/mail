@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "82dbf4093dc3743443931e43ad5471ad",
+    "content-hash": "53fef5f4c418f0b2b073a0ca95774c98",
     "packages": [],
     "packages-dev": [
         {
@@ -61,16 +61,16 @@
         },
         {
             "name": "nextcloud/coding-standard",
-            "version": "v1.4.0",
+            "version": "v1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextcloud/coding-standard.git",
-                "reference": "8e06808c1423e9208d63d1bd205b9a38bd400011"
+                "reference": "80547a93236fbb9c783e05f0f0899043851b0dba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud/coding-standard/zipball/8e06808c1423e9208d63d1bd205b9a38bd400011",
-                "reference": "8e06808c1423e9208d63d1bd205b9a38bd400011",
+                "url": "https://api.github.com/repos/nextcloud/coding-standard/zipball/80547a93236fbb9c783e05f0f0899043851b0dba",
+                "reference": "80547a93236fbb9c783e05f0f0899043851b0dba",
                 "shasum": ""
             },
             "require": {
@@ -100,22 +100,22 @@
             ],
             "support": {
                 "issues": "https://github.com/nextcloud/coding-standard/issues",
-                "source": "https://github.com/nextcloud/coding-standard/tree/v1.4.0"
+                "source": "https://github.com/nextcloud/coding-standard/tree/v1.5.0"
             },
-            "time": "2025-06-19T12:27:27+00:00"
+            "time": "2026-05-19T18:30:09+00:00"
         },
         {
             "name": "php-cs-fixer/shim",
-            "version": "v3.95.5",
+            "version": "v3.95.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/shim.git",
-                "reference": "f6ce9082af26d7497e8a1c75c5fc77387179b856"
+                "reference": "9b815f2ba5c581faaaec1386dcda4c16d511e6bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/shim/zipball/f6ce9082af26d7497e8a1c75c5fc77387179b856",
-                "reference": "f6ce9082af26d7497e8a1c75c5fc77387179b856",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/shim/zipball/9b815f2ba5c581faaaec1386dcda4c16d511e6bb",
+                "reference": "9b815f2ba5c581faaaec1386dcda4c16d511e6bb",
                 "shasum": ""
             },
             "require": {
@@ -152,9 +152,9 @@
             "description": "A tool to automatically fix PHP code style",
             "support": {
                 "issues": "https://github.com/PHP-CS-Fixer/shim/issues",
-                "source": "https://github.com/PHP-CS-Fixer/shim/tree/v3.95.5"
+                "source": "https://github.com/PHP-CS-Fixer/shim/tree/v3.95.18"
             },
-            "time": "2026-06-09T14:55:56+00:00"
+            "time": "2026-07-30T15:46:28+00:00"
         }
     ],
     "aliases": [],

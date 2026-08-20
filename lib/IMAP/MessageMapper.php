@@ -151,7 +151,7 @@ class MessageMapper {
 		// Here we assume somewhat equally distributed UIDs
 		// +1 is added to fetch all messages with the rare case of strictly
 		// continuous UIDs and fractions
-		$estimatedPageSize = (int)((float)($totalRange / $total) * $maxResults) + 1;
+		$estimatedPageSize = (int)((float)($totalRange / $total) * (float)$maxResults) + 1;
 		// Determine min UID to fetch, but don't exceed the known maximum
 		$lower = max(
 			$min,
@@ -178,7 +178,7 @@ class MessageMapper {
 		while ($actualPageSize > $maxResults) {
 			$logger->debug("Range for findAll matches too many messages: min=$min max=$max total=$total estimatedPageSize=$estimatedPageSize actualPageSize=$actualPageSize");
 
-			$estimatedPageSize = (int)($estimatedPageSize / 2.0);
+			$estimatedPageSize = (int)((float)$estimatedPageSize / 2.0);
 
 			$upper = min(
 				$max,
@@ -293,7 +293,7 @@ class MessageMapper {
 			]), false);
 		}
 
-		$fetchResults = array_values(array_filter($fetchResults, static fn (Horde_Imap_Client_Data_Fetch $fetchResult) => $fetchResult->exists(Horde_Imap_Client::FETCH_ENVELOPE)));
+		$fetchResults = array_values(array_filter($fetchResults, static fn (Horde_Imap_Client_Data_Fetch $fetchResult) => $fetchResult->exists(Horde_Imap_Client::FETCH_ENVELOPE) && $fetchResult->getUid() !== null));
 
 		if ($fetchResults === []) {
 			$nIds = count($ids);
@@ -751,8 +751,12 @@ class MessageMapper {
 		// TODO: compare logic and merge with getAttachments()
 
 		$query = new Horde_Imap_Client_Fetch_Query();
-		$query->bodyPart($attachmentId);
-		$query->mimeHeader($attachmentId);
+		$query->bodyPart($attachmentId, [
+			'peek' => true,
+		]);
+		$query->mimeHeader($attachmentId, [
+			'peek' => true,
+		]);
 		$this->smimeService->addEncryptionCheckQueries($query);
 
 		$uids = new Horde_Imap_Client_Ids($messageUid);
@@ -836,7 +840,7 @@ class MessageMapper {
 	 */
 	private function buildAttachmentsPartsQuery(Horde_Mime_Part $structure, array $attachmentIds) : Horde_Imap_Client_Fetch_Query {
 		$partsQuery = new Horde_Imap_Client_Fetch_Query();
-		$partsQuery->fullText();
+		$partsQuery->fullText(['peek' => true]);
 		foreach ($structure->partIterator() as $part) {
 			/** @var Horde_Mime_Part $part */
 			if ($part->getMimeId() === '0') {
@@ -976,7 +980,6 @@ class MessageMapper {
 				$structure->setContents($bodyContent);
 				return $this->converter->convert($structure);
 			};
-
 
 			$htmlBody = ($htmlBodyId !== null) ? $part->getBodyPart($htmlBodyId) : null;
 			if (!empty($htmlBody)) {

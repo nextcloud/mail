@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<AppContent
+	<NcAppContent
 		:pane-config-key="'mail-' + layoutMode"
 		:layout="layoutMode"
 		:show-details="isThreadShown"
@@ -18,7 +18,7 @@
 						:account-id="account.accountId"
 						@search-changed="onUpdateSearchQuery" />
 				</div>
-				<AppContentList
+				<NcAppContentList
 					v-infinite-scroll="onScroll"
 					v-shortkey.once="shortkeys"
 					class="envelope-list"
@@ -31,6 +31,7 @@
 					@shortkey.native="onShortcut">
 					<template v-if="!mailbox.isPriorityInbox">
 						<div
+							v-if="sortFavorites"
 							v-show="hasFavoriteEnvelopes"
 							class="app-content-list-item">
 							<SectionTitle
@@ -38,14 +39,14 @@
 								:name="t('mail', 'Favorites')" />
 							<NcPopover trigger="hover focus">
 								<template #trigger>
-									<ButtonVue
-										type="tertiary-no-background"
+									<NcButton
+										variant="tertiary-no-background"
 										:aria-label="t('mail', 'Favorites info')"
 										class="button">
 										<template #icon>
 											<IconInfo :size="20" />
 										</template>
-									</ButtonVue>
+									</NcButton>
 								</template>
 								<p class="section-header-info">
 									{{ favoritesInfo }}
@@ -53,6 +54,7 @@
 							</NcPopover>
 						</div>
 						<Mailbox
+							v-if="sortFavorites"
 							v-show="hasFavoriteEnvelopes"
 							:load-more-label="t('mail', 'Load more favorites')"
 							:account="account"
@@ -76,6 +78,7 @@
 
 					<template v-else>
 						<div
+							v-if="sortFavorites"
 							v-show="hasFavoriteEnvelopes"
 							class="app-content-list-item">
 							<SectionTitle
@@ -83,14 +86,14 @@
 								:name="t('mail', 'Favorites')" />
 							<NcPopover trigger="hover focus">
 								<template #trigger>
-									<ButtonVue
-										type="tertiary-no-background"
+									<NcButton
+										variant="tertiary-no-background"
 										:aria-label="t('mail', 'Favorites info')"
 										class="button">
 										<template #icon>
 											<IconInfo :size="20" />
 										</template>
-									</ButtonVue>
+									</NcButton>
 								</template>
 								<p class="section-header-info">
 									{{ favoritesInfo }}
@@ -98,6 +101,7 @@
 							</NcPopover>
 						</div>
 						<Mailbox
+							v-if="sortFavorites"
 							v-show="hasFavoriteEnvelopes"
 							:load-more-label="t('mail', 'Load more favorites')"
 							:account="unifiedAccount"
@@ -116,14 +120,14 @@
 								:name="t('mail', 'Follow up')" />
 							<NcPopover trigger="hover focus">
 								<template #trigger>
-									<ButtonVue
-										type="tertiary-no-background"
+									<NcButton
+										variant="tertiary-no-background"
 										:aria-label="t('mail', 'Follow up info')"
 										class="button">
 										<template #icon>
 											<IconInfo :size="20" />
 										</template>
-									</ButtonVue>
+									</NcButton>
 								</template>
 								<p class="section-header-info">
 									{{ followupInfo }}
@@ -147,14 +151,14 @@
 								:name="t('mail', 'Important')" />
 							<NcPopover trigger="hover focus">
 								<template #trigger>
-									<ButtonVue
-										type="tertiary-no-background"
+									<NcButton
+										variant="tertiary-no-background"
 										:aria-label="t('mail', 'Important info')"
 										class="button">
 										<template #icon>
 											<IconInfo :size="20" />
 										</template>
-									</ButtonVue>
+									</NcButton>
 								</template>
 								<p class="section-header-info">
 									{{ importantInfo }}
@@ -186,17 +190,17 @@
 							:is-priority-inbox="true"
 							:bus="bus" />
 					</template>
-				</AppContentList>
+				</NcAppContentList>
 			</div>
 		</template>
 
 		<Thread v-if="showThread" @delete="deleteMessage" />
 		<NoMessageSelected v-else-if="hasEnvelopes" />
-	</AppContent>
+	</NcAppContent>
 </template>
 
 <script>
-import { NcAppContent as AppContent, NcAppContentList as AppContentList, NcButton as ButtonVue, isMobile, NcPopover } from '@nextcloud/vue'
+import { isMobile, NcAppContent, NcAppContentList, NcButton, NcPopover } from '@nextcloud/vue'
 import addressParser from 'address-rfc2822'
 import mitt from 'mitt'
 import { mapStores } from 'pinia'
@@ -231,9 +235,9 @@ export default {
 	},
 
 	components: {
-		AppContent,
-		AppContentList,
-		ButtonVue,
+		NcAppContent,
+		NcAppContentList,
+		NcButton,
 		IconInfo,
 		Mailbox,
 		NoMessageSelected,
@@ -344,15 +348,16 @@ export default {
 		},
 
 		sortFavorites() {
-			return this.mainStore.getPreference('sort-favorites', 'false') === 'true'
+			return this.mainStore.getPreference('sort-favorites', 'false') === 'true' && this.$route.params.filter !== 'starred'
 		},
 
 		hasFavoriteEnvelopes() {
 			if (!this.sortFavorites) {
 				return false
 			}
+			const mailbox = this.mailbox.isPriorityInbox ? this.unifiedInbox : this.mailbox
 			const envelopes = this.mainStore.getEnvelopes(
-				this.unifiedInbox.databaseId,
+				mailbox.databaseId,
 				this.appendToSearch(this.favoriteQuery),
 			)
 			return envelopes.length > 0
@@ -433,9 +438,9 @@ export default {
 
 		sortFavorites(enabled) {
 			if (enabled) {
-				this.searchQuery = this.searchQuery ? 'not:starred' : this.searchQuery + ' not:starred'
-			} else if (this.searchQuery.includes('not:starred')) {
-				this.searchQuery = this.searchQuery.replace('not:starred', '')
+				this.searchQuery = this.searchQuery ? this.searchQuery + ' not:starred' : 'not:starred'
+			} else if (this.searchQuery?.includes('not:starred')) {
+				this.searchQuery = this.searchQuery.replace('not:starred', '').trim() || undefined
 			}
 		},
 
@@ -468,7 +473,7 @@ export default {
 		}
 	},
 
-	beforeUnmount() {
+	beforeDestroy() {
 		clearTimeout(this.startMailboxTimer)
 	},
 
@@ -508,7 +513,7 @@ export default {
 		},
 
 		appendToSearch(str) {
-			if (this.searchQuery === undefined) {
+			if (!this.searchQuery) {
 				return str
 			}
 

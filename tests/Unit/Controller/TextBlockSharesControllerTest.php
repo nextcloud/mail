@@ -7,7 +7,6 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-
 namespace OCA\Mail\Tests\Unit\Controller;
 
 use OCA\Mail\Controller\TextBlockSharesController;
@@ -27,7 +26,6 @@ final class TextBlockSharesControllerTest extends TestCase {
 
 	/** @var string */
 	private $userId;
-
 
 	protected function setUp(): void {
 		$this->textBlockService = $this->createMock(TextBlockService::class);
@@ -71,7 +69,6 @@ final class TextBlockSharesControllerTest extends TestCase {
 		$expectedResponse = JsonResponse::success($sharedTextBlocks);
 		$this->assertEquals($expectedResponse, $response);
 	}
-
 
 	public function testShareNoUser(): void {
 		$controller = new TextBlockSharesController($this->createStub(\OCP\IRequest::class), null, $this->textBlockService);
@@ -210,7 +207,6 @@ final class TextBlockSharesControllerTest extends TestCase {
 		$this->assertEquals($expectedResponse, $response);
 	}
 
-
 	public function testGetSharesNoUser(): void {
 		$controller = new TextBlockSharesController($this->createStub(\OCP\IRequest::class), null, $this->textBlockService);
 
@@ -218,6 +214,5 @@ final class TextBlockSharesControllerTest extends TestCase {
 		$expectedResponse = JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		$this->assertEquals($expectedResponse, $response);
 	}
-
 
 }

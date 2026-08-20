@@ -48,9 +48,10 @@ class HordeImapClient extends Horde_Imap_Client_Socket {
 
 	#[\Override]
 	public function login() {
+		$initiallyAutheticated = $this->_isAuthenticated;
 		parent::login();
 
-		if ($this->capability->query('ID')) {
+		if ($initiallyAutheticated === false && $this->capability->query('ID')) {
 			try {
 				$this->sendID();
 				/* ID is queued - force sending the queued command. */

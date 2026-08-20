@@ -3,7 +3,12 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<NcDialog id="text-block-picker" :name="t('mail', 'Text blocks')" @closing="handleClose">
+	<NcDialog
+		v-if="hasTextBlockes"
+		id="text-block-picker"
+		:name="t('mail', 'Text blocks')"
+		:buttons="saveButtons"
+		@closing="handleClose">
 		<p>{{ t('mail', 'Choose a text block to insert at the cursor') }}</p>
 		<ListItem
 			v-for="textBlock in getMyTextBlocks()"
@@ -20,22 +25,20 @@
 			:is-view-mode="true"
 			:picked="textBlock.id === picked?.id"
 			@click="handleClick" />
-		<NcButton
-			class="insert-button"
-			:disabled="!picked"
-			@click="$emit('insert', picked)">
-			{{ t('mail', 'Insert') }}
-			<template #icon>
-				<IconCheck :size="20" :name="t('mail', 'Insert text block')" />
-			</template>
-		</NcButton>
+	</NcDialog>
+	<NcDialog
+		v-else
+		id="text-block-picker"
+		:name="t('mail', 'Text blocks')"
+		:message="t('mail', 'Text blocks are reusable pieces of text that can be inserted in messages. Visit the Settings panel to create your own.')"
+		@closing="handleClose">
 	</NcDialog>
 </template>
 
 <script>
-import { NcButton, NcDialog } from '@nextcloud/vue'
+import IconCheck from '@mdi/svg/svg/check.svg'
+import { NcDialog } from '@nextcloud/vue'
 import { mapState } from 'pinia'
-import IconCheck from 'vue-material-design-icons/Check.vue'
 import ListItem from './ListItem.vue'
 import useMainStore from '../../store/mainStore.js'
 
@@ -44,8 +47,6 @@ export default {
 	components: {
 		ListItem,
 		NcDialog,
-		NcButton,
-		IconCheck,
 	},
 
 	data() {
@@ -56,6 +57,22 @@ export default {
 
 	computed: {
 		...mapState(useMainStore, ['getMyTextBlocks', 'getSharedTextBlocks']),
+
+		hasTextBlockes() {
+			return this.getMyTextBlocks().length > 0 || this.getSharedTextBlocks().length > 0
+		},
+
+		saveButtons() {
+			return [
+				{
+					variant: 'primary',
+					disabled: !this.picked,
+					callback: () => this.$emit('insert', this.picked),
+					label: t('mail', 'Insert'),
+					icon: IconCheck,
+				},
+			]
+		},
 	},
 
 	methods: {
@@ -69,10 +86,3 @@ export default {
 	},
 }
 </script>
-
-<style lang="scss" scoped>
-.insert-button {
-	justify-self: end;
-	margin-bottom: calc( var(--default-grid-baseline) * 2) ;
-}
-</style>

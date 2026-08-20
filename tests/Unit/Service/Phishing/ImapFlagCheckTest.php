@@ -8,11 +8,9 @@
 namespace OCA\Mail\Tests\Integration\Service\Phishing;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-
 use Horde_Imap_Client;
 use OCA\Mail\Service\PhishingDetection\ImapFlagCheck;
 use OCP\IL10N;
-
 use PHPUnit\Framework\MockObject\MockObject;
 
 class ImapFlagCheckTest extends TestCase {

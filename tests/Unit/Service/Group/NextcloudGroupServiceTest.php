@@ -84,7 +84,6 @@ class NextcloudGroupServiceTest extends TestCase {
 		];
 	}
 
-
 	/**
 	 * @dataProvider dataForTestSearch
 	 * @param string $allowGroupSharing
@@ -108,7 +107,6 @@ class NextcloudGroupServiceTest extends TestCase {
 				['core', 'shareapi_allow_group_sharing', 'yes', $allowGroupSharing],
 				['core', 'shareapi_only_share_with_group_members', 'no', $restrictSharingToGroups],
 			]);
-
 
 		$actual = $this->groupService->search($term);
 

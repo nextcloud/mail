@@ -56,6 +56,12 @@ use function strtolower;
  * @method void setShared(bool $shared)
  * @method string getNameHash()
  * @method void setNameHash(string $nameHash)
+ * @method string|null getRemoteParentId()
+ * @method void setRemoteParentId(?string $remoteParentId)
+ * @method string|null getRemoteId()
+ * @method void setRemoteId(?string $remoteId)
+ * @method string|null getState()
+ * @method void setState(?string $state)
  */
 class Mailbox extends Entity implements JsonSerializable {
 	protected $name;
@@ -76,6 +82,9 @@ class Mailbox extends Entity implements JsonSerializable {
 	protected $myAcls;
 	protected $shared;
 	protected $nameHash;
+	protected ?string $remoteParentId = null;
+	protected ?string $remoteId = null;
+	protected ?string $state = null;
 
 	/**
 	 * @var int
@@ -121,17 +130,26 @@ class Mailbox extends Entity implements JsonSerializable {
 			&& $this->getSyncVanishedToken() !== null;
 	}
 
+	private function isLockActive(?int $lock, int $now): bool {
+		return $lock !== null && $lock > ($now - self::LOCK_TIMEOUT);
+	}
+
+	public function hasNewLock(int $now): bool {
+		return $this->isLockActive($this->getSyncNewLock(), $now);
+	}
+
+	public function hasChangedLock(int $now): bool {
+		return $this->isLockActive($this->getSyncChangedLock(), $now);
+	}
+
+	public function hasVanishedLock(int $now): bool {
+		return $this->isLockActive($this->getSyncVanishedLock(), $now);
+	}
+
 	public function hasLocks(int $now): bool {
-		if ($this->getSyncNewLock() !== null || $this->getSyncNewLock() > ($now - self::LOCK_TIMEOUT)) {
-			return true;
-		}
-		if ($this->getSyncChangedLock() !== null || $this->getSyncChangedLock() > ($now - self::LOCK_TIMEOUT)) {
-			return true;
-		}
-		if ($this->getSyncVanishedLock() !== null || $this->getSyncVanishedLock() > ($now - self::LOCK_TIMEOUT)) {
-			return true;
-		}
-		return false;
+		return $this->hasNewLock($now)
+			|| $this->hasChangedLock($now)
+			|| $this->hasVanishedLock($now);
 	}
 
 	/**

@@ -4,28 +4,30 @@
 -->
 <template>
 	<div class="wrapper">
-		<EmptyContent
+		<NcEmptyContent
 			v-if="hint"
 			class="empty-content"
 			:name="hint">
 			<template #icon>
-				<IconLoading />
+				<NcLoadingIcon />
 			</template>
-			<transition name="fade">
-				<em v-if="slowHint && slow">{{ slowHint }}</em>
-			</transition>
-		</EmptyContent>
-		<IconLoading v-else class="container" />
+			<template #description>
+				<transition name="fade">
+					<em v-if="slowHint && slow">{{ slowHint }}</em>
+				</transition>
+			</template>
+		</NcEmptyContent>
+		<NcLoadingIcon v-else class="container" />
 	</div>
 </template>
 
 <script>
-import { NcEmptyContent as EmptyContent, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import { NcEmptyContent, NcLoadingIcon } from '@nextcloud/vue'
 export default {
 	name: 'Loading',
 	components: {
-		IconLoading,
-		EmptyContent,
+		NcLoadingIcon,
+		NcEmptyContent,
 	},
 
 	props: {
@@ -57,7 +59,7 @@ export default {
 		}, 3500)
 	},
 
-	beforeUnmount() {
+	beforeDestroy() {
 		clearTimeout(this.slowTimer)
 	},
 }
@@ -85,6 +87,6 @@ export default {
 	flex-direction: column;
 	flex: 1 auto;
 	align-items: center;
-	height: 100vh;
+	height: 100%;
 }
 </style>

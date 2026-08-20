@@ -66,6 +66,12 @@ class ContactsIntegration {
 				if ($e === '') {
 					continue;
 				}
+
+				$mightBeValidEmail = filter_var($e, FILTER_VALIDATE_EMAIL);
+				if ($mightBeValidEmail === false) {
+					continue;
+				}
+
 				$receivers[] = [
 					'id' => $id,
 					// Show full name if possible or fall back to email

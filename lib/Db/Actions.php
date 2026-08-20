@@ -47,7 +47,6 @@ class Actions extends Entity implements JsonSerializable {
 			'accountId' => $this->getAccountId(),
 			'actionSteps' => $this->actionSteps,
 			'icon' => $this->icon,
-
 		];
 	}
 }
