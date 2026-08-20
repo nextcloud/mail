@@ -19,6 +19,7 @@ use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\CouldNotConnectException;
+use OCA\Mail\Exception\DuplicateEmailAddress;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JsonResponse as MailJsonResponse;
 use OCA\Mail\Http\TrapError;
@@ -178,6 +179,11 @@ class AccountsController extends Controller {
 
 			$this->logger->info('Creating account failed: ' . $e->getMessage(), $data);
 			return MailJsonResponse::fail($data);
+		} catch (DuplicateEmailAddress $e) {
+			$this->logger->info('Trying to create already existing account.');
+			return MailJsonResponse::fail([
+				'error' => 'ACCOUNT_EXISTS',
+			]);
 		} catch (ServiceException $e) {
 			$this->logger->error('Creating account failed: ' . $e->getMessage(), [
 				'exception' => $e,
@@ -341,12 +347,6 @@ class AccountsController extends Controller {
 			$this->logger->info('Creating account disabled by admin.');
 			return MailJsonResponse::error('Could not create account');
 		}
-		if (empty($this->accountService->findByUserIdAndAddress($this->userId, $emailAddress)) === false) {
-			$this->logger->info('Trying to create already existing account.');
-			return MailJsonResponse::fail([
-				'error' => 'ACCOUNT_EXISTS',
-			]);
-		}
 		if (!$this->hostValidator->isValid($imapHost)) {
 			$this->logger->debug('Prevented access to invalid IMAP host', [
 				'host' => $imapHost,
@@ -392,6 +392,11 @@ class AccountsController extends Controller {
 
 			$this->logger->info('Creating account failed: ' . $e->getMessage(), $data);
 			return MailJsonResponse::fail($data);
+		} catch (DuplicateEmailAddress $e) {
+			$this->logger->info('Trying to create already existing account.');
+			return MailJsonResponse::fail([
+				'error' => 'ACCOUNT_EXISTS',
+			]);
 		} catch (ServiceException $e) {
 			$this->logger->error('Creating account failed: ' . $e->getMessage(), [
 				'exception' => $e,
