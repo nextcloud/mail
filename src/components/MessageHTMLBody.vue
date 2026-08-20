@@ -37,7 +37,8 @@
 			</Actions>
 		</div>
 		<div id="message-container" :class="{ scroll: !fullHeight }">
-			<!-- allow-same-origin: parent JS accesses contentDocument directly (image unblocking, resize, print).
+			<!-- allow-scripts: the server-injected iframe-resizer child must run to size the frame to its content.
+			     allow-same-origin: parent JS accesses contentDocument directly (image unblocking, resize, print).
 			     allow-popups + allow-popups-to-escape-sandbox: email links must open as normal tabs, not sandboxed ones. -->
 			<iframe
 				ref="iframe"
@@ -45,7 +46,7 @@
 				:title="t('mail', 'Message frame')"
 				:src="url"
 				seamless
-				sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+				sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
 				@load="onMessageFrameLoad" />
 		</div>
 	</div>
