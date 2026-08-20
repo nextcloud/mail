@@ -246,4 +246,15 @@ class HtmlTest extends TestCase {
 		$sanitizedStyleSheet = $html->sanitizeStyleSheet($styleSheet);
 		self::assertSame($expected, $sanitizedStyleSheet);
 	}
+
+	public function testSanitizeHtmlMailBodyPreservesId(): void {
+		$urlGenerator = $this->createStub(IURLGenerator::class);
+		$request = $this->createStub(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$result = $html->sanitizeHtmlMailBody(42, '<p id="target">hello</p>', []);
+
+		$this->assertStringContainsString('id="target"', $result);
+	}
 }

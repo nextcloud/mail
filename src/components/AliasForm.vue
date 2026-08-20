@@ -37,7 +37,7 @@
 					:form="formId"
 					:name="t('mail', 'Update alias')">
 					<template #icon>
-						<IconLoading v-if="loading" :size="20" />
+						<NcLoadingIcon v-if="loading" :size="20" />
 						<IconCheck v-else :size="20" />
 					</template>
 				</NcButton>
@@ -63,7 +63,7 @@
 					:name="t('mail', 'Delete alias')"
 					@click.prevent="deleteAlias">
 					<template #icon>
-						<IconLoading v-if="loading" :size="20" />
+						<NcLoadingIcon v-if="loading" :size="20" />
 						<IconDelete v-else :size="20" />
 					</template>
 				</NcButton>
@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import { NcLoadingIcon as IconLoading, NcButton } from '@nextcloud/vue'
+import { NcButton, NcLoadingIcon } from '@nextcloud/vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import IconRename from 'vue-material-design-icons/PencilOutline.vue'
 import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
@@ -83,7 +83,7 @@ export default {
 	components: {
 		NcButton,
 		IconRename,
-		IconLoading,
+		NcLoadingIcon,
 		IconDelete,
 		IconCheck,
 	},

@@ -120,7 +120,13 @@ class OutOfOfficeParser {
 			$vacationCondition = "currentdate :value \"ge\" \"iso8601\" \"$formattedStart\"";
 		}
 
-		$automaticMailCondition = 'anyof(exists "List-Id", exists "List-Unsubscribe")';
+		$skipConditions = [
+			'exists "List-Id"',
+			'exists "List-Unsubscribe"',
+			'address :all :matches ["From", "Sender"] ["noreply@*", "no-reply@*"]',
+		];
+
+		$automaticMailCondition = 'anyof(' . join(', ', $skipConditions) . ')';
 
 		$escapedSubject = SieveUtils::escapeString($state->getSubject());
 		$vacation = [

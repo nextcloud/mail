@@ -62,7 +62,7 @@
 			</div>
 			<div class="floating-composer__body">
 				<KeepAlive>
-					<EmptyContent
+					<NcEmptyContent
 						v-if="error"
 						:name="t('mail', 'Error sending your message')"
 						class="empty-content"
@@ -78,8 +78,8 @@
 								{{ t('mail', 'Retry') }}
 							</NcButton>
 						</template>
-					</EmptyContent>
-					<EmptyContent
+					</NcEmptyContent>
+					<NcEmptyContent
 						v-else-if="warning"
 						:name="t('mail', 'Warning sending your message')"
 						class="empty-content"
@@ -95,7 +95,8 @@
 								{{ t('mail', 'Send anyway') }}
 							</NcButton>
 						</template>
-					</EmptyContent>
+					</NcEmptyContent>
+
 					<Composer
 						v-else
 						ref="composer"
@@ -122,6 +123,7 @@
 						:is-first-open="modalFirstOpen"
 						:is-draft="composerData.draftId !== undefined"
 						:request-mdn="composerData.requestMdn"
+						:is-ai-generated="composerData.isAiGenerated"
 						:accounts="accounts"
 						@update:from-account="patchComposerData({ accountId: $event })"
 						@update:from-alias="patchComposerData({ aliasId: $event })"
@@ -135,6 +137,7 @@
 						@update:smime-sign="patchComposerData({ smimeSign: $event })"
 						@update:smime-encrypt="patchComposerData({ smimeSign: $event })"
 						@update:request-mdn="patchComposerData({ requestMdn: $event })"
+						@update:is-ai-generated="patchComposerData({ isAiGenerated: $event })"
 						@draft="onDraft"
 						@discard-draft="discardDraft"
 						@upload-attachment="onAttachmentUploading"
@@ -147,10 +150,10 @@
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import { translate as t } from '@nextcloud/l10n'
+import { t } from '@nextcloud/l10n'
 import {
-	NcEmptyContent as EmptyContent,
 	NcButton,
+	NcEmptyContent,
 } from '@nextcloud/vue'
 import { mapActions, mapState, mapStores } from 'pinia'
 import DefaultComposerIcon from 'vue-material-design-icons/ArrowCollapse.vue'
@@ -177,7 +180,7 @@ export default {
 	components: {
 		NcButton,
 		Composer,
-		EmptyContent,
+		NcEmptyContent,
 		MinimizeIcon,
 		RecipientInfo,
 		MaximizeIcon,

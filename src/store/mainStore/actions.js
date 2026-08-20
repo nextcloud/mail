@@ -597,6 +597,7 @@ export default function mainStoreActions() {
 					data = {
 						...data,
 						message,
+						isAiGenerated: data.isAiGenerated ?? message.hasAiGeneratedHeader ?? false,
 					}
 
 					// Fetch and transform the body into a rich text object

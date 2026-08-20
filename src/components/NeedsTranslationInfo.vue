@@ -5,6 +5,7 @@
 
 <template>
 	<div
+		v-if="availableOutputLanguages.length > 0"
 		class="needs-translation-info"
 		:class="{ 'needs-translation-info--html': isHtml }">
 		{{ t('mail', 'Translate this message to {language}', { language: localLanguage }) }}

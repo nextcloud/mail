@@ -28,6 +28,7 @@ class NewMessageReceivedEvent extends Event implements IWebhookCompatibleEvent {
 		return $this->uri;
 	}
 
+	#[\Override]
 	public function getWebhookSerializable(): array {
 		return [
 			'accountId' => $this->account->getId(),

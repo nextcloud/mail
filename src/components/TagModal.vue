@@ -10,7 +10,7 @@
 		:envelopes="envelopes"
 		:account-id="envelopes[0].accountId"
 		@close="closeDeleteModal" />
-	<Modal
+	<NcModal
 		v-else
 		size="large"
 		label-id="tag-modal-heading"
@@ -39,25 +39,25 @@
 					</template>
 					{{ t('mail', 'Add tag') }}
 				</NcButton>
-				<ActionInput v-if="editing" :disabled="showSaving" @submit="createTag">
+				<NcActionInput v-if="editing" :disabled="showSaving" @submit="createTag">
 					<template #icon>
 						<IconTag :size="20" />
 					</template>
-				</ActionInput>
-				<ActionText v-if="showSaving">
+				</NcActionInput>
+				<NcActionText v-if="showSaving">
 					<template #icon>
-						<IconLoading :size="20" />
+						<NcLoadingIcon :size="20" />
 					</template>
 					{{ t('mail', 'Saving tag …') }}
-				</ActionText>
+				</NcActionText>
 			</div>
 		</div>
-	</Modal>
+	</NcModal>
 </template>
 
 <script>
 import { showError, showInfo } from '@nextcloud/dialogs'
-import { NcActionInput as ActionInput, NcActionText as ActionText, NcLoadingIcon as IconLoading, NcModal as Modal, NcButton } from '@nextcloud/vue'
+import { NcActionInput, NcActionText, NcButton, NcLoadingIcon, NcModal } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconTag from 'vue-material-design-icons/TagOutline.vue'
@@ -78,12 +78,12 @@ function randomColor() {
 export default {
 	name: 'TagModal',
 	components: {
-		Modal,
-		ActionText,
-		ActionInput,
+		NcModal,
+		NcActionText,
+		NcActionInput,
 		DeleteTagModal,
 		IconTag,
-		IconLoading,
+		NcLoadingIcon,
 		TagItem,
 		NcButton,
 		IconAdd,

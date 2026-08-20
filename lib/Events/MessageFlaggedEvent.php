@@ -50,6 +50,7 @@ class MessageFlaggedEvent extends Event implements IWebhookCompatibleEvent {
 		return $this->set;
 	}
 
+	#[\Override]
 	public function getWebhookSerializable(): array {
 		return [
 			'accountId' => $this->account->getId(),

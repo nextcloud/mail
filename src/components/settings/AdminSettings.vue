@@ -4,7 +4,7 @@
 -->
 
 <template>
-	<SettingsSection
+	<NcSettingsSection
 		:name="t('mail', 'Mail app')"
 		:description="t('mail', 'The mail app allows users to read mails on their IMAP accounts.')">
 		<p>
@@ -91,7 +91,7 @@
 			}}
 		</h3>
 		<p>
-			<ButtonVue
+			<NcButton
 				class="config-button"
 				:aria-label="t('mail', 'Add new config')"
 				@click="addNew = true">
@@ -99,8 +99,8 @@
 					<IconAdd :size="20" />
 				</template>
 				{{ t('mail', 'Add new config') }}
-			</ButtonVue>
-			<ButtonVue
+			</NcButton>
+			<NcButton
 				class="config-button"
 				:aria-label="t('mail', 'Provision all accounts')"
 				@click="provisionAll">
@@ -108,7 +108,7 @@
 					<IconSettings :size="20" />
 				</template>
 				{{ t('mail', 'Provision all accounts') }}
-			</ButtonVue>
+			</NcButton>
 			<ProvisioningSettings
 				v-if="addNew"
 				:key="formKey"
@@ -277,15 +277,15 @@
 				</p>
 			</article>
 		</div>
-	</SettingsSection>
+	</NcSettingsSection>
 </template>
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
-import ButtonVue from '@nextcloud/vue/components/NcButton'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
-import SettingsSection from '@nextcloud/vue/components/NcSettingsSection'
+import NcSettingsSection from '@nextcloud/vue/components/NcSettingsSection'
 import IconSettings from 'vue-material-design-icons/CogOutline.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import AntiSpamSettings from './AntiSpamSettings.vue'
@@ -318,8 +318,8 @@ export default {
 		AntiSpamSettings,
 		MicrosoftAdminOauthSettings,
 		ProvisioningSettings,
-		SettingsSection,
-		ButtonVue,
+		NcSettingsSection,
+		NcButton,
 		IconAdd,
 		IconSettings,
 		NcCheckboxRadioSwitch,

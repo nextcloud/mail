@@ -27,7 +27,6 @@ use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AiIntegrations\Cache;
 use OCA\Mail\Service\AiIntegrations\DefaultPrompts;
 use OCP\IAppConfig;
-use OCP\IL10N;
 use OCP\IUser;
 use OCP\IUserManager;
 use OCP\L10N\IFactory;
@@ -50,7 +49,6 @@ class AiIntegrationsServiceTest extends TestCase {
 	private IMailManager|MockObject $mailManager;
 	private TaskProcessingManager|MockObject $taskProcessingManager;
 	private TaskProcessingProvider|MockObject $taskProcessingProvider;
-	private IL10N|MockObject $l10n;
 	private IFactory|MockObject $l10nFactory;
 	private IUserManager|MockObject $userManager;
 
@@ -63,7 +61,6 @@ class AiIntegrationsServiceTest extends TestCase {
 		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->mailManager = $this->createMock(IMailManager::class);
 		$this->taskProcessingManager = $this->createMock(TaskProcessingManager::class);
-		$this->l10n = $this->createMock(IL10N::class);
 		$this->l10nFactory = $this->createMock(IFactory::class);
 		$this->userManager = $this->createMock(IUserManager::class);
 		$this->aiIntegrationsService = new AiIntegrationsService(
@@ -72,7 +69,6 @@ class AiIntegrationsServiceTest extends TestCase {
 			$this->clientFactory,
 			$this->mailManager,
 			$this->taskProcessingManager,
-			$this->l10n,
 			$this->l10nFactory,
 			$this->userManager,
 			$this->appConfig,
@@ -694,106 +690,6 @@ class AiIntegrationsServiceTest extends TestCase {
 		$this->mailManager->method('getImapMessage')->willReturn($imapMessage);
 
 		$this->aiIntegrationsService->summarizeMessages($account, [$message]);
-	}
-
-	public function testRequiresTranslationNoBackend(): void {
-		$account = new Account(new MailAccount());
-		$mailbox = new Mailbox();
-		$message = new Message();
-
-		$this->taskProcessingManager
-			->method('getAvailableTaskTypes')
-			->willReturn([]);
-		$result = $this->aiIntegrationsService->requiresTranslation($account, $mailbox, $message, '');
-		$this->assertNull($result);
-
-	}
-
-	public function testRequiresTranslation(): void {
-		$account = new Account(new MailAccount());
-		$mailbox = new Mailbox();
-		$message = new Message();
-		$imapMessage = $this->createMock(IMAPMessage::class);
-		$message->setUid(1);
-		$currentUserId = 'user';
-		$this->taskProcessingManager
-			->method('getAvailableTaskTypes')
-			->willReturn([TextToText::ID => $this->taskProcessingProvider]);
-		$this->cache->method('getValue')->willReturn(false);
-		$this->clientFactory->method('getClient')->with($account)->willReturn($this->createMock(Horde_Imap_Client_Socket::class));
-		$this->mailManager->method('getImapMessage')->willReturn($imapMessage);
-		$imapMessage->method('isOneClickUnsubscribe')->willReturn(false);
-		$imapMessage->method('getUnsubscribeUrl')->willReturn(null);
-		$fromList = new AddressList([ Address::fromRaw('personal@example.com', 'personal@example.com')]);
-		$imapMessage->method('getFrom')->willReturn($fromList);
-		$imapMessage->method('getPlainBody')->willReturn('Ceci n\'est pas un message');
-
-		$this->taskProcessingManager->expects($this->once())
-			->method('runTask')
-			->will($this->returnCallback(function (TaskProcessingTask $task) {
-				$task->setOutput(['output' => '{"needsTranslation": true}, the message is in French that is the value returned is true ']);
-				return $task;
-			}));
-
-		$result = $this->aiIntegrationsService->requiresTranslation($account, $mailbox, $message, $currentUserId);
-
-		$this->assertTrue($result);
-	}
-
-	public static function provideUnusableTranslationOutput(): array {
-		return [
-			'missing output' => [null],
-			'empty output' => [''],
-			'whitespace-only output' => ['   '],
-		];
-	}
-
-	/**
-	 * @dataProvider provideUnusableTranslationOutput
-	 */
-	public function testRequiresTranslationRejectsUnusableOutput(?string $output): void {
-		$account = new Account(new MailAccount());
-		$mailbox = new Mailbox();
-		$message = new Message();
-		$message->setId(123);
-		$message->setUid(1);
-		$currentUserId = 'user';
-		$imapMessage = $this->createMock(IMAPMessage::class);
-
-		$this->taskProcessingManager
-			->method('getAvailableTaskTypes')
-			->willReturn([TextToText::ID => $this->taskProcessingProvider]);
-		$this->cache->method('getValue')->willReturn(false);
-		$this->cache->expects(self::never())->method('addValue');
-		$this->l10n->method('getLanguageCode')->willReturn('en_US');
-		$this->clientFactory->method('getClient')->with($account)->willReturn($this->createMock(Horde_Imap_Client_Socket::class));
-		$this->mailManager->method('getImapMessage')->willReturn($imapMessage);
-		$imapMessage->method('isOneClickUnsubscribe')->willReturn(false);
-		$imapMessage->method('getUnsubscribeUrl')->willReturn(null);
-		$imapMessage->method('getFrom')->willReturn(new AddressList([
-			Address::fromRaw('personal@example.com', 'personal@example.com'),
-		]));
-		$imapMessage->method('getPlainBody')->willReturn('Ceci n\'est pas un message');
-
-		$this->taskProcessingManager->expects(self::once())
-			->method('runTask')
-			->willReturnCallback(function (TaskProcessingTask $task) use ($output) {
-				$task->setOutput($output === null ? null : ['output' => $output]);
-				$task->setStatus($output === null ? TaskProcessingTask::STATUS_FAILED : TaskProcessingTask::STATUS_SUCCESSFUL);
-				$task->setErrorMessage($output === null ? 'Provider timeout' : null);
-				return $task;
-			});
-		$this->logger->expects(self::once())
-			->method('warning')
-			->with(
-				'Translation check task returned no usable output',
-				self::arrayHasKey('status'),
-			);
-
-		$this->expectException(ServiceException::class);
-		$this->expectExceptionMessage('Translation check task returned no usable output');
-
-		$this->aiIntegrationsService->requiresTranslation($account, $mailbox, $message, $currentUserId);
 	}
 
 	public function testRequiresFollowUp(): void {
