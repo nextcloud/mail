@@ -39,6 +39,17 @@ describe('MessageHTMLBody', () => {
 		...modifiers,
 	})
 
+	describe('iframe sandbox', () => {
+		it('allows scripts so the injected resizer can size the frame', () => {
+			const view = mountBody()
+
+			const sandbox = view.vm.$refs.iframe.getAttribute('sandbox').split(' ')
+
+			expect(sandbox).toContain('allow-scripts')
+			expect(sandbox).toContain('allow-same-origin')
+		})
+	})
+
 	describe('print shortcut', () => {
 		it('takes the shortcut from inside the frame, where the app window cannot see it', () => {
 			const view = mountBody()
