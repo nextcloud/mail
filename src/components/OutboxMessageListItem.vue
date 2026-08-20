@@ -4,7 +4,7 @@
 -->
 
 <template>
-	<ListItem
+	<NcListItem
 		class="outbox-message"
 		:class="{ selected }"
 		:name="title"
@@ -21,7 +21,7 @@
 			{{ subjectForSubtitle }}
 		</template>
 		<template #actions>
-			<ActionButton
+			<NcActionButton
 				v-if="message.status === statusImapSentMailboxFail()"
 				:close-after-click="true"
 				@click="sendMessageNow">
@@ -31,8 +31,8 @@
 						:title="t('mail', 'Copy to Sent Folder')"
 						:size="20" />
 				</template>
-			</ActionButton>
-			<ActionButton
+			</NcActionButton>
+			<NcActionButton
 				v-if="message.status !== statusImapSentMailboxFail() && message.status !== statusSmtpError()"
 				:close-after-click="true"
 				@click="sendMessageNow">
@@ -42,24 +42,24 @@
 						:title="t('mail', 'Send now')"
 						:size="20" />
 				</template>
-			</ActionButton>
-			<ActionButton
+			</NcActionButton>
+			<NcActionButton
 				:close-after-click="true"
 				@click="deleteMessage">
 				<template #icon>
 					<IconDelete :size="24" />
 				</template>
 				{{ t('mail', 'Delete') }}
-			</ActionButton>
+			</NcActionButton>
 		</template>
-	</ListItem>
+	</NcListItem>
 </template>
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import { getLanguage, translate as t } from '@nextcloud/l10n'
+import { getLanguage, t } from '@nextcloud/l10n'
 import moment from '@nextcloud/moment'
-import { NcActionButton as ActionButton, NcListItem as ListItem } from '@nextcloud/vue'
+import { NcActionButton, NcListItem } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import Copy from 'vue-material-design-icons/ContentCopy.vue'
 import Send from 'vue-material-design-icons/SendOutline.vue'
@@ -80,9 +80,9 @@ import useOutboxStore from '../store/outboxStore.js'
 export default {
 	name: 'OutboxMessageListItem',
 	components: {
-		ListItem,
+		NcListItem,
 		Avatar,
-		ActionButton,
+		NcActionButton,
 		IconDelete,
 		Send,
 		Copy,

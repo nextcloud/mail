@@ -30,6 +30,7 @@ class MessageSentEvent extends Event implements IWebhookCompatibleEvent {
 		return $this->localMessage;
 	}
 
+	#[\Override]
 	public function getWebhookSerializable(): array {
 		// No local message id: the row is deleted right after a successful send
 		return [

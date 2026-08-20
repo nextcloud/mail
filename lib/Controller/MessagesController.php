@@ -1089,51 +1089,6 @@ class MessagesController extends Controller {
 		return new JSONResponse($replies);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 *
-	 * @param int $messageId
-	 *
-	 * @return JSONResponse
-	 */
-	#[TrapError]
-	public function needsTranslation(int $messageId): JSONResponse {
-		if ($this->userId === null) {
-			return new JSONResponse([], Http::STATUS_FORBIDDEN);
-		}
-		try {
-			$effectiveUserId = $this->delegationService->resolveMessageUserId($messageId, $this->userId);
-			$message = $this->mailManager->getMessage($effectiveUserId, $messageId);
-			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
-			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
-		} catch (DoesNotExistException $e) {
-			return new JSONResponse([], Http::STATUS_FORBIDDEN);
-		}
-
-		if (!$this->aiIntegrationService->isLlmProcessingEnabled()) {
-			$response = new JSONResponse([], Http::STATUS_NOT_IMPLEMENTED);
-			$response->cacheFor(60 * 60 * 24, false, true);
-			return $response;
-		}
-
-		try {
-			$requiresTranslation = $this->aiIntegrationService->requiresTranslation(
-				$account,
-				$mailbox,
-				$message,
-				$effectiveUserId
-			);
-			$response = new JSONResponse(['requiresTranslation' => $requiresTranslation === true]);
-			$response->cacheFor(60 * 60 * 24, false, true);
-			return $response;
-		} catch (ServiceException $e) {
-			$this->logger->error('Translation check failed: ' . $e->getMessage(), [
-				'exception' => $e,
-			]);
-			return new JSONResponse([], Http::STATUS_NO_CONTENT);
-		}
-	}
-
 	private function enrichAttachments(int $id, array $attachments): array {
 		return array_map(
 			fn ($attachment) => $this->enrichAttachment($id, $attachment),

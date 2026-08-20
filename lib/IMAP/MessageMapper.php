@@ -293,7 +293,7 @@ class MessageMapper {
 			]), false);
 		}
 
-		$fetchResults = array_values(array_filter($fetchResults, static fn (Horde_Imap_Client_Data_Fetch $fetchResult) => $fetchResult->exists(Horde_Imap_Client::FETCH_ENVELOPE)));
+		$fetchResults = array_values(array_filter($fetchResults, static fn (Horde_Imap_Client_Data_Fetch $fetchResult) => $fetchResult->exists(Horde_Imap_Client::FETCH_ENVELOPE) && $fetchResult->getUid() !== null));
 
 		if ($fetchResults === []) {
 			$nIds = count($ids);

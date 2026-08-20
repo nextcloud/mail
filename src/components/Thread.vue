@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<AppContentDetails id="mail-message">
+	<NcAppContentDetails id="mail-message">
 		<!-- Show outer loading screen only if we have no data about the thread -->
 		<Loading v-if="loading && thread.length === 0" :hint="t('mail', 'Loading thread')" />
 		<Error
@@ -35,13 +35,13 @@
 				@toggle-expand="toggleExpand(env.databaseId)"
 				@print="print" />
 		</template>
-	</AppContentDetails>
+	</NcAppContentDetails>
 </template>
 
 <script>
 import { showError } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
-import { NcAppContentDetails as AppContentDetails } from '@nextcloud/vue'
+import { NcAppContentDetails } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import Error from './Error.vue'
 import Loading from './Loading.vue'
@@ -83,7 +83,7 @@ export default {
 	name: 'Thread',
 	components: {
 		ThreadSummary,
-		AppContentDetails,
+		NcAppContentDetails,
 		Error,
 		Loading,
 		ThreadEnvelope,

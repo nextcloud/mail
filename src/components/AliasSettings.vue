@@ -13,16 +13,16 @@
 					:alias="accountAlias"
 					:enable-update="false"
 					:enable-delete="false">
-					<ButtonVue
+					<NcButton
 						v-if="!account.provisioningId"
-						type="tertiary-no-background"
+						variant="tertiary-no-background"
 						:aria-label="t('mail', 'Go back')"
 						:name="t('mail', 'Change name')"
 						@click="$emit('rename-primary-alias')">
 						<template #icon>
 							<IconRename :size="20" />
 						</template>
-					</ButtonVue>
+					</NcButton>
 				</AliasForm>
 			</li>
 
@@ -52,41 +52,41 @@
 		</ul>
 
 		<div v-if="!account.provisioningId" class="aliases-controls">
-			<ButtonVue
+			<NcButton
 				v-if="!showForm"
-				type="primary"
+				variant="primary"
 				:aria-label="t('mail', 'Add alias')"
 				@click="showForm = true">
 				{{ t('mail', 'Add alias') }}
-			</ButtonVue>
+			</NcButton>
 
-			<ButtonVue
+			<NcButton
 				v-if="showForm"
-				native-type="submit"
-				type="primary"
+				type="submit"
+				variant="primary"
 				form="createAliasForm"
 				:aria-label="t('mail', 'Create alias')"
 				:disabled="loading">
 				<template #icon>
-					<IconLoading v-if="loading" :size="20" />
+					<NcLoadingIcon v-if="loading" :size="20" />
 					<IconCheck v-else :size="20" />
 				</template>
 				{{ t('mail', 'Create alias') }}
-			</ButtonVue>
-			<ButtonVue
+			</NcButton>
+			<NcButton
 				v-if="showForm"
-				type="tertiary-no-background"
+				variant="tertiary-no-background"
 				class="button-text"
 				:aria-label="t('mail', 'Cancel')"
 				@click="resetCreate">
 				{{ t("mail", "Cancel") }}
-			</ButtonVue>
+			</NcButton>
 		</div>
 	</div>
 </template>
 
 <script>
-import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import { NcButton, NcLoadingIcon } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import IconRename from 'vue-material-design-icons/PencilOutline.vue'
@@ -98,8 +98,8 @@ export default {
 	name: 'AliasSettings',
 	components: {
 		AliasForm,
-		ButtonVue,
-		IconLoading,
+		NcButton,
+		NcLoadingIcon,
 		IconCheck,
 		IconRename,
 	},

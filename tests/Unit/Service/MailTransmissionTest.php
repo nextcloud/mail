@@ -398,6 +398,40 @@ class MailTransmissionTest extends TestCase {
 		$this->transmission->saveLocalDraft(new Account($mailAccount), $localMessage);
 	}
 
+	public function testSaveLocalDraftWithAiGeneratedHeader(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(10);
+		$mailAccount->setUserId('gunther');
+		$mailAccount->setName('Gunther');
+		$mailAccount->setEmail('gunther@stardewvalley-museum.com');
+		$mailAccount->setDraftsMailboxId(123);
+		$localMessage = new LocalMessage();
+		$localMessage->setType(LocalMessage::TYPE_DRAFT);
+		$localMessage->setAccountId($mailAccount->getId());
+		$localMessage->setSubject('subject');
+		$localMessage->setBodyHtml('message');
+		$localMessage->setHtml(true);
+		$localMessage->setAttachments([]);
+		$localMessage->setAiGenerated(true);
+		$to = Recipient::fromParams([
+			'email' => 'emily@stardewvalleypub.com',
+			'label' => 'Emily',
+			'type' => Recipient::TYPE_TO
+		]);
+		$localMessage->setRecipients([$to]);
+
+		$this->messageMapper->expects(self::once())
+			->method('save')
+			->with(
+				self::anything(),
+				self::anything(),
+				self::callback(static fn (string $raw) => str_contains($raw, LocalMessage::HEADER_AI_GENERATED . ': 1')),
+				self::anything(),
+			);
+
+		$this->transmission->saveLocalDraft(new Account($mailAccount), $localMessage);
+	}
+
 	public function testCreateDraftsMailboxAndSave(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(10);
@@ -425,6 +459,62 @@ class MailTransmissionTest extends TestCase {
 			->method('save');
 
 		$this->transmission->saveLocalDraft(new Account($mailAccount), $localMessage);
+	}
+
+	public function testSendMessageWithAiGeneratedHeader(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setName('Bob');
+		$mailAccount->setEmail('bob@mail.example');
+		$mailAccount->setUserId('bob');
+		$mailAccount->setSentMailboxId(123);
+		$account = new Account($mailAccount);
+		$localMessage = new LocalMessage();
+		$localMessage->setSubject('Test');
+		$localMessage->setBodyPlain('Test');
+		$localMessage->setHtml(false);
+		$localMessage->setAiGenerated(true);
+		$transport = $this->createStub(Horde_Mail_Transport::class);
+		$this->smtpClientFactory->expects($this->once())
+			->method('create')
+			->willReturn($transport);
+		$this->transmissionService->expects(self::once())
+			->method('getSignMimePart')
+			->willReturnCallback(static fn ($localMessage, $account, $mimePart) => $mimePart);
+		$this->transmissionService->expects(self::once())
+			->method('getEncryptMimePart')
+			->willReturnCallback(static fn ($localMessage, $to, $cc, $bcc, $account, $mimePart) => $mimePart);
+
+		$this->transmission->sendMessage($account, $localMessage);
+
+		$this->assertStringContainsString(LocalMessage::HEADER_AI_GENERATED . ': 1', $localMessage->getRaw());
+	}
+
+	public function testSendMessageWithoutAiGeneratedHeader(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setName('Bob');
+		$mailAccount->setEmail('bob@mail.example');
+		$mailAccount->setUserId('bob');
+		$mailAccount->setSentMailboxId(123);
+		$account = new Account($mailAccount);
+		$localMessage = new LocalMessage();
+		$localMessage->setSubject('Test');
+		$localMessage->setBodyPlain('Test');
+		$localMessage->setHtml(false);
+		$localMessage->setAiGenerated(false);
+		$transport = $this->createStub(Horde_Mail_Transport::class);
+		$this->smtpClientFactory->expects($this->once())
+			->method('create')
+			->willReturn($transport);
+		$this->transmissionService->expects(self::once())
+			->method('getSignMimePart')
+			->willReturnCallback(static fn ($localMessage, $account, $mimePart) => $mimePart);
+		$this->transmissionService->expects(self::once())
+			->method('getEncryptMimePart')
+			->willReturnCallback(static fn ($localMessage, $to, $cc, $bcc, $account, $mimePart) => $mimePart);
+
+		$this->transmission->sendMessage($account, $localMessage);
+
+		$this->assertStringNotContainsString(LocalMessage::HEADER_AI_GENERATED, $localMessage->getRaw());
 	}
 
 	public function testSendMessageCc() {

@@ -4,7 +4,7 @@
 -->
 
 <template>
-	<AppNavigation class="mail-navigation">
+	<NcAppNavigation class="mail-navigation">
 		<template #search>
 			<NewMessageButtonHeader class="mail-navigation__new-message-button" />
 		</template>
@@ -70,7 +70,7 @@
 				<NavigationOutbox class="outbox" />
 			</div>
 			<div class="mail-settings">
-				<AppNavigationItem
+				<NcAppNavigationItem
 					class="mail-settings__button"
 					:close-after-click="true"
 					:name="t('mail', 'Mail settings')"
@@ -78,15 +78,15 @@
 					<template #icon>
 						<IconSetting :size="20" />
 					</template>
-				</AppNavigationItem>
+				</NcAppNavigationItem>
 			</div>
 		</template>
 		<AppSettingsMenu :open.sync="showSettings" />
-	</AppNavigation>
+	</NcAppNavigation>
 </template>
 
 <script>
-import { NcAppNavigation as AppNavigation, NcAppNavigationItem as AppNavigationItem, NcButton } from '@nextcloud/vue'
+import { NcAppNavigation, NcAppNavigationItem, NcButton } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import IconAlertTriangle from 'vue-material-design-icons/AlertOutline.vue'
 import IconSetting from 'vue-material-design-icons/CogOutline.vue'
@@ -103,7 +103,7 @@ import useOutboxStore from '../store/outboxStore.js'
 export default {
 	name: 'Navigation',
 	components: {
-		AppNavigation,
+		NcAppNavigation,
 		AppSettingsMenu,
 		NavigationAccount,
 		NavigationAccountExpandCollapse,
@@ -112,7 +112,7 @@ export default {
 		NcButton,
 		NewMessageButtonHeader,
 		IconSetting,
-		AppNavigationItem,
+		NcAppNavigationItem,
 		IconAlertTriangle,
 	},
 

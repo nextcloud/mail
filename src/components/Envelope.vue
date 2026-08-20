@@ -202,7 +202,7 @@
 				:mimetype-filter="['httpd/unix-directory']"
 				@close="() => isFilePickerOpen = false" />
 			<EnvelopePrimaryActions v-if="!moreActionsOpen && !snoozeOptions" id="primary-actions">
-				<ActionButton
+				<NcActionButton
 					v-if="hasWriteAcl"
 					class="action--primary"
 					:close-after-click="true"
@@ -218,8 +218,8 @@
 					{{
 						data.flags.flagged ? t('mail', 'Unfavorite') : t('mail', 'Favorite')
 					}}
-				</ActionButton>
-				<ActionButton
+				</NcActionButton>
+				<NcActionButton
 					v-if="hasSeenAcl"
 					class="action--primary"
 					:close-after-click="true"
@@ -235,8 +235,8 @@
 					{{
 						data.flags.seen ? t('mail', 'Unread') : t('mail', 'Read')
 					}}
-				</ActionButton>
-				<ActionButton
+				</NcActionButton>
+				<NcActionButton
 					v-if="hasWriteAcl"
 					class="action--primary"
 					:close-after-click="true"
@@ -248,25 +248,25 @@
 					{{
 						isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')
 					}}
-				</ActionButton>
+				</NcActionButton>
 			</EnvelopePrimaryActions>
 			<template v-if="!moreActionsOpen && !snoozeOptions && !quickActionMenu">
-				<ActionText>
+				<NcActionText>
 					<template #icon>
 						<ClockOutlineIcon :size="20" />
 					</template>
 					{{
 						messageLongDate
 					}}
-				</ActionText>
+				</NcActionText>
 				<NcActionSeparator />
-				<ActionButton :is-menu="true" @click="showQuickActionsMenu">
+				<NcActionButton :is-menu="true" @click="showQuickActionsMenu">
 					<template #icon>
 						<IconEmailFast :size="20" />
 					</template>
 					{{ t('mail', 'Quick actions') }}
-				</ActionButton>
-				<ActionButton
+				</NcActionButton>
+				<NcActionButton
 					v-if="hasWriteAcl"
 					:close-after-click="true"
 					@click.prevent="onToggleJunk">
@@ -276,8 +276,8 @@
 					{{
 						data.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
 					}}
-				</ActionButton>
-				<ActionButton
+				</NcActionButton>
+				<NcActionButton
 					v-if="hasWriteAcl"
 					:close-after-click="true"
 					@click.prevent="onOpenTagModal">
@@ -285,8 +285,8 @@
 						<TagIcon :size="20" />
 					</template>
 					{{ t('mail', 'Edit tags') }}
-				</ActionButton>
-				<ActionButton
+				</NcActionButton>
+				<NcActionButton
 					v-if="!isSnoozeDisabled && !isSnoozedMailbox"
 					:close-after-click="false"
 					@click="showSnoozeOptions">
@@ -298,8 +298,8 @@
 					{{
 						t('mail', 'Snooze')
 					}}
-				</ActionButton>
-				<ActionButton
+				</NcActionButton>
+				<NcActionButton
 					v-if="!isSnoozeDisabled && isSnoozedMailbox"
 					:close-after-click="true"
 					@click="onUnSnooze">
@@ -309,8 +309,8 @@
 							:size="20" />
 					</template>
 					{{ t('mail', 'Unsnooze') }}
-				</ActionButton>
-				<ActionButton
+				</NcActionButton>
+				<NcActionButton
 					v-if="hasDeleteAcl"
 					:close-after-click="true"
 					@click.prevent="onOpenMoveModal">
@@ -323,8 +323,8 @@
 					<template v-else>
 						{{ t('mail', 'Move Message') }}
 					</template>
-				</ActionButton>
-				<ActionButton
+				</NcActionButton>
+				<NcActionButton
 					v-if="showArchiveButton && hasArchiveAcl"
 					:close-after-click="true"
 					:disabled="disableArchiveButton"
@@ -338,18 +338,18 @@
 					<template v-else>
 						{{ t('mail', 'Archive message') }}
 					</template>
-				</ActionButton>
-				<ActionButton
+				</NcActionButton>
+				<NcActionButton
 					:close-after-click="false"
 					@click="showMoreActionOptions">
 					<template #icon>
 						<DotsHorizontalIcon :size="20" />
 					</template>
 					{{ t('mail', 'More actions') }}
-				</ActionButton>
+				</NcActionButton>
 			</template>
 			<template v-if="snoozeOptions">
-				<ActionButton
+				<NcActionButton
 					:close-after-click="false"
 					@click="snoozeOptions = false">
 					<template #icon>
@@ -358,18 +358,18 @@
 					{{
 						t('mail', 'Back')
 					}}
-				</ActionButton>
+				</NcActionButton>
 
 				<NcActionSeparator />
 
-				<ActionButton
+				<NcActionButton
 					v-for="option in reminderOptions"
 					:key="option.key"
 					:aria-label="option.ariaLabel"
 					close-after-click
 					@click.stop="onSnooze(option.timestamp)">
 					{{ option.label }}
-				</ActionButton>
+				</NcActionButton>
 
 				<NcActionSeparator />
 
@@ -384,7 +384,7 @@
 					</template>
 				</NcActionInput>
 
-				<ActionButton
+				<NcActionButton
 					:aria-label="t('mail', 'Set custom snooze')"
 					close-after-click
 					@click.stop="setCustomSnooze(customSnoozeDateTime)">
@@ -392,34 +392,34 @@
 						<CheckIcon :size="20" />
 					</template>
 					{{ t('mail', 'Set custom snooze') }}
-				</ActionButton>
+				</NcActionButton>
 			</template>
 			<template v-if="moreActionsOpen">
-				<ActionButton
+				<NcActionButton
 					:close-after-click="false"
 					@click="moreActionsOpen = false">
 					<template #icon>
 						<ChevronLeft :size="20" />
 					</template>
 					{{ t('mail', 'More actions') }}
-				</ActionButton>
-				<ActionButton
+				</NcActionButton>
+				<NcActionButton
 					:close-after-click="true"
 					@click.prevent="onOpenEditAsNew">
 					<template #icon>
 						<PlusIcon :size="20" />
 					</template>
 					{{ t('mail', 'Edit as new message') }}
-				</ActionButton>
-				<ActionButton
+				</NcActionButton>
+				<NcActionButton
 					:close-after-click="true"
 					@click.prevent="showEventModal = true">
 					<template #icon>
 						<IconCreateEvent :size="20" />
 					</template>
 					{{ t('mail', 'Reply with meeting') }}
-				</ActionButton>
-				<ActionButton
+				</NcActionButton>
+				<NcActionButton
 					v-if="tasksEnabled"
 					:close-after-click="true"
 					@click.prevent="showTaskModal = true">
@@ -427,16 +427,16 @@
 						<TaskIcon :size="20" />
 					</template>
 					{{ t('mail', 'Create task') }}
-				</ActionButton>
-				<ActionLink
+				</NcActionButton>
+				<NcActionLink
 					:close-after-click="true"
 					:href="exportMessageLink">
 					<template #icon>
 						<DownloadIcon :size="20" />
 					</template>
 					{{ t('mail', 'Download message') }}
-				</ActionLink>
-				<ActionButton
+				</NcActionLink>
+				<NcActionButton
 					class="message-save-to-cloud"
 					:disabled="savingToCloud"
 					:close-after-click="true"
@@ -445,8 +445,8 @@
 						<IconSave :size="20" />
 					</template>
 					{{ t('mail', 'Save message to Files') }}
-				</ActionButton>
-				<ActionButton
+				</NcActionButton>
+				<NcActionButton
 					v-if="hasDeleteAcl"
 					:close-after-click="true"
 					@click.prevent="onDelete">
@@ -459,18 +459,18 @@
 					<template v-else>
 						{{ t('mail', 'Delete message') }}
 					</template>
-				</ActionButton>
+				</NcActionButton>
 			</template>
 			<template v-if="quickActionMenu">
-				<ActionButton
+				<NcActionButton
 					:close-after-click="false"
 					@click="closeQuickActionsMenu()">
 					<template #icon>
 						<ChevronLeft :size="20" />
 					</template>
 					{{ t('mail', 'Back to all actions') }}
-				</ActionButton>
-				<ActionButton
+				</NcActionButton>
+				<NcActionButton
 					v-for="action in filteredQuickActions"
 					:key="action.id"
 					:close-after-click="true"
@@ -479,13 +479,13 @@
 						<Icon :action="action?.icon" />
 					</template>
 					{{ action.name }}
-				</ActionButton>
-				<ActionButton :close-after-click="true" @click="$emit('open:quick-actions-settings')">
+				</NcActionButton>
+				<NcActionButton :close-after-click="true" @click="$emit('open:quick-actions-settings')">
 					<template #icon>
 						<CogIcon :size="20" />
 					</template>
 					{{ t('mail', 'Manage quick actions') }}
-				</ActionButton>
+				</NcActionButton>
 			</template>
 		</template>
 		<template #tags>
@@ -541,11 +541,11 @@ import { isRTL } from '@nextcloud/l10n'
 import moment from '@nextcloud/moment'
 import { generateUrl } from '@nextcloud/router'
 import {
-	NcActionButton as ActionButton,
-	NcActionLink as ActionLink,
-	NcActionText as ActionText,
+	NcActionButton,
 	NcActionInput,
+	NcActionLink,
 	NcActionSeparator,
+	NcActionText,
 	NcAssistantIcon,
 	NcCheckboxRadioSwitch,
 } from '@nextcloud/vue'
@@ -626,7 +626,7 @@ export default {
 		TaskModal,
 		EnvelopeSkeleton,
 		JunkIcon,
-		ActionButton,
+		NcActionButton,
 		NcCheckboxRadioSwitch,
 		MoveModal,
 		OpenInNewIcon,
@@ -640,8 +640,8 @@ export default {
 		IconAttachment,
 		IconBullet,
 		Reply,
-		ActionLink,
-		ActionText,
+		NcActionLink,
+		NcActionText,
 		DownloadIcon,
 		ClockOutlineIcon,
 		NcActionSeparator,

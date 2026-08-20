@@ -9,7 +9,7 @@ import Nextcloud from '../../../mixins/Nextcloud.js'
 
 vi.mock('@iframe-resizer/parent', () => ({ default: vi.fn() }))
 vi.mock('@nextcloud/initial-state', () => ({ loadState: vi.fn().mockReturnValue(false) }))
-vi.mock('../../../service/AiIntergrationsService.js', () => ({ needsTranslation: vi.fn().mockResolvedValue(false) }))
+vi.mock('../../../util/languageDetection.ts', () => ({ detectForeignLanguage: vi.fn().mockResolvedValue(null) }))
 vi.mock('../../../service/TrustedSenderService.js', () => ({ trustSender: vi.fn() }))
 
 const localVue = createLocalVue()
@@ -37,6 +37,17 @@ describe('MessageHTMLBody', () => {
 		code: `Key${key.toUpperCase()}`,
 		cancelable: true,
 		...modifiers,
+	})
+
+	describe('iframe sandbox', () => {
+		it('allows scripts so the injected resizer can size the frame', () => {
+			const view = mountBody()
+
+			const sandbox = view.vm.$refs.iframe.getAttribute('sandbox').split(' ')
+
+			expect(sandbox).toContain('allow-scripts')
+			expect(sandbox).toContain('allow-same-origin')
+		})
 	})
 
 	describe('print shortcut', () => {
