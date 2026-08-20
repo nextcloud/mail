@@ -75,6 +75,9 @@ class Version1120Date20220223094709 extends SimpleMigrationStep {
 		]);
 		$recipientsTable->addForeignKeyConstraint($localMessageTable, ['local_message_id'], ['id'], ['onDelete' => 'CASCADE']);
 
+		// mail_recip_local_msg_idx was added later and may not exist until optional indices are created
+		$recipientsTable->addIndex(['local_message_id'], 'mail_recip_local_msg_idx');
+
 		$attachmentsTable = $schema->getTable('mail_attachments');
 		$attachmentsTable->addColumn('local_message_id', Types::INTEGER, [
 			'notnull' => false,

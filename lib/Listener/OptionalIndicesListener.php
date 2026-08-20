@@ -55,6 +55,12 @@ class OptionalIndicesListener implements IEventListener {
 		);
 
 		$event->addMissingIndex(
+			'mail_messages',
+			'mail_msg_mb_del_snt_idx',
+			['mailbox_id', 'flag_deleted', 'sent_at'],
+		);
+
+		$event->addMissingIndex(
 			'mail_classifiers',
 			'mail_class_creat_idx',
 			['created_at']
@@ -129,6 +135,12 @@ class OptionalIndicesListener implements IEventListener {
 			'mail_recip_eml_type_mid_idx',
 			['email', 'type', 'message_id'],
 			false,
+		);
+
+		$event->addMissingIndex(
+			'mail_recipients',
+			'mail_recip_local_msg_idx',
+			['local_message_id'],
 		);
 	}
 
