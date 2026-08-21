@@ -13,7 +13,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\ProvisioningMapper;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCP\IL10N;
 use OCP\SetupCheck\ISetupCheck;
 use OCP\SetupCheck\SetupResult;
@@ -26,7 +26,7 @@ class MailConnectionPerformance implements ISetupCheck {
 		private LoggerInterface $logger,
 		private ProvisioningMapper $provisioningMapper,
 		private MailAccountMapper $accountMapper,
-		private IMAPClientFactory $clientFactory,
+		private ProtocolFactory $protocolFactory,
 		private MicroTime $microtime,
 	) {
 	}
@@ -59,7 +59,7 @@ class MailConnectionPerformance implements ISetupCheck {
 			foreach ($collection as $accountId) {
 				$account = new Account($this->accountMapper->findById((int)$accountId));
 				try {
-					$client = $this->clientFactory->getClient($account);
+					$client = $this->protocolFactory->imapClient($account);
 				} catch (ServiceException $e) {
 					$this->logger->warning('Error occurred while getting IMAP client for setup check: ' . $e->getMessage(), [
 						'exception' => $e,

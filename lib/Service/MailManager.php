@@ -9,14 +9,8 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service;
 
-use Horde_Imap_Client;
-use Horde_Imap_Client_Exception;
-use Horde_Imap_Client_Exception_NoSupportExtension;
-use Horde_Imap_Client_Socket;
-use Horde_Mime_Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Attachment;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
@@ -31,54 +25,38 @@ use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ImapFlagEncodingException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\Exception\TrashMailboxNotSetException;
-use OCA\Mail\Folder;
-use OCA\Mail\IMAP\FolderMapper;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\ImapFlag;
-use OCA\Mail\IMAP\MailboxSync;
-use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 use OCA\Mail\Model\IMAPMessage;
+use OCA\Mail\Protocol\ProtocolFactory;
+use OCA\Mail\Service\Search\SearchQuery;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
 use Psr\Log\LoggerInterface;
 use function array_map;
 use function array_values;
 
-class MailManager implements IMailManager {
-	/**
-	 * https://datatracker.ietf.org/doc/html/rfc9051#name-flags-message-attribute
-	 */
-	private const SYSTEM_FLAGS = [
-		'seen' => [Horde_Imap_Client::FLAG_SEEN],
-		'answered' => [Horde_Imap_Client::FLAG_ANSWERED],
-		'flagged' => [Horde_Imap_Client::FLAG_FLAGGED],
-		'deleted' => [Horde_Imap_Client::FLAG_DELETED],
-		'draft' => [Horde_Imap_Client::FLAG_DRAFT],
-		'recent' => [Horde_Imap_Client::FLAG_RECENT],
-	];
-
-	/** @var IEventDispatcher */
-	private $eventDispatcher;
+class MailManager {
 
 	public function __construct(
-		private IMAPClientFactory $imapClientFactory,
-		private MailboxMapper $mailboxMapper,
-		private MailboxSync $mailboxSync,
-		private FolderMapper $folderMapper,
-		private ImapMessageMapper $imapMessageMapper,
-		private DbMessageMapper $dbMessageMapper,
-		IEventDispatcher $eventDispatcher,
-		private LoggerInterface $logger,
-		private TagMapper $tagMapper,
-		private MessageTagsMapper $messageTagsMapper,
-		private ThreadMapper $threadMapper,
-		private ImapFlag $imapFlag,
+		private readonly MailboxMapper $mailboxMapper,
+		private readonly DbMessageMapper $dbMessageMapper,
+		private readonly IEventDispatcher $eventDispatcher,
+		private readonly LoggerInterface $logger,
+		private readonly TagMapper $tagMapper,
+		private readonly MessageTagsMapper $messageTagsMapper,
+		private readonly ProtocolFactory $protocolFactory,
+		private readonly ImapFlag $imapFlag,
+		private readonly ThreadMapper $threadMapper,
 	) {
-		$this->eventDispatcher = $eventDispatcher;
 	}
 
-	#[\Override]
+	//** ============================ Mailbox Operations ============================ */
+
+	/**
+	 * @throws ClientException
+	 */
 	public function getMailbox(string $uid, int $id): Mailbox {
 		try {
 			return $this->mailboxMapper->findByUid($id, $uid);
@@ -94,170 +72,188 @@ class MailManager implements IMailManager {
 	 * @return Mailbox[]
 	 * @throws ServiceException
 	 */
-	#[\Override]
 	public function getMailboxes(Account $account, bool $forceSync = false): array {
-		$this->mailboxSync->sync($account, $this->logger, $forceSync);
+		$this->protocolFactory
+			->mailboxConnector($account)
+			->syncAll($account, $forceSync);
 
 		return $this->mailboxMapper->findAll($account);
 	}
 
-	#[\Override]
+	/**
+	 * @throws ServiceException
+	 * @throws DoesNotExistException the mailbox could not be re-read after being created on the remote (IMAP-backed accounts only)
+	 */
 	public function createMailbox(Account $account, string $name, array $specialUse = []): Mailbox {
-		$client = $this->imapClientFactory->getClient($account);
-		try {
-			$folder = $this->folderMapper->createFolder($client, $name, $specialUse);
-			$this->folderMapper->fetchFolderAcls([$folder], $client);
-			$this->folderMapper->detectFolderSpecialUse([$folder]);
-			$this->mailboxSync->sync($account, $this->logger, true, $client);
-		} catch (Horde_Imap_Client_Exception $e) {
-			throw new ServiceException(
-				'Could not get mailbox status: ' . $e->getMessage(),
-				$e->getCode(),
-				$e
-			);
-		} finally {
-			$client->logout();
-		}
-
-		return $this->mailboxMapper->find($account, $name);
-	}
-
-	#[\Override]
-	public function getImapMessage(Horde_Imap_Client_Socket $client,
-		Account $account,
-		Mailbox $mailbox,
-		int $uid,
-		bool $loadBody = false): IMAPMessage {
-		try {
-			return $this->imapMessageMapper->find(
-				$client,
-				$mailbox->getName(),
-				$uid,
-				$account->getUserId(),
-				$loadBody
-			);
-		} catch (DoesNotExistException|Horde_Mime_Exception|Horde_Imap_Client_Exception $e) {
-			throw new ServiceException(
-				'Could not load message',
-				$e->getCode(),
-				$e
-			);
-		}
+		return $this->protocolFactory
+			->mailboxConnector($account)
+			->create($account, $name, $specialUse);
 	}
 
 	/**
-	 * @param Account $account
-	 * @param Mailbox $mailbox
-	 * @param int[] $uids
-	 * @return IMAPMessage[]
 	 * @throws ServiceException
 	 */
-	public function getImapMessagesForScheduleProcessing(Account $account,
-		Mailbox $mailbox,
-		array $uids): array {
-		$client = $this->imapClientFactory->getClient($account);
-		try {
-			return $this->imapMessageMapper->findByIds(
-				$client,
-				$mailbox->getName(),
-				$uids,
-				$account->getUserId(),
-				true
-			);
-		} catch (Horde_Imap_Client_Exception $e) {
-			throw new ServiceException(
-				'Could not load messages: ' . $e->getMessage(),
-				$e->getCode(),
-				$e
-			);
-		} finally {
-			$client->logout();
+	public function renameMailbox(Account $account, Mailbox $mailbox, string $name): Mailbox {
+		return $this->protocolFactory
+			->mailboxConnector($account)
+			->rename($account, $mailbox, $name);
+	}
+
+	/**
+	 * @throws ServiceException
+	 */
+	public function deleteMailbox(Account $account, Mailbox $mailbox): void {
+		$this->protocolFactory
+			->mailboxConnector($account)
+			->delete($account, $mailbox);
+	}
+
+	/**
+	 * @throws ServiceException
+	 * @throws DoesNotExistException the mailbox could not be re-read after being updated on the remote (IMAP-backed accounts only)
+	 */
+	public function updateSubscription(Account $account, Mailbox $mailbox, bool $subscribed): Mailbox {
+		return $this->protocolFactory
+			->mailboxConnector($account)
+			->subscribe($account, $mailbox, $subscribed);
+	}
+
+	/**
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	public function clearMailbox(Account $account, Mailbox $mailbox): void {
+		$uids = $this->dbMessageMapper->findAllUids($mailbox);
+		if ($uids === []) {
+			return;
 		}
+		// deleteMessages already moves to trash, or expunges if the mailbox is the trash
+		$messages = $this->dbMessageMapper->findByUids($mailbox, $uids);
+		$this->deleteMessages($account, $mailbox, ...$messages);
 	}
 
-	#[\Override]
-	public function getThread(Account $account, string $threadRootId): array {
-		return $this->dbMessageMapper->findThread($account, $threadRootId);
-	}
+	//** ============================ Message Operations ============================ */
 
-	#[\Override]
-	public function getMessageIdForUid(Mailbox $mailbox, $uid): ?int {
-		return $this->dbMessageMapper->getIdForUid($mailbox, $uid);
-	}
-
-	#[\Override]
+	/**
+	 * @throws DoesNotExistException
+	 */
 	public function getMessage(string $uid, int $id): Message {
 		return $this->dbMessageMapper->findByUserId($uid, $id);
 	}
 
 	/**
-	 * @param Horde_Imap_Client_Socket $client
+	 * @throws ClientException
+	 * @throws ServiceException
+	 * @throws SmimeDecryptException
+	 */
+	public function getImapMessage(Account $account, Mailbox $mailbox, Message $message, bool $loadBody = false): IMAPMessage {
+		$messages = $this->protocolFactory
+			->messageConnector($account)
+			->fetchMessages($account, $mailbox, $loadBody, $message);
+
+		if ($messages === []) {
+			throw new ClientException('Message not found on remote server');
+		}
+		return reset($messages);
+	}
+
+	/**
 	 * @param Account $account
-	 * @param string $mailbox
-	 * @param int $uid
+	 * @param Mailbox $mailbox
+	 * @param bool $loadBody
+	 * @param Message ...$messages
+	 * @return IMAPMessage[]
+	 * @throws ServiceException
+	 * @throws SmimeDecryptException
+	 */
+	public function getImapMessages(Account $account, Mailbox $mailbox, bool $loadBody = false, Message ...$messages): array {
+		return $this->protocolFactory
+			->messageConnector($account)
+			->fetchMessages($account, $mailbox, $loadBody, ...$messages);
+	}
+
+	/**
+	 * @param Account $account
+	 * @param Mailbox $mailbox
+	 * @param Message $message
 	 *
-	 * @return string
+	 * @return string|null
 	 *
+	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	#[\Override]
-	public function getSource(Horde_Imap_Client_Socket $client,
-		Account $account,
-		string $mailbox,
-		int $uid): ?string {
-		try {
-			return $this->imapMessageMapper->getFullText(
-				$client,
-				$mailbox,
-				$uid,
-				$account->getUserId(),
-				false,
-			);
-		} catch (Horde_Imap_Client_Exception|DoesNotExistException $e) {
-			throw new ServiceException('Could not load message', 0, $e);
+	public function getRawMessage(Account $account, Mailbox $mailbox, Message $message): ?string {
+		$raw = $this->protocolFactory
+			->messageConnector($account)
+			->fetchMessageRaw($account, $mailbox, $message);
+		if ($raw === null) {
+			throw new ClientException('Message not found on remote server');
 		}
+		return $raw;
+	}
+
+	public function getMessageIdForUid(Mailbox $mailbox, $uid): ?int {
+		return $this->dbMessageMapper->getIdForUid($mailbox, $uid);
+	}
+
+	/**
+	 * @return Message[]
+	 */
+	public function getMessagesByMessageId(Account $account, string $messageId): array {
+		return $this->dbMessageMapper->findByMessageId($account, $messageId);
+	}
+
+	/**
+	 * @return int[]
+	 * @throws ServiceException
+	 */
+	public function findMessages(Account $account, Mailbox $mailbox, SearchQuery $searchQuery): array {
+		return $this->protocolFactory
+			->messageConnector($account)
+			->findMessages($account, $mailbox, $searchQuery);
 	}
 
 	/**
 	 * @param Account $sourceAccount
-	 * @param string $sourceFolderId
-	 * @param int $uid
+	 * @param Mailbox $sourceMailbox
+	 * @param Message $message
 	 * @param Account $destinationAccount
-	 * @param string $destFolderId
+	 * @param Mailbox $destinationMailbox
 	 *
 	 * @return ?int the new UID (or null if couldn't be determined)
 	 * @throws ServiceException
 	 */
-	#[\Override]
-	public function moveMessage(Account $sourceAccount,
-		string $sourceFolderId,
-		int $uid,
-		Account $destinationAccount,
-		string $destFolderId): ?int {
-		if ($sourceAccount->getId() === $destinationAccount->getId()) {
-			try {
-				$sourceMailbox = $this->mailboxMapper->find($sourceAccount, $sourceFolderId);
-			} catch (DoesNotExistException $e) {
-				throw new ServiceException("Source mailbox $sourceFolderId does not exist", 0, $e);
-			}
-
-			$newUid = $this->moveMessageOnSameAccount(
-				$sourceAccount,
-				$sourceFolderId,
-				$destFolderId,
-				$uid
-			);
-
-			// Delete cached source message (the source imap message is copied and deleted)
-			$this->eventDispatcher->dispatch(
-				MessageDeletedEvent::class,
-				new MessageDeletedEvent($sourceAccount, $sourceMailbox, $uid)
-			);
-
-			return $newUid;
-		} else {
+	public function moveMessage(Account $sourceAccount, Mailbox $sourceMailbox, Message $message, Account $destinationAccount, Mailbox $destinationMailbox): ?int {
+		if ($sourceAccount->getId() !== $destinationAccount->getId()) {
 			throw new ServiceException('It is not possible to move across accounts yet');
 		}
+
+		$mutatedUids = $this->moveMessages($sourceAccount, $destinationMailbox, $sourceMailbox, $message);
+
+		return $mutatedUids[0] ?? null;
+	}
+
+	/**
+	 * @throws ServiceException
+	 */
+	public function moveMessages(Account $account, Mailbox $targetMailbox, Mailbox $sourceMailbox, Message ...$messages): array {
+		if ($messages === []) {
+			return [];
+		}
+		// update remote store
+		$mutatedMessages = $this->protocolFactory
+			->messageConnector($account)
+			->moveMessages($account, $targetMailbox, $sourceMailbox, ...$messages);
+
+		// update local store
+		$this->dbMessageMapper->updateBulk($account, false, ...$mutatedMessages);
+
+		$mutatedUids = [];
+		foreach ($mutatedMessages as $mutatedMessage) {
+			$mutatedUids[] = $mutatedMessage->getUid();
+		}
+
+		return $mutatedUids;
 	}
 
 	/**
@@ -265,42 +261,18 @@ class MailManager implements IMailManager {
 	 * @throws ServiceException
 	 * @todo evaluate if we should sync mailboxes first
 	 */
-	#[\Override]
-	public function deleteMessage(Account $account,
-		string $mailboxId,
-		int $messageUid): void {
-		try {
-			$sourceMailbox = $this->mailboxMapper->find($account, $mailboxId);
-		} catch (DoesNotExistException $e) {
-			throw new ServiceException("Source mailbox $mailboxId does not exist", 0, $e);
-		}
-
-		$client = $this->imapClientFactory->getClient($account);
-		try {
-			$this->deleteMessageWithClient($account, $sourceMailbox, $messageUid, $client);
-		} finally {
-			$client->logout();
-		}
+	public function deleteMessage(Account $account, Mailbox $mailbox, Message $message): void {
+		$this->deleteMessages($account, $mailbox, $message);
 	}
 
 	/**
-	 * @throws ServiceException
 	 * @throws ClientException
-	 * @throws TrashMailboxNotSetException
-	 *
-	 * @todo evaluate if we should sync mailboxes first
+	 * @throws ServiceException
 	 */
-	#[\Override]
-	public function deleteMessageWithClient(
-		Account $account,
-		Mailbox $mailbox,
-		int $messageUid,
-		Horde_Imap_Client_Socket $client,
-	): void {
-		$this->eventDispatcher->dispatchTyped(
-			new BeforeMessageDeletedEvent($account, $mailbox, $messageUid)
-		);
-
+	public function deleteMessages(Account $account, Mailbox $sourceMailbox, Message ...$messages): void {
+		if ($messages === []) {
+			return;
+		}
 		try {
 			$trashMailboxId = $account->getMailAccount()->getTrashMailboxId();
 			if ($trashMailboxId === null) {
@@ -310,350 +282,161 @@ class MailManager implements IMailManager {
 		} catch (DoesNotExistException $e) {
 			throw new ServiceException('No trash folder', 0, $e);
 		}
+		$operation = $sourceMailbox->getId() === $trashMailbox->getId() ? 'delete' : 'move';
+		$mappedUids = [];
 
-		if ($mailbox->getName() === $trashMailbox->getName()) {
-			// Delete inside trash -> expunge
-			$this->imapMessageMapper->expunge(
-				$client,
-				$mailbox->getName(),
-				$messageUid
-			);
-		} else {
-			$this->imapMessageMapper->move(
-				$client,
-				$mailbox->getName(),
-				$messageUid,
-				$trashMailbox->getName()
-			);
+		// dispatch events and map objects to their original UIDs before mutation
+		foreach ($messages as $message) {
+			$this->eventDispatcher->dispatchTyped(new BeforeMessageDeletedEvent($account, $sourceMailbox, $message->getUid()));
+			$this->logger->debug("$operation message", ['messageId' => $message->getUid(), 'mailboxId' => $message->getMailboxId()]);
+			$mappedUids[spl_object_id($message)] = $message->getUid();
 		}
 
-		$this->eventDispatcher->dispatchTyped(
-			new MessageDeletedEvent($account, $mailbox, $messageUid)
-		);
+		// update remote store
+		$mutatedMessages = match ($operation) {
+			'move' => $this->protocolFactory
+				->messageConnector($account)
+				->moveMessages($account, $trashMailbox, $sourceMailbox, ...$messages),
+			'delete' => $this->protocolFactory
+				->messageConnector($account)
+				->deleteMessages($account, $sourceMailbox, ...$messages),
+		};
+
+		// update local store
+		if ($operation === 'move') {
+			$this->dbMessageMapper->updateBulk($account, false, ...$mutatedMessages);
+		}
+		if ($operation === 'delete') {
+			$mutatedUids = array_map(static fn (Message $message): int => $message->getUid(), $mutatedMessages);
+			$this->dbMessageMapper->deleteByUid($sourceMailbox, ...$mutatedUids);
+		}
+
+		// dispatch events
+		foreach ($mutatedMessages as $mutatedMessage) {
+			$this->eventDispatcher->dispatchTyped(new MessageDeletedEvent($account, $sourceMailbox, $mappedUids[spl_object_id($mutatedMessage)]));
+		}
 	}
 
 	/**
-	 * @param Account $account
-	 * @param string $sourceFolderId
-	 * @param string $destFolderId
-	 * @param int $messageId
-	 *
-	 * @return ?int the new UID (or null if it couldn't be determined)
 	 * @throws ServiceException
-	 *
 	 */
-	private function moveMessageOnSameAccount(Account $account,
-		string $sourceFolderId,
-		string $destFolderId,
-		int $messageId): ?int {
-		$client = $this->imapClientFactory->getClient($account);
-		try {
-			return $this->imapMessageMapper->move($client, $sourceFolderId, $messageId, $destFolderId);
-		} finally {
-			$client->logout();
+	public function flagMessages(Account $account, Mailbox $mailbox, string $flag, bool $value, Message ...$messages): void {
+		if ($messages === []) {
+			return;
+		}
+		// update remote store
+		$mutatedMessages = $this->protocolFactory
+			->messageConnector($account)
+			->flagMessages($account, $mailbox, $flag, $value, ...$messages);
+
+		// update local store
+		$this->dbMessageMapper->updateBulk($account, true, ...$mutatedMessages);
+
+		// dispatch events
+		foreach ($mutatedMessages as $message) {
+			$this->eventDispatcher->dispatchTyped(new MessageFlaggedEvent($account, $mailbox, $message, $flag, $value));
 		}
 	}
 
-	#[\Override]
+	/**
+	 * @throws ServiceException
+	 */
+	public function tagMessages(Account $account, Mailbox $mailbox, Tag $tag, bool $value, Message ...$messages): void {
+		if ($messages === []) {
+			return;
+		}
+		// update remote store
+		$mutatedMessages = $this->protocolFactory
+			->messageConnector($account)
+			->tagMessages($account, $mailbox, $tag, $value, ...$messages);
+
+		// update local store
+		$this->dbMessageMapper->updateBulk($account, true, ...$mutatedMessages);
+	}
+
+	/**
+	 * @throws ServiceException
+	 */
 	public function markFolderAsRead(Account $account, Mailbox $mailbox): void {
-		$client = $this->imapClientFactory->getClient($account);
-		try {
-			$this->imapMessageMapper->markAllRead($client, $mailbox->getName());
-		} finally {
-			$client->logout();
+		// find all messages in mailbox with their remote ids
+		$messages = $this->dbMessageMapper->findByUids($mailbox, $this->dbMessageMapper->findAllUids($mailbox));
+		if ($messages === []) {
+			return;
 		}
+		$this->flagMessages($account, $mailbox, 'seen', true, ...$messages);
 	}
 
-	#[\Override]
-	public function updateSubscription(Account $account, Mailbox $mailbox, bool $subscribed): Mailbox {
-		/**
-		 * 1. Change subscription on IMAP
-		 */
-		$client = $this->imapClientFactory->getClient($account);
-		try {
-			$client->subscribeMailbox($mailbox->getName(), $subscribed);
-
-			/**
-			 * 2. Pull changes into the mailbox database cache
-			 */
-			$this->mailboxSync->sync($account, $this->logger, true, $client);
-		} catch (Horde_Imap_Client_Exception $e) {
-			throw new ServiceException(
-				"Could not set subscription status for mailbox {$mailbox->getId()} on IMAP: {$e->getMessage()}",
-				$e->getCode(),
-				$e
-			);
-		} finally {
-			$client->logout();
-		}
-
-		/**
-		 * 3. Return the updated object
-		 */
-		return $this->mailboxMapper->find($account, $mailbox->getName());
+	public function getThread(Account $account, string $threadRootId): array {
+		return $this->dbMessageMapper->findThread($account, $threadRootId);
 	}
 
-	#[\Override]
-	public function enableMailboxBackgroundSync(Mailbox $mailbox,
-		bool $syncInBackground): Mailbox {
-		$mailbox->setSyncInBackground($syncInBackground);
+	/**
+	 * Finds all messages in the thread of the given thread root id
+	 *
+	 * @return array<string, Message> array of messages in the thread, keyed by remote id
+	 * @throws DoesNotExistException
+	 */
+	public function fetchThread(Account $account, Mailbox $mailbox, string $threadRootId): array {
+		$mailAccount = $account->getMailAccount();
+		$messageInTrash = $mailbox->getId() === $mailAccount->getTrashMailboxId();
+		$threadMessages = $this->threadMapper->findMessageUidsAndMailboxNamesByAccountAndThreadRoot(
+			$mailAccount,
+			$threadRootId,
+			$messageInTrash,
+		);
 
-		return $this->mailboxMapper->update($mailbox);
+		// group message uids by mailbox
+		$uids = [];
+		foreach ($threadMessages as $threadMessage) {
+			$uids[$threadMessage['mailboxName']][] = $threadMessage['messageUid'];
+		}
+		unset($threadMessages);
+
+		// retrieve messages from local store
+		$messages = [];
+		$mailboxes = [];
+		foreach ($uids as $mailboxName => $messageUids) {
+			$sourceMailbox = $mailboxes[$mailboxName] ??= $this->mailboxMapper->find($account, $mailboxName);
+			$sourceMessages = $this->dbMessageMapper->findByUids($sourceMailbox, $messageUids);
+			$messages = array_merge($messages, $sourceMessages);
+		}
+
+		return $messages;
 	}
 
-	#[\Override]
-	public function flagMessage(Account $account, string $mailbox, int $uid, string $flag, bool $value): void {
-		try {
-			$mb = $this->mailboxMapper->find($account, $mailbox);
-		} catch (DoesNotExistException $e) {
-			throw new ClientException("Mailbox $mailbox does not exist", 0, $e);
+	/**
+	 * @throws DoesNotExistException
+	 * @throws ServiceException
+	 */
+	public function moveThread(Account $srcAccount, Mailbox $srcMailbox, Account $dstAccount, Mailbox $dstMailbox, string $threadRootId): array {
+		if ($srcAccount->getId() !== $dstAccount->getId()) {
+			throw new ServiceException('It is not possible to move across accounts yet');
 		}
 
-		$client = $this->imapClientFactory->getClient($account);
-		try {
-			// Only send system flags to the IMAP server as other flags might not be supported
-			$imapFlags = $this->filterFlags($client, $account, $flag, $mailbox);
-			foreach ($imapFlags as $imapFlag) {
-				if (empty($imapFlag) === true) {
-					continue;
-				}
-				if ($value) {
-					$this->imapMessageMapper->addFlag($client, $mb, [$uid], $imapFlag);
-				} else {
-					$this->imapMessageMapper->removeFlag($client, $mb, [$uid], $imapFlag);
-				}
-			}
-		} catch (Horde_Imap_Client_Exception $e) {
-			throw new ServiceException(
-				'Could not set message flag on IMAP: ' . $e->getMessage(),
-				$e->getCode(),
-				$e
-			);
-		} finally {
-			$client->logout();
+		$messages = $this->fetchThread($srcAccount, $srcMailbox, $threadRootId);
+		if ($messages === []) {
+			return [];
 		}
 
-		// Looking the message up by uid is a shortcut to avoid changing this method's
-		// signature, which the JMAP PR does anyway.
-		$messages = $this->dbMessageMapper->findByUids($mb, [$uid]);
-		if (count($messages) < 1) {
-			// The message should be in the database cache, otherwise the client wouldn't
-			// know about the uid. Skip the event rather than fail the whole flag operation.
+		return $this->moveMessages($srcAccount, $dstMailbox, $srcMailbox, ...$messages);
+	}
+
+	/**
+	 * @throws ClientException
+	 * @throws DoesNotExistException
+	 * @throws ServiceException
+	 */
+	public function deleteThread(Account $account, Mailbox $mailbox, string $threadRootId): void {
+		if ($account->getMailAccount()->getTrashMailboxId() === null) {
+			throw new TrashMailboxNotSetException();
+		}
+
+		$messages = $this->fetchThread($account, $mailbox, $threadRootId);
+		if ($messages === []) {
 			return;
 		}
 
-		$message = reset($messages);
-
-		$this->eventDispatcher->dispatch(
-			MessageFlaggedEvent::class,
-			new MessageFlaggedEvent(
-				$account,
-				$mb,
-				$message,
-				$flag,
-				$value
-			)
-		);
-	}
-
-	/**
-	 * Tag (flag) multiple messages on IMAP using a given client instance
-	 *
-	 * @param Message[] $messages
-	 *
-	 * @throws ClientException
-	 * @throws ServiceException
-	 */
-	public function tagMessagesWithClient(Horde_Imap_Client_Socket $client, Account $account, Mailbox $mailbox, array $messages, Tag $tag, bool $value):void {
-		if ($this->isPermflagsEnabled($client, $account, $mailbox->getName()) === true) {
-			$messageIds = array_map(static fn (Message $message) => $message->getUid(), $messages);
-			try {
-				if ($value) {
-					// imap keywords and flags work the same way
-					$this->imapMessageMapper->addFlag($client, $mailbox, $messageIds, $tag->getImapLabel());
-				} else {
-					$this->imapMessageMapper->removeFlag($client, $mailbox, $messageIds, $tag->getImapLabel());
-				}
-			} catch (Horde_Imap_Client_Exception $e) {
-				throw new ServiceException(
-					'Could not set message keyword on IMAP: ' . $e->getMessage(),
-					$e->getCode(),
-					$e
-				);
-			}
-		}
-
-		if ($value) {
-			foreach ($messages as $message) {
-				$this->tagMapper->tagMessage($tag, $message->getMessageId(), $account->getUserId());
-			}
-		} else {
-			foreach ($messages as $message) {
-				$this->tagMapper->untagMessage($tag, $message->getMessageId());
-			}
-		}
-	}
-
-	/**
-	 * Tag (flag) a message on IMAP
-	 *
-	 * @param Account $account
-	 * @param string $mailbox
-	 * @param Message $message
-	 * @param Tag $tag
-	 * @param boolean $value
-	 * @return void
-	 *
-	 * @throws ClientException
-	 * @throws ServiceException
-	 * @uses
-	 *
-	 * @link https://github.com/nextcloud/mail/issues/25
-	 */
-	#[\Override]
-	public function tagMessage(Account $account, string $mailbox, Message $message, Tag $tag, bool $value): void {
-		try {
-			$mb = $this->mailboxMapper->find($account, $mailbox);
-		} catch (DoesNotExistException $e) {
-			throw new ClientException("Mailbox $mailbox does not exist", 0, $e);
-		}
-		$client = $this->imapClientFactory->getClient($account);
-		try {
-			$this->tagMessagesWithClient($client, $account, $mb, [$message], $tag, $value);
-		} finally {
-			$client->logout();
-		}
-	}
-
-	/**
-	 * @param Account $account
-	 *
-	 * @return Quota|null
-	 * @see https://tools.ietf.org/html/rfc2087
-	 */
-	#[\Override]
-	public function getQuota(Account $account): ?Quota {
-		/**
-		 * Get all the quotas roots of the user's mailboxes
-		 */
-		$client = $this->imapClientFactory->getClient($account);
-		try {
-			$quotas = array_map(static fn (Folder $mb) => $client->getQuotaRoot($mb->getMailbox()), $this->folderMapper->getFolders($account, $client));
-		} catch (Horde_Imap_Client_Exception_NoSupportExtension $ex) {
-			return null;
-		} finally {
-			$client->logout();
-		}
-
-		/**
-		 * Extract the 'storage' quota
-		 *
-		 * Falls back to 0/0 if this quota has no storage information
-		 *
-		 * @see https://tools.ietf.org/html/rfc2087#section-3
-		 */
-		$storageQuotas = array_map(static fn (array $root) => $root['storage'] ?? [
-			'usage' => 0,
-			'limit' => 0,
-		], array_merge(...array_values($quotas)));
-
-		if ($storageQuotas === []) {
-			// Nothing left to do, and array_merge doesn't like to be called with zero arguments.
-			return null;
-		}
-
-		/**
-		 * Deduplicate identical quota roots
-		 */
-		$storage = array_merge(...array_values($storageQuotas));
-
-		return new Quota(
-			1024 * (int)($storage['usage'] ?? 0),
-			1024 * (int)($storage['limit'] ?? 0)
-		);
-	}
-
-	#[\Override]
-	public function renameMailbox(Account $account, Mailbox $mailbox, string $name): Mailbox {
-		/*
-		 * 1. Rename on IMAP
-		 */
-		$client = $this->imapClientFactory->getClient($account);
-		try {
-			$this->folderMapper->renameFolder(
-				$client,
-				$mailbox->getName(),
-				$name
-			);
-
-			/**
-			 * 2. Get the IMAP changes into our database cache
-			 */
-			$this->mailboxSync->sync($account, $this->logger, true, $client);
-		} finally {
-			$client->logout();
-		}
-
-		/**
-		 * 3. Return the cached object with the new ID
-		 */
-		try {
-			return $this->mailboxMapper->find($account, $name);
-		} catch (DoesNotExistException $e) {
-			throw new ServiceException("The renamed mailbox $name does not exist", 0, $e);
-		}
-	}
-
-	/**
-	 * @param Account $account
-	 * @param Mailbox $mailbox
-	 *
-	 * @throws ServiceException
-	 */
-	#[\Override]
-	public function deleteMailbox(Account $account,
-		Mailbox $mailbox): void {
-		$client = $this->imapClientFactory->getClient($account);
-		try {
-			$this->folderMapper->delete($client, $mailbox->getName());
-		} finally {
-			$client->logout();
-		}
-		$this->mailboxMapper->delete($mailbox);
-	}
-
-	/**
-	 * Clear messages in folder
-	 *
-	 * @param Account $account
-	 * @param Mailbox $mailbox
-	 *
-	 * @throws DoesNotExistException
-	 * @throws Horde_Imap_Client_Exception
-	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
-	 * @throws ServiceException
-	 */
-	#[\Override]
-	public function clearMailbox(Account $account,
-		Mailbox $mailbox): void {
-		$client = $this->imapClientFactory->getClient($account);
-		$trashMailboxId = $account->getMailAccount()->getTrashMailboxId();
-		$currentMailboxId = $mailbox->getId();
-		try {
-			if (($currentMailboxId !== $trashMailboxId) && !is_null($trashMailboxId)) {
-				$trash = $this->mailboxMapper->findById($trashMailboxId);
-				$client->copy($mailbox->getName(), $trash->getName(), [
-					'move' => true
-				]);
-			} else {
-				$client->expunge($mailbox->getName(), [
-					'delete' => true
-				]);
-			}
-			$this->dbMessageMapper->deleteAll($mailbox);
-		} finally {
-			$client->logout();
-		}
+		$this->deleteMessages($account, $mailbox, ...$messages);
 	}
 
 	/**
@@ -661,20 +444,14 @@ class MailManager implements IMailManager {
 	 * @param Mailbox $mailbox
 	 * @param Message $message
 	 * @return Attachment[]
+	 *
+	 * @throws DoesNotExistException
+	 * @throws ServiceException
 	 */
-	#[\Override]
 	public function getMailAttachments(Account $account, Mailbox $mailbox, Message $message): array {
-		$client = $this->imapClientFactory->getClient($account);
-		try {
-			return $this->imapMessageMapper->getAttachments(
-				$client,
-				$mailbox->getName(),
-				$message->getUid(),
-				$account->getUserId(),
-			);
-		} finally {
-			$client->logout();
-		}
+		return $this->protocolFactory
+			->messageConnector($account)
+			->fetchAttachments($account, $mailbox, $message);
 	}
 
 	/**
@@ -685,28 +462,41 @@ class MailManager implements IMailManager {
 	 * @return Attachment
 	 *
 	 * @throws DoesNotExistException
-	 * @throws Horde_Imap_Client_Exception
-	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
 	 * @throws ServiceException
-	 * @throws Horde_Mime_Exception
 	 */
-	#[\Override]
-	public function getMailAttachment(Account $account,
-		Mailbox $mailbox,
-		Message $message,
-		string $attachmentId): Attachment {
-		$client = $this->imapClientFactory->getClient($account);
-		try {
-			return $this->imapMessageMapper->getAttachment(
-				$client,
-				$mailbox->getName(),
-				$message->getUid(),
-				$attachmentId,
-				$account->getUserId(),
-			);
-		} finally {
-			$client->logout();
-		}
+	public function getMailAttachment(Account $account, Mailbox $mailbox, Message $message, string $attachmentId): Attachment {
+		return $this->protocolFactory
+			->messageConnector($account)
+			->fetchAttachment($account, $mailbox, $message, $attachmentId);
+	}
+
+	/**
+	 * @param Account $account
+	 *
+	 * @return Quota|null
+	 * @see https://tools.ietf.org/html/rfc2087
+	 *
+	 * @throws ServiceException
+	 */
+	public function getQuota(Account $account): ?Quota {
+		return $this->protocolFactory
+			->messageConnector($account)
+			->getQuota($account);
+	}
+
+	/**
+	 * Check IMAP server for support for PERMANENTFLAGS
+	 *
+	 * @param Account $account
+	 * @param Mailbox $mailbox
+	 * @return boolean
+	 *
+	 * @throws ServiceException
+	 */
+	public function isPermflagsEnabled(Account $account, Mailbox $mailbox): bool {
+		return $this->protocolFactory
+			->messageConnector($account)
+			->isPermflagsEnabled($account, $mailbox);
 	}
 
 	/**
@@ -715,8 +505,7 @@ class MailManager implements IMailManager {
 	 * @return Tag
 	 * @throws ClientException
 	 */
-	#[\Override]
-	public function getTagByImapLabel(string $imapLabel, string $userId): Tag {
+	public function getTagByLabel(string $imapLabel, string $userId): Tag {
 		try {
 			return $this->tagMapper->getTagByImapLabel($imapLabel, $userId);
 		} catch (DoesNotExistException $e) {
@@ -725,61 +514,8 @@ class MailManager implements IMailManager {
 	}
 
 	/**
-	 * Filter out IMAP flags that aren't supported by the client server
-	 *
-	 * @param string $flag
-	 * @param string $mailbox
-	 * @return array
+	 * @throws ClientException
 	 */
-	public function filterFlags(Horde_Imap_Client_Socket $client, Account $account, string $flag, string $mailbox): array {
-		// check if flag is RFC defined system flag
-		if (array_key_exists($flag, self::SYSTEM_FLAGS) === true) {
-			return self::SYSTEM_FLAGS[$flag];
-		}
-		// check if server supports custom keywords / this specific keyword
-		try {
-			$capabilities = $client->status($mailbox, Horde_Imap_Client::STATUS_PERMFLAGS);
-		} catch (Horde_Imap_Client_Exception $e) {
-			throw new ServiceException(
-				'Could not get message flag options from IMAP: ' . $e->getMessage(),
-				$e->getCode(),
-				$e
-			);
-		}
-		// check if server returned supported flags
-		if (!isset($capabilities['permflags'])) {
-			return [];
-		}
-		// check if server supports custom flags or specific flag
-		if (in_array("\*", $capabilities['permflags']) || in_array($flag, $capabilities['permflags'])) {
-			return [$flag];
-		}
-
-		return [];
-	}
-
-	/**
-	 * Check IMAP server for support for PERMANENTFLAGS
-	 *
-	 * @param Account $account
-	 * @param string $mailbox
-	 * @return boolean
-	 */
-	#[\Override]
-	public function isPermflagsEnabled(Horde_Imap_Client_Socket $client, Account $account, string $mailbox): bool {
-		try {
-			$capabilities = $client->status($mailbox, Horde_Imap_Client::STATUS_PERMFLAGS);
-		} catch (Horde_Imap_Client_Exception $e) {
-			throw new ServiceException(
-				'Could not get message flag options from IMAP: ' . $e->getMessage(),
-				$e->getCode(),
-				$e
-			);
-		}
-		return (is_array($capabilities) === true && array_key_exists('permflags', $capabilities) === true && in_array("\*", $capabilities['permflags'], true) === true);
-	}
-
-	#[\Override]
 	public function createTag(string $displayName, string $color, string $userId): Tag {
 		try {
 			$imapLabel = $this->imapFlag->create($displayName);
@@ -788,7 +524,11 @@ class MailManager implements IMailManager {
 		}
 
 		try {
-			return $this->getTagByImapLabel($imapLabel, $userId);
+			try {
+				return $this->tagMapper->getTagByImapLabel($imapLabel, $userId);
+			} catch (DoesNotExistException $e) {
+				throw new ClientException('Unknown Tag', 0, $e);
+			}
 		} catch (ClientException $e) {
 			// it's valid that a tag does not exist.
 		}
@@ -803,7 +543,9 @@ class MailManager implements IMailManager {
 		return $this->tagMapper->insert($tag);
 	}
 
-	#[\Override]
+	/**
+	 * @throws ClientException
+	 */
 	public function updateTag(int $id, string $displayName, string $color, string $userId): Tag {
 		try {
 			$tag = $this->tagMapper->getTagForUser($id, $userId);
@@ -817,120 +559,55 @@ class MailManager implements IMailManager {
 		return $this->tagMapper->update($tag);
 	}
 
-	#[\Override]
-	public function deleteTag(int $id, string $userId, array $accounts) :Tag {
+	/**
+	 * @param int $id tag id
+	 * @param string $userId user id of the tag owner
+	 * @param Account[] $accounts accounts to remove the tag from
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	public function deleteTag(int $id, string $userId, array $accounts): Tag {
 		try {
 			$tag = $this->tagMapper->getTagForUser($id, $userId);
 		} catch (DoesNotExistException $e) {
 			throw new ClientException('Tag not found', 0, $e);
 		}
 
+		// find all messages with this tag (independent of the account)
+		$messageTags = $this->messageTagsMapper->getMessagesByTag($id);
+
 		foreach ($accounts as $account) {
-			$this->deleteTagForAccount($id, $userId, $tag, $account);
+			try {
+				$messages = array_merge(... array_map(fn ($messageTag) => $this->getMessagesByMessageId($account, $messageTag->getImapMessageId()), array_values($messageTags)));
+			} catch (DoesNotExistException $e) {
+				throw new ClientException('Messages not found', 0, $e);
+			}
+			if ($messages === []) {
+				continue;
+			}
+
+			// the connector removes keywords per mailbox, so group the messages accordingly
+			$messagesByMailbox = [];
+			foreach ($messages as $message) {
+				$messagesByMailbox[$message->getMailboxId()][] = $message;
+			}
+			foreach ($messagesByMailbox as $mailboxId => $mailboxMessages) {
+				try {
+					$mailbox = $this->mailboxMapper->findById($mailboxId);
+				} catch (DoesNotExistException $e) {
+					continue;
+				}
+				$this->tagMessages($account, $mailbox, $tag, false, ...$mailboxMessages);
+			}
 		}
-		return $this->tagMapper->delete($tag);
-	}
 
-	#[\Override]
-	public function deleteTagForAccount(int $id, string $userId, Tag $tag, Account $account) :void {
-		try {
-			$messageTags = $this->messageTagsMapper->getMessagesByTag($id);
-			$messages = array_merge(... array_map(fn ($messageTag) => $this->getByMessageId($account, $messageTag->getImapMessageId()), array_values($messageTags)));
-		} catch (DoesNotExistException $e) {
-			throw new ClientException('Messages not found', 0, $e);
-		}
-
-		$client = $this->imapClientFactory->getClient($account);
-
+		// update the local store
 		foreach ($messageTags as $messageTag) {
 			$this->messageTagsMapper->delete($messageTag);
 		}
-		$groupedMessages = [];
-		foreach ($messages as $message) {
-			$mailboxId = $message->getMailboxId();
-			if (array_key_exists($mailboxId, $groupedMessages)) {
-				$groupedMessages[$mailboxId][] = $message;
-			} else {
-				$groupedMessages[$mailboxId] = [$message];
-			}
-		}
-		try {
-			foreach ($groupedMessages as $mailboxId => $messages) {
-				$mailbox = $this->getMailbox($userId, $mailboxId);
-				$this->tagMessagesWithClient($client, $account, $mailbox, $messages, $tag, false);
-			}
-		} finally {
-			$client->logout();
-		}
+
+		return $this->tagMapper->delete($tag);
 	}
 
-	#[\Override]
-	public function moveThread(Account $srcAccount, Mailbox $srcMailbox, Account $dstAccount, Mailbox $dstMailbox, string $threadRootId): array {
-		$mailAccount = $srcAccount->getMailAccount();
-		$messageInTrash = $srcMailbox->getId() === $mailAccount->getTrashMailboxId();
-
-		$messages = $this->threadMapper->findMessageUidsAndMailboxNamesByAccountAndThreadRoot(
-			$mailAccount,
-			$threadRootId,
-			$messageInTrash
-		);
-
-		$newUids = [];
-		foreach ($messages as $message) {
-			$this->logger->debug('move message', [
-				'messageId' => $message['messageUid'],
-				'srcMailboxId' => $srcMailbox->getId(),
-				'dstMailboxId' => $dstMailbox->getId()
-			]);
-
-			$newUid = $this->moveMessage(
-				$srcAccount,
-				$message['mailboxName'],
-				$message['messageUid'],
-				$dstAccount,
-				$dstMailbox->getName()
-			);
-			if ($newUid !== null) {
-				$newUids[] = $newUid;
-			}
-		}
-		return $newUids;
-	}
-
-	/**
-	 * @throws ClientException
-	 * @throws ServiceException
-	 */
-	#[\Override]
-	public function deleteThread(Account $account, Mailbox $mailbox, string $threadRootId): void {
-		$mailAccount = $account->getMailAccount();
-		$messageInTrash = $mailbox->getId() === $mailAccount->getTrashMailboxId();
-
-		$messages = $this->threadMapper->findMessageUidsAndMailboxNamesByAccountAndThreadRoot(
-			$mailAccount,
-			$threadRootId,
-			$messageInTrash
-		);
-
-		foreach ($messages as $message) {
-			$this->logger->debug('deleting message', [
-				'messageId' => $message['messageUid'],
-				'mailboxId' => $mailbox->getId(),
-			]);
-
-			$this->deleteMessage(
-				$account,
-				$message['mailboxName'],
-				$message['messageUid']
-			);
-		}
-	}
-
-	/**
-	 * @return Message[]
-	 */
-	#[\Override]
-	public function getByMessageId(Account $account, string $messageId): array {
-		return $this->dbMessageMapper->findByMessageId($account, $messageId);
-	}
 }
