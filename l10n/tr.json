@@ -947,13 +947,9 @@
     "Tag name is a hidden system tag" : "Etiket adı sistem tarafından kullanılan bir gizli ad",
     "Tag already exists" : "Etiket zaten var",
     "Error loading message" : "İleti yüklenirken sorun çıktı",
-    "Add share link from Files" : "Dosyalar uygulamasına paylaşım bağlantısı ekle",
-    "Choose a file to add as attachment" : "Eklenecek ek dosyasını seçin",
-    "Choose a file to share as a link" : "Bağlantı olarak paylaşılacak bir dosya seçin",
     "Show recipient details" : "Alıcı ayrıntıları görüntüle",
     "Hide recipient details" : "Alıcı ayrıntılarını gizle",
     "Show less" : "Daha az görüntüle",
-    "Show more" : "Daha çok görüntüle",
-    "Insert text block" : "Yazı bloğu ekle"
+    "Show more" : "Daha çok görüntüle"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

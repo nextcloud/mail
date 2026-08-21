@@ -906,7 +906,7 @@ OC.L10N.register(
     "To add a mail account, please contact your administrator." : "Para adicionar uma conta de e-mail, por favor, entre em contato com o administrador.",
     "Insert image from Files" : "Inserir imagem de Arquivos",
     "Choose an image" : "Escolha uma imagem",
-    "Select an image" : "Selecionar um imagem",
+    "Select an image" : "Selecionar uma imagem",
     "Insert {name}" : "Inserir {name}",
     "The selected image is too large to embed" : "A imagem selecionada é grande demais para ser incorporada",
     "Could not insert the selected image" : "Não foi possível inserir a imagem selecionada",
@@ -949,13 +949,9 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "O nome da etiqueta é uma etiqueta de sistema oculta",
     "Tag already exists" : "Etiqueta já existe",
     "Error loading message" : "Erro carregando mensagem",
-    "Add share link from Files" : "Adicionar link de compartilhamento de Arquivos",
-    "Choose a file to add as attachment" : "Escolha um arquivo para adicionar como anexo",
-    "Choose a file to share as a link" : "Escolher um arquivo para compartilhar como link",
     "Show recipient details" : "Mostrar detalhes do destinatário",
     "Hide recipient details" : "Ocultar detalhes do destinatário",
     "Show less" : "Mostrar menos",
-    "Show more" : "Mostrar mais",
-    "Insert text block" : "Inserir bloco de texto"
+    "Show more" : "Mostrar mais"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

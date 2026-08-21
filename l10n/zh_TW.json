@@ -947,13 +947,9 @@
     "Tag name is a hidden system tag" : "標籤名稱為隱藏的系統標籤",
     "Tag already exists" : "標籤已經存在",
     "Error loading message" : "載入信件錯誤",
-    "Add share link from Files" : "新增來自檔案的分享連結",
-    "Choose a file to add as attachment" : "選擇要作為附件的檔案",
-    "Choose a file to share as a link" : "選擇要作為連結分享的檔案",
     "Show recipient details" : "顯示收件者詳細資訊",
     "Hide recipient details" : "隱藏收件者詳細資訊",
     "Show less" : "顯示較少",
-    "Show more" : "顯示更多",
-    "Insert text block" : "插入文字區塊"
+    "Show more" : "顯示更多"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

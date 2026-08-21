@@ -923,13 +923,9 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Labelnaam is een verborgen systeemlabel",
     "Tag already exists" : "Markering bestaat al",
     "Error loading message" : "Fout bij laden bericht",
-    "Add share link from Files" : "Voeg een gedeelde koppeling toe vanuit Bestanden",
-    "Choose a file to add as attachment" : "Kies een bestand om als bijlage toe te voegen",
-    "Choose a file to share as a link" : "Kies een bestand om als link te delen",
     "Show recipient details" : "Ontvangerdetails tonen",
     "Hide recipient details" : "Ontvangerdetails verbergen",
     "Show less" : "Toon minder",
-    "Show more" : "Toon meer",
-    "Insert text block" : "Voeg een tekstblok in"
+    "Show more" : "Toon meer"
 },
 "nplurals=2; plural=(n != 1);");

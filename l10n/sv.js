@@ -931,13 +931,9 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Taggnamnet är en dold systemtagg",
     "Tag already exists" : "Taggen finns redan",
     "Error loading message" : "Fel vid inläsning av meddelande",
-    "Add share link from Files" : "Lägg till delningslänk från Filer",
-    "Choose a file to add as attachment" : "Välj en fil att lägga som bilaga",
-    "Choose a file to share as a link" : "Välj en fil att dela som länk",
     "Show recipient details" : "Visa mottagarens detaljer",
     "Hide recipient details" : "Dölj mottagarens detaljer",
     "Show less" : "Visa mindre",
-    "Show more" : "Visa mer",
-    "Insert text block" : "Infoga textblock"
+    "Show more" : "Visa mer"
 },
 "nplurals=2; plural=(n != 1);");

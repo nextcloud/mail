@@ -949,13 +949,9 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Is clib córais ceilte é an t-ainm clibe",
     "Tag already exists" : "Tá clib ann cheana féin",
     "Error loading message" : "Earráid agus an teachtaireacht á lódáil",
-    "Add share link from Files" : "Cuir nasc comhroinnte leis ó Chomhaid",
-    "Choose a file to add as attachment" : "Roghnaigh comhad le cur leis mar cheangaltán",
-    "Choose a file to share as a link" : "Roghnaigh comhad le roinnt mar nasc",
     "Show recipient details" : "Taispeáin sonraí an fhaighteora",
     "Hide recipient details" : "Folaigh sonraí an fhaighteora",
     "Show less" : "Taispeáin níos lú",
-    "Show more" : "Taispeáin níos mó",
-    "Insert text block" : "Cuir bloc téacs isteach"
+    "Show more" : "Taispeáin níos mó"
 },
 "nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);");

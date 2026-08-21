@@ -129,7 +129,6 @@ OC.L10N.register(
     "{from}\n{subject}" : "{from}\n{subject}",
     "Message sent" : "Messatge mandat",
     "Date:" : "Data :",
-    "Error loading message" : "Error al moment del cargament del messatge",
-    "Choose a file to add as attachment" : "Causissètz un fichièr de jónher al messatge"
+    "Error loading message" : "Error al moment del cargament del messatge"
 },
 "nplurals=2; plural=(n > 1);");

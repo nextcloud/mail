@@ -723,9 +723,6 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "El nom de l'etiqueta és una etiqueta del sistema oculta",
     "Tag already exists" : "L'etiqueta ja existeix",
     "Error loading message" : "S'ha produït un error mentre es carregava el missatge",
-    "Add share link from Files" : "Afegeix un enllaç de compartició des de Fitxers",
-    "Choose a file to add as attachment" : "Trieu un fitxer per afegir als adjunts",
-    "Choose a file to share as a link" : "Tria un fitxer per compartir-lo com a enllaç",
     "Show less" : "Mostra'n menys",
     "Show more" : "Mostra'n més"
 },
