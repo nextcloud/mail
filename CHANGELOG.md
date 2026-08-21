@@ -1,3 +1,15 @@
+## [5.11.2](https://github.com/nextcloud/mail/compare/v5.11.1...v5.11.2) (2026-08-21)
+
+
+### Bug Fixes
+
+* **l10n:** Update translations from Transifex ([c1cc069](https://github.com/nextcloud/mail/commit/c1cc0691e9b1a8b357176a5b9b6f11eb528fa57f))
+* **migration:** heal legacy non-bool appconfig values ([e84149b](https://github.com/nextcloud/mail/commit/e84149bd3cc7bd22d1c0bf0b415c5bab8e890440))
+* **proxy:** preserve percent-encoded image URLs in proxy link ([23ed0bd](https://github.com/nextcloud/mail/commit/23ed0bdbcc759cdb1c6fd839b91351e2fd79f37b))
+* **ui:** restore virtual start mailbox too ([9d1f01d](https://github.com/nextcloud/mail/commit/9d1f01d0e56d8813e421217c4743a4e43f0a9123))
+
+
+
 ## [5.11.1](https://github.com/nextcloud/mail/compare/v5.11.0...v5.11.1) (2026-08-20)
 
 
