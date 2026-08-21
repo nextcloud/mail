@@ -17,7 +17,7 @@ use OCP\IConfig;
 use OCP\IDBConnection;
 
 /**
- * @template-implements IEventListener<Event|OptionalIndicesListener>
+ * @template-implements IEventListener<AddMissingIndicesEvent>
  */
 class OptionalIndicesListener implements IEventListener {
 
