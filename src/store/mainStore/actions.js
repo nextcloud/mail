@@ -239,6 +239,19 @@ export default function mainStoreActions() {
 				return account
 			})
 		},
+		async checkOidcReauth(account) {
+			if (!account || account.authMethod !== 'xoauth2' || account.oauthNeedsReauth) {
+				return
+			}
+			try {
+				const fresh = await fetchAccount(account.id)
+				if (fresh.oauthNeedsReauth) {
+					this.patchAccountMutation({ account, data: { oauthNeedsReauth: true } })
+				}
+			} catch (error) {
+				logger.error('Could not check OIDC re-authentication state', { error })
+			}
+		},
 		async startAccountSetup(config) {
 			const account = await createAccount(config)
 			logger.debug(`account ${account.id} created`, { account })

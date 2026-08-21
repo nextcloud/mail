@@ -17,7 +17,9 @@ use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Controller\PageController;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\OidcProvider;
 use OCA\Mail\Db\TagMapper;
+use OCA\Mail\Integration\OidcIntegration;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
@@ -122,6 +124,8 @@ class PageControllerTest extends TestCase {
 	private ContextChatSettingsService $contextChatSettingsService;
 
 	private ClassificationSettingsService|MockObject $classificationSettingsService;
+
+	private OidcIntegration|MockObject $oidcIntegration;
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -151,6 +155,7 @@ class PageControllerTest extends TestCase {
 		$this->appManager = $this->createMock(IAppManager::class);
 		$this->appManager->method('getAppVersion')->willReturn('0.0.1-dev.0');
 		$this->contextChatSettingsService = $this->createMock(ContextChatSettingsService::class);
+		$this->oidcIntegration = $this->createMock(OidcIntegration::class);
 		$this->contextChatSettingsService->method('isIndexingEnabled')->willReturn(true);
 
 		$this->classificationSettingsService = $this->createMock(ClassificationSettingsService::class);
@@ -180,7 +185,8 @@ class PageControllerTest extends TestCase {
 			$this->appManager,
 			$this->contextChatSettingsService,
 			$this->classificationSettingsService,
-			$this->appConfig
+			$this->appConfig,
+			$this->oidcIntegration,
 		);
 	}
 
@@ -188,6 +194,17 @@ class PageControllerTest extends TestCase {
 		$account1 = $this->createMock(Account::class);
 		$account2 = $this->createMock(Account::class);
 		$mailbox = $this->createStub(Mailbox::class);
+		$oidcProvider = new OidcProvider();
+		$oidcProvider->setId(7);
+		$oidcProvider->setName('IdP');
+		$oidcProvider->setEmailDomain('example.com');
+		$oidcProvider->setImapHost('imap.example.com');
+		$oidcProvider->setImapPort(993);
+		$oidcProvider->setImapSslMode('ssl');
+		$oidcProvider->setSmtpHost('smtp.example.com');
+		$oidcProvider->setSmtpPort(587);
+		$oidcProvider->setSmtpSslMode('tls');
+		$this->oidcIntegration->method('getProviders')->willReturn([$oidcProvider]);
 		$this->preferences->expects($this->exactly(15))
 			->method('getPreference')
 			->willReturnMap([
@@ -347,7 +364,7 @@ class PageControllerTest extends TestCase {
 		$this->classificationSettingsService->expects(($this->once()))
 			->method(('isClassificationEnabledByDefault'))
 			->willReturn(true);
-		$this->initialState->expects($this->exactly(27))
+		$this->initialState->expects($this->exactly(28))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
@@ -382,6 +399,7 @@ class PageControllerTest extends TestCase {
 				['prefill_email', 'jane@doe.cz'],
 				['outbox-messages', []],
 				['quick-actions', []],
+				['oidc_providers', $this->anything()],
 				['disable-scheduled-send', false],
 				['disable-snooze', false],
 				['allow-new-accounts', true],
