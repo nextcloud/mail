@@ -14,29 +14,29 @@
 			<!-- Actions -->
 			<template #actions>
 				<template v-if="isDisabled">
-					<ActionText :name="t('mail', 'Provisioned account is disabled')">
+					<NcActionText :name="t('mail', 'Provisioned account is disabled')">
 						<template #icon>
 							<IconInfo :size="20" />
 						</template>
 						{{ t('mail', 'Please login using a password to enable this account. The current session is using passwordless authentication, e.g. SSO or WebAuthn.') }}
-					</ActionText>
+					</NcActionText>
 				</template>
 				<template v-else>
-					<ActionText v-if="!account.isUnified && account.quotaPercentage !== null ">
+					<NcActionText v-if="!account.isUnified && account.quotaPercentage !== null ">
 						<template #icon>
 							<IconInfo :size="20" />
 						</template>
 						{{ quotaText }}
-					</ActionText>
-					<ActionButton
+					</NcActionText>
+					<NcActionButton
 						:close-after-click="true"
-						@click="showAccountSettings(true)">
+						@click="showAccountSettings">
 						<template #icon>
 							<IconSettings :size="20" />
 						</template>
 						{{ t('mail', 'Account settings') }}
-					</ActionButton>
-					<ActionButton
+					</NcActionButton>
+					<NcActionButton
 						v-if="canDelegate"
 						:close-after-click="true"
 						@click="showDelegationModal = true">
@@ -47,60 +47,55 @@
 								:svg="IconDelegation" />
 						</template>
 						{{ t('mail', 'Delegate account') }}
-					</ActionButton>
-					<ActionCheckbox
-						:checked="account.showSubscribedOnly"
+					</NcActionButton>
+					<NcActionCheckbox
+						:model-value="account.showSubscribedOnly"
 						:disabled="savingShowOnlySubscribed"
 						@update:checked="changeShowSubscribedOnly">
 						{{ t('mail', 'Show only subscribed folders') }}
-					</ActionCheckbox>
-					<ActionButton v-if="!editing && nameLabel" @click="openCreateMailbox">
+					</NcActionCheckbox>
+					<NcActionButton v-if="!editing && nameLabel" @click="openCreateMailbox">
 						<template #icon>
 							<IconFolderAdd :size="20" />
 						</template>
 						{{ t('mail', 'Add folder') }}
-					</ActionButton>
-					<ActionInput
+					</NcActionButton>
+					<NcActionInput
 						v-if="editing && nameInput"
-						:value.sync="createMailboxName"
+						v-model="createMailboxName"
 						@submit.prevent.stop="createMailbox">
 						<template #icon>
 							<IconFolderAdd :size="20" />
 						</template>
 						{{ t('mail', 'Folder name') }}
-					</ActionInput>
-					<ActionText v-if="showSaving">
+					</NcActionInput>
+					<NcActionText v-if="showSaving">
 						<template #icon>
-							<IconLoading :size="20" />
+							<NcLoadingIcon :size="20" />
 						</template>
 						{{ t('mail', 'Saving') }}
-					</ActionText>
-					<ActionButton v-if="!isFirst" @click="changeAccountOrderUp">
+					</NcActionText>
+					<NcActionButton v-if="!isFirst" @click="changeAccountOrderUp">
 						<template #icon>
 							<MenuUp :size="20" />
 						</template>
 						{{ t('mail', 'Move up') }}
-					</ActionButton>
-					<ActionButton v-if="!isLast" @click="changeAccountOrderDown">
+					</NcActionButton>
+					<NcActionButton v-if="!isLast" @click="changeAccountOrderDown">
 						<template #icon>
 							<MenuDown :size="20" />
 						</template>
 						{{ t('mail', 'Move down') }}
-					</ActionButton>
-					<ActionButton v-if="!account.provisioningId && !account.isDelegated" @click="removeAccount">
+					</NcActionButton>
+					<NcActionButton v-if="!account.provisioningId && !account.isDelegated" @click="removeAccount">
 						<template #icon>
 							<IconDelete :size="20" />
 						</template>
 						{{ t('mail', 'Remove account') }}
-					</ActionButton>
+					</NcActionButton>
 				</template>
 			</template>
 		</NcAppNavigationCaption>
-		<AccountSettings
-			:open="showSettings"
-			:account="account"
-			:scroll-to-section="showSettingsSection"
-			@update:open="showAccountSettings($event)" />
 		<DelegationModal v-if="showDelegationModal" :account="account" @close="showDelegationModal = false" />
 	</Fragment>
 </template>
@@ -109,7 +104,7 @@
 import { DialogBuilder, showError } from '@nextcloud/dialogs'
 import { formatFileSize } from '@nextcloud/files'
 import { generateUrl } from '@nextcloud/router'
-import { NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionText as ActionText, NcLoadingIcon as IconLoading, NcAppNavigationCaption, NcIconSvgWrapper } from '@nextcloud/vue'
+import { NcActionButton, NcActionCheckbox, NcActionInput, NcActionText, NcAppNavigationCaption, NcIconSvgWrapper, NcLoadingIcon } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import { Fragment } from 'vue-frag'
 import MenuDown from 'vue-material-design-icons/ChevronDown.vue'
@@ -128,11 +123,10 @@ export default {
 	components: {
 		NcAppNavigationCaption,
 		Fragment,
-		ActionButton,
-		ActionCheckbox,
-		ActionInput,
-		ActionText,
-		AccountSettings: () => import(/* webpackChunkName: "account-settings" */ './AccountSettings.vue'),
+		NcActionButton,
+		NcActionCheckbox,
+		NcActionInput,
+		NcActionText,
 		DelegationModal: () => import(/* webpackChunkName: "delegation-modal" */ './DelegationModal.vue'),
 		IconInfo,
 		IconSettings,
@@ -141,7 +135,7 @@ export default {
 		MenuDown,
 		MenuUp,
 		IconDelete,
-		IconLoading,
+		NcLoadingIcon,
 	},
 
 	props: {
@@ -193,14 +187,6 @@ export default {
 
 	computed: {
 		...mapStores(useMainStore),
-		showSettings() {
-			return this.mainStore.showSettingsForAccount(this.account.id)
-		},
-
-		showSettingsSection() {
-			return this.mainStore.showSettingsSectionForAccount(this.account.id)
-		},
-
 		visible() {
 			return this.account.isUnified !== true && this.account.visible !== false
 		},
@@ -344,17 +330,8 @@ export default {
 			}
 		},
 
-		/**
-		 * Show the settings for the given account
-		 *
-		 * @param {boolean} show true to show, false to hide
-		 */
-		showAccountSettings(show) {
-			if (show) {
-				this.mainStore.showSettingsForAccountMutation(this.account.id)
-			} else {
-				this.mainStore.showSettingsForAccountMutation(null)
-			}
+		showAccountSettings() {
+			this.mainStore.showSettingsForAccountMutation(this.account.id)
 		},
 	},
 }

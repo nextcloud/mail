@@ -26,7 +26,7 @@ if address :is :all "From" ["marketing@mail.internal"] {
 ### Nextcloud Mail: Vacation Responder ### DON'T EDIT ###
 # DATA: {"version":1,"enabled":true,"start":"2024-10-08T22:00:00+00:00","subject":"Thanks for your message!","message":"I'm not here, please try again later.\u00a0"}
 if currentdate :value "ge" "iso8601" "2024-10-08T22:00:00Z" {
-	if not anyof(exists "List-Id", exists "List-Unsubscribe") {
+	if not anyof(exists "List-Id", exists "List-Unsubscribe", address :all :matches ["From", "Sender"] ["noreply@*", "no-reply@*"]) {
 		vacation :days 4 :subject "Thanks for your message!" :addresses ["alice@mail.internal"] "I'm not here, please try again later. ";
 	}
 }

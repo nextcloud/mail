@@ -14,16 +14,20 @@
 		<div class="html-message-body__content">
 			<MdnRequest :message="message" />
 			<NeedsTranslationInfo
-				v-if="needsTranslation"
+				v-if="detectedForeignLanguage"
 				:is-html="true"
-				@translate="$emit('translate')" />
+				@translate="$emit('translate', detectedForeignLanguage)" />
 			<div id="message-container" :class="{ scroll: !fullHeight }">
+				<!-- allow-scripts: the server-injected iframe-resizer child must run to size the frame to its content.
+				     allow-same-origin: parent JS accesses contentDocument directly (image unblocking, resize, print).
+				     allow-popups + allow-popups-to-escape-sandbox: email links must open as normal tabs, not sandboxed ones. -->
 				<iframe
 					ref="iframe"
 					class="message-frame"
 					:title="t('mail', 'Message frame')"
 					:src="url"
 					seamless
+					sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
 					@load="onMessageFrameLoad" />
 			</div>
 		</div>
@@ -32,13 +36,12 @@
 
 <script>
 import iframeResize from '@iframe-resizer/parent'
-import { loadState } from '@nextcloud/initial-state'
 import BlockedContentWarning from './BlockedContentWarning.vue'
 import MdnRequest from './MdnRequest.vue'
 import NeedsTranslationInfo from './NeedsTranslationInfo.vue'
 import logger from '../logger.js'
-import { needsTranslation } from '../service/AiIntergrationsService.js'
 import { trustSender } from '../service/TrustedSenderService.js'
+import { detectForeignLanguage } from '../util/languageDetection.ts'
 import { isPrintShortcut } from '../util/printMessage.ts'
 
 export default {
@@ -71,8 +74,7 @@ export default {
 		return {
 			hasBlockedContent: false,
 			isSenderTrusted: this.message.isSenderTrusted,
-			needsTranslation: false,
-			enabledFreePrompt: loadState('mail', 'llm_freeprompt_available', false),
+			detectedForeignLanguage: null,
 		}
 	},
 
@@ -93,9 +95,7 @@ export default {
 			scrolling: true,
 		}, this.$refs.iframe)
 
-		if (this.enabledFreePrompt && this.message) {
-			this.needsTranslation = await needsTranslation(this.message.databaseId)
-		}
+		this.detectedForeignLanguage = await detectForeignLanguage(this.message.body ?? '')
 	},
 
 	beforeDestroy() {

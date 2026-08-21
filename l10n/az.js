@@ -52,6 +52,7 @@ OC.L10N.register(
     "Clear cache" : "Keşi təmizlə",
     "Reply" : "Cavab",
     "Add" : "Əlavə etmək",
+    "Collapse" : "Yığılma",
     "Close" : "Bağla",
     "Date" : "Date",
     "Tags" : "Işarələr",
@@ -80,7 +81,6 @@ OC.L10N.register(
     "Junk" : "Önəmsiz",
     "Sent" : "Göndərildi",
     "Trash" : "Zibil",
-    "Error loading message" : "Mesajın yüklənməsində səhv baş verdi",
-    "Choose a file to add as attachment" : "Əlavə ediləcək faylı seçin"
+    "Error loading message" : "Mesajın yüklənməsində səhv baş verdi"
 },
 "nplurals=2; plural=(n != 1);");

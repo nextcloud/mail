@@ -543,8 +543,6 @@
     "Message discarded" : "邮件已舍弃",
     "Could not discard message" : "无法舍弃邮件",
     "Maximize composer" : "最大化编辑器",
-    "Show recipient details" : "显示收件人详情",
-    "Hide recipient details" : "隐藏收件人详情",
     "Minimize composer" : "最小化编辑器",
     "Error sending your message" : "发送邮件时出错",
     "Retry" : "重试",
@@ -584,8 +582,8 @@
     "Copy to clipboard" : "复制到剪贴板",
     "Contact name …" : "联系人名称 …",
     "Add" : "新增",
-    "Show less" : "显示更少",
-    "Show more" : "显示更多",
+    "Collapse" : "折叠",
+    "Expand" : "展开",
     "Clear" : "清空",
     "Search in folder" : "在文件夹中搜索",
     "Open search modal" : "打开搜索模式",
@@ -896,6 +894,7 @@
     "Search for users or groups" : "搜索用户或组",
     "Insert" : "插入",
     "Choose a text block to insert at the cursor" : "选择要在光标处插入的文本块",
+    "Text blocks are reusable pieces of text that can be inserted in messages. Visit the Settings panel to create your own." : "文本块是可重复使用的文本片段，可以插入到邮件中。请访问“设置”面板创建您自己的文本块。",
     "Account connected" : "账号已连接",
     "You can close this window" : "您可以关闭此窗口",
     "Connect your mail account" : "连接您的邮件账号",
@@ -939,9 +938,9 @@
     "Tag name is a hidden system tag" : "标记名称是一个隐藏的系统标记",
     "Tag already exists" : "标签已存在",
     "Error loading message" : "加载邮件时出错",
-    "Add share link from Files" : "从文件添加共享链接",
-    "Choose a file to add as attachment" : "选择文件添加为附件",
-    "Choose a file to share as a link" : "选择要共享为链接的文件",
-    "Insert text block" : "插入文本块"
+    "Show recipient details" : "显示收件人详情",
+    "Hide recipient details" : "隐藏收件人详情",
+    "Show less" : "显示更少",
+    "Show more" : "显示更多"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

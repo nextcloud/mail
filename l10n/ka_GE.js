@@ -101,6 +101,7 @@ OC.L10N.register(
     "Message" : "წერილი",
     "Copy to clipboard" : "კოპირება ბუფერში",
     "Add" : "დამატება",
+    "Collapse" : "აკეცვა",
     "Clear" : "გასუფთავება",
     "Close" : "დახურვა",
     "Date" : "თარიღი",
@@ -145,7 +146,6 @@ OC.L10N.register(
     "Could not load your message" : "თქვენი წერილის ჩატვირთვა ვერ მოხერხდა",
     "Could not load the desired message" : "სასურველი წერილის ჩატვირთვა ვერ მოხერხდა",
     "Could not load the message" : "წერილის ჩატვირთვა ვერ მოხერხდა",
-    "Error loading message" : "წერილის ჩატვირთვისას წარმოიშვა შეცდომა",
-    "Choose a file to add as attachment" : "დანართად დასამატებლად აირჩიეთ ფაილი"
+    "Error loading message" : "წერილის ჩატვირთვისას წარმოიშვა შეცდომა"
 },
 "nplurals=2; plural=(n!=1);");

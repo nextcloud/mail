@@ -350,8 +350,8 @@ OC.L10N.register(
     "New Contact" : "Нов контакт",
     "Copy to clipboard" : "Копиране в клипборда",
     "Add" : "Добавяне",
-    "Show less" : "Покажи по-малко",
-    "Show more" : "Покажи повече",
+    "Collapse" : "Сгъване",
+    "Expand" : "Разгъване",
     "Clear" : "Изчистване",
     "Close" : "Затваряне",
     "Search parameters" : "Параметри на търсенето",
@@ -555,8 +555,7 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Името на етикета е скрит системен етикет",
     "Tag already exists" : "Етикетът вече съществува",
     "Error loading message" : "Грешка при зареждане съобщението",
-    "Add share link from Files" : "Сподели връзка от \"Файлове\"",
-    "Choose a file to add as attachment" : "Избери файл за прикачване",
-    "Choose a file to share as a link" : "Изберете файл, който да споделите като връзка"
+    "Show less" : "Покажи по-малко",
+    "Show more" : "Покажи повече"
 },
 "nplurals=2; plural=(n != 1);");

@@ -458,8 +458,6 @@ OC.L10N.register(
     "Message discarded" : "Mensaje descartado",
     "Could not discard message" : "No se pudo descartar el mensaje",
     "Maximize composer" : "Maximizar compositor",
-    "Show recipient details" : "Mostrar detalles del recipiente",
-    "Hide recipient details" : "Ocultar detalles del recipiente",
     "Minimize composer" : "Minimizar compositor",
     "Error sending your message" : "Error al enviar tu mensaje",
     "Retry" : "Volver a intentar",
@@ -498,8 +496,8 @@ OC.L10N.register(
     "New Contact" : "Nuevo Contacto",
     "Copy to clipboard" : "Copiar al portapapeles",
     "Add" : "Añadir",
-    "Show less" : "Ver menos",
-    "Show more" : "Ver mas",
+    "Collapse" : "Colapsar",
+    "Expand" : "Expandir",
     "Clear" : "Borrar",
     "Search in folder" : "Buscar en la carpeta",
     "Open search modal" : "Abrir modal de búsqueda",
@@ -834,9 +832,9 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "El nombre de la etiqueta es una etiqueta oculta del sistema",
     "Tag already exists" : "La etiqueta ya existe",
     "Error loading message" : "Error al cargar el mensaje",
-    "Add share link from Files" : "Agregar un enlace a un recurso compartido desde Archivos",
-    "Choose a file to add as attachment" : "Escoja un archivo para adjuntar",
-    "Choose a file to share as a link" : "Escoge un archivo para compartir como enlace",
-    "Insert text block" : "Insertar bloque de texto"
+    "Show recipient details" : "Mostrar detalles del recipiente",
+    "Hide recipient details" : "Ocultar detalles del recipiente",
+    "Show less" : "Ver menos",
+    "Show more" : "Ver mas"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

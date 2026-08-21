@@ -443,8 +443,8 @@ OC.L10N.register(
     "New Contact" : "Nýr tengiliður",
     "Copy to clipboard" : "Afrita á klippispjald",
     "Add" : "Bæta við",
-    "Show less" : "Birta minna",
-    "Show more" : "Birta meira",
+    "Collapse" : "Fella saman",
+    "Expand" : "Fletta út",
     "Clear" : "Hreinsa",
     "Close" : "Loka",
     "Search parameters" : "Viðföng leitar",
@@ -698,8 +698,7 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Heiti merkis er falið merki kerfisins",
     "Tag already exists" : "Merki er þegar til",
     "Error loading message" : "Villa við hleðslu á skilaboðum",
-    "Add share link from Files" : "Bæta við deilitengli úr skrám",
-    "Choose a file to add as attachment" : "Veldu skrá til að setja sem viðhengi",
-    "Choose a file to share as a link" : "Veldu skrá til að deila sem tengli"
+    "Show less" : "Birta minna",
+    "Show more" : "Birta meira"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

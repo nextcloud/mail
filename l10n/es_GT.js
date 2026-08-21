@@ -151,6 +151,7 @@ OC.L10N.register(
     "Message" : "Mensaje",
     "Copy to clipboard" : "Copiar al portapapeles",
     "Add" : "Agregar",
+    "Collapse" : "Colapsar",
     "Clear" : "Limpiar",
     "Close" : "Close",
     "Date" : "Fecha",
@@ -196,8 +197,6 @@ OC.L10N.register(
     "Could not load your message" : "No fue posible cargar tu mensaje",
     "Could not load the desired message" : "No fue posible cargar el mensaje deseado",
     "Could not load the message" : "No fue posible cargar el mensaje",
-    "Error loading message" : "Se presentó un error al cargar el mensaje",
-    "Choose a file to add as attachment" : "Selecciona el archivo a agregar como adjunto",
-    "Choose a file to share as a link" : "Selecciona un archivo para compartir como enlace"
+    "Error loading message" : "Se presentó un error al cargar el mensaje"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

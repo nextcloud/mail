@@ -503,8 +503,6 @@ OC.L10N.register(
     "Message discarded" : "Správa bola zrušená",
     "Could not discard message" : "Správu sa nepodarilo zahodiť",
     "Maximize composer" : "Maximalizovať editor",
-    "Show recipient details" : "Zobraziť podprobnosti o prijímateľovi",
-    "Hide recipient details" : "Skryť podrobnosti o prijímateľovy",
     "Minimize composer" : "Minimalizovať editor",
     "Error sending your message" : "Chyba pri odosielaní správy",
     "Retry" : "Skúsiť znova",
@@ -544,8 +542,8 @@ OC.L10N.register(
     "Copy to clipboard" : "Skopírovať do schránky",
     "Contact name …" : "Názov kontaktu ...",
     "Add" : "Pridať",
-    "Show less" : "Zobraziť menej",
-    "Show more" : "Zobraziť viac",
+    "Collapse" : "Zvinúť",
+    "Expand" : "Rozbaliť",
     "Clear" : "Vyčistiť",
     "Search in folder" : "Vyhľadávať v priečinku",
     "Open search modal" : "Otvoriť vyhľadávací modal",
@@ -891,9 +889,9 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Názov štítku už existuje ako skrytý systémový štítok",
     "Tag already exists" : "Štítok už existuje",
     "Error loading message" : "Chyba načítavania správy",
-    "Add share link from Files" : "Pridať zdieľaný odkaz zo Súborov",
-    "Choose a file to add as attachment" : "Vyberte súbor, ktorý chcete pridať ako prílohu.",
-    "Choose a file to share as a link" : "Vyberte súbor, ktorý chcete sprístupniť pomocou odkazu",
-    "Insert text block" : "Vložiť textový blok"
+    "Show recipient details" : "Zobraziť podprobnosti o prijímateľovi",
+    "Hide recipient details" : "Skryť podrobnosti o prijímateľovy",
+    "Show less" : "Zobraziť menej",
+    "Show more" : "Zobraziť viac"
 },
 "nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);");

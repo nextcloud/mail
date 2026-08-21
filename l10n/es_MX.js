@@ -321,8 +321,7 @@ OC.L10N.register(
     "Message" : "Mensaje",
     "Copy to clipboard" : "Copiar al portapapeles",
     "Add" : "Agregar",
-    "Show less" : "Mostrar menos",
-    "Show more" : "Mostrar más",
+    "Collapse" : "Colapsar",
     "Clear" : "Limpiar",
     "Close" : "Cerrar",
     "Date" : "Fecha",
@@ -379,8 +378,7 @@ OC.L10N.register(
     "Date:" : "Fecha:",
     "Tag already exists" : "La etiqueta ya existe",
     "Error loading message" : "Se presentó un error al cargar el mensaje",
-    "Add share link from Files" : "Agregar un enlace adjunto desde Archivos",
-    "Choose a file to add as attachment" : "Selecciona el archivo a agregar como adjunto",
-    "Choose a file to share as a link" : "Eligir un archivo para compartir como enlace"
+    "Show less" : "Mostrar menos",
+    "Show more" : "Mostrar más"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

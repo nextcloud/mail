@@ -498,8 +498,6 @@ OC.L10N.register(
     "Message discarded" : "Pesan dibuang",
     "Could not discard message" : "Tidak dapat membuang pesan",
     "Maximize composer" : "Maksimalkan penyusun",
-    "Show recipient details" : "Tampilkan detail penerima",
-    "Hide recipient details" : "Sembunyikan detail penerima",
     "Minimize composer" : "Minimalkan penyusun",
     "Error sending your message" : "Kesalahan saat mengirim pesan Anda",
     "Retry" : "Coba lagi",
@@ -539,8 +537,8 @@ OC.L10N.register(
     "Copy to clipboard" : "Salin ke papan klip",
     "Contact name …" : "Nama kontak …",
     "Add" : "Tambahkan",
-    "Show less" : "Tampilkan lebih sedikit",
-    "Show more" : "Tampilkan lebih banyak",
+    "Collapse" : "Tutup",
+    "Expand" : "Perluas",
     "Clear" : "Bersihkan",
     "Search in folder" : "Cari di folder",
     "Open search modal" : "Buka modal pencarian",
@@ -883,9 +881,9 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Nama tag adalah tag sistem tersembunyi",
     "Tag already exists" : "Tag sudah ada",
     "Error loading message" : "Kesalahan saat memuat pesan",
-    "Add share link from Files" : "Tambahkan tautan berbagi dari Berkas",
-    "Choose a file to add as attachment" : "Pilih berkas untuk ditambahkan sebagai lampiran",
-    "Choose a file to share as a link" : "Pilih berkas untuk dibagikan sebagai tautan",
-    "Insert text block" : "Sisipkan blok teks"
+    "Show recipient details" : "Tampilkan detail penerima",
+    "Hide recipient details" : "Sembunyikan detail penerima",
+    "Show less" : "Tampilkan lebih sedikit",
+    "Show more" : "Tampilkan lebih banyak"
 },
 "nplurals=1; plural=0;");

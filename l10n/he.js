@@ -190,8 +190,8 @@ OC.L10N.register(
     "Oh Snap!" : "שוד ושבר!",
     "Copy to clipboard" : "העתקה ללוח הגזירים",
     "Add" : "הוספה",
-    "Show less" : "להציג פחות",
-    "Show more" : "להציג יותר",
+    "Collapse" : "קיווץ",
+    "Expand" : "הרחבה",
     "Clear" : "פינוי",
     "Close" : "סגירה",
     "Body" : "גוף",
@@ -277,7 +277,7 @@ OC.L10N.register(
     "Date:" : "בתאריך:",
     "Tag already exists" : "תגית כבר קיימת",
     "Error loading message" : "שגיאה בהעלאת הודעה",
-    "Choose a file to add as attachment" : "בחירת קובץ להוספה כקובץ מצורף",
-    "Choose a file to share as a link" : "נא לבחור קובץ לשיתוף כקישור"
+    "Show less" : "להציג פחות",
+    "Show more" : "להציג יותר"
 },
 "nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;");

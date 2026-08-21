@@ -463,8 +463,8 @@ OC.L10N.register(
     "New Contact" : "新しい連絡先",
     "Copy to clipboard" : "クリップボードにコピー",
     "Add" : "追加",
-    "Show less" : "表示を減らす",
-    "Show more" : "表示を増やす",
+    "Collapse" : "折りたたむ",
+    "Expand" : "展開",
     "Clear" : "クリア",
     "Close" : "閉じる",
     "Search parameters" : "パラメータを検索する",
@@ -744,8 +744,7 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "タグ名は非表示のシステムタグです",
     "Tag already exists" : "タグはすでに存在します",
     "Error loading message" : "メッセージ読み込みエラー",
-    "Add share link from Files" : "ファイル から共有リンクを追加",
-    "Choose a file to add as attachment" : "添付として追加するファイルを選択",
-    "Choose a file to share as a link" : "共有リンクにして送信するファイルを選択"
+    "Show less" : "表示を減らす",
+    "Show more" : "表示を増やす"
 },
 "nplurals=1; plural=0;");

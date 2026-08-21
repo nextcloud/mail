@@ -396,8 +396,8 @@ OC.L10N.register(
     "New Contact" : "Új névjegy",
     "Copy to clipboard" : "Másolás a vágólapra",
     "Add" : "Hozzáadás",
-    "Show less" : "Kevesebb megjelenítése",
-    "Show more" : "Több megjelenítése",
+    "Collapse" : "Összecsukás",
+    "Expand" : "Kibontás",
     "Clear" : "Törlés",
     "Close" : "Bezárás",
     "Search parameters" : "Keresési paraméterek",
@@ -633,7 +633,7 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "A címkenév egy rejtett rendszercímke",
     "Tag already exists" : "A címke már létezik",
     "Error loading message" : "Hiba történt az üzenet betöltése közben",
-    "Choose a file to add as attachment" : "Válasszon mellékletként hozzáadandó fájlt",
-    "Choose a file to share as a link" : "Válasszon fájlt a hivatkozással történő megosztáshoz"
+    "Show less" : "Kevesebb megjelenítése",
+    "Show more" : "Több megjelenítése"
 },
 "nplurals=2; plural=(n != 1);");

@@ -4,50 +4,50 @@
 -->
 
 <template>
-	<AppSettingsDialog
+	<NcAppSettingsDialog
 		id="app-settings-dialog"
 		:open="open"
 		:show-navigation="true"
 		:additional-trap-elements="trapElements"
 		:name="t('mail', 'Account settings')"
-		@update:open="updateOpen">
-		<AppSettingsSection
+		@update:open="onClose">
+		<NcAppSettingsSection
 			id="alias-settings"
 			:name="t('mail', 'Aliases')">
 			<AliasSettings :account="account" @rename-primary-alias="scrollToAccountSettings" />
-		</AppSettingsSection>
-		<AppSettingsSection
+		</NcAppSettingsSection>
+		<NcAppSettingsSection
 			id="certificate-settings"
 			:name="t('mail', 'Alias to S/MIME certificate mapping')">
 			<CertificateSettings :account="account" />
-		</AppSettingsSection>
-		<AppSettingsSection id="writing-mode" :name="t('mail', 'Writing mode')">
+		</NcAppSettingsSection>
+		<NcAppSettingsSection id="writing-mode" :name="t('mail', 'Writing mode')">
 			<p class="settings-hint">
 				{{ t('mail', 'Preferred writing mode for new messages and replies.') }}
 			</p>
 			<EditorSettings :account="account" />
-		</AppSettingsSection>
-		<AppSettingsSection id="signature" :name="t('mail', 'Signature')">
+		</NcAppSettingsSection>
+		<NcAppSettingsSection id="signature" :name="t('mail', 'Signature')">
 			<p class="settings-hint">
 				{{ t('mail', 'A signature is added to the text of new messages and replies.') }}
 			</p>
 			<SignatureSettings :account="account" />
-		</AppSettingsSection>
-		<AppSettingsSection id="default-folders" :name=" t('mail', 'Default folders')">
+		</NcAppSettingsSection>
+		<NcAppSettingsSection id="default-folders" :name=" t('mail', 'Default folders')">
 			<p class="settings-hint">
 				{{
 					t('mail', 'The folders to use for drafts, sent messages, deleted messages, archived messages and junk messages.')
 				}}
 			</p>
 			<AccountDefaultsSettings :account="account" />
-		</AppSettingsSection>
-		<AppSettingsSection id="trash-retention" :name=" t('mail', 'Automatic trash deletion')">
+		</NcAppSettingsSection>
+		<NcAppSettingsSection id="trash-retention" :name=" t('mail', 'Automatic trash deletion')">
 			<p class="settings-hint">
 				{{ t('mail', 'Days after which messages in Trash will automatically be deleted:') }}
 			</p>
 			<TrashRetentionSettings :account="account" />
-		</AppSettingsSection>
-		<AppSettingsSection
+		</NcAppSettingsSection>
+		<NcAppSettingsSection
 			v-if="account"
 			id="out-of-office-replies"
 			:name="t('mail', 'Autoresponder')">
@@ -61,14 +61,14 @@
 					{{ t('mail', 'Go to Sieve settings') }}
 				</NcButton>
 			</div>
-		</AppSettingsSection>
-		<AppSettingsSection
+		</NcAppSettingsSection>
+		<NcAppSettingsSection
 			v-if="account && systemVersion >= 33"
 			id="calendar-settings"
 			:name="t('mail', 'Calendar settings')">
 			<CalendarSettings :account="account" />
-		</AppSettingsSection>
-		<AppSettingsSection
+		</NcAppSettingsSection>
+		<NcAppSettingsSection
 			v-if="account"
 			id="classification"
 			:name="t('mail', 'Classification settings')">
@@ -79,22 +79,22 @@
 				@update:checked="onToggleClassification">
 				{{ t('mail', 'Enable mark as important classification') }}
 			</NcCheckboxRadioSwitch>
-		</AppSettingsSection>
-		<AppSettingsSection
+		</NcAppSettingsSection>
+		<NcAppSettingsSection
 			v-if="account && account.sieveEnabled"
 			id="mail-filters"
 			:name="t('mail', 'Filters')">
 			<div id="mail-filters">
 				<MailFilters :key="account.accountId" ref="mailFilters" :account="account" />
 			</div>
-		</AppSettingsSection>
-		<AppSettingsSection
+		</NcAppSettingsSection>
+		<NcAppSettingsSection
 			v-if="account"
 			id="quick-actions-settings"
 			:name="t('mail', 'Quick actions')">
 			<Settings :key="account.accountId" ref="quickActions" :account="account" />
-		</AppSettingsSection>
-		<AppSettingsSection
+		</NcAppSettingsSection>
+		<NcAppSettingsSection
 			v-if="account && account.sieveEnabled"
 			id="sieve-filter"
 			:name="t('mail', 'Sieve script editor')">
@@ -104,8 +104,8 @@
 					ref="sieveFilterForm"
 					:account="account" />
 			</div>
-		</AppSettingsSection>
-		<AppSettingsSection
+		</NcAppSettingsSection>
+		<NcAppSettingsSection
 			v-if="account && !account.provisioningId && !account.isDelegated"
 			id="mail-server"
 			ref="mail-server"
@@ -118,8 +118,8 @@
 					:email="email"
 					:account="account" />
 			</div>
-		</AppSettingsSection>
-		<AppSettingsSection
+		</NcAppSettingsSection>
+		<NcAppSettingsSection
 			v-if="account && !account.provisioningId"
 			id="sieve-settings"
 			:name="t('mail', 'Sieve server')">
@@ -129,16 +129,16 @@
 					ref="sieveAccountForm"
 					:account="account" />
 			</div>
-		</AppSettingsSection>
+		</NcAppSettingsSection>
 		<!-- TRANSLATORS: Settings for searching in a folder -->
-		<AppSettingsSection id="mailbox_search" :name="t('mail', 'Folder search')">
+		<NcAppSettingsSection id="mailbox_search" :name="t('mail', 'Folder search')">
 			<SearchSettings :account="account" />
-		</AppSettingsSection>
-	</AppSettingsDialog>
+		</NcAppSettingsSection>
+	</NcAppSettingsDialog>
 </template>
 
 <script>
-import { NcAppSettingsDialog as AppSettingsDialog, NcAppSettingsSection as AppSettingsSection, NcButton, NcCheckboxRadioSwitch } from '@nextcloud/vue'
+import { NcAppSettingsDialog, NcAppSettingsSection, NcButton, NcCheckboxRadioSwitch } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import AccountDefaultsSettings from '../components/AccountDefaultsSettings.vue'
 import AccountForm from '../components/AccountForm.vue'
@@ -166,8 +166,8 @@ export default {
 		AliasSettings,
 		EditorSettings,
 		SignatureSettings,
-		AppSettingsDialog,
-		AppSettingsSection,
+		NcAppSettingsDialog,
+		NcAppSettingsSection,
 		AccountDefaultsSettings,
 		CalendarSettings,
 		OutOfOfficeForm,
@@ -206,7 +206,6 @@ export default {
 	data() {
 		return {
 			trapElements: [],
-			fetchActiveSieveScript: this.account.sieveEnabled,
 			loadingClassificationToggle: false,
 			systemVersion: parseInt(OC.config.version.split('.')[0], 10),
 		}
@@ -224,24 +223,26 @@ export default {
 	},
 
 	watch: {
-		open(newState, oldState) {
-			if (newState === true && this.fetchActiveSieveScript === true) {
-				logger.debug(`Load active sieve script for account ${this.account.accountId}`)
-				this.fetchActiveSieveScript = false
-				this.mainStore.fetchActiveSieveScript({
-					accountId: this.account.id,
+		scrollToSection: {
+			immediate: true,
+			handler(newState) {
+				this.$nextTick(() => {
+					this.$refs[newState]?.$el?.scrollIntoView({
+						behavior: 'smooth',
+						block: 'start',
+					})
 				})
-			}
+			},
 		},
+	},
 
-		scrollToSection(newState) {
-			this.$nextTick(() => {
-				this.$refs[newState]?.$el?.scrollIntoView({
-					behavior: 'smooth',
-					block: 'start',
-				})
+	mounted() {
+		if (this.account.sieveEnabled) {
+			logger.debug(`Load active sieve script for account ${this.account.accountId}`)
+			this.mainStore.fetchActiveSieveScript({
+				accountId: this.account.id,
 			})
-		},
+		}
 	},
 
 	methods: {
@@ -251,8 +252,8 @@ export default {
 			})
 		},
 
-		updateOpen() {
-			this.$emit('update:open')
+		onClose() {
+			this.$emit('close')
 		},
 
 		async onToggleClassification(classificationEnabled) {

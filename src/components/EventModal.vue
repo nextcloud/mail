@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<Modal
+	<NcModal
 		size="large"
 		:name="t('mail', 'Create event')"
 		@close="onClose">
@@ -18,7 +18,7 @@
 					type="text">
 			</div>
 			<div class="dateTimePicker">
-				<DatetimePicker
+				<NcDateTimePicker
 					v-model="startDate"
 					:format="dateFormat"
 					:clearable="false"
@@ -27,7 +27,7 @@
 					:type="datePickerType"
 					:show-timezone-select="true"
 					:timezone-id="startTimezoneId" />
-				<DatetimePicker
+				<NcDateTimePicker
 					v-model="endDate"
 					:format="dateFormat"
 					:clearable="false"
@@ -112,7 +112,7 @@
 				{{ t('mail', 'Create') }}
 			</button>
 		</div>
-	</Modal>
+	</NcModal>
 </template>
 
 <script>
@@ -120,7 +120,7 @@ import { AttendeeProperty, createEvent, DateTimeValue, TextProperty } from '@nex
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
 import { getTimezoneManager } from '@nextcloud/timezones'
-import { NcDateTimePicker as DatetimePicker, NcModal as Modal, NcSelect } from '@nextcloud/vue'
+import { NcDateTimePicker, NcModal, NcSelect } from '@nextcloud/vue'
 import jstz from 'jstz'
 import { mapState, mapStores } from 'pinia'
 import CalendarPickerOption from './CalendarPickerOption.vue'
@@ -135,8 +135,8 @@ export default {
 	components: {
 		RecipientListItem,
 		CalendarPickerOption,
-		DatetimePicker,
-		Modal,
+		NcDateTimePicker,
+		NcModal,
 		NcSelect,
 	},
 

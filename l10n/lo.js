@@ -483,8 +483,6 @@ OC.L10N.register(
     "Message discarded" : "Message discarded",
     "Could not discard message" : "Could not discard message",
     "Maximize composer" : "Maximize composer",
-    "Show recipient details" : "Show recipient details",
-    "Hide recipient details" : "Hide recipient details",
     "Minimize composer" : "Minimize composer",
     "Error sending your message" : "Error sending your message",
     "Retry" : "Retry",
@@ -524,8 +522,8 @@ OC.L10N.register(
     "Copy to clipboard" : "ສຳເນົາໃສ່ຄລິບບອດ",
     "Contact name …" : "Contact name …",
     "Add" : "ເພີ່ມ",
-    "Show less" : "ສະແດງໜ້ອຍລົງ",
-    "Show more" : "ສະແດງເພີ່ມເຕີມ",
+    "Collapse" : "Collapse",
+    "Expand" : "Expand",
     "Clear" : "ລຶບລ້າງ",
     "Search in folder" : "Search in folder",
     "Open search modal" : "Open search modal",
@@ -863,9 +861,9 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Tag name is a hidden system tag",
     "Tag already exists" : "Tag already exists",
     "Error loading message" : "Error loading message",
-    "Add share link from Files" : "Add share link from Files",
-    "Choose a file to add as attachment" : "Choose a file to add as attachment",
-    "Choose a file to share as a link" : "Choose a file to share as a link",
-    "Insert text block" : "Insert text block"
+    "Show recipient details" : "Show recipient details",
+    "Hide recipient details" : "Hide recipient details",
+    "Show less" : "ສະແດງໜ້ອຍລົງ",
+    "Show more" : "ສະແດງເພີ່ມເຕີມ"
 },
 "nplurals=1; plural=0;");

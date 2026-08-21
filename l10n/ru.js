@@ -527,8 +527,6 @@ OC.L10N.register(
     "Message discarded" : "Внесение изменений отменено",
     "Could not discard message" : "Не удалось отменить внесение изменений",
     "Maximize composer" : "Развернуть композер",
-    "Show recipient details" : "Показать сведения о получателе",
-    "Hide recipient details" : "Скрыть сведения о получателе",
     "Minimize composer" : "Свернуть композер",
     "Error sending your message" : "Ошибка при отправке вашего сообщения",
     "Retry" : "Попробовать снова",
@@ -568,8 +566,8 @@ OC.L10N.register(
     "Copy to clipboard" : "Копировать в буфер",
     "Contact name …" : "Имя контакта  ...",
     "Add" : "Добавить",
-    "Show less" : "Показывать меньше",
-    "Show more" : "Показывать больше",
+    "Collapse" : "Свернуть",
+    "Expand" : "Развернуть",
     "Clear" : "Очистить",
     "Search in folder" : "Искать в папке",
     "Open search modal" : "Открыть окно поиска",
@@ -917,9 +915,9 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Имя тега является скрытым системным тегом",
     "Tag already exists" : "Метка уже существует",
     "Error loading message" : "Ошибка загрузки сообщения",
-    "Add share link from Files" : "Добавить ссылку для общего доступа из Файлов",
-    "Choose a file to add as attachment" : "Выбрать файл для вложения",
-    "Choose a file to share as a link" : "Выберите файл для публикации ссылкой",
-    "Insert text block" : "Вставить блок текста"
+    "Show recipient details" : "Показать сведения о получателе",
+    "Hide recipient details" : "Скрыть сведения о получателе",
+    "Show less" : "Показывать меньше",
+    "Show more" : "Показывать больше"
 },
 "nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);");

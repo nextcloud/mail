@@ -50,22 +50,3 @@ export async function smartReply(messageId) {
 		throw convertAxiosError(e)
 	}
 }
-
-export async function needsTranslation(messageId) {
-	const url = generateUrl('/apps/mail/api/messages/{messageId}/needsTranslation', {
-		messageId,
-	})
-
-	try {
-		const resp = await axios.get(url)
-		if (resp.status === 204) {
-			throw new Error('Checking whether translation is needed failed, error in the llm service')
-		}
-		if (resp.status === 501) {
-			throw new Error('Please enable llm services for groupware to use this feature')
-		}
-		return resp.data.requiresTranslation
-	} catch (e) {
-		throw convertAxiosError(e)
-	}
-}
