@@ -1307,6 +1307,7 @@ export default {
 				trigger,
 				toHtml(detect(this.selectedAlias.signature)).value,
 				this.selectedAlias.signatureAboveQuote,
+				this.editorPlainText,
 			)
 
 			this.changeSignature = false
