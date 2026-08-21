@@ -1396,6 +1396,7 @@ export default {
 				trigger,
 				signature,
 				this.selectedAlias.signatureAboveQuote,
+				this.editorPlainText,
 			)
 
 			this.changeSignature = false
