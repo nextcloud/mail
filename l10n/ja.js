@@ -744,9 +744,6 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "タグ名は非表示のシステムタグです",
     "Tag already exists" : "タグはすでに存在します",
     "Error loading message" : "メッセージ読み込みエラー",
-    "Add share link from Files" : "ファイル から共有リンクを追加",
-    "Choose a file to add as attachment" : "添付として追加するファイルを選択",
-    "Choose a file to share as a link" : "共有リンクにして送信するファイルを選択",
     "Show less" : "表示を減らす",
     "Show more" : "表示を増やす"
 },

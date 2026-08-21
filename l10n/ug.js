@@ -878,13 +878,9 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "بەلگە ئىسمى يوشۇرۇن سىستېما بەلگىسى",
     "Tag already exists" : "خەتكۈچ مەۋجۇت",
     "Error loading message" : "ئۇچۇر يۈكلەشتە خاتالىق",
-    "Add share link from Files" : "ھۆججەتلەردىن ھەمبەھىر ئۇلانمىسىنى قوشۇڭ",
-    "Choose a file to add as attachment" : "قوشۇمچە قىلىپ قوشماقچى بولغان ھۆججەتنى تاللاڭ",
-    "Choose a file to share as a link" : "ئۇلىنىش سۈپىتىدە ھەمبەھىرلىنىدىغان ھۆججەتنى تاللاڭ",
     "Show recipient details" : "تاپشۇرۋالغۇچى تەپسىلاتىنى كۆرسەت",
     "Hide recipient details" : "تاپشۇرۋالغۇچى تەپسىلاتىنى يۇشۇر",
     "Show less" : "ئازراق كۆرسەت",
-    "Show more" : "تېخىمۇ كۆپ كۆرسەت",
-    "Insert text block" : "تىكىست بۆلىكى قىستۇر"
+    "Show more" : "تېخىمۇ كۆپ كۆرسەت"
 },
 "nplurals=2; plural=(n != 1);");

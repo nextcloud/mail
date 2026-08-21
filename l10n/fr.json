@@ -947,13 +947,9 @@
     "Tag name is a hidden system tag" : "Le nom de l'étiquette est celui d'une étiquette système cachée",
     "Tag already exists" : "L'étiquette existe déjà",
     "Error loading message" : "Erreur lors du chargement du message",
-    "Add share link from Files" : "Ajouter un lien de partage depuis Fichiers",
-    "Choose a file to add as attachment" : "Choisissez un fichier à joindre au message",
-    "Choose a file to share as a link" : "Sélectionnez un fichier à partager par lien",
     "Show recipient details" : "Afficher les détails du destinataire",
     "Hide recipient details" : "Masquer les détails du destinataire",
     "Show less" : "Afficher moins",
-    "Show more" : "Afficher plus",
-    "Insert text block" : "Insérer un bloc de texte"
+    "Show more" : "Afficher plus"
 },"pluralForm" :"nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

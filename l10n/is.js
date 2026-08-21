@@ -698,9 +698,6 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Heiti merkis er falið merki kerfisins",
     "Tag already exists" : "Merki er þegar til",
     "Error loading message" : "Villa við hleðslu á skilaboðum",
-    "Add share link from Files" : "Bæta við deilitengli úr skrám",
-    "Choose a file to add as attachment" : "Veldu skrá til að setja sem viðhengi",
-    "Choose a file to share as a link" : "Veldu skrá til að deila sem tengli",
     "Show less" : "Birta minna",
     "Show more" : "Birta meira"
 },

@@ -912,13 +912,9 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Nazwa etykiety jest ukrytej etykiety systemowej",
     "Tag already exists" : "Tag już istnieje",
     "Error loading message" : "Błąd podczas wczytywania wiadomości",
-    "Add share link from Files" : "Dodaj link do udostępnienia z Plików",
-    "Choose a file to add as attachment" : "Wybierz plik, aby dodać jako załącznik",
-    "Choose a file to share as a link" : "Wybierz plik do udostępnienia przez link",
     "Show recipient details" : "Pokaż szczegóły odbiorcy",
     "Hide recipient details" : "Ukryj szczegóły odbiorcy",
     "Show less" : "Pokaż mniej",
-    "Show more" : "Pokaż więcej",
-    "Insert text block" : "Wstaw blok tekstowy"
+    "Show more" : "Pokaż więcej"
 },
 "nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);");

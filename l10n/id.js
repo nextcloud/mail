@@ -881,13 +881,9 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Nama tag adalah tag sistem tersembunyi",
     "Tag already exists" : "Tag sudah ada",
     "Error loading message" : "Kesalahan saat memuat pesan",
-    "Add share link from Files" : "Tambahkan tautan berbagi dari Berkas",
-    "Choose a file to add as attachment" : "Pilih berkas untuk ditambahkan sebagai lampiran",
-    "Choose a file to share as a link" : "Pilih berkas untuk dibagikan sebagai tautan",
     "Show recipient details" : "Tampilkan detail penerima",
     "Hide recipient details" : "Sembunyikan detail penerima",
     "Show less" : "Tampilkan lebih sedikit",
-    "Show more" : "Tampilkan lebih banyak",
-    "Insert text block" : "Sisipkan blok teks"
+    "Show more" : "Tampilkan lebih banyak"
 },
 "nplurals=1; plural=0;");

@@ -609,10 +609,7 @@
     "Tag name is a hidden system tag" : "Tunnisteen nimi on piilotettu järjestelmätunniste",
     "Tag already exists" : "Tunniste on jo olemassa",
     "Error loading message" : "Virhe viestiä ladatessa",
-    "Choose a file to add as attachment" : "Valitse liitteeksi lisättävä tiedosto",
-    "Choose a file to share as a link" : "Valitse tiedosto, joka jaetaan linkkinä",
     "Show less" : "Näytä vähemmän",
-    "Show more" : "Näytä enemmän",
-    "Insert text block" : "Lisää tekstilohko"
+    "Show more" : "Näytä enemmän"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

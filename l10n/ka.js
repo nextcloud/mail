@@ -617,8 +617,6 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Tag name is a hidden system tag",
     "Tag already exists" : "Tag already exists",
     "Error loading message" : "Error loading message",
-    "Choose a file to add as attachment" : "Choose a file to add as attachment",
-    "Choose a file to share as a link" : "Choose a file to share as a link",
     "Show less" : "Show less",
     "Show more" : "Show more"
 },

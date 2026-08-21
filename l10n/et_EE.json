@@ -947,13 +947,9 @@
     "Tag name is a hidden system tag" : "Sildi nimi on peidetud süsteemne silt",
     "Tag already exists" : "Silt on juba olemas",
     "Error loading message" : "Viga kirja laadimisel",
-    "Add share link from Files" : "Lisa jagamislink failirakendusest",
-    "Choose a file to add as attachment" : "Vali fail, mida manustada",
-    "Choose a file to share as a link" : "Vali lingiga jagatav fail",
     "Show recipient details" : "Näita kirjasaaja üksikasju",
     "Hide recipient details" : "Peida kirjasaaja üksikasjad",
     "Show less" : "Näita vähem",
-    "Show more" : "Näita rohkem",
-    "Insert text block" : "Sisesta tekstiplokk"
+    "Show more" : "Näita rohkem"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

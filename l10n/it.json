@@ -942,13 +942,9 @@
     "Tag name is a hidden system tag" : "Questo nome è riservato a un’etichetta di sistema nascosta",
     "Tag already exists" : "L'etichetta esiste già",
     "Error loading message" : "Errore durante il caricamento del messaggio",
-    "Add share link from Files" : "Aggiungi link condiviso da Files",
-    "Choose a file to add as attachment" : "Scegli un file da aggiungere come allegato",
-    "Choose a file to share as a link" : "Scegli un file da condividere come un collegamento",
     "Show recipient details" : "Mostra dettagli dei destinatari",
     "Hide recipient details" : "Nascondi dettagli dei destinatari",
     "Show less" : "Mostra meno",
-    "Show more" : "Mostra più",
-    "Insert text block" : "Inserisci testo di blocco"
+    "Show more" : "Mostra più"
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

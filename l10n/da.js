@@ -590,9 +590,6 @@ OC.L10N.register(
     "Date:" : "Dato:",
     "Tag already exists" : "Mærket eksisterer allerede",
     "Error loading message" : "Fejl under indlæsning af besked",
-    "Add share link from Files" : "Tilføj delingslink fra Filer",
-    "Choose a file to add as attachment" : "Vælg en fil, der skal tilføjes som vedhæftning",
-    "Choose a file to share as a link" : "Vælg en fil der skal deles som link",
     "Show less" : "Vis mindre",
     "Show more" : "Vis mere"
 },

@@ -130,7 +130,6 @@ OC.L10N.register(
     "Could not load the desired message" : "Methu llwytho'r neges a ddewiswyd",
     "Could not load the message" : "Methu llwytho'r neges",
     "Date:" : "Dyddiad:",
-    "Error loading message" : "Gwall wrth lwytho neges",
-    "Choose a file to add as attachment" : "Dewiswch ffeil i'w hychwanegu fel atodiad"
+    "Error loading message" : "Gwall wrth lwytho neges"
 },
 "nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;");

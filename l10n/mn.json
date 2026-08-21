@@ -863,13 +863,9 @@
     "Tag name is a hidden system tag" : "Тагийн нэр нуугдсан системийн таг байна",
     "Tag already exists" : "Таг аль хэдийн байна",
     "Error loading message" : "–∞–ª–¥–∞–∞—Ç–∞–π –∞—á–∞–∞–ª–ª–∞—Ö –∑—É—Ä–≤–∞—Å",
-    "Add share link from Files" : "Файлуудаас хуваалцах холбоос нэмэх",
-    "Choose a file to add as attachment" : "Хавсралт болгох файл сонгоно уу",
-    "Choose a file to share as a link" : "Холбоосоор хуваалцах файл сонгоно уу",
     "Show recipient details" : "Хүлээн авагчийн дэлгэрэнгүйг харуулах",
     "Hide recipient details" : "Хүлээн авагчийн дэлгэрэнгүйг нуух",
     "Show less" : "Бага харуулах",
-    "Show more" : "Илүү харуулах",
-    "Insert text block" : "Текст блок оруулах"
+    "Show more" : "Илүү харуулах"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

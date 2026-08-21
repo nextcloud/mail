@@ -949,13 +949,9 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Tag name is a hidden system tag",
     "Tag already exists" : "Tag already exists",
     "Error loading message" : "Error loading message",
-    "Add share link from Files" : "Add share link from Files",
-    "Choose a file to add as attachment" : "Choose a file to add as attachment",
-    "Choose a file to share as a link" : "Choose a file to share as a link",
     "Show recipient details" : "Show recipient details",
     "Hide recipient details" : "Hide recipient details",
     "Show less" : "Show less",
-    "Show more" : "Show more",
-    "Insert text block" : "Insert text block"
+    "Show more" : "Show more"
 },
 "nplurals=2; plural=(n != 1);");

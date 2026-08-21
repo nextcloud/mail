@@ -911,13 +911,9 @@
     "Tag name is a hidden system tag" : "نام برچسب یک برچسب سیستمی مخفی است",
     "Tag already exists" : "برچسب از قبل وجود دارد",
     "Error loading message" : "خطا در بارگذاری پیام",
-    "Add share link from Files" : "افزودن لینک اشتراک‌گذاری از Files",
-    "Choose a file to add as attachment" : "فایلی را برای افزودن به عنوان پیوست انتخاب کنید",
-    "Choose a file to share as a link" : "فایلی را برای اشتراک‌گذاری به عنوان پیوند انتخاب کنید",
     "Show recipient details" : "نمایش جزئیات گیرنده",
     "Hide recipient details" : "مخفی کردن جزئیات گیرنده",
     "Show less" : "نمایش کمتر",
-    "Show more" : "نمایش بیشتر",
-    "Insert text block" : "درج بلوک متنی"
+    "Show more" : "نمایش بیشتر"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

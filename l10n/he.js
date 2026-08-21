@@ -277,8 +277,6 @@ OC.L10N.register(
     "Date:" : "בתאריך:",
     "Tag already exists" : "תגית כבר קיימת",
     "Error loading message" : "שגיאה בהעלאת הודעה",
-    "Choose a file to add as attachment" : "בחירת קובץ להוספה כקובץ מצורף",
-    "Choose a file to share as a link" : "נא לבחור קובץ לשיתוף כקישור",
     "Show less" : "להציג פחות",
     "Show more" : "להציג יותר"
 },
