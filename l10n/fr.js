@@ -250,6 +250,7 @@ OC.L10N.register(
     "Add attachment from Files" : "Ajouter des pièces jointes depuis Fichiers",
     "Smart picker" : "Sélecteur intelligent",
     "Request a read receipt" : "Demander un accusé de réception",
+    "Mark as AI generated" : "Marquer comme généré par IA",
     "Sign message with S/MIME" : "Signer les messages avec S/MIME",
     "Encrypt message with S/MIME" : "Chiffrer les messages avec S/MIME",
     "Encrypt message with Mailvelope" : "Chiffrer le message avec Mailvelope",
