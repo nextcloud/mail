@@ -734,6 +734,15 @@ export default {
 	--fold-distance: calc(var(--subject-height, 1lh) - 1lh);
 	height: var(--fold-distance);
 	margin-bottom: calc(-1 * var(--fold-distance));
+
+	// The back button is sticky, and a sticky button still takes its place in
+	// the flow, leaving a button's worth of blank above the subject. Take it
+	// back so the subject sits beside the button rather than under it. Pulling
+	// the marker rather than the header moves the two together, which leaves
+	// the distance between them, and so the fold, as it was.
+	@media only screen and (max-width: #{variables.$breakpoint-mobile}) {
+		margin-top: calc(-1 * var(--default-clickable-area));
+	}
 }
 
 @media only screen and (max-width: #{variables.$breakpoint-mobile}) {
