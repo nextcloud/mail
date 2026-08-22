@@ -11,6 +11,7 @@
     xsi:schemaLocation="https://getpsalm.org/schema/config"
     errorBaseline="tests/psalm-baseline.xml"
     phpVersion="8.1"
+    findUnusedCode="false"
 >
     <projectFiles>
         <directory name="lib" />
@@ -22,7 +23,7 @@
     <extraFiles>
         <directory name="vendor" />
 		<directory name="lib/Vendor" />
-		<directory name="vendor-bin/psalm-stubs" />
+		<directory name="vendor-bin/psalm/vendor/psr" />
     </extraFiles>
 	<stubs>
 		<file name="tests/stubs/php-polyfill.php" />
