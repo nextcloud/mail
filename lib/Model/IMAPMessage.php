@@ -47,6 +47,9 @@ use function trim;
 class IMAPMessage implements IMessage, JsonSerializable {
 	use ConvertAddresses;
 
+	private ?string $sanitizedHtmlBody = null;
+	private ?int $sanitizedHtmlBodyId = null;
+
 	/**
 	 * @param list<IMAPAttachment> $inlineAttachments
 	 */
@@ -304,7 +307,14 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 * @return string
 	 */
 	public function getHtmlBody(int $id): string {
-		return $this->htmlService->sanitizeHtmlMailBody(
+		// Sanitizing is expensive and callers request the same body more than
+		// once per request (cache write + full message), so memoize the result
+		if ($this->sanitizedHtmlBody !== null && $this->sanitizedHtmlBodyId === $id) {
+			return $this->sanitizedHtmlBody;
+		}
+
+		$this->sanitizedHtmlBodyId = $id;
+		return $this->sanitizedHtmlBody = $this->htmlService->sanitizeHtmlMailBody(
 			$id,
 			$this->htmlMessage,
 			$this->inlineAttachments,
