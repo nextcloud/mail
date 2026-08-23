@@ -185,8 +185,6 @@ OC.L10N.register(
     "Discard changes" : "Discard changes",
     "Message sent" : "Ujumbe umetumwa",
     "Date:" : "Tarehe:",
-    "Choose a file to add as attachment" : "Chagua faili kuongeza kama kiambatanisho",
-    "Choose a file to share as a link" : "Chagua faili kushirikisha kama kiungo",
     "Show less" : "Show less",
     "Show more" : "Show more"
 },

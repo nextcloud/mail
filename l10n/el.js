@@ -933,13 +933,9 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Το όνομα ετικέτας είναι κρυφή ετικέτα συστήματος",
     "Tag already exists" : "Υπάρχει ήδη η ετικέτα",
     "Error loading message" : "Σφάλμα φόρτωσης μηνύματος",
-    "Add share link from Files" : "Προσθήκη συνδέσμου κοινής χρήσης από Αρχεία",
-    "Choose a file to add as attachment" : "Επιλέξτε ένα αρχείο για να προσθέσετε ως συνημμένο",
-    "Choose a file to share as a link" : "Επιλέξτε ένα αρχείο για κοινή χρήση ως σύνδεσμο",
     "Show recipient details" : "Εμφάνιση λεπτομερειών παραληπτών",
     "Hide recipient details" : "Απόκρυψη λεπτομερειών παραληπτών",
     "Show less" : "Εμφάνιση λιγότερων",
-    "Show more" : "Εμφάνιση περισσότερων",
-    "Insert text block" : "Εισαγωγή μπλοκ κειμένου"
+    "Show more" : "Εμφάνιση περισσότερων"
 },
 "nplurals=2; plural=(n != 1);");

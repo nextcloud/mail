@@ -890,13 +890,9 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "O nome da etiqueta é unha etiqueta agochada do sistema",
     "Tag already exists" : "Xa existe a etiqueta",
     "Error loading message" : "Produciuse un erro ao cargar a mensaxe",
-    "Add share link from Files" : "Engadir ligazón para compartir desde Ficheiros",
-    "Choose a file to add as attachment" : "Escolla un ficheiro para engadir como anexo",
-    "Choose a file to share as a link" : "Escolla un ficheiro para compartir como ligazón",
     "Show recipient details" : "Amosar os detalles do destinatario",
     "Hide recipient details" : "Agochar os detalles do destinatario",
     "Show less" : "Amosar menos",
-    "Show more" : "Amosar máis",
-    "Insert text block" : "Inserir o bloque de texto"
+    "Show more" : "Amosar máis"
 },
 "nplurals=2; plural=(n != 1);");

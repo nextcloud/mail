@@ -938,13 +938,9 @@
     "Tag name is a hidden system tag" : "标记名称是一个隐藏的系统标记",
     "Tag already exists" : "标签已存在",
     "Error loading message" : "加载邮件时出错",
-    "Add share link from Files" : "从文件添加共享链接",
-    "Choose a file to add as attachment" : "选择文件添加为附件",
-    "Choose a file to share as a link" : "选择要共享为链接的文件",
     "Show recipient details" : "显示收件人详情",
     "Hide recipient details" : "隐藏收件人详情",
     "Show less" : "显示更少",
-    "Show more" : "显示更多",
-    "Insert text block" : "插入文本块"
+    "Show more" : "显示更多"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

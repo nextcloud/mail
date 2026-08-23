@@ -250,6 +250,7 @@ OC.L10N.register(
     "Add attachment from Files" : "Ajouter des pièces jointes depuis Fichiers",
     "Smart picker" : "Sélecteur intelligent",
     "Request a read receipt" : "Demander un accusé de réception",
+    "Mark as AI generated" : "Marquer comme généré par IA",
     "Sign message with S/MIME" : "Signer les messages avec S/MIME",
     "Encrypt message with S/MIME" : "Chiffrer les messages avec S/MIME",
     "Encrypt message with Mailvelope" : "Chiffrer le message avec Mailvelope",
@@ -949,13 +950,9 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Le nom de l'étiquette est celui d'une étiquette système cachée",
     "Tag already exists" : "L'étiquette existe déjà",
     "Error loading message" : "Erreur lors du chargement du message",
-    "Add share link from Files" : "Ajouter un lien de partage depuis Fichiers",
-    "Choose a file to add as attachment" : "Choisissez un fichier à joindre au message",
-    "Choose a file to share as a link" : "Sélectionnez un fichier à partager par lien",
     "Show recipient details" : "Afficher les détails du destinataire",
     "Hide recipient details" : "Masquer les détails du destinataire",
     "Show less" : "Afficher moins",
-    "Show more" : "Afficher plus",
-    "Insert text block" : "Insérer un bloc de texte"
+    "Show more" : "Afficher plus"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

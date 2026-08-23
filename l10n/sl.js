@@ -527,8 +527,6 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Ime oznake je skrita sistemska oznaka",
     "Tag already exists" : "Oznaka že obstaja",
     "Error loading message" : "Napaka nalaganja sporočila",
-    "Choose a file to add as attachment" : "Izbor datoteke za prilogo",
-    "Choose a file to share as a link" : "Izberite datoteko, ki jo želite dati v skupno rabo kot povezavo",
     "Show less" : "Pokaži manj",
     "Show more" : "Pokaži več"
 },

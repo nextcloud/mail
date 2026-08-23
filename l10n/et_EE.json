@@ -248,6 +248,7 @@
     "Add attachment from Files" : "Lisa manus failirakendusest",
     "Smart picker" : "Nutivalija",
     "Request a read receipt" : "Palu lugemiskinnitust",
+    "Mark as AI generated" : "Märgi koostatuks tehisaru poolt",
     "Sign message with S/MIME" : "Allkirjasta kiri S/MIME-ga",
     "Encrypt message with S/MIME" : "Krüpti kiri S/MIME-ga",
     "Encrypt message with Mailvelope" : "Krüpti kiri Mailvelope'iga",
@@ -661,6 +662,7 @@
     "Could not unsubscribe from mailing list" : "Postiloendi tellimusest loobumine ei õnnestunud",
     "Please wait for the message to load" : "Palun oota, kuni e-kirja laadimine on lõppenud",
     "Disable reminder" : "Lülita meeldetuletus välja",
+    "Contains AI content" : "Sisaldab tehisaru poolt koostatud sisu",
     "Unsubscribe" : "Lõpeta tellimus",
     "Reply to sender only" : "Vasta vaid saatjale",
     "Mark as unfavorite" : "Märgi mittelemmikuks",
@@ -911,8 +913,8 @@
     "All" : "Kõik",
     "Drafts" : "Kavandid",
     "Priority inbox" : "Olulised kirjad",
-    "All inboxes" : "Kõik postkastid",
-    "Inbox" : "Postkast",
+    "All inboxes" : "Kõik saabuvad kirjad",
+    "Inbox" : "Saabuvad kirjad",
     "Junk" : "Rämpspost",
     "Sent" : "Saadetud",
     "Trash" : "Prügikast",
@@ -947,13 +949,9 @@
     "Tag name is a hidden system tag" : "Sildi nimi on peidetud süsteemne silt",
     "Tag already exists" : "Silt on juba olemas",
     "Error loading message" : "Viga kirja laadimisel",
-    "Add share link from Files" : "Lisa jagamislink failirakendusest",
-    "Choose a file to add as attachment" : "Vali fail, mida manustada",
-    "Choose a file to share as a link" : "Vali lingiga jagatav fail",
     "Show recipient details" : "Näita kirjasaaja üksikasju",
     "Hide recipient details" : "Peida kirjasaaja üksikasjad",
     "Show less" : "Näita vähem",
-    "Show more" : "Näita rohkem",
-    "Insert text block" : "Sisesta tekstiplokk"
+    "Show more" : "Näita rohkem"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

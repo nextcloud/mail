@@ -248,6 +248,7 @@
     "Add attachment from Files" : "從雲端檔案中加入附件",
     "Smart picker" : "聰明的選擇器",
     "Request a read receipt" : "索取讀取回條",
+    "Mark as AI generated" : "標記為人工智慧產生",
     "Sign message with S/MIME" : "使用 S/MIME 簽署訊息",
     "Encrypt message with S/MIME" : "使用 S/MIME 加密訊息",
     "Encrypt message with Mailvelope" : "使用 Mailvelope 加密郵件",
@@ -661,6 +662,7 @@
     "Could not unsubscribe from mailing list" : "無法從郵寄名單取消訂閱",
     "Please wait for the message to load" : "請等待訊息載入",
     "Disable reminder" : "停用提醒",
+    "Contains AI content" : "包含人工智慧內容",
     "Unsubscribe" : "取消訂閱",
     "Reply to sender only" : "僅回覆寄件人",
     "Mark as unfavorite" : "取消標記我的最愛",
@@ -947,13 +949,9 @@
     "Tag name is a hidden system tag" : "標籤名稱是隱藏的系統標籤",
     "Tag already exists" : "標籤已經存在",
     "Error loading message" : "載入信件錯誤",
-    "Add share link from Files" : "新增來自檔案的分享連結",
-    "Choose a file to add as attachment" : "選擇要作為附件的檔案",
-    "Choose a file to share as a link" : "選擇要作為連結分享的檔案",
     "Show recipient details" : "顯示收件人詳細資訊",
     "Hide recipient details" : "隱藏收件人詳細資訊",
     "Show less" : "顯示較少",
-    "Show more" : "顯示更多",
-    "Insert text block" : "插入文本區塊"
+    "Show more" : "顯示更多"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

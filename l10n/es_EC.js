@@ -570,8 +570,6 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "El nombre de la etiqueta es una etiqueta oculta del sistema",
     "Tag already exists" : "La etiqueta ya existe",
     "Error loading message" : "Se presentó un error al cargar el mensaje",
-    "Choose a file to add as attachment" : "Selecciona el archivo a agregar como adjunto",
-    "Choose a file to share as a link" : "Elige un archivo para compartir como enlace",
     "Show less" : "Mostrar menos",
     "Show more" : "Mostrar más"
 },

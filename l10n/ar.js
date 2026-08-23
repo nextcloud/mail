@@ -719,9 +719,6 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "اسم الوَسْم هو وَسْمٌ نِظَامِيٌّ مَخْفِيٌّ hidden system tag",
     "Tag already exists" : "الوَسْمُ موجود سلفاً",
     "Error loading message" : "حدث خطأ أثناء تحميل الرسالة",
-    "Add share link from Files" : "إضافة رابط المشاركة من الملفات",
-    "Choose a file to add as attachment" : "إختَر ملفاً لإضافته كمُرفَقٍ",
-    "Choose a file to share as a link" : "إختَر ملفاً لمُشاركته كرابطٍ",
     "Show less" : "عرض أقل",
     "Show more" : "عرض المزيد"
 },

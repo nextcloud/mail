@@ -248,6 +248,7 @@
     "Add attachment from Files" : "Dosyalardan ek dosya ekle",
     "Smart picker" : "Akıllı seçici",
     "Request a read receipt" : "Okundu bilgisi iste",
+    "Mark as AI generated" : "YZ ile oluşturulmuş olarak işaretle",
     "Sign message with S/MIME" : "İleti S/MIME ile imzalansın",
     "Encrypt message with S/MIME" : "İleti S/MIME ile şifrelensin",
     "Encrypt message with Mailvelope" : "İleti Mailvelope ile şifrelensin",
@@ -661,6 +662,7 @@
     "Could not unsubscribe from mailing list" : "E-posta listesinin aboneliğinden çıkılamadı",
     "Please wait for the message to load" : "Lütfen iletinin yüklenmesini bekleyin",
     "Disable reminder" : "Anımsatıcıyı kapat",
+    "Contains AI content" : "YZ ile oluşturulmuş içerik ",
     "Unsubscribe" : "Abonelikten ayrıl",
     "Reply to sender only" : "Yalnızca gönderene yanıtla",
     "Mark as unfavorite" : "Sık kullanılanlardan kaldır",
@@ -947,13 +949,9 @@
     "Tag name is a hidden system tag" : "Etiket adı sistem tarafından kullanılan bir gizli ad",
     "Tag already exists" : "Etiket zaten var",
     "Error loading message" : "İleti yüklenirken sorun çıktı",
-    "Add share link from Files" : "Dosyalar uygulamasına paylaşım bağlantısı ekle",
-    "Choose a file to add as attachment" : "Eklenecek ek dosyasını seçin",
-    "Choose a file to share as a link" : "Bağlantı olarak paylaşılacak bir dosya seçin",
     "Show recipient details" : "Alıcı ayrıntıları görüntüle",
     "Hide recipient details" : "Alıcı ayrıntılarını gizle",
     "Show less" : "Daha az görüntüle",
-    "Show more" : "Daha çok görüntüle",
-    "Insert text block" : "Yazı bloğu ekle"
+    "Show more" : "Daha çok görüntüle"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

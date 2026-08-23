@@ -250,6 +250,7 @@ OC.L10N.register(
     "Add attachment from Files" : "Cuir ceangaltán ó Chomhaid leis",
     "Smart picker" : "Roghnóir cliste",
     "Request a read receipt" : "Iarr admháil léite",
+    "Mark as AI generated" : "Marcáil mar ginte ag an AI",
     "Sign message with S/MIME" : "Sínigh an teachtaireacht le S/MIME",
     "Encrypt message with S/MIME" : "Criptigh an teachtaireacht le S/MIME",
     "Encrypt message with Mailvelope" : "Criptigh an teachtaireacht le Mailvelope",
@@ -663,6 +664,7 @@ OC.L10N.register(
     "Could not unsubscribe from mailing list" : "Níorbh fhéidir díliostáil ón liosta postála",
     "Please wait for the message to load" : "Fan go mbeidh an teachtaireacht á luchtú",
     "Disable reminder" : "Díchumasaigh meabhrúchán",
+    "Contains AI content" : "Tá ábhar AI ann",
     "Unsubscribe" : "Díliostáil",
     "Reply to sender only" : "Freagair don seoltóir amháin",
     "Mark as unfavorite" : "Marcáil mar rud is fearr leat",
@@ -949,13 +951,9 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Is clib córais ceilte é an t-ainm clibe",
     "Tag already exists" : "Tá clib ann cheana féin",
     "Error loading message" : "Earráid agus an teachtaireacht á lódáil",
-    "Add share link from Files" : "Cuir nasc comhroinnte leis ó Chomhaid",
-    "Choose a file to add as attachment" : "Roghnaigh comhad le cur leis mar cheangaltán",
-    "Choose a file to share as a link" : "Roghnaigh comhad le roinnt mar nasc",
     "Show recipient details" : "Taispeáin sonraí an fhaighteora",
     "Hide recipient details" : "Folaigh sonraí an fhaighteora",
     "Show less" : "Taispeáin níos lú",
-    "Show more" : "Taispeáin níos mó",
-    "Insert text block" : "Cuir bloc téacs isteach"
+    "Show more" : "Taispeáin níos mó"
 },
 "nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);");

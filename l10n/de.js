@@ -250,6 +250,7 @@ OC.L10N.register(
     "Add attachment from Files" : "Anhang von \"Dateien\" hinzufügen",
     "Smart picker" : "Smart Picker",
     "Request a read receipt" : "Eine Bestätigung anfordern",
+    "Mark as AI generated" : "Als KI-generiert markieren",
     "Sign message with S/MIME" : "Nachricht mit S/MIME signieren",
     "Encrypt message with S/MIME" : "Nachricht mit S/MIME verschlüsseln",
     "Encrypt message with Mailvelope" : "Nachricht mit Mailvelope verschlüsseln",
@@ -663,6 +664,7 @@ OC.L10N.register(
     "Could not unsubscribe from mailing list" : "Abbestellen der Mailingliste fehlgeschlagen",
     "Please wait for the message to load" : "Bitte warte, bis die Nachricht geladen ist",
     "Disable reminder" : "Erinnerung deaktivieren",
+    "Contains AI content" : "Enthält KI-Inhalt",
     "Unsubscribe" : "Abbestellen",
     "Reply to sender only" : "Nur dem Absender antworten",
     "Mark as unfavorite" : "Als nicht favorisiert markieren",
@@ -949,13 +951,9 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Name des Schlagworts ist ein verstecktes System-Schlagwort.",
     "Tag already exists" : "Schlagwort ist bereits vorhanden",
     "Error loading message" : "Fehler beim Laden der Nachricht",
-    "Add share link from Files" : "Link zum Teilen aus Dateien hinzufügen",
-    "Choose a file to add as attachment" : "Wähle eine Datei, die als Anhang angefügt werden soll",
-    "Choose a file to share as a link" : "Datei auswählen welche als Link geteilt wird",
     "Show recipient details" : "Empfängerdetails anzeigen",
     "Hide recipient details" : "Empfängerdetails ausblenden",
     "Show less" : "Weniger anzeigen",
-    "Show more" : "Mehr anzeigen",
-    "Insert text block" : "Textblock einfügen"
+    "Show more" : "Mehr anzeigen"
 },
 "nplurals=2; plural=(n != 1);");
