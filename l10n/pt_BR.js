@@ -890,7 +890,7 @@ OC.L10N.register(
     "Failed to share text block with {sharee}" : "Falha ao compartilhar o bloco de texto com {sharee}",
     "Share deleted for {name}" : "Compartilhamento excluído para {name}",
     "Failed to delete share with {name}" : "Falho ao excluir o compartilhamento com {name}",
-    "Guest" : "Convidado",
+    "Guest" : "Visitante",
     "Group" : "Grupo",
     "Failed to save text block" : "Falha ao salvar o bloco de texto",
     "Shared" : "Compartilhado",
