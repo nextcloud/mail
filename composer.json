@@ -51,7 +51,7 @@
 		"psr/log": "^1.0.4|^2|^3"
 	},
 	"require-dev": {
-		"psalm/phar": "^5.26.1",
+		"nextcloud/ocp": "dev-stable32",
 		"roave/security-advisories": "dev-master"
 	},
 	"autoload": {
@@ -71,8 +71,9 @@
 		],
 		"lint-8.2-or-earlier": "[ $(php -r \"echo PHP_VERSION_ID;\") -ge 80300 ] || find . -type f -name '*.php' -not -path './vendor/*' -not -path './vendor-bin/*' -not -path './tests/stubs/*' -print0 | xargs -0 -n1 -P$(nproc) php -l",
 		"lint-8.3-or-later": "[ $(php -r \"echo PHP_VERSION_ID;\") -lt 80300 ] || find . -type f -name '*.php' -not -path './vendor/*' -not -path './vendor-bin/*' -not -path './tests/stubs/*' -print0 | xargs -0 -n200 -P$(nproc) php -l",
-		"psalm": "psalm.phar",
-		"psalm:fix": "psalm.phar --alter --issues=InvalidReturnType,InvalidNullableReturnType,MismatchingDocblockParamType,MismatchingDocblockReturnType,MissingParamType,InvalidFalsableReturnType",
+		"psalm": "vendor-bin/psalm/vendor/psalm/phar/psalm.phar --threads=1",
+		"psalm:clear": "vendor-bin/psalm/vendor/psalm/phar/psalm.phar --clear-cache && vendor-bin/psalm/vendor/psalm/phar/psalm.phar --clear-cache --clear-global-cache",
+		"psalm:update-baseline": "vendor-bin/psalm/vendor/psalm/phar/psalm.phar --threads=1 --update-baseline --set-baseline=tests/psalm-baseline.xml",
 		"post-install-cmd": [
 			"@composer bin all install --ansi",
 			"\"vendor/bin/mozart\" compose",
