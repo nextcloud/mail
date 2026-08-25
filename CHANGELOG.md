@@ -1,3 +1,17 @@
+## [5.11.3](https://github.com/nextcloud/mail/compare/v5.11.2...v5.11.3) (2026-08-25)
+
+
+### Bug Fixes
+
+* **deps:** Fix npm audit ([0267250](https://github.com/nextcloud/mail/commit/0267250aaf6bd521f7ff869066199de2477dcdd6))
+* **l10n:** Update translations from Transifex ([e46b107](https://github.com/nextcloud/mail/commit/e46b1074dd97a98d1fb1babe7255c45f6a737875))
+* **l10n:** Update translations from Transifex ([8be5861](https://github.com/nextcloud/mail/commit/8be5861caf17cd525201ac69b39fc0030e15123f))
+* **l10n:** Update translations from Transifex ([f92d279](https://github.com/nextcloud/mail/commit/f92d279c5ff9bea35df9d2beafcded2237307e09))
+* **l10n:** Update translations from Transifex ([84e14c2](https://github.com/nextcloud/mail/commit/84e14c221584d70776d3756c18769e76f71cc01a))
+* **signature:** insert "-- " separator for plain text only ([9f5f14c](https://github.com/nextcloud/mail/commit/9f5f14cd134af94e76f485e1a5f5946991a2552e)), closes [#3457](https://github.com/nextcloud/mail/issues/3457)
+
+
+
 ## [5.11.2](https://github.com/nextcloud/mail/compare/v5.11.1...v5.11.2) (2026-08-21)
 
 
