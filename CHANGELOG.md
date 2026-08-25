@@ -1,6 +1,26 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 5.12.0 – unreleased
+### Added
+* Insert images from Files in the composer
+* Floating composer editor
+* Warn when sending an email with an empty recipient
+* Do not auto-reply to noreply@ and no-reply@ senders
+* Hint when message content is AI generated
+### Changed
+* Translations
+### Fixed
+* Quick actions for special folders
+* Show the unified inbox icon
+* Detect message language in the browser for translation
+* Skip IMAP fetch results without a UID during sync
+* Allow HTML ids inside the email body for CSS targeting
+* Button alignment and graphics in the signature editor
+* Moving messages, threads and folders
+* Mount the account settings dialog at the app root
+* Check permissions when selecting a folder for a quick action
+
 ## 5.11.0 – unreleased
 ### Added
 * Initial JMAP protocol support

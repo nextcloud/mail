@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<Modal @close="onClose">
+	<NcModal @close="onClose">
 		<div class="modal-content">
 			<h2>{{ t('mail', 'Create task') }}</h2>
 			<div class="taskTitle">
@@ -11,7 +11,7 @@
 				<input id="taskTitle" v-model="taskTitle" type="text">
 			</div>
 			<div class="all-day">
-				<DatetimePicker
+				<NcDateTimePicker
 					v-model="startDate"
 					:format="dateFormat"
 					:clearable="false"
@@ -20,7 +20,7 @@
 					:type="datePickerType"
 					:show-timezone-select="true"
 					:timezone-id="startTimezoneId" />
-				<DatetimePicker
+				<NcDateTimePicker
 					v-model="endDate"
 					:format="dateFormat"
 					:clearable="false"
@@ -71,13 +71,13 @@
 				{{ t('mail', 'Create') }}
 			</button>
 		</div>
-	</Modal>
+	</NcModal>
 </template>
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import moment from '@nextcloud/moment'
-import { NcDateTimePicker as DatetimePicker, NcModal as Modal, NcSelect } from '@nextcloud/vue'
+import { NcDateTimePicker, NcModal, NcSelect } from '@nextcloud/vue'
 import ICAL from 'ical.js'
 import jstz from 'jstz'
 import { mapStores } from 'pinia'
@@ -90,8 +90,8 @@ export default {
 	name: 'TaskModal',
 	components: {
 		CalendarPickerOption,
-		DatetimePicker,
-		Modal,
+		NcDateTimePicker,
+		NcModal,
 		NcSelect,
 	},
 

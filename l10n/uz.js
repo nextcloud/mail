@@ -95,8 +95,6 @@ OC.L10N.register(
     "All" : "All",
     "Error while sharing file" : "Fayl almashishda xatolik yuz berdi",
     "Discard changes" : "O'zgarishlarni bekor qilish",
-    "Date:" : "Sana:",
-    "Choose a file to add as attachment" : "Ilova sifatida qo'shish uchun faylni tanlang",
-    "Choose a file to share as a link" : "Havola sifatida almashish uchun faylni tanlang"
+    "Date:" : "Sana:"
 },
 "nplurals=1; plural=0;");

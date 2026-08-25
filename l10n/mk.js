@@ -337,8 +337,7 @@ OC.L10N.register(
     "New Contact" : "Нов контакт",
     "Copy to clipboard" : "Копирај во клипборд",
     "Add" : "Додади",
-    "Show less" : "Помалку",
-    "Show more" : "Прикажи повеќе",
+    "Collapse" : "Собери",
     "Clear" : "Исчисти",
     "Close" : "Затвори",
     "Search parameters" : "Параметри за пребарување",
@@ -464,7 +463,7 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Името на ознаката е сокриена системска ознака",
     "Tag already exists" : "Тагот веќе постои",
     "Error loading message" : "Грешка при вчитување на пораката",
-    "Choose a file to add as attachment" : "Избери датотека за да додадете прилог",
-    "Choose a file to share as a link" : "Избери датотека за да се сподели како линк"
+    "Show less" : "Помалку",
+    "Show more" : "Прикажи повеќе"
 },
 "nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;");

@@ -445,7 +445,6 @@ OC.L10N.register(
     "Your message has no subject. Do you want to send it anyway?" : "Sua mensagem não tem assunto. Deseja enviá-la mesmo assim?",
     "Message discarded" : "Mensagem descartada",
     "Could not discard message" : "Não foi possível descartar a mensagem",
-    "Hide recipient details" : "Ocultar detalhes do destinatário",
     "Minimize composer" : "Minimizar compositor",
     "Error sending your message" : "Erro ao enviar a sua mensagem",
     "Retry" : "Repetir",
@@ -478,8 +477,8 @@ OC.L10N.register(
     "Copy to clipboard" : "Copiar para área de transferência",
     "Contact name …" : "Nome de contato …",
     "Add" : "Adicionar",
-    "Show less" : "Mostrar menos",
-    "Show more" : "Mostrar mais",
+    "Collapse" : "Expandir",
+    "Expand" : "Expandir",
     "Clear" : "Limpar",
     "Search in folder" : "Pesquisar na pasta",
     "Open search modal" : "Abrir modal de pesquisa",
@@ -754,9 +753,8 @@ OC.L10N.register(
     "Tag name cannot be empty" : "O nome da etiqueta não pode ficar vazio",
     "Tag already exists" : "A etiqueta já existe",
     "Error loading message" : "Erro ao carregar a mensagem",
-    "Add share link from Files" : "Adicionar link de compartilhamento de Arquivos",
-    "Choose a file to add as attachment" : "Escolha um ficheiro para adicionar como anexo",
-    "Choose a file to share as a link" : "Escolha um arquivo para compartilhar como link",
-    "Insert text block" : "Inserir bloco de texto"
+    "Hide recipient details" : "Ocultar detalhes do destinatário",
+    "Show less" : "Mostrar menos",
+    "Show more" : "Mostrar mais"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

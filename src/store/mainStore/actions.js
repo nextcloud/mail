@@ -610,6 +610,7 @@ export default function mainStoreActions() {
 					data = {
 						...data,
 						message,
+						isAiGenerated: data.isAiGenerated ?? message.hasAiGeneratedHeader ?? false,
 					}
 
 					// Fetch and transform the body into a rich text object
@@ -2524,15 +2525,6 @@ export default function mainStoreActions() {
 		},
 		getInbox(accountId) {
 			return this.findMailboxBySpecialRole(accountId, 'inbox')
-		},
-		showSettingsForAccount(accountId) {
-			return this.showAccountSettings?.accountId === accountId
-		},
-		showSettingsSectionForAccount(accountId) {
-			if (this.showAccountSettings?.accountId !== accountId) {
-				return undefined
-			}
-			return this.showAccountSettings.section
 		},
 		getMyTextBlocks() {
 			return this.myTextBlocks

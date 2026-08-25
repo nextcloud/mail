@@ -462,8 +462,6 @@ OC.L10N.register(
     "Message discarded" : "Відхилено повідомлення",
     "Could not discard message" : "Не вдалося відхилити повідомлення",
     "Maximize composer" : "Редактор на весь екран",
-    "Show recipient details" : "Показати дані одержувача",
-    "Hide recipient details" : "Приховати дані одержувача",
     "Minimize composer" : "Згорнути редактор",
     "Error sending your message" : "Помилка під час надсилання повідомлення",
     "Retry" : "Ще раз",
@@ -502,8 +500,8 @@ OC.L10N.register(
     "New Contact" : "Новий контакт",
     "Copy to clipboard" : "Копіювати до буфера обміну ",
     "Add" : "Додати",
-    "Show less" : "Показувати менше",
-    "Show more" : "Показати більше",
+    "Collapse" : "Згорнути",
+    "Expand" : "Розгорнути",
     "Clear" : "Очистити",
     "Search in folder" : "Пошук у папці",
     "Open search modal" : "Відкритий режим пошуку",
@@ -838,9 +836,9 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Назва мітки - це прихована системна мітка",
     "Tag already exists" : "Мітка вже існує",
     "Error loading message" : "Помилка завантаження повідомлення.",
-    "Add share link from Files" : "Додати посилання на спільний доступ з Файлів",
-    "Choose a file to add as attachment" : "Виберіть файл для вкладення",
-    "Choose a file to share as a link" : "Виберіть файл, яким ви поділитеся через посилання",
-    "Insert text block" : "Вставити текстовий блок"
+    "Show recipient details" : "Показати дані одержувача",
+    "Hide recipient details" : "Приховати дані одержувача",
+    "Show less" : "Показувати менше",
+    "Show more" : "Показати більше"
 },
 "nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);");

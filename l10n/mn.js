@@ -488,8 +488,6 @@ OC.L10N.register(
     "Message discarded" : "Зурвас хаягдлаа",
     "Could not discard message" : "Зурвас хаях боломжгүй",
     "Maximize composer" : "Бичигчийг томруулах",
-    "Show recipient details" : "Хүлээн авагчийн дэлгэрэнгүйг харуулах",
-    "Hide recipient details" : "Хүлээн авагчийн дэлгэрэнгүйг нуух",
     "Minimize composer" : "Бичигчийг жижигрүүлэх",
     "Error sending your message" : "Зурвас илгээхэд алдаа гарлаа",
     "Retry" : "–î–∞—Ö–∏–Ω –æ—Ä–æ–ª–¥–æ—Ö",
@@ -528,8 +526,8 @@ OC.L10N.register(
     "New Contact" : "Шинэ харилцагч",
     "Copy to clipboard" : "Санах ойд хуулах",
     "Add" : "–Ω—ç–º—ç—Ö",
-    "Show less" : "Бага харуулах",
-    "Show more" : "Илүү харуулах",
+    "Collapse" : "Хураах",
+    "Expand" : "Дэлгэх",
     "Clear" : "Цэвэрлэх",
     "Search in folder" : "Хавтсаас хайх",
     "Open search modal" : "Хайлтын цонхыг нээх",
@@ -867,9 +865,9 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Тагийн нэр нуугдсан системийн таг байна",
     "Tag already exists" : "Таг аль хэдийн байна",
     "Error loading message" : "–∞–ª–¥–∞–∞—Ç–∞–π –∞—á–∞–∞–ª–ª–∞—Ö –∑—É—Ä–≤–∞—Å",
-    "Add share link from Files" : "Файлуудаас хуваалцах холбоос нэмэх",
-    "Choose a file to add as attachment" : "Хавсралт болгох файл сонгоно уу",
-    "Choose a file to share as a link" : "Холбоосоор хуваалцах файл сонгоно уу",
-    "Insert text block" : "Текст блок оруулах"
+    "Show recipient details" : "Хүлээн авагчийн дэлгэрэнгүйг харуулах",
+    "Hide recipient details" : "Хүлээн авагчийн дэлгэрэнгүйг нуух",
+    "Show less" : "Бага харуулах",
+    "Show more" : "Илүү харуулах"
 },
 "nplurals=2; plural=(n != 1);");

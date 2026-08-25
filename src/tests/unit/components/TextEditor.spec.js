@@ -8,6 +8,7 @@ import { GeneralHtmlSupport, Paragraph } from 'ckeditor5'
 import mitt from 'mitt'
 import { vi } from 'vitest'
 import TextEditor from '../../../components/TextEditor.vue'
+import ImageDowncastPlugin from '../../../ckeditor/image/ImageDowncastPlugin.ts'
 import MailPlugin from '../../../ckeditor/mail/MailPlugin.js'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 import VirtualTestEditor from '../../virtualtesteditor.js'
@@ -54,6 +55,23 @@ describe('TextEditor', () => {
 
 		expect(wrapper.vm.config.plugins).toContain(GeneralHtmlSupport)
 		expect(wrapper.vm.config.htmlSupport.allow.some((rule) => rule.name === 'img')).toBe(true)
+	})
+
+	it('resizes images in pixels in html mode', async () => {
+		const wrapper = shallowMount(TextEditor, {
+			localVue,
+			provide: {
+				addToFocusTrap: vi.fn(),
+			},
+			propsData: {
+				value: 'bonjour',
+				html: true,
+				bus: mitt(),
+			},
+		})
+
+		expect(wrapper.vm.config.plugins).toContain(ImageDowncastPlugin)
+		expect(wrapper.vm.config.image.resizeUnit).toBe('px')
 	})
 
 	it('throw when editor not ready', async () => {

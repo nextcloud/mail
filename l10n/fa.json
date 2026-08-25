@@ -523,8 +523,6 @@
     "Message discarded" : "پیام کنار گذاشته شد",
     "Could not discard message" : "امکان کنار گذاشتن پیام وجود نداشت",
     "Maximize composer" : "بزرگ‌نمایی ویرایشگر",
-    "Show recipient details" : "نمایش جزئیات گیرنده",
-    "Hide recipient details" : "مخفی کردن جزئیات گیرنده",
     "Minimize composer" : "کوچک‌نمایی ویرایشگر",
     "Error sending your message" : "خطا در ارسال پیام شما",
     "Retry" : "تلاش مجدد",
@@ -564,8 +562,8 @@
     "Copy to clipboard" : "کپی در کلیپ‌بورد",
     "Contact name …" : "نام مخاطب …",
     "Add" : "افزودن",
-    "Show less" : "نمایش کمتر",
-    "Show more" : "نمایش بیشتر",
+    "Collapse" : "جمع کردن",
+    "Expand" : "باز کردن",
     "Clear" : "پاک کردن",
     "Search in folder" : "جستجو در پوشه",
     "Open search modal" : "باز کردن پنجره جستجو",
@@ -913,9 +911,9 @@
     "Tag name is a hidden system tag" : "نام برچسب یک برچسب سیستمی مخفی است",
     "Tag already exists" : "برچسب از قبل وجود دارد",
     "Error loading message" : "خطا در بارگذاری پیام",
-    "Add share link from Files" : "افزودن لینک اشتراک‌گذاری از Files",
-    "Choose a file to add as attachment" : "فایلی را برای افزودن به عنوان پیوست انتخاب کنید",
-    "Choose a file to share as a link" : "فایلی را برای اشتراک‌گذاری به عنوان پیوند انتخاب کنید",
-    "Insert text block" : "درج بلوک متنی"
+    "Show recipient details" : "نمایش جزئیات گیرنده",
+    "Hide recipient details" : "مخفی کردن جزئیات گیرنده",
+    "Show less" : "نمایش کمتر",
+    "Show more" : "نمایش بیشتر"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

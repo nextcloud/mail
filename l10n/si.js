@@ -45,7 +45,6 @@ OC.L10N.register(
     "Retry" : "නැවත උත්සාහ කරන්න",
     "Message" : "පණිවිඩය",
     "Add" : "එකතු කරන්න",
-    "Show more" : "තව පෙන්වන්න",
     "Close" : "වසන්න",
     "Body" : "අන්තර්ගතය",
     "Date" : "දිනය",
@@ -57,6 +56,7 @@ OC.L10N.register(
     "Certificate" : "සහතිකය",
     "Shares" : "බෙදාගැනීම්",
     "All" : "සියල්ල",
-    "Date:" : "දිනය:"
+    "Date:" : "දිනය:",
+    "Show more" : "තව පෙන්වන්න"
 },
 "nplurals=2; plural=(n != 1);");

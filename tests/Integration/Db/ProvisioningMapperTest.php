@@ -98,6 +98,24 @@ class ProvisioningMapperTest extends TestCase {
 		$provisioning = $this->mapper->validate($data);
 	}
 
+	public function testValidateRejectsMalformedLdapPlaceholder() {
+		$data = $this->data;
+		$data['emailTemplate'] = '%ldap:uid%@heart-of-gold.com';
+
+		$this->expectException(ValidationException::class);
+
+		$this->mapper->validate($data);
+	}
+
+	public function testValidateAcceptsLdapPlaceholder() {
+		$data = $this->data;
+		$data['emailTemplate'] = '%LDAP:sAMAccountName%@heart-of-gold.com';
+
+		$provisioning = $this->mapper->validate($data);
+
+		$this->assertSame('%LDAP:sAMAccountName%@heart-of-gold.com', $provisioning->getEmailTemplate());
+	}
+
 	public function testGetNoResult() {
 		$db = $this->mapper->get(99999);
 		$this->assertNull($db);

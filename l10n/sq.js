@@ -104,6 +104,7 @@ OC.L10N.register(
     "Message" : "Mesazh",
     "Copy to clipboard" : "Kopjo në dërrasë ",
     "Add" : "Shto",
+    "Collapse" : "Tkurre",
     "Clear" : "Pastro",
     "Close" : "Mbylleni",
     "Date" : "Data",
@@ -147,7 +148,6 @@ OC.L10N.register(
     "Could not load {tag}{name}{endtag}" : "Nuk mund të ngarkohej {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Pati një problem me ngarkimin e {tag}{name}{endtag}",
     "Tag already exists" : "Etiketa ekziston",
-    "Error loading message" : "Gabim në ngarkimin e kartelës",
-    "Choose a file to add as attachment" : "Zgjidhni një kartelë që të shtohet si bashkëngjitje"
+    "Error loading message" : "Gabim në ngarkimin e kartelës"
 },
 "nplurals=2; plural=(n != 1);");

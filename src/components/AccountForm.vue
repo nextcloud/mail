@@ -243,34 +243,34 @@
 			{{ t('mail', 'This email domain uses single sign-on. You will be redirected to your identity provider to grant access to your mail account.') }}
 		</div>
 		<div class="account-form__submit-buttons">
-			<ButtonVue
+			<NcButton
 				v-if="mode === 'auto'"
 				:aria-label="submitButtonText"
 				class="account-form__submit-button"
-				type="primary"
-				native-type="submit"
+				variant="primary"
+				type="submit"
 				:disabled="isDisabledAuto || loading"
 				@click.prevent="onSubmit">
 				<template #icon>
-					<IconLoading v-if="loading" :size="20" />
+					<NcLoadingIcon v-if="loading" :size="20" />
 					<IconCheck v-else :size="20" />
 				</template>
 				{{ submitButtonText }}
-			</ButtonVue>
-			<ButtonVue
+			</NcButton>
+			<NcButton
 				v-else-if="mode === 'manual'"
 				:aria-label="submitButtonText"
 				class="account-form__submit-button"
-				type="primary"
-				native-type="submit"
+				variant="primary"
+				type="submit"
 				:disabled="isDisabledManual || loading"
 				@click.prevent="onSubmit">
 				<template #icon>
-					<IconLoading v-if="loading" :size="20" />
+					<NcLoadingIcon v-if="loading" :size="20" />
 					<IconCheck v-else :size="20" />
 				</template>
 				{{ submitButtonText }}
-			</ButtonVue>
+			</NcButton>
 		</div>
 		<div v-if="feedback" class="account-form--feedback">
 			{{ feedback }}
@@ -280,8 +280,8 @@
 
 <script>
 import { loadState } from '@nextcloud/initial-state'
-import { translate as t } from '@nextcloud/l10n'
-import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcCheckboxRadioSwitch, NcInputField, NcPasswordField } from '@nextcloud/vue'
+import { t } from '@nextcloud/l10n'
+import { NcButton, NcCheckboxRadioSwitch, NcInputField, NcLoadingIcon, NcPasswordField } from '@nextcloud/vue'
 import { mapState, mapStores } from 'pinia'
 import { Tab, Tabs } from 'vue-tabs-component'
 import IconCheck from 'vue-material-design-icons/Check.vue'
@@ -304,8 +304,8 @@ export default {
 		NcCheckboxRadioSwitch,
 		Tab,
 		Tabs,
-		ButtonVue,
-		IconLoading,
+		NcButton,
+		NcLoadingIcon,
 		IconCheck,
 	},
 

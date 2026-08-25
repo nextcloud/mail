@@ -38,6 +38,7 @@
     "Clear cache" : "ক্যাশে পরিষ্কার কর",
     "Reply" : "জবাব",
     "Add" : "যোগ করুন",
+    "Collapse" : "ভাঙো",
     "Close" : "বন্ধ",
     "Date" : "Date",
     "Tags" : "ট্যাগ",
@@ -56,7 +57,6 @@
     "Group" : "গোষ্ঠীসমূহ",
     "Shared" : "ভাগাভাগিকৃত",
     "Shares" : "ভাগাভাগি",
-    "All" : "সবাই",
-    "Choose a file to add as attachment" : "সংযুক্তি দেয়ার জন্য একটি ফাইল নির্বাচন করুন"
+    "All" : "সবাই"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

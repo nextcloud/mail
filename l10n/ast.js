@@ -207,8 +207,8 @@ OC.L10N.register(
     "New Contact" : "Contautu nuevu",
     "Copy to clipboard" : "Copiar nel cartafueyu",
     "Add" : "Amestar",
-    "Show less" : "Amosar menos",
-    "Show more" : "Amosar más",
+    "Collapse" : "Contrayer",
+    "Expand" : "Espander",
     "Clear" : "Borrar",
     "Close" : "Zarrar",
     "Search parameters" : "Parámetros de busca",
@@ -317,6 +317,8 @@ OC.L10N.register(
     "Date:" : "Data:",
     "Tag name cannot be empty" : "El nome de la etiqueta nun pue tar baleru",
     "Tag already exists" : "La etiqueta yá esiste",
-    "Error loading message" : "Hebo un error al cargar el mensaxe"
+    "Error loading message" : "Hebo un error al cargar el mensaxe",
+    "Show less" : "Amosar menos",
+    "Show more" : "Amosar más"
 },
 "nplurals=2; plural=(n != 1);");

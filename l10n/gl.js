@@ -505,8 +505,6 @@ OC.L10N.register(
     "Message discarded" : "Mensaxe desbotada",
     "Could not discard message" : "Non foi posíbel desbotar a mensaxe",
     "Maximize composer" : "Maximizar a xanela de redacción",
-    "Show recipient details" : "Amosar os detalles do destinatario",
-    "Hide recipient details" : "Agochar os detalles do destinatario",
     "Minimize composer" : "Minimizar a xanela de redacción",
     "Error sending your message" : "Produciuse un erro ao enviar a súa mensaxe",
     "Retry" : "Volver tentar",
@@ -546,8 +544,8 @@ OC.L10N.register(
     "Copy to clipboard" : "Copiar no portapapeis.",
     "Contact name …" : "Nome do contacto…",
     "Add" : "Engadir",
-    "Show less" : "Amosar menos",
-    "Show more" : "Amosar máis",
+    "Collapse" : "Contraer",
+    "Expand" : "Expandir",
     "Clear" : "Limpar",
     "Search in folder" : "Buscar no cartafol",
     "Open search modal" : "Abrir a xanela modal de busca",
@@ -892,9 +890,9 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "O nome da etiqueta é unha etiqueta agochada do sistema",
     "Tag already exists" : "Xa existe a etiqueta",
     "Error loading message" : "Produciuse un erro ao cargar a mensaxe",
-    "Add share link from Files" : "Engadir ligazón para compartir desde Ficheiros",
-    "Choose a file to add as attachment" : "Escolla un ficheiro para engadir como anexo",
-    "Choose a file to share as a link" : "Escolla un ficheiro para compartir como ligazón",
-    "Insert text block" : "Inserir o bloque de texto"
+    "Show recipient details" : "Amosar os detalles do destinatario",
+    "Hide recipient details" : "Agochar os detalles do destinatario",
+    "Show less" : "Amosar menos",
+    "Show more" : "Amosar máis"
 },
 "nplurals=2; plural=(n != 1);");

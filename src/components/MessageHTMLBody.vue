@@ -6,43 +6,47 @@
 	<div class="html-message-body">
 		<MdnRequest :message="message" />
 		<NeedsTranslationInfo
-			v-if="needsTranslation"
+			v-if="detectedForeignLanguage"
 			:is-html="true"
-			@translate="$emit('translate')" />
+			@translate="$emit('translate', detectedForeignLanguage)" />
 		<div v-if="hasBlockedContent" id="mail-message-has-blocked-content" style="color: #000000">
 			{{ t('mail', 'The images have been blocked to protect your privacy.') }}
-			<Actions type="tertiary" :menu-name="t('mail', 'Show images')">
-				<ActionButton @click="displayIframe">
+			<NcActions variant="tertiary" :menu-name="t('mail', 'Show images')">
+				<NcActionButton @click="displayIframe">
 					<template #icon>
 						<IconImage :size="20" />
 					</template>
 					{{ t('mail', 'Show images temporarily') }}
-				</ActionButton>
-				<ActionButton
+				</NcActionButton>
+				<NcActionButton
 					v-if="sender"
 					@click="onShowBlockedContent">
 					<template #icon>
 						<IconMail :size="20" />
 					</template>
 					{{ t('mail', 'Always show images from {sender}', { sender }) }}
-				</ActionButton>
-				<ActionButton
+				</NcActionButton>
+				<NcActionButton
 					v-if="domain"
 					@click="onShowBlockedContentForDomain">
 					<template #icon>
 						<IconDomain :size="20" />
 					</template>
 					{{ t('mail', 'Always show images from {domain}', { domain }) }}
-				</ActionButton>
-			</Actions>
+				</NcActionButton>
+			</NcActions>
 		</div>
 		<div id="message-container" :class="{ scroll: !fullHeight }">
+			<!-- allow-scripts: the server-injected iframe-resizer child must run to size the frame to its content.
+			     allow-same-origin: parent JS accesses contentDocument directly (image unblocking, resize, print).
+			     allow-popups + allow-popups-to-escape-sandbox: email links must open as normal tabs, not sandboxed ones. -->
 			<iframe
 				ref="iframe"
 				class="message-frame"
 				:title="t('mail', 'Message frame')"
 				:src="url"
 				seamless
+				sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
 				@load="onMessageFrameLoad" />
 		</div>
 	</div>
@@ -50,16 +54,15 @@
 
 <script>
 import iframeResize from '@iframe-resizer/parent'
-import { loadState } from '@nextcloud/initial-state'
-import { NcActionButton as ActionButton, NcActions as Actions } from '@nextcloud/vue'
+import { NcActionButton, NcActions } from '@nextcloud/vue'
 import IconDomain from 'vue-material-design-icons/Domain.vue'
 import IconMail from 'vue-material-design-icons/EmailOutline.vue'
 import IconImage from 'vue-material-design-icons/ImageSizeSelectActual.vue'
 import MdnRequest from './MdnRequest.vue'
 import NeedsTranslationInfo from './NeedsTranslationInfo.vue'
 import logger from '../logger.js'
-import { needsTranslation } from '../service/AiIntergrationsService.js'
 import { trustSender } from '../service/TrustedSenderService.js'
+import { detectForeignLanguage } from '../util/languageDetection.ts'
 import { isPrintShortcut } from '../util/printMessage.ts'
 
 export default {
@@ -67,8 +70,8 @@ export default {
 	components: {
 		MdnRequest,
 		NeedsTranslationInfo,
-		Actions,
-		ActionButton,
+		NcActions,
+		NcActionButton,
 		IconImage,
 		IconMail,
 		IconDomain,
@@ -96,8 +99,7 @@ export default {
 		return {
 			hasBlockedContent: false,
 			isSenderTrusted: this.message.isSenderTrusted,
-			needsTranslation: false,
-			enabledFreePrompt: loadState('mail', 'llm_freeprompt_available', false),
+			detectedForeignLanguage: null,
 		}
 	},
 
@@ -118,9 +120,7 @@ export default {
 			scrolling: true,
 		}, this.$refs.iframe)
 
-		if (this.enabledFreePrompt && this.message) {
-			this.needsTranslation = await needsTranslation(this.message.databaseId)
-		}
+		this.detectedForeignLanguage = await detectForeignLanguage(this.message.body ?? '')
 	},
 
 	beforeDestroy() {
@@ -256,4 +256,5 @@ export default {
 :deep(.button-vue--vue-tertiary) {
 	color: var(--color-text-maxcontrast);
 }
+
 </style>

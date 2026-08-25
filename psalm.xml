@@ -40,6 +40,7 @@
 				<referencedClass name="Doctrine\DBAL\Platforms\PostgreSQL94Platform" />
 				<referencedClass name="Doctrine\DBAL\Platforms\SqlitePlatform" />
 				<referencedClass name="Doctrine\DBAL\Schema\Table" />
+				<referencedClass name="OCP\DB\Schema\ITable" />
 				<referencedClass name="Doctrine\DBAL\Types\Type" />
 				<referencedClass name="Doctrine\DBAL\Types\Types" />
 				<referencedClass name="IPLib\Factory" />
@@ -67,6 +68,7 @@
 				<referencedClass name="Doctrine\DBAL\Schema\Schema" />
 				<referencedClass name="Doctrine\DBAL\Schema\SchemaException" />
 				<referencedClass name="Doctrine\DBAL\Schema\Table" />
+				<referencedClass name="OCP\DB\Schema\ITable" />
 				<referencedClass name="OC\Security\CSP\ContentSecurityPolicyNonceManager" />
 				<referencedClass name="Symfony\Component\Console\Output\OutputInterface" />
 			</errorLevel>

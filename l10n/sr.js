@@ -476,8 +476,6 @@ OC.L10N.register(
     "Message discarded" : "Порука је одбачена",
     "Could not discard message" : "Порука није могла да се одбаци",
     "Maximize composer" : "Максимизуј композитора",
-    "Show recipient details" : "Прикажи детаље о примаоцу",
-    "Hide recipient details" : "Сакриј детаље о примаоцу",
     "Minimize composer" : "Минимизуј састављач",
     "Error sending your message" : "Грешка приликом слања поруке",
     "Retry" : "Покушај поново",
@@ -517,8 +515,8 @@ OC.L10N.register(
     "Copy to clipboard" : "Копирај у оставу",
     "Contact name …" : "Име контакта…",
     "Add" : "Додај",
-    "Show less" : "Прикажи мање",
-    "Show more" : "Прикажи више",
+    "Collapse" : "Скупи",
+    "Expand" : "Proširi",
     "Clear" : "Очисти",
     "Search in folder" : "Претражи у фолдеру",
     "Open search modal" : "Отвори модални дијалог за претрагу",
@@ -856,9 +854,9 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Назив ознаке је скривена системска ознака",
     "Tag already exists" : "Ознака већ постоји",
     "Error loading message" : "Грешка при учитавању поруке",
-    "Add share link from Files" : "Додај везу дељења из Фајлова",
-    "Choose a file to add as attachment" : "Изаберите фајл за прилог",
-    "Choose a file to share as a link" : "Одаберите фајл који желите да поделите као везу",
-    "Insert text block" : "Уметни блок текста"
+    "Show recipient details" : "Прикажи детаље о примаоцу",
+    "Hide recipient details" : "Сакриј детаље о примаоцу",
+    "Show less" : "Прикажи мање",
+    "Show more" : "Прикажи више"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");

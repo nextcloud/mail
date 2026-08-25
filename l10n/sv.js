@@ -542,8 +542,6 @@ OC.L10N.register(
     "Message discarded" : "Meddelandet har kasserats",
     "Could not discard message" : "Det gick inte att kassera meddelandet",
     "Maximize composer" : "Maximera editor",
-    "Show recipient details" : "Visa mottagarens detaljer",
-    "Hide recipient details" : "Dölj mottagarens detaljer",
     "Minimize composer" : "Minimera editor",
     "Error sending your message" : "Ett fel inträffade när ditt meddelande skulle skickas",
     "Retry" : "Försök igen",
@@ -583,8 +581,8 @@ OC.L10N.register(
     "Copy to clipboard" : "Kopiera till urklipp",
     "Contact name …" : "Kontakt namn",
     "Add" : "Lägg till",
-    "Show less" : "Visa mindre",
-    "Show more" : "Visa mer",
+    "Collapse" : "Fäll ihop",
+    "Expand" : "Fäll ut",
     "Clear" : "Rensa",
     "Search in folder" : "Sök i mapp",
     "Open search modal" : "Öppna sökning modalt",
@@ -933,9 +931,9 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Taggnamnet är en dold systemtagg",
     "Tag already exists" : "Taggen finns redan",
     "Error loading message" : "Fel vid inläsning av meddelande",
-    "Add share link from Files" : "Lägg till delningslänk från Filer",
-    "Choose a file to add as attachment" : "Välj en fil att lägga som bilaga",
-    "Choose a file to share as a link" : "Välj en fil att dela som länk",
-    "Insert text block" : "Infoga textblock"
+    "Show recipient details" : "Visa mottagarens detaljer",
+    "Hide recipient details" : "Dölj mottagarens detaljer",
+    "Show less" : "Visa mindre",
+    "Show more" : "Visa mer"
 },
 "nplurals=2; plural=(n != 1);");

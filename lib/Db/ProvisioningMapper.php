@@ -84,6 +84,12 @@ class ProvisioningMapper extends QBMapper {
 			$exception->setField('smtpSslMode', false);
 		}
 
+		foreach (['emailTemplate', 'imapUser', 'smtpUser', 'sieveUser'] as $templateField) {
+			if (Provisioning::findMalformedLdapPlaceholders($data[$templateField] ?? null) !== []) {
+				$exception->setField($templateField, false);
+			}
+		}
+
 		$ldapAliasesProvisioning = (bool)($data['ldapAliasesProvisioning'] ?? false);
 		$ldapAliasesAttribute = $data['ldapAliasesAttribute'] ?? '';
 

@@ -36,6 +36,7 @@ import CloseIcon from 'vue-material-design-icons/Close.vue'
 import DragIcon from 'vue-material-design-icons/Drag.vue'
 import Icon from './Icon.vue'
 import useMainStore from '../../store/mainStore.js'
+import { mailboxHasRights } from '../../util/acl.js'
 import { hiddenTags } from '../tags.js'
 
 export default {
@@ -93,10 +94,12 @@ export default {
 			if (this.action.name === 'moveThread') {
 				const ret = []
 				for (const mailbox of this.mainStore.getRecursiveMailboxIterator(this.account.accountId)) {
-					ret.push({
-						value: mailbox.name,
-						id: mailbox.databaseId,
-					})
+					if (mailboxHasRights(mailbox, 'i')) {
+						ret.push({
+							value: mailbox.name,
+							id: mailbox.databaseId,
+						})
+					}
 				}
 				return ret
 			}

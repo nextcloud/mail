@@ -48,6 +48,7 @@ OC.L10N.register(
     "Rename" : "Renominar",
     "Reply" : "Responder",
     "Add" : "Adder",
+    "Collapse" : "Collaber",
     "Close" : "Clauder",
     "Date" : "Date",
     "Tags" : "Etiquettas",
@@ -70,7 +71,6 @@ OC.L10N.register(
     "All" : "Tote",
     "All inboxes" : "Tote cassas de entrata",
     "Could not load {tag}{name}{endtag}" : "Impossibile cargar {tag}{name}{endtag}",
-    "There was a problem loading {tag}{name}{endtag}" : "Un problema occurreva durante le carga de {tag}{name}{endtag}",
-    "Choose a file to add as attachment" : "Selectiona un file pro adder como attachamento"
+    "There was a problem loading {tag}{name}{endtag}" : "Un problema occurreva durante le carga de {tag}{name}{endtag}"
 },
 "nplurals=2; plural=(n != 1);");

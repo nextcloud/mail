@@ -442,8 +442,8 @@ OC.L10N.register(
     "New Contact" : "Ny kontakt",
     "Copy to clipboard" : "Kopiert til utklippstavlen",
     "Add" : "Legg til",
-    "Show less" : "Vis mindre",
-    "Show more" : "Vis mer",
+    "Collapse" : "Skjul",
+    "Expand" : "Ekspander",
     "Clear" : "Tøm",
     "Close" : "Lukk",
     "Search parameters" : "Søkeparametere",
@@ -698,8 +698,7 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Tagnavn er en skjult systemtag",
     "Tag already exists" : "Merkelappen finnes allerede",
     "Error loading message" : "Feil ved innlasting av melding",
-    "Add share link from Files" : "Legg til delingskobling fra Filer",
-    "Choose a file to add as attachment" : "Velg en fil å legge til som vedlegg",
-    "Choose a file to share as a link" : "Velg en fil du vil dele som en lenke"
+    "Show less" : "Vis mindre",
+    "Show more" : "Vis mer"
 },
 "nplurals=2; plural=(n != 1);");

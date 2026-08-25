@@ -393,8 +393,8 @@ OC.L10N.register(
     "New Contact" : "새 연락처",
     "Copy to clipboard" : "클립보드로 복사",
     "Add" : "추가",
-    "Show less" : "적게 보기",
-    "Show more" : "더 보기",
+    "Collapse" : "접기",
+    "Expand" : "확장",
     "Clear" : "비우기",
     "Search in folder" : "폴더에서 검색",
     "Close" : "닫기",
@@ -638,8 +638,7 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "태그 이름이 숨겨진 시스템 태그입니다",
     "Tag already exists" : "태그가 이미 존재합니다.",
     "Error loading message" : "메시지 불러오기 오류",
-    "Choose a file to add as attachment" : "첨부할 파일을 선택하십시오",
-    "Choose a file to share as a link" : "공유할 링크 파일을 선택하세요.",
-    "Insert text block" : "텍스트 블록 삽입"
+    "Show less" : "적게 보기",
+    "Show more" : "더 보기"
 },
 "nplurals=1; plural=0;");

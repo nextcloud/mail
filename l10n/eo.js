@@ -128,8 +128,7 @@ OC.L10N.register(
     "Message" : "Mesaĝo",
     "Copy to clipboard" : "Kopii tondejen",
     "Add" : "Aldoni",
-    "Show less" : "Montri malpli",
-    "Show more" : "Montri pli",
+    "Collapse" : "Maletendi",
     "Clear" : "Viŝi",
     "Close" : "Malfermi",
     "Date" : "Date",
@@ -196,6 +195,7 @@ OC.L10N.register(
     "Date:" : "Dato:",
     "Tag already exists" : "La etikedo jam ekzistas",
     "Error loading message" : "Eraris ŝargi mesaĝon",
-    "Choose a file to add as attachment" : "Elektu dosieron aldonotan kiel kunsendaĵon"
+    "Show less" : "Montri malpli",
+    "Show more" : "Montri pli"
 },
 "nplurals=2; plural=(n != 1);");

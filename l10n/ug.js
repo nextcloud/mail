@@ -495,8 +495,6 @@ OC.L10N.register(
     "Message discarded" : "ئۇچۇر تاشلىۋېتىلدى",
     "Could not discard message" : "ئۇچۇرنى تاشلىۋېتەلمىدى",
     "Maximize composer" : "كومپوزىتورنى چوڭايتىڭ",
-    "Show recipient details" : "تاپشۇرۋالغۇچى تەپسىلاتىنى كۆرسەت",
-    "Hide recipient details" : "تاپشۇرۋالغۇچى تەپسىلاتىنى يۇشۇر",
     "Minimize composer" : "كومپوزىتورنى كىچىكلىتىڭ",
     "Error sending your message" : "ئۇچۇرىڭىزنى ئەۋەتىشتە خاتالىق",
     "Retry" : "قايتا سىناڭ",
@@ -536,8 +534,8 @@ OC.L10N.register(
     "Copy to clipboard" : "چاپلاش تاختىسىغا كۆچۈرۈڭ",
     "Contact name …" : "ئالاقىداش ئىسمى…",
     "Add" : "قوش",
-    "Show less" : "ئازراق كۆرسەت",
-    "Show more" : "تېخىمۇ كۆپ كۆرسەت",
+    "Collapse" : "يىمىرىلىش",
+    "Expand" : "كېڭەيتىش",
     "Clear" : "تازلا",
     "Search in folder" : "قىسقۇچتا ئىزدە",
     "Open search modal" : "ئىزدەش ھالىتىنى ئاچ",
@@ -880,9 +878,9 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "بەلگە ئىسمى يوشۇرۇن سىستېما بەلگىسى",
     "Tag already exists" : "خەتكۈچ مەۋجۇت",
     "Error loading message" : "ئۇچۇر يۈكلەشتە خاتالىق",
-    "Add share link from Files" : "ھۆججەتلەردىن ھەمبەھىر ئۇلانمىسىنى قوشۇڭ",
-    "Choose a file to add as attachment" : "قوشۇمچە قىلىپ قوشماقچى بولغان ھۆججەتنى تاللاڭ",
-    "Choose a file to share as a link" : "ئۇلىنىش سۈپىتىدە ھەمبەھىرلىنىدىغان ھۆججەتنى تاللاڭ",
-    "Insert text block" : "تىكىست بۆلىكى قىستۇر"
+    "Show recipient details" : "تاپشۇرۋالغۇچى تەپسىلاتىنى كۆرسەت",
+    "Hide recipient details" : "تاپشۇرۋالغۇچى تەپسىلاتىنى يۇشۇر",
+    "Show less" : "ئازراق كۆرسەت",
+    "Show more" : "تېخىمۇ كۆپ كۆرسەت"
 },
 "nplurals=2; plural=(n != 1);");
