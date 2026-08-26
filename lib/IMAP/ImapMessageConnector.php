@@ -192,7 +192,7 @@ class ImapMessageConnector implements IMessageConnector {
 				if ($newUid === null) {
 					// The IMAP server does not support UIDPLUS and the message has no Message-ID
 					// header, so the new UID is unknown. It will be reconciled on the next sync.
-					$this->logger->warning('Moved message but could not determine its new UID', [
+					$this->logger->debug('Moved message but could not determine its new UID', [
 						'userId' => $account->getUserId(),
 						'accountId' => $account->getId(),
 						'sourceMailboxId' => $sourceMailbox->getId(),
