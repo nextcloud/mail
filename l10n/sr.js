@@ -196,9 +196,9 @@ OC.L10N.register(
     "From" : "Од",
     "Select account" : "Одаберите налог",
     "To" : "За",
-    "Cc/Bcc" : "Cc/Bcc",
     "Select recipient" : "Изаберите примаоца",
     "Contact or email address …" : "Контакт или и-мејл адреса…",
+    "Cc/Bcc" : "Cc/Bcc",
     "Cc" : "Cc",
     "Bcc" : "Bcc",
     "Subject" : "Наслов",
@@ -777,7 +777,6 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "Атрибут са више вредности за достављање и-мејл алијаса. Алијас се креира за сваку вредност. Бришу се алијаси који постоје у Nextcloud  а не налазе се у LDAP директоријуму.",
     "Save Config" : "Сачувај конфигурацију",
     "Unprovision & Delete Config" : "Уклони достављање и обриши конфигурацију",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% и %EMAIL% ће се заменити са корисниковим UID и и-мејл адресом",
     "With the settings above, the app will create account settings in the following way:" : "Уз поставке изнад, апликација ће креирати поставке налога на следећи начин:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Наведени PKCS #12 сертификат мора да садржи барем један сертификат и тачно један приватни кључ.",
     "Failed to import the certificate. Please check the password." : "Сертификат није могао да се увезе. Молимо вас да проверите лозинку.",
@@ -857,6 +856,7 @@ OC.L10N.register(
     "Show recipient details" : "Прикажи детаље о примаоцу",
     "Hide recipient details" : "Сакриј детаље о примаоцу",
     "Show less" : "Прикажи мање",
-    "Show more" : "Прикажи више"
+    "Show more" : "Прикажи више",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% и %EMAIL% ће се заменити са корисниковим UID и и-мејл адресом"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");

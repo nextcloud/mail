@@ -163,8 +163,8 @@ OC.L10N.register(
     "From" : "Nork",
     "Select account" : "Hautatu kontua",
     "To" : "Nori",
-    "Cc/Bcc" : "Cc/Bcc",
     "Select recipient" : "Hautatu hartzailea",
+    "Cc/Bcc" : "Cc/Bcc",
     "Cc" : "Cc",
     "Bcc" : "Bcc",
     "Subject" : "Gaia",
@@ -650,7 +650,6 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "Balio anitzeko atributu bat posta elektroniko aliasak hornitzeko. Balio bakoitzerako alias bat sortzen da. LDAP direktorioan ez dauden Nextcloud-en dauden aliasak ezabatzen dira.",
     "Save Config" : "Gorde konfigurazioa",
     "Unprovision & Delete Config" : "Ez hornitu eta ezabatu konfigurazioa",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% eta%EMAIL% erabiltzailearen UID eta e-postarekin ordeztuko dira",
     "With the settings above, the app will create account settings in the following way:" : "Goiko ezarpenekin, aplikazioak honako ezarpenak dituzten kontuak sortuko ditu:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Emandako PKCS #12 ziurtagiriak gutxienez izan behar ditu ziurtagiri bat eta gako pribatu bat zehazki.",
     "Failed to import the certificate. Please check the password." : "Ezin izan da ziurtagiria inportatu. Mesedez, egiaztatu pasahitza.",
@@ -711,6 +710,7 @@ OC.L10N.register(
     "Tag already exists" : "Etiketa dagoeneko existitzen da",
     "Error loading message" : "Errorea mezua kargatzerakoan",
     "Show less" : "Erakutsi gutxiago",
-    "Show more" : "Erakutsi gehiago"
+    "Show more" : "Erakutsi gehiago",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% eta%EMAIL% erabiltzailearen UID eta e-postarekin ordeztuko dira"
 },
 "nplurals=2; plural=(n != 1);");

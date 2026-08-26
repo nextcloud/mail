@@ -210,8 +210,8 @@ OC.L10N.register(
     "From" : "Эхлэх",
     "Select account" : "–ê–∫–∫–∞—É–Ω—Ç —Å–æ–Ω–≥–æ—Ö",
     "To" : "Хүртэл",
-    "Cc/Bcc" : "Cc/Bcc",
     "Select recipient" : "Хүлээн авагч сонгох",
+    "Cc/Bcc" : "Cc/Bcc",
     "Cc" : "Cc",
     "Bcc" : "Bcc",
     "Subject" : "–°—ç–¥—ç–≤",
@@ -788,7 +788,6 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "Имэйлийн хоч нэрүүдийг хангахад зориулсан олон утгатай атрибут. Утга тус бүрт хоч нэр үүснэ. Nextcloud-д байгаа боловч LDAP лавлахад байхгүй хоч нэрүүд устгагдана.",
     "Save Config" : "Тохиргоо хадгалах",
     "Unprovision & Delete Config" : "Нийлүүлэлт цуцлах & Тохиргоо устгах",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% болон %EMAIL% хэрэглэгчийн UID болон и-мэйлээр солигдоно",
     "With the settings above, the app will create account settings in the following way:" : "Дээрх тохиргоонуудыг ашиглан апп бүртгэлийн тохиргоог дараах байдлаар үүсгэнэ:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Өгсөн PKCS #12 сертификат нь дор хаяж нэг сертификат болон яг нэг хувийн түлхүүр агуулсан байх ёстой.",
     "Failed to import the certificate. Please check the password." : "Сертификат импортлоход алдаа гарлаа. Нууц үгээ шалгана уу.",
@@ -868,6 +867,7 @@ OC.L10N.register(
     "Show recipient details" : "Хүлээн авагчийн дэлгэрэнгүйг харуулах",
     "Hide recipient details" : "Хүлээн авагчийн дэлгэрэнгүйг нуух",
     "Show less" : "Бага харуулах",
-    "Show more" : "Илүү харуулах"
+    "Show more" : "Илүү харуулах",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% болон %EMAIL% хэрэглэгчийн UID болон и-мэйлээр солигдоно"
 },
 "nplurals=2; plural=(n != 1);");

@@ -218,9 +218,9 @@
     "From" : "Od",
     "Select account" : "Wybierz konto",
     "To" : "Do",
-    "Cc/Bcc" : "Do/Ukryte Do wiadomości (Cc/Bcc)",
     "Select recipient" : "Wybierz odbiorcę",
     "Contact or email address …" : "Kontakt lub adres e-mail …",
+    "Cc/Bcc" : "Do/Ukryte Do wiadomości (Cc/Bcc)",
     "Cc" : "DW",
     "Bcc" : "UDW",
     "Subject" : "Temat",
@@ -831,7 +831,6 @@
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "Atrybut wielowartościowy do zabezpieczenia aliasów e-mail. Dla każdej wartości tworzony jest alias. Aliasy istniejące w Nextcloud, których nie ma w katalogu LDAP, są usuwane.",
     "Save Config" : "Zapisz konfigurację",
     "Unprovision & Delete Config" : "Cofnij zabezpieczenie i usuń konfigurację",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% i %EMAIL% zostaną zastąpione UID i adresem e-mail użytkownika",
     "With the settings above, the app will create account settings in the following way:" : "Przy powyższych ustawieniach aplikacja utworzy ustawienia konta w następujący sposób:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Dostarczony certyfikat PKCS #12 musi zawierać co najmniej jeden certyfikat i dokładnie jeden klucz prywatny.",
     "Failed to import the certificate. Please check the password." : "Nie udało się zaimportować certyfikatu. Sprawdź hasło.",
@@ -913,6 +912,7 @@
     "Show recipient details" : "Pokaż szczegóły odbiorcy",
     "Hide recipient details" : "Ukryj szczegóły odbiorcy",
     "Show less" : "Pokaż mniej",
-    "Show more" : "Pokaż więcej"
+    "Show more" : "Pokaż więcej",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% i %EMAIL% zostaną zastąpione UID i adresem e-mail użytkownika"
 },"pluralForm" :"nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);"
 }

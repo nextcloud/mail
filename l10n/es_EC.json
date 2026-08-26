@@ -509,7 +509,6 @@
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "Atributo multivalor para aprovisionar alias de correo electrónico. Se crea un alias para cada valor. Los alias existentes en Nextcloud que no estén en el directorio LDAP se eliminarán.",
     "Save Config" : "Guardar configuración",
     "Unprovision & Delete Config" : "Desaprovisionar y eliminar configuración",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% y %EMAIL% se reemplazarán con el UID y el correo electrónico del usuario",
     "With the settings above, the app will create account settings in the following way:" : "Con la configuración anterior, la aplicación creará configuraciones de cuenta de la siguiente manera:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "El certificado PKCS #12 proporcionado debe contener al menos un certificado y exactamente una clave privada.",
     "Failed to import the certificate. Please check the password." : "Error al importar el certificado. Por favor, verifica la contraseña.",
@@ -569,6 +568,7 @@
     "Tag already exists" : "La etiqueta ya existe",
     "Error loading message" : "Se presentó un error al cargar el mensaje",
     "Show less" : "Mostrar menos",
-    "Show more" : "Mostrar más"
+    "Show more" : "Mostrar más",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% y %EMAIL% se reemplazarán con el UID y el correo electrónico del usuario"
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

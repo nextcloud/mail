@@ -169,8 +169,8 @@ OC.L10N.register(
     "From" : "Fra",
     "Select account" : "Velg konto",
     "To" : "Til",
-    "Cc/Bcc" : "Kopi/Blindkopi",
     "Select recipient" : "Velg mottaker",
+    "Cc/Bcc" : "Kopi/Blindkopi",
     "Cc" : "Kopi",
     "Bcc" : "Blindkopi",
     "Subject" : "Emne",
@@ -637,7 +637,6 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "Et attributt med flere verdier for klargjøring av e-post aliaser. For hver verdi opprettes et alias. Aliaser som eksisterer i Nextcloud som ikke er i LDAP katalogen, slettes.",
     "Save Config" : "Lagre konfigurasjon",
     "Unprovision & Delete Config" : "Opphev tilordning og slett konfigurasjon",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% og %E MAIL% vil bli erstattet med brukerens UID og e-post",
     "With the settings above, the app will create account settings in the following way:" : "Med innstillingene ovenfor vil appen opprette konto innstillinger på følgende måte:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Det angitte PKCS #12-sertifikatet må inneholde minst ett sertifikat og nøyaktig én privat nøkkel.",
     "Failed to import the certificate. Please check the password." : "Kunne ikke importere sertifikatet. Vennligst sjekk passordet.",
@@ -699,6 +698,7 @@ OC.L10N.register(
     "Tag already exists" : "Merkelappen finnes allerede",
     "Error loading message" : "Feil ved innlasting av melding",
     "Show less" : "Vis mindre",
-    "Show more" : "Vis mer"
+    "Show more" : "Vis mer",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% og %E MAIL% vil bli erstattet med brukerens UID og e-post"
 },
 "nplurals=2; plural=(n != 1);");

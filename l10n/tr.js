@@ -227,9 +227,9 @@ OC.L10N.register(
     "From" : "Kimden",
     "Select account" : "Hesap seçin",
     "To" : "Kime",
-    "Cc/Bcc" : "Kopya/Gizli kopya",
     "Select recipient" : "Alıcıyı seçin",
     "Contact or email address …" : "Kişi ya da e-posta adresi…",
+    "Cc/Bcc" : "Kopya/Gizli kopya",
     "Messages with no 'To' recipients may be rejected by some mail providers." : "'Kime' alıcısı olmayan iletiler bazı e-posta hizmeti sağlayıcıları tarafından reddedilebilir.",
     "Cc" : "Kopya",
     "Bcc" : "Gizli kopya",
@@ -862,7 +862,6 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "E-posta takma adları için çok değerli bir öznitelik. Her değer için bir takma ad oluşturulur. Nextcloud üzerinde bulunup LDAP dizininde bulunmayan takma adlar silinir.",
     "Save Config" : "Yapılandırmayı kaydet",
     "Unprovision & Delete Config" : "Hazırlığı kaldırıp yapılandırmayı sil",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% ve %EMAIL% kodları yerine kullanıcının eşsiz kodu ve e-posta adresi geçer",
     "With the settings above, the app will create account settings in the following way:" : "Uygulama, yukarıdaki ayarlara göre, aşağıdaki şekilde hesap ayarları oluşturacak:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Belirtilen PKCS #12 sertifikasında, en az bir sertifika ve yalnızca bir kişisel anahtar bulunmalıdır.",
     "Failed to import the certificate. Please check the password." : "Sertifika içe aktarılamadı. Lütfen parolayı denetleyin.",
@@ -954,6 +953,7 @@ OC.L10N.register(
     "Show recipient details" : "Alıcı ayrıntıları görüntüle",
     "Hide recipient details" : "Alıcı ayrıntılarını gizle",
     "Show less" : "Daha az görüntüle",
-    "Show more" : "Daha çok görüntüle"
+    "Show more" : "Daha çok görüntüle",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% ve %EMAIL% kodları yerine kullanıcının eşsiz kodu ve e-posta adresi geçer"
 },
 "nplurals=2; plural=(n > 1);");

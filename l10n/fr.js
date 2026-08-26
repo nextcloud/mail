@@ -227,9 +227,9 @@ OC.L10N.register(
     "From" : "De",
     "Select account" : "Sélectionnez un compte",
     "To" : "À",
-    "Cc/Bcc" : "Cc/Cci",
     "Select recipient" : "Sélectionner le destinataire",
     "Contact or email address …" : "Contact ou adresse de messagerie ...",
+    "Cc/Bcc" : "Cc/Cci",
     "Messages with no 'To' recipients may be rejected by some mail providers." : "Les messages sans destinataire dans le champ « À » peuvent être rejetés par certains fournisseurs de messagerie.",
     "Cc" : "Cc",
     "Bcc" : "Cci",
@@ -861,7 +861,6 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "Un attribut multi-valeurs pour le provisionnement des adresses e-mail. Un alias est créé pour chaque valeur. Les alias existants dans Nextcloud et qui ne sont pas dans le dossier LDAP sont supprimés.",
     "Save Config" : "Enregistrer la configuration",
     "Unprovision & Delete Config" : "Déprovisionner et supprimer la configuration",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% et %EMAIL% seront remplacés respectivement par l'UID et l’adresse e-mail de l'utilisateur",
     "With the settings above, the app will create account settings in the following way:" : "Avec les paramètres ci-dessus, l'application créera les paramètres de compte de la manière suivante:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Le certificat PKCS #12 fourni doit contenir au moins un certificat et une seule clé privée.",
     "Failed to import the certificate. Please check the password." : "L'import du certificat a échoué. Merci de vérifier le mot de passe.",
@@ -953,6 +952,7 @@ OC.L10N.register(
     "Show recipient details" : "Afficher les détails du destinataire",
     "Hide recipient details" : "Masquer les détails du destinataire",
     "Show less" : "Afficher moins",
-    "Show more" : "Afficher plus"
+    "Show more" : "Afficher plus",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% et %EMAIL% seront remplacés respectivement par l'UID et l’adresse e-mail de l'utilisateur"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

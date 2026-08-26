@@ -570,7 +570,6 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "이메일 별칭 프로비전을 위한 복수의 속성값. 각 값에 대해 별칭이 생성됩니다. Nextcloud에 존재하는 별칭 중 LDAP 디렉토리에 없는 것은 삭제됩니다.",
     "Save Config" : "설정 저장",
     "Unprovision & Delete Config" : "프로비전 해제 및 삭제 설정",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID%와(과) %EMAIL%이(가) 사용자의 UID와 이메일로 대체됩니다",
     "With the settings above, the app will create account settings in the following way:" : "상단의 설정을 통해, 앱은 다음의 방법으로 계정 설정을 생성합니다: ",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "제공된 PKCS #12 인증서는 최소 하나의 인증서와 정확히 하나의 개인 키를 포함하여야 합니다.",
     "Failed to import the certificate. Please check the password." : "인증서를 불러올 수 없음. 암호를 확인하십시오.",
@@ -639,6 +638,7 @@ OC.L10N.register(
     "Tag already exists" : "태그가 이미 존재합니다.",
     "Error loading message" : "메시지 불러오기 오류",
     "Show less" : "적게 보기",
-    "Show more" : "더 보기"
+    "Show more" : "더 보기",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID%와(과) %EMAIL%이(가) 사용자의 UID와 이메일로 대체됩니다"
 },
 "nplurals=1; plural=0;");

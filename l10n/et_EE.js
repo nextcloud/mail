@@ -227,9 +227,9 @@ OC.L10N.register(
     "From" : "Saatja",
     "Select account" : "Vali kasutajakonto",
     "To" : "Saaja",
-    "Cc/Bcc" : "Cc/Bcc",
     "Select recipient" : "Vali kirja saaja",
     "Contact or email address …" : "Kontakt või e-posti aadress…",
+    "Cc/Bcc" : "Cc/Bcc",
     "Messages with no 'To' recipients may be rejected by some mail providers." : "Kui kirjal pole saaja väljal väärtust, siis mõned e-postiteenused ei pruugi seda vastu võtta.",
     "Cc" : "Koopia",
     "Bcc" : "Pimekoopia",
@@ -862,7 +862,6 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "Mitmeväärtuseline e-posti aliaste eelkoostamise lahendus. Iga väärtuse kohta luuakse alias. Nexctcloudis leiduvate aliaste puhul, millel pole LDAP-i serveris vastet, kustutakse e-posti teenusest.",
     "Save Config" : "Salvesta seadistus",
     "Unprovision & Delete Config" : "Eemalda ettevalmistatud seadistused ja kustuta nad",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% ja %EMAIL% asendatakse kasutajatunnuse (UID) ja e-posti aadressiga",
     "With the settings above, the app will create account settings in the following way:" : "Ülalmääratud seadistuste alusel loob rakendus kasutajakonto seadistused alljärgneval viisil:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Lisatud PKCS #12 sertifikaadis peab olema vähemalt üks sertifikaat ning ainult üks privaatvõti.",
     "Failed to import the certificate. Please check the password." : "Sertifikaadi importimine ei õnnestunud. Palun kontrolli, kas salasõna on õige.",
@@ -954,6 +953,7 @@ OC.L10N.register(
     "Show recipient details" : "Näita kirjasaaja üksikasju",
     "Hide recipient details" : "Peida kirjasaaja üksikasjad",
     "Show less" : "Näita vähem",
-    "Show more" : "Näita rohkem"
+    "Show more" : "Näita rohkem",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% ja %EMAIL% asendatakse kasutajatunnuse (UID) ja e-posti aadressiga"
 },
 "nplurals=2; plural=(n != 1);");

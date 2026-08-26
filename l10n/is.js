@@ -167,8 +167,8 @@ OC.L10N.register(
     "From" : "Frá",
     "Select account" : "Veldu notandaaðgang",
     "To" : "Til",
-    "Cc/Bcc" : "Cc/Bcc",
     "Select recipient" : "Veldu viðtakanda",
+    "Cc/Bcc" : "Cc/Bcc",
     "Cc" : "Afrit (Cc)",
     "Bcc" : "Falið afrit (Bcc)",
     "Subject" : "Viðfangsefni",
@@ -639,7 +639,6 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "Marg-gilda eigindi til að úthluta tölvupóstsamnefnum. Fyrir hvert gildi er útbúið samnefni. Samnefnum sem finnast í Nextcloud en sem eru ekki í LDAP-skráningunni er eytt.",
     "Save Config" : "Vista uppsetningu",
     "Unprovision & Delete Config" : "Taka úr úthlutun og eyða uppsetningu",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% og %EMAIL% verður skipt út með UID-auðkenni notanda og tölvupóstfangi",
     "With the settings above, the app will create account settings in the following way:" : "Með stillingunum hér fyrir ofan, mun forritið útbúa aðgangsstillingar á eftirfarandi máta:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Uppgefið PKCS #12 skilríki verður að innihalda að minnsta kosti eitt skilríki og nákvæmlega einn einkalykil.",
     "Failed to import the certificate. Please check the password." : "Mistókst að flytja inn skilríkið. Athugaðu lykilorðið.",
@@ -699,6 +698,7 @@ OC.L10N.register(
     "Tag already exists" : "Merki er þegar til",
     "Error loading message" : "Villa við hleðslu á skilaboðum",
     "Show less" : "Birta minna",
-    "Show more" : "Birta meira"
+    "Show more" : "Birta meira",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% og %EMAIL% verður skipt út með UID-auðkenni notanda og tölvupóstfangi"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

@@ -225,9 +225,9 @@
     "From" : "從",
     "Select account" : "選擇賬號",
     "To" : "至",
-    "Cc/Bcc" : "副本/密件副本",
     "Select recipient" : "選擇收件人",
     "Contact or email address …" : "聯絡人或電子郵件地址 …",
+    "Cc/Bcc" : "副本/密件副本",
     "Messages with no 'To' recipients may be rejected by some mail providers." : "沒有「收件者」的郵件可能會被部分郵件服務供應商拒收。",
     "Cc" : "副本",
     "Bcc" : "密件副本",
@@ -860,7 +860,6 @@
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "用於配置電郵地址別名的多值屬性。 為每個值創建一個別名。 刪除存在於 Nextcloud 中但不在 LDAP 目錄中的別名。",
     "Save Config" : "保存配置",
     "Unprovision & Delete Config" : "取消配置和刪除配置",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% 與 %EMAIL% 將以用戶的 UID 與電郵地址取代",
     "With the settings above, the app will create account settings in the following way:" : "使用上述設定，應用程式將會以下列方式建立賬號：",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "提供的 PKCS #12 憑證必須包含至少一個憑證與一個私鑰。",
     "Failed to import the certificate. Please check the password." : "無法導入證書。請檢查密碼。",
@@ -952,6 +951,7 @@
     "Show recipient details" : "顯示收件人詳細資訊",
     "Hide recipient details" : "隱藏收件人詳細資訊",
     "Show less" : "顯示較少",
-    "Show more" : "顯示更多"
+    "Show more" : "顯示更多",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% 與 %EMAIL% 將以用戶的 UID 與電郵地址取代"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

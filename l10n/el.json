@@ -222,9 +222,9 @@
     "From" : "Από",
     "Select account" : "Επιλογή λογαριασμού",
     "To" : "Προς",
-    "Cc/Bcc" : "Cc/Bcc",
     "Select recipient" : "Επιλογή παραλήπτη",
     "Contact or email address …" : "Επαφή ή διεύθυνση ηλ.ταχυδρομείου  ..",
+    "Cc/Bcc" : "Cc/Bcc",
     "Cc" : "Cc",
     "Bcc" : "Bcc",
     "Subject" : "Θέμα",
@@ -850,7 +850,6 @@
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "Ένα χαρακτηριστικό πολλαπλών τιμών για την προμήθεια ψευδωνύμων email. Για κάθε τιμή δημιουργείται ένα ψευδώνυμο. Τα ψευδώνυμα που υπάρχουν στο Nextcloud και δεν βρίσκονται στον κατάλογο LDAP διαγράφονται.",
     "Save Config" : "Αποθήκευση Διαμόρφωσης",
     "Unprovision & Delete Config" : "Αποπρομήθεια & Διαγραφή Διαμόρφωσης",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* Το %USERID% και το %EMAIL% θα αντικατασταθούν με το UID και το email του χρήστη",
     "With the settings above, the app will create account settings in the following way:" : "Με τις παραπάνω ρυθμίσεις, η εφαρμογή θα δημιουργήσει τις ρυθμίσεις λογαριασμού με τον ακόλουθο τρόπο:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Το παρεχόμενο πιστοποιητικό PKCS #12 πρέπει να περιέχει τουλάχιστον ένα πιστοποιητικό και ακριβώς ένα ιδιωτικό κλειδί.",
     "Failed to import the certificate. Please check the password." : "Αποτυχία εισαγωγής του πιστοποιητικού. Παρακαλώ ελέγξτε τον κωδικό.",
@@ -934,6 +933,7 @@
     "Show recipient details" : "Εμφάνιση λεπτομερειών παραληπτών",
     "Hide recipient details" : "Απόκρυψη λεπτομερειών παραληπτών",
     "Show less" : "Εμφάνιση λιγότερων",
-    "Show more" : "Εμφάνιση περισσότερων"
+    "Show more" : "Εμφάνιση περισσότερων",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* Το %USERID% και το %EMAIL% θα αντικατασταθούν με το UID και το email του χρήστη"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
