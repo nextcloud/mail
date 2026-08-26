@@ -1000,10 +1000,6 @@ export default {
 	},
 
 	watch: {
-		'$route.params.threadId': function() {
-			this.reset()
-		},
-
 		allRecipients() {
 			this.checkRecipientsKeys()
 		},
