@@ -240,17 +240,27 @@ class MailManager {
 		if ($messages === []) {
 			return [];
 		}
+		$sourceUids = [];
+		foreach ($messages as $message) {
+			$sourceUids[spl_object_id($message)] = $message->getUid();
+		}
+
 		// update remote store
 		$mutatedMessages = $this->protocolFactory
 			->messageConnector($account)
 			->moveMessages($account, $targetMailbox, $sourceMailbox, ...$messages);
 
 		// update local store
-		$this->dbMessageMapper->updateBulk($account, false, ...$mutatedMessages);
-
 		$mutatedUids = [];
 		foreach ($mutatedMessages as $mutatedMessage) {
+			$this->dbMessageMapper->update($mutatedMessage);
 			$mutatedUids[] = $mutatedMessage->getUid();
+
+			$this->eventDispatcher->dispatchTyped(new MessageDeletedEvent(
+				$account,
+				$sourceMailbox,
+				$sourceUids[spl_object_id($mutatedMessage)],
+			));
 		}
 
 		return $mutatedUids;
@@ -304,7 +314,9 @@ class MailManager {
 
 		// update local store
 		if ($operation === 'move') {
-			$this->dbMessageMapper->updateBulk($account, false, ...$mutatedMessages);
+			foreach ($mutatedMessages as $mutatedMessage) {
+				$this->dbMessageMapper->update($mutatedMessage);
+			}
 		}
 		if ($operation === 'delete') {
 			$mutatedUids = array_map(static fn (Message $message): int => $message->getUid(), $mutatedMessages);
