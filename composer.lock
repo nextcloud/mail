@@ -4,11 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-<<<<<<< HEAD
-    "content-hash": "b5da21087a50ee288a4a2337ec4fdf11",
-=======
-    "content-hash": "2fb927ba5f110787127f6be85127cb0f",
->>>>>>> 03ce482fe (fixup! feat: jmap support - part 2)
+    "content-hash": "09b1b7f1bc1fa81ff19f79ec444faf95",
     "packages": [
         {
             "name": "amphp/amp",
@@ -4377,5 +4373,5 @@
     "platform-overrides": {
         "php": "8.1"
     },
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }
