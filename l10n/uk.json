@@ -181,8 +181,8 @@
     "From" : "Від",
     "Select account" : "Оберіть обліковий запис",
     "To" : "Кому",
-    "Cc/Bcc" : "Cc/Bcc",
     "Select recipient" : "Виберіть отримувача",
+    "Cc/Bcc" : "Cc/Bcc",
     "Cc" : "Копія",
     "Bcc" : "Всс",
     "Subject" : "Тема",
@@ -757,7 +757,6 @@
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "Багатозначний атрибут для надання псевдонімів електронної пошти. Для кожного значення створюється псевдонім. Псевдоніми, що існують у Nextcloud, але відсутні в каталозі LDAP, видаляються.",
     "Save Config" : "Зберегти конфігурацію",
     "Unprovision & Delete Config" : "Видалення конфігурації та деконфігурація",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% та %EMAIL% буде замінено на UID та email користувача",
     "With the settings above, the app will create account settings in the following way:" : "Із наведеними вище налаштуваннями застосунок створить налаштування облікового запису таким чином:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Наданий сертифікат PKCS #12 повинен містити принаймні один сертифікат і рівно один приватний ключ.",
     "Failed to import the certificate. Please check the password." : "Не вдалося імпортувати сертифікат. Будь ласка, перевірте пароль.",
@@ -837,6 +836,7 @@
     "Show recipient details" : "Показати дані одержувача",
     "Hide recipient details" : "Приховати дані одержувача",
     "Show less" : "Показувати менше",
-    "Show more" : "Показати більше"
+    "Show more" : "Показати більше",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% та %EMAIL% буде замінено на UID та email користувача"
 },"pluralForm" :"nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);"
 }

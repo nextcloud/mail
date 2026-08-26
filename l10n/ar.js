@@ -171,8 +171,8 @@ OC.L10N.register(
     "From" : "من :",
     "Select account" : "إختر الحساب",
     "To" : "إلى :",
-    "Cc/Bcc" : "نسخة Cc / نسخة مخفية Bcc",
     "Select recipient" : "إختر المُستلِم",
+    "Cc/Bcc" : "نسخة Cc / نسخة مخفية Bcc",
     "Cc" : "نُسخة كَربونية Cc",
     "Bcc" : "نُسخة مَخفية الوجهة Bcc",
     "Subject" : "الموضوع",
@@ -659,7 +659,6 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "سمة متعددة القيم لتوفير الأسماء المستعارة للبريد الإلكتروني. لكل قيمة يتم إنشاء اسم مستعار. يتم حذف الأسماء المستعارة الموجودة في نكست كلاود والتي ليست في دليل LDAP.",
     "Save Config" : "حفظ الإعدادات",
     "Unprovision & Delete Config" : "إلغاء التهيئة و حذفها",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% و %EMAIL% سيتم استبدالها بمُعرّف المستخدم و البريد الالكتروني",
     "With the settings above, the app will create account settings in the following way:" : "باستخدام الإعدادات أعلاه، سيقوم التطبيق بإنشاء إعدادات الحساب بالطريقة التالية:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "يجب أن تحتوي شهادة PKCS ـ # 12 المقدمة على شهادة واحدة على الأقل ومفتاح خاص واحد بالضبط.",
     "Failed to import the certificate. Please check the password." : "فشل استيراد الشهادة. يرجى التحقق من كلمة المرور.",
@@ -720,6 +719,7 @@ OC.L10N.register(
     "Tag already exists" : "الوَسْمُ موجود سلفاً",
     "Error loading message" : "حدث خطأ أثناء تحميل الرسالة",
     "Show less" : "عرض أقل",
-    "Show more" : "عرض المزيد"
+    "Show more" : "عرض المزيد",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% و %EMAIL% سيتم استبدالها بمُعرّف المستخدم و البريد الالكتروني"
 },
 "nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;");

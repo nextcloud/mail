@@ -216,9 +216,9 @@ OC.L10N.register(
     "From" : "Od",
     "Select account" : "Vybrat účet",
     "To" : "Pro",
-    "Cc/Bcc" : "Kopie / skrytá kopie",
     "Select recipient" : "Vybrat příjemce",
     "Contact or email address …" : "Kontakt nebo e-mailová adresa …",
+    "Cc/Bcc" : "Kopie / skrytá kopie",
     "Cc" : "Kopie",
     "Bcc" : "Skrytá kopie",
     "Subject" : "Předmět",
@@ -815,7 +815,6 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "Atribut s vícero hodnotami pro zprovoznění alternativních e-mailů. Pro každou z hodnot je vytvořen alternativní název. Alternativní e-maily, které existují v Nextcloud, ale ne v LDAP adresáři, jsou smazány.",
     "Save Config" : "Uložit nastavení",
     "Unprovision & Delete Config" : "Zrušit zprovoznění služby a smazat nastavení",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% a %EMAIL% budou nahrazeny identif. uživatele (UID) a e-mailovou adresou",
     "With the settings above, the app will create account settings in the following way:" : "S výše uvedenými nastaveními aplikace vytvoří nastavení účtu následujícím způsobem:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Je třeba, aby poskytnutý PKCS #12 certifikát obsahoval alespoň jediný certifikát a právě jeden soukromý klíč.",
     "Failed to import the certificate. Please check the password." : "Certifikát se nepodařilo naimportovat. Zkontrolujte heslo.",
@@ -896,6 +895,7 @@ OC.L10N.register(
     "Show recipient details" : "Zobrazit podrobnosti o příjemci",
     "Hide recipient details" : "Skrýt podrobnosti o příjemci",
     "Show less" : "Zobrazit méně",
-    "Show more" : "Zobrazit více"
+    "Show more" : "Zobrazit více",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% a %EMAIL% budou nahrazeny identif. uživatele (UID) a e-mailovou adresou"
 },
 "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;");

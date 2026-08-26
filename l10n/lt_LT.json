@@ -225,9 +225,9 @@
     "From" : "Nuo",
     "Select account" : "Pasirinkti paskyrą",
     "To" : "Kam",
-    "Cc/Bcc" : "Cc/Bcc",
     "Select recipient" : "Pasirinkti gavėją",
     "Contact or email address …" : "Adresatas arba el. pašto adresas …",
+    "Cc/Bcc" : "Cc/Bcc",
     "Messages with no 'To' recipients may be rejected by some mail providers." : "Kai kurie el. pašto paslaugų teikėjai gali atmesti pranešimus, kuriuose nenurodyti gavėjai lauke „Kam“.",
     "Cc" : "Cc",
     "Bcc" : "Bcc",
@@ -860,7 +860,6 @@
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "Kelių reikšmių atributas, skirtas el. pašto slapyvardžiams teikti. Kiekvienai reikšmei sukuriamas slapyvardis. „Nextcloud“ esantys slapyvardžiai, kurių nėra LDAP kataloge, yra ištrinami.",
     "Save Config" : "Įrašyti konfigūraciją",
     "Unprovision & Delete Config" : "Atšaukti parengimą ir ištrinti konfigūraciją",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% ir %E MAIL% bus pakeistas vartotojo UID ir el. pašto adresu",
     "With the settings above, the app will create account settings in the following way:" : "Naudodama aukščiau esančius nustatymus, programėlė sukurs paskyrai nustatymus štai tokiu būdu: ",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Pateiktame PKCS #12 sertifikate turi būti bent vienas sertifikatas ir lygiai vienas privatusis raktas.",
     "Failed to import the certificate. Please check the password." : "Nepavyko importuoti sertifikato. Patikrinkite slaptažodį.",
@@ -952,6 +951,7 @@
     "Show recipient details" : "Rodyti gavėjo informaciją",
     "Hide recipient details" : "Slėpti gavėjo informaciją",
     "Show less" : "Rodyti mažiau",
-    "Show more" : "Rodyti daugiau"
+    "Show more" : "Rodyti daugiau",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% ir %E MAIL% bus pakeistas vartotojo UID ir el. pašto adresu"
 },"pluralForm" :"nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);"
 }

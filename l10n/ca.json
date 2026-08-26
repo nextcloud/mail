@@ -168,8 +168,8 @@
     "From" : "De",
     "Select account" : "Selecciona un compte",
     "To" : "A",
-    "Cc/Bcc" : "Cc/Cco",
     "Select recipient" : "Seleccioneu el destinatari",
+    "Cc/Bcc" : "Cc/Cco",
     "Cc" : "Cc",
     "Bcc" : "CcO",
     "Subject" : "Assumpte",
@@ -660,7 +660,6 @@
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "Un atribut de diversos valors per proporcionar àlies de correu electrònic. Per a cada valor es crea un àlies. Es suprimeixen els àlies existents a Nextcloud que no es troben al directori LDAP.",
     "Save Config" : "Desa la configuració",
     "Unprovision & Delete Config" : "Desaprovisionar i suprimir la configuració",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% i %EMAIL% es substituiran per l'UID i el correu electrònic de l'usuari",
     "With the settings above, the app will create account settings in the following way:" : "Amb la configuració anterior, l'aplicació crearà els paràmetres del compte de la manera següent:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "El certificat PKCS #12 proporcionat ha de contenir almenys un certificat i exactament una clau privada.",
     "Failed to import the certificate. Please check the password." : "No s'ha pogut importar el certificat. Comproveu la contrasenya.",
@@ -722,6 +721,7 @@
     "Tag already exists" : "L'etiqueta ja existeix",
     "Error loading message" : "S'ha produït un error mentre es carregava el missatge",
     "Show less" : "Mostra'n menys",
-    "Show more" : "Mostra'n més"
+    "Show more" : "Mostra'n més",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% i %EMAIL% es substituiran per l'UID i el correu electrònic de l'usuari"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

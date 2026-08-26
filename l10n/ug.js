@@ -210,9 +210,9 @@ OC.L10N.register(
     "From" : "دىن",
     "Select account" : "ھېساباتنى تاللاڭ",
     "To" : "غا",
-    "Cc/Bcc" : "كوپىيە",
     "Select recipient" : "تاپشۇرۇۋالغۇچىنى تاللاڭ",
     "Contact or email address …" : "ئالاقىداش ياكى ئېلىخەت ئادرېسى…",
+    "Cc/Bcc" : "كوپىيە",
     "Cc" : "كوپىيە",
     "Bcc" : "Bcc",
     "Subject" : "تېما",
@@ -801,7 +801,6 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "ئېلېكترونلۇق خەت ئادرېسى بىلەن تەمىنلەيدىغان كۆپ خىل قىممەت خاسلىقى. ھەر بىر قىممەت ئۈچۈن بىر تەخەللۇس قۇرۇلدى. Nextcloud دا بار بولغان LDAP مۇندەرىجىسىدە يوق.",
     "Save Config" : "سەپلىمىنى ساقلاڭ",
     "Unprovision & Delete Config" : "تەڭشەكنى بىكار قىلىش ۋە ئۆچۈرۈش",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "*%USERID% ۋە %EMAIL% ئىشلەتكۈچىنىڭ UID ۋە ئېلېكترونلۇق خەت ساندۇقىنىڭ ئورنىنى ئالىدۇ",
     "With the settings above, the app will create account settings in the following way:" : "يۇقىرىدىكى تەڭشەكلەر بىلەن بۇ دېتال تۆۋەندىكى ئۇسۇلدا ھېسابات تەڭشىكى قۇرىدۇ:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "تەمىنلەنگەن PKCS # 12 گۇۋاھنامىسىدە كەم دېگەندە بىر گۇۋاھنامە ۋە ئېنىق بىر شەخسىي ئاچقۇچ بولۇشى كېرەك.",
     "Failed to import the certificate. Please check the password." : "گۇۋاھنامىنى ئەكىرىش مەغلۇب بولدى. پارولنى تەكشۈرۈپ بېقىڭ.",
@@ -881,6 +880,7 @@ OC.L10N.register(
     "Show recipient details" : "تاپشۇرۋالغۇچى تەپسىلاتىنى كۆرسەت",
     "Hide recipient details" : "تاپشۇرۋالغۇچى تەپسىلاتىنى يۇشۇر",
     "Show less" : "ئازراق كۆرسەت",
-    "Show more" : "تېخىمۇ كۆپ كۆرسەت"
+    "Show more" : "تېخىمۇ كۆپ كۆرسەت",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "*%USERID% ۋە %EMAIL% ئىشلەتكۈچىنىڭ UID ۋە ئېلېكترونلۇق خەت ساندۇقىنىڭ ئورنىنى ئالىدۇ"
 },
 "nplurals=2; plural=(n != 1);");

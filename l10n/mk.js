@@ -410,7 +410,6 @@ OC.L10N.register(
     "Port" : "Порта",
     "SMTP" : "SMTP",
     "Save Config" : "Зачувај конфигурација",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% и %EMAIL% ќе биде заменето со корнички ID и e-po[ta",
     "With the settings above, the app will create account settings in the following way:" : "Со овие параметри, апликацијата ќе креира сметки:",
     "Failed to import the certificate. Please check the password." : "Неуспешно увезување на сертификат. Проверете ја лозинката.",
     "Certificate imported successfully" : "Сертификатот е успешно увезен",
@@ -464,6 +463,7 @@ OC.L10N.register(
     "Tag already exists" : "Тагот веќе постои",
     "Error loading message" : "Грешка при вчитување на пораката",
     "Show less" : "Помалку",
-    "Show more" : "Прикажи повеќе"
+    "Show more" : "Прикажи повеќе",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% и %EMAIL% ќе биде заменето со корнички ID и e-po[ta"
 },
 "nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;");

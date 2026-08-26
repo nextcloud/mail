@@ -218,9 +218,9 @@
     "From" : "От",
     "Select account" : "Выбрать аккаунт",
     "To" : "Кому",
-    "Cc/Bcc" : "Копия/СК",
     "Select recipient" : "Выберите получателя",
     "Contact or email address …" : "Контактное лицо или адрес электронной почты",
+    "Cc/Bcc" : "Копия/СК",
     "Cc" : "Коп",
     "Bcc" : "СкрКоп",
     "Subject" : "Тема",
@@ -834,7 +834,6 @@
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "Атрибут с несколькими значениями для подключённого адреса электронной почты aliases. Для каждого значения создаётся alias. Все aliase, существующие в Nextcloud, которые не находятся в каталоге LDAP, удаляются.",
     "Save Config" : "Сохранить параметры конфигурации",
     "Unprovision & Delete Config" : "Отключить и удалить файл конфигурации",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "*В поля %USERID% and %EMAIL% будут подставлены значения идентификаторов и адресов эл. почты пользователей",
     "With the settings above, the app will create account settings in the following way:" : "Для настраиваемых учётных записей будут применены следующие параметры:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Предоставленный сертификат PKCS #12 должен содержать как минимум один сертификат и ровно один закрытый ключ.",
     "Failed to import the certificate. Please check the password." : "Не удалось импортировать сертификат. Пожалуйста, проверьте пароль.",
@@ -916,6 +915,7 @@
     "Show recipient details" : "Показать сведения о получателе",
     "Hide recipient details" : "Скрыть сведения о получателе",
     "Show less" : "Показывать меньше",
-    "Show more" : "Показывать больше"
+    "Show more" : "Показывать больше",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "*В поля %USERID% and %EMAIL% будут подставлены значения идентификаторов и адресов эл. почты пользователей"
 },"pluralForm" :"nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);"
 }

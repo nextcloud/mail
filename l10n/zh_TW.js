@@ -227,9 +227,9 @@ OC.L10N.register(
     "From" : "從",
     "Select account" : "選取帳號",
     "To" : "至",
-    "Cc/Bcc" : "副本/密件副本",
     "Select recipient" : "選取收件者",
     "Contact or email address …" : "聯絡人或電子郵件地址……",
+    "Cc/Bcc" : "副本/密件副本",
     "Messages with no 'To' recipients may be rejected by some mail providers." : "部分郵件服務供應商可能會拒絕接收未填寫「收件人」的郵件。",
     "Cc" : "副本",
     "Bcc" : "密件副本",
@@ -862,7 +862,6 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "用於設定電子郵件別名的多重值屬性。為每個值建立一個別名。刪除存在於 Nextcloud 但不在 LDAP 目錄中的別名。",
     "Save Config" : "儲存設定",
     "Unprovision & Delete Config" : "取消設定與刪除設定",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% 與 %EMAIL% 將以使用者的 UID 與電子郵件取代",
     "With the settings above, the app will create account settings in the following way:" : "使用上述設定，應用程式將會以下列方式建立帳號：",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "提供的 PKCS #12 憑證必須包含至少一個憑證與一個私鑰。",
     "Failed to import the certificate. Please check the password." : "匯入憑證失敗。請檢查密碼。",
@@ -954,6 +953,7 @@ OC.L10N.register(
     "Show recipient details" : "顯示收件者詳細資訊",
     "Hide recipient details" : "隱藏收件者詳細資訊",
     "Show less" : "顯示較少",
-    "Show more" : "顯示更多"
+    "Show more" : "顯示更多",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% 與 %EMAIL% 將以使用者的 UID 與電子郵件取代"
 },
 "nplurals=1; plural=0;");

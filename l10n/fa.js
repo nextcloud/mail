@@ -220,9 +220,9 @@ OC.L10N.register(
     "From" : "از",
     "Select account" : "انتخاب حساب",
     "To" : "به",
-    "Cc/Bcc" : "رونوشت/رونوشت پنهان",
     "Select recipient" : "انتخاب دریافت‌کننده",
     "Contact or email address …" : "مخاطب یا نشانی ایمیل …",
+    "Cc/Bcc" : "رونوشت/رونوشت پنهان",
     "Cc" : "رونوشت",
     "Bcc" : "رونوشت پنهان",
     "Subject" : "موضوع",
@@ -834,7 +834,6 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "یک ویژگی چند مقداری برای تأمین نام‌های مستعار ایمیل. برای هر مقدار یک نام مستعار ایجاد می‌شود. نام‌های مستعار موجود در نکست‌کلود که در دایرکتوری LDAP نیستند حذف می‌شوند.",
     "Save Config" : "ذخیره پیکربندی",
     "Unprovision & Delete Config" : "لغو تأمین و حذف پیکربندی",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% و %EMAIL% با شناسه کاربری و ایمیل کاربر جایگزین می‌شوند",
     "With the settings above, the app will create account settings in the following way:" : "با تنظیمات بالا، برنامه تنظیمات حساب را به روش زیر ایجاد می‌کند:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "گواهی PKCS #12 ارائه شده باید حداقل شامل یک گواهی و دقیقاً یک کلید خصوصی باشد.",
     "Failed to import the certificate. Please check the password." : "وارد کردن گواهی ناموفق بود. لطفاً رمز عبور را بررسی کنید.",
@@ -916,6 +915,7 @@ OC.L10N.register(
     "Show recipient details" : "نمایش جزئیات گیرنده",
     "Hide recipient details" : "مخفی کردن جزئیات گیرنده",
     "Show less" : "نمایش کمتر",
-    "Show more" : "نمایش بیشتر"
+    "Show more" : "نمایش بیشتر",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% و %EMAIL% با شناسه کاربری و ایمیل کاربر جایگزین می‌شوند"
 },
 "nplurals=2; plural=(n > 1);");

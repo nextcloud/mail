@@ -212,9 +212,9 @@ OC.L10N.register(
     "From" : "Dari",
     "Select account" : "Pilih akun",
     "To" : "Kepada",
-    "Cc/Bcc" : "Cc/Bcc",
     "Select recipient" : "Pilih penerima",
     "Contact or email address …" : "Kontak atau alamat email …",
+    "Cc/Bcc" : "Cc/Bcc",
     "Cc" : "Cc",
     "Bcc" : "Bcc",
     "Subject" : "Subjek",
@@ -804,7 +804,6 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "Atribut multi-nilai untuk memprovisikan alias email. Untuk setiap nilai, sebuah alias akan dibuat. Alias yang ada di Nextcloud tetapi tidak ada di direktori LDAP akan dihapus.",
     "Save Config" : "Simpan Konfigurasi",
     "Unprovision & Delete Config" : "Batalkan provisi & Hapus Konfigurasi",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% dan %EMAIL% akan diganti dengan UID dan email pengguna",
     "With the settings above, the app will create account settings in the following way:" : "Dengan pengaturan di atas, aplikasi akan membuat pengaturan akun dengan cara berikut:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Sertifikat PKCS #12 yang diberikan harus berisi setidaknya satu sertifikat dan tepat satu kunci privat.",
     "Failed to import the certificate. Please check the password." : "Gagal mengimpor sertifikat. Silakan periksa kata sandinya.",
@@ -884,6 +883,7 @@ OC.L10N.register(
     "Show recipient details" : "Tampilkan detail penerima",
     "Hide recipient details" : "Sembunyikan detail penerima",
     "Show less" : "Tampilkan lebih sedikit",
-    "Show more" : "Tampilkan lebih banyak"
+    "Show more" : "Tampilkan lebih banyak",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% dan %EMAIL% akan diganti dengan UID dan email pengguna"
 },
 "nplurals=1; plural=0;");

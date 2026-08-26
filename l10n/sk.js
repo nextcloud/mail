@@ -213,9 +213,9 @@ OC.L10N.register(
     "From" : "Od",
     "Select account" : "Vybrať účet",
     "To" : "Pre",
-    "Cc/Bcc" : "Kópia/Skrytá kópia",
     "Select recipient" : "Vyberte príjemcu",
     "Contact or email address …" : "Kontaktná alebo emailová adresa …",
+    "Cc/Bcc" : "Kópia/Skrytá kópia",
     "Cc" : "Kópia",
     "Bcc" : "Skrytá kópia",
     "Subject" : "Predmet",
@@ -810,7 +810,6 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "Atribút s viacerými hodnotami na poskytovanie e-mailových aliasov. Pre každú hodnotu je vytvorený alias. Aliasy existujúce v Nextcloud, ktoré nie sú v adresári LDAP, sa odstránia. Atribút s viacerými hodnotami na poskytovanie e-mailových aliasov. Pre každú hodnotu je vytvorený alias. Aliasy existujúce v Nextcloud, ktoré nie sú v adresári LDAP, sa odstránia.",
     "Save Config" : "Uložiť Konfiguráciu",
     "Unprovision & Delete Config" : "Zrušiť sprevádzkovanie služby a zmazať nastavenia.",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "*% USERID% a MAIL% budú nahradené UID a e-mailom užívateľa",
     "With the settings above, the app will create account settings in the following way:" : "Pri vyššie uvedených nastaveniach aplikácia vytvorí nastavenia účtu nasledujúcim spôsobom:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Poskytnutý certifikát PKCS #12 musí obsahovať aspoň jeden certifikát a presne jeden súkromný kľúč.",
     "Failed to import the certificate. Please check the password." : "Zlyhalo importovanie certifikátu. Skontrolujte prosím heslo.",
@@ -892,6 +891,7 @@ OC.L10N.register(
     "Show recipient details" : "Zobraziť podprobnosti o prijímateľovi",
     "Hide recipient details" : "Skryť podrobnosti o prijímateľovy",
     "Show less" : "Zobraziť menej",
-    "Show more" : "Zobraziť viac"
+    "Show more" : "Zobraziť viac",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "*% USERID% a MAIL% budú nahradené UID a e-mailom užívateľa"
 },
 "nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);");

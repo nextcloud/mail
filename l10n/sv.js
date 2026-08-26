@@ -224,9 +224,9 @@ OC.L10N.register(
     "From" : "Från",
     "Select account" : "Välj konto",
     "To" : "Till",
-    "Cc/Bcc" : "Cc/Bcc",
     "Select recipient" : "Välj mottagare",
     "Contact or email address …" : "Kontakt eller e-postadress …",
+    "Cc/Bcc" : "Cc/Bcc",
     "Cc" : "Cc",
     "Bcc" : "Bcc",
     "Subject" : "Ämne",
@@ -852,7 +852,6 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "Ett flervärdesattribut för provisionering av e-postalias. Ett alias skapas för varje värde. Alias som finns i Nextcloud men inte i LDAP-katalogen tas bort.",
     "Save Config" : "Spara inställningar",
     "Unprovision & Delete Config" : "Ta bort provisionering och konfiguration",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% och %EMAIL% ersätts med användarens UID och e-postadress",
     "With the settings above, the app will create account settings in the following way:" : "Med inställningarna ovan skapar appen kontoinställningar på följande sätt:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Det angivna PKCS #12-certifikatet måste innehålla minst ett certifikat och exakt en privat nyckel.",
     "Failed to import the certificate. Please check the password." : "Det gick inte att importera certifikatet. Kontrollera lösenordet.",
@@ -934,6 +933,7 @@ OC.L10N.register(
     "Show recipient details" : "Visa mottagarens detaljer",
     "Hide recipient details" : "Dölj mottagarens detaljer",
     "Show less" : "Visa mindre",
-    "Show more" : "Visa mer"
+    "Show more" : "Visa mer",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% och %EMAIL% ersätts med användarens UID och e-postadress"
 },
 "nplurals=2; plural=(n != 1);");

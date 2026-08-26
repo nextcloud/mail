@@ -573,7 +573,6 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "Egy többértékű attribútum az e-mail-cím álneveinek beállításhoz. Az összes értékhez létrejön egy álnév. A Nextcloudban létező, de az LDAP címtárban nem szereplő álnevek törlésre kerülnek.",
     "Save Config" : "Konfiguráció mentése",
     "Unprovision & Delete Config" : "Felügyelet megszüntetése és konfiguráció törlése",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* a %USERID% és az %EMAIL% le lesz cserélve a felhasználó UID-jára és az e-mail-címére",
     "With the settings above, the app will create account settings in the following way:" : "A fenti beállításokkal az alkalmazás a következő módon hozza létre a fiókbeállításokat:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "A megadott PKCS #12 tanúsítványnak legalább egy tanúsítványt és pontosan egy titkos kulcsot kell tartalmaznia.",
     "Failed to import the certificate. Please check the password." : "A tanúsítvány importálása nem sikerült. Ellenőrizze a jelszót.",
@@ -634,6 +633,7 @@ OC.L10N.register(
     "Tag already exists" : "A címke már létezik",
     "Error loading message" : "Hiba történt az üzenet betöltése közben",
     "Show less" : "Kevesebb megjelenítése",
-    "Show more" : "Több megjelenítése"
+    "Show more" : "Több megjelenítése",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* a %USERID% és az %EMAIL% le lesz cserélve a felhasználó UID-jára és az e-mail-címére"
 },
 "nplurals=2; plural=(n != 1);");

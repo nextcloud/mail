@@ -501,7 +501,6 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "Атрибут с няколко стойности за предоставяне на имейл псевдоними. За всяка стойност се създава псевдоним. Псевдонимите, съществуващи в Nextcloud, които не са в LDAP директорията, се изтриват.",
     "Save Config" : "Записване на конфигурацията",
     "Unprovision & Delete Config" : "Отмяна на осигурявне и изтриване на конфигурация",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% и %EMAIL% ще бъдат заменени с UID и имейл на потребителя",
     "With the settings above, the app will create account settings in the following way:" : "С настройките по-горе приложението ще създаде настройки на профил по следния начин:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Предоставеният сертификат PKCS #12 трябва да съдържа поне един сертификат и само един частен ключ.",
     "Failed to import the certificate. Please check the password." : "Неуспешно импортиране на сертификата. Моля, проверете паролата.",
@@ -556,6 +555,7 @@ OC.L10N.register(
     "Tag already exists" : "Етикетът вече съществува",
     "Error loading message" : "Грешка при зареждане съобщението",
     "Show less" : "Покажи по-малко",
-    "Show more" : "Покажи повече"
+    "Show more" : "Покажи повече",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% и %EMAIL% ще бъдат заменени с UID и имейл на потребителя"
 },
 "nplurals=2; plural=(n != 1);");

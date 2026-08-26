@@ -213,9 +213,9 @@ OC.L10N.register(
     "From" : "Od",
     "Select account" : "Odaberi račun",
     "To" : "Do",
-    "Cc/Bcc" : "Cc/Bcc",
     "Select recipient" : "Odaberite primatelja",
     "Contact or email address …" : "Kontakt ili adresa e-pošte …",
+    "Cc/Bcc" : "Cc/Bcc",
     "Cc" : "Cc",
     "Bcc" : "Bcc",
     "Subject" : "Predmet",
@@ -809,7 +809,6 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "Viševrijednosni atribut za dodjeljivanje pseudonima e-pošte. Za svaku se vrijednost stvara pseudonim. Brišu se pseudonimi koji postoje u Nextcloudu, ali koji nisu u LDAP direktoriju.",
     "Save Config" : "Spremi konfiguraciju",
     "Unprovision & Delete Config" : "Ukini dodjelu i izbriši konfiguraciju",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% i %EMAIL% bit će zamijenjeni korisničkim UID-om i e-poštom",
     "With the settings above, the app will create account settings in the following way:" : "Aplikacija će primijeniti navedene postavke i stvoriti račun na sljedeći način:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Dostavljeni PKCS #12 certifikat mora sadržavati barem jedan certifikat i točnojedan privatni ključ.",
     "Failed to import the certificate. Please check the password." : "Nije uspjelo uvesti certifikat. Provjerite lozinku.",
@@ -891,6 +890,7 @@ OC.L10N.register(
     "Show recipient details" : "Prikaži detalje primatelja",
     "Hide recipient details" : "Sakrij detalje primatelja",
     "Show less" : "Prikaži manje",
-    "Show more" : "Prikaži više"
+    "Show more" : "Prikaži više",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% i %EMAIL% bit će zamijenjeni korisničkim UID-om i e-poštom"
 },
 "nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;");
