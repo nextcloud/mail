@@ -22,6 +22,7 @@ jobs:
       pull-requests: read
     outputs:
       backend: ${{ steps.changes.outputs.backend }}
+      frontend: ${{ steps.changes.outputs.frontend }}
     steps:
       - uses: dorny/paths-filter@7b450fff21473bca461d4b92ce414b9d0420d706 # v4.0.2
         id: changes
@@ -38,6 +39,16 @@ jobs:
               - 'vendor-bin/**'
               - 'composer.json'
               - 'composer.lock'
+            frontend:
+              - '.github/workflows/**'
+              - 'src/**'
+              - 'package.json'
+              - 'package-lock.json'
+              - 'tsconfig.json'
+              - 'vitest.config.js'
+              - 'babel.config.js'
+              - 'webpack.*.js'
+              - 'playwright.config.js'
 
   unit-tests:
     runs-on: ubuntu-latest
@@ -262,6 +273,8 @@ jobs:
               verbose: true
   frontend-unit-test:
       runs-on: ubuntu-24.04
+      needs: changes
+      if: needs.changes.outputs.frontend != 'false'
       name: Front-end unit tests
       steps:
           - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
