@@ -860,6 +860,7 @@
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "用於設定電子郵件別名的多重值屬性。為每個值建立一個別名。刪除存在於 Nextcloud 但不在 LDAP 目錄中的別名。",
     "Save Config" : "儲存設定",
     "Unprovision & Delete Config" : "取消設定與刪除設定",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email. {ldapPlaceholder} will be replaced with the value of that LDAP attribute" : "* %USERID% 與 %EMAIL% 將會被使用者的 UID 與電子郵件取代。{ldapPlaceholder} 將會以 LDAP 屬性的值取代",
     "With the settings above, the app will create account settings in the following way:" : "使用上述設定，應用程式將會以下列方式建立帳號：",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "提供的 PKCS #12 憑證必須包含至少一個憑證與一個私鑰。",
     "Failed to import the certificate. Please check the password." : "匯入憑證失敗。請檢查密碼。",

@@ -860,6 +860,7 @@
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "Um atributo de vários valores para provisionar aliases de e-mail. Para cada valor, um alias é criado. Os aliases existentes no Nextcloud que não estão no diretório LDAP são excluídos.",
     "Save Config" : "Salvar Configuração",
     "Unprovision & Delete Config" : "Desprovisionar & Excluir Configuração",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email. {ldapPlaceholder} will be replaced with the value of that LDAP attribute" : "* %USERID% e %EMAIL% serão substituídos pelo UID e pelo e-mail do usuário. {ldapPlaceholder} será substituído pelo valor desse atributo LDAP",
     "With the settings above, the app will create account settings in the following way:" : "Com as configurações acima, o aplicativo criará configurações da conta da seguinte maneira:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "O certificado PKCS #12 fornecido deve conter pelo menos um certificado e exatamente uma chave privada.",
     "Failed to import the certificate. Please check the password." : "Falha ao importar o certificado. Por favor, verifique a senha.",
