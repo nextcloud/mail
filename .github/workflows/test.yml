@@ -6,13 +6,43 @@ on: pull_request
 permissions:
   contents: read
 
+concurrency:
+  group: test-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
 env:
   E2E_NODE_VERSION: "20"
   STALWART_PWD: "secretpassword"
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest-low
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      backend: ${{ steps.changes.outputs.backend }}
+    steps:
+      - uses: dorny/paths-filter@7b450fff21473bca461d4b92ce414b9d0420d706 # v4.0.2
+        id: changes
+        continue-on-error: true
+        with:
+          filters: |
+            backend:
+              - '.github/workflows/**'
+              - 'appinfo/**'
+              - 'lib/**'
+              - 'templates/**'
+              - 'tests/**'
+              - 'vendor/**'
+              - 'vendor-bin/**'
+              - 'composer.json'
+              - 'composer.lock'
+
   unit-tests:
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.backend != 'false'
     strategy:
       matrix:
         php-versions: ['8.5']
@@ -66,6 +96,8 @@ jobs:
 
   integration-tests:
       runs-on: ubuntu-latest
+      needs: changes
+      if: needs.changes.outputs.backend != 'false'
       strategy:
           matrix:
               php-versions: ['8.4']
