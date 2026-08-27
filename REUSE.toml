@@ -90,6 +90,12 @@ SPDX-FileCopyrightText = "2021-2024 Nextcloud GmbH and Nextcloud contributors"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
 
 [[annotations]]
+path = ["src/tests/component/snapshots/**", "src/tests/component/gallery/assets/server/dist/icons.css"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
 path = ["src/tests/data/.editorconfig", "tests/data/mime-html.txt", "tests/data/mime-html-greek.txt", "tests/data/mime-html-image.txt", "tests/data/mime-text.txt", "tests/data/test.txt"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2022 Nextcloud GmbH and Nextcloud contributors"
