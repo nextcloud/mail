@@ -862,6 +862,7 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "Ein Attribut mit mehreren Werten, um E-Mail-Aliasse bereitzustellen. Für jeden Wert wird ein Alias erstellt. Aliasse, die in Nextcloud, aber nicht im LDAP-Verzeichnis existieren, werden gelöscht.",
     "Save Config" : "Einstellungen speichern",
     "Unprovision & Delete Config" : "Bereitstellung aufheben und Konfiguration löschen",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email. {ldapPlaceholder} will be replaced with the value of that LDAP attribute" : "* %USERID% und %EMAIL% werden durch die Benutzer-ID und die E-Mail-Adresse des Benutzers ersetzt. {ldapPlaceholder} wird durch den Wert des entsprechenden LDAP-Attributs ersetzt.",
     "With the settings above, the app will create account settings in the following way:" : "Mit den obigen Einstellungen erstellt die App die Kontoeinstellungen wie folgt:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Das bereitgestellte PKCS #12-Zertifikat muss mindestens ein Zertifikat und genau einen privaten Schlüssel enthalten.",
     "Failed to import the certificate. Please check the password." : "Das Zertifikat konnte nicht importiert werden. Bitte überprüfen Sie das Passwort.",

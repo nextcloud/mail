@@ -862,6 +862,7 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "E-posta takma adları için çok değerli bir öznitelik. Her değer için bir takma ad oluşturulur. Nextcloud üzerinde bulunup LDAP dizininde bulunmayan takma adlar silinir.",
     "Save Config" : "Yapılandırmayı kaydet",
     "Unprovision & Delete Config" : "Hazırlığı kaldırıp yapılandırmayı sil",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email. {ldapPlaceholder} will be replaced with the value of that LDAP attribute" : "* %USERID% ve %EMAIL% kullanıcının UID ve e-posta değeri ile değiştirilir. {ldapPlaceholder}, bu LDAP özniteliğinin değeri ile değiştirilir",
     "With the settings above, the app will create account settings in the following way:" : "Uygulama, yukarıdaki ayarlara göre, aşağıdaki şekilde hesap ayarları oluşturacak:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Belirtilen PKCS #12 sertifikasında, en az bir sertifika ve yalnızca bir kişisel anahtar bulunmalıdır.",
     "Failed to import the certificate. Please check the password." : "Sertifika içe aktarılamadı. Lütfen parolayı denetleyin.",
