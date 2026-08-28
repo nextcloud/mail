@@ -37,8 +37,14 @@ jobs:
               - 'tests/**'
               - 'vendor/**'
               - 'vendor-bin/**'
+              - 'composer/**'
               - 'composer.json'
               - 'composer.lock'
+              - '.patches/**'
+              - 'patches.json'
+              - 'patches.lock.json'
+              - 'resources/**'
+              - 'img/**'
             frontend:
               - '.github/workflows/**'
               - 'src/**'
@@ -49,6 +55,8 @@ jobs:
               - 'babel.config.js'
               - 'webpack.*.js'
               - 'playwright.config.js'
+              - 'css/**'
+              - 'img/**'
 
   unit-tests:
     runs-on: ubuntu-latest
