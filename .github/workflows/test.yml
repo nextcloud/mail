@@ -37,8 +37,14 @@ jobs:
               - 'tests/**'
               - 'vendor/**'
               - 'vendor-bin/**'
+              - 'composer/**'
               - 'composer.json'
               - 'composer.lock'
+              - '.patches/**'
+              - 'patches.json'
+              - 'patches.lock.json'
+              - 'resources/**'
+              - 'img/**'
             frontend:
               - '.github/workflows/**'
               - 'src/**'
@@ -49,6 +55,8 @@ jobs:
               - 'babel.config.js'
               - 'webpack.*.js'
               - 'playwright.config.js'
+              - 'css/**'
+              - 'img/**'
 
   unit-tests:
     runs-on: ubuntu-latest
@@ -303,6 +311,8 @@ jobs:
 
   matrix:
     runs-on: ubuntu-latest-low
+    needs: changes
+    if: needs.changes.outputs.backend != 'false' || needs.changes.outputs.frontend != 'false'
     outputs:
       php-min: ${{ steps.versions.outputs.php-min }}
       branches-min: ${{ steps.versions.outputs.branches-min }}
@@ -316,7 +326,8 @@ jobs:
   frontend-e2e-tests:
     runs-on: ubuntu-latest
     name: Front-end E2E tests
-    needs: matrix
+    needs: [changes, matrix]
+    if: needs.changes.outputs.backend != 'false' || needs.changes.outputs.frontend != 'false'
     steps:
       - name: Set up Nextcloud env
         uses: nextcloud/setup-server-action@34b73d5b0e3633f83a52227d00cc2a6c41d01d9a # v1.0.0
