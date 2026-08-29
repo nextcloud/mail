@@ -31,11 +31,10 @@
 					:href="routerLinkHref || href"
 					:target="target || (href === '#' ? undefined : '_blank')"
 					:rel="href === '#' ? undefined : 'noopener noreferrer'"
-					@focus="showActions"
+					@focus="handleMouseover"
 					@focusout="handleBlur"
 					@click="onClick($event, navigate, routerLinkHref)"
-					@contextmenu.prevent
-					@keydown.esc="hideActions">
+					@contextmenu.prevent>
 					<!-- @slot This slot is used for the NcAvatar or icon, the content of this slot must not be interactive -->
 					<slot name="icon" />
 
@@ -73,7 +72,6 @@
 								<!-- Counter and indicator -->
 								<div
 									v-if="counterNumber || hasIndicator"
-									:class="{ 'extra--hidden': !showAdditionalElements }"
 									class="list-item-content__inner__details__extra">
 									<NcCounterBubble
 										v-if="counterNumber"
@@ -93,7 +91,7 @@
 					</div>
 				</a>
 
-				<div class="list-item__hoverable">
+				<div class="list-item__hoverable" v-show="displayActionsOverlay">
 					<EnvelopeSingleClickActions
 						:is-read="isRead"
 						:is-important="isImportant"
@@ -103,7 +101,7 @@
 
 					<!-- Actions -->
 					<div
-						v-show="forceDisplayActions || displayActionsOnHoverFocus"
+						v-show="hasActions"
 						class="list-item__actions"
 						@focusout="handleBlur">
 						<NcActions
@@ -257,14 +255,6 @@ export default {
 		},
 
 		/**
-		 * To be used only when the elements in the actions menu are very important
-		 */
-		forceDisplayActions: {
-			type: Boolean,
-			default: false,
-		},
-
-		/**
 		 * Show the list component layout
 		 */
 		oneLine: {
@@ -293,7 +283,6 @@ export default {
 			hovered: false,
 			hasActions: false,
 			hasSubname: false,
-			displayActionsOnHoverFocus: false,
 			menuOpen: false,
 			hasIndicator: false,
 			hasDetails: false,
@@ -301,27 +290,17 @@ export default {
 	},
 
 	computed: {
-		showAdditionalElements() {
-			return !this.displayActionsOnHoverFocus || this.forceDisplayActions
-		},
-
 		showDetails() {
 			return (this.details !== '' || this.hasDetails)
-				&& (!this.displayActionsOnHoverFocus || this.forceDisplayActions)
+				&& !this.hasActions
 		},
 
 		computedActionsAriaLabel() {
 			return this.actionsAriaLabel || t('Actions for item with name "{name}"', { name: this.name })
 		},
-	},
 
-	watch: {
-
-		menuOpen(newValue) {
-			// A click outside both the menu and the root element hides the actions again
-			if (!newValue && !this.hovered) {
-				this.displayActionsOnHoverFocus = false
-			}
+		displayActionsOverlay() {
+			return this.menuOpen || this.hovered
 		},
 	},
 
@@ -355,50 +334,31 @@ export default {
 			}
 		},
 
-		showActions() {
-			if (this.hasActions) {
-				this.displayActionsOnHoverFocus = true
-			}
-			this.hovered = false
-		},
-
-		hideActions() {
-			this.displayActionsOnHoverFocus = false
-		},
-
-		/**
-		 * @param {FocusEvent} event UI event
-		 */
-		handleBlur(event) {
-			// do not hide if open
-			if (this.menuOpen) {
-				return
-			}
-			// do not hide if focus is kept within
-			if (this.$refs['list-item'].contains(event.relatedTarget)) {
-				return
-			}
-			this.hideActions()
-		},
-
 		/**
 		 * Hide the actions on mouseleave unless the menu is open
 		 */
 		handleMouseleave() {
-			if (!this.menuOpen) {
-				this.displayActionsOnHoverFocus = false
-			}
 			this.hovered = false
 		},
 
 		handleMouseover() {
-			this.showActions()
 			this.hovered = true
 		},
 
+		handleBlur(e) {
+			// do not hide if focus is kept within
+			if (this.$refs['list-item'].contains(e.relatedTarget)) {
+				return
+			}
+
+			this.hovered = false
+		},
+
 		handleActionsUpdateOpen(e) {
-			this.menuOpen = e
-			this.$emit('update:menuOpen', e)
+			setTimeout(() => {
+				this.menuOpen = e
+				this.$emit('update:menuOpen', e)
+			})
 		},
 
 		// Check if subname and actions slots are populated
@@ -454,10 +414,6 @@ export default {
 		.list-item-details__details {
 			color: var(--color-primary-element-text);
 		}
-
-		.list-item-content__quick-actions :deep(svg) {
-			fill: var(--color-primary-element-text) !important;
-		}
 	}
 	.list-item-content__name,
 	.list-item-content__subname,
@@ -508,10 +464,6 @@ export default {
 	&:has(&__anchor:focus-visible) {
 		outline: 2px solid var(--color-main-text);
 		box-shadow: 0 0 0 4px var(--color-main-background);
-	}
-
-	&__hoverable {
-		visibility: hidden;
 	}
 
 	.list-item-content {
@@ -702,20 +654,17 @@ export default {
 
 }
 
-.list-item:hover {
-	.list-item__hoverable {
-		visibility: visible;
-		position: absolute;
-		display: flex;
-		background: var(--color-main-background);
-		border-radius: var(--border-radius-element);
-		box-shadow: 0 0 4px 0 var(--color-box-shadow);
-		height: var(--default-clickable-area);
-		inset-inline-end: var(--default-grid-baseline);
+.list-item__hoverable {
+	position: absolute;
+	display: flex;
+	background: var(--color-main-background);
+	border-radius: var(--border-radius-element);
+	box-shadow: 0 0 4px 0 var(--color-box-shadow);
+	height: var(--default-clickable-area);
+	inset-inline-end: var(--default-grid-baseline);
 
-		:deep(svg) {
-			fill: var(--color-main-text) !important; // needed to not inherit active styling
-		}
+	:deep(svg) {
+		fill: var(--color-main-text) !important; // needed to not inherit active styling
 	}
 }
 
@@ -731,9 +680,5 @@ export default {
 :deep(.app-content-list-item-icon), :deep(.avatardiv), :deep(.avatardiv__initials-wrapper) {
 	height: calc(var(--header-menu-item-height) - 4px);
 	width: calc(var(--header-menu-item-height) - 4px);
-}
-
-.extra--hidden {
-	visibility: hidden;
 }
 </style>
