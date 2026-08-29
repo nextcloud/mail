@@ -18,7 +18,9 @@ function tryParse(str) {
 	}
 
 	try {
-		return addressParser.parse(str).map((addr) => ({
+		return addressParser.parse(str).filter((addr) => {
+			return isValidEmail(addr.address)
+		}).map((addr) => ({
 			label: addr.name() || addr.address,
 			email: addr.address,
 		}))
@@ -129,4 +131,9 @@ export function parseEmailList(str) {
 		}
 	}
 	return list
+}
+
+export function isValidEmail(email) {
+	const regExpEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(localhost|((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})))$/
+	return regExpEmail.test(email)
 }
