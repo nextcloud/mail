@@ -139,7 +139,8 @@ class MailboxSynchronizationTest extends TestCase {
 		$syncJson = $jsonResponse->getData()->jsonSerialize();
 
 		self::assertCount(1, $syncJson['newMessages']);
-		self::assertEquals($newUid, $syncJson['newMessages'][0]->getUid());
+		// newMessages is grouped by thread (Message[][]); the new message is its own thread
+		self::assertEquals($newUid, $syncJson['newMessages'][0][0]->getUid());
 		self::assertCount(0, $syncJson['changedMessages']);
 		self::assertCount(0, $syncJson['vanishedMessages']);
 	}

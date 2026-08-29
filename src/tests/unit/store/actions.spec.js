@@ -165,34 +165,28 @@ describe('Vuex store actions', () => {
 			},
 		})
 
-		store.addEnvelopesMutation = vi.fn()
+		store.addThreadsMutation = vi.fn()
 
-		MessageService.fetchEnvelopes.mockReturnValueOnce(Promise.resolve([{
+		MessageService.fetchEnvelopes.mockReturnValueOnce(Promise.resolve([[{
 			databaseId: 123,
 			mailboxId: 21,
 			uid: 321,
 			subject: 'msg1',
-		}]))
+			threadRootId: 'root-1',
+		}]]))
 
-		const envelopes = await store.fetchEnvelopes({
+		await store.fetchEnvelopes({
 			mailboxId: UNIFIED_INBOX_ID,
 		})
 
-		expect(envelopes).toEqual([
-			{
+		expect(store.addThreadsMutation).toBeCalledWith({
+			threads: [[{
 				databaseId: 123,
 				mailboxId: 21,
 				uid: 321,
 				subject: 'msg1',
-			},
-		])
-		expect(store.addEnvelopesMutation).toBeCalledWith({
-			envelopes: [{
-				databaseId: 123,
-				mailboxId: 21,
-				uid: 321,
-				subject: 'msg1',
-			}],
+				threadRootId: 'root-1',
+			}]],
 			query: undefined,
 		})
 	})
@@ -232,13 +226,13 @@ describe('Vuex store actions', () => {
 			addToUnifiedMailboxes: true,
 		})
 
-		// Mock fetching next pages
+		// Mock fetching next pages (threaded view returns one group per thread)
 		MessageService.fetchEnvelopes.mockImplementation(async (accountId, mailboxId) => {
 			if (accountId !== 13 || mailboxId !== 11) {
 				return []
 			}
 
-			return page1.map(mockEnvelope(11))
+			return page1.map(mockEnvelope(11)).map((e) => [e])
 		})
 
 		await store.fetchNextEnvelopePage({
@@ -274,6 +268,7 @@ describe('Vuex store actions', () => {
 		}
 
 		store.preferences['sort-order'] = 'newest'
+		store.preferences['layout-message-view'] = 'threaded'
 
 		store.addAccountMutation(account13)
 		store.addMailboxMutation({
@@ -397,7 +392,7 @@ describe('Vuex store actions', () => {
 			}
 
 			expect(sortOrder).toBe('newest')
-			return page2.map(mockEnvelope(11)).filter((e) => e.dateInt < cursor).slice(0, limit)
+			return page2.map(mockEnvelope(11)).filter((e) => e.dateInt < cursor).slice(0, limit).map((e) => [e])
 		})
 
 		await store.fetchNextEnvelopePage({
