@@ -270,9 +270,13 @@ export default {
 							showError(t('mail', 'Failed to update step in quick action'))
 						}
 					} else {
-						const createdStep = await createActionStep(action.name, action.order, quickAction.id, action?.tagId, action?.mailboxId)
-						if (createdStep) {
-							this.actions[index] = createdStep
+						try {
+							this.actions[index] = await createActionStep(action.name, action.order, quickAction.id, action?.tagId, action?.mailboxId)
+						} catch (error) {
+							logger.error('Could not add step to quick action', {
+								error,
+							})
+							showError(t('mail', 'Failed to add step to quick action'))
 						}
 					}
 					this.localAction = quickAction
