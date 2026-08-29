@@ -153,7 +153,7 @@ OC.L10N.register(
     "Vertical split" : "Dikey bölme",
     "Horizontal split" : "Yatay bölme",
     "List" : "Liste",
-    "Use compact mode" : "Sıkışık kipi kullan",
+    "Use compact mode" : "Dar kipi kullan",
     "Sorting" : "Sıralama",
     "Newest first" : "Yeniden eskiye",
     "Oldest first" : "Eskiden yeniye",
