@@ -4,7 +4,10 @@
 -->
 
 <template>
-	<NcModal class="confirm-modal" @close="cancel">
+	<NcModal
+		class="confirm-modal"
+		:close-on-click-outside="true"
+		@close="cancel">
 		<div class="confirm-modal">
 			<h2>{{ title }}</h2>
 			<slot />

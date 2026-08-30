@@ -6,6 +6,7 @@
 	<NcModal
 		size="large"
 		:name="t('mail', 'Create event')"
+		:close-on-click-outside="true"
 		@close="onClose">
 		<div class="modal-content">
 			<h2>{{ t('mail', 'Create event') }}</h2>

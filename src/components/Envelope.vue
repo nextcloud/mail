@@ -16,7 +16,6 @@
 		class="list-item-style envelope"
 		:class="{ seen: data.flags.seen, draft, selected: selected }"
 		:to="link"
-		:exact="true"
 		:data-envelope-id="data.databaseId"
 		:name="addresses"
 		:details="formatted()"
@@ -71,7 +70,7 @@
 							class="compact-checkbox"
 							:class="{ 'compact-checkbox--active': selected }"
 							:model-value="selected"
-							@update:checked="toggleSelected" />
+							@update:model-value="toggleSelected" />
 					</div>
 				</template>
 

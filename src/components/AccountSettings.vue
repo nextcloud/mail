@@ -76,7 +76,7 @@
 				id="auto-classification-enabled"
 				:model-value="account.classificationEnabled"
 				:disabled="loadingClassificationToggle"
-				@update:checked="onToggleClassification">
+				@update:model-value="onToggleClassification">
 				{{ t('mail', 'Enable mark as important classification') }}
 			</NcCheckboxRadioSwitch>
 		</NcAppSettingsSection>

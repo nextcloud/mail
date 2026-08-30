@@ -71,7 +71,7 @@
 					v-for="(reply, index) in smartReplies"
 					:key="index"
 					class="reply-buttons__suggested__button"
-					type="secondary"
+					variant="secondary"
 					@click="onReply(reply)">
 					{{ reply }}
 				</NcAssistantButton>

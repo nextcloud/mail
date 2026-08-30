@@ -3,7 +3,9 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<NcModal @close="onClose">
+	<NcModal
+		:close-on-click-outside="true"
+		@close="onClose">
 		<div class="modal-content">
 			<h2>{{ t('mail', 'Create task') }}</h2>
 			<div class="taskTitle">

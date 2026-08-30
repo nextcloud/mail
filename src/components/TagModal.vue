@@ -14,6 +14,7 @@
 		v-else
 		size="large"
 		label-id="tag-modal-heading"
+		:close-on-click-outside="true"
 		@close="onClose">
 		<div class="modal-content">
 			<h2 id="tag-modal-heading" class="tag-title">

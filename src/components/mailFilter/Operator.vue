@@ -12,7 +12,7 @@
 			:options="availableOperators"
 			:reduce="operator => operator.value"
 			:clearable="false"
-			@input="updateOperator($event)" />
+			@update:model-value="updateOperator($event)" />
 		<NcPopover class="operator__popover" :no-focus-trap="true" popup-role="dialog">
 			<template #trigger>
 				<NcButton variant="tertiary-no-background" :aria-label="t('mail', 'Help')">

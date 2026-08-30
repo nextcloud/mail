@@ -10,7 +10,7 @@
 		:label-outside="true"
 		:options="flags"
 		:clearable="false"
-		@input="updateAction({ flag: $event })">
+		@update:model-value="updateAction({ flag: $event })">
 		<template #selected-option="{ label }">
 			{{ getLabelForFlag(label) }}
 		</template>

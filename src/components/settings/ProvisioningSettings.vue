@@ -328,8 +328,8 @@
 						<ButtonVue
 							class="config-button save-config"
 							:aria-label="t('mail', 'Save Config')"
-							type="secondary"
-							native-type="submit"
+							variant="secondary"
+							type="submit"
 							:disabled="loading">
 							<template #icon>
 								<IconUpload :size="20" />
@@ -338,7 +338,7 @@
 						</ButtonVue>
 						<ButtonVue
 							v-if="deleteButton"
-							type="secondary"
+							variant="secondary"
 							class="config-button"
 							:aria-label="t('mail', 'Unprovision & Delete Config')"
 							:disabled="loading"

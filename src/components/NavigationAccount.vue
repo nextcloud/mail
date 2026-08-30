@@ -51,7 +51,7 @@
 					<NcActionCheckbox
 						:model-value="account.showSubscribedOnly"
 						:disabled="savingShowOnlySubscribed"
-						@update:checked="changeShowSubscribedOnly">
+						@update:model-value="changeShowSubscribedOnly">
 						{{ t('mail', 'Show only subscribed folders') }}
 					</NcActionCheckbox>
 					<NcActionButton v-if="!editing && nameLabel" @click="openCreateMailbox">

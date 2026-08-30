@@ -8,6 +8,7 @@
 		v-if="view === 'main'"
 		size="normal"
 		label-id="delegation-modal-title"
+		:close-on-click-outside="true"
 		@close="$emit('close')">
 		<div class="delegation-modal">
 			<h2 id="delegation-modal-title">

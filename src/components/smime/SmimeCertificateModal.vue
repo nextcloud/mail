@@ -4,7 +4,10 @@
 -->
 
 <template>
-	<NcModal :name="showImportScreen ? t('mail', 'Import S/MIME certificate') : t('mail', 'S/MIME certificates')" @close="$emit('close')">
+	<NcModal
+		:name="showImportScreen ? t('mail', 'Import S/MIME certificate') : t('mail', 'S/MIME certificates')"
+		:close-on-click-outside="true"
+		@close="$emit('close')">
 		<div class="certificate-modal">
 			<div v-if="!showImportScreen" class="certificate-modal__list">
 				<h2>{{ t('mail', 'S/MIME certificates') }}</h2>

@@ -29,7 +29,11 @@
 		<NcButton class="add-quick-action" variant="primary" @click="openEditModal()">
 			{{ t('mail', 'Add quick action') }}
 		</NcButton>
-		<NcModal v-if="editModal" :name="modalName" @close="closeEditModal">
+		<NcModal
+			v-if="editModal"
+			:name="modalName"
+			:close-on-click-outside="true"
+			@close="closeEditModal">
 			<h2 class="modal-name" v-text="modalName" />
 			<div class="modal-content">
 				<NcTextField v-model="localAction.name" :label="t('mail', 'Quick action name')" />

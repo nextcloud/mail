@@ -7,13 +7,12 @@
 	<!-- This wrapper can be either a router link or a `<li>` -->
 	<component
 		:is="to ? 'router-link' : 'NcVNodes'"
-		v-slot="{ href: routerLinkHref, navigate, isActive }"
+		v-slot="{ href: routerLinkHref, navigate, isExactActive }"
 		:custom="to ? true : null"
-		:to="to"
-		:exact="to ? exact : null">
+		:to="to">
 		<li
 			class="list-item__wrapper"
-			:class="{ 'list-item__wrapper--active': isActive || active }">
+			:class="{ 'list-item__wrapper--active': isExactActive || active }">
 			<div
 				ref="list-item"
 				class="list-item"
@@ -77,7 +76,7 @@
 									class="list-item-content__inner__details__extra">
 									<NcCounterBubble
 										v-if="counterNumber"
-										:active="isActive || active"
+										:active="isExactActive || active"
 										class="list-item-content__inner__details__extra__counter"
 										:type="counterType">
 										{{ counterNumber }}
@@ -108,7 +107,7 @@
 						@focusout="handleBlur">
 						<NcActions
 							ref="actions"
-							:primary="isActive || active"
+							:primary="isExactActive || active"
 							:aria-label="computedActionsAriaLabel"
 							variant="tertiary"
 							@update:open="handleActionsUpdateOpen">
@@ -156,15 +155,6 @@ export default {
 		name: {
 			type: String,
 			required: true,
-		},
-
-		/**
-		 * Pass in `true` if you want the matching behavior to
-		 * be non-inclusive: https://router.vuejs.org/api/#exact
-		 */
-		exact: {
-			type: Boolean,
-			default: false,
 		},
 
 		/**
