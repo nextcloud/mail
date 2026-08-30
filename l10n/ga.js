@@ -862,6 +862,7 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "Tréith illuacha d'ailiasanna ríomhphoist soláthair. Cruthaítear ailias do gach luach. Scriostar ailiasanna atá in Nextcloud nach bhfuil san eolaire LDAP.",
     "Save Config" : "Sábháil Cumraíocht",
     "Unprovision & Delete Config" : "Dísholáthar & Scrios Cumraíocht",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email. {ldapPlaceholder} will be replaced with the value of that LDAP attribute" : "* Cuirfear %USERID% agus %EMAIL% in ionad UID agus ríomhphost an úsáideora. Cuirfear luach an tréith LDAP sin in ionad {ldapPlaceholder}.",
     "With the settings above, the app will create account settings in the following way:" : "Leis na socruithe thuas, cruthóidh an aip socruithe cuntais ar an mbealach seo a leanas:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Caithfidh teastas amháin ar a laghad agus eochair phríobháideach amháin a bheith sa teastas PKCS #12 a sholáthrófar.",
     "Failed to import the certificate. Please check the password." : "Theip ar an teastas a iompórtáil. Seiceáil an pasfhocal le do thoil.",

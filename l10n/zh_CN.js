@@ -862,6 +862,7 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "提供电子邮件别名的多值属性。为每个值创建一个别名。存在于 Nextcloud 中但 LDAP 目录中不存在的别名将被删除。",
     "Save Config" : "保存配置",
     "Unprovision & Delete Config" : "取消开通 & 删除配置",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email. {ldapPlaceholder} will be replaced with the value of that LDAP attribute" : "* %USERID% 和 %EMAIL% 将被替换为用户的 UID 和电子邮件地址。{ldapPlaceholder} 将被替换为该 LDAP 属性的值。",
     "With the settings above, the app will create account settings in the following way:" : "使用上述设置，该应用将通过以下方式创建账号设置：",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "提供的 PKCS #12 证书必须包含至少一个证书和唯一私钥。",
     "Failed to import the certificate. Please check the password." : "无法导入证书，请检查密码。",
