@@ -132,7 +132,7 @@
 				v-if="notVirtual"
 				:model-value="mailbox.isSubscribed"
 				:disabled="changeSubscription"
-				@update:checked="changeFolderSubscription">
+				@update:model-value="changeFolderSubscription">
 				{{ t('mail', 'Subscribed') }}
 			</NcActionCheckbox>
 
@@ -140,7 +140,7 @@
 				v-if="notVirtual && notInbox"
 				:model-value="mailbox.syncInBackground"
 				:disabled="changingSyncInBackground"
-				@update:checked="changeSyncInBackground">
+				@update:model-value="changeSyncInBackground">
 				{{ t('mail', 'Sync in background') }}
 			</NcActionCheckbox>
 
