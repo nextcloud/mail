@@ -186,37 +186,39 @@ class ImapMessageConnector implements IMessageConnector {
 		$client = $this->protocolFactory->imapClient($account);
 
 		$mutatedMessages = [];
-		foreach ($messages as $message) {
-			try {
-				$newUid = $this->imapMessageMapper->move($client, $sourceMailbox->getName(), $message->getUid(), $targetMailbox->getName());
-				if ($newUid === null) {
-					// The IMAP server does not support UIDPLUS and the message has no Message-ID
-					// header, so the new UID is unknown. It will be reconciled on the next sync.
-					$this->logger->debug('Moved message but could not determine its new UID', [
+		try {
+			foreach ($messages as $message) {
+				try {
+					$newUid = $this->imapMessageMapper->move($client, $sourceMailbox->getName(), $message->getUid(), $targetMailbox->getName());
+					if ($newUid === null) {
+						// The IMAP server does not support UIDPLUS and the message has no Message-ID
+						// header, so the new UID is unknown. It will be reconciled on the next sync.
+						$this->logger->debug('Moved message but could not determine its new UID', [
+							'userId' => $account->getUserId(),
+							'accountId' => $account->getId(),
+							'sourceMailboxId' => $sourceMailbox->getId(),
+							'targetMailboxId' => $targetMailbox->getId(),
+							'messageUid' => $message->getUid(),
+						]);
+						continue;
+					}
+					$message->setUid($newUid);
+					$message->setMailboxId($targetMailbox->getId());
+					$mutatedMessages[] = $message;
+				} catch (Horde_Imap_Client_Exception $e) {
+					$this->logger->error('Could not move message on remote IMAP server', [
+						'exception' => $e,
 						'userId' => $account->getUserId(),
 						'accountId' => $account->getId(),
 						'sourceMailboxId' => $sourceMailbox->getId(),
 						'targetMailboxId' => $targetMailbox->getId(),
 						'messageUid' => $message->getUid(),
 					]);
-					continue;
 				}
-				$message->setUid($newUid);
-				$message->setMailboxId($targetMailbox->getId());
-				$mutatedMessages[] = $message;
-			} catch (Horde_Imap_Client_Exception $e) {
-				$this->logger->error('Could not move message on remote IMAP server', [
-					'exception' => $e,
-					'userId' => $account->getUserId(),
-					'accountId' => $account->getId(),
-					'sourceMailboxId' => $sourceMailbox->getId(),
-					'targetMailboxId' => $targetMailbox->getId(),
-					'messageUid' => $message->getUid(),
-				]);
 			}
+		} finally {
+			$client->logout();
 		}
-
-		$client->logout();
 
 		return $mutatedMessages;
 	}
@@ -229,22 +231,24 @@ class ImapMessageConnector implements IMessageConnector {
 		$client = $this->protocolFactory->imapClient($account);
 
 		$mutatedMessages = [];
-		foreach ($messages as $message) {
-			try {
-				$this->imapMessageMapper->expunge($client, $mailbox->getName(), $message->getUid());
-				$mutatedMessages[] = $message;
-			} catch (Horde_Imap_Client_Exception $e) {
-				$this->logger->error('Could not delete message on remote IMAP server', [
-					'exception' => $e,
-					'userId' => $account->getUserId(),
-					'accountId' => $account->getId(),
-					'mailboxId' => $mailbox->getId(),
-					'messageUid' => $message->getUid(),
-				]);
+		try {
+			foreach ($messages as $message) {
+				try {
+					$this->imapMessageMapper->expunge($client, $mailbox->getName(), $message->getUid());
+					$mutatedMessages[] = $message;
+				} catch (Horde_Imap_Client_Exception $e) {
+					$this->logger->error('Could not delete message on remote IMAP server', [
+						'exception' => $e,
+						'userId' => $account->getUserId(),
+						'accountId' => $account->getId(),
+						'mailboxId' => $mailbox->getId(),
+						'messageUid' => $message->getUid(),
+					]);
+				}
 			}
+		} finally {
+			$client->logout();
 		}
-
-		$client->logout();
 
 		return $mutatedMessages;
 	}
@@ -276,9 +280,9 @@ class ImapMessageConnector implements IMessageConnector {
 			}
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException('Could not set message flag on remote IMAP server: ' . $e->getMessage(), $e->getCode(), $e);
+		} finally {
+			$client->logout();
 		}
-
-		$client->logout();
 
 		return $messages;
 	}
@@ -290,20 +294,24 @@ class ImapMessageConnector implements IMessageConnector {
 		}
 		$client = $this->protocolFactory->imapClient($account);
 
-		if ($this->isPermflagsEnabledWithClient($client, $mailbox->getName()) === false) {
-			$this->logger->error('Cannot set message keyword, server does not support permanent flags', ['tag' => $tag->getDisplayName()]);
-			return [];
-		}
-
-		$uids = array_map(static fn (Message $message) => $message->getUid(), $messages);
 		try {
-			if ($value) {
-				$this->imapMessageMapper->addFlag($client, $mailbox, $uids, $tag->getImapLabel());
-			} else {
-				$this->imapMessageMapper->removeFlag($client, $mailbox, $uids, $tag->getImapLabel());
+			if ($this->isPermflagsEnabledWithClient($client, $mailbox->getName()) === false) {
+				$this->logger->error('Cannot set message keyword, server does not support permanent flags', ['tag' => $tag->getDisplayName()]);
+				return [];
 			}
-		} catch (Horde_Imap_Client_Exception $e) {
-			throw new ServiceException('Could not set message keyword on remote IMAP server: ' . $e->getMessage(), $e->getCode(), $e);
+
+			$uids = array_map(static fn (Message $message) => $message->getUid(), $messages);
+			try {
+				if ($value) {
+					$this->imapMessageMapper->addFlag($client, $mailbox, $uids, $tag->getImapLabel());
+				} else {
+					$this->imapMessageMapper->removeFlag($client, $mailbox, $uids, $tag->getImapLabel());
+				}
+			} catch (Horde_Imap_Client_Exception $e) {
+				throw new ServiceException('Could not set message keyword on remote IMAP server: ' . $e->getMessage(), $e->getCode(), $e);
+			}
+		} finally {
+			$client->logout();
 		}
 
 		foreach ($messages as $message) {
@@ -359,7 +367,11 @@ class ImapMessageConnector implements IMessageConnector {
 	#[\Override]
 	public function isPermflagsEnabled(Account $account, Mailbox $mailbox): bool {
 		$client = $this->protocolFactory->imapClient($account);
-		return $this->isPermflagsEnabledWithClient($client, $mailbox->getName());
+		try {
+			return $this->isPermflagsEnabledWithClient($client, $mailbox->getName());
+		} finally {
+			$client->logout();
+		}
 	}
 
 	private function isPermflagsEnabledWithClient($client, string $mailbox): bool {
