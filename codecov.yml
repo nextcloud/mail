@@ -12,6 +12,12 @@ coverage:
         target: auto
         flags:
           - integrationtests
+flag_management:
+  individual_flags:
+    - name: unittests
+      carryforward: true
+    - name: integrationtests
+      carryforward: true
 ignore:
   - "tests"
   - "lib/Vendor"
