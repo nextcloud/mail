@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { translatePlural as n, translate as t } from '@nextcloud/l10n'
+import { n, t } from '@nextcloud/l10n'
 import { generateFilePath } from '@nextcloud/router'
 import uniq from 'lodash/fp/uniq.js'
 import Logger from '../logger.js'
