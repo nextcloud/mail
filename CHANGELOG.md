@@ -1,3 +1,18 @@
+## [5.11.4](https://github.com/nextcloud/mail/compare/v5.11.3...v5.11.4) (2026-08-31)
+
+
+### Bug Fixes
+
+* **l10n:** Update translations from Transifex ([0427ebd](https://github.com/nextcloud/mail/commit/0427ebd3109bdbeea098a9ca3d6bebacd12bcf67))
+* **l10n:** Update translations from Transifex ([112331c](https://github.com/nextcloud/mail/commit/112331c69321bfb2bf627745646bdd212ab39d09))
+* **l10n:** Update translations from Transifex ([a7a0edb](https://github.com/nextcloud/mail/commit/a7a0edbe7105a4896be5e8751856563f2ba178a2))
+* **l10n:** Update translations from Transifex ([f8e45c5](https://github.com/nextcloud/mail/commit/f8e45c58188e49f486b09ec2588f9b5e6b3fffa9))
+* **l10n:** Update translations from Transifex ([b03befb](https://github.com/nextcloud/mail/commit/b03befbf3bbaba61346adfb9999b5b8d5f5a57dd))
+* **l10n:** Update translations from Transifex ([5b97c8e](https://github.com/nextcloud/mail/commit/5b97c8ede4cc30238a169a0e234f90b80e5732e6))
+* mail printing with hidden images ([115b5dc](https://github.com/nextcloud/mail/commit/115b5dcd6809c0717e49e412b8e9e0740afbca12))
+
+
+
 ## [5.11.3](https://github.com/nextcloud/mail/compare/v5.11.2...v5.11.3) (2026-08-25)
 
 
