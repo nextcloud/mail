@@ -1167,7 +1167,7 @@ class MessagesControllerTest extends TestCase {
 			->will($this->returnValue($this->account));
 		$source = file_get_contents(__DIR__ . '/../../data/mail-message-123.txt');
 		$this->mailManager->expects($this->exactly(1))
-			->method('getRawMessage')
+			->method('getSource')
 			->with($this->account, $mailbox, $message)
 			->willReturn($source);
 
@@ -1211,7 +1211,7 @@ class MessagesControllerTest extends TestCase {
 			->will($this->returnValue($this->account));
 		$source = file_get_contents(__DIR__ . '/../../data/mail-message-123.txt');
 		$this->mailManager->expects($this->exactly(1))
-			->method('getRawMessage')
+			->method('getSource')
 			->with($this->account, $mailbox, $message)
 			->willReturn($source);
 		$folderNode = $this->createStub(Folder::class);
