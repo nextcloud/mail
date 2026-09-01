@@ -40,6 +40,14 @@ reviews:
     - "!package-lock.json"
     - "!**/l10n/**"
 
+  # Skip built-in linters the repo does not use (it relies on php-cs-fixer + psalm),
+  # so reviews don't raise findings from tools that are not part of this project.
+  tools:
+    phpmd:
+      enabled: false
+    phpstan:
+      enabled: false
+
   # Reviewer-only guidance (not author conventions, so it is not in AGENTS.md).
   path_instructions:
     - path: "**"
@@ -47,8 +55,11 @@ reviews:
         - Do not raise formatting issues that php-cs-fixer, eslint or stylelint already
           enforce (tabs, quotes, semicolons, line length, trailing commas).
 
-        - If a diff looks AI/agent-generated (PR template ignored, missing Assisted-by
-          trailer, uncharacteristically broad or boilerplate scope, or tests that do not
-          exercise the change), ask the author for the disclosure that CONTRIBUTING.md
-          requires (an "Assisted-by: <agent>:<model-id>" trailer) and to explain the
-          change in their own words.
+        - Provenance/disclosure is a whole-PR judgment, made at most once per PR in the
+          summary — never attach it to an individual code or test finding, and never
+          infer it from a single weak signal such as a test that could assert more. Only
+          when the PR as a whole clearly looks agent-generated (e.g. the PR template is
+          ignored AND the Assisted-by trailer is missing AND the scope is broad/boilerplate
+          or the tests don't exercise the change), gently note the "Assisted-by:
+          <agent>:<model-id>" trailer that CONTRIBUTING.md requires and invite the author
+          to describe the change in their own words. When in doubt, say nothing.
