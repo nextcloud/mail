@@ -17,6 +17,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\CouldNotConnectException;
+use OCA\Mail\Exception\DuplicateEmailAddress;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\SMTP\SmtpClientFactory;
@@ -62,6 +63,11 @@ class SetupService {
 		?int $accountId = null,
 		?bool $classificationEnabled = null): Account {
 		$this->logger->info('Setting up manually configured account');
+
+		if (empty($this->accountService->findByUserIdAndAddress($uid, $emailAddress)) === false) {
+			throw new DuplicateEmailAddress('Account already exists: ' . $emailAddress);
+		}
+
 		$newAccount = new MailAccount([
 			'accountId' => $accountId,
 			'accountName' => $accountName,

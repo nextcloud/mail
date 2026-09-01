@@ -18,6 +18,7 @@ use OCA\Mail\Controller\AccountsController;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\DuplicateEmailAddress;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\Sync\Response;
 use OCA\Mail\Service\AccountService;
@@ -301,6 +302,35 @@ class AccountsControllerTest extends TestCase {
 
 		$expectedResponse = \OCA\Mail\Http\JsonResponse::error('Could not create account');
 		$response = $this->controller->create($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $imapPassword, $smtpPassword);
+
+		self::assertEquals($expectedResponse, $response);
+	}
+
+	public function testCreateManualNoDuplicate(): void {
+		$this->appConfig->expects(self::once())
+			->method('getValueBool')
+			->willReturn(true);
+		$email = 'user@domain.tld';
+		$accountName = 'Mail';
+		$imapHost = 'localhost';
+		$imapPort = 993;
+		$imapSslMode = 'ssl';
+		$imapUser = 'user@domain.tld';
+		$imapPassword = 'mypassword';
+		$smtpHost = 'localhost';
+		$smtpPort = 465;
+		$smtpSslMode = 'none';
+		$smtpUser = 'user@domain.tld';
+		$smtpPassword = 'mypassword';
+		$this->setupService->expects(self::once())
+			->method('createNewAccount')
+			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, 'password')
+			->willThrowException(new DuplicateEmailAddress());
+
+		$expectedResponse = \OCA\Mail\Http\JsonResponse::fail([
+			'error' => 'ACCOUNT_EXISTS',
+		]);
+		$response = $this->controller->create($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $imapPassword, $smtpPassword, 'password');
 
 		self::assertEquals($expectedResponse, $response);
 	}
