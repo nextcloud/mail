@@ -16,6 +16,7 @@ use OCA\Mail\Controller\ThreadController;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
+use OCA\Mail\Exception\DelegationForbiddenException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\EventData;
 use OCA\Mail\Service\AccountService;
@@ -135,6 +136,82 @@ class ThreadControllerTest extends TestCase {
 		$response = $this->controller->move($message->getId(), $dstMailbox->getId());
 
 		$this->assertEquals(Http::STATUS_OK, $response->getStatus());
+	}
+
+	public function testMoveDestinationMailboxNotDelegated(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1);
+		$this->accountService
+			->method('find')
+			->willReturn(new Account($mailAccount));
+		$srcMailbox = new Mailbox();
+		$srcMailbox->setId(20);
+		$srcMailbox->setAccountId($mailAccount->getId());
+		$dstMailbox = new Mailbox();
+		$dstMailbox->setId(40);
+		$dstMailbox->setAccountId(2);
+		$this->mailManager
+			->method('getMailbox')
+			->willReturnMap([
+				[$this->userId, $srcMailbox->getId(), $srcMailbox],
+				[$this->userId, $dstMailbox->getId(), $dstMailbox],
+			]);
+		$message = new Message();
+		$message->setId(300);
+		$message->setMailboxId($srcMailbox->getId());
+		$message->setThreadRootId('some-thread-root-id-1');
+		$this->mailManager
+			->method('getMessage')
+			->willReturn($message);
+		$this->delegationService->expects(self::once())
+			->method('assertMailboxAccess')
+			->with($dstMailbox->getId(), $this->userId)
+			->willThrowException(new DelegationForbiddenException('no access'));
+		$this->mailManager
+			->expects(self::never())
+			->method('moveThread');
+
+		$this->expectException(DelegationForbiddenException::class);
+
+		$this->controller->move($message->getId(), $dstMailbox->getId());
+	}
+
+	public function testSnoozeDestinationMailboxNotDelegated(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1);
+		$this->accountService
+			->method('find')
+			->willReturn(new Account($mailAccount));
+		$srcMailbox = new Mailbox();
+		$srcMailbox->setId(20);
+		$srcMailbox->setAccountId($mailAccount->getId());
+		$dstMailbox = new Mailbox();
+		$dstMailbox->setId(40);
+		$dstMailbox->setAccountId(2);
+		$this->mailManager
+			->method('getMailbox')
+			->willReturnMap([
+				[$this->userId, $srcMailbox->getId(), $srcMailbox],
+				[$this->userId, $dstMailbox->getId(), $dstMailbox],
+			]);
+		$message = new Message();
+		$message->setId(300);
+		$message->setMailboxId($srcMailbox->getId());
+		$message->setThreadRootId('some-thread-root-id-1');
+		$this->mailManager
+			->method('getMessage')
+			->willReturn($message);
+		$this->delegationService->expects(self::once())
+			->method('assertMailboxAccess')
+			->with($dstMailbox->getId(), $this->userId)
+			->willThrowException(new DelegationForbiddenException('no access'));
+		$this->snoozeService
+			->expects(self::never())
+			->method('snoozeThread');
+
+		$this->expectException(DelegationForbiddenException::class);
+
+		$this->controller->snooze($message->getId(), 1234567890, $dstMailbox->getId());
 	}
 
 	public function testMoveTrash(): void {

@@ -391,6 +391,8 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
+		$this->delegationService->assertMailboxAccess($destFolderId, $this->userId);
+
 		$this->mailManager->moveMessage(
 			$srcAccount,
 			$srcMailbox->getName(),
@@ -430,6 +432,8 @@ class MessagesController extends Controller {
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
+
+		$this->delegationService->assertMailboxAccess($destMailboxId, $this->userId);
 
 		$this->snoozeService->snoozeMessage($message, $unixTimestamp, $srcAccount, $srcMailbox, $dstAccount, $dstMailbox);
 		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId snoozed message <$id> to <$unixTimestamp> on behalf of $effectiveUserId");
