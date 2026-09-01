@@ -257,4 +257,21 @@ class HtmlTest extends TestCase {
 
 		$this->assertStringContainsString('id="target"', $result);
 	}
+
+	public function testSanitizeHtmlMailBodyPreservesFigure(): void {
+		$urlGenerator = $this->createStub(IURLGenerator::class);
+		$urlGenerator->method('linkToRoute')->willReturn('/apps/mail/proxy?id=42&hmac=abc');
+		$request = $this->createStub(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$result = $html->sanitizeHtmlMailBody(
+			42,
+			'<figure class="image image-style-align-center"><img src="https://example.com/i.png" alt=""><figcaption>Caption</figcaption></figure>',
+			[],
+		);
+
+		$this->assertStringContainsString('<figure class="image image-style-align-center">', $result);
+		$this->assertStringContainsString('<figcaption>Caption</figcaption>', $result);
+	}
 }
