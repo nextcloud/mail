@@ -164,6 +164,8 @@ class DraftsController extends Controller {
 		bool $isPgpMime = false): JsonResponse {
 		$effectiveUserId = $this->delegationService->resolveLocalMessageUserId($id, $this->userId);
 		$message = $this->service->getMessage($id, $effectiveUserId);
+
+		$this->delegationService->assertAccountAccess($accountId, $this->userId);
 		$account = $this->accountService->find($effectiveUserId, $accountId);
 
 		$message->setType(LocalMessage::TYPE_DRAFT);
