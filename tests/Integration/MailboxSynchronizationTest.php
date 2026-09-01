@@ -282,7 +282,7 @@ class MailboxSynchronizationTest extends TestCase {
 
 		// Receive unsolicited vanished uid
 		$message = $dbMessageMapper->findByUids($inbox, [$uid2])[0];
-		$mailManager->getRawMessage(
+		$mailManager->getSource(
 			new Account($this->account),
 			$inbox,
 			$message,
