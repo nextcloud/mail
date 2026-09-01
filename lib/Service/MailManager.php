@@ -182,7 +182,7 @@ class MailManager {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function getRawMessage(Account $account, Mailbox $mailbox, Message $message): ?string {
+	public function getSource(Account $account, Mailbox $mailbox, Message $message): ?string {
 		$raw = $this->protocolFactory
 			->messageConnector($account)
 			->fetchMessageRaw($account, $mailbox, $message);
