@@ -12,12 +12,11 @@ namespace OCA\Mail\Tests\Integration\Service;
 use ChristophWurst\Nextcloud\Testing\TestUser;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IAttachmentService;
-use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\LocalAttachmentMapper;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\MailAccount;
-use OCA\Mail\IMAP\MessageMapper;
+use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Attachment\AttachmentService;
@@ -57,9 +56,6 @@ class DraftServiceIntegrationTest extends TestCase {
 	/** @var IAttachmentService */
 	private $attachmentService;
 
-	/** @var IMailTransmission */
-	private $transmission;
-
 	/** @var OutboxService */
 	private $service;
 
@@ -98,7 +94,6 @@ class DraftServiceIntegrationTest extends TestCase {
 			Server::get(LocalAttachmentMapper::class),
 			Server::get(AttachmentStorage::class),
 			$mailManager,
-			Server::get(MessageMapper::class),
 			Server::get(ICacheFactory::class),
 			Server::get(IURLGenerator::class),
 			Server::get(IMimeTypeDetector::class),
@@ -107,7 +102,6 @@ class DraftServiceIntegrationTest extends TestCase {
 		);
 		$this->client = $this->getClient($this->account);
 		$this->mapper = Server::get(LocalMessageMapper::class);
-		$this->transmission = Server::get(IMailTransmission::class);
 		$this->eventDispatcher = Server::get(IEventDispatcher::class);
 		$this->clientFactory = Server::get(ProtocolFactory::class);
 		$this->accountService = $this->createMock(AccountService::class);
@@ -119,12 +113,12 @@ class DraftServiceIntegrationTest extends TestCase {
 		$delete->executeStatement();
 
 		$this->service = new DraftsService(
-			$this->transmission,
 			$this->mapper,
 			$this->attachmentService,
 			$this->eventDispatcher,
 			$this->clientFactory,
 			$mailManager,
+			Server::get(MailboxMapper::class),
 			$this->createMock(LoggerInterface::class),
 			$this->accountService,
 			$this->timeFactory

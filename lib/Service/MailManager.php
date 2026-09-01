@@ -182,10 +182,10 @@ class MailManager {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function getRawMessage(Account $account, Mailbox $mailbox, Message $message): ?string {
+	public function getRawMessage(Account $account, Mailbox $mailbox, Message $message, bool $decrypt = false): ?string {
 		$raw = $this->protocolFactory
 			->messageConnector($account)
-			->fetchMessageRaw($account, $mailbox, $message);
+			->fetchMessageRaw($account, $mailbox, $message, $decrypt);
 		if ($raw === null) {
 			throw new ClientException('Message not found on remote server');
 		}

@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service;
 
-use Horde_Mime_Part;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
@@ -16,11 +15,7 @@ use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Exception\AttachmentNotFoundException;
-use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\Exception\SmimeEncryptException;
-use OCA\Mail\Exception\SmimeSignException;
 use OCA\Mail\Service\Attachment\AttachmentService;
-use OCP\AppFramework\Db\DoesNotExistException;
 use Psr\Log\LoggerInterface;
 
 class TransmissionService {
@@ -29,7 +24,6 @@ class TransmissionService {
 		private GroupsIntegration $groupsIntegration,
 		private AttachmentService $attachmentService,
 		private LoggerInterface $logger,
-		private SmimeService $smimeService,
 	) {
 	}
 
@@ -62,140 +56,28 @@ class TransmissionService {
 	}
 
 	/**
-	 * @param Account $account
-	 * @param array $attachment
-	 * @return \Horde_Mime_Part|null
+	 * @return array{content: string, type: string, name: string, disposition: ?string, contentId: ?string}|null
 	 */
-	public function handleAttachment(Account $account, array $attachment): ?Horde_Mime_Part {
-		if (!isset($attachment['id'])) {
-			$this->logger->warning('ignoring local attachment because its id is unknown');
+	public function getAttachmentContent(Account $account, array $attachmentRef): ?array {
+		if (!isset($attachmentRef['id'])) {
+			$this->logger->warning('Ignoring local attachment reference without an id', ['ref' => $attachmentRef]);
 			return null;
 		}
 
 		try {
-			[$localAttachment, $file] = $this->attachmentService->getAttachment($account->getMailAccount()->getUserId(), (int)$attachment['id']);
-			$part = new Horde_Mime_Part();
-			$part->setCharset('us-ascii');
-
-			if ($localAttachment->isDispositionAttachmentOrInline()) {
-				$part->setDisposition($localAttachment->getDisposition());
-				/*
-				 * Setting a name implicitly adds a Content-Disposition header in Horde,
-				 * which would override the intentional omission. Only set it for attachment/inline dispositions.
-				 */
-				$part->setName($localAttachment->getFileName());
-			}
-
-			if ($localAttachment->getContentId() !== null) {
-				$part->setContentId($localAttachment->getContentId());
-			}
-
-			$part->setContents($file->getContent());
-			/*
-			 * Horde_Mime_Part.setType takes the mimetype (e.g. text/calendar)
-			 * and discards additional parameters (like method=REQUEST).
-			 *
-			 * $part->setType('text/calendar; method=REQUEST')
-			 * $part->getType() => text/calendar
-			 */
-			$contentTypeHeader = \Horde_Mime_Headers_ContentParam_ContentType::create();
-			$contentTypeHeader->decode($localAttachment->getMimeType());
-
-			$part->setType($contentTypeHeader->value);
-			foreach ($contentTypeHeader->params as $label => $data) {
-				$part->setContentTypeParameter($label, $data);
-			}
-
-			return $part;
+			[$attachment, $file] = $this->attachmentService->getAttachment($account->getMailAccount()->getUserId(), (int)$attachmentRef['id']);
 		} catch (AttachmentNotFoundException $e) {
 			$this->logger->warning('Ignoring local attachment because it does not exist', ['exception' => $e]);
 			return null;
 		}
-	}
 
-	/**
-	 * @param LocalMessage $localMessage
-	 * @param Account $account
-	 * @param \Horde_Mime_Part $mimePart
-	 * @return \Horde_Mime_Part
-	 * @throws ServiceException
-	 */
-	public function getSignMimePart(LocalMessage $localMessage, Account $account, \Horde_Mime_Part $mimePart): \Horde_Mime_Part {
-		if ($localMessage->getSmimeSign()) {
-			if ($localMessage->getSmimeCertificateId() === null) {
-				$localMessage->setStatus(LocalMessage::STATUS_SMIME_SIGN_NO_CERT_ID);
-				throw new ServiceException('Could not send message: Requested S/MIME signature without certificate id');
-			}
-
-			try {
-				$certificate = $this->smimeService->findCertificate(
-					$localMessage->getSmimeCertificateId(),
-					$account->getUserId(),
-				);
-				$mimePart = $this->smimeService->signMimePart($mimePart, $certificate);
-			} catch (DoesNotExistException $e) {
-				$localMessage->setStatus(LocalMessage::STATUS_SMIME_SIGN_CERT);
-				throw new ServiceException(
-					'Could not send message: Certificate does not exist: ' . $e->getMessage(),
-					$e->getCode(),
-					$e,
-				);
-			} catch (SmimeSignException|ServiceException $e) {
-				$localMessage->setStatus(LocalMessage::STATUS_SMIME_SIGN_FAIL);
-				throw new ServiceException(
-					'Could not send message: Failed to sign MIME part: ' . $e->getMessage(),
-					$e->getCode(),
-					$e,
-				);
-			}
-		}
-		return $mimePart;
-	}
-
-	/**
-	 * @param LocalMessage $localMessage
-	 * @param AddressList $to
-	 * @param AddressList $cc
-	 * @param AddressList $bcc
-	 * @param Account $account
-	 * @param \Horde_Mime_Part $mimePart
-	 * @return \Horde_Mime_Part
-	 * @throws ServiceException
-	 */
-	public function getEncryptMimePart(LocalMessage $localMessage, AddressList $to, AddressList $cc, AddressList $bcc, Account $account, \Horde_Mime_Part $mimePart): \Horde_Mime_Part {
-		if ($localMessage->getSmimeEncrypt()) {
-			if ($localMessage->getSmimeCertificateId() === null) {
-				$localMessage->setStatus(LocalMessage::STATUS_SMIME_ENCRYPT_NO_CERT_ID);
-				throw new ServiceException('Could not send message: Requested S/MIME signature without certificate id');
-			}
-
-			try {
-				$addressList = $to
-					->merge($cc)
-					->merge($bcc);
-				$certificates = $this->smimeService->findCertificatesByAddressList($addressList, $account->getUserId());
-
-				$senderCertificate = $this->smimeService->findCertificate($localMessage->getSmimeCertificateId(), $account->getUserId());
-				$certificates[] = $senderCertificate;
-
-				$mimePart = $this->smimeService->encryptMimePart($mimePart, $certificates);
-			} catch (DoesNotExistException $e) {
-				$localMessage->setStatus(LocalMessage::STATUS_SMIME_ENCRYPT_CERT);
-				throw new ServiceException(
-					'Could not send message: Certificate does not exist: ' . $e->getMessage(),
-					$e->getCode(),
-					$e,
-				);
-			} catch (SmimeEncryptException|ServiceException $e) {
-				$localMessage->setStatus(LocalMessage::STATUS_SMIME_ENCRYT_FAIL);
-				throw new ServiceException(
-					'Could not send message: Failed to encrypt MIME part: ' . $e->getMessage(),
-					$e->getCode(),
-					$e,
-				);
-			}
-		}
-		return $mimePart;
+		return [
+			'content' => $file->getContent(),
+			'type' => $attachment->getMimeType(),
+			'name' => $attachment->getFileName(),
+			'disposition' => $attachment->getDisposition(),
+			'contentId' => $attachment->getContentId(),
+		];
 	}
 
 }
