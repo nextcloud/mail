@@ -338,7 +338,7 @@ class MessageApiController extends OCSController {
 		}
 
 		try {
-			$source = $this->mailManager->getRawMessage(
+			$source = $this->mailManager->getSource(
 				$account,
 				$mailbox,
 				$message
