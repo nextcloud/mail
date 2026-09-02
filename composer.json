@@ -43,7 +43,7 @@
 		"phpmailer/dkimvalidator": "^0.3.1",
 		"rubix/ml": "2.5.5",
 		"sabberworm/php-css-parser": "^9.4.0",
-		"sebastiankrupinski/jmap-client-php": "^2.0.0",
+		"sebastiankrupinski/jmap-client-php": "^2.1.0",
 		"wamania/php-stemmer": "4.0 as 3.0",
 		"youthweb/urllinker": "^2.1.0"
 	},
