@@ -199,7 +199,7 @@ class MailManager {
 	/**
 	 * @return Message[]
 	 */
-	public function getMessagesByMessageId(Account $account, string $messageId): array {
+	public function getByMessageId(Account $account, string $messageId): array {
 		return $this->dbMessageMapper->findByMessageId($account, $messageId);
 	}
 
@@ -591,7 +591,7 @@ class MailManager {
 
 		foreach ($accounts as $account) {
 			try {
-				$messages = array_merge(... array_map(fn ($messageTag) => $this->getMessagesByMessageId($account, $messageTag->getImapMessageId()), array_values($messageTags)));
+				$messages = array_merge(... array_map(fn ($messageTag) => $this->getByMessageId($account, $messageTag->getImapMessageId()), array_values($messageTags)));
 			} catch (DoesNotExistException $e) {
 				throw new ClientException('Messages not found', 0, $e);
 			}
