@@ -1,3 +1,24 @@
+## [5.11.5](https://github.com/nextcloud/mail/compare/v5.11.4...v5.11.5) (2026-09-02)
+
+
+### Bug Fixes
+
+* avatar size on hover ([7a53301](https://github.com/nextcloud/mail/commit/7a53301a3740a7b355acb70fb6063f9fa6bc405c))
+* **delegation:** check if delegated user has access to destination mailbox ([#13605](https://github.com/nextcloud/mail/issues/13605)) ([bf31b55](https://github.com/nextcloud/mail/commit/bf31b5516e9c8351cc672841b2a6d205eb84066a))
+* **deps:** Fix npm audit ([d7f8447](https://github.com/nextcloud/mail/commit/d7f8447c67432f33cc7cc2f2aaf3de2ea55d1e60))
+* **dns:** Update public suffix list ([a2b7afd](https://github.com/nextcloud/mail/commit/a2b7afd61935933295a48597b3e0a5e4fff1eb0f))
+* **imap:** handle korean Windows encoding ks_c_5601-1987/ks_c_5601-1989 ([181fbe3](https://github.com/nextcloud/mail/commit/181fbe351a1e2907844dbfa9f12fdf9967df7de0))
+* **imap:** skip fetch results without a UID during sync ([f810923](https://github.com/nextcloud/mail/commit/f81092326420d70dd67f29a4a4606152cf68f201))
+* **l10n:** Update translations from Transifex ([9056ac6](https://github.com/nextcloud/mail/commit/9056ac69d0c36633d987e6923425d6ede4fddecd))
+* **sieve:** terminate installed scripts with CRLF ([62f11dc](https://github.com/nextcloud/mail/commit/62f11dc898211f52a12a7f5d4503a7799a139ca8))
+
+
+### Performance Improvements
+
+* **db:** index the mailbox list sort ([e37dceb](https://github.com/nextcloud/mail/commit/e37dceb40b2e275cf9f0946d6054f39467810380))
+
+
+
 ## [5.11.4](https://github.com/nextcloud/mail/compare/v5.11.3...v5.11.4) (2026-08-31)
 
 
