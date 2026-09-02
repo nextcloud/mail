@@ -16,11 +16,10 @@ const THREAD_PATH = '/box/31/thread/42'
  * @param {object} options - test options
  * @param {object|null} options.to - the `to` prop, null for the draft case
  * @param {string} options.currentPath - the path $route is currently on
- * @param {boolean} options.exact - the `exact` prop
  * @param {Function} options.push - the router push spy
  * @return {object} the mounted wrapper
  */
-function mountSkeleton({ to = THREAD_ROUTE, currentPath = '/box/31', exact = true, push = vi.fn() } = {}) {
+function mountSkeleton({ to = THREAD_ROUTE, currentPath = '/box/31', push = vi.fn() } = {}) {
 	return shallowMount(EnvelopeSkeleton, {
 		global: {
 			mocks: {
@@ -34,7 +33,6 @@ function mountSkeleton({ to = THREAD_ROUTE, currentPath = '/box/31', exact = tru
 		props: {
 			name: 'Zoidberg',
 			to,
-			exact,
 		},
 		slots: {
 			subname: '<span class="test-subname">Why not Zoidberg?</span>',
@@ -130,20 +128,14 @@ describe('EnvelopeSkeleton', () => {
 		expect(view.vm.isRouteActive).toBe(true)
 	})
 
-	it('is inactive on a nested path when matching exactly', () => {
-		const view = mountSkeleton({ currentPath: `${THREAD_PATH}/sub`, exact: true })
-
-		expect(view.vm.isRouteActive).toBe(false)
-	})
-
-	it('is active on a nested path when not matching exactly', () => {
-		const view = mountSkeleton({ currentPath: `${THREAD_PATH}/sub`, exact: false })
+	it('is active on a nested path', () => {
+		const view = mountSkeleton({ currentPath: `${THREAD_PATH}/sub` })
 
 		expect(view.vm.isRouteActive).toBe(true)
 	})
 
 	it('does not treat a sibling path with a shared prefix as nested', () => {
-		const view = mountSkeleton({ currentPath: `${THREAD_PATH}0`, exact: false })
+		const view = mountSkeleton({ currentPath: `${THREAD_PATH}0` })
 
 		expect(view.vm.isRouteActive).toBe(false)
 	})
