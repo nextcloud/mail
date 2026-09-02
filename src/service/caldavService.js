@@ -4,7 +4,7 @@
  */
 
 import { getRequestToken } from '@nextcloud/auth'
-import DavClient, { CalendarHome, Collection, Principal } from '@nextcloud/cdav-library'
+import DavClient from '@nextcloud/cdav-library'
 import { generateRemoteUrl } from '@nextcloud/router'
 
 let client = null
@@ -60,7 +60,7 @@ export function getCurrentUserPrincipal() {
 /**
  * Fetch all calendars from the server
  *
- * @return {Promise<CalendarHome>}
+ * @return {Promise<import('@nextcloud/cdav-library')CalendarHome>}
  */
 export function getCalendarHome() {
 	return getClient().calendarHomes[0]
@@ -69,7 +69,7 @@ export function getCalendarHome() {
 /**
  * Fetch all collections in the calendar home from the server
  *
- * @return {Promise<Collection[]>}
+ * @return {Promise<import('@nextcloud/cdav-library').Collection[]>}
  */
 export async function findAll() {
 	return await getCalendarHome().findAllCalDAVCollectionsGrouped()

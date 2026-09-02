@@ -66,7 +66,13 @@ module.exports = async () => ({
 			},
 			{
 				test: /\.tsx?$/,
-				use: 'ts-loader',
+				use: {
+					loader: 'ts-loader',
+					options: {
+						// Do not bundle for example src/tests/**.ts as they are not bundled.
+						onlyCompileBundledFiles: true,
+					},
+				},
 				exclude: /node_modules/,
 			},
 			{
