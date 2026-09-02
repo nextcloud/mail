@@ -723,6 +723,12 @@ export default function mainStoreActions() {
 				const mailbox = this.getMailbox(mailboxId)
 
 				if (mailbox.isUnified) {
+					// One account's fetch rejecting must not discard every
+					// other account's already-successful envelopes. Promise.all()
+					// rejects as soon as any single promise rejects, so a single
+					// slow/unreachable account used to make the whole unified
+					// mailbox render nothing at all instead of everything except
+					// that one account. See #9072.
 					const fetchIndividualLists = pipe(
 						map((mb) => this.fetchEnvelopes({
 							mailboxId: mb.databaseId,
@@ -730,6 +736,9 @@ export default function mainStoreActions() {
 							addToUnifiedMailboxes: false,
 							sort: this.getPreference('sort-order'),
 							view: this.getPreference('layout-message-view'),
+						}).catch((error) => {
+							logger.error(`Failed to fetch envelopes for unified constituent mailbox ${mb.databaseId}: ${error}`, { error })
+							return []
 						})),
 						Promise.all.bind(Promise),
 						andThen(map(sliceToPage)),
@@ -826,12 +835,18 @@ export default function mainStoreActions() {
 						logger.debug('not enough local envelopes for the next unified page. ' + mbs.length + ' fetches required', {
 							mailboxes: mbs.map((mb) => mb.databaseId),
 						})
+						// Same reasoning as fetchEnvelopes() above: one account
+						// failing must not fail pagination for every other
+						// account sharing this unified mailbox.
 						return pipe(
 							map((mb) => this.fetchNextEnvelopes({
 								mailboxId: mb.databaseId,
 								query,
 								quantity,
 								addToUnifiedMailboxes: false,
+							}).catch((error) => {
+								logger.error(`Failed to fetch next envelopes for unified constituent mailbox ${mb.databaseId}: ${error}`, { error })
+								return []
 							})),
 							Promise.all.bind(Promise),
 							andThen(() => this.fetchNextEnvelopes({
