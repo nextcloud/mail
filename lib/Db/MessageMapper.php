@@ -922,9 +922,10 @@ class MessageMapper extends QBMapper {
 		}
 		// createParameter
 		if ($uids !== null) {
-			// In the case of body+subject search we need a combination of both results,
-			// thus the orWhere in every other case andWhere should do the job.
-			if (!empty($query->getSubjects())) {
+			// In anyof mode or when subjects are also searched, body results must be
+			// OR'd with other criteria so a match in any one field is sufficient.
+			// In allof mode without subjects, AND is correct: all criteria must match.
+			if (!empty($query->getSubjects()) || $query->getMatch() === 'anyof') {
 				$textOrs[] = $qb->expr()->in('m.uid', $qb->createParameter('uids'));
 			} else {
 				$select->andWhere(
