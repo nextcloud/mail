@@ -24,7 +24,7 @@ jobs:
       backend: ${{ steps.changes.outputs.backend }}
       frontend: ${{ steps.changes.outputs.frontend }}
     steps:
-      - uses: dorny/paths-filter@7b450fff21473bca461d4b92ce414b9d0420d706 # v4.0.2
+      - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
         id: changes
         continue-on-error: true
         with:
@@ -390,6 +390,20 @@ jobs:
         run: cat nextcloud/data/nextcloud.log*
     env:
       CI: true
+
+  codecov-empty:
+    runs-on: ubuntu-latest-low
+    needs: changes
+    if: needs.changes.outputs.backend == 'false'
+    name: codecov-empty-upload
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Send empty Codecov upload so required coverage checks pass
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          run_command: empty-upload
 
   summary:
     runs-on: ubuntu-latest-low

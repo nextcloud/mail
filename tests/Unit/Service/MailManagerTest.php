@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Attachment;
@@ -22,8 +23,10 @@ use OCA\Mail\Db\MessageTagsMapper;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Db\ThreadMapper;
+use OCA\Mail\Events\BeforeMessageDeletedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Exception\TrashMailboxNotSetException;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
@@ -273,6 +276,117 @@ class MailManagerTest extends TestCase {
 			$account,
 			'Trash',
 			123
+		);
+	}
+
+	public function testDeleteMessageTrashMailboxIdNull(): void {
+		$account = $this->createMock(Account::class);
+		$mailAccount = new MailAccount();
+		$mailAccount->setTrashMailboxId(null);
+		$account->method('getMailAccount')->willReturn($mailAccount);
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
+		$this->mailboxMapper->expects($this->once())
+			->method('find')
+			->with($account, 'INBOX')
+			->willReturn($mailbox);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$this->imapClientFactory->expects($this->once())
+			->method('getClient')
+			->willReturn($client);
+		$client->expects($this->once())
+			->method('logout');
+		$this->expectException(TrashMailboxNotSetException::class);
+
+		$this->manager->deleteMessage(
+			$account,
+			'INBOX',
+			123
+		);
+	}
+
+	public function testDeleteMessageWithClientTrashMailboxIdNull(): void {
+		$account = $this->createMock(Account::class);
+		$mailAccount = new MailAccount();
+		$mailAccount->setTrashMailboxId(null);
+		$account->method('getMailAccount')->willReturn($mailAccount);
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
+		$this->eventDispatcher->expects($this->once())
+			->method('dispatchTyped')
+			->with($this->callback(fn ($event) => $event instanceof BeforeMessageDeletedEvent));
+		$this->imapMessageMapper->expects($this->never())
+			->method('expunge');
+		$this->imapMessageMapper->expects($this->never())
+			->method('move');
+		$this->expectException(TrashMailboxNotSetException::class);
+
+		$this->manager->deleteMessageWithClient(
+			$account,
+			$mailbox,
+			123,
+			$client
+		);
+	}
+
+	public function testDeleteMessageWithClientExpungeThrowsException(): void {
+		$account = $this->createMock(Account::class);
+		$mailAccount = new MailAccount();
+		$mailAccount->setTrashMailboxId(123);
+		$account->method('getMailAccount')->willReturn($mailAccount);
+		$trash = new Mailbox();
+		$trash->setName('Trash');
+		$source = new Mailbox();
+		$source->setName('Trash');
+		$this->mailboxMapper->expects($this->once())
+			->method('findById')
+			->with(123)
+			->willReturn($trash);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
+		$this->imapMessageMapper->expects($this->once())
+			->method('expunge')
+			->willThrowException(new Horde_Imap_Client_Exception('expunge failed'));
+		$this->eventDispatcher->expects($this->once())
+			->method('dispatchTyped')
+			->with($this->callback(fn ($event) => $event instanceof BeforeMessageDeletedEvent));
+		$this->expectException(Horde_Imap_Client_Exception::class);
+
+		$this->manager->deleteMessageWithClient(
+			$account,
+			$source,
+			123,
+			$client
+		);
+	}
+
+	public function testDeleteMessageWithClientMoveThrowsException(): void {
+		$account = $this->createMock(Account::class);
+		$mailAccount = new MailAccount();
+		$mailAccount->setTrashMailboxId(123);
+		$account->method('getMailAccount')->willReturn($mailAccount);
+		$trash = new Mailbox();
+		$trash->setName('Trash');
+		$inbox = new Mailbox();
+		$inbox->setName('INBOX');
+		$this->mailboxMapper->expects($this->once())
+			->method('findById')
+			->with(123)
+			->willReturn($trash);
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
+		$this->imapMessageMapper->expects($this->once())
+			->method('move')
+			->willThrowException(new Horde_Imap_Client_Exception('move failed'));
+		$this->eventDispatcher->expects($this->once())
+			->method('dispatchTyped')
+			->with($this->callback(fn ($event) => $event instanceof BeforeMessageDeletedEvent));
+		$this->expectException(Horde_Imap_Client_Exception::class);
+
+		$this->manager->deleteMessageWithClient(
+			$account,
+			$inbox,
+			123,
+			$client
 		);
 	}
 
@@ -781,6 +895,10 @@ class MailManagerTest extends TestCase {
 			->method('findById')
 			->with($trashMailbox->getId())
 			->willReturn($trashMailbox);
+		$this->imapClientFactory
+			->expects(self::exactly(2))
+			->method('getClient')
+			->willReturn($this->createStub(Horde_Imap_Client_Socket::class));
 		$this->imapMessageMapper
 			->expects(self::exactly(2))
 			->method('move');
@@ -824,9 +942,70 @@ class MailManagerTest extends TestCase {
 				['messageUid' => 200, 'mailboxName' => 'Trash'],
 				['messageUid' => 300, 'mailboxName' => 'Trash'],
 			]);
+		$this->imapClientFactory
+			->expects(self::exactly(2))
+			->method('getClient')
+			->willReturn($this->createStub(Horde_Imap_Client_Socket::class));
 		$this->imapMessageMapper
 			->expects(self::exactly(2))
 			->method('expunge');
+		$this->eventDispatcher
+			->expects(self::exactly(4))
+			->method('dispatchTyped');
+
+		$this->manager->deleteThread(
+			$account,
+			$mailbox,
+			$threadRootId
+		);
+	}
+
+	public function testDeleteThreadMessagesInDifferentMailboxes(): void {
+		$threadRootId = 'some-thread-root-id-1';
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1);
+		$mailAccount->setTrashMailboxId(80);
+		$account = new Account($mailAccount);
+		$mailbox = new Mailbox();
+		$mailbox->setId(20);
+		$mailbox->setAccountId($mailAccount->getId());
+		$mailbox->setName('INBOX');
+		$this->threadMapper
+			->expects(self::once())
+			->method('findMessageUidsAndMailboxNamesByAccountAndThreadRoot')
+			->with($mailAccount, $threadRootId, false)
+			->willReturn([
+				['messageUid' => 200, 'mailboxName' => 'INBOX'],
+				['messageUid' => 300, 'mailboxName' => 'Sent'],
+			]);
+		$inbox = new Mailbox();
+		$inbox->setId(20);
+		$inbox->setName('INBOX');
+		$sent = new Mailbox();
+		$sent->setId(40);
+		$sent->setName('Sent');
+		$this->mailboxMapper
+			->expects(self::exactly(2))
+			->method('find')
+			->willReturnMap([
+				[$account, 'INBOX', $inbox],
+				[$account, 'Sent', $sent],
+			]);
+		$trash = new Mailbox();
+		$trash->setId(80);
+		$trash->setName('Trash');
+		$this->mailboxMapper
+			->expects(self::exactly(2))
+			->method('findById')
+			->with(80)
+			->willReturn($trash);
+		$this->imapClientFactory
+			->expects(self::exactly(2))
+			->method('getClient')
+			->willReturn($this->createStub(Horde_Imap_Client_Socket::class));
+		$this->imapMessageMapper
+			->expects(self::exactly(2))
+			->method('move');
 		$this->eventDispatcher
 			->expects(self::exactly(4))
 			->method('dispatchTyped');
