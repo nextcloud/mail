@@ -4,234 +4,236 @@
 -->
 <template>
 	<form id="account-form" @submit.prevent="onSubmit">
-		<Tabs
-			:options="{ useUrlFragment: false, defaultTabHash: settingsPage ? 'manual' : 'auto' }"
-			cache-lifetime="0"
-			@changed="onModeChanged">
-			<Tab id="auto" key="auto" :name="t('mail', 'Auto')">
-				<NcInputField
-					id="auto-name"
-					v-model="accountName"
-					:label="t('mail', 'Name')"
-					type="text"
-					:placeholder="t('mail', 'Name')"
-					:disabled="loading"
-					autofocus />
-				<NcInputField
-					id="auto-address"
-					v-model="emailAddress"
-					:label="t('mail', 'Mail address')"
-					:disabled="loading"
-					:placeholder="t('mail', 'name@example.org')"
-					required
-					type="email"
-					@change="clearFeedback" />
-				<p v-if="!isValidEmail(emailAddress)" class="account-form--error">
-					{{ t('mail', 'Please enter an email of the format name@example.com') }}
-				</p>
-				<NcPasswordField
-					id="auto-password"
-					v-model="autoConfig.password"
-					:disabled="loading"
-					type="password"
-					:label="t('mail', 'Password')"
-					:required="!hasPasswordAlternatives"
-					@change="clearFeedback" />
-				<NcCheckboxRadioSwitch
-					id="auto-classification-enabled"
-					v-model="classificationEnabled"
-					:disabled="loading">
-					{{ t('mail', 'Enable mark as important classification') }}
-				</NcCheckboxRadioSwitch>
-			</Tab>
-			<Tab id="manual" key="manual" :name="t('mail', 'Manual')">
-				<NcInputField
-					id="man-name"
-					v-model="accountName"
-					:label="t('mail', 'Name')"
-					type="text"
-					:placeholder="t('mail', 'Name')"
-					:disabled="loading" />
-				<NcInputField
-					id="man-address"
-					v-model="emailAddress"
-					:label="t('mail', 'Mail address')"
-					type="email"
-					:placeholder="t('mail', 'name@example.org')"
-					:disabled="loading"
-					required
-					@change="clearFeedback" />
-				<p v-if="!isValidEmail(emailAddress)" class="account-form--error">
-					{{ t('mail', 'Please enter an email of the format name@example.com') }}
-				</p>
+		<NcRadioGroup
+			v-model="mode"
+			:label="t('mail', 'Mail server configuration mode')"
+			hide-label>
+			<NcRadioGroupButton :label="t('mail', 'Auto')" value="auto" :disabled="loading" />
+			<NcRadioGroupButton :label="t('mail', 'Manual')" value="manual" :disabled="loading" />
+		</NcRadioGroup>
+		<div v-show="mode === 'auto'" class="account-form__panel">
+			<NcInputField
+				id="auto-name"
+				v-model="accountName"
+				:label="t('mail', 'Name')"
+				type="text"
+				:placeholder="t('mail', 'Name')"
+				:disabled="loading"
+				autofocus />
+			<NcInputField
+				id="auto-address"
+				v-model="emailAddress"
+				:label="t('mail', 'Mail address')"
+				:disabled="loading"
+				:placeholder="t('mail', 'name@example.org')"
+				required
+				type="email"
+				@change="clearFeedback" />
+			<p v-if="!isValidEmail(emailAddress)" class="account-form--error">
+				{{ t('mail', 'Please enter an email of the format name@example.com') }}
+			</p>
+			<NcPasswordField
+				id="auto-password"
+				v-model="autoConfig.password"
+				:disabled="loading"
+				type="password"
+				:label="t('mail', 'Password')"
+				:required="!hasPasswordAlternatives"
+				@change="clearFeedback" />
+			<NcCheckboxRadioSwitch
+				id="auto-classification-enabled"
+				v-model="classificationEnabled"
+				:disabled="loading">
+				{{ t('mail', 'Enable mark as important classification') }}
+			</NcCheckboxRadioSwitch>
+		</div>
+		<div v-show="mode === 'manual'" class="account-form__panel">
+			<NcInputField
+				id="man-name"
+				v-model="accountName"
+				:label="t('mail', 'Name')"
+				type="text"
+				:placeholder="t('mail', 'Name')"
+				:disabled="loading" />
+			<NcInputField
+				id="man-address"
+				v-model="emailAddress"
+				:label="t('mail', 'Mail address')"
+				type="email"
+				:placeholder="t('mail', 'name@example.org')"
+				:disabled="loading"
+				required
+				@change="clearFeedback" />
+			<p v-if="!isValidEmail(emailAddress)" class="account-form--error">
+				{{ t('mail', 'Please enter an email of the format name@example.com') }}
+			</p>
 
-				<h4>{{ t('mail', 'IMAP Settings') }}</h4>
-				<NcInputField
-					id="man-imap-host"
-					v-model="manualConfig.imapHost"
-					:label="t('mail', 'IMAP Host')"
-					type="text"
-					:placeholder="t('mail', 'IMAP Host')"
-					:disabled="loading"
-					required
-					@change="syncCredentials" />
-				<h4 class="account-form__heading--required">
-					{{ t('mail', 'IMAP Security') }}
-				</h4>
-				<div class="flex-row">
-					<NcCheckboxRadioSwitch
-						id="man-imap-sec-none"
-						:button-variant="true"
-						:model-value="manualConfig.imapSslMode"
-						type="radio"
-						name="man-imap-sec"
-						:disabled="loading"
-						value="none"
-						button-variant-grouped="horizontal"
-						@update:checked="onImapSslModeChange">
-						{{ t('mail', 'None') }}
-					</NcCheckboxRadioSwitch>
-					<NcCheckboxRadioSwitch
-						id="man-imap-sec-ssl"
-						:button-variant="true"
-						:model-value="manualConfig.imapSslMode"
-						type="radio"
-						name="man-imap-sec"
-						:disabled="loading"
-						value="ssl"
-						button-variant-grouped="horizontal"
-						@update:checked="onImapSslModeChange">
-						{{ t('mail', 'SSL/TLS') }}
-					</NcCheckboxRadioSwitch>
-					<NcCheckboxRadioSwitch
-						id="man-imap-sec-tls"
-						:button-variant="true"
-						:model-value="manualConfig.imapSslMode"
-						type="radio"
-						name="man-imap-sec"
-						:disabled="loading"
-						value="tls"
-						button-variant-grouped="horizontal"
-						@update:checked="onImapSslModeChange">
-						{{ t('mail', 'STARTTLS') }}
-					</NcCheckboxRadioSwitch>
-				</div>
-				<NcInputField
-					id="man-imap-port"
-					v-model="manualConfig.imapPort"
-					:label="t('mail', 'IMAP Port')"
-					type="number"
-					:placeholder="t('mail', 'IMAP Port')"
-					:disabled="loading"
-					required
-					@change="clearFeedback" />
-				<NcInputField
-					id="man-imap-user"
-					v-model="manualConfig.imapUser"
-					:label="t('mail', 'IMAP User')"
-					type="text"
-					:placeholder="t('mail', 'IMAP User')"
-					:disabled="loading"
-					required
-					@change="syncCredentials" />
-				<NcPasswordField
-					v-if="!useOauth"
-					id="man-imap-password"
-					v-model="manualConfig.imapPassword"
-					type="password"
-					:label="t('mail', 'IMAP Password')"
-					:disabled="loading"
-					required
-					@change="syncCredentials" />
-
-				<h4>{{ t('mail', 'SMTP Settings') }}</h4>
-				<NcInputField
-					id="man-smtp-host"
-					v-model="manualConfig.smtpHost"
-					:label="t('mail', 'SMTP Host')"
-					type="text"
-					name="smtp-host"
-					:placeholder="t('mail', 'SMTP Host')"
-					:disabled="loading"
-					required
-					@change="unsyncCredentials" />
-				<h4 class="account-form__heading--required">
-					{{ t('mail', 'SMTP Security') }}
-				</h4>
-				<div class="flex-row">
-					<NcCheckboxRadioSwitch
-						id="man-imap-sec-none"
-						:button-variant="true"
-						:model-value="manualConfig.smtpSslMode"
-						type="radio"
-						name="man-smtp-sec"
-						:disabled="loading"
-						value="none"
-						button-variant-grouped="horizontal"
-						@update:checked="onSmtpSslModeChange">
-						{{ t('mail', 'None') }}
-					</NcCheckboxRadioSwitch>
-					<NcCheckboxRadioSwitch
-						id="man-imap-sec-ssl"
-						:button-variant="true"
-						:model-value="manualConfig.smtpSslMode"
-						type="radio"
-						name="man-smtp-sec"
-						:disabled="loading"
-						value="ssl"
-						button-variant-grouped="horizontal"
-						@update:checked="onSmtpSslModeChange">
-						{{ t('mail', 'SSL/TLS') }}
-					</NcCheckboxRadioSwitch>
-					<NcCheckboxRadioSwitch
-						id="man-imap-sec-tls"
-						:button-variant="true"
-						:model-value="manualConfig.smtpSslMode"
-						type="radio"
-						name="man-smtp-sec"
-						:disabled="loading"
-						value="tls"
-						button-variant-grouped="horizontal"
-						@update:checked="onSmtpSslModeChange">
-						{{ t('mail', 'STARTTLS') }}
-					</NcCheckboxRadioSwitch>
-				</div>
-				<NcInputField
-					id="man-smtp-port"
-					v-model="manualConfig.smtpPort"
-					:label="t('mail', 'SMTP Port')"
-					type="number"
-					:placeholder="t('mail', 'SMTP Port')"
-					:disabled="loading"
-					required
-					@change="clearFeedback" />
-				<NcInputField
-					id="man-smtp-user"
-					v-model="manualConfig.smtpUser"
-					:label="t('mail', 'SMTP User')"
-					type="text"
-					:placeholder="t('mail', 'SMTP User')"
-					:disabled="loading"
-					required
-					@change="unsyncCredentials" />
-				<NcPasswordField
-					v-if="!useOauth"
-					id="man-smtp-password"
-					v-model="manualConfig.smtpPassword"
-					:label="t('mail', 'SMTP Password')"
-					type="password"
-					:disabled="loading"
-					required
-					@change="unsyncCredentials" />
+			<h4>{{ t('mail', 'IMAP Settings') }}</h4>
+			<NcInputField
+				id="man-imap-host"
+				v-model="manualConfig.imapHost"
+				:label="t('mail', 'IMAP Host')"
+				type="text"
+				:placeholder="t('mail', 'IMAP Host')"
+				:disabled="loading"
+				required
+				@change="syncCredentials" />
+			<h4 class="account-form__heading--required">
+				{{ t('mail', 'IMAP Security') }}
+			</h4>
+			<div class="flex-row">
 				<NcCheckboxRadioSwitch
-					v-if="isSetup"
-					id="auto-classification-enabled"
-					v-model="classificationEnabled"
-					:disabled="loading">
-					{{ t('mail', 'Enable mark as important classification') }}
+					id="man-imap-sec-none"
+					:button-variant="true"
+					:model-value="manualConfig.imapSslMode"
+					type="radio"
+					name="man-imap-sec"
+					:disabled="loading"
+					value="none"
+					button-variant-grouped="horizontal"
+					@update:checked="onImapSslModeChange">
+					{{ t('mail', 'None') }}
 				</NcCheckboxRadioSwitch>
-			</Tab>
-		</Tabs>
+				<NcCheckboxRadioSwitch
+					id="man-imap-sec-ssl"
+					:button-variant="true"
+					:model-value="manualConfig.imapSslMode"
+					type="radio"
+					name="man-imap-sec"
+					:disabled="loading"
+					value="ssl"
+					button-variant-grouped="horizontal"
+					@update:checked="onImapSslModeChange">
+					{{ t('mail', 'SSL/TLS') }}
+				</NcCheckboxRadioSwitch>
+				<NcCheckboxRadioSwitch
+					id="man-imap-sec-tls"
+					:button-variant="true"
+					:model-value="manualConfig.imapSslMode"
+					type="radio"
+					name="man-imap-sec"
+					:disabled="loading"
+					value="tls"
+					button-variant-grouped="horizontal"
+					@update:checked="onImapSslModeChange">
+					{{ t('mail', 'STARTTLS') }}
+				</NcCheckboxRadioSwitch>
+			</div>
+			<NcInputField
+				id="man-imap-port"
+				v-model="manualConfig.imapPort"
+				:label="t('mail', 'IMAP Port')"
+				type="number"
+				:placeholder="t('mail', 'IMAP Port')"
+				:disabled="loading"
+				required
+				@change="clearFeedback" />
+			<NcInputField
+				id="man-imap-user"
+				v-model="manualConfig.imapUser"
+				:label="t('mail', 'IMAP User')"
+				type="text"
+				:placeholder="t('mail', 'IMAP User')"
+				:disabled="loading"
+				required
+				@change="syncCredentials" />
+			<NcPasswordField
+				v-if="!useOauth"
+				id="man-imap-password"
+				v-model="manualConfig.imapPassword"
+				type="password"
+				:label="t('mail', 'IMAP Password')"
+				:disabled="loading"
+				required
+				@change="syncCredentials" />
+
+			<h4>{{ t('mail', 'SMTP Settings') }}</h4>
+			<NcInputField
+				id="man-smtp-host"
+				v-model="manualConfig.smtpHost"
+				:label="t('mail', 'SMTP Host')"
+				type="text"
+				name="smtp-host"
+				:placeholder="t('mail', 'SMTP Host')"
+				:disabled="loading"
+				required
+				@change="unsyncCredentials" />
+			<h4 class="account-form__heading--required">
+				{{ t('mail', 'SMTP Security') }}
+			</h4>
+			<div class="flex-row">
+				<NcCheckboxRadioSwitch
+					id="man-imap-sec-none"
+					:button-variant="true"
+					:model-value="manualConfig.smtpSslMode"
+					type="radio"
+					name="man-smtp-sec"
+					:disabled="loading"
+					value="none"
+					button-variant-grouped="horizontal"
+					@update:checked="onSmtpSslModeChange">
+					{{ t('mail', 'None') }}
+				</NcCheckboxRadioSwitch>
+				<NcCheckboxRadioSwitch
+					id="man-imap-sec-ssl"
+					:button-variant="true"
+					:model-value="manualConfig.smtpSslMode"
+					type="radio"
+					name="man-smtp-sec"
+					:disabled="loading"
+					value="ssl"
+					button-variant-grouped="horizontal"
+					@update:checked="onSmtpSslModeChange">
+					{{ t('mail', 'SSL/TLS') }}
+				</NcCheckboxRadioSwitch>
+				<NcCheckboxRadioSwitch
+					id="man-imap-sec-tls"
+					:button-variant="true"
+					:model-value="manualConfig.smtpSslMode"
+					type="radio"
+					name="man-smtp-sec"
+					:disabled="loading"
+					value="tls"
+					button-variant-grouped="horizontal"
+					@update:checked="onSmtpSslModeChange">
+					{{ t('mail', 'STARTTLS') }}
+				</NcCheckboxRadioSwitch>
+			</div>
+			<NcInputField
+				id="man-smtp-port"
+				v-model="manualConfig.smtpPort"
+				:label="t('mail', 'SMTP Port')"
+				type="number"
+				:placeholder="t('mail', 'SMTP Port')"
+				:disabled="loading"
+				required
+				@change="clearFeedback" />
+			<NcInputField
+				id="man-smtp-user"
+				v-model="manualConfig.smtpUser"
+				:label="t('mail', 'SMTP User')"
+				type="text"
+				:placeholder="t('mail', 'SMTP User')"
+				:disabled="loading"
+				required
+				@change="unsyncCredentials" />
+			<NcPasswordField
+				v-if="!useOauth"
+				id="man-smtp-password"
+				v-model="manualConfig.smtpPassword"
+				:label="t('mail', 'SMTP Password')"
+				type="password"
+				:disabled="loading"
+				required
+				@change="unsyncCredentials" />
+			<NcCheckboxRadioSwitch
+				v-if="isSetup"
+				id="auto-classification-enabled"
+				v-model="classificationEnabled"
+				:disabled="loading">
+				{{ t('mail', 'Enable mark as important classification') }}
+			</NcCheckboxRadioSwitch>
+		</div>
 		<div v-if="isGoogleAccount && !googleOauthUrl" class="account-form__google-sso">
 			{{ t('mail', 'Google requires OAuth authentication. If your Nextcloud admin has not configured Google OAuth, you can use a Google App Password instead.') }}
 		</div>
@@ -277,9 +279,8 @@
 <script>
 import { loadState } from '@nextcloud/initial-state'
 import { t } from '@nextcloud/l10n'
-import { NcButton, NcCheckboxRadioSwitch, NcInputField, NcLoadingIcon, NcPasswordField } from '@nextcloud/vue'
+import { NcButton, NcCheckboxRadioSwitch, NcInputField, NcLoadingIcon, NcPasswordField, NcRadioGroup, NcRadioGroupButton } from '@nextcloud/vue'
 import { mapState, mapStores } from 'pinia'
-import { Tab, Tabs } from 'vue-tabs-component'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import { CONSENT_ABORTED, getUserConsent } from '../integration/oauth.js'
 import logger from '../logger.js'
@@ -297,8 +298,8 @@ export default {
 		NcPasswordField,
 		NcInputField,
 		NcCheckboxRadioSwitch,
-		Tab,
-		Tabs,
+		NcRadioGroup,
+		NcRadioGroupButton,
 		NcButton,
 		NcLoadingIcon,
 		IconCheck,
@@ -334,7 +335,7 @@ export default {
 		return {
 			loading: false,
 			loadingMessage: undefined,
-			mode: 'auto',
+			mode: this.account !== undefined ? 'manual' : 'auto',
 			accountName: this.displayName,
 			emailAddress: this.email,
 			classificationEnabled: fromAccountOr('classificationEnabled', loadState('mail', 'importance_classification_default', true)),
@@ -367,10 +368,6 @@ export default {
 			'googleOauthUrl',
 			'microsoftOauthUrl',
 		]),
-
-		settingsPage() {
-			return this.account !== undefined
-		},
 
 		isSetup() {
 			return this.account === undefined
@@ -441,11 +438,14 @@ export default {
 		},
 	},
 
-	methods: {
-		onModeChanged(e) {
-			this.mode = e.tab.id
+	watch: {
+		mode: {
+			immediate: true,
+			handler(mode) {
+				if (mode !== 'manual') {
+					return
+				}
 
-			if (this.mode === 'manual') {
 				// IMAP
 				if (this.manualConfig.imapUser === '') {
 					this.manualConfig.imapUser = this.emailAddress
@@ -461,9 +461,11 @@ export default {
 				if (this.manualConfig.smtpPassword === '') {
 					this.manualConfig.smtpPassword = this.autoConfig.password
 				}
-			}
+			},
 		},
+	},
 
+	methods: {
 		onImapSslModeChange(value) {
 			this.clearFeedback()
 			this.manualConfig.imapSslMode = value
@@ -754,38 +756,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-:deep(.tabs-component-tabs) {
-	display: flex;
-}
-
-:deep(.tabs-component-tab) {
-	flex-grow: 1;
-	text-align: center;
-	color: var(--color-text-lighter);
-	margin-bottom: calc(var(--default-grid-baseline) * 2 + var(--default-grid-baseline) / 2);
-}
-
-:deep(.tabs-component-tab.is-active) {
-	border-bottom: var(--border-width-input) solid black;
-	font-weight: bold;
-}
-
 :deep(.input-field) {
 	margin: calc(var(--default-grid-baseline) * 3) 0;
 }
 
-.tabs-component-panels {
-	padding-top: calc(var(--default-grid-baseline) * 5);
-}
-
-.tabs-component-panels label {
+.account-form__panel label {
 	text-align: start;
 	width: 100%;
 	display: inline-block;
 }
 
-.tabs-component-panels input,
-.tabs-component-panels select {
+.account-form__panel input,
+.account-form__panel select {
 	margin-bottom: calc(var(--default-grid-baseline) * 2);
 }
 </style>
