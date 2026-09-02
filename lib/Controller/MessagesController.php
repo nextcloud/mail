@@ -507,7 +507,7 @@ class MessagesController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
-	public function getRawMessage(int $id): JSONResponse {
+	public function getSource(int $id): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
 		}
@@ -521,7 +521,7 @@ class MessagesController extends Controller {
 		}
 
 		$response = new JSONResponse([
-			'source' => $this->mailManager->getRawMessage(
+			'source' => $this->mailManager->getSource(
 				$account,
 				$mailbox,
 				$message
@@ -559,7 +559,7 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$source = $this->mailManager->getRawMessage(
+		$source = $this->mailManager->getSource(
 			$account,
 			$mailbox,
 			$message
@@ -611,7 +611,7 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$source = $this->mailManager->getRawMessage(
+		$source = $this->mailManager->getSource(
 			$account,
 			$mailbox,
 			$message
