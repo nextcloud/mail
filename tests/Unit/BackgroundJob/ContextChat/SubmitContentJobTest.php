@@ -21,6 +21,7 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\NewMessagesSynchronized;
+use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\ContextChat\TaskService;
@@ -302,6 +303,52 @@ class SubmitContentJobTest extends TestCase {
 		$this->mailManager->expects($this->once())->method('getImapMessage')->willReturn($imapMessage);
 		$imapMessage->expects($this->once())->method('isEncrypted')->willReturn(true);
 		$imapMessage->expects($this->never())->method('getFullMessage');
+
+		$this->submitContentJob->setLastRun(0);
+		$this->submitContentJob->start($this->createMock(IJobList::class));
+	}
+
+	public function testRunWithContextChatSkipsMessageVanishedFromRemote(): void {
+		$this->contentManager->expects($this->once())
+			->method('isContextChatAvailable')
+			->willReturn(true);
+		$task = new Task();
+		$task->setLastMessageId(0);
+		$task->setMailboxId(1);
+		$task->setId(1);
+		$this->taskService->expects($this->once())->method('findNext')->willReturn($task);
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$mailbox->setAccountId(5);
+		$this->mailboxMapper->expects($this->once())->method('findById')->willReturn($mailbox);
+		$this->time->expects($this->any())->method('getTime')
+			->willReturn(
+				// returned when Job#start asks
+				12 * 60 * 60,
+				12 * 60 * 60,
+				// returned when filtering messages
+				ContextChatProvider::CONTEXT_CHAT_MESSAGE_MAX_AGE,
+				// returned before processing messages
+				0,
+				// returned on first message
+				0,
+				0,
+				0,
+				0,
+			);
+		$this->messageMapper->expects($this->once())->method('findIdsAfter')
+			->with($mailbox, 0, 0, ContextChatProvider::CONTEXT_CHAT_IMPORT_MAX_ITEMS)->willReturn([1]);
+		$account = $this->createMock(Account::class);
+		$account->expects($this->any())->method('getUserId')->willReturn('user123');
+		$this->accountService->expects($this->once())->method('findById')->with()->willReturn($account);
+		$message = new Message();
+		$message->setId(1);
+		$message->setUid(1);
+		$this->messageMapper->expects($this->once())->method('findByIds')->willReturn([$message]);
+		$this->mailManager->expects($this->once())->method('getImapMessage')
+			->willThrowException(new ClientException('Message not found on remote server'));
+		$this->contentManager->expects($this->never())->method('submitContent');
+		$this->taskService->expects($this->once())->method('setLastMessage')->with($task->getMailboxId(), 1);
 
 		$this->submitContentJob->setLastRun(0);
 		$this->submitContentJob->start($this->createMock(IJobList::class));

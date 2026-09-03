@@ -13,6 +13,7 @@ use OCA\Mail\ContextChat\ContextChatProvider;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
+use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\Service\AccountService;
@@ -115,7 +116,7 @@ class SubmitContentJob extends TimedJob {
 			}
 			try {
 				$imapMessage = $this->mailManager->getImapMessage($account, $mailbox, $message, true);
-			} catch (ServiceException $e) {
+			} catch (ServiceException|ClientException $e) {
 				// couldn't load message, let's skip it. Retrying would be too costly
 				continue;
 			} catch (SmimeDecryptException $e) {
