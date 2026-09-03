@@ -176,6 +176,9 @@ class Version1130Date20220412111833 extends SimpleMigrationStep {
 		// mail_msg_mb_del_snt_idx was added later and may not exist until optional indices are created
 		$messagesTable->addIndex(['mailbox_id', 'flag_deleted', 'sent_at'], 'mail_msg_mb_del_snt_idx');
 
+		// mail_msg_imip_idx was added later and may not exist until optional indices are created
+		$messagesTable->addIndex(['imip_message', 'sent_at'], 'mail_msg_imip_idx');
+
 		return $schema;
 	}
 
