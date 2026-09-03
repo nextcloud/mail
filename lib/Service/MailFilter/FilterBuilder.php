@@ -121,15 +121,17 @@ class FilterBuilder {
 			$lines[] = self::SEPARATOR;
 		}
 
-		/*
-		 * Using implode("\r\n", $lines) may introduce an extra newline if the original script already ends with one.
-		 * There may be a cleaner solution, but I couldn't find one that works seamlessly with Filter and Autoresponder.
-		 * Feel free to give it a try!
-		 */
-		if (str_ends_with($untouchedScript, self::SIEVE_NEWLINE . self::SIEVE_NEWLINE)) {
-			$untouchedScript = substr($untouchedScript, 0, -2);
+		if (strlen($untouchedScript) !== 0) {
+			/*
+			 * Using implode("\r\n", $lines) may introduce an extra newline if the original script already ends with one.
+			 * There may be a cleaner solution, but I couldn't find one that works seamlessly with Filter and Autoresponder.
+			 * Feel free to give it a try!
+			 */
+			if (str_ends_with($untouchedScript, self::SIEVE_NEWLINE . self::SIEVE_NEWLINE)) {
+				$untouchedScript = substr($untouchedScript, 0, -2);
+			}
+			$lines[] = $untouchedScript;
 		}
-		$lines[] = $untouchedScript;
 
 		if (count($filters) > 0) {
 			$lines[] = self::SEPARATOR;
