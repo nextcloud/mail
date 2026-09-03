@@ -80,6 +80,10 @@
 				{{ t('mail', 'Enable mark as important classification') }}
 			</NcCheckboxRadioSwitch>
 		</NcAppSettingsSection>
+		<!-- TRANSLATORS: Settings for searching in a folder -->
+		<NcAppSettingsSection id="mailbox_search" :name="t('mail', 'Folder search')">
+			<SearchSettings :account="account" />
+		</NcAppSettingsSection>
 		<NcAppSettingsSection
 			v-if="account && account.sieveEnabled"
 			id="mail-filters"
@@ -129,10 +133,6 @@
 					ref="sieveAccountForm"
 					:account="account" />
 			</div>
-		</NcAppSettingsSection>
-		<!-- TRANSLATORS: Settings for searching in a folder -->
-		<NcAppSettingsSection id="mailbox_search" :name="t('mail', 'Folder search')">
-			<SearchSettings :account="account" />
 		</NcAppSettingsSection>
 	</NcAppSettingsDialog>
 </template>
