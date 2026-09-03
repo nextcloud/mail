@@ -92,7 +92,7 @@ class ImapMessageConnector implements IMessageConnector {
 				$mailbox->getName(),
 				$uids,
 				$account->getUserId(),
-				true
+				$loadBody
 			);
 		} catch (DoesNotExistException|Horde_Mime_Exception|Horde_Imap_Client_Exception $e) {
 			throw new ServiceException('Could not load messages: ' . $e->getMessage(), $e->getCode(), $e);
