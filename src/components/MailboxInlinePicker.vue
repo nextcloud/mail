@@ -37,15 +37,17 @@ export default {
 			default: false,
 		},
 
-		value: {
+		modelValue: {
 			type: Number,
 			default: undefined,
 		},
 	},
 
+	emits: ['update:modelValue'],
+
 	data() {
 		return {
-			selected: this.value,
+			selected: this.modelValue,
 		}
 	},
 
@@ -57,10 +59,13 @@ export default {
 	},
 
 	watch: {
+		modelValue(val) {
+			this.selected = val
+		},
+
 		selected(val) {
-			if (val !== this.value) {
-				this.$emit('input', val)
-				this.selected = val
+			if (val !== this.modelValue) {
+				this.$emit('update:modelValue', val)
 			}
 		},
 	},

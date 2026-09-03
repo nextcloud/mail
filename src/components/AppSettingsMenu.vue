@@ -10,7 +10,7 @@
 			:show-navigation="true"
 			:additional-trap-elements="trapElements"
 			:legacy="false"
-			:open.sync="showSettings">
+			v-model:open="showSettings">
 			<NcAppSettingsSection id="general" :name="t('mail', 'General')">
 				<NcButton
 					variant="secondary"
@@ -103,7 +103,7 @@
 				</NcRadioGroup>
 
 				<NcDialog
-					:open.sync="textBlockDialogOpen"
+					v-model:open="textBlockDialogOpen"
 					:name="t('mail', 'New text block')"
 					:is-form="true"
 					size="normal">
