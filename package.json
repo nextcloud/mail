@@ -52,7 +52,7 @@
     "dompurify": "^3.4.13",
     "escape-html": "^1.0.3",
     "franc": "^6.2.0",
-    "html-to-text": "^10.0.0",
+    "html-to-text": "^10.0.1",
     "ical.js": "^2.2.1",
     "js-base64": "^3.9.3",
     "jstz": "^2.1.1",
