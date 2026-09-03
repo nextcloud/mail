@@ -45,6 +45,7 @@ OC.L10N.register(
     "domain" : "Domain",
     "Remove" : "Läschen",
     "Today" : "Haut",
+    "Yesterday" : "Gëschter",
     "Favorites" : "Favoriten",
     "Other" : "Aner",
     "Forward" : "Weiderleeden",

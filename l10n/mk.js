@@ -235,6 +235,7 @@ OC.L10N.register(
     "Add internal address" : "Додади внатрешна адреса",
     "Add internal email or domain" : "Додади внатрешна е-пошта или домен",
     "Itinerary for {type} is not supported yet" : "Итинерар за {type} сеуште не е поддржан",
+    "Last hour" : "Последниов час",
     "Today" : "Денес",
     "Last week" : "Минатата недела",
     "Choose target folder" : "Избери папка",
