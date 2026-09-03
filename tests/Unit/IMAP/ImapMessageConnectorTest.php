@@ -180,4 +180,20 @@ class ImapMessageConnectorTest extends TestCase {
 
 		self::assertTrue($result);
 	}
+
+	public function testFetchMessagesPassesThroughLoadBody(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
+		$message = new Message();
+		$message->setUid(1);
+		$this->account->method('getUserId')
+			->willReturn('user123');
+
+		$this->imapMessageMapper->expects(self::once())
+			->method('findByIds')
+			->with($this->client, 'INBOX', [1], 'user123', false)
+			->willReturn([]);
+
+		$this->connector->fetchMessages($this->account, $mailbox, false, $message);
+	}
 }
