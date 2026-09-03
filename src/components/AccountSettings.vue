@@ -99,17 +99,6 @@
 			<Settings :key="account.accountId" ref="quickActions" :account="account" />
 		</NcAppSettingsSection>
 		<NcAppSettingsSection
-			v-if="account && account.sieveEnabled"
-			id="sieve-filter"
-			:name="t('mail', 'Sieve script editor')">
-			<div id="sieve-filter">
-				<SieveFilterForm
-					:key="account.accountId"
-					ref="sieveFilterForm"
-					:account="account" />
-			</div>
-		</NcAppSettingsSection>
-		<NcAppSettingsSection
 			v-if="account && !account.provisioningId && !account.isDelegated"
 			id="mail-server"
 			ref="mail-server"
@@ -131,6 +120,17 @@
 				<SieveAccountForm
 					:key="account.accountId"
 					ref="sieveAccountForm"
+					:account="account" />
+			</div>
+		</NcAppSettingsSection>
+		<NcAppSettingsSection
+			v-if="account && account.sieveEnabled"
+			id="sieve-filter"
+			:name="t('mail', 'Sieve script editor')">
+			<div id="sieve-filter">
+				<SieveFilterForm
+					:key="account.accountId"
+					ref="sieveFilterForm"
 					:account="account" />
 			</div>
 		</NcAppSettingsSection>
