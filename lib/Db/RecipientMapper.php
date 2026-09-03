@@ -44,10 +44,11 @@ class RecipientMapper extends QBMapper {
 			return [];
 		}
 		$qb = $this->db->getQueryBuilder();
-		$query = $qb->select('*')
-			->from($this->getTableName())
+		$query = $qb->select('r.*')
+			->from($this->getTableName(), 'r')
+			->innerJoin('r', 'mail_local_messages', 'lm', $qb->expr()->eq('lm.id', 'r.local_message_id'))
 			->where(
-				$qb->expr()->in('local_message_id', $qb->createNamedParameter($localMessageIds, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY)
+				$qb->expr()->in('lm.id', $qb->createNamedParameter($localMessageIds, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY)
 			);
 
 		return $this->findEntities($query);
