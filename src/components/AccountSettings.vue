@@ -55,12 +55,7 @@
 				{{ t('mail', 'Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days.') }}
 			</p>
 			<OutOfOfficeForm v-if="account.sieveEnabled" :account="account" />
-			<div v-else>
-				<p>{{ t('mail', 'The autoresponder uses Sieve, a scripting language supported by many email providers. If you\'re unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it.') }}</p>
-				<NcButton variant="secondary" :aria-label="t('mail', 'Go to Sieve settings')" href="#sieve-form">
-					{{ t('mail', 'Go to Sieve settings') }}
-				</NcButton>
-			</div>
+			<SieveDisabledHint v-else />
 		</NcAppSettingsSection>
 		<NcAppSettingsSection
 			v-if="account && systemVersion >= 33"
@@ -85,18 +80,22 @@
 			<SearchSettings :account="account" />
 		</NcAppSettingsSection>
 		<NcAppSettingsSection
-			v-if="account && account.sieveEnabled"
-			id="mail-filters"
-			:name="t('mail', 'Filters')">
-			<div id="mail-filters">
-				<MailFilters :key="account.accountId" ref="mailFilters" :account="account" />
-			</div>
-		</NcAppSettingsSection>
-		<NcAppSettingsSection
 			v-if="account"
 			id="quick-actions-settings"
 			:name="t('mail', 'Quick actions')">
 			<Settings :key="account.accountId" ref="quickActions" :account="account" />
+		</NcAppSettingsSection>
+		<NcAppSettingsSection
+			v-if="account"
+			id="mail-filters"
+			:name="t('mail', 'Filters')">
+			<p class="settings-hint">
+				{{ t('mail', 'Rules that are applied to incoming messages, for example to move them into a folder or flag them.') }}
+			</p>
+			<div v-if="account.sieveEnabled" id="mail-filters">
+				<MailFilters :key="account.accountId" ref="mailFilters" :account="account" />
+			</div>
+			<SieveDisabledHint v-else />
 		</NcAppSettingsSection>
 		<NcAppSettingsSection
 			v-if="account && !account.provisioningId && !account.isDelegated"
@@ -138,7 +137,7 @@
 </template>
 
 <script>
-import { NcAppSettingsDialog, NcAppSettingsSection, NcButton, NcCheckboxRadioSwitch } from '@nextcloud/vue'
+import { NcAppSettingsDialog, NcAppSettingsSection, NcCheckboxRadioSwitch } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import AccountDefaultsSettings from '../components/AccountDefaultsSettings.vue'
 import AccountForm from '../components/AccountForm.vue'
@@ -152,6 +151,7 @@ import OutOfOfficeForm from './OutOfOfficeForm.vue'
 import Settings from './quickActions/Settings.vue'
 import SearchSettings from './SearchSettings.vue'
 import SieveAccountForm from './SieveAccountForm.vue'
+import SieveDisabledHint from './SieveDisabledHint.vue'
 import SieveFilterForm from './SieveFilterForm.vue'
 import TrashRetentionSettings from './TrashRetentionSettings.vue'
 import logger from '../logger.js'
@@ -161,6 +161,7 @@ export default {
 	name: 'AccountSettings',
 	components: {
 		SieveAccountForm,
+		SieveDisabledHint,
 		SieveFilterForm,
 		AccountForm,
 		AliasSettings,
@@ -175,7 +176,6 @@ export default {
 		TrashRetentionSettings,
 		SearchSettings,
 		MailFilters,
-		NcButton,
 		Settings,
 		NcCheckboxRadioSwitch,
 	},

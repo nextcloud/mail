@@ -4,7 +4,6 @@
 -->
 <template>
 	<div class="section">
-		<p>{{ t('mail', 'Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter.') }}</p>
 		<div v-if="loading" class="filter-list__loading">
 			<NcLoadingIcon />
 			<p>{{ t('mail', 'Hang tight while the filters load') }}</p>
