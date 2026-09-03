@@ -13,27 +13,29 @@
 		@update:open="onClose">
 		<NcAppSettingsSection
 			id="alias-settings"
+			key="alias-settings"
 			:name="t('mail', 'Aliases')">
 			<AliasSettings :account="account" @rename-primary-alias="scrollToAccountSettings" />
 		</NcAppSettingsSection>
 		<NcAppSettingsSection
 			id="certificate-settings"
+			key="certificate-settings"
 			:name="t('mail', 'Alias to S/MIME certificate mapping')">
 			<CertificateSettings :account="account" />
 		</NcAppSettingsSection>
-		<NcAppSettingsSection id="writing-mode" :name="t('mail', 'Writing mode')">
+		<NcAppSettingsSection id="writing-mode" key="writing-mode" :name="t('mail', 'Writing mode')">
 			<p class="settings-hint">
 				{{ t('mail', 'Preferred writing mode for new messages and replies.') }}
 			</p>
 			<EditorSettings :account="account" />
 		</NcAppSettingsSection>
-		<NcAppSettingsSection id="signature" :name="t('mail', 'Signature')">
+		<NcAppSettingsSection id="signature" key="signature" :name="t('mail', 'Signature')">
 			<p class="settings-hint">
 				{{ t('mail', 'A signature is added to the text of new messages and replies.') }}
 			</p>
 			<SignatureSettings :account="account" />
 		</NcAppSettingsSection>
-		<NcAppSettingsSection id="default-folders" :name=" t('mail', 'Default folders')">
+		<NcAppSettingsSection id="default-folders" key="default-folders" :name=" t('mail', 'Default folders')">
 			<p class="settings-hint">
 				{{
 					t('mail', 'The folders to use for drafts, sent messages, deleted messages, archived messages and junk messages.')
@@ -41,7 +43,7 @@
 			</p>
 			<AccountDefaultsSettings :account="account" />
 		</NcAppSettingsSection>
-		<NcAppSettingsSection id="trash-retention" :name=" t('mail', 'Automatic trash deletion')">
+		<NcAppSettingsSection id="trash-retention" key="trash-retention" :name=" t('mail', 'Automatic trash deletion')">
 			<p class="settings-hint">
 				{{ t('mail', 'Days after which messages in Trash will automatically be deleted:') }}
 			</p>
@@ -50,6 +52,7 @@
 		<NcAppSettingsSection
 			v-if="account"
 			id="out-of-office-replies"
+			key="out-of-office-replies"
 			:name="t('mail', 'Autoresponder')">
 			<p class="settings-hint">
 				{{ t('mail', 'Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days.') }}
@@ -60,12 +63,14 @@
 		<NcAppSettingsSection
 			v-if="account && systemVersion >= 33"
 			id="calendar-settings"
+			key="calendar-settings"
 			:name="t('mail', 'Calendar settings')">
 			<CalendarSettings :account="account" />
 		</NcAppSettingsSection>
 		<NcAppSettingsSection
 			v-if="account"
 			id="classification"
+			key="classification"
 			:name="t('mail', 'Classification settings')">
 			<NcCheckboxRadioSwitch
 				id="auto-classification-enabled"
@@ -76,18 +81,20 @@
 			</NcCheckboxRadioSwitch>
 		</NcAppSettingsSection>
 		<!-- TRANSLATORS: Settings for searching in a folder -->
-		<NcAppSettingsSection id="mailbox_search" :name="t('mail', 'Folder search')">
+		<NcAppSettingsSection id="mailbox_search" key="mailbox_search" :name="t('mail', 'Folder search')">
 			<SearchSettings :account="account" />
 		</NcAppSettingsSection>
 		<NcAppSettingsSection
 			v-if="account"
 			id="quick-actions-settings"
+			key="quick-actions-settings"
 			:name="t('mail', 'Quick actions')">
 			<Settings :key="account.accountId" ref="quickActions" :account="account" />
 		</NcAppSettingsSection>
 		<NcAppSettingsSection
 			v-if="account"
 			id="mail-filters"
+			key="mail-filters"
 			:name="t('mail', 'Filters')">
 			<p class="settings-hint">
 				{{ t('mail', 'Rules that are applied to incoming messages, for example to move them into a folder or flag them.') }}
@@ -100,6 +107,7 @@
 		<NcAppSettingsSection
 			v-if="account && !account.provisioningId && !account.isDelegated"
 			id="mail-server"
+			key="mail-server"
 			ref="mail-server"
 			:name="t('mail', 'Mail server')">
 			<div id="mail-settings">
@@ -114,6 +122,7 @@
 		<NcAppSettingsSection
 			v-if="account && !account.provisioningId"
 			id="sieve-settings"
+			key="sieve-settings"
 			:name="t('mail', 'Sieve server')">
 			<div id="sieve-settings">
 				<SieveAccountForm
@@ -125,6 +134,7 @@
 		<NcAppSettingsSection
 			v-if="account && account.sieveEnabled"
 			id="sieve-filter"
+			key="sieve-filter"
 			:name="t('mail', 'Sieve script editor')">
 			<div id="sieve-filter">
 				<SieveFilterForm
