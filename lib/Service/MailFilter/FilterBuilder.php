@@ -90,9 +90,11 @@ class FilterBuilder {
 				if ($action['type'] === 'stop') {
 					$actions[] = 'stop;';
 				}
-				if ($action['type'] === 'forward') {
-					$recipient = SieveUtils::escapeString($action['recipient']);
-					$actions[] = sprintf('redirect "%s";', $recipient);
+				if ($action['type'] === 'forward' && !empty($action['recipient'])) {
+					$actions[] = sprintf(
+						'redirect "%s";',
+						SieveUtils::escapeString($action['recipient'])
+					);
 				}
 			}
 

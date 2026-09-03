@@ -89,6 +89,8 @@ export class MailFilterActionStop implements MailFilterAction {
 export class MailFilterActionForward implements MailFilterAction {
 	public id: number
 	public type: string
+	public recipient: string
+
 	constructor() {
 		this.id = randomId()
 		this.type = 'forward'

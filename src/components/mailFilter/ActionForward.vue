@@ -3,21 +3,23 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<NcTextField
+	<NcInputField
+		type="email"
 		:required="true"
 		:model-value="recipient"
 		:label-outside="true"
-		:placeholder="t('mail', 'Enter recipient')"
-		@update:value="onInput" />
+		:aria-label="t('mail', 'Recipient')"
+		:placeholder="t('mail', 'name@example.org')"
+		@update:model-value="onInput" />
 </template>
 
 <script>
-import { NcTextField } from '@nextcloud/vue'
+import { NcInputField } from '@nextcloud/vue'
 
 export default {
 	name: 'ActionForward',
 	components: {
-		NcTextField,
+		NcInputField,
 	},
 
 	props: {

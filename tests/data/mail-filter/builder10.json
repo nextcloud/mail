@@ -1,6 +1,6 @@
 [
 	{
-		"name": "Test 9",
+		"name": "Test 10",
 		"enable": true,
 		"operator": "allof",
 		"tests": [
@@ -15,7 +15,10 @@
 		"actions": [
 			{
 				"type": "forward",
-				"recipient": "alice@example.org"
+				"recipient": ""
+			},
+			{
+				"type": "stop"
 			}
 		],
 		"priority": 10
