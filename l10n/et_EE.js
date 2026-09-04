@@ -258,7 +258,7 @@ OC.L10N.register(
     "Tomorrow morning" : "Homme hommikul",
     "Tomorrow afternoon" : "Homme pärastlõunal",
     "Monday morning" : "Esmaspäeva hommikul",
-    "Custom date and time" : "Valutud kuupäeval ja kellaajal",
+    "Custom date and time" : "Valitud kuupäeval ja kellaajal",
     "Enter a date" : "Sisesta kuupäev",
     "Remove attachment {fileName}" : "Eemalda manus: {fileName}",
     "Add as attachment" : "Lisa manusena",
