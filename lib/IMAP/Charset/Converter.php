@@ -35,7 +35,7 @@ class Converter {
 		$charset = trim($charset);
 		$lowerCharset = strtolower($charset);
 
-		return self::CHARSET_MAP[$lowerCharset] ?? $charset;
+		return self::CHARSET_MAP[$lowerCharset] ?? strtoupper($charset);
 	}
 
 	/**
@@ -45,7 +45,7 @@ class Converter {
 		/** @var list<string>|null $encodings */
 		static $encodings = null;
 		if ($encodings === null) {
-			$encodings = mb_list_encodings();
+			$encodings = array_map('strtoupper', mb_list_encodings());
 		}
 
 		return $encodings;
