@@ -71,12 +71,43 @@ class ItineraryServiceTest extends TestCase {
 		$mailbox->setName('INBOX');
 
 		$this->itineraryExtractor->expects($this->once())
+			->method('hasAdapter')
+			->willReturn(true);
+		$this->itineraryExtractor->expects($this->once())
 			->method('extract')
 			->willReturn(new Itinerary());
 
 		$itinerary = $this->service->extract($account, $mailbox, 13);
 
 		$this->assertEquals([], $itinerary->jsonSerialize());
+	}
+
+	public function testExtractWithoutAdapterSkipsImapFetch(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(100);
+		$mailAccount->setUserId('1');
+		$account = new Account($mailAccount);
+
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
+
+		$this->itineraryExtractor->expects($this->once())
+			->method('hasAdapter')
+			->willReturn(false);
+		$this->itineraryExtractor->expects($this->never())
+			->method('extract');
+		$this->imapClientFactory->expects($this->never())
+			->method('getClient');
+		$this->messageMapper->expects($this->never())
+			->method('getHtmlBody');
+		$this->messageMapper->expects($this->never())
+			->method('getRawAttachments');
+
+		$itinerary = $this->service->extract($account, $mailbox, 13);
+
+		$this->assertEquals([], $itinerary->jsonSerialize());
+		// The empty result is cached so subsequent opens skip the probe too
+		$this->assertNotNull($this->service->getCached($account, $mailbox, 13));
 	}
 
 	public function testExtractFromBody() {
@@ -98,6 +129,9 @@ class ItineraryServiceTest extends TestCase {
 			->method('getHtmlBody')
 			->with($client, 'INBOX', 13)
 			->willReturn($body);
+		$this->itineraryExtractor->expects($this->once())
+			->method('hasAdapter')
+			->willReturn(true);
 		$this->itineraryExtractor->expects($this->exactly(2))
 			->method('extract')
 			->withConsecutive([$body], ['["datafrombody"]'])
@@ -127,6 +161,9 @@ class ItineraryServiceTest extends TestCase {
 			->method('getRawAttachments')
 			->with($client, 'INBOX', 13)
 			->willReturn([$pdf]);
+		$this->itineraryExtractor->expects($this->once())
+			->method('hasAdapter')
+			->willReturn(true);
 		$this->itineraryExtractor->expects($this->exactly(2))
 			->method('extract')
 			->withConsecutive([$pdf], ['["datafrompdf"]'])
@@ -135,6 +172,47 @@ class ItineraryServiceTest extends TestCase {
 		$itinerary = $this->service->extract($account, $mailbox, 13);
 
 		$this->assertEquals(['datafrompdf'], $itinerary->jsonSerialize());
+	}
+
+	public function testExtractSecondCallIsServedFromCacheWithoutImapIo(): void {
+		// IOPS guard: reopening a message must not touch IMAP (or even probe
+		// the adapter) again — the first extraction's result has to be served
+		// from the cache. The once()/exactly() expectations fail this test if
+		// the second extract() call performs any backend work.
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(100);
+		$mailAccount->setUserId('1');
+		$account = new Account($mailAccount);
+
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
+
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
+		$this->imapClientFactory->expects($this->once())
+			->method('getClient')
+			->with($account)
+			->willReturn($client);
+		$body = '<html><body>hello</body></html>';
+		$this->messageMapper->expects($this->once())
+			->method('getHtmlBody')
+			->with($client, 'INBOX', 13)
+			->willReturn($body);
+		$this->messageMapper->expects($this->once())
+			->method('getRawAttachments')
+			->with($client, 'INBOX', 13)
+			->willReturn([]);
+		$this->itineraryExtractor->expects($this->once())
+			->method('hasAdapter')
+			->willReturn(true);
+		$this->itineraryExtractor->expects($this->exactly(2))
+			->method('extract')
+			->willReturn(new Itinerary(['datafrombody']));
+
+		$first = $this->service->extract($account, $mailbox, 13);
+		$second = $this->service->extract($account, $mailbox, 13);
+
+		$this->assertEquals($first->jsonSerialize(), $second->jsonSerialize());
+		$this->assertEquals(['datafrombody'], $second->jsonSerialize());
 	}
 
 	public function testGetCachedMiss(): void {
