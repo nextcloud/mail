@@ -141,6 +141,7 @@ OC.L10N.register(
     "Ok" : "OK",
     "Manually" : "手動",
     "Text blocks" : "テキストブロック",
+    "Shared with me" : "私と共有",
     "Privacy" : "プライバシー",
     "Security" : "セキュリティ",
     "S/MIME" : "S/MIME",
