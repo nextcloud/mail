@@ -76,6 +76,7 @@ class MailAccountTest extends TestCase {
 			'imipCreate' => false,
 			'protocol' => 'imap',
 			'path' => null,
+			'oauthNeedsReauth' => false,
 		], $a->toJson());
 	}
 
@@ -119,6 +120,7 @@ class MailAccountTest extends TestCase {
 			'imipCreate' => false,
 			'protocol' => 'imap',
 			'path' => null,
+			'oauthNeedsReauth' => false,
 		];
 		$a = new MailAccount($expected);
 		// TODO: fix inconsistency

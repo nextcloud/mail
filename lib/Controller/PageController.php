@@ -15,8 +15,10 @@ use OCA\Mail\AppInfo\Application;
 use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IUserPreferences;
+use OCA\Mail\Db\OidcProvider;
 use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Db\TagMapper;
+use OCA\Mail\Integration\OidcIntegration;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
@@ -92,6 +94,7 @@ class PageController extends Controller {
 		private ContextChatSettingsService $contextChatSettingsService,
 		private ClassificationSettingsService $classificationSettingsService,
 		private IAppConfig $appConfig,
+		private OidcIntegration $oidcIntegration,
 	) {
 		parent::__construct($appName, $request);
 
@@ -296,6 +299,24 @@ class PageController extends Controller {
 				]),
 			);
 		}
+
+		$oidcAuthorizeUrl = $this->urlGenerator->linkToRouteAbsolute('mail.oidcIntegration.authorize');
+		$this->initialStateService->provideInitialState(
+			'oidc_providers',
+			array_map(static function (OidcProvider $provider) use ($oidcAuthorizeUrl): array {
+				return [
+					'name' => $provider->getName(),
+					'emailDomain' => $provider->getEmailDomain(),
+					'imapHost' => $provider->getImapHost(),
+					'imapPort' => $provider->getImapPort(),
+					'imapSslMode' => $provider->getImapSslMode(),
+					'smtpHost' => $provider->getSmtpHost(),
+					'smtpPort' => $provider->getSmtpPort(),
+					'smtpSslMode' => $provider->getSmtpSslMode(),
+					'authorizeUrl' => $oidcAuthorizeUrl . '?providerId=' . $provider->getId() . '&state=_state_',
+				];
+			}, $this->oidcIntegration->getProviders()),
+		);
 
 		// Disable snooze and scheduled send in frontend if ajax cron is used because it is unreliable
 		$cronMode = $this->config->getAppValue('core', 'backgroundjobs_mode', 'ajax');
