@@ -195,7 +195,6 @@ OC.L10N.register(
     "Date:" : "Dato:",
     "Tag already exists" : "La etikedo jam ekzistas",
     "Error loading message" : "Eraris ŝargi mesaĝon",
-    "Choose a file to add as attachment" : "Elektu dosieron aldonotan kiel kunsendaĵon",
     "Show less" : "Montri malpli",
     "Show more" : "Montri pli"
 },

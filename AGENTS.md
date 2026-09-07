@@ -77,6 +77,131 @@ The diff shows *what* changed and *how*; a comment exists only to capture *why* 
 - **No multi-line explanatory blocks, AI-style walkthroughs, or section banners.**
 - **Remove a stale comment** only when you're already editing that code for the task at hand — no drive-by cleanups.
 
+## Coding conventions
+
+These are the points maintainers raise again and again in review. Following them up
+front keeps review focused on design instead of the same recurring notes. CodeRabbit
+reads this file automatically and reviews against these conventions, so the bot flags
+the same things — but the author should not need the bot to learn them.
+
+### Scope & commits
+- **One concern per PR.** Keep unrelated edits, drive-by refactors, code-style churn,
+  dependency/lock-file bumps and new runtime-version support out of a feature PR — put
+  them in a separate PR so they stay backportable to stable branches. Small,
+  single-purpose PRs sail through; large diffs draw change requests.
+- **The commit type must match the change** (see `.github/CONTRIBUTING.md`): moving code
+  with no behavior change is `refactor:`, not `feat:`. Scopes stay broad (`imap`, `ui`).
+- **Reuse before reinventing.** Grep for an existing helper, mapper, constant or pattern
+  and mirror it instead of writing a parallel implementation.
+
+### PHP backend
+- **Types over PHPDoc.** Prefer native param/return/property types; drop PHPDoc that only
+  restates them; keep `@throws` and anything that adds information. Use precise
+  `psalm-type` array shapes (reuse existing shape definitions) instead of bare `array`.
+  Handle Psalm's possible-null and
+  `string|false` (e.g. `file_get_contents`) results — throw a `ServiceException`, don't
+  cast the failure away. Use constructor property promotion and strict comparison
+  (`===`, `in_array(..., true)`).
+- **Exceptions.** Catch narrowly — never a blanket `\Exception`/`\Throwable` for a
+  specific failure. When wrapping, pass the original as `$previous` (or rethrow) so the
+  stack trace survives. Throw domain exceptions; don't leak abstraction-layer exceptions
+  (`DoesNotExistException`, storage exceptions) out of a service. Keep `@throws` in sync
+  with the interface contract.
+- **Logging.** Inject `LoggerInterface`; log with a meaningful message and
+  `['exception' => $e]` context at the right level. Log non-critical conditions at
+  info/debug and return rather than throwing or spamming warnings. Never swallow errors.
+- **Dependency injection & layering.** Inject collaborators (incl. OCP services) via the
+  constructor, not the service locator. Replace `time()` with `ITimeFactory` for
+  testability. Don't inject request data such as `userId` into services (controllers
+  only) — pass it as an argument so the service stays usable from background jobs. Keep
+  controllers thin (request/response only); business logic and DB access belong in
+  services; keep constants in their owning class.
+- **Nextcloud API boundaries.** Never use another app's private `\OCA\OtherApp\*` API — go
+  through a stable OCP interface. Respect the minimum server version in `appinfo/info.xml`;
+  guard newer OCP APIs with `method_exists` + a fallback. Store new config via
+  `IAppConfig` (no dots in new keys). Controllers use `#[NoAdminRequired]` for non-admin
+  routes (omit it on admin-only ones), HTTP 422 for validation errors, `HTTP::STATUS_*`
+  constants, and `TrapError` over hand-written try/catch. Keep 400 (client error) vs 404
+  (not found) intentional. Prefer kebab-case URLs with the id in the path and a single
+  `resource` route.
+- **Controller access control.** Check that the current user owns the resource before
+  acting on an incoming id — guard against IDOR, don't act on a guessed id. Take a nullable
+  `?string $userId` from the predefined core services and return 401 when it is null.
+
+### Mappers & entities
+- Let mappers propagate `DoesNotExistException` / `OCP\DB\Exception` to the caller — don't
+  catch not-found inside the mapper. Reuse the `QBMapper` `insert`/`update`/`find` helpers
+  instead of hand-writing queries.
+- Name accessors `findX`/`getX` (not `store`); keep entity `@method` annotations accurate,
+  including `int|null` for nullable columns; register column types with `addType` in the
+  constructor.
+
+### Database & migrations
+- **Re-runnable:** check column/table existence before changing schema so a partially
+  failed migration can retry.
+- **Version naming:** name the `Version` class after the *next unreleased* minor and bump
+  `version` in `appinfo/info.xml`, or the migration won't run. (See the DB index dual
+  pattern for adding indices without a blocking `changeSchema`.)
+- **Foreign keys** on referencing columns, with the delete action chosen from the
+  relationship: cascade delete for rows the parent owns (so account/mailbox deletion leaves
+  no orphans), `SET NULL` for an optional reference, `RESTRICT` to prevent deletion. Clean up
+  dangling rows pre-schema.
+- **Indexes:** composite column order matters (`[a,b]` ≠ `[b,a]`) — match the query's
+  WHERE/ORDER BY; add covering indexes on exactly the filtered/joined columns; make the
+  index unique when the column is.
+- **Portability & size:** sensible column lengths (avoid MariaDB off-row storage), truncate
+  before writing fixed-width columns, Oracle needs nullable booleans and treats empty
+  strings as `NULL`, Postgres/Oracle are strict about VARCHAR-vs-INT. Batch huge
+  UPDATE/DELETE and emit progress. Inline entity constants in migrations (a loaded class
+  can hold stale values mid-upgrade).
+
+### Performance
+- Push filters/limits/cursors into the DB query; scope by `user_id`; use `WHERE ... IN`
+  to avoid N+1; don't `array_merge` in a loop. Reuse one Horde IMAP client across a bulk
+  operation instead of reconnecting per message. Stream large result sets via generators
+  and guard against OOM — users can have 200+ mailboxes. Prefer a local cache over a
+  distributed one for recomputable values and scope cache keys per user.
+
+### Frontend (Vue / JS)
+- **Async:** `async`/`await` with `try`/`catch`, never mixed with `.then`; never `await`
+  inside `forEach` (use `for...of`); a missing `await` is a real bug. Await sequential
+  per-item dispatches instead of flooding the backend, and don't fire one request per
+  list item — push it to the backend or preload via initial state.
+- **Structure:** HTTP handling in the service layer, mutations inside store actions,
+  business logic out of components. Add a loading/disabled state to any control that
+  triggers an async action so a double click can't fire it twice. Don't make an element
+  look clickable when its action is unavailable.
+- **Style of code:** early returns over nested conditions, named constants over magic
+  numbers, `const`/`let` never `var`, pure helpers free of side effects and store access.
+  Sanitize user-controlled values before they reach the DOM. Use `isDarkTheme` from
+  `@nextcloud/vue`, not `window.matchMedia('(prefers-color-scheme: dark)')`. Follow the
+  dev-manual naming the linter can't check: multi-word PascalCase component names
+  (`SettingsView`, not `Settings`), prefixed sub-components, and acronyms with only the
+  first letter capitalised (`callHttpApi`).
+- **CSS:** see [Styling](#styling); keep styles scoped, follow BEM, prefer a modifier class
+  over manipulating inline style, use grid/spacing/breakpoint CSS variables (no hard-coded
+  breakpoints), and remove now-unused styles. Avoid `::v-deep`/`!important` into upstream
+  component internals; where a deep selector is genuinely needed, comment why so it isn't
+  dropped by mistake.
+
+### Internationalization
+- Wrap every user-facing string, **including aria-labels**, in `t('mail', …)`. Use one
+  string with placeholders — never concatenate translated fragments (translators reorder
+  words). Use `n('mail', …)` with a `%n` placeholder for counts. Never compare against a
+  hard-coded English string or use a translated string as a key. No HTML inside a
+  translation string — translate the plain parts and HTML-encode the inserts.
+
+### Accessibility
+- Real anchor (`<a href … target="_blank">`) for links, not a JS click handler, so screen
+  readers and native middle-click work. Use semantically correct elements and let
+  `NcButton` inject the required a11y attributes rather than hand-rolling clickable markup.
+
+### Mail-specific gotchas
+- **IMAP UIDs are only unique within one mailbox** — never treat them as global
+  identifiers; key on the database primary key.
+- The app already has building blocks (trusted senders, RFC-2822 address parsing,
+  `IMAPClientFactory`, `Horde_Mail_Rfc822_Identification`) — reuse them.
+
 ## Testing
 
 ### Unit Tests
@@ -86,6 +211,11 @@ Located in `tests/Unit/` with structure mirroring `lib/`.
 - Use **arrange-act-assert** structure with blank lines separating each phase (no literal comments)
 - Mock dependencies via `$this->createMock(Interface::class)`
 - Setup mocks in `setUp()` for common fixtures
+- **Cover the error and edge paths**, not just the happy path (empty input, the throwing branch, both sort orders); new classes and changed logic need tests
+- Declare typed fixture properties (`private Foo&MockObject $foo;`) to avoid dynamic-property deprecation warnings; test methods return `void`
+- Only mock external collaborators, never the class under test; assert arguments with `->with(...)` and, instead of the removed `withConsecutive`, branch on the argument with `match`/`if` so behavior depends on input, not call order
+- Use the same constants in tests as in production code (don't hard-code their values)
+- Hand-written stubs of another app's API give false safety — Psalm keeps passing when the upstream API changes, so keep them in sync or avoid them
 
 #### Running Tests
 ```bash

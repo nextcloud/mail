@@ -187,8 +187,6 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Birkas nosaukums ir slēpta sistēmas birka",
     "Tag already exists" : "Birka jau pastāv",
     "Error loading message" : "Kļūda ielādējot vēstuli",
-    "Choose a file to add as attachment" : "Izvēlēties datni, ko pievienot kā pielikumu",
-    "Choose a file to share as a link" : "Jāizvēlas datne, ko kopīgot kā saiti",
     "Show more" : "Parādīt vairāk"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);");

@@ -342,8 +342,6 @@ OC.L10N.register(
     "Could not load the message" : "No at fatu a carrigare su messàgiu",
     "Date:" : "Data:",
     "Error loading message" : "Errore in su carrigamentu de su messàgiu",
-    "Choose a file to add as attachment" : "Sèbera un'archìviu de agiùnghere comente alligongiadu",
-    "Choose a file to share as a link" : "Sèbera un'archìviu de cumpartzire comente ligòngiu",
     "Show less" : "Mustra prus pagu",
     "Show more" : "Mustra de prus"
 },

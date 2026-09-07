@@ -277,8 +277,6 @@ OC.L10N.register(
     "Could not load the message" : "Không thể tải tin nhắn",
     "Date:" : "Ngày:",
     "Tag already exists" : "Thẻ đã tồn tại",
-    "Error loading message" : "Lỗi khi tải tin nhắn",
-    "Choose a file to add as attachment" : "Chọn một tệp để thêm dưới dạng tệp đính kèm",
-    "Choose a file to share as a link" : "Chọn một tệp để chia sẻ dưới dạng liên kết"
+    "Error loading message" : "Lỗi khi tải tin nhắn"
 },
 "nplurals=1; plural=0;");

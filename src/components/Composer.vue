@@ -43,14 +43,9 @@
 			</div>
 		</div>
 		<div class="composer-fields">
-			<div class="composer-fields__label">
-				<label class="to-label" for="to">
-					{{ t('mail', 'To') }}
-				</label>
-				<NcButton size="small" variant="tertiary-no-background" @click.prevent="toggleViewMode">
-					{{ t('mail', 'Cc/Bcc') }}
-				</NcButton>
-			</div>
+			<label class="to-label" for="to">
+				{{ t('mail', 'To') }}
+			</label>
 			<div class="composer-fields--custom">
 				<NcSelect
 					id="to"
@@ -1064,10 +1059,6 @@ export default {
 	},
 
 	watch: {
-		'$route.params.threadId': function() {
-			this.reset()
-		},
-
 		allRecipients() {
 			this.checkRecipientsKeys()
 		},
@@ -1396,6 +1387,7 @@ export default {
 				trigger,
 				signature,
 				this.selectedAlias.signatureAboveQuote,
+				this.editorPlainText,
 			)
 
 			this.changeSignature = false

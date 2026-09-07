@@ -235,6 +235,7 @@ OC.L10N.register(
     "Add internal address" : "Додади внатрешна адреса",
     "Add internal email or domain" : "Додади внатрешна е-пошта или домен",
     "Itinerary for {type} is not supported yet" : "Итинерар за {type} сеуште не е поддржан",
+    "Last hour" : "Последниов час",
     "Today" : "Денес",
     "Last week" : "Минатата недела",
     "Choose target folder" : "Избери папка",
@@ -410,7 +411,6 @@ OC.L10N.register(
     "Port" : "Порта",
     "SMTP" : "SMTP",
     "Save Config" : "Зачувај конфигурација",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% и %EMAIL% ќе биде заменето со корнички ID и e-po[ta",
     "With the settings above, the app will create account settings in the following way:" : "Со овие параметри, апликацијата ќе креира сметки:",
     "Failed to import the certificate. Please check the password." : "Неуспешно увезување на сертификат. Проверете ја лозинката.",
     "Certificate imported successfully" : "Сертификатот е успешно увезен",
@@ -463,9 +463,8 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Името на ознаката е сокриена системска ознака",
     "Tag already exists" : "Тагот веќе постои",
     "Error loading message" : "Грешка при вчитување на пораката",
-    "Choose a file to add as attachment" : "Избери датотека за да додадете прилог",
-    "Choose a file to share as a link" : "Избери датотека за да се сподели како линк",
     "Show less" : "Помалку",
-    "Show more" : "Прикажи повеќе"
+    "Show more" : "Прикажи повеќе",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% и %EMAIL% ќе биде заменето со корнички ID и e-po[ta"
 },
 "nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;");

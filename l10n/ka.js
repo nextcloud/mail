@@ -557,7 +557,6 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted.",
     "Save Config" : "Save Config",
     "Unprovision & Delete Config" : "Unprovision & Delete Config",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% and %EMAIL% will be replaced with the user's UID and email",
     "With the settings above, the app will create account settings in the following way:" : "With the settings above, the app will create account settings in the following way:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key.",
     "Failed to import the certificate. Please check the password." : "Failed to import the certificate. Please check the password.",
@@ -617,9 +616,8 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Tag name is a hidden system tag",
     "Tag already exists" : "Tag already exists",
     "Error loading message" : "Error loading message",
-    "Choose a file to add as attachment" : "Choose a file to add as attachment",
-    "Choose a file to share as a link" : "Choose a file to share as a link",
     "Show less" : "Show less",
-    "Show more" : "Show more"
+    "Show more" : "Show more",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% and %EMAIL% will be replaced with the user's UID and email"
 },
 "nplurals=2; plural=(n!=1);");

@@ -59,7 +59,6 @@ OC.L10N.register(
     "Group" : "গোষ্ঠীসমূহ",
     "Shared" : "ভাগাভাগিকৃত",
     "Shares" : "ভাগাভাগি",
-    "All" : "সবাই",
-    "Choose a file to add as attachment" : "সংযুক্তি দেয়ার জন্য একটি ফাইল নির্বাচন করুন"
+    "All" : "সবাই"
 },
 "nplurals=2; plural=(n != 1);");

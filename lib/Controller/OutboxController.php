@@ -207,6 +207,8 @@ class OutboxController extends Controller {
 		if ($message->getStatus() === LocalMessage::STATUS_PROCESSED) {
 			return JsonResponse::error('Cannot modify already sent message', Http::STATUS_FORBIDDEN, [$message]);
 		}
+
+		$this->delegationService->assertAccountAccess($accountId, $this->userId);
 		$account = $this->accountService->find($effectiveUserId, $accountId);
 
 		$message->setAccountId($accountId);

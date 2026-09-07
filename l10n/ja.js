@@ -141,6 +141,7 @@ OC.L10N.register(
     "Ok" : "OK",
     "Manually" : "手動",
     "Text blocks" : "テキストブロック",
+    "Shared with me" : "私と共有",
     "Privacy" : "プライバシー",
     "Security" : "セキュリティ",
     "S/MIME" : "S/MIME",
@@ -181,8 +182,8 @@ OC.L10N.register(
     "From" : "差出人",
     "Select account" : "アカウントを選択",
     "To" : "宛先",
-    "Cc/Bcc" : "Cc/Bcc",
     "Select recipient" : "受信先を選択する",
+    "Cc/Bcc" : "Cc/Bcc",
     "Cc" : "Cc",
     "Bcc" : "Bcc",
     "Subject" : "件名",
@@ -683,7 +684,6 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "電子メールエイリアスをプロビジョニングするためのマルチ値属性。値ごとにエイリアスが作成されます。LDAPディレクトリにないNextcloudに存在するエイリアスは削除されます。",
     "Save Config" : "設定を保存",
     "Unprovision & Delete Config" : "プロビジョニング解除と設定の削除",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* USERID%と %E MAIL%は、ユーザーのUIDとEメールに置き換えられます。",
     "With the settings above, the app will create account settings in the following way:" : "上記の設定では、アプリは次の方法でアカウント設定を作成します：",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "指定されたPKCS#12証明書には、少なくとも一つの証明書と一つの秘密鍵が含まれている必要があります。",
     "Failed to import the certificate. Please check the password." : "証明書のインポートが失敗しました。パスワードをチェックしてください",
@@ -744,10 +744,8 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "タグ名は非表示のシステムタグです",
     "Tag already exists" : "タグはすでに存在します",
     "Error loading message" : "メッセージ読み込みエラー",
-    "Add share link from Files" : "ファイル から共有リンクを追加",
-    "Choose a file to add as attachment" : "添付として追加するファイルを選択",
-    "Choose a file to share as a link" : "共有リンクにして送信するファイルを選択",
     "Show less" : "表示を減らす",
-    "Show more" : "表示を増やす"
+    "Show more" : "表示を増やす",
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* USERID%と %E MAIL%は、ユーザーのUIDとEメールに置き換えられます。"
 },
 "nplurals=1; plural=0;");

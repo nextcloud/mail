@@ -111,7 +111,6 @@ OC.L10N.register(
     "Trash" : "ถังขยะ",
     "{from}\n{subject}" : "{from}\n{subject}",
     "Tag already exists" : "มีแท็กอยู่แล้ว",
-    "Error loading message" : "เกิดข้อผิดพลาดขณะโหลดข้อความ",
-    "Choose a file to add as attachment" : "เลือกไฟล์ที่ต้องการแนบ"
+    "Error loading message" : "เกิดข้อผิดพลาดขณะโหลดข้อความ"
 },
 "nplurals=1; plural=0;");

@@ -4,7 +4,7 @@
  */
 
 import { showError, showWarning, TOAST_DEFAULT_TIMEOUT } from '@nextcloud/dialogs'
-import { translate as t } from '@nextcloud/l10n'
+import { t } from '@nextcloud/l10n'
 import DOMPurify from 'dompurify'
 import escapeRegExp from 'lodash/fp/escapeRegExp.js'
 import flatMapDeep from 'lodash/fp/flatMapDeep.js'
@@ -2512,15 +2512,6 @@ export default function mainStoreActions() {
 		},
 		getInbox(accountId) {
 			return this.findMailboxBySpecialRole(accountId, 'inbox')
-		},
-		showSettingsForAccount(accountId) {
-			return this.showAccountSettings?.accountId === accountId
-		},
-		showSettingsSectionForAccount(accountId) {
-			if (this.showAccountSettings?.accountId !== accountId) {
-				return undefined
-			}
-			return this.showAccountSettings.section
 		},
 		getMyTextBlocks() {
 			return this.myTextBlocks

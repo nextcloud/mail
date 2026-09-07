@@ -183,8 +183,8 @@ OC.L10N.register(
     "From" : "De",
     "Select account" : "Seleccione una cuenta",
     "To" : "Para",
-    "Cc/Bcc" : "Cc/Cco",
     "Select recipient" : "Seleccionar recipiente",
+    "Cc/Bcc" : "Cc/Cco",
     "Cc" : "Cc",
     "Bcc" : "Ccc",
     "Subject" : "Asunto",
@@ -755,7 +755,6 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "Un atributo de multi-valor para proporcionar aliases de correo. Para cada valor se creará un alias. Se eliminarán los aliases existentes en Nextcloud que no están en el directorio LDAP.",
     "Save Config" : "Guardar configuración",
     "Unprovision & Delete Config" : "Desaprovisionar & Eliminar configuración",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% y %EMAIL% será reemplazado con el UID y el correo electrónico del usuario",
     "With the settings above, the app will create account settings in the following way:" : "Con los ajustes anteriores, la app creará ajustes de cuenta de la siguiente manera:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "El certificado PKCS #12 provisto debe contener al menos un certificado y únicamente una llave privada.",
     "Failed to import the certificate. Please check the password." : "Fallo al importar el certificado. Por favor, revise la contraseña.",
@@ -832,13 +831,10 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "El nombre de la etiqueta es una etiqueta oculta del sistema",
     "Tag already exists" : "La etiqueta ya existe",
     "Error loading message" : "Error al cargar el mensaje",
-    "Add share link from Files" : "Agregar un enlace a un recurso compartido desde Archivos",
-    "Choose a file to add as attachment" : "Escoja un archivo para adjuntar",
-    "Choose a file to share as a link" : "Escoge un archivo para compartir como enlace",
     "Show recipient details" : "Mostrar detalles del recipiente",
     "Hide recipient details" : "Ocultar detalles del recipiente",
     "Show less" : "Ver menos",
     "Show more" : "Ver mas",
-    "Insert text block" : "Insertar bloque de texto"
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% y %EMAIL% será reemplazado con el UID y el correo electrónico del usuario"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

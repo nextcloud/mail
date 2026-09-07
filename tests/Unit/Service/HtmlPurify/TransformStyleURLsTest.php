@@ -195,4 +195,21 @@ class TransformStyleURLsTest extends TestCase {
 		$this->assertStringContainsString('/apps/mail/img/blocked-image.png', $result['style']);
 		$this->assertStringNotContainsString('http://example.com/1.png', $result['style']);
 	}
+
+	public function testExistingOriginalStyleBackupKept(): void {
+		$attr = [
+			'style' => 'background-image: url(http://example.com/image.jpg); display: none !important;',
+			'data-original-style' => 'background-image: url(http://example.com/image.jpg);',
+		];
+		$config = HTMLPurifier_Config::createDefault();
+		$context = new HTMLPurifier_Context();
+
+		$this->urlGenerator->method('imagePath')
+			->with('mail', 'blocked-image.png')
+			->willReturn('/apps/mail/img/blocked-image.png');
+
+		$result = $this->transform->transform($attr, $config, $context);
+
+		$this->assertSame('background-image: url(http://example.com/image.jpg);', $result['data-original-style']);
+	}
 }

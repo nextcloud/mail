@@ -200,9 +200,9 @@ OC.L10N.register(
     "From" : "ຈາກ",
     "Select account" : "Select account",
     "To" : "ເຖິງ",
-    "Cc/Bcc" : "Cc/Bcc",
     "Select recipient" : "Select recipient",
     "Contact or email address …" : "Contact or email address …",
+    "Cc/Bcc" : "Cc/Bcc",
     "Cc" : "Cc",
     "Bcc" : "Bcc",
     "Subject" : "Subject",
@@ -784,7 +784,6 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted.",
     "Save Config" : "Save Config",
     "Unprovision & Delete Config" : "Unprovision & Delete Config",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% and %EMAIL% will be replaced with the user's UID and email",
     "With the settings above, the app will create account settings in the following way:" : "With the settings above, the app will create account settings in the following way:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key.",
     "Failed to import the certificate. Please check the password." : "Failed to import the certificate. Please check the password.",
@@ -861,13 +860,10 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Tag name is a hidden system tag",
     "Tag already exists" : "Tag already exists",
     "Error loading message" : "Error loading message",
-    "Add share link from Files" : "Add share link from Files",
-    "Choose a file to add as attachment" : "Choose a file to add as attachment",
-    "Choose a file to share as a link" : "Choose a file to share as a link",
     "Show recipient details" : "Show recipient details",
     "Hide recipient details" : "Hide recipient details",
     "Show less" : "ສະແດງໜ້ອຍລົງ",
     "Show more" : "ສະແດງເພີ່ມເຕີມ",
-    "Insert text block" : "Insert text block"
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% and %EMAIL% will be replaced with the user's UID and email"
 },
 "nplurals=1; plural=0;");

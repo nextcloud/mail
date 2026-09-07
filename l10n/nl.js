@@ -224,9 +224,9 @@ OC.L10N.register(
     "From" : "Van",
     "Select account" : "Selecteer account",
     "To" : "Naar",
-    "Cc/Bcc" : "Cc/Bcc",
     "Select recipient" : "Selecteer ontvanger",
     "Contact or email address …" : "Contact of e-mailadres",
+    "Cc/Bcc" : "Cc/Bcc",
     "Cc" : "Cc",
     "Bcc" : "Bcc",
     "Subject" : "Onderwerp",
@@ -844,7 +844,6 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "Een attribuut met meerdere waarden om e-mailaliassen in te richten. Voor elke waarde wordt een alias aangemaakt. Aliassen die in Nextcloud bestaan maar niet in de LDAP-directory staan, worden verwijderd.",
     "Save Config" : "Opslaan config",
     "Unprovision & Delete Config" : "De-provision & verwijder config",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% en %EMAIL% zal worden vervangen door de gebruikers UID en e-mail",
     "With the settings above, the app will create account settings in the following way:" : "Met de bovenstaande instellingen maakt de app op de volgende manier accountinstellingen:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Het opgegeven PKCS #12-certificaat moet ten minste één certificaat en precies één privésleutel bevatten.",
     "Failed to import the certificate. Please check the password." : "Importeren van het certificaat mislukt. Controleer het wachtwoord.",
@@ -923,13 +922,10 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Labelnaam is een verborgen systeemlabel",
     "Tag already exists" : "Markering bestaat al",
     "Error loading message" : "Fout bij laden bericht",
-    "Add share link from Files" : "Voeg een gedeelde koppeling toe vanuit Bestanden",
-    "Choose a file to add as attachment" : "Kies een bestand om als bijlage toe te voegen",
-    "Choose a file to share as a link" : "Kies een bestand om als link te delen",
     "Show recipient details" : "Ontvangerdetails tonen",
     "Hide recipient details" : "Ontvangerdetails verbergen",
     "Show less" : "Toon minder",
     "Show more" : "Toon meer",
-    "Insert text block" : "Voeg een tekstblok in"
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% en %EMAIL% zal worden vervangen door de gebruikers UID en e-mail"
 },
 "nplurals=2; plural=(n != 1);");

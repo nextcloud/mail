@@ -82,6 +82,16 @@
 			</div>
 		</template>
 		<AppSettingsMenu :open.sync="showSettings" />
+
+		<!-- Must stay outside the #list slot: within NavigationAccount's vue-frag
+		     fragment the dialog gets pulled back into the clipped sidebar after
+		     NcModal relocated it to <body>. -->
+		<AccountSettings
+			v-if="settingsAccount"
+			:open="true"
+			:account="settingsAccount"
+			:scroll-to-section="settingsSection"
+			@close="onCloseAccountSettings" />
 	</NcAppNavigation>
 </template>
 
@@ -104,6 +114,7 @@ export default {
 	name: 'Navigation',
 	components: {
 		NcAppNavigation,
+		AccountSettings: () => import(/* webpackChunkName: "account-settings" */ './AccountSettings.vue'),
 		AppSettingsMenu,
 		NavigationAccount,
 		NavigationAccountExpandCollapse,
@@ -120,11 +131,17 @@ export default {
 		return {
 			refreshing: false,
 			showSettings: false,
+			settingsAccountId: null,
+			settingsSection: undefined,
 		}
 	},
 
 	computed: {
 		...mapStores(useOutboxStore, useMainStore),
+		settingsAccount() {
+			return this.settingsAccountId ? this.mainStore.getAccount(this.settingsAccountId) : null
+		},
+
 		menu() {
 			return this.mainStore.getAccounts
 				.filter((account) => account.id !== UNIFIED_ACCOUNT_ID)
@@ -164,7 +181,23 @@ export default {
 		},
 	},
 
+	watch: {
+		'mainStore.showAccountSettings': function(settings) {
+			if (settings?.accountId) {
+				this.settingsAccountId = settings.accountId
+				this.settingsSection = settings.section
+			} else {
+				this.settingsAccountId = null
+				this.settingsSection = undefined
+			}
+		},
+	},
+
 	methods: {
+		onCloseAccountSettings() {
+			this.mainStore.showSettingsForAccountMutation(null)
+		},
+
 		showMailSettings() {
 			this.showSettings = true
 		},

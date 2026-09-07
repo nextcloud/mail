@@ -77,6 +77,7 @@
 
 				<template v-else>
 					<div
+						class="avatar-select-wrapper"
 						@click.stop.exact.prevent="toggleSelected"
 						@click.shift.exact.prevent="onSelectMultiple">
 						<template v-if="hoveringAvatar || selected">
@@ -1781,10 +1782,17 @@ export default {
 }
 
 .hovering-status {
-	// Needs to be the same height as the check-icon and the avatar to prevent automatic resizing
-	// and height differences between hover state and normal state
 	height: calc(var(--default-grid-baseline) * 10);
-	padding-top: 3px;
+	width: calc(var(--default-grid-baseline) * 10);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.avatar-select-wrapper {
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .check-icon {

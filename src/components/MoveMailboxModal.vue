@@ -11,7 +11,7 @@
 		:allow-root="true"
 		:label-select="t('mail', 'Move')"
 		:label-select-loading="t('mail', 'Moving')"
-		@select="onMove"
+		:select="onMove"
 		@close="onClose" />
 </template>
 

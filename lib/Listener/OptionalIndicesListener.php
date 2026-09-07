@@ -17,7 +17,7 @@ use OCP\IConfig;
 use OCP\IDBConnection;
 
 /**
- * @template-implements IEventListener<Event|OptionalIndicesListener>
+ * @template-implements IEventListener<AddMissingIndicesEvent>
  */
 class OptionalIndicesListener implements IEventListener {
 
@@ -52,6 +52,12 @@ class OptionalIndicesListener implements IEventListener {
 			'mail_messages',
 			'mail_messages_strucanalyz_idx',
 			['structure_analyzed']
+		);
+
+		$event->addMissingIndex(
+			'mail_messages',
+			'mail_msg_mb_del_snt_idx',
+			['mailbox_id', 'flag_deleted', 'sent_at'],
 		);
 
 		$event->addMissingIndex(

@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import { translate as t } from '@nextcloud/l10n'
+import { t } from '@nextcloud/l10n'
 import { NcButton } from '@nextcloud/vue'
 import { mapGetters } from 'pinia'
 import IconArrowDown from 'vue-material-design-icons/ArrowDown.vue'

@@ -16,6 +16,7 @@ use OCA\Mail\Sieve\SieveUtils;
 class FilterBuilder {
 	private const SEPARATOR = '### Nextcloud Mail: Filters ### DON\'T EDIT ###';
 	private const DATA_MARKER = '# FILTER: ';
+	/** @deprecated use SieveUtils::NEWLINE */
 	private const SIEVE_NEWLINE = "\r\n";
 
 	public function __construct(

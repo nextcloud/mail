@@ -9,7 +9,7 @@
 		:loading="moving"
 		:label-select="moveThread ? t('mail', 'Move thread') : t('mail', 'Move message')"
 		:label-select-loading="moveThread ? t('mail', 'Moving thread') : t('mail', 'Moving message')"
-		@select="onMove"
+		:select="onMove"
 		@close="onClose" />
 </template>
 

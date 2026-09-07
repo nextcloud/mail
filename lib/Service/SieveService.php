@@ -14,6 +14,7 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\CouldNotConnectException;
 use OCA\Mail\Sieve\NamedSieveScript;
 use OCA\Mail\Sieve\SieveClientFactory;
+use OCA\Mail\Sieve\SieveUtils;
 
 class SieveService {
 	public function __construct(
@@ -39,7 +40,7 @@ class SieveService {
 
 		// Sieve appends the script with a carriage return and line feed (\r\n) each time it's saved.
 		// Strip those line feeds to avoid the accumulation of unnecessary white space.
-		$script = rtrim($script, "\r\n");
+		$script = rtrim($script, SieveUtils::NEWLINE);
 
 		return new NamedSieveScript($scriptName, $script);
 	}
@@ -53,7 +54,12 @@ class SieveService {
 		$sieve = $this->getClient($userId, $accountId);
 
 		$scriptName = $sieve->getActive() ?? 'nextcloud';
-		$sieve->installScript($scriptName, $script, true);
+		$sieve->installScript($scriptName, $this->enforceTrailingNewline($script), true);
+	}
+
+	private function enforceTrailingNewline(string $script): string {
+		// RFC 5228 terminates every line with CRLF.
+		return rtrim($script, SieveUtils::NEWLINE) . SieveUtils::NEWLINE;
 	}
 
 	/**

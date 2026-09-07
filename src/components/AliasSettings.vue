@@ -51,7 +51,7 @@
 			</li>
 		</ul>
 
-		<div v-if="!account.provisioningId" class="aliases-controls">
+		<div v-if="!account.provisioningId" class="mail-button-row">
 			<NcButton
 				v-if="!showForm"
 				variant="primary"
@@ -76,7 +76,6 @@
 			<NcButton
 				v-if="showForm"
 				variant="tertiary-no-background"
-				class="button-text"
 				:aria-label="t('mail', 'Cancel')"
 				@click="resetCreate">
 				{{ t("mail", "Cancel") }}
@@ -184,38 +183,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.primary {
-	padding-inline-start: 26px;
-	background-position: 6px;
-	color: var(--color-main-background);
-
-	&:after {
-		inset-inline-start: 14px;
-	}
-}
-
-.button-text {
-	background-color: transparent;
-	border: none;
-	color: var(--color-text-maxcontrast);
-	font-weight: normal;
-
-	&:hover,
-	&:focus {
-		color: var(--color-main-text);
-	}
-}
-
-.aliases-controls {
-	display: flex;
-}
-
 input {
 	width: 195px;
-}
-
-.button-vue:deep() {
-	display: inline-block !important;
-	margin-top: 4px !important;
 }
 </style>

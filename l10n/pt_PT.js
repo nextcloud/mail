@@ -194,8 +194,8 @@ OC.L10N.register(
     "From" : "De",
     "Select account" : "Selecionar uma conta",
     "To" : "Para",
-    "Cc/Bcc" : "Cc/Cco",
     "Contact or email address …" : "Contato ou endereço de e-mail …",
+    "Cc/Bcc" : "Cc/Cco",
     "Cc" : "Cc",
     "Bcc" : "Bcc",
     "Subject" : "Assunto",
@@ -753,12 +753,8 @@ OC.L10N.register(
     "Tag name cannot be empty" : "O nome da etiqueta não pode ficar vazio",
     "Tag already exists" : "A etiqueta já existe",
     "Error loading message" : "Erro ao carregar a mensagem",
-    "Add share link from Files" : "Adicionar link de compartilhamento de Arquivos",
-    "Choose a file to add as attachment" : "Escolha um ficheiro para adicionar como anexo",
-    "Choose a file to share as a link" : "Escolha um arquivo para compartilhar como link",
     "Hide recipient details" : "Ocultar detalhes do destinatário",
     "Show less" : "Mostrar menos",
-    "Show more" : "Mostrar mais",
-    "Insert text block" : "Inserir bloco de texto"
+    "Show more" : "Mostrar mais"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

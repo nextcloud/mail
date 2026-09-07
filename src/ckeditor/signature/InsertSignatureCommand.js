@@ -34,8 +34,9 @@ export default class InsertSignatureCommand extends Command {
 	 * @param {module:engine/model/writer~Writer} writer instance
 	 * @param {string} signature text
 	 * @param {boolean} signatureAboveQuote signature position: above/below the quoted text
+	 * @param {boolean} plainText whether the editor is in plain text mode
 	 */
-	insertSignatureElement(editor, writer, signature, signatureAboveQuote) {
+	insertSignatureElement(editor, writer, signature, signatureAboveQuote, plainText) {
 		// Skip empty signature
 		if (signature.length === 0) {
 			return
@@ -55,8 +56,12 @@ export default class InsertSignatureCommand extends Command {
 		const modelFragment = editor.data.toModel(viewFragment)
 
 		const signatureElement = writer.createElement('signature')
-		writer.append(writer.createText('-- '), signatureElement)
-		writer.append(writer.createElement('paragraph'), signatureElement)
+		// The "-- " separator is a plain text convention (RFC 3676, section 4.3).
+		// HTML signatures are visually distinguishable already, so skip it there.
+		if (plainText) {
+			writer.append(writer.createText('-- '), signatureElement)
+			writer.append(writer.createElement('paragraph'), signatureElement)
+		}
 		writer.append(modelFragment, signatureElement)
 		if (signatureAboveQuote) {
 			writer.append(writer.createElement('paragraph'), signatureElement)
@@ -122,8 +127,9 @@ export default class InsertSignatureCommand extends Command {
 	 * @param {string} trigger TRIGGER_CHANGE_ALIAS or TRIGGER_EDITOR_READY
 	 * @param {string} signature text
 	 * @param {boolean} signatureAboveQuote signature position: above/below the quoted text
+	 * @param {boolean} plainText whether the editor is in plain text mode
 	 */
-	execute(trigger, signature, signatureAboveQuote) {
+	execute(trigger, signature, signatureAboveQuote, plainText) {
 		this.editor.model.change((writer) => {
 			/**
 			 * TRIGGER_CHANGE_ALIAS:
@@ -139,11 +145,11 @@ export default class InsertSignatureCommand extends Command {
 
 			if (trigger === TRIGGER_CHANGE_ALIAS) {
 				this.removeSignatureElement(this.editor, writer)
-				this.insertSignatureElement(this.editor, writer, signature, signatureAboveQuote)
+				this.insertSignatureElement(this.editor, writer, signature, signatureAboveQuote, plainText)
 			}
 
 			if (trigger === TRIGGER_EDITOR_READY && !this.hasSignatureElement(this.editor)) {
-				this.insertSignatureElement(this.editor, writer, signature, signatureAboveQuote)
+				this.insertSignatureElement(this.editor, writer, signature, signatureAboveQuote, plainText)
 			}
 		})
 	}

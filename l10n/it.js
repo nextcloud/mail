@@ -223,9 +223,9 @@ OC.L10N.register(
     "From" : "Da",
     "Select account" : "Seleziona account",
     "To" : "A",
-    "Cc/Bcc" : "Cc/Ccn",
     "Select recipient" : "Seleziona destinatario",
     "Contact or email address …" : "Contatto o indirizzo email …",
+    "Cc/Bcc" : "Cc/Ccn",
     "Messages with no 'To' recipients may be rejected by some mail providers." : "I messaggi senza destinatari nel campo “A” potrebbero essere rifiutati da alcuni provider di posta elettronica.",
     "Cc" : "Cc",
     "Bcc" : "Ccn",
@@ -855,7 +855,6 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "Un attributo multi valore per il approvvigionamento di e-mail alias. Per ogni valore viene creato un alias. Gli alias esistenti in Nextcloud che non si trovano nella directory LDAP vengono eliminati.",
     "Save Config" : "Salva configurazione",
     "Unprovision & Delete Config" : "Annullare il approvvigionamento ed eliminare la configurazione",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% e %EMAIL% verranno sostituiti con l'UID e l'email dell'utente",
     "With the settings above, the app will create account settings in the following way:" : "Con le impostazioni precedenti, l'applicazione creerà le impostazioni dell'account nel modo seguente:",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Il certificato PKCS #12 fornito deve contenere almeno un certificato ed esattamente una chiave privata.",
     "Failed to import the certificate. Please check the password." : "Impossibile importare il certificato. Controlla la password.",
@@ -944,13 +943,10 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Questo nome è riservato a un’etichetta di sistema nascosta",
     "Tag already exists" : "L'etichetta esiste già",
     "Error loading message" : "Errore durante il caricamento del messaggio",
-    "Add share link from Files" : "Aggiungi link condiviso da Files",
-    "Choose a file to add as attachment" : "Scegli un file da aggiungere come allegato",
-    "Choose a file to share as a link" : "Scegli un file da condividere come un collegamento",
     "Show recipient details" : "Mostra dettagli dei destinatari",
     "Hide recipient details" : "Nascondi dettagli dei destinatari",
     "Show less" : "Mostra meno",
     "Show more" : "Mostra più",
-    "Insert text block" : "Inserisci testo di blocco"
+    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% e %EMAIL% verranno sostituiti con l'UID e l'email dell'utente"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");
