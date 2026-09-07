@@ -11,8 +11,12 @@ namespace OCA\Mail\Tests\Unit\Service;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
+use OCA\Mail\BackgroundJob\ContextChat\ScheduleJob;
+use OCA\Mail\BackgroundJob\PreviewEnhancementProcessingJob;
 use OCA\Mail\BackgroundJob\QuotaJob;
+use OCA\Mail\BackgroundJob\RepairSyncJob;
 use OCA\Mail\BackgroundJob\SyncJob;
+use OCA\Mail\BackgroundJob\TrainImportanceClassifierJob;
 use OCA\Mail\Db\DelegationMapper;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
@@ -342,5 +346,27 @@ class AccountServiceTest extends TestCase {
 			->method('scheduleAfter');
 
 		$this->accountService->scheduleBackgroundJobs($mailAccountId);
+	}
+
+	public function testRemoveBackgroundJobs(): void {
+		$mailAccountId = 1000;
+		$removed = [];
+		$this->jobList->expects($this->exactly(6))
+			->method('remove')
+			->willReturnCallback(function (string $job, $argument) use (&$removed, $mailAccountId): void {
+				$this->assertSame(['accountId' => $mailAccountId], $argument);
+				$removed[] = $job;
+			});
+
+		$this->accountService->removeBackgroundJobs($mailAccountId);
+
+		$this->assertEqualsCanonicalizing([
+			SyncJob::class,
+			TrainImportanceClassifierJob::class,
+			PreviewEnhancementProcessingJob::class,
+			QuotaJob::class,
+			ScheduleJob::class,
+			RepairSyncJob::class,
+		], $removed);
 	}
 }
