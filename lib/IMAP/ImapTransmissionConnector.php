@@ -27,6 +27,7 @@ use Horde_Mime_Headers_Subject;
 use Horde_Mime_Mdn;
 use Horde_Mime_Part;
 use Horde_Smtp_Exception;
+use Horde_Support_Guid;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
@@ -112,7 +113,9 @@ class ImapTransmissionConnector implements ITransmissionConnector {
 		// approach used by Horde IMP and other clients (Evolution, Thunderbird).
 		$fccHeaders = new Horde_Mime_Headers();
 		$fccHeaders->addHeaderOb(Horde_Mime_Headers_Date::create());
-		$fccHeaders->addHeaderOb(Horde_Mime_Headers_MessageId::create());
+		$smtpHost = !is_null($account->getMailAccount()->getOutboundHost()) ? $account->getMailAccount()->getOutboundHost() : 'localhost';
+		$msgIdValue = '<' . strval(new Horde_Support_Guid(['prefix' => 'nextcloud-mail', 'server' => $smtpHost])) . '>';
+		$fccHeaders->addHeaderOb(new Horde_Mime_Headers_MessageId('Message-ID', $msgIdValue));
 		$fccHeaders->addHeaderOb(new Horde_Mime_Headers_Addresses('From', $fromHorde));
 		$fccHeaders->addHeaderOb(new Horde_Mime_Headers_Addresses('To', $toHorde));
 		if (count($cc) > 0) {
@@ -241,7 +244,9 @@ class ImapTransmissionConnector implements ITransmissionConnector {
 
 		$headers = new Horde_Mime_Headers();
 		$headers->addHeaderOb(Horde_Mime_Headers_Date::create());
-		$headers->addHeaderOb(Horde_Mime_Headers_MessageId::create());
+		$smtpHost = !is_null($account->getMailAccount()->getOutboundHost()) ? $account->getMailAccount()->getOutboundHost() : 'localhost';
+		$msgIdValue = '<' . strval(new Horde_Support_Guid(['prefix' => 'nextcloud-mail', 'server' => $smtpHost])) . '>';
+		$headers->addHeaderOb(new Horde_Mime_Headers_MessageId('Message-ID', $msgIdValue));
 		$headers->addHeaderOb(new Horde_Mime_Headers_Addresses('From', $from->toHorde()));
 		$headers->addHeaderOb(new Horde_Mime_Headers_Addresses('To', $to->toHorde()));
 		if (count($cc) > 0) {
