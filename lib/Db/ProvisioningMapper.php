@@ -52,6 +52,7 @@ class ProvisioningMapper extends QBMapper {
 	 */
 	public function validate(array $data): Provisioning {
 		$exception = new ValidationException();
+		$isNewConfig = !isset($data['id']);
 
 		if (!isset($data['provisioningDomain']) || $data['provisioningDomain'] === '') {
 			$exception->setField('provisioningDomain', false);
@@ -66,7 +67,7 @@ class ProvisioningMapper extends QBMapper {
 			$exception->setField('imapHost', false);
 		}
 		if (!isset($data['imapPort']) || (int)$data['imapPort'] === 0) {
-			$exception->setField('imapHost', false);
+			$exception->setField('imapPort', false);
 		}
 		if (!isset($data['imapSslMode']) || $data['imapSslMode'] === '') {
 			$exception->setField('imapSslMode', false);
@@ -97,6 +98,14 @@ class ProvisioningMapper extends QBMapper {
 			$exception->setField('ldapAliasesAttribute', false);
 		}
 
+		$masterPasswordEnabled = (bool)($data['masterPasswordEnabled'] ?? false);
+		$masterPassword = $data['masterPassword'] ?? '';
+		$masterUser = $data['masterUser'] ?? '';
+
+		if ($masterPasswordEnabled && ($masterPassword === '' || ($isNewConfig && $masterPassword === Provisioning::MASTER_PASSWORD_PLACEHOLDER))) {
+			$exception->setField('masterPassword', false);
+		}
+
 		if (!empty($exception->getFields())) {
 			throw $exception;
 		}
@@ -113,12 +122,6 @@ class ProvisioningMapper extends QBMapper {
 		$provisioning->setSmtpHost($data['smtpHost']);
 		$provisioning->setSmtpPort((int)$data['smtpPort']);
 		$provisioning->setSmtpSslMode($data['smtpSslMode']);
-
-		$provisioning->setMasterPasswordEnabled((bool)($data['masterPasswordEnabled'] ?? false));
-		if (isset($data['masterPassword']) && $data['masterPassword'] !== Provisioning::MASTER_PASSWORD_PLACEHOLDER) {
-			$provisioning->setMasterPassword($data['masterPassword']);
-		}
-
 		$provisioning->setSieveEnabled((bool)$data['sieveEnabled']);
 		$provisioning->setSieveHost($data['sieveHost'] ?? '');
 		$provisioning->setSieveUser($data['sieveUser'] ?? '');
@@ -127,6 +130,12 @@ class ProvisioningMapper extends QBMapper {
 
 		$provisioning->setLdapAliasesProvisioning($ldapAliasesProvisioning);
 		$provisioning->setLdapAliasesAttribute($ldapAliasesAttribute);
+
+		if ($masterPasswordEnabled) {
+			$provisioning->enableMasterPassword($masterPassword, $masterUser);
+		} else {
+			$provisioning->disableMasterPassword();
+		}
 
 		return $provisioning;
 	}
