@@ -67,7 +67,8 @@
 </template>
 
 <script>
-import { NcButton, NcSelect } from '@nextcloud/vue'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import { MailFilterConditionField, MailFilterConditionOperator } from '../../models/mailFilter.ts'
 

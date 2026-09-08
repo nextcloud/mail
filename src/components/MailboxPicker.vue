@@ -47,8 +47,13 @@
 
 <script>
 import { t } from '@nextcloud/l10n'
-import { NcBreadcrumb, NcBreadcrumbs, NcDialog, NcEmptyContent, NcInputField, NcListItem } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcBreadcrumb from '@nextcloud/vue/components/NcBreadcrumb'
+import NcBreadcrumbs from '@nextcloud/vue/components/NcBreadcrumbs'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
+import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
+import NcInputField from '@nextcloud/vue/components/NcInputField'
+import NcListItem from '@nextcloud/vue/components/NcListItem'
 import IconFolder from 'vue-material-design-icons/FolderOutline.vue'
 import MailboxIcon from './icons/MailboxIcon.vue'
 import { translate as translateMailboxName } from '../i18n/MailboxTranslator.js'

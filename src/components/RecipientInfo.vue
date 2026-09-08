@@ -70,8 +70,8 @@
 
 <script>
 import { t } from '@nextcloud/l10n'
-import { NcButton } from '@nextcloud/vue'
 import { mapGetters } from 'pinia'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import IconArrowDown from 'vue-material-design-icons/ArrowDown.vue'
 import IconArrowUp from 'vue-material-design-icons/ArrowUp.vue'
 import Avatar from './Avatar.vue'

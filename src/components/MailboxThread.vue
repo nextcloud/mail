@@ -200,10 +200,14 @@
 </template>
 
 <script>
-import { isMobile, NcAppContent, NcAppContentList, NcButton, NcPopover } from '@nextcloud/vue'
+import { isMobile } from '@nextcloud/vue'
 import addressParser from 'address-rfc2822'
 import mitt from 'mitt'
 import { mapStores } from 'pinia'
+import NcAppContent from '@nextcloud/vue/components/NcAppContent'
+import NcAppContentList from '@nextcloud/vue/components/NcAppContentList'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcPopover from '@nextcloud/vue/components/NcPopover'
 import IconInfo from 'vue-material-design-icons/InformationOutline.vue'
 import Mailbox from './Mailbox.vue'
 import NoMessageSelected from './NoMessageSelected.vue'

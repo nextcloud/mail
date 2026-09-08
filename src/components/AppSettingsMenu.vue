@@ -296,25 +296,23 @@
 <script>
 import { showError } from '@nextcloud/dialogs'
 import { generateUrl } from '@nextcloud/router'
-import {
-	NcAppSettingsDialog,
-	NcAppSettingsSection,
-	NcAppSettingsShortcutsSection,
-	NcButton,
-	NcDialog,
-	NcFormBox,
-	NcFormBoxButton,
-	NcFormBoxSwitch,
-	NcFormGroup,
-	NcHotkey,
-	NcHotkeyList,
-	NcInputField,
-	NcNoteCard,
-	NcRadioGroup,
-	NcRadioGroupButton,
-} from '@nextcloud/vue'
 import mitt from 'mitt'
 import { mapState, mapStores } from 'pinia'
+import NcAppSettingsDialog from '@nextcloud/vue/components/NcAppSettingsDialog'
+import NcAppSettingsSection from '@nextcloud/vue/components/NcAppSettingsSection'
+import NcAppSettingsShortcutsSection from '@nextcloud/vue/components/NcAppSettingsShortcutsSection'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
+import NcFormBox from '@nextcloud/vue/components/NcFormBox'
+import NcFormBoxButton from '@nextcloud/vue/components/NcFormBoxButton'
+import NcFormBoxSwitch from '@nextcloud/vue/components/NcFormBoxSwitch'
+import NcFormGroup from '@nextcloud/vue/components/NcFormGroup'
+import NcHotkey from '@nextcloud/vue/components/NcHotkey'
+import NcHotkeyList from '@nextcloud/vue/components/NcHotkeyList'
+import NcInputField from '@nextcloud/vue/components/NcInputField'
+import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
+import NcRadioGroup from '@nextcloud/vue/components/NcRadioGroup'
+import NcRadioGroupButton from '@nextcloud/vue/components/NcRadioGroupButton'
 import IconArrow from 'vue-material-design-icons/ArrowRight.vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import IconClose from 'vue-material-design-icons/Close.vue'

@@ -297,15 +297,13 @@ import { showError, showSuccess } from '@nextcloud/dialogs'
 import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
 import moment from '@nextcloud/moment'
 import { generateUrl } from '@nextcloud/router'
-import {
-	NcActionButton,
-	NcActionLink,
-	NcLoadingIcon,
-} from '@nextcloud/vue'
 import { Base64 } from 'js-base64'
 import { mapState, mapStores } from 'pinia'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActionInput from '@nextcloud/vue/components/NcActionInput'
+import NcActionLink from '@nextcloud/vue/components/NcActionLink'
 import NcActionSeparator from '@nextcloud/vue/components/NcActionSeparator'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import AlarmIcon from 'vue-material-design-icons/Alarm.vue'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
 import CalendarBlankIcon from 'vue-material-design-icons/CalendarBlankOutline.vue'

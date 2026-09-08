@@ -144,8 +144,11 @@
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import moment from '@nextcloud/moment'
-import { NcButton, NcEmptyContent, NcModal, NcPasswordField } from '@nextcloud/vue'
 import { mapState, mapStores } from 'pinia'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
+import NcModal from '@nextcloud/vue/components/NcModal'
+import NcPasswordField from '@nextcloud/vue/components/NcPasswordField'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import logger from '../../logger.js'
 import useMainStore from '../../store/mainStore.js'
