@@ -108,6 +108,11 @@ class AdminSettings implements ISettings {
 			$this->themingDefaults->buildDocLinkToKey('admin-groupware-oauth-microsoft'),
 		);
 
+		$this->initialStateService->provideInitialState(
+			'message_id_prefix',
+			$this->appConfig->getValueString(Application::APP_ID, ConfigLexicon::MESSAGE_ID_PREFIX, 'nextcloud-mail')
+		);
+
 		return new TemplateResponse(Application::APP_ID, 'settings-admin');
 	}
 

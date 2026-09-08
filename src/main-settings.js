@@ -22,5 +22,6 @@ const View = Vue.extend(AdminSettings)
 new View({
 	propsData: {
 		provisioningSettings: loadState('mail', 'provisioning_settings') || [],
+		messageIdPrefix: loadState('mail', 'message_id_prefix') || 'nextcloud-mail',
 	},
 }).$mount('#mail-admin-settings')
