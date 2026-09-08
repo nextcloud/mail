@@ -11,10 +11,12 @@ All notable changes to this project will be documented in this file.
 * Nextcloud 36 support
 * Disable the background sync job via configuration
 * Use LDAP attributes in provisioning templates
+* Add support for Dovecot master user authentication
 ### Changed
 * Translations
 ### Performance
 * Prefix the internal-address index with the user id
+* Load local-message children via PK join
 ### Fixed
 * Quick actions for special folders
 * Show the unified inbox icon
@@ -28,6 +30,7 @@ All notable changes to this project will be documented in this file.
 * Remove the duplicate Cc/Bcc button in the composer
 * Keep the draft when clicking outside the composer
 * Termination condition when translating text
+* Declare UTF-8 charset for IMAP search queries
 
 ## 5.11.0 – unreleased
 ### Added
