@@ -36,6 +36,7 @@ use OCA\Mail\SMTP\SmtpClientFactory;
 use OCA\Mail\Support\PerformanceLogger;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\IAppConfig;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
@@ -51,6 +52,7 @@ class MailTransmissionTest extends TestCase {
 	private MailTransmission $transmission;
 	private AliasesService|MockObject $aliasService;
 	private TransmissionService $transmissionService;
+	private IAppConfig $appConfig;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -65,6 +67,7 @@ class MailTransmissionTest extends TestCase {
 		$this->aliasService = $this->createMock(AliasesService::class);
 		$this->transmissionService = $this->createMock(TransmissionService::class);
 		$this->mailManager = $this->createMock(IMailManager::class);
+		$this->appConfig = $this->createMock(IAppConfig::class);
 
 		$this->transmission = new MailTransmission(
 			$this->imapClientFactory,
@@ -77,6 +80,7 @@ class MailTransmissionTest extends TestCase {
 			$this->aliasService,
 			$this->transmissionService,
 			$this->mailManager,
+			$this->appConfig,
 		);
 	}
 
