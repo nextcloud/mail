@@ -24,7 +24,7 @@
 <script>
 import CKEditor from '@ckeditor/ckeditor5-vue2'
 import { getLanguage } from '@nextcloud/l10n'
-import { emojiAddRecent, emojiSearch } from '@nextcloud/vue'
+import { emojiAddRecent, emojiSearch } from '@nextcloud/vue/functions/emoji'
 import {
 	Alignment,
 	Base64UploadAdapter,
