@@ -254,7 +254,7 @@ export default {
 	display: none !important;
 }
 
-:deep(.button-vue--vue-tertiary) {
+:deep(.button-vue--tertiary) {
 	color: var(--color-text-maxcontrast);
 }
 

@@ -676,15 +676,6 @@ export default {
 	contain: none !important;
 }
 
-.information-icon {
-	opacity: .7;
-}
-@media only screen and (max-width: 1024px) {
-	.information-icon {
-		margin-bottom: 20px;
-	}
-}
-
 .list__wrapper {
 	display: flex;
 	flex: 1 1 auto;

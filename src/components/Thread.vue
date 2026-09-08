@@ -699,8 +699,4 @@ export default {
 		padding: 0;
 	}
 }
-
-.user-bubble__title {
-	cursor: pointer;
-}
 </style>

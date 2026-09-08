@@ -285,10 +285,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.user-bubble__title {
-	max-width: 30vw;
-}
-
 .contact-menu {
 	display: flex;
 	flex-wrap: wrap;

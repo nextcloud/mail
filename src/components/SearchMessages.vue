@@ -676,12 +676,6 @@ export default {
 	width: 100%;
 }
 
-.checkbox-radio-switch__label {
-	background: none !important;
-	padding: 0 !important;
-	margin: 0 !important;
-}
-
 .tag-group__search {
 	box-sizing: border-box;
 	position: relative;
@@ -750,10 +744,6 @@ export default {
 	width: 100%;
 }
 
-.multiselect-search-tags .multiselect__tags .multiselect__tags-wrap {
-	flex-wrap: wrap !important;
-}
-
 .modal-inner-field--right {
 	display: flex;
 	align-items: center;
@@ -794,7 +784,7 @@ export default {
 	position: relative
 }
 
-.button-vue.search-messages--filter.button-vue--icon-only {
+.button-vue.search-messages--filter {
 	position: absolute;
 	width: auto;
 	height: auto;
@@ -807,7 +797,7 @@ export default {
 	padding: 0 !important;
 }
 
-.button-vue.search-messages--close.button-vue--icon-only {
+.button-vue.search-messages--close {
 	position: absolute;
 	width: auto;
 	height: auto;
@@ -833,10 +823,6 @@ export default {
 	inset-inline-end: 12px;
 	border-radius: 50%;
 	top: 12px;
-}
-
-.mx-datepicker {
-	width:100%;
 }
 
 .filter-buttons {
