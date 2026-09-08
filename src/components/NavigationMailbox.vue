@@ -15,11 +15,11 @@
 			isValidDropTarget,
 		}"
 		:allow-collapse="hasSubMailboxes"
-		:menu-open.sync="menuOpen"
+		v-model:menu-open="menuOpen"
 		:force-menu="true"
 		:name="title"
 		:to="to"
-		:open.sync="showSubMailboxes"
+		v-model:open="showSubMailboxes"
 		@update:menuOpen="onMenuToggle">
 		<template #icon="{ active }">
 			<div>
@@ -62,7 +62,7 @@
 			</NcActionButton>
 			<NcActionInput
 				v-if="subfolderInput"
-				v-model="createMailboxName"
+				v-model:value="createMailboxName"
 				@submit.prevent.stop="createMailbox">
 				<template #icon>
 					<IconAdd :size="20" />
@@ -84,7 +84,7 @@
 			</NcActionButton>
 			<NcActionInput
 				v-if="renameInput"
-				v-model="mailboxName"
+				v-model:value="mailboxName"
 				@submit.prevent.stop="renameMailbox">
 				<template #icon>
 					<IconEdit

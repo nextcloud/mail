@@ -62,7 +62,7 @@
 					</NcActionButton>
 					<NcActionInput
 						v-if="editing && nameInput"
-						v-model="createMailboxName"
+						v-model:value="createMailboxName"
 						@submit.prevent.stop="createMailbox">
 						<template #icon>
 							<IconFolderAdd :size="20" />
