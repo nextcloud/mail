@@ -18,16 +18,20 @@ use ReturnTypeWillChange;
  * @method void setAccountId(int $accountId)
  * @method string getUserId()
  * @method void setUserId(string $userId)
+ * @method void setSignature(string|null $string)
+ * @method string getSignature()
  */
 class Delegation extends Entity implements JsonSerializable {
 	protected $accountId;
 	protected $userId;
+	protected $signature;
 
 	private ?string $displayName = null;
 
 	public function __construct() {
 		$this->addType('userId', 'string');
 		$this->addType('accountId', 'integer');
+		$this->addType('signature', 'string');
 	}
 
 	public function getDisplayName(): ?string {
@@ -46,6 +50,7 @@ class Delegation extends Entity implements JsonSerializable {
 			'accountId' => $this->getAccountId(),
 			'userId' => $this->getUserId(),
 			'displayName' => $this->displayName ?? $this->getUserId(),
+			'signature' => $this->getSignature(),
 		];
 	}
 }
