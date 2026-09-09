@@ -167,7 +167,7 @@ export default {
 			}
 
 			this.savingToCloud = true
-			const id = this.$route.params.threadId
+			const id = this.envelope.databaseId
 
 			try {
 				await saveAttachmentsToFiles(id, path)
