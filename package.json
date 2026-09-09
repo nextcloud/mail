@@ -103,7 +103,7 @@
     "typescript": "^5.9.3",
     "url-loader": "^4.1.1",
     "vitest": "^4.1.11",
-    "vue-loader": "^15.11.1",
+    "vue-loader": "^17.4.2",
     "vue-template-compiler": "^2.7.16",
     "webpack": "^5.109.2",
     "webpack-cli": "^7.2.2",
