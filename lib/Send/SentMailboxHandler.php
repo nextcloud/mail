@@ -11,8 +11,14 @@ namespace OCA\Mail\Send;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
+use Psr\Log\LoggerInterface;
 
 class SentMailboxHandler extends AHandler {
+	public function __construct(
+		private LoggerInterface $logger,
+	) {
+	}
+
 	#[\Override]
 	public function process(
 		Account $account,
@@ -20,8 +26,12 @@ class SentMailboxHandler extends AHandler {
 		Horde_Imap_Client_Socket $client,
 	): LocalMessage {
 		if ($account->getMailAccount()->getSentMailboxId() === null) {
-			$localMessage->setStatus(LocalMessage::STATUS_NO_SENT_MAILBOX);
-			return $localMessage;
+			// Blocking the send here strands the message in the outbox forever
+			// (https://github.com/nextcloud/mail/issues/10546). CopySentMessageHandler
+			// marks the message after the SMTP send instead.
+			$this->logger->warning('No sent mailbox configured for account {accountId}, sending without archiving a copy', [
+				'accountId' => $account->getMailAccount()->getId(),
+			]);
 		}
 		return $this->processNext($account, $localMessage, $client);
 	}

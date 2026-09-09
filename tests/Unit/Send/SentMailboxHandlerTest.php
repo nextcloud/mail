@@ -16,14 +16,17 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Send\AntiAbuseHandler;
 use OCA\Mail\Send\SentMailboxHandler;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class SentMailboxHandlerTest extends TestCase {
-	private AntiAbuseHandler|MockObject $antiAbuseHandler;
+	private AntiAbuseHandler&MockObject $antiAbuseHandler;
+	private LoggerInterface&MockObject $logger;
 	private SentMailboxHandler $handler;
 
 	protected function setUp(): void {
 		$this->antiAbuseHandler = $this->createMock(AntiAbuseHandler::class);
-		$this->handler = new SentMailboxHandler();
+		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->handler = new SentMailboxHandler($this->logger);
 		$this->handler->setNext($this->antiAbuseHandler);
 	}
 
@@ -47,17 +50,17 @@ class SentMailboxHandlerTest extends TestCase {
 		$mailAccount->setUserId('bob');
 		$mailAccount->setId(123);
 		$account = new Account($mailAccount);
-		$localMessage = $this->getMockBuilder(LocalMessage::class);
-		$localMessage->addMethods(['setStatus']);
-		$mock = $localMessage->getMock();
+		$localMessage = new LocalMessage();
+		$localMessage->setStatus(LocalMessage::STATUS_RAW);
 		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 
-		$mock->expects(self::once())
-			->method('setStatus')
-			->with(LocalMessage::STATUS_NO_SENT_MAILBOX);
-		$this->antiAbuseHandler->expects(self::never())
+		$this->logger->expects(self::once())
+			->method('warning');
+		$this->antiAbuseHandler->expects(self::once())
 			->method('process');
 
-		$this->handler->process($account, $mock, $client);
+		$this->handler->process($account, $localMessage, $client);
+
+		self::assertSame(LocalMessage::STATUS_RAW, $localMessage->getStatus());
 	}
 }
