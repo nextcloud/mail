@@ -56,33 +56,36 @@ export default {
 		},
 
 		async onMove() {
+			if (this.mailbox.databaseId === this.destMailboxId) {
+				this.$emit('close')
+				return
+			}
+
 			this.moving = true
-			if (this.mailbox.id !== this.destMailboxId) {
-				try {
-					if (!this.destMailboxId) {
-						const newName = this.mailbox.displayName
-						await this.mainStore.renameMailbox({
-							account: this.account,
-							mailbox: this.mailbox,
-							newName,
-						})
-					} else {
-						const destMailbox = this.mainStore.getMailbox(this.destMailboxId)
-						const newName = destMailbox.name + this.mailbox.delimiter + this.mailbox.displayName
-						await this.mainStore.renameMailbox({
-							account: this.account,
-							mailbox: this.mailbox,
-							newName,
-						})
-					}
-				} catch (error) {
-					logger.error('could not move folder', {
-						error,
+			try {
+				if (!this.destMailboxId) {
+					const newName = this.mailbox.displayName
+					await this.mainStore.renameMailbox({
+						account: this.account,
+						mailbox: this.mailbox,
+						newName,
 					})
-				} finally {
-					this.moving = false
-					this.$emit('close')
+				} else {
+					const destMailbox = this.mainStore.getMailbox(this.destMailboxId)
+					const newName = destMailbox.name + this.mailbox.delimiter + this.mailbox.displayName
+					await this.mainStore.renameMailbox({
+						account: this.account,
+						mailbox: this.mailbox,
+						newName,
+					})
 				}
+			} catch (error) {
+				logger.error('could not move folder', {
+					error,
+				})
+			} finally {
+				this.moving = false
+				this.$emit('close')
 			}
 		},
 

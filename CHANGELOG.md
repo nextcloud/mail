@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 * Prefix the internal-address index with the user id
 ### Fixed
 * Quick actions for special folders
+* Prevent a stuck dialog when moving a folder onto itself
 * Show the unified inbox icon
 * Detect message language in the browser for translation
 * Skip IMAP fetch results without a UID during sync
