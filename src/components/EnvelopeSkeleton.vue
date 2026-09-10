@@ -126,7 +126,9 @@
 </template>
 
 <script>
-import { NcActions, NcCounterBubble, NcVNodes } from '@nextcloud/vue'
+import NcActions from '@nextcloud/vue/components/NcActions'
+import NcCounterBubble from '@nextcloud/vue/components/NcCounterBubble'
+import NcVNodes from '@nextcloud/vue/components/NcVNodes'
 import DotsHorizontal from 'vue-material-design-icons/DotsHorizontal.vue'
 import EnvelopeSingleClickActions from './EnvelopeSingleClickActions.vue'
 

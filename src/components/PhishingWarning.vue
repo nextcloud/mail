@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { NcButton } from '@nextcloud/vue'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import IconAlertOutline from 'vue-material-design-icons/AlertOutline.vue'
 
 export default {

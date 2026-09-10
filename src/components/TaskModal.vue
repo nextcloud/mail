@@ -77,10 +77,12 @@
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import moment from '@nextcloud/moment'
-import { NcDateTimePicker, NcModal, NcSelect } from '@nextcloud/vue'
 import ICAL from 'ical.js'
 import jstz from 'jstz'
 import { mapStores } from 'pinia'
+import NcDateTimePicker from '@nextcloud/vue/components/NcDateTimePicker'
+import NcModal from '@nextcloud/vue/components/NcModal'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import CalendarPickerOption from './CalendarPickerOption.vue'
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'

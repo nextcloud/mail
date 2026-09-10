@@ -24,8 +24,10 @@
 <script>
 
 import moment from '@nextcloud/moment'
-import { NcActionButton, NcActions, NcLoadingIcon } from '@nextcloud/vue'
 import ical from 'ical.js'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcActions from '@nextcloud/vue/components/NcActions'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import logger from '../../logger.js'
 
