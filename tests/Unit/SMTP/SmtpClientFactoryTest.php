@@ -11,6 +11,7 @@ namespace OCA\Mail\Tests\Unit\Smtp;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Mail_Transport_Smtphorde;
+use Horde_Smtp_Password_Xoauth2;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\SMTP\SmtpClientFactory;
@@ -18,6 +19,7 @@ use OCA\Mail\Support\HostNameFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
 use PHPUnit\Framework\MockObject\MockObject;
+use ReflectionProperty;
 
 class SmtpClientFactoryTest extends TestCase {
 	/** @var IConfig|MockObject */
@@ -91,5 +93,81 @@ class SmtpClientFactoryTest extends TestCase {
 		$this->assertNotNull($transport);
 		$this->assertInstanceOf(Horde_Mail_Transport_Smtphorde::class, $transport);
 		$this->assertEquals($expected, $transport);
+	}
+
+	public function testSmtpTransportWithXOAuth2UsesConfiguredSmtpUser(): void {
+		$mailAccount = new MailAccount([
+			'emailAddress' => 'shared@domain.tld',
+			'smtpHost' => 'smtp.domain.tld',
+			'smtpPort' => 25,
+			'smtpSslMode' => 'none',
+			'smtpUser' => 'user@domain.tld',
+		]);
+		$mailAccount->setAuthMethod('xoauth2');
+		$mailAccount->setOauthAccessToken('enctoken');
+		$account = new Account($mailAccount);
+		$this->mockConfig();
+		$this->crypto->expects($this->once())
+			->method('decrypt')
+			->with('enctoken')
+			->willReturn('token123');
+		$this->hostNameFactory->expects($this->once())
+			->method('getHostName')
+			->willReturn('cloud.example.com');
+
+		$transport = $this->factory->create($account);
+
+		$this->assertEquals(
+			new Horde_Smtp_Password_Xoauth2('user@domain.tld', 'token123'),
+			$this->getXOAuth2Token($transport),
+		);
+	}
+
+	public function testSmtpTransportWithXOAuth2FallsBackToEmailAddress(): void {
+		$mailAccount = new MailAccount([
+			'emailAddress' => 'user@domain.tld',
+			'smtpHost' => 'smtp.domain.tld',
+			'smtpPort' => 25,
+			'smtpSslMode' => 'none',
+			'smtpUser' => '',
+		]);
+		$mailAccount->setAuthMethod('xoauth2');
+		$mailAccount->setOauthAccessToken('enctoken');
+		$account = new Account($mailAccount);
+		$this->mockConfig();
+		$this->crypto->expects($this->once())
+			->method('decrypt')
+			->with('enctoken')
+			->willReturn('token123');
+		$this->hostNameFactory->expects($this->once())
+			->method('getHostName')
+			->willReturn('cloud.example.com');
+
+		$transport = $this->factory->create($account);
+
+		$this->assertEquals(
+			new Horde_Smtp_Password_Xoauth2('user@domain.tld', 'token123'),
+			$this->getXOAuth2Token($transport),
+		);
+	}
+
+	private function mockConfig(): void {
+		$this->config->expects($this->any())
+			->method('getSystemValue')
+			->willReturnMap([
+				['app.mail.transport', 'smtp', 'smtp'],
+				['app.mail.smtp.timeout', 20, 2],
+			]);
+		$this->config->expects($this->any())
+			->method('getSystemValueBool')
+			->willReturnMap([
+				['app.mail.verify-tls-peer', true, true],
+				['app.mail.debug', false, false],
+			]);
+	}
+
+	private function getXOAuth2Token(Horde_Mail_Transport_Smtphorde $transport): Horde_Smtp_Password_Xoauth2 {
+		$reflection = new ReflectionProperty($transport, '_params');
+		return $reflection->getValue($transport)['xoauth2_token'];
 	}
 }
