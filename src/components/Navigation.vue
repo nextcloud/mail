@@ -96,8 +96,10 @@
 </template>
 
 <script>
-import { NcAppNavigation, NcAppNavigationItem, NcButton } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcAppNavigation from '@nextcloud/vue/components/NcAppNavigation'
+import NcAppNavigationItem from '@nextcloud/vue/components/NcAppNavigationItem'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import IconAlertTriangle from 'vue-material-design-icons/AlertOutline.vue'
 import IconSetting from 'vue-material-design-icons/CogOutline.vue'
 import AppSettingsMenu from '../components/AppSettingsMenu.vue'

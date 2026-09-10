@@ -41,8 +41,9 @@
 </template>
 
 <script>
-import { NcActionButton, NcActions } from '@nextcloud/vue'
 import { mapState, mapStores } from 'pinia'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcActions from '@nextcloud/vue/components/NcActions'
 import ArrowExpandIcon from 'vue-material-design-icons/ArrowExpand.vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 import PencilIcon from 'vue-material-design-icons/PencilOutline.vue'
