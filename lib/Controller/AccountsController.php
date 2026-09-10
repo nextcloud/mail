@@ -304,7 +304,11 @@ class AccountsController extends Controller {
 	#[TrapError]
 	public function updateSignature(int $id, ?string $signature = null): JSONResponse {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
-		$this->accountService->updateSignature($id, $effectiveUserId, $signature);
+		if ($this->userId === $effectiveUserId) {
+			$this->accountService->updateSignature($id, $effectiveUserId, $signature);
+		} else {
+			$this->delegationService->updateSignatureForDelegatedUser($id, $this->userId, $signature);
+		}
 		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated signature for account <$id> on behalf of $effectiveUserId");
 		return new JSONResponse();
 	}
