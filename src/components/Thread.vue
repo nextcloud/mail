@@ -11,9 +11,14 @@
 			:error="errorTitle ? errorTitle : t('mail', 'Not found')"
 			:message="errorMessage" />
 		<template v-else>
-			<div id="mail-thread-header">
+			<div ref="headerSentinel" class="thread-header-sentinel" :style="foldStyle" />
+			<div
+				id="mail-thread-header"
+				ref="threadHeader"
+				:class="{ 'mail-thread-header--stuck': subjectIsOneLine }"
+				:style="foldStyle">
 				<div id="mail-thread-header-fields">
-					<h2 dir="auto" :title="threadSubject">
+					<h2 ref="threadSubject" dir="auto" :title="threadSubject">
 						{{ threadSubject }}
 					</h2>
 				</div>
@@ -101,11 +106,27 @@ export default {
 			summaryText: '',
 			summaryError: false,
 			isolatedPrint: false,
+			headerCollapse: 0,
+			subjectHeight: null,
 		}
 	},
 
 	computed: {
 		...mapStores(useMainStore),
+
+		subjectIsOneLine() {
+			return this.headerCollapse === 1
+		},
+
+		// The marker is a sibling of the header rather than a child, so both are
+		// told how far the fold has come and how tall the subject is.
+		foldStyle() {
+			return {
+				'--subject-collapse': this.headerCollapse,
+				'--subject-height': this.subjectHeight,
+			}
+		},
+
 		threadId() {
 			return parseInt(this.$route.params.threadId, 10)
 		},
@@ -210,14 +231,100 @@ export default {
 		if (!document.getElementById(BROWSER_PRINT_NOTICE_ID)) {
 			document.body.appendChild(buildBrowserPrintNotice(document))
 		}
+
+		document.addEventListener('scroll', this.onThreadScroll, { capture: true, passive: true })
+		this.watchSubjectHeight()
+	},
+
+	updated() {
+		// The thread is fetched, so the subject is rarely there to be watched by
+		// the time this view is, and it is replaced again on the way to the next
+		// thread.
+		this.watchSubjectHeight()
 	},
 
 	beforeDestroy() {
 		window.removeEventListener('keydown', this.handleKeyDown)
 		document.getElementById(BROWSER_PRINT_NOTICE_ID)?.remove()
+		document.removeEventListener('scroll', this.onThreadScroll, true)
+		this.subjectObserver?.disconnect()
+		if (this.collapseFrame) {
+			cancelAnimationFrame(this.collapseFrame)
+		}
 	},
 
 	methods: {
+		/**
+		 * Track whether the header has been pinned to the top.
+		 *
+		 * The subject folds away as the thread scrolls, so that the reader who
+		 * stops halfway finds it halfway rather than watching it finish on its
+		 * own. Scroll position is the only clock.
+		 *
+		 * The scroll is caught on the way down from the document, because the
+		 * thread scrolls in a pane the component does not own and cannot name.
+		 *
+		 * Watching the subject waits for the subject: until the thread has been
+		 * fetched this view holds a loading screen, and there is no subject to
+		 * measure.
+		 */
+		watchSubjectHeight() {
+			const subject = this.$refs.threadSubject
+			if (!subject || subject === this.watchedSubject) {
+				return
+			}
+
+			this.watchedSubject = subject
+			this.subjectObserver?.disconnect()
+			this.subjectObserver = new ResizeObserver(this.measureSubject)
+			this.subjectObserver.observe(subject)
+			this.updateHeaderCollapse()
+		},
+
+		/**
+		 * Note how tall the subject is with every line shown, which is what the
+		 * fold counts down from.
+		 *
+		 * Only measured while the subject is whole: half folded it would report
+		 * the height it is on the way to, and the fold would chase itself.
+		 */
+		measureSubject() {
+			if (this.headerCollapse > 0) {
+				return
+			}
+			this.subjectHeight = `${this.$refs.threadSubject.scrollHeight}px`
+		},
+
+		onThreadScroll() {
+			if (this.collapseFrame) {
+				return
+			}
+			this.collapseFrame = requestAnimationFrame(() => {
+				this.collapseFrame = null
+				this.updateHeaderCollapse()
+			})
+		},
+
+		/**
+		 * How far the subject has folded, from whole to a single line.
+		 *
+		 * The marker above the header scrolls away while the header stays
+		 * pinned, so the gap that opens between the two is how far the thread
+		 * has travelled, and the marker's own height is how far it has to
+		 * travel. Both are read from the same viewport, so wherever the pane
+		 * sits below the app header falls out of the subtraction.
+		 */
+		updateHeaderCollapse() {
+			const marker = this.$refs.headerSentinel?.getBoundingClientRect()
+			const header = this.$refs.threadHeader?.getBoundingClientRect()
+			if (!marker?.height || !header) {
+				return
+			}
+
+			const travelled = (header.top - marker.top) / marker.height
+			this.headerCollapse = Math.min(Math.max(travelled, 0), 1)
+		},
+
 		async updateSummary() {
 			if (this.thread.length <= 2 || !this.enabledThreadSummary) {
 				return
@@ -537,6 +644,13 @@ export default {
 	width: 100%;
 	max-width: 100%;
 
+	// The header changes height when it pins, and the browser would scroll back
+	// by as much to hold the message still. That correction is what moves the
+	// thread back over the mark that pinned it in the first place, so the header
+	// unpins, grows, and the correction runs again. Let the message move
+	// instead: it is the header that shrank, and the reader is watching it.
+	overflow-anchor: none;
+
 	.icon-loading {
 		&:only-child:after {
 			margin-top: calc(var(--default-line-height) - var(--default-grid-baseline));
@@ -568,7 +682,12 @@ export default {
 	position: -webkit-sticky; // ios/safari fallback
 	position: sticky;
 	top: 0;
-	margin-bottom: 5px;
+	// Folding shortens the header, and everything under it would move up by as
+	// much, on top of the scrolling that caused the fold. Hand back the height
+	// the subject gives up, so the message below holds still and the thread
+	// scrolls at the speed of the finger however fast the subject folds.
+	--subject-folded: calc((var(--subject-height, 1lh) - 1lh) * var(--subject-collapse, 0));
+	margin-bottom: calc(5px + var(--subject-folded));
 
 	&::before {
 		content: '';
@@ -582,12 +701,54 @@ export default {
 		border-bottom: var(--border-width-input-focused) solid var(--color-border);
 		z-index: -1;
 	}
+
+	// The subject follows the scroll from its full height down to one line.
+	// Until it has been measured there is nothing to count down from, so the
+	// fallback leaves every line alone. One line is `1lh` rather than
+	// `--default-line-height`, which the server sets to a bare ratio: subtracting
+	// it from a length would void the whole declaration.
+	#mail-thread-header-fields h2 {
+		max-height: calc(
+			var(--subject-height, 100vh)
+			- (var(--subject-height, 100vh) - 1lh) * var(--subject-collapse, 0)
+		);
+		overflow: hidden;
+	}
+
+	// Folded, the header is a strip over the message rather than a title above
+	// it. Clamping rather than truncating keeps the line break where the fold
+	// left it, so only the ellipsis appears at the end.
+	&.mail-thread-header--stuck #mail-thread-header-fields h2 {
+		display: -webkit-box;
+		-webkit-line-clamp: 1;
+		-webkit-box-orient: vertical;
+	}
+}
+
+// How far the thread has to scroll for the subject to fold away: exactly the
+// height it is giving up, so a line of the subject folds away over the distance
+// that line would have scrolled off by anyway, and a longer subject takes
+// proportionally longer rather than folding in a snap. It takes no room of its
+// own, and a subject already on one line leaves nothing to fold.
+.thread-header-sentinel {
+	--fold-distance: calc(var(--subject-height, 1lh) - 1lh);
+	height: var(--fold-distance);
+	margin-bottom: calc(-1 * var(--fold-distance));
+
+	// The back button is sticky, and a sticky button still takes its place in
+	// the flow, leaving a button's worth of blank above the subject. Take it
+	// back so the subject sits beside the button rather than under it. Pulling
+	// the marker rather than the header moves the two together, which leaves
+	// the distance between them, and so the fold, as it was.
+	@media only screen and (max-width: #{variables.$breakpoint-mobile}) {
+		margin-top: calc(-1 * var(--default-clickable-area));
+	}
 }
 
 @media only screen and (max-width: #{variables.$breakpoint-mobile}) {
     #mail-thread-header {
         position: sticky !important;
-        top: 29px !important;
+        top: 0 !important;
     }
 }
 
@@ -608,12 +769,6 @@ export default {
 		// some h2 styling coming from server add some space on top
 		margin-top: var(--default-grid-baseline);
 	}
-
-	p {
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
 	.transparency {
 		opacity: 0.6;
 		a {
@@ -624,14 +779,14 @@ export default {
 
 @media only screen and (max-width: #{variables.$breakpoint-mobile}) {
     #mail-thread-header-fields {
-        padding-inline-start: 48px;
+        // Clear the back button the app content puts over the header: where it
+        // starts, how wide it is, and a gap so the subject does not run into it
+        padding-inline-start: calc(
+            var(--app-navigation-padding)
+            + var(--default-clickable-area)
+            + var(--default-grid-baseline) * 2
+        );
     }
-}
-
-@media only screen and (max-width: #{variables.$breakpoint-mobile}) {
-	#mail-thread-header-fields {
-		margin-top: -32px;
-	}
 }
 
 .attachment-popover {
