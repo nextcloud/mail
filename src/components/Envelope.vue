@@ -532,17 +532,15 @@ import { showError, showSuccess, showWarning } from '@nextcloud/dialogs'
 import { isRTL } from '@nextcloud/l10n'
 import moment from '@nextcloud/moment'
 import { generateUrl } from '@nextcloud/router'
-import {
-	NcActionButton,
-	NcActionInput,
-	NcActionLink,
-	NcActionSeparator,
-	NcActionText,
-	NcAssistantIcon,
-	NcCheckboxRadioSwitch,
-} from '@nextcloud/vue'
 import escapeHtml from 'escape-html'
 import { mapState, mapStores } from 'pinia'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcActionInput from '@nextcloud/vue/components/NcActionInput'
+import NcActionLink from '@nextcloud/vue/components/NcActionLink'
+import NcActionSeparator from '@nextcloud/vue/components/NcActionSeparator'
+import NcActionText from '@nextcloud/vue/components/NcActionText'
+import NcAssistantIcon from '@nextcloud/vue/components/NcAssistantIcon'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import AlarmIcon from 'vue-material-design-icons/Alarm.vue'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
 import ArchiveIcon from 'vue-material-design-icons/ArchiveArrowDownOutline.vue'
@@ -1709,19 +1707,6 @@ export default {
 :deep(.list-item__anchor) {
 	margin-top: 6px;
 	margin-bottom: 6px;
-}
-
-:deep(.line-two__subtitle) {
-	display: flex;
-	flex-basis: 100%;
-	padding-inline-start: 40px;
-	width: 450px;
-}
-
-:deep(.line-one__title) {
-	flex-direction: row;
-	display: flex;
-	width: 200px;
 }
 
 .line-two.one-line {

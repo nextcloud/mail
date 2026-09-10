@@ -34,7 +34,9 @@
 </template>
 
 <script>
-import { NcButton, NcSelect, NcTextField } from '@nextcloud/vue'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
+import NcTextField from '@nextcloud/vue/components/NcTextField'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import ActionAddflag from './ActionAddflag.vue'
 import ActionAddSystemFlag from './ActionAddSystemFlag.vue'

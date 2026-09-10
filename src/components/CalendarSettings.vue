@@ -16,8 +16,8 @@
 </template>
 
 <script>
-import { NcCheckboxRadioSwitch } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import Logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 

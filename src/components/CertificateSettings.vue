@@ -40,8 +40,10 @@
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import moment from '@nextcloud/moment'
-import { NcButton, NcNoteCard, NcSelect } from '@nextcloud/vue'
 import { mapState, mapStores } from 'pinia'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import Logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 import { compareSmimeCertificates } from '../util/smime.js'

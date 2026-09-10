@@ -132,28 +132,31 @@ export default {
 	},
 
 	watch: {
-		attachments() {
-			this.$nextTick(function() {
-				let prevTop = null
-				this.$refs.attachments.some((attachment, i) => {
-					const top = attachment.$el.getBoundingClientRect().top
-					if (prevTop !== null && prevTop !== top) {
-						if (!this.hasNextLine) {
-							this.isToggle = true
-							this.hasNextLine = true
-						}
-						return true
-					} else {
-						prevTop = top
-						if (this.$refs.attachments.length === i + 1) {
-							this.hasNextLine = false
-							this.isToggle = false
+		attachments: {
+			deep: true,
+			handler() {
+				this.$nextTick(function() {
+					let prevTop = null
+					this.$refs.attachments.some((attachment, i) => {
+						const top = attachment.$el.getBoundingClientRect().top
+						if (prevTop !== null && prevTop !== top) {
+							if (!this.hasNextLine) {
+								this.isToggle = true
+								this.hasNextLine = true
+							}
 							return true
+						} else {
+							prevTop = top
+							if (this.$refs.attachments.length === i + 1) {
+								this.hasNextLine = false
+								this.isToggle = false
+								return true
+							}
 						}
-					}
-					return false
+						return false
+					})
 				})
-			})
+			},
 		},
 	},
 

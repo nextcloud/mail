@@ -22,7 +22,8 @@
 </template>
 
 <script>
-import { NcEmptyContent, NcLoadingIcon } from '@nextcloud/vue'
+import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 export default {
 	name: 'Loading',
 	components: {

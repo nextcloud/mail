@@ -15,7 +15,7 @@
 
 import IconCancel from '@mdi/svg/svg/cancel.svg?raw'
 import IconCheck from '@mdi/svg/svg/check.svg?raw'
-import { NcDialog } from '@nextcloud/vue'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
 
 export default {
 	name: 'DeleteModal',

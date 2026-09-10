@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import { NcAppNavigationItem } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcAppNavigationItem from '@nextcloud/vue/components/NcAppNavigationItem'
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 

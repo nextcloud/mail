@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { NcSelect } from '@nextcloud/vue'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import { MailFilterSystemFlag } from '../../models/mailFilter.ts'
 
 export default {

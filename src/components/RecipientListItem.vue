@@ -17,8 +17,8 @@
 </template>
 
 <script>
-import { NcListItemIcon } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcListItemIcon from '@nextcloud/vue/components/NcListItemIcon'
 import Close from 'vue-material-design-icons/Close.vue'
 import useMainStore from '../store/mainStore.js'
 

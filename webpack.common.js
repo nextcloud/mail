@@ -84,6 +84,13 @@ module.exports = async () => ({
 				loader: 'babel-loader',
 				include: /node_modules[/\\](@?selderee|parseley)/,
 			},
+			// Allow ESM packages in node_modules to import without file extensions
+			{
+				test: /\.m?js$/,
+				resolve: {
+					fullySpecified: false,
+				},
+			},
 			{
 				test: /\.(png|jpg|gif)$/,
 				loader: 'file-loader',

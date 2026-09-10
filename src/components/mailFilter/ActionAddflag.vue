@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { NcTextField } from '@nextcloud/vue'
+import NcTextField from '@nextcloud/vue/components/NcTextField'
 
 export default {
 	name: 'ActionAddflag',

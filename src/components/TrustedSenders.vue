@@ -33,9 +33,10 @@
 <script>
 
 import { showError } from '@nextcloud/dialogs'
-import { NcActionButton, NcListItem } from '@nextcloud/vue'
 import prop from 'lodash/fp/prop.js'
 import sortBy from 'lodash/fp/sortBy.js'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcListItem from '@nextcloud/vue/components/NcListItem'
 import IconDomain from 'vue-material-design-icons/Domain.vue'
 import IconEmail from 'vue-material-design-icons/EmailOutline.vue'
 import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'

@@ -73,7 +73,8 @@
 </template>
 
 <script>
-import { NcButton, NcLoadingIcon } from '@nextcloud/vue'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import IconRename from 'vue-material-design-icons/PencilOutline.vue'
 import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'

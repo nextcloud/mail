@@ -41,8 +41,8 @@
 <script>
 import { showError } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
-import { NcAppContentDetails } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcAppContentDetails from '@nextcloud/vue/components/NcAppContentDetails'
 import Error from './Error.vue'
 import Loading from './Loading.vue'
 import ThreadEnvelope from './ThreadEnvelope.vue'

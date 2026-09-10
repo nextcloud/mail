@@ -19,8 +19,8 @@
 </template>
 
 <script>
-import { NcContent } from '@nextcloud/vue'
 import { mapState, mapStores } from 'pinia'
+import NcContent from '@nextcloud/vue/components/NcContent'
 import ComposerSessionIndicator from '../components/ComposerSessionIndicator.vue'
 import MailboxThread from '../components/MailboxThread.vue'
 import Navigation from '../components/Navigation.vue'
