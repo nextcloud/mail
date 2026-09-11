@@ -5,7 +5,6 @@
 <template>
 	<NcModal
 		size="normal"
-		:close-on-click-outside="false"
 		:name="t('mail', 'New filter')"
 		@close="closeModal">
 		<form class="modal__content" @submit.prevent="updateFilter">
