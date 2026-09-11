@@ -380,6 +380,7 @@ OC.L10N.register(
     "Collapse folders" : "Replega les carpetes",
     "_{total} message_::_{total} messages_" : ["{total} missatge","{total} missatges"],
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} no llegit de {total}","{unread} no llegits de {total}"],
+    "Loading …" : "S'està carregant ...",
     "All messages in mailbox will be deleted." : "Se suprimiran tots els missatges de la bústia.",
     "Clear mailbox {name}" : "Esborra la bústia {name}",
     "The folder and all messages in it will be deleted." : "Se suprimirà la carpeta i tots els missatges que conté.",
