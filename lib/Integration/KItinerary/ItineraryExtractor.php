@@ -45,18 +45,34 @@ class ItineraryExtractor {
 		return null;
 	}
 
-	public function extract(string $content): Itinerary {
+	/**
+	 * Look the adapter up once and remember the result
+	 */
+	private function getAdapter(): ?Adapter {
 		if ($this->adapter === null) {
 			$this->adapter = $this->findAvailableAdapter() ?? false;
 		}
-		if ($this->adapter === false) {
+		return $this->adapter === false ? null : $this->adapter;
+	}
+
+	/**
+	 * Whether any KItinerary adapter is available on this system, without
+	 * doing any extraction work
+	 */
+	public function hasAdapter(): bool {
+		return $this->getAdapter() !== null;
+	}
+
+	public function extract(string $content): Itinerary {
+		$adapter = $this->getAdapter();
+		if ($adapter === null) {
 			$this->logger->info('KItinerary binary adapter is not available, can\'t extract information');
 
 			return new Itinerary();
 		}
 
 		try {
-			return (new Extractor($this->adapter))->extractFromString($content);
+			return (new Extractor($adapter))->extractFromString($content);
 		} catch (KItineraryRuntimeException $e) {
 			$this->logger->error('Could not extract itinerary function from KItinerary integration: ' . $e->getMessage(), [
 				'exception' => $e,

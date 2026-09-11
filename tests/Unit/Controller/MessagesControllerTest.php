@@ -341,12 +341,74 @@ class MessagesControllerTest extends TestCase {
 			->will($this->returnValue($type));
 
 		$expected = new AttachmentDownloadResponse($contents, $name, $type);
+		$expected->cacheFor(24 * 3600, false, true);
 		$response = $this->controller->downloadAttachment(
 			$id,
 			$attachmentId
 		);
 
 		$this->assertEquals($expected, $response);
+		// IOPS guard: the response must be browser-cacheable so repeated
+		// message opens do not trigger new requests (and IMAP logins)
+		$this->assertSame(
+			'private, max-age=86400, immutable',
+			$response->getHeaders()['Cache-Control'] ?? null
+		);
+	}
+
+	public function testDownloadEmbeddedMessageAttachmentIsCacheable() {
+		$accountId = 17;
+		$mailboxId = 987;
+		$id = 123;
+		$uid = 321;
+		$attachmentId = '2';
+
+		// Embedded messages and body parts have no name
+		$contents = 'embedded rfc822 bytes';
+		$type = 'message/rfc822';
+		$message = new \OCA\Mail\Db\Message();
+		$message->setMailboxId($mailboxId);
+		$message->setUid($uid);
+		$mailbox = new \OCA\Mail\Db\Mailbox();
+		$mailbox->setName('INBOX');
+		$mailbox->setAccountId($accountId);
+		$this->mailManager->expects($this->once())
+			->method('getMessage')
+			->with($this->userId, $id)
+			->willReturn($message);
+		$this->mailManager->expects($this->once())
+			->method('getMailbox')
+			->with($this->userId, $mailboxId)
+			->willReturn($mailbox);
+		$this->mailManager->expects($this->once())
+			->method('getMailAttachment')
+			->with($this->account, $mailbox, $message, $attachmentId)
+			->will($this->returnValue($this->attachment));
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->will($this->returnValue($this->account));
+		$this->attachment->expects($this->once())
+			->method('getContent')
+			->will($this->returnValue($contents));
+		$this->attachment->expects($this->any())
+			->method('getName')
+			->will($this->returnValue(null));
+		$this->attachment->expects($this->once())
+			->method('getType')
+			->will($this->returnValue($type));
+
+		$response = $this->controller->downloadAttachment(
+			$id,
+			$attachmentId
+		);
+
+		// The null-name (.eml) branch must be cacheable too
+		$this->assertSame(
+			'private, max-age=86400, immutable',
+			$response->getHeaders()['Cache-Control'] ?? null
+		);
+		$this->assertStringContainsString('.eml', $response->getHeaders()['Content-Disposition'] ?? '');
 	}
 
 	public function testSaveSingleAttachment() {

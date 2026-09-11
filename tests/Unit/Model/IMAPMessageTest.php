@@ -92,6 +92,51 @@ class IMAPMessageTest extends TestCase {
 		$this->assertEquals($plainTextBody, $actualPlainTextBody);
 	}
 
+	public function testGetHtmlBodyIsMemoized(): void {
+		// Two calls with the same id must sanitize only once; a different id
+		// must recompute because attachment URLs embed the message id
+		$this->htmlService->expects($this->exactly(2))
+			->method('sanitizeHtmlMailBody')
+			->willReturn('<p>sanitized</p>');
+
+		$message = new IMAPMessage(
+			1234,
+			'<memo-test@example.com>',
+			[],
+			AddressList::parse('from@mail.com'),
+			AddressList::parse('to@mail.com'),
+			AddressList::parse('cc@mail.com'),
+			AddressList::parse('bcc@mail.com'),
+			AddressList::parse('reply-to@mail.com'),
+			'subject',
+			'plain body',
+			'<p>html body</p>',
+			true,
+			[],
+			[],
+			false,
+			[],
+			new Horde_Imap_Client_DateTime('2016-01-01 00:00:00'),
+			'',
+			'disposition',
+			false,
+			[],
+			null,
+			false,
+			'',
+			'',
+			false,
+			false,
+			false,
+			$this->htmlService,
+			false,
+		);
+
+		$this->assertSame('<p>sanitized</p>', $message->getHtmlBody(123));
+		$this->assertSame('<p>sanitized</p>', $message->getHtmlBody(123));
+		$this->assertSame('<p>sanitized</p>', $message->getHtmlBody(456));
+	}
+
 	public function testSerialize() {
 		$data = new Horde_Imap_Client_Data_Fetch();
 		$data->setUid(1234);
