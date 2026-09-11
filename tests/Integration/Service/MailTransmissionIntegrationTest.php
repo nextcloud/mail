@@ -42,6 +42,7 @@ use OCA\Mail\Support\PerformanceLogger;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use OCA\Mail\Tests\Integration\TestCase;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\IConfig;
 use OCP\IUser;
 use OCP\Security\ICrypto;
 use OCP\Server;
@@ -240,6 +241,38 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$this->chain->process($this->account, $this->message);
 
 		$this->assertMailboxExists('Sent');
+		$this->assertMessageCount(1, 'Sent');
+	}
+
+	public function testSkipsAppendWhenServerAlreadySavedSentMessage(): void {
+		$messageId = '<server-saved-' . microtime(true) . '@domain.tld>';
+		$rawMessage = implode("\r\n", [
+			'From: user@domain.tld',
+			'To: recipient@domain.com',
+			'Message-ID: ' . $messageId,
+			'Subject: server auto-save test',
+			'',
+			'Body text',
+		]);
+
+		// Enable the opt-in feature flag
+		Server::get(IConfig::class)->setAppValue('mail', 'smtp_saves_sent', 'true');
+
+		// Simulate what an Exchange-style server does: save to Sent before the client does
+		$this->saveMimeMessage('Sent', $rawMessage);
+		$this->assertMessageCount(1, 'Sent');
+
+		$this->message->setRaw($rawMessage);
+
+		/** @var IMAPClientFactory $clientFactory */
+		$clientFactory = Server::get(IMAPClientFactory::class);
+		$client = $clientFactory->getClient($this->account);
+		/** @var CopySentMessageHandler $handler */
+		$handler = Server::get(CopySentMessageHandler::class);
+		$handler->process($this->account, $this->message, $client);
+
+		Server::get(IConfig::class)->deleteAppValue('mail', 'smtp_saves_sent');
+
 		$this->assertMessageCount(1, 'Sent');
 	}
 
