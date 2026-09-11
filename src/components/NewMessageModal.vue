@@ -151,11 +151,9 @@
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { t } from '@nextcloud/l10n'
-import {
-	NcButton,
-	NcEmptyContent,
-} from '@nextcloud/vue'
 import { mapActions, mapState, mapStores } from 'pinia'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 import DefaultComposerIcon from 'vue-material-design-icons/ArrowCollapse.vue'
 import MaximizeIcon from 'vue-material-design-icons/ArrowExpand.vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'

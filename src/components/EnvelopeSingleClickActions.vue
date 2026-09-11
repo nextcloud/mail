@@ -44,7 +44,7 @@
 
 <script>
 
-import { NcButton } from '@nextcloud/vue'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
 import EmailUnread from 'vue-material-design-icons/EmailOutline.vue'
 import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'

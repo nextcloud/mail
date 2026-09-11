@@ -59,8 +59,10 @@
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import { NcActionButton, NcButton, NcListItem } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcListItem from '@nextcloud/vue/components/NcListItem'
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import DeleteModal from './DeleteModal.vue'

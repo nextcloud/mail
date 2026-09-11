@@ -115,9 +115,12 @@
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { generateUrl } from '@nextcloud/router'
-import { NcButton, NcPopover, NcSelect, NcUserBubble } from '@nextcloud/vue'
 import debouncePromise from 'debounce-promise'
 import uniqBy from 'lodash/fp/uniqBy.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcPopover from '@nextcloud/vue/components/NcPopover'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
+import NcUserBubble from '@nextcloud/vue/components/NcUserBubble'
 import IconUser from 'vue-material-design-icons/AccountOutline.vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import IconClipboard from 'vue-material-design-icons/ClipboardTextOutline.vue'

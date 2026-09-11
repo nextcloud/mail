@@ -35,8 +35,8 @@
 </template>
 
 <script>
-import { NcButton } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconRefresh from 'vue-material-design-icons/Refresh.vue'

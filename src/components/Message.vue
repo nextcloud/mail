@@ -91,8 +91,10 @@
 
 <script>
 import { generateUrl } from '@nextcloud/router'
-import { NcAssistantButton, NcButton, NcPopover } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcAssistantButton from '@nextcloud/vue/components/NcAssistantButton'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcPopover from '@nextcloud/vue/components/NcPopover'
 import IconInfo from 'vue-material-design-icons/InformationOutline.vue'
 import LockOffIcon from 'vue-material-design-icons/LockOffOutline.vue'
 import ReplyIcon from 'vue-material-design-icons/ReplyOutline.vue'

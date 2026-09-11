@@ -167,9 +167,12 @@
 
 <script>
 import { showError } from '@nextcloud/dialogs'
-import { NcActionButton, NcActions, NcButton, NcDialog } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import { differenceWith } from 'ramda'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcActions from '@nextcloud/vue/components/NcActions'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
 import IconSelect from 'vue-material-design-icons/CloseThick.vue'
 import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
