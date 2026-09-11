@@ -136,7 +136,7 @@ class MailSearch implements IMailSearch {
 	 * @throws ServiceException
 	 */
 	private function getIdsLocally(Account $account, Mailbox $mailbox, SearchQuery $query, string $sortOrder, ?int $limit): array {
-		if (empty($query->getBodies())) {
+		if (empty($query->getBodies()) || !$account->getMailAccount()->getSearchBody()) {
 			return $this->messageMapper->findIdsByQuery($mailbox, $query, $sortOrder, $limit);
 		}
 
@@ -145,6 +145,11 @@ class MailSearch implements IMailSearch {
 			$mailbox,
 			$query
 		);
+
+		if (empty($fromImap)) {
+			return $this->messageMapper->findIdsByQuery($mailbox, $query, $sortOrder, $limit);
+		}
+
 		return $this->messageMapper->findIdsByQuery($mailbox, $query, $sortOrder, $limit, $fromImap);
 	}
 
