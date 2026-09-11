@@ -98,6 +98,11 @@ final class CreateImapAccount extends Command {
 			return self::FAILURE;
 		}
 
+		if (empty($this->accountService->findByUserIdAndAddress($userId, $email)) === false) {
+			$output->writeln("<error>User $userId already has an account for $email</error>");
+			return 1;
+		}
+
 		$account = new MailAccount();
 		$account->setUserId($userId);
 		$account->setName($name);
