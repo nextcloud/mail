@@ -118,6 +118,7 @@ export default {
 			license: 'GPLv3',
 			log: false,
 			scrolling: true,
+			warningTimeout: 10000,
 		}, this.$refs.iframe)
 
 		this.detectedForeignLanguage = await detectForeignLanguage(this.message.body ?? '')

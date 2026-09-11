@@ -8,6 +8,19 @@ import type { ViewDocumentFragment, ViewElement } from 'ckeditor5'
 import { ImageUtils, Plugin, UpcastWriter } from 'ckeditor5'
 
 /**
+ * Alignment as inline styles, keyed by the class the image style feature writes.
+ *
+ * Physical margins because the Word engine behind Outlook ignores margin-inline.
+ * The margins place a figure narrower than the available space, text-align
+ * places the image inside a full width figure.
+ */
+const ALIGNMENTS: Record<string, Record<string, string>> = {
+	'image-style-align-center': { 'margin-left': 'auto', 'margin-right': 'auto', 'text-align': 'center' },
+	'image-style-block-align-right': { 'margin-left': 'auto', 'margin-right': '0', 'text-align': 'right' },
+	'image-style-block-align-left': { 'margin-left': '0', 'margin-right': 'auto', 'text-align': 'left' },
+}
+
+/**
  * Parse a CSS length into whole pixels. Anything but an absolute pixel value
  * yields null.
  *
@@ -49,6 +62,10 @@ export default class ImageDowncastPlugin extends Plugin {
 			const writer = new UpcastWriter(fragment.document)
 
 			for (const { item } of writer.createRangeIn(fragment)) {
+				if (item.is('element', 'figure') && item.hasClass('image')) {
+					this._inlineAlignment(writer, item)
+				}
+
 				// A block image carries the resized width on its figure, an inline
 				// one on the img itself.
 				if ((item.is('element', 'figure') && item.hasClass('image')) || item.is('element', 'img')) {
@@ -56,6 +73,36 @@ export default class ImageDowncastPlugin extends Plugin {
 				}
 			}
 		}, { priority: 'low' })
+	}
+
+	/**
+	 * Adds the inline styles for the figure's alignment class, which is backed by
+	 * an editor stylesheet recipients never load. The class stays so that
+	 * reopening the draft restores the active alignment.
+	 *
+	 * @param writer view writer of the data view
+	 * @param figure the figure to align
+	 */
+	_inlineAlignment(writer: UpcastWriter, figure: ViewElement): void {
+		// Fall back to left: without a class the figure keeps the client's own margins.
+		const className = Object.keys(ALIGNMENTS).find((candidate) => figure.hasClass(candidate))
+			?? 'image-style-block-align-left'
+		const alignment = ALIGNMENTS[className]
+
+		writer.setStyle(alignment, figure)
+
+		const image = this.editor.plugins.get('ImageUtils').findViewImgElement(figure)
+		if (image === undefined) {
+			return
+		}
+
+		// Clients that predate <figure> drop the tag and keep the img, so the img
+		// has to align itself. Auto margins only move a block element.
+		writer.setStyle({
+			display: 'block',
+			'margin-left': alignment['margin-left'],
+			'margin-right': alignment['margin-right'],
+		}, image)
 	}
 
 	/**
