@@ -5,14 +5,6 @@
 <!-- Standard Actions menu for Envelopes -->
 <template>
 	<div>
-		<FilePicker
-			v-if="isFilePickerOpen"
-			:name="t('mail', 'Choose a folder to store the message in')"
-			:buttons="saveMessageButtons"
-			:allow-pick-directory="true"
-			:multiselect="false"
-			:mimetype-filter="['httpd/unix-directory']"
-			@close="() => isFilePickerOpen = false" />
 		<template v-if="!localMoreActionsOpen && !snoozeActionsOpen">
 			<NcActionButton
 				v-if="hasWriteAcl"
@@ -223,7 +215,7 @@
 				class="message-save-to-cloud"
 				:disabled="savingToCloud"
 				:close-after-click="true"
-				@click="() => isFilePickerOpen = true">
+				@click="saveToCloud">
 				<template #icon>
 					<IconSave v-if="!savingToCloud" :size="20" />
 					<NcLoadingIcon v-else-if="savingToCloud" :size="20" />
@@ -303,7 +295,6 @@
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
 import moment from '@nextcloud/moment'
 import { generateUrl } from '@nextcloud/router'
 import {
@@ -342,6 +333,7 @@ import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder.js'
 import { saveMessage } from '../service/MessageService.js'
 import useMainStore from '../store/mainStore.js'
 import { mailboxHasRights } from '../util/acl.js'
+import { pickFolder } from '../util/filePicker.js'
 
 export default {
 	name: 'MenuEnvelope',
@@ -360,7 +352,6 @@ export default {
 		TranslationIcon,
 		DownloadIcon,
 		IconSave,
-		FilePicker,
 		InformationIcon,
 		OpenInNewIcon,
 		PlusIcon,
@@ -433,14 +424,6 @@ export default {
 			copied: false,
 			copyResetTimer: null,
 			savingToCloud: false,
-			isFilePickerOpen: false,
-			saveMessageButtons: [
-				{
-					label: t('mail', 'Choose'),
-					callback: this.saveToCloud,
-					type: 'primary',
-				},
-			],
 		}
 	},
 
@@ -741,8 +724,15 @@ export default {
 			}
 		},
 
-		async saveToCloud(dest) {
-			const path = dest[0].path
+		async saveToCloud() {
+			let path
+			try {
+				path = await pickFolder(t('mail', 'Choose a folder to store the message in'))
+			} catch (error) {
+				logger.debug('file picker closed without picking a folder', { error })
+				return
+			}
+
 			this.savingToCloud = true
 			const id = this.envelope.databaseId
 

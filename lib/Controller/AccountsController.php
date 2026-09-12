@@ -30,6 +30,7 @@ use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\SetupService;
 use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
@@ -226,6 +227,12 @@ class AccountsController extends Controller {
 		$account = $this->accountService->find($effectiveUserId, $id);
 
 		$dbAccount = $account->getMailAccount();
+
+		foreach ([$draftsMailboxId, $sentMailboxId, $trashMailboxId, $archiveMailboxId, $snoozeMailboxId, $junkMailboxId] as $mailboxId) {
+			if ($mailboxId !== null) {
+				$this->delegationService->assertMailboxAccess($mailboxId, $this->userId);
+			}
+		}
 
 		if ($draftsMailboxId !== null) {
 			$this->mailManager->getMailbox($effectiveUserId, $draftsMailboxId);
@@ -432,6 +439,11 @@ class AccountsController extends Controller {
 		$account = $this->accountService->find($effectiveUserId, $id);
 		$previousDraft = null;
 		if ($draftId !== null) {
+			try {
+				$this->delegationService->assertMessageAccess($draftId, $this->userId);
+			} catch (DoesNotExistException $e) {
+				// Nothing to authorise, loading the draft below will fail and be logged
+			}
 			try {
 				$previousDraft = $this->mailManager->getMessage($effectiveUserId, $draftId);
 			} catch (ClientException $e) {

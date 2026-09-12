@@ -43,14 +43,9 @@
 			</div>
 		</div>
 		<div class="composer-fields">
-			<div class="composer-fields__label">
-				<label class="to-label" for="to">
-					{{ t('mail', 'To') }}
-				</label>
-				<NcButton size="small" variant="tertiary-no-background" @click.prevent="toggleViewMode">
-					{{ t('mail', 'Cc/Bcc') }}
-				</NcButton>
-			</div>
+			<label class="to-label" for="to">
+				{{ t('mail', 'To') }}
+			</label>
 			<div class="composer-fields--custom">
 				<NcSelect
 					id="to"
@@ -563,8 +558,6 @@ import trimStart from 'lodash/fp/trimCharsStart.js'
 import uniqBy from 'lodash/fp/uniqBy.js'
 import mitt from 'mitt'
 import { mapState, mapStores } from 'pinia'
-import Vue from 'vue'
-import Autosize from 'vue-autosize'
 import { NcReferencePickerModal } from '@nextcloud/vue/components/NcRichText'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
 import IconFolder from 'vue-material-design-icons/FolderOutline.vue'
@@ -598,8 +591,6 @@ import textBlockSvg from './../../img/text_snippet.svg'
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
 const NO_ALIAS_SET = -1
-
-Vue.use(Autosize)
 
 export default {
 	name: 'Composer',
@@ -1064,10 +1055,6 @@ export default {
 	},
 
 	watch: {
-		'$route.params.threadId': function() {
-			this.reset()
-		},
-
 		allRecipients() {
 			this.checkRecipientsKeys()
 		},

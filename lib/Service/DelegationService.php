@@ -18,6 +18,7 @@ use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\DelegationExistsException;
+use OCA\Mail\Exception\DelegationForbiddenException;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
@@ -119,6 +120,49 @@ class DelegationService {
 	public function resolveMessageUserId(int $messageId, string $currentUserId): string {
 		$accountId = $this->messageMapper->findAccountIdForMessage($messageId);
 		return $this->resolveAccountUserId($accountId, $currentUserId);
+	}
+
+	/**
+	 * Assert that the current user may act on the given account.
+	 *
+	 * Use this for account ids that are supplied by the client on top of the id the
+	 * effective user was resolved from. Resolving those with the effective user id
+	 * would accept any account of the account owner, not just the delegated ones.
+	 *
+	 * @throws DelegationForbiddenException
+	 */
+	public function assertAccountAccess(int $accountId, string $currentUserId): void {
+		try {
+			$this->resolveAccountUserId($accountId, $currentUserId);
+		} catch (ClientException $e) {
+			throw new DelegationForbiddenException($e->getMessage(), 0, $e);
+		}
+	}
+
+	/**
+	 * Assert that the current user may act on the account the given mailbox belongs to.
+	 *
+	 * @throws DoesNotExistException
+	 * @throws DelegationForbiddenException
+	 */
+	public function assertMailboxAccess(int $mailboxId, string $currentUserId): void {
+		$this->assertAccountAccess(
+			$this->mailboxMapper->findAccountIdForMailbox($mailboxId),
+			$currentUserId,
+		);
+	}
+
+	/**
+	 * Assert that the current user may act on the account the given message belongs to.
+	 *
+	 * @throws DoesNotExistException
+	 * @throws DelegationForbiddenException
+	 */
+	public function assertMessageAccess(int $messageId, string $currentUserId): void {
+		$this->assertAccountAccess(
+			$this->messageMapper->findAccountIdForMessage($messageId),
+			$currentUserId,
+		);
 	}
 
 	/**
