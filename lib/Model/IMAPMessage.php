@@ -248,9 +248,21 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	public function getFullMessage(int $id, bool $loadBody = true): array {
 		$mailBody = $this->plainMessage;
 		$data = $this->jsonSerialize();
+		$hasPlainBody = trim($mailBody) !== '';
+		$data['hasPlainBody'] = $hasPlainBody;
+		$data['signature'] = null;
+
+		if ($hasPlainBody) {
+			$mailBody = $this->htmlService->convertLinks($mailBody);
+			[$mailBody, $signature] = $this->htmlService->parseMailBody($mailBody);
+			$data['signature'] = $signature;
+		}
 
 		if ($this->hasHtmlMessage && $loadBody) {
 			$data['body'] = $this->getHtmlBody($id);
+			if ($hasPlainBody) {
+				$data['plainBody'] = $mailBody;
+			}
 		}
 
 		if ($this->hasHtmlMessage) {
@@ -260,9 +272,6 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			return $data;
 		}
 
-		$mailBody = $this->htmlService->convertLinks($mailBody);
-		[$mailBody, $signature] = $this->htmlService->parseMailBody($mailBody);
-		$data['signature'] = $signature;
 		$data['attachments'] = array_merge($this->attachments, $this->inlineAttachments);
 		$data['inlineAttachments'] = [];
 		if ($loadBody) {

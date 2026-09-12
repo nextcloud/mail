@@ -5,7 +5,7 @@
 
 <template>
 	<div
-		:class="[message.hasHtmlBody ? 'mail-message-body mail-message-body-html' : 'mail-message-body']"
+		:class="[showHtmlBody ? 'mail-message-body mail-message-body-html' : 'mail-message-body']"
 		role="region"
 		:aria-label="t('mail', 'Message body')">
 		<PhishingWarning v-if="message.phishingDetails.warning" :phishing-data="message.phishingDetails.checks" />
@@ -30,12 +30,18 @@
 				:scheduling="scheduling" />
 		</div>
 		<MessageHTMLBody
-			v-if="message.hasHtmlBody"
+			v-if="showHtmlBody"
 			:url="htmlUrl"
 			:message="message"
 			:full-height="fullHeight"
 			@load="$emit('load', $event)"
 			@print-shortcut="$emit('print-shortcut')"
+			@translate="$emit('translate', $event)" />
+		<MessagePlainTextBody
+			v-else-if="showTextualVersion"
+			:body="message.plainBody"
+			:signature="message.signature"
+			:message="message"
 			@translate="$emit('translate', $event)" />
 		<MessageEncryptedBody
 			v-else-if="isEncrypted || isPgpMimeEncrypted"
@@ -152,6 +158,11 @@ export default {
 			required: true,
 			type: String,
 		},
+
+		showTextualVersion: {
+			type: Boolean,
+			default: false,
+		},
 	},
 
 	data() {
@@ -164,6 +175,10 @@ export default {
 		...mapStores(useMainStore),
 		from() {
 			return this.message.from.length === 0 ? '?' : this.message.from[0].label || this.message.from[0].email
+		},
+
+		showHtmlBody() {
+			return this.message.hasHtmlBody && !this.showTextualVersion
 		},
 
 		htmlUrl() {
