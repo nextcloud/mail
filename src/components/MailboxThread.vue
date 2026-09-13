@@ -200,8 +200,7 @@
 </template>
 
 <script>
-import { NcAppContent, NcAppContentList, NcButton, NcPopover } from '@nextcloud/vue'
-import { useIsMobile } from '@nextcloud/vue/composables/useIsMobile'
+import { isMobile, NcAppContent, NcAppContentList, NcButton, NcPopover } from '@nextcloud/vue'
 import addressParser from 'address-rfc2822'
 import mitt from 'mitt'
 import { mapStores } from 'pinia'
@@ -248,6 +247,7 @@ export default {
 		Thread,
 	},
 
+	mixins: [isMobile],
 	props: {
 		account: {
 			type: Object,
@@ -258,12 +258,6 @@ export default {
 			type: Object,
 			required: true,
 		},
-	},
-
-	setup() {
-		return {
-			isMobile: useIsMobile(),
-		}
 	},
 
 	data() {

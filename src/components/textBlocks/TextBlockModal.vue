@@ -31,14 +31,13 @@
 		id="text-block-picker"
 		:name="t('mail', 'Text blocks')"
 		:message="t('mail', 'Text blocks are reusable pieces of text that can be inserted in messages. Visit the Settings panel to create your own.')"
-		@closing="handleClose">
-	</NcDialog>
+		@closing="handleClose" />
 </template>
 
 <script>
 import IconCheck from '@mdi/svg/svg/check.svg'
-import { NcDialog } from '@nextcloud/vue'
 import { mapState } from 'pinia'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
 import ListItem from './ListItem.vue'
 import useMainStore from '../../store/mainStore.js'
 

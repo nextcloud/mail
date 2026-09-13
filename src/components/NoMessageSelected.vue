@@ -22,8 +22,8 @@
 
 <script>
 import { generateFilePath } from '@nextcloud/router'
-import { NcAppContentDetails } from '@nextcloud/vue'
 import { useIsDarkTheme } from '@nextcloud/vue/composables/useIsDarkTheme'
+import NcAppContentDetails from '@nextcloud/vue/components/NcAppContentDetails'
 import NewMessageButtonHeader from './NewMessageButtonHeader.vue'
 
 export default {

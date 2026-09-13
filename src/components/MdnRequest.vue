@@ -22,8 +22,8 @@
 
 <script>
 import { showError } from '@nextcloud/dialogs'
-import { NcButton } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import logger from '../logger.js'
 import { sendMdn } from '../service/MessageService.js'
 import useMainStore from '../store/mainStore.js'
