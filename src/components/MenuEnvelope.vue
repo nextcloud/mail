@@ -176,6 +176,15 @@
 				{{ t('mail', 'Create task') }}
 			</NcActionButton>
 			<NcActionButton
+				v-if="hasPlainBody"
+				:close-after-click="true"
+				@click.prevent="$emit('toggle-textual-version')">
+				<template #icon>
+					<TextBoxOutlineIcon :size="20" />
+				</template>
+				{{ showingTextualVersion ? t('mail', 'View HTML version') : t('mail', 'View textual version') }}
+			</NcActionButton>
+			<NcActionButton
 				v-if="withShowSource"
 				:close-after-click="true"
 				@click.prevent="$emit('show-source-modal')">
@@ -316,6 +325,7 @@ import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import PrinterIcon from 'vue-material-design-icons/PrinterOutline.vue'
 import ShareIcon from 'vue-material-design-icons/ShareOutline.vue'
 import TagIcon from 'vue-material-design-icons/TagOutline.vue'
+import TextBoxOutlineIcon from 'vue-material-design-icons/TextBoxOutline.vue'
 import TranslationIcon from 'vue-material-design-icons/Translate.vue'
 import DownloadIcon from 'vue-material-design-icons/TrayArrowDown.vue'
 import logger from '../logger.js'
@@ -347,6 +357,7 @@ export default {
 		PlusIcon,
 		ShareIcon,
 		TagIcon,
+		TextBoxOutlineIcon,
 		ImportantIcon,
 		ImportantOutlineIcon,
 		TaskIcon,
@@ -384,6 +395,16 @@ export default {
 			// "Show source" action should only appear in thread envelopes
 			type: Boolean,
 			default: true,
+		},
+
+		hasPlainBody: {
+			type: Boolean,
+			default: false,
+		},
+
+		showingTextualVersion: {
+			type: Boolean,
+			default: false,
 		},
 
 		isTranslationAvailable: {
