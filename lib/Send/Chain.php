@@ -18,7 +18,6 @@ use OCP\DB\Exception;
 
 class Chain {
 	public function __construct(
-		private SentMailboxHandler $sentMailboxHandler,
 		private AntiAbuseHandler $antiAbuseHandler,
 		private SendHandler $sendHandler,
 		private CopySentMessageHandler $copySentMessageHandler,
@@ -35,7 +34,7 @@ class Chain {
 	 * @throws ServiceException
 	 */
 	public function process(Account $account, LocalMessage $localMessage): LocalMessage {
-		$handlers = $this->sentMailboxHandler;
+		$handlers = $this->antiAbuseHandler;
 		$handlers->setNext($this->antiAbuseHandler)
 			->setNext($this->sendHandler)
 			->setNext($this->copySentMessageHandler)

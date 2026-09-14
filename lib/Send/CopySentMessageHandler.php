@@ -46,7 +46,9 @@ class CopySentMessageHandler extends AHandler {
 			// We can't write the "sent mailbox" status here bc that would trigger an additional send.
 			// Thus, we leave the "imap copy to sent mailbox" status.
 			$localMessage->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
-			$this->logger->warning("No sent mailbox exists, can't save sent message");
+			$this->logger->warning("No sent mailbox exists, can't save sent message", [
+				'accountId' => $account->getMailAccount()->getId(),
+			]);
 			return $localMessage;
 		}
 
