@@ -14,6 +14,7 @@ use Horde\ManageSieve;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Sieve\SieveClientFactory;
+use OCA\Mail\Support\DebugLogPathFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
 use OCP\Server;
@@ -46,7 +47,7 @@ class SieveClientFactoryTest extends TestCase {
 				['app.mail.debug', false, false],
 			]);
 
-		$this->factory = new SieveClientFactory($this->crypto, $this->config);
+		$this->factory = new SieveClientFactory($this->crypto, $this->config, new DebugLogPathFactory($this->config));
 	}
 
 	/**
