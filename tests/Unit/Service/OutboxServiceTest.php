@@ -17,7 +17,6 @@ use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Exception\ClientException;
-use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Send\Chain;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Attachment\AttachmentService;
@@ -45,9 +44,6 @@ class OutboxServiceTest extends TestCase {
 	/** @var AttachmentService|MockObject */
 	private $attachmentService;
 
-	/** @var ProtocolFactory|MockObject */
-	private $protocolFactory;
-
 	/** @var MailManager|MockObject */
 	private $mailManager;
 
@@ -66,7 +62,6 @@ class OutboxServiceTest extends TestCase {
 
 		$this->mapper = $this->createMock(LocalMessageMapper::class);
 		$this->attachmentService = $this->createMock(AttachmentService::class);
-		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
 		$this->mailManager = $this->createMock(MailManager::class);
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
@@ -76,7 +71,6 @@ class OutboxServiceTest extends TestCase {
 			$this->mapper,
 			$this->attachmentService,
 			$this->createMock(EventDispatcher::class),
-			$this->protocolFactory,
 			$this->mailManager,
 			$this->accountService,
 			$this->timeFactory,
@@ -211,19 +205,14 @@ class OutboxServiceTest extends TestCase {
 		$account = $this->createConfiguredMock(Account::class, [
 			'getUserId' => $this->userId
 		]);
-		$client = $this->createStub(\Horde_Imap_Client_Socket::class);
 
 		$this->mapper->expects(self::once())
 			->method('saveWithRecipients')
 			->with($message, [$rTo], $cc, $bcc)
 			->willReturn($message2);
-		$this->protocolFactory->expects(self::once())
-			->method('imapClient')
-			->with($account)
-			->willReturn($client);
 		$this->attachmentService->expects(self::once())
 			->method('handleAttachments')
-			->with($account, $attachments, $client)
+			->with($account, $attachments)
 			->willReturn($attachmentIds);
 		$this->attachmentService->expects(self::once())
 			->method('saveLocalMessageAttachments')
@@ -265,8 +254,6 @@ class OutboxServiceTest extends TestCase {
 			->method('saveWithRecipients')
 			->with($message, [$rTo], $cc, $bcc)
 			->willReturn($message2);
-		$this->protocolFactory->expects(self::never())
-			->method('imapClient');
 		$this->attachmentService->expects(self::never())
 			->method('handleAttachments');
 		$this->attachmentService->expects(self::never())
@@ -313,19 +300,14 @@ class OutboxServiceTest extends TestCase {
 		$account = $this->createConfiguredMock(Account::class, [
 			'getUserId' => $this->userId
 		]);
-		$client = $this->createStub(\Horde_Imap_Client_Socket::class);
 
 		$this->mapper->expects(self::once())
 			->method('updateWithRecipients')
 			->with($message, [$rTo], $cc, $bcc)
 			->willReturn($message2);
-		$this->protocolFactory->expects(self::once())
-			->method('imapClient')
-			->with($account)
-			->willReturn($client);
 		$this->attachmentService->expects(self::once())
 			->method('handleAttachments')
-			->with($account, $attachments, $client)
+			->with($account, $attachments)
 			->willReturn($attachmentIds);
 		$this->attachmentService->expects(self::once())
 			->method('updateLocalMessageAttachments')
@@ -377,8 +359,6 @@ class OutboxServiceTest extends TestCase {
 		$this->attachmentService->expects(self::once())
 			->method('updateLocalMessageAttachments')
 			->with($this->userId, $message2, $attachments);
-		$this->protocolFactory->expects(self::never())
-			->method('imapClient');
 		$this->attachmentService->expects(self::never())
 			->method('handleAttachments');
 
