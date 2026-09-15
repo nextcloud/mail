@@ -9,8 +9,7 @@
 		:is="to ? 'router-link' : 'NcVNodes'"
 		v-slot="{ href: routerLinkHref, navigate, isActive }"
 		:custom="to ? true : null"
-		:to="to"
-		:exact="to ? exact : null">
+		:to="to">
 		<li
 			class="list-item__wrapper"
 			:class="{ 'list-item__wrapper--active': isActive || active }">
@@ -156,15 +155,6 @@ export default {
 		name: {
 			type: String,
 			required: true,
-		},
-
-		/**
-		 * Pass in `true` if you want the matching behavior to
-		 * be non-inclusive: https://router.vuejs.org/api/#exact
-		 */
-		exact: {
-			type: Boolean,
-			default: false,
 		},
 
 		/**
