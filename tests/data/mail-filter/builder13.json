@@ -1,0 +1,27 @@
+[
+	{
+		"name": "Test 13",
+		"enable": true,
+		"operator": "allof",
+		"tests": [
+			{
+				"operator": "is",
+				"values": [
+					"bob@example.org"
+				],
+				"field": "to"
+			}
+		],
+		"actions": [
+			{
+				"type": "addsystemflag",
+				"flag": "\\Seen"
+			},
+			{
+				"type": "redirect",
+				"recipient": "alice@example.org"
+			}
+		],
+		"priority": 10
+	}
+]
