@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import CKEditor from '@ckeditor/ckeditor5-vue2'
+import CKEditor from '@ckeditor/ckeditor5-vue'
 import { getLanguage } from '@nextcloud/l10n'
 import { emojiAddRecent, emojiSearch } from '@nextcloud/vue'
 import {
