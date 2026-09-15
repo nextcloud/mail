@@ -15,11 +15,11 @@
 			isValidDropTarget,
 		}"
 		:allow-collapse="hasSubMailboxes"
-		:menu-open.sync="menuOpen"
+		v-model:menu-open="menuOpen"
 		:force-menu="true"
 		:name="title"
 		:to="to"
-		:open.sync="showSubMailboxes"
+		v-model:open="showSubMailboxes"
 		@update:menuOpen="onMenuToggle">
 		<template #icon="{ active }">
 			<div>

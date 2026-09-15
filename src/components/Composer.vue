@@ -373,7 +373,7 @@
 					</template>
 				</NcButton>
 
-				<NcActions :open.sync="isAddAttachmentsOpen">
+				<NcActions v-model:open="isAddAttachmentsOpen">
 					<template #icon>
 						<Paperclip :size="20" />
 					</template>
@@ -396,7 +396,7 @@
 				</NcActions>
 
 				<NcActions
-					:open.sync="isActionsOpen"
+					v-model:open="isActionsOpen"
 					@close="isMoreActionsOpen = false">
 					<template v-if="!isMoreActionsOpen">
 						<NcActionButton v-if="isPickerAvailable" :close-after-click="true" @click="openPicker">
