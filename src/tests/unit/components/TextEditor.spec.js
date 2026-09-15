@@ -240,7 +240,7 @@ describe('TextEditor', () => {
 
 		// updateEditorData() calls editor.data.set() → model change:data → Vue wrapper emits @input.
 		// We assert the handoff to CKEditor's pipeline here; the Vue wrapper propagation is tested
-		// by @ckeditor/ckeditor5-vue2's own suite.
+		// by @ckeditor/ckeditor5-vue's own suite.
 		expect(updateEditorData).toHaveBeenCalledTimes(1)
 
 		vi.useRealTimers()
