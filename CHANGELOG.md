@@ -1,3 +1,29 @@
+## [5.11.6](https://github.com/nextcloud/mail/compare/v5.11.5...v5.11.6) (2026-09-15)
+
+
+### Bug Fixes
+
+* **deps:** bump vitest from ^4.1.9 to v4.1.11 ([a891668](https://github.com/nextcloud/mail/commit/a8916687190b3aee0961da5dde1bbec578755158))
+* **dns:** Update public suffix list ([9232367](https://github.com/nextcloud/mail/commit/9232367273a69b5216d4e4951d199603308a16f1))
+* **imap:** declare UTF-8 charset for IMAP search queries ([5e4c97a](https://github.com/nextcloud/mail/commit/5e4c97aa62f64582c1ad29f2f73ba7a2e2a7fa67))
+* **l10n:** Update translations from Transifex ([372246a](https://github.com/nextcloud/mail/commit/372246a2d2dd104c556bfe138d650c0a42ba6400))
+* **l10n:** Update translations from Transifex ([40ae8d2](https://github.com/nextcloud/mail/commit/40ae8d27a4d021e54b4e68f9badc9ae6e42776f3))
+* **l10n:** Update translations from Transifex ([cf57099](https://github.com/nextcloud/mail/commit/cf57099c1b45876a1f28b913fc88e0004dbddc76))
+* **l10n:** Update translations from Transifex ([694bd80](https://github.com/nextcloud/mail/commit/694bd80a88abee33991ef092ce6c1a3d04b4e828))
+* **l10n:** Update translations from Transifex ([2098418](https://github.com/nextcloud/mail/commit/2098418e59514fc5211726b731de0659cc9b9b7f))
+* **l10n:** Update translations from Transifex ([bba6c8a](https://github.com/nextcloud/mail/commit/bba6c8abe2c9df3e7cb5e27024bdf43d5244ae18))
+* **l10n:** Update translations from Transifex ([115ccdc](https://github.com/nextcloud/mail/commit/115ccdc685cb06c75a5b93d23428c2d8e0de2732))
+* **l10n:** Update translations from Transifex ([0701b14](https://github.com/nextcloud/mail/commit/0701b147e1c5e3f80b27af58b5bacda5cea2385d))
+* **l10n:** Update translations from Transifex ([65fb728](https://github.com/nextcloud/mail/commit/65fb728688be5fb2f4ae0ef70ef7b9b23f7075a0))
+* **l10n:** Update translations from Transifex ([8e8d270](https://github.com/nextcloud/mail/commit/8e8d270d739dcb2a46dd4f51d223f7658770ff5f))
+
+
+### Performance Improvements
+
+* **db:** load local-message children via PK join ([fccc12f](https://github.com/nextcloud/mail/commit/fccc12fdbbb3fa5e5f0e299cc942bff866e7a6d1))
+
+
+
 ## [5.11.5](https://github.com/nextcloud/mail/compare/v5.11.4...v5.11.5) (2026-09-02)
 
 
