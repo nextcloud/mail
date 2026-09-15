@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 5.12.0 – unreleased
+## 5.12.0 – 2026-09-15
 ### Added
 * Insert images from Files in the composer
 * Floating composer editor
@@ -31,6 +31,7 @@ All notable changes to this project will be documented in this file.
 * Keep the draft when clicking outside the composer
 * Termination condition when translating text
 * Declare UTF-8 charset for IMAP search queries
+* Filters: Redirect a message
 
 ## 5.11.0 – unreleased
 ### Added
