@@ -4,17 +4,13 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { generateUrl } from '@nextcloud/router'
-import Vue from 'vue'
-import Router from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 
 const Home = () => import('./views/Home.vue')
 const Setup = () => import('./views/Setup.vue')
 
-Vue.use(Router)
-
-export default new Router({
-	mode: 'history',
-	base: generateUrl('/apps/mail/'),
+export default createRouter({
+	history: createWebHistory(generateUrl('/apps/mail/')),
 	linkActiveClass: 'active',
 	routes: [
 		{
