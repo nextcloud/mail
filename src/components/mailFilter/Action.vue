@@ -39,6 +39,7 @@ import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import ActionAddflag from './ActionAddflag.vue'
 import ActionAddSystemFlag from './ActionAddSystemFlag.vue'
 import ActionFileinto from './ActionFileinto.vue'
+import ActionForward from './ActionForward.vue'
 import ActionStop from './ActionStop.vue'
 import { MailFilterActions } from '../../models/mailFilter.ts'
 
@@ -51,6 +52,7 @@ export default {
 		ActionFileinto,
 		ActionAddflag,
 		ActionStop,
+		ActionForward,
 		DeleteIcon,
 	},
 
@@ -85,6 +87,10 @@ export default {
 					id: MailFilterActions.Stop,
 					label: this.t('mail', 'Stop'),
 				},
+				{
+					id: MailFilterActions.Forward,
+					label: this.t('mail', 'Forward to'),
+				},
 			],
 		}
 	},
@@ -103,6 +109,8 @@ export default {
 				return ActionStop
 			} else if (this.action.type === MailFilterActions.AddSystemFlag) {
 				return ActionAddSystemFlag
+			} else if (this.action.type === MailFilterActions.Forward) {
+				return ActionForward
 			}
 			return null
 		},

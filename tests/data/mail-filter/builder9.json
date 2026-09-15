@@ -1,0 +1,23 @@
+[
+	{
+		"name": "Test 9",
+		"enable": true,
+		"operator": "allof",
+		"tests": [
+			{
+				"operator": "is",
+				"values": [
+					"bob@example.org"
+				],
+				"field": "to"
+			}
+		],
+		"actions": [
+			{
+				"type": "forward",
+				"flag": "alice@example.org"
+			}
+		],
+		"priority": 10
+	}
+]
