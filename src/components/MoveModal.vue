@@ -5,7 +5,7 @@
 <template>
 	<MailboxPicker
 		:account="account"
-		:selected.sync="destMailboxId"
+		v-model:selected="destMailboxId"
 		:loading="moving"
 		:label-select="moveThread ? t('mail', 'Move thread') : t('mail', 'Move message')"
 		:label-select-loading="moveThread ? t('mail', 'Moving thread') : t('mail', 'Moving message')"

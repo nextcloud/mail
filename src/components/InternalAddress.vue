@@ -59,7 +59,7 @@
 			{{ t('mail', 'Add internal address') }}
 		</NcButton>
 		<NcDialog
-			:open.sync="openDialog"
+			v-model:open="openDialog"
 			:buttons="buttons"
 			:name="t('mail', 'Add internal address')"
 			@close="openDialog = false">

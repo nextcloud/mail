@@ -81,7 +81,7 @@
 				</NcAppNavigationItem>
 			</div>
 		</template>
-		<AppSettingsMenu :open.sync="showSettings" />
+		<AppSettingsMenu v-model:open="showSettings" />
 
 		<!-- Must stay outside the #list slot: within NavigationAccount's vue-frag
 		     fragment the dialog gets pulled back into the clipped sidebar after
