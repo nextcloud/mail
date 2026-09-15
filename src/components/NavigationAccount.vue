@@ -4,8 +4,7 @@
 -->
 
 <template>
-	<Fragment>
-		<NcAppNavigationCaption
+	<NcAppNavigationCaption
 			v-if="visible"
 			:id="id"
 			:key="id"
@@ -97,7 +96,6 @@
 			</template>
 		</NcAppNavigationCaption>
 		<DelegationModal v-if="showDelegationModal" :account="account" @close="showDelegationModal = false" />
-	</Fragment>
 </template>
 
 <script>
@@ -105,7 +103,6 @@ import { DialogBuilder, showError } from '@nextcloud/dialogs'
 import { formatFileSize } from '@nextcloud/files'
 import { generateUrl } from '@nextcloud/router'
 import { mapStores } from 'pinia'
-import { Fragment } from 'vue-frag'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActionCheckbox from '@nextcloud/vue/components/NcActionCheckbox'
 import NcActionInput from '@nextcloud/vue/components/NcActionInput'
@@ -128,7 +125,6 @@ export default {
 	name: 'NavigationAccount',
 	components: {
 		NcAppNavigationCaption,
-		Fragment,
 		NcActionButton,
 		NcActionCheckbox,
 		NcActionInput,

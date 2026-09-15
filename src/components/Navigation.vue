@@ -83,9 +83,9 @@
 		</template>
 		<AppSettingsMenu v-model:open="showSettings" />
 
-		<!-- Must stay outside the #list slot: within NavigationAccount's vue-frag
-		     fragment the dialog gets pulled back into the clipped sidebar after
-		     NcModal relocated it to <body>. -->
+		<!-- Must stay outside the #list slot: NcModal relocates the dialog to
+		     <body> but the clipped sidebar would pull it back in if it were
+		     rendered inside the slot. -->
 		<AccountSettings
 			v-if="settingsAccount"
 			:open="true"
