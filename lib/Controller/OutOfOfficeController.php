@@ -11,7 +11,7 @@ namespace OCA\Mail\Controller;
 
 use DateTimeImmutable;
 use OCA\Mail\AppInfo\Application;
-use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
@@ -97,6 +97,7 @@ class OutOfOfficeController extends Controller {
 		?string $end,
 		string $subject,
 		string $message,
+		?string $forwardTo = null,
 	): JsonResponse {
 		$user = $this->userSession->getUser();
 		if ($user === null) {
@@ -109,7 +110,11 @@ class OutOfOfficeController extends Controller {
 		}
 
 		if ($enabled && $start === null) {
-			throw new ServiceException('Missing start date');
+			throw new ClientException('Missing start date');
+		}
+
+		if ($forwardTo !== null && filter_var($forwardTo, FILTER_VALIDATE_EMAIL) === false) {
+			throw new ClientException('Invalid forwardTo address');
 		}
 
 		$mailAccount = $account->getMailAccount();
@@ -124,6 +129,7 @@ class OutOfOfficeController extends Controller {
 			$end ? new DateTimeImmutable($end) : null,
 			$subject,
 			$message,
+			$forwardTo,
 		);
 		$this->outOfOfficeService->update($mailAccount, $state);
 
