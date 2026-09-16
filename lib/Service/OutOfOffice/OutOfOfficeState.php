@@ -22,6 +22,7 @@ class OutOfOfficeState implements JsonSerializable {
 		private ?DateTimeImmutable $end,
 		private string $subject,
 		private string $message,
+		private ?string $forwardTo = null,
 		private int $version = self::DEFAULT_VERSION,
 	) {
 	}
@@ -33,7 +34,8 @@ class OutOfOfficeState implements JsonSerializable {
 			isset($data['end']) ? new DateTimeImmutable($data['end']) : null,
 			$data['subject'],
 			$data['message'],
-			$data['version'],
+			$data['forwardTo'] ?? null,
+			$data['version'] ?? self::DEFAULT_VERSION,
 		);
 	}
 
@@ -85,6 +87,14 @@ class OutOfOfficeState implements JsonSerializable {
 		$this->message = $message;
 	}
 
+	public function getForwardTo(): ?string {
+		return $this->forwardTo;
+	}
+
+	public function setForwardTo(?string $forwardTo): void {
+		$this->forwardTo = $forwardTo;
+	}
+
 	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
@@ -105,6 +115,12 @@ class OutOfOfficeState implements JsonSerializable {
 
 		$json['subject'] = $this->getSubject();
 		$json['message'] = $this->getMessage();
+
+		$forwardTo = $this->getForwardTo();
+		if ($forwardTo !== null) {
+			$json['forwardTo'] = $forwardTo;
+		}
+
 		return $json;
 	}
 }
