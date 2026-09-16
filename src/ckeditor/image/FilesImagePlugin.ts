@@ -4,7 +4,7 @@
  */
 
 import { getFilePickerBuilder, showError } from '@nextcloud/dialogs'
-import { translate as t } from '@nextcloud/l10n'
+import { t } from '@nextcloud/l10n'
 import { ButtonView, IconImageAssetManager, ImageInsertUI, MenuBarMenuListItemButtonView, Plugin } from 'ckeditor5'
 import { getClient } from '../../dav/client.js'
 import logger from '../../logger.js'

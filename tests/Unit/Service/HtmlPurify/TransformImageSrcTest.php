@@ -15,6 +15,7 @@ use HTMLPurifier_Context;
 use HTMLPurifier_Token_Start;
 use OCA\Mail\Service\HtmlPurify\TransformImageSrc;
 use OCP\IURLGenerator;
+use OCP\Util;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class TransformImageSrcTest extends TestCase {
@@ -126,7 +127,7 @@ class TransformImageSrcTest extends TestCase {
 
 		$result = $this->transform->transform($attr, $config, $context);
 
-		$this->assertStringContainsString('display: none;', $result['style']);
+		$this->assertStringContainsString('display: none !important;', $result['style']);
 		$this->assertStringContainsString('margin: 10px;', $result['style']);
 	}
 
@@ -144,7 +145,7 @@ class TransformImageSrcTest extends TestCase {
 
 		$result = $this->transform->transform($attr, $config, $context);
 
-		$this->assertSame('display: none;', $result['style']);
+		$this->assertSame('display: none !important;', $result['style']);
 	}
 
 	public function testOnlyHeightSmall(): void {
@@ -158,5 +159,67 @@ class TransformImageSrcTest extends TestCase {
 
 		$this->assertSame('https://example.com/pixel.png', $result['src']);
 		$this->assertFalse(isset($result['style']));
+	}
+
+	public function testTrackingPixelStyleNotBackedUp(): void {
+		$attr = ['src' => 'https://example.com/pixel.png', 'width' => '1', 'height' => '1', 'style' => 'margin: 10px;'];
+		$config = HTMLPurifier_Config::createDefault();
+		$context = new HTMLPurifier_Context();
+		$token = new HTMLPurifier_Token_Start('img');
+		$context->register('CurrentToken', $token);
+
+		$this->urlGenerator->method('imagePath')->willReturn('/apps/mail/img/blocked-image.png');
+
+		$result = $this->transform->transform($attr, $config, $context);
+
+		$this->assertArrayNotHasKey('data-original-style', $result);
+	}
+
+	public function testBlockedImageHidingBeatsOwnDisplay(): void {
+		$attr = ['src' => $this->proxySrc(), 'width' => '221', 'style' => 'width:221px;display:block;'];
+		$config = HTMLPurifier_Config::createDefault();
+		$context = new HTMLPurifier_Context();
+		$token = new HTMLPurifier_Token_Start('img');
+		$context->register('CurrentToken', $token);
+
+		$result = $this->transform->transform($attr, $config, $context);
+
+		$this->assertSame('width:221px;display:block; display: none !important;', $result['style']);
+	}
+
+	public function testBlockedImageBacksUpOriginalStyle(): void {
+		$attr = ['src' => $this->proxySrc(), 'style' => 'width:221px;display:block;'];
+		$config = HTMLPurifier_Config::createDefault();
+		$context = new HTMLPurifier_Context();
+		$token = new HTMLPurifier_Token_Start('img');
+		$context->register('CurrentToken', $token);
+
+		$result = $this->transform->transform($attr, $config, $context);
+
+		$this->assertSame('width:221px;display:block;', $result['data-original-style']);
+	}
+
+	public function testBlockedImageWithoutStyleHasNoBackup(): void {
+		$attr = ['src' => $this->proxySrc()];
+		$config = HTMLPurifier_Config::createDefault();
+		$context = new HTMLPurifier_Context();
+		$token = new HTMLPurifier_Token_Start('img');
+		$context->register('CurrentToken', $token);
+
+		$result = $this->transform->transform($attr, $config, $context);
+
+		$this->assertArrayNotHasKey('data-original-style', $result);
+		$this->assertSame('display: none !important;', $result['style']);
+	}
+
+	private function proxySrc(): string {
+		$this->urlGenerator->method('linkToRoute')
+			->with('mail.proxy.proxy')
+			->willReturn('/index.php/apps/mail/proxy');
+		$this->urlGenerator->method('imagePath')
+			->with('mail', 'blocked-image.png')
+			->willReturn('/apps/mail/img/blocked-image.png');
+
+		return 'https://' . Util::getServerHostName() . '/index.php/apps/mail/proxy?id=1&src=x';
 	}
 }

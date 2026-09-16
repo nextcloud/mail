@@ -16,6 +16,7 @@ use OCA\Mail\Sieve\SieveUtils;
 class FilterBuilder {
 	private const SEPARATOR = '### Nextcloud Mail: Filters ### DON\'T EDIT ###';
 	private const DATA_MARKER = '# FILTER: ';
+	/** @deprecated use SieveUtils::NEWLINE */
 	private const SIEVE_NEWLINE = "\r\n";
 
 	public function __construct(
@@ -88,6 +89,14 @@ class FilterBuilder {
 				}
 				if ($action['type'] === 'stop') {
 					$actions[] = 'stop;';
+				}
+				if ($action['type'] === 'redirect' && !empty($action['recipient'])) {
+					$extensions[] = 'copy';
+					// :copy leaves the implicit keep in place, which a plain redirect would cancel
+					$actions[] = sprintf(
+						'redirect :copy "%s";',
+						SieveUtils::escapeString($action['recipient'])
+					);
 				}
 			}
 

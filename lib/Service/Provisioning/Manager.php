@@ -413,7 +413,7 @@ class Manager {
 			// Maybe research other providers as well.
 			// Ref \OCA\Mail\Controller\PageController::index()
 			//     -> initial state for password-is-unavailable
-			if ($provisioning->getMasterPasswordEnabled() === true && $provisioning->getMasterPassword() !== null) {
+			if ($provisioning->getMasterPasswordEnabled() === true && ($provisioning->getMasterPassword() ?? '') !== '') {
 				$password = $provisioning->getMasterPassword();
 				$this->logger->debug('Password set to master password for ' . $user->getUID());
 			} elseif ($password === null) {

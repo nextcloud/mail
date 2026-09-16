@@ -20,9 +20,11 @@ use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\DelegationExistsException;
+use OCA\Mail\Exception\DelegationForbiddenException;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\DelegationService;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IUser;
@@ -288,6 +290,91 @@ class DelegationServiceTest extends TestCase {
 		$result = $this->service->resolveMessageUserId(99, 'owner');
 
 		$this->assertEquals('owner', $result);
+	}
+
+	public function testAssertAccountAccessGranted(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1);
+		$mailAccount->setUserId('owner');
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with('delegatee', 1)
+			->willThrowException(new ClientException('Not found'));
+		$this->delegationMapper->expects($this->once())
+			->method('findAccountOwnerForDelegatedUser')
+			->with(1, 'delegatee')
+			->willReturn('owner');
+
+		$this->service->assertAccountAccess(1, 'delegatee');
+
+		$this->addToAssertionCount(1);
+	}
+
+	public function testAssertAccountAccessDenied(): void {
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with('delegatee', 2)
+			->willThrowException(new ClientException('Not found'));
+		$this->delegationMapper->expects($this->once())
+			->method('findAccountOwnerForDelegatedUser')
+			->with(2, 'delegatee')
+			->willThrowException(new DoesNotExistException('No delegation found'));
+
+		$this->expectException(DelegationForbiddenException::class);
+
+		$this->service->assertAccountAccess(2, 'delegatee');
+	}
+
+	public function testAssertAccountAccessDeniedUsesForbiddenStatus(): void {
+		$this->accountService->method('find')
+			->willThrowException(new ClientException('Not found'));
+		$this->delegationMapper->method('findAccountOwnerForDelegatedUser')
+			->willThrowException(new DoesNotExistException('No delegation found'));
+
+		try {
+			$this->service->assertAccountAccess(2, 'delegatee');
+			$this->fail('Expected a DelegationForbiddenException');
+		} catch (DelegationForbiddenException $e) {
+			$this->assertSame(Http::STATUS_FORBIDDEN, $e->getHttpCode());
+		}
+	}
+
+	public function testAssertMailboxAccessDenied(): void {
+		$this->mailboxMapper->expects($this->once())
+			->method('findAccountIdForMailbox')
+			->with(42)
+			->willReturn(2);
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with('delegatee', 2)
+			->willThrowException(new ClientException('Not found'));
+		$this->delegationMapper->expects($this->once())
+			->method('findAccountOwnerForDelegatedUser')
+			->with(2, 'delegatee')
+			->willThrowException(new DoesNotExistException('No delegation found'));
+
+		$this->expectException(DelegationForbiddenException::class);
+
+		$this->service->assertMailboxAccess(42, 'delegatee');
+	}
+
+	public function testAssertMessageAccessDenied(): void {
+		$this->messageMapper->expects($this->once())
+			->method('findAccountIdForMessage')
+			->with(99)
+			->willReturn(2);
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with('delegatee', 2)
+			->willThrowException(new ClientException('Not found'));
+		$this->delegationMapper->expects($this->once())
+			->method('findAccountOwnerForDelegatedUser')
+			->with(2, 'delegatee')
+			->willThrowException(new DoesNotExistException('No delegation found'));
+
+		$this->expectException(DelegationForbiddenException::class);
+
+		$this->service->assertMessageAccess(99, 'delegatee');
 	}
 
 	public function testResolveAliasUserId(): void {

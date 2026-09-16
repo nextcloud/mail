@@ -22,7 +22,6 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Db\MessageRetentionMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -56,9 +55,6 @@ class TrashRetentionJobTest extends TestCase {
 	/** @var IMailManager|MockObject */
 	private $mailManager;
 
-	/** @var SyncService|MockObject */
-	private $syncService;
-
 	private TrashRetentionJob $job;
 
 	protected function setUp(): void {
@@ -72,7 +68,6 @@ class TrashRetentionJobTest extends TestCase {
 		$this->accountMapper = $this->createMock(MailAccountMapper::class);
 		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
 		$this->mailManager = $this->createMock(IMailManager::class);
-		$this->syncService = $this->createMock(SyncService::class);
 
 		$this->job = new TrashRetentionJob(
 			$this->timeFactory,
@@ -83,7 +78,6 @@ class TrashRetentionJobTest extends TestCase {
 			$this->accountMapper,
 			$this->mailboxMapper,
 			$this->mailManager,
-			$this->syncService,
 		);
 	}
 
@@ -106,8 +100,6 @@ class TrashRetentionJobTest extends TestCase {
 			->method('findById')
 			->with(42)
 			->willReturn($trash);
-		$this->syncService->expects($this->never())
-			->method('syncMailbox');
 		$this->timeFactory->expects($this->once())
 			->method('getTime')
 			->willReturn(1000000);
@@ -134,8 +126,6 @@ class TrashRetentionJobTest extends TestCase {
 		$this->accountMapper->expects($this->once())
 			->method('getAllAccounts')
 			->willReturn([$dbAccount]);
-		$this->syncService->expects($this->never())
-			->method('syncMailbox');
 		$this->mailManager->expects($this->never())
 			->method('deleteMessageWithClient');
 
@@ -149,8 +139,6 @@ class TrashRetentionJobTest extends TestCase {
 		$this->accountMapper->expects($this->once())
 			->method('getAllAccounts')
 			->willReturn([$dbAccount]);
-		$this->syncService->expects($this->never())
-			->method('syncMailbox');
 		$this->mailManager->expects($this->never())
 			->method('deleteMessageWithClient');
 
@@ -164,8 +152,6 @@ class TrashRetentionJobTest extends TestCase {
 		$this->accountMapper->expects($this->once())
 			->method('getAllAccounts')
 			->willReturn([$dbAccount]);
-		$this->syncService->expects($this->never())
-			->method('syncMailbox');
 		$this->mailManager->expects($this->never())
 			->method('deleteMessageWithClient');
 
@@ -182,8 +168,6 @@ class TrashRetentionJobTest extends TestCase {
 			->willReturn([$dbAccount]);
 		$this->mailboxMapper->expects($this->never())
 			->method('findById');
-		$this->syncService->expects($this->never())
-			->method('syncMailbox');
 		$this->mailManager->expects($this->never())
 			->method('deleteMessageWithClient');
 
@@ -202,10 +186,50 @@ class TrashRetentionJobTest extends TestCase {
 			->method('findById')
 			->with(42)
 			->willThrowException(new DoesNotExistException('Mailbox 42 does not exist'));
-		$this->syncService->expects($this->never())
-			->method('syncMailbox');
 		$this->mailManager->expects($this->never())
 			->method('deleteMessageWithClient');
+
+		$this->job->run(self::ARGUMENT);
+	}
+
+	public function testRunRetentionCleanupCalledAfterDelete() {
+		$dbAccount = new MailAccount();
+		$dbAccount->setTrashRetentionDays(60);
+		$dbAccount->setTrashMailboxId(42);
+		$dbAccount->setUserId('user');
+		$account = new Account($dbAccount);
+		$trash = new Mailbox();
+		$message1 = new Message();
+		$message1->setMailboxId(123);
+		$message1->setUid(420);
+		$message2 = new Message();
+		$message2->setMailboxId(124);
+		$message2->setUid(421);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+
+		$this->accountMapper->expects($this->once())
+			->method('getAllAccounts')
+			->willReturn([$dbAccount]);
+		$this->mailboxMapper->expects($this->once())
+			->method('findById')
+			->with(42)
+			->willReturn($trash);
+		$this->timeFactory->expects($this->once())
+			->method('getTime')
+			->willReturn(1000000);
+		$this->messageMapper->expects($this->once())
+			->method('findMessagesKnownSinceBefore')
+			->with(42, 1000000 - 24 * 60 * 3600)
+			->willReturn([$message1, $message2]);
+		$this->clientFactory->expects($this->once())
+			->method('getClient')
+			->willReturn($client);
+		$this->mailManager->expects($this->exactly(2))
+			->method('deleteMessageWithClient');
+		$this->messageRetentionMapper->expects($this->exactly(2))
+			->method('deleteByMailboxIdAndUid');
+		$client->expects($this->once())
+			->method('logout');
 
 		$this->job->run(self::ARGUMENT);
 	}
