@@ -351,7 +351,7 @@ class ContactsIntegrationTest extends TestCase {
 				['core', 'shareapi_restrict_user_enumeration_to_group', 'no'],
 				['core', 'shareapi_restrict_user_enumeration_full_match', 'yes'],
 				['core', 'shareapi_restrict_user_enumeration_full_match_displayname', 'yes'],
-				['core', 'shareapi_restrict_user_enumeration_full_match_userid', 'yes'],
+				['core', 'shareapi_restrict_user_enumeration_full_match_user_id', 'yes'],
 				['core', 'shareapi_restrict_user_enumeration_full_match_email', 'yes'],
 			)
 			->willReturnOnConsecutiveCalls(
