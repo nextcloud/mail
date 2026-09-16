@@ -90,6 +90,14 @@ class FilterBuilder {
 				if ($action['type'] === 'stop') {
 					$actions[] = 'stop;';
 				}
+				if ($action['type'] === 'redirect' && !empty($action['recipient'])) {
+					$extensions[] = 'copy';
+					// :copy leaves the implicit keep in place, which a plain redirect would cancel
+					$actions[] = sprintf(
+						'redirect :copy "%s";',
+						SieveUtils::escapeString($action['recipient'])
+					);
+				}
 			}
 
 			if (count($tests) > 1) {
