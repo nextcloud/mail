@@ -97,6 +97,7 @@ OC.L10N.register(
     "To:" : "Al :",
     "Translate message" : "Traduire lo messatge",
     "Translating" : "Traduccion",
+    "Copy translated text" : "Copiar lo tèxt traduch",
     "Untitled event" : "Eveniment sens títol",
     "Train" : "Tren",
     "Deleted" : "Suprimit",
