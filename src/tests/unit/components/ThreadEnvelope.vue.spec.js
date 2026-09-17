@@ -3,14 +3,10 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import ThreadEnvelope from '../../../components/ThreadEnvelope.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
-
-const localVue = createLocalVue()
-
-localVue.mixin(Nextcloud)
 
 describe('ThreadEnvelope', () => {
 	beforeEach(() => {
@@ -19,7 +15,10 @@ describe('ThreadEnvelope', () => {
 
 	it('allows toggling seen flag without ACLs', () => {
 		const view = shallowMount(ThreadEnvelope, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					specialRole: '',
@@ -38,7 +37,6 @@ describe('ThreadEnvelope', () => {
 					return { myAcls: undefined }
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasSeenAcl).toBe(true)
@@ -46,7 +44,10 @@ describe('ThreadEnvelope', () => {
 
 	it('disallows toggling seen flag without s ACL right', () => {
 		const view = shallowMount(ThreadEnvelope, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					specialRole: '',
@@ -65,7 +66,6 @@ describe('ThreadEnvelope', () => {
 					return { myAcls: 'x' }
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasSeenAcl).toBe(false)
@@ -73,7 +73,10 @@ describe('ThreadEnvelope', () => {
 
 	it('allows toggling seen flag with s ACL right', () => {
 		const view = shallowMount(ThreadEnvelope, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					specialRole: '',
@@ -92,14 +95,16 @@ describe('ThreadEnvelope', () => {
 					return { myAcls: 's' }
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasSeenAcl).toBe(true)
 	})
 	it('allows toggling archive action without ACLs', () => {
 		const view = shallowMount(ThreadEnvelope, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					specialRole: '',
@@ -121,7 +126,6 @@ describe('ThreadEnvelope', () => {
 					return { myAcls: undefined }
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasArchiveAcl).toBe(true)
@@ -129,7 +133,10 @@ describe('ThreadEnvelope', () => {
 
 	it('source mailbox has te and archive mailbox has i ACLs for archiving', () => {
 		const view = shallowMount(ThreadEnvelope, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					specialRole: '',
@@ -151,7 +158,6 @@ describe('ThreadEnvelope', () => {
 					return { myAcls: 'i' }
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasArchiveAcl).toBe(true)
@@ -159,7 +165,10 @@ describe('ThreadEnvelope', () => {
 
 	it('source mailbox has te and archive mailbox has no ACLs for archiving', () => {
 		const view = shallowMount(ThreadEnvelope, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					specialRole: '',
@@ -181,7 +190,6 @@ describe('ThreadEnvelope', () => {
 					return { myAcls: undefined }
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasArchiveAcl).toBe(true)
@@ -189,7 +197,10 @@ describe('ThreadEnvelope', () => {
 
 	it('source mailbox has no acls and archive mailbox has i ACL for archiving', () => {
 		const view = shallowMount(ThreadEnvelope, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					specialRole: '',
@@ -211,7 +222,6 @@ describe('ThreadEnvelope', () => {
 					return { }
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasArchiveAcl).toBe(true)
@@ -219,7 +229,10 @@ describe('ThreadEnvelope', () => {
 
 	it('disallows toggling archive action without w ACL right', () => {
 		const view = shallowMount(ThreadEnvelope, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					specialRole: '',
@@ -238,7 +251,6 @@ describe('ThreadEnvelope', () => {
 					return { myAcls: 'x' }
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasArchiveAcl).toBe(false)
@@ -246,7 +258,10 @@ describe('ThreadEnvelope', () => {
 
 	it('allows toggling delete action without ACLs', () => {
 		const view = shallowMount(ThreadEnvelope, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					specialRole: '',
@@ -266,14 +281,16 @@ describe('ThreadEnvelope', () => {
 					return { myAcls: undefined }
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasDeleteAcl).toBe(true)
 	})
 	it('disallows toggling delete action without x ACL right', () => {
 		const view = shallowMount(ThreadEnvelope, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					specialRole: '',
@@ -292,14 +309,16 @@ describe('ThreadEnvelope', () => {
 					return { myAcls: 's' }
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasDeleteAcl).toBe(false)
 	})
 	it('allows toggling delete action with te ACL right', () => {
 		const view = shallowMount(ThreadEnvelope, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					specialRole: '',
@@ -318,14 +337,16 @@ describe('ThreadEnvelope', () => {
 					return { myAcls: 'te' }
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasDeleteAcl).toBe(true)
 	})
 	it('allows toggling favorite, important and spam action with w ACL right', () => {
 		const view = shallowMount(ThreadEnvelope, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					specialRole: '',
@@ -351,7 +372,6 @@ describe('ThreadEnvelope', () => {
 					return { myAcls: 'w' }
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasWriteAcl).toBe(true)
@@ -359,7 +379,10 @@ describe('ThreadEnvelope', () => {
 
 	it('allows toggling favorite, important and spam action without w ACL right', () => {
 		const view = shallowMount(ThreadEnvelope, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					specialRole: '',
@@ -388,14 +411,16 @@ describe('ThreadEnvelope', () => {
 					return { }
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasWriteAcl).toBe(false)
 	})
 	it('allows toggling favorite, important and spam action without ACL right', () => {
 		const view = shallowMount(ThreadEnvelope, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					specialRole: '',
@@ -424,7 +449,6 @@ describe('ThreadEnvelope', () => {
 					return { }
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasWriteAcl).toBe(true)

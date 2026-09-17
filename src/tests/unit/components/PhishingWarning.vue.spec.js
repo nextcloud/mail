@@ -3,17 +3,17 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import PhishingWarning from '../../../components/PhishingWarning.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
-
-const localVue = createLocalVue()
-localVue.mixin(Nextcloud)
 
 describe('PhishingWarning', () => {
 	it('Should only show messages from positive checks', async () => {
 		const view = shallowMount(PhishingWarning, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				phishingData: [
 					{
 						isPhishing: false,
@@ -25,7 +25,6 @@ describe('PhishingWarning', () => {
 					},
 				],
 			},
-			localVue,
 		})
 
 		expect(view.text()).not.toContain('Lorem ipsum')
@@ -34,7 +33,10 @@ describe('PhishingWarning', () => {
 
 	it('Should show the messages of multiple positive checks', async () => {
 		const view = shallowMount(PhishingWarning, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				phishingData: [{
 					isPhishing: true,
 					message: 'Lorem ipsum',
@@ -43,7 +45,6 @@ describe('PhishingWarning', () => {
 					message: 'Ipsum lorem',
 				}],
 			},
-			localVue,
 		})
 
 		expect(view.text()).toContain('Lorem ipsum')
@@ -52,7 +53,10 @@ describe('PhishingWarning', () => {
 
 	it('Should display the option to expand the list of suspicious links', async () => {
 		const view = shallowMount(PhishingWarning, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				phishingData: [{
 					isPhishing: true,
 					message: 'Lorem ipsum',
@@ -69,7 +73,6 @@ describe('PhishingWarning', () => {
 					],
 				}],
 			},
-			localVue,
 		})
 
 		expect(view.text()).toContain('Show suspicious links')
@@ -77,7 +80,10 @@ describe('PhishingWarning', () => {
 
 	it('Should hide the list of suspicious links by default', async () => {
 		const view = shallowMount(PhishingWarning, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				phishingData: [{
 					isPhishing: true,
 					message: 'Lorem ipsum',
@@ -94,7 +100,6 @@ describe('PhishingWarning', () => {
 					],
 				}],
 			},
-			localVue,
 		})
 
 		expect(view.text()).not.toContain('href: http://lorem.ipsum/')
@@ -105,7 +110,10 @@ describe('PhishingWarning', () => {
 
 	it('Should show a list of suspicious links when requested', async () => {
 		const view = shallowMount(PhishingWarning, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				phishingData: [{
 					isPhishing: true,
 					message: 'Lorem ipsum',
@@ -125,7 +133,6 @@ describe('PhishingWarning', () => {
 			data() {
 				return { showMore: true }
 			},
-			localVue,
 		})
 
 		expect(view.text()).toContain('href: http://lorem.ipsum/')
@@ -136,7 +143,10 @@ describe('PhishingWarning', () => {
 
 	it('Should display the option to collapse the list of suspicious links', async () => {
 		const view = shallowMount(PhishingWarning, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				phishingData: [{
 					isPhishing: true,
 					message: 'Lorem ipsum',
@@ -156,7 +166,6 @@ describe('PhishingWarning', () => {
 			data() {
 				return { showMore: true }
 			},
-			localVue,
 		})
 
 		expect(view.text()).toContain('Hide suspicious links')

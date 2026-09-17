@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import Thread from '../../../components/Thread.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
@@ -13,10 +13,6 @@ vi.mock('@nextcloud/dialogs', async (importOriginal) => ({
 	...await importOriginal(),
 	showError: vi.fn(),
 }))
-
-const localVue = createLocalVue()
-
-localVue.mixin(Nextcloud)
 
 describe('Thread', () => {
 	let store
@@ -222,15 +218,16 @@ describe('Thread', () => {
 
 	it('empty list when envelope not found', () => {
 		const view = shallowMount(Thread, {
-			mocks: {
-				$route: {
-					params: {
-						threadId: 100,
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route: {
+						params: {
+							threadId: 100,
+						},
 					},
 				},
 			},
-			store,
-			localVue,
 		})
 
 		expect(view.vm.thread).toHaveLength(0)
@@ -238,15 +235,16 @@ describe('Thread', () => {
 
 	it('show messages for thread root from inbox and test folder', () => {
 		const view = shallowMount(Thread, {
-			mocks: {
-				$route: {
-					params: {
-						threadId: 200,
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route: {
+						params: {
+							threadId: 200,
+						},
 					},
 				},
 			},
-			store,
-			localVue,
 		})
 
 		expect(view.vm.thread).toHaveLength(3)
@@ -254,15 +252,16 @@ describe('Thread', () => {
 
 	it('show messages for thread root from inbox and test folder, ignore trash', () => {
 		const view = shallowMount(Thread, {
-			mocks: {
-				$route: {
-					params: {
-						threadId: 300,
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route: {
+						params: {
+							threadId: 300,
+						},
 					},
 				},
 			},
-			store,
-			localVue,
 		})
 
 		expect(view.vm.thread).toHaveLength(3)
@@ -270,15 +269,16 @@ describe('Thread', () => {
 
 	it('show messages for thread root only from trash', () => {
 		const view = shallowMount(Thread, {
-			mocks: {
-				$route: {
-					params: {
-						threadId: 301,
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route: {
+						params: {
+							threadId: 301,
+						},
 					},
 				},
 			},
-			store,
-			localVue,
 		})
 
 		const envelopes = view.vm.thread
@@ -288,15 +288,16 @@ describe('Thread', () => {
 
 	it('show messages for thread root only from junk', () => {
 		const view = shallowMount(Thread, {
-			mocks: {
-				$route: {
-					params: {
-						threadId: 302,
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route: {
+						params: {
+							threadId: 302,
+						},
 					},
 				},
 			},
-			store,
-			localVue,
 		})
 
 		const envelopes = view.vm.thread
@@ -310,15 +311,16 @@ describe('Thread', () => {
 
 		const mountThread = () => {
 			const view = shallowMount(Thread, {
-				mocks: {
-					$route: {
-						params: {
-							threadId: 200,
+				global: {
+					mixins: [Nextcloud],
+					mocks: {
+						$route: {
+							params: {
+								threadId: 200,
+							},
 						},
 					},
 				},
-				store,
-				localVue,
 			})
 			view.vm.$refs.envelopeRefs = view.vm.thread.map((envelope) => ({
 				envelope,
@@ -513,15 +515,16 @@ describe('Thread', () => {
 	describe('print shortcut', () => {
 		const mountThread = (printable = true) => {
 			const view = shallowMount(Thread, {
-				mocks: {
-					$route: {
-						params: {
-							threadId: 200,
+				global: {
+					mixins: [Nextcloud],
+					mocks: {
+						$route: {
+							params: {
+								threadId: 200,
+							},
 						},
 					},
 				},
-				store,
-				localVue,
 			})
 			view.vm.$refs.envelopeRefs = view.vm.thread.map((envelope) => ({
 				envelope,
@@ -610,15 +613,16 @@ describe('Thread', () => {
 		const notice = () => document.getElementById('mail-browser-print-notice')
 
 		const mountThread = () => shallowMount(Thread, {
-			mocks: {
-				$route: {
-					params: {
-						threadId: 200,
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route: {
+						params: {
+							threadId: 200,
+						},
 					},
 				},
 			},
-			store,
-			localVue,
 		})
 
 		afterEach(() => {
@@ -668,7 +672,7 @@ describe('Thread', () => {
 		it('cleans up the notice when the thread goes away', () => {
 			const view = mountThread()
 
-			view.destroy()
+			view.unmount()
 
 			expect(notice()).toBeNull()
 		})
