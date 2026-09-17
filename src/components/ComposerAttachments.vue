@@ -49,7 +49,6 @@ import map from 'lodash/fp/map.js'
 import prop from 'lodash/fp/prop.js'
 import sumBy from 'lodash/fp/sumBy.js'
 import trimStart from 'lodash/fp/trimCharsStart.js'
-import Vue from 'vue'
 import ChevronDown from 'vue-material-design-icons/ChevronDown.vue'
 import ChevronUp from 'vue-material-design-icons/ChevronUp.vue'
 import ComposerAttachment from './ComposerAttachment.vue'
@@ -234,7 +233,7 @@ export default {
 		addLocalFiles(files) {
 			this.uploading = true
 			// BUG - if choose again - progress lost/ move to complete()
-			Vue.set(this, 'uploads', {})
+			this.\2 = {}
 
 			const toUpload = sumBy(prop('size'), Object.values(files))
 			const newTotal = toUpload + this.totalSizeOfUpload()
@@ -279,16 +278,16 @@ export default {
 				}
 				this.attachments.push(attachment)
 
-				Vue.set(this.uploads, file.name, {
+				this.uploads[file.name] = {
 					total: file.size,
 					uploaded: 0,
-				})
+				}
 				try {
 					return uploadLocalAttachment(file, this.accountId, progress(file.name), controller)
 						.catch(() => {
 							this.attachments.some((attachment) => {
 								if (attachment.displayName === file.name && !attachment.error) {
-									this.$set(attachment, 'error', true)
+									attachment.error = true
 									return true
 								}
 								return false
@@ -470,11 +469,11 @@ export default {
 				if (item.fileName === attachment.fileName) {
 					if (!attachment.finished) {
 						const _progress = progress <= attachment.total ? progress : attachment.total
-						this.$set(attachment, 'progress', _progress)
-						this.$set(attachment, 'sizeString', this.formatBytes(_progress))
-						this.$set(attachment, 'percent', (_progress / attachment.total) * 100).toFixed(1)
+						attachment.progress = _progress
+						attachment.sizeString = this.formatBytes(_progress)
+						attachment.percent = ((_progress / attachment.total) * 100).toFixed(1)
 						if (item.total <= _progress) {
-							this.$set(attachment, 'finished', true)
+							attachment.finished = true
 						}
 					}
 				}
