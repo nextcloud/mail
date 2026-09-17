@@ -3,13 +3,13 @@
 * SPDX-License-Identifier: AGPL-3.0-or-later
 */
 
-import { recommendedVue2 } from '@nextcloud/eslint-config'
+import { recommended } from '@nextcloud/eslint-config'
 import pluginImport from 'eslint-plugin-import'
 import pluginVitest from 'eslint-plugin-vitest-globals'
 import { defineConfig } from 'eslint/config'
 
 export default defineConfig([
-	...recommendedVue2,
+	...recommended,
 	{
 		plugins: {
 			import: pluginImport,
