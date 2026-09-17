@@ -3,22 +3,17 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import Envelope from '../../../components/Envelope.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 import useMainStore from '../../../store/mainStore.js'
 
-const localVue = createLocalVue()
 const $route = {
 	params: {
 		id: 1,
 	},
 }
-
-const pinia = createPinia()
-
-localVue.mixin(Nextcloud)
 
 describe('Envelope', () => {
 	let store
@@ -32,10 +27,13 @@ describe('Envelope', () => {
 	})
 	it('allows toggling seen flag without ACLs', () => {
 		const view = shallowMount(Envelope, {
-			mocks: {
-				$route,
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
 			},
-			propsData: {
+			props: {
 				data: {
 					accountId: 123,
 					from: [{ email: 'info@test.com' }],
@@ -48,8 +46,6 @@ describe('Envelope', () => {
 					specialRole: '',
 				},
 			},
-			store,
-			localVue,
 		})
 
 		expect(view.vm.hasSeenAcl).toBe(true)
@@ -57,10 +53,13 @@ describe('Envelope', () => {
 
 	it('disallows toggling seen flag without s ACL right', () => {
 		const view = shallowMount(Envelope, {
-			mocks: {
-				$route,
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
 			},
-			propsData: {
+			props: {
 				mailbox: {
 					specialRole: '',
 					databaseId: '3',
@@ -72,9 +71,6 @@ describe('Envelope', () => {
 					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 				},
 			},
-			store,
-			pinia,
-			localVue,
 		})
 
 		expect(view.vm.hasSeenAcl).toBe(false)
@@ -82,10 +78,13 @@ describe('Envelope', () => {
 
 	it('allows toggling seen flag with s ACL right', () => {
 		const view = shallowMount(Envelope, {
-			mocks: {
-				$route,
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
 			},
-			propsData: {
+			props: {
 				mailbox: {
 					specialRole: '',
 					databaseId: '3',
@@ -97,18 +96,19 @@ describe('Envelope', () => {
 					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 				},
 			},
-			store,
-			localVue,
 		})
 
 		expect(view.vm.hasSeenAcl).toBe(true)
 	})
 	it('allows toggling archive action without ACLs', () => {
 		const view = shallowMount(Envelope, {
-			mocks: {
-				$route,
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
 			},
-			propsData: {
+			props: {
 				mailbox: {
 					specialRole: '',
 					databaseId: '3',
@@ -125,8 +125,6 @@ describe('Envelope', () => {
 					return { myAcls: undefined }
 				},
 			},
-			store,
-			localVue,
 		})
 
 		expect(view.vm.hasArchiveAcl).toBe(true)
@@ -134,10 +132,13 @@ describe('Envelope', () => {
 
 	it('source mailbox has te and archive mailbox has i ACLs for archiving', () => {
 		const view = shallowMount(Envelope, {
-			mocks: {
-				$route,
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
 			},
-			propsData: {
+			props: {
 				mailbox: {
 					specialRole: '',
 					databaseId: '3',
@@ -154,8 +155,6 @@ describe('Envelope', () => {
 					return { myAcls: 'i' }
 				},
 			},
-			store,
-			localVue,
 		})
 
 		expect(view.vm.hasArchiveAcl).toBe(true)
@@ -163,10 +162,13 @@ describe('Envelope', () => {
 
 	it('source mailbox has te and archive mailbox has no ACLs for archiving', () => {
 		const view = shallowMount(Envelope, {
-			mocks: {
-				$route,
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
 			},
-			propsData: {
+			props: {
 				mailbox: {
 					specialRole: '',
 					databaseId: '3',
@@ -183,8 +185,6 @@ describe('Envelope', () => {
 					return { myAcls: undefined }
 				},
 			},
-			store,
-			localVue,
 		})
 
 		expect(view.vm.hasArchiveAcl).toBe(true)
@@ -192,10 +192,13 @@ describe('Envelope', () => {
 
 	it('source mailbox has no acls and archive mailbox has i ACL for archiving', () => {
 		const view = shallowMount(Envelope, {
-			mocks: {
-				$route,
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
 			},
-			propsData: {
+			props: {
 				mailbox: {
 					specialRole: '',
 					databaseId: '3',
@@ -212,8 +215,6 @@ describe('Envelope', () => {
 					return { myAcls: 'i' }
 				},
 			},
-			store,
-			localVue,
 		})
 
 		expect(view.vm.hasArchiveAcl).toBe(true)
@@ -221,10 +222,13 @@ describe('Envelope', () => {
 
 	it('disallows toggling archive action without i ACL right', () => {
 		const view = shallowMount(Envelope, {
-			mocks: {
-				$route,
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
 			},
-			propsData: {
+			props: {
 				mailbox: {
 					specialRole: '',
 					databaseId: '3',
@@ -236,8 +240,6 @@ describe('Envelope', () => {
 					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 				},
 			},
-			store,
-			localVue,
 		})
 
 		expect(view.vm.hasArchiveAcl).toBe(false)
@@ -245,10 +247,13 @@ describe('Envelope', () => {
 
 	it('allows toggling delete action without ACLs', () => {
 		const view = shallowMount(Envelope, {
-			mocks: {
-				$route,
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
 			},
-			propsData: {
+			props: {
 				mailbox: {
 					specialRole: '',
 					databaseId: '3',
@@ -261,18 +266,19 @@ describe('Envelope', () => {
 
 				},
 			},
-			store,
-			localVue,
 		})
 
 		expect(view.vm.hasDeleteAcl).toBe(true)
 	})
 	it('disallows toggling delete action without x ACL right', () => {
 		const view = shallowMount(Envelope, {
-			mocks: {
-				$route,
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
 			},
-			propsData: {
+			props: {
 				mailbox: {
 					specialRole: '',
 					databaseId: '3',
@@ -285,18 +291,19 @@ describe('Envelope', () => {
 
 				},
 			},
-			store,
-			localVue,
 		})
 
 		expect(view.vm.hasDeleteAcl).toBe(false)
 	})
 	it('allows toggling delete action with te ACL right', () => {
 		const view = shallowMount(Envelope, {
-			mocks: {
-				$route,
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
 			},
-			propsData: {
+			props: {
 				mailbox: {
 					specialRole: '',
 					databaseId: '3',
@@ -308,18 +315,19 @@ describe('Envelope', () => {
 					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 				},
 			},
-			store,
-			localVue,
 		})
 
 		expect(view.vm.hasDeleteAcl).toBe(true)
 	})
 	it('allows toggling favorite, important and spam action with w ACL right', () => {
 		const view = shallowMount(Envelope, {
-			mocks: {
-				$route,
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
 			},
-			propsData: {
+			props: {
 				mailbox: {
 					specialRole: '',
 					databaseId: '3',
@@ -331,18 +339,19 @@ describe('Envelope', () => {
 					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 				},
 			},
-			store,
-			localVue,
 		})
 
 		expect(view.vm.hasWriteAcl).toBe(true)
 	})
 	it('allows toggling favorite, important and spam action without w ACL right', () => {
 		const view = shallowMount(Envelope, {
-			mocks: {
-				$route,
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
 			},
-			propsData: {
+			props: {
 				mailbox: {
 					specialRole: '',
 					databaseId: '3',
@@ -354,18 +363,19 @@ describe('Envelope', () => {
 					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 				},
 			},
-			store,
-			localVue,
 		})
 
 		expect(view.vm.hasWriteAcl).toBe(false)
 	})
 	it('allows toggling favorite, important and spam action without ACL right', () => {
 		const view = shallowMount(Envelope, {
-			mocks: {
-				$route,
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
 			},
-			propsData: {
+			props: {
 				mailbox: {
 					specialRole: '',
 					databaseId: '3',
@@ -377,8 +387,6 @@ describe('Envelope', () => {
 					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 				},
 			},
-			store,
-			localVue,
 		})
 
 		expect(view.vm.hasWriteAcl).toBe(true)
