@@ -108,7 +108,7 @@ export default {
 				const current = this.expandedRecipients.length
 				if (next > current) {
 					for (let i = current; i < next; i++) {
-						this.$set(this.expandedRecipients, i, false)
+						this.expandedRecipients[i] = false
 					}
 				} else if (next < current) {
 					this.expandedRecipients = this.expandedRecipients.slice(0, next)
@@ -119,7 +119,7 @@ export default {
 
 	methods: {
 		toggleExpand(index) {
-			this.$set(this.expandedRecipients, index, !this.expandedRecipients[index])
+			this.expandedRecipients[index] = !this.expandedRecipients[index]
 		},
 
 		isExpanded(index) {
