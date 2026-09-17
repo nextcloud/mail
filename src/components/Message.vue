@@ -111,6 +111,7 @@ import { html, plain } from '../util/text.js'
 
 export default {
 	name: 'Message',
+	emits: ['load', 'print-shortcut', 'translate', 'reply'],
 	components: {
 		Itinerary,
 		IconInfo,

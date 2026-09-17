@@ -332,6 +332,7 @@ import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'AppSettingsMenu',
+	emits: ['update:open'],
 	components: {
 		TrustedSenders,
 		InternalAddress,

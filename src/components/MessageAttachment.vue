@@ -90,6 +90,7 @@ import { pickFolder } from '../util/filePicker.js'
 
 export default {
 	name: 'MessageAttachment',
+	emits: ['open'],
 	components: {
 		NcActions,
 		NcActionButton,

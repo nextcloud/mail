@@ -199,6 +199,7 @@ import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'EnvelopeList',
+	emits: ['delete', 'load-more'],
 	components: {
 		IconUnFavorite,
 		EmailUnread,

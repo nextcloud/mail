@@ -134,6 +134,7 @@ import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'EventModal',
+	emits: ['close'],
 	components: {
 		RecipientListItem,
 		CalendarPickerOption,

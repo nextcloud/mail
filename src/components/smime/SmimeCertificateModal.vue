@@ -159,6 +159,7 @@ const TYPE_PEM = 'pem'
 
 export default {
 	name: 'SmimeCertificateModal',
+	emits: ['close'],
 	components: {
 		NcModal,
 		NcButton,

@@ -34,6 +34,7 @@ import NcModal from '@nextcloud/vue/components/NcModal'
 
 export default {
 	name: 'ConfirmationModal',
+	emits: ['confirm', 'cancel'],
 	components: {
 		NcButton,
 		NcModal,

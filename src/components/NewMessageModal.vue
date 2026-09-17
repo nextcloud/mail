@@ -175,6 +175,7 @@ import { toPlain } from '../util/text.js'
 
 export default {
 	name: 'NewMessageModal',
+	emits: ['close'],
 	components: {
 		NcButton,
 		Composer,

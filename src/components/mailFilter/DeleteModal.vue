@@ -19,6 +19,7 @@ import NcDialog from '@nextcloud/vue/components/NcDialog'
 
 export default {
 	name: 'DeleteModal',
+	emits: ['delete-filter', 'close'],
 	components: {
 		NcDialog,
 	},

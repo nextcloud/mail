@@ -74,6 +74,7 @@ import { MailFilterConditionField, MailFilterConditionOperator } from '../../mod
 
 export default {
 	name: 'Test',
+	emits: ['update-test', 'delete-test'],
 	components: {
 		NcButton,
 		NcSelect,

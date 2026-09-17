@@ -300,6 +300,7 @@ import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'AccountForm',
+	emits: ['account-created'],
 	components: {
 		NcPasswordField,
 		NcInputField,

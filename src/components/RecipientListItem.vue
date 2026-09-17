@@ -24,6 +24,7 @@ import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'RecipientListItem',
+	emits: ['remove-recipient'],
 	components: {
 		NcListItemIcon,
 		Close,
