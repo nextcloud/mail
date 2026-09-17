@@ -166,7 +166,7 @@ export default {
 
 		updateAction(action) {
 			const index = this.clone.actions.findIndex((item) => item.id === action.id)
-			this.$set(this.clone.actions, index, action)
+			this.clone.actions[index] = action
 		},
 
 		updateOperator(operator) {
