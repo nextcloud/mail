@@ -70,6 +70,7 @@ import 'ckeditor5/ckeditor5.css'
 
 export default {
 	name: 'TextEditor',
+	emits: ['mention', 'submit', 'save', 'ready', 'input'],
 	components: {
 		Ckeditor: CKEditor.component,
 	},

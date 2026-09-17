@@ -597,6 +597,7 @@ import { hiddenTags } from './tags.js'
 
 export default {
 	name: 'Envelope',
+	emits: ['open:quick-actions-settings', 'update:selected', 'select-multiple', 'delete', 'archive', 'move'],
 	components: {
 		AttachmentTag,
 		AlertOctagonIcon,

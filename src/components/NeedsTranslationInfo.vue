@@ -25,6 +25,7 @@ import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'NeedsTranslationInfo',
+	emits: ['translate'],
 	components: {
 		NcButton,
 	},

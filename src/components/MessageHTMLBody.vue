@@ -46,6 +46,7 @@ import { isPrintShortcut } from '../util/printMessage.ts'
 
 export default {
 	name: 'MessageHTMLBody',
+	emits: ['translate', 'load', 'print-shortcut'],
 	components: {
 		BlockedContentWarning,
 		MdnRequest,

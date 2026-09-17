@@ -29,6 +29,7 @@ import { mailboxHasRights } from '../util/acl.js'
 
 export default {
 	name: 'MailboxInlinePicker',
+	emits: ['input'],
 	components: {
 		NcEllipsisedOption,
 		NcSelect,

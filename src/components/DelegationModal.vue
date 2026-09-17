@@ -113,6 +113,7 @@ import { delegate, fetchDelegatedUsers, unDelegate } from '../service/Delegation
 
 export default {
 	name: 'DelegationModal',
+	emits: ['close'],
 	components: {
 		NcAvatar,
 		NcButton,

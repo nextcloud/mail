@@ -68,6 +68,7 @@ const mimes = [
 
 export default {
 	name: 'ComposerAttachments',
+	emits: ['input', 'upload', 'on-delete-attachment'],
 	components: {
 		ComposerAttachment,
 		ChevronDown,

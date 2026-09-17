@@ -602,6 +602,25 @@ const NO_ALIAS_SET = -1
 
 export default {
 	name: 'Composer',
+	emits: [
+		'upload-attachment',
+		'discard-draft',
+		'update:to',
+		'update:cc',
+		'update:bcc',
+		'update:subject',
+		'update:editor-body',
+		'update:attachments-data',
+		'update:send-at',
+		'update:smime-sign',
+		'update:smime-encrypt',
+		'update:request-mdn',
+		'update:is-ai-generated',
+		'draft',
+		'update:from-account',
+		'update:from-alias',
+		'send',
+	],
 	components: {
 		MailvelopeEditor,
 		NcActions,

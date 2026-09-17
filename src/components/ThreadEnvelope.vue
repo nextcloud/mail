@@ -454,6 +454,7 @@ const Loading = Object.seal({
 
 export default {
 	name: 'ThreadEnvelope',
+	emits: ['toggle-expand', 'delete', 'print-shortcut', 'loaded', 'unselect', 'archive', 'move', 'print'],
 	components: {
 		AiIcon,
 		MailFilterFromEnvelope,

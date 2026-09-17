@@ -81,6 +81,7 @@ import { translateTagDisplayName, validateTag } from '../util/tag.js'
 
 export default {
 	name: 'TagItem',
+	emits: ['delete-tag'],
 	components: {
 		NcColorPicker,
 		NcActions,

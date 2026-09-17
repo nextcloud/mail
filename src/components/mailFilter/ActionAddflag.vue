@@ -16,6 +16,7 @@ import NcTextField from '@nextcloud/vue/components/NcTextField'
 
 export default {
 	name: 'ActionAddflag',
+	emits: ['update-action'],
 	components: {
 		NcTextField,
 	},

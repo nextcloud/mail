@@ -15,6 +15,7 @@
 
 export default {
 	name: 'AttachmentTag',
+	emits: ['open'],
 	props: {
 		fileName: {
 			type: String,

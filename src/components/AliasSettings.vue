@@ -96,6 +96,7 @@ import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'AliasSettings',
+	emits: ['rename-primary-alias'],
 	components: {
 		AliasForm,
 		NcButton,

@@ -16,6 +16,7 @@ import NcModal from '@nextcloud/vue/components/NcModal'
 
 export default {
 	name: 'SourceModal',
+	emits: ['close'],
 	components: {
 		NcModal,
 	},

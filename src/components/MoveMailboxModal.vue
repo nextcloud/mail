@@ -23,6 +23,7 @@ import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'MoveMailboxModal',
+	emits: ['close'],
 	components: {
 		MailboxPicker,
 	},

@@ -26,6 +26,7 @@ const regFirstParagraph = /(.+\n\r?)+(\n\r?)+/
 
 export default {
 	name: 'MessagePlainTextBody',
+	emits: ['translate'],
 	components: { MdnRequest, NeedsTranslationInfo },
 	props: {
 		body: {

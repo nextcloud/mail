@@ -172,6 +172,7 @@ import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'AccountSettings',
+	emits: ['close'],
 	components: {
 		SieveAccountForm,
 		SieveDisabledHint,

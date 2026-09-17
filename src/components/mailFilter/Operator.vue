@@ -44,6 +44,7 @@ import { MailFilterOperator } from '../../models/mailFilter.ts'
 
 export default {
 	name: 'Operator',
+	emits: ['update:operator'],
 	components: {
 		IconInformationOutline,
 		NcPopover,

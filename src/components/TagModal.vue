@@ -81,6 +81,7 @@ function randomColor() {
 }
 export default {
 	name: 'TagModal',
+	emits: ['close'],
 	components: {
 		NcModal,
 		NcActionText,

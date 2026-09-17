@@ -325,6 +325,20 @@ import { pickFolder } from '../util/filePicker.js'
 
 export default {
 	name: 'MenuEnvelope',
+	emits: [
+		'open-tag-modal',
+		'open-move-modal',
+		'open-translation-modal',
+		'open-event-modal',
+		'open-task-modal',
+		'show-source-modal',
+		'open-mail-filter-from-envelope',
+		'update:moreActionsOpen',
+		'unselect',
+		'delete',
+		'update:selected',
+		'print',
+	],
 	components: {
 		NcActionButton,
 		NcActionInput,

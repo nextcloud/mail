@@ -81,6 +81,7 @@ const PRINT_CLEANUP_TIMEOUT = 60000
 
 export default {
 	name: 'Thread',
+	emits: ['delete'],
 	components: {
 		ThreadSummary,
 		NcAppContentDetails,
