@@ -5,10 +5,10 @@
 
 import { getRequestToken } from '@nextcloud/auth'
 import { loadState } from '@nextcloud/initial-state'
+import { n, t } from '@nextcloud/l10n'
 import { generateFilePath } from '@nextcloud/router'
 import { createApp } from 'vue'
 import AdminSettings from './components/settings/AdminSettings.vue'
-import Nextcloud from './mixins/Nextcloud.js'
 
 import '@nextcloud/dialogs/style.css'
 
@@ -19,5 +19,6 @@ __webpack_public_path__ = generateFilePath('mail', '', 'js/')
 const app = createApp(AdminSettings, {
 	provisioningSettings: loadState('mail', 'provisioning_settings') || [],
 })
-app.mixin(Nextcloud)
+app.config.globalProperties.t = t
+app.config.globalProperties.n = n
 app.mount('#mail-admin-settings')

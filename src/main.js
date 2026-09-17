@@ -6,11 +6,11 @@
 import { getRequestToken } from '@nextcloud/auth'
 import { registerDavProperty } from '@nextcloud/files'
 import { generateFilePath } from '@nextcloud/router'
+import { n, t } from '@nextcloud/l10n'
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 import VueShortKey from 'vue3-shortkey'
 import App from './App.vue'
-import Nextcloud from './mixins/Nextcloud.js'
 import router from './router.js'
 
 import '@nextcloud/dialogs/style.css'
@@ -28,5 +28,6 @@ const app = createApp(App)
 app.use(router)
 app.use(pinia)
 app.use(VueShortKey, { prevent: ['input', 'div', 'textarea'] })
-app.mixin(Nextcloud)
+app.config.globalProperties.t = t
+app.config.globalProperties.n = n
 app.mount('#content')
