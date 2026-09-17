@@ -836,10 +836,6 @@ export default {
 	top: 12px;
 }
 
-.mx-datepicker {
-	width:100%;
-}
-
 .filter-buttons {
 	display: flex;
 	justify-content: center;
