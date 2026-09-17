@@ -385,10 +385,6 @@ input {
 	float: inline-end;
 }
 
-:deep(.mx-datepicker) {
-	width: 213px;
-}
-
 .vs__search {
 	width: 100%;
 }
