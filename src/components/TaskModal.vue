@@ -288,7 +288,4 @@ input , textarea {
 	float: inline-end;
 }
 
-:deep(.mx-datepicker) {
-	width: 213px;
-}
 </style>
