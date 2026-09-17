@@ -671,9 +671,9 @@ div {
 	transition: all calc(var(--animation-slow) / 2);
 }
 
-.multiselect-header-enter,
+.multiselect-header-enter-from,
 .multiselect-header-leave-to,
-.list-enter,
+.list-enter-from,
 .list-leave-to {
 	opacity: 0;
 	height: 0;
