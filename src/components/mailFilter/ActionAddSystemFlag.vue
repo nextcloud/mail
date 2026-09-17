@@ -26,6 +26,7 @@ import { MailFilterSystemFlag } from '../../models/mailFilter.ts'
 
 export default {
 	name: 'ActionAddSystemFlag',
+	emits: ['update-action'],
 	components: {
 		NcSelect,
 	},

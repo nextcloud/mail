@@ -43,6 +43,7 @@ import useMainStore from '../../store/mainStore.js'
 
 export default {
 	name: 'TextBlockModal',
+	emits: ['insert', 'close'],
 	components: {
 		ListItem,
 		NcDialog,

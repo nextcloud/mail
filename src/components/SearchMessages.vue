@@ -321,6 +321,7 @@ const debouncedSearch = debouncePromise(findRecipient, 500)
 
 export default {
 	name: 'SearchMessages',
+	emits: ['search-changed'],
 	components: {
 		NcChip,
 		NcDialog,

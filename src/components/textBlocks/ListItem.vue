@@ -136,6 +136,7 @@ import useMainStore from '../../store/mainStore.js'
 
 export default {
 	name: 'ListItem',
+	emits: ['click'],
 	components: {
 		NcActionButton,
 		NcLoadingIcon,

@@ -42,6 +42,7 @@ import { hiddenTags } from '../tags.js'
 
 export default {
 	name: 'Action',
+	emits: ['delete', 'update'],
 	components: {
 		NcSelect,
 		CloseIcon,

@@ -14,6 +14,7 @@ import useMainStore from '../../store/mainStore.js'
 
 export default {
 	name: 'ActionFileinto',
+	emits: ['update-action'],
 	components: {
 		MailboxInlinePicker,
 	},

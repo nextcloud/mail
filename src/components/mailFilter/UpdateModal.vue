@@ -99,6 +99,7 @@ import { randomId } from '../../util/randomId.js'
 
 export default {
 	name: 'UpdateModal',
+	emits: ['update-filter', 'close'],
 	components: {
 		IconCheck,
 		Action,

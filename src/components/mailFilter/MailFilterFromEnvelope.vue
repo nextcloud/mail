@@ -41,6 +41,7 @@ import useMainStore from '../../store/mainStore.js'
 
 export default {
 	name: 'MailFilterFromEnvelope',
+	emits: ['close'],
 	components: {
 		CreateModal,
 		UpdateModal,

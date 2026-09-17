@@ -53,6 +53,7 @@ import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 
 export default {
 	name: 'EnvelopeSingleClickActions',
+	emits: ['toggle-seen', 'toggle-important', 'delete'],
 	components: {
 		EmailRead,
 		EmailUnread,

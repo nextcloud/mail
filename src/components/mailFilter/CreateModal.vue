@@ -50,6 +50,7 @@ import useMainStore from '../../store/mainStore.js'
 
 export default {
 	name: 'CreateModal',
+	emits: ['create-filter', 'close'],
 	components: {
 		NcModal,
 		NcCheckboxRadioSwitch,

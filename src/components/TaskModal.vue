@@ -90,6 +90,7 @@ import Task from '../task.js'
 
 export default {
 	name: 'TaskModal',
+	emits: ['close'],
 	components: {
 		CalendarPickerOption,
 		NcDateTimePicker,

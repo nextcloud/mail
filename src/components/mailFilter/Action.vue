@@ -46,6 +46,7 @@ import { MailFilterActions } from '../../models/mailFilter.ts'
 
 export default {
 	name: 'Action',
+	emits: ['update-action', 'delete-action'],
 	components: {
 		NcSelect,
 		NcTextField,
