@@ -76,4 +76,21 @@ class ActionStepMapper extends QBMapper {
 
 		return $this->findEntity($qb);
 	}
+
+	/**
+	 * @return ActionStep[]
+	 */
+	public function findStepsFromOrder(int $actionId, int $order): array {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('*')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->andX(
+					$qb->expr()->eq('action_id', $qb->createNamedParameter($actionId, IQueryBuilder::PARAM_INT)),
+					$qb->expr()->gte('order', $qb->createNamedParameter($order, IQueryBuilder::PARAM_INT))
+				)
+			);
+
+		return $this->findEntities($qb);
+	}
 }
