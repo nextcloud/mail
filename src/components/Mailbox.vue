@@ -6,7 +6,10 @@
 <template>
 	<div
 		class="mailbox"
-		:class="{ 'empty-content': (!hasMessages && !loadingEnvelopes) || error }">
+		:class="{
+			'mailbox--priority-inbox': isPriorityInbox,
+			'empty-content': (!hasMessages && !loadingEnvelopes) || error,
+		}">
 		<Error
 			v-if="error"
 			:error="t('mail', 'Could not open folder')"
@@ -635,6 +638,11 @@ export default {
 <style lang="scss" scoped>
 .mailbox {
 	height: 100%;
+}
+
+.mailbox--priority-inbox {
+	flex-shrink: 0;
+	height: auto;
 }
 
 // Fix vertical space between sections in priority inbox
