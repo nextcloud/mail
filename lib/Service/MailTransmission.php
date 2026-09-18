@@ -30,6 +30,8 @@ use Horde_Smtp_Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
+use OCA\Mail\AppInfo\Application;
+use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\LocalMessage;
@@ -50,6 +52,7 @@ use OCA\Mail\SMTP\SmtpClientFactory;
 use OCA\Mail\Support\PerformanceLogger;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\IAppConfig;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
@@ -71,6 +74,7 @@ class MailTransmission implements IMailTransmission {
 		private AliasesService $aliasesService,
 		private TransmissionService $transmissionService,
 		private IMailManager $mailManager,
+		private IAppConfig $appConfig,
 	) {
 	}
 
@@ -114,7 +118,12 @@ class MailTransmission implements IMailTransmission {
 		// approach used by Horde IMP and other clients (Evolution, Thunderbird).
 		$fccHeaders = new Horde_Mime_Headers();
 		$fccHeaders->addHeaderOb(Horde_Mime_Headers_Date::create());
-		$fccHeaders->addHeaderOb(Horde_Mime_Headers_MessageId::create());
+		$prefix = $this->appConfig->getValueString(
+			Application::APP_ID,
+			ConfigLexicon::MESSAGE_ID_PREFIX,
+			'nextcloud-mail',
+		);
+		$fccHeaders->addHeaderOb(Horde_Mime_Headers_MessageId::create($prefix));
 		$fccHeaders->addHeaderOb(new Horde_Mime_Headers_Addresses('From', $from->toHorde()));
 		$fccHeaders->addHeaderOb(new Horde_Mime_Headers_Addresses('To', $to->toHorde()));
 		if (count($cc) > 0) {
@@ -376,7 +385,12 @@ class MailTransmission implements IMailTransmission {
 	private function buildMimeHeaders(Address $from, AddressList $to, AddressList $cc, AddressList $bcc, ?string $subject): Horde_Mime_Headers {
 		$headers = new Horde_Mime_Headers();
 		$headers->addHeaderOb(Horde_Mime_Headers_Date::create());
-		$headers->addHeaderOb(Horde_Mime_Headers_MessageId::create());
+		$prefix = $this->appConfig->getValueString(
+			Application::APP_ID,
+			ConfigLexicon::MESSAGE_ID_PREFIX,
+			'nextcloud-mail',
+		);
+		$headers->addHeaderOb(Horde_Mime_Headers_MessageId::create($prefix));
 		$headers->addHeaderOb(new Horde_Mime_Headers_Addresses('From', $from->toHorde()));
 		$headers->addHeaderOb(new Horde_Mime_Headers_Addresses('To', $to->toHorde()));
 		if (count($cc) > 0) {

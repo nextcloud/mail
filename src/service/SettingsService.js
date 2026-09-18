@@ -70,6 +70,15 @@ export async function updateLlmEnabled(enabled) {
 	return resp.data
 }
 
+export async function updateMessageIdPrefix(prefix) {
+	const url = generateUrl('/apps/mail/api/settings/messageidprefix')
+	const data = {
+		prefix,
+	}
+	const resp = await axios.post(url, data)
+	return resp.data
+}
+
 export async function updateEnabledSmartReply(enabled) {
 	const url = generateUrl('/apps/mail/api/settings/smartreply')
 	const data = {

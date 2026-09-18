@@ -351,6 +351,11 @@ return [
 			'verb' => 'PUT'
 		],
 		[
+			'name' => 'settings#setMessageIdPrefix',
+			'url' => '/api/settings/messageidprefix',
+			'verb' => 'POST'
+		],
+		[
 			'name' => 'settings#setImportanceClassificationEnabledByDefault',
 			'url' => '/api/settings/importance-classification-default',
 			'verb' => 'PUT'
