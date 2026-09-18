@@ -48,7 +48,7 @@
 			<TrashRetentionSettings :account="account" />
 		</NcAppSettingsSection>
 		<NcAppSettingsSection
-			v-if="account"
+			v-if="account && !account.error"
 			id="out-of-office-replies"
 			:name="t('mail', 'Autoresponder')">
 			<p class="settings-hint">
@@ -81,7 +81,7 @@
 			</NcCheckboxRadioSwitch>
 		</NcAppSettingsSection>
 		<NcAppSettingsSection
-			v-if="account && account.sieveEnabled"
+			v-if="canUseSieve"
 			id="mail-filters"
 			:name="t('mail', 'Filters')">
 			<div id="mail-filters">
@@ -95,7 +95,7 @@
 			<Settings :key="account.accountId" ref="quickActions" :account="account" />
 		</NcAppSettingsSection>
 		<NcAppSettingsSection
-			v-if="account && account.sieveEnabled"
+			v-if="canUseSieve"
 			id="sieve-filter"
 			:name="t('mail', 'Sieve script editor')">
 			<div id="sieve-filter">
@@ -220,9 +220,27 @@ export default {
 		email() {
 			return this.account.emailAddress
 		},
+
+		canUseSieve() {
+			return this.account.sieveEnabled && !this.account.error
+		},
 	},
 
 	watch: {
+		canUseSieve: {
+			immediate: true,
+			handler(canUseSieve) {
+				if (!canUseSieve) {
+					return
+				}
+
+				logger.debug(`Load active sieve script for account ${this.account.accountId}`)
+				this.mainStore.fetchActiveSieveScript({
+					accountId: this.account.id,
+				})
+			},
+		},
+
 		scrollToSection: {
 			immediate: true,
 			handler(newState) {
@@ -234,15 +252,6 @@ export default {
 				})
 			},
 		},
-	},
-
-	mounted() {
-		if (this.account.sieveEnabled) {
-			logger.debug(`Load active sieve script for account ${this.account.accountId}`)
-			this.mainStore.fetchActiveSieveScript({
-				accountId: this.account.id,
-			})
-		}
 	},
 
 	methods: {
