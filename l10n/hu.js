@@ -633,6 +633,7 @@ OC.L10N.register(
     "Could not load the desired message" : "Nem sikerült betölteni a kért üzenetet",
     "Could not load the message" : "Nem sikerült betölteni az üzenetet",
     "Date:" : "Dátum:",
+    "Tag name cannot be empty" : "A címkenév nem lehet üres",
     "Tag name is a hidden system tag" : "A címkenév egy rejtett rendszercímke",
     "Tag already exists" : "A címke már létezik",
     "Error loading message" : "Hiba történt az üzenet betöltése közben",
