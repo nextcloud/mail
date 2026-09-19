@@ -206,7 +206,6 @@ export default {
 	data() {
 		return {
 			trapElements: [],
-			fetchActiveSieveScript: this.account.sieveEnabled,
 			loadingClassificationToggle: false,
 			systemVersion: parseInt(OC.config.version.split('.')[0], 10),
 		}
@@ -224,24 +223,26 @@ export default {
 	},
 
 	watch: {
-		open(newState, oldState) {
-			if (newState === true && this.fetchActiveSieveScript === true) {
-				logger.debug(`Load active sieve script for account ${this.account.accountId}`)
-				this.fetchActiveSieveScript = false
-				this.mainStore.fetchActiveSieveScript({
-					accountId: this.account.id,
+		scrollToSection: {
+			immediate: true,
+			handler(newState) {
+				this.$nextTick(() => {
+					this.$refs[newState]?.$el?.scrollIntoView({
+						behavior: 'smooth',
+						block: 'start',
+					})
 				})
-			}
+			},
 		},
+	},
 
-		scrollToSection(newState) {
-			this.$nextTick(() => {
-				this.$refs[newState]?.$el?.scrollIntoView({
-					behavior: 'smooth',
-					block: 'start',
-				})
+	mounted() {
+		if (this.account.sieveEnabled) {
+			logger.debug(`Load active sieve script for account ${this.account.accountId}`)
+			this.mainStore.fetchActiveSieveScript({
+				accountId: this.account.id,
 			})
-		},
+		}
 	},
 
 	methods: {
@@ -251,8 +252,8 @@ export default {
 			})
 		},
 
-		updateOpen() {
-			this.$emit('update:open')
+		onClose() {
+			this.$emit('close')
 		},
 
 		async onToggleClassification(classificationEnabled) {
