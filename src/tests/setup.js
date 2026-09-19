@@ -34,6 +34,15 @@ global.OC = {
 global.t = vi.fn().mockImplementation((msg) => msg)
 global.n = vi.fn().mockImplementation((msg) => msg)
 
+// jsdom ships no ResizeObserver, so components that watch an element for its
+// size would fail to mount. Nothing is laid out in a test, so the stub never
+// reports a resize.
+global.ResizeObserver = class {
+	observe() {}
+	unobserve() {}
+	disconnect() {}
+}
+
 /**
  * @param {string} path Path to file relative to src/tests/data/
  * @return {Buffer} File contents
