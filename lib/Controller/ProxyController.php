@@ -10,8 +10,10 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Html\ProxyHmacGenerator;
 use OCA\Mail\Http\ProxyDownloadResponse;
+use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -44,6 +46,7 @@ class ProxyController extends Controller {
 		private ProxyHmacGenerator $hmacGenerator,
 		private LoggerInterface $logger,
 		private MailManager $mailManager,
+		private DelegationService $delegationService,
 		private ?string $userId,
 	) {
 		parent::__construct($appName, $request);
@@ -82,8 +85,9 @@ class ProxyController extends Controller {
 			return new Response(Http::STATUS_BAD_REQUEST);
 		}
 		try {
-			$this->mailManager->getMessage($this->userId, $id);
-		} catch (DoesNotExistException $e) {
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$this->mailManager->getMessage($effectiveUserId, $id);
+		} catch (DoesNotExistException|ClientException $e) {
 			return new Response(Http::STATUS_BAD_REQUEST);
 		}
 		if (!hash_equals($this->hmacGenerator->generate($id, $src), $hmac)) {
