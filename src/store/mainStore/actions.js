@@ -2436,12 +2436,16 @@ export default function mainStoreActions() {
 		getMailboxes(accountId) {
 			return this.accountsUnmapped[accountId].mailboxes.map((id) => this.mailboxes[id])
 		},
-		* getRecursiveMailboxIterator(accountId) {
-			for (const mailbox of this.getMailboxes(accountId)) {
+		* getRecursiveMailboxIterator(accountId, parentMailboxId = null) {
+			const mailboxes = parentMailboxId ? this.getSubMailboxes(parentMailboxId) : this.getMailboxes(accountId)
+			for (const mailbox of mailboxes) {
 				yield mailbox
 
-				for (const subMailboxId of mailbox.mailboxes) {
-					yield this.getMailbox(subMailboxId)
+				if (mailbox.mailboxes) {
+					for (const subMailboxId of mailbox.mailboxes) {
+						yield this.getMailbox(subMailboxId)
+						yield* this.getRecursiveMailboxIterator(accountId, subMailboxId)
+					}
 				}
 			}
 		},
@@ -2450,11 +2454,14 @@ export default function mainStoreActions() {
 			return mailbox.mailboxes.map((id) => this.mailboxes[id])
 		},
 		getParentMailbox(id) {
-			for (const mailbox of this.getMailboxes(this.getMailbox(id).accountId)) {
+			const accountId = this.getMailbox(id).accountId
+
+			for (const mailbox of this.getRecursiveMailboxIterator(accountId)) {
 				if (mailbox.mailboxes.includes(id)) {
 					return mailbox
 				}
 			}
+
 			return undefined
 		},
 		getUnifiedMailbox(specialRole) {
