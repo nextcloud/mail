@@ -32,6 +32,18 @@ use function array_map;
 
 class AccountService {
 	/**
+	 * @var list<class-string<IJob>>
+	 */
+	private const PER_ACCOUNT_JOBS = [
+		SyncJob::class,
+		TrainImportanceClassifierJob::class,
+		PreviewEnhancementProcessingJob::class,
+		QuotaJob::class,
+		ScheduleJob::class,
+		RepairSyncJob::class,
+	];
+
+	/**
 	 * Cache accounts for multiple calls to 'findByUserId'
 	 *
 	 * @var array<string, list<Account>>
@@ -246,14 +258,12 @@ class AccountService {
 		$arguments = ['accountId' => $accountId];
 
 		$now = $this->timeFactory->getTime();
-		$this->scheduleBackgroundJob(SyncJob::class, $now, $arguments);
-		$this->scheduleBackgroundJob(TrainImportanceClassifierJob::class, $now, $arguments);
-		$this->scheduleBackgroundJob(PreviewEnhancementProcessingJob::class, $now, $arguments);
-		$this->scheduleBackgroundJob(QuotaJob::class, $now, $arguments);
-		$this->scheduleBackgroundJob(ScheduleJob::class, $now, $arguments);
-
 		$inThreeDays = $now + (3 * 86400);
-		$this->scheduleBackgroundJob(RepairSyncJob::class, $inThreeDays, $arguments);
+		foreach (self::PER_ACCOUNT_JOBS as $job) {
+			// Defer the expensive full repair sync so it doesn't compete with the initial sync
+			$runAfter = $job === RepairSyncJob::class ? $inThreeDays : $now;
+			$this->scheduleBackgroundJob($job, $runAfter, $arguments);
+		}
 	}
 
 	/**
@@ -266,6 +276,13 @@ class AccountService {
 	private function scheduleBackgroundJob(string $job, int $runAfter, mixed $argument = null): void {
 		if (!$this->jobList->has($job, $argument)) {
 			$this->jobList->scheduleAfter($job, $runAfter, $argument);
+		}
+	}
+
+	public function removeBackgroundJobs(int $accountId): void {
+		$arguments = ['accountId' => $accountId];
+		foreach (self::PER_ACCOUNT_JOBS as $job) {
+			$this->jobList->remove($job, $arguments);
 		}
 	}
 }
