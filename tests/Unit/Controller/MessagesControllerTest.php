@@ -47,8 +47,8 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\ZipResponse;
-use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\Folder;
 use OCP\Files\IFilenameValidator;
 use OCP\Files\IMimeTypeDetector;
@@ -118,9 +118,6 @@ class MessagesControllerTest extends TestCase {
 	/** @var MockObject|IMailTransmission */
 	private $mailTransmission;
 
-	/** @var ITimeFactory */
-	private $oldFactory;
-
 	/** @var MockObject|SmimeService */
 	private $smimeService;
 
@@ -177,13 +174,6 @@ class MessagesControllerTest extends TestCase {
 		$this->filenameValidator->method('sanitizeFilename')
 			->willReturn('core_master has new results');
 
-		$timeFactory = $this->createMocK(ITimeFactory::class);
-		$timeFactory->expects($this->any())
-			->method('getTime')
-			->willReturn(10000);
-		$this->oldFactory = \OC::$server->offsetGet(ITimeFactory::class);
-		\OC::$server->registerService(ITimeFactory::class, fn () => $timeFactory);
-
 		$this->controller = new MessagesController(
 			$this->appName,
 			$this->request,
@@ -216,11 +206,11 @@ class MessagesControllerTest extends TestCase {
 		$this->attachment = $this->createMock(Attachment::class);
 	}
 
-	protected function tearDown(): void {
-		parent::tearDown();
+	private function assertCachedFor(Response $response, int $seconds): void {
+		$headers = $response->getHeaders();
 
-		\OC::$server->offsetUnset(ITimeFactory::class);
-		\OC::$server->offsetSet(ITimeFactory::class, $this->oldFactory);
+		$this->assertSame("private, max-age=$seconds, immutable", $headers['Cache-Control']);
+		$this->assertGreaterThan(time(), strtotime($headers['Expires']));
 	}
 
 	public function testGetHtmlBody(): void {
@@ -261,7 +251,6 @@ class MessagesControllerTest extends TestCase {
 			->willReturn($client);
 
 		$expectedPlainResponse = HtmlResponse::plain('');
-		$expectedPlainResponse->cacheFor(3600);
 
 		$nonce = 'abc123';
 		$relativeScriptUrl = '/script.js';
@@ -278,23 +267,23 @@ class MessagesControllerTest extends TestCase {
 			->with($relativeScriptUrl)
 			->willReturn($scriptUrl);
 		$expectedRichResponse = HtmlResponse::withResizer('', $nonce, $scriptUrl);
-		$expectedRichResponse->cacheFor(3600);
 
 		$policy = new ContentSecurityPolicy();
 		$policy->disallowScriptDomain('\'self\'');
 		$policy->disallowConnectDomain('\'self\'');
 		$policy->disallowFontDomain('\'self\'');
 		$policy->disallowMediaDomain('\'self\'');
-		$expectedPlainResponse->setContentSecurityPolicy($policy);
-		$expectedPlainResponse->cacheFor(60 * 60, false, true);
-		$expectedRichResponse->setContentSecurityPolicy($policy);
-		$expectedRichResponse->cacheFor(60 * 60, false, true);
 
 		$actualPlainResponse = $this->controller->getHtmlBody($messageId, true);
 		$actualRichResponse = $this->controller->getHtmlBody($messageId, false);
 
-		$this->assertEquals($expectedPlainResponse, $actualPlainResponse);
-		$this->assertEquals($expectedRichResponse, $actualRichResponse);
+		$this->assertSame($expectedPlainResponse->render(), $actualPlainResponse->render());
+		$this->assertEquals($policy, $actualPlainResponse->getContentSecurityPolicy());
+		$this->assertCachedFor($actualPlainResponse, 60 * 60);
+
+		$this->assertSame($expectedRichResponse->render(), $actualRichResponse->render());
+		$this->assertEquals($policy, $actualRichResponse->getContentSecurityPolicy());
+		$this->assertCachedFor($actualRichResponse, 60 * 60);
 	}
 
 	public function testDownloadAttachment() {
