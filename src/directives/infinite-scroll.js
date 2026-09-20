@@ -211,11 +211,21 @@ function onUnbind(el) {
 	}
 }
 
+function onUpdate(el) {
+	nextTick(() => {
+		if (el?.[ctx]?.binded) {
+			el[ctx].scrollListener()
+		}
+	})
+}
+
 export default {
 	// Vue 2
 	bind: onBind,
+	componentUpdated: onUpdate,
 	unbind: onUnbind,
 	// Vue 3
 	mounted: onBind,
+	updated: onUpdate,
 	unmounted: onUnbind,
 }
