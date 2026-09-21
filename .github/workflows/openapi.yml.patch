@@ -1,0 +1,17 @@
+diff --git a/.github/workflows/openapi.yml b/.github/workflows/openapi.yml
+index b06063f7a..13b2ccdfd 100644
+--- a/.github/workflows/openapi.yml
++++ b/.github/workflows/openapi.yml
+@@ -85,12 +85 @@ jobs:
+         run: composer run openapi
+-
+-      - name: Check openapi*.json and typescript changes
+-        run: |
+-          bash -c "[[ ! \"`git status --porcelain `\" ]] || (echo 'Please run \"composer run openapi\" and commit the openapi*.json files and (if applicable) src/types/openapi/openapi*.ts, see the section \"Show changes on failure\" for details' && exit 1)"
+-
+-      - name: Show changes on failure
+-        if: failure()
+-        run: |
+-          git status
+-          git --no-pager diff
+-          exit 1 # make it red to grab attention

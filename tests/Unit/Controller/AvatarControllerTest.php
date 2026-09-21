@@ -10,24 +10,15 @@ namespace OCA\Mail\Tests\Unit\Controller;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Contracts\IAvatarService;
 use OCA\Mail\Controller\AvatarsController;
-use OCA\Mail\Http\AvatarDownloadResponse;
 use OCA\Mail\Service\Avatar\Avatar;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
-use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class AvatarControllerTest extends TestCase {
-	/** @var IAvatarService|MockObject */
-	private $avatarService;
-
-	/** @var AvatarsController */
-	private $controller;
-
-	/** @var ITimeFactory */
-	private $oldFactory;
+	private IAvatarService&MockObject $avatarService;
+	private AvatarsController $controller;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -35,24 +26,17 @@ class AvatarControllerTest extends TestCase {
 		$request = $this->createMock(IRequest::class);
 		$this->avatarService = $this->createMock(IAvatarService::class);
 
-		$timeFactory = $this->createMocK(ITimeFactory::class);
-		$timeFactory->expects($this->any())
-			->method('getTime')
-			->willReturn(10000);
-		$this->oldFactory = \OC::$server->offsetGet(ITimeFactory::class);
-		\OC::$server->registerService(ITimeFactory::class, fn () => $timeFactory);
-
 		$this->controller = new AvatarsController('mail', $request, $this->avatarService, 'jane');
 	}
 
-	protected function tearDown(): void {
-		parent::tearDown();
+	private function assertCachedFor(Response $response, int $seconds): void {
+		$headers = $response->getHeaders();
 
-		\OC::$server->offsetUnset(ITimeFactory::class);
-		\OC::$server->offsetSet(ITimeFactory::class, $this->oldFactory);
+		$this->assertSame("private, max-age=$seconds, immutable", $headers['Cache-Control']);
+		$this->assertGreaterThan(time(), strtotime($headers['Expires']));
 	}
 
-	public function testGetUrl() {
+	public function testGetUrl(): void {
 		$email = 'john@doe.com';
 		$avatar = new Avatar('https://doe.com/favicon.ico');
 		$this->avatarService->expects($this->once())
@@ -62,12 +46,12 @@ class AvatarControllerTest extends TestCase {
 
 		$resp = $this->controller->url($email);
 
-		$expected = new JSONResponse($avatar);
-		$expected->cacheFor(7 * 24 * 60 * 60, false, true);
-		$this->assertEquals($expected, $resp);
+		$this->assertSame(Http::STATUS_OK, $resp->getStatus());
+		$this->assertSame($avatar, $resp->getData());
+		$this->assertCachedFor($resp, 7 * 24 * 60 * 60);
 	}
 
-	public function testGetUrlNoAvatarFound() {
+	public function testGetUrlNoAvatarFound(): void {
 		$email = 'john@doe.com';
 		$this->avatarService->expects($this->once())
 			->method('getAvatar')
@@ -76,12 +60,11 @@ class AvatarControllerTest extends TestCase {
 
 		$resp = $this->controller->url($email);
 
-		$expected = new JSONResponse([], Http::STATUS_NO_CONTENT);
-		$expected->cacheFor(24 * 60 * 60, false, true);
-		$this->assertEquals($expected, $resp);
+		$this->assertSame(Http::STATUS_NO_CONTENT, $resp->getStatus());
+		$this->assertCachedFor($resp, 24 * 60 * 60);
 	}
 
-	public function testGetImage() {
+	public function testGetImage(): void {
 		$email = 'john@doe.com';
 		$this->avatarService->expects($this->once())
 			->method('getAvatarImage')
@@ -90,13 +73,13 @@ class AvatarControllerTest extends TestCase {
 
 		$resp = $this->controller->image($email);
 
-		$expected = new AvatarDownloadResponse('data');
-		$expected->addHeader('Content-Type', 'image/jpeg');
-		$expected->cacheFor(7 * 24 * 60 * 60, false, true);
-		$this->assertEquals($expected, $resp);
+		$this->assertSame(Http::STATUS_OK, $resp->getStatus());
+		$this->assertSame('image/jpeg', $resp->getHeaders()['Content-Type']);
+		$this->assertSame('data', $resp->render());
+		$this->assertCachedFor($resp, 7 * 24 * 60 * 60);
 	}
 
-	public function testGetImageNotFound() {
+	public function testGetImageNotFound(): void {
 		$email = 'john@doe.com';
 		$this->avatarService->expects($this->once())
 			->method('getAvatarImage')
@@ -105,9 +88,7 @@ class AvatarControllerTest extends TestCase {
 
 		$resp = $this->controller->image($email);
 
-		$expected = new Response();
-		$expected->setStatus(Http::STATUS_NOT_FOUND);
-		$expected->cacheFor(60 * 60, false, true);
-		$this->assertEquals($expected, $resp);
+		$this->assertSame(Http::STATUS_NOT_FOUND, $resp->getStatus());
+		$this->assertCachedFor($resp, 60 * 60);
 	}
 }
