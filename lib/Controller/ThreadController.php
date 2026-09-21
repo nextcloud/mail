@@ -64,6 +64,8 @@ class ThreadController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
+		$this->delegationService->assertMailboxAccess($destMailboxId, $this->userId);
+
 		$threadRootId = $message->getThreadRootId();
 		if ($threadRootId === null) {
 			return new JSONResponse([], Http::STATUS_NOT_FOUND);
@@ -103,6 +105,8 @@ class ThreadController extends Controller {
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
+
+		$this->delegationService->assertMailboxAccess($destMailboxId, $this->userId);
 
 		$this->snoozeService->snoozeThread($selectedMessage, $unixTimestamp, $srcAccount, $srcMailbox, $dstAccount, $dstMailbox);
 		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId snoozed thread <$id> until <$unixTimestamp> in mailbox <$destMailboxId> on behalf of $effectiveUserId");

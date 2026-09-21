@@ -77,6 +77,7 @@
 
 				<template v-else>
 					<div
+						class="avatar-select-wrapper"
 						@click.stop.exact.prevent="toggleSelected"
 						@click.shift.exact.prevent="onSelectMultiple">
 						<template v-if="hoveringAvatar || selected">
@@ -193,14 +194,6 @@
 				fill-color="var(--color-primary-element)" />
 		</template>
 		<template #actions>
-			<FilePicker
-				v-if="isFilePickerOpen"
-				:name="t('mail', 'Choose a folder to store the message in')"
-				:buttons="saveMessageButtons"
-				:allow-pick-directory="true"
-				:multiselect="false"
-				:mimetype-filter="['httpd/unix-directory']"
-				@close="() => isFilePickerOpen = false" />
 			<EnvelopePrimaryActions v-if="!moreActionsOpen && !snoozeOptions" id="primary-actions">
 				<NcActionButton
 					v-if="hasWriteAcl"
@@ -440,7 +433,7 @@
 					class="message-save-to-cloud"
 					:disabled="savingToCloud"
 					:close-after-click="true"
-					@click="() => isFilePickerOpen = true">
+					@click="saveToCloud">
 					<template #icon>
 						<IconSave :size="20" />
 					</template>
@@ -536,7 +529,6 @@
 
 <script>
 import { showError, showSuccess, showWarning } from '@nextcloud/dialogs'
-import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
 import { isRTL } from '@nextcloud/l10n'
 import moment from '@nextcloud/moment'
 import { generateUrl } from '@nextcloud/router'
@@ -600,6 +592,7 @@ import { saveMessage } from '../service/MessageService.js'
 import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
 import { mailboxHasRights } from '../util/acl.js'
+import { pickFolder } from '../util/filePicker.js'
 import { flatRelativeDatetime, groupedRelativeDatetime, messageDateTime } from '../util/relativeDatetime.js'
 import { translateTagDisplayName } from '../util/tag.js'
 import { hiddenTags } from './tags.js'
@@ -620,7 +613,6 @@ export default {
 		EnvelopePrimaryActions,
 		EventModal,
 		IconSave,
-		FilePicker,
 		ImportantIcon,
 		ImportantOutlineIcon,
 		TaskModal,
@@ -720,14 +712,6 @@ export default {
 			quickActionLoading: false,
 			possibleAttachmentsCount: 0,
 			savingToCloud: false,
-			isFilePickerOpen: false,
-			saveMessageButtons: [
-				{
-					label: t('mail', 'Choose'),
-					callback: this.saveToCloud,
-					type: 'primary',
-				},
-			],
 		}
 	},
 
@@ -1466,8 +1450,15 @@ export default {
 			this.showTagModal = false
 		},
 
-		async saveToCloud(dest) {
-			const path = dest[0].path
+		async saveToCloud() {
+			let path
+			try {
+				path = await pickFolder(t('mail', 'Choose a folder to store the message in'))
+			} catch (error) {
+				logger.debug('file picker closed without picking a folder', { error })
+				return
+			}
+
 			this.savingToCloud = true
 			const id = this.data.databaseId
 
@@ -1781,10 +1772,17 @@ export default {
 }
 
 .hovering-status {
-	// Needs to be the same height as the check-icon and the avatar to prevent automatic resizing
-	// and height differences between hover state and normal state
 	height: calc(var(--default-grid-baseline) * 10);
-	padding-top: 3px;
+	width: calc(var(--default-grid-baseline) * 10);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.avatar-select-wrapper {
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .check-icon {

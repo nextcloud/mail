@@ -115,6 +115,36 @@ class RecipientMapperTest extends TestCase {
 		$this->assertEmpty($result);
 	}
 
+	public function testFindAllRecipientsForMultipleMessages(): void {
+		$secondMessage = new LocalMessage();
+		$secondMessage->setType(LocalMessage::TYPE_OUTGOING);
+		$secondMessage->setAccountId(1);
+		$secondMessage->setAliasId(2);
+		$secondMessage->setSendAt(123);
+		$secondMessage->setSubject('subject');
+		$secondMessage->setBodyHtml('message');
+		$secondMessage->setHtml(true);
+		$secondMessage->setInReplyToMessageId('efgh');
+		$secondMessage = $this->localMessageMapper->insert($secondMessage);
+
+		$recipient = new Recipient();
+		$recipient->setLocalMessageId($secondMessage->getId());
+		$recipient->setEmail('sebastian@stardewvalley.com');
+		$recipient->setType(Recipient::TYPE_TO);
+		$recipient->setLabel('Sebastian');
+		$this->mapper->insert($recipient);
+
+		$result = $this->mapper->findByLocalMessageIds([$this->message->getId(), $secondMessage->getId()]);
+
+		$this->assertCount(3, $result);
+		$byMessage = [];
+		foreach ($result as $r) {
+			$byMessage[$r->getLocalMessageId()][] = $r;
+		}
+		$this->assertCount(2, $byMessage[$this->message->getId()]);
+		$this->assertCount(1, $byMessage[$secondMessage->getId()]);
+	}
+
 	/**
 	 * @depends testFindAllRecipientsEmpty
 	 */

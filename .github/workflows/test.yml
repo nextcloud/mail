@@ -6,13 +6,62 @@ on: pull_request
 permissions:
   contents: read
 
+concurrency:
+  group: test-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
 env:
   E2E_NODE_VERSION: "20"
   STALWART_PWD: "secretpassword"
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest-low
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      backend: ${{ steps.changes.outputs.backend }}
+      frontend: ${{ steps.changes.outputs.frontend }}
+    steps:
+      - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+        id: changes
+        continue-on-error: true
+        with:
+          filters: |
+            backend:
+              - '.github/workflows/**'
+              - 'appinfo/**'
+              - 'lib/**'
+              - 'templates/**'
+              - 'tests/**'
+              - 'vendor/**'
+              - 'vendor-bin/**'
+              - 'composer/**'
+              - 'composer.json'
+              - 'composer.lock'
+              - '.patches/**'
+              - 'patches.json'
+              - 'patches.lock.json'
+              - 'resources/**'
+              - 'img/**'
+            frontend:
+              - '.github/workflows/**'
+              - 'src/**'
+              - 'package.json'
+              - 'package-lock.json'
+              - 'tsconfig.json'
+              - 'vitest.config.js'
+              - 'babel.config.js'
+              - 'webpack.*.js'
+              - 'playwright.config.js'
+              - 'css/**'
+              - 'img/**'
+
   unit-tests:
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.backend != 'false'
     strategy:
       matrix:
         php-versions: ['8.5']
@@ -25,10 +74,10 @@ jobs:
             nextcloud-versions: 'stable32'
           - php-versions: '8.2'
             nextcloud-versions: 'stable33'
-          - php-versions: '8.2'
-            nextcloud-versions: 'stable34'
           - php-versions: '8.3'
-            nextcloud-versions: 'master'
+            nextcloud-versions: 'stable34'
+          - php-versions: '8.4'
+            nextcloud-versions: 'stable35'
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests ${{ matrix.coverage && '(coverage)' || ''}}
     steps:
     - name: Set up Nextcloud env
@@ -41,7 +90,7 @@ jobs:
         node-version: 'false'
         install: true
     - name: Checkout Mail
-      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
         path: nextcloud/apps/mail
         fetch-depth: 2
@@ -66,6 +115,8 @@ jobs:
 
   integration-tests:
       runs-on: ubuntu-latest
+      needs: changes
+      if: needs.changes.outputs.backend != 'false'
       strategy:
           matrix:
               php-versions: ['8.4']
@@ -93,6 +144,10 @@ jobs:
                   coverage: true
                 - php-versions: 8.4
                   nextcloud-versions: 'stable34'
+                  db: 'mysql'
+                  cache: 'redis'
+                - php-versions: 8.5
+                  nextcloud-versions: 'stable35'
                   db: 'mysql'
                   cache: 'redis'
                 - php-versions: 8.5
@@ -184,7 +239,7 @@ jobs:
               php -f nextcloud/occ config:system:set memcache.local --value='\OC\Memcache\Redis'
               php -f nextcloud/occ config:system:set memcache.distributed --value='\OC\Memcache\Redis'
           - name: Checkout Mail
-            uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+            uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
             with:
                 path: nextcloud/apps/mail
                 fetch-depth: 2
@@ -230,9 +285,11 @@ jobs:
               verbose: true
   frontend-unit-test:
       runs-on: ubuntu-24.04
+      needs: changes
+      if: needs.changes.outputs.frontend != 'false'
       name: Front-end unit tests
       steps:
-          - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+          - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
           - name: Read package.json node and npm engines version
             uses: skjnldsv/read-package-engines-version-actions@06d6baf7d8f41934ab630e97d9e6c0bc9c9ac5e4 # v3
             id: versions
@@ -240,7 +297,7 @@ jobs:
               fallbackNode: '^14'
               fallbackNpm: '^7'
           - name: Set up node ${{ steps.versions.outputs.nodeVersion }}
-            uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+            uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
             with:
               node-version: ${{ steps.versions.outputs.nodeVersion }}
           - name: Set up npm ${{ steps.versions.outputs.npmVersion }}
@@ -254,12 +311,14 @@ jobs:
 
   matrix:
     runs-on: ubuntu-latest-low
+    needs: changes
+    if: needs.changes.outputs.backend != 'false' || needs.changes.outputs.frontend != 'false'
     outputs:
       php-min: ${{ steps.versions.outputs.php-min }}
       branches-min: ${{ steps.versions.outputs.branches-min }}
     steps:
       - name: Checkout app
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Get version matrix
         id: versions
         uses: icewind1991/nextcloud-version-matrix@8a7bac6300b2f0f3100088b297995a229558ddba # v1.3.2
@@ -267,7 +326,8 @@ jobs:
   frontend-e2e-tests:
     runs-on: ubuntu-latest
     name: Front-end E2E tests
-    needs: matrix
+    needs: [changes, matrix]
+    if: needs.changes.outputs.backend != 'false' || needs.changes.outputs.frontend != 'false'
     steps:
       - name: Set up Nextcloud env
         uses: nextcloud/setup-server-action@34b73d5b0e3633f83a52227d00cc2a6c41d01d9a # v1.0.0
@@ -285,7 +345,7 @@ jobs:
           php -f nextcloud/occ config:system:set app.mail.debug --type=bool --value=true
           php -f nextcloud/occ config:system:set app.mail.verify-tls-peer --type=bool --value=false
       - name: Check out the app
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           path: nextcloud/apps/mail
       - name: Install php dependencies
@@ -294,7 +354,7 @@ jobs:
       - name: Install the app
         run: php -f nextcloud/occ app:enable mail --force
       - name: Set up node ${{ env.E2E_NODE_VERSION }}
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
         with:
           node-version: ${{ env.E2E_NODE_VERSION }}
       - name: Install npm dependencies
@@ -330,6 +390,20 @@ jobs:
         run: cat nextcloud/data/nextcloud.log*
     env:
       CI: true
+
+  codecov-empty:
+    runs-on: ubuntu-latest-low
+    needs: changes
+    if: needs.changes.outputs.backend == 'false'
+    name: codecov-empty-upload
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Send empty Codecov upload so required coverage checks pass
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          run_command: empty-upload
 
   summary:
     runs-on: ubuntu-latest-low

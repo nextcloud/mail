@@ -3,27 +3,35 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<Treeselect
-		ref="Treeselect"
-		v-model="selected"
+	<NcSelect
+		:model-value="value"
 		:options="mailboxes"
-		:multiple="false"
+		:reduce="(option) => option.id"
 		:clearable="false"
-		:disabled="disabled" />
+		:disabled="disabled"
+		:aria-label-combobox="t('mail', 'Select a mailbox')"
+		label="label"
+		@update:model-value="$emit('input', $event)">
+		<template #option="option">
+			<NcEllipsisedOption
+				class="mailbox-option"
+				:style="{ '--mailbox-depth': option.depth }"
+				:name="option.label" />
+		</template>
+	</NcSelect>
 </template>
 
 <script>
-import Treeselect from '@riophae/vue-treeselect'
+import { NcEllipsisedOption, NcSelect } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import useMainStore from '../store/mainStore.js'
 import { mailboxHasRights } from '../util/acl.js'
 
-import '@riophae/vue-treeselect/dist/vue-treeselect.css'
-
 export default {
 	name: 'MailboxInlinePicker',
 	components: {
-		Treeselect,
+		NcEllipsisedOption,
+		NcSelect,
 	},
 
 	props: {
@@ -43,12 +51,6 @@ export default {
 		},
 	},
 
-	data() {
-		return {
-			selected: this.value,
-		}
-	},
-
 	computed: {
 		...mapStores(useMainStore),
 		mailboxes() {
@@ -56,76 +58,29 @@ export default {
 		},
 	},
 
-	watch: {
-		selected(val) {
-			if (val !== this.value) {
-				this.$emit('input', val)
-				this.selected = val
-			}
-		},
-	},
-
 	methods: {
-		getMailboxes(mailboxId) {
-			let mailboxes = []
-			if (!mailboxId) {
-				mailboxes = this.mainStore.getMailboxes(this.account.accountId)
-			} else {
-				mailboxes = this.mainStore.getSubMailboxes(mailboxId)
-			}
-			mailboxes = mailboxes.filter((mailbox) => mailboxHasRights(mailbox, 'i'))
-			return mailboxes.map((mailbox) => {
-				return {
-					id: mailbox.databaseId,
-					label: mailbox.displayName,
-					children: mailbox.mailboxes.length > 0 ? this.getMailboxes(mailbox.databaseId) : '',
-				}
-			})
+		getMailboxes(mailboxId, depth = 0) {
+			const mailboxes = mailboxId
+				? this.mainStore.getSubMailboxes(mailboxId)
+				: this.mainStore.getMailboxes(this.account.accountId)
+
+			return mailboxes
+				.filter((mailbox) => mailboxHasRights(mailbox, 'i'))
+				.flatMap((mailbox) => [
+					{
+						id: mailbox.databaseId,
+						label: mailbox.displayName,
+						depth,
+					},
+					...this.getMailboxes(mailbox.databaseId, depth + 1),
+				])
 		},
 	},
 }
 </script>
 
-<style>
-.vue-treeselect__control {
-	padding: 0;
-	border: 0;
-	width: 250px;
+<style lang="scss" scoped>
+.mailbox-option {
+	padding-inline-start: calc(var(--mailbox-depth) * var(--default-grid-baseline) * 3);
 }
-
-.vue-treeselect__control-arrow-container {
-	display: none;
-}
-
-.vue-treeselect--searchable .vue-treeselect__input-container {
-	padding-inline-start: 0;
-	background-color: var(--color-main-background)
-}
-
-input.vue-treeselect__input {
-	margin: 0;
-	padding: 0;
-	border: 1px solid var(--color-border-maxcontrast) !important;
-}
-
-.vue-treeselect__menu {
-	background: var(--color-main-background);
-}
-
-.vue-treeselect--single .vue-treeselect__option--selected {
-	background: var(--color-primary-element-light);
-	border-radius: var(--border-radius-large);
-}
-
-.vue-treeselect__option.vue-treeselect__option--highlight,
-.vue-treeselect__option:hover,
-.vue-treeselect__option:focus {
-	border-radius: var(--border-radius-large);
-	}
-
-.vue-treeselect__placeholder, .vue-treeselect__single-value {
-	line-height: 34px;
-	color: var(--color-main-text);
-}
-
 </style>
