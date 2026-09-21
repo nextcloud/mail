@@ -1142,7 +1142,12 @@ class MessagesController extends Controller {
 	 * @return boolean
 	 */
 	private function attachmentIsCalendarEvent(array $attachment): bool {
-		return in_array($attachment['mime'], ['text/calendar', 'application/ics'], true);
+		if (in_array($attachment['mime'], ['text/calendar', 'application/ics'], true)) {
+			return true;
+		}
+		// Fall back to the file extension: some senders attach .ics files
+		// with a generic MIME type (e.g. application/octet-stream)
+		return str_ends_with(strtolower($attachment['fileName'] ?? ''), '.ics');
 	}
 
 	private function getCacheForAccount(int $accountId): ICache {
