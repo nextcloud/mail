@@ -807,7 +807,7 @@ OC.L10N.register(
     "Enable classification of important mails by default" : "Activer la classification par importance des e-mails par défaut",
     "Anti Spam Service" : "Service anti-spam",
     "You can set up an anti spam service email address here." : "Vous pouvez configurer une adresse e-mail de service anti-spam ici.",
-    "Any email that is marked as spam will be sent to the anti spam service." : "Les e-mails marqués comme indésirables seront envoyé au service anti-spam.",
+    "Any email that is marked as spam will be sent to the anti spam service." : "Tout e-mail marqué comme spam sera transmis au service anti-spam.",
     "Gmail integration" : "Intégration Gmail",
     "Gmail allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection or Google accounts that use two-factor authentication and app passwords." : "Gmail permet aux utilisateurs d'accéder à leur courrier électronique via IMAP. Pour des raisons de sécurité, cet accès n'est possible qu'avec une connexion OAuth 2.0 ou des comptes Google qui utilisent une authentification à deux facteurs et des mots de passe d'application.",
     "You have to register a new Client ID for a \"Web application\" in the Google Cloud console. Add the URL {url} as authorized redirect URI." : "Vous devez enregistrer un nouvel ID client pour une \"application Web\" dans la console Google Cloud. Ajoutez l'URL {url} comme URI de redirection autorisée.",
