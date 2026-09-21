@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\Search;
 
-use function urldecode;
+use function rawurldecode;
 
 class FilterStringParser {
 	public function parse(?string $filter): SearchQuery {
@@ -30,8 +30,8 @@ class FilterStringParser {
 			return false;
 		}
 
-		[$type, $encodedParam] = explode(':', $token);
-		$param = urldecode($encodedParam);
+		[$type, $encodedParam] = explode(':', $token, 2);
+		$param = rawurldecode($encodedParam);
 		$type = strtolower($type);
 		$flagMap = [
 			'answered' => Flag::is(Flag::ANSWERED),
