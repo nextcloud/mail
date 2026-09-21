@@ -346,6 +346,19 @@ export default {
 				logger.info('Ignoring draft because there is no message anymore', { data })
 				return this.draftsPromise
 			}
+			if (!this.composerData.id
+				&& data.subject === ''
+				&& data.bodyIsEmpty
+				&& data.cc.length === 0
+				&& data.bcc.length === 0
+				&& data.to.length === 0
+				&& data.attachments.length === 0
+				&& data.sendAt === undefined) {
+				logger.debug('Nothing substantial to save, ignoring draft save')
+				this.changed = false
+				this.mainStore.setComposerMessageSavedMutation(true)
+				return this.draftsPromise
+			}
 			this.changed = true
 
 			this.draftsPromise = this.draftsPromise.then(async (id) => {
@@ -426,6 +439,7 @@ export default {
 			} else {
 				delete dataForServer.bodyHtml
 			}
+			delete dataForServer.bodyIsEmpty
 
 			return dataForServer
 		},
