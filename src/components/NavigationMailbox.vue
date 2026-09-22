@@ -164,12 +164,8 @@
 			</NcActionButton>
 		</template>
 		<template #counter>
-			<NcCounterBubble v-if="showUnreadCounter && subCounter">
-				{{ mailbox.unread }}&nbsp;({{ subCounter }})
-			</NcCounterBubble>
-			<NcCounterBubble v-else-if="showUnreadCounter">
-				{{ mailbox.unread }}
-			</NcCounterBubble>
+			<NcCounterBubble v-if="showUnreadCounter && subCounter" raw :count="unreadWithSubCounter" />
+			<NcCounterBubble v-else-if="showUnreadCounter" :count="mailbox.unread" />
 		</template>
 		<template #extra>
 			<MoveMailboxModal
@@ -396,6 +392,10 @@ export default {
 
 		subCounter() {
 			return this.subMailboxes.reduce((carry, mb) => carry + mb.unread, 0)
+		},
+
+		unreadWithSubCounter() {
+			return `${this.mailbox.unread}\u00a0(${this.subCounter})`
 		},
 
 		hasRenameAcl() {
