@@ -21,6 +21,7 @@
 			<div class="composer-fields--custom">
 				<NcSelect
 					id="from"
+					label-outside
 					:model-value="selectedAlias"
 					:options="aliases"
 					label="name"

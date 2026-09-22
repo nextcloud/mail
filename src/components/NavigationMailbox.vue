@@ -220,6 +220,7 @@ export default {
 	components: {
 		NcAppNavigationItem,
 		NcCounterBubble,
+		NcLoadingIcon,
 		NcActionText,
 		NcActionButton,
 		NcActionCheckbox,
