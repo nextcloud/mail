@@ -4,26 +4,23 @@
 -->
 <template>
 	<div>
-		<template v-for="(entry, idx) in entries">
+		<template v-for="(entry, idx) in entries" :key="idx">
 			<EventReservation
 				v-if="entry['@type'] === 'EventReservation'"
-				:key="idx"
 				:data="entry"
 				:calendars="calendars"
 				:message-id="messageId" />
 			<FlightReservation
 				v-else-if="entry['@type'] === 'FlightReservation'"
-				:key="idx"
 				:data="entry"
 				:calendars="calendars"
 				:message-id="messageId" />
 			<TrainReservation
 				v-else-if="entry['@type'] === 'TrainReservation'"
-				:key="idx"
 				:data="entry"
 				:calendars="calendars"
 				:message-id="messageId" />
-			<span v-else :key="idx">{{
+			<span v-else>{{
 				t('mail', 'Itinerary for {type} is not supported yet', { type: entry['@type'] })
 			}}</span>
 		</template>

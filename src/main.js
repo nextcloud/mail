@@ -4,7 +4,7 @@
  */
 
 import { getRequestToken } from '@nextcloud/auth'
-import { registerDavProperty } from '@nextcloud/files'
+import { registerDavProperty } from '@nextcloud/files/dav'
 import { generateFilePath } from '@nextcloud/router'
 import { n, t } from '@nextcloud/l10n'
 import { createPinia } from 'pinia'
