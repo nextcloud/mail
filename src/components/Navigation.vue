@@ -41,19 +41,17 @@
 					</span>
 				</div>
 				<template v-else-if="!isDisabled(group.account)">
-					<template v-for="item in group.mailboxes">
+					<template v-for="item in group.mailboxes" :key="item.databaseId">
 						<NavigationMailbox
 							v-show="
 								!group.isCollapsible
 									|| !group.account.collapsed
 									|| !isCollapsed(group.account, item)
 							"
-							:key="'mailbox-' + item.databaseId"
 							:account="group.account"
 							:mailbox="item" />
 						<NavigationMailbox
 							v-if="!group.account.isUnified && item.specialRole === 'inbox'"
-							:key="item.databaseId + '-starred'"
 							:account="group.account"
 							:mailbox="item"
 							filter="starred" />

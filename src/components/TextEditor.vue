@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import CKEditor from '@ckeditor/ckeditor5-vue'
+import { Ckeditor } from '@ckeditor/ckeditor5-vue'
 import { getLanguage } from '@nextcloud/l10n'
 import { emojiAddRecent, emojiSearch } from '@nextcloud/vue'
 import {
@@ -70,7 +70,7 @@ export default {
 	name: 'TextEditor',
 	emits: ['mention', 'submit', 'save', 'ready', 'input'],
 	components: {
-		Ckeditor: CKEditor.component,
+		Ckeditor,
 	},
 
 	inject: {
