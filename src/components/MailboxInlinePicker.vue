@@ -4,14 +4,14 @@
 -->
 <template>
 	<NcSelect
-		:model-value="value"
+		:model-value="modelValue"
 		:options="mailboxes"
 		:reduce="(option) => option.id"
 		:clearable="false"
 		:disabled="disabled"
 		:aria-label-combobox="t('mail', 'Select a mailbox')"
 		label="label"
-		@update:model-value="$emit('input', $event)">
+		@update:model-value="$emit('update:modelValue', $event)">
 		<template #option="option">
 			<NcEllipsisedOption
 				class="mailbox-option"
@@ -29,7 +29,7 @@ import { mailboxHasRights } from '../util/acl.js'
 
 export default {
 	name: 'MailboxInlinePicker',
-	emits: ['input'],
+	emits: ['update:modelValue'],
 	components: {
 		NcEllipsisedOption,
 		NcSelect,
@@ -46,7 +46,7 @@ export default {
 			default: false,
 		},
 
-		value: {
+		modelValue: {
 			type: Number,
 			default: undefined,
 		},
