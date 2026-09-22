@@ -11,7 +11,7 @@
 
 		<Ckeditor
 			v-if="ready"
-			:value="value"
+			:model-value="modelValue"
 			:config="config"
 			:editor="editor"
 			:disabled="disabled"
@@ -70,7 +70,7 @@ import 'ckeditor5/ckeditor5.css'
 
 export default {
 	name: 'TextEditor',
-	emits: ['mention', 'submit', 'save', 'ready', 'input'],
+	emits: ['mention', 'submit', 'save', 'ready', 'update:modelValue'],
 	components: {
 		Ckeditor,
 	},
@@ -80,7 +80,7 @@ export default {
 	},
 
 	props: {
-		value: {
+		modelValue: {
 			type: String,
 			required: true,
 		},
@@ -650,9 +650,9 @@ export default {
 		},
 
 		onEditorInput(text) {
-			if (text !== this.value) {
+			if (text !== this.modelValue) {
 				logger.debug(`TextEditor input changed to <${text}>`)
-				this.$emit('input', text)
+				this.$emit('update:modelValue', text)
 			}
 		},
 
