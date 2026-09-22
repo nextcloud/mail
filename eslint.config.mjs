@@ -4,7 +4,6 @@
 */
 
 import { recommended } from '@nextcloud/eslint-config'
-import pluginImport from 'eslint-plugin-import'
 import pluginVitest from 'eslint-plugin-vitest-globals'
 import { defineConfig } from 'eslint/config'
 
@@ -12,7 +11,6 @@ export default defineConfig([
 	...recommended,
 	{
 		plugins: {
-			import: pluginImport,
 			vitest: pluginVitest,
 		},
 		languageOptions: {
@@ -39,7 +37,6 @@ export default defineConfig([
 			'vue/multi-word-component-names': 'off',
 
 			// 'sort-imports': ['error', { ignoreDeclarationSort: true }],
-			// 'import/order': ['error', { groups: ['builtin', 'external', 'internal'], alphabetize: { order: 'asc', caseInsensitive: true } }],
 
 			// // Relax some rules for now. Can be improved later one (baseline).
 			//
