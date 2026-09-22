@@ -95,6 +95,7 @@
 
 <script>
 import { mapStores } from 'pinia'
+import { defineAsyncComponent } from 'vue'
 import NcAppNavigation from '@nextcloud/vue/components/NcAppNavigation'
 import NcAppNavigationItem from '@nextcloud/vue/components/NcAppNavigationItem'
 import NcButton from '@nextcloud/vue/components/NcButton'
@@ -114,7 +115,7 @@ export default {
 	name: 'Navigation',
 	components: {
 		NcAppNavigation,
-		AccountSettings: () => import(/* webpackChunkName: "account-settings" */ './AccountSettings.vue'),
+		AccountSettings: defineAsyncComponent(() => import(/* webpackChunkName: "account-settings" */ './AccountSettings.vue')),
 		AppSettingsMenu,
 		NavigationAccount,
 		NavigationAccountExpandCollapse,
