@@ -233,7 +233,7 @@ export default {
 		addLocalFiles(files) {
 			this.uploading = true
 			// BUG - if choose again - progress lost/ move to complete()
-			this.\2 = {}
+			this.uploads = {}
 
 			const toUpload = sumBy(prop('size'), Object.values(files))
 			const newTotal = toUpload + this.totalSizeOfUpload()
