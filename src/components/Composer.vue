@@ -1903,6 +1903,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// Subject and editor body must share one text inset so their first characters line up
+$composer-text-inset: calc(var(--default-grid-baseline) * 2);
+
 .message-composer {
 	z-index: 100;
 	display: flex;
@@ -1944,7 +1947,7 @@ export default {
 		justify-content: space-between;
 		padding: calc(var(--default-grid-baseline) * 1.5) 0;
 
-		button {
+		button:not(.copy-toggle) {
 			margin-top: 0;
 			margin-bottom: 0;
 			background-color: transparent;
@@ -1967,7 +1970,8 @@ export default {
 		font-size: 15px;
 		font-weight: bold;
 		margin: var(--default-grid-baseline) 0 !important;
-		padding: 0 !important;
+		padding-block: 0 !important;
+		padding-inline: $composer-text-inset !important;
 		width: 100%;
 
 		&:focus-visible {
@@ -1982,6 +1986,11 @@ export default {
 		border: none !important;
 		outline: none !important;
 		box-shadow: none !important;
+
+		// CKEditor's own inset is font-relative; pin it to the subject's instead
+		:deep(.ck-editor__editable) {
+			padding-inline: $composer-text-inset;
+		}
 
 		// Fix contenteditable not becoming focused upon clichint within it's
 		// boundaries in safari
@@ -2070,12 +2079,11 @@ export default {
 }
 
 .copy-toggle {
-	// Absolute so it overlays the bottom-right of the To field without affecting chip layout
+	// Absolute so it overlays the trailing edge of the To field without affecting chip layout
 	position: absolute;
 	inset-inline-end: 0;
 	bottom: 0;
 	z-index: 1;
-	// Override the .composer-fields--custom button rule
 	opacity: 1;
 	cursor: pointer;
 
