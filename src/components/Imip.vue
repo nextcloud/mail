@@ -52,6 +52,7 @@
 					<NcSelect
 						v-if="calendarsForPicker.length > 1"
 						:id="targetCalendarPickerId"
+						label-outside
 						v-model="targetCalendar"
 						:aria-label-combobox="t('mail', 'Select')"
 						label="displayname"

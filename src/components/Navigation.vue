@@ -4,7 +4,7 @@
 -->
 
 <template>
-	<NcAppNavigation class="mail-navigation">
+	<NcAppNavigation class="mail-navigation" :aria-label="t('mail', 'Mail navigation')">
 		<template #search>
 			<NewMessageButtonHeader class="mail-navigation__new-message-button" />
 		</template>
