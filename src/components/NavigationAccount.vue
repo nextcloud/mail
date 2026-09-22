@@ -103,6 +103,7 @@ import { DialogBuilder, showError } from '@nextcloud/dialogs'
 import { formatFileSize } from '@nextcloud/files'
 import { generateUrl } from '@nextcloud/router'
 import { mapStores } from 'pinia'
+import { defineAsyncComponent } from 'vue'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActionCheckbox from '@nextcloud/vue/components/NcActionCheckbox'
 import NcActionInput from '@nextcloud/vue/components/NcActionInput'
@@ -129,7 +130,7 @@ export default {
 		NcActionCheckbox,
 		NcActionInput,
 		NcActionText,
-		DelegationModal: () => import(/* webpackChunkName: "delegation-modal" */ './DelegationModal.vue'),
+		DelegationModal: defineAsyncComponent(() => import(/* webpackChunkName: "delegation-modal" */ './DelegationModal.vue')),
 		IconInfo,
 		IconSettings,
 		NcIconSvgWrapper,
