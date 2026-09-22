@@ -77,11 +77,10 @@
 									class="list-item-content__inner__details__extra">
 									<NcCounterBubble
 										v-if="counterNumber"
+										:count="counterNumber"
 										:active="isActive || active"
 										class="list-item-content__inner__details__extra__counter"
-										:type="counterType">
-										{{ counterNumber }}
-									</NcCounterBubble>
+										:type="counterType" />
 
 									<span v-if="hasIndicator" class="list-item-content__inner__details__extra__indicator">
 										<!-- @slot This slot is used for some indicator in form of icon -->

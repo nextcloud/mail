@@ -16,9 +16,8 @@
 		<template #counter>
 			<NcCounterBubble
 				v-if="count"
-				class="navigation-outbox__unread-counter">
-				{{ count }}
-			</NcCounterBubble>
+				:count="count"
+				class="navigation-outbox__unread-counter" />
 		</template>
 	</NcAppNavigationItem>
 </template>
