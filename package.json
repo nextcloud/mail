@@ -86,7 +86,6 @@
     "babel-loader": "^10.1.1",
     "babel-loader-exclude-node-modules-except": "^1.2.4",
     "css-loader": "^7.1.5",
-    "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-vitest-globals": "^1.6.1",
     "file-loader": "^6.2.0",
     "jsdom": "^30.1.0",
