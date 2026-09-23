@@ -19,14 +19,6 @@
 			</span>
 			<span class="attachment-size">{{ humanReadable(size) }}</span>
 		</div>
-		<FilePicker
-			v-if="isFilePickerOpen"
-			:name="t('mail', 'Choose a folder to store the attachment in')"
-			:buttons="saveAttachementButtons"
-			:allow-pick-directory="true"
-			:multiselect="false"
-			:mimetype-filter="['httpd/unix-directory']"
-			@close="() => isFilePickerOpen = false" />
 		<NcActions :boundaries-element="boundariesElement">
 			<template v-if="!showCalendarPopover">
 				<NcActionButton
@@ -53,7 +45,7 @@
 					class="attachment-save-to-cloud"
 					:disabled="savingToCloud"
 					:close-after-click="true"
-					@click="() => isFilePickerOpen = true">
+					@click="saveToCloud">
 					<template #icon>
 						<IconSave v-if="!savingToCloud" :size="20" />
 						<NcLoadingIcon v-else-if="savingToCloud" :size="20" />
@@ -82,7 +74,6 @@
 <script>
 
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
 import { formatFileSize } from '@nextcloud/files'
 import { t } from '@nextcloud/l10n'
 import { NcActionButton, NcActions, NcLoadingIcon } from '@nextcloud/vue'
@@ -93,11 +84,11 @@ import IconDownload from 'vue-material-design-icons/TrayArrowDown.vue'
 import Logger from '../logger.js'
 import { downloadAttachment, saveAttachmentToFiles } from '../service/AttachmentService.js'
 import { getUserCalendars, importCalendarEvent } from '../service/DAVService.js'
+import { pickFolder } from '../util/filePicker.js'
 
 export default {
 	name: 'MessageAttachment',
 	components: {
-		FilePicker,
 		NcActions,
 		NcActionButton,
 		IconAdd,
@@ -161,15 +152,6 @@ export default {
 			loadingCalendars: false,
 			calendars: [],
 			showCalendarPopover: false,
-			saveAttachementButtons: [
-				{
-					label: t('mail', 'Choose'),
-					callback: this.saveToCloud,
-					type: 'primary',
-				},
-			],
-
-			isFilePickerOpen: false,
 		}
 	},
 
@@ -225,8 +207,15 @@ export default {
 			return formatFileSize(size)
 		},
 
-		async saveToCloud(dest) {
-			const path = dest[0].path
+		async saveToCloud() {
+			let path
+			try {
+				path = await pickFolder(t('mail', 'Choose a folder to store the attachment in'))
+			} catch (error) {
+				Logger.debug('file picker closed without picking a folder', { error })
+				return
+			}
+
 			this.savingToCloud = true
 			const id = this.$route.params.threadId
 

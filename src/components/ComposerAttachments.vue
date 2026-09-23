@@ -37,19 +37,12 @@
 			multiple
 			style="display: none;"
 			@change="onLocalAttachmentSelected">
-		<FilePicker
-			v-if="isAttachmentPickerOpen"
-			:name="t('mail', 'Choose a file')"
-			:buttons="attachmentPickerButtons"
-			:filter-fn="filterAttachements"
-			@close="() => isAttachmentPickerOpen = false" />
 	</div>
 </template>
 
 <script>
 import { getRequestToken } from '@nextcloud/auth'
-import { showWarning } from '@nextcloud/dialogs'
-import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
+import { getFilePickerBuilder, showWarning } from '@nextcloud/dialogs'
 import { formatFileSize } from '@nextcloud/files'
 import { n, t } from '@nextcloud/l10n'
 import map from 'lodash/fp/map.js'
@@ -76,7 +69,6 @@ const mimes = [
 export default {
 	name: 'ComposerAttachments',
 	components: {
-		FilePicker,
 		ComposerAttachment,
 		ChevronDown,
 		ChevronUp,
@@ -112,20 +104,6 @@ export default {
 			attachments: [],
 			isToggle: false,
 			hasNextLine: false,
-			isAttachmentPickerOpen: false,
-			attachmentPickerButtons: [
-				{
-					label: t('mail', 'Add as attachment'),
-					callback: this.onAddCloudAttachment,
-					type: 'primary',
-				},
-				{
-					label: t('mail', 'Add as share link'),
-					callback: this.onAddCloudAttachmentLink,
-					type: 'primary',
-				},
-			],
-
 		}
 	},
 
@@ -206,8 +184,27 @@ export default {
 			return (node.permissions & OC.PERMISSION_READ) && downloadPermissions
 		},
 
-		openAttachementPicker() {
-			this.isAttachmentPickerOpen = true
+		async openAttachementPicker() {
+			const picker = getFilePickerBuilder(t('mail', 'Choose a file'))
+				.setMultiSelect(true)
+				.setFilter(this.filterAttachements)
+				.addButton({
+					label: t('mail', 'Add as attachment'),
+					variant: 'primary',
+					callback: this.onAddCloudAttachment,
+				})
+				.addButton({
+					label: t('mail', 'Add as share link'),
+					variant: 'primary',
+					callback: this.onAddCloudAttachmentLink,
+				})
+				.build()
+
+			try {
+				await picker.pickNodes()
+			} catch (error) {
+				logger.debug('file picker closed without picking a file', { error })
+			}
 		},
 
 		onAddLocalAttachment() {
