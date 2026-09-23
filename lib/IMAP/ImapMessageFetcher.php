@@ -217,6 +217,8 @@ class ImapMessageFetcher {
 				$bodyPartId = $structure->findBody();
 				if (!is_null($bodyPartId)) {
 					$this->getPart($structure[$bodyPartId], $bodyPartId, $isEncrypted || $isSigned);
+				} elseif ($structure->isAttachment()) {
+					$this->getPart($structure, '1', $isEncrypted || $isSigned);
 				}
 			}
 		} elseif (is_null($fetch)) {
@@ -501,10 +503,11 @@ class ImapMessageFetcher {
 	}
 
 	private function hasAttachments(Horde_Mime_Part $part): bool {
+		if ($part->isAttachment() || $part->getType() === 'message/rfc822') {
+			return true;
+		}
+
 		foreach ($part->getParts() as $p) {
-			if ($p->isAttachment() || $p->getType() === 'message/rfc822') {
-				return true;
-			}
 			if ($this->hasAttachments($p)) {
 				return true;
 			}
