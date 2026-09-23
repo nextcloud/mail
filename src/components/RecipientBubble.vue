@@ -13,7 +13,7 @@
 				:size="size"
 				@click="onClickOpenContactDialog" />
 		</template>
-		<template>
+		<template #default="{ hide }">
 			<div class="contact-wrapper">
 				<p class="contact-popover__email">
 					{{ email }}
@@ -96,11 +96,10 @@
 					</NcButton>
 
 					<NcButton
-						v-close-popover
 						:disabled="addButtonDisabled"
 						variant="tertiary-no-background"
 						:aria-label="t('mail', 'Add')"
-						@click="onClickAddToContact">
+						@click="onClickAddToContact(); hide()">
 						<template #icon>
 							<IconCheck :size="20" />
 						</template>
@@ -285,10 +284,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.user-bubble__title {
-	max-width: 30vw;
-}
-
 .contact-menu {
 	display: flex;
 	flex-wrap: wrap;
@@ -305,13 +300,6 @@ export default {
 .contact-wrapper {
 	padding:10px;
 	min-width: 300px;
-
-	a {
-		opacity: 0.7;
-	}
-	a:hover {
-		opacity: 1;
-	}
 }
 
 .contact-input-wrapper {

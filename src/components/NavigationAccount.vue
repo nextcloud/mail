@@ -341,14 +341,12 @@ export default {
 </script>
 
 <style lang="scss">
-// Fix very long button labels overflowing the modal
-.dialog {
-	&__actions {
-		flex-wrap: wrap;
+// Unscoped because DialogBuilder mounts outside this component; wraps the long "Remove {email}" label
+.nc-generic-dialog .dialog__actions {
+	flex-wrap: wrap;
 
-		> button {
-			flex: 1 auto;
-		}
+	> button {
+		flex: 1 auto;
 	}
 }
 </style>

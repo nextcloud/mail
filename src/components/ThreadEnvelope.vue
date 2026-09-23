@@ -1273,20 +1273,6 @@ export default {
 		}
 	}
 
-	.button {
-		color: var(--color-main-background);
-		&:not(.active):not(.primary) {
-			display: none;
-
-			&.primary {
-				background-color: var(--color-primary-element);
-				opacity: 1;
-				margin-bottom: 0;
-
-			}
-		}
-	}
-
 	.envelope {
 		display: flex;
 		flex-direction: column;
@@ -1457,6 +1443,7 @@ export default {
 
 	.tag-group__label {
 		margin: 0 calc(var(--default-grid-baseline) * 2);
+		position: relative;
 		z-index: 2;
 		font-size: calc(var(--default-font-size) * 0.8);
 		font-weight: bold;

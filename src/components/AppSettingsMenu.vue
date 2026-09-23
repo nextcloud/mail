@@ -45,9 +45,9 @@
 						<NcButton
 							v-if="allowNewMailAccounts"
 							variant="secondary"
-							to="/setup"
 							:aria-label="t('mail', 'Add mail account')"
-							wide>
+							wide
+							@click="openAddMailAccount">
 							<template #icon>
 								<IconAdd :size="20" />
 							</template>
@@ -648,6 +648,11 @@ export default {
 
 		async onOpen() {
 			this.showSettings = true
+		},
+
+		openAddMailAccount() {
+			this.showSettings = false
+			this.$router.push('/setup')
 		},
 
 		onToggleButtonReplies(atBottom) {

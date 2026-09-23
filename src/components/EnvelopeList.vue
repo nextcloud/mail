@@ -680,17 +680,4 @@ div {
 	height: 0;
 	transform: scaleY(0);
 }
-
-#action-label {
-	vertical-align: middle;
-}
-@media only screen and (min-width: 600px) {
-	#action-label {
-		display: block;
-	}
-}
-
-:deep(.button-vue--text-only) {
-	padding: 0 !important;
-}
 </style>

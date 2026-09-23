@@ -12,6 +12,7 @@
 		@close="closeDeleteModal" />
 	<NcModal
 		v-else
+		class="tag-modal"
 		size="large"
 		label-id="tag-modal-heading"
 		@close="onClose">
@@ -208,12 +209,8 @@ export default {
 	overflow-y: auto;
 }
 
-:deep(.modal-container) {
+.tag-modal :deep(.modal-container) {
 	width: auto !important;
-}
-
-.icon-colorpicker {
-	background-image: var(--icon-add-fff);
 }
 
 .tagButton {
@@ -231,7 +228,7 @@ export default {
 	margin-bottom:12px;
 }
 @media only screen and (max-width: 512px) {
-	:deep(.modal-container) {
+	.tag-modal :deep(.modal-container) {
 	top: 100px !important;
 	max-height: calc(100vh - 170px) !important
 	}

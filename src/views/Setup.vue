@@ -125,9 +125,9 @@ export default {
 
 		/* overrides for custom icon size and full opacity */
 		:deep(.empty-content__icon) {
-			width: 128px !important;
-			height: 128px !important;
-			opacity: 1 !important;
+			width: 128px;
+			height: 128px;
+			opacity: 1;
 
 			.setup__form-content__svg-wrapper {
 				width: 128px;

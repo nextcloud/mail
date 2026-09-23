@@ -352,10 +352,6 @@ export default {
 			gap: 5px;
 		}
 
-		&__input {
-			flex: 1 auto;
-		}
-
 		&__description {
 			color: var(--color-text-maxcontrast);
 		}

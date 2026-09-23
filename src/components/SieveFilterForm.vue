@@ -117,14 +117,4 @@ textarea {
 	width: 100%;
 	resize: vertical;
 }
-
-.primary {
-	padding-inline-start: 26px;
-	background-position: 6px;
-	color: var(--color-main-background);
-
-	&:after {
-		 inset-inline-start: 14px;
-	 }
-}
 </style>

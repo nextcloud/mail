@@ -160,14 +160,6 @@ form {
 	width: 300px
 }
 
-label {
-	display: inline-block;
-}
-
-input {
-	width: 100%;
-}
-
 .flex-row {
 	display: flex;
 	gap: var(--default-grid-baseline);
@@ -176,9 +168,5 @@ input {
 
 .custom {
 	margin-bottom: calc(var(--default-grid-baseline) * 4);
-}
-
-input[type='radio'] {
-	display: none;
 }
 </style>

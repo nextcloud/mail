@@ -343,11 +343,6 @@ export default {
 	border-radius: var(--border-radius);
 }
 
-.attachment-import-popover {
-	inset-inline-end: 32px;
-	top: 42px;
-}
-
 .mail-attached-image:hover {
 	opacity: 0.8;
 }
@@ -377,10 +372,5 @@ export default {
 
 .action-item {
 	transition: 0.4s;
-}
-
-.mail-message-attachments {
-	overflow-x: auto;
-	overflow-y: auto;
 }
 </style>

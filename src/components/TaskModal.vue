@@ -131,7 +131,7 @@ export default {
 		},
 
 		dateFormat() {
-			return this.isAllDay ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm'
+			return this.isAllDay ? 'yyyy-MM-dd' : 'yyyy-MM-dd HH:mm'
 		},
 
 		datePickerType() {
@@ -267,10 +267,6 @@ export default {
 
 input , textarea {
 	width: 100%;
-}
-
-:deep(input[type='text']) {
-	padding: 0 !important;
 }
 
 .all-day {

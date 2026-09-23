@@ -118,13 +118,3 @@ export default {
 	},
 }
 </script>
-
-<style lang="scss" scoped>
-.outbox-list {
-	contain: none !important;
-}
-
-:deep(.button-vue--vue-secondary) {
-	box-shadow: none;
-}
-</style>

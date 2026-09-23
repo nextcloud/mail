@@ -628,7 +628,7 @@ export default {
 	flex: 1 1 auto;
 	min-height: 0;
 	overflow: scroll;
-	width: 100% !important;
+	width: 100%;
 }
 
 :deep(.app-content-wrapper) {
@@ -636,10 +636,6 @@ export default {
 	flex-direction: column;
 	height: 100%;
 	overflow: hidden;
-}
-
-.v-popover > .trigger > * {
-	z-index: 1;
 }
 
 .section-header-info {
@@ -675,16 +671,6 @@ export default {
 	flex: 1 1 auto;
 	overflow-y: auto;
 	min-height: 0;
-	contain: none !important;
-}
-
-.information-icon {
-	opacity: .7;
-}
-@media only screen and (max-width: 1024px) {
-	.information-icon {
-		margin-bottom: 20px;
-	}
 }
 
 .list__wrapper {

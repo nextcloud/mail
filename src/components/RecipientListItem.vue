@@ -63,23 +63,10 @@ export default {
 
 <style scoped lang="scss">
 .external {
+	// NcSelect styles .vs__selected with a four-class selector
 	background-color: var(--color-error) !important;
-	:deep(.option__lineone){
-		color: var(--color-primary-text) !important;
-	}
-}
-
-.ncselect__tag--recipient {
-	padding: 0 ;
-	border-radius: 25px;
-	border-color: transparent;
-	background-color: var(--color-background-dark);
-	height: 24px;
-	max-width: 100%;
-	display: flex;
-
-	& > span.option {
-		margin-inline-start: 0
+	:deep(.option__lineone) {
+		color: var(--color-error-text);
 	}
 }
 

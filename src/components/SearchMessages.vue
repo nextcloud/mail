@@ -639,7 +639,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .search-messages {
 	border-bottom: 1px solid var(--color-border);
 	position: sticky;
@@ -659,28 +659,11 @@ export default {
 		input {
 			flex-grow: 1;
 		}
-
-		.action-item--single {
-			border: none;
-			background: none;
-			transition: 0.4s;
-		}
-
-		.action-item--single:hover {
-			transition: 0.4s;
-			background: var(--color-primary-element);
-		}
 	}
 }
 
 .search-input {
 	width: 100%;
-}
-
-.checkbox-radio-switch__label {
-	background: none !important;
-	padding: 0 !important;
-	margin: 0 !important;
 }
 
 .tag-group__search {
@@ -751,18 +734,6 @@ export default {
 	width: 100%;
 }
 
-.multiselect-search-tags .multiselect__tags .multiselect__tags-wrap {
-	flex-wrap: wrap !important;
-}
-
-.modal-inner-field--right {
-	display: flex;
-	align-items: center;
-	justify-content: flex-end;
-	padding: 0 33px;
-	margin-top: 15px;
-}
-
 .modal-inner--field {
 	display: flex;
 	align-items: center;
@@ -791,14 +762,8 @@ export default {
 	}
 }
 
-.modal-wrapper--normal .modal-container {
-	position: relative
-}
-
-.button-vue.search-messages--filter.button-vue--icon-only {
+.button-vue.search-messages--filter {
 	position: absolute;
-	width: auto;
-	height: auto;
 	z-index: 5;
 	inset-inline-end: 7px; /* same spacing to the input border as top/bottom */
 	inset-inline-start: auto;
@@ -808,10 +773,8 @@ export default {
 	padding: 0 !important;
 }
 
-.button-vue.search-messages--close.button-vue--icon-only {
+.button-vue.search-messages--close {
 	position: absolute;
-	width: auto;
-	height: auto;
 	z-index: 5;
 	inset-inline-end: 35px;
 	inset-inline-start: auto;
@@ -821,14 +784,10 @@ export default {
 	padding: 0 !important;
 }
 
-.button-reset-filter {
-	margin-inline-end: 10px;
-}
-
 .filter-changed {
 	width: 6px;
 	height: 6px;
-	background: var(--color-error);
+	background: var(--color-element-error);
 	position: absolute;
 	z-index: 10;
 	inset-inline-end: 12px;

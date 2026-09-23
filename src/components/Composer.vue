@@ -1931,8 +1931,7 @@ $composer-text-inset: calc(var(--default-grid-baseline) * 2);
 		padding-top: var(--default-grid-baseline);
 	}
 
-	input,
-	TextEditor {
+	input {
 		flex-grow: 1;
 		max-width: none;
 		border: none;
@@ -2098,16 +2097,8 @@ $composer-text-inset: calc(var(--default-grid-baseline) * 2);
 	}
 }
 
-.reply {
-	min-height: 100px;
-}
-
 .subject {
 	border: none !important;
-}
-
-:deep([data-select="create"] .avatardiv--unknown) {
-	background: var(--color-text-maxcontrast) !important;
 }
 
 #from{
@@ -2131,28 +2122,9 @@ $composer-text-inset: calc(var(--default-grid-baseline) * 2);
 	border-radius: 0  !important;
 }
 
-.submit-message.send.primary.icon-confirm-white {
-	color: var(--color-main-background);
-}
-
 .button {
 	background-color: transparent;
 	border: none;
-}
-
-.send-button {
-	display: flex;
-	align-items: center;
-	padding: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 4);
-	margin-inline-start: var(--default-grid-baseline);
-}
-
-.send-button .send-icon {
-	padding-inline-end: var(--default-grid-baseline);
-}
-
-.centered-content {
-	margin-top: 0 !important;
 }
 
 .composer-actions-right {
@@ -2181,16 +2153,8 @@ $composer-text-inset: calc(var(--default-grid-baseline) * 2);
 	padding: 2px;
 }
 
-.composer-actions--secondary-actions .button{
-	flex-shrink: 0;
-}
-
 .composer-actions-draft-status {
 	padding-inline-start: 0;
-}
-
-:deep(.vs__selected-options .vs__dropdown-toggle .vs--multiple ){
-	width: 100%;
 }
 
 @media only screen and (max-width: 580px) {

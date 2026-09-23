@@ -91,7 +91,7 @@
 					:disabled="loading"
 					value="none"
 					button-variant-grouped="horizontal"
-					@update:checked="onImapSslModeChange">
+					@update:modelValue="onImapSslModeChange">
 					{{ t('mail', 'None') }}
 				</NcCheckboxRadioSwitch>
 				<NcCheckboxRadioSwitch
@@ -103,7 +103,7 @@
 					:disabled="loading"
 					value="ssl"
 					button-variant-grouped="horizontal"
-					@update:checked="onImapSslModeChange">
+					@update:modelValue="onImapSslModeChange">
 					{{ t('mail', 'SSL/TLS') }}
 				</NcCheckboxRadioSwitch>
 				<NcCheckboxRadioSwitch
@@ -115,7 +115,7 @@
 					:disabled="loading"
 					value="tls"
 					button-variant-grouped="horizontal"
-					@update:checked="onImapSslModeChange">
+					@update:modelValue="onImapSslModeChange">
 					{{ t('mail', 'STARTTLS') }}
 				</NcCheckboxRadioSwitch>
 			</div>
@@ -171,7 +171,7 @@
 					:disabled="loading"
 					value="none"
 					button-variant-grouped="horizontal"
-					@update:checked="onSmtpSslModeChange">
+					@update:modelValue="onSmtpSslModeChange">
 					{{ t('mail', 'None') }}
 				</NcCheckboxRadioSwitch>
 				<NcCheckboxRadioSwitch
@@ -183,7 +183,7 @@
 					:disabled="loading"
 					value="ssl"
 					button-variant-grouped="horizontal"
-					@update:checked="onSmtpSslModeChange">
+					@update:modelValue="onSmtpSslModeChange">
 					{{ t('mail', 'SSL/TLS') }}
 				</NcCheckboxRadioSwitch>
 				<NcCheckboxRadioSwitch
@@ -195,7 +195,7 @@
 					:disabled="loading"
 					value="tls"
 					button-variant-grouped="horizontal"
-					@update:checked="onSmtpSslModeChange">
+					@update:modelValue="onSmtpSslModeChange">
 					{{ t('mail', 'STARTTLS') }}
 				</NcCheckboxRadioSwitch>
 			</div>
@@ -766,17 +766,6 @@ export default {
 :deep(.input-field) {
 	margin: calc(var(--default-grid-baseline) * 3) 0;
 }
-
-.account-form__panel label {
-	text-align: start;
-	width: 100%;
-	display: inline-block;
-}
-
-.account-form__panel input,
-.account-form__panel select {
-	margin-bottom: calc(var(--default-grid-baseline) * 2);
-}
 </style>
 
 <style scoped>
@@ -787,23 +776,6 @@ h4 {
 
 .flex-row {
 	display: flex;
-}
-
-input.primary {
-	color: var(--color-main-background);
-}
-
-input[type='radio'] {
-	display: none;
-}
-
-input[type='radio'][disabled] + label {
-	cursor: default;
-	opacity: 0.5;
-}
-
-.account-form__label--required:after {
-	content:" *";
 }
 
 .account-form__heading--required:after {
@@ -839,10 +811,5 @@ input[type='radio'][disabled] + label {
 	padding-bottom: calc(var(--default-grid-baseline) * 12);
 	margin: 0 auto;
 	padding-top: calc(var(--default-grid-baseline) * 7);
-}
-
-#account-form input {
-	width: 100%;
-	box-sizing: border-box;
 }
 </style>
