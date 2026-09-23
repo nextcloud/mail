@@ -158,7 +158,8 @@ class JmapMessageConnector implements IMessageConnector {
 			null,
 			'basic',
 		);
-		$messages = $this->dbMessageMapper->findByRemoteIds($mailbox, array_keys($results['list']));
+		$messageIds = array_map(static fn (Message $m) => $m->getRemoteId(), $results['list']);
+		$messages = $this->dbMessageMapper->findByRemoteIds($mailbox, $messageIds);
 
 		return array_map(
 			static fn (Message $message): int => $message->getUid(),
