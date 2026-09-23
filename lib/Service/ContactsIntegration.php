@@ -87,12 +87,13 @@ class ContactsIntegration {
 	}
 
 	/**
+	 * @param string $userId
 	 * @param string $email
 	 *
 	 * @return false|null|string
 	 */
-	public function getPhoto(string $email) {
-		$result = $this->contactsManager->search($email, ['EMAIL']);
+	public function getPhoto(string $userId, string $email) {
+		$result = $this->search($userId, $email, ['EMAIL'], true);
 		foreach ($result as $contact) {
 			if (!isset($contact['PHOTO']) || empty($contact['PHOTO'])) {
 				continue;
