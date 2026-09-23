@@ -14,6 +14,7 @@ use JmapClient\Responses\Mail\MailParameters as MailParametersResponse;
 use JmapClient\Responses\Mail\MailPart as MailPartResponse;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
+use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Model\IMAPMessage;
@@ -94,6 +95,7 @@ class JmapMessageAdapter {
 		/** @var list<IMAPAttachment> $inlineAttachments */
 		$dispositionNotificationTo = $this->firstHeaderValue($source, 'Disposition-Notification-To') ?? '';
 		$hasDkimSignature = $this->firstHeaderValue($source, 'DKIM-Signature') !== null;
+		$hasAiGeneratedHeader = trim($this->firstHeaderValue($source, LocalMessage::HEADER_AI_GENERATED) ?? '') === '1';
 		[$unsubscribeUrl, $unsubscribeMailto] = $this->extractUnsubscribeTargets($source);
 		$isOneClickUnsubscribe = $unsubscribeUrl !== null
 			&& str_contains(strtolower($this->firstHeaderValue($source, 'List-Unsubscribe-Post') ?? ''), 'one-click');
@@ -120,6 +122,7 @@ class JmapMessageAdapter {
 			$this->normalizeRawMessageIdList($source->references()),
 			$dispositionNotificationTo,
 			$hasDkimSignature,
+			$hasAiGeneratedHeader,
 			[],
 			$unsubscribeUrl,
 			$isOneClickUnsubscribe,
