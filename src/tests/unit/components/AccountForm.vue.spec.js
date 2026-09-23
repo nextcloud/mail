@@ -102,7 +102,7 @@ describe('AccountForm', () => {
 
 		expect(queryIspdb).toHaveBeenCalled()
 		expect(queryMx).toHaveBeenCalled()
-		expect(testConnectivity).toHaveBeenCalledTimes(8)
+		expect(testConnectivity).toHaveBeenCalledTimes(4)
 		expect(detected).toBe(true)
 		expect(view.vm.manualConfig.imapUser).toBe('tom@tom.turbo')
 		expect(view.vm.manualConfig.imapHost).toBe('mx.tom.turbo')
