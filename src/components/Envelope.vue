@@ -320,12 +320,7 @@
 					<template #icon>
 						<ArchiveIcon :size="20" />
 					</template>
-					<template v-if="layoutMessageViewThreaded">
-						{{ t('mail', 'Archive thread') }}
-					</template>
-					<template v-else>
-						{{ t('mail', 'Archive message') }}
-					</template>
+					{{ layoutMessageViewThreaded ? t('mail', 'Archive thread') : t('mail', 'Archive message') }}
 				</NcActionButton>
 				<NcActionButton
 					:close-after-click="false"
