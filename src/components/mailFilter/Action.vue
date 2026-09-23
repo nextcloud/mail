@@ -141,7 +141,8 @@ export default {
 		width: 100%;
 		&__column {
 			flex: 0 1 auto;
-			&__select {
+			// Match NcSelect's own `.nc-select.v-select.select` so the reset still wins
+			&__select.nc-select {
 				margin: 0
 			}
 		}

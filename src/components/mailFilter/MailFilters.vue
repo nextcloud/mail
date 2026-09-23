@@ -224,20 +224,6 @@ export default {
 	margin-bottom: 23px;
 }
 
-textarea {
-	width: 100%;
-}
-
-.primary {
-	padding-inline-start: 26px;
-	background-position: 6px;
-	color: var(--color-main-background);
-
-	&:after {
-		 inset-inline-start: 14px;
-	 }
-}
-
 .filter-list__loading {
 	text-align: center;
 }

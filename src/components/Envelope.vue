@@ -1500,19 +1500,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.mail-message-account-color {
-	position: absolute;
-	inset-inline-start: 0px;
-	width: 2px;
-	height: 69px;
-	z-index: 1;
-}
-
 .envelope {
-	.app-content-list-item-icon {
-		height: 40px; // To prevent some unexpected spacing below the avatar
-	}
-
 	&__subtitle {
 		display: flex;
 		overflow: hidden;
@@ -1547,12 +1535,6 @@ export default {
 		-webkit-line-clamp: 2;
 		-webkit-box-orient: vertical;
 
-		.material-design-icon {
-			display: inline;
-
-			position: relative;
-			top: 2px;
-		}
 		&__icon {
 			display: inline;
 		}
@@ -1573,8 +1555,7 @@ export default {
 		stroke-width: 2;
 	}
 	.list-item:hover &,
-	.list-item:focus &,
-	.list-item.active & {
+	.list-item:focus & {
 		:deep(path) {
 			stroke: var(--color-background-dark);
 		}
@@ -1592,15 +1573,6 @@ export default {
 .important-one-line.app-content-list-item-star:deep() {
 	top: 4px !important;
 	inset-inline-start: 2px;
-}
-
-.app-content-list-item-select-checkbox {
-	display: inline-block;
-	vertical-align: middle;
-	position: absolute;
-	inset-inline-start: 33px;
-	top: 35px;
-	z-index: 50; // same as icon-starred
 }
 
 .list-item-style:not(.seen) {
@@ -1628,11 +1600,6 @@ export default {
 	top: 36px;
 }
 
-.icon-attachment {
-	-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=25)';
-	opacity: 0.25;
-}
-
 :deep(.action--primary) {
 	.material-design-icon {
 		margin-bottom: -14px;
@@ -1641,6 +1608,7 @@ export default {
 
 .tag-group__label {
 	margin: 0 7px;
+	position: relative;
 	z-index: 2;
 	font-size: calc(var(--default-font-size) * 0.8);
 	font-weight: bold;
@@ -1718,13 +1686,6 @@ export default {
 	white-space: nowrap;
 }
 
-.quick-actions-button{
-	width: 100%;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-}
-
 .envelope__subtitle__subject.one-line {
 	display: flex;
 	align-items: center;
@@ -1740,11 +1701,11 @@ export default {
 
 .app-content-list-item-avatar-selected {
 	background-color: var(--color-primary-element);
-	color: var(--color-primary-light);
+	color: var(--color-primary-element-text);
 	border-radius: 32px;
 	&:hover {
 		background-color: var(--color-primary-element);
-		color: var(--color-primary-light);
+		color: var(--color-primary-element-text);
 		border-radius: 32px;
 	}
 }
@@ -1823,15 +1784,7 @@ export default {
 	white-space: nowrap;
 }
 
-.envelope--compact.envelope--one-line {
-	.favorite-icon-style,
-	.icon-important {
-		display: none;
-	}
-}
-
-.list-item__wrapper--active :deep(.compact-checkbox .checkbox-radio-switch__content),
-.list-item__wrapper.active :deep(.compact-checkbox .checkbox-radio-switch__content) {
+.list-item__wrapper--active :deep(.compact-checkbox .checkbox-radio-switch__content) {
 	background-color: var(--color-primary-element-text) !important;
 	color: var(--color-primary-element) !important;
 }

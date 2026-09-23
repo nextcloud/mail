@@ -203,17 +203,5 @@ export default {
 <style lang="scss" scoped>
 .outbox-message {
 	list-style: none;
-	&.active {
-		background-color: var(--color-background-dark);
-		border-radius: 16px;
-	}
-
-	.account-color {
-		position: absolute;
-		inset-inline-start: 0;
-		width: 2px;
-		height: 69px;
-		z-index: 1;
-	}
 }
 </style>

@@ -254,10 +254,6 @@ export default {
 	}
 }
 
-.ck-balloon-panel {
-	 z-index: 10000 !important;
- }
-
 /* it's a bit hard to make it work without this max-width in the modal because it overlaps with the sidebar of the modal */
 :deep(.ck.ck-toolbar-dropdown>.ck-dropdown__panel) {
 	max-width: 19vw;

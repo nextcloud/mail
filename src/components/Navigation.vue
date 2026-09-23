@@ -248,15 +248,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@keyframes rotation {
-from {
-	transform: rotate(-0deg);
-}
-to {
-		transform: rotate(-360deg);
-	}
-}
-
 .mail-navigation {
 	&__new-message-button {
 		padding: calc(var(--default-grid-baseline, 4px) * 2);
@@ -281,16 +272,6 @@ to {
 .mail-settings {
 	padding: calc(var(--default-grid-baseline, 4px) * 2);
 	padding-top: 0;
-
-	&__button {
-		display: flex;
-		width: 100% !important;
-		justify-content: start !important;
-	}
-}
-
-.v-popper__inner {
-	height: unset !important;
 }
 
 </style>

@@ -210,7 +210,7 @@ export default {
 }
 
 .attachment-button {
-	color: var(--color-text-lighter);
+	color: var(--color-text-maxcontrast);
 }
 
 @keyframes spin {
@@ -227,10 +227,6 @@ export default {
 
 .spin {
   animation: spin 1s linear infinite;
-}
-
-.oc-dialog {
-	z-index: 10000000;
 }
 
 .mail-message-attachments {

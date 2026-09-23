@@ -63,7 +63,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-:deep(.app-navigation-entry__title) {
+:deep(.app-navigation-entry__name) {
 	color: var(--color-text-maxcontrast);
 }
 </style>

@@ -437,8 +437,7 @@ export default {
 		padding-block-end: 4px
 	}
 
-	&--active,
-	&.active {
+	&--active {
 		.list-item {
 			background-color: var(--color-primary-element);
 			&:hover,
@@ -449,10 +448,7 @@ export default {
 			}
 		}
 
-		.list-item-content__name,
-		.list-item-content__subname,
-		.list-item-content__details,
-		.list-item-details__details {
+		.list-item-content__name {
 			color: var(--color-primary-element-text);
 		}
 
@@ -460,20 +456,13 @@ export default {
 			fill: var(--color-primary-element-text) !important;
 		}
 	}
-	.list-item-content__name,
-	.list-item-content__subname,
-	.list-item-content__details,
-	.list-item-details__details {
+	.list-item-content__name {
 		white-space: nowrap;
 		margin-block: 0;
 		margin-inline-start: 0;
 		margin-inline-end: auto;
 		overflow: hidden;
 		text-overflow: ellipsis;
-
-		&--hidden {
-			visibility: hidden;
-		}
 	}
 }
 
@@ -523,8 +512,6 @@ export default {
 			min-width: 100px;
 			flex: 1 1 10%;
 			font-weight: 500;
-			// we changed the time/date and actions to be aligned with the name
-			max-width: 78%;
 			line-height: var(--default-line-height);
 
 			span {
@@ -577,8 +564,6 @@ export default {
 				align-items: end;
 				white-space: nowrap;
 				gap: 4px;
-				// to align details on top instead of in the center. The right way to do it would be to change the template, but that breaks one-line layout
-				margin-top: -22px;
 
 				&__details {
 					margin: 0 4px !important;
@@ -606,12 +591,33 @@ export default {
 		margin: 0;
 	}
 
-	.one-line .envelope__subtitle__subject {
-		max-width: 300px;
-	}
-
 	&--compact {
 		--list-item-padding: 2px;
+	}
+
+	&--multiline .list-item-content {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+
+		&__name {
+			grid-column: 1;
+			grid-row: 1;
+			max-width: 100%;
+		}
+
+		&__inner {
+			display: contents;
+		}
+
+		&__inner__main {
+			grid-column: 1;
+			grid-row: 2;
+		}
+
+		&__inner__details {
+			grid-column: 2;
+			grid-row: 1 / span 2;
+		}
 	}
 
 	&--one-line {
@@ -654,7 +660,6 @@ export default {
 				flex-direction: row;
 				align-items: unset;
 				justify-content: end;
-				margin-top: 0;
 				margin-inline-start: 0;
 			}
 		}
@@ -690,15 +695,6 @@ export default {
 		justify-content: space-between;
 		padding-inline-start: 8px;
 		min-width: 0;
-		&__main {
-			flex: 1 0;
-			width: 0;
-			margin: auto 0;
-
-			&--oneline {
-				display: flex;
-			}
-		}
 	}
 
 }
@@ -726,11 +722,6 @@ export default {
 	width: 100%;
 	max-width: unset;
 	max-height: calc(var(--default-font-size) * var(--default-line-height));
-}
-
-:deep(.app-content-list-item-icon) {
-	height: calc(var(--header-menu-item-height) - 4px);
-	width: calc(var(--header-menu-item-height) - 4px);
 }
 
 .extra--hidden {

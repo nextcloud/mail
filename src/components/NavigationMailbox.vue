@@ -760,10 +760,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.counter-bubble__counter {
-	max-width: initial;
-}
-
 :deep(.action-item__menutoggle) {
 	background-color: transparent !important;
 }

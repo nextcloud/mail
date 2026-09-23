@@ -55,7 +55,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-:deep(.v-select) {
+.v-select {
 	width: 100%; /* todo: fix MailboxInlinePicker.vue styling instead */
 }
 </style>

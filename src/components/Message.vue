@@ -203,11 +203,6 @@ export default {
 <style lang="scss" scoped>
 @use '../../css/variables.scss';
 
-.v-popover > .trigger > .action-item {
-	border-radius: 22px;
-	background-color: var(--color-background-darker);
-}
-
 .message-imip {
 	padding: 5px 10px;
 	margin-inline-start: calc(var(--default-grid-baseline) * 11);

@@ -241,16 +241,3 @@ export default {
 	},
 }
 </script>
-
-<style lang="scss" scoped>
-.button.icon-rename {
-	background-color: transparent;
-	border: none;
-	opacity: 0.3;
-
-	&:hover,
-	&:focus {
-		opacity: 1;
-	}
-}
-</style>

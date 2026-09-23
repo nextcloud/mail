@@ -182,11 +182,6 @@ $form-gap: 10px;
 		flex: 1 auto;
 		gap: 10px; // Gap between inputs
 
-		&--expand {
-			// Prevent the submit button from being wrapped to the next line on normal sized screens
-			flex-basis: calc(100% - 44px - $form-gap);
-		}
-
 		&__input {
 			flex: 1 auto;
 		}

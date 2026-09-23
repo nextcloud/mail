@@ -210,26 +210,7 @@ export default {
 	margin-bottom: calc(var(--default-grid-baseline) * 4)
 }
 
-.form-group {
-	margin: calc(var(--default-grid-baseline) * 4) 0;
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-}
-
-.external-label {
-	display: flex;
-	width: 100%;
-	margin-top: 1rem;
-}
-
-.external-label label {
-	padding-top: 7px;
-	padding-inline-end: 14px;
-	white-space: nowrap;
-}
-
-.add-condition, .add-action, .filter-name, .filter-settings, .redirect-note {
+.add-condition, .add-action, .filter-name, .filter-settings {
 	width: calc(100% - (30px + var(--default-grid-baseline)));
 }
 

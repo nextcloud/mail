@@ -70,7 +70,6 @@ export default {
 	gap: calc(var(--default-grid-baseline, 4px) * 2);
 	padding-inline-start: 50px;
 	height: 100%;
-	max-width: 100% !important; /* restricted otherwise by stronger selector */
 
 	@include fluid.background;
 

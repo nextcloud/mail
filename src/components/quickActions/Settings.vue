@@ -390,16 +390,7 @@ export default {
 }
 
 :deep(.v-select){
-	display: grid;
-	grid-template-columns: 1fr 1fr;
 	flex-grow: 1;
-    align-items: center;
-    justify-content: space-between;
-	margin: 0;
-
-	.select__label {
-		margin: 0;
-	}
 }
 
 .modal-name{

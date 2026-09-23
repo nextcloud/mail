@@ -367,10 +367,6 @@ input {
 	width: 100%;
 }
 
-:deep(input[type='text']) {
-	padding: 0 !important;
-}
-
 .all-day {
 	margin-inline-start: -1px;
 	margin-top: 5px;
