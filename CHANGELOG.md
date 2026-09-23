@@ -1,3 +1,20 @@
+## [5.11.7](https://github.com/nextcloud/mail/compare/v5.11.6...v5.11.7) (2026-09-23)
+
+
+### Bug Fixes
+
+* **l10n:** Update translations from Transifex ([76793e2](https://github.com/nextcloud/mail/commit/76793e2fe915b06c4d9e323a899ca0a2755dd113))
+* **l10n:** Update translations from Transifex ([fc953a9](https://github.com/nextcloud/mail/commit/fc953a9c8f054378a2787e413fa291ee8daf56dd))
+* **l10n:** Update translations from Transifex ([ce5b74f](https://github.com/nextcloud/mail/commit/ce5b74f2f9dcbeb2bdbc70d3d6e23c93b0430987))
+* **l10n:** Update translations from Transifex ([bf17002](https://github.com/nextcloud/mail/commit/bf1700229c4ae77d7632a2ee147fe33d2503a9cd))
+* **l10n:** Update translations from Transifex ([3ba8770](https://github.com/nextcloud/mail/commit/3ba8770457765bf5eb9d3a073bf5fc3488c9bced))
+* **l10n:** Update translations from Transifex ([939130e](https://github.com/nextcloud/mail/commit/939130e5ac90beeaf168bcf34059373983765c21))
+* **l10n:** Update translations from Transifex ([1a767ac](https://github.com/nextcloud/mail/commit/1a767ac300ef6b09fa658a8c69982056e52b90be))
+* shareapi config key name ([c286c8d](https://github.com/nextcloud/mail/commit/c286c8d970f6a10c6bfa54a8408c1c210e8de6aa))
+* swap the FilePicker component for the builder ([9cfc5d7](https://github.com/nextcloud/mail/commit/9cfc5d7c8efd401cd272c067cf2ecf619ffae569))
+
+
+
 ## [5.11.6](https://github.com/nextcloud/mail/compare/v5.11.5...v5.11.6) (2026-09-15)
 
 
