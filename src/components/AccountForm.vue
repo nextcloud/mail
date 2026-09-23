@@ -91,7 +91,7 @@
 					:disabled="loading"
 					value="none"
 					button-variant-grouped="horizontal"
-					@update:checked="onImapSslModeChange">
+					@update:modelValue="onImapSslModeChange">
 					{{ t('mail', 'None') }}
 				</NcCheckboxRadioSwitch>
 				<NcCheckboxRadioSwitch
@@ -103,7 +103,7 @@
 					:disabled="loading"
 					value="ssl"
 					button-variant-grouped="horizontal"
-					@update:checked="onImapSslModeChange">
+					@update:modelValue="onImapSslModeChange">
 					{{ t('mail', 'SSL/TLS') }}
 				</NcCheckboxRadioSwitch>
 				<NcCheckboxRadioSwitch
@@ -115,7 +115,7 @@
 					:disabled="loading"
 					value="tls"
 					button-variant-grouped="horizontal"
-					@update:checked="onImapSslModeChange">
+					@update:modelValue="onImapSslModeChange">
 					{{ t('mail', 'STARTTLS') }}
 				</NcCheckboxRadioSwitch>
 			</div>
@@ -171,7 +171,7 @@
 					:disabled="loading"
 					value="none"
 					button-variant-grouped="horizontal"
-					@update:checked="onSmtpSslModeChange">
+					@update:modelValue="onSmtpSslModeChange">
 					{{ t('mail', 'None') }}
 				</NcCheckboxRadioSwitch>
 				<NcCheckboxRadioSwitch
@@ -183,7 +183,7 @@
 					:disabled="loading"
 					value="ssl"
 					button-variant-grouped="horizontal"
-					@update:checked="onSmtpSslModeChange">
+					@update:modelValue="onSmtpSslModeChange">
 					{{ t('mail', 'SSL/TLS') }}
 				</NcCheckboxRadioSwitch>
 				<NcCheckboxRadioSwitch
@@ -195,7 +195,7 @@
 					:disabled="loading"
 					value="tls"
 					button-variant-grouped="horizontal"
-					@update:checked="onSmtpSslModeChange">
+					@update:modelValue="onSmtpSslModeChange">
 					{{ t('mail', 'STARTTLS') }}
 				</NcCheckboxRadioSwitch>
 			</div>

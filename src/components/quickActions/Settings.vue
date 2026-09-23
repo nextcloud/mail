@@ -377,7 +377,7 @@ export default {
 <style lang="scss" scoped>
 
 .modal-content{
-	padding: 0 30px 30px 30px;
+	padding: 30px;
 
 	&__action{
 		padding: 6px 0;

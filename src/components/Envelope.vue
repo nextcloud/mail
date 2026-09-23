@@ -310,12 +310,7 @@
 					<template #icon>
 						<OpenInNewIcon :size="20" />
 					</template>
-					<template v-if="layoutMessageViewThreaded">
-						{{ t('mail', 'Move thread') }}
-					</template>
-					<template v-else>
-						{{ t('mail', 'Move Message') }}
-					</template>
+					{{ layoutMessageViewThreaded ? t('mail', 'Move thread') : t('mail', 'Move message') }}
 				</NcActionButton>
 				<NcActionButton
 					v-if="showArchiveButton && hasArchiveAcl"
@@ -446,12 +441,7 @@
 					<template #icon>
 						<DeleteIcon :size="20" />
 					</template>
-					<template v-if="layoutMessageViewThreaded">
-						{{ t('mail', 'Delete thread') }}
-					</template>
-					<template v-else>
-						{{ t('mail', 'Delete message') }}
-					</template>
+					{{ layoutMessageViewThreaded ? t('mail', 'Delete thread') : t('mail', 'Delete message') }}
 				</NcActionButton>
 			</template>
 			<template v-if="quickActionMenu">
