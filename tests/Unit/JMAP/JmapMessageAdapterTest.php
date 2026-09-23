@@ -180,4 +180,27 @@ class JmapMessageAdapterTest extends TestCase {
 		self::assertNotNull($from);
 		self::assertSame('sender@example.com', $from->getEmail());
 	}
+
+	public static function aiGeneratedHeaderProvider(): array {
+		return [
+			'absent' => [null, false],
+			'set' => ['1', true],
+			'set with whitespace' => [' 1 ', true],
+			'other value' => ['0', false],
+		];
+	}
+
+	/**
+	 * @dataProvider aiGeneratedHeaderProvider
+	 */
+	public function testModelMessageAiGeneratedHeader(?string $headerValue, bool $expected): void {
+		$source = $this->source();
+		$source->method('header')->willReturnCallback(
+			static fn (string $name): ?string => $name === 'X-AI-Generated' ? $headerValue : null,
+		);
+
+		$message = $this->adapter->convertToModelMessage($source, 1, false);
+
+		self::assertSame($expected, $message->jsonSerialize()['hasAiGeneratedHeader']);
+	}
 }
