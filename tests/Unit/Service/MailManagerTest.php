@@ -251,11 +251,36 @@ class MailManagerTest extends TestCase {
 			->with($account, $mailbox, 'seen', true, $message)
 			->willReturn([$message]);
 		$this->dbMessageMapper->expects($this->once())
-			->method('updateBulk');
+			->method('updateBulk')
+			->with($account, false, $message);
 		$this->eventDispatcher->expects($this->once())
 			->method('dispatchTyped');
 
 		$this->manager->flagMessages($account, $mailbox, 'seen', true, $message);
+	}
+
+	public function testMarkFolderAsReadDoesNotUpdateTags(): void {
+		$account = $this->createStub(Account::class);
+		$mailbox = new Mailbox();
+		$message = new Message();
+		$message->setUid(123);
+		$this->dbMessageMapper->method('findAllUids')
+			->with($mailbox)
+			->willReturn([123]);
+		$this->dbMessageMapper->method('findByUids')
+			->with($mailbox, [123])
+			->willReturn([$message]);
+		$messageConnector = $this->createMock(IMessageConnector::class);
+		$this->protocolFactory->method('messageConnector')->willReturn($messageConnector);
+		$messageConnector->expects(self::once())
+			->method('flagMessages')
+			->with($account, $mailbox, 'seen', true, $message)
+			->willReturn([$message]);
+		$this->dbMessageMapper->expects(self::once())
+			->method('updateBulk')
+			->with($account, false, $message);
+
+		$this->manager->markFolderAsRead($account, $mailbox);
 	}
 
 	public function testIsPermflagsEnabled(): void {
@@ -277,6 +302,7 @@ class MailManagerTest extends TestCase {
 
 	public function testTagMessage(): void {
 		$account = $this->createStub(Account::class);
+		$account->method('getUserId')->willReturn('user');
 		$tag = new Tag();
 		$tag->setImapLabel(Tag::LABEL_IMPORTANT);
 		$message = new Message();
@@ -284,6 +310,12 @@ class MailManagerTest extends TestCase {
 		$message->setMessageId('<jhfjkhdsjkfhdsjkhfjkdsh@test.com>');
 		$mailbox = new Mailbox();
 		$mailbox->setName('INBOX');
+		$otherTag = new Tag();
+		$otherTag->setImapLabel('$custom');
+		$this->tagMapper->expects($this->once())
+			->method('getAllTagsForMessages')
+			->with([$message], 'user')
+			->willReturn([$message->getMessageId() => [$otherTag]]);
 		$messageConnector = $this->createMock(IMessageConnector::class);
 		$this->protocolFactory->expects($this->once())
 			->method('messageConnector')
@@ -292,15 +324,23 @@ class MailManagerTest extends TestCase {
 		$messageConnector->expects($this->once())
 			->method('tagMessages')
 			->with($account, $mailbox, $tag, true, $message)
-			->willReturn([$message]);
+			->willReturnCallback(function (Account $a, Mailbox $m, Tag $t, bool $value, Message $message) use ($otherTag, $tag): array {
+				$this->assertSame([$otherTag], $message->getTags());
+				$message->setTags([$otherTag, $tag]);
+				return [$message];
+			});
 		$this->dbMessageMapper->expects($this->once())
-			->method('updateBulk');
+			->method('updateBulk')
+			->with($account, true, $this->callback(function (Message $message) use ($otherTag, $tag): bool {
+				return $message->getTags() === [$otherTag, $tag];
+			}));
 
 		$this->manager->tagMessages($account, $mailbox, $tag, true, $message);
 	}
 
 	public function testUntagMessage(): void {
 		$account = $this->createStub(Account::class);
+		$account->method('getUserId')->willReturn('user');
 		$tag = new Tag();
 		$tag->setImapLabel(Tag::LABEL_IMPORTANT);
 		$message = new Message();
@@ -308,6 +348,12 @@ class MailManagerTest extends TestCase {
 		$message->setMessageId('<jhfjkhdsjkfhdsjkhfjkdsh@test.com>');
 		$mailbox = new Mailbox();
 		$mailbox->setName('INBOX');
+		$otherTag = new Tag();
+		$otherTag->setImapLabel('$custom');
+		$this->tagMapper->expects($this->once())
+			->method('getAllTagsForMessages')
+			->with([$message], 'user')
+			->willReturn([$message->getMessageId() => [$otherTag, $tag]]);
 		$messageConnector = $this->createMock(IMessageConnector::class);
 		$this->protocolFactory->expects($this->once())
 			->method('messageConnector')
@@ -316,11 +362,49 @@ class MailManagerTest extends TestCase {
 		$messageConnector->expects($this->once())
 			->method('tagMessages')
 			->with($account, $mailbox, $tag, false, $message)
-			->willReturn([$message]);
+			->willReturnCallback(function (Account $a, Mailbox $m, Tag $t, bool $value, Message $message) use ($otherTag, $tag): array {
+				$this->assertSame([$otherTag, $tag], $message->getTags());
+				$message->setTags([$otherTag]);
+				return [$message];
+			});
 		$this->dbMessageMapper->expects($this->once())
-			->method('updateBulk');
+			->method('updateBulk')
+			->with($account, true, $this->callback(function (Message $message) use ($otherTag, $tag): bool {
+				return $message->getTags() === [$otherTag];
+			}));
 
 		$this->manager->tagMessages($account, $mailbox, $tag, false, $message);
+	}
+
+	public function testTagMessagesWithoutExistingTags(): void {
+		$account = $this->createStub(Account::class);
+		$account->method('getUserId')->willReturn('user');
+		$mailbox = new Mailbox();
+		$tag = new Tag();
+		$message = new Message();
+		$message->setMessageId('<message@example.com>');
+		$messageWithoutId = new Message();
+		$this->tagMapper->expects(self::once())
+			->method('getAllTagsForMessages')
+			->with([$message, $messageWithoutId], 'user')
+			->willReturn([]);
+		$messageConnector = $this->createMock(IMessageConnector::class);
+		$this->protocolFactory->method('messageConnector')->willReturn($messageConnector);
+		$messageConnector->expects(self::once())
+			->method('tagMessages')
+			->with($account, $mailbox, $tag, true, $message, $messageWithoutId)
+			->willReturnCallback(static function (Account $a, Mailbox $m, Tag $t, bool $value, Message ...$messages): array {
+				foreach ($messages as $message) {
+					self::assertSame([], $message->getTags());
+					$message->setTags([$t]);
+				}
+				return $messages;
+			});
+		$this->dbMessageMapper->expects(self::once())
+			->method('updateBulk')
+			->with($account, true, $message, $messageWithoutId);
+
+		$this->manager->tagMessages($account, $mailbox, $tag, true, $message, $messageWithoutId);
 	}
 
 	public function testGetThread(): void {
@@ -777,6 +861,7 @@ class MailManagerTest extends TestCase {
 
 	public function testDeleteTagUntagsMessagesGroupedByMailbox(): void {
 		$account = $this->createMock(Account::class);
+		$account->method('getUserId')->willReturn('user');
 		$tag = new Tag();
 		$tag->setImapLabel('$label1');
 		$this->tagMapper->expects(self::once())
@@ -784,7 +869,7 @@ class MailManagerTest extends TestCase {
 			->with(5, 'user')
 			->willReturn($tag);
 		$messageTag = new MessageTags();
-		$messageTag->setImapMessageId('msg@id');
+		$messageTag->setImapMessageId('<msg@id>');
 		$this->messageTagsMapper->expects(self::once())
 			->method('getMessagesByTag')
 			->with(5)
@@ -792,14 +877,25 @@ class MailManagerTest extends TestCase {
 		// two messages of the same tag living in different mailboxes
 		$messageInInbox = new Message();
 		$messageInInbox->setUid(11);
+		$messageInInbox->setMessageId('<msg@id>');
 		$messageInInbox->setMailboxId(1);
 		$messageInArchive = new Message();
 		$messageInArchive->setUid(22);
+		$messageInArchive->setMessageId('<msg@id>');
 		$messageInArchive->setMailboxId(2);
 		$this->dbMessageMapper->expects(self::once())
 			->method('findByMessageId')
-			->with($account, 'msg@id')
+			->with($account, '<msg@id>')
 			->willReturn([$messageInInbox, $messageInArchive]);
+		$otherTag = new Tag();
+		$otherTag->setImapLabel('$custom');
+		$this->tagMapper->expects(self::exactly(2))
+			->method('getAllTagsForMessages')
+			->with($this->callback(static fn (array $messages): bool => count($messages) === 1), 'user')
+			->willReturn(['<msg@id>' => [$tag, $otherTag]]);
+		$this->dbMessageMapper->expects(self::exactly(2))
+			->method('updateBulk')
+			->with($account, true, $this->callback(static fn (Message $message): bool => $message->getTags() === [$otherTag]));
 		$inbox = new Mailbox();
 		$inbox->setId(1);
 		$archive = new Mailbox();
@@ -817,7 +913,13 @@ class MailManagerTest extends TestCase {
 		$tagCalls = [];
 		$messageConnector->expects(self::exactly(2))
 			->method('tagMessages')
-			->willReturnCallback(function (Account $a, Mailbox $mailbox, Tag $t, bool $value, Message ...$messages) use (&$tagCalls): array {
+			->willReturnCallback(function (Account $a, Mailbox $mailbox, Tag $t, bool $value, Message ...$messages) use (&$tagCalls, $tag, $otherTag): array {
+				self::assertFalse($value);
+				self::assertSame($tag, $t);
+				foreach ($messages as $message) {
+					self::assertSame([$tag, $otherTag], $message->getTags());
+					$message->setTags([$otherTag]);
+				}
 				$tagCalls[$mailbox->getId()] = $messages;
 				return $messages;
 			});
