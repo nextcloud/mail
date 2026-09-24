@@ -20,6 +20,7 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\ImapMessageConnector;
 use OCA\Mail\IMAP\MessageMapper;
+use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -63,6 +64,37 @@ class ImapMessageConnectorTest extends TestCase {
 		$this->protocolFactory->method('imapClient')
 			->with($this->account)
 			->willReturn($this->client);
+	}
+
+	public static function bodyLoadingOptions(): array {
+		return [
+			'without body' => [false],
+			'with body' => [true],
+		];
+	}
+
+	/** @dataProvider bodyLoadingOptions */
+	public function testFetchMessagesEnablesPhishingCheck(bool $loadBody): void {
+		$this->account->method('getUserId')->willReturn('user');
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
+		$message = new Message();
+		$message->setUid(1);
+		$otherMessage = new Message();
+		$otherMessage->setUid(2);
+		$fetchedMessages = [
+			$this->createStub(IMAPMessage::class),
+			$this->createStub(IMAPMessage::class),
+		];
+		$this->imapMessageMapper->expects(self::once())
+			->method('findByIds')
+			->with($this->client, 'INBOX', [1, 2], 'user', $loadBody, true)
+			->willReturn($fetchedMessages);
+		$this->client->expects(self::once())->method('logout');
+
+		$result = $this->connector->fetchMessages($this->account, $mailbox, $loadBody, $message, $otherMessage);
+
+		self::assertSame($fetchedMessages, $result);
 	}
 
 	public function testMoveMessagesLogsOutClientWhenMapperThrows(): void {
