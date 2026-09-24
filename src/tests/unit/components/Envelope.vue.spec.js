@@ -101,6 +101,9 @@ describe('Envelope', () => {
 		expect(view.vm.hasSeenAcl).toBe(true)
 	})
 	it('allows toggling archive action without ACLs', () => {
+		store.accountsUnmapped[123].archiveMailboxId = '4'
+		store.mailboxes['4'] = { databaseId: '4', myAcls: undefined }
+
 		const view = shallowMount(Envelope, {
 			global: {
 				mixins: [Nextcloud],
@@ -118,11 +121,6 @@ describe('Envelope', () => {
 					accountId: 123,
 					from: [{ email: 'info@test.com' }],
 					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
-				},
-			},
-			computed: {
-				archiveMailbox() {
-					return { myAcls: undefined }
 				},
 			},
 		})
@@ -131,6 +129,9 @@ describe('Envelope', () => {
 	})
 
 	it('source mailbox has te and archive mailbox has i ACLs for archiving', () => {
+		store.accountsUnmapped[123].archiveMailboxId = '4'
+		store.mailboxes['4'] = { databaseId: '4', myAcls: 'i' }
+
 		const view = shallowMount(Envelope, {
 			global: {
 				mixins: [Nextcloud],
@@ -148,11 +149,6 @@ describe('Envelope', () => {
 					accountId: 123,
 					from: [{ email: 'info@test.com' }],
 					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
-				},
-			},
-			computed: {
-				archiveMailbox() {
-					return { myAcls: 'i' }
 				},
 			},
 		})
@@ -161,6 +157,9 @@ describe('Envelope', () => {
 	})
 
 	it('source mailbox has te and archive mailbox has no ACLs for archiving', () => {
+		store.accountsUnmapped[123].archiveMailboxId = '4'
+		store.mailboxes['4'] = { databaseId: '4', myAcls: undefined }
+
 		const view = shallowMount(Envelope, {
 			global: {
 				mixins: [Nextcloud],
@@ -180,17 +179,15 @@ describe('Envelope', () => {
 					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 				},
 			},
-			computed: {
-				archiveMailbox() {
-					return { myAcls: undefined }
-				},
-			},
 		})
 
 		expect(view.vm.hasArchiveAcl).toBe(true)
 	})
 
 	it('source mailbox has no acls and archive mailbox has i ACL for archiving', () => {
+		store.accountsUnmapped[123].archiveMailboxId = '4'
+		store.mailboxes['4'] = { databaseId: '4', myAcls: 'i' }
+
 		const view = shallowMount(Envelope, {
 			global: {
 				mixins: [Nextcloud],
@@ -208,11 +205,6 @@ describe('Envelope', () => {
 					accountId: 123,
 					from: [{ email: 'info@test.com' }],
 					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
-				},
-			},
-			computed: {
-				archiveMailbox() {
-					return { myAcls: 'i' }
 				},
 			},
 		})

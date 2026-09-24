@@ -4,6 +4,7 @@
 -->
 <template>
 	<NcModal
+		close-on-click-outside
 		size="large"
 		:name="t('mail', 'Create event')"
 		@close="onClose">

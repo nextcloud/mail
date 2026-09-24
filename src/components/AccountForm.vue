@@ -36,7 +36,6 @@
 				id="auto-password"
 				v-model="autoConfig.password"
 				:disabled="loading"
-				type="password"
 				:label="t('mail', 'Password')"
 				:required="!hasPasswordAlternatives"
 				@change="clearFeedback" />
@@ -141,7 +140,6 @@
 				v-if="!useOauth"
 				id="man-imap-password"
 				v-model="manualConfig.imapPassword"
-				type="password"
 				:label="t('mail', 'IMAP Password')"
 				:disabled="loading"
 				required
@@ -222,7 +220,6 @@
 				id="man-smtp-password"
 				v-model="manualConfig.smtpPassword"
 				:label="t('mail', 'SMTP Password')"
-				type="password"
 				:disabled="loading"
 				required
 				@change="unsyncCredentials" />

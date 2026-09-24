@@ -56,7 +56,8 @@
 					<NcDateTimePicker
 						id="ooo-first-day"
 						v-model="firstDay"
-						:disabled="!enabled" />
+						:class="{ 'form__date-picker--disabled': !enabled }"
+						:inert="!enabled" />
 				</fieldset>
 
 				<fieldset class="form__fieldset">
@@ -73,7 +74,8 @@
 					<NcDateTimePicker
 						id="ooo-last-day"
 						v-model="lastDay"
-						:disabled="!enabled || !enableLastDay" />
+						:class="{ 'form__date-picker--disabled': !enabled || !enableLastDay }"
+						:inert="!enabled || !enableLastDay" />
 				</fieldset>
 			</div>
 
@@ -355,6 +357,10 @@ export default {
 		&__description {
 			color: var(--color-text-maxcontrast);
 		}
+	}
+
+	&__date-picker--disabled {
+		opacity: .5;
 	}
 
 	&__multi-row {

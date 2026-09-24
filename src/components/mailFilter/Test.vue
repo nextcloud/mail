@@ -14,7 +14,7 @@
 					:label-outside="true"
 					:options="fields"
 					:clearable="false"
-					@input="updateTest({ field: $event })">
+					@update:model-value="updateTest({ field: $event })">
 					<template #selected-option="{ label }">
 						{{ getLabelForField(label) }}
 					</template>
@@ -30,7 +30,7 @@
 					:label-outside="true"
 					:options="operators"
 					:clearable="false"
-					@input="updateTest({ operator: $event })">
+					@update:model-value="updateTest({ operator: $event })">
 					<template #selected-option="{ label }">
 						{{ getLabelForOperator(label) }}
 					</template>

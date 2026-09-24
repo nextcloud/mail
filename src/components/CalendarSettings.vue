@@ -9,7 +9,7 @@
 			id="imip-create"
 			:model-value="imipCreate"
 			:disabled="saving"
-			@update:checked="onToggleImipCreate">
+			@update:model-value="onToggleImipCreate">
 			{{ t('mail', 'Automatically create tentative appointments in calendar') }}
 		</NcCheckboxRadioSwitch>
 	</div>

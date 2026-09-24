@@ -20,7 +20,7 @@ describe('TextEditor', () => {
 				mixins: [Nextcloud],
 			},
 			props: {
-				value: 'bonjour',
+				modelValue: 'bonjour',
 				bus: mitt(),
 			},
 		})
@@ -32,7 +32,7 @@ describe('TextEditor', () => {
 				mixins: [Nextcloud],
 			},
 			props: {
-				value: 'bonjour',
+				modelValue: 'bonjour',
 				bus: mitt(),
 			},
 		})
@@ -49,7 +49,7 @@ describe('TextEditor', () => {
 				},
 			},
 			props: {
-				value: 'bonjour',
+				modelValue: 'bonjour',
 				html: true,
 				bus: mitt(),
 			},
@@ -68,7 +68,7 @@ describe('TextEditor', () => {
 				},
 			},
 			props: {
-				value: 'bonjour',
+				modelValue: 'bonjour',
 				html: true,
 				bus: mitt(),
 			},
@@ -85,7 +85,7 @@ describe('TextEditor', () => {
 				mixins: [Nextcloud],
 			},
 			props: {
-				value: 'bonjour',
+				modelValue: 'bonjour',
 				bus: mitt(),
 			},
 		})
@@ -101,15 +101,14 @@ describe('TextEditor', () => {
 				mixins: [Nextcloud],
 			},
 			props: {
-				value: 'bonjour',
+				modelValue: 'bonjour',
 				bus: mitt(),
 			},
 		})
 
 		wrapper.vm.onEditorInput('bonjour bonjour')
 
-		expect(wrapper.emitted().input[0]).toBeTruthy()
-		expect(wrapper.emitted().input[0]).toEqual(['bonjour bonjour'])
+		expect(wrapper.emitted('update:modelValue')[0]).toEqual(['bonjour bonjour'])
 	})
 
 	it('emit event on ready', async () => {
@@ -118,7 +117,7 @@ describe('TextEditor', () => {
 				mixins: [Nextcloud],
 			},
 			props: {
-				value: 'bonjour',
+				modelValue: 'bonjour',
 				bus: mitt(),
 			},
 		})
@@ -154,7 +153,7 @@ describe('TextEditor', () => {
 				mixins: [Nextcloud],
 			},
 			props: {
-				value: '',
+				modelValue: '',
 				bus: mitt(),
 			},
 		})
@@ -197,7 +196,7 @@ describe('TextEditor', () => {
 				},
 			},
 			props: {
-				value: '<p>bonjour</p>',
+				modelValue: '<p>bonjour</p>',
 				html: true,
 				bus: mitt(),
 			},

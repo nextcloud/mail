@@ -19,6 +19,7 @@
 		:force-menu="true"
 		:name="title"
 		:to="to"
+		:active="isActive"
 		v-model:open="showSubMailboxes"
 		@update:menuOpen="onMenuToggle">
 		<template #icon="{ active }">
@@ -132,7 +133,7 @@
 				v-if="notVirtual"
 				:model-value="mailbox.isSubscribed"
 				:disabled="changeSubscription"
-				@update:checked="changeFolderSubscription">
+				@update:model-value="changeFolderSubscription">
 				{{ t('mail', 'Subscribed') }}
 			</NcActionCheckbox>
 
@@ -140,7 +141,7 @@
 				v-if="notVirtual && notInbox"
 				:model-value="mailbox.syncInBackground"
 				:disabled="changingSyncInBackground"
-				@update:checked="changeSyncInBackground">
+				@update:model-value="changeSyncInBackground">
 				{{ t('mail', 'Sync in background') }}
 			</NcActionCheckbox>
 
@@ -367,7 +368,8 @@ export default {
 		},
 
 		isActive() {
-			return this.$route.params.mailboxId === this.mailbox.databaseId
+			return this.$route.params.mailboxId === String(this.mailbox.databaseId)
+				&& (this.$route.params.filter || '') === this.filter
 		},
 
 		isValidDropTarget() {
@@ -439,7 +441,7 @@ export default {
 		dragEventBus.on('envelopes-moved', this.onEnvelopesMoved)
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		dragEventBus.off('drag-start', this.onDragStart)
 		dragEventBus.off('drag-end', this.onDragEnd)
 		dragEventBus.off('envelopes-moved', this.onEnvelopesMoved)

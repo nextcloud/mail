@@ -166,11 +166,6 @@ describe('Composer', () => {
 					$route,
 				},
 			},
-			computed: {
-				smimeCertificateForCurrentAlias() {
-					return undefined
-				},
-			},
 		})
 
 		view.vm.wantsSmimeSign = false
@@ -181,6 +176,8 @@ describe('Composer', () => {
 	})
 
 	it('should S/MIME sign messages if there are certs', () => {
+		store.smimeCertificates = [{ id: 1, emailAddress: 'test@example.com' }]
+
 		const view = shallowMount(Composer, {
 			props: {
 				isFirstOpen: true,
@@ -190,6 +187,7 @@ describe('Composer', () => {
 						editorMode: 'plaintext',
 						isUnified: false,
 						aliases: [],
+						smimeCertificateId: 1,
 					},
 				],
 			},
@@ -197,11 +195,6 @@ describe('Composer', () => {
 				mixins: [Nextcloud],
 				mocks: {
 					$route,
-				},
-			},
-			computed: {
-				smimeCertificateForCurrentAlias() {
-					return { foo: 'bar' }
 				},
 			},
 		})
@@ -232,11 +225,6 @@ describe('Composer', () => {
 					$route,
 				},
 			},
-			computed: {
-				smimeCertificateForCurrentAlias() {
-					return undefined
-				},
-			},
 		})
 
 		view.vm.wantsSmimeEncrypt = false
@@ -247,15 +235,21 @@ describe('Composer', () => {
 	})
 
 	it('should not S/MIME encrypt messages if there are missing recipient certs', () => {
+		store.smimeCertificates = [{ id: 1, emailAddress: 'test@example.com' }]
+
 		const view = shallowMount(Composer, {
 			props: {
 				isFirstOpen: true,
+				to: [
+					{ label: 'john', email: 'john@foo.bar' },
+				],
 				accounts: [
 					{
 						id: 123,
 						editorMode: 'plaintext',
 						isUnified: false,
 						aliases: [],
+						smimeCertificateId: 1,
 					},
 				],
 			},
@@ -263,14 +257,6 @@ describe('Composer', () => {
 				mixins: [Nextcloud],
 				mocks: {
 					$route,
-				},
-			},
-			computed: {
-				smimeCertificateForCurrentAlias() {
-					return { foo: 'bar' }
-				},
-				missingSmimeCertificatesForRecipients() {
-					return ['john@foo.bar']
 				},
 			},
 		})
@@ -283,6 +269,8 @@ describe('Composer', () => {
 	})
 
 	it('should S/MIME sign messages if there are certs', () => {
+		store.smimeCertificates = [{ id: 1, emailAddress: 'test@example.com' }]
+
 		const view = shallowMount(Composer, {
 			props: {
 				isFirstOpen: true,
@@ -292,6 +280,7 @@ describe('Composer', () => {
 						editorMode: 'plaintext',
 						isUnified: false,
 						aliases: [],
+						smimeCertificateId: 1,
 					},
 				],
 			},
@@ -299,14 +288,6 @@ describe('Composer', () => {
 				mixins: [Nextcloud],
 				mocks: {
 					$route,
-				},
-			},
-			computed: {
-				smimeCertificateForCurrentAlias() {
-					return { foo: 'bar' }
-				},
-				missingSmimeCertificatesForRecipients() {
-					return []
 				},
 			},
 		})
@@ -553,6 +534,7 @@ describe('Composer', () => {
 	})
 
 	it('switches to rich text when the signature contains an image', () => {
+		const editorExecute = vi.fn()
 		const view = shallowMount(Composer, {
 			props: {
 				isFirstOpen: true,
@@ -570,10 +552,14 @@ describe('Composer', () => {
 				mocks: {
 					$route,
 				},
+				stubs: {
+					TextEditor: {
+						template: '<div />',
+						methods: { editorExecute },
+					},
+				},
 			},
 		})
-		const editorExecute = vi.fn()
-		view.vm.$refs.editor = { editorExecute }
 		view.vm.selectedAlias = {
 			id: 123,
 			signature: '<p>Regards<img src="cid:logo"></p>',
@@ -587,6 +573,7 @@ describe('Composer', () => {
 	})
 
 	it('keeps plain text when the signature contains no image', () => {
+		const editorExecute = vi.fn()
 		const view = shallowMount(Composer, {
 			props: {
 				isFirstOpen: true,
@@ -604,10 +591,14 @@ describe('Composer', () => {
 				mocks: {
 					$route,
 				},
+				stubs: {
+					TextEditor: {
+						template: '<div />',
+						methods: { editorExecute },
+					},
+				},
 			},
 		})
-		const editorExecute = vi.fn()
-		view.vm.$refs.editor = { editorExecute }
 		view.vm.selectedAlias = {
 			id: 123,
 			signature: '<p>Regards</p>',

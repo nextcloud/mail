@@ -71,7 +71,7 @@
 							class="compact-checkbox"
 							:class="{ 'compact-checkbox--active': selected }"
 							:model-value="selected"
-							@update:checked="toggleSelected" />
+							@update:model-value="toggleSelected" />
 					</div>
 				</template>
 

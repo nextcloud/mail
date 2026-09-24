@@ -5,6 +5,7 @@
 
 <template>
 	<NcModal
+		close-on-click-outside
 		v-if="view === 'main'"
 		size="normal"
 		label-id="delegation-modal-title"
@@ -151,13 +152,13 @@ export default {
 			return [
 				{
 					label: t('mail', 'Cancel'),
-					type: 'tertiary',
+					variant: 'tertiary',
 					disabled: this.delegating,
 					callback: () => { this.closeDialog() },
 				},
 				{
 					label: t('mail', 'Delegate access'),
-					type: 'primary',
+					variant: 'primary',
 					icon: IconCheck,
 					disabled: !this.selectedUser || this.delegating,
 					callback: async () => { await this.addDelegate() },
@@ -169,12 +170,12 @@ export default {
 			return [
 				{
 					label: t('mail', 'Cancel'),
-					type: 'tertiary',
+					variant: 'tertiary',
 					callback: () => { this.closeDialog() },
 				},
 				{
 					label: t('mail', 'Revoke'),
-					type: 'error',
+					variant: 'error',
 					callback: async () => { await this.revokeDelegate() },
 				},
 			]

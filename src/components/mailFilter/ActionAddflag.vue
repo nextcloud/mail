@@ -8,7 +8,7 @@
 		:model-value="flag"
 		:label-outside="true"
 		:placeholder="t('mail', 'Enter flag')"
-		@update:value="onInput" />
+		@update:model-value="onInput" />
 </template>
 
 <script>

@@ -236,7 +236,7 @@
 			</NcActionLink>
 		</template>
 		<template v-if="snoozeActionsOpen">
-			<ActionButton
+			<NcActionButton
 				:closeAfterClick="false"
 				@click="snoozeActionsOpen = false">
 				<template #icon>
@@ -245,16 +245,16 @@
 				{{
 					t('mail', 'Back')
 				}}
-			</ActionButton>
+			</NcActionButton>
 
-			<ActionButton
+			<NcActionButton
 				v-for="option in reminderOptions"
 				:key="option.key"
 				:aria-label="option.ariaLabel"
 				closeAfterClick
 				@click.stop="onSnooze(option.timestamp)">
 				{{ option.label }}
-			</ActionButton>
+			</NcActionButton>
 
 			<NcActionSeparator />
 

@@ -220,7 +220,7 @@ export default {
 		this.mainStore.setHasFetchedInitialEnvelopesMutation(true)
 	},
 
-	destroyed() {
+	unmounted() {
 		this.bus.off('load-more', this.onScroll)
 		this.bus.off('delete', this.onDelete)
 		this.bus.off('archive', this.onArchive)
@@ -567,7 +567,7 @@ export default {
 				logger.debug('envelope to delete does not exist in envelope list')
 				return
 			}
-			if (id !== this.$route.params.threadId) {
+			if (id !== parseInt(this.$route.params.threadId, 10)) {
 				logger.debug('other message open, not jumping to the next/previous message')
 				return
 			}

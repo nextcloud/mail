@@ -200,7 +200,10 @@
 </template>
 
 <script>
-import { NcAppContent, NcAppContentList, NcButton, NcPopover } from '@nextcloud/vue'
+import NcAppContent from '@nextcloud/vue/components/NcAppContent'
+import NcAppContentList from '@nextcloud/vue/components/NcAppContentList'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcPopover from '@nextcloud/vue/components/NcPopover'
 import { useIsMobile } from '@nextcloud/vue/composables/useIsMobile'
 import addressParser from 'address-rfc2822'
 import mitt from 'mitt'
@@ -479,7 +482,7 @@ export default {
 		}
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		clearTimeout(this.startMailboxTimer)
 	},
 

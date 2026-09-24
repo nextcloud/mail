@@ -116,7 +116,7 @@ export default {
 				},
 				{
 					label: 'Ok',
-					type: 'primary',
+					variant: 'primary',
 					icon: IconCheck,
 					callback: () => { this.addInternalAddress() },
 				},

@@ -286,6 +286,9 @@ export default {
 
 	emits: [
 		'click',
+		'delete',
+		'toggle-important',
+		'toggle-seen',
 		'update:menuOpen',
 	],
 
@@ -376,7 +379,7 @@ export default {
 				return
 			}
 			// do not hide if focus is kept within
-			if (this.$refs['list-item'].contains(event.relatedTarget)) {
+			if (this.$refs['list-item']?.contains(event.relatedTarget)) {
 				return
 			}
 			this.hideActions()

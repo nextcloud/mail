@@ -68,7 +68,7 @@
 					:append-to-body="false"
 					:create-option="createRecipientOption"
 					:clear-search-on-blur="() => clearOnBlur('to')"
-					@input="saveDraftDebounced"
+					@update:model-value="saveDraftDebounced"
 					@option:selecting="onNewToAddr"
 					@search:blur="onToFieldBlur"
 					@search="onAutocomplete($event, 'to')">
@@ -150,7 +150,7 @@
 					:reducible="true"
 					:clearable="true"
 					:create-option="createRecipientOption"
-					@input="saveDraftDebounced"
+					@update:model-value="saveDraftDebounced"
 					@option:selecting="onNewCcAddr"
 					@search:blur="onNewCcAddr"
 					@search="onAutocomplete($event, 'cc')">
@@ -218,7 +218,7 @@
 					:loading="loadingIndicatorBcc"
 					:clearable="true"
 					:create-option="createRecipientOption"
-					@input="saveDraftDebounced"
+					@update:model-value="saveDraftDebounced"
 					@option:selecting="onNewBccAddr"
 					@search:blur="onNewBccAddr"
 					@search="onAutocomplete($event, 'bcc')">
@@ -1206,7 +1206,7 @@ export default {
 		}
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		window.removeEventListener('mailvelope', this.onMailvelopeLoaded)
 	},
 
