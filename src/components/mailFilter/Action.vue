@@ -12,7 +12,7 @@
 				:label-outside="true"
 				:options="availableTypes"
 				:clearable="false"
-				@input="updateAction({ type: $event.id })" />
+				@update:model-value="updateAction({ type: $event.id })" />
 			<component
 				:is="componentInstance"
 				v-if="componentInstance"

@@ -24,7 +24,7 @@
 <script>
 import { Ckeditor } from '@ckeditor/ckeditor5-vue'
 import { getLanguage } from '@nextcloud/l10n'
-import { emojiAddRecent, emojiSearch } from '@nextcloud/vue'
+import { emojiAddRecent, emojiSearch } from '@nextcloud/vue/functions/emoji'
 import {
 	Alignment,
 	Base64UploadAdapter,
@@ -282,7 +282,7 @@ export default {
 		this.loadEditorTranslations(getLanguage())
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		this.unregisterSourceEditingInputListener()
 
 		if (this.editorInstance?.plugins.has('SourceEditing') && this.sourceEditingModeHandler) {

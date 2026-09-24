@@ -213,7 +213,7 @@ export default {
 		}
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		window.removeEventListener('keydown', this.handleKeyDown)
 		document.getElementById(BROWSER_PRINT_NOTICE_ID)?.remove()
 	},

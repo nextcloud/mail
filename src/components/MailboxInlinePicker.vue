@@ -22,7 +22,8 @@
 </template>
 
 <script>
-import { NcEllipsisedOption, NcSelect } from '@nextcloud/vue'
+import NcEllipsisedOption from '@nextcloud/vue/components/NcEllipsisedOption'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import { mapStores } from 'pinia'
 import useMainStore from '../store/mainStore.js'
 import { mailboxHasRights } from '../util/acl.js'

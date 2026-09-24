@@ -9,6 +9,11 @@ import { setActivePinia } from 'pinia'
 import EventModal from '../../../components/EventModal.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 
+vi.mock('../../../service/DAVService.js', () => ({
+	getUserCalendars: vi.fn().mockResolvedValue([]),
+	importCalendarEvent: vi.fn(),
+}))
+
 describe('EventModal', () => {
 	beforeEach(() => {
 		setActivePinia(createTestingPinia())

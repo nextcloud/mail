@@ -387,7 +387,7 @@ export default {
 		dragEventBus.on('envelopes-dropped', this.unselectAll)
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		dragEventBus.off('envelopes-dropped', this.unselectAll)
 	},
 
@@ -491,7 +491,7 @@ export default {
 			if (this.selectedEnvelopes.length === this.sortedEnvelops.length) {
 				isAllSelected = true
 			} else {
-				const indexSelectedEnvelope = this.selectedEnvelopes.findIndex((selectedEnvelope) => selectedEnvelope.databaseId === this.$route.params.threadId)
+				const indexSelectedEnvelope = this.selectedEnvelopes.findIndex((selectedEnvelope) => selectedEnvelope.databaseId === parseInt(this.$route.params.threadId, 10))
 
 				// one of threads is selected
 				if (indexSelectedEnvelope !== -1) {

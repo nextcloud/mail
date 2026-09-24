@@ -8,8 +8,7 @@
 			v-if="visible"
 			:id="id"
 			:key="id"
-			:name="account.emailAddress"
-			@update:open="onMenuToggle">
+			:name="account.emailAddress">
 			<!-- Actions -->
 			<template #actions>
 				<template v-if="isDisabled">
@@ -21,7 +20,7 @@
 					</NcActionText>
 				</template>
 				<template v-else>
-					<NcActionText v-if="!account.isUnified && account.quotaPercentage !== null ">
+					<NcActionText v-if="!account.isUnified && account.quotaPercentage !== null" @vue:mounted="fetchQuota">
 						<template #icon>
 							<IconInfo :size="20" />
 						</template>
@@ -50,7 +49,7 @@
 					<NcActionCheckbox
 						:model-value="account.showSubscribedOnly"
 						:disabled="savingShowOnlySubscribed"
-						@update:checked="changeShowSubscribedOnly">
+						@update:model-value="changeShowSubscribedOnly">
 						{{ t('mail', 'Show only subscribed folders') }}
 					</NcActionCheckbox>
 					<NcActionButton v-if="!editing && nameLabel" @click="openCreateMailbox">
@@ -261,7 +260,7 @@ export default {
 					},
 					{
 						label: t('mail', 'Remove {email}', { email: this.account.emailAddress }),
-						type: 'error',
+						variant: 'error',
 						callback: async () => {
 							this.loading.delete = true
 							try {
@@ -310,13 +309,6 @@ export default {
 					this.savingShowOnlySubscribed = false
 					throw error
 				})
-		},
-
-		onMenuToggle(open) {
-			if (open && this.account.quotaPercentage !== null) {
-				logger.debug('accounts menu opened, fetching quota')
-				this.fetchQuota()
-			}
 		},
 
 		async fetchQuota() {

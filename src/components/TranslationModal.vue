@@ -5,7 +5,6 @@
 
 <template>
 	<NcDialog
-		ref="translateDialog"
 		class="translate-dialog"
 		:name="t('mail', 'Translate message')"
 		size="large"
@@ -186,7 +185,7 @@ export default {
 			?? findLanguage(this.availableInputLanguages, this.detectedForeignLanguage)
 		this.$nextTick(() => {
 			// FIXME trick to avoid focusTrap() from activating on NcSelect
-			this.isMounted = !!this.$refs.translateDialog.navigationId
+			this.isMounted = true
 		})
 	},
 

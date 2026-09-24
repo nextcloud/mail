@@ -37,7 +37,8 @@
 </template>
 
 <script>
-import { NcActionButton, NcActions } from '@nextcloud/vue'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcActions from '@nextcloud/vue/components/NcActions'
 import IconDomain from 'vue-material-design-icons/Domain.vue'
 import IconMail from 'vue-material-design-icons/EmailOutline.vue'
 import IconImageOff from 'vue-material-design-icons/ImageOffOutline.vue'
@@ -65,6 +66,8 @@ export default {
 			default: null,
 		},
 	},
+
+	emits: ['show', 'trust-sender', 'trust-domain'],
 }
 </script>
 

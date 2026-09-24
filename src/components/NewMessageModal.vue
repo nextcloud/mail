@@ -298,7 +298,7 @@ export default {
 		await this.openModalSize()
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		window.removeEventListener('beforeunload', this.onBeforeUnload)
 	},
 

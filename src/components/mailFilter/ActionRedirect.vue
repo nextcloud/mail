@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { NcInputField } from '@nextcloud/vue'
+import NcInputField from '@nextcloud/vue/components/NcInputField'
 
 export default {
 	name: 'ActionRedirect',
@@ -33,6 +33,8 @@ export default {
 			required: true,
 		},
 	},
+
+	emits: ['update-action'],
 
 	computed: {
 		recipient() {

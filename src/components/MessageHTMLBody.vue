@@ -99,7 +99,7 @@ export default {
 		this.detectedForeignLanguage = await detectForeignLanguage(this.message.body ?? '')
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		// The frame's document goes away with the frame, so this is housekeeping
 		// rather than a fix for a leak. It is done because the listener is added
 		// to a document this component does not own: nothing guarantees the frame

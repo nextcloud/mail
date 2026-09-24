@@ -14,6 +14,17 @@ vi.mock('@nextcloud/dialogs', async (importOriginal) => ({
 	showError: vi.fn(),
 }))
 
+/**
+ * `$refs` is read-only in Vue 3, so the stand-ins for the rendered
+ * ThreadEnvelope components go into the instance's refs instead.
+ *
+ * @param {object} view the mounted thread
+ * @param {object[]} envelopeRefs the envelope component stubs
+ */
+function setEnvelopeRefs(view, envelopeRefs) {
+	view.vm.$.refs = { envelopeRefs }
+}
+
 describe('Thread', () => {
 	let store
 
@@ -322,10 +333,10 @@ describe('Thread', () => {
 					},
 				},
 			})
-			view.vm.$refs.envelopeRefs = view.vm.thread.map((envelope) => ({
+			setEnvelopeRefs(view, view.vm.thread.map((envelope) => ({
 				envelope,
 				$el: document.createElement('div'),
-			}))
+			})))
 			return view
 		}
 
@@ -404,11 +415,11 @@ describe('Thread', () => {
 
 		it('gives every message a shadow root of its own so they cannot restyle each other', () => {
 			const view = mountThread()
-			view.vm.$refs.envelopeRefs = [
+			setEnvelopeRefs(view, [
 				renderedMessage(1001, 'red', 'first'),
 				renderedMessage(1002, 'blue', 'second'),
 				{ envelope: { databaseId: 1003 }, $el: document.createElement('div') },
-			]
+			])
 
 			view.vm.appendPrintMessage(parent, 0)
 			view.vm.appendPrintMessage(parent, 1)
@@ -423,7 +434,7 @@ describe('Thread', () => {
 
 		it('prints the messages as part of the document, so they follow whatever paper is picked', () => {
 			const view = mountThread()
-			view.vm.$refs.envelopeRefs = [renderedMessage(1001, 'red', 'first')]
+			setEnvelopeRefs(view, [renderedMessage(1001, 'red', 'first')])
 
 			view.vm.appendPrintMessage(parent, 0)
 
@@ -433,7 +444,7 @@ describe('Thread', () => {
 
 		it('keeps the header out of reach of the message styles', () => {
 			const view = mountThread()
-			view.vm.$refs.envelopeRefs = [renderedMessage(1001, 'red', 'first')]
+			setEnvelopeRefs(view, [renderedMessage(1001, 'red', 'first')])
 
 			view.vm.appendPrintMessage(parent, 0)
 
@@ -444,7 +455,7 @@ describe('Thread', () => {
 
 		it('keeps the messages own styles out of the print document', () => {
 			const view = mountThread()
-			view.vm.$refs.envelopeRefs = [renderedMessage(1001, 'red', 'first')]
+			setEnvelopeRefs(view, [renderedMessage(1001, 'red', 'first')])
 
 			view.vm.appendPrintMessage(parent, 0)
 
@@ -453,10 +464,10 @@ describe('Thread', () => {
 
 		it('renders a plain text message the same way, so both kinds print alike', () => {
 			const view = mountThread()
-			view.vm.$refs.envelopeRefs = [
+			setEnvelopeRefs(view, [
 				renderedPlainTextMessage(1001, 'plain'),
 				renderedMessage(1002, 'blue', 'html'),
-			]
+			])
 
 			view.vm.appendPrintMessage(parent, 0)
 			view.vm.appendPrintMessage(parent, 1)
@@ -473,10 +484,10 @@ describe('Thread', () => {
 			const iframe = document.createElement('iframe')
 			el.appendChild(iframe)
 			Object.defineProperty(iframe, 'contentDocument', { value: null })
-			view.vm.$refs.envelopeRefs = [
+			setEnvelopeRefs(view, [
 				{ envelope: { databaseId: 1001 }, $el: el },
 				renderedMessage(1002, 'blue', 'second'),
-			]
+			])
 
 			view.vm.appendPrintMessage(parent, 0)
 			view.vm.appendPrintMessage(parent, 1)
@@ -490,11 +501,11 @@ describe('Thread', () => {
 
 		it('pairs a message with its own body, whatever order the refs came in', () => {
 			const view = mountThread()
-			view.vm.$refs.envelopeRefs = [
+			setEnvelopeRefs(view, [
 				renderedMessage(1002, 'blue', 'second'),
 				{ envelope: { databaseId: 1003 }, $el: document.createElement('div') },
 				renderedMessage(1001, 'red', 'first'),
-			]
+			])
 
 			view.vm.appendPrintMessage(parent, 0)
 			view.vm.appendPrintMessage(parent, 1)
@@ -526,11 +537,11 @@ describe('Thread', () => {
 					},
 				},
 			})
-			view.vm.$refs.envelopeRefs = view.vm.thread.map((envelope) => ({
+			setEnvelopeRefs(view, view.vm.thread.map((envelope) => ({
 				envelope,
 				printable,
 				$el: document.createElement('div'),
-			}))
+			})))
 			return view
 		}
 
@@ -638,10 +649,10 @@ describe('Thread', () => {
 
 		it('never copies a message into the app document', () => {
 			const view = mountThread()
-			view.vm.$refs.envelopeRefs = view.vm.thread.map((envelope) => ({
+			setEnvelopeRefs(view, view.vm.thread.map((envelope) => ({
 				envelope,
 				$el: document.createElement('div'),
-			}))
+			})))
 
 			expect(notice().querySelector('.print-message')).toBeNull()
 			expect(document.querySelector('.print-message')).toBeNull()

@@ -46,7 +46,7 @@ export default {
 				},
 				{
 					label: t('mail', 'Delete filter'),
-					type: 'error',
+					variant: 'error',
 					icon: IconCheck,
 					callback: () => { this.deleteFilter() },
 				},

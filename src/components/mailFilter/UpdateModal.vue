@@ -155,7 +155,7 @@ export default {
 
 		updateTest(test) {
 			const index = this.clone.tests.findIndex((items) => items.id === test.id)
-			this.$set(this.clone.tests, index, test)
+			this.clone.tests[index] = test
 		},
 
 		deleteTest(test) {

@@ -368,13 +368,13 @@ export default {
 				{
 					label: t('mail', 'Clear'),
 					callback: () => this.resetFilter(),
-					type: 'primary',
+					variant: 'primary',
 					icon: IconClose,
 				},
 				{
 					label: t('mail', 'Search'),
 					callback: () => this.closeSearchModal(),
-					type: 'primary',
+					variant: 'primary',
 					icon: IconMagnify,
 				},
 			],

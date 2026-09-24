@@ -130,7 +130,7 @@
 					<NcCheckboxRadioSwitch
 						v-model="allowNewMailAccounts"
 						type="switch"
-						@update:checked="updateAllowNewMailAccounts">
+						@update:model-value="updateAllowNewMailAccounts">
 						{{ t('mail', 'Allow additional Mail accounts from User Settings') }}
 					</NcCheckboxRadioSwitch>
 				</p>
@@ -148,7 +148,7 @@
 					<NcCheckboxRadioSwitch
 						v-model="isLlmEnabled"
 						type="switch"
-						@update:checked="updateLlmEnabled">
+						@update:model-value="updateLlmEnabled">
 						{{ t('mail', 'Enable LLM processing') }}
 					</NcCheckboxRadioSwitch>
 				</p>
@@ -164,7 +164,7 @@
 					<NcCheckboxRadioSwitch
 						type="switch"
 						:model-value="isImportanceClassificationEnabledByDefault"
-						@update:checked="setImportanceClassificationEnabledByDefault">
+						@update:model-value="setImportanceClassificationEnabledByDefault">
 						{{ t('mail', 'Enable classification of important mails by default') }}
 					</NcCheckboxRadioSwitch>
 				</p>
@@ -263,7 +263,7 @@
 						type="radio"
 						name="message_view_mode_radio"
 						value="threaded"
-						@update:checked="setLayoutMessageView('threaded')">
+						@update:model-value="setLayoutMessageView('threaded')">
 						{{ t('mail', 'Show all messages in thread') }}
 					</NcCheckboxRadioSwitch>
 					<NcCheckboxRadioSwitch
@@ -271,7 +271,7 @@
 						type="radio"
 						name="message_view_mode_radio"
 						value="singleton"
-						@update:checked="setLayoutMessageView('singleton')">
+						@update:model-value="setLayoutMessageView('singleton')">
 						{{ t('mail', 'Show only the selected message') }}
 					</NcCheckboxRadioSwitch>
 				</p>

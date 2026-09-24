@@ -55,6 +55,7 @@ describe('PhishingWarning', () => {
 		const view = shallowMount(PhishingWarning, {
 			global: {
 				mixins: [Nextcloud],
+				renderStubDefaultSlot: true,
 			},
 			props: {
 				phishingData: [{
@@ -145,6 +146,7 @@ describe('PhishingWarning', () => {
 		const view = shallowMount(PhishingWarning, {
 			global: {
 				mixins: [Nextcloud],
+				renderStubDefaultSlot: true,
 			},
 			props: {
 				phishingData: [{
