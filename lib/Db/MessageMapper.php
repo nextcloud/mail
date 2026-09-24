@@ -50,6 +50,14 @@ class MessageMapper extends QBMapper {
 
 	use TTransactional;
 
+	private const PARAM_UIDS = 'uids';
+	private const PARAM_IDS = 'ids';
+
+	/**
+	 * TODO: replace with IQueryBuilder::MAX_IN_PARAMETERS once the minimum server version is 35
+	 */
+	private const MAX_IN_PARAMETERS = 1000;
+
 	/** @var ITimeFactory */
 	private $timeFactory;
 
@@ -791,14 +799,12 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
-	 * @param Mailbox $mailbox
-	 * @param SearchQuery $query
-	 * @param int|null $limit
-	 * @param int[]|null $uids
+	 * @param int[]|null $uids IMAP body search matches, combined with the text conditions via OR
+	 * @param int[]|null $ids restricts the result to these message ids
 	 *
 	 * @return int[]
 	 */
-	public function findIdsByQuery(Mailbox $mailbox, SearchQuery $query, string $sortOrder, ?int $limit, ?array $uids = null): array {
+	public function findIdsByQuery(Mailbox $mailbox, SearchQuery $query, string $sortOrder, ?int $limit, ?array $uids = null, ?array $ids = null): array {
 		$qb = $this->db->getQueryBuilder();
 
 		if ($this->needDistinct($query)) {
@@ -925,15 +931,21 @@ class MessageMapper extends QBMapper {
 			// In the case of body+subject search we need a combination of both results,
 			// thus the orWhere in every other case andWhere should do the job.
 			if (!empty($query->getSubjects())) {
-				$textOrs[] = $qb->expr()->in('m.uid', $qb->createParameter('uids'));
+				$textOrs[] = $qb->expr()->in('m.uid', $qb->createParameter(self::PARAM_UIDS));
 			} else {
 				$select->andWhere(
-					$qb->expr()->in('m.uid', $qb->createParameter('uids'))
+					$qb->expr()->in('m.uid', $qb->createParameter(self::PARAM_UIDS))
 				);
 			}
 		}
 		if (!empty($textOrs)) {
 			$select->andWhere($qb->expr()->orX(...$textOrs));
+		}
+
+		if ($ids !== null) {
+			$select->andWhere(
+				$qb->expr()->in('m.id', $qb->createParameter(self::PARAM_IDS), IQueryBuilder::PARAM_INT_ARRAY)
+			);
 		}
 
 		if (!empty($query->getStart())) {
@@ -994,14 +1006,29 @@ class MessageMapper extends QBMapper {
 		}
 
 		if ($uids !== null) {
-			return array_flat_map(function (array $chunk) use ($qb, $select) {
-				$qb->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-				return array_map(static fn (Message $message) => $message->getId(), $this->findEntities($select));
-			}, array_chunk($uids, 1000));
+			return $this->findIdsByChunkedParameter($select, self::PARAM_UIDS, $uids);
+		}
+
+		if ($ids !== null) {
+			return $this->findIdsByChunkedParameter($select, self::PARAM_IDS, $ids);
 		}
 
 		$result = array_map(static fn (Message $message) => $message->getId(), $this->findEntities($select));
 		return $result;
+	}
+
+	/**
+	 * Run $select once per chunk of $values, binding each chunk to $parameter.
+	 *
+	 * @param int[] $values
+	 *
+	 * @return int[]
+	 */
+	private function findIdsByChunkedParameter(IQueryBuilder $select, string $parameter, array $values): array {
+		return array_flat_map(function (array $chunk) use ($select, $parameter) {
+			$select->setParameter($parameter, $chunk, IQueryBuilder::PARAM_INT_ARRAY);
+			return array_map(static fn (Message $message) => $message->getId(), $this->findEntities($select));
+		}, array_chunk($values, self::MAX_IN_PARAMETERS));
 	}
 
 	public function findIdsGloballyByQuery(IUser $user, SearchQuery $query, ?int $limit, ?array $uids = null): array {
@@ -1112,7 +1139,7 @@ class MessageMapper extends QBMapper {
 		}
 		if ($uids !== null) {
 			$select->andWhere(
-				$qb->expr()->in('m.uid', $qb->createParameter('uids'))
+				$qb->expr()->in('m.uid', $qb->createParameter(self::PARAM_UIDS))
 			);
 		}
 		foreach ($query->getFlags() as $flag) {
@@ -1133,10 +1160,7 @@ class MessageMapper extends QBMapper {
 		}
 
 		if ($uids !== null) {
-			return array_flat_map(function (array $chunk) use ($select) {
-				$select->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-				return array_map(static fn (Message $message) => $message->getId(), $this->findEntities($select));
-			}, array_chunk($uids, 1000));
+			return $this->findIdsByChunkedParameter($select, self::PARAM_UIDS, $uids);
 		}
 
 		return array_map(static fn (Message $message) => $message->getId(), $this->findEntities($select));
