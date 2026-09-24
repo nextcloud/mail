@@ -1,3 +1,13 @@
+## [5.12.2](https://github.com/nextcloud/mail/compare/v5.12.1...v5.12.2) (2026-09-24)
+
+
+### Bug Fixes
+
+* **ai:** reduce summary tasks queued per user ([#13724](https://github.com/nextcloud/mail/issues/13724)) ([0e87da6](https://github.com/nextcloud/mail/commit/0e87da6a6ac038669450afe878480c78d62bf2f3))
+* **l10n:** Update translations from Transifex ([8780db5](https://github.com/nextcloud/mail/commit/8780db53a9e671dccdc6d77a14817555a109e01f))
+
+
+
 ## [5.12.1](https://github.com/nextcloud/mail/compare/v5.12.0...v5.12.1) (2026-09-23)
 
 
