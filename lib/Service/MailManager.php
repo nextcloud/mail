@@ -342,7 +342,7 @@ class MailManager {
 			->flagMessages($account, $mailbox, $flag, $value, ...$messages);
 
 		// update local store
-		$this->dbMessageMapper->updateBulk($account, true, ...$mutatedMessages);
+		$this->dbMessageMapper->updateBulk($account, false, ...$mutatedMessages);
 
 		// dispatch events
 		foreach ($mutatedMessages as $message) {
@@ -357,6 +357,12 @@ class MailManager {
 		if ($messages === []) {
 			return;
 		}
+		$tags = $this->tagMapper->getAllTagsForMessages($messages, $account->getUserId());
+		foreach ($messages as $message) {
+			$messageId = $message->getMessageId();
+			$message->setTags($messageId !== null ? ($tags[$messageId] ?? []) : []);
+		}
+
 		// update remote store
 		$mutatedMessages = $this->protocolFactory
 			->messageConnector($account)
