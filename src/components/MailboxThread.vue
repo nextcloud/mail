@@ -213,6 +213,7 @@ import SectionTitle from './SectionTitle.vue'
 import Thread from './Thread.vue'
 import infiniteScroll from '../directives/infinite-scroll.js'
 import logger from '../logger.js'
+import { hasJumps, resolveShortcuts, setJumpsEnabled } from '../shortcuts.js'
 import {
 	FOLLOW_UP_MAILBOX_ID,
 	PRIORITY_INBOX_ID,
@@ -274,15 +275,6 @@ export default {
 			followupInfo: t('mail', 'AI identifies messages sent by you that likely require a reply but did not receive one after a couple of days and shows them here'),
 			bus: mitt(),
 			searchQuery: undefined,
-			shortkeys: {
-				del: ['del'],
-				arch: ['a'],
-				flag: ['s'],
-				next: ['arrowright'],
-				prev: ['arrowleft'],
-				refresh: ['r'],
-				unseen: ['u'],
-			},
 
 			priorityImportantQuery,
 			priorityOtherQuery,
@@ -294,6 +286,18 @@ export default {
 	},
 
 	computed: {
+		/**
+		 * Keyboard shortcuts for the envelope list.
+		 *
+		 * Resolved through the shortcuts module rather than hardcoded here, so
+		 * the bindings can be switched off for accessibility.
+		 *
+		 * @return {object} vue-shortkey binding map
+		 */
+		shortkeys() {
+			return resolveShortcuts()
+		},
+
 		...mapStores(useMainStore),
 
 		layoutMode() {
@@ -477,13 +481,68 @@ export default {
 		if (this.isThreadShown) {
 			await this.fetchEnvelopes()
 		}
+		window.addEventListener('mail:jump', this.onJump)
+		setJumpsEnabled(hasJumps())
 	},
 
 	beforeDestroy() {
 		clearTimeout(this.startMailboxTimer)
+		window.removeEventListener('mail:jump', this.onJump)
 	},
 
 	methods: {
+		/**
+		 * @param {CustomEvent} event carries the target specialRole
+		 */
+		onJump(event) {
+			this.jumpToMailbox(event.detail)
+		},
+
+		/**
+		 * @param {string} specialRole mailbox special role, e.g. 'inbox'
+		 */
+		jumpToMailbox(specialRole) {
+			const accountId = this.mailbox?.accountId > 0 ? this.mailbox.accountId : this.account.accountId
+
+			const mailboxes = this.mainStore.getMailboxesAndSubmailboxesByAccountId(accountId) ?? []
+
+			// Starred is the inbox under a route filter rather than its own
+			// mailbox, mirroring how the navigation sidebar links to it.
+			const filter = specialRole === 'starred' ? 'starred' : undefined
+			const wanted = specialRole === 'starred' ? 'inbox' : specialRole
+
+			// Prefer the mailbox the account is actually configured to use.
+			// Several folders can share a specialRole - servers accumulate
+			// Sent / Sent Messages / INBOX.Sent from different clients - and
+			// picking the first match can land in an empty duplicate.
+			const configured = {
+				sent: this.account.sentMailboxId,
+				trash: this.account.trashMailboxId,
+				archive: this.account.archiveMailboxId,
+				snoozed: this.account.snoozeMailboxId,
+			}[wanted]
+
+			const target = configured
+				? mailboxes.find((mailbox) => mailbox.databaseId === configured)
+				: mailboxes.find((mailbox) => mailbox.specialRole === wanted)
+
+			if (!target) {
+				logger.debug('no mailbox for jump target', { specialRole, accountId })
+				return
+			}
+			if (parseInt(this.$route.params.mailboxId, 10) === target.databaseId
+				&& this.$route.params.filter === filter) {
+				return
+			}
+
+			// filter is always set, so jumping out of the starred view clears it
+			// rather than silently carrying it into the next mailbox.
+			this.$router.push({
+				name: 'mailbox',
+				params: { mailboxId: target.databaseId, filter },
+			})
+		},
+
 		getGroupedEnvelopes(envelopes, syncTimestamp) {
 			return groupEnvelopesByDate(envelopes, syncTimestamp, this.sortOrder)
 		},

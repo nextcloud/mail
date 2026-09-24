@@ -12,6 +12,8 @@
 				:placeholder="t('mail', 'Search in folder')"
 				:aria-label="t('mail', 'Search in folder')"
 				@focus="showButtons = true"
+				@keydown.enter.prevent="$event.target.blur()"
+				@keydown.esc.prevent="$event.target.blur()"
 				@blur="hideButtonsWithDelay(true)">
 			<NcButton
 				variant="tertiary"
