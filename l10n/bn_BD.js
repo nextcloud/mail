@@ -18,6 +18,8 @@ OC.L10N.register(
     "Search" : "Search",
     "Send" : "পাঠাও",
     "Refresh" : "নবোদ্যম",
+    "From" : "From",
+    "To" : "To",
     "Favorite" : "প্রিয়জন",
     "Read" : "পড়",
     "Edit tags" : "ট্যাগ সম্পাদনা",

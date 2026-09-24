@@ -48,6 +48,7 @@ OC.L10N.register(
     "Signature" : "חתימה",
     "A signature is added to the text of new messages and replies." : "נוספה חתימה לטקסט של הודעות חדשות ותגובות.",
     "Default folders" : "תיקיות בררת מחדל",
+    "Filters" : "מסננים",
     "Mail server" : "שרת דוא״ל",
     "Email address" : "כתובת דוא״ל",
     "Go back" : "חזרה",
