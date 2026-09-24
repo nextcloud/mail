@@ -391,7 +391,7 @@ class MailManager {
 	/**
 	 * Finds all messages in the thread of the given thread root id
 	 *
-	 * @return array<string, Message> array of messages in the thread, keyed by remote id
+	 * @return list<array{mailbox: Mailbox, messages: Message[]}> messages grouped by source mailbox
 	 * @throws DoesNotExistException
 	 */
 	public function fetchThread(Account $account, Mailbox $mailbox, string $threadRootId): array {
@@ -411,15 +411,16 @@ class MailManager {
 		unset($threadMessages);
 
 		// retrieve messages from local store
-		$messages = [];
-		$mailboxes = [];
+		$messagesByMailbox = [];
 		foreach ($uids as $mailboxName => $messageUids) {
-			$sourceMailbox = $mailboxes[$mailboxName] ??= $this->mailboxMapper->find($account, $mailboxName);
-			$sourceMessages = $this->dbMessageMapper->findByUids($sourceMailbox, $messageUids);
-			$messages = array_merge($messages, $sourceMessages);
+			$sourceMailbox = $this->mailboxMapper->find($account, $mailboxName);
+			$messagesByMailbox[] = [
+				'mailbox' => $sourceMailbox,
+				'messages' => $this->dbMessageMapper->findByUids($sourceMailbox, $messageUids),
+			];
 		}
 
-		return $messages;
+		return $messagesByMailbox;
 	}
 
 	/**
@@ -431,12 +432,13 @@ class MailManager {
 			throw new ServiceException('It is not possible to move across accounts yet');
 		}
 
-		$messages = $this->fetchThread($srcAccount, $srcMailbox, $threadRootId);
-		if ($messages === []) {
-			return [];
+		$messagesByMailbox = $this->fetchThread($srcAccount, $srcMailbox, $threadRootId);
+		$mutatedUids = [];
+		foreach ($messagesByMailbox as $group) {
+			$mutatedUids[] = $this->moveMessages($srcAccount, $dstMailbox, $group['mailbox'], ...$group['messages']);
 		}
 
-		return $this->moveMessages($srcAccount, $dstMailbox, $srcMailbox, ...$messages);
+		return array_merge(...$mutatedUids);
 	}
 
 	/**
@@ -449,12 +451,10 @@ class MailManager {
 			throw new TrashMailboxNotSetException();
 		}
 
-		$messages = $this->fetchThread($account, $mailbox, $threadRootId);
-		if ($messages === []) {
-			return;
+		$messagesByMailbox = $this->fetchThread($account, $mailbox, $threadRootId);
+		foreach ($messagesByMailbox as $group) {
+			$this->deleteMessages($account, $group['mailbox'], ...$group['messages']);
 		}
-
-		$this->deleteMessages($account, $mailbox, ...$messages);
 	}
 
 	/**

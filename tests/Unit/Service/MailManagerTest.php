@@ -25,6 +25,7 @@ use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Db\ThreadMapper;
 use OCA\Mail\Events\BeforeMessageDeletedEvent;
+use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\ImapFlag;
@@ -545,6 +546,102 @@ class MailManagerTest extends TestCase {
 		$this->manager->updateTag(100, 'Hello Hello 👋', '#0082c9', 'admin');
 	}
 
+	public static function threadOperations(): array {
+		return [['move'], ['delete']];
+	}
+
+	/** @dataProvider threadOperations */
+	public function testThreadOperationUsesEachSourceMailbox(string $operation): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1);
+		$mailAccount->setTrashMailboxId(3);
+		$account = new Account($mailAccount);
+		$inbox = new Mailbox();
+		$inbox->setId(1);
+		$inbox->setName('INBOX');
+		$sent = new Mailbox();
+		$sent->setId(2);
+		$sent->setName('Sent');
+		$target = new Mailbox();
+		$target->setId(3);
+		$target->setName('Trash');
+		$messagesByMailbox = [];
+		foreach ([$inbox, $sent] as $source) {
+			foreach ([10, 20] as $uid) {
+				$message = new Message();
+				$message->setMailboxId($source->getId());
+				$message->setUid($uid);
+				$messagesByMailbox[$source->getId()][] = $message;
+			}
+		}
+		$this->threadMapper->expects(self::once())
+			->method('findMessageUidsAndMailboxNamesByAccountAndThreadRoot')
+			->with($mailAccount, 'thread', false)
+			->willReturn([
+				['messageUid' => 10, 'mailboxName' => 'INBOX'],
+				['messageUid' => 10, 'mailboxName' => 'Sent'],
+				['messageUid' => 20, 'mailboxName' => 'INBOX'],
+				['messageUid' => 20, 'mailboxName' => 'Sent'],
+			]);
+		$this->mailboxMapper->expects(self::exactly(2))
+			->method('find')
+			->willReturnMap([[$account, 'INBOX', $inbox], [$account, 'Sent', $sent]]);
+		$this->mailboxMapper->method('findById')->with(3)->willReturn($target);
+		$this->dbMessageMapper->expects(self::exactly(2))
+			->method('findByUids')
+			->with(self::anything(), [10, 20])
+			->willReturnCallback(static fn (Mailbox $source): array => $messagesByMailbox[$source->getId()]);
+		$connector = $this->createMock(IMessageConnector::class);
+		$this->protocolFactory->method('messageConnector')->with($account)->willReturn($connector);
+		$connector->expects(self::never())->method('deleteMessages');
+		$connector->expects(self::exactly(2))
+			->method('moveMessages')
+			->willReturnCallback(static function (Account $a, Mailbox $destination, Mailbox $source, Message ...$messages) use ($account, $target, $messagesByMailbox): array {
+				self::assertSame($account, $a);
+				self::assertSame($target, $destination);
+				self::assertSame($messagesByMailbox[$source->getId()], $messages);
+				foreach ($messages as $message) {
+					self::assertSame($source->getId(), $message->getMailboxId());
+					$message->setUid($source->getId() * 100 + $message->getUid());
+					$message->setMailboxId($target->getId());
+				}
+				return $messages;
+			});
+		$this->dbMessageMapper->expects(self::exactly(4))
+			->method('update')
+			->with(self::callback(static fn (Message $message): bool => $message->getMailboxId() === 3));
+		$events = [];
+		$this->eventDispatcher->method('dispatchTyped')
+			->willReturnCallback(static function ($event) use (&$events): void {
+				$events[get_class($event)][] = [$event->getMailbox()->getId(), $event->getUid()];
+			});
+
+		if ($operation === 'move') {
+			self::assertSame([110, 120, 210, 220], $this->manager->moveThread($account, $inbox, $account, $target, 'thread'));
+		} else {
+			$this->manager->deleteThread($account, $inbox, 'thread');
+			self::assertSame([[1, 10], [1, 20], [2, 10], [2, 20]], $events[BeforeMessageDeletedEvent::class]);
+		}
+		self::assertSame([[1, 10], [1, 20], [2, 10], [2, 20]], $events[MessageDeletedEvent::class]);
+	}
+
+	/** @dataProvider threadOperations */
+	public function testThreadOperationWithoutMessages(string $operation): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1);
+		$mailAccount->setTrashMailboxId(3);
+		$account = new Account($mailAccount);
+		$mailbox = new Mailbox();
+		$this->threadMapper->method('findMessageUidsAndMailboxNamesByAccountAndThreadRoot')->willReturn([]);
+		$this->protocolFactory->expects(self::never())->method('messageConnector');
+
+		if ($operation === 'move') {
+			self::assertSame([], $this->manager->moveThread($account, $mailbox, $account, new Mailbox(), 'thread'));
+		} else {
+			$this->manager->deleteThread($account, $mailbox, 'thread');
+		}
+	}
+
 	public function testMoveInbox(): void {
 		$srcMailboxId = 20;
 		$dstMailboxId = 80;
@@ -595,8 +692,9 @@ class MailManagerTest extends TestCase {
 			->with($account, $dstMailbox, $srcMailbox, $message1, $message2)
 			->willReturn([$message1, $message2]);
 		$this->dbMessageMapper
-			->expects(self::once())
-			->method('updateBulk');
+			->expects(self::exactly(2))
+			->method('update')
+			->with(self::callback(static fn (Message $message): bool => in_array($message, [$message1, $message2], true)));
 
 		$this->manager->moveThread(
 			$account,
@@ -657,8 +755,9 @@ class MailManagerTest extends TestCase {
 			->with($account, $dstMailbox, $srcMailbox, $message1, $message2)
 			->willReturn([$message1, $message2]);
 		$this->dbMessageMapper
-			->expects(self::once())
-			->method('updateBulk');
+			->expects(self::exactly(2))
+			->method('update')
+			->with(self::callback(static fn (Message $message): bool => in_array($message, [$message1, $message2], true)));
 
 		$this->manager->moveThread(
 			$account,
@@ -724,8 +823,9 @@ class MailManagerTest extends TestCase {
 			->with($account, $trashMailbox, $mailbox, $message1, $message2)
 			->willReturn([$message1, $message2]);
 		$this->dbMessageMapper
-			->expects(self::once())
-			->method('updateBulk');
+			->expects(self::exactly(2))
+			->method('update')
+			->with(self::callback(static fn (Message $message): bool => in_array($message, [$message1, $message2], true)));
 		$this->eventDispatcher
 			->expects(self::exactly(4))
 			->method('dispatchTyped');
