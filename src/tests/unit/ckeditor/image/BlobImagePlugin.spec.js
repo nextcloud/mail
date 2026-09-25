@@ -48,6 +48,17 @@ describe('BlobImagePlugin', () => {
 		expect(await blob.text()).toBe('image')
 	})
 
+	it('turns base64 images inserted as a view fragment into blob URLs', async () => {
+		editor = await createEditor()
+
+		const viewFragment = editor.data.processor.toView('<p><img src="data:image/png;base64,aW1hZ2U="></p>')
+		editor.model.change((writer) => {
+			writer.append(editor.data.toModel(viewFragment), editor.model.document.getRoot())
+		})
+
+		expect(editor.data.get()).toContain('src="blob:http://localhost/image"')
+	})
+
 	it('keeps other image sources', async () => {
 		editor = await createEditor('<p><img src="https://example.com/image.png"></p>')
 
