@@ -331,6 +331,7 @@ import TextEditor from './TextEditor.vue'
 import TrustedSenders from './TrustedSenders.vue'
 import Logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
+import { embedBlobImages } from '../util/blobImages.js'
 
 export default {
 	name: 'AppSettingsMenu',
@@ -823,8 +824,11 @@ export default {
 			document.body.append(iframe)
 		},
 
-		newTextBlock() {
-			this.mainStore.createTextBlock({ ...this.localTextBlock })
+		async newTextBlock() {
+			this.mainStore.createTextBlock({
+				...this.localTextBlock,
+				content: await embedBlobImages(this.localTextBlock.content),
+			})
 			this.textBlockDialogOpen = false
 			this.localTextBlock = {
 				title: '',
