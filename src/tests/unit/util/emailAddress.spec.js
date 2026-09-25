@@ -3,7 +3,29 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { getLabelAndAddress, parseEmailList } from '../../../util/emailAddress.js'
+import { formatRecipient, getLabelAndAddress, parseEmailList } from '../../../util/emailAddress.js'
+
+describe('formatRecipient', () => {
+	it('shows the email next to a distinct display name', () => {
+		expect(formatRecipient({
+			label: 'Alice Smith',
+			email: 'alice@example.com',
+		})).toBe('Alice Smith (alice@example.com)')
+	})
+
+	it('does not repeat the email when it is also the label', () => {
+		expect(formatRecipient({
+			label: 'alice@example.com',
+			email: 'alice@example.com',
+		})).toBe('alice@example.com')
+	})
+
+	it('falls back to the available recipient value', () => {
+		expect(formatRecipient({ email: 'alice@example.com' })).toBe('alice@example.com')
+		expect(formatRecipient({ label: 'Alice Smith' })).toBe('Alice Smith')
+		expect(formatRecipient(undefined)).toBe('')
+	})
+})
 
 describe('getLabelAndAddress', () => {
 	it('parses a plain email address', () => {
