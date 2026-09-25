@@ -139,16 +139,13 @@ class SyncService {
 		}
 		$order = $sortOrder === 'oldest' ? IMailSearch::ORDER_OLDEST_FIRST : IMailSearch::ORDER_NEWEST_FIRST;
 		if ($query !== null) {
-			// Filter new messages to those that also match the current filter
-			$newUids = $this->messageMapper->findUidsForIds($mailbox, $newIds);
-			$newIds = $this->messageMapper->findIdsByQuery($mailbox, $query, $order, null, $newUids);
+			$newIds = $this->messageMapper->findIdsByQuery($mailbox, $query, $order, null, null, $newIds);
 		}
 		$new = $this->messageMapper->findByMailboxAndIds($mailbox, $account->getUserId(), $newIds);
 
 		// TODO: $changed = $this->messageMapper->findChanged($account, $mailbox, $uids);
 		if ($query !== null) {
-			$changedUids = $this->messageMapper->findUidsForIds($mailbox, $knownIds);
-			$changedIds = $this->messageMapper->findIdsByQuery($mailbox, $query, $order, null, $changedUids);
+			$changedIds = $this->messageMapper->findIdsByQuery($mailbox, $query, $order, null, null, $knownIds);
 		} else {
 			$changedIds = $knownIds;
 		}
