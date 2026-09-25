@@ -84,22 +84,12 @@ export default class FilesImagePlugin extends Plugin {
 		try {
 			const response = await getClient('files').getFileContents(node.path, { details: true })
 			const blob = new Blob([response.data as BlobPart], { type: response.headers['content-type'] })
-			const dataUri = await this._readBlobAsDataUri(blob)
 
-			this.editor.execute('insertImage', { source: dataUri })
+			this.editor.execute('insertImage', { source: URL.createObjectURL(blob) })
 			this.editor.editing.view.focus()
 		} catch (error) {
 			logger.error('Could not insert image from Files', { error })
 			showError(t('mail', 'Could not insert the selected image'))
 		}
-	}
-
-	_readBlobAsDataUri(blob: Blob): Promise<string> {
-		return new Promise((resolve, reject) => {
-			const reader = new FileReader()
-			reader.onload = () => resolve(reader.result as string)
-			reader.onerror = () => reject(reader.error)
-			reader.readAsDataURL(blob)
-		})
 	}
 }

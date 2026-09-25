@@ -27,7 +27,6 @@ import { getLanguage } from '@nextcloud/l10n'
 import { emojiAddRecent, emojiSearch } from '@nextcloud/vue/functions/emoji'
 import {
 	Alignment,
-	Base64UploadAdapter,
 	BlockQuote,
 	Bold,
 	ClassicEditor,
@@ -54,6 +53,7 @@ import {
 } from 'ckeditor5'
 import { getLinkWithPicker, searchProvider } from '@nextcloud/vue/components/NcRichText'
 import TextDirectionPlugin from '../ckeditor/direction/TextDirectionPlugin.js'
+import BlobImagePlugin from '../ckeditor/image/BlobImagePlugin.ts'
 import FilesImagePlugin from '../ckeditor/image/FilesImagePlugin.ts'
 import ImageDowncastPlugin from '../ckeditor/image/ImageDowncastPlugin.ts'
 import MailPlugin from '../ckeditor/mail/MailPlugin.js'
@@ -156,7 +156,7 @@ export default {
 				ImageDowncastPlugin,
 				Font,
 				RemoveFormat,
-				Base64UploadAdapter,
+				BlobImagePlugin,
 				MailPlugin,
 				SourceEditing,
 				TextDirectionPlugin,

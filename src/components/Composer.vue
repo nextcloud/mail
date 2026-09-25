@@ -1335,7 +1335,32 @@ export default {
 			return data
 		},
 
-		saveDraft() {
+		/**
+		 * @param {string} bodyHtml html with blob: image sources
+		 * @return {Promise<string>} html with those images as base64 data URIs
+		 */
+		async embedBlobImages(bodyHtml) {
+			if (!bodyHtml.includes('blob:')) {
+				return bodyHtml
+			}
+
+			const doc = new DOMParser().parseFromString(bodyHtml, 'text/html')
+			const images = [...doc.querySelectorAll('img[src^="blob:"]')]
+
+			await Promise.all(images.map(async (img) => {
+				const blob = await (await fetch(img.src)).blob()
+				img.src = await new Promise((resolve, reject) => {
+					const reader = new FileReader()
+					reader.onload = () => resolve(reader.result)
+					reader.onerror = () => reject(reader.error)
+					reader.readAsDataURL(blob)
+				})
+			}))
+
+			return doc.body.innerHTML
+		},
+
+		async saveDraft() {
 			const draftData = this.getMessageData()
 			if (draftData.subject === ''
 				&& draftData.body?.value === ''
@@ -1348,6 +1373,10 @@ export default {
 				// and fires an input event
 				logger.debug('Nothing substantial to save, ignoring draft save')
 				return
+			}
+
+			if (draftData.bodyHtml) {
+				draftData.bodyHtml = await this.embedBlobImages(draftData.bodyHtml)
 			}
 
 			this.$emit('draft', draftData)
@@ -1629,8 +1658,13 @@ export default {
 				await this.$refs.mailvelopeEditor.pull()
 			}
 
+			const data = this.getMessageData()
+			if (data.bodyHtml) {
+				data.bodyHtml = await this.embedBlobImages(data.bodyHtml)
+			}
+
 			this.$emit('send', {
-				...this.getMessageData(),
+				...data,
 				force: false,
 			})
 		},
