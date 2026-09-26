@@ -19,22 +19,17 @@ use Psr\Log\LoggerInterface;
 use Throwable;
 
 class TrainImportanceClassifierJob extends TimedJob {
-	private AccountService $accountService;
-	private ImportanceClassifier $classifier;
 	private IJobList $jobList;
-	private LoggerInterface $logger;
 
-	public function __construct(ITimeFactory $time,
-		AccountService $accountService,
-		ImportanceClassifier $classifier,
+	public function __construct(
+		ITimeFactory $time,
+		private AccountService $accountService,
+		private ImportanceClassifier $classifier,
 		IJobList $jobList,
-		LoggerInterface $logger) {
+		private LoggerInterface $logger,
+	) {
 		parent::__construct($time);
-
-		$this->accountService = $accountService;
-		$this->classifier = $classifier;
 		$this->jobList = $jobList;
-		$this->logger = $logger;
 
 		$this->setInterval(24 * 60 * 60);
 		$this->setTimeSensitivity(self::TIME_INSENSITIVE);

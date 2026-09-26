@@ -16,35 +16,35 @@
 			<NcTextField v-model="sieveConfig.sieveHost" :label="t('mail', 'Sieve host')" />
 			<h4>{{ t('mail', 'Sieve security') }}</h4>
 			<div class="flex-row">
-				<ButtonVue
+				<NcButton
 					:pressed="sieveConfig.sieveSslMode === 'none'"
 					@click="updateSslMode('none')">
 					{{ t('mail', 'None') }}
-				</ButtonVue>
-				<ButtonVue
+				</NcButton>
+				<NcButton
 					:pressed="sieveConfig.sieveSslMode === 'ssl'"
 					@click="updateSslMode('ssl')">
 					{{ t('mail', 'SSL/TLS') }}
-				</ButtonVue>
-				<ButtonVue
+				</NcButton>
+				<NcButton
 					:pressed="sieveConfig.sieveSslMode === 'tls'"
 					@click="updateSslMode('tls')">
 					{{ t('mail', 'STARTTLS') }}
-				</ButtonVue>
+				</NcButton>
 			</div>
 			<NcTextField v-model="sieveConfig.sievePort" :label="t('mail', 'Sieve Port')" />
 			<h4>{{ t('mail', 'Sieve credentials') }}</h4>
 			<div class="flex-row">
-				<ButtonVue
+				<NcButton
 					:pressed="useImapCredentials"
 					@click="updateCredentials(true)">
 					{{ t('mail', 'IMAP credentials') }}
-				</ButtonVue>
-				<ButtonVue
+				</NcButton>
+				<NcButton
 					:pressed="!useImapCredentials"
 					@click="updateCredentials(false)">
 					{{ t('mail', 'Custom') }}
-				</ButtonVue>
+				</NcButton>
 			</div>
 			<p v-if="!useImapCredentials" class="custom">
 				<NcTextField v-model="sieveConfig.sieveUser" :label="t('mail', 'Sieve User')" />
@@ -56,25 +56,25 @@
 			{{ t('mail', 'Oh snap!') }}
 			{{ errorMessage }}
 		</p>
-		<ButtonVue
-			type="primary"
+		<NcButton
+			variant="primary"
 			:disabled="loading"
 			:aria-label="t('mail', 'Save sieve settings')"
 			@click.prevent="onSubmit">
 			{{ t('mail', 'Save sieve settings') }}
-		</ButtonVue>
+		</NcButton>
 	</form>
 </template>
 
 <script>
-import { NcButton as ButtonVue, NcCheckboxRadioSwitch, NcPasswordField, NcTextField } from '@nextcloud/vue'
+import { NcButton, NcCheckboxRadioSwitch, NcPasswordField, NcTextField } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'SieveAccountForm',
 	components: {
-		ButtonVue,
+		NcButton,
 		NcTextField,
 		NcPasswordField,
 		NcCheckboxRadioSwitch,

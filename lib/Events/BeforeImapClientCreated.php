@@ -13,12 +13,10 @@ use OCA\Mail\Account;
 use OCP\EventDispatcher\Event;
 
 class BeforeImapClientCreated extends Event {
-	/** @var Account */
-	private $account;
-
-	public function __construct(Account $account) {
+	public function __construct(
+		private Account $account,
+	) {
 		parent::__construct();
-		$this->account = $account;
 	}
 
 	/**

@@ -8,12 +8,10 @@
 namespace OCA\Mail\Tests\Unit\Service\Phishing;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-
 use DateTime;
 use OCA\Mail\Service\PhishingDetection\DateCheck;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IL10N;
-
 use PHPUnit\Framework\MockObject\MockObject;
 
 class DateCheckTest extends TestCase {
@@ -48,7 +46,6 @@ class DateCheckTest extends TestCase {
 	}
 
 	public function testInTheFuture(): void {
-
 
 		$this->time->expects($this->exactly(2))
 			->method('getDateTime')

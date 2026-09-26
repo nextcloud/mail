@@ -20,15 +20,12 @@ use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\IRequest;
 
 class TextBlockController extends Controller {
-	private ?string $uid;
-
 	public function __construct(
 		IRequest $request,
-		?string $userId,
+		private ?string $userId,
 		private TextBlockService $textBlockService,
 	) {
 		parent::__construct(Application::APP_ID, $request);
-		$this->uid = $userId;
 	}
 
 	/**
@@ -38,10 +35,10 @@ class TextBlockController extends Controller {
 	 */
 	#[TrapError]
 	public function index(): JsonResponse {
-		if ($this->uid === null) {
+		if ($this->userId === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
-		$textBlocks = $this->textBlockService->findAll($this->uid);
+		$textBlocks = $this->textBlockService->findAll($this->userId);
 
 		return JsonResponse::success($textBlocks);
 	}
@@ -55,10 +52,10 @@ class TextBlockController extends Controller {
 	 */
 	#[TrapError]
 	public function create(string $title, string $content): JsonResponse {
-		if ($this->uid === null) {
+		if ($this->userId === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
-		$textBlock = $this->textBlockService->create($this->uid, $title, $content);
+		$textBlock = $this->textBlockService->create($this->userId, $title, $content);
 
 		return JsonResponse::success($textBlock, Http::STATUS_CREATED);
 	}
@@ -74,17 +71,17 @@ class TextBlockController extends Controller {
 	#[TrapError]
 	public function update(int $id, string $title, string $content): JsonResponse {
 
-		if ($this->uid === null) {
+		if ($this->userId === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
 
-		$textBlock = $this->textBlockService->find($id, $this->uid);
+		$textBlock = $this->textBlockService->find($id, $this->userId);
 
 		if ($textBlock === null) {
 			return JsonResponse::error('Text block not found', Http::STATUS_NOT_FOUND);
 		}
 
-		$textBlock = $this->textBlockService->update($textBlock, $this->uid, $title, $content);
+		$textBlock = $this->textBlockService->update($textBlock, $this->userId, $title, $content);
 
 		return JsonResponse::success($textBlock, Http::STATUS_OK);
 	}
@@ -95,11 +92,11 @@ class TextBlockController extends Controller {
 	 * @return JsonResponse
 	 */
 	public function destroy(int $id): JsonResponse {
-		if ($this->uid === null) {
+		if ($this->userId === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
 		try {
-			$this->textBlockService->delete($id, $this->uid);
+			$this->textBlockService->delete($id, $this->userId);
 			return JsonResponse::success();
 		} catch (DoesNotExistException $e) {
 			return JsonResponse::fail('Text block not found', Http::STATUS_NOT_FOUND);

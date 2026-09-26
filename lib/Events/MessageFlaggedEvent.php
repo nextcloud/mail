@@ -11,35 +11,19 @@ namespace OCA\Mail\Events;
 
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\Message;
 use OCP\EventDispatcher\Event;
+use OCP\EventDispatcher\IWebhookCompatibleEvent;
 
-class MessageFlaggedEvent extends Event {
-	/** @var Account */
-	private $account;
-
-	/** @var Mailbox */
-	private $mailbox;
-
-	/** @var int */
-	private $uid;
-
-	/** @var string */
-	private $flag;
-
-	/** @var bool */
-	private $set;
-
-	public function __construct(Account $account,
-		Mailbox $mailbox,
-		int $uid,
-		string $flag,
-		bool $set) {
+class MessageFlaggedEvent extends Event implements IWebhookCompatibleEvent {
+	public function __construct(
+		private Account $account,
+		private Mailbox $mailbox,
+		private Message $message,
+		private string $flag,
+		private bool $set,
+	) {
 		parent::__construct();
-		$this->account = $account;
-		$this->mailbox = $mailbox;
-		$this->uid = $uid;
-		$this->flag = $flag;
-		$this->set = $set;
 	}
 
 	public function getAccount(): Account {
@@ -50,8 +34,12 @@ class MessageFlaggedEvent extends Event {
 		return $this->mailbox;
 	}
 
+	public function getMessage(): Message {
+		return $this->message;
+	}
+
 	public function getUid(): int {
-		return $this->uid;
+		return $this->message->getUid();
 	}
 
 	public function getFlag(): string {
@@ -60,5 +48,17 @@ class MessageFlaggedEvent extends Event {
 
 	public function isSet(): bool {
 		return $this->set;
+	}
+
+	#[\Override]
+	public function getWebhookSerializable(): array {
+		return [
+			'accountId' => $this->account->getId(),
+			'flag' => $this->flag,
+			'mailboxId' => $this->mailbox->getId(),
+			'messageId' => $this->message->getId(),
+			'set' => $this->set,
+			'uid' => $this->message->getUid(),
+		];
 	}
 }

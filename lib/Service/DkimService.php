@@ -23,27 +23,16 @@ class DkimService implements IDkimService {
 	private const CACHE_PREFIX = 'mail_dkim';
 	private const CACHE_TTL = 7 * 24 * 3600;
 
-	/** @var IMAPClientFactory */
-	private $clientFactory;
-
-	/** @var MessageMapper */
-	private $messageMapper;
-
 	/** @var ICache */
 	private $cache;
 
-	private IDkimValidator $dkimValidator;
-
 	public function __construct(
-		IMAPClientFactory $clientFactory,
-		MessageMapper $messageMapper,
+		private IMAPClientFactory $clientFactory,
+		private MessageMapper $messageMapper,
 		ICacheFactory $cacheFactory,
-		IDkimValidator $dkimValidator,
+		private IDkimValidator $dkimValidator,
 	) {
-		$this->clientFactory = $clientFactory;
-		$this->messageMapper = $messageMapper;
 		$this->cache = $cacheFactory->createLocal(self::CACHE_PREFIX);
-		$this->dkimValidator = $dkimValidator;
 	}
 
 	#[\Override]

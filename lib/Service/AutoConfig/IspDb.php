@@ -25,10 +25,6 @@ class IspDb {
 	/** @var IClient */
 	private $client;
 
-	/** @var LoggerInterface */
-	private $logger;
-	private Resolver $dnsResolver;
-
 	/** @returns string[] */
 	public function getUrls(): array {
 		return [
@@ -40,12 +36,12 @@ class IspDb {
 		];
 	}
 
-	public function __construct(IClientService $clientService,
-		Resolver $dnsResolver,
-		LoggerInterface $logger) {
+	public function __construct(
+		IClientService $clientService,
+		private Resolver $dnsResolver,
+		private LoggerInterface $logger,
+	) {
 		$this->client = $clientService->newClient();
-		$this->dnsResolver = $dnsResolver;
-		$this->logger = $logger;
 	}
 
 	/**

@@ -15,19 +15,11 @@ use OCA\Mail\Service\ContactsIntegration;
 use OCA\Mail\Service\GroupsIntegration;
 
 class AutoCompleteService {
-	/** @var ContactsIntegration */
-	private $contactsIntegration;
-
-	/** @var GroupsIntegration */
-	private $groupsIntegration;
-
-	/** @var AddressCollector */
-	private $addressCollector;
-
-	public function __construct(ContactsIntegration $ci, GroupsIntegration $gi, AddressCollector $ac) {
-		$this->contactsIntegration = $ci;
-		$this->groupsIntegration = $gi;
-		$this->addressCollector = $ac;
+	public function __construct(
+		private ContactsIntegration $contactsIntegration,
+		private GroupsIntegration $groupsIntegration,
+		private AddressCollector $addressCollector,
+	) {
 	}
 
 	public function findMatches(string $userId, string $term): array {

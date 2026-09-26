@@ -4,7 +4,7 @@
 -->
 
 <template>
-	<AppContentDetails
+	<NcAppContentDetails
 		class="app-content no-message-selected"
 		:class="{ 'no-message-selected--themed': isThemed }"
 		:style="{ backgroundImage: isThemed ? undefined : backgroundImgSrc }">
@@ -17,12 +17,12 @@
 		<div class="no-message-selected__action">
 			<NewMessageButtonHeader :show-refresh="false" />
 		</div>
-	</AppContentDetails>
+	</NcAppContentDetails>
 </template>
 
 <script>
 import { generateFilePath } from '@nextcloud/router'
-import { NcAppContentDetails as AppContentDetails } from '@nextcloud/vue'
+import { NcAppContentDetails } from '@nextcloud/vue'
 import { useIsDarkTheme } from '@nextcloud/vue/composables/useIsDarkTheme'
 import NewMessageButtonHeader from './NewMessageButtonHeader.vue'
 
@@ -30,7 +30,7 @@ export default {
 	name: 'NoMessageSelected',
 	components: {
 		NewMessageButtonHeader,
-		AppContentDetails,
+		NcAppContentDetails,
 	},
 
 	setup() {

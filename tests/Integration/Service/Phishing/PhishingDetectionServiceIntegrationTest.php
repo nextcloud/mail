@@ -5,13 +5,11 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-
 namespace OCA\Mail\Tests\Integration\Service\Phishing;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Mime_Headers;
 use OCA\Mail\Service\ContactsIntegration;
-
 use OCA\Mail\Service\PhishingDetection\ContactCheck;
 use OCA\Mail\Service\PhishingDetection\CustomEmailCheck;
 use OCA\Mail\Service\PhishingDetection\DateCheck;
@@ -21,7 +19,6 @@ use OCA\Mail\Service\PhishingDetection\PhishingDetectionService;
 use OCA\Mail\Service\PhishingDetection\ReplyToCheck;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IL10N;
-
 use PHPUnit\Framework\MockObject\MockObject;
 
 class PhishingDetectionServiceIntegrationTest extends TestCase {

@@ -4,18 +4,8 @@
  */
 
 import { getCurrentUser } from '@nextcloud/auth'
-import axios from '@nextcloud/axios'
+import { getClient as getDavClient } from '@nextcloud/files/dav'
 import { generateRemoteUrl } from '@nextcloud/router'
 import memoize from 'lodash/fp/memoize.js'
-import * as webdav from 'webdav'
 
-export const getClient = memoize((service) => {
-	// Add this so the server knows it is an request from the browser
-	axios.defaults.headers['X-Requested-With'] = 'XMLHttpRequest'
-
-	// force our axios
-	const patcher = webdav.getPatcher()
-	patcher.patch('request', axios)
-
-	return webdav.createClient(generateRemoteUrl(`dav/${service}/${getCurrentUser().uid}`))
-})
+export const getClient = memoize((service) => getDavClient(generateRemoteUrl(`dav/${service}/${getCurrentUser().uid}`)))

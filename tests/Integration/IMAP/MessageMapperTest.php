@@ -91,7 +91,6 @@ class MessageMapperTest extends TestCase {
 			self::assertEquals('$label1', $tags[0]->getImapLabel());
 		}
 
-
 		// now we untag this message!
 		$client = $this->getClient($account);
 		try {

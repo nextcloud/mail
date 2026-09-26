@@ -88,7 +88,6 @@ class TextBlockService {
 		$this->textBlockShareMapper->deleteByTextBlockId($textBlockId);
 	}
 
-
 	/**
 	 * @throws UserNotFoundException
 	 * @throws ShareeAlreadyExistsException

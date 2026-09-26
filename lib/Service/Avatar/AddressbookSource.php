@@ -16,11 +16,9 @@ use OCA\Mail\Service\ContactsIntegration;
  * as avatar source
  */
 class AddressbookSource implements IAvatarSource {
-	/** @var ContactsIntegration */
-	private $contactsIntegration;
-
-	public function __construct(ContactsIntegration $contactsIntegration) {
-		$this->contactsIntegration = $contactsIntegration;
+	public function __construct(
+		private ContactsIntegration $contactsIntegration,
+	) {
 	}
 
 	/**

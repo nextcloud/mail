@@ -55,7 +55,6 @@ class AttachmentServiceTest extends TestCase {
 	private ITimeFactory&MockObject $timeFactory;
 	private AttachmentService $service;
 
-
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -336,7 +335,6 @@ class AttachmentServiceTest extends TestCase {
 			'id' => 123,
 			'fileName' => 'cat.jpg',
 			'mimeType' => 'text/plain',
-
 		];
 
 		$this->mailManager->expects(self::once())
@@ -563,7 +561,6 @@ class AttachmentServiceTest extends TestCase {
 			'messageId' => 999,
 			'fileName' => 'cat.jpg',
 			'mimeType' => 'text/plain',
-
 		];
 
 		$this->userFolder->expects(self::once())

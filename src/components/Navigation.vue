@@ -4,7 +4,7 @@
 -->
 
 <template>
-	<AppNavigation class="mail-navigation">
+	<NcAppNavigation class="mail-navigation">
 		<template #search>
 			<NewMessageButtonHeader class="mail-navigation__new-message-button" />
 		</template>
@@ -33,8 +33,11 @@
 					<IconAlertTriangle
 						:size="18"
 						:title="t('mail', 'This account cannot connect')" />
-					<span>
+					<span @click="showAccountSettings(group.account.id, 'mail-server')">
 						{{ t('mail', 'Connection failed. Please verify your information and try again') }}
+						<NcButton
+							:aria-label="t('mail', 'Change password')"
+							variant="tertiary">{{ t('mail', 'Change password') }}</NcButton>
 					</span>
 				</div>
 				<template v-else-if="!isDisabled(group.account)">
@@ -67,7 +70,7 @@
 				<NavigationOutbox class="outbox" />
 			</div>
 			<div class="mail-settings">
-				<AppNavigationItem
+				<NcAppNavigationItem
 					class="mail-settings__button"
 					:close-after-click="true"
 					:name="t('mail', 'Mail settings')"
@@ -75,15 +78,25 @@
 					<template #icon>
 						<IconSetting :size="20" />
 					</template>
-				</AppNavigationItem>
+				</NcAppNavigationItem>
 			</div>
 		</template>
 		<AppSettingsMenu :open.sync="showSettings" />
-	</AppNavigation>
+
+		<!-- Must stay outside the #list slot: within NavigationAccount's vue-frag
+		     fragment the dialog gets pulled back into the clipped sidebar after
+		     NcModal relocated it to <body>. -->
+		<AccountSettings
+			v-if="settingsAccount"
+			:open="true"
+			:account="settingsAccount"
+			:scroll-to-section="settingsSection"
+			@close="onCloseAccountSettings" />
+	</NcAppNavigation>
 </template>
 
 <script>
-import { NcAppNavigation as AppNavigation, NcAppNavigationItem as AppNavigationItem } from '@nextcloud/vue'
+import { NcAppNavigation, NcAppNavigationItem, NcButton } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import IconAlertTriangle from 'vue-material-design-icons/AlertOutline.vue'
 import IconSetting from 'vue-material-design-icons/CogOutline.vue'
@@ -100,15 +113,17 @@ import useOutboxStore from '../store/outboxStore.js'
 export default {
 	name: 'Navigation',
 	components: {
-		AppNavigation,
+		NcAppNavigation,
+		AccountSettings: () => import(/* webpackChunkName: "account-settings" */ './AccountSettings.vue'),
 		AppSettingsMenu,
 		NavigationAccount,
 		NavigationAccountExpandCollapse,
 		NavigationMailbox,
 		NavigationOutbox,
+		NcButton,
 		NewMessageButtonHeader,
 		IconSetting,
-		AppNavigationItem,
+		NcAppNavigationItem,
 		IconAlertTriangle,
 	},
 
@@ -116,11 +131,17 @@ export default {
 		return {
 			refreshing: false,
 			showSettings: false,
+			settingsAccountId: null,
+			settingsSection: undefined,
 		}
 	},
 
 	computed: {
 		...mapStores(useOutboxStore, useMainStore),
+		settingsAccount() {
+			return this.settingsAccountId ? this.mainStore.getAccount(this.settingsAccountId) : null
+		},
+
 		menu() {
 			return this.mainStore.getAccounts
 				.filter((account) => account.id !== UNIFIED_ACCOUNT_ID)
@@ -160,9 +181,29 @@ export default {
 		},
 	},
 
+	watch: {
+		'mainStore.showAccountSettings': function(settings) {
+			if (settings?.accountId) {
+				this.settingsAccountId = settings.accountId
+				this.settingsSection = settings.section
+			} else {
+				this.settingsAccountId = null
+				this.settingsSection = undefined
+			}
+		},
+	},
+
 	methods: {
+		onCloseAccountSettings() {
+			this.mainStore.showSettingsForAccountMutation(null)
+		},
+
 		showMailSettings() {
 			this.showSettings = true
+		},
+
+		showAccountSettings(accountId, section) {
+			this.mainStore.showSettingsForAccountMutation(accountId, section)
 		},
 
 		isCollapsed(account, mailbox) {

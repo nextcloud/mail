@@ -69,6 +69,19 @@ export function detect(str) {
 }
 
 /**
+ * Check whether an HTML string contains an inline image.
+ *
+ * Plain text can't carry images: toPlain() skips <img> entirely. Callers use
+ * this to detect content that would be lost before converting it.
+ *
+ * @param {string} value HTML string
+ * @return {boolean}
+ */
+export function containsImage(value) {
+	return new DOMParser().parseFromString(value, 'text/html').querySelector('img') !== null
+}
+
+/**
  * @function
  * @param {string} format
  * @param {Text} text

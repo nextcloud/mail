@@ -25,36 +25,18 @@ use Psr\Log\LoggerInterface;
 use function in_array;
 
 class SetupService {
-	/** @var AccountService */
-	private $accountService;
-
 	/** @var ICrypto */
 	private $crypto;
 
-	/** @var SmtpClientFactory */
-	private $smtpClientFactory;
-
-	/** @var IMAPClientFactory */
-	private $imapClientFactory;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var TagMapper */
-	private $tagMapper;
-
-	public function __construct(AccountService $accountService,
+	public function __construct(
+		private AccountService $accountService,
 		ICrypto $crypto,
-		SmtpClientFactory $smtpClientFactory,
-		IMAPClientFactory $imapClientFactory,
-		LoggerInterface $logger,
-		TagMapper $tagMapper) {
-		$this->accountService = $accountService;
+		private SmtpClientFactory $smtpClientFactory,
+		private IMAPClientFactory $imapClientFactory,
+		private LoggerInterface $logger,
+		private TagMapper $tagMapper,
+	) {
 		$this->crypto = $crypto;
-		$this->smtpClientFactory = $smtpClientFactory;
-		$this->imapClientFactory = $imapClientFactory;
-		$this->logger = $logger;
-		$this->tagMapper = $tagMapper;
 	}
 
 	/**

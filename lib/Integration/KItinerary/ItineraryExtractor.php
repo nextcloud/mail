@@ -19,29 +19,15 @@ use Nextcloud\KItinerary\Sys\SysAdapter;
 use Psr\Log\LoggerInterface;
 
 class ItineraryExtractor {
-	/** @var BinaryAdapter */
-	private $binAdapter;
-
-	/** @var FlatpakAdapter */
-	private $flatpakAdapter;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var SysAdapter */
-	private $sysAdapter;
-
 	/** @var Adapter */
 	private $adapter;
 
-	public function __construct(BinaryAdapter $binAdapter,
-		FlatpakAdapter $flatpakAdapter,
-		SysAdapter $sysAdapter,
-		LoggerInterface $logger) {
-		$this->binAdapter = $binAdapter;
-		$this->flatpakAdapter = $flatpakAdapter;
-		$this->sysAdapter = $sysAdapter;
-		$this->logger = $logger;
+	public function __construct(
+		private BinaryAdapter $binAdapter,
+		private FlatpakAdapter $flatpakAdapter,
+		private SysAdapter $sysAdapter,
+		private LoggerInterface $logger,
+	) {
 	}
 
 	private function findAvailableAdapter(): ?Adapter {

@@ -180,7 +180,7 @@ class SieveServiceTest extends TestCase {
 			->willReturn('nextcloud');
 		$client->expects(self::once())
 			->method('installScript')
-			->with('nextcloud', '# foo bar', true);
+			->with('nextcloud', "# foo bar\r\n", true);
 
 		$this->accountService->expects(self::once())
 			->method('find')
@@ -210,7 +210,7 @@ class SieveServiceTest extends TestCase {
 			->willReturn(null);
 		$client->expects(self::once())
 			->method('installScript')
-			->with('nextcloud', '# foo bar', true);
+			->with('nextcloud', "# foo bar\r\n", true);
 
 		$this->accountService->expects(self::once())
 			->method('find')
@@ -222,6 +222,36 @@ class SieveServiceTest extends TestCase {
 			->willReturn($client);
 
 		$this->sieveService->updateActiveScript('1', 2, '# foo bar');
+	}
+
+	public function testUpdateActiveScriptCollapsesTrailingNewlines(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setSieveEnabled(true);
+		$mailAccount->setSieveHost('localhost');
+		$mailAccount->setSievePort(4190);
+		$mailAccount->setSieveUser('user');
+		$mailAccount->setSievePassword('password');
+		$mailAccount->setSieveSslMode('');
+		$account = new Account($mailAccount);
+
+		$client = $this->createMock(\Horde\ManageSieve::class);
+		$client->expects(self::once())
+			->method('getActive')
+			->willReturn('nextcloud');
+		$client->expects(self::once())
+			->method('installScript')
+			->with('nextcloud', "# foo bar\r\n", true);
+
+		$this->accountService->expects(self::once())
+			->method('find')
+			->with('1', 2)
+			->willReturn($account);
+		$this->sieveClientFactory->expects(self::once())
+			->method('getClient')
+			->with($account)
+			->willReturn($client);
+
+		$this->sieveService->updateActiveScript('1', 2, "# foo bar\r\n\r\n\r\n");
 	}
 
 	public function testUpdateActiveScriptNoSieve(): void {

@@ -91,7 +91,7 @@ class DeepLinkControllerTest extends TestCase {
 			->with('user123')
 			->willReturn([$lightAccount]);
 
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$this->accountService->expects(self::once())
 			->method('find')
 			->with('user123', 1)
@@ -133,7 +133,7 @@ class DeepLinkControllerTest extends TestCase {
 			->with('user123')
 			->willReturn([$lightAccount]);
 
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$this->accountService->expects(self::once())
 			->method('find')
 			->with('user123', 1)

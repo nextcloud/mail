@@ -71,7 +71,7 @@
 						</div>
 					</div>
 					<div class="modal-inner--field">
-						<label class="modal-inner--label" for="fromId">
+						<label class="modal-inner--label">
 							{{ t('mail', 'Date') }}
 						</label>
 						<div class="modal-inner--container range">
@@ -274,33 +274,24 @@
 		</div>
 		<!-- Filter buttons -->
 		<div v-if="showButtons" class="filter-buttons">
-			<NcButton
-				variant="secondary"
-				class="shortcut"
+			<NcChip
+				:text="t('mail', 'Has attachment')"
+				:no-close="true"
+				:variant="hasAttachmentActive ? 'primary' : 'secondary'"
 				:aria-label="t('mail', 'Has attachment')"
-				:title="t('mail', 'Has attachment')"
-				:pressed="hasAttachmentActive"
-				@click="toggleGetAttachments">
-				{{ t('mail', 'Has attachment') }}
-			</NcButton>
-			<NcButton
-				variant="secondary"
-				class="shortcut"
-				:pressed="hasUnreadActive"
+				@click.native="toggleGetAttachments" />
+			<NcChip
+				:text="t('mail', 'Unread')"
+				:no-close="true"
+				:variant="hasUnreadActive ? 'primary' : 'secondary'"
 				:aria-label="t('mail', 'Unread')"
-				:title="t('mail', 'Unread')"
-				@click="toggleUnread">
-				{{ t('mail', 'Unread') }}
-			</NcButton>
-			<NcButton
-				variant="secondary"
-				class="shortcut"
-				:pressed="hasToMeActive"
+				@click.native="toggleUnread" />
+			<NcChip
+				:text="t('mail', 'To me')"
+				:no-close="true"
+				:variant="hasToMeActive ? 'primary' : 'secondary'"
 				:aria-label="t('mail', 'To me')"
-				:title="t('mail', 'To me')"
-				@click="toggleCurrentUser">
-				{{ t('mail', 'To me') }}
-			</NcButton>
+				@click.native="toggleCurrentUser" />
 		</div>
 	</div>
 </template>
@@ -308,7 +299,7 @@
 <script>
 import IconClose from '@mdi/svg/svg/close.svg'
 import IconMagnify from '@mdi/svg/svg/magnify.svg'
-import { translate as t } from '@nextcloud/l10n'
+import { t } from '@nextcloud/l10n'
 import moment from '@nextcloud/moment'
 import debouncePromise from 'debounce-promise'
 import uniqBy from 'lodash/fp/uniqBy.js'
@@ -316,6 +307,7 @@ import { mapStores } from 'pinia'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcCheckboxRadioSwitch
 	from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
+import NcChip from '@nextcloud/vue/components/NcChip'
 import NcDateTimePickerNative from '@nextcloud/vue/components/NcDateTimePickerNative'
 import NcDialog from '@nextcloud/vue/components/NcDialog'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
@@ -330,6 +322,7 @@ const debouncedSearch = debouncePromise(findRecipient, 500)
 export default {
 	name: 'SearchMessages',
 	components: {
+		NcChip,
 		NcDialog,
 		NcSelect,
 		NcDateTimePickerNative,
@@ -374,7 +367,7 @@ export default {
 				{
 					label: t('mail', 'Clear'),
 					callback: () => this.resetFilter(),
-					type: 'secondary',
+					type: 'primary',
 					icon: IconClose,
 				},
 				{
@@ -721,7 +714,7 @@ export default {
 
 		.marked-as .modal-inner-inline {
 			display: inline-block;
-			width: 32%;
+			width: 50%;
 
 		}
 		.range {
@@ -853,7 +846,6 @@ export default {
 	flex-wrap: nowrap;
 	gap: 4px;
 	overflow: hidden;
-	text-overflow: ellipsis;
 	padding: 0 5px 5px 5px;
 }
 </style>

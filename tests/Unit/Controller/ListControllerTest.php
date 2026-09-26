@@ -27,6 +27,7 @@ use OCP\Http\Client\IClient;
 class ListControllerTest extends TestCase {
 	private ServiceMockObject $serviceMock;
 	private ListController $controller;
+	private string $userId = 'user123';
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -148,6 +149,7 @@ class ListControllerTest extends TestCase {
 			'',
 			'',
 			false,
+			false,
 			[],
 			null,
 			false,
@@ -212,6 +214,7 @@ class ListControllerTest extends TestCase {
 			'',
 			'',
 			false,
+			false,
 			[],
 			'https://un.sub.scribe/me',
 			true,
@@ -235,6 +238,10 @@ class ListControllerTest extends TestCase {
 		$httpClient->expects(self::once())
 			->method('post')
 			->with('https://un.sub.scribe/me');
+		$this->serviceMock->getParameter('delegationService')
+			->expects(self::once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, 'user123 unsubscribed from mailing list: 123 on behalf of user123');
 
 		$response = $this->controller->unsubscribe(123);
 

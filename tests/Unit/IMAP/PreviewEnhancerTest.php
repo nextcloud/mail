@@ -26,7 +26,6 @@ use Psr\Log\LoggerInterface;
 
 class PreviewEnhancerTest extends TestCase {
 
-
 	/** @var IMAPClientFactory|MockObject */
 	private $imapClientFactory;
 	/** @var ImapMapper|MockObject */
@@ -111,6 +110,5 @@ class PreviewEnhancerTest extends TestCase {
 		$this->assertNull($message1->getAvatar());
 		$this->assertSame($message2Avatar, $message2->getAvatar());
 	}
-
 
 }

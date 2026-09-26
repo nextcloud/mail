@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 use Nextcloud\Rector\Set\NextcloudSets;
 use Rector\Config\RectorConfig;
+use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\TypeDeclaration\Rector\Class_\AddTestsVoidReturnTypeWhereNoReturnRector;
 
@@ -32,4 +33,5 @@ return RectorConfig::configure()
 	)
 	->withRules([
 		AddTestsVoidReturnTypeWhereNoReturnRector::class,
+		ClassPropertyAssignToConstructorPromotionRector::class,
 	]);

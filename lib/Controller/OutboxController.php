@@ -26,25 +26,16 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class OutboxController extends Controller {
-	private OutboxService $service;
-	private string $userId;
-	private AccountService $accountService;
-	private SmimeService $smimeService;
-	private DelegationService $delegationService;
-
-	public function __construct(string $appName,
-		$userId,
+	public function __construct(
+		string $appName,
+		private string $userId,
 		IRequest $request,
-		OutboxService $service,
-		AccountService $accountService,
-		SmimeService $smimeService,
-		DelegationService $delegationService) {
+		private OutboxService $service,
+		private AccountService $accountService,
+		private SmimeService $smimeService,
+		private DelegationService $delegationService,
+	) {
 		parent::__construct($appName, $request);
-		$this->userId = $userId;
-		$this->service = $service;
-		$this->accountService = $accountService;
-		$this->smimeService = $smimeService;
-		$this->delegationService = $delegationService;
 	}
 
 	/**
@@ -112,6 +103,7 @@ class OutboxController extends Controller {
 		?int $sendAt = null,
 		bool $requestMdn = false,
 		bool $isPgpMime = false,
+		bool $isAiGenerated = false,
 	): JsonResponse {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->userId);
 		$account = $this->accountService->find($effectiveUserId, $accountId);
@@ -135,6 +127,7 @@ class OutboxController extends Controller {
 		$message->setSmimeSign($smimeSign);
 		$message->setSmimeEncrypt($smimeEncrypt);
 		$message->setRequestMdn($requestMdn);
+		$message->setAiGenerated($isAiGenerated);
 
 		if (!empty($smimeCertificateId)) {
 			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $effectiveUserId);
@@ -142,6 +135,7 @@ class OutboxController extends Controller {
 		}
 
 		$this->service->saveMessage($account, $message, $to, $cc, $bcc, $attachments);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId created an outbox message for account <$accountId> on behalf of $effectiveUserId");
 
 		return JsonResponse::success($message, Http::STATUS_CREATED);
 	}
@@ -159,6 +153,7 @@ class OutboxController extends Controller {
 		$this->accountService->find($effectiveUserId, $draftMessage->getAccountId());
 
 		$outboxMessage = $this->service->convertDraft($draftMessage, $sendAt);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId created an outbox message from draft <$id> on behalf of $effectiveUserId");
 
 		return JsonResponse::success(
 			$outboxMessage,
@@ -175,7 +170,6 @@ class OutboxController extends Controller {
 	 * @param string $body
 	 * @param string $editorBody
 	 * @param bool $isHtml
-	 * @param bool $failed
 	 * @param array $to i. e. [['label' => 'Linus', 'email' => 'tent@stardewvalley.com'], ['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']]
 	 * @param array $cc
 	 * @param array $bcc
@@ -196,7 +190,6 @@ class OutboxController extends Controller {
 		bool $isHtml,
 		bool $smimeSign,
 		bool $smimeEncrypt,
-		bool $failed = false,
 		array $to = [],
 		array $cc = [],
 		array $bcc = [],
@@ -207,12 +200,15 @@ class OutboxController extends Controller {
 		?int $sendAt = null,
 		bool $requestMdn = false,
 		bool $isPgpMime = false,
+		bool $isAiGenerated = false,
 	): JsonResponse {
 		$effectiveUserId = $this->delegationService->resolveLocalMessageUserId($id, $this->userId);
 		$message = $this->service->getMessage($id, $effectiveUserId);
 		if ($message->getStatus() === LocalMessage::STATUS_PROCESSED) {
 			return JsonResponse::error('Cannot modify already sent message', Http::STATUS_FORBIDDEN, [$message]);
 		}
+
+		$this->delegationService->assertAccountAccess($accountId, $this->userId);
 		$account = $this->accountService->find($effectiveUserId, $accountId);
 
 		$message->setAccountId($accountId);
@@ -228,6 +224,11 @@ class OutboxController extends Controller {
 		$message->setSmimeSign($smimeSign);
 		$message->setSmimeEncrypt($smimeEncrypt);
 		$message->setRequestMdn($requestMdn);
+		$message->setAiGenerated($isAiGenerated);
+
+		// Reset the status to make it retryable.
+		$message->setFailed(false);
+		$message->setStatus(LocalMessage::STATUS_RAW);
 
 		if (!empty($smimeCertificateId)) {
 			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $effectiveUserId);
@@ -235,6 +236,7 @@ class OutboxController extends Controller {
 		}
 
 		$message = $this->service->updateMessage($account, $message, $to, $cc, $bcc, $attachments);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated outbox message <$id> for account <$accountId> on behalf of $effectiveUserId");
 
 		return JsonResponse::success($message, Http::STATUS_ACCEPTED);
 	}
@@ -252,8 +254,13 @@ class OutboxController extends Controller {
 		$account = $this->accountService->find($effectiveUserId, $message->getAccountId());
 
 		$message = $this->service->sendMessage($message, $account);
+		$status = $message->getStatus();
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, match ($status) {
+			LocalMessage::STATUS_PROCESSED => "$this->userId sent outbox message <$id> on behalf of $effectiveUserId",
+			default => "$this->userId attempted sending outbox message <$id> on behalf of $effectiveUserId but sending failed",
+		});
 
-		if ($message->getStatus() !== LocalMessage::STATUS_PROCESSED) {
+		if ($status !== LocalMessage::STATUS_PROCESSED) {
 			return JsonResponse::error('Could not send message', Http::STATUS_INTERNAL_SERVER_ERROR, [$message]);
 		}
 		return JsonResponse::success(
@@ -272,6 +279,7 @@ class OutboxController extends Controller {
 		$effectiveUserId = $this->delegationService->resolveLocalMessageUserId($id, $this->userId);
 		$message = $this->service->getMessage($id, $effectiveUserId);
 		$this->service->deleteMessage($effectiveUserId, $message);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId deleted outbox message <$id> on behalf of $effectiveUserId");
 		return JsonResponse::success('Message deleted', Http::STATUS_ACCEPTED);
 	}
 }

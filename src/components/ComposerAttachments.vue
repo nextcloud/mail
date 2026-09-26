@@ -37,28 +37,14 @@
 			multiple
 			style="display: none;"
 			@change="onLocalAttachmentSelected">
-		<FilePicker
-			v-if="isAttachementPickerOpen"
-			:name="t('mail', 'Choose a file to add as attachment')"
-			:buttons="attachementPickerButtons"
-			:filter-fn="filterAttachements"
-			@close="() => isAttachementPickerOpen = false" />
-		<FilePicker
-			v-if="isLinkPickerOpen"
-			:name="t('mail', 'Choose a file to share as a link')"
-			:multiselect="false"
-			:buttons="linkPickerButtons"
-			:filter-fn="filterAttachements"
-			@close="() => isLinkPickerOpen = false" />
 	</div>
 </template>
 
 <script>
 import { getRequestToken } from '@nextcloud/auth'
-import { showWarning } from '@nextcloud/dialogs'
-import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
+import { getFilePickerBuilder, showWarning } from '@nextcloud/dialogs'
 import { formatFileSize } from '@nextcloud/files'
-import { translatePlural as n, translate as t } from '@nextcloud/l10n'
+import { n, t } from '@nextcloud/l10n'
 import map from 'lodash/fp/map.js'
 import prop from 'lodash/fp/prop.js'
 import sumBy from 'lodash/fp/sumBy.js'
@@ -83,7 +69,6 @@ const mimes = [
 export default {
 	name: 'ComposerAttachments',
 	components: {
-		FilePicker,
 		ComposerAttachment,
 		ChevronDown,
 		ChevronUp,
@@ -104,6 +89,11 @@ export default {
 			type: Number,
 			default: 0,
 		},
+
+		accountId: {
+			type: Number,
+			default: null,
+		},
 	},
 
 	data() {
@@ -114,24 +104,6 @@ export default {
 			attachments: [],
 			isToggle: false,
 			hasNextLine: false,
-			isAttachementPickerOpen: false,
-			isLinkPickerOpen: false,
-			attachementPickerButtons: [
-				{
-					label: t('mail', 'Choose'),
-					callback: this.onAddCloudAttachment,
-					type: 'primary',
-				},
-			],
-
-			linkPickerButtons: [
-				{
-					label: t('mail', 'Choose'),
-					callback: this.onAddCloudAttachmentLink,
-					type: 'primary',
-				},
-			],
-
 		}
 	},
 
@@ -188,8 +160,8 @@ export default {
 	created() {
 		this.bus.on('on-add-local-attachment', this.onAddLocalAttachment)
 		this.bus.on('on-add-cloud-attachment', this.openAttachementPicker)
-		this.bus.on('on-add-cloud-attachment-link', this.OpenLinkPicker)
 		this.bus.on('on-add-message-as-attachment', this.onAddMessageAsAttachment)
+		this.bus.on('on-add-local-files', this.addLocalFiles)
 		this.value.map((attachment) => {
 			this.attachments.push({
 				id: attachment.id,
@@ -212,12 +184,27 @@ export default {
 			return (node.permissions & OC.PERMISSION_READ) && downloadPermissions
 		},
 
-		openAttachementPicker() {
-			this.isAttachementPickerOpen = true
-		},
+		async openAttachementPicker() {
+			const picker = getFilePickerBuilder(t('mail', 'Choose a file'))
+				.setMultiSelect(true)
+				.setFilter(this.filterAttachements)
+				.addButton({
+					label: t('mail', 'Add as attachment'),
+					variant: 'primary',
+					callback: this.onAddCloudAttachment,
+				})
+				.addButton({
+					label: t('mail', 'Add as share link'),
+					variant: 'primary',
+					callback: this.onAddCloudAttachmentLink,
+				})
+				.build()
 
-		OpenLinkPicker() {
-			this.isLinkPickerOpen = true
+			try {
+				await picker.pickNodes()
+			} catch (error) {
+				logger.debug('file picker closed without picking a file', { error })
+			}
 		},
 
 		onAddLocalAttachment() {
@@ -240,11 +227,15 @@ export default {
 		},
 
 		onLocalAttachmentSelected(e) {
+			return this.addLocalFiles(Array.from(e.target.files))
+		},
+
+		addLocalFiles(files) {
 			this.uploading = true
 			// BUG - if choose again - progress lost/ move to complete()
 			Vue.set(this, 'uploads', {})
 
-			const toUpload = sumBy(prop('size'), Object.values(e.target.files))
+			const toUpload = sumBy(prop('size'), Object.values(files))
 			const newTotal = toUpload + this.totalSizeOfUpload()
 			logger.debug('checking upload size limit', {
 				existingUploads: this.totalSizeOfUpload(),
@@ -253,7 +244,7 @@ export default {
 				newTotal,
 			})
 			if (this.uploadSizeLimit && newTotal > this.uploadSizeLimit) {
-				this.showAttachmentFileSizeWarning(e.target.files.length)
+				this.showAttachmentFileSizeWarning(files.length)
 				this.uploading = false
 				return
 			}
@@ -292,7 +283,7 @@ export default {
 					uploaded: 0,
 				})
 				try {
-					return uploadLocalAttachment(file, progress(file.name), controller)
+					return uploadLocalAttachment(file, this.accountId, progress(file.name), controller)
 						.catch(() => {
 							this.attachments.some((attachment) => {
 								if (attachment.displayName === file.name && !attachment.error) {
@@ -318,7 +309,7 @@ export default {
 				} catch (error) {
 					logger.error('Could not upload file', { file, error })
 				}
-			}, e.target.files)
+			}, files)
 
 			const done = Promise.all(promises)
 				.catch((error) => logger.error('could not upload all attachments', { error }))
@@ -362,7 +353,7 @@ export default {
 						total: filesFromCloud[i].size,
 						sizeString: this.formatBytes(filesFromCloud[i].size),
 						hasPreview: filesFromCloud[i]['has-preview'],
-						// dont know, may be it will be conflict if cloud & local has equal IDs?
+						// don't know, may be it will be conflict if cloud & local has equal IDs?
 						id: filesFromCloud[i].fileid,
 						uploaded: 0,
 					}

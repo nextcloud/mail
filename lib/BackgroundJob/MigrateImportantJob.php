@@ -12,7 +12,6 @@ namespace OCA\Mail\BackgroundJob;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\MailboxMapper;
-
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Migration\MigrateImportantFromImapAndDb;
@@ -23,28 +22,16 @@ use OCP\BackgroundJob\QueuedJob;
 use Psr\Log\LoggerInterface;
 
 class MigrateImportantJob extends QueuedJob {
-	private MailboxMapper $mailboxMapper;
-	private MailAccountMapper $mailAccountMapper;
-	private MailManager $mailManager;
-	private MigrateImportantFromImapAndDb $migration;
-	private LoggerInterface $logger;
-	private IMAPClientFactory $imapClientFactory;
-
-	public function __construct(MailboxMapper $mailboxMapper,
-		MailAccountMapper $mailAccountMapper,
-		MailManager $mailManager,
-		MigrateImportantFromImapAndDb $migration,
-		LoggerInterface $logger,
+	public function __construct(
+		private MailboxMapper $mailboxMapper,
+		private MailAccountMapper $mailAccountMapper,
+		private MailManager $mailManager,
+		private MigrateImportantFromImapAndDb $migration,
+		private LoggerInterface $logger,
 		ITimeFactory $timeFactory,
-		IMAPClientFactory $imapClientFactory,
+		private IMAPClientFactory $imapClientFactory,
 	) {
 		parent::__construct($timeFactory);
-		$this->mailboxMapper = $mailboxMapper;
-		$this->mailAccountMapper = $mailAccountMapper;
-		$this->mailManager = $mailManager;
-		$this->migration = $migration;
-		$this->logger = $logger;
-		$this->imapClientFactory = $imapClientFactory;
 	}
 
 	/**

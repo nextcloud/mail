@@ -27,9 +27,6 @@ use ReflectionMethod;
 use Throwable;
 
 class ErrorMiddleware extends Middleware {
-	/** @var LoggerInterface */
-	private $logger;
-
 	/** @var IConfig */
 	private $config;
 
@@ -37,10 +34,11 @@ class ErrorMiddleware extends Middleware {
 	 * @param IConfig $config
 	 * @param LoggerInterface $logger
 	 */
-	public function __construct(IConfig $config,
-		LoggerInterface $logger) {
+	public function __construct(
+		IConfig $config,
+		private LoggerInterface $logger,
+	) {
 		$this->config = $config;
-		$this->logger = $logger;
 	}
 
 	/**

@@ -18,13 +18,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class CreateTagMigrationJobEntry extends Command {
 	private JobList $jobList;
-	private MailboxMapper $mailboxMapper;
 
-	public function __construct(JobList $jobList,
-		MailboxMapper $mailboxMapper) {
+	public function __construct(
+		JobList $jobList,
+		private MailboxMapper $mailboxMapper,
+	) {
 		parent::__construct();
 		$this->jobList = $jobList;
-		$this->mailboxMapper = $mailboxMapper;
 	}
 
 	protected function configure(): void {

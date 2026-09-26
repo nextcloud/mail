@@ -37,7 +37,7 @@
 				</p>
 			</div>
 			<div class="summary__notice">
-				{{ t('mail', 'This summary is AI generated and may contain mistakes.') }}
+				{{ t('mail', 'This summary is AI-generated and may contain mistakes.') }}
 			</div>
 		</div>
 	</NcAssistantContent>

@@ -80,7 +80,6 @@ class MailboxesApiControllerTest extends TestCase {
 		$this->assertEquals(Http::STATUS_NOT_FOUND, $actual->getStatus());
 	}
 
-
 	public function testListMailboxes() {
 		$account = $this->createStub(Account::class);
 		$folder = $this->createStub(Folder::class);
@@ -120,7 +119,6 @@ class MailboxesApiControllerTest extends TestCase {
 		$actual = $controller->listMessages($accountId);
 		$this->assertEquals(Http::STATUS_NOT_FOUND, $actual->getStatus());
 	}
-
 
 	public function testListMessages(): void {
 		$accountId = 100;
@@ -173,7 +171,6 @@ class MailboxesApiControllerTest extends TestCase {
 		$this->accountService->expects(self::never())
 			->method('find');
 
-
 		$actual = $this->controller->listMessages($mailboxId);
 
 		$this->assertEquals(Http::STATUS_FORBIDDEN, $actual->getStatus());
@@ -218,6 +215,5 @@ class MailboxesApiControllerTest extends TestCase {
 
 		$this->controller->listMessages($mailboxId, null, null, $limit);
 	}
-
 
 }

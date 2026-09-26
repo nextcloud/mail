@@ -20,19 +20,17 @@ class FaviconSource implements IAvatarSource {
 	/** @var IClientService */
 	private $clientService;
 
-	/** @var Favicon */
-	private $favicon;
-
 	/** @var IMimeTypeDetector */
 	private $mimeDetector;
 	private IRemoteHostValidator $remoteHostValidator;
 
-	public function __construct(IClientService $clientService,
-		Favicon $favicon,
+	public function __construct(
+		IClientService $clientService,
+		private Favicon $favicon,
 		IMimeTypeDetector $mimeDetector,
-		IRemoteHostValidator $remoteHostValidator) {
+		IRemoteHostValidator $remoteHostValidator,
+	) {
 		$this->clientService = $clientService;
-		$this->favicon = $favicon;
 		$this->favicon->setCacheTimeout(0);
 		$this->mimeDetector = $mimeDetector;
 		$this->remoteHostValidator = $remoteHostValidator;

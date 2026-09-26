@@ -47,6 +47,7 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 	) {
 	}
 
+	#[\Override]
 	public function handle(Event $event): void {
 		if (!$this->contentManager->isContextChatAvailable()) {
 			return;
@@ -72,7 +73,7 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 		}
 
 		if ($event instanceof MessageDeletedEvent) {
-			$this->contentManager->deleteContent($this->getAppId(), $this->getId(), [strval($event->getMessageId())]);
+			$this->contentManager->deleteContent($this->getAppId(), $this->getId(), [strval($event->getUid())]);
 			return;
 		}
 	}
@@ -83,16 +84,18 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 	 * @return string
 	 * @since 5.2.0
 	 */
+	#[\Override]
 	public function getId(): string {
 		return 'mail';
 	}
 
 	/**
-	 * The ID of the app making the provider avaialble
+	 * The ID of the app making the provider available
 	 *
 	 * @return string
 	 * @since 5.2.0
 	 */
+	#[\Override]
 	public function getAppId(): string {
 		return Application::APP_ID;
 	}
@@ -104,6 +107,7 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 	 * @return string
 	 * @since 5.2.0
 	 */
+	#[\Override]
 	public function getItemUrl(string $id): string {
 		[$mailboxId, $messageId] = explode(':', $id);
 		if (!$mailboxId || !$messageId) {
@@ -118,6 +122,7 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 	 * @return void
 	 * @since 5.2.0
 	 */
+	#[\Override]
 	public function triggerInitialImport(): void {
 	}
 }

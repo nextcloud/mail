@@ -50,23 +50,25 @@ class MessageMapper extends QBMapper {
 
 	use TTransactional;
 
+	private const PARAM_UIDS = 'uids';
+	private const PARAM_IDS = 'ids';
+
+	/**
+	 * TODO: replace with IQueryBuilder::MAX_IN_PARAMETERS once the minimum server version is 35
+	 */
+	private const MAX_IN_PARAMETERS = 1000;
+
 	/** @var ITimeFactory */
 	private $timeFactory;
 
-	/** @var TagMapper */
-	private $tagMapper;
-
-	/** @var PerformanceLogger */
-	private $performanceLogger;
-
-	public function __construct(IDBConnection $db,
+	public function __construct(
+		IDBConnection $db,
 		ITimeFactory $timeFactory,
-		TagMapper $tagMapper,
-		PerformanceLogger $performanceLogger) {
+		private TagMapper $tagMapper,
+		private PerformanceLogger $performanceLogger,
+	) {
 		parent::__construct($db, 'mail_messages');
 		$this->timeFactory = $timeFactory;
-		$this->tagMapper = $tagMapper;
-		$this->performanceLogger = $performanceLogger;
 	}
 
 	/**
@@ -474,7 +476,6 @@ class MessageMapper extends QBMapper {
 			}
 		}
 
-
 		try {
 			// UPDATE messages SET flag true/false WHERE uid in (uids) -> for each flag
 			// => total of 20 queries
@@ -545,7 +546,8 @@ class MessageMapper extends QBMapper {
 	 */
 	private function updateTags(Account $account, Message $message, array $tags, PerformanceLoggerTask $perf): void {
 		$imapTags = $message->getTags();
-		$dbTags = $tags[$message->getMessageId()] ?? [];
+		$messageId = $message->getMessageId();
+		$dbTags = $messageId !== null ? ($tags[$messageId] ?? []) : [];
 
 		if ($imapTags === [] && $dbTags === []) {
 			// neither old nor new tags
@@ -797,14 +799,12 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
-	 * @param Mailbox $mailbox
-	 * @param SearchQuery $query
-	 * @param int|null $limit
-	 * @param int[]|null $uids
+	 * @param int[]|null $uids IMAP body search matches, combined with the text conditions via OR
+	 * @param int[]|null $ids restricts the result to these message ids
 	 *
 	 * @return int[]
 	 */
-	public function findIdsByQuery(Mailbox $mailbox, SearchQuery $query, string $sortOrder, ?int $limit, ?array $uids = null): array {
+	public function findIdsByQuery(Mailbox $mailbox, SearchQuery $query, string $sortOrder, ?int $limit, ?array $uids = null, ?array $ids = null): array {
 		$qb = $this->db->getQueryBuilder();
 
 		if ($this->needDistinct($query)) {
@@ -931,15 +931,21 @@ class MessageMapper extends QBMapper {
 			// In the case of body+subject search we need a combination of both results,
 			// thus the orWhere in every other case andWhere should do the job.
 			if (!empty($query->getSubjects())) {
-				$textOrs[] = $qb->expr()->in('m.uid', $qb->createParameter('uids'));
+				$textOrs[] = $qb->expr()->in('m.uid', $qb->createParameter(self::PARAM_UIDS));
 			} else {
 				$select->andWhere(
-					$qb->expr()->in('m.uid', $qb->createParameter('uids'))
+					$qb->expr()->in('m.uid', $qb->createParameter(self::PARAM_UIDS))
 				);
 			}
 		}
 		if (!empty($textOrs)) {
 			$select->andWhere($qb->expr()->orX(...$textOrs));
+		}
+
+		if ($ids !== null) {
+			$select->andWhere(
+				$qb->expr()->in('m.id', $qb->createParameter(self::PARAM_IDS), IQueryBuilder::PARAM_INT_ARRAY)
+			);
 		}
 
 		if (!empty($query->getStart())) {
@@ -953,7 +959,6 @@ class MessageMapper extends QBMapper {
 				$qb->expr()->lte('m.sent_at', $qb->createNamedParameter($query->getEnd()), IQueryBuilder::PARAM_INT)
 			);
 		}
-
 
 		if ($query->getHasAttachments()) {
 			$select->andWhere(
@@ -1001,14 +1006,29 @@ class MessageMapper extends QBMapper {
 		}
 
 		if ($uids !== null) {
-			return array_flat_map(function (array $chunk) use ($qb, $select) {
-				$qb->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-				return array_map(static fn (Message $message) => $message->getId(), $this->findEntities($select));
-			}, array_chunk($uids, 1000));
+			return $this->findIdsByChunkedParameter($select, self::PARAM_UIDS, $uids);
+		}
+
+		if ($ids !== null) {
+			return $this->findIdsByChunkedParameter($select, self::PARAM_IDS, $ids);
 		}
 
 		$result = array_map(static fn (Message $message) => $message->getId(), $this->findEntities($select));
 		return $result;
+	}
+
+	/**
+	 * Run $select once per chunk of $values, binding each chunk to $parameter.
+	 *
+	 * @param int[] $values
+	 *
+	 * @return int[]
+	 */
+	private function findIdsByChunkedParameter(IQueryBuilder $select, string $parameter, array $values): array {
+		return array_flat_map(function (array $chunk) use ($select, $parameter) {
+			$select->setParameter($parameter, $chunk, IQueryBuilder::PARAM_INT_ARRAY);
+			return array_map(static fn (Message $message) => $message->getId(), $this->findEntities($select));
+		}, array_chunk($values, self::MAX_IN_PARAMETERS));
 	}
 
 	public function findIdsGloballyByQuery(IUser $user, SearchQuery $query, ?int $limit, ?array $uids = null): array {
@@ -1119,7 +1139,7 @@ class MessageMapper extends QBMapper {
 		}
 		if ($uids !== null) {
 			$select->andWhere(
-				$qb->expr()->in('m.uid', $qb->createParameter('uids'))
+				$qb->expr()->in('m.uid', $qb->createParameter(self::PARAM_UIDS))
 			);
 		}
 		foreach ($query->getFlags() as $flag) {
@@ -1140,10 +1160,7 @@ class MessageMapper extends QBMapper {
 		}
 
 		if ($uids !== null) {
-			return array_flat_map(function (array $chunk) use ($select) {
-				$select->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-				return array_map(static fn (Message $message) => $message->getId(), $this->findEntities($select));
-			}, array_chunk($uids, 1000));
+			return $this->findIdsByChunkedParameter($select, self::PARAM_UIDS, $uids);
 		}
 
 		return array_map(static fn (Message $message) => $message->getId(), $this->findEntities($select));
@@ -1192,16 +1209,12 @@ class MessageMapper extends QBMapper {
 			throw new RuntimeException('Invalid operand type ' . get_class($operand));
 		}, $expr->getOperands());
 
-		switch ($expr->getOperator()) {
-			case 'and':
-				/** @psalm-suppress InvalidCast */
-				return (string)$qb->expr()->andX(...$operands);
-			case 'or':
-				/** @psalm-suppress InvalidCast */
-				return (string)$qb->expr()->orX(...$operands);
-			default:
-				throw new RuntimeException('Unknown operator ' . $expr->getOperator());
-		}
+		/** @psalm-suppress InvalidCast */
+		return match ($expr->getOperator()) {
+			'and' => (string)$qb->expr()->andX(...$operands),
+			'or' => (string)$qb->expr()->orX(...$operands),
+			default => throw new RuntimeException('Unknown operator ' . $expr->getOperator()),
+		};
 	}
 
 	private function flagToColumnName(Flag $flag): string {
@@ -1273,13 +1286,14 @@ class MessageMapper extends QBMapper {
 		if ($ids === []) {
 			return [];
 		}
+		$direction = strtoupper($sortOrder) === 'DESC' ? 'DESC' : 'ASC';
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('*')
 			->from($this->getTableName())
 			->where(
 				$qb->expr()->in('id', $qb->createParameter('ids'))
 			)
-			->orderBy($orderBy, $sortOrder);
+			->orderBy($orderBy, $direction);
 
 		$results = [];
 		foreach (array_chunk($ids, 1000) as $chunk) {
@@ -1354,7 +1368,8 @@ class MessageMapper extends QBMapper {
 		$tags = $this->tagMapper->getAllTagsForMessages($messages, $userId);
 		/** @var Message $message */
 		$messages = array_map(static function ($message) use ($tags) {
-			$message->setTags($tags[$message->getMessageId()] ?? []);
+			$messageId = $message->getMessageId();
+			$message->setTags($messageId !== null ? ($tags[$messageId] ?? []) : []);
 			return $message;
 		}, $messages);
 		return $messages;

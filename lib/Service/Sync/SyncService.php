@@ -30,41 +30,15 @@ use function array_map;
 
 class SyncService {
 
-	private IMAPClientFactory $clientFactory;
-
-	/** @var ImapToDbSynchronizer */
-	private $synchronizer;
-
-	/** @var FilterStringParser */
-	private $filterStringParser;
-
-	/** @var MessageMapper */
-	private $messageMapper;
-
-	/** @var PreviewEnhancer */
-	private $previewEnhancer;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var MailboxSync */
-	private $mailboxSync;
-
 	public function __construct(
-		IMAPClientFactory $clientFactory,
-		ImapToDbSynchronizer $synchronizer,
-		FilterStringParser $filterStringParser,
-		MessageMapper $messageMapper,
-		PreviewEnhancer $previewEnhancer,
-		LoggerInterface $logger,
-		MailboxSync $mailboxSync) {
-		$this->clientFactory = $clientFactory;
-		$this->synchronizer = $synchronizer;
-		$this->filterStringParser = $filterStringParser;
-		$this->messageMapper = $messageMapper;
-		$this->previewEnhancer = $previewEnhancer;
-		$this->logger = $logger;
-		$this->mailboxSync = $mailboxSync;
+		private IMAPClientFactory $clientFactory,
+		private ImapToDbSynchronizer $synchronizer,
+		private FilterStringParser $filterStringParser,
+		private MessageMapper $messageMapper,
+		private PreviewEnhancer $previewEnhancer,
+		private LoggerInterface $logger,
+		private MailboxSync $mailboxSync,
+	) {
 	}
 
 	/**
@@ -165,16 +139,13 @@ class SyncService {
 		}
 		$order = $sortOrder === 'oldest' ? IMailSearch::ORDER_OLDEST_FIRST : IMailSearch::ORDER_NEWEST_FIRST;
 		if ($query !== null) {
-			// Filter new messages to those that also match the current filter
-			$newUids = $this->messageMapper->findUidsForIds($mailbox, $newIds);
-			$newIds = $this->messageMapper->findIdsByQuery($mailbox, $query, $order, null, $newUids);
+			$newIds = $this->messageMapper->findIdsByQuery($mailbox, $query, $order, null, null, $newIds);
 		}
 		$new = $this->messageMapper->findByMailboxAndIds($mailbox, $account->getUserId(), $newIds);
 
 		// TODO: $changed = $this->messageMapper->findChanged($account, $mailbox, $uids);
 		if ($query !== null) {
-			$changedUids = $this->messageMapper->findUidsForIds($mailbox, $knownIds);
-			$changedIds = $this->messageMapper->findIdsByQuery($mailbox, $query, $order, null, $changedUids);
+			$changedIds = $this->messageMapper->findIdsByQuery($mailbox, $query, $order, null, null, $knownIds);
 		} else {
 			$changedIds = $knownIds;
 		}

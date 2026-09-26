@@ -12,20 +12,14 @@ namespace OCA\Mail\Events;
 use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
 use OCP\EventDispatcher\Event;
+use OCP\EventDispatcher\IWebhookCompatibleEvent;
 
-/**
- * @psalm-immutable
- */
-class MessageSentEvent extends Event {
-	/** @var Account */
-	private $account;
-
+class MessageSentEvent extends Event implements IWebhookCompatibleEvent {
 	public function __construct(
-		Account $account,
+		private Account $account,
 		private LocalMessage $localMessage,
 	) {
 		parent::__construct();
-		$this->account = $account;
 	}
 
 	public function getAccount(): Account {
@@ -34,5 +28,16 @@ class MessageSentEvent extends Event {
 
 	public function getLocalMessage(): LocalMessage {
 		return $this->localMessage;
+	}
+
+	#[\Override]
+	public function getWebhookSerializable(): array {
+		// No local message id: the row is deleted right after a successful send
+		return [
+			'accountId' => $this->account->getId(),
+			'inReplyToRfcMessageId' => $this->localMessage->getInReplyToMessageId(),
+			'sendAt' => $this->localMessage->getSendAt(),
+			'subject' => $this->localMessage->getSubject(),
+		];
 	}
 }

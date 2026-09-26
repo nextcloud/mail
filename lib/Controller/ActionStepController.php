@@ -21,16 +21,13 @@ use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\IRequest;
 
 class ActionStepController extends Controller {
-	private ?string $uid;
-
 	public function __construct(
 		IRequest $request,
-		?string $userId,
+		private ?string $userId,
 		private QuickActionsService $quickActionsService,
 		private AccountService $accountService,
 	) {
 		parent::__construct(Application::APP_ID, $request);
-		$this->uid = $userId;
 	}
 
 	/**
@@ -41,11 +38,11 @@ class ActionStepController extends Controller {
 	 */
 	#[TrapError]
 	public function create(string $name, int $order, int $actionId, ?int $tagId = null, ?int $mailboxId = null): JsonResponse {
-		if ($this->uid === null) {
+		if ($this->userId === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
 		try {
-			$action = $this->quickActionsService->find($actionId, $this->uid);
+			$action = $this->quickActionsService->find($actionId, $this->userId);
 			if ($action === null) {
 				return JsonResponse::fail('Action not found', Http::STATUS_BAD_REQUEST);
 			}
@@ -54,7 +51,7 @@ class ActionStepController extends Controller {
 		} catch (DoesNotExistException $e) {
 			return JsonResponse::fail('Account not found', Http::STATUS_BAD_REQUEST);
 		}
-		if ($account->getUserId() !== $this->uid) {
+		if ($account->getUserId() !== $this->userId) {
 			return JsonResponse::fail('Account not found', Http::STATUS_BAD_REQUEST);
 		}
 		$actionStep = $this->quickActionsService->createActionStep($name, $order, $actionId, $tagId, $mailboxId);
@@ -72,11 +69,11 @@ class ActionStepController extends Controller {
 	#[TrapError]
 	public function update(int $id, string $name, int $order, ?int $tagId, ?int $mailboxId): JsonResponse {
 
-		if ($this->uid === null) {
+		if ($this->userId === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
 
-		$actionStep = $this->quickActionsService->findActionStep($id, $this->uid);
+		$actionStep = $this->quickActionsService->findActionStep($id, $this->userId);
 
 		$actionStep = $this->quickActionsService->updateActionStep($actionStep, $name, $order, $tagId, $mailboxId);
 
@@ -89,11 +86,11 @@ class ActionStepController extends Controller {
 	 * @return JsonResponse
 	 */
 	public function destroy(int $id): JsonResponse {
-		if ($this->uid === null) {
+		if ($this->userId === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
 		try {
-			$this->quickActionsService->deleteActionStep($id, $this->uid);
+			$this->quickActionsService->deleteActionStep($id, $this->userId);
 			return JsonResponse::success();
 		} catch (DoesNotExistException $e) {
 			return JsonResponse::fail('Action step not found', Http::STATUS_NOT_FOUND);

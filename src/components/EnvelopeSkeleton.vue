@@ -522,7 +522,7 @@ export default {
 			min-width: 100px;
 			flex: 1 1 10%;
 			font-weight: 500;
-			// we changed the time/date and actions to be alighned with the name
+			// we changed the time/date and actions to be aligned with the name
 			max-width: 78%;
 			line-height: var(--default-line-height);
 
@@ -727,8 +727,7 @@ export default {
 	max-height: calc(var(--default-font-size) * var(--default-line-height));
 }
 
-// Force icon to be in line with the first two lines
-:deep(.app-content-list-item-icon), :deep(.avatardiv), :deep(.avatardiv__initials-wrapper) {
+:deep(.app-content-list-item-icon) {
 	height: calc(var(--header-menu-item-height) - 4px);
 	width: calc(var(--header-menu-item-height) - 4px);
 }

@@ -29,50 +29,25 @@ use Throwable;
 
 class OutboxService {
 
-
-	/** @var LocalMessageMapper */
-	private $mapper;
-
-	/** @var AttachmentService */
-	private $attachmentService;
-
 	/** @var IEventDispatcher */
 	private $eventDispatcher;
-
-	/** @var IMAPClientFactory */
-	private $clientFactory;
-
-	/** @var IMailManager */
-	private $mailManager;
-
-	/** @var AccountService */
-	private $accountService;
 
 	/** @var ITimeFactory */
 	private $timeFactory;
 
-	/** @var LoggerInterface */
-	private $logger;
-
 	public function __construct(
-		LocalMessageMapper $mapper,
-		AttachmentService $attachmentService,
+		private LocalMessageMapper $mapper,
+		private AttachmentService $attachmentService,
 		IEventDispatcher $eventDispatcher,
-		IMAPClientFactory $clientFactory,
-		IMailManager $mailManager,
-		AccountService $accountService,
+		private IMAPClientFactory $clientFactory,
+		private IMailManager $mailManager,
+		private AccountService $accountService,
 		ITimeFactory $timeFactory,
-		LoggerInterface $logger,
+		private LoggerInterface $logger,
 		private Chain $sendChain,
 	) {
-		$this->mapper = $mapper;
-		$this->attachmentService = $attachmentService;
 		$this->eventDispatcher = $eventDispatcher;
-		$this->clientFactory = $clientFactory;
-		$this->mailManager = $mailManager;
 		$this->timeFactory = $timeFactory;
-		$this->logger = $logger;
-		$this->accountService = $accountService;
 	}
 
 	/**

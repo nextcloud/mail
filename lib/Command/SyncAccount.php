@@ -31,24 +31,14 @@ final class SyncAccount extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
 	public const OPTION_FORCE = 'force';
 
-	private AccountService $accountService;
-	private MailboxSync $mailboxSync;
-	private ImapToDbSynchronizer $syncService;
-	private LoggerInterface $logger;
-	private IMAPClientFactory $clientFactory;
-
-	public function __construct(AccountService $service,
-		MailboxSync $mailboxSync,
-		ImapToDbSynchronizer $messageSync,
-		LoggerInterface $logger,
-		IMAPClientFactory $clientFactory) {
+	public function __construct(
+		private AccountService $accountService,
+		private MailboxSync $mailboxSync,
+		private ImapToDbSynchronizer $syncService,
+		private LoggerInterface $logger,
+		private IMAPClientFactory $clientFactory,
+	) {
 		parent::__construct();
-
-		$this->accountService = $service;
-		$this->mailboxSync = $mailboxSync;
-		$this->syncService = $messageSync;
-		$this->logger = $logger;
-		$this->clientFactory = $clientFactory;
 	}
 
 	/**

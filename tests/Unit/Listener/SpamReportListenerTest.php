@@ -13,6 +13,7 @@ use ChristophWurst\Nextcloud\Testing\ServiceMockObject;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Exception\ServiceException;
@@ -49,10 +50,12 @@ class SpamReportListenerTest extends TestCase {
 	public function testHandleNotFlaggedJunk(): void {
 		$account = $this->createStub(Account::class);
 		$mailbox = $this->createStub(Mailbox::class);
+		$message = new Message();
+		$message->setUid(123);
 		$event = new MessageFlaggedEvent(
 			$account,
 			$mailbox,
-			123,
+			$message,
 			Tag::LABEL_IMPORTANT,
 			true
 		);
@@ -70,10 +73,12 @@ class SpamReportListenerTest extends TestCase {
 	public function testHandleNotUnflaggingJunk(): void {
 		$account = $this->createStub(Account::class);
 		$mailbox = $this->createStub(Mailbox::class);
+		$message = new Message();
+		$message->setUid(123);
 		$event = new MessageFlaggedEvent(
 			$account,
 			$mailbox,
-			123,
+			$message,
 			'$junk',
 			false
 		);
@@ -88,10 +93,12 @@ class SpamReportListenerTest extends TestCase {
 	public function testHandleJunkExceptionOnSend(): void {
 		$account = $this->createStub(Account::class);
 		$mailbox = $this->createStub(Mailbox::class);
+		$message = new Message();
+		$message->setUid(123);
 		$event = new MessageFlaggedEvent(
 			$account,
 			$mailbox,
-			123,
+			$message,
 			'$junk',
 			true
 		);
@@ -111,10 +118,12 @@ class SpamReportListenerTest extends TestCase {
 	public function testHandle(): void {
 		$account = $this->createStub(Account::class);
 		$mailbox = $this->createStub(Mailbox::class);
+		$message = new Message();
+		$message->setUid(123);
 		$event = new MessageFlaggedEvent(
 			$account,
 			$mailbox,
-			123,
+			$message,
 			'$junk',
 			true
 		);

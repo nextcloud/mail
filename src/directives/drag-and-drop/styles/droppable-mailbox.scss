@@ -41,8 +41,10 @@
 }
 
 [droppable-mailbox="disabled"] {
-	pointer-events: none;
-	opacity: .3;
+	> div > a {
+		pointer-events: none;
+		opacity: .3;
+	}
 }
 
 [droppable-mailbox="dragover"] {

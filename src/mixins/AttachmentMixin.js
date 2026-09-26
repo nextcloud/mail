@@ -13,11 +13,14 @@ export default {
 				mime: attachment.mime,
 				etag: 'fixme',
 				hasPreview: false,
-				fileid: parseInt(attachment.id, 10),
 			}))
 		},
 
 		previewableFileInfos() {
+			if (!OCA?.Viewer) {
+				return []
+			}
+
 			return this.fileInfos.filter((fileInfo) => (fileInfo.mime.startsWith('image/')
 				|| fileInfo.mime.startsWith('video/')
 				|| fileInfo.mime.startsWith('audio/')

@@ -13,22 +13,13 @@ use JsonSerializable;
 use ReturnTypeWillChange;
 
 final class SmimeCertificateInfo implements JsonSerializable {
-	private ?string $commonName;
-	private ?string $emailAddress;
-	private int $notAfter;
-	private SmimeCertificatePurposes $purposes;
-	private bool $isChainVerified;
-
-	public function __construct(?string $commonName,
-		?string $emailAddress,
-		int $notAfter,
-		SmimeCertificatePurposes $purposes,
-		bool $isChainVerified) {
-		$this->commonName = $commonName;
-		$this->emailAddress = $emailAddress;
-		$this->notAfter = $notAfter;
-		$this->purposes = $purposes;
-		$this->isChainVerified = $isChainVerified;
+	public function __construct(
+		private ?string $commonName,
+		private ?string $emailAddress,
+		private int $notAfter,
+		private SmimeCertificatePurposes $purposes,
+		private bool $isChainVerified,
+	) {
 	}
 
 	/**

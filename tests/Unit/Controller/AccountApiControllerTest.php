@@ -162,7 +162,6 @@ class AccountApiControllerTest extends TestCase {
 		$ownMailAccount->setUserId(self::USER_ID);
 		$ownAccount = new Account($ownMailAccount);
 
-
 		$delegatedMailAccount = new MailAccount();
 		$delegatedMailAccount->setId(99);
 		$delegatedMailAccount->setEmail('shared@bar.com');

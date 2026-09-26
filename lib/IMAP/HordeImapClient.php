@@ -28,11 +28,12 @@ class HordeImapClient extends Horde_Imap_Client_Socket {
 	private ?IMemcache $rateLimiterCache = null;
 	private ?ITimeFactory $timeFactory = null;
 	private ?string $hash = null;
-	private IMAPClientFactory $factory;
 
-	public function __construct(array $params, IMAPClientFactory $factory) {
+	public function __construct(
+		array $params,
+		private IMAPClientFactory $factory,
+	) {
 		parent::__construct($params);
-		$this->factory = $factory;
 	}
 
 	public function enableRateLimiter(
@@ -47,9 +48,10 @@ class HordeImapClient extends Horde_Imap_Client_Socket {
 
 	#[\Override]
 	public function login() {
+		$initiallyAutheticated = $this->_isAuthenticated;
 		parent::login();
 
-		if ($this->capability->query('ID')) {
+		if ($initiallyAutheticated === false && $this->capability->query('ID')) {
 			try {
 				$this->sendID();
 				/* ID is queued - force sending the queued command. */
@@ -91,7 +93,7 @@ class HordeImapClient extends Horde_Imap_Client_Socket {
 			return $this->imapLogin();
 		} catch (Horde_Imap_Client_Exception $e) {
 			if ($e->getCode() === Horde_Imap_Client_Exception::LOGIN_AUTHENTICATIONFAILED
-				&& $e->getMessage() === 'Authentication failed.') {
+				&& in_array($e->getMessage(), ['Authentication failed.', 'Mail server denied authentication.'], true)) {
 				$this->rateLimiterCache->inc($cacheKey);
 				if ($this->rateLimiterCache instanceof IMemcacheTTL) {
 					$this->rateLimiterCache->setTTL($cacheKey, self::RATE_LIMIT_WINDOW);

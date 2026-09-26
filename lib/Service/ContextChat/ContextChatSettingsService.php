@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\ContextChat;
 
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCP\IAppConfig;
 
@@ -24,15 +25,15 @@ class ContextChatSettingsService {
 	 * Whether the classification by importance is enabled for a given user.
 	 */
 	public function isIndexingEnabled(string $userId): bool {
-		$appConfig = $this->appConfig->getValueString(
+		$enabledByDefault = $this->appConfig->getValueBool(
 			Application::APP_ID,
-			'index_context_chat_default',
-			'no',
+			ConfigLexicon::INDEX_CONTEXT_CHAT_DEFAULT,
+			false,
 		);
 		$preference = $this->preferences->getPreference(
 			$userId,
 			'index-context-chat',
-			$appConfig !== 'no' ? 'true' : 'false',
+			$enabledByDefault ? 'true' : 'false',
 		);
 		return $preference === 'true';
 	}
@@ -42,11 +43,11 @@ class ContextChatSettingsService {
 	 * preference themselves.
 	 */
 	public function isIndexingEnabledByDefault(): bool {
-		return $this->appConfig->getValueString(
+		return $this->appConfig->getValueBool(
 			Application::APP_ID,
-			'index_context_chat_default',
-			'no'
-		) !== 'no';
+			ConfigLexicon::INDEX_CONTEXT_CHAT_DEFAULT,
+			false,
+		);
 	}
 
 	/**
@@ -54,10 +55,10 @@ class ContextChatSettingsService {
 	 * the preference themselves.
 	 */
 	public function setIndexingEnabledByDefault(bool $enabledByDefault): void {
-		$this->appConfig->setValueString(
+		$this->appConfig->setValueBool(
 			Application::APP_ID,
-			'index_context_chat_default',
-			$enabledByDefault ? 'yes' : 'no',
+			ConfigLexicon::INDEX_CONTEXT_CHAT_DEFAULT,
+			$enabledByDefault,
 		);
 	}
 }

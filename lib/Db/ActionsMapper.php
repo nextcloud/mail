@@ -53,5 +53,4 @@ class ActionsMapper extends QBMapper {
 		return $this->findEntities($qb);
 	}
 
-
 }

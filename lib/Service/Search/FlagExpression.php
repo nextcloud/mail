@@ -10,25 +10,16 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\Search;
 
 class FlagExpression {
-	/**
-	 * @var string
-	 * @psalm-var "and"|"or"
-	 */
-	private $operator;
-
-	/**
-	 * @var array
-	 * @psalm-var (Flag|FlagExpression)[]
-	 */
-	private $operands;
-
-	/**
-	 * @psalm-param "and"|"or" $operator
-	 * @param array $operands
-	 */
-	private function __construct(string $operator, array $operands) {
-		$this->operator = $operator;
-		$this->operands = $operands;
+	private function __construct(
+		/**
+		 * @psalm-var "and"|"or"
+		 */
+		private string $operator,
+		/**
+		 * @psalm-var (Flag|FlagExpression)[]
+		 */
+		private array $operands,
+	) {
 	}
 
 	/**

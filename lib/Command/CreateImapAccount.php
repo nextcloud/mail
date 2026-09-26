@@ -20,7 +20,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class CreateAccount extends Command {
+final class CreateImapAccount extends Command {
 	public const ARGUMENT_USER_ID = 'user-id';
 	public const ARGUMENT_NAME = 'name';
 	public const ARGUMENT_EMAIL = 'email';
@@ -35,20 +35,16 @@ final class CreateAccount extends Command {
 	public const ARGUMENT_SMTP_SSL_MODE = 'smtp-ssl-mode';
 	public const ARGUMENT_SMTP_USER = 'smtp-user';
 	public const ARGUMENT_SMTP_PASSWORD = 'smtp-password';
-
-	private AccountService $accountService;
 	private ICrypto $crypto;
 	private IUserManager $userManager;
 
 	public function __construct(
-		AccountService $service,
+		private AccountService $accountService,
 		ICrypto $crypto,
 		IUserManager $userManager,
 		private ClassificationSettingsService $classificationSettingsService,
 	) {
 		parent::__construct();
-
-		$this->accountService = $service;
 		$this->crypto = $crypto;
 		$this->userManager = $userManager;
 	}
@@ -57,8 +53,9 @@ final class CreateAccount extends Command {
 	 * @return void
 	 */
 	protected function configure() {
-		$this->setName('mail:account:create');
-		$this->setDescription('creates IMAP account');
+		$this->setName('mail:account:create-imap');
+		$this->setAliases(['mail:account:create']);
+		$this->setDescription('creates an IMAP mail account');
 		$this->addArgument(self::ARGUMENT_USER_ID, InputArgument::REQUIRED);
 		$this->addArgument(self::ARGUMENT_NAME, InputArgument::REQUIRED);
 		$this->addArgument(self::ARGUMENT_EMAIL, InputArgument::REQUIRED);
@@ -98,7 +95,7 @@ final class CreateAccount extends Command {
 
 		if (!$this->userManager->userExists($userId)) {
 			$output->writeln("<error>User $userId does not exist</error>");
-			return 1;
+			return self::FAILURE;
 		}
 
 		$account = new MailAccount();
@@ -124,6 +121,6 @@ final class CreateAccount extends Command {
 
 		$output->writeln("<info>Account {$account->getId()} for $email created</info>");
 
-		return 0;
+		return self::SUCCESS;
 	}
 }

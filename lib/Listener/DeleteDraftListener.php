@@ -31,30 +31,16 @@ use Psr\Log\LoggerInterface;
  * @template-implements IEventListener<Event|DraftSavedEvent|OutboxMessageCreatedEvent|DraftMessageCreatedEvent>
  */
 class DeleteDraftListener implements IEventListener {
-	/** @var IMAPClientFactory */
-	private $imapClientFactory;
-
-	/** @var MailboxMapper */
-	private $mailboxMapper;
-
-	/** @var MessageMapper */
-	private $messageMapper;
-
-	/** @var LoggerInterface */
-	private $logger;
-
 	/** @var IEventDispatcher */
 	private $eventDispatcher;
 
-	public function __construct(IMAPClientFactory $imapClientFactory,
-		MailboxMapper $mailboxMapper,
-		MessageMapper $messageMapper,
-		LoggerInterface $logger,
-		IEventDispatcher $eventDispatcher) {
-		$this->imapClientFactory = $imapClientFactory;
-		$this->mailboxMapper = $mailboxMapper;
-		$this->messageMapper = $messageMapper;
-		$this->logger = $logger;
+	public function __construct(
+		private IMAPClientFactory $imapClientFactory,
+		private MailboxMapper $mailboxMapper,
+		private MessageMapper $messageMapper,
+		private LoggerInterface $logger,
+		IEventDispatcher $eventDispatcher,
+	) {
 		$this->eventDispatcher = $eventDispatcher;
 	}
 

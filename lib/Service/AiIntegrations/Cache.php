@@ -15,10 +15,12 @@ use OCP\ICacheFactory;
 class Cache {
 	// Cache for one week
 	public const CACHE_TTL = 7 * 24 * 60 * 60;
+	// Failed or empty AI results are retried after one hour
+	public const FAILURE_CACHE_TTL = 60 * 60;
+	public const FAILURE_MARKER = '';
 
 	/** @var ICache */
 	private $cache;
-
 
 	public function __construct(ICacheFactory $cacheFactory) {
 		$this->cache = $cacheFactory->createLocal('mail.ai');
@@ -31,7 +33,6 @@ class Cache {
 	public function buildUrlKey(array $ids): string {
 		return base64_encode(json_encode($ids, JSON_THROW_ON_ERROR));
 	}
-
 
 	/**
 	 * @param array $ids
@@ -54,8 +55,12 @@ class Cache {
 	 *
 	 * @return void
 	 */
-	public function addValue(string $key, ?string $value): void {
-		$this->cache->set($key, $value ?? false, self::CACHE_TTL);
+	public function addValue(string $key, ?string $value, int $ttl = self::CACHE_TTL): void {
+		$this->cache->set($key, $value ?? false, $ttl);
+	}
+
+	public function addFailure(string $key): void {
+		$this->addValue($key, self::FAILURE_MARKER, self::FAILURE_CACHE_TTL);
 	}
 
 	/**

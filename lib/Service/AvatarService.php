@@ -18,21 +18,6 @@ use OCA\Mail\Service\Avatar\CompositeAvatarSource;
 use OCA\Mail\Service\Avatar\Downloader;
 
 class AvatarService implements IAvatarService {
-	/** @var AvatarCache */
-	private $cache;
-
-	/** @var Downloader */
-	private $downloader;
-
-	/** @var CompositeAvatarSource */
-	private $source;
-
-	/** @var AvatarFactory */
-	private $avatarFactory;
-
-	/** @var IUserPreferences */
-	private $preferences;
-
 	/**
 	 * @param CompositeAvatarSource $source
 	 * @param Downloader $downloader
@@ -40,16 +25,13 @@ class AvatarService implements IAvatarService {
 	 * @param AvatarFactory $avatarFactory
 	 * @param IUserPreferences $preferences
 	 */
-	public function __construct(CompositeAvatarSource $source,
-		Downloader $downloader,
-		AvatarCache $cache,
-		AvatarFactory $avatarFactory,
-		IUserPreferences $preferences) {
-		$this->source = $source;
-		$this->cache = $cache;
-		$this->downloader = $downloader;
-		$this->avatarFactory = $avatarFactory;
-		$this->preferences = $preferences;
+	public function __construct(
+		private CompositeAvatarSource $source,
+		private Downloader $downloader,
+		private AvatarCache $cache,
+		private AvatarFactory $avatarFactory,
+		private IUserPreferences $preferences,
+	) {
 	}
 
 	/**

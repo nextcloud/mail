@@ -22,46 +22,19 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use Psr\Log\LoggerInterface;
 
 class CleanupService {
-	private MailAccountMapper $mailAccountMapper;
-
-	/** @var AliasMapper */
-	private $aliasMapper;
-
-	/** @var MailboxMapper */
-	private $mailboxMapper;
-
-	/** @var MessageMapper */
-	private $messageMapper;
-
-	/** @var CollectedAddressMapper */
-	private $collectedAddressMapper;
-
-	/** @var TagMapper */
-	private $tagMapper;
-
-	private MessageRetentionMapper $messageRetentionMapper;
-
-	private MessageSnoozeMapper $messageSnoozeMapper;
-
 	private ITimeFactory $timeFactory;
 
-	public function __construct(MailAccountMapper $mailAccountMapper,
-		AliasMapper $aliasMapper,
-		MailboxMapper $mailboxMapper,
-		MessageMapper $messageMapper,
-		CollectedAddressMapper $collectedAddressMapper,
-		TagMapper $tagMapper,
-		MessageRetentionMapper $messageRetentionMapper,
-		MessageSnoozeMapper $messageSnoozeMapper,
-		ITimeFactory $timeFactory) {
-		$this->aliasMapper = $aliasMapper;
-		$this->mailboxMapper = $mailboxMapper;
-		$this->messageMapper = $messageMapper;
-		$this->collectedAddressMapper = $collectedAddressMapper;
-		$this->tagMapper = $tagMapper;
-		$this->messageRetentionMapper = $messageRetentionMapper;
-		$this->messageSnoozeMapper = $messageSnoozeMapper;
-		$this->mailAccountMapper = $mailAccountMapper;
+	public function __construct(
+		private MailAccountMapper $mailAccountMapper,
+		private AliasMapper $aliasMapper,
+		private MailboxMapper $mailboxMapper,
+		private MessageMapper $messageMapper,
+		private CollectedAddressMapper $collectedAddressMapper,
+		private TagMapper $tagMapper,
+		private MessageRetentionMapper $messageRetentionMapper,
+		private MessageSnoozeMapper $messageSnoozeMapper,
+		ITimeFactory $timeFactory,
+	) {
 		$this->timeFactory = $timeFactory;
 	}
 

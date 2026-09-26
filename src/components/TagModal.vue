@@ -10,9 +10,13 @@
 		:envelopes="envelopes"
 		:account-id="envelopes[0].accountId"
 		@close="closeDeleteModal" />
-	<Modal v-else size="large" @close="onClose">
+	<NcModal
+		v-else
+		size="large"
+		label-id="tag-modal-heading"
+		@close="onClose">
 		<div class="modal-content">
-			<h2 class="tag-title">
+			<h2 id="tag-modal-heading" class="tag-title">
 				{{ t('mail', 'Add default tags') }}
 			</h2>
 			<TagItem
@@ -35,25 +39,25 @@
 					</template>
 					{{ t('mail', 'Add tag') }}
 				</NcButton>
-				<ActionInput v-if="editing" :disabled="showSaving" @submit="createTag">
+				<NcActionInput v-if="editing" :disabled="showSaving" @submit="createTag">
 					<template #icon>
 						<IconTag :size="20" />
 					</template>
-				</ActionInput>
-				<ActionText v-if="showSaving">
+				</NcActionInput>
+				<NcActionText v-if="showSaving">
 					<template #icon>
-						<IconLoading :size="20" />
+						<NcLoadingIcon :size="20" />
 					</template>
 					{{ t('mail', 'Saving tag …') }}
-				</ActionText>
+				</NcActionText>
 			</div>
 		</div>
-	</Modal>
+	</NcModal>
 </template>
 
 <script>
 import { showError, showInfo } from '@nextcloud/dialogs'
-import { NcActionInput as ActionInput, NcActionText as ActionText, NcLoadingIcon as IconLoading, NcModal as Modal, NcButton } from '@nextcloud/vue'
+import { NcActionInput, NcActionText, NcButton, NcLoadingIcon, NcModal } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconTag from 'vue-material-design-icons/TagOutline.vue'
@@ -61,6 +65,7 @@ import DeleteTagModal from './DeleteTagModal.vue'
 import TagItem from './TagItem.vue'
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
+import { validateTag } from '../util/tag.js'
 import { hiddenTags } from './tags.js'
 
 function randomColor() {
@@ -73,12 +78,12 @@ function randomColor() {
 export default {
 	name: 'TagModal',
 	components: {
-		Modal,
-		ActionText,
-		ActionInput,
+		NcModal,
+		NcActionText,
+		NcActionInput,
 		DeleteTagModal,
 		IconTag,
-		IconLoading,
+		NcLoadingIcon,
 		TagItem,
 		NcButton,
 		IconAdd,
@@ -99,8 +104,6 @@ export default {
 			tagLabel: true,
 			tagInput: false,
 			showSaving: false,
-			renameTagLabel: true,
-			renameTagInput: false,
 			deleteTagModal: false,
 			tagToDelete: null,
 			color: randomColor(),
@@ -161,19 +164,14 @@ export default {
 				return
 			}
 
-			const displayName = event.target.querySelector('input[type=text]').value
-			if (displayName.toLowerCase() in hiddenTags) {
-				showError(this.t('mail', 'Tag name is a hidden system tag'))
+			const displayName = event.target.querySelector('input[type=text]').value.trim()
+			const otherTags = this.mainStore.getTags
+			const valid = validateTag(null, displayName, otherTags)
+			if (valid !== true) {
+				showError(valid)
 				return
 			}
-			if (this.mainStore.getTags.some((tag) => tag.displayName === displayName)) {
-				showError(this.t('mail', 'Tag already exists'))
-				return
-			}
-			if (displayName.trim() === '') {
-				showError(this.t('mail', 'Tag name cannot be empty'))
-				return
-			}
+
 			try {
 				await this.mainStore.createTag({
 					displayName,
@@ -185,49 +183,6 @@ export default {
 			} finally {
 				this.showSaving = false
 				this.tagLabel = true
-			}
-		},
-
-		convertHex(color, opacity) {
-			if (color.length === 4) {
-				const r = parseInt(color.substring(1, 2), 16)
-				const g = parseInt(color.substring(2, 3), 16)
-				const b = parseInt(color.substring(3, 4), 16)
-				return `rgba(${r}, ${g}, ${b}, ${opacity})`
-			} else {
-				const r = parseInt(color.substring(1, 3), 16)
-				const g = parseInt(color.substring(3, 5), 16)
-				const b = parseInt(color.substring(5, 7), 16)
-				return `rgba(${r}, ${g}, ${b}, ${opacity})`
-			}
-		},
-
-		openEditTag() {
-			this.renameTagLabel = false
-			this.renameTagInput = true
-			this.showSaving = false
-		},
-
-		async renameTag(tag, event) {
-			this.renameTagInput = false
-			this.showSaving = false
-			const displayName = event.target.querySelector('input[type=text]').value
-
-			try {
-				await this.mainStore.updateTag({
-					tag,
-					displayName,
-					color: tag.color,
-				})
-				this.renameTagLabel = true
-				this.renameTagInput = false
-				this.showSaving = false
-			} catch (error) {
-				showInfo(t('mail', 'An error occurred, unable to rename the tag.'))
-				logger.error('could not rename tag', { error })
-				this.renameTagLabel = false
-				this.renameTagInput = false
-				this.showSaving = true
 			}
 		},
 

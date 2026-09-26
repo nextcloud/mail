@@ -4,7 +4,7 @@
  */
 
 import { showError, showSuccess, showUndo } from '@nextcloud/dialogs'
-import { translate as t } from '@nextcloud/l10n'
+import { t } from '@nextcloud/l10n'
 import { defineStore } from 'pinia'
 import Vue from 'vue'
 import logger from '../logger.js'
@@ -117,7 +117,7 @@ export default defineStore('outbox', {
 			this.stopMessageMutation({ message })
 			const updatedMessage = await OutboxService.updateMessage({
 				...message,
-				sentAt: undefined,
+				sendAt: null,
 			}, message.id)
 			this.updateMessageMutation({ message: updatedMessage })
 			return updatedMessage

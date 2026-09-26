@@ -26,20 +26,16 @@ use function in_array;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class AutoConfigController extends Controller {
-	private IspDb $ispDb;
-	private MxRecord $mxRecord;
-	private ConnectivityTester $connectivityTester;
 	private IRemoteHostValidator $hostValidator;
 
-	public function __construct(IRequest $request,
-		IspDb $ispDb,
-		MxRecord $mxRecord,
-		ConnectivityTester $connectivityTester,
-		IRemoteHostValidator $hostValidator) {
+	public function __construct(
+		IRequest $request,
+		private IspDb $ispDb,
+		private MxRecord $mxRecord,
+		private ConnectivityTester $connectivityTester,
+		IRemoteHostValidator $hostValidator,
+	) {
 		parent::__construct(Application::APP_ID, $request);
-		$this->ispDb = $ispDb;
-		$this->mxRecord = $mxRecord;
-		$this->connectivityTester = $connectivityTester;
 		$this->hostValidator = $hostValidator;
 	}
 

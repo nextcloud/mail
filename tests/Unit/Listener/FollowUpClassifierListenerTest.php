@@ -22,7 +22,7 @@ use OCA\Mail\Events\NewMessagesSynchronized;
 use OCA\Mail\Listener\FollowUpClassifierListener;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCP\BackgroundJob\IJobList;
-use OCP\TextProcessing\FreePromptTaskType;
+use OCP\TaskProcessing\TaskTypes\TextToText;
 
 class FollowUpClassifierListenerTest extends TestCase {
 	private FollowUpClassifierListener $listener;
@@ -69,7 +69,7 @@ class FollowUpClassifierListenerTest extends TestCase {
 			->willReturn(true);
 		$this->aiService->expects(self::once())
 			->method('isLlmAvailable')
-			->with(FreePromptTaskType::class)
+			->with(TextToText::ID)
 			->willReturn(true);
 		$this->jobList->expects(self::once())
 			->method('scheduleAfter')
@@ -136,7 +136,7 @@ class FollowUpClassifierListenerTest extends TestCase {
 			->willReturn(true);
 		$this->aiService->expects(self::once())
 			->method('isLlmAvailable')
-			->with(FreePromptTaskType::class)
+			->with(TextToText::ID)
 			->willReturn(false);
 		$this->jobList->expects(self::never())
 			->method('scheduleAfter');
@@ -169,7 +169,7 @@ class FollowUpClassifierListenerTest extends TestCase {
 			->willReturn(true);
 		$this->aiService->expects(self::once())
 			->method('isLlmAvailable')
-			->with(FreePromptTaskType::class)
+			->with(TextToText::ID)
 			->willReturn(true);
 		$this->jobList->expects(self::never())
 			->method('scheduleAfter');
@@ -201,7 +201,7 @@ class FollowUpClassifierListenerTest extends TestCase {
 			->willReturn(true);
 		$this->aiService->expects(self::once())
 			->method('isLlmAvailable')
-			->with(FreePromptTaskType::class)
+			->with(TextToText::ID)
 			->willReturn(true);
 		$this->jobList->expects(self::never())
 			->method('scheduleAfter');

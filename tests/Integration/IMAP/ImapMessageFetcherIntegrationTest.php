@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Tests\Integration\IMAP;
 
+use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Db\SmimeCertificateMapper;
@@ -34,7 +35,6 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 
 	protected function setUp(): void {
 		parent::setUp();
-
 
 		$this->account = $this->createTestAccount();
 		$this->fetcherFactory = Server::get(ImapMessageFetcherFactory::class);
@@ -166,6 +166,83 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 		$this->assertFalse($message->isEncrypted());
 		$this->assertTrue($message->isSigned());
 		$this->assertTrue($message->isSignatureValid());
+	}
+
+	public function aiGeneratedHeaderProvider(): array {
+		return [
+			[LocalMessage::HEADER_AI_GENERATED . ": 1\r\n", true],
+			[LocalMessage::HEADER_AI_GENERATED . ": 0\r\n", false],
+			['', false],
+		];
+	}
+
+	/**
+	 * @dataProvider aiGeneratedHeaderProvider
+	 */
+	public function testFetchMessageWithAiGeneratedHeader(string $header, bool $expected): void {
+		$mimeMessage = "From: debug@imap.localhost\r\n"
+			. "To: user@imap.localhost\r\n"
+			. "Subject: AI generated\r\n"
+			. $header
+			. "\r\n"
+			. "Hello\r\n";
+		$uid = $this->saveMimeMessage('INBOX', $mimeMessage);
+		$fetcher = $this->fetcherFactory
+			->build(
+				$uid,
+				'INBOX',
+				$this->getTestClient(),
+				$this->account->getUserId()
+			)
+			->withBody(true);
+
+		$message = $fetcher->fetchMessage();
+
+		$this->assertSame($expected, $message->jsonSerialize()['hasAiGeneratedHeader']);
+	}
+
+	public function testFetchMessageWithInlineImageWithoutFilename(): void {
+		$mimeMessage = file_get_contents(__DIR__ . '/../../data/mime-html-cid-no-filename.txt');
+		$uid = $this->saveMimeMessage('INBOX', $mimeMessage);
+		$fetcher = $this->fetcherFactory
+			->build(
+				$uid,
+				'INBOX',
+				$this->getTestClient(),
+				$this->account->getUserId()
+			)
+			->withBody(true);
+
+		$message = $fetcher->fetchMessage();
+
+		$this->assertCount(0, $message->attachments);
+		$this->assertCount(1, $message->inlineAttachments);
+		$inlineAttachment = $message->inlineAttachments[0];
+		$this->assertSame('_1_0FAD84280FACDD0C0038DE9FC1258E02', $inlineAttachment['cid']);
+		$this->assertNull($inlineAttachment['fileName']);
+		$this->assertSame('image/gif', $inlineAttachment['mime']);
+		$this->assertTrue($message->hasHtmlMessage());
+	}
+
+	public function testFetchMessageDoesNotTreatHtmlBodyWithCidAsInlineAttachment(): void {
+		$mimeMessage = file_get_contents(__DIR__ . '/../../data/mime-html-body-with-cid.txt');
+		$uid = $this->saveMimeMessage('INBOX', $mimeMessage);
+		$fetcher = $this->fetcherFactory
+			->build(
+				$uid,
+				'INBOX',
+				$this->getTestClient(),
+				$this->account->getUserId()
+			)
+			->withBody(true);
+
+		$message = $fetcher->fetchMessage();
+
+		$this->assertCount(0, $message->attachments);
+		$this->assertCount(1, $message->inlineAttachments);
+		$this->assertSame('image/gif', $message->inlineAttachments[0]['mime']);
+		$this->assertTrue($message->hasHtmlMessage());
+		$this->assertStringContainsString('Hello', $message->getHtmlBody($uid));
 	}
 
 	public function testFetchMessageWithOpaqueSignedMessage(): void {

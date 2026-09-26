@@ -20,12 +20,16 @@ use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\DelegationExistsException;
+use OCA\Mail\Exception\DelegationForbiddenException;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\DelegationService;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IUser;
 use OCP\IUserManager;
+use OCP\Log\Audit\CriticalActionPerformedEvent;
 use OCP\Notification\IManager;
 use OCP\Notification\INotification;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -41,6 +45,7 @@ class DelegationServiceTest extends TestCase {
 	private IUserManager&MockObject $userManager;
 	private IManager&MockObject $notificationManager;
 	private ITimeFactory&MockObject $timeFactory;
+	private IEventDispatcher&MockObject $eventDispatcher;
 	private LoggerInterface&MockObject $logger;
 	private DelegationService $service;
 
@@ -58,6 +63,7 @@ class DelegationServiceTest extends TestCase {
 		$this->userManager = $this->createMock(IUserManager::class);
 		$this->notificationManager = $this->createMock(IManager::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
+		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->service = new DelegationService(
@@ -70,6 +76,7 @@ class DelegationServiceTest extends TestCase {
 			$this->userManager,
 			$this->notificationManager,
 			$this->timeFactory,
+			$this->eventDispatcher,
 			$this->logger,
 		);
 
@@ -144,6 +151,7 @@ class DelegationServiceTest extends TestCase {
 
 	public function testFindDelegatedToUsersForAccount(): void {
 		$delegation = new Delegation();
+		$delegation->setId(10);
 		$delegation->setAccountId(1);
 		$delegation->setUserId('delegatee');
 
@@ -152,10 +160,15 @@ class DelegationServiceTest extends TestCase {
 			->with(1)
 			->willReturn([$delegation]);
 
+		$user = $this->createMock(IUser::class);
+		$user->method('getDisplayName')->willReturn('Delegatee Name');
+		$this->userManager->method('get')->with('delegatee')->willReturn($user);
+
 		$result = $this->service->findDelegatedToUsersForAccount(1);
 
 		$this->assertCount(1, $result);
 		$this->assertEquals('delegatee', $result[0]->getUserId());
+		$this->assertEquals('Delegatee Name', $result[0]->getDisplayName());
 	}
 
 	public function testUnDelegateSuccess(): void {
@@ -279,6 +292,91 @@ class DelegationServiceTest extends TestCase {
 		$this->assertEquals('owner', $result);
 	}
 
+	public function testAssertAccountAccessGranted(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1);
+		$mailAccount->setUserId('owner');
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with('delegatee', 1)
+			->willThrowException(new ClientException('Not found'));
+		$this->delegationMapper->expects($this->once())
+			->method('findAccountOwnerForDelegatedUser')
+			->with(1, 'delegatee')
+			->willReturn('owner');
+
+		$this->service->assertAccountAccess(1, 'delegatee');
+
+		$this->addToAssertionCount(1);
+	}
+
+	public function testAssertAccountAccessDenied(): void {
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with('delegatee', 2)
+			->willThrowException(new ClientException('Not found'));
+		$this->delegationMapper->expects($this->once())
+			->method('findAccountOwnerForDelegatedUser')
+			->with(2, 'delegatee')
+			->willThrowException(new DoesNotExistException('No delegation found'));
+
+		$this->expectException(DelegationForbiddenException::class);
+
+		$this->service->assertAccountAccess(2, 'delegatee');
+	}
+
+	public function testAssertAccountAccessDeniedUsesForbiddenStatus(): void {
+		$this->accountService->method('find')
+			->willThrowException(new ClientException('Not found'));
+		$this->delegationMapper->method('findAccountOwnerForDelegatedUser')
+			->willThrowException(new DoesNotExistException('No delegation found'));
+
+		try {
+			$this->service->assertAccountAccess(2, 'delegatee');
+			$this->fail('Expected a DelegationForbiddenException');
+		} catch (DelegationForbiddenException $e) {
+			$this->assertSame(Http::STATUS_FORBIDDEN, $e->getHttpCode());
+		}
+	}
+
+	public function testAssertMailboxAccessDenied(): void {
+		$this->mailboxMapper->expects($this->once())
+			->method('findAccountIdForMailbox')
+			->with(42)
+			->willReturn(2);
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with('delegatee', 2)
+			->willThrowException(new ClientException('Not found'));
+		$this->delegationMapper->expects($this->once())
+			->method('findAccountOwnerForDelegatedUser')
+			->with(2, 'delegatee')
+			->willThrowException(new DoesNotExistException('No delegation found'));
+
+		$this->expectException(DelegationForbiddenException::class);
+
+		$this->service->assertMailboxAccess(42, 'delegatee');
+	}
+
+	public function testAssertMessageAccessDenied(): void {
+		$this->messageMapper->expects($this->once())
+			->method('findAccountIdForMessage')
+			->with(99)
+			->willReturn(2);
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with('delegatee', 2)
+			->willThrowException(new ClientException('Not found'));
+		$this->delegationMapper->expects($this->once())
+			->method('findAccountOwnerForDelegatedUser')
+			->with(2, 'delegatee')
+			->willThrowException(new DoesNotExistException('No delegation found'));
+
+		$this->expectException(DelegationForbiddenException::class);
+
+		$this->service->assertMessageAccess(99, 'delegatee');
+	}
+
 	public function testResolveAliasUserId(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(1);
@@ -396,5 +494,21 @@ class DelegationServiceTest extends TestCase {
 			->with($notification);
 
 		$this->service->unDelegate($this->account, 'delegatee', 'owner');
+	}
+
+	public function testLogDelegatedActionDispatchesEvent(): void {
+		$this->eventDispatcher->expects($this->once())
+			->method('dispatchTyped')
+			->with($this->callback(fn ($event) => $event instanceof CriticalActionPerformedEvent
+				&& $event->getLogMessage() === 'delegatee performed an action on behalf of owner'));
+
+		$this->service->logDelegatedAction('delegatee', 'owner', 'delegatee performed an action on behalf of owner');
+	}
+
+	public function testLogDelegatedActionSkipsWhenNotDelegated(): void {
+		$this->eventDispatcher->expects($this->never())
+			->method('dispatchTyped');
+
+		$this->service->logDelegatedAction('owner', 'owner', 'owner performed an action on their own account');
 	}
 }

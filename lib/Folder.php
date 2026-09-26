@@ -13,31 +13,18 @@ use Horde_Imap_Client_Mailbox;
 
 class Folder {
 
-	/** @var Horde_Imap_Client_Mailbox */
-	private $mailbox;
-
-	/** @var array */
-	private $attributes;
-
-	/** @var string */
-	private $delimiter;
-
-	/** @var null|array */
-	private $status;
-
 	/** @var string[] */
 	private $specialUse;
 
 	private ?string $myAcls;
 
-	public function __construct(Horde_Imap_Client_Mailbox $mailbox,
-		array $attributes,
-		?string $delimiter,
-		?array $status) {
-		$this->mailbox = $mailbox;
-		$this->attributes = $attributes;
-		$this->delimiter = $delimiter;
-		$this->status = $status;
+	public function __construct(
+		private Horde_Imap_Client_Mailbox $mailbox,
+		private array $attributes,
+		/** @var string */
+		private ?string $delimiter,
+		private ?array $status,
+	) {
 		$this->specialUse = [];
 		$this->myAcls = null;
 	}

@@ -66,6 +66,12 @@ class ContactsIntegration {
 				if ($e === '') {
 					continue;
 				}
+
+				$mightBeValidEmail = filter_var($e, FILTER_VALIDATE_EMAIL);
+				if ($mightBeValidEmail === false) {
+					continue;
+				}
+
 				$receivers[] = [
 					'id' => $id,
 					// Show full name if possible or fall back to email
@@ -182,7 +188,7 @@ class ContactsIntegration {
 		$shareeEnumerationInGroupOnly = $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_to_group', 'no') === 'yes';
 		$shareeEnumerationFullMatch = $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_full_match', 'yes') === 'yes';
 		$shareeEnumerationFullMatchDisplayName = $shareeEnumerationFullMatch && $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_full_match_displayname', 'yes') === 'yes';
-		$shareeEnumerationFullMatchUserId = $shareeEnumerationFullMatch && $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_full_match_userid', 'yes') === 'yes';
+		$shareeEnumerationFullMatchUserId = $shareeEnumerationFullMatch && $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_full_match_user_id', 'yes') === 'yes';
 		$shareeEnumerationFullMatchEmail = $shareeEnumerationFullMatch && $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_full_match_email', 'yes') === 'yes';
 
 		$options = [

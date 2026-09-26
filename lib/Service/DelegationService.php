@@ -18,9 +18,12 @@ use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\DelegationExistsException;
+use OCA\Mail\Exception\DelegationForbiddenException;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IUserManager;
+use OCP\Log\Audit\CriticalActionPerformedEvent;
 use OCP\Notification\IManager;
 use OCP\Notification\IncompleteNotificationException;
 use Psr\Log\LoggerInterface;
@@ -37,6 +40,7 @@ class DelegationService {
 		private IUserManager $userManager,
 		private IManager $notificationManager,
 		private ITimeFactory $time,
+		private IEventDispatcher $eventDispatcher,
 		private LoggerInterface $logger,
 	) {
 	}
@@ -58,8 +62,16 @@ class DelegationService {
 		return $result;
 	}
 
+	public function deleteByUserId(string $userId): void {
+		$this->delegationMapper->deleteByUserId($userId);
+	}
+
 	public function findDelegatedToUsersForAccount(int $accountId): array {
-		return $this->delegationMapper->findDelegatedToUsers($accountId);
+		return array_map(function (Delegation $delegation) {
+			$displayName = $this->userManager->get($delegation->getUserId())?->getDisplayName();
+			$delegation->setDisplayName($displayName);
+			return $delegation;
+		}, $this->delegationMapper->findDelegatedToUsers($accountId));
 	}
 
 	public function unDelegate(Account $account, string $userId, string $currentUserId): void {
@@ -111,6 +123,49 @@ class DelegationService {
 	}
 
 	/**
+	 * Assert that the current user may act on the given account.
+	 *
+	 * Use this for account ids that are supplied by the client on top of the id the
+	 * effective user was resolved from. Resolving those with the effective user id
+	 * would accept any account of the account owner, not just the delegated ones.
+	 *
+	 * @throws DelegationForbiddenException
+	 */
+	public function assertAccountAccess(int $accountId, string $currentUserId): void {
+		try {
+			$this->resolveAccountUserId($accountId, $currentUserId);
+		} catch (ClientException $e) {
+			throw new DelegationForbiddenException($e->getMessage(), 0, $e);
+		}
+	}
+
+	/**
+	 * Assert that the current user may act on the account the given mailbox belongs to.
+	 *
+	 * @throws DoesNotExistException
+	 * @throws DelegationForbiddenException
+	 */
+	public function assertMailboxAccess(int $mailboxId, string $currentUserId): void {
+		$this->assertAccountAccess(
+			$this->mailboxMapper->findAccountIdForMailbox($mailboxId),
+			$currentUserId,
+		);
+	}
+
+	/**
+	 * Assert that the current user may act on the account the given message belongs to.
+	 *
+	 * @throws DoesNotExistException
+	 * @throws DelegationForbiddenException
+	 */
+	public function assertMessageAccess(int $messageId, string $currentUserId): void {
+		$this->assertAccountAccess(
+			$this->messageMapper->findAccountIdForMessage($messageId),
+			$currentUserId,
+		);
+	}
+
+	/**
 	 * @throws DoesNotExistException
 	 * @throws ClientException
 	 */
@@ -126,6 +181,13 @@ class DelegationService {
 	public function resolveLocalMessageUserId(int $localMessageId, string $currentUserId): string {
 		$accountId = $this->localMessageMapper->findAccountIdForLocalMessage($localMessageId);
 		return $this->resolveAccountUserId($accountId, $currentUserId);
+	}
+
+	public function logDelegatedAction(string $currentUserId, string $effectiveUserId, string $logMessage): void {
+		if ($currentUserId === $effectiveUserId) {
+			return;
+		}
+		$this->eventDispatcher->dispatchTyped(new CriticalActionPerformedEvent($logMessage));
 	}
 
 	/**
@@ -147,7 +209,6 @@ class DelegationService {
 			->setSubject('account_delegation', [
 				'id' => $account->getId(),
 				'account_email' => $account->getEmail(),
-
 			])
 			->setDateTime($time)
 			->setMessage('account_delegation_changed', [

@@ -58,64 +58,24 @@ class MailManager implements IMailManager {
 		'recent' => [Horde_Imap_Client::FLAG_RECENT],
 	];
 
-	/** @var IMAPClientFactory */
-	private $imapClientFactory;
-
-	/** @var MailboxSync */
-	private $mailboxSync;
-
-	/** @var MailboxMapper */
-	private $mailboxMapper;
-
-	/** @var FolderMapper */
-	private $folderMapper;
-
-	/** @var ImapMessageMapper */
-	private $imapMessageMapper;
-
-	/** @var DbMessageMapper */
-	private $dbMessageMapper;
-
 	/** @var IEventDispatcher */
 	private $eventDispatcher;
 
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var TagMapper */
-	private $tagMapper;
-
-	/** @var MessageTagsMapper */
-	private $messageTagsMapper;
-
-	/** @var ThreadMapper */
-	private $threadMapper;
-
 	public function __construct(
-		IMAPClientFactory $imapClientFactory,
-		MailboxMapper $mailboxMapper,
-		MailboxSync $mailboxSync,
-		FolderMapper $folderMapper,
-		ImapMessageMapper $messageMapper,
-		DbMessageMapper $dbMessageMapper,
+		private IMAPClientFactory $imapClientFactory,
+		private MailboxMapper $mailboxMapper,
+		private MailboxSync $mailboxSync,
+		private FolderMapper $folderMapper,
+		private ImapMessageMapper $imapMessageMapper,
+		private DbMessageMapper $dbMessageMapper,
 		IEventDispatcher $eventDispatcher,
-		LoggerInterface $logger,
-		TagMapper $tagMapper,
-		MessageTagsMapper $messageTagsMapper,
-		ThreadMapper $threadMapper,
+		private LoggerInterface $logger,
+		private TagMapper $tagMapper,
+		private MessageTagsMapper $messageTagsMapper,
+		private ThreadMapper $threadMapper,
 		private ImapFlag $imapFlag,
 	) {
-		$this->imapClientFactory = $imapClientFactory;
-		$this->mailboxMapper = $mailboxMapper;
-		$this->mailboxSync = $mailboxSync;
-		$this->folderMapper = $folderMapper;
-		$this->imapMessageMapper = $messageMapper;
-		$this->dbMessageMapper = $dbMessageMapper;
 		$this->eventDispatcher = $eventDispatcher;
-		$this->logger = $logger;
-		$this->tagMapper = $tagMapper;
-		$this->messageTagsMapper = $messageTagsMapper;
-		$this->threadMapper = $threadMapper;
 	}
 
 	#[\Override]
@@ -338,7 +298,7 @@ class MailManager implements IMailManager {
 		Horde_Imap_Client_Socket $client,
 	): void {
 		$this->eventDispatcher->dispatchTyped(
-			new BeforeMessageDeletedEvent($account, $mailbox->getName(), $messageUid)
+			new BeforeMessageDeletedEvent($account, $mailbox, $messageUid)
 		);
 
 		try {
@@ -473,12 +433,23 @@ class MailManager implements IMailManager {
 			$client->logout();
 		}
 
+		// Looking the message up by uid is a shortcut to avoid changing this method's
+		// signature, which the JMAP PR does anyway.
+		$messages = $this->dbMessageMapper->findByUids($mb, [$uid]);
+		if (count($messages) < 1) {
+			// The message should be in the database cache, otherwise the client wouldn't
+			// know about the uid. Skip the event rather than fail the whole flag operation.
+			return;
+		}
+
+		$message = reset($messages);
+
 		$this->eventDispatcher->dispatch(
 			MessageFlaggedEvent::class,
 			new MessageFlaggedEvent(
 				$account,
 				$mb,
-				$uid,
+				$message,
 				$flag,
 				$value
 			)

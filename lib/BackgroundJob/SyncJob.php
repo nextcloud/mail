@@ -30,36 +30,36 @@ class SyncJob extends TimedJob {
 	private const DEFAULT_SYNC_INTERVAL = 3600;
 
 	private IUserManager $userManager;
-	private AccountService $accountService;
-	private ImapToDbSynchronizer $syncService;
-	private MailboxSync $mailboxSync;
-	private LoggerInterface $logger;
 	private IJobList $jobList;
 	private readonly bool $forcedSyncInterval;
+	private readonly bool $forcedSkip;
 
 	public function __construct(
 		ITimeFactory $time,
 		IUserManager $userManager,
-		AccountService $accountService,
-		MailboxSync $mailboxSync,
-		ImapToDbSynchronizer $syncService,
-		LoggerInterface $logger,
+		private AccountService $accountService,
+		private MailboxSync $mailboxSync,
+		private ImapToDbSynchronizer $syncService,
+		private LoggerInterface $logger,
 		IJobList $jobList,
 		private readonly IConfig $config,
 	) {
 		parent::__construct($time);
 
 		$this->userManager = $userManager;
-		$this->accountService = $accountService;
-		$this->syncService = $syncService;
-		$this->mailboxSync = $mailboxSync;
-		$this->logger = $logger;
 		$this->jobList = $jobList;
 
 		$configuredSyncInterval = $config->getSystemValueInt('app.mail.background-sync-interval');
 		if ($configuredSyncInterval > 0) {
 			$this->forcedSyncInterval = true;
+			$this->forcedSkip = false;
 		} else {
+			if ($configuredSyncInterval === -1) {
+				$this->forcedSkip = true;
+			} else {
+				$this->forcedSkip = false;
+			}
+
 			$this->forcedSyncInterval = false;
 			$configuredSyncInterval = self::DEFAULT_SYNC_INTERVAL;
 		}
@@ -73,6 +73,10 @@ class SyncJob extends TimedJob {
 	 */
 	#[\Override]
 	protected function run($argument) {
+		if ($this->forcedSkip) {
+			return;
+		}
+
 		$accountId = (int)$argument['accountId'];
 
 		try {

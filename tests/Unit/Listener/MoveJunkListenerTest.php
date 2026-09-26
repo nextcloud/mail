@@ -6,6 +6,7 @@ declare(strict_types=1);
  * SPDX-FileCopyrightText: 2023 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
+
 namespace Unit\Listener;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
@@ -13,6 +14,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
@@ -76,10 +78,12 @@ class MoveJunkListenerTest extends TestCase {
 		$this->mailManager->method('getMailbox')
 			->willThrowException(new ClientException('Computer says no'));
 
+		$message = new Message();
+		$message->setUid(100);
 		$event = new MessageFlaggedEvent(
 			$account,
 			$mailbox,
-			100,
+			$message,
 			'$junk',
 			true
 		);
@@ -101,10 +105,12 @@ class MoveJunkListenerTest extends TestCase {
 		$this->mailManager->expects($this->never())
 			->method('moveMessage');
 
+		$message = new Message();
+		$message->setUid(100);
 		$event = new MessageFlaggedEvent(
 			$account,
 			$mailbox,
-			100,
+			$message,
 			'$junk',
 			true
 		);
@@ -132,10 +138,12 @@ class MoveJunkListenerTest extends TestCase {
 		$this->mailManager->method('moveMessage')
 			->willThrowException(new ServiceException('Computer says no'));
 
+		$message = new Message();
+		$message->setUid(100);
 		$event = new MessageFlaggedEvent(
 			$account,
 			$mailbox,
-			100,
+			$message,
 			'$junk',
 			true
 		);
@@ -158,10 +166,12 @@ class MoveJunkListenerTest extends TestCase {
 		$this->mailManager->expects($this->never())
 			->method('moveMessage');
 
+		$message = new Message();
+		$message->setUid(100);
 		$event = new MessageFlaggedEvent(
 			$account,
 			$mailbox,
-			100,
+			$message,
 			'$junk',
 			false
 		);
@@ -189,10 +199,12 @@ class MoveJunkListenerTest extends TestCase {
 		$this->mailManager->method('moveMessage')
 			->willThrowException(new ServiceException('Computer says no'));
 
+		$message = new Message();
+		$message->setUid(100);
 		$event = new MessageFlaggedEvent(
 			$account,
 			$mailbox,
-			100,
+			$message,
 			'$junk',
 			false
 		);

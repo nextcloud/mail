@@ -13,6 +13,7 @@ namespace OCA\Mail\Controller;
 use Horde_Imap_Client;
 use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\Mailbox;
@@ -29,10 +30,12 @@ use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\SetupService;
 use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\IAppConfig;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
@@ -41,52 +44,33 @@ use Psr\Log\LoggerInterface;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class AccountsController extends Controller {
-	private AccountService $accountService;
-	private string $currentUserId;
-	private LoggerInterface $logger;
 	private IL10N $l10n;
-	private AliasesService $aliasesService;
-	private IMailTransmission $mailTransmission;
-	private SetupService $setup;
-	private IMailManager $mailManager;
-	private SyncService $syncService;
 	private IConfig $config;
 	private IRemoteHostValidator $hostValidator;
-	private MailboxSync $mailboxSync;
-	private DelegationService $delegationService;
 
 	public function __construct(
 		string $appName,
 		IRequest $request,
-		AccountService $accountService,
-		$userId,
-		LoggerInterface $logger,
+		private AccountService $accountService,
+		private string $userId,
+		private LoggerInterface $logger,
 		IL10N $l10n,
-		AliasesService $aliasesService,
-		IMailTransmission $mailTransmission,
-		SetupService $setup,
-		IMailManager $mailManager,
-		SyncService $syncService,
+		private AliasesService $aliasesService,
+		private IMailTransmission $mailTransmission,
+		private SetupService $setup,
+		private IMailManager $mailManager,
+		private SyncService $syncService,
 		IConfig $config,
 		IRemoteHostValidator $hostValidator,
-		MailboxSync $mailboxSync,
+		private MailboxSync $mailboxSync,
 		private ITimeFactory $timeFactory,
-		DelegationService $delegationService,
+		private DelegationService $delegationService,
+		private IAppConfig $appConfig,
 	) {
 		parent::__construct($appName, $request);
-		$this->accountService = $accountService;
-		$this->currentUserId = $userId;
-		$this->logger = $logger;
 		$this->l10n = $l10n;
-		$this->aliasesService = $aliasesService;
-		$this->mailTransmission = $mailTransmission;
-		$this->setup = $setup;
-		$this->mailManager = $mailManager;
-		$this->syncService = $syncService;
 		$this->config = $config;
 		$this->hostValidator = $hostValidator;
-		$this->mailboxSync = $mailboxSync;
-		$this->delegationService = $delegationService;
 	}
 
 	/**
@@ -96,17 +80,17 @@ class AccountsController extends Controller {
 	 */
 	#[TrapError]
 	public function index(): JSONResponse {
-		$mailAccounts = $this->accountService->findByUserId($this->currentUserId);
+		$mailAccounts = $this->accountService->findByUserId($this->userId);
 
 		$json = [];
 		foreach ($mailAccounts as $mailAccount) {
 			$conf = $mailAccount->jsonSerialize();
-			$conf['aliases'] = $this->aliasesService->findAll($conf['accountId'], $this->currentUserId);
+			$conf['aliases'] = $this->aliasesService->findAll($conf['accountId'], $this->userId);
 			$conf['isDelegated'] = false;
 			$json[] = $conf;
 		}
 
-		$delegatedAccounts = $this->accountService->findDelegatedAccounts($this->currentUserId);
+		$delegatedAccounts = $this->accountService->findDelegatedAccounts($this->userId);
 		foreach ($delegatedAccounts as $delegatedAccount) {
 			$conf = $delegatedAccount->jsonSerialize();
 			$conf['isDelegated'] = true;
@@ -126,7 +110,7 @@ class AccountsController extends Controller {
 	 */
 	#[TrapError]
 	public function show(int $id): JSONResponse {
-		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->currentUserId);
+		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
 
 		return new JSONResponse($this->accountService->find($effectiveUserId, $id));
 	}
@@ -152,8 +136,9 @@ class AccountsController extends Controller {
 		?string $smtpPassword = null,
 		string $authMethod = 'password'): JSONResponse {
 		try {
+			$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
 			// Make sure the account actually exists
-			$this->accountService->find($this->currentUserId, $id);
+			$this->accountService->find($this->userId, $id);
 		} catch (ClientException $e) {
 			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
 		}
@@ -179,9 +164,11 @@ class AccountsController extends Controller {
 		}
 
 		try {
-			return MailJsonResponse::success(
-				$this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId, $authMethod, $id)
+			$result = MailJsonResponse::success(
+				$this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, $authMethod, $id)
 			);
+			$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated account <$id> on behalf of $effectiveUserId");
+			return $result;
 		} catch (CouldNotConnectException $e) {
 			$data = [
 				'error' => $e->getReason(),
@@ -236,10 +223,16 @@ class AccountsController extends Controller {
 		?bool $classificationEnabled = null,
 		?bool $imipCreate = null,
 	): JSONResponse {
-		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->currentUserId);
+		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
 		$account = $this->accountService->find($effectiveUserId, $id);
 
 		$dbAccount = $account->getMailAccount();
+
+		foreach ([$draftsMailboxId, $sentMailboxId, $trashMailboxId, $archiveMailboxId, $snoozeMailboxId, $junkMailboxId] as $mailboxId) {
+			if ($mailboxId !== null) {
+				$this->delegationService->assertMailboxAccess($mailboxId, $this->userId);
+			}
+		}
 
 		if ($draftsMailboxId !== null) {
 			$this->mailManager->getMailbox($effectiveUserId, $draftsMailboxId);
@@ -293,6 +286,7 @@ class AccountsController extends Controller {
 		$result = new JSONResponse(
 			new Account($this->accountService->save($dbAccount))
 		);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId patched account <$id> on behalf of $effectiveUserId");
 		return $result;
 	}
 
@@ -309,8 +303,9 @@ class AccountsController extends Controller {
 	 */
 	#[TrapError]
 	public function updateSignature(int $id, ?string $signature = null): JSONResponse {
-		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->currentUserId);
+		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
 		$this->accountService->updateSignature($id, $effectiveUserId, $signature);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated signature for account <$id> on behalf of $effectiveUserId");
 		return new JSONResponse();
 	}
 
@@ -325,7 +320,9 @@ class AccountsController extends Controller {
 	 */
 	#[TrapError]
 	public function destroy(int $id): JSONResponse {
-		$this->accountService->delete($this->currentUserId, $id);
+		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
+		$this->accountService->delete($effectiveUserId, $id);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId deleted account <$id> on behalf of $effectiveUserId");
 		return new JSONResponse();
 	}
 
@@ -347,7 +344,7 @@ class AccountsController extends Controller {
 		?string $smtpPassword = null,
 		string $authMethod = 'password',
 		?bool $classificationEnabled = null): JSONResponse {
-		if ($this->config->getAppValue(Application::APP_ID, 'allow_new_mail_accounts', 'yes') === 'no') {
+		if (!$this->appConfig->getValueBool(Application::APP_ID, ConfigLexicon::ALLOW_NEW_MAIL_ACCOUNTS, true)) {
 			$this->logger->info('Creating account disabled by admin.');
 			return MailJsonResponse::error('Could not create account');
 		}
@@ -378,7 +375,7 @@ class AccountsController extends Controller {
 			);
 		}
 		try {
-			$account = $this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId, $authMethod, null, $classificationEnabled);
+			$account = $this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, $authMethod, null, $classificationEnabled);
 			// Set initial heartbeat
 			$this->config->setUserValue(
 				$account->getUserId(),
@@ -438,10 +435,15 @@ class AccountsController extends Controller {
 			$this->logger->info("Updating draft <$draftId> in account <$id>");
 		}
 
-		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->currentUserId);
+		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
 		$account = $this->accountService->find($effectiveUserId, $id);
 		$previousDraft = null;
 		if ($draftId !== null) {
+			try {
+				$this->delegationService->assertMessageAccess($draftId, $this->userId);
+			} catch (DoesNotExistException $e) {
+				// Nothing to authorise, loading the draft below will fail and be logged
+			}
 			try {
 				$previousDraft = $this->mailManager->getMessage($effectiveUserId, $draftId);
 			} catch (ClientException $e) {
@@ -461,6 +463,7 @@ class AccountsController extends Controller {
 				null,
 				[]
 			);
+			$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId saved draft in account <$id> on behalf of $effectiveUserId");
 			return new JSONResponse([
 				'id' => $this->mailManager->getMessageIdForUid($draftsMailbox, $newUID)
 			]);
@@ -479,7 +482,7 @@ class AccountsController extends Controller {
 	 * @throws ClientException
 	 */
 	public function getQuota(int $id): JSONResponse {
-		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->currentUserId);
+		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
 		$account = $this->accountService->find($effectiveUserId, $id);
 
 		$quota = $this->mailManager->getQuota($account);
@@ -499,10 +502,11 @@ class AccountsController extends Controller {
 	 * @throws ClientException
 	 */
 	public function updateSmimeCertificate(int $id, ?int $smimeCertificateId = null) {
-		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->currentUserId);
+		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
 		$account = $this->accountService->find($effectiveUserId, $id)->getMailAccount();
 		$account->setSmimeCertificateId($smimeCertificateId);
 		$this->accountService->update($account);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated S/MIME certificate for account <$id> on behalf of $effectiveUserId");
 		return MailJsonResponse::success();
 	}
 
@@ -515,7 +519,7 @@ class AccountsController extends Controller {
 	 * @throws ClientException
 	 */
 	public function testAccountConnection(int $id) {
-		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->currentUserId);
+		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
 		return new JSONResponse([
 			'data' => $this->accountService->testAccountConnection($effectiveUserId, $id),
 		]);

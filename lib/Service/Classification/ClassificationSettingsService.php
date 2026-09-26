@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\Classification;
 
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCP\IAppConfig;
 
@@ -25,11 +26,11 @@ class ClassificationSettingsService {
 	 * preference themselves.
 	 */
 	public function isClassificationEnabledByDefault(): bool {
-		return $this->appConfig->getValueString(
+		return $this->appConfig->getValueBool(
 			Application::APP_ID,
-			'importance_classification_default',
-			'yes'
-		) === 'yes';
+			ConfigLexicon::IMPORTANCE_CLASSIFICATION_DEFAULT,
+			true,
+		);
 	}
 
 	/**
@@ -37,10 +38,10 @@ class ClassificationSettingsService {
 	 * the preference themselves.
 	 */
 	public function setClassificationEnabledByDefault(bool $enabledByDefault): void {
-		$this->appConfig->setValueString(
+		$this->appConfig->setValueBool(
 			Application::APP_ID,
-			'importance_classification_default',
-			$enabledByDefault ? 'yes' : 'no',
+			ConfigLexicon::IMPORTANCE_CLASSIFICATION_DEFAULT,
+			$enabledByDefault,
 		);
 	}
 }

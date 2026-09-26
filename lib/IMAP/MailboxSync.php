@@ -39,17 +39,10 @@ use function str_starts_with;
 class MailboxSync {
 	use TTransactional;
 
-	/** @var MailboxMapper */
-	private $mailboxMapper;
-
-	/** @var FolderMapper */
-	private $folderMapper;
-
-	/** @var MailAccountMapper */
-	private $mailAccountMapper;
-
-	/** @var IMAPClientFactory */
-	private $imapClientFactory;
+	private const NON_PERSONAL_NAMESPACE_TYPES = [
+		Horde_Imap_Client_Data_Namespace::NS_OTHER,
+		Horde_Imap_Client_Data_Namespace::NS_SHARED,
+	];
 
 	/** @var ITimeFactory */
 	private $timeFactory;
@@ -58,17 +51,15 @@ class MailboxSync {
 	private $dispatcher;
 	private IDBConnection $dbConnection;
 
-	public function __construct(MailboxMapper $mailboxMapper,
-		FolderMapper $folderMapper,
-		MailAccountMapper $mailAccountMapper,
-		IMAPClientFactory $imapClientFactory,
+	public function __construct(
+		private MailboxMapper $mailboxMapper,
+		private FolderMapper $folderMapper,
+		private MailAccountMapper $mailAccountMapper,
+		private IMAPClientFactory $imapClientFactory,
 		ITimeFactory $timeFactory,
 		IEventDispatcher $dispatcher,
-		IDBConnection $dbConnection) {
-		$this->mailboxMapper = $mailboxMapper;
-		$this->folderMapper = $folderMapper;
-		$this->mailAccountMapper = $mailAccountMapper;
-		$this->imapClientFactory = $imapClientFactory;
+		IDBConnection $dbConnection,
+	) {
 		$this->timeFactory = $timeFactory;
 		$this->dispatcher = $dispatcher;
 		$this->dbConnection = $dbConnection;
@@ -253,7 +244,11 @@ class MailboxSync {
 	private function isMailboxShared(?Horde_Imap_Client_Namespace_List $namespaces, Mailbox $mailbox): bool {
 		foreach (($namespaces ?? []) as $namespace) {
 			/** @var Horde_Imap_Client_Data_Namespace $namespace */
-			if ($namespace->type === Horde_Imap_Client_Data_Namespace::NS_OTHER && str_starts_with($mailbox->getName(), $namespace->name)) {
+			// An empty prefix would match every mailbox
+			if ($namespace->name === '') {
+				continue;
+			}
+			if (in_array($namespace->type, self::NON_PERSONAL_NAMESPACE_TYPES, true) && str_starts_with($mailbox->getName(), $namespace->name)) {
 				return true;
 			}
 		}

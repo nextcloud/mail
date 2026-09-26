@@ -14,6 +14,7 @@ use Doctrine\DBAL\Schema\Table;
 use OCP\DB\Exception;
 use OCP\DB\ISchemaWrapper;
 use OCP\DB\QueryBuilder\IQueryBuilder;
+use OCP\DB\Schema\ITable;
 use OCP\IDBConnection;
 use OCP\Migration\Attributes\ModifyColumn;
 use OCP\Migration\IOutput;
@@ -82,15 +83,17 @@ class Version5007Date20260108124422 extends SimpleMigrationStep {
 	}
 
 	/**
-	 * @param Table $accountsTable
-	 * @param Table $mailboxesTable
+	 * @param Table|ITable $accountsTable
+	 * @param Table|ITable $mailboxesTable
 	 * @param string $mailboxType
 	 * @return void
 	 */
-	private function addMailboxKey(Table $accountsTable, Table $mailboxesTable, string $mailboxType): void {
+	private function addMailboxKey(Table|ITable $accountsTable, Table|ITable $mailboxesTable, string $mailboxType): void {
+		/** @var non-empty-lowercase-string $column */
+		$column = $mailboxType . '_mailbox_id';
 		$accountsTable->addForeignKeyConstraint(
-			$mailboxesTable,
-			["{$mailboxType}_mailbox_id"],
+			$mailboxesTable->getName(),
+			[$column],
 			['id'],
 			[
 				'onDelete' => 'SET NULL',

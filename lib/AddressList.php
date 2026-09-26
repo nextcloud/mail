@@ -19,14 +19,12 @@ use ReturnTypeWillChange;
  * @psalm-immutable
  */
 class AddressList implements Countable, JsonSerializable {
-	/** @var list<Address> */
-	private array $addresses;
-
 	/**
 	 * @param list<Address> $addresses
 	 */
-	public function __construct(array $addresses = []) {
-		$this->addresses = $addresses;
+	public function __construct(
+		private array $addresses = [],
+	) {
 	}
 
 	/**
