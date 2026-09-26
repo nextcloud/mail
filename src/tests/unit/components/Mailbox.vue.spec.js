@@ -356,7 +356,7 @@ describe('Mailbox all matching selection', () => {
 
 		expect(showError).toHaveBeenCalled()
 		expect(vm.allMatchingSelected).toBe(true)
-		expect(vm.flaggingAllMatching).toBe(false)
+		expect(vm.allMatchingBusy).toBe(false)
 	})
 
 	it('selects messages loaded later while all matching messages are selected', async () => {
@@ -368,6 +368,62 @@ describe('Mailbox all matching selection', () => {
 		await vm.$nextTick()
 
 		expect(vm.selection).toEqual([1, 2, 3])
+	})
+
+	it('asks for confirmation before deleting all matching messages', async () => {
+		store.deleteMatchingEnvelopes = vi.fn().mockResolvedValue()
+		const vm = mountMailbox()
+		vm.selectAll()
+		vm.allMatchingSelected = true
+		await vm.$nextTick()
+
+		await wrapper.find('.multiselect-header [title="Delete all"]').trigger('click')
+
+		expect(store.deleteMatchingEnvelopes).not.toHaveBeenCalled()
+
+		wrapper.findComponent({ name: 'ConfirmationModal' }).vm.$emit('confirm')
+		await flushPromises()
+
+		expect(store.deleteMatchingEnvelopes).toHaveBeenCalledWith({ mailboxId: 1, query: 'is:unread' })
+		expect(vm.selection).toEqual([])
+	})
+
+	it('moves all matching messages to the picked mailbox', async () => {
+		store.moveMatchingEnvelopes = vi.fn().mockResolvedValue()
+		const vm = mountMailbox()
+		vm.selectAll()
+		vm.allMatchingSelected = true
+		await vm.$nextTick()
+
+		wrapper.findComponent(EnvelopeList).vm.onMoveAllMatching(14)
+		await flushPromises()
+
+		expect(store.moveMatchingEnvelopes).toHaveBeenCalledWith({ mailboxId: 1, query: 'is:unread', destMailboxId: 14 })
+		expect(vm.allMatchingSelected).toBe(false)
+	})
+
+	it('reports an error when moving all matching messages fails', async () => {
+		store.moveMatchingEnvelopes = vi.fn().mockRejectedValue(new Error('500'))
+		const vm = mountMailbox()
+		vm.selectAll()
+		vm.allMatchingSelected = true
+
+		await vm.moveAllMatching(14)
+
+		expect(showError).toHaveBeenCalled()
+		expect(vm.allMatchingSelected).toBe(true)
+		expect(vm.allMatchingBusy).toBe(false)
+	})
+
+	it('marks dragged messages as all matching', async () => {
+		const vm = mountMailbox()
+		vm.selectAll()
+		vm.allMatchingSelected = true
+		await vm.$nextTick()
+
+		const rows = wrapper.findAllComponents({ name: 'Envelope' })
+
+		expect(rows.at(0).vm.$attrs['all-matching']).toEqual({ mailboxId: 1, query: 'is:unread' })
 	})
 
 	it('leaves the all matching mode when the selection is changed by hand', () => {

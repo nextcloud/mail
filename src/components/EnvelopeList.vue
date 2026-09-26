@@ -10,35 +10,49 @@
 					<NcButton
 						variant="tertiary"
 						:title="t('mail', 'Mark all as read')"
-						:disabled="flaggingAllMatching"
+						:disabled="allMatchingBusy"
 						@click.prevent="$emit('flag-all-matching', { seen: true })">
 						<EmailRead :size="20" />
 					</NcButton>
 					<NcButton
 						variant="tertiary"
 						:title="t('mail', 'Mark all as unread')"
-						:disabled="flaggingAllMatching"
+						:disabled="allMatchingBusy"
 						@click.prevent="$emit('flag-all-matching', { seen: false })">
 						<EmailUnread :size="20" />
 					</NcButton>
 					<NcButton
 						variant="tertiary"
 						:title="t('mail', 'Favorite all')"
-						:disabled="flaggingAllMatching"
+						:disabled="allMatchingBusy"
 						@click.prevent="$emit('flag-all-matching', { flagged: true })">
 						<IconFavorite :size="20" />
 					</NcButton>
 					<NcButton
 						variant="tertiary"
 						:title="t('mail', 'Unfavorite all')"
-						:disabled="flaggingAllMatching"
+						:disabled="allMatchingBusy"
 						@click.prevent="$emit('flag-all-matching', { flagged: false })">
 						<IconUnFavorite :size="20" />
 					</NcButton>
 					<NcButton
 						variant="tertiary"
+						:title="t('mail', 'Move all')"
+						:disabled="allMatchingBusy"
+						@click.prevent="showMoveAllModal = true">
+						<OpenInNewIcon :size="20" />
+					</NcButton>
+					<NcButton
+						variant="tertiary"
+						:title="t('mail', 'Delete all')"
+						:disabled="allMatchingBusy"
+						@click.prevent="showDeleteAllConfirmation = true">
+						<IconDelete :size="20" />
+					</NcButton>
+					<NcButton
+						variant="tertiary"
 						:title="t('mail', 'Unselect all')"
-						:disabled="flaggingAllMatching"
+						:disabled="allMatchingBusy"
 						@click.prevent="unselectAll">
 						<IconSelect :size="20" />
 					</NcButton>
@@ -163,6 +177,7 @@
 				:select-mode="selectMode"
 				:has-multiple-accounts="hasMultipleAccounts"
 				:selected-envelopes="selectedEnvelopes"
+				:all-matching="allMatchingSelected ? { mailboxId: mailbox.databaseId, query: searchQuery } : null"
 				:compact-mode="compactMode"
 				:date-grouped="dateGrouped"
 				@delete="$emit('delete', env.databaseId)"
@@ -193,6 +208,26 @@
 			:move-thread="true"
 			@close="onCloseMoveModal" />
 
+		<MailboxPicker
+			v-if="showMoveAllModal"
+			:account="account"
+			:selected.sync="moveAllDestination"
+			:loading="allMatchingBusy"
+			:label-select="t('mail', 'Move all')"
+			:label-select-loading="t('mail', 'Moving messages')"
+			:select="onMoveAllMatching"
+			@close="showMoveAllModal = false" />
+
+		<ConfirmationModal
+			v-if="showDeleteAllConfirmation"
+			:title="t('mail', 'Delete all selected messages')"
+			:confirm-text="t('mail', 'Delete')"
+			:disabled="allMatchingBusy"
+			@confirm="onDeleteAllMatching"
+			@cancel="showDeleteAllConfirmation = false">
+			{{ isTrashMailbox ? t('mail', 'All selected messages will be deleted permanently.') : t('mail', 'All selected messages will be moved to the trash.') }}
+		</ConfirmationModal>
+
 		<NcDialog
 			v-if="showQuickActionsSettings"
 			:name="t('mail', 'Manage quick actions')"
@@ -220,7 +255,9 @@ import IconUnFavorite from 'vue-material-design-icons/StarOutline.vue'
 import TagIcon from 'vue-material-design-icons/TagOutline.vue'
 import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 import Settings from '../components/quickActions/Settings.vue'
+import ConfirmationModal from './ConfirmationModal.vue'
 import Envelope from './Envelope.vue'
+import MailboxPicker from './MailboxPicker.vue'
 import MoveModal from './MoveModal.vue'
 import TagModal from './TagModal.vue'
 import dragEventBus from '../directives/drag-and-drop/util/dragEventBus.js'
@@ -248,6 +285,8 @@ export default {
 		ImportantOutlineIcon,
 		IconFavorite,
 		IconSelect,
+		ConfirmationModal,
+		MailboxPicker,
 		MoveModal,
 		OpenInNewIcon,
 		ShareIcon,
@@ -330,7 +369,7 @@ export default {
 			default: false,
 		},
 
-		flaggingAllMatching: {
+		allMatchingBusy: {
 			type: Boolean,
 			default: false,
 		},
@@ -340,6 +379,9 @@ export default {
 		return {
 			showMoveModal: false,
 			showTagModal: false,
+			showMoveAllModal: false,
+			showDeleteAllConfirmation: false,
+			moveAllDestination: undefined,
 			defaultView: false,
 			showQuickActionsSettings: false,
 		}
@@ -412,6 +454,10 @@ export default {
 			return this.selection
 				.map((id) => this.mainStore.getEnvelope(id))
 				.filter((envelope) => envelope !== undefined)
+		},
+
+		isTrashMailbox() {
+			return this.mailbox.databaseId === this.account.trashMailboxId
 		},
 
 		hasMultipleAccounts() {
@@ -596,6 +642,16 @@ export default {
 
 		unselectAll() {
 			this.$emit('update:selection', [])
+		},
+
+		onMoveAllMatching(destMailboxId) {
+			this.showMoveAllModal = false
+			this.$emit('move-all-matching', destMailboxId)
+		},
+
+		onDeleteAllMatching() {
+			this.showDeleteAllConfirmation = false
+			this.$emit('delete-all-matching')
 		},
 
 		onOpenMoveModal() {

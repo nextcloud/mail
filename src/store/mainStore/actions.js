@@ -69,8 +69,10 @@ import {
 	clearMailbox,
 	create as createMailbox,
 	deleteMailbox,
+	deleteMailboxMessages,
 	fetchAll as fetchAllMailboxes,
 	markMailboxRead,
+	moveMailboxMessages,
 	patchMailbox,
 	setMailboxFlags,
 } from '../../service/MailboxService.js'
@@ -443,6 +445,39 @@ export default function mainStoreActions() {
 					mailboxId,
 					query,
 				})
+			})
+		},
+		async moveMatchingEnvelopes({
+			mailboxId,
+			query,
+			destMailboxId,
+		}) {
+			return handleHttpAuthErrors(async () => {
+				await moveMailboxMessages(mailboxId, query, destMailboxId)
+				await this.removeMatchingEnvelopes({ mailboxId, query })
+				await this.syncEnvelopes({ mailboxId: destMailboxId })
+			})
+		},
+		async deleteMatchingEnvelopes({
+			mailboxId,
+			query,
+		}) {
+			return handleHttpAuthErrors(async () => {
+				await deleteMailboxMessages(mailboxId, query)
+				await this.removeMatchingEnvelopes({ mailboxId, query })
+			})
+		},
+		async removeMatchingEnvelopes({
+			mailboxId,
+			query,
+		}) {
+			for (const envelope of this.getEnvelopes(mailboxId, query)) {
+				this.removeEnvelopeMutation({ id: envelope.databaseId })
+			}
+
+			await this.syncEnvelopes({
+				mailboxId,
+				query,
 			})
 		},
 		async changeMailboxSubscription({

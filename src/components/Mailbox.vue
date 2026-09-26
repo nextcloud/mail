@@ -32,7 +32,7 @@
 				<span>{{ searchQuery ? t('mail', 'All messages matching this search are selected.') : t('mail', 'All messages in this folder are selected.') }}</span>
 				<NcButton
 					variant="tertiary"
-					:disabled="flaggingAllMatching"
+					:disabled="allMatchingBusy"
 					@click="unselectAll">
 					{{ t('mail', 'Clear selection') }}
 				</NcButton>
@@ -59,12 +59,14 @@
 						:flat-index="groupFlatIndices[index]"
 						:hide-multiselect-header="index > 0"
 						:all-matching-selected="allMatchingSelected"
-						:flagging-all-matching="flaggingAllMatching"
+						:all-matching-busy="allMatchingBusy"
 						@delete="onDelete"
 						@select="onSelect"
 						@select-range="onSelectRange"
 						@update:selection="onUpdateSelection"
-						@flag-all-matching="flagAllMatching" />
+						@flag-all-matching="flagAllMatching"
+						@move-all-matching="moveAllMatching"
+						@delete-all-matching="deleteAllMatching" />
 				</div>
 			</template>
 			<EnvelopeList
@@ -79,13 +81,15 @@
 				:skip-transition="skipListTransition"
 				:selection="selection"
 				:all-matching-selected="allMatchingSelected"
-				:flagging-all-matching="flaggingAllMatching"
+				:all-matching-busy="allMatchingBusy"
 				@delete="onDelete"
 				@load-more="loadMore"
 				@select="onSelect"
 				@select-range="onSelectRange"
 				@update:selection="onUpdateSelection"
-				@flag-all-matching="flagAllMatching" />
+				@flag-all-matching="flagAllMatching"
+				@move-all-matching="moveAllMatching"
+				@delete-all-matching="deleteAllMatching" />
 		</div>
 	</div>
 </template>
@@ -192,7 +196,7 @@ export default {
 			selection: [],
 			selectionAnchor: undefined,
 			allMatchingSelected: false,
-			flaggingAllMatching: false,
+			allMatchingBusy: false,
 		}
 	},
 
@@ -759,19 +763,47 @@ export default {
 		},
 
 		async flagAllMatching(flags) {
-			this.flaggingAllMatching = true
-			try {
-				await this.mainStore.flagMatchingEnvelopes({
+			await this.runAllMatchingAction(
+				() => this.mainStore.flagMatchingEnvelopes({
 					mailboxId: this.mailbox.databaseId,
 					query: this.searchQuery,
 					flags,
-				})
+				}),
+				t('mail', 'Could not update the messages'),
+			)
+		},
+
+		async moveAllMatching(destMailboxId) {
+			await this.runAllMatchingAction(
+				() => this.mainStore.moveMatchingEnvelopes({
+					mailboxId: this.mailbox.databaseId,
+					query: this.searchQuery,
+					destMailboxId,
+				}),
+				t('mail', 'Could not move the messages'),
+			)
+		},
+
+		async deleteAllMatching() {
+			await this.runAllMatchingAction(
+				() => this.mainStore.deleteMatchingEnvelopes({
+					mailboxId: this.mailbox.databaseId,
+					query: this.searchQuery,
+				}),
+				t('mail', 'Could not delete the messages'),
+			)
+		},
+
+		async runAllMatchingAction(action, errorMessage) {
+			this.allMatchingBusy = true
+			try {
+				await action()
 				this.unselectAll()
 			} catch (error) {
-				logger.error('could not flag all matching messages', { error })
-				showError(t('mail', 'Could not update the messages'))
+				logger.error('could not apply an action to all matching messages', { error })
+				showError(errorMessage)
 			} finally {
-				this.flaggingAllMatching = false
+				this.allMatchingBusy = false
 			}
 		},
 

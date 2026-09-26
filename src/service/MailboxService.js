@@ -51,6 +51,22 @@ export async function setMailboxFlags(id, filter, flags) {
 	await axios.put(url, { filter, flags })
 }
 
+export async function moveMailboxMessages(id, filter, destinationId) {
+	const url = generateUrl('/apps/mail/api/mailboxes/{id}/move-messages', {
+		id,
+	})
+
+	await axios.post(url, { filter, destinationId })
+}
+
+export async function deleteMailboxMessages(id, filter) {
+	const url = generateUrl('/apps/mail/api/mailboxes/{id}/delete-messages', {
+		id,
+	})
+
+	await axios.post(url, { filter })
+}
+
 export async function deleteMailbox(id) {
 	const url = generateUrl('/apps/mail/api/mailboxes/{id}', {
 		id,

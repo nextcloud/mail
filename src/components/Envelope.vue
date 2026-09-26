@@ -11,6 +11,7 @@
 			databaseId: data.databaseId,
 			draggableLabel,
 			selectedEnvelopes,
+			allMatching,
 			isDraggable,
 		}"
 		class="list-item-style envelope"
@@ -684,6 +685,12 @@ export default {
 			type: Array,
 			required: false,
 			default: () => [],
+		},
+
+		allMatching: {
+			type: Object,
+			required: false,
+			default: null,
 		},
 
 		hasMultipleAccounts: {

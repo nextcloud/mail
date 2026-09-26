@@ -886,4 +886,43 @@ describe('Vuex store actions', () => {
 		expect(envelopes[0].flags.seen).toBe(false)
 		expect(store.syncEnvelopes).not.toHaveBeenCalled()
 	})
+
+	it('moves all matching envelopes on the server and removes them from the list', async () => {
+		const envelopes = [{ databaseId: 1 }, { databaseId: 2 }]
+		vi.spyOn(store, 'getEnvelopes').mockReturnValue(envelopes)
+		vi.spyOn(store, 'removeEnvelopeMutation').mockImplementation(() => {})
+		vi.spyOn(store, 'syncEnvelopes').mockResolvedValue()
+		MailboxService.moveMailboxMessages.mockResolvedValue()
+
+		await store.moveMatchingEnvelopes({ mailboxId: 13, query: 'from:shop', destMailboxId: 14 })
+
+		expect(MailboxService.moveMailboxMessages).toHaveBeenCalledWith(13, 'from:shop', 14)
+		expect(store.removeEnvelopeMutation.mock.calls).toEqual([[{ id: 1 }], [{ id: 2 }]])
+		expect(store.syncEnvelopes).toHaveBeenCalledWith({ mailboxId: 13, query: 'from:shop' })
+		expect(store.syncEnvelopes).toHaveBeenCalledWith({ mailboxId: 14 })
+	})
+
+	it('deletes all matching envelopes on the server and removes them from the list', async () => {
+		vi.spyOn(store, 'getEnvelopes').mockReturnValue([{ databaseId: 1 }])
+		vi.spyOn(store, 'removeEnvelopeMutation').mockImplementation(() => {})
+		vi.spyOn(store, 'syncEnvelopes').mockResolvedValue()
+		MailboxService.deleteMailboxMessages.mockResolvedValue()
+
+		await store.deleteMatchingEnvelopes({ mailboxId: 13, query: undefined })
+
+		expect(MailboxService.deleteMailboxMessages).toHaveBeenCalledWith(13, undefined)
+		expect(store.removeEnvelopeMutation).toHaveBeenCalledWith({ id: 1 })
+		expect(store.syncEnvelopes).toHaveBeenCalledWith({ mailboxId: 13, query: undefined })
+	})
+
+	it('keeps the list when deleting all matching envelopes fails', async () => {
+		vi.spyOn(store, 'removeEnvelopeMutation').mockImplementation(() => {})
+		vi.spyOn(store, 'syncEnvelopes').mockResolvedValue()
+		MailboxService.deleteMailboxMessages.mockRejectedValue(new Error('500'))
+
+		await expect(store.deleteMatchingEnvelopes({ mailboxId: 13, query: undefined })).rejects.toThrow('500')
+
+		expect(store.removeEnvelopeMutation).not.toHaveBeenCalled()
+		expect(store.syncEnvelopes).not.toHaveBeenCalled()
+	})
 })

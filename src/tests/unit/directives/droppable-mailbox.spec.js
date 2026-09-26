@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import { ALL_MATCHING_DATA_TYPE, DraggableEnvelope } from '../../../directives/drag-and-drop/draggable-envelope/draggable-envelope.js'
+import { DroppableMailbox } from '../../../directives/drag-and-drop/droppable-mailbox/droppable-mailbox.js'
 import { DroppableMailboxDirective } from '../../../directives/drag-and-drop/droppable-mailbox/index.js'
 import dragEventBus from '../../../directives/drag-and-drop/util/dragEventBus.js'
 
@@ -164,5 +166,77 @@ describe('DroppableMailboxDirective', () => {
 
 		// Should not throw
 		expect(() => unbind(el)).not.toThrow()
+	})
+})
+
+describe('dragging all matching messages', () => {
+	const createDataTransfer = () => {
+		const data = {}
+		return {
+			clearData: vi.fn(),
+			setData: vi.fn((type, value) => {
+				data[type] = value
+			}),
+			getData: vi.fn((type) => data[type] ?? ''),
+			setDragImage: vi.fn(),
+		}
+	}
+
+	const createDraggable = (allMatching) => new DraggableEnvelope(
+		{ setAttribute: vi.fn(), classList: { add: vi.fn() }, addEventListener: vi.fn() },
+		{
+			accountId: 1,
+			mailboxId: 5,
+			databaseId: 11,
+			draggableLabel: 'Hello',
+			isDraggable: true,
+			selectedEnvelopes: [{ databaseId: 11, subject: 'Hello', from: [{ label: 'Jane' }] }],
+			allMatching,
+		},
+	)
+
+	const createDroppable = (mainStore) => {
+		const droppable = new DroppableMailbox(createMockEl('target'), createBinding({ mailboxId: 7, mainStore }).value)
+		droppable.onDragStart({ accountId: 1, mailboxId: 5 })
+		return droppable
+	}
+
+	it('adds the all matching marker to the drag data', () => {
+		const dataTransfer = createDataTransfer()
+		const draggable = createDraggable({ mailboxId: 5, query: 'from:shop' })
+		draggable.attachGhost = vi.fn()
+
+		draggable.onDragStart({ dataTransfer })
+
+		expect(JSON.parse(dataTransfer.getData(ALL_MATCHING_DATA_TYPE))).toEqual({ mailboxId: 5, query: 'from:shop' })
+	})
+
+	it('does not add the marker for a normal selection', () => {
+		const dataTransfer = createDataTransfer()
+		const draggable = createDraggable(null)
+		draggable.attachGhost = vi.fn()
+
+		draggable.onDragStart({ dataTransfer })
+
+		expect(dataTransfer.getData(ALL_MATCHING_DATA_TYPE)).toBe('')
+	})
+
+	it('moves all matching messages with one request on drop', async () => {
+		const mainStore = {
+			moveMatchingEnvelopes: vi.fn().mockResolvedValue(),
+			moveThread: vi.fn(),
+			moveMessage: vi.fn(),
+		}
+		const droppable = createDroppable(mainStore)
+		const dataTransfer = createDataTransfer()
+		dataTransfer.setData('text', JSON.stringify([{ databaseId: 11 }]))
+		dataTransfer.setData(ALL_MATCHING_DATA_TYPE, JSON.stringify({ mailboxId: 5, query: 'from:shop' }))
+
+		await droppable.onDrop({ preventDefault: vi.fn(), dataTransfer })
+
+		expect(mainStore.moveMatchingEnvelopes).toHaveBeenCalledWith({ mailboxId: 5, query: 'from:shop', destMailboxId: 7 })
+		expect(mainStore.moveThread).not.toHaveBeenCalled()
+		expect(mainStore.moveMessage).not.toHaveBeenCalled()
+		droppable.removeListeners(droppable.el)
 	})
 })
