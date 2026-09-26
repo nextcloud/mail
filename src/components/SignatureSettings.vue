@@ -70,6 +70,7 @@ import TextEditor from './TextEditor.vue'
 import logger from '../logger.js'
 import { EDITOR_MODE_HTML } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
+import { embedBlobImages, embeddedSize } from '../util/blobImages.js'
 import { containsImage, detect, toHtml } from '../util/text.js'
 
 export default {
@@ -149,7 +150,7 @@ export default {
 		},
 
 		isLargeSignature() {
-			return (new Blob([this.signature])).size > 2 * 1024 * 1024
+			return embeddedSize(this.signature) > 2 * 1024 * 1024
 		},
 	},
 
@@ -194,7 +195,7 @@ export default {
 
 			const payload = {
 				account: this.account,
-				signature: this.signature,
+				signature: await embedBlobImages(this.signature),
 			}
 
 			if (this.identity.id > -1) {
