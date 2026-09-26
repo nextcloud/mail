@@ -56,7 +56,9 @@
 			</p>
 			<OutOfOfficeForm v-if="account.sieveEnabled" :account="account" />
 			<div v-else>
-				<p>{{ t('mail', 'The autoresponder uses Sieve, a scripting language supported by many email providers. If you\'re unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it.') }}</p>
+				<NcNoteCard
+					type="info"
+					:text="t('mail', 'The autoresponder uses Sieve, a scripting language supported by many email providers. If you\'re unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it.')" />
 				<NcButton variant="secondary" :aria-label="t('mail', 'Go to Sieve settings')" href="#sieve-form">
 					{{ t('mail', 'Go to Sieve settings') }}
 				</NcButton>
@@ -138,7 +140,7 @@
 </template>
 
 <script>
-import { NcAppSettingsDialog, NcAppSettingsSection, NcButton, NcCheckboxRadioSwitch } from '@nextcloud/vue'
+import { NcAppSettingsDialog, NcAppSettingsSection, NcButton, NcCheckboxRadioSwitch, NcNoteCard } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import AccountDefaultsSettings from '../components/AccountDefaultsSettings.vue'
 import AccountForm from '../components/AccountForm.vue'
@@ -178,6 +180,7 @@ export default {
 		NcButton,
 		Settings,
 		NcCheckboxRadioSwitch,
+		NcNoteCard,
 	},
 
 	provide() {

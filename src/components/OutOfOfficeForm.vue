@@ -5,131 +5,93 @@
 
 <template>
 	<form class="form" @submit.prevent="submit">
-		<div class="form__multi-row">
-			<fieldset class="form__fieldset">
-				<input
-					id="ooo-disabled"
-					class="radio"
-					type="radio"
-					name="enabled"
-					:checked="enabled === OOO_DISABLED"
-					@change="enabled = OOO_DISABLED">
-				<label for="ooo-disabled">{{ t('mail', 'Autoresponder off') }}</label>
-			</fieldset>
+		<NcFormGroup hide-label hide-description>
+			<NcRadioGroup v-model="enabled" label="" hide-label>
+				<NcRadioGroupButton :label="t('mail', 'On')" :value="OOO_ENABLED" />
+				<NcRadioGroupButton :label="t('mail', 'Off')" :value="OOO_DISABLED" />
+				<NcRadioGroupButton v-if="hasPersonalAbsenceSettings" :label="t('mail', 'Follows system settings')" :value="OOO_FOLLOW_SYSTEM" />
+			</NcRadioGroup>
 
-			<fieldset class="form__fieldset">
-				<input
-					id="ooo-enabled"
-					class="radio"
-					type="radio"
-					name="enabled"
-					:checked="enabled === OOO_ENABLED"
-					@change="enabled = OOO_ENABLED">
-				<label for="ooo-enabled">{{ t('mail', 'Autoresponder on') }}</label>
-			</fieldset>
+			<template v-if="followingSystem">
+				<NcNoteCard
+					type="info"
+					:text="t('mail', 'The autoresponder follows your personal absence period settings.')" />
 
-			<fieldset v-if="hasPersonalAbsenceSettings" class="form__fieldset">
-				<input
-					id="ooo-follow-system"
-					class="radio"
-					type="radio"
-					name="enabled"
-					:checked="enabled === OOO_FOLLOW_SYSTEM"
-					@change="enabled = OOO_FOLLOW_SYSTEM">
-				<label for="ooo-follow-system">{{ t('mail', 'Autoresponder follows system settings') }}</label>
-			</fieldset>
-		</div>
-
-		<template v-if="followingSystem">
-			<p>{{ t('mail', 'The autoresponder follows your personal absence period settings.') }}</p>
-			<NcButton :href="personalAbsenceSettingsUrl" target="_blank" rel="noopener noreferrer">
-				<template #icon>
-					<OpenInNewIcon :size="20" />
-				</template>
-				{{ t('mail', 'Edit absence settings') }}
-			</NcButton>
-		</template>
-		<template v-else>
-			<div class="form__multi-row">
-				<fieldset class="form__fieldset">
-					<label for="ooo-first-day">{{ t('mail', 'First day') }}</label>
-					<NcDateTimePicker
-						id="ooo-first-day"
+				<NcButton :href="personalAbsenceSettingsUrl" target="_blank" rel="noopener noreferrer">
+					<template #icon>
+						<OpenInNewIcon :size="20" />
+					</template>
+					{{ t('mail', 'Edit absence settings') }}
+				</NcButton>
+			</template>
+			<template v-else-if="enabled === OOO_ENABLED">
+				<div class="split-row">
+					<NcDateTimePickerNative
 						v-model="firstDay"
-						:disabled="!enabled" />
-				</fieldset>
+						:label="t('mail', 'First day')" />
 
-				<fieldset class="form__fieldset">
-					<div class="form__fieldset__label">
-						<input
-							id="ooo-enable-last-day"
-							v-model="enableLastDay"
-							type="checkbox"
-							:disabled="!enabled">
-						<label for="ooo-enable-last-day">
+					<div>
+						<NcCheckboxRadioSwitch v-model="enableLastDay">
 							{{ t('mail', 'Last day (optional)') }}
-						</label>
-					</div>
-					<NcDateTimePicker
-						id="ooo-last-day"
-						v-model="lastDay"
-						:disabled="!enabled || !enableLastDay" />
-				</fieldset>
-			</div>
+						</NcCheckboxRadioSwitch>
 
-			<fieldset class="form__fieldset">
-				<label for="ooo-subject">{{ t('mail', 'Subject') }}</label>
-				<input
-					id="ooo-subject"
+						<NcDateTimePickerNative
+							v-model="lastDay"
+							:disabled="!enableLastDay"
+							:label="t('mail', 'Last day')"
+							hide-label />
+					</div>
+				</div>
+
+				<NcTextField
 					v-model="subject"
 					type="text"
-					:disabled="followingSystem">
-				<p class="form__fieldset__description">
-					{{ t('mail', '${subject} will be replaced with the subject of the message you are responding to') }}
-				</p>
-			</fieldset>
+					:label="t('mail', 'Subject')"
+					:helper-text="t('mail', '${subject} will be replaced with the subject of the message you are responding to')" />
 
-			<fieldset class="form__fieldset">
-				<label for="ooo-message">{{ t('mail', 'Message') }}</label>
-				<TextEditor
-					id="ooo-message"
+				<NcTextArea
 					v-model="message"
-					:html="false"
-					:disabled="followingSystem"
-					:bus="textEditorDummyBus" />
-			</fieldset>
-		</template>
-
-		<p v-if="errorMessage">
-			{{ t('mail', 'Oh Snap!') }}
-			{{ errorMessage }}
-		</p>
-
-		<NcButton
-			variant="primary"
-			type="submit"
-			:aria-label="t('mail', 'Save autoresponder')"
-			:disabled="loading || !valid">
-			<template #icon>
-				<CheckIcon :size="20" />
+					:label="t('mail', 'Message')" />
 			</template>
-			{{ t('mail', 'Save autoresponder') }}
-		</NcButton>
+
+			<NcNoteCard
+				v-if="errorMessage"
+				type="error"
+				:text="errorMessage" />
+
+			<NcButton
+				variant="primary"
+				type="submit"
+				:aria-label="t('mail', 'Save autoresponder')"
+				:disabled="loading || !valid">
+				<template #icon>
+					<CheckIcon :size="20" />
+				</template>
+				{{ t('mail', 'Save autoresponder') }}
+			</NcButton>
+		</NcFormGroup>
 	</form>
 </template>
 
 <script>
 import { loadState } from '@nextcloud/initial-state'
 import { generateUrl } from '@nextcloud/router'
-import { NcButton, NcDateTimePicker } from '@nextcloud/vue'
-import mitt from 'mitt'
+import {
+	NcButton,
+	NcCheckboxRadioSwitch,
+	NcDateTimePickerNative,
+	NcFormGroup,
+	NcNoteCard,
+	NcRadioGroup,
+	NcRadioGroupButton,
+	NcTextArea,
+	NcTextField,
+} from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import CheckIcon from 'vue-material-design-icons/Check.vue'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
-import TextEditor from './TextEditor.vue'
 import * as OutOfOfficeService from '../service/OutOfOfficeService.js'
 import useMainStore from '../store/mainStore.js'
-import { html, plain, toHtml, toPlain } from '../util/text.js'
 
 const OOO_DISABLED = 'disabled'
 const OOO_ENABLED = 'enabled'
@@ -138,11 +100,17 @@ const OOO_FOLLOW_SYSTEM = 'system'
 export default {
 	name: 'OutOfOfficeForm',
 	components: {
-		NcDateTimePicker,
-		TextEditor,
+		NcDateTimePickerNative,
+		NcCheckboxRadioSwitch,
 		NcButton,
 		CheckIcon,
 		OpenInNewIcon,
+		NcFormGroup,
+		NcNoteCard,
+		NcRadioGroup,
+		NcRadioGroupButton,
+		NcTextField,
+		NcTextArea,
 	},
 
 	props: {
@@ -168,10 +136,9 @@ export default {
 			subject: '',
 			message: '',
 			loading: false,
-			errorMessage: '',
+			errorMessage: null,
 			hasPersonalAbsenceSettings: nextcloudVersion >= 28 && enableSystemOutOfOffice,
 			personalAbsenceSettingsUrl: generateUrl('/settings/user/availability'),
-			textEditorDummyBus: mitt(),
 		}
 	},
 
@@ -181,19 +148,15 @@ export default {
 		 * @return {boolean}
 		 */
 		valid() {
-			if (this.followingSystem) {
+			if (this.enabled === OOO_ENABLED) {
+				return !!(this.firstDay
+					&& (!this.enableLastDay || (this.enableLastDay && this.lastDay))
+					&& (!this.enableLastDay || (this.lastDay >= this.firstDay))
+					&& this.subject
+					&& this.message)
+			} else {
 				return true
 			}
-
-			if (this.enabled === OOO_DISABLED) {
-				return true
-			}
-
-			return !!(this.firstDay
-				&& (!this.enableLastDay || (this.enableLastDay && this.lastDay))
-				&& (!this.enableLastDay || (this.lastDay >= this.firstDay))
-				&& this.subject
-				&& this.message)
 		},
 
 		/**
@@ -280,12 +243,12 @@ export default {
 			}
 
 			this.subject = state.subject
-			this.message = toHtml(plain(state.message)).value
+			this.message = state.message
 		},
 
 		async submit() {
 			this.loading = true
-			this.errorMessage = ''
+			this.errorMessage = null
 
 			try {
 				if (this.followingSystem) {
@@ -313,7 +276,7 @@ export default {
 						start: firstDay.toISOString(),
 						end: lastDay?.toISOString() ?? null,
 						subject: this.subject,
-						message: toPlain(html(this.message)).value, // CKEditor always returns html data
+						message: this.message,
 						allowedRecipients: this.aliases,
 					})
 
@@ -336,61 +299,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .form {
 	display: flex;
 	flex-direction: column;
-	gap: 15px;
 
-	&__fieldset {
-		display: flex;
-		flex-direction: column;
-
-		&__label {
-			display: flex;
-			align-items: center;
-			gap: 5px;
-		}
-
-		&__input {
-			flex: 1 auto;
-		}
-
-		&__description {
-			color: var(--color-text-maxcontrast);
-		}
-	}
-
-	&__multi-row {
+	.split-row {
 		display: flex;
 		align-items: end;
-		gap: 15px;
-	}
+		gap: var(--form-group-content-gap);
 
-	#ooo-enable-last-day {
-		cursor: pointer;
-		min-height: unset;
-	}
-
-	#ooo-subject {
-		width: 100%;
-	}
-
-	#ooo-message {
-		width: 100%;
-		min-height: 100px;
-		border: 1px solid var(--color-border);
-
-		&:active,
-		&:focus,
-		&:hover {
-			border-color: var(--color-primary-element) !important;
+		> * {
+			flex-grow: 1;
 		}
 	}
 }
 
-#ooo-first-day {
-	:deep(.mx-datepicker-popup) {
-		inset-inline-start: 0 !important;
-	}
-}
 </style>
