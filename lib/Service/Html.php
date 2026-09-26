@@ -163,6 +163,11 @@ class Html {
 		// Rewrite URL for redirection and proxying of content
 		/** @var HTMLPurifier_HTMLDefinition $def */
 		$def = $config->getHTMLDefinition(true);
+
+		// HTMLPurifier only knows XHTML 1.0, which predates these
+		$def->addElement('figure', 'Block', 'Flow', 'Common');
+		$def->addElement('figcaption', 'Block', 'Flow', 'Common');
+
 		$def->info_attr_transform_post['imagesrc'] = new TransformImageSrc($this->urlGenerator);
 		$def->info_attr_transform_post['cssbackground'] = new TransformStyleURLs($this->urlGenerator);
 		$def->info_attr_transform_post['htmllinks'] = new TransformHTMLLinks();
