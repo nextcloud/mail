@@ -81,6 +81,25 @@ export function getLabelAndAddress(str) {
 }
 
 /**
+ * Format a recipient for display without hiding their email address.
+ *
+ * @param {{ label?: string, email?: string } | null | undefined} recipient The recipient
+ * @return {string} The display value
+ */
+export function formatRecipient(recipient) {
+	if (!recipient) {
+		return ''
+	}
+
+	const label = recipient.label || recipient.email || ''
+	if (!recipient.email || recipient.email === label) {
+		return label
+	}
+
+	return `${label} (${recipient.email})`
+}
+
+/**
  * Parse a string containing one or more email addresses separated by
  * commas or semicolons, with limited support for spaces between bare
  * email addresses.
