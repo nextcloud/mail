@@ -19,38 +19,59 @@
 			:slow-hint="t('mail', 'Indexing your messages. This can take a bit longer for larger folders.')" />
 		<EmptyMailboxSection v-else-if="isPriorityInbox && !hasMessages" key="empty" />
 		<EmptyMailbox v-else-if="!hasMessages" key="empty" />
-		<template v-else-if="hasGroupedEnvelopes && !isPriorityInbox">
-			<div v-for="[label, group] in groupEnvelopes" :key="label">
-				<SectionTitle class="section-title" :name="getLabelForGroup(label)" />
-				<EnvelopeList
-					:account="account"
-					:mailbox="mailbox"
-					:search-query="searchQuery"
-					:envelopes="group"
-					:loading-more="false"
-					:load-more-button="false"
-					:skip-transition="skipListTransition"
-					:date-grouped="true"
-					@delete="onDelete" />
+		<div v-else>
+			<div v-if="!selectMode" class="select-all-bar">
+				<NcCheckboxRadioSwitch
+					:model-value="false"
+					type="checkbox"
+					@update:checked="selectAll">
+					{{ n('mail', 'Select %n message', 'Select all %n messages', flatEnvelopeList.length) }}
+				</NcCheckboxRadioSwitch>
 			</div>
-		</template>
-		<EnvelopeList
-			v-else
-			:account="account"
-			:load-more-label="loadMoreLabel"
-			:mailbox="mailbox"
-			:search-query="searchQuery"
-			:envelopes="envelopesToShow"
-			:loading-more="loadingMore"
-			:load-more-button="showLoadMore"
-			:skip-transition="skipListTransition"
-			@delete="onDelete"
-			@load-more="loadMore" />
+			<template v-if="hasGroupedEnvelopes && !isPriorityInbox">
+				<div v-for="([label, group], index) in groupEnvelopes" :key="label">
+					<SectionTitle class="section-title" :name="getLabelForGroup(label)" />
+					<EnvelopeList
+						:account="account"
+						:mailbox="mailbox"
+						:search-query="searchQuery"
+						:envelopes="group"
+						:loading-more="false"
+						:load-more-button="false"
+						:skip-transition="skipListTransition"
+						:date-grouped="true"
+						:selection="selection"
+						:flat-index="groupFlatIndices[index]"
+						:hide-multiselect-header="index > 0"
+						@delete="onDelete"
+						@select="onSelect"
+						@select-range="onSelectRange"
+						@update:selection="setSelection" />
+				</div>
+			</template>
+			<EnvelopeList
+				v-else
+				:account="account"
+				:load-more-label="loadMoreLabel"
+				:mailbox="mailbox"
+				:search-query="searchQuery"
+				:envelopes="envelopesToShow"
+				:loading-more="loadingMore"
+				:load-more-button="showLoadMore"
+				:skip-transition="skipListTransition"
+				:selection="selection"
+				@delete="onDelete"
+				@load-more="loadMore"
+				@select="onSelect"
+				@select-range="onSelectRange"
+				@update:selection="setSelection" />
+		</div>
 	</div>
 </template>
 
 <script>
 import { showError, showWarning } from '@nextcloud/dialogs'
+import { NcCheckboxRadioSwitch } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import { findIndex, propEq } from 'ramda'
 import EmptyMailbox from './EmptyMailbox.vue'
@@ -68,6 +89,7 @@ import NoTrashMailboxConfiguredError
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 import { mailboxHasRights } from '../util/acl.js'
+import { sortEnvelopes } from '../util/sortEnvelopes.js'
 import { wait } from '../util/wait.js'
 
 export default {
@@ -79,6 +101,7 @@ export default {
 		Error,
 		Loading,
 		LoadingSkeleton,
+		NcCheckboxRadioSwitch,
 		SectionTitle,
 	},
 
@@ -144,6 +167,8 @@ export default {
 			endReached: false,
 			syncedMailboxes: new Set(),
 			skipListTransition: false,
+			selection: [],
+			selectionAnchor: undefined,
 		}
 	},
 
@@ -178,10 +203,35 @@ export default {
 		showLoadMore() {
 			return !this.endReached && this.paginate === 'manual'
 		},
+
+		flatEnvelopeList() {
+			if (this.hasGroupedEnvelopes) {
+				return this.groupEnvelopes.flatMap(([, group]) => sortEnvelopes(group, this.sortOrder))
+			}
+			return sortEnvelopes(this.envelopesToShow, this.sortOrder)
+		},
+
+		groupFlatIndices() {
+			let offset = 0
+			return (this.groupEnvelopes ?? []).map(([, group]) => {
+				const index = offset
+				offset += group.length
+				return index
+			})
+		},
+
+		selectMode() {
+			return this.selection.length > 0
+		},
 	},
 
 	watch: {
+		flatEnvelopeList() {
+			this.setSelection(this.selection)
+		},
+
 		mailbox() {
+			this.unselectAll()
 			this.loadEnvelopes()
 				.then(() => {
 					logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.query}) after folder change`)
@@ -190,10 +240,12 @@ export default {
 		},
 
 		searchQuery() {
+			this.unselectAll()
 			this.loadEnvelopes()
 		},
 
 		sortOrder() {
+			this.unselectAll()
 			this.loadEnvelopes()
 		},
 	},
@@ -617,6 +669,52 @@ export default {
 			this.loadMailboxInterval = undefined
 		},
 
+		setSelection(ids) {
+			const selected = new Set(ids)
+			const selection = this.flatEnvelopeList
+				.map((envelope) => envelope.databaseId)
+				.filter((id) => selected.has(id))
+			if (selection.length !== this.selection.length
+				|| selection.some((id, index) => id !== this.selection[index])) {
+				this.selection = selection
+			}
+		},
+
+		onSelect(id, selected) {
+			this.selectionAnchor = id
+			this.setSelection(selected
+				? [...this.selection, id]
+				: this.selection.filter((selectedId) => selectedId !== id))
+		},
+
+		onSelectRange(flatIndex, deselect) {
+			const anchorId = this.selectionAnchor ?? parseInt(this.$route.params.threadId)
+			const anchor = this.flatEnvelopeList.findIndex((envelope) => envelope.databaseId === anchorId)
+			if (anchor === -1) {
+				return
+			}
+
+			const range = this.flatEnvelopeList
+				.slice(Math.min(anchor, flatIndex), Math.max(anchor, flatIndex) + 1)
+				.map((envelope) => envelope.databaseId)
+			if (deselect) {
+				const deselected = new Set(range)
+				this.setSelection(this.selection.filter((id) => !deselected.has(id)))
+			} else {
+				this.setSelection([...this.selection, ...range])
+			}
+			this.selectionAnchor = this.flatEnvelopeList[flatIndex].databaseId
+		},
+
+		selectAll() {
+			this.setSelection(this.flatEnvelopeList.map((envelope) => envelope.databaseId))
+		},
+
+		unselectAll() {
+			this.selectionAnchor = undefined
+			this.setSelection([])
+		},
+
 		getLabelForGroup(group) {
 			switch (group) {
 				case 'lastHour':
@@ -653,5 +751,13 @@ export default {
 	height: 100%;
 	display: flex;
 	justify-content: center;
+}
+
+.select-all-bar {
+	display: flex;
+	align-items: center;
+	margin-top: calc(2 * var(--default-grid-baseline));
+	padding: var(--default-grid-baseline) calc(2 * var(--default-grid-baseline));
+	border-bottom: 1px solid var(--color-border);
 }
 </style>
