@@ -429,4 +429,40 @@ describe('ThreadEnvelope', () => {
 
 		expect(view.vm.hasWriteAcl).toBe(true)
 	})
+
+	it('finishes HTML loading when switching to the textual version', async () => {
+		const view = shallowMount(ThreadEnvelope, {
+			propsData: {
+				envelope: {
+					accountId: 123,
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: true, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
+					subject: '',
+					dateInt: 1692200926180,
+				},
+				threadSubject: '',
+			},
+			computed: {
+				mailbox() {
+					return { myAcls: undefined }
+				},
+			},
+			localVue,
+		})
+		const loadingBodyTimeout = setTimeout(() => {}, 1000)
+		await view.setData({
+			loading: view.vm.Loading.Skeleton,
+			loadingBodyTimeout,
+		})
+
+		view.vm.onToggleTextualVersion()
+
+		expect(view.vm.showingTextualVersion).toBe(true)
+		expect(view.vm.loading).toBe(view.vm.Loading.Done)
+		expect(view.vm.loadingBodyTimeout).toBeUndefined()
+
+		view.vm.onToggleTextualVersion()
+
+		expect(view.vm.showingTextualVersion).toBe(false)
+	})
 })
