@@ -5,7 +5,7 @@
 <template>
 	<div>
 		<transition name="multiselect-header">
-			<div v-if="selectMode" key="multiselect-header" class="multiselect-header">
+			<div v-if="selectMode && !hideMultiselectHeader" key="multiselect-header" class="multiselect-header">
 				<div class="action-buttons">
 					<NcButton
 						v-if="isAtLeastOneSelectedUnread"
@@ -129,7 +129,7 @@
 				:compact-mode="compactMode"
 				:date-grouped="dateGrouped"
 				@delete="$emit('delete', env.databaseId)"
-				@update:selected="onEnvelopeSelectToggle(env, index, $event)"
+				@update:selected="onEnvelopeSelectToggle(env, $event)"
 				@select-multiple="onEnvelopeSelectMultiple(env, index)"
 				@open:quick-actions-settings="showQuickActionsSettings = true" />
 			<div
@@ -169,7 +169,6 @@
 import { showError } from '@nextcloud/dialogs'
 import { NcActionButton, NcActions, NcButton, NcDialog } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
-import { differenceWith } from 'ramda'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
 import IconSelect from 'vue-material-design-icons/CloseThick.vue'
 import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
@@ -269,6 +268,11 @@ export default {
 			default: false,
 		},
 
+		dateGrouped: {
+			type: Boolean,
+			default: false,
+		},
+
 		selection: {
 			type: Array,
 			default: () => [],
@@ -279,7 +283,7 @@ export default {
 			default: 0,
 		},
 
-		dateGrouped: {
+		hideMultiselectHeader: {
 			type: Boolean,
 			default: false,
 		},
@@ -289,7 +293,6 @@ export default {
 		return {
 			showMoveModal: false,
 			showTagModal: false,
-			lastToggledIndex: undefined,
 			defaultView: false,
 			showQuickActionsSettings: false,
 		}
@@ -359,7 +362,9 @@ export default {
 		},
 
 		selectedEnvelopes() {
-			return this.sortedEnvelops.filter((env) => this.selection.includes(env.databaseId))
+			return this.selection
+				.map((id) => this.mainStore.getEnvelope(id))
+				.filter((envelope) => envelope !== undefined)
 		},
 
 		hasMultipleAccounts() {
@@ -369,36 +374,6 @@ export default {
 
 		listTransitionName() {
 			return this.skipTransition ? 'disabled' : 'list'
-		},
-	},
-
-	watch: {
-		selection: {
-			handler(newSelection) {
-				// Sync flags.selected with the global selection prop.
-				// This ensures checkboxes stay correct when another
-				// EnvelopeList instance changes the selection (e.g. shift-click
-				// across groups, or Select All / Unselect All).
-				const selectionSet = new Set(newSelection)
-				this.sortedEnvelops.forEach((env) => {
-					env.flags.selected = selectionSet.has(env.databaseId)
-				})
-			},
-
-			immediate: true,
-		},
-
-		sortedEnvelops(newVal, oldVal) {
-			// Unselect vanished envelopes by emitting cleaned selection
-			const newIds = new Set(newVal.map((env) => env.databaseId))
-			const cleanedSelection = this.selection.filter((id) => newIds.has(id))
-			if (cleanedSelection.length !== this.selection.length) {
-				this.$emit('update:selection', cleanedSelection, this.envelopes)
-			}
-			differenceWith((a, b) => a.databaseId === b.databaseId, oldVal, newVal)
-				.forEach((env) => {
-					env.flags.selected = false
-				})
 		},
 	},
 
@@ -563,50 +538,17 @@ export default {
 			this.unselectAll()
 		},
 
-		setEnvelopeSelected(envelope, selected) {
-			const alreadySelected = this.selection.includes(envelope.databaseId)
-			if (selected && !alreadySelected) {
-				envelope.flags.selected = true
-			} else if (!selected && alreadySelected) {
-				envelope.flags.selected = false
-			}
-		},
-
-		emitLocalSelection() {
-			const localIds = this.sortedEnvelops
-				.filter((env) => env.flags.selected)
-				.map((env) => env.databaseId)
-			this.$emit('update:selection', localIds, this.envelopes)
-		},
-
-		onEnvelopeSelectToggle(envelope, index, selected) {
-			this.lastToggledIndex = index
-			this.setEnvelopeSelected(envelope, selected)
-			this.emitLocalSelection()
+		onEnvelopeSelectToggle(envelope, selected) {
+			this.$emit('select', envelope.databaseId, selected)
 		},
 
 		onEnvelopeSelectMultiple(envelope, index) {
-			const lastToggledIndex = this.lastToggledIndex
-				?? this.findSelectionIndex(parseInt(this.$route.params.threadId))
-				?? undefined
-			if (lastToggledIndex === undefined) {
-				return
-			}
-
-			// Convert to global flat indices and delegate to the parent
-			const globalFrom = this.flatIndex + lastToggledIndex
-			const globalTo = this.flatIndex + index
-			// If the clicked envelope is already selected, deselect the range
 			const deselect = this.selection.includes(envelope.databaseId)
-			this.$emit('select-range', globalFrom, globalTo, deselect)
-			this.lastToggledIndex = index
+			this.$emit('select-range', this.flatIndex + index, deselect)
 		},
 
 		unselectAll() {
-			this.sortedEnvelops.forEach((env) => {
-				env.flags.selected = false
-			})
-			this.$emit('update:selection', [], this.envelopes)
+			this.$emit('update:selection', [])
 		},
 
 		onOpenMoveModal() {
@@ -631,22 +573,6 @@ export default {
 		onCloseMoveModal() {
 			this.showMoveModal = false
 			this.unselectAll()
-		},
-
-		/**
-		 * Find the envelope list index of a given envelope's database id.
-		 *
-		 * @param {number} databaseId of the given envelope
-		 * @return {number|undefined} Index or undefined if not found in the envelope list
-		 */
-		findSelectionIndex(databaseId) {
-			for (const [index, envelope] of this.sortedEnvelops.entries()) {
-				if (envelope.databaseId === databaseId) {
-					return index
-				}
-			}
-
-			return undefined
 		},
 	},
 }

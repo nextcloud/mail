@@ -20,16 +20,16 @@
 		<EmptyMailboxSection v-else-if="isPriorityInbox && !hasMessages" key="empty" />
 		<EmptyMailbox v-else-if="!hasMessages" key="empty" />
 		<div v-else>
-			<div v-if="!selectMode" class="select-all-bar" @click="selectAll">
+			<div v-if="!selectMode" class="select-all-bar">
 				<NcCheckboxRadioSwitch
 					:model-value="false"
 					type="checkbox"
 					@update:checked="selectAll">
-					{{ n('mail', 'Select {count} message', 'Select all {count} messages', flatEnvelopeList.length, { count: flatEnvelopeList.length }) }}
+					{{ n('mail', 'Select %n message', 'Select all %n messages', flatEnvelopeList.length) }}
 				</NcCheckboxRadioSwitch>
 			</div>
 			<template v-if="hasGroupedEnvelopes && !isPriorityInbox">
-				<div v-for="[label, group] in groupEnvelopes" :key="label">
+				<div v-for="([label, group], index) in groupEnvelopes" :key="label">
 					<SectionTitle class="section-title" :name="getLabelForGroup(label)" />
 					<EnvelopeList
 						:account="account"
@@ -41,10 +41,12 @@
 						:skip-transition="skipListTransition"
 						:date-grouped="true"
 						:selection="selection"
-						:flat-index="getGroupFlatIndex(label)"
+						:flat-index="groupFlatIndices[index]"
+						:hide-multiselect-header="index > 0"
 						@delete="onDelete"
-						@update:selection="onUpdateSelection"
-						@select-range="onSelectRange" />
+						@select="onSelect"
+						@select-range="onSelectRange"
+						@update:selection="setSelection" />
 				</div>
 			</template>
 			<EnvelopeList
@@ -58,11 +60,11 @@
 				:load-more-button="showLoadMore"
 				:skip-transition="skipListTransition"
 				:selection="selection"
-				:flat-index="0"
 				@delete="onDelete"
 				@load-more="loadMore"
-				@update:selection="onUpdateSelection"
-				@select-range="onSelectRange" />
+				@select="onSelect"
+				@select-range="onSelectRange"
+				@update:selection="setSelection" />
 		</div>
 	</div>
 </template>
@@ -87,6 +89,7 @@ import NoTrashMailboxConfiguredError
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 import { mailboxHasRights } from '../util/acl.js'
+import { sortEnvelopes } from '../util/sortEnvelopes.js'
 import { wait } from '../util/wait.js'
 
 export default {
@@ -165,6 +168,7 @@ export default {
 			syncedMailboxes: new Set(),
 			skipListTransition: false,
 			selection: [],
+			selectionAnchor: undefined,
 		}
 	},
 
@@ -200,36 +204,34 @@ export default {
 			return !this.endReached && this.paginate === 'manual'
 		},
 
-		/**
-		 * Flat list of all visible envelopes, regardless of grouping.
-		 * Used for shift-click range selection and Select All.
-		 */
 		flatEnvelopeList() {
 			if (this.hasGroupedEnvelopes) {
-				return this.groupEnvelopes.flatMap(([, group]) => group)
+				return this.groupEnvelopes.flatMap(([, group]) => sortEnvelopes(group, this.sortOrder))
 			}
-			return this.envelopesToShow
+			return sortEnvelopes(this.envelopesToShow, this.sortOrder)
 		},
 
-		/**
-		 * Whether selection mode is active (at least one envelope selected).
-		 */
+		groupFlatIndices() {
+			let offset = 0
+			return (this.groupEnvelopes ?? []).map(([, group]) => {
+				const index = offset
+				offset += group.length
+				return index
+			})
+		},
+
 		selectMode() {
 			return this.selection.length > 0
-		},
-
-		/**
-		 * Whether all visible envelopes are currently selected.
-		 */
-		allSelected() {
-			return this.flatEnvelopeList.length > 0
-				&& this.selection.length === this.flatEnvelopeList.length
 		},
 	},
 
 	watch: {
+		flatEnvelopeList() {
+			this.setSelection(this.selection)
+		},
+
 		mailbox() {
-			this.selection = []
+			this.unselectAll()
 			this.loadEnvelopes()
 				.then(() => {
 					logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.query}) after folder change`)
@@ -238,12 +240,12 @@ export default {
 		},
 
 		searchQuery() {
-			this.selection = []
+			this.unselectAll()
 			this.loadEnvelopes()
 		},
 
 		sortOrder() {
-			this.selection = []
+			this.unselectAll()
 			this.loadEnvelopes()
 		},
 	},
@@ -606,9 +608,6 @@ export default {
 		// onDelete(id): Load more message and navigate to other message if needed
 		// id: The id of the message being delete
 		onDelete(id) {
-			// Remove from selection if selected
-			this.selection = this.selection.filter((selectedId) => selectedId !== id)
-
 			// Get a new message
 			this.mainStore.fetchNextEnvelopes({
 				mailboxId: this.mailbox.databaseId,
@@ -670,78 +669,50 @@ export default {
 			this.loadMailboxInterval = undefined
 		},
 
-		/**
-		 * Compute the flat index offset for a group label.
-		 * Used by grouped EnvelopeList children to emit
-		 * correct global indices for shift-click range selection.
-		 *
-		 * @param {string} label The group label key
-		 * @return {number} Flat index of the first envelope in this group
-		 */
-		getGroupFlatIndex(label) {
-			let offset = 0
-			for (const [groupLabel, group] of this.groupEnvelopes) {
-				if (groupLabel === label) {
-					return offset
-				}
-				offset += group.length
+		setSelection(ids) {
+			const selected = new Set(ids)
+			const selection = this.flatEnvelopeList
+				.map((envelope) => envelope.databaseId)
+				.filter((id) => selected.has(id))
+			if (selection.length !== this.selection.length
+				|| selection.some((id, index) => id !== this.selection[index])) {
+				this.selection = selection
 			}
-			return offset
 		},
 
-		/**
-		 * Handle a child EnvelopeList updating its selection.
-		 * The child emits its full new selection array (local IDs),
-		 * and we merge it with the global selection, replacing
-		 * any IDs from this child's visible envelope set.
-		 *
-		 * @param {number[]} childSelection Array of selected envelope databaseIds
-		 * @param {object[]} childEnvelopes Array of envelopes visible in this child
-		 */
-		onUpdateSelection(childSelection, childEnvelopes) {
-			const childIds = new Set(childEnvelopes.map((e) => e.databaseId))
-			// Remove all IDs from this child's scope, then add the new selection
-			this.selection = this.selection.filter((id) => !childIds.has(id))
-			this.selection.push(...childSelection)
+		onSelect(id, selected) {
+			this.selectionAnchor = id
+			this.setSelection(selected
+				? [...this.selection, id]
+				: this.selection.filter((selectedId) => selectedId !== id))
 		},
 
-		/**
-		 * Handle shift-click range selection across the flat envelope list.
-		 * Called by a child EnvelopeList with global flat indices.
-		 *
-		 * @param {number} fromIndex Start of the range (global flat index)
-		 * @param {number} toIndex End of the range (global flat index)
-		 * @param {boolean} deselect If true, remove the range from selection
-		 */
-		onSelectRange(fromIndex, toIndex, deselect = false) {
-			const start = Math.min(fromIndex, toIndex)
-			const end = Math.max(fromIndex, toIndex)
-			const idsInRange = new Set(this.flatEnvelopeList
-				.slice(start, end + 1)
-				.map((e) => e.databaseId))
+		onSelectRange(flatIndex, deselect) {
+			const anchorId = this.selectionAnchor ?? parseInt(this.$route.params.threadId)
+			const anchor = this.flatEnvelopeList.findIndex((envelope) => envelope.databaseId === anchorId)
+			if (anchor === -1) {
+				return
+			}
+
+			const range = this.flatEnvelopeList
+				.slice(Math.min(anchor, flatIndex), Math.max(anchor, flatIndex) + 1)
+				.map((envelope) => envelope.databaseId)
 			if (deselect) {
-				this.selection = this.selection.filter((id) => !idsInRange.has(id))
+				const deselected = new Set(range)
+				this.setSelection(this.selection.filter((id) => !deselected.has(id)))
 			} else {
-				const newSelection = new Set(this.selection)
-				for (const id of idsInRange) {
-					newSelection.add(id)
-				}
-				this.selection = [...newSelection]
+				this.setSelection([...this.selection, ...range])
 			}
+			this.selectionAnchor = this.flatEnvelopeList[flatIndex].databaseId
 		},
 
-		/**
-		 * Select all visible envelopes.
-		 */
 		selectAll() {
-			this.selection = this.flatEnvelopeList.map((e) => e.databaseId)
+			this.setSelection(this.flatEnvelopeList.map((envelope) => envelope.databaseId))
 		},
 
-		/**
-		 * Clear the current selection.
-		 */
 		unselectAll() {
-			this.selection = []
+			this.selectionAnchor = undefined
+			this.setSelection([])
 		},
 
 		getLabelForGroup(group) {
@@ -785,12 +756,8 @@ export default {
 .select-all-bar {
 	display: flex;
 	align-items: center;
-	margin-top: 8px;
-	padding: 4px 8px;
-	cursor: pointer;
+	margin-top: calc(2 * var(--default-grid-baseline));
+	padding: var(--default-grid-baseline) calc(2 * var(--default-grid-baseline));
 	border-bottom: 1px solid var(--color-border);
-	&:hover {
-		background-color: var(--color-background-hover);
-	}
 }
 </style>
