@@ -120,11 +120,17 @@ export default {
 		return {
 			refreshing: false,
 			showSettings: false,
+			settingsAccountId: null,
+			settingsSection: undefined,
 		}
 	},
 
 	computed: {
 		...mapStores(useOutboxStore, useMainStore),
+		settingsAccount() {
+			return this.settingsAccountId ? this.mainStore.getAccount(this.settingsAccountId) : null
+		},
+
 		menu() {
 			return this.mainStore.getAccounts
 				.filter((account) => account.id !== UNIFIED_ACCOUNT_ID)
@@ -164,7 +170,23 @@ export default {
 		},
 	},
 
+	watch: {
+		'mainStore.showAccountSettings': function(settings) {
+			if (settings?.accountId) {
+				this.settingsAccountId = settings.accountId
+				this.settingsSection = settings.section
+			} else {
+				this.settingsAccountId = null
+				this.settingsSection = undefined
+			}
+		},
+	},
+
 	methods: {
+		onCloseAccountSettings() {
+			this.mainStore.showSettingsForAccountMutation(null)
+		},
+
 		showMailSettings() {
 			this.showSettings = true
 		},
