@@ -4,29 +4,36 @@ declare(strict_types=1);
 
 /**
  * SPDX-FileCopyrightText: 2025 Nextcloud GmbH and Nextcloud contributors
- * SPDX-License-Identifier: AGPL-3.0-only
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-namespace OCA\Mail\Tests\Unit;
+namespace Unit\UserMigration;
 
 use ChristophWurst\Nextcloud\Testing\ServiceMockObject;
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use Exception;
-use OCA\Mail\Account;
-use OCA\Mail\Db\MailAccount;
-use OCA\Mail\Service\AccountService;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\UserMigration\MailAccountMigrator;
 use OCP\IUser;
 use OCP\UserMigration\IExportDestination;
 use OCP\UserMigration\IImportSource;
-use OCP\UserMigration\UserMigrationException;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Output\OutputInterface;
-use function json_decode;
-use function json_encode;
-use function substr;
 
 class MailAccountMigratorTest extends TestCase {
+	private const EXPORT_DELEGATIONS = [
+		'appConfigMigrationService' => 'exportAppConfiguration',
+		'internalAddressesMigrationService' => 'exportInternalAddresses',
+		'trustedSendersMigrationService' => 'exportTrustedSenders',
+		'textBlocksMigrationService' => 'exportTextBlocks',
+		'tagsMigrationService' => 'exportTags',
+		'smimeMigrationService' => 'exportCertificates',
+		'accountMigrationService' => 'exportAccounts',
+		'quickActionsMigrationService' => 'exportQuickActions',
+	];
+	private const TAGS_MAPPING = [1 => 11];
+	private const CERTIFICATES_MAPPING = [2 => 22];
+	private const ACCOUNTS_MAPPING = [3 => 33];
+	private const MAILBOXES_MAPPING = [4 => 44];
 
 	private MailAccountMigrator $migrator;
 
@@ -41,17 +48,6 @@ class MailAccountMigratorTest extends TestCase {
 		$this->serviceMock->getParameter('l10n')
 			->method('t')
 			->willReturnArgument(0);
-		$this->serviceMock->getParameter('crypto')
-			->method('encrypt')
-			->willReturnCallback(fn (string $value) => $value . '_encrypted');
-		$this->serviceMock->getParameter('crypto')
-			->method('decrypt')
-			->willReturnCallback(function (string $encryptedValue) {
-				if (!str_ends_with($encryptedValue, '_encrypted')) {
-					throw new Exception('Invalid encrypted value');
-				}
-				return substr($encryptedValue, 0, strlen($encryptedValue) - strlen('_encrypted'));
-			});
 		$this->migrator = $this->serviceMock->getService();
 
 		$this->output = $this->createMock(OutputInterface::class);
@@ -78,7 +74,7 @@ class MailAccountMigratorTest extends TestCase {
 	public function testGetVersion(): void {
 		$version = $this->migrator->getVersion();
 
-		self::assertGreaterThanOrEqual(01_00_00, $version);
+		self::assertSame(MailAccountMigrator::VERSION, $version);
 	}
 
 	public function testCantImportNewer(): void {
@@ -103,137 +99,229 @@ class MailAccountMigratorTest extends TestCase {
 		self::assertTrue($canImport);
 	}
 
-	public function testCanImportOlder(): void {
+	public function testExportDelegatesToEveryMigrationService(): void {
+		$user = $this->createMock(IUser::class);
+		$user->method('getUID')->willReturn('jane');
+		$exportDestination = $this->createMock(IExportDestination::class);
+
+		$calls = [];
+		foreach (self::EXPORT_DELEGATIONS as $parameter => $method) {
+			$this->serviceMock->getParameter($parameter)
+				->expects(self::once())
+				->method($method)
+				->willReturnCallback(function () use (&$calls, $method) {
+					$calls[] = $method;
+					return [];
+				});
+		}
+
+		$this->migrator->export($user, $exportDestination, $this->output);
+
+		self::assertSame(array_values(self::EXPORT_DELEGATIONS), $calls);
+	}
+
+	public function testImportDelegatesInDependencyOrderAndThreadsMappings(): void {
+		$user = $this->createMock(IUser::class);
+		$user->method('getUID')->willReturn('jane');
+		$importSource = $this->createMock(IImportSource::class);
+
+		$calls = [];
+		$this->serviceMock->getParameter('internalAddressesMigrationService')
+			->method('importInternalAddresses')
+			->willReturnCallback(function () use (&$calls): void {
+				$calls[] = 'importInternalAddresses';
+			});
+		$this->serviceMock->getParameter('trustedSendersMigrationService')
+			->method('importTrustedSenders')
+			->willReturnCallback(function () use (&$calls): void {
+				$calls[] = 'importTrustedSenders';
+			});
+		$this->serviceMock->getParameter('textBlocksMigrationService')
+			->method('importTextBlocks')
+			->willReturnCallback(function () use (&$calls): void {
+				$calls[] = 'importTextBlocks';
+			});
+		$this->serviceMock->getParameter('tagsMigrationService')
+			->method('importTags')
+			->willReturnCallback(function () use (&$calls): array {
+				$calls[] = 'importTags';
+				return self::TAGS_MAPPING;
+			});
+		$this->serviceMock->getParameter('smimeMigrationService')
+			->method('importCertificates')
+			->willReturnCallback(function () use (&$calls): array {
+				$calls[] = 'importCertificates';
+				return self::CERTIFICATES_MAPPING;
+			});
+
+		$this->serviceMock->getParameter('accountMigrationService')
+			->expects(self::once())
+			->method('importAccounts')
+			->willReturnCallback(function ($actualUser, $actualSource, $actualOutput, array $certificatesMapping) use (&$calls): array {
+				$calls[] = 'importAccounts';
+				self::assertSame(self::CERTIFICATES_MAPPING, $certificatesMapping);
+				return ['accounts' => self::ACCOUNTS_MAPPING, 'mailboxes' => self::MAILBOXES_MAPPING];
+			});
+
+		$this->serviceMock->getParameter('appConfigMigrationService')
+			->expects(self::once())
+			->method('importAppConfiguration')
+			->willReturnCallback(function ($actualUser, $actualSource, $actualOutput, array $accountsMapping, array $mailboxesMapping) use (&$calls): void {
+				$calls[] = 'importAppConfiguration';
+				self::assertSame(self::ACCOUNTS_MAPPING, $accountsMapping);
+				self::assertSame(self::MAILBOXES_MAPPING, $mailboxesMapping);
+			});
+
+		$this->serviceMock->getParameter('quickActionsMigrationService')
+			->expects(self::once())
+			->method('importQuickActions')
+			->willReturnCallback(function ($actualUser,
+				$actualSource,
+				$actualOutput,
+				array $accountsMapping,
+				array $mailboxesMapping,
+				array $tagsMapping) use (&$calls): void {
+				$calls[] = 'importQuickActions';
+				self::assertSame(self::ACCOUNTS_MAPPING, $accountsMapping);
+				self::assertSame(self::MAILBOXES_MAPPING, $mailboxesMapping);
+				self::assertSame(self::TAGS_MAPPING, $tagsMapping);
+			});
+
+		$this->serviceMock->getParameter('accountMigrationService')
+			->expects(self::once())
+			->method('scheduleBackgroundJobs')
+			->willReturnCallback(function (array $accountsMapping) use (&$calls): void {
+				$calls[] = 'scheduleBackgroundJobs';
+				self::assertSame(self::ACCOUNTS_MAPPING, $accountsMapping);
+			});
+
+		$this->migrator->import($user, $importSource, $this->output);
+
+		self::assertSame([
+			'importInternalAddresses',
+			'importTrustedSenders',
+			'importTextBlocks',
+			'importTags',
+			'importCertificates',
+			'importAccounts',
+			'importAppConfiguration',
+			'importQuickActions',
+			'scheduleBackgroundJobs',
+		], $calls);
+	}
+
+	public function testEstimatedExportSizeSumsEveryServiceAndReturnsKib(): void {
+		$user = $this->createMock(IUser::class);
+		$user->method('getUID')->willReturn('jane');
+
+		$services = [
+			'appConfigMigrationService' => 100,
+			'internalAddressesMigrationService' => 200,
+			'trustedSendersMigrationService' => 300,
+			'textBlocksMigrationService' => 400,
+			'tagsMigrationService' => 500,
+			'smimeMigrationService' => 600,
+			'accountMigrationService' => 700,
+			'quickActionsMigrationService' => 800,
+		];
+		foreach ($services as $parameter => $bytes) {
+			$this->serviceMock->getParameter($parameter)
+				->expects(self::once())
+				->method('getEstimatedExportSize')
+				->with($user)
+				->willReturn($bytes);
+		}
+
+		$size = $this->migrator->getEstimatedExportSize($user);
+
+		self::assertSame(ceil(array_sum($services) / 1024), $size);
+	}
+
+	public function testEstimatedExportSizeForUserWithoutData(): void {
+		$user = $this->createMock(IUser::class);
+		$user->method('getUID')->willReturn('jane');
+
+		foreach (self::EXPORT_DELEGATIONS as $parameter => $method) {
+			$this->serviceMock->getParameter($parameter)
+				->method('getEstimatedExportSize')
+				->willReturn(0);
+		}
+
+		$size = $this->migrator->getEstimatedExportSize($user);
+
+		self::assertSame(0.0, $size);
+	}
+
+	public function testImportRoutesVersionOneArchivesToTheLegacyImporter(): void {
+		$user = $this->createMock(IUser::class);
+		$user->method('getUID')->willReturn('jane');
 		$importSource = $this->createMock(IImportSource::class);
 		$importSource->method('getMigratorVersion')
 			->with('mail_account')
-			->willReturn($this->migrator->getVersion() - 00_00_01);
+			->willReturn(MailAccountMigrator::LEGACY_VERSION);
+
+		$this->serviceMock->getParameter('legacyAccountMigrationService')
+			->expects(self::once())
+			->method('importAccounts')
+			->with($user, $importSource, $this->output)
+			->willReturn(self::ACCOUNTS_MAPPING);
+		$this->serviceMock->getParameter('accountMigrationService')
+			->expects(self::once())
+			->method('scheduleBackgroundJobs')
+			->with(self::ACCOUNTS_MAPPING);
+
+		// the current-format services must stay out of it
+		$this->serviceMock->getParameter('accountMigrationService')
+			->expects(self::never())
+			->method('importAccounts');
+		foreach (['appConfigMigrationService', 'tagsMigrationService', 'smimeMigrationService',
+			'quickActionsMigrationService'] as $parameter) {
+			$this->serviceMock->getParameter($parameter)
+				->expects(self::never())
+				->method(self::anything());
+		}
+
+		$this->migrator->import($user, $importSource, $this->output);
+	}
+
+	public function testCanImportVersionOne(): void {
+		$importSource = $this->createMock(IImportSource::class);
+		$importSource->method('getMigratorVersion')
+			->with('mail_account')
+			->willReturn(MailAccountMigrator::LEGACY_VERSION);
+
+		self::assertTrue($this->migrator->canImport($importSource));
+	}
+
+	public function testCanImportArchiveWithoutMailData(): void {
+		$importSource = $this->createMock(IImportSource::class);
+		$importSource->method('getMigratorVersion')
+			->with('mail_account')
+			->willReturn(null);
 
 		$canImport = $this->migrator->canImport($importSource);
 
 		self::assertTrue($canImport);
 	}
 
-	public function testExportBasicAccountInfo(): void {
+	public function testImportSchedulesBackgroundJobsWhenALaterStepFails(): void {
 		$user = $this->createMock(IUser::class);
-		$user->method('getUID')->willReturn('user_export');
-		$mailAccount1 = new MailAccount([]);
-		$account1 = $this->createMock(Account::class);
-		$account1->method('getId')->willReturn(101);
-		$account1->method('getUserId')->willReturn('user_export');
-		$account1->method('getMailAccount')->willReturn($mailAccount1);
-		$mailAccount1->setAuthMethod('password');
-		$mailAccount1->setInboundPassword('imap_pass_encrypted');
-		$account1->method('jsonSerialize')->willReturn([
-			'id' => 101,
-			'email' => 'jane@doe.org',
-		]);
-		$mailAccount2 = new MailAccount([]);
-		$account2 = $this->createMock(Account::class);
-		$account2->method('getId')->willReturn(102);
-		$account2->method('getUserId')->willReturn('user_export');
-		$account2->method('getMailAccount')->willReturn($mailAccount2);
-		$mailAccount2->setAuthMethod('password');
-		$mailAccount2->setInboundPassword('imap_pass_encrypted');
-		$account2->method('jsonSerialize')->willReturn([
-			'id' => 102,
-			'email' => 'jane@doe.com',
-		]);
-		/** @var AccountService|MockObject $accountService */
-		$accountService = $this->serviceMock->getParameter('accountService');
-		$accountService->expects(self::once())
-			->method('findByUserId')
-			->with('user_export')
-			->willReturn([
-				$account1,
-				$account2,
-			]);
-		$exportDestination = $this->createMock(IExportDestination::class);
-		$exportDestination->method('addFileContents')
-			->willReturnCallback(function (string $path, string $content) {
-				if ($path === 'mail/accounts/index.json') {
-					self::assertSame(
-						[
-							101 => 'mail/accounts/101.json',
-							102 => 'mail/accounts/102.json',
-						],
-						json_decode($content, true)
-					);
-				} elseif ($path === 'mail/accounts/101.json') {
-					$accountData = json_decode($content, true);
-					self::assertArrayHasKey('id', $accountData);
-					self::assertSame(101, $accountData['id']);
-					self::assertArrayHasKey('inboundPassword', $accountData);
-					self::assertSame('imap_pass', $accountData['inboundPassword']);
-				} elseif ($path === 'mail/accounts/102.json') {
-					$accountData = json_decode($content, true);
-					self::assertArrayHasKey('id', $accountData);
-					self::assertSame(102, $accountData['id']);
-					self::assertArrayHasKey('inboundPassword', $accountData);
-					self::assertSame('imap_pass', $accountData['inboundPassword']);
-				} else {
-					$this->fail('Invalid file content path ' . $path);
-				}
-			});
+		$user->method('getUID')->willReturn('jane');
 
-		$this->migrator->export(
-			$user,
-			$exportDestination,
-			$this->output,
-		);
+		$this->serviceMock->getParameter('accountMigrationService')
+			->method('importAccounts')
+			->willReturn(['accounts' => self::ACCOUNTS_MAPPING, 'mailboxes' => self::MAILBOXES_MAPPING]);
+		$this->serviceMock->getParameter('quickActionsMigrationService')
+			->method('importQuickActions')
+			->willThrowException(new ServiceException('quick action import failed'));
+
+		$this->serviceMock->getParameter('accountMigrationService')
+			->expects(self::once())
+			->method('scheduleBackgroundJobs')
+			->with(self::ACCOUNTS_MAPPING);
+
+		$this->expectException(ServiceException::class);
+
+		$this->migrator->import($user, $this->createMock(IImportSource::class), $this->output);
 	}
-
-	public function testImportInvalidIndex(): void {
-		$this->expectException(UserMigrationException::class);
-		$user = $this->createStub(IUser::class);
-
-		$importSource = $this->createMock(IImportSource::class);
-		$importSource->method('getFileContents')
-			->with('mail/accounts/index.json')
-			->willReturn('fail');
-
-		$this->migrator->import(
-			$user,
-			$importSource,
-			$this->output,
-		);
-	}
-
-	public function testImportBasicAccountInfo(): void {
-		$user = $this->createMock(IUser::class);
-		$user->method('getUID')->willReturn('user_import');
-		$accountData = [
-			'id' => 101,
-			'userId' => 'user_export',
-			'name' => 'Jane Doe',
-			'email' => 'jane@doe.org',
-			'authMethod' => 'password',
-			'aliases' => [],
-		];
-		$importSource = $this->createMock(IImportSource::class);
-		$importSource->method('getFileContents')
-			->willReturnMap([
-				['mail/accounts/index.json', json_encode([101 => 'mail/accounts/101.json'])],
-				['mail/accounts/101.json', json_encode($accountData)],
-			]);
-		$newAccount = new MailAccount([]);
-		$newAccount->setUserId('user_import');
-		$newAccount->setName('Jane Doe');
-		$newAccount->setAuthMethod('password');
-		$newAccount->setEditorMode('plain');
-		$newAccount->setClassificationEnabled(false);
-		/** @var AccountService|MockObject $accountService */
-		$accountService = $this->serviceMock->getParameter('accountService');
-		$accountService->expects(self::once())
-			->method('save')
-			->with(self::equalTo($newAccount))
-			->willReturnArgument(0);
-
-		$this->migrator->import(
-			$user,
-			$importSource,
-			$this->output,
-		);
-	}
-
 }
