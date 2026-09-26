@@ -14,7 +14,7 @@
 			isDraggable,
 		}"
 		class="list-item-style envelope"
-		:class="{ seen: data.flags.seen, draft, selected: selected }"
+		:class="{ seen: data.flags.seen, draft, selected, 'envelope--cursored': cursored }"
 		:to="link"
 		:exact="true"
 		:data-envelope-id="data.databaseId"
@@ -653,6 +653,12 @@ export default {
 	mixins: [AttachmentMixin],
 
 	props: {
+		/** Highlighted by the keyboard cursor (not the same as checkbox selection). */
+		cursored: {
+			type: Boolean,
+			default: false,
+		},
+
 		withReply: {
 			// "Reply" action should only appear in envelopes from the envelope list
 			// (Because in thread envelopes, this action is already set as primary button of this menu)
@@ -1848,5 +1854,12 @@ export default {
 .list-item__wrapper.active :deep(.compact-checkbox .checkbox-radio-switch__content) {
 	background-color: var(--color-primary-element-text) !important;
 	color: var(--color-primary-element) !important;
+}
+
+// Keyboard cursor: distinct from checkbox selection, and must stay visible
+// against both the unread (bold) and seen states.
+.envelope--cursored {
+	box-shadow: inset 3px 0 0 0 var(--color-primary-element);
+	background-color: var(--color-background-hover);
 }
 </style>

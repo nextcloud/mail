@@ -12,6 +12,7 @@ import VueShortKey from 'vue-shortkey'
 import App from './App.vue'
 import Nextcloud from './mixins/Nextcloud.js'
 import router from './router.js'
+import { installJumpChords } from './shortcuts.js'
 
 import '@nextcloud/dialogs/style.css'
 import './directives/drag-and-drop/styles/drag-and-drop.scss'
@@ -25,7 +26,18 @@ const pinia = createPinia()
 
 Vue.mixin(Nextcloud)
 
-Vue.use(VueShortKey, { prevent: ['input', 'div', 'textarea'] })
+// Chord handling listens on window so it runs ahead of vue-shortkey's
+// document listeners regardless of import order.
+installJumpChords()
+
+// 'div' used to be in this list to stop shortcuts firing while typing in the
+// CKEditor composer, which is a contenteditable div. But vue-shortkey tests
+// document.activeElement against these selectors, and Nextcloud focuses plain
+// divs (#app-content, the envelope list), so every shortcut was suppressed
+// almost all of the time. Target the editable elements themselves instead.
+Vue.use(VueShortKey, {
+	prevent: ['input', 'textarea', '[contenteditable]:not([contenteditable="false"])'],
+})
 
 registerDavProperty('nc:share-attributes', { nc: 'http://nextcloud.org/ns' })
 

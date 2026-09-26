@@ -23,8 +23,10 @@
 			<div v-for="[label, group] in groupEnvelopes" :key="label">
 				<SectionTitle class="section-title" :name="getLabelForGroup(label)" />
 				<EnvelopeList
+					ref="envelopeLists"
 					:account="account"
 					:mailbox="mailbox"
+					:cursor-id="cursorId"
 					:search-query="searchQuery"
 					:envelopes="group"
 					:loading-more="false"
@@ -36,9 +38,11 @@
 		</template>
 		<EnvelopeList
 			v-else
+			ref="envelopeLists"
 			:account="account"
 			:load-more-label="loadMoreLabel"
 			:mailbox="mailbox"
+			:cursor-id="cursorId"
 			:search-query="searchQuery"
 			:envelopes="envelopesToShow"
 			:loading-more="loadingMore"
@@ -141,6 +145,7 @@ export default {
 			loadingCacheInitialization: false,
 			loadMailboxInterval: undefined,
 			expanded: false,
+			cursorId: undefined,
 			endReached: false,
 			syncedMailboxes: new Set(),
 			skipListTransition: false,
@@ -370,6 +375,162 @@ export default {
 			return mailboxHasRights(this.mailbox, 'te')
 		},
 
+		/**
+		 * Move the list cursor without opening anything.
+		 *
+		 * @param {number} delta 1 for next, -1 for previous
+		 */
+		moveCursor(delta) {
+			const envelopes = this.envelopes
+			if (envelopes.length === 0) {
+				return
+			}
+
+			const current = envelopes.findIndex((env) => env.databaseId === this.cursorId)
+			const next = current === -1
+				? (delta > 0 ? 0 : envelopes.length - 1)
+				: Math.min(envelopes.length - 1, Math.max(0, current + delta))
+
+			this.cursorId = envelopes[next].databaseId
+			this.$nextTick(() => {
+				const el = this.$el.querySelector('.envelope--cursored')
+				if (el) {
+					el.scrollIntoView({ block: 'nearest' })
+				}
+			})
+		},
+
+		/**
+		 * The mounted envelope lists.
+		 *
+		 * Date grouped views mount one per group, so this is normalised to an
+		 * array. Refs inside v-for are not reactive, so this may only be read
+		 * while handling an event, never from a computed.
+		 *
+		 * @return {Array<object>} envelope list components
+		 */
+		envelopeLists() {
+			return [].concat(this.$refs.envelopeLists ?? [])
+		},
+
+		/**
+		 * @return {Array<object>} the lists that currently hold a selection
+		 */
+		listsWithSelection() {
+			return this.envelopeLists().filter((list) => list.selection.length > 0)
+		},
+
+		/** Open the message the cursor is on. */
+		openCursor() {
+			const target = this.envelopes.find((env) => env.databaseId === this.cursorId)
+			if (!target) {
+				return
+			}
+
+			this.$router.push({
+				name: 'message',
+				params: {
+					mailboxId: this.$route.params.mailboxId,
+					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
+					threadId: target.databaseId,
+				},
+			})
+		},
+
+		/** Close the open message, leaving the cursor on it. */
+		backToList() {
+			const currentId = parseInt(this.$route.params.threadId, 10)
+			if (!currentId) {
+				return
+			}
+
+			this.cursorId = currentId
+			this.$router.push({
+				name: 'mailbox',
+				params: {
+					mailboxId: this.$route.params.mailboxId,
+					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
+				},
+			})
+		},
+
+		/** Focus the message search field. */
+		focusSearch() {
+			// SearchMessages renders a type="text" input, not type="search".
+			const input = document.querySelector('.search-messages--input')
+			if (input) {
+				input.focus()
+				input.select?.()
+			}
+		},
+
+		/**
+		 * Move one envelope to its account's archive folder.
+		 *
+		 * @param {object} env envelope to archive
+		 * @return {Promise<boolean>} false when the account cannot archive at all,
+		 *   so that a bulk run stops instead of repeating the same warning
+		 */
+		async archiveEnvelope(env) {
+			// In unified mailboxes this.account is the unified account which
+			// has no archive mailbox, so resolve the envelope's actual account
+			const account = this.mainStore.getAccount(env.accountId)
+
+			if (account.archiveMailboxId === null) {
+				showWarning(t('mail', 'To archive a message please configure an archive folder in account settings'))
+				return false
+			}
+
+			if (!this.hasArchiveAcl()) {
+				showWarning(t('mail', 'You are not allowed to move this message to the archive folder and/or delete this message from the current folder'))
+				return false
+			}
+
+			if (env.mailboxId === account.archiveMailboxId) {
+				logger.debug('message is already in archive folder')
+				return true
+			}
+
+			logger.debug('archiving', { env })
+			this.onDelete(env.databaseId)
+			try {
+				await this.mainStore.moveThread({
+					envelope: env,
+					destMailboxId: account.archiveMailboxId,
+				})
+			} catch (error) {
+				logger.error('could not archive envelope', {
+					env,
+					error,
+				})
+
+				showError(t('mail', 'Could not archive message'))
+			}
+
+			return true
+		},
+
+		/**
+		 * Archive every marked message.
+		 *
+		 * The multiselect header has no archive button, so unlike the other bulk
+		 * actions this one cannot delegate to the list.
+		 *
+		 * @param {Array<object>} lists envelope lists holding a selection
+		 */
+		async archiveSelected(lists) {
+			for (const list of lists) {
+				const envelopes = [...list.selectedEnvelopes]
+				list.unselectAll()
+
+				for (const envelope of envelopes) {
+					if (!await this.archiveEnvelope(envelope)) {
+						return
+					}
+				}
+			}
+		},
+
 		async handleShortcut(e) {
 			const envelopes = this.envelopes
 			const currentId = parseInt(this.$route.params.threadId, 10)
@@ -377,6 +538,97 @@ export default {
 			const env = envelopes.find((e) => e.databaseId === currentId)
 			const idx = envelopes.indexOf(env)
 			let next
+
+			// x marks the message under the cursor. Marking is a list gesture, so
+			// it only applies where the cursor lives.
+			if (e.srcKey === 'select') {
+				if (this.cursorId === undefined) {
+					return
+				}
+
+				this.envelopeLists().some((list) => list.toggleSelectionById(this.cursorId))
+				return
+			}
+
+			// While anything is marked the acting verbs work on the marked set.
+			// They must never fall through to the cursor or the open message:
+			// acting on a message the user did not mark is the one failure worth
+			// guarding against here, so an unsupported verb does nothing at all.
+			const selectedLists = this.listsWithSelection()
+			if (selectedLists.length > 0) {
+				if (e.srcKey === 'back') {
+					selectedLists.forEach((list) => list.unselectAll())
+					return
+				}
+
+				if (e.srcKey === 'arch') {
+					return this.archiveSelected(selectedLists)
+				}
+
+				if (['del', 'delAlt', 'delBackspace', 'flag', 'unseen', 'junk', 'important'].includes(e.srcKey)) {
+					selectedLists.forEach((list) => list.handleBulkShortcut(e.srcKey))
+					return
+				}
+			}
+
+			// Verbs that work without an open message.
+			if (e.srcKey === 'search') {
+				return this.focusSearch()
+			}
+			if (e.srcKey === 'back') {
+				return this.backToList()
+			}
+			if (e.srcKey === 'help' || e.srcKey === 'helpAlt') {
+				return window.dispatchEvent(new CustomEvent('mail:show-settings'))
+			}
+			if (e.srcKey === 'compose') {
+				return this.mainStore.startComposerSession({
+					data: { accountId: this.account.accountId },
+				})
+			}
+
+			// Junk and important act on the open message or the cursor.
+			if (e.srcKey === 'junk' || e.srcKey === 'important') {
+				const target = env ?? envelopes.find((envelope) => envelope.databaseId === this.cursorId)
+				if (!target) {
+					return
+				}
+
+				if (e.srcKey === 'important') {
+					return this.mainStore.toggleEnvelopeImportant(target)
+				}
+
+				await this.mainStore.moveEnvelopeToJunk(target)
+				return this.onDelete(target.databaseId)
+			}
+
+			// Reply/forward act on the open message, or on the cursor when
+			// browsing the list.
+			if (['reply', 'replyAll', 'forward'].includes(e.srcKey)) {
+				const target = env ?? envelopes.find((envelope) => envelope.databaseId === this.cursorId)
+				if (!target) {
+					return
+				}
+
+				return this.mainStore.startComposerSession({
+					reply: {
+						mode: e.srcKey === 'forward' ? 'forward' : e.srcKey,
+						data: target,
+					},
+				})
+			}
+
+			// Gmail's model: in the list a cursor moves without opening, and
+			// only 'open' follows it. Inside a message j/k walk the thread
+			// list as before.
+			if (!env && envelopes.length > 0) {
+				if (e.srcKey === 'next' || e.srcKey === 'prev') {
+					return this.moveCursor(e.srcKey === 'next' ? 1 : -1)
+				}
+				if (e.srcKey === 'open' || e.srcKey === 'openAlt') {
+					return this.openCursor()
+				}
+			}
 
 			if (e.srcKey !== 'refresh' && !env) {
 				logger.debug('envelope is not in the list, ignoring shortcut', {
@@ -414,6 +666,8 @@ export default {
 						},
 					})
 					break
+				case 'delAlt':
+				case 'delBackspace':
 				case 'del':
 					if (!this.hasDeleteAcl()) {
 						return
@@ -441,45 +695,10 @@ export default {
 					}
 
 					break
-				case 'arch': {
+				case 'arch':
 					logger.debug('archiving via shortcut')
-
-					// In unified mailboxes this.account is the unified account which
-					// has no archive mailbox, so resolve the envelope's actual account
-					const account = this.mainStore.getAccount(env.accountId)
-
-					if (account.archiveMailboxId === null) {
-						showWarning(t('mail', 'To archive a message please configure an archive folder in account settings'))
-						return
-					}
-
-					if (!this.hasArchiveAcl()) {
-						showWarning(t('mail', 'You are not allowed to move this message to the archive folder and/or delete this message from the current folder'))
-						return
-					}
-
-					if (env.mailboxId === account.archiveMailboxId) {
-						logger.debug('message is already in archive folder')
-						return
-					}
-
-					logger.debug('archiving', { env })
-					this.onDelete(env.databaseId)
-					try {
-						await this.mainStore.moveThread({
-							envelope: env,
-							destMailboxId: account.archiveMailboxId,
-						})
-					} catch (error) {
-						logger.error('could not archive envelope', {
-							env,
-							error,
-						})
-
-						showError(t('mail', 'Could not archive message'))
-					}
+					await this.archiveEnvelope(env)
 					break
-				}
 				case 'flag':
 					logger.debug('flagging envelope via shortkey', { env })
 					this.mainStore.toggleEnvelopeFlagged(env).catch((error) => logger.error('could not flag envelope via shortkey', {
