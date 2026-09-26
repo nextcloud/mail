@@ -760,4 +760,88 @@ class MessageApiControllerTest extends TestCase {
 
 		$this->assertEquals($expected, $actual);
 	}
+
+	public function testSetFlagsSeen(): void {
+		$flags = [
+			'seen' => true,
+		];
+		$message = new Message();
+		$message->setId($this->messageId);
+		$message->setMailboxId($this->mailboxId);
+		$message->setUid(1);
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
+		$mailbox->setAccountId($this->accountId);
+
+		$this->mailManager->expects(self::once())
+			->method('getMessage')
+			->with($this->userId, $this->messageId)
+			->willReturn($message);
+		$this->mailManager->expects(self::once())
+			->method('getMailbox')
+			->with($this->userId, $this->mailboxId)
+			->willReturn($mailbox);
+		$this->accountService->expects(self::once())
+			->method('find')
+			->with($this->userId, $this->accountId)
+			->willReturn($this->account);
+		$this->mailManager->expects(self::once())
+			->method('flagMessage')
+			->with($this->account, 'INBOX', 1, 'seen', true);
+		$this->delegationService->expects(self::once())
+			->method('logDelegatedAction')
+			->with(
+				$this->userId,
+				$this->userId,
+				"$this->userId updated flags on message <$this->messageId> with [seen=true] on behalf of $this->userId",
+			);
+		$this->logger->expects(self::never())
+			->method('error');
+
+		$expected = new DataResponse('', Http::STATUS_OK);
+		$actual = $this->controller->setFlags($this->messageId, $flags);
+
+		$this->assertEquals($expected, $actual);
+	}
+
+	public function testSetFlagsUnseen(): void {
+		$flags = [
+			'seen' => false,
+		];
+		$message = new Message();
+		$message->setId($this->messageId);
+		$message->setMailboxId($this->mailboxId);
+		$message->setUid(1);
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
+		$mailbox->setAccountId($this->accountId);
+
+		$this->mailManager->expects(self::once())
+			->method('getMessage')
+			->with($this->userId, $this->messageId)
+			->willReturn($message);
+		$this->mailManager->expects(self::once())
+			->method('getMailbox')
+			->with($this->userId, $this->mailboxId)
+			->willReturn($mailbox);
+		$this->accountService->expects(self::once())
+			->method('find')
+			->with($this->userId, $this->accountId)
+			->willReturn($this->account);
+		$this->mailManager->expects(self::once())
+			->method('flagMessage')
+			->with($this->account, 'INBOX', 1, 'seen', false);
+		$this->delegationService->expects(self::once())
+			->method('logDelegatedAction')
+			->with(
+				$this->userId,
+				$this->userId,
+				"$this->userId updated flags on message <$this->messageId> with [seen=false] on behalf of $this->userId",
+			);
+
+		$expected = new DataResponse('', Http::STATUS_OK);
+		$actual = $this->controller->setFlags($this->messageId, $flags);
+
+		$this->assertEquals($expected, $actual);
+	}
 }
