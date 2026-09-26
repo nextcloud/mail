@@ -22,7 +22,7 @@
 					</NcActionText>
 				</template>
 				<template v-else>
-					<NcActionText v-if="!account.isUnified && account.quotaPercentage !== null ">
+					<NcActionText v-if="!account.error && !account.isUnified && account.quotaPercentage !== null">
 						<template #icon>
 							<IconInfo :size="20" />
 						</template>
@@ -310,7 +310,7 @@ export default {
 		},
 
 		onMenuToggle(open) {
-			if (open && this.account.quotaPercentage !== null) {
+			if (open && !this.account.error && this.account.quotaPercentage !== null) {
 				logger.debug('accounts menu opened, fetching quota')
 				this.fetchQuota()
 			}
