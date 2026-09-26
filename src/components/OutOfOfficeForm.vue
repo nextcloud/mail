@@ -91,12 +91,16 @@
 
 			<fieldset class="form__fieldset">
 				<label for="ooo-message">{{ t('mail', 'Message') }}</label>
-				<TextEditor
-					id="ooo-message"
-					v-model="message"
-					:html="false"
-					:disabled="followingSystem"
-					:bus="textEditorDummyBus" />
+					<div class="message-editor-wrapper">
+						<TextEditor
+							:key="allowHtml"
+							id="ooo-message"
+							v-model="message"
+							:html="allowHtml"
+							:disabled="followingSystem"
+							:bus="textEditorDummyBus"
+							class="message-editor-wrapper__editor" />
+					</div>
 			</fieldset>
 		</template>
 
@@ -130,6 +134,7 @@ import TextEditor from './TextEditor.vue'
 import * as OutOfOfficeService from '../service/OutOfOfficeService.js'
 import useMainStore from '../store/mainStore.js'
 import { html, plain, toHtml, toPlain } from '../util/text.js'
+import { EDITOR_MODE_HTML } from '../store/constants.js'
 
 const OOO_DISABLED = 'disabled'
 const OOO_ENABLED = 'enabled'
@@ -216,6 +221,30 @@ export default {
 		 */
 		followingSystem() {
 			return this.hasPersonalAbsenceSettings && this.enabled === OOO_FOLLOW_SYSTEM
+		},
+
+		/**
+		 * Plain text accounts get the plain text editor so they can't add images to
+		 * their signature in the first place. Signatures that already contain one
+		 * keep the rich text editor, otherwise the image would be stripped on load
+		 * and silently lost on save.
+		 *
+		 * @return {boolean}
+		 */
+		allowHtml() {
+			return this.account.editorMode === EDITOR_MODE_HTML || this.signatureEnforcesHtml
+		},
+
+		/**
+		 * Unlike allowHtml this follows the current content so the warning disappears
+		 * as soon as the image is gone.
+		 *
+		 * @return {boolean}
+		 */
+		overridesPlainText() {
+			return this.account.editorMode !== EDITOR_MODE_HTML
+				&& !!this.signature
+				&& containsImage(this.signature)
 		},
 	},
 
@@ -307,13 +336,28 @@ export default {
 						lastDay.setHours(24, 0, 0, 0)
 					}
 
+					let messageHtml;
+					let message;
+
+					switch (this.account.editorMode) {
+						case 'plaintext':
+							messageHtml = false;
+							message = toPlain(html(this.message)).value; // CKEditor always returns html data
+							break;
+						case 'richtext':
+							messageHtml = true;
+							message = this.message;
+							break;
+					}
+
 					// Date.toISOString() always returns the date in UTC
 					await OutOfOfficeService.update(this.account.id, {
 						enabled: this.enabled === OOO_ENABLED,
+						messageHtml: messageHtml,
 						start: firstDay.toISOString(),
 						end: lastDay?.toISOString() ?? null,
 						subject: this.subject,
-						message: toPlain(html(this.message)).value, // CKEditor always returns html data
+						message: message,
 						allowedRecipients: this.aliases,
 					})
 
@@ -336,6 +380,48 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.message-editor-wrapper {
+	width: 100%;
+	min-width: 0;
+	box-sizing: border-box;
+	padding: 4px;
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius);
+	background: var(--color-main-background);
+	transition: border-color 120ms ease, box-shadow 120ms ease;
+
+	&:focus-within {
+		border-color: var(--color-primary-element);
+		box-shadow: 0 0 0 2px var(--color-primary-element-light);
+	}
+
+	&__editor {
+		width: 100%;
+		min-width: 0;
+
+		:deep(.ck.ck-editor) {
+			width: 100%;
+			min-width: 0;
+		}
+
+		:deep(.ck.ck-editor__editable_inline) {
+			border: none !important;
+			box-shadow: none !important;
+			min-height: 120px;
+		}
+	}
+}
+
+:deep(.ck.ck-toolbar-dropdown > .ck-dropdown__panel) {
+	max-width: 19vw;
+}
+
+@media only screen and (max-width: 580px) {
+	:deep(.ck.ck-toolbar-dropdown > .ck-dropdown__panel) {
+		max-width: 70vw;
+	}
+}
+
 .form {
 	display: flex;
 	flex-direction: column;
@@ -344,6 +430,7 @@ export default {
 	&__fieldset {
 		display: flex;
 		flex-direction: column;
+		min-width: 0;
 
 		&__label {
 			display: flex;
@@ -373,18 +460,6 @@ export default {
 
 	#ooo-subject {
 		width: 100%;
-	}
-
-	#ooo-message {
-		width: 100%;
-		min-height: 100px;
-		border: 1px solid var(--color-border);
-
-		&:active,
-		&:focus,
-		&:hover {
-			border-color: var(--color-primary-element) !important;
-		}
 	}
 }
 
