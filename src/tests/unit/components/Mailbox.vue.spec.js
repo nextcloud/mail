@@ -3,9 +3,10 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import mitt from 'mitt'
 import { createPinia, setActivePinia } from 'pinia'
+import EnvelopeList from '../../../components/EnvelopeList.vue'
 import Mailbox from '../../../components/Mailbox.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 import useMainStore from '../../../store/mainStore.js'
@@ -141,5 +142,91 @@ describe('Mailbox selection', () => {
 
 		expect(vm.selection).toEqual([])
 		expect(vm.selectionAnchor).toBeUndefined()
+	})
+})
+
+describe('Mailbox selection with date groups', () => {
+	let wrapper
+	let store
+	let envelopes
+
+	beforeEach(() => {
+		setActivePinia(createPinia())
+		store = useMainStore()
+		store.setHasFetchedInitialEnvelopesMutation(true)
+		store.toggleEnvelopeSeen = vi.fn()
+		envelopes = [envelope(1, 4), envelope(2, 3), envelope(3, 2), envelope(4, 1)]
+		for (const env of envelopes) {
+			store.envelopes[env.databaseId] = env
+		}
+
+		wrapper = mount(Mailbox, {
+			propsData: {
+				account: {},
+				mailbox: { databaseId: 1 },
+				bus: mitt(),
+				groupEnvelopes: [
+					['today', [envelopes[0], envelopes[1]]],
+					['yesterday', [envelopes[2], envelopes[3]]],
+				],
+			},
+			computed: {
+				envelopes: () => envelopes,
+			},
+			mocks: {
+				$route: { params: {} },
+			},
+			stubs: {
+				Envelope: true,
+				SectionTitle: true,
+			},
+			localVue,
+		})
+	})
+
+	afterEach(() => {
+		wrapper.destroy()
+	})
+
+	const envelopeRows = () => wrapper.findAll('envelope-stub')
+
+	it('selects a range across groups and shows one bulk action header', async () => {
+		envelopeRows().at(1).vm.$emit('update:selected', true)
+		await wrapper.vm.$nextTick()
+
+		envelopeRows().at(3).vm.$emit('select-multiple')
+		await wrapper.vm.$nextTick()
+
+		expect(wrapper.vm.selection).toEqual([2, 3, 4])
+		expect(wrapper.find('.select-all-bar').exists()).toBe(false)
+		expect(wrapper.findAll('.multiselect-header').length).toBe(1)
+		expect(envelopeRows().at(0).attributes('selected')).toBeUndefined()
+		expect(envelopeRows().at(2).attributes('selected')).toBe('true')
+	})
+
+	it('applies bulk actions to the selection of all groups', async () => {
+		wrapper.vm.setSelection([2, 3])
+		await wrapper.vm.$nextTick()
+
+		wrapper.findAllComponents(EnvelopeList).at(0).vm.markSelectedRead()
+		await wrapper.vm.$nextTick()
+
+		expect(store.toggleEnvelopeSeen.mock.calls.map(([{ envelope }]) => envelope.databaseId)).toEqual([2, 3])
+		expect(wrapper.vm.selection).toEqual([])
+	})
+
+	it('selects all through the checkbox', async () => {
+		wrapper.findComponent({ name: 'NcCheckboxRadioSwitch' }).vm.$emit('update:checked', true)
+		await wrapper.vm.$nextTick()
+
+		expect(wrapper.vm.selection).toEqual([1, 2, 3, 4])
+	})
+
+	it('drops envelopes that are no longer shown', async () => {
+		wrapper.vm.selectAll()
+
+		await wrapper.setProps({ groupEnvelopes: [['today', [envelopes[0]]], ['yesterday', [envelopes[3]]]] })
+
+		expect(wrapper.vm.selection).toEqual([1, 4])
 	})
 })
