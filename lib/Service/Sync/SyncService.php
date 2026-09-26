@@ -18,10 +18,10 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\MailboxLockedException;
 use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\PreviewEnhancer;
 use OCA\Mail\IMAP\Sync\Response;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\Search\FilterStringParser;
 use OCA\Mail\Service\Search\SearchQuery;
 use Psr\Log\LoggerInterface;
@@ -31,7 +31,7 @@ use function array_map;
 class SyncService {
 
 	public function __construct(
-		private IMAPClientFactory $clientFactory,
+		private ProtocolFactory $protocolFactory,
 		private ImapToDbSynchronizer $synchronizer,
 		private FilterStringParser $filterStringParser,
 		private MessageMapper $messageMapper,
@@ -48,9 +48,8 @@ class SyncService {
 	 * @throws MailboxLockedException
 	 * @throws ServiceException
 	 */
-	public function clearCache(Account $account,
-		Mailbox $mailbox): void {
-		$this->synchronizer->clearCache($account, $mailbox);
+	public function clearCache(Account $account, Mailbox $mailbox): void {
+		$this->protocolFactory->messageConnector($account)->clearCache($account, $mailbox);
 	}
 
 	/**
@@ -60,7 +59,7 @@ class SyncService {
 	 * @throws ServiceException
 	 */
 	public function repairSync(Account $account, Mailbox $mailbox): void {
-		$this->synchronizer->repairSync($account, $mailbox, $this->logger);
+		$this->protocolFactory->messageConnector($account)->repairSync($account, $mailbox);
 	}
 
 	/**
@@ -84,26 +83,26 @@ class SyncService {
 		?int $lastMessageTimestamp,
 		?array $knownIds = null,
 		string $sortOrder = IMailSearch::ORDER_NEWEST_FIRST,
-		?string $filter = null): Response {
+		?string $filter = null,
+	): Response {
 		if ($partialOnly && !$mailbox->isCached()) {
 			throw MailboxNotCachedException::from($mailbox);
 		}
 
-		$client = $this->clientFactory->getClient($account);
+		$this->protocolFactory
+			->mailboxConnector($account)
+			->syncOne($account, $mailbox);
 
-		$this->synchronizer->sync(
-			$account,
-			$client,
-			$mailbox,
-			$this->logger,
-			$criteria,
-			$knownIds === null ? null : $this->messageMapper->findUidsForIds($mailbox, $knownIds),
-			!$partialOnly
-		);
-
-		$this->mailboxSync->syncStats($client, $mailbox);
-
-		$client->logout();
+		$this->protocolFactory
+			->messageConnector($account)
+			->syncMailbox(
+				$account,
+				$mailbox,
+				$this->logger,
+				$criteria,
+				$knownIds === null ? null : $this->messageMapper->findUidsForIds($mailbox, $knownIds),
+				!$partialOnly,
+			);
 
 		$query = $filter === null ? null : $this->filterStringParser->parse($filter);
 		return $this->getDatabaseSyncChanges(

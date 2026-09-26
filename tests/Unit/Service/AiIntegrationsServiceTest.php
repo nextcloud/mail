@@ -10,22 +10,20 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\ConfigLexicon;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AiIntegrations\Cache;
 use OCA\Mail\Service\AiIntegrations\DefaultPrompts;
+use OCA\Mail\Service\MailManager;
 use OCP\IAppConfig;
 use OCP\IUser;
 use OCP\IUserManager;
@@ -45,8 +43,7 @@ class AiIntegrationsServiceTest extends TestCase {
 	private NullLogger|MockObject $logger;
 	private AiIntegrationsService $aiIntegrationsService;
 	private Cache|MockObject $cache;
-	private IMAPClientFactory|MockObject $clientFactory;
-	private IMailManager|MockObject $mailManager;
+	private MailManager|MockObject $mailManager;
 	private TaskProcessingManager|MockObject $taskProcessingManager;
 	private TaskProcessingProvider|MockObject $taskProcessingProvider;
 	private IFactory|MockObject $l10nFactory;
@@ -58,15 +55,13 @@ class AiIntegrationsServiceTest extends TestCase {
 		$this->logger = $this->createMock(NullLogger::class);
 		$this->appConfig = $this->createMock(IAppConfig::class);
 		$this->cache = $this->createMock(Cache::class);
-		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
-		$this->mailManager = $this->createMock(IMailManager::class);
+		$this->mailManager = $this->createMock(MailManager::class);
 		$this->taskProcessingManager = $this->createMock(TaskProcessingManager::class);
 		$this->l10nFactory = $this->createMock(IFactory::class);
 		$this->userManager = $this->createMock(IUserManager::class);
 		$this->aiIntegrationsService = new AiIntegrationsService(
 			$this->logger,
 			$this->cache,
-			$this->clientFactory,
 			$this->mailManager,
 			$this->taskProcessingManager,
 			$this->l10nFactory,
@@ -91,10 +86,6 @@ class AiIntegrationsServiceTest extends TestCase {
 			->method('getAvailableTaskTypes')
 			->willReturn([TextToTextSummary::ID => $this->taskProcessingProvider]);
 		$this->cache->method('getValue')->willReturn(false);
-		$this->clientFactory
-			->method('getClient')
-			->with($account)
-			->willReturn($this->createMock(Horde_Imap_Client_Socket::class));
 		$this->taskProcessingManager
 			->method('runTask')
 			->willThrowException($taskProcessingException);
@@ -133,7 +124,6 @@ class AiIntegrationsServiceTest extends TestCase {
 			->method('getAvailableTaskTypes')
 			->willReturn([TextToText::ID => $this->taskProcessingProvider]);
 		$this->cache->method('getValue')->willReturn(false);
-		$this->clientFactory->method('getClient')->with($account)->willReturn($this->createMock(Horde_Imap_Client_Socket::class));
 		$this->mailManager->method('getImapMessage')->willReturn($imapMessage);
 		$imapMessage->method('isOneClickUnsubscribe')->willReturn(false);
 		$imapMessage->method('getUnsubscribeUrl')->willReturn(null);
@@ -184,7 +174,6 @@ class AiIntegrationsServiceTest extends TestCase {
 			->willReturnCallback(function (string $_key, ?string $value) use (&$cachedReplies): void {
 				$cachedReplies = $value;
 			});
-		$this->clientFactory->method('getClient')->with($account)->willReturn($this->createMock(Horde_Imap_Client_Socket::class));
 		$this->mailManager->method('getImapMessage')->willReturn($imapMessage);
 		$imapMessage->method('isOneClickUnsubscribe')->willReturn(false);
 		$imapMessage->method('getUnsubscribeUrl')->willReturn(null);
@@ -231,7 +220,6 @@ class AiIntegrationsServiceTest extends TestCase {
 			->method('getAvailableTaskTypes')
 			->willReturn([TextToText::ID => $this->taskProcessingProvider]);
 		$this->cache->method('getValue')->willReturn(false);
-		$this->clientFactory->method('getClient')->with($account)->willReturn($this->createMock(Horde_Imap_Client_Socket::class));
 		$this->mailManager->method('getImapMessage')->willReturn($imapMessage);
 		$imapMessage->method('isOneClickUnsubscribe')->willReturn(false);
 		$imapMessage->method('getUnsubscribeUrl')->willReturn(null);
@@ -552,8 +540,6 @@ class AiIntegrationsServiceTest extends TestCase {
 		$this->taskProcessingManager->expects(self::once())
 			->method('getAvailableTaskTypes')
 			->willReturn([TextToText::ID => $this->taskProcessingProvider]);
-		$this->clientFactory->expects(self::once())
-			->method('getClient');
 
 		$this->aiIntegrationsService->summarizeMessages($account, [$message]);
 	}
@@ -588,9 +574,6 @@ class AiIntegrationsServiceTest extends TestCase {
 			->method('getUserLanguage')
 			->with($user)
 			->willReturn('en');
-
-		$imapClient = $this->clientFactory->getClient($account);
-
 		$imapMessage = $this->createMock(IMAPMessage::class);
 		$imapMessage->expects(self::never())
 			->method('getPlainBody')
@@ -604,9 +587,6 @@ class AiIntegrationsServiceTest extends TestCase {
 		$this->taskProcessingManager->expects(self::never())
 			->method('scheduleTask');
 
-		$this->clientFactory->expects(self::once())
-			->method('getClient');
-
 		$this->mailManager->expects(self::once())
 			->method('getMailbox')
 			->with(
@@ -617,10 +597,9 @@ class AiIntegrationsServiceTest extends TestCase {
 		$this->mailManager->expects(self::once())
 			->method('getImapMessage')
 			->with(
-				$imapClient,
 				$account,
 				$mailBox,
-				$message->getUid(),
+				$message,
 				true
 			)
 			->willReturn($imapMessage);
@@ -659,8 +638,6 @@ class AiIntegrationsServiceTest extends TestCase {
 			->with($user)
 			->willReturn('de_DE');
 
-		$imapClient = $this->clientFactory->getClient($account);
-
 		$imapMessage = $this->createMock(IMAPMessage::class);
 		$imapMessage->expects(self::atMost(2))
 			->method('getPlainBody')
@@ -682,9 +659,6 @@ class AiIntegrationsServiceTest extends TestCase {
 				);
 			});
 
-		$this->clientFactory->expects(self::once())
-			->method('getClient');
-
 		$this->mailManager->expects(self::once())
 			->method('getMailbox')
 			->with(
@@ -695,10 +669,9 @@ class AiIntegrationsServiceTest extends TestCase {
 		$this->mailManager->expects(self::once())
 			->method('getImapMessage')
 			->with(
-				$imapClient,
 				$account,
 				$mailBox,
-				$message->getUid(),
+				$message,
 				true
 			)
 			->willReturn($imapMessage);
@@ -760,7 +733,6 @@ class AiIntegrationsServiceTest extends TestCase {
 		$this->taskProcessingManager
 			->method('getAvailableTaskTypes')
 			->willReturn([TextToText::ID => $this->taskProcessingProvider]);
-		$this->clientFactory->method('getClient')->with($account)->willReturn($this->createMock(Horde_Imap_Client_Socket::class));
 		$this->mailManager->method('getImapMessage')->willReturn($imapMessage);
 		$imapMessage->method('isOneClickUnsubscribe')->willReturn(false);
 		$imapMessage->method('getUnsubscribeUrl')->willReturn(null);
@@ -803,7 +775,6 @@ class AiIntegrationsServiceTest extends TestCase {
 		$this->taskProcessingManager
 			->method('getAvailableTaskTypes')
 			->willReturn([TextToText::ID => $this->taskProcessingProvider]);
-		$this->clientFactory->method('getClient')->with($account)->willReturn($this->createMock(Horde_Imap_Client_Socket::class));
 		$this->mailManager->method('getImapMessage')->willReturn($imapMessage);
 		$imapMessage->method('isOneClickUnsubscribe')->willReturn(false);
 		$imapMessage->method('getUnsubscribeUrl')->willReturn(null);

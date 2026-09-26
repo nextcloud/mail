@@ -15,7 +15,7 @@ use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MessageMapper;
-use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Send\AntiAbuseHandler;
 use OCA\Mail\Send\Chain;
 use OCA\Mail\Send\CopySentMessageHandler;
@@ -35,7 +35,7 @@ class ChainTest extends TestCase {
 	private MockObject|MessageMapper $messageMapper;
 	private AttachmentService|MockObject $attachmentService;
 	private MockObject|LocalMessageMapper $localMessageMapper;
-	private MockObject&IMAPClientFactory $clientFactory;
+	private MockObject&ProtocolFactory $protocolFactory;
 
 	protected function setUp(): void {
 		$this->sentMailboxHandler = $this->createMock(SentMailboxHandler::class);
@@ -45,7 +45,7 @@ class ChainTest extends TestCase {
 		$this->flagRepliedMessageHandler = $this->createMock(FlagRepliedMessageHandler::class);
 		$this->attachmentService = $this->createMock(AttachmentService::class);
 		$this->localMessageMapper = $this->createMock(LocalMessageMapper::class);
-		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
+		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
 		$this->chain = new Chain($this->sentMailboxHandler,
 			$this->antiAbuseHandler,
 			$this->sendHandler,
@@ -53,7 +53,7 @@ class ChainTest extends TestCase {
 			$this->flagRepliedMessageHandler,
 			$this->attachmentService,
 			$this->localMessageMapper,
-			$this->clientFactory,
+			$this->protocolFactory,
 		);
 	}
 
@@ -74,8 +74,8 @@ class ChainTest extends TestCase {
 
 		$this->sentMailboxHandler->expects(self::once())
 			->method('setNext');
-		$this->clientFactory->expects(self::once())
-			->method('getClient')
+		$this->protocolFactory->expects(self::once())
+			->method('imapClient')
 			->willReturn($client);
 		$this->sentMailboxHandler->expects(self::once())
 			->method('process')
@@ -110,8 +110,8 @@ class ChainTest extends TestCase {
 
 		$this->sentMailboxHandler->expects(self::once())
 			->method('setNext');
-		$this->clientFactory->expects(self::once())
-			->method('getClient')
+		$this->protocolFactory->expects(self::once())
+			->method('imapClient')
 			->willReturn($client);
 		$this->sentMailboxHandler->expects(self::once())
 			->method('process')
