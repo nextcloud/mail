@@ -28,6 +28,8 @@ use function sprintf;
 
 class SyncJob extends TimedJob {
 	private const DEFAULT_SYNC_INTERVAL = 3600;
+	private const ACTIVE_SYNC_INTERVAL = 15 * 60;
+	private const INACTIVE_SYNC_INTERVAL = 6 * 3600;
 
 	private IUserManager $userManager;
 	private IJobList $jobList;
@@ -68,6 +70,47 @@ class SyncJob extends TimedJob {
 		$this->setTimeSensitivity(self::TIME_SENSITIVE);
 	}
 
+	#[\Override]
+	public function setArgument(mixed $argument): void {
+		parent::setArgument($argument);
+
+		// If an admin configured a custom sync interval, always abide by it
+		if ($this->forcedSyncInterval || $this->forcedSkip) {
+			return;
+		}
+
+		// Default to hourly sync when the last use was 1-3 days ago or there is no heartbeat
+		$this->setInterval(self::DEFAULT_SYNC_INTERVAL);
+		if (!is_array($argument) || !isset($argument['accountId'])) {
+			return;
+		}
+
+		try {
+			$account = $this->accountService->findById((int)$argument['accountId']);
+		} catch (DoesNotExistException $e) {
+			return;
+		}
+		if (!$account->getMailAccount()->canAuthenticateImap()) {
+			return;
+		}
+
+		$now = $this->time->getTime();
+		$heartbeat = (int)$this->config->getUserValue(
+			$account->getUserId(),
+			Application::APP_ID,
+			'ui-heartbeat',
+			$now + 1, // Force negative value for $lastUsed in case of no heartbeat
+		);
+		$lastUsed = $now - $heartbeat;
+		if ($lastUsed > 3 * 24 * 3600) {
+			// User did not open the app in more than three days -> defer sync
+			$this->setInterval(self::INACTIVE_SYNC_INTERVAL);
+		} elseif ($lastUsed > 0 && $lastUsed <= 24 * 3600) {
+			// User opened the app at least once within the last 24 hours -> sync more often
+			$this->setInterval(self::ACTIVE_SYNC_INTERVAL);
+		}
+	}
+
 	/**
 	 * @return void
 	 */
@@ -90,31 +133,6 @@ class SyncJob extends TimedJob {
 		if (!$account->getMailAccount()->canAuthenticateImap()) {
 			$this->logger->debug('No authentication on IMAP possible, skipping background sync job');
 			return;
-		}
-
-		// If an admin configured a custom sync interval, always abide by it
-		if (!$this->forcedSyncInterval) {
-			$now = $this->time->getTime();
-			$heartbeat = (int)$this->config->getUserValue(
-				$account->getUserId(),
-				Application::APP_ID,
-				'ui-heartbeat',
-				$now + 1, // Force negative value for $lastUsed in case of no heartbeat
-			);
-			$lastUsed = $now - $heartbeat;
-			if ($lastUsed > 3 * 24 * 3600) {
-				// User did not open the app in more than three days -> defer sync
-				$this->setInterval(6 * 3600);
-			} elseif ($lastUsed > 24 * 3600) {
-				// User opened the app at least once within the last three days -> default sync
-				$this->setInterval(self::DEFAULT_SYNC_INTERVAL);
-			} elseif ($lastUsed > 0) {
-				// User opened the app at least once within the last 24 hours -> sync more often
-				$this->setInterval(15 * 60);
-			} else {
-				// Default to the hourly interval in case there is no heartbeat
-				$this->setInterval(self::DEFAULT_SYNC_INTERVAL);
-			}
 		}
 
 		$user = $this->userManager->get($account->getUserId());
