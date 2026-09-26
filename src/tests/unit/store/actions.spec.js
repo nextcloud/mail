@@ -925,4 +925,54 @@ describe('Vuex store actions', () => {
 		expect(store.removeEnvelopeMutation).not.toHaveBeenCalled()
 		expect(store.syncEnvelopes).not.toHaveBeenCalled()
 	})
+
+	it('adds a tag to all matching envelopes', async () => {
+		const envelope = { databaseId: 1, tags: [] }
+		const tag = { id: 7, imapLabel: '$label1' }
+		vi.spyOn(store, 'getEnvelopes').mockReturnValue([envelope])
+		MailboxService.setMailboxTag.mockResolvedValue(tag)
+
+		await store.tagMatchingEnvelopes({ mailboxId: 13, query: 'from:boss', imapLabel: '$label1', value: true })
+
+		expect(MailboxService.setMailboxTag).toHaveBeenCalledWith(13, 'from:boss', '$label1')
+		expect(store.getTag(7)).toEqual(tag)
+		expect(envelope.tags).toEqual([7])
+	})
+
+	it('removes a tag from all matching envelopes', async () => {
+		const envelope = { databaseId: 1, tags: [7, 8] }
+		vi.spyOn(store, 'getEnvelopes').mockReturnValue([envelope])
+		MailboxService.removeMailboxTag.mockResolvedValue({ id: 7, imapLabel: '$label1' })
+
+		await store.tagMatchingEnvelopes({ mailboxId: 13, query: undefined, imapLabel: '$label1', value: false })
+
+		expect(MailboxService.removeMailboxTag).toHaveBeenCalledWith(13, undefined, '$label1')
+		expect(envelope.tags).toEqual([8])
+	})
+
+	it('removes all matching envelopes that were moved to the junk folder', async () => {
+		vi.spyOn(store, 'removeMatchingEnvelopes').mockResolvedValue()
+		vi.spyOn(store, 'syncEnvelopes').mockResolvedValue()
+		MailboxService.setMailboxJunk.mockResolvedValue(true)
+
+		await store.junkMatchingEnvelopes({ mailboxId: 13, query: 'from:shop', junk: true })
+
+		expect(MailboxService.setMailboxJunk).toHaveBeenCalledWith(13, 'from:shop', true)
+		expect(store.removeMatchingEnvelopes).toHaveBeenCalledWith({ mailboxId: 13, query: 'from:shop' })
+		expect(store.syncEnvelopes).not.toHaveBeenCalled()
+	})
+
+	it('flags all matching envelopes as junk when they stay in place', async () => {
+		const envelope = { databaseId: 1, mailboxId: 13, flags: { $junk: false, $notjunk: true } }
+		vi.spyOn(store, 'getEnvelopes').mockReturnValue([envelope])
+		vi.spyOn(store, 'removeMatchingEnvelopes').mockResolvedValue()
+		vi.spyOn(store, 'syncEnvelopes').mockResolvedValue()
+		MailboxService.setMailboxJunk.mockResolvedValue(false)
+
+		await store.junkMatchingEnvelopes({ mailboxId: 13, query: undefined, junk: true })
+
+		expect(store.removeMatchingEnvelopes).not.toHaveBeenCalled()
+		expect(envelope.flags).toEqual({ $junk: true, $notjunk: false })
+		expect(store.syncEnvelopes).toHaveBeenCalledWith({ mailboxId: 13, query: undefined })
+	})
 })

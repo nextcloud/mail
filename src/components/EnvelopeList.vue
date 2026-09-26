@@ -23,6 +23,20 @@
 					</NcButton>
 					<NcButton
 						variant="tertiary"
+						:title="t('mail', 'Mark all as important')"
+						:disabled="allMatchingBusy"
+						@click.prevent="$emit('tag-all-matching', { imapLabel: '$label1', value: true })">
+						<ImportantIcon :size="20" />
+					</NcButton>
+					<NcButton
+						variant="tertiary"
+						:title="t('mail', 'Mark all as unimportant')"
+						:disabled="allMatchingBusy"
+						@click.prevent="$emit('tag-all-matching', { imapLabel: '$label1', value: false })">
+						<ImportantOutlineIcon :size="20" />
+					</NcButton>
+					<NcButton
+						variant="tertiary"
 						:title="t('mail', 'Favorite all')"
 						:disabled="allMatchingBusy"
 						@click.prevent="$emit('flag-all-matching', { flagged: true })">
@@ -128,7 +142,30 @@
 					</NcButton>
 				</div>
 
-				<NcActions v-if="!allMatchingSelected" class="app-content-list-item-menu" menu-align="right">
+				<NcActions v-if="allMatchingSelected" class="app-content-list-item-menu" menu-align="right">
+					<NcActionButton :disabled="allMatchingBusy" @click.prevent="$emit('junk-all-matching', true)">
+						<template #icon>
+							<AlertOctagonIcon :size="20" />
+						</template>
+						{{ t('mail', 'Mark all as spam') }}
+					</NcActionButton>
+					<NcActionButton :disabled="allMatchingBusy" @click.prevent="$emit('junk-all-matching', false)">
+						<template #icon>
+							<AlertOctagonIcon :size="20" />
+						</template>
+						{{ t('mail', 'Mark all as not spam') }}
+					</NcActionButton>
+					<NcActionButton
+						:disabled="allMatchingBusy"
+						:close-after-click="true"
+						@click.prevent="showTagAllModal = true">
+						<template #icon>
+							<TagIcon :size="20" />
+						</template>
+						{{ t('mail', 'Edit tags of all') }}
+					</NcActionButton>
+				</NcActions>
+				<NcActions v-else class="app-content-list-item-menu" menu-align="right">
 					<NcActionButton
 						v-if="isAtLeastOneSelectedNotJunk"
 						@click.prevent="markSelectionJunk">
@@ -218,6 +255,12 @@
 			:select="onMoveAllMatching"
 			@close="showMoveAllModal = false" />
 
+		<TagAllMatchingModal
+			v-if="showTagAllModal"
+			:busy="allMatchingBusy"
+			@tag="onTagAllMatching"
+			@close="showTagAllModal = false" />
+
 		<ConfirmationModal
 			v-if="showDeleteAllConfirmation"
 			:title="t('mail', 'Delete all selected messages')"
@@ -259,6 +302,7 @@ import ConfirmationModal from './ConfirmationModal.vue'
 import Envelope from './Envelope.vue'
 import MailboxPicker from './MailboxPicker.vue'
 import MoveModal from './MoveModal.vue'
+import TagAllMatchingModal from './TagAllMatchingModal.vue'
 import TagModal from './TagModal.vue'
 import dragEventBus from '../directives/drag-and-drop/util/dragEventBus.js'
 import { matchError } from '../errors/match.js'
@@ -292,6 +336,7 @@ export default {
 		ShareIcon,
 		AlertOctagonIcon,
 		TagIcon,
+		TagAllMatchingModal,
 		TagModal,
 		Settings,
 	},
@@ -380,6 +425,7 @@ export default {
 			showMoveModal: false,
 			showTagModal: false,
 			showMoveAllModal: false,
+			showTagAllModal: false,
 			showDeleteAllConfirmation: false,
 			moveAllDestination: undefined,
 			defaultView: false,
@@ -647,6 +693,11 @@ export default {
 		onMoveAllMatching(destMailboxId) {
 			this.showMoveAllModal = false
 			this.$emit('move-all-matching', destMailboxId)
+		},
+
+		onTagAllMatching(change) {
+			this.showTagAllModal = false
+			this.$emit('tag-all-matching', change)
 		},
 
 		onDeleteAllMatching() {

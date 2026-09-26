@@ -426,6 +426,59 @@ describe('Mailbox all matching selection', () => {
 		expect(rows.at(0).vm.$attrs['all-matching']).toEqual({ mailboxId: 1, query: 'is:unread' })
 	})
 
+	it('marks all matching messages as important with one request', async () => {
+		store.tagMatchingEnvelopes = vi.fn().mockResolvedValue()
+		const vm = mountMailbox()
+		vm.selectAll()
+		vm.allMatchingSelected = true
+		await vm.$nextTick()
+
+		await wrapper.find('.multiselect-header [title="Mark all as important"]').trigger('click')
+		await flushPromises()
+
+		expect(store.tagMatchingEnvelopes).toHaveBeenCalledWith({ mailboxId: 1, query: 'is:unread', imapLabel: '$label1', value: true })
+		expect(vm.allMatchingSelected).toBe(false)
+	})
+
+	it('applies a tag picked in the tag dialog to all matching messages', async () => {
+		store.tagMatchingEnvelopes = vi.fn().mockResolvedValue()
+		const vm = mountMailbox()
+		vm.selectAll()
+		vm.allMatchingSelected = true
+		await vm.$nextTick()
+
+		wrapper.findComponent(EnvelopeList).vm.onTagAllMatching({ imapLabel: 'work', value: false })
+		await flushPromises()
+
+		expect(store.tagMatchingEnvelopes).toHaveBeenCalledWith({ mailboxId: 1, query: 'is:unread', imapLabel: 'work', value: false })
+	})
+
+	it('marks all matching messages as spam', async () => {
+		store.junkMatchingEnvelopes = vi.fn().mockResolvedValue()
+		const vm = mountMailbox()
+		vm.selectAll()
+		vm.allMatchingSelected = true
+		await vm.$nextTick()
+
+		wrapper.findComponent(EnvelopeList).vm.$emit('junk-all-matching', true)
+		await flushPromises()
+
+		expect(store.junkMatchingEnvelopes).toHaveBeenCalledWith({ mailboxId: 1, query: 'is:unread', junk: true })
+		expect(vm.selection).toEqual([])
+	})
+
+	it('reports an error when marking all matching messages as spam fails', async () => {
+		store.junkMatchingEnvelopes = vi.fn().mockRejectedValue(new Error('500'))
+		const vm = mountMailbox()
+		vm.selectAll()
+		vm.allMatchingSelected = true
+
+		await vm.junkAllMatching(false)
+
+		expect(showError).toHaveBeenCalled()
+		expect(vm.allMatchingSelected).toBe(true)
+	})
+
 	it('leaves the all matching mode when the selection is changed by hand', () => {
 		const vm = mountMailbox()
 		vm.selectAll()

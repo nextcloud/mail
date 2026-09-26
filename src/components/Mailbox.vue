@@ -66,7 +66,9 @@
 						@update:selection="onUpdateSelection"
 						@flag-all-matching="flagAllMatching"
 						@move-all-matching="moveAllMatching"
-						@delete-all-matching="deleteAllMatching" />
+						@delete-all-matching="deleteAllMatching"
+						@tag-all-matching="tagAllMatching"
+						@junk-all-matching="junkAllMatching" />
 				</div>
 			</template>
 			<EnvelopeList
@@ -89,7 +91,9 @@
 				@update:selection="onUpdateSelection"
 				@flag-all-matching="flagAllMatching"
 				@move-all-matching="moveAllMatching"
-				@delete-all-matching="deleteAllMatching" />
+				@delete-all-matching="deleteAllMatching"
+				@tag-all-matching="tagAllMatching"
+				@junk-all-matching="junkAllMatching" />
 		</div>
 	</div>
 </template>
@@ -791,6 +795,29 @@ export default {
 					query: this.searchQuery,
 				}),
 				t('mail', 'Could not delete the messages'),
+			)
+		},
+
+		async tagAllMatching({ imapLabel, value }) {
+			await this.runAllMatchingAction(
+				() => this.mainStore.tagMatchingEnvelopes({
+					mailboxId: this.mailbox.databaseId,
+					query: this.searchQuery,
+					imapLabel,
+					value,
+				}),
+				t('mail', 'Could not update the tags of the messages'),
+			)
+		},
+
+		async junkAllMatching(junk) {
+			await this.runAllMatchingAction(
+				() => this.mainStore.junkMatchingEnvelopes({
+					mailboxId: this.mailbox.databaseId,
+					query: this.searchQuery,
+					junk,
+				}),
+				t('mail', 'Could not update the spam state of the messages'),
 			)
 		},
 

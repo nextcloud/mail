@@ -74,7 +74,10 @@ import {
 	markMailboxRead,
 	moveMailboxMessages,
 	patchMailbox,
+	removeMailboxTag,
 	setMailboxFlags,
+	setMailboxJunk,
+	setMailboxTag,
 } from '../../service/MailboxService.js'
 import {
 	createEnvelopeTag,
@@ -465,6 +468,48 @@ export default function mainStoreActions() {
 			return handleHttpAuthErrors(async () => {
 				await deleteMailboxMessages(mailboxId, query)
 				await this.removeMatchingEnvelopes({ mailboxId, query })
+			})
+		},
+		async tagMatchingEnvelopes({
+			mailboxId,
+			query,
+			imapLabel,
+			value,
+		}) {
+			return handleHttpAuthErrors(async () => {
+				const tag = value
+					? await setMailboxTag(mailboxId, query, imapLabel)
+					: await removeMailboxTag(mailboxId, query, imapLabel)
+				if (!this.getTag(tag.id)) {
+					this.addTagMutation({ tag })
+				}
+
+				for (const envelope of this.getEnvelopes(mailboxId, query)) {
+					if (value) {
+						this.addEnvelopeTagMutation({ envelope, tagId: tag.id })
+					} else {
+						this.removeEnvelopeTagMutation({ envelope, tagId: tag.id })
+					}
+				}
+			})
+		},
+		async junkMatchingEnvelopes({
+			mailboxId,
+			query,
+			junk,
+		}) {
+			return handleHttpAuthErrors(async () => {
+				const moved = await setMailboxJunk(mailboxId, query, junk)
+				if (moved) {
+					await this.removeMatchingEnvelopes({ mailboxId, query })
+					return
+				}
+
+				for (const envelope of this.getEnvelopes(mailboxId, query)) {
+					this.flagEnvelopeMutation({ envelope, flag: '$junk', value: junk })
+					this.flagEnvelopeMutation({ envelope, flag: '$notjunk', value: !junk })
+				}
+				await this.syncEnvelopes({ mailboxId, query })
 			})
 		},
 		async removeMatchingEnvelopes({
