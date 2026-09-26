@@ -43,6 +43,14 @@ export function markMailboxRead(id) {
 	return axios.post(url).then((resp) => resp.data)
 }
 
+export async function setMailboxFlags(id, filter, flags) {
+	const url = generateUrl('/apps/mail/api/mailboxes/{id}/flags', {
+		id,
+	})
+
+	await axios.put(url, { filter, flags })
+}
+
 export async function deleteMailbox(id) {
 	const url = generateUrl('/apps/mail/api/mailboxes/{id}', {
 		id,

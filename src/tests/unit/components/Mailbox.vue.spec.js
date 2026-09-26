@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import { showError } from '@nextcloud/dialogs'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import mitt from 'mitt'
 import { createPinia, setActivePinia } from 'pinia'
@@ -11,9 +12,16 @@ import Mailbox from '../../../components/Mailbox.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 import useMainStore from '../../../store/mainStore.js'
 
+vi.mock('@nextcloud/dialogs', async (importOriginal) => ({
+	...await importOriginal(),
+	showError: vi.fn(),
+}))
+
 const localVue = createLocalVue()
 
 localVue.mixin(Nextcloud)
+
+const flushPromises = () => new Promise((resolve) => setTimeout(resolve))
 
 const envelope = (databaseId, dateInt) => ({ databaseId, dateInt, flags: {} })
 
@@ -238,5 +246,138 @@ describe('Mailbox selection with date groups', () => {
 		await wrapper.setProps({ groupEnvelopes: [['today', [envelopes[0]]], ['yesterday', [envelopes[3]]]] })
 
 		expect(wrapper.vm.selection).toEqual([1, 4])
+	})
+})
+
+describe('Mailbox all matching selection', () => {
+	let wrapper
+	let store
+	let envelopes
+
+	const mountMailbox = ({ account = {}, isPriorityInbox = false } = {}) => {
+		wrapper = mount(Mailbox, {
+			propsData: {
+				account,
+				mailbox: { databaseId: 1 },
+				bus: mitt(),
+				isPriorityInbox,
+				searchQuery: 'is:unread',
+			},
+			data: () => ({
+				testEnvelopes: envelopes,
+			}),
+			computed: {
+				envelopes() {
+					return this.testEnvelopes
+				},
+			},
+			mocks: {
+				$route: { params: {} },
+			},
+			stubs: {
+				Envelope: true,
+			},
+			localVue,
+		})
+		return wrapper.vm
+	}
+
+	const banner = () => wrapper.find('.select-all-matching')
+
+	beforeEach(() => {
+		setActivePinia(createPinia())
+		store = useMainStore()
+		store.setHasFetchedInitialEnvelopesMutation(true)
+		store.flagMatchingEnvelopes = vi.fn().mockResolvedValue()
+		envelopes = [envelope(1, 2), envelope(2, 1)]
+		for (const env of envelopes) {
+			store.envelopes[env.databaseId] = env
+		}
+		showError.mockClear()
+	})
+
+	afterEach(() => {
+		wrapper.destroy()
+	})
+
+	it('offers to select all matching messages once the loaded ones are selected', async () => {
+		const vm = mountMailbox()
+
+		vm.selectAll()
+		await vm.$nextTick()
+
+		expect(banner().text()).toContain('Select all matching messages')
+	})
+
+	it('does not offer it when every message is loaded', async () => {
+		const vm = mountMailbox()
+		vm.endReached = true
+
+		vm.selectAll()
+		await vm.$nextTick()
+
+		expect(banner().exists()).toBe(false)
+	})
+
+	it('does not offer it in unified mailboxes and the priority inbox', () => {
+		const unified = mountMailbox({ account: { isUnified: true } })
+		unified.selectAll()
+		expect(unified.canSelectAllMatching).toBe(false)
+		wrapper.destroy()
+
+		const priority = mountMailbox({ isPriorityInbox: true })
+		priority.selectAll()
+
+		expect(priority.canSelectAllMatching).toBe(false)
+	})
+
+	it('flags all matching messages on the server with one request', async () => {
+		const vm = mountMailbox()
+		vm.selectAll()
+		await vm.$nextTick()
+		await banner().findComponent({ name: 'NcButton' }).trigger('click')
+		await vm.$nextTick()
+
+		wrapper.findAll('.multiselect-header button').at(0).trigger('click')
+		await flushPromises()
+
+		expect(store.flagMatchingEnvelopes).toHaveBeenCalledWith({ mailboxId: 1, query: 'is:unread', flags: { seen: true } })
+		expect(vm.allMatchingSelected).toBe(false)
+		expect(vm.selection).toEqual([])
+	})
+
+	it('keeps the selection and reports an error when flagging fails', async () => {
+		store.flagMatchingEnvelopes.mockRejectedValue(new Error('500'))
+		const vm = mountMailbox()
+		vm.selectAll()
+		vm.allMatchingSelected = true
+
+		await vm.flagAllMatching({ flagged: true })
+
+		expect(showError).toHaveBeenCalled()
+		expect(vm.allMatchingSelected).toBe(true)
+		expect(vm.flaggingAllMatching).toBe(false)
+	})
+
+	it('selects messages loaded later while all matching messages are selected', async () => {
+		const vm = mountMailbox()
+		vm.selectAll()
+		vm.allMatchingSelected = true
+
+		vm.testEnvelopes = [...envelopes, envelope(3, 0)]
+		await vm.$nextTick()
+
+		expect(vm.selection).toEqual([1, 2, 3])
+	})
+
+	it('leaves the all matching mode when the selection is changed by hand', () => {
+		const vm = mountMailbox()
+		vm.selectAll()
+		vm.allMatchingSelected = true
+
+		vm.onSelect(1, false)
+
+		expect(vm.allMatchingSelected).toBe(false)
+		expect(vm.selection).toEqual([2])
 	})
 })

@@ -72,6 +72,7 @@ import {
 	fetchAll as fetchAllMailboxes,
 	markMailboxRead,
 	patchMailbox,
+	setMailboxFlags,
 } from '../../service/MailboxService.js'
 import {
 	createEnvelopeTag,
@@ -417,6 +418,30 @@ export default function mainStoreActions() {
 				await this.syncEnvelopes({
 					accountId,
 					mailboxId,
+				})
+			})
+		},
+		async flagMatchingEnvelopes({
+			mailboxId,
+			query,
+			flags,
+		}) {
+			return handleHttpAuthErrors(async () => {
+				await setMailboxFlags(mailboxId, query, flags)
+
+				for (const envelope of this.getEnvelopes(mailboxId, query)) {
+					for (const [flag, value] of Object.entries(flags)) {
+						this.flagEnvelopeMutation({
+							envelope,
+							flag,
+							value,
+						})
+					}
+				}
+
+				await this.syncEnvelopes({
+					mailboxId,
+					query,
 				})
 			})
 		},

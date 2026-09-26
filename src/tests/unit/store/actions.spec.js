@@ -857,4 +857,33 @@ describe('Vuex store actions', () => {
 			}))
 		})
 	})
+
+	it('flags all matching envelopes on the server and refreshes the list', async () => {
+		const envelopes = [
+			{ databaseId: 1, mailboxId: 13, flags: { seen: false } },
+			{ databaseId: 2, mailboxId: 13, flags: { seen: true } },
+		]
+		vi.spyOn(store, 'getEnvelopes').mockReturnValue(envelopes)
+		vi.spyOn(store, 'syncEnvelopes').mockResolvedValue()
+		MailboxService.setMailboxFlags.mockResolvedValue()
+
+		await store.flagMatchingEnvelopes({ mailboxId: 13, query: 'is:unread', flags: { seen: true } })
+
+		expect(MailboxService.setMailboxFlags).toHaveBeenCalledWith(13, 'is:unread', { seen: true })
+		expect(store.getEnvelopes).toHaveBeenCalledWith(13, 'is:unread')
+		expect(envelopes.map((envelope) => envelope.flags.seen)).toEqual([true, true])
+		expect(store.syncEnvelopes).toHaveBeenCalledWith({ mailboxId: 13, query: 'is:unread' })
+	})
+
+	it('keeps the envelopes unchanged when flagging all matching envelopes fails', async () => {
+		const envelopes = [{ databaseId: 1, mailboxId: 13, flags: { seen: false } }]
+		vi.spyOn(store, 'getEnvelopes').mockReturnValue(envelopes)
+		vi.spyOn(store, 'syncEnvelopes').mockResolvedValue()
+		MailboxService.setMailboxFlags.mockRejectedValue(new Error('500'))
+
+		await expect(store.flagMatchingEnvelopes({ mailboxId: 13, query: undefined, flags: { seen: true } })).rejects.toThrow('500')
+
+		expect(envelopes[0].flags.seen).toBe(false)
+		expect(store.syncEnvelopes).not.toHaveBeenCalled()
+	})
 })

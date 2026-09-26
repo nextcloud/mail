@@ -28,6 +28,21 @@
 					{{ n('mail', 'Select %n message', 'Select all %n messages', flatEnvelopeList.length) }}
 				</NcCheckboxRadioSwitch>
 			</div>
+			<div v-else-if="allMatchingSelected" class="select-all-matching">
+				<span>{{ searchQuery ? t('mail', 'All messages matching this search are selected.') : t('mail', 'All messages in this folder are selected.') }}</span>
+				<NcButton
+					variant="tertiary"
+					:disabled="flaggingAllMatching"
+					@click="unselectAll">
+					{{ t('mail', 'Clear selection') }}
+				</NcButton>
+			</div>
+			<div v-else-if="canSelectAllMatching" class="select-all-matching">
+				<span>{{ n('mail', 'All %n loaded message is selected.', 'All %n loaded messages are selected.', selection.length) }}</span>
+				<NcButton variant="tertiary" @click="allMatchingSelected = true">
+					{{ searchQuery ? t('mail', 'Select all matching messages') : t('mail', 'Select all messages in this folder') }}
+				</NcButton>
+			</div>
 			<template v-if="hasGroupedEnvelopes && !isPriorityInbox">
 				<div v-for="([label, group], index) in groupEnvelopes" :key="label">
 					<SectionTitle class="section-title" :name="getLabelForGroup(label)" />
@@ -43,10 +58,13 @@
 						:selection="selection"
 						:flat-index="groupFlatIndices[index]"
 						:hide-multiselect-header="index > 0"
+						:all-matching-selected="allMatchingSelected"
+						:flagging-all-matching="flaggingAllMatching"
 						@delete="onDelete"
 						@select="onSelect"
 						@select-range="onSelectRange"
-						@update:selection="setSelection" />
+						@update:selection="onUpdateSelection"
+						@flag-all-matching="flagAllMatching" />
 				</div>
 			</template>
 			<EnvelopeList
@@ -60,18 +78,21 @@
 				:load-more-button="showLoadMore"
 				:skip-transition="skipListTransition"
 				:selection="selection"
+				:all-matching-selected="allMatchingSelected"
+				:flagging-all-matching="flaggingAllMatching"
 				@delete="onDelete"
 				@load-more="loadMore"
 				@select="onSelect"
 				@select-range="onSelectRange"
-				@update:selection="setSelection" />
+				@update:selection="onUpdateSelection"
+				@flag-all-matching="flagAllMatching" />
 		</div>
 	</div>
 </template>
 
 <script>
 import { showError, showWarning } from '@nextcloud/dialogs'
-import { NcCheckboxRadioSwitch } from '@nextcloud/vue'
+import { NcButton, NcCheckboxRadioSwitch } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import { findIndex, propEq } from 'ramda'
 import EmptyMailbox from './EmptyMailbox.vue'
@@ -101,6 +122,7 @@ export default {
 		Error,
 		Loading,
 		LoadingSkeleton,
+		NcButton,
 		NcCheckboxRadioSwitch,
 		SectionTitle,
 	},
@@ -169,6 +191,8 @@ export default {
 			skipListTransition: false,
 			selection: [],
 			selectionAnchor: undefined,
+			allMatchingSelected: false,
+			flaggingAllMatching: false,
 		}
 	},
 
@@ -223,11 +247,22 @@ export default {
 		selectMode() {
 			return this.selection.length > 0
 		},
+
+		canSelectAllMatching() {
+			return !this.isPriorityInbox
+				&& !this.account.isUnified
+				&& !this.endReached
+				&& this.selection.length === this.flatEnvelopeList.length
+		},
 	},
 
 	watch: {
 		flatEnvelopeList() {
-			this.setSelection(this.selection)
+			if (this.allMatchingSelected) {
+				this.selectAll()
+			} else {
+				this.setSelection(this.selection)
+			}
 		},
 
 		mailbox() {
@@ -680,7 +715,13 @@ export default {
 			}
 		},
 
+		onUpdateSelection(ids) {
+			this.allMatchingSelected = false
+			this.setSelection(ids)
+		},
+
 		onSelect(id, selected) {
+			this.allMatchingSelected = false
 			this.selectionAnchor = id
 			this.setSelection(selected
 				? [...this.selection, id]
@@ -694,6 +735,7 @@ export default {
 				return
 			}
 
+			this.allMatchingSelected = false
 			const range = this.flatEnvelopeList
 				.slice(Math.min(anchor, flatIndex), Math.max(anchor, flatIndex) + 1)
 				.map((envelope) => envelope.databaseId)
@@ -711,8 +753,26 @@ export default {
 		},
 
 		unselectAll() {
+			this.allMatchingSelected = false
 			this.selectionAnchor = undefined
 			this.setSelection([])
+		},
+
+		async flagAllMatching(flags) {
+			this.flaggingAllMatching = true
+			try {
+				await this.mainStore.flagMatchingEnvelopes({
+					mailboxId: this.mailbox.databaseId,
+					query: this.searchQuery,
+					flags,
+				})
+				this.unselectAll()
+			} catch (error) {
+				logger.error('could not flag all matching messages', { error })
+				showError(t('mail', 'Could not update the messages'))
+			} finally {
+				this.flaggingAllMatching = false
+			}
 		},
 
 		getLabelForGroup(group) {
@@ -759,5 +819,15 @@ export default {
 	margin-top: calc(2 * var(--default-grid-baseline));
 	padding: var(--default-grid-baseline) calc(2 * var(--default-grid-baseline));
 	border-bottom: 1px solid var(--color-border);
+}
+
+.select-all-matching {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--default-grid-baseline);
+	padding: var(--default-grid-baseline) calc(2 * var(--default-grid-baseline));
+	border-bottom: 1px solid var(--color-border);
+	color: var(--color-text-maxcontrast);
 }
 </style>

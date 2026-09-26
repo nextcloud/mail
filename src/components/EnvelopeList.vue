@@ -6,7 +6,44 @@
 	<div>
 		<transition name="multiselect-header">
 			<div v-if="selectMode && !hideMultiselectHeader" key="multiselect-header" class="multiselect-header">
-				<div class="action-buttons">
+				<div v-if="allMatchingSelected" class="action-buttons">
+					<NcButton
+						variant="tertiary"
+						:title="t('mail', 'Mark all as read')"
+						:disabled="flaggingAllMatching"
+						@click.prevent="$emit('flag-all-matching', { seen: true })">
+						<EmailRead :size="20" />
+					</NcButton>
+					<NcButton
+						variant="tertiary"
+						:title="t('mail', 'Mark all as unread')"
+						:disabled="flaggingAllMatching"
+						@click.prevent="$emit('flag-all-matching', { seen: false })">
+						<EmailUnread :size="20" />
+					</NcButton>
+					<NcButton
+						variant="tertiary"
+						:title="t('mail', 'Favorite all')"
+						:disabled="flaggingAllMatching"
+						@click.prevent="$emit('flag-all-matching', { flagged: true })">
+						<IconFavorite :size="20" />
+					</NcButton>
+					<NcButton
+						variant="tertiary"
+						:title="t('mail', 'Unfavorite all')"
+						:disabled="flaggingAllMatching"
+						@click.prevent="$emit('flag-all-matching', { flagged: false })">
+						<IconUnFavorite :size="20" />
+					</NcButton>
+					<NcButton
+						variant="tertiary"
+						:title="t('mail', 'Unselect all')"
+						:disabled="flaggingAllMatching"
+						@click.prevent="unselectAll">
+						<IconSelect :size="20" />
+					</NcButton>
+				</div>
+				<div v-else class="action-buttons">
 					<NcButton
 						v-if="isAtLeastOneSelectedUnread"
 						variant="tertiary"
@@ -77,7 +114,7 @@
 					</NcButton>
 				</div>
 
-				<NcActions class="app-content-list-item-menu" menu-align="right">
+				<NcActions v-if="!allMatchingSelected" class="app-content-list-item-menu" menu-align="right">
 					<NcActionButton
 						v-if="isAtLeastOneSelectedNotJunk"
 						@click.prevent="markSelectionJunk">
@@ -284,6 +321,16 @@ export default {
 		},
 
 		hideMultiselectHeader: {
+			type: Boolean,
+			default: false,
+		},
+
+		allMatchingSelected: {
+			type: Boolean,
+			default: false,
+		},
+
+		flaggingAllMatching: {
 			type: Boolean,
 			default: false,
 		},
