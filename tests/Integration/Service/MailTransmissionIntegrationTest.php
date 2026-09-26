@@ -31,7 +31,6 @@ use OCA\Mail\Send\Chain;
 use OCA\Mail\Send\CopySentMessageHandler;
 use OCA\Mail\Send\FlagRepliedMessageHandler;
 use OCA\Mail\Send\SendHandler;
-use OCA\Mail\Send\SentMailboxHandler;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\Attachment\UploadedFile;
 use OCA\Mail\Service\MailTransmission;
@@ -120,7 +119,6 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$mbSync->sync($this->account, new NullLogger(), true);
 
 		$this->chain = new Chain(
-			Server::get(SentMailboxHandler::class),
 			Server::get(AntiAbuseHandler::class),
 			Server::get(SendHandler::class),
 			Server::get(CopySentMessageHandler::class),

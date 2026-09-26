@@ -21,13 +21,11 @@ use OCA\Mail\Send\Chain;
 use OCA\Mail\Send\CopySentMessageHandler;
 use OCA\Mail\Send\FlagRepliedMessageHandler;
 use OCA\Mail\Send\SendHandler;
-use OCA\Mail\Send\SentMailboxHandler;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class ChainTest extends TestCase {
 	private Chain $chain;
-	private SentMailboxHandler|MockObject $sentMailboxHandler;
 	private MockObject|AntiAbuseHandler $antiAbuseHandler;
 	private SendHandler|MockObject $sendHandler;
 	private MockObject|CopySentMessageHandler $copySentMessageHandler;
@@ -38,7 +36,6 @@ class ChainTest extends TestCase {
 	private MockObject&IMAPClientFactory $clientFactory;
 
 	protected function setUp(): void {
-		$this->sentMailboxHandler = $this->createMock(SentMailboxHandler::class);
 		$this->antiAbuseHandler = $this->createMock(AntiAbuseHandler::class);
 		$this->sendHandler = $this->createMock(SendHandler::class);
 		$this->copySentMessageHandler = $this->createMock(CopySentMessageHandler::class);
@@ -46,7 +43,7 @@ class ChainTest extends TestCase {
 		$this->attachmentService = $this->createMock(AttachmentService::class);
 		$this->localMessageMapper = $this->createMock(LocalMessageMapper::class);
 		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
-		$this->chain = new Chain($this->sentMailboxHandler,
+		$this->chain = new Chain(
 			$this->antiAbuseHandler,
 			$this->sendHandler,
 			$this->copySentMessageHandler,
@@ -72,12 +69,12 @@ class ChainTest extends TestCase {
 		$client->expects(self::once())
 			->method('logout');
 
-		$this->sentMailboxHandler->expects(self::once())
+		$this->antiAbuseHandler->expects(self::once())
 			->method('setNext');
 		$this->clientFactory->expects(self::once())
 			->method('getClient')
 			->willReturn($client);
-		$this->sentMailboxHandler->expects(self::once())
+		$this->antiAbuseHandler->expects(self::once())
 			->method('process')
 			->with($account, $localMessage)
 			->willReturn($expected);
@@ -108,12 +105,12 @@ class ChainTest extends TestCase {
 		$client->expects(self::once())
 			->method('logout');
 
-		$this->sentMailboxHandler->expects(self::once())
+		$this->antiAbuseHandler->expects(self::once())
 			->method('setNext');
 		$this->clientFactory->expects(self::once())
 			->method('getClient')
 			->willReturn($client);
-		$this->sentMailboxHandler->expects(self::once())
+		$this->antiAbuseHandler->expects(self::once())
 			->method('process')
 			->with($account, $localMessage)
 			->willReturn($expected);
