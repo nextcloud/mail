@@ -673,4 +673,199 @@ describe('Thread', () => {
 			expect(notice()).toBeNull()
 		})
 	})
+
+	describe('folding the subject away', () => {
+		const BAND = 48
+		const LINES = 3
+		let watched
+
+		beforeEach(() => {
+			watched = []
+			global.ResizeObserver = class {
+				observe(element) {
+					watched.push(element)
+				}
+
+				unobserve() {}
+				disconnect() {}
+			}
+		})
+
+		// jsdom lays nothing out, so the subject reports the height it is given
+		const setSubjectHeight = (view, height) => Object.defineProperty(
+			view.vm.$refs.threadSubject,
+			'scrollHeight',
+			{ value: height, configurable: true },
+		)
+
+		const mountThread = () => {
+			const view = shallowMount(Thread, {
+				mocks: {
+					$route: {
+						params: {
+							threadId: 200,
+						},
+					},
+				},
+				store,
+				localVue,
+			})
+			setSubjectHeight(view, BAND * LINES)
+			return view
+		}
+
+		afterEach(() => {
+			document.getElementById('mail-browser-print-notice')?.remove()
+		})
+
+		/**
+		 * Put the thread at a scroll offset. The marker scrolls with the thread
+		 * while the header stays pinned, so the gap between them is the offset.
+		 *
+		 * @param {object} view the mounted thread
+		 * @param {number} scrolled pixels scrolled down from the top
+		 */
+		const scrollTo = (view, scrolled) => {
+			view.vm.$refs.headerSentinel.getBoundingClientRect = () => ({ top: -scrolled, height: BAND })
+			view.vm.$refs.threadHeader.getBoundingClientRect = () => ({ top: 0 })
+			view.vm.updateHeaderCollapse()
+		}
+
+		const header = (view) => view.find('#mail-thread-header')
+
+		it('leaves the subject whole at the top of the thread', () => {
+			const view = mountThread()
+
+			scrollTo(view, 0)
+
+			expect(view.vm.headerCollapse).toBe(0)
+		})
+
+		it('folds the subject as far as the thread has scrolled', () => {
+			const view = mountThread()
+
+			scrollTo(view, BAND / 4)
+
+			expect(view.vm.headerCollapse).toBe(0.25)
+		})
+
+		it('stops folding once the subject is down to one line', () => {
+			const view = mountThread()
+
+			scrollTo(view, BAND * 5)
+
+			expect(view.vm.headerCollapse).toBe(1)
+		})
+
+		it('unfolds again on the way back up', () => {
+			const view = mountThread()
+			scrollTo(view, BAND)
+
+			scrollTo(view, BAND / 2)
+
+			expect(view.vm.headerCollapse).toBe(0.5)
+		})
+
+		it('carries the fold into the header, for the subject to follow', async () => {
+			const view = mountThread()
+
+			scrollTo(view, BAND / 2)
+			await view.vm.$nextTick()
+
+			expect(header(view).element.style.getPropertyValue('--subject-collapse')).toBe('0.5')
+		})
+
+		it('adds the ellipsis only once the subject is one line', async () => {
+			const view = mountThread()
+
+			scrollTo(view, BAND / 2)
+			await view.vm.$nextTick()
+			expect(header(view).classes()).not.toContain('mail-thread-header--stuck')
+
+			scrollTo(view, BAND)
+			await view.vm.$nextTick()
+			expect(header(view).classes()).toContain('mail-thread-header--stuck')
+		})
+
+		it('measures the subject while every line of it is shown', async () => {
+			const view = mountThread()
+
+			view.vm.measureSubject()
+			await view.vm.$nextTick()
+
+			expect(header(view).element.style.getPropertyValue('--subject-height')).toBe(`${BAND * LINES}px`)
+		})
+
+		it('tells the marker how tall the subject is, since it is what sets the pace', async () => {
+			const view = mountThread()
+
+			view.vm.measureSubject()
+			await view.vm.$nextTick()
+
+			const marker = view.find('.thread-header-sentinel')
+			expect(marker.element.style.getPropertyValue('--subject-height')).toBe(`${BAND * LINES}px`)
+		})
+
+		it('does not re-measure a subject that is already folding', () => {
+			const view = mountThread()
+			view.vm.measureSubject()
+			scrollTo(view, BAND / 2)
+
+			setSubjectHeight(view, BAND)
+			view.vm.measureSubject()
+
+			expect(view.vm.subjectHeight).toBe(`${BAND * LINES}px`)
+		})
+
+		it('watches a subject that only shows up once the thread has been fetched', async () => {
+			// the thread is still on its way, so the view is a loading screen
+			const view = shallowMount(Thread, {
+				mocks: {
+					$route: {
+						params: {
+							threadId: 100,
+						},
+					},
+				},
+				store,
+				localVue,
+			})
+			expect(view.vm.$refs.threadSubject).toBeUndefined()
+			expect(watched).toHaveLength(0)
+
+			view.vm.loading = false
+			await view.vm.$nextTick()
+
+			expect(watched).toContain(view.vm.$refs.threadSubject)
+		})
+
+		it('follows the scroll from the start, before there is a subject to fold', () => {
+			const listening = vi.spyOn(document, 'addEventListener')
+
+			const view = shallowMount(Thread, {
+				mocks: {
+					$route: {
+						params: {
+							threadId: 100,
+						},
+					},
+				},
+				store,
+				localVue,
+			})
+
+			expect(listening).toHaveBeenCalledWith('scroll', view.vm.onThreadScroll, { capture: true, passive: true })
+			listening.mockRestore()
+		})
+
+		it('stops following the scroll once the thread is gone', () => {
+			const view = mountThread()
+			const removed = vi.spyOn(document, 'removeEventListener')
+
+			view.destroy()
+
+			expect(removed).toHaveBeenCalledWith('scroll', view.vm.onThreadScroll, true)
+			removed.mockRestore()
+		})
+	})
 })
