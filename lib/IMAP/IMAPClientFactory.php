@@ -16,6 +16,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Cache\HordeCacheFactory;
 use OCA\Mail\Events\BeforeImapClientCreated;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Support\DebugLogPathFactory;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\ICacheFactory;
@@ -51,6 +52,7 @@ class IMAPClientFactory {
 		IEventDispatcher $eventDispatcher,
 		ITimeFactory $timeFactory,
 		private HordeCacheFactory $hordeCacheFactory,
+		private DebugLogPathFactory $debugLogPathFactory,
 	) {
 		$this->crypto = $crypto;
 		$this->config = $config;
@@ -132,9 +134,9 @@ class IMAPClientFactory {
 				'backend' => $this->hordeCacheFactory->newCache($account),
 			];
 		}
-		if ($account->getMailAccount()->getDebug() || $this->config->getSystemValueBool('app.mail.debug')) {
-			$fn = "mail-{$account->getUserId()}-{$account->getId()}-imap.log";
-			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/' . $fn;
+		$debugLogPath = $this->debugLogPathFactory->getPath($account, 'imap');
+		if ($debugLogPath !== null) {
+			$params['debug'] = $debugLogPath;
 		}
 
 		$client = new HordeImapClient($params, $this);
