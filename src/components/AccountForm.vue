@@ -33,6 +33,7 @@
 				{{ t('mail', 'Please enter an email of the format name@example.com') }}
 			</p>
 			<NcPasswordField
+				v-if="!isOidcAccount"
 				id="auto-password"
 				v-model="autoConfig.password"
 				:disabled="loading"
@@ -240,6 +241,9 @@
 		<div v-if="isMicrosoftAccount && !microsoftOauthUrl" class="account-form__microsoft-sso">
 			{{ t('mail', 'Microsoft requires OAuth authentication. Ask your Nextcloud admin to configure Microsoft OAuth in the admin settings.') }}
 		</div>
+		<div v-if="isOidcAccount" class="account-form__oidc-sso">
+			{{ t('mail', 'This email domain uses single sign-on. You will be redirected to your identity provider to grant access to your mail account.') }}
+		</div>
 		<div class="account-form__submit-buttons">
 			<NcButton
 				v-if="mode === 'auto'"
@@ -291,6 +295,7 @@ import {
 } from '../service/AutoConfigService.js'
 import { generateOauthState } from '../service/OauthStateService.js'
 import useMainStore from '../store/mainStore.js'
+import { findProviderForEmail, loadOidcProviders, openOidcConsent } from '../util/oidc.js'
 
 export default {
 	name: 'AccountForm',
@@ -359,6 +364,7 @@ export default {
 
 			feedback: null,
 			password: '',
+			oidcProviders: loadOidcProviders(),
 		}
 	},
 
@@ -382,8 +388,15 @@ export default {
 				return this.loading
 			}
 
-			return !this.emailAddress || !this.isValidEmail(this.emailAddress)
-				|| (!this.googleOauthUrl && !this.autoConfig.password)
+			if (!this.emailAddress || !this.isValidEmail(this.emailAddress)) {
+				return true
+			}
+
+			if (this.isOidcAccount) {
+				return false
+			}
+
+			return (!this.googleOauthUrl && !this.autoConfig.password)
 				|| (!this.microsoftOauthUrl && !this.autoConfig.password)
 		},
 
@@ -413,6 +426,19 @@ export default {
 				|| this.manualConfig.smtpHost === 'outlook.office365.com'
 		},
 
+		/**
+		 * The admin-configured OIDC provider matching the entered email's domain, if any.
+		 *
+		 * @return {?object}
+		 */
+		oidcProvider() {
+			return findProviderForEmail(this.emailAddress, this.oidcProviders)
+		},
+
+		isOidcAccount() {
+			return !this.isGoogleAccount && !this.isMicrosoftAccount && !!this.oidcProvider
+		},
+
 		hasPasswordAlternatives() {
 			return !!this.googleOauthUrl
 				|| !!this.microsoftOauthUrl
@@ -421,11 +447,18 @@ export default {
 		useOauth() {
 			return (this.isGoogleAccount && this.googleOauthUrl)
 				|| (this.isMicrosoftAccount && this.microsoftOauthUrl)
+				|| this.isOidcAccount
 		},
 
 		submitButtonText() {
 			if (this.loading) {
 				return this.loadingMessage ?? t('mail', 'Connecting')
+			}
+			if (this.isOidcAccount) {
+				const provider = this.oidcProvider.name || this.oidcProvider.emailDomain
+				return this.account
+					? t('mail', 'Reconnect to {provider}', { provider })
+					: t('mail', 'Connect to {provider}', { provider })
 			}
 			if (this.mode === 'manual' && this.useOauth) {
 				if (this.isGoogleAccount) {
@@ -439,6 +472,15 @@ export default {
 	},
 
 	watch: {
+		oidcProvider: {
+			immediate: true,
+			handler(provider) {
+				if (provider && this.isSetup) {
+					this.applyOidcProvider(provider)
+				}
+			},
+		},
+
 		mode: {
 			immediate: true,
 			handler(mode) {
@@ -466,6 +508,42 @@ export default {
 	},
 
 	methods: {
+		applyOidcProvider(provider) {
+			this.manualConfig.imapHost = provider.imapHost
+			this.manualConfig.imapPort = provider.imapPort
+			this.manualConfig.imapSslMode = provider.imapSslMode
+			this.manualConfig.imapUser = this.emailAddress
+			this.manualConfig.smtpHost = provider.smtpHost
+			this.manualConfig.smtpPort = provider.smtpPort
+			this.manualConfig.smtpSslMode = provider.smtpSslMode
+			this.manualConfig.smtpUser = this.emailAddress
+		},
+
+		async requestOauthConsent(account, isUpdate) {
+			this.loadingMessage = t('mail', 'Awaiting user consent')
+			if (this.isGoogleAccount) {
+				this.feedback = isUpdate
+					? t('mail', 'Account updated. Please follow the pop-up instructions to reconnect your Google account')
+					: t('mail', 'Account created. Please follow the pop-up instructions to link your Google account')
+				await getUserConsent(this.googleOauthUrl
+					.replace('_state_', await generateOauthState(account.id))
+					.replace('_email_', encodeURIComponent(account.emailAddress)))
+			} else if (this.isMicrosoftAccount) {
+				this.feedback = isUpdate
+					? t('mail', 'Account updated. Please follow the pop-up instructions to reconnect your Microsoft account')
+					: t('mail', 'Account created. Please follow the pop-up instructions to link your Microsoft account')
+				await getUserConsent(this.microsoftOauthUrl
+					.replace('_state_', await generateOauthState(account.id))
+					.replace('_email_', encodeURIComponent(account.emailAddress)))
+			} else {
+				const provider = this.oidcProvider.name || this.oidcProvider.emailDomain
+				this.feedback = isUpdate
+					? t('mail', 'Account updated. Please follow the pop-up instructions to reconnect your {provider} account', { provider })
+					: t('mail', 'Account created. Please follow the pop-up instructions to link your {provider} account', { provider })
+				await openOidcConsent(this.oidcProvider, account.id)
+			}
+		},
+
 		onImapSslModeChange(value) {
 			this.clearFeedback()
 			this.manualConfig.imapSslMode = value
@@ -612,7 +690,9 @@ export default {
 			this.loading = true
 			try {
 				if (this.mode === 'auto') {
-					if (!await this.detectConfig()) {
+					if (this.isOidcAccount) {
+						this.applyOidcProvider(this.oidcProvider)
+					} else if (!await this.detectConfig()) {
 						logger.warn('Auto mode failed')
 						return
 					}
@@ -644,19 +724,8 @@ export default {
 				if (!this.account) {
 					const account = await this.mainStore.startAccountSetup(data)
 					if (this.useOauth) {
-						this.loadingMessage = t('mail', 'Awaiting user consent')
 						try {
-							if (this.isGoogleAccount) {
-								this.feedback = t('mail', 'Account created. Please follow the pop-up instructions to link your Google account')
-								await getUserConsent(this.googleOauthUrl
-									.replace('_state_', await generateOauthState(account.id))
-									.replace('_email_', encodeURIComponent(account.emailAddress)))
-							} else {
-								this.feedback = t('mail', 'Account created. Please follow the pop-up instructions to link your Microsoft account')
-								await getUserConsent(this.microsoftOauthUrl
-									.replace('_state_', await generateOauthState(account.id))
-									.replace('_email_', encodeURIComponent(account.emailAddress)))
-							}
+							await this.requestOauthConsent(account, false)
 						} catch (e) {
 							// Clean up the temporary account before we continue
 							this.mainStore.deleteAccount(account)
@@ -675,19 +744,8 @@ export default {
 						accountId: this.account.id,
 					})
 					if (this.useOauth) {
-						this.loadingMessage = t('mail', 'Awaiting user consent')
 						try {
-							if (this.isGoogleAccount) {
-								this.feedback = t('mail', 'Account updated. Please follow the pop-up instructions to reconnect your Google account')
-								await getUserConsent(this.googleOauthUrl
-									.replace('_state_', await generateOauthState(account.id))
-									.replace('_email_', encodeURIComponent(account.emailAddress)))
-							} else {
-								this.feedback = t('mail', 'Account updated. Please follow the pop-up instructions to reconnect your Microsoft account')
-								await getUserConsent(this.microsoftOauthUrl
-									.replace('_state_', await generateOauthState(account.id))
-									.replace('_email_', encodeURIComponent(account.emailAddress)))
-							}
+							await this.requestOauthConsent(account, true)
 						} catch (e) {
 							// Undo changes
 							await this.mainStore.updateAccount({

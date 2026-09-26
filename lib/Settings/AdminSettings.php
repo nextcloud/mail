@@ -13,6 +13,7 @@ use OCA\Mail\AppInfo\Application;
 use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Integration\GoogleIntegration;
 use OCA\Mail\Integration\MicrosoftIntegration;
+use OCA\Mail\Integration\OidcIntegration;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AntiSpamService;
 use OCA\Mail\Service\Classification\ClassificationSettingsService;
@@ -32,6 +33,7 @@ class AdminSettings implements ISettings {
 		private AntiSpamService $antiSpamService,
 		private GoogleIntegration $googleIntegration,
 		private MicrosoftIntegration $microsoftIntegration,
+		private OidcIntegration $oidcIntegration,
 		private IAppConfig $appConfig,
 		private AiIntegrationsService $aiIntegrationsService,
 		private Defaults $themingDefaults,
@@ -90,6 +92,14 @@ class AdminSettings implements ISettings {
 		$this->initialStateService->provideInitialState(
 			'importance_classification_default',
 			$this->classificationSettingsService->isClassificationEnabledByDefault(),
+		);
+		$this->initialStateService->provideInitialState(
+			'oidc_providers',
+			$this->oidcIntegration->getProviders(),
+		);
+		$this->initialStateService->provideInitialState(
+			'oidc_redirect_url',
+			$this->oidcIntegration->getRedirectUrl(),
 		);
 		$this->initialStateService->provideInitialState(
 			'microsoft_oauth_tenant_id',
