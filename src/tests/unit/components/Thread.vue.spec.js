@@ -57,8 +57,8 @@ describe('Thread', () => {
 			return undefined
 		})
 
-		store.getEnvelopesByThreadRootId = vi.fn().mockImplementation((accountId, threadRootId) => {
-			if (threadRootId === '123-456-789') {
+		store.getEnvelopesByThreadRootId = vi.fn().mockImplementation((envelope) => {
+			if (envelope.threadRootId === '123-456-789') {
 				return [
 					{
 						accountId: 100,
@@ -89,7 +89,7 @@ describe('Thread', () => {
 					},
 				]
 			}
-			if (threadRootId === '456-789-123') {
+			if (envelope.threadRootId === '456-789-123') {
 				return [
 					{
 						accountId: 200,

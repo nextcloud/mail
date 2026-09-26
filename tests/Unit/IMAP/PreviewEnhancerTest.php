@@ -57,7 +57,8 @@ class PreviewEnhancerTest extends TestCase {
 			$this->dbMapper,
 			$this->logger,
 			$this->avatarService,
-			$this->attachmentService
+			$this->attachmentService,
+			$this->createMock(\OCA\Mail\Db\MailboxMapper::class),
 		);
 	}
 
