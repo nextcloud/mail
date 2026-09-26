@@ -193,6 +193,7 @@ import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError.js'
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
+import { sortEnvelopes } from '../util/sortEnvelopes.js'
 
 export default {
 	name: 'EnvelopeList',
@@ -301,12 +302,7 @@ export default {
 		},
 
 		sortedEnvelops() {
-			if (this.sortOrder === 'oldest') {
-				return [...this.envelopes].sort((a, b) => {
-					return a.dateInt < b.dateInt ? -1 : 1
-				})
-			}
-			return [...this.envelopes]
+			return sortEnvelopes(this.envelopes, this.sortOrder)
 		},
 
 		selectMode() {
