@@ -4,7 +4,7 @@
 -->
 
 <template>
-	<NcModal class="confirm-modal" @close="cancel">
+	<NcModal @close="cancel">
 		<div class="confirm-modal">
 			<h2>{{ title }}</h2>
 			<slot />
@@ -29,10 +29,12 @@
 <script>
 
 import { t } from '@nextcloud/l10n'
-import { NcButton, NcModal } from '@nextcloud/vue'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcModal from '@nextcloud/vue/components/NcModal'
 
 export default {
 	name: 'ConfirmationModal',
+	emits: ['confirm', 'cancel'],
 	components: {
 		NcButton,
 		NcModal,

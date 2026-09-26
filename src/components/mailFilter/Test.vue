@@ -14,7 +14,7 @@
 					:label-outside="true"
 					:options="fields"
 					:clearable="false"
-					@input="updateTest({ field: $event })">
+					@update:model-value="updateTest({ field: $event })">
 					<template #selected-option="{ label }">
 						{{ getLabelForField(label) }}
 					</template>
@@ -30,7 +30,7 @@
 					:label-outside="true"
 					:options="operators"
 					:clearable="false"
-					@input="updateTest({ operator: $event })">
+					@update:model-value="updateTest({ operator: $event })">
 					<template #selected-option="{ label }">
 						{{ getLabelForOperator(label) }}
 					</template>
@@ -67,12 +67,14 @@
 </template>
 
 <script>
-import { NcButton, NcSelect } from '@nextcloud/vue'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import { MailFilterConditionField, MailFilterConditionOperator } from '../../models/mailFilter.ts'
 
 export default {
 	name: 'Test',
+	emits: ['update-test', 'delete-test'],
 	components: {
 		NcButton,
 		NcSelect,

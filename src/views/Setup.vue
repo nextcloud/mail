@@ -21,7 +21,7 @@
 						<AccountForm
 							:display-name="displayName"
 							:email="email"
-							:error.sync="error"
+							v-model:error="error"
 							class="setup__form-content__form"
 							@account-created="onAccountCreated" />
 					</template>
@@ -39,8 +39,10 @@
 <script>
 import { loadState } from '@nextcloud/initial-state'
 import { generateFilePath } from '@nextcloud/router'
-import { NcAppContent, NcContent, NcEmptyContent } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcAppContent from '@nextcloud/vue/components/NcAppContent'
+import NcContent from '@nextcloud/vue/components/NcContent'
+import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 import AccountForm from '../components/AccountForm.vue'
 import Navigation from '../components/Navigation.vue'
 import FluidMail from '../../img/mail-fluid.svg'
@@ -123,9 +125,9 @@ export default {
 
 		/* overrides for custom icon size and full opacity */
 		:deep(.empty-content__icon) {
-			width: 128px !important;
-			height: 128px !important;
-			opacity: 1 !important;
+			width: 128px;
+			height: 128px;
+			opacity: 1;
 
 			.setup__form-content__svg-wrapper {
 				width: 128px;

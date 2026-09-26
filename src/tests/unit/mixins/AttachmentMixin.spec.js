@@ -4,6 +4,7 @@
  */
 
 import { shallowMount } from '@vue/test-utils'
+import { h } from 'vue'
 import AttachmentMixin from '../../../mixins/AttachmentMixin.js'
 
 const attachments = [
@@ -15,7 +16,7 @@ function mountMixin() {
 	return shallowMount({
 		mixins: [AttachmentMixin],
 		data: () => ({ attachments }),
-		render: (h) => h('div'),
+		render: () => h('div'),
 	})
 }
 

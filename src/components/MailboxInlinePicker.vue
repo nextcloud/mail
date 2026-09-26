@@ -4,14 +4,14 @@
 -->
 <template>
 	<NcSelect
-		:model-value="value"
+		:model-value="modelValue"
 		:options="mailboxes"
 		:reduce="(option) => option.id"
 		:clearable="false"
 		:disabled="disabled"
 		:aria-label-combobox="t('mail', 'Select a mailbox')"
 		label="label"
-		@update:model-value="$emit('input', $event)">
+		@update:model-value="$emit('update:modelValue', $event)">
 		<template #option="option">
 			<NcEllipsisedOption
 				class="mailbox-option"
@@ -22,13 +22,15 @@
 </template>
 
 <script>
-import { NcEllipsisedOption, NcSelect } from '@nextcloud/vue'
+import NcEllipsisedOption from '@nextcloud/vue/components/NcEllipsisedOption'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import { mapStores } from 'pinia'
 import useMainStore from '../store/mainStore.js'
 import { mailboxHasRights } from '../util/acl.js'
 
 export default {
 	name: 'MailboxInlinePicker',
+	emits: ['update:modelValue'],
 	components: {
 		NcEllipsisedOption,
 		NcSelect,
@@ -45,7 +47,7 @@ export default {
 			default: false,
 		},
 
-		value: {
+		modelValue: {
 			type: Number,
 			default: undefined,
 		},

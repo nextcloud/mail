@@ -10,7 +10,7 @@
 		:label-outside="true"
 		:options="flags"
 		:clearable="false"
-		@input="updateAction({ flag: $event })">
+		@update:model-value="updateAction({ flag: $event })">
 		<template #selected-option="{ label }">
 			{{ getLabelForFlag(label) }}
 		</template>
@@ -21,11 +21,12 @@
 </template>
 
 <script>
-import { NcSelect } from '@nextcloud/vue'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import { MailFilterSystemFlag } from '../../models/mailFilter.ts'
 
 export default {
 	name: 'ActionAddSystemFlag',
+	emits: ['update-action'],
 	components: {
 		NcSelect,
 	},

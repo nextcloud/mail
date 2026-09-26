@@ -71,7 +71,7 @@
 					v-for="(reply, index) in smartReplies"
 					:key="index"
 					class="reply-buttons__suggested__button"
-					type="secondary"
+					variant="secondary"
 					@click="onReply(reply)">
 					{{ reply }}
 				</NcAssistantButton>
@@ -91,8 +91,10 @@
 
 <script>
 import { generateUrl } from '@nextcloud/router'
-import { NcAssistantButton, NcButton, NcPopover } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcAssistantButton from '@nextcloud/vue/components/NcAssistantButton'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcPopover from '@nextcloud/vue/components/NcPopover'
 import IconInfo from 'vue-material-design-icons/InformationOutline.vue'
 import LockOffIcon from 'vue-material-design-icons/LockOffOutline.vue'
 import ReplyIcon from 'vue-material-design-icons/ReplyOutline.vue'
@@ -109,6 +111,7 @@ import { html, plain } from '../util/text.js'
 
 export default {
 	name: 'Message',
+	emits: ['load', 'print-shortcut', 'translate', 'reply'],
 	components: {
 		Itinerary,
 		IconInfo,
@@ -199,11 +202,6 @@ export default {
 
 <style lang="scss" scoped>
 @use '../../css/variables.scss';
-
-.v-popover > .trigger > .action-item {
-	border-radius: 22px;
-	background-color: var(--color-background-darker);
-}
 
 .message-imip {
 	padding: 5px 10px;

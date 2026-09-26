@@ -59,8 +59,10 @@
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import { NcActionButton, NcButton, NcListItem } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcListItem from '@nextcloud/vue/components/NcListItem'
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import DeleteModal from './DeleteModal.vue'
@@ -220,20 +222,6 @@ export default {
 	display: block;
 	padding: 0;
 	margin-bottom: 23px;
-}
-
-textarea {
-	width: 100%;
-}
-
-.primary {
-	padding-inline-start: 26px;
-	background-position: 6px;
-	color: var(--color-main-background);
-
-	&:after {
-		 inset-inline-start: 14px;
-	 }
 }
 
 .filter-list__loading {

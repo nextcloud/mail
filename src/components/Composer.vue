@@ -21,6 +21,7 @@
 			<div class="composer-fields--custom">
 				<NcSelect
 					id="from"
+					label-outside
 					:model-value="selectedAlias"
 					:options="aliases"
 					label="name"
@@ -67,7 +68,7 @@
 					:append-to-body="false"
 					:create-option="createRecipientOption"
 					:clear-search-on-blur="() => clearOnBlur('to')"
-					@input="saveDraftDebounced"
+					@update:model-value="saveDraftDebounced"
 					@option:selecting="onNewToAddr"
 					@search:blur="onToFieldBlur"
 					@search="onAutocomplete($event, 'to')">
@@ -149,7 +150,7 @@
 					:reducible="true"
 					:clearable="true"
 					:create-option="createRecipientOption"
-					@input="saveDraftDebounced"
+					@update:model-value="saveDraftDebounced"
 					@option:selecting="onNewCcAddr"
 					@search:blur="onNewCcAddr"
 					@search="onAutocomplete($event, 'cc')">
@@ -217,7 +218,7 @@
 					:loading="loadingIndicatorBcc"
 					:clearable="true"
 					:create-option="createRecipientOption"
-					@input="saveDraftDebounced"
+					@update:model-value="saveDraftDebounced"
 					@option:selecting="onNewBccAddr"
 					@search:blur="onNewBccAddr"
 					@search="onAutocomplete($event, 'bcc')">
@@ -296,7 +297,7 @@
 				v-if="!encrypt"
 				ref="editor"
 				:key="editorMode"
-				:value="bodyVal"
+				:model-value="bodyVal"
 				:html="!editorPlainText"
 				name="body"
 				class="message-body"
@@ -304,7 +305,7 @@
 				:focus="isReply || !isFirstOpen"
 				:bus="bus"
 				:text-blocks="textBlocks"
-				@input="onEditorInput"
+				@update:model-value="onEditorInput"
 				@ready="onEditorReady"
 				@mention="handleMention"
 				@save="onEditorSave"
@@ -373,7 +374,7 @@
 					</template>
 				</NcButton>
 
-				<NcActions :open.sync="isAddAttachmentsOpen">
+				<NcActions v-model:open="isAddAttachmentsOpen">
 					<template #icon>
 						<Paperclip :size="20" />
 					</template>
@@ -396,7 +397,7 @@
 				</NcActions>
 
 				<NcActions
-					:open.sync="isActionsOpen"
+					v-model:open="isActionsOpen"
 					@close="isMoreActionsOpen = false">
 					<template v-if="!isMoreActionsOpen">
 						<NcActionButton v-if="isPickerAvailable" :close-after-click="true" @click="openPicker">
@@ -551,14 +552,22 @@
 import { showError, showWarning } from '@nextcloud/dialogs'
 import { getCanonicalLocale, getFirstDay, getLocale, t } from '@nextcloud/l10n'
 import moment from '@nextcloud/moment'
-import { NcActionButton, NcActionCheckbox, NcActionInput, NcActionRadio, NcActions, NcButton, NcIconSvgWrapper, NcListItemIcon, NcSelect } from '@nextcloud/vue'
 import debouncePromise from 'debounce-promise'
 import debounce from 'lodash/fp/debounce.js'
 import trimStart from 'lodash/fp/trimCharsStart.js'
 import uniqBy from 'lodash/fp/uniqBy.js'
 import mitt from 'mitt'
 import { mapState, mapStores } from 'pinia'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcActionCheckbox from '@nextcloud/vue/components/NcActionCheckbox'
+import NcActionInput from '@nextcloud/vue/components/NcActionInput'
+import NcActionRadio from '@nextcloud/vue/components/NcActionRadio'
+import NcActions from '@nextcloud/vue/components/NcActions'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
+import NcListItemIcon from '@nextcloud/vue/components/NcListItemIcon'
 import { NcReferencePickerModal } from '@nextcloud/vue/components/NcRichText'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
 import IconFolder from 'vue-material-design-icons/FolderOutline.vue'
 import IconFormat from 'vue-material-design-icons/FormatSize.vue'
@@ -594,6 +603,25 @@ const NO_ALIAS_SET = -1
 
 export default {
 	name: 'Composer',
+	emits: [
+		'upload-attachment',
+		'discard-draft',
+		'update:to',
+		'update:cc',
+		'update:bcc',
+		'update:subject',
+		'update:editor-body',
+		'update:attachments-data',
+		'update:send-at',
+		'update:smime-sign',
+		'update:smime-encrypt',
+		'update:request-mdn',
+		'update:is-ai-generated',
+		'draft',
+		'update:from-account',
+		'update:from-alias',
+		'send',
+	],
 	components: {
 		MailvelopeEditor,
 		NcActions,
@@ -1178,7 +1206,7 @@ export default {
 		}
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		window.removeEventListener('mailvelope', this.onMailvelopeLoaded)
 	},
 
@@ -1875,6 +1903,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// Subject and editor body must share one text inset so their first characters line up
+$composer-text-inset: calc(var(--default-grid-baseline) * 2);
+
 .message-composer {
 	z-index: 100;
 	display: flex;
@@ -1900,8 +1931,7 @@ export default {
 		padding-top: var(--default-grid-baseline);
 	}
 
-	input,
-	TextEditor {
+	input {
 		flex-grow: 1;
 		max-width: none;
 		border: none;
@@ -1916,7 +1946,7 @@ export default {
 		justify-content: space-between;
 		padding: calc(var(--default-grid-baseline) * 1.5) 0;
 
-		button {
+		button:not(.copy-toggle) {
 			margin-top: 0;
 			margin-bottom: 0;
 			background-color: transparent;
@@ -1939,7 +1969,8 @@ export default {
 		font-size: 15px;
 		font-weight: bold;
 		margin: var(--default-grid-baseline) 0 !important;
-		padding: 0 !important;
+		padding-block: 0 !important;
+		padding-inline: $composer-text-inset !important;
 		width: 100%;
 
 		&:focus-visible {
@@ -1954,6 +1985,11 @@ export default {
 		border: none !important;
 		outline: none !important;
 		box-shadow: none !important;
+
+		// CKEditor's own inset is font-relative; pin it to the subject's instead
+		:deep(.ck-editor__editable) {
+			padding-inline: $composer-text-inset;
+		}
 
 		// Fix contenteditable not becoming focused upon clichint within it's
 		// boundaries in safari
@@ -2042,12 +2078,11 @@ export default {
 }
 
 .copy-toggle {
-	// Absolute so it overlays the bottom-right of the To field without affecting chip layout
+	// Absolute so it overlays the trailing edge of the To field without affecting chip layout
 	position: absolute;
 	inset-inline-end: 0;
 	bottom: 0;
 	z-index: 1;
-	// Override the .composer-fields--custom button rule
 	opacity: 1;
 	cursor: pointer;
 
@@ -2062,16 +2097,8 @@ export default {
 	}
 }
 
-.reply {
-	min-height: 100px;
-}
-
 .subject {
 	border: none !important;
-}
-
-:deep([data-select="create"] .avatardiv--unknown) {
-	background: var(--color-text-maxcontrast) !important;
 }
 
 #from{
@@ -2095,28 +2122,9 @@ export default {
 	border-radius: 0  !important;
 }
 
-.submit-message.send.primary.icon-confirm-white {
-	color: var(--color-main-background);
-}
-
 .button {
 	background-color: transparent;
 	border: none;
-}
-
-.send-button {
-	display: flex;
-	align-items: center;
-	padding: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 4);
-	margin-inline-start: var(--default-grid-baseline);
-}
-
-.send-button .send-icon {
-	padding-inline-end: var(--default-grid-baseline);
-}
-
-.centered-content {
-	margin-top: 0 !important;
 }
 
 .composer-actions-right {
@@ -2145,16 +2153,8 @@ export default {
 	padding: 2px;
 }
 
-.composer-actions--secondary-actions .button{
-	flex-shrink: 0;
-}
-
 .composer-actions-draft-status {
 	padding-inline-start: 0;
-}
-
-:deep(.vs__selected-options .vs__dropdown-toggle .vs--multiple ){
-	width: 100%;
 }
 
 @media only screen and (max-width: 580px) {

@@ -12,6 +12,7 @@
 		@close="closeDeleteModal" />
 	<NcModal
 		v-else
+		class="tag-modal"
 		size="large"
 		label-id="tag-modal-heading"
 		@close="onClose">
@@ -57,8 +58,12 @@
 
 <script>
 import { showError, showInfo } from '@nextcloud/dialogs'
-import { NcActionInput, NcActionText, NcButton, NcLoadingIcon, NcModal } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcActionInput from '@nextcloud/vue/components/NcActionInput'
+import NcActionText from '@nextcloud/vue/components/NcActionText'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
+import NcModal from '@nextcloud/vue/components/NcModal'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconTag from 'vue-material-design-icons/TagOutline.vue'
 import DeleteTagModal from './DeleteTagModal.vue'
@@ -77,6 +82,7 @@ function randomColor() {
 }
 export default {
 	name: 'TagModal',
+	emits: ['close'],
 	components: {
 		NcModal,
 		NcActionText,
@@ -203,12 +209,8 @@ export default {
 	overflow-y: auto;
 }
 
-:deep(.modal-container) {
+.tag-modal :deep(.modal-container) {
 	width: auto !important;
-}
-
-.icon-colorpicker {
-	background-image: var(--icon-add-fff);
 }
 
 .tagButton {
@@ -226,7 +228,7 @@ export default {
 	margin-bottom:12px;
 }
 @media only screen and (max-width: 512px) {
-	:deep(.modal-container) {
+	.tag-modal :deep(.modal-container) {
 	top: 100px !important;
 	max-height: calc(100vh - 170px) !important
 	}

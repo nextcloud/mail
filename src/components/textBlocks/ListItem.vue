@@ -29,7 +29,7 @@
 			</template>
 		</NcListItem>
 		<NcDialog
-			:open.sync="editModalOpen"
+			v-model:open="editModalOpen"
 			:name="t('mail', 'Edit text block')"
 			size="normal"
 			:is-form="true">
@@ -114,10 +114,17 @@ import axios from '@nextcloud/axios'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { generateOcsUrl } from '@nextcloud/router'
 import { ShareType } from '@nextcloud/sharing'
-import { NcActionButton, NcAvatar, NcButton, NcDialog, NcInputField, NcListItem, NcLoadingIcon, NcSelectUsers } from '@nextcloud/vue'
 import debounce from 'lodash/fp/debounce.js'
 import mitt from 'mitt'
 import { mapStores } from 'pinia'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcAvatar from '@nextcloud/vue/components/NcAvatar'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
+import NcInputField from '@nextcloud/vue/components/NcInputField'
+import NcListItem from '@nextcloud/vue/components/NcListItem'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
+import NcSelectUsers from '@nextcloud/vue/components/NcSelectUsers'
 import AccountMultiple from 'vue-material-design-icons/AccountMultiple.vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import IconClose from 'vue-material-design-icons/Close.vue'
@@ -129,6 +136,7 @@ import useMainStore from '../../store/mainStore.js'
 
 export default {
 	name: 'ListItem',
+	emits: ['click'],
 	components: {
 		NcActionButton,
 		NcLoadingIcon,

@@ -31,7 +31,8 @@
 </template>
 
 <script>
-import { NcButton, NcSelect } from '@nextcloud/vue'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 import DragIcon from 'vue-material-design-icons/Drag.vue'
 import Icon from './Icon.vue'
@@ -41,6 +42,7 @@ import { hiddenTags } from '../tags.js'
 
 export default {
 	name: 'Action',
+	emits: ['delete', 'update'],
 	components: {
 		NcSelect,
 		CloseIcon,

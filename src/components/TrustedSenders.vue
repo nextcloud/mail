@@ -16,14 +16,15 @@
 				<IconEmail v-if="sender.type === 'individual'" :size="20" :title="senderType(sender.type)" />
 			</template>
 			<template #extra-actions>
-				<NcActionButton
+				<NcButton
+					variant="tertiary"
 					:title="t('mail', 'Remove')"
 					:aria-label="t('mail', 'Remove')"
 					@click="removeSender(sender)">
 					<template #icon>
 						<IconDelete :size="20" />
 					</template>
-				</NcActionButton>
+				</NcButton>
 			</template>
 		</NcListItem>
 		<span v-if="!sortedSenders.length"> {{ t('mail', 'No senders are trusted at the moment.') }}</span>
@@ -33,9 +34,10 @@
 <script>
 
 import { showError } from '@nextcloud/dialogs'
-import { NcActionButton, NcListItem } from '@nextcloud/vue'
 import prop from 'lodash/fp/prop.js'
 import sortBy from 'lodash/fp/sortBy.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcListItem from '@nextcloud/vue/components/NcListItem'
 import IconDomain from 'vue-material-design-icons/Domain.vue'
 import IconEmail from 'vue-material-design-icons/EmailOutline.vue'
 import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
@@ -47,7 +49,7 @@ const sortByEmail = sortBy(prop('email'))
 export default {
 	name: 'TrustedSenders',
 	components: {
-		NcActionButton,
+		NcButton,
 		NcListItem,
 		IconDelete,
 		IconDomain,

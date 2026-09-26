@@ -28,7 +28,7 @@
 					:infinite-scroll-distance="300"
 					role="heading"
 					:aria-level="2"
-					@shortkey.native="onShortcut">
+					@shortkey="onShortcut">
 					<template v-if="!mailbox.isPriorityInbox">
 						<div
 							v-if="sortFavorites"
@@ -200,7 +200,10 @@
 </template>
 
 <script>
-import { NcAppContent, NcAppContentList, NcButton, NcPopover } from '@nextcloud/vue'
+import NcAppContent from '@nextcloud/vue/components/NcAppContent'
+import NcAppContentList from '@nextcloud/vue/components/NcAppContentList'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcPopover from '@nextcloud/vue/components/NcPopover'
 import { useIsMobile } from '@nextcloud/vue/composables/useIsMobile'
 import addressParser from 'address-rfc2822'
 import mitt from 'mitt'
@@ -248,6 +251,12 @@ export default {
 		Thread,
 	},
 
+	setup() {
+		return {
+			isMobile: useIsMobile(),
+		}
+	},
+
 	props: {
 		account: {
 			type: Object,
@@ -258,12 +267,6 @@ export default {
 			type: Object,
 			required: true,
 		},
-	},
-
-	setup() {
-		return {
-			isMobile: useIsMobile(),
-		}
 	},
 
 	data() {
@@ -479,7 +482,7 @@ export default {
 		}
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		clearTimeout(this.startMailboxTimer)
 	},
 
@@ -628,7 +631,7 @@ export default {
 	flex: 1 1 auto;
 	min-height: 0;
 	overflow: scroll;
-	width: 100% !important;
+	width: 100%;
 }
 
 :deep(.app-content-wrapper) {
@@ -636,10 +639,6 @@ export default {
 	flex-direction: column;
 	height: 100%;
 	overflow: hidden;
-}
-
-.v-popover > .trigger > * {
-	z-index: 1;
 }
 
 .section-header-info {
@@ -675,16 +674,6 @@ export default {
 	flex: 1 1 auto;
 	overflow-y: auto;
 	min-height: 0;
-	contain: none !important;
-}
-
-.information-icon {
-	opacity: .7;
-}
-@media only screen and (max-width: 1024px) {
-	.information-icon {
-		margin-bottom: 20px;
-	}
 }
 
 .list__wrapper {

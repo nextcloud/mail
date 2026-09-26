@@ -26,6 +26,7 @@ const regFirstParagraph = /(.+\n\r?)+(\n\r?)+/
 
 export default {
 	name: 'MessagePlainTextBody',
+	emits: ['translate'],
 	components: { MdnRequest, NeedsTranslationInfo },
 	props: {
 		body: {
@@ -91,23 +92,21 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.quoted-text {
-	color: var(--color-text-maxcontrast);
-
-	summary {
-		cursor: pointer;
-	}
-}
-</style>
-
 <style lang="scss" scoped>
 #message-container,
 .mail-signature {
 	white-space: pre-wrap;
 }
 
-.mail-signature, .quoted {
+.mail-signature {
+	color: var(--color-text-maxcontrast);
+
+	summary {
+		cursor: pointer;
+	}
+}
+
+#message-container :deep(.quoted-text) {
 	color: var(--color-text-maxcontrast);
 
 	summary {

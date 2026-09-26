@@ -59,8 +59,9 @@
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { getLanguage, t } from '@nextcloud/l10n'
 import moment from '@nextcloud/moment'
-import { NcActionButton, NcListItem } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcListItem from '@nextcloud/vue/components/NcListItem'
 import Copy from 'vue-material-design-icons/ContentCopy.vue'
 import Send from 'vue-material-design-icons/SendOutline.vue'
 import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
@@ -202,17 +203,5 @@ export default {
 <style lang="scss" scoped>
 .outbox-message {
 	list-style: none;
-	&.active {
-		background-color: var(--color-background-dark);
-		border-radius: 16px;
-	}
-
-	.account-color {
-		position: absolute;
-		inset-inline-start: 0;
-		width: 2px;
-		height: 69px;
-		z-index: 1;
-	}
 }
 </style>

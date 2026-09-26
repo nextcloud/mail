@@ -246,7 +246,7 @@
 							:mailbox="mailbox"
 							:with-select="false"
 							:with-show-source="true"
-							:more-actions-open.sync="moreActionsOpen"
+							v-model:more-actions-open="moreActionsOpen"
 							@reply="onReply('', false, false)"
 							@delete="$emit('delete', envelope.databaseId)"
 							@show-source-modal="onShowSourceModal"
@@ -394,11 +394,12 @@ import { showError, showSuccess } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
 import moment from '@nextcloud/moment'
 import { generateUrl } from '@nextcloud/router'
-import { NcActionButton, NcButton } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
 import NcActionText from '@nextcloud/vue/components/NcActionText'
 import AiIcon from '@nextcloud/vue/components/NcAssistantIcon'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import ArchiveIcon from 'vue-material-design-icons/ArchiveArrowDownOutline.vue'
 import ChevronDownIcon from 'vue-material-design-icons/ChevronDown.vue'
 import ChevronUpIcon from 'vue-material-design-icons/ChevronUp.vue'
@@ -453,6 +454,7 @@ const Loading = Object.seal({
 
 export default {
 	name: 'ThreadEnvelope',
+	emits: ['toggle-expand', 'delete', 'print-shortcut', 'loaded', 'unselect', 'archive', 'move', 'print'],
 	components: {
 		AiIcon,
 		MailFilterFromEnvelope,
@@ -827,7 +829,7 @@ export default {
 		}, 100)
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		if (this.seenTimer !== undefined) {
 			logger.info('Navigating away before seenTimer delay, will not mark message as seen/read')
 			clearTimeout(this.seenTimer)
@@ -1271,20 +1273,6 @@ export default {
 		}
 	}
 
-	.button {
-		color: var(--color-main-background);
-		&:not(.active):not(.primary) {
-			display: none;
-
-			&.primary {
-				background-color: var(--color-primary-element);
-				opacity: 1;
-				margin-bottom: 0;
-
-			}
-		}
-	}
-
 	.envelope {
 		display: flex;
 		flex-direction: column;
@@ -1455,6 +1443,7 @@ export default {
 
 	.tag-group__label {
 		margin: 0 calc(var(--default-grid-baseline) * 2);
+		position: relative;
 		z-index: 2;
 		font-size: calc(var(--default-font-size) * 0.8);
 		font-weight: bold;

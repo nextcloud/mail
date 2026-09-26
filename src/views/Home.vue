@@ -19,8 +19,9 @@
 </template>
 
 <script>
-import { NcContent } from '@nextcloud/vue'
 import { mapState, mapStores } from 'pinia'
+import { defineAsyncComponent } from 'vue'
+import NcContent from '@nextcloud/vue/components/NcContent'
 import ComposerSessionIndicator from '../components/ComposerSessionIndicator.vue'
 import MailboxThread from '../components/MailboxThread.vue'
 import Navigation from '../components/Navigation.vue'
@@ -37,7 +38,7 @@ export default {
 		NcContent,
 		MailboxThread,
 		Navigation,
-		NewMessageModal: () => import(/* webpackChunkName: "new-message-modal" */ '../components/NewMessageModal.vue'),
+		NewMessageModal: defineAsyncComponent(() => import(/* webpackChunkName: "new-message-modal" */ '../components/NewMessageModal.vue')),
 		Outbox,
 		ComposerSessionIndicator,
 	},

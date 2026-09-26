@@ -4,13 +4,11 @@
 -->
 
 <template>
-	<Fragment>
-		<NcAppNavigationCaption
+	<NcAppNavigationCaption
 			v-if="visible"
 			:id="id"
 			:key="id"
-			:name="account.emailAddress"
-			@update:open="onMenuToggle">
+			:name="account.emailAddress">
 			<!-- Actions -->
 			<template #actions>
 				<template v-if="isDisabled">
@@ -22,7 +20,7 @@
 					</NcActionText>
 				</template>
 				<template v-else>
-					<NcActionText v-if="!account.isUnified && account.quotaPercentage !== null ">
+					<NcActionText v-if="!account.isUnified && account.quotaPercentage !== null" @vue:mounted="fetchQuota">
 						<template #icon>
 							<IconInfo :size="20" />
 						</template>
@@ -51,7 +49,7 @@
 					<NcActionCheckbox
 						:model-value="account.showSubscribedOnly"
 						:disabled="savingShowOnlySubscribed"
-						@update:checked="changeShowSubscribedOnly">
+						@update:model-value="changeShowSubscribedOnly">
 						{{ t('mail', 'Show only subscribed folders') }}
 					</NcActionCheckbox>
 					<NcActionButton v-if="!editing && nameLabel" @click="openCreateMailbox">
@@ -97,16 +95,21 @@
 			</template>
 		</NcAppNavigationCaption>
 		<DelegationModal v-if="showDelegationModal" :account="account" @close="showDelegationModal = false" />
-	</Fragment>
 </template>
 
 <script>
 import { DialogBuilder, showError } from '@nextcloud/dialogs'
 import { formatFileSize } from '@nextcloud/files'
 import { generateUrl } from '@nextcloud/router'
-import { NcActionButton, NcActionCheckbox, NcActionInput, NcActionText, NcAppNavigationCaption, NcIconSvgWrapper, NcLoadingIcon } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
-import { Fragment } from 'vue-frag'
+import { defineAsyncComponent } from 'vue'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcActionCheckbox from '@nextcloud/vue/components/NcActionCheckbox'
+import NcActionInput from '@nextcloud/vue/components/NcActionInput'
+import NcActionText from '@nextcloud/vue/components/NcActionText'
+import NcAppNavigationCaption from '@nextcloud/vue/components/NcAppNavigationCaption'
+import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import MenuDown from 'vue-material-design-icons/ChevronDown.vue'
 import MenuUp from 'vue-material-design-icons/ChevronUp.vue'
 import IconSettings from 'vue-material-design-icons/CogOutline.vue'
@@ -122,12 +125,11 @@ export default {
 	name: 'NavigationAccount',
 	components: {
 		NcAppNavigationCaption,
-		Fragment,
 		NcActionButton,
 		NcActionCheckbox,
 		NcActionInput,
 		NcActionText,
-		DelegationModal: () => import(/* webpackChunkName: "delegation-modal" */ './DelegationModal.vue'),
+		DelegationModal: defineAsyncComponent(() => import(/* webpackChunkName: "delegation-modal" */ './DelegationModal.vue')),
 		IconInfo,
 		IconSettings,
 		NcIconSvgWrapper,
@@ -258,7 +260,7 @@ export default {
 					},
 					{
 						label: t('mail', 'Remove {email}', { email: this.account.emailAddress }),
-						type: 'error',
+						variant: 'error',
 						callback: async () => {
 							this.loading.delete = true
 							try {
@@ -309,13 +311,6 @@ export default {
 				})
 		},
 
-		onMenuToggle(open) {
-			if (open && this.account.quotaPercentage !== null) {
-				logger.debug('accounts menu opened, fetching quota')
-				this.fetchQuota()
-			}
-		},
-
 		async fetchQuota() {
 			const quota = await fetchQuota(this.account.id)
 			logger.debug('quota fetched', {
@@ -338,14 +333,12 @@ export default {
 </script>
 
 <style lang="scss">
-// Fix very long button labels overflowing the modal
-.dialog {
-	&__actions {
-		flex-wrap: wrap;
+// Unscoped because DialogBuilder mounts outside this component; wraps the long "Remove {email}" label
+.nc-generic-dialog .dialog__actions {
+	flex-wrap: wrap;
 
-		> button {
-			flex: 1 auto;
-		}
+	> button {
+		flex: 1 auto;
 	}
 }
 </style>

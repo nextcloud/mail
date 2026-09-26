@@ -67,8 +67,11 @@
 </template>
 
 <script>
-import { NcButton, NcCheckboxRadioSwitch, NcPasswordField, NcTextField } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
+import NcPasswordField from '@nextcloud/vue/components/NcPasswordField'
+import NcTextField from '@nextcloud/vue/components/NcTextField'
 import useMainStore from '../store/mainStore.js'
 
 export default {
@@ -157,14 +160,6 @@ form {
 	width: 300px
 }
 
-label {
-	display: inline-block;
-}
-
-input {
-	width: 100%;
-}
-
 .flex-row {
 	display: flex;
 	gap: var(--default-grid-baseline);
@@ -173,9 +168,5 @@ input {
 
 .custom {
 	margin-bottom: calc(var(--default-grid-baseline) * 4);
-}
-
-input[type='radio'] {
-	display: none;
 }
 </style>

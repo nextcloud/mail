@@ -3,16 +3,14 @@
 * SPDX-License-Identifier: AGPL-3.0-or-later
 */
 
-import { recommendedVue2 } from '@nextcloud/eslint-config'
-import pluginImport from 'eslint-plugin-import'
+import { recommended } from '@nextcloud/eslint-config'
 import pluginVitest from 'eslint-plugin-vitest-globals'
 import { defineConfig } from 'eslint/config'
 
 export default defineConfig([
-	...recommendedVue2,
+	...recommended,
 	{
 		plugins: {
-			import: pluginImport,
 			vitest: pluginVitest,
 		},
 		languageOptions: {
@@ -39,7 +37,6 @@ export default defineConfig([
 			'vue/multi-word-component-names': 'off',
 
 			// 'sort-imports': ['error', { ignoreDeclarationSort: true }],
-			// 'import/order': ['error', { groups: ['builtin', 'external', 'internal'], alphabetize: { order: 'asc', caseInsensitive: true } }],
 
 			// // Relax some rules for now. Can be improved later one (baseline).
 			//

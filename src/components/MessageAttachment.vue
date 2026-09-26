@@ -76,7 +76,9 @@
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { formatFileSize } from '@nextcloud/files'
 import { t } from '@nextcloud/l10n'
-import { NcActionButton, NcActions, NcLoadingIcon } from '@nextcloud/vue'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcActions from '@nextcloud/vue/components/NcActions'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import IconArrow from 'vue-material-design-icons/ArrowLeft.vue'
 import IconSave from 'vue-material-design-icons/FolderOutline.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
@@ -88,6 +90,7 @@ import { pickFolder } from '../util/filePicker.js'
 
 export default {
 	name: 'MessageAttachment',
+	emits: ['open'],
 	components: {
 		NcActions,
 		NcActionButton,
@@ -188,7 +191,7 @@ export default {
 		document.addEventListener('click', this.handleClickOutside)
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		document.removeEventListener('click', this.handleClickOutside)
 	},
 
@@ -340,11 +343,6 @@ export default {
 	border-radius: var(--border-radius);
 }
 
-.attachment-import-popover {
-	inset-inline-end: 32px;
-	top: 42px;
-}
-
 .mail-attached-image:hover {
 	opacity: 0.8;
 }
@@ -374,10 +372,5 @@ export default {
 
 .action-item {
 	transition: 0.4s;
-}
-
-.mail-message-attachments {
-	overflow-x: auto;
-	overflow-y: auto;
 }
 </style>

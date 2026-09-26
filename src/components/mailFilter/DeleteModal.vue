@@ -15,10 +15,11 @@
 
 import IconCancel from '@mdi/svg/svg/cancel.svg?raw'
 import IconCheck from '@mdi/svg/svg/check.svg?raw'
-import { NcDialog } from '@nextcloud/vue'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
 
 export default {
 	name: 'DeleteModal',
+	emits: ['delete-filter', 'close'],
 	components: {
 		NcDialog,
 	},
@@ -45,7 +46,7 @@ export default {
 				},
 				{
 					label: t('mail', 'Delete filter'),
-					type: 'error',
+					variant: 'error',
 					icon: IconCheck,
 					callback: () => { this.deleteFilter() },
 				},

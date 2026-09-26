@@ -120,9 +120,11 @@ import { AttendeeProperty, createEvent, DateTimeValue, TextProperty } from '@nex
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
 import { getTimezoneManager } from '@nextcloud/timezones'
-import { NcDateTimePicker, NcModal, NcSelect } from '@nextcloud/vue'
 import jstz from 'jstz'
 import { mapState, mapStores } from 'pinia'
+import NcDateTimePicker from '@nextcloud/vue/components/NcDateTimePicker'
+import NcModal from '@nextcloud/vue/components/NcModal'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import CalendarPickerOption from './CalendarPickerOption.vue'
 import RecipientListItem from './RecipientListItem.vue'
 import logger from '../logger.js'
@@ -132,6 +134,7 @@ import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'EventModal',
+	emits: ['close'],
 	components: {
 		RecipientListItem,
 		CalendarPickerOption,
@@ -177,7 +180,7 @@ export default {
 		}),
 
 		dateFormat() {
-			return this.isAllDay ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm'
+			return this.isAllDay ? 'yyyy-MM-dd' : 'yyyy-MM-dd HH:mm'
 		},
 
 		datePickerType() {
@@ -364,10 +367,6 @@ input {
 	width: 100%;
 }
 
-:deep(input[type='text']) {
-	padding: 0 !important;
-}
-
 .all-day {
 	margin-inline-start: -1px;
 	margin-top: 5px;
@@ -380,10 +379,6 @@ input {
 
 .primary {
 	float: inline-end;
-}
-
-:deep(.mx-datepicker) {
-	width: 213px;
 }
 
 .vs__search {

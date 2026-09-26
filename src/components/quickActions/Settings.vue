@@ -118,8 +118,14 @@
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import { NcActionButton, NcActions, NcButton, NcListItem, NcLoadingIcon, NcModal, NcTextField } from '@nextcloud/vue'
 import { Container, Draggable } from 'vue-dndrop'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcActions from '@nextcloud/vue/components/NcActions'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcListItem from '@nextcloud/vue/components/NcListItem'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
+import NcModal from '@nextcloud/vue/components/NcModal'
+import NcTextField from '@nextcloud/vue/components/NcTextField'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
 import IconEmailFast from 'vue-material-design-icons/EmailFastOutline.vue'
 import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
@@ -371,7 +377,7 @@ export default {
 <style lang="scss" scoped>
 
 .modal-content{
-	padding: 0 30px 30px 30px;
+	padding: 30px;
 
 	&__action{
 		padding: 6px 0;
@@ -384,16 +390,7 @@ export default {
 }
 
 :deep(.v-select){
-	display: grid;
-	grid-template-columns: 1fr 1fr;
 	flex-grow: 1;
-    align-items: center;
-    justify-content: space-between;
-	margin: 0;
-
-	.select__label {
-		margin: 0;
-	}
 }
 
 .modal-name{

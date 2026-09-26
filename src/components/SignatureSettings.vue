@@ -62,9 +62,13 @@
 </template>
 
 <script>
-import { NcButton, NcCheckboxRadioSwitch, NcLoadingIcon, NcNoteCard, NcSelect } from '@nextcloud/vue'
 import mitt from 'mitt'
 import { mapStores } from 'pinia'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
+import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import TextEditor from './TextEditor.vue'
 import logger from '../logger.js'
@@ -249,10 +253,6 @@ export default {
 		}
 	}
 }
-
-.ck-balloon-panel {
-	 z-index: 10000 !important;
- }
 
 /* it's a bit hard to make it work without this max-width in the modal because it overlaps with the sidebar of the modal */
 :deep(.ck.ck-toolbar-dropdown>.ck-dropdown__panel) {

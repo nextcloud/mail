@@ -3,30 +3,39 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { createPinia, setActivePinia } from 'pinia'
+import { createTestingPinia } from '@pinia/testing'
+import { shallowMount } from '@vue/test-utils'
+import { setActivePinia } from 'pinia'
 import App from '../../App.vue'
 import Nextcloud from '../../mixins/Nextcloud.js'
 import useMainStore from '../../store/mainStore.js'
 
-const localVue = createLocalVue()
-localVue.mixin(Nextcloud)
-
 vi.mock('../../service/AutoConfigService.js')
+vi.mock('../../init.js')
+vi.mock('@nextcloud/dialogs', async (importOriginal) => ({
+	...await importOriginal(),
+	showError: vi.fn(),
+}))
 
 describe('App', () => {
 	let store
 	let view
 
 	beforeEach(() => {
-		setActivePinia(createPinia())
+		setActivePinia(createTestingPinia())
 
 		store = useMainStore()
 		store.isExpiredSession = false
 
 		view = shallowMount(App, {
-			store,
-			localVue,
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$router: {
+						replace: vi.fn(),
+					},
+				},
+			},
 		})
 	})
 

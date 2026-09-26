@@ -89,7 +89,12 @@
 </template>
 
 <script>
-import { NcButton, NcCheckboxRadioSwitch, NcLoadingIcon, NcModal, NcNoteCard, NcTextField } from '@nextcloud/vue'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
+import NcModal from '@nextcloud/vue/components/NcModal'
+import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
+import NcTextField from '@nextcloud/vue/components/NcTextField'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import Action from './Action.vue'
 import Operator from './Operator.vue'
@@ -99,6 +104,7 @@ import { randomId } from '../../util/randomId.js'
 
 export default {
 	name: 'UpdateModal',
+	emits: ['update-filter', 'close'],
 	components: {
 		IconCheck,
 		Action,
@@ -149,7 +155,7 @@ export default {
 
 		updateTest(test) {
 			const index = this.clone.tests.findIndex((items) => items.id === test.id)
-			this.$set(this.clone.tests, index, test)
+			this.clone.tests[index] = test
 		},
 
 		deleteTest(test) {
@@ -172,7 +178,7 @@ export default {
 
 		updateAction(action) {
 			const index = this.clone.actions.findIndex((item) => item.id === action.id)
-			this.$set(this.clone.actions, index, action)
+			this.clone.actions[index] = action
 		},
 
 		updateOperator(operator) {
@@ -204,26 +210,7 @@ export default {
 	margin-bottom: calc(var(--default-grid-baseline) * 4)
 }
 
-.form-group {
-	margin: calc(var(--default-grid-baseline) * 4) 0;
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-}
-
-.external-label {
-	display: flex;
-	width: 100%;
-	margin-top: 1rem;
-}
-
-.external-label label {
-	padding-top: 7px;
-	padding-inline-end: 14px;
-	white-space: nowrap;
-}
-
-.add-condition, .add-action, .filter-name, .filter-settings, .redirect-note {
+.add-condition, .add-action, .filter-name, .filter-settings {
 	width: calc(100% - (30px + var(--default-grid-baseline)));
 }
 

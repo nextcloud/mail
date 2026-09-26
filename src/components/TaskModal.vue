@@ -77,10 +77,12 @@
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import moment from '@nextcloud/moment'
-import { NcDateTimePicker, NcModal, NcSelect } from '@nextcloud/vue'
 import ICAL from 'ical.js'
 import jstz from 'jstz'
 import { mapStores } from 'pinia'
+import NcDateTimePicker from '@nextcloud/vue/components/NcDateTimePicker'
+import NcModal from '@nextcloud/vue/components/NcModal'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import CalendarPickerOption from './CalendarPickerOption.vue'
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
@@ -88,6 +90,7 @@ import Task from '../task.js'
 
 export default {
 	name: 'TaskModal',
+	emits: ['close'],
 	components: {
 		CalendarPickerOption,
 		NcDateTimePicker,
@@ -128,7 +131,7 @@ export default {
 		},
 
 		dateFormat() {
-			return this.isAllDay ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm'
+			return this.isAllDay ? 'yyyy-MM-dd' : 'yyyy-MM-dd HH:mm'
 		},
 
 		datePickerType() {
@@ -266,10 +269,6 @@ input , textarea {
 	width: 100%;
 }
 
-:deep(input[type='text']) {
-	padding: 0 !important;
-}
-
 .all-day {
 	margin-inline-start: -1px;
 	margin-top: 5px;
@@ -285,7 +284,4 @@ input , textarea {
 	float: inline-end;
 }
 
-:deep(.mx-datepicker) {
-	width: 213px;
-}
 </style>

@@ -8,14 +8,15 @@
 		:model-value="flag"
 		:label-outside="true"
 		:placeholder="t('mail', 'Enter flag')"
-		@update:value="onInput" />
+		@update:model-value="onInput" />
 </template>
 
 <script>
-import { NcTextField } from '@nextcloud/vue'
+import NcTextField from '@nextcloud/vue/components/NcTextField'
 
 export default {
 	name: 'ActionAddflag',
+	emits: ['update-action'],
 	components: {
 		NcTextField,
 	},

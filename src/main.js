@@ -4,13 +4,13 @@
  */
 
 import { getRequestToken } from '@nextcloud/auth'
-import { registerDavProperty } from '@nextcloud/files'
+import { registerDavProperty } from '@nextcloud/files/dav'
 import { generateFilePath } from '@nextcloud/router'
-import { createPinia, PiniaVuePlugin } from 'pinia'
-import Vue from 'vue'
-import VueShortKey from 'vue-shortkey'
+import { n, t } from '@nextcloud/l10n'
+import { createPinia } from 'pinia'
+import { createApp } from 'vue'
+import VueShortKey from 'vue3-shortkey'
 import App from './App.vue'
-import Nextcloud from './mixins/Nextcloud.js'
 import router from './router.js'
 
 import '@nextcloud/dialogs/style.css'
@@ -20,19 +20,14 @@ __webpack_nonce__ = btoa(getRequestToken())
 
 __webpack_public_path__ = generateFilePath('mail', '', 'js/')
 
-Vue.use(PiniaVuePlugin)
 const pinia = createPinia()
-
-Vue.mixin(Nextcloud)
-
-Vue.use(VueShortKey, { prevent: ['input', 'div', 'textarea'] })
 
 registerDavProperty('nc:share-attributes', { nc: 'http://nextcloud.org/ns' })
 
-export default new Vue({
-	el: '#content',
-	name: 'Mail',
-	router,
-	pinia,
-	render: (h) => h(App),
-})
+const app = createApp(App)
+app.use(router)
+app.use(pinia)
+app.use(VueShortKey, { prevent: ['input', 'div', 'textarea'] })
+app.config.globalProperties.t = t
+app.config.globalProperties.n = n
+app.mount('#content')

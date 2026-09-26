@@ -71,7 +71,7 @@
 							class="compact-checkbox"
 							:class="{ 'compact-checkbox--active': selected }"
 							:model-value="selected"
-							@update:checked="toggleSelected" />
+							@update:model-value="toggleSelected" />
 					</div>
 				</template>
 
@@ -310,12 +310,7 @@
 					<template #icon>
 						<OpenInNewIcon :size="20" />
 					</template>
-					<template v-if="layoutMessageViewThreaded">
-						{{ t('mail', 'Move thread') }}
-					</template>
-					<template v-else>
-						{{ t('mail', 'Move Message') }}
-					</template>
+					{{ layoutMessageViewThreaded ? t('mail', 'Move thread') : t('mail', 'Move message') }}
 				</NcActionButton>
 				<NcActionButton
 					v-if="showArchiveButton && hasArchiveAcl"
@@ -325,12 +320,7 @@
 					<template #icon>
 						<ArchiveIcon :size="20" />
 					</template>
-					<template v-if="layoutMessageViewThreaded">
-						{{ t('mail', 'Archive thread') }}
-					</template>
-					<template v-else>
-						{{ t('mail', 'Archive message') }}
-					</template>
+					{{ layoutMessageViewThreaded ? t('mail', 'Archive thread') : t('mail', 'Archive message') }}
 				</NcActionButton>
 				<NcActionButton
 					:close-after-click="false"
@@ -446,12 +436,7 @@
 					<template #icon>
 						<DeleteIcon :size="20" />
 					</template>
-					<template v-if="layoutMessageViewThreaded">
-						{{ t('mail', 'Delete thread') }}
-					</template>
-					<template v-else>
-						{{ t('mail', 'Delete message') }}
-					</template>
+					{{ layoutMessageViewThreaded ? t('mail', 'Delete thread') : t('mail', 'Delete message') }}
 				</NcActionButton>
 			</template>
 			<template v-if="quickActionMenu">
@@ -532,17 +517,15 @@ import { showError, showSuccess, showWarning } from '@nextcloud/dialogs'
 import { isRTL } from '@nextcloud/l10n'
 import moment from '@nextcloud/moment'
 import { generateUrl } from '@nextcloud/router'
-import {
-	NcActionButton,
-	NcActionInput,
-	NcActionLink,
-	NcActionSeparator,
-	NcActionText,
-	NcAssistantIcon,
-	NcCheckboxRadioSwitch,
-} from '@nextcloud/vue'
 import escapeHtml from 'escape-html'
 import { mapState, mapStores } from 'pinia'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcActionInput from '@nextcloud/vue/components/NcActionInput'
+import NcActionLink from '@nextcloud/vue/components/NcActionLink'
+import NcActionSeparator from '@nextcloud/vue/components/NcActionSeparator'
+import NcActionText from '@nextcloud/vue/components/NcActionText'
+import NcAssistantIcon from '@nextcloud/vue/components/NcAssistantIcon'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import AlarmIcon from 'vue-material-design-icons/Alarm.vue'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
 import ArchiveIcon from 'vue-material-design-icons/ArchiveArrowDownOutline.vue'
@@ -599,6 +582,7 @@ import { hiddenTags } from './tags.js'
 
 export default {
 	name: 'Envelope',
+	emits: ['open:quick-actions-settings', 'update:selected', 'select-multiple', 'delete', 'archive', 'move'],
 	components: {
 		AttachmentTag,
 		AlertOctagonIcon,
@@ -1501,19 +1485,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.mail-message-account-color {
-	position: absolute;
-	inset-inline-start: 0px;
-	width: 2px;
-	height: 69px;
-	z-index: 1;
-}
-
 .envelope {
-	.app-content-list-item-icon {
-		height: 40px; // To prevent some unexpected spacing below the avatar
-	}
-
 	&__subtitle {
 		display: flex;
 		overflow: hidden;
@@ -1548,12 +1520,6 @@ export default {
 		-webkit-line-clamp: 2;
 		-webkit-box-orient: vertical;
 
-		.material-design-icon {
-			display: inline;
-
-			position: relative;
-			top: 2px;
-		}
 		&__icon {
 			display: inline;
 		}
@@ -1574,8 +1540,7 @@ export default {
 		stroke-width: 2;
 	}
 	.list-item:hover &,
-	.list-item:focus &,
-	.list-item.active & {
+	.list-item:focus & {
 		:deep(path) {
 			stroke: var(--color-background-dark);
 		}
@@ -1593,15 +1558,6 @@ export default {
 .important-one-line.app-content-list-item-star:deep() {
 	top: 4px !important;
 	inset-inline-start: 2px;
-}
-
-.app-content-list-item-select-checkbox {
-	display: inline-block;
-	vertical-align: middle;
-	position: absolute;
-	inset-inline-start: 33px;
-	top: 35px;
-	z-index: 50; // same as icon-starred
 }
 
 .list-item-style:not(.seen) {
@@ -1629,11 +1585,6 @@ export default {
 	top: 36px;
 }
 
-.icon-attachment {
-	-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=25)';
-	opacity: 0.25;
-}
-
 :deep(.action--primary) {
 	.material-design-icon {
 		margin-bottom: -14px;
@@ -1642,6 +1593,7 @@ export default {
 
 .tag-group__label {
 	margin: 0 7px;
+	position: relative;
 	z-index: 2;
 	font-size: calc(var(--default-font-size) * 0.8);
 	font-weight: bold;
@@ -1711,32 +1663,12 @@ export default {
 	margin-bottom: 6px;
 }
 
-:deep(.line-two__subtitle) {
-	display: flex;
-	flex-basis: 100%;
-	padding-inline-start: 40px;
-	width: 450px;
-}
-
-:deep(.line-one__title) {
-	flex-direction: row;
-	display: flex;
-	width: 200px;
-}
-
 .line-two.one-line {
 	display: flex;
 	overflow: hidden;
 	align-items: center;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-}
-
-.quick-actions-button{
-	width: 100%;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
 }
 
 .envelope__subtitle__subject.one-line {
@@ -1754,11 +1686,11 @@ export default {
 
 .app-content-list-item-avatar-selected {
 	background-color: var(--color-primary-element);
-	color: var(--color-primary-light);
+	color: var(--color-primary-element-text);
 	border-radius: 32px;
 	&:hover {
 		background-color: var(--color-primary-element);
-		color: var(--color-primary-light);
+		color: var(--color-primary-element-text);
 		border-radius: 32px;
 	}
 }
@@ -1837,15 +1769,7 @@ export default {
 	white-space: nowrap;
 }
 
-.envelope--compact.envelope--one-line {
-	.favorite-icon-style,
-	.icon-important {
-		display: none;
-	}
-}
-
-.list-item__wrapper--active :deep(.compact-checkbox .checkbox-radio-switch__content),
-.list-item__wrapper.active :deep(.compact-checkbox .checkbox-radio-switch__content) {
+.list-item__wrapper--active :deep(.compact-checkbox .checkbox-radio-switch__content) {
 	background-color: var(--color-primary-element-text) !important;
 	color: var(--color-primary-element) !important;
 }

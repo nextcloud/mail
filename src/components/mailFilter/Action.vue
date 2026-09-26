@@ -12,7 +12,7 @@
 				:label-outside="true"
 				:options="availableTypes"
 				:clearable="false"
-				@input="updateAction({ type: $event.id })" />
+				@update:model-value="updateAction({ type: $event.id })" />
 			<component
 				:is="componentInstance"
 				v-if="componentInstance"
@@ -34,7 +34,9 @@
 </template>
 
 <script>
-import { NcButton, NcSelect, NcTextField } from '@nextcloud/vue'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
+import NcTextField from '@nextcloud/vue/components/NcTextField'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import ActionAddflag from './ActionAddflag.vue'
 import ActionAddSystemFlag from './ActionAddSystemFlag.vue'
@@ -45,6 +47,7 @@ import { MailFilterActions } from '../../models/mailFilter.ts'
 
 export default {
 	name: 'Action',
+	emits: ['update-action', 'delete-action'],
 	components: {
 		NcSelect,
 		NcTextField,
@@ -138,7 +141,8 @@ export default {
 		width: 100%;
 		&__column {
 			flex: 0 1 auto;
-			&__select {
+			// Match NcSelect's own `.nc-select.v-select.select` so the reset still wins
+			&__select.nc-select {
 				margin: 0
 			}
 		}

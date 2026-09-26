@@ -16,16 +16,16 @@
 		<template #counter>
 			<NcCounterBubble
 				v-if="count"
-				class="navigation-outbox__unread-counter">
-				{{ count }}
-			</NcCounterBubble>
+				:count="count"
+				class="navigation-outbox__unread-counter" />
 		</template>
 	</NcAppNavigationItem>
 </template>
 
 <script>
-import { NcAppNavigationItem, NcCounterBubble } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcAppNavigationItem from '@nextcloud/vue/components/NcAppNavigationItem'
+import NcCounterBubble from '@nextcloud/vue/components/NcCounterBubble'
 import IconOutbox from 'vue-material-design-icons/InboxArrowUp.vue'
 import useOutboxStore from '../store/outboxStore.js'
 

@@ -167,9 +167,12 @@
 
 <script>
 import { showError } from '@nextcloud/dialogs'
-import { NcActionButton, NcActions, NcButton, NcDialog } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import { differenceWith } from 'ramda'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcActions from '@nextcloud/vue/components/NcActions'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
 import IconSelect from 'vue-material-design-icons/CloseThick.vue'
 import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
@@ -196,6 +199,7 @@ import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'EnvelopeList',
+	emits: ['delete', 'load-more'],
 	components: {
 		IconUnFavorite,
 		EmailUnread,
@@ -383,7 +387,7 @@ export default {
 		dragEventBus.on('envelopes-dropped', this.unselectAll)
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		dragEventBus.off('envelopes-dropped', this.unselectAll)
 	},
 
@@ -487,7 +491,7 @@ export default {
 			if (this.selectedEnvelopes.length === this.sortedEnvelops.length) {
 				isAllSelected = true
 			} else {
-				const indexSelectedEnvelope = this.selectedEnvelopes.findIndex((selectedEnvelope) => selectedEnvelope.databaseId === this.$route.params.threadId)
+				const indexSelectedEnvelope = this.selectedEnvelopes.findIndex((selectedEnvelope) => selectedEnvelope.databaseId === parseInt(this.$route.params.threadId, 10))
 
 				// one of threads is selected
 				if (indexSelectedEnvelope !== -1) {
@@ -668,25 +672,12 @@ div {
 	transition: all calc(var(--animation-slow) / 2);
 }
 
-.multiselect-header-enter,
+.multiselect-header-enter-from,
 .multiselect-header-leave-to,
-.list-enter,
+.list-enter-from,
 .list-leave-to {
 	opacity: 0;
 	height: 0;
 	transform: scaleY(0);
-}
-
-#action-label {
-	vertical-align: middle;
-}
-@media only screen and (min-width: 600px) {
-	#action-label {
-		display: block;
-	}
-}
-
-:deep(.button-vue--text-only) {
-	padding: 0 !important;
 }
 </style>

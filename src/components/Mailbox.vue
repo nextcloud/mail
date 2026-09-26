@@ -17,8 +17,8 @@
 			v-else-if="loadingCacheInitialization"
 			:hint="t('mail', 'Loading messages …')"
 			:slow-hint="t('mail', 'Indexing your messages. This can take a bit longer for larger folders.')" />
-		<EmptyMailboxSection v-else-if="isPriorityInbox && !hasMessages" key="empty" />
-		<EmptyMailbox v-else-if="!hasMessages" key="empty" />
+		<EmptyMailboxSection v-else-if="isPriorityInbox && !hasMessages" key="empty-priority-inbox" />
+		<EmptyMailbox v-else-if="!hasMessages" key="empty-mailbox" />
 		<template v-else-if="hasGroupedEnvelopes && !isPriorityInbox">
 			<div v-for="[label, group] in groupEnvelopes" :key="label">
 				<SectionTitle class="section-title" :name="getLabelForGroup(label)" />
@@ -220,7 +220,7 @@ export default {
 		this.mainStore.setHasFetchedInitialEnvelopesMutation(true)
 	},
 
-	destroyed() {
+	unmounted() {
 		this.bus.off('load-more', this.onScroll)
 		this.bus.off('delete', this.onDelete)
 		this.bus.off('archive', this.onArchive)
@@ -567,7 +567,7 @@ export default {
 				logger.debug('envelope to delete does not exist in envelope list')
 				return
 			}
-			if (id !== this.$route.params.threadId) {
+			if (id !== parseInt(this.$route.params.threadId, 10)) {
 				logger.debug('other message open, not jumping to the next/previous message')
 				return
 			}

@@ -19,12 +19,13 @@
 
 <script>
 import { getLanguage } from '@nextcloud/l10n'
-import { NcButton } from '@nextcloud/vue'
 import { mapState } from 'pinia'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'NeedsTranslationInfo',
+	emits: ['translate'],
 	components: {
 		NcButton,
 	},

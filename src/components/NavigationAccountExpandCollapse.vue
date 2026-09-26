@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import { NcAppNavigationItem } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcAppNavigationItem from '@nextcloud/vue/components/NcAppNavigationItem'
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 
@@ -63,7 +63,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-:deep(.app-navigation-entry__title) {
+:deep(.app-navigation-entry__name) {
 	color: var(--color-text-maxcontrast);
 }
 </style>

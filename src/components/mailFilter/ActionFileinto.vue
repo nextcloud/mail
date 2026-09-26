@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<MailboxInlinePicker :account="account" :value="mailbox" @input="onInput" />
+	<MailboxInlinePicker :account="account" :model-value="mailbox" @update:model-value="onInput" />
 </template>
 
 <script>
@@ -14,6 +14,7 @@ import useMainStore from '../../store/mainStore.js'
 
 export default {
 	name: 'ActionFileinto',
+	emits: ['update-action'],
 	components: {
 		MailboxInlinePicker,
 	},
@@ -54,7 +55,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-:deep(.v-select) {
+.v-select {
 	width: 100%; /* todo: fix MailboxInlinePicker.vue styling instead */
 }
 </style>

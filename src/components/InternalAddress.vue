@@ -59,7 +59,7 @@
 			{{ t('mail', 'Add internal address') }}
 		</NcButton>
 		<NcDialog
-			:open.sync="openDialog"
+			v-model:open="openDialog"
 			:buttons="buttons"
 			:name="t('mail', 'Add internal address')"
 			@close="openDialog = false">
@@ -73,10 +73,14 @@
 import IconCancel from '@mdi/svg/svg/cancel.svg'
 import IconCheck from '@mdi/svg/svg/check.svg'
 import { showError } from '@nextcloud/dialogs'
-import { NcActionButton, NcButton, NcDialog, NcListItem, NcTextField } from '@nextcloud/vue'
 import prop from 'lodash/fp/prop.js'
 import sortBy from 'lodash/fp/sortBy.js'
 import { mapStores } from 'pinia'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
+import NcListItem from '@nextcloud/vue/components/NcListItem'
+import NcTextField from '@nextcloud/vue/components/NcTextField'
 import IconDomain from 'vue-material-design-icons/Domain.vue'
 import IconEmail from 'vue-material-design-icons/EmailOutline.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
@@ -112,7 +116,7 @@ export default {
 				},
 				{
 					label: 'Ok',
-					type: 'primary',
+					variant: 'primary',
 					icon: IconCheck,
 					callback: () => { this.addInternalAddress() },
 				},

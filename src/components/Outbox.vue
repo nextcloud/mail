@@ -30,8 +30,9 @@
 </template>
 
 <script>
-import { NcAppContent, NcAppContentList } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcAppContent from '@nextcloud/vue/components/NcAppContent'
+import NcAppContentList from '@nextcloud/vue/components/NcAppContentList'
 import EmptyMailbox from './EmptyMailbox.vue'
 import Error from './Error.vue'
 import LoadingSkeleton from './LoadingSkeleton.vue'
@@ -90,7 +91,7 @@ export default {
 		await this.fetchMessages()
 	},
 
-	destroyed() {
+	unmounted() {
 		clearInterval(this.refreshInterval)
 	},
 
@@ -117,13 +118,3 @@ export default {
 	},
 }
 </script>
-
-<style lang="scss" scoped>
-.outbox-list {
-	contain: none !important;
-}
-
-:deep(.button-vue--vue-secondary) {
-	box-shadow: none;
-}
-</style>
