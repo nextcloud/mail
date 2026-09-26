@@ -42,10 +42,14 @@ use OCA\Mail\Model\IMAPMessage;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
 use Psr\Log\LoggerInterface;
+use function array_chunk;
 use function array_map;
 use function array_values;
 
 class MailManager implements IMailManager {
+	// Keeps sparse UID sets below the 8000 octet command length recommended by RFC 7162
+	private const FLAG_UIDS_CHUNK_SIZE = 500;
+
 	/**
 	 * https://datatracker.ietf.org/doc/html/rfc9051#name-flags-message-attribute
 	 */
@@ -409,29 +413,7 @@ class MailManager implements IMailManager {
 			throw new ClientException("Mailbox $mailbox does not exist", 0, $e);
 		}
 
-		$client = $this->imapClientFactory->getClient($account);
-		try {
-			// Only send system flags to the IMAP server as other flags might not be supported
-			$imapFlags = $this->filterFlags($client, $account, $flag, $mailbox);
-			foreach ($imapFlags as $imapFlag) {
-				if (empty($imapFlag) === true) {
-					continue;
-				}
-				if ($value) {
-					$this->imapMessageMapper->addFlag($client, $mb, [$uid], $imapFlag);
-				} else {
-					$this->imapMessageMapper->removeFlag($client, $mb, [$uid], $imapFlag);
-				}
-			}
-		} catch (Horde_Imap_Client_Exception $e) {
-			throw new ServiceException(
-				'Could not set message flag on IMAP: ' . $e->getMessage(),
-				$e->getCode(),
-				$e
-			);
-		} finally {
-			$client->logout();
-		}
+		$this->flagMessages($account, $mb, [$uid], $flag, $value);
 
 		// Looking the message up by uid is a shortcut to avoid changing this method's
 		// signature, which the JMAP PR does anyway.
@@ -454,6 +436,39 @@ class MailManager implements IMailManager {
 				$value
 			)
 		);
+	}
+
+	#[\Override]
+	public function flagMessages(Account $account, Mailbox $mailbox, array $uids, string $flag, bool $value): void {
+		if ($uids === []) {
+			return;
+		}
+
+		$client = $this->imapClientFactory->getClient($account);
+		try {
+			// Only send system flags to the IMAP server as other flags might not be supported
+			$imapFlags = $this->filterFlags($client, $account, $flag, $mailbox->getName());
+			foreach ($imapFlags as $imapFlag) {
+				if (empty($imapFlag) === true) {
+					continue;
+				}
+				foreach (array_chunk($uids, self::FLAG_UIDS_CHUNK_SIZE) as $chunk) {
+					if ($value) {
+						$this->imapMessageMapper->addFlag($client, $mailbox, $chunk, $imapFlag);
+					} else {
+						$this->imapMessageMapper->removeFlag($client, $mailbox, $chunk, $imapFlag);
+					}
+				}
+			}
+		} catch (Horde_Imap_Client_Exception $e) {
+			throw new ServiceException(
+				'Could not set message flag on IMAP: ' . $e->getMessage(),
+				$e->getCode(),
+				$e
+			);
+		} finally {
+			$client->logout();
+		}
 	}
 
 	/**

@@ -178,6 +178,17 @@ interface IMailManager {
 	public function flagMessage(Account $account, string $mailbox, int $uid, string $flag, bool $value): void;
 
 	/**
+	 * Set a flag on many messages of a mailbox with a single IMAP connection
+	 *
+	 * The database cache is not updated. It picks up the change with the next sync.
+	 *
+	 * @param int[] $uids
+	 *
+	 * @throws ServiceException
+	 */
+	public function flagMessages(Account $account, Mailbox $mailbox, array $uids, string $flag, bool $value): void;
+
+	/**
 	 * @param Account $account
 	 * @param string $mailbox
 	 * @param Message $message

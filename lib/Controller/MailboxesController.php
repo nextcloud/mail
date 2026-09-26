@@ -36,6 +36,8 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class MailboxesController extends Controller {
+	private const BULK_FLAGS = ['seen', 'flagged'];
+
 	public function __construct(
 		string $appName,
 		IRequest $request,
@@ -46,6 +48,7 @@ class MailboxesController extends Controller {
 		private readonly IConfig $config,
 		private readonly ITimeFactory $timeFactory,
 		private DelegationService $delegationService,
+		private IMailSearch $mailSearch,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -217,6 +220,47 @@ class MailboxesController extends Controller {
 
 		$this->syncService->clearCache($account, $mailbox);
 		return new JSONResponse([]);
+	}
+
+	/**
+	 * Set flags on all messages of a mailbox that match a filter
+	 *
+	 * @param array<string, bool|string> $flags
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	#[TrapError]
+	#[NoAdminRequired]
+	public function setFlags(int $id, array $flags, ?string $filter = null): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+		if ($flags === [] || array_diff(array_keys($flags), self::BULK_FLAGS) !== []) {
+			return new JSONResponse([], Http::STATUS_UNPROCESSABLE_ENTITY);
+		}
+
+		try {
+			$effectiveUserId = $this->delegationService->resolveMailboxUserId($id, $this->userId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$mailbox = $this->mailManager->getMailbox($effectiveUserId, $id);
+		$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
+
+		$uids = $this->mailSearch->findMessageUids($account, $mailbox, $filter);
+		$flagChanges = [];
+		foreach ($flags as $flag => $value) {
+			$value = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+			$this->mailManager->flagMessages($account, $mailbox, $uids, $flag, $value);
+			$flagChanges[] = "$flag=" . ($value ? 'true' : 'false');
+		}
+
+		$flagsSummary = implode(', ', $flagChanges);
+		$count = count($uids);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated flags on $count messages in mailbox: $id with [$flagsSummary] on behalf of $effectiveUserId");
+
+		return new JSONResponse();
 	}
 
 	/**

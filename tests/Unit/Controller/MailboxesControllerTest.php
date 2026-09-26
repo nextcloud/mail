@@ -12,6 +12,7 @@ namespace OCA\Mail\Tests\Unit\Controller;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Controller\MailboxesController;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\NotImplemented;
@@ -20,6 +21,7 @@ use OCA\Mail\IMAP\MailboxStats;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\Sync\SyncService;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IConfig;
@@ -51,6 +53,7 @@ class MailboxesControllerTest extends TestCase {
 	private IConfig|MockObject $config;
 	private ITimeFactory|MockObject $timeFactory;
 	private DelegationService|MockObject $delegationService;
+	private IMailSearch|MockObject $mailSearch;
 
 	public function setUp(): void {
 		parent::setUp();
@@ -64,6 +67,7 @@ class MailboxesControllerTest extends TestCase {
 		$this->delegationService = $this->createMock(DelegationService::class);
 		$this->delegationService->method('resolveAccountUserId')->willReturn($this->userId);
 		$this->delegationService->method('resolveMailboxUserId')->willReturn($this->userId);
+		$this->mailSearch = $this->createMock(IMailSearch::class);
 
 		$this->controller = new MailboxesController(
 			$this->appName,
@@ -75,6 +79,7 @@ class MailboxesControllerTest extends TestCase {
 			$this->config,
 			$this->timeFactory,
 			$this->delegationService,
+			$this->mailSearch,
 		);
 	}
 
@@ -257,6 +262,80 @@ class MailboxesControllerTest extends TestCase {
 			->with($this->userId, $this->userId, "$this->userId marked all messages as read in mailbox: $mailboxId on behalf of $this->userId");
 
 		$this->controller->markAllAsRead($mailboxId);
+	}
+
+	public function testSetFlags(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(13);
+		$mailbox->setAccountId(28);
+		$account = $this->createStub(Account::class);
+		$this->mailManager->method('getMailbox')
+			->with($this->userId, 13)
+			->willReturn($mailbox);
+		$this->accountService->method('find')
+			->with($this->userId, 28)
+			->willReturn($account);
+		$this->mailSearch->expects($this->once())
+			->method('findMessageUids')
+			->with($account, $mailbox, 'is:unread')
+			->willReturn([101, 102]);
+		$this->mailManager->expects($this->exactly(2))
+			->method('flagMessages')
+			->willReturnCallback(function (Account $a, Mailbox $mb, array $uids, string $flag, bool $value): void {
+				$this->assertSame([101, 102], $uids);
+				match ($flag) {
+					'seen' => $this->assertTrue($value),
+					'flagged' => $this->assertFalse($value),
+				};
+			});
+		$this->delegationService->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId updated flags on 2 messages in mailbox: 13 with [seen=true, flagged=false] on behalf of $this->userId");
+
+		$response = $this->controller->setFlags(13, ['seen' => true, 'flagged' => 'false'], 'is:unread');
+
+		$this->assertSame(Http::STATUS_OK, $response->getStatus());
+	}
+
+	public function testSetFlagsRejectsUnsupportedFlags(): void {
+		$this->mailSearch->expects($this->never())
+			->method('findMessageUids');
+		$this->mailManager->expects($this->never())
+			->method('flagMessages');
+
+		$response = $this->controller->setFlags(13, ['$junk' => true]);
+
+		$this->assertSame(Http::STATUS_UNPROCESSABLE_ENTITY, $response->getStatus());
+	}
+
+	public function testSetFlagsRejectsEmptyFlags(): void {
+		$this->mailManager->expects($this->never())
+			->method('flagMessages');
+
+		$response = $this->controller->setFlags(13, []);
+
+		$this->assertSame(Http::STATUS_UNPROCESSABLE_ENTITY, $response->getStatus());
+	}
+
+	public function testSetFlagsWithoutUser(): void {
+		$controller = new MailboxesController(
+			$this->appName,
+			$this->request,
+			$this->accountService,
+			null,
+			$this->mailManager,
+			$this->syncService,
+			$this->config,
+			$this->timeFactory,
+			$this->delegationService,
+			$this->mailSearch,
+		);
+		$this->mailManager->expects($this->never())
+			->method('flagMessages');
+
+		$response = $controller->setFlags(13, ['seen' => true]);
+
+		$this->assertSame(Http::STATUS_UNAUTHORIZED, $response->getStatus());
 	}
 
 	public function testDestroyLogsDelegatedAction(): void {

@@ -186,6 +186,11 @@ return [
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'mailboxes#setFlags',
+			'url' => '/api/mailboxes/{id}/flags',
+			'verb' => 'PUT'
+		],
+		[
 			'name' => 'mailboxes#stats',
 			'url' => '/api/mailboxes/{id}/stats',
 			'verb' => 'GET'

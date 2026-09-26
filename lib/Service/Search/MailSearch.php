@@ -77,27 +77,12 @@ class MailSearch implements IMailSearch {
 		?int $limit,
 		?string $userId,
 		?string $view): array {
-		if ($mailbox->hasLocks($this->timeFactory->getTime())) {
-			throw MailboxLockedException::from($mailbox);
-		}
-		if (!$mailbox->isCached()) {
-			throw MailboxNotCachedException::from($mailbox);
-		}
-
-		$query = $this->filterStringParser->parse($filter);
+		$query = $this->createQuery($mailbox, $filter);
 		if ($cursor !== null) {
 			$query->setCursor($cursor);
 		}
 		if ($view !== null) {
 			$query->setThreaded($view === self::VIEW_THREADED);
-		}
-		// In flagged we don't want anything but flagged messages
-		if ($mailbox->isSpecialUse(Horde_Imap_Client::SPECIALUSE_FLAGGED)) {
-			$query->addFlag(Flag::is(Flag::FLAGGED));
-		}
-		// Don't show deleted messages except for trash folders
-		if (!$mailbox->isSpecialUse(Horde_Imap_Client::SPECIALUSE_TRASH)) {
-			$query->addFlag(Flag::not(Flag::DELETED));
 		}
 
 		return $this->previewEnhancer->process(
@@ -110,6 +95,40 @@ class MailSearch implements IMailSearch {
 			true,
 			$userId
 		);
+	}
+
+	#[\Override]
+	public function findMessageUids(Account $account, Mailbox $mailbox, ?string $filter): array {
+		$query = $this->createQuery($mailbox, $filter);
+		$query->setThreaded(false);
+
+		return $this->messageMapper->findUidsForIds(
+			$mailbox,
+			$this->getIdsLocally($account, $mailbox, $query, self::ORDER_NEWEST_FIRST, null),
+		);
+	}
+
+	/**
+	 * @throws ClientException
+	 */
+	private function createQuery(Mailbox $mailbox, ?string $filter): SearchQuery {
+		if ($mailbox->hasLocks($this->timeFactory->getTime())) {
+			throw MailboxLockedException::from($mailbox);
+		}
+		if (!$mailbox->isCached()) {
+			throw MailboxNotCachedException::from($mailbox);
+		}
+
+		$query = $this->filterStringParser->parse($filter);
+		// In flagged we don't want anything but flagged messages
+		if ($mailbox->isSpecialUse(Horde_Imap_Client::SPECIALUSE_FLAGGED)) {
+			$query->addFlag(Flag::is(Flag::FLAGGED));
+		}
+		// Don't show deleted messages except for trash folders
+		if (!$mailbox->isSpecialUse(Horde_Imap_Client::SPECIALUSE_TRASH)) {
+			$query->addFlag(Flag::not(Flag::DELETED));
+		}
+		return $query;
 	}
 
 	/**
