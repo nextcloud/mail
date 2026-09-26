@@ -43,6 +43,59 @@ export function markMailboxRead(id) {
 	return axios.post(url).then((resp) => resp.data)
 }
 
+export async function setMailboxFlags(id, filter, flags) {
+	const url = generateUrl('/apps/mail/api/mailboxes/{id}/flags', {
+		id,
+	})
+
+	await axios.put(url, { filter, flags })
+}
+
+export async function moveMailboxMessages(id, filter, destinationId) {
+	const url = generateUrl('/apps/mail/api/mailboxes/{id}/move-messages', {
+		id,
+	})
+
+	await axios.post(url, { filter, destinationId })
+}
+
+export async function deleteMailboxMessages(id, filter) {
+	const url = generateUrl('/apps/mail/api/mailboxes/{id}/delete-messages', {
+		id,
+	})
+
+	await axios.post(url, { filter })
+}
+
+export async function setMailboxTag(id, filter, imapLabel) {
+	const url = generateUrl('/apps/mail/api/mailboxes/{id}/tags/{imapLabel}', {
+		id,
+		imapLabel,
+	})
+
+	const { data } = await axios.put(url, { filter })
+	return data
+}
+
+export async function removeMailboxTag(id, filter, imapLabel) {
+	const url = generateUrl('/apps/mail/api/mailboxes/{id}/tags/{imapLabel}', {
+		id,
+		imapLabel,
+	})
+
+	const { data } = await axios.delete(url, { params: { filter } })
+	return data
+}
+
+export async function setMailboxJunk(id, filter, junk) {
+	const url = generateUrl('/apps/mail/api/mailboxes/{id}/junk', {
+		id,
+	})
+
+	const { data } = await axios.put(url, { filter, junk })
+	return data.moved
+}
+
 export async function deleteMailbox(id) {
 	const url = generateUrl('/apps/mail/api/mailboxes/{id}', {
 		id,

@@ -207,4 +207,76 @@ class MailSearchTest extends TestCase {
 
 		$this->assertCount(2, $messages);
 	}
+
+	public function testFindMessageUidsNotCached(): void {
+		$account = $this->createStub(Account::class);
+		$mailbox = new Mailbox();
+		$this->expectException(MailboxNotCachedException::class);
+
+		$this->search->findMessageUids($account, $mailbox, null);
+	}
+
+	public function testFindMessageUidsLocked(): void {
+		$account = $this->createStub(Account::class);
+		$mailbox = new Mailbox();
+		$mailbox->setSyncNewLock(123);
+		$this->expectException(MailboxLockedException::class);
+
+		$this->search->findMessageUids($account, $mailbox, null);
+	}
+
+	public function testFindMessageUids(): void {
+		$account = $this->createStub(Account::class);
+		$mailbox = new Mailbox();
+		$mailbox->setSyncNewToken('abc');
+		$mailbox->setSyncChangedToken('def');
+		$mailbox->setSyncVanishedToken('ghi');
+		$query = new SearchQuery();
+		$this->filterStringParser->expects($this->once())
+			->method('parse')
+			->with('is:unread')
+			->willReturn($query);
+		$this->imapSearchProvider->expects($this->never())
+			->method('findMatches');
+		$this->messageMapper->expects($this->once())
+			->method('findIdsByQuery')
+			->with($mailbox, $query, 'DESC', null)
+			->willReturn([1, 2]);
+		$this->messageMapper->expects($this->once())
+			->method('findUidsForIds')
+			->with($mailbox, [1, 2])
+			->willReturn([101, 102]);
+
+		$uids = $this->search->findMessageUids($account, $mailbox, 'is:unread');
+
+		$this->assertSame([101, 102], $uids);
+		$this->assertFalse($query->getThreaded());
+		$this->assertEquals([Flag::not(Flag::DELETED)], $query->getFlags());
+	}
+
+	public function testFindMessageUidsWithBodySearch(): void {
+		$account = $this->createStub(Account::class);
+		$mailbox = new Mailbox();
+		$mailbox->setSyncNewToken('abc');
+		$mailbox->setSyncChangedToken('def');
+		$mailbox->setSyncVanishedToken('ghi');
+		$query = new SearchQuery();
+		$query->addBody('invoice');
+		$this->filterStringParser->method('parse')
+			->willReturn($query);
+		$this->imapSearchProvider->expects($this->once())
+			->method('findMatches')
+			->with($account, $mailbox, $query)
+			->willReturn([101]);
+		$this->messageMapper->expects($this->once())
+			->method('findIdsByQuery')
+			->with($mailbox, $query, 'DESC', null, [101])
+			->willReturn([1]);
+		$this->messageMapper->method('findUidsForIds')
+			->willReturn([101]);
+
+		$uids = $this->search->findMessageUids($account, $mailbox, 'body:invoice');
+
+		$this->assertSame([101], $uids);
+	}
 }

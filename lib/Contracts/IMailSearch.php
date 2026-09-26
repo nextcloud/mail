@@ -57,6 +57,16 @@ interface IMailSearch {
 		?string $view): array;
 
 	/**
+	 * Find the IMAP UIDs of all messages of a mailbox that match a filter
+	 *
+	 * @return int[]
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	public function findMessageUids(Account $account, Mailbox $mailbox, ?string $filter): array;
+
+	/**
 	 * Run a search through all mailboxes of a user.
 	 *
 	 * @return Message[]

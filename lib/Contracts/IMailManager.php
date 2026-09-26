@@ -178,6 +178,46 @@ interface IMailManager {
 	public function flagMessage(Account $account, string $mailbox, int $uid, string $flag, bool $value): void;
 
 	/**
+	 * Set a flag on many messages of a mailbox with a single IMAP connection
+	 *
+	 * The database cache is not updated. It picks up the change with the next sync.
+	 *
+	 * @param int[] $uids
+	 *
+	 * @throws ServiceException
+	 */
+	public function flagMessages(Account $account, Mailbox $mailbox, array $uids, string $flag, bool $value): void;
+
+	/**
+	 * Move many messages to another mailbox of the same account
+	 *
+	 * @param int[] $uids
+	 * @return array<int, int> new UIDs by old UID, as far as the IMAP server reports them
+	 *
+	 * @throws ServiceException
+	 */
+	public function moveMessages(Account $account, Mailbox $source, array $uids, Mailbox $destination): array;
+
+	/**
+	 * Add a tag to, or remove it from, many messages of a mailbox
+	 *
+	 * @param int[] $uids
+	 *
+	 * @throws ServiceException
+	 */
+	public function tagMessagesByUids(Account $account, Mailbox $mailbox, array $uids, Tag $tag, bool $value): void;
+
+	/**
+	 * Move many messages to the trash, or expunge them when they are in the trash already
+	 *
+	 * @param int[] $uids
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	public function deleteMessages(Account $account, Mailbox $mailbox, array $uids): void;
+
+	/**
 	 * @param Account $account
 	 * @param string $mailbox
 	 * @param Message $message

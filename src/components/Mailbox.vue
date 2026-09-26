@@ -19,38 +19,88 @@
 			:slow-hint="t('mail', 'Indexing your messages. This can take a bit longer for larger folders.')" />
 		<EmptyMailboxSection v-else-if="isPriorityInbox && !hasMessages" key="empty" />
 		<EmptyMailbox v-else-if="!hasMessages" key="empty" />
-		<template v-else-if="hasGroupedEnvelopes && !isPriorityInbox">
-			<div v-for="[label, group] in groupEnvelopes" :key="label">
-				<SectionTitle class="section-title" :name="getLabelForGroup(label)" />
-				<EnvelopeList
-					:account="account"
-					:mailbox="mailbox"
-					:search-query="searchQuery"
-					:envelopes="group"
-					:loading-more="false"
-					:load-more-button="false"
-					:skip-transition="skipListTransition"
-					:date-grouped="true"
-					@delete="onDelete" />
+		<div v-else>
+			<div v-if="!selectMode" class="select-all-bar">
+				<NcCheckboxRadioSwitch
+					:model-value="false"
+					type="checkbox"
+					@update:checked="selectAll">
+					{{ n('mail', 'Select %n message', 'Select all %n messages', flatEnvelopeList.length) }}
+				</NcCheckboxRadioSwitch>
 			</div>
-		</template>
-		<EnvelopeList
-			v-else
-			:account="account"
-			:load-more-label="loadMoreLabel"
-			:mailbox="mailbox"
-			:search-query="searchQuery"
-			:envelopes="envelopesToShow"
-			:loading-more="loadingMore"
-			:load-more-button="showLoadMore"
-			:skip-transition="skipListTransition"
-			@delete="onDelete"
-			@load-more="loadMore" />
+			<div v-else-if="allMatchingSelected" class="select-all-matching">
+				<span>{{ searchQuery ? t('mail', 'All messages matching this search are selected.') : t('mail', 'All messages in this folder are selected.') }}</span>
+				<NcButton
+					variant="tertiary"
+					:disabled="allMatchingBusy"
+					@click="unselectAll">
+					{{ t('mail', 'Clear selection') }}
+				</NcButton>
+			</div>
+			<div v-else-if="canSelectAllMatching" class="select-all-matching">
+				<span>{{ n('mail', 'All %n loaded message is selected.', 'All %n loaded messages are selected.', selection.length) }}</span>
+				<NcButton variant="tertiary" @click="allMatchingSelected = true">
+					{{ searchQuery ? t('mail', 'Select all matching messages') : t('mail', 'Select all messages in this folder') }}
+				</NcButton>
+			</div>
+			<template v-if="hasGroupedEnvelopes && !isPriorityInbox">
+				<div v-for="([label, group], index) in groupEnvelopes" :key="label">
+					<SectionTitle class="section-title" :name="getLabelForGroup(label)" />
+					<EnvelopeList
+						:account="account"
+						:mailbox="mailbox"
+						:search-query="searchQuery"
+						:envelopes="group"
+						:loading-more="false"
+						:load-more-button="false"
+						:skip-transition="skipListTransition"
+						:date-grouped="true"
+						:selection="selection"
+						:flat-index="groupFlatIndices[index]"
+						:hide-multiselect-header="index > 0"
+						:all-matching-selected="allMatchingSelected"
+						:all-matching-busy="allMatchingBusy"
+						@delete="onDelete"
+						@select="onSelect"
+						@select-range="onSelectRange"
+						@update:selection="onUpdateSelection"
+						@flag-all-matching="flagAllMatching"
+						@move-all-matching="moveAllMatching"
+						@delete-all-matching="deleteAllMatching"
+						@tag-all-matching="tagAllMatching"
+						@junk-all-matching="junkAllMatching" />
+				</div>
+			</template>
+			<EnvelopeList
+				v-else
+				:account="account"
+				:load-more-label="loadMoreLabel"
+				:mailbox="mailbox"
+				:search-query="searchQuery"
+				:envelopes="envelopesToShow"
+				:loading-more="loadingMore"
+				:load-more-button="showLoadMore"
+				:skip-transition="skipListTransition"
+				:selection="selection"
+				:all-matching-selected="allMatchingSelected"
+				:all-matching-busy="allMatchingBusy"
+				@delete="onDelete"
+				@load-more="loadMore"
+				@select="onSelect"
+				@select-range="onSelectRange"
+				@update:selection="onUpdateSelection"
+				@flag-all-matching="flagAllMatching"
+				@move-all-matching="moveAllMatching"
+				@delete-all-matching="deleteAllMatching"
+				@tag-all-matching="tagAllMatching"
+				@junk-all-matching="junkAllMatching" />
+		</div>
 	</div>
 </template>
 
 <script>
 import { showError, showWarning } from '@nextcloud/dialogs'
+import { NcButton, NcCheckboxRadioSwitch } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import { findIndex, propEq } from 'ramda'
 import EmptyMailbox from './EmptyMailbox.vue'
@@ -68,6 +118,7 @@ import NoTrashMailboxConfiguredError
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 import { mailboxHasRights } from '../util/acl.js'
+import { sortEnvelopes } from '../util/sortEnvelopes.js'
 import { wait } from '../util/wait.js'
 
 export default {
@@ -79,6 +130,8 @@ export default {
 		Error,
 		Loading,
 		LoadingSkeleton,
+		NcButton,
+		NcCheckboxRadioSwitch,
 		SectionTitle,
 	},
 
@@ -144,6 +197,10 @@ export default {
 			endReached: false,
 			syncedMailboxes: new Set(),
 			skipListTransition: false,
+			selection: [],
+			selectionAnchor: undefined,
+			allMatchingSelected: false,
+			allMatchingBusy: false,
 		}
 	},
 
@@ -178,10 +235,46 @@ export default {
 		showLoadMore() {
 			return !this.endReached && this.paginate === 'manual'
 		},
+
+		flatEnvelopeList() {
+			if (this.hasGroupedEnvelopes) {
+				return this.groupEnvelopes.flatMap(([, group]) => sortEnvelopes(group, this.sortOrder))
+			}
+			return sortEnvelopes(this.envelopesToShow, this.sortOrder)
+		},
+
+		groupFlatIndices() {
+			let offset = 0
+			return (this.groupEnvelopes ?? []).map(([, group]) => {
+				const index = offset
+				offset += group.length
+				return index
+			})
+		},
+
+		selectMode() {
+			return this.selection.length > 0
+		},
+
+		canSelectAllMatching() {
+			return !this.isPriorityInbox
+				&& !this.account.isUnified
+				&& !this.endReached
+				&& this.selection.length === this.flatEnvelopeList.length
+		},
 	},
 
 	watch: {
+		flatEnvelopeList() {
+			if (this.allMatchingSelected) {
+				this.selectAll()
+			} else {
+				this.setSelection(this.selection)
+			}
+		},
+
 		mailbox() {
+			this.unselectAll()
 			this.loadEnvelopes()
 				.then(() => {
 					logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.query}) after folder change`)
@@ -190,10 +283,12 @@ export default {
 		},
 
 		searchQuery() {
+			this.unselectAll()
 			this.loadEnvelopes()
 		},
 
 		sortOrder() {
+			this.unselectAll()
 			this.loadEnvelopes()
 		},
 	},
@@ -617,6 +712,128 @@ export default {
 			this.loadMailboxInterval = undefined
 		},
 
+		setSelection(ids) {
+			const selected = new Set(ids)
+			const selection = this.flatEnvelopeList
+				.map((envelope) => envelope.databaseId)
+				.filter((id) => selected.has(id))
+			if (selection.length !== this.selection.length
+				|| selection.some((id, index) => id !== this.selection[index])) {
+				this.selection = selection
+			}
+		},
+
+		onUpdateSelection(ids) {
+			this.allMatchingSelected = false
+			this.setSelection(ids)
+		},
+
+		onSelect(id, selected) {
+			this.allMatchingSelected = false
+			this.selectionAnchor = id
+			this.setSelection(selected
+				? [...this.selection, id]
+				: this.selection.filter((selectedId) => selectedId !== id))
+		},
+
+		onSelectRange(flatIndex, deselect) {
+			const anchorId = this.selectionAnchor ?? parseInt(this.$route.params.threadId)
+			const anchor = this.flatEnvelopeList.findIndex((envelope) => envelope.databaseId === anchorId)
+			if (anchor === -1) {
+				return
+			}
+
+			this.allMatchingSelected = false
+			const range = this.flatEnvelopeList
+				.slice(Math.min(anchor, flatIndex), Math.max(anchor, flatIndex) + 1)
+				.map((envelope) => envelope.databaseId)
+			if (deselect) {
+				const deselected = new Set(range)
+				this.setSelection(this.selection.filter((id) => !deselected.has(id)))
+			} else {
+				this.setSelection([...this.selection, ...range])
+			}
+			this.selectionAnchor = this.flatEnvelopeList[flatIndex].databaseId
+		},
+
+		selectAll() {
+			this.setSelection(this.flatEnvelopeList.map((envelope) => envelope.databaseId))
+		},
+
+		unselectAll() {
+			this.allMatchingSelected = false
+			this.selectionAnchor = undefined
+			this.setSelection([])
+		},
+
+		async flagAllMatching(flags) {
+			await this.runAllMatchingAction(
+				() => this.mainStore.flagMatchingEnvelopes({
+					mailboxId: this.mailbox.databaseId,
+					query: this.searchQuery,
+					flags,
+				}),
+				t('mail', 'Could not update the messages'),
+			)
+		},
+
+		async moveAllMatching(destMailboxId) {
+			await this.runAllMatchingAction(
+				() => this.mainStore.moveMatchingEnvelopes({
+					mailboxId: this.mailbox.databaseId,
+					query: this.searchQuery,
+					destMailboxId,
+				}),
+				t('mail', 'Could not move the messages'),
+			)
+		},
+
+		async deleteAllMatching() {
+			await this.runAllMatchingAction(
+				() => this.mainStore.deleteMatchingEnvelopes({
+					mailboxId: this.mailbox.databaseId,
+					query: this.searchQuery,
+				}),
+				t('mail', 'Could not delete the messages'),
+			)
+		},
+
+		async tagAllMatching({ imapLabel, value }) {
+			await this.runAllMatchingAction(
+				() => this.mainStore.tagMatchingEnvelopes({
+					mailboxId: this.mailbox.databaseId,
+					query: this.searchQuery,
+					imapLabel,
+					value,
+				}),
+				t('mail', 'Could not update the tags of the messages'),
+			)
+		},
+
+		async junkAllMatching(junk) {
+			await this.runAllMatchingAction(
+				() => this.mainStore.junkMatchingEnvelopes({
+					mailboxId: this.mailbox.databaseId,
+					query: this.searchQuery,
+					junk,
+				}),
+				t('mail', 'Could not update the spam state of the messages'),
+			)
+		},
+
+		async runAllMatchingAction(action, errorMessage) {
+			this.allMatchingBusy = true
+			try {
+				await action()
+				this.unselectAll()
+			} catch (error) {
+				logger.error('could not apply an action to all matching messages', { error })
+				showError(errorMessage)
+			} finally {
+				this.allMatchingBusy = false
+			}
+		},
+
 		getLabelForGroup(group) {
 			switch (group) {
 				case 'lastHour':
@@ -653,5 +870,23 @@ export default {
 	height: 100%;
 	display: flex;
 	justify-content: center;
+}
+
+.select-all-bar {
+	display: flex;
+	align-items: center;
+	margin-top: calc(2 * var(--default-grid-baseline));
+	padding: var(--default-grid-baseline) calc(2 * var(--default-grid-baseline));
+	border-bottom: 1px solid var(--color-border);
+}
+
+.select-all-matching {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--default-grid-baseline);
+	padding: var(--default-grid-baseline) calc(2 * var(--default-grid-baseline));
+	border-bottom: 1px solid var(--color-border);
+	color: var(--color-text-maxcontrast);
 }
 </style>

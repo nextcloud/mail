@@ -360,6 +360,52 @@ class MessageMapper {
 		}
 	}
 
+	/**
+	 * @param int[] $uids
+	 * @return array<int, int> new UIDs by old UID, empty if the server does not support UIDPLUS
+	 *
+	 * @throws ServiceException
+	 */
+	public function moveMessages(Horde_Imap_Client_Base $client,
+		string $sourceFolderId,
+		array $uids,
+		string $destFolderId): array {
+		try {
+			$mapping = $client->copy($sourceFolderId, $destFolderId,
+				[
+					'ids' => new Horde_Imap_Client_Ids($uids),
+					'move' => true,
+				]);
+			return is_array($mapping) ? $mapping : [];
+		} catch (Horde_Imap_Client_Exception $e) {
+			throw new ServiceException(
+				'Could not move ' . count($uids) . " messages from $sourceFolderId to $destFolderId",
+				0,
+				$e
+			);
+		}
+	}
+
+	/**
+	 * @param int[] $uids
+	 *
+	 * @throws ServiceException
+	 */
+	public function expungeMessages(Horde_Imap_Client_Base $client,
+		string $mailbox,
+		array $uids): void {
+		try {
+			$client->expunge(
+				$mailbox,
+				[
+					'ids' => new Horde_Imap_Client_Ids($uids),
+					'delete' => true,
+				]);
+		} catch (Horde_Imap_Client_Exception $e) {
+			throw new ServiceException('Could not expunge ' . count($uids) . " messages from $mailbox", 0, $e);
+		}
+	}
+
 	public function markAllRead(Horde_Imap_Client_Base $client,
 		string $mailbox): void {
 		$client->store($mailbox, [
