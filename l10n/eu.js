@@ -130,6 +130,7 @@ OC.L10N.register(
     "Manage certificates" : "Kudeatu ziurtagiriak",
     "Mailvelope" : "Mailvelope",
     "Assistance features" : "Laguntzailearen aukerak",
+    "Context Chat integration" : "Testuinguruko txaten integrazioa",
     "Compose new message" : "Idatzi mezu berria",
     "Newer message" : "Mezu berriagoa",
     "Older message" : "Mezu zaharragoa",
