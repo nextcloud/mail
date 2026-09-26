@@ -215,6 +215,16 @@ describe('Mailbox selection with date groups', () => {
 		expect(wrapper.vm.selection).toEqual([])
 	})
 
+	it('passes the full selection to every group for dragging', async () => {
+		wrapper.vm.setSelection([2, 3])
+		await wrapper.vm.$nextTick()
+
+		const selectedIds = wrapper.findAllComponents(EnvelopeList).wrappers
+			.map((list) => list.vm.selectedEnvelopes.map((env) => env.databaseId))
+
+		expect(selectedIds).toEqual([[2, 3], [2, 3]])
+	})
+
 	it('selects all through the checkbox', async () => {
 		wrapper.findComponent({ name: 'NcCheckboxRadioSwitch' }).vm.$emit('update:checked', true)
 		await wrapper.vm.$nextTick()
