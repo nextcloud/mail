@@ -1331,26 +1331,15 @@ export default {
 			} else {
 				data.bodyPlain = toPlain(html(this.bodyVal)).value
 			}
+			const body = new DOMParser().parseFromString(this.bodyVal, 'text/html').body
+			body.querySelectorAll('.signature').forEach((signature) => signature.remove())
+			data.bodyIsEmpty = body.textContent.trim() === '' && !body.querySelector('img')
 
 			return data
 		},
 
 		saveDraft() {
-			const draftData = this.getMessageData()
-			if (draftData.subject === ''
-				&& draftData.body?.value === ''
-				&& draftData.cc.length === 0
-				&& draftData.bcc.length === 0
-				&& draftData.to.length === 0
-				&& draftData.sendAt === undefined) {
-				// this might happen after a call to reset()
-				// where the text input gets reset as well
-				// and fires an input event
-				logger.debug('Nothing substantial to save, ignoring draft save')
-				return
-			}
-
-			this.$emit('draft', draftData)
+			this.$emit('draft', this.getMessageData())
 		},
 
 		insertSignature() {
