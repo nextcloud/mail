@@ -192,10 +192,20 @@ interface IMailManager {
 	 * Move many messages to another mailbox of the same account
 	 *
 	 * @param int[] $uids
+	 * @return array<int, int> new UIDs by old UID, as far as the IMAP server reports them
 	 *
 	 * @throws ServiceException
 	 */
-	public function moveMessages(Account $account, Mailbox $source, array $uids, Mailbox $destination): void;
+	public function moveMessages(Account $account, Mailbox $source, array $uids, Mailbox $destination): array;
+
+	/**
+	 * Add a tag to, or remove it from, many messages of a mailbox
+	 *
+	 * @param int[] $uids
+	 *
+	 * @throws ServiceException
+	 */
+	public function tagMessagesByUids(Account $account, Mailbox $mailbox, array $uids, Tag $tag, bool $value): void;
 
 	/**
 	 * Move many messages to the trash, or expunge them when they are in the trash already

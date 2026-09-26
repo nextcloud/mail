@@ -362,19 +362,21 @@ class MessageMapper {
 
 	/**
 	 * @param int[] $uids
+	 * @return array<int, int> new UIDs by old UID, empty if the server does not support UIDPLUS
 	 *
 	 * @throws ServiceException
 	 */
 	public function moveMessages(Horde_Imap_Client_Base $client,
 		string $sourceFolderId,
 		array $uids,
-		string $destFolderId): void {
+		string $destFolderId): array {
 		try {
-			$client->copy($sourceFolderId, $destFolderId,
+			$mapping = $client->copy($sourceFolderId, $destFolderId,
 				[
 					'ids' => new Horde_Imap_Client_Ids($uids),
 					'move' => true,
 				]);
+			return is_array($mapping) ? $mapping : [];
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
 				'Could not move ' . count($uids) . " messages from $sourceFolderId to $destFolderId",

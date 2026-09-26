@@ -22,6 +22,7 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\DelegationService;
+use OCA\Mail\Service\JunkService;
 use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -49,6 +50,7 @@ class MailboxesController extends Controller {
 		private readonly ITimeFactory $timeFactory,
 		private DelegationService $delegationService,
 		private IMailSearch $mailSearch,
+		private JunkService $junkService,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -329,6 +331,93 @@ class MailboxesController extends Controller {
 		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId deleted $count messages in mailbox: $id on behalf of $effectiveUserId");
 
 		return new JSONResponse();
+	}
+
+	/**
+	 * Add a tag to all messages of a mailbox that match a filter
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	#[TrapError]
+	#[NoAdminRequired]
+	public function setTag(int $id, string $imapLabel, ?string $filter = null): JSONResponse {
+		return $this->tagMessages($id, $imapLabel, $filter, true);
+	}
+
+	/**
+	 * Remove a tag from all messages of a mailbox that match a filter
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	#[TrapError]
+	#[NoAdminRequired]
+	public function removeTag(int $id, string $imapLabel, ?string $filter = null): JSONResponse {
+		return $this->tagMessages($id, $imapLabel, $filter, false);
+	}
+
+	/**
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	private function tagMessages(int $id, string $imapLabel, ?string $filter, bool $value): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
+		try {
+			$effectiveUserId = $this->delegationService->resolveMailboxUserId($id, $this->userId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$mailbox = $this->mailManager->getMailbox($effectiveUserId, $id);
+		$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
+		try {
+			$tag = $this->mailManager->getTagByImapLabel($imapLabel, $this->userId);
+		} catch (ClientException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+
+		$uids = $this->mailSearch->findMessageUids($account, $mailbox, $filter);
+		$this->mailManager->tagMessagesByUids($account, $mailbox, $uids, $tag, $value);
+
+		$count = count($uids);
+		$action = $value ? 'added' : 'removed';
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId $action tag <$imapLabel> on $count messages in mailbox: $id on behalf of $effectiveUserId");
+
+		return new JSONResponse($tag);
+	}
+
+	/**
+	 * Mark all messages of a mailbox that match a filter as junk or not junk
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	#[TrapError]
+	#[NoAdminRequired]
+	public function setJunk(int $id, bool $junk, ?string $filter = null): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
+		try {
+			$effectiveUserId = $this->delegationService->resolveMailboxUserId($id, $this->userId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$mailbox = $this->mailManager->getMailbox($effectiveUserId, $id);
+		$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
+
+		$uids = $this->mailSearch->findMessageUids($account, $mailbox, $filter);
+		$moved = $this->junkService->markMessages($account, $mailbox, $uids, $junk);
+
+		$count = count($uids);
+		$state = $junk ? 'junk' : 'not junk';
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId marked $count messages in mailbox: $id as $state on behalf of $effectiveUserId");
+
+		return new JSONResponse(['moved' => $moved]);
 	}
 
 	/**

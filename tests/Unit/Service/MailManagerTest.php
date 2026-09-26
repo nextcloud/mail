@@ -653,10 +653,11 @@ class MailManagerTest extends TestCase {
 		$moved = [];
 		$this->imapMessageMapper->expects($this->exactly(2))
 			->method('moveMessages')
-			->willReturnCallback(function ($c, string $source, array $chunk, string $destination) use (&$moved): void {
+			->willReturnCallback(function ($c, string $source, array $chunk, string $destination) use (&$moved): array {
 				$this->assertSame('INBOX', $source);
 				$this->assertSame('Archive', $destination);
 				$moved[] = $chunk;
+				return array_combine($chunk, array_map(static fn (int $uid): int => $uid + 1000, $chunk));
 			});
 		$cleared = [];
 		$this->dbMessageMapper->expects($this->exactly(2))
@@ -668,9 +669,11 @@ class MailManagerTest extends TestCase {
 		$client->expects($this->once())
 			->method('logout');
 
-		$this->manager->moveMessages($account, $inbox, $uids, $archive);
+		$mapping = $this->manager->moveMessages($account, $inbox, $uids, $archive);
 
 		$this->assertSame($moved, $cleared);
+		$this->assertCount(700, $mapping);
+		$this->assertSame(1700, $mapping[700]);
 		$this->assertSame($uids, array_merge(...$moved));
 	}
 
@@ -681,10 +684,11 @@ class MailManagerTest extends TestCase {
 		$this->imapClientFactory->method('getClient')
 			->willReturn($client);
 		$this->imapMessageMapper->method('moveMessages')
-			->willReturnCallback(function ($c, string $source, array $chunk): void {
+			->willReturnCallback(function ($c, string $source, array $chunk): array {
 				if ($chunk[0] > 500) {
 					throw new ServiceException('connection lost');
 				}
+				return [];
 			});
 		$cleared = [];
 		$this->dbMessageMapper->method('deleteByUid')
@@ -768,6 +772,48 @@ class MailManagerTest extends TestCase {
 			->method('findById');
 
 		$this->manager->deleteMessages($account, $this->mailbox(1, 'INBOX'), []);
+	}
+
+	public function testTagMessagesByUidsInChunks(): void {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$account = $this->createConfiguredMock(Account::class, ['getUserId' => 'john']);
+		$inbox = $this->mailbox(1, 'INBOX');
+		$tag = new Tag();
+		$tag->setImapLabel('$label1');
+		$this->imapClientFactory->expects($this->once())
+			->method('getClient')
+			->willReturn($client);
+		$client->method('status')
+			->willReturn(['permflags' => ['\\*']]);
+		$loaded = [];
+		$this->dbMessageMapper->expects($this->exactly(2))
+			->method('findByUids')
+			->willReturnCallback(function (Mailbox $mailbox, array $uids) use (&$loaded): array {
+				$loaded[] = $uids;
+				return array_map(static function (int $uid): \OCA\Mail\Db\Message {
+					$message = new \OCA\Mail\Db\Message();
+					$message->setUid($uid);
+					$message->setMessageId("<$uid@example.com>");
+					return $message;
+				}, $uids);
+			});
+		$this->imapMessageMapper->expects($this->exactly(2))
+			->method('addFlag');
+		$this->tagMapper->expects($this->exactly(600))
+			->method('tagMessage');
+		$client->expects($this->once())
+			->method('logout');
+
+		$this->manager->tagMessagesByUids($account, $inbox, range(1, 600), $tag, true);
+
+		$this->assertSame(range(1, 600), array_merge(...$loaded));
+	}
+
+	public function testTagMessagesByUidsWithoutUids(): void {
+		$this->imapClientFactory->expects($this->never())
+			->method('getClient');
+
+		$this->manager->tagMessagesByUids($this->createStub(Account::class), $this->mailbox(1, 'INBOX'), [], new Tag(), true);
 	}
 
 	public function testTagMessage(): void {

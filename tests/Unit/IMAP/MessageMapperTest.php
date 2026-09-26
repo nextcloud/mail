@@ -1004,9 +1004,22 @@ class MessageMapperTest extends TestCase {
 				$this->assertEquals(new Horde_Imap_Client_Ids([1, 2, 3]), $options['ids']);
 				$this->assertTrue($options['move']);
 				return true;
-			}));
+			}))
+			->willReturn([1 => 11, 2 => 12, 3 => 13]);
 
-		$this->mapper->moveMessages($client, 'INBOX', [1, 2, 3], 'Archive');
+		$mapping = $this->mapper->moveMessages($client, 'INBOX', [1, 2, 3], 'Archive');
+
+		$this->assertSame([1 => 11, 2 => 12, 3 => 13], $mapping);
+	}
+
+	public function testMoveMessagesWithoutUidplus(): void {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client->method('copy')
+			->willReturn(true);
+
+		$mapping = $this->mapper->moveMessages($client, 'INBOX', [1], 'Archive');
+
+		$this->assertSame([], $mapping);
 	}
 
 	public function testMoveMessagesWrapsImapErrors(): void {

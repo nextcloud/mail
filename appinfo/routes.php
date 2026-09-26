@@ -201,6 +201,21 @@ return [
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'mailboxes#setTag',
+			'url' => '/api/mailboxes/{id}/tags/{imapLabel}',
+			'verb' => 'PUT'
+		],
+		[
+			'name' => 'mailboxes#removeTag',
+			'url' => '/api/mailboxes/{id}/tags/{imapLabel}',
+			'verb' => 'DELETE'
+		],
+		[
+			'name' => 'mailboxes#setJunk',
+			'url' => '/api/mailboxes/{id}/junk',
+			'verb' => 'PUT'
+		],
+		[
 			'name' => 'mailboxes#stats',
 			'url' => '/api/mailboxes/{id}/stats',
 			'verb' => 'GET'

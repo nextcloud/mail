@@ -472,7 +472,26 @@ class MailManager implements IMailManager {
 	}
 
 	#[\Override]
-	public function moveMessages(Account $account, Mailbox $source, array $uids, Mailbox $destination): void {
+	public function moveMessages(Account $account, Mailbox $source, array $uids, Mailbox $destination): array {
+		if ($uids === []) {
+			return [];
+		}
+
+		$mapping = [];
+		$client = $this->imapClientFactory->getClient($account);
+		try {
+			foreach (array_chunk($uids, self::UIDS_CHUNK_SIZE) as $chunk) {
+				$mapping += $this->imapMessageMapper->moveMessages($client, $source->getName(), $chunk, $destination->getName());
+				$this->dbMessageMapper->deleteByUid($source, ...$chunk);
+			}
+		} finally {
+			$client->logout();
+		}
+		return $mapping;
+	}
+
+	#[\Override]
+	public function tagMessagesByUids(Account $account, Mailbox $mailbox, array $uids, Tag $tag, bool $value): void {
 		if ($uids === []) {
 			return;
 		}
@@ -480,8 +499,8 @@ class MailManager implements IMailManager {
 		$client = $this->imapClientFactory->getClient($account);
 		try {
 			foreach (array_chunk($uids, self::UIDS_CHUNK_SIZE) as $chunk) {
-				$this->imapMessageMapper->moveMessages($client, $source->getName(), $chunk, $destination->getName());
-				$this->dbMessageMapper->deleteByUid($source, ...$chunk);
+				$messages = $this->dbMessageMapper->findByUids($mailbox, $chunk);
+				$this->tagMessagesWithClient($client, $account, $mailbox, $messages, $tag, $value);
 			}
 		} finally {
 			$client->logout();

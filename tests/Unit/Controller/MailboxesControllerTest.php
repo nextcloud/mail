@@ -15,12 +15,14 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Controller\MailboxesController;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\Tag;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\MailboxStats;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\DelegationService;
+use OCA\Mail\Service\JunkService;
 use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -55,6 +57,7 @@ class MailboxesControllerTest extends TestCase {
 	private ITimeFactory|MockObject $timeFactory;
 	private DelegationService|MockObject $delegationService;
 	private IMailSearch|MockObject $mailSearch;
+	private JunkService|MockObject $junkService;
 
 	public function setUp(): void {
 		parent::setUp();
@@ -69,6 +72,7 @@ class MailboxesControllerTest extends TestCase {
 		$this->delegationService->method('resolveAccountUserId')->willReturn($this->userId);
 		$this->delegationService->method('resolveMailboxUserId')->willReturn($this->userId);
 		$this->mailSearch = $this->createMock(IMailSearch::class);
+		$this->junkService = $this->createMock(JunkService::class);
 
 		$this->controller = new MailboxesController(
 			$this->appName,
@@ -81,6 +85,7 @@ class MailboxesControllerTest extends TestCase {
 			$this->timeFactory,
 			$this->delegationService,
 			$this->mailSearch,
+			$this->junkService,
 		);
 	}
 
@@ -330,6 +335,7 @@ class MailboxesControllerTest extends TestCase {
 			$this->timeFactory,
 			$this->delegationService,
 			$this->mailSearch,
+			$this->junkService,
 		);
 		$this->mailManager->expects($this->never())
 			->method('flagMessages');
@@ -446,6 +452,7 @@ class MailboxesControllerTest extends TestCase {
 			$this->timeFactory,
 			$this->delegationService,
 			$this->mailSearch,
+			$this->junkService,
 		);
 		$this->mailManager->expects($this->never())
 			->method('moveMessages');
@@ -454,6 +461,92 @@ class MailboxesControllerTest extends TestCase {
 
 		$this->assertSame(Http::STATUS_UNAUTHORIZED, $controller->moveMessages(13, 14)->getStatus());
 		$this->assertSame(Http::STATUS_UNAUTHORIZED, $controller->deleteMessages(13)->getStatus());
+	}
+
+	public function testSetTag(): void {
+		$inbox = $this->mailboxOf(13, 28);
+		$account = $this->mockMailboxes($inbox);
+		$tag = new Tag();
+		$tag->setImapLabel('$label1');
+		$this->mailManager->method('getTagByImapLabel')
+			->with('$label1', $this->userId)
+			->willReturn($tag);
+		$this->mailSearch->method('findMessageUids')
+			->with($account, $inbox, 'from:boss')
+			->willReturn([101, 102]);
+		$this->mailManager->expects($this->once())
+			->method('tagMessagesByUids')
+			->with($account, $inbox, [101, 102], $tag, true);
+		$this->delegationService->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId added tag <\$label1> on 2 messages in mailbox: 13 on behalf of $this->userId");
+
+		$response = $this->controller->setTag(13, '$label1', 'from:boss');
+
+		$this->assertSame($tag, $response->getData());
+	}
+
+	public function testRemoveTag(): void {
+		$inbox = $this->mailboxOf(13, 28);
+		$account = $this->mockMailboxes($inbox);
+		$tag = new Tag();
+		$this->mailManager->method('getTagByImapLabel')
+			->willReturn($tag);
+		$this->mailSearch->method('findMessageUids')
+			->willReturn([101]);
+		$this->mailManager->expects($this->once())
+			->method('tagMessagesByUids')
+			->with($account, $inbox, [101], $tag, false);
+
+		$response = $this->controller->removeTag(13, '$label1');
+
+		$this->assertSame(Http::STATUS_OK, $response->getStatus());
+	}
+
+	public function testSetUnknownTag(): void {
+		$this->mockMailboxes($this->mailboxOf(13, 28));
+		$this->mailManager->method('getTagByImapLabel')
+			->willThrowException(new ClientException('unknown tag'));
+		$this->mailManager->expects($this->never())
+			->method('tagMessagesByUids');
+
+		$response = $this->controller->setTag(13, '$unknown');
+
+		$this->assertSame(Http::STATUS_FORBIDDEN, $response->getStatus());
+	}
+
+	public function testSetJunk(): void {
+		$inbox = $this->mailboxOf(13, 28);
+		$account = $this->mockMailboxes($inbox);
+		$this->mailSearch->method('findMessageUids')
+			->with($account, $inbox, 'from:shop')
+			->willReturn([101, 102]);
+		$this->junkService->expects($this->once())
+			->method('markMessages')
+			->with($account, $inbox, [101, 102], true)
+			->willReturn(true);
+		$this->delegationService->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId marked 2 messages in mailbox: 13 as junk on behalf of $this->userId");
+
+		$response = $this->controller->setJunk(13, true, 'from:shop');
+
+		$this->assertSame(['moved' => true], $response->getData());
+	}
+
+	public function testSetNotJunk(): void {
+		$inbox = $this->mailboxOf(13, 28);
+		$account = $this->mockMailboxes($inbox);
+		$this->mailSearch->method('findMessageUids')
+			->willReturn([101]);
+		$this->junkService->expects($this->once())
+			->method('markMessages')
+			->with($account, $inbox, [101], false)
+			->willReturn(false);
+
+		$response = $this->controller->setJunk(13, false);
+
+		$this->assertSame(['moved' => false], $response->getData());
 	}
 
 	public function testDestroyLogsDelegatedAction(): void {
