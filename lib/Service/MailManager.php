@@ -500,6 +500,13 @@ class MailManager implements IMailManager {
 		try {
 			foreach (array_chunk($uids, self::UIDS_CHUNK_SIZE) as $chunk) {
 				$messages = $this->dbMessageMapper->findByUids($mailbox, $chunk);
+				if ($value) {
+					// mail_message_tags has no unique index, so tagging an already tagged message would duplicate it
+					$messages = $this->withoutTag($messages, $tag, $account->getUserId());
+				}
+				if ($messages === []) {
+					continue;
+				}
 				$this->tagMessagesWithClient($client, $account, $mailbox, $messages, $tag, $value);
 			}
 		} finally {
@@ -537,6 +544,22 @@ class MailManager implements IMailManager {
 		} finally {
 			$client->logout();
 		}
+	}
+
+	/**
+	 * @param Message[] $messages
+	 * @return Message[]
+	 */
+	private function withoutTag(array $messages, Tag $tag, string $userId): array {
+		$tagsByMessageId = $this->tagMapper->getAllTagsForMessages($messages, $userId);
+		return array_values(array_filter($messages, static function (Message $message) use ($tag, $tagsByMessageId): bool {
+			foreach ($tagsByMessageId[$message->getMessageId()] ?? [] as $existing) {
+				if ($existing->getImapLabel() === $tag->getImapLabel()) {
+					return false;
+				}
+			}
+			return true;
+		}));
 	}
 
 	/**

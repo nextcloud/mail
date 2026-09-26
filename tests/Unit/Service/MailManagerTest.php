@@ -809,6 +809,83 @@ class MailManagerTest extends TestCase {
 		$this->assertSame(range(1, 600), array_merge(...$loaded));
 	}
 
+	public function testTagMessagesByUidsSkipsAlreadyTaggedMessages(): void {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$account = $this->createConfiguredMock(Account::class, ['getUserId' => 'john']);
+		$tag = new Tag();
+		$tag->setImapLabel('work');
+		$other = new Tag();
+		$other->setImapLabel('private');
+		$tagged = new \OCA\Mail\Db\Message();
+		$tagged->setUid(1);
+		$tagged->setMessageId('<1@example.com>');
+		$untagged = new \OCA\Mail\Db\Message();
+		$untagged->setUid(2);
+		$untagged->setMessageId('<2@example.com>');
+		$this->imapClientFactory->method('getClient')
+			->willReturn($client);
+		$client->method('status')
+			->willReturn(['permflags' => ['\\*']]);
+		$this->dbMessageMapper->method('findByUids')
+			->willReturn([$tagged, $untagged]);
+		$this->tagMapper->method('getAllTagsForMessages')
+			->willReturn([
+				'<1@example.com>' => [$other, $tag],
+				'<2@example.com>' => [$other],
+			]);
+		$this->imapMessageMapper->expects($this->once())
+			->method('addFlag')
+			->with($client, $this->anything(), [2], 'work');
+		$this->tagMapper->expects($this->once())
+			->method('tagMessage')
+			->with($tag, '<2@example.com>', 'john');
+
+		$this->manager->tagMessagesByUids($account, $this->mailbox(1, 'INBOX'), [1, 2], $tag, true);
+	}
+
+	public function testTagMessagesByUidsWhenAllAreTagged(): void {
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
+		$account = $this->createConfiguredMock(Account::class, ['getUserId' => 'john']);
+		$tag = new Tag();
+		$tag->setImapLabel('work');
+		$message = new \OCA\Mail\Db\Message();
+		$message->setUid(1);
+		$message->setMessageId('<1@example.com>');
+		$this->imapClientFactory->method('getClient')
+			->willReturn($client);
+		$this->dbMessageMapper->method('findByUids')
+			->willReturn([$message]);
+		$this->tagMapper->method('getAllTagsForMessages')
+			->willReturn(['<1@example.com>' => [$tag]]);
+		$this->imapMessageMapper->expects($this->never())
+			->method('addFlag');
+		$this->tagMapper->expects($this->never())
+			->method('tagMessage');
+
+		$this->manager->tagMessagesByUids($account, $this->mailbox(1, 'INBOX'), [1], $tag, true);
+	}
+
+	public function testUntagMessagesByUidsDoesNotCheckExistingTags(): void {
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
+		$account = $this->createConfiguredMock(Account::class, ['getUserId' => 'john']);
+		$tag = new Tag();
+		$tag->setImapLabel('work');
+		$message = new \OCA\Mail\Db\Message();
+		$message->setUid(1);
+		$message->setMessageId('<1@example.com>');
+		$this->imapClientFactory->method('getClient')
+			->willReturn($client);
+		$this->dbMessageMapper->method('findByUids')
+			->willReturn([$message]);
+		$this->tagMapper->expects($this->never())
+			->method('getAllTagsForMessages');
+		$this->tagMapper->expects($this->once())
+			->method('untagMessage')
+			->with($tag, '<1@example.com>');
+
+		$this->manager->tagMessagesByUids($account, $this->mailbox(1, 'INBOX'), [1], $tag, false);
+	}
+
 	public function testTagMessagesByUidsWithoutUids(): void {
 		$this->imapClientFactory->expects($this->never())
 			->method('getClient');
