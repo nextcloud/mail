@@ -264,6 +264,74 @@ class MailboxesController extends Controller {
 	}
 
 	/**
+	 * Move all messages of a mailbox that match a filter to another mailbox of the same account
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	#[TrapError]
+	#[NoAdminRequired]
+	public function moveMessages(int $id, int $destinationId, ?string $filter = null): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+		if ($id === $destinationId) {
+			return new JSONResponse([], Http::STATUS_UNPROCESSABLE_ENTITY);
+		}
+
+		try {
+			$effectiveUserId = $this->delegationService->resolveMailboxUserId($id, $this->userId);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $id);
+			$destination = $this->mailManager->getMailbox($effectiveUserId, $destinationId);
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$this->delegationService->assertMailboxAccess($destinationId, $this->userId);
+		if ($destination->getAccountId() !== $mailbox->getAccountId()) {
+			return new JSONResponse([], Http::STATUS_UNPROCESSABLE_ENTITY);
+		}
+
+		$uids = $this->mailSearch->findMessageUids($account, $mailbox, $filter);
+		$this->mailManager->moveMessages($account, $mailbox, $uids, $destination);
+
+		$count = count($uids);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId moved $count messages from mailbox: $id to mailbox: $destinationId on behalf of $effectiveUserId");
+
+		return new JSONResponse();
+	}
+
+	/**
+	 * Delete all messages of a mailbox that match a filter
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	#[TrapError]
+	#[NoAdminRequired]
+	public function deleteMessages(int $id, ?string $filter = null): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
+		try {
+			$effectiveUserId = $this->delegationService->resolveMailboxUserId($id, $this->userId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$mailbox = $this->mailManager->getMailbox($effectiveUserId, $id);
+		$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
+
+		$uids = $this->mailSearch->findMessageUids($account, $mailbox, $filter);
+		$this->mailManager->deleteMessages($account, $mailbox, $uids);
+
+		$count = count($uids);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId deleted $count messages in mailbox: $id on behalf of $effectiveUserId");
+
+		return new JSONResponse();
+	}
+
+	/**
 	 * @NoAdminRequired
 	 *
 	 * @param int $id

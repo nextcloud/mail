@@ -191,6 +191,16 @@ return [
 			'verb' => 'PUT'
 		],
 		[
+			'name' => 'mailboxes#moveMessages',
+			'url' => '/api/mailboxes/{id}/move-messages',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'mailboxes#deleteMessages',
+			'url' => '/api/mailboxes/{id}/delete-messages',
+			'verb' => 'POST'
+		],
+		[
 			'name' => 'mailboxes#stats',
 			'url' => '/api/mailboxes/{id}/stats',
 			'verb' => 'GET'

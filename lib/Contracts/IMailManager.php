@@ -189,6 +189,25 @@ interface IMailManager {
 	public function flagMessages(Account $account, Mailbox $mailbox, array $uids, string $flag, bool $value): void;
 
 	/**
+	 * Move many messages to another mailbox of the same account
+	 *
+	 * @param int[] $uids
+	 *
+	 * @throws ServiceException
+	 */
+	public function moveMessages(Account $account, Mailbox $source, array $uids, Mailbox $destination): void;
+
+	/**
+	 * Move many messages to the trash, or expunge them when they are in the trash already
+	 *
+	 * @param int[] $uids
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	public function deleteMessages(Account $account, Mailbox $mailbox, array $uids): void;
+
+	/**
 	 * @param Account $account
 	 * @param string $mailbox
 	 * @param Message $message

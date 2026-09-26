@@ -21,6 +21,7 @@ use Horde_Imap_Client_Search_Query;
 use Horde_Imap_Client_Socket;
 use Horde_Mime_Part;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\Charset\Converter;
 use OCA\Mail\IMAP\ImapMessageFetcher;
 use OCA\Mail\IMAP\ImapMessageFetcherFactory;
@@ -993,5 +994,49 @@ class MessageMapperTest extends TestCase {
 		$this->assertEquals('nextcloud.png', $attachment->getName());
 		$this->assertEquals('image/png', $attachment->getType());
 		$this->assertEquals('inline', $attachment->disposition);
+	}
+
+	public function testMoveMessages(): void {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client->expects($this->once())
+			->method('copy')
+			->with('INBOX', 'Archive', $this->callback(function (array $options): bool {
+				$this->assertEquals(new Horde_Imap_Client_Ids([1, 2, 3]), $options['ids']);
+				$this->assertTrue($options['move']);
+				return true;
+			}));
+
+		$this->mapper->moveMessages($client, 'INBOX', [1, 2, 3], 'Archive');
+	}
+
+	public function testMoveMessagesWrapsImapErrors(): void {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client->method('copy')
+			->willThrowException(new Horde_Imap_Client_Exception('no permission'));
+		$this->expectException(ServiceException::class);
+
+		$this->mapper->moveMessages($client, 'INBOX', [1], 'Archive');
+	}
+
+	public function testExpungeMessages(): void {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client->expects($this->once())
+			->method('expunge')
+			->with('Trash', $this->callback(function (array $options): bool {
+				$this->assertEquals(new Horde_Imap_Client_Ids([4, 5]), $options['ids']);
+				$this->assertTrue($options['delete']);
+				return true;
+			}));
+
+		$this->mapper->expungeMessages($client, 'Trash', [4, 5]);
+	}
+
+	public function testExpungeMessagesWrapsImapErrors(): void {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client->method('expunge')
+			->willThrowException(new Horde_Imap_Client_Exception('no permission'));
+		$this->expectException(ServiceException::class);
+
+		$this->mapper->expungeMessages($client, 'Trash', [4]);
 	}
 }

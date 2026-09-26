@@ -15,6 +15,7 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Controller\MailboxesController;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\MailboxStats;
@@ -336,6 +337,123 @@ class MailboxesControllerTest extends TestCase {
 		$response = $controller->setFlags(13, ['seen' => true]);
 
 		$this->assertSame(Http::STATUS_UNAUTHORIZED, $response->getStatus());
+	}
+
+	private function mockMailboxes(Mailbox ...$mailboxes): Account {
+		$account = $this->createStub(Account::class);
+		$this->mailManager->method('getMailbox')
+			->willReturnCallback(function (string $userId, int $id) use ($mailboxes): Mailbox {
+				foreach ($mailboxes as $mailbox) {
+					if ($mailbox->getId() === $id) {
+						return $mailbox;
+					}
+				}
+				throw new ClientException("Mailbox $id does not exist");
+			});
+		$this->accountService->method('find')
+			->willReturn($account);
+		return $account;
+	}
+
+	private function mailboxOf(int $id, int $accountId): Mailbox {
+		$mailbox = new Mailbox();
+		$mailbox->setId($id);
+		$mailbox->setAccountId($accountId);
+		return $mailbox;
+	}
+
+	public function testMoveMessages(): void {
+		$inbox = $this->mailboxOf(13, 28);
+		$archive = $this->mailboxOf(14, 28);
+		$account = $this->mockMailboxes($inbox, $archive);
+		$this->delegationService->expects($this->once())
+			->method('assertMailboxAccess')
+			->with(14, $this->userId);
+		$this->mailSearch->expects($this->once())
+			->method('findMessageUids')
+			->with($account, $inbox, 'from:shop')
+			->willReturn([101, 102]);
+		$this->mailManager->expects($this->once())
+			->method('moveMessages')
+			->with($account, $inbox, [101, 102], $archive);
+		$this->delegationService->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId moved 2 messages from mailbox: 13 to mailbox: 14 on behalf of $this->userId");
+
+		$response = $this->controller->moveMessages(13, 14, 'from:shop');
+
+		$this->assertSame(Http::STATUS_OK, $response->getStatus());
+	}
+
+	public function testMoveMessagesIntoSameMailbox(): void {
+		$this->mailManager->expects($this->never())
+			->method('moveMessages');
+
+		$response = $this->controller->moveMessages(13, 13);
+
+		$this->assertSame(Http::STATUS_UNPROCESSABLE_ENTITY, $response->getStatus());
+	}
+
+	public function testMoveMessagesToOtherAccount(): void {
+		$this->mockMailboxes($this->mailboxOf(13, 28), $this->mailboxOf(14, 29));
+		$this->mailSearch->expects($this->never())
+			->method('findMessageUids');
+		$this->mailManager->expects($this->never())
+			->method('moveMessages');
+
+		$response = $this->controller->moveMessages(13, 14);
+
+		$this->assertSame(Http::STATUS_UNPROCESSABLE_ENTITY, $response->getStatus());
+	}
+
+	public function testMoveMessagesToUnknownMailbox(): void {
+		$this->mockMailboxes($this->mailboxOf(13, 28));
+		$this->mailManager->expects($this->never())
+			->method('moveMessages');
+		$this->expectException(ClientException::class);
+
+		$this->controller->moveMessages(13, 99);
+	}
+
+	public function testDeleteMessages(): void {
+		$inbox = $this->mailboxOf(13, 28);
+		$account = $this->mockMailboxes($inbox);
+		$this->mailSearch->expects($this->once())
+			->method('findMessageUids')
+			->with($account, $inbox, null)
+			->willReturn([101, 102, 103]);
+		$this->mailManager->expects($this->once())
+			->method('deleteMessages')
+			->with($account, $inbox, [101, 102, 103]);
+		$this->delegationService->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId deleted 3 messages in mailbox: 13 on behalf of $this->userId");
+
+		$response = $this->controller->deleteMessages(13);
+
+		$this->assertSame(Http::STATUS_OK, $response->getStatus());
+	}
+
+	public function testMoveAndDeleteMessagesWithoutUser(): void {
+		$controller = new MailboxesController(
+			$this->appName,
+			$this->request,
+			$this->accountService,
+			null,
+			$this->mailManager,
+			$this->syncService,
+			$this->config,
+			$this->timeFactory,
+			$this->delegationService,
+			$this->mailSearch,
+		);
+		$this->mailManager->expects($this->never())
+			->method('moveMessages');
+		$this->mailManager->expects($this->never())
+			->method('deleteMessages');
+
+		$this->assertSame(Http::STATUS_UNAUTHORIZED, $controller->moveMessages(13, 14)->getStatus());
+		$this->assertSame(Http::STATUS_UNAUTHORIZED, $controller->deleteMessages(13)->getStatus());
 	}
 
 	public function testDestroyLogsDelegatedAction(): void {

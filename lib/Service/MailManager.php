@@ -48,7 +48,7 @@ use function array_values;
 
 class MailManager implements IMailManager {
 	// Keeps sparse UID sets below the 8000 octet command length recommended by RFC 7162
-	private const FLAG_UIDS_CHUNK_SIZE = 500;
+	private const UIDS_CHUNK_SIZE = 500;
 
 	/**
 	 * https://datatracker.ietf.org/doc/html/rfc9051#name-flags-message-attribute
@@ -452,7 +452,7 @@ class MailManager implements IMailManager {
 				if (empty($imapFlag) === true) {
 					continue;
 				}
-				foreach (array_chunk($uids, self::FLAG_UIDS_CHUNK_SIZE) as $chunk) {
+				foreach (array_chunk($uids, self::UIDS_CHUNK_SIZE) as $chunk) {
 					if ($value) {
 						$this->imapMessageMapper->addFlag($client, $mailbox, $chunk, $imapFlag);
 					} else {
@@ -466,6 +466,55 @@ class MailManager implements IMailManager {
 				$e->getCode(),
 				$e
 			);
+		} finally {
+			$client->logout();
+		}
+	}
+
+	#[\Override]
+	public function moveMessages(Account $account, Mailbox $source, array $uids, Mailbox $destination): void {
+		if ($uids === []) {
+			return;
+		}
+
+		$client = $this->imapClientFactory->getClient($account);
+		try {
+			foreach (array_chunk($uids, self::UIDS_CHUNK_SIZE) as $chunk) {
+				$this->imapMessageMapper->moveMessages($client, $source->getName(), $chunk, $destination->getName());
+				$this->dbMessageMapper->deleteByUid($source, ...$chunk);
+			}
+		} finally {
+			$client->logout();
+		}
+	}
+
+	#[\Override]
+	public function deleteMessages(Account $account, Mailbox $mailbox, array $uids): void {
+		if ($uids === []) {
+			return;
+		}
+
+		$trashMailboxId = $account->getMailAccount()->getTrashMailboxId();
+		if ($trashMailboxId === null) {
+			throw new TrashMailboxNotSetException();
+		}
+		try {
+			$trashMailbox = $this->mailboxMapper->findById($trashMailboxId);
+		} catch (DoesNotExistException $e) {
+			throw new ServiceException('No trash folder', 0, $e);
+		}
+
+		if ($mailbox->getId() !== $trashMailbox->getId()) {
+			$this->moveMessages($account, $mailbox, $uids, $trashMailbox);
+			return;
+		}
+
+		$client = $this->imapClientFactory->getClient($account);
+		try {
+			foreach (array_chunk($uids, self::UIDS_CHUNK_SIZE) as $chunk) {
+				$this->imapMessageMapper->expungeMessages($client, $mailbox->getName(), $chunk);
+				$this->dbMessageMapper->deleteByUid($mailbox, ...$chunk);
+			}
 		} finally {
 			$client->logout();
 		}
