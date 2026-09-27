@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b5da21087a50ee288a4a2337ec4fdf11",
+    "content-hash": "093dd039d34383af8df2afb4c74f8675",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2720,16 +2720,16 @@
         },
         {
             "name": "rubix/ml",
-            "version": "2.5.5",
+            "version": "2.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RubixML/ML.git",
-                "reference": "29ff662115245de6f4b5d092ba688799b693c7d9"
+                "reference": "8fdea4a0607ec44dadf91d83e706b4e393fa2db5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RubixML/ML/zipball/29ff662115245de6f4b5d092ba688799b693c7d9",
-                "reference": "29ff662115245de6f4b5d092ba688799b693c7d9",
+                "url": "https://api.github.com/repos/RubixML/ML/zipball/8fdea4a0607ec44dadf91d83e706b4e393fa2db5",
+                "reference": "8fdea4a0607ec44dadf91d83e706b4e393fa2db5",
                 "shasum": ""
             },
             "require": {
@@ -2738,7 +2738,7 @@
                 "ext-json": "*",
                 "php": ">=7.4",
                 "psr/log": "^1.1|^2.0|^3.0",
-                "rubix/tensor": "^3.0",
+                "rubix/tensor": "^3.1",
                 "symfony/polyfill-mbstring": "^1.0",
                 "symfony/polyfill-php80": "^1.17",
                 "symfony/polyfill-php82": "^1.27",
@@ -2877,20 +2877,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-16T03:02:06+00:00"
+            "time": "2026-09-18T22:28:55+00:00"
         },
         {
             "name": "rubix/tensor",
-            "version": "3.0.5",
+            "version": "3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RubixML/Tensor.git",
-                "reference": "9f0ee170319280dcf081984adccefa8b0e6f06b8"
+                "reference": "94cd025562b4edcd968e1c26b67a8751cb42f39a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RubixML/Tensor/zipball/9f0ee170319280dcf081984adccefa8b0e6f06b8",
-                "reference": "9f0ee170319280dcf081984adccefa8b0e6f06b8",
+                "url": "https://api.github.com/repos/RubixML/Tensor/zipball/94cd025562b4edcd968e1c26b67a8751cb42f39a",
+                "reference": "94cd025562b4edcd968e1c26b67a8751cb42f39a",
                 "shasum": ""
             },
             "require": {
@@ -2898,7 +2898,7 @@
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.0",
-                "phalcon/zephir": "^0.17",
+                "phalcon/zephir": "^1.0",
                 "phpbench/phpbench": "^1.0",
                 "phpstan/extension-installer": "^1.0",
                 "phpstan/phpstan": "^1.0",
@@ -2922,9 +2922,7 @@
             "authors": [
                 {
                     "name": "Andrew DalPino",
-                    "email": "support@andrewdalpino.com",
-                    "homepage": "https://github.com/andrewdalpino",
-                    "role": "Project Lead"
+                    "homepage": "https://github.com/andrewdalpino"
                 },
                 {
                     "name": "Contributors",
@@ -2970,7 +2968,6 @@
             ],
             "support": {
                 "chat": "https://t.me/RubixML",
-                "email": "support@andrewdalpino.com",
                 "issues": "https://github.com/RubixML/Tensor/issues",
                 "source": "https://github.com/RubixML/Tensor"
             },
@@ -2980,7 +2977,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-03-15T19:43:50+00:00"
+            "time": "2026-09-18T22:03:04+00:00"
         },
         {
             "name": "sabberworm/php-css-parser",
