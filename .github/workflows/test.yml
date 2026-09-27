@@ -103,7 +103,7 @@ jobs:
       env:
         XDEBUG_MODE: ${{ matrix.coverage && 'coverage' || 'off' }}
     - name: Report coverage
-      uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+      uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
       if: ${{ !cancelled() && matrix.coverage }}
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
@@ -274,7 +274,7 @@ jobs:
             if: ${{ always() }}
             run: cat nextcloud/data/mail-*-*-imap.log
           - name: Report coverage
-            uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+            uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
             if: ${{ !cancelled() && matrix.coverage }}
             with:
               token: ${{ secrets.CODECOV_TOKEN }}
@@ -400,7 +400,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Send empty Codecov upload so required coverage checks pass
-        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           run_command: empty-upload
