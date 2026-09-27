@@ -5,14 +5,47 @@
 
 <template>
 	<Fragment>
-		<NcAppNavigationCaption
+		<li
 			v-if="visible"
-			:id="id"
 			:key="id"
-			:name="account.emailAddress"
-			@update:open="onMenuToggle">
-			<!-- Actions -->
-			<template #actions>
+			class="navigation-account-header"
+			:class="{
+				'navigation-account-header--folded': account.folded,
+				'navigation-account-header--active': account.folded && isInboxActive,
+			}">
+			<NcButton
+				v-if="!isDisabled"
+				class="navigation-account-header__toggle"
+				variant="tertiary"
+				:aria-label="foldLabel"
+				:title="foldLabel"
+				:aria-expanded="account.folded ? 'false' : 'true'"
+				:disabled="savingFolded"
+				@click="toggleFolded">
+				<template #icon>
+					<IconChevronRight class="navigation-account-header__chevron" :size="20" />
+				</template>
+			</NcButton>
+			<h2 :id="id" class="navigation-account-header__name">
+				<router-link
+					v-if="inboxRoute"
+					class="navigation-account-header__link"
+					:to="inboxRoute"
+					:title="account.emailAddress">
+					{{ account.emailAddress }}
+				</router-link>
+				<span v-else class="navigation-account-header__link">{{ account.emailAddress }}</span>
+			</h2>
+			<template v-if="account.folded && inboxUnread > 0">
+				<NcCounterBubble
+					class="navigation-account-header__unread"
+					:title="unreadLabel"
+					aria-hidden="true">
+					{{ inboxUnread }}
+				</NcCounterBubble>
+				<span class="hidden-visually">{{ unreadLabel }}</span>
+			</template>
+			<NcActions class="navigation-account-header__actions" @update:open="onMenuToggle">
 				<template v-if="isDisabled">
 					<NcActionText :name="t('mail', 'Provisioned account is disabled')">
 						<template #icon>
@@ -94,8 +127,8 @@
 						{{ t('mail', 'Remove account') }}
 					</NcActionButton>
 				</template>
-			</template>
-		</NcAppNavigationCaption>
+			</NcActions>
+		</li>
 		<DelegationModal v-if="showDelegationModal" :account="account" @close="showDelegationModal = false" />
 	</Fragment>
 </template>
@@ -104,10 +137,11 @@
 import { DialogBuilder, showError } from '@nextcloud/dialogs'
 import { formatFileSize } from '@nextcloud/files'
 import { generateUrl } from '@nextcloud/router'
-import { NcActionButton, NcActionCheckbox, NcActionInput, NcActionText, NcAppNavigationCaption, NcIconSvgWrapper, NcLoadingIcon } from '@nextcloud/vue'
+import { NcActionButton, NcActionCheckbox, NcActionInput, NcActions, NcActionText, NcButton, NcCounterBubble, NcIconSvgWrapper, NcLoadingIcon } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import { Fragment } from 'vue-frag'
 import MenuDown from 'vue-material-design-icons/ChevronDown.vue'
+import IconChevronRight from 'vue-material-design-icons/ChevronRight.vue'
 import MenuUp from 'vue-material-design-icons/ChevronUp.vue'
 import IconSettings from 'vue-material-design-icons/CogOutline.vue'
 import IconFolderAdd from 'vue-material-design-icons/FolderOutline.vue'
@@ -121,7 +155,9 @@ import IconDelegation from './../../img/delegation.svg'
 export default {
 	name: 'NavigationAccount',
 	components: {
-		NcAppNavigationCaption,
+		NcActions,
+		NcButton,
+		NcCounterBubble,
 		Fragment,
 		NcActionButton,
 		NcActionCheckbox,
@@ -132,6 +168,7 @@ export default {
 		IconSettings,
 		NcIconSvgWrapper,
 		IconFolderAdd,
+		IconChevronRight,
 		MenuDown,
 		MenuUp,
 		IconDelete,
@@ -173,6 +210,7 @@ export default {
 			},
 
 			savingShowOnlySubscribed: false,
+			savingFolded: false,
 			quota: undefined,
 			editing: false,
 			showSaving: false,
@@ -197,6 +235,43 @@ export default {
 
 		id() {
 			return 'account-' + this.account.id
+		},
+
+		foldLabel() {
+			return this.account.folded
+				? t('mail', 'Expand account {email}', { email: this.account.emailAddress })
+				: t('mail', 'Collapse account {email}', { email: this.account.emailAddress })
+		},
+
+		inbox() {
+			return this.mainStore.getMailboxes(this.account.id)
+				.find((mailbox) => mailbox.specialRole === 'inbox')
+		},
+
+		inboxRoute() {
+			if (this.isDisabled || !this.inbox) {
+				return null
+			}
+			return {
+				name: 'mailbox',
+				params: {
+					mailboxId: this.inbox.databaseId,
+				},
+			}
+		},
+
+		isInboxActive() {
+			return this.inbox !== undefined
+				&& !this.$route?.params.filter
+				&& String(this.$route?.params.mailboxId) === String(this.inbox.databaseId)
+		},
+
+		inboxUnread() {
+			return this.inbox?.unread ?? 0
+		},
+
+		unreadLabel() {
+			return n('mail', '%n unread message in the inbox', '%n unread messages in the inbox', this.inboxUnread)
 		},
 
 		quotaText() {
@@ -280,6 +355,18 @@ export default {
 			await dialog.show()
 		},
 
+		async toggleFolded() {
+			this.savingFolded = true
+			try {
+				await this.mainStore.toggleAccountFolded(this.account.id)
+			} catch (error) {
+				logger.error('could not save folded state of account', { error })
+				showError(t('mail', 'Could not save whether the account is collapsed'))
+			} finally {
+				this.savingFolded = false
+			}
+		},
+
 		changeAccountOrderUp() {
 			this.mainStore.moveAccount({ account: this.account, up: true })
 				.catch((error) => logger.error('could not move account up', { error }))
@@ -336,6 +423,84 @@ export default {
 	},
 }
 </script>
+
+<style lang="scss" scoped>
+.navigation-account-header {
+	display: flex;
+	align-items: center;
+	gap: calc(var(--default-grid-baseline) / 2);
+
+	&:not(:first-child) {
+		margin-top: calc(var(--default-clickable-area) / 2);
+	}
+
+	& + & {
+		margin-top: 0;
+	}
+
+	&__toggle {
+		flex-shrink: 0;
+	}
+
+	&__chevron {
+		transform: rotate(90deg);
+		transition: transform var(--animation-quick);
+	}
+
+	&--folded &__chevron {
+		transform: rotate(0deg);
+	}
+
+	&__name {
+		flex: 1 1 auto;
+		min-width: 0;
+		margin: 0;
+		font-size: var(--default-font-size);
+		font-weight: var(--font-weight-heading, bold);
+		line-height: var(--default-clickable-area);
+	}
+
+	&__link {
+		display: block;
+		overflow: hidden;
+		padding-inline: calc(var(--default-grid-baseline) * 2);
+		border-radius: var(--border-radius-element);
+		color: var(--color-main-text);
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	a#{&}__link:hover,
+	a#{&}__link:focus-visible {
+		background-color: var(--color-background-hover);
+	}
+
+	// Same highlight as an active NcAppNavigationItem
+	&--active {
+		position: relative;
+		border-radius: var(--border-radius-element);
+		background-color: color-mix(in srgb, var(--color-primary-element) 16%, transparent);
+
+		&::before {
+			content: '';
+			position: absolute;
+			inset-block: calc(var(--default-grid-baseline) * 2);
+			inset-inline-start: 0;
+			width: calc(var(--default-grid-baseline) * 3 / 4);
+			border-radius: var(--border-radius-pill);
+			background-color: var(--color-primary-element);
+		}
+	}
+
+	&__unread {
+		flex-shrink: 0;
+	}
+
+	&__actions {
+		flex: 0 0 var(--default-clickable-area);
+	}
+}
+</style>
 
 <style lang="scss">
 // Fix very long button labels overflowing the modal

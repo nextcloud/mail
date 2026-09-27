@@ -54,6 +54,44 @@ describe('Pinia store mutations', () => {
 		})
 	})
 
+	it('adds an account unfolded by default', () => {
+		store.addAccountMutation({
+			accountId: 13,
+			id: 13,
+			mailboxes: [],
+			aliases: [],
+		})
+
+		expect(store.accountsUnmapped[13].folded).toBe(false)
+	})
+
+	it('keeps a persisted folded state when adding an account', () => {
+		store.addAccountMutation({
+			accountId: 13,
+			id: 13,
+			mailboxes: [],
+			aliases: [],
+			folded: true,
+		})
+
+		expect(store.accountsUnmapped[13].folded).toBe(true)
+	})
+
+	it('toggles the folded state of an account', () => {
+		store.addAccountMutation({
+			accountId: 13,
+			id: 13,
+			mailboxes: [],
+			aliases: [],
+		})
+
+		store.toggleAccountFoldedMutation(13)
+		expect(store.accountsUnmapped[13].folded).toBe(true)
+
+		store.toggleAccountFoldedMutation(13)
+		expect(store.accountsUnmapped[13].folded).toBe(false)
+	})
+
 	it('adds an account with one level of mailboxes', () => {
 		store.addAccountMutation({
 			accountId: 13,

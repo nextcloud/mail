@@ -40,7 +40,7 @@
 							variant="tertiary">{{ t('mail', 'Change password') }}</NcButton>
 					</span>
 				</div>
-				<template v-else-if="!isDisabled(group.account)">
+				<template v-else-if="!isDisabled(group.account) && !group.account.folded">
 					<template v-for="item in group.mailboxes">
 						<NavigationMailbox
 							v-show="
