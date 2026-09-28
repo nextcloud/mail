@@ -1,0 +1,26 @@
+[
+	{
+		"name": "Test 12",
+		"enable": true,
+		"operator": "allof",
+		"tests": [
+			{
+				"operator": "is",
+				"values": [
+					"bob@example.org"
+				],
+				"field": "to"
+			}
+		],
+		"actions": [
+			{
+				"type": "redirect",
+				"recipient": "alice@example.org"
+			},
+			{
+				"type": "stop"
+			}
+		],
+		"priority": 10
+	}
+]

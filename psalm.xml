@@ -26,6 +26,7 @@
     </extraFiles>
 	<stubs>
 		<file name="tests/stubs/php-polyfill.php" />
+		<file name="tests/stubs/oc_hooks_emitter.php" />
 	</stubs>
 	<issueHandlers>
 		<UndefinedAttributeClass>

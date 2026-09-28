@@ -1,0 +1,16 @@
+diff --git a/.github/workflows/npm-audit-fix.yml b/.github/workflows/npm-audit-fix.yml
+index f525f7ebc..0fbc89cdb 100644
+--- a/.github/workflows/npm-audit-fix.yml
++++ b/.github/workflows/npm-audit-fix.yml
+@@ -26,9 +26,8 @@ jobs:
+       matrix:
+         branches:
+           - ${{ github.event.repository.default_branch }}
+-          - 'stable35'
+-          - 'stable34'
+-          - 'stable33'
++          - 'stable5.12'
++          - 'stable5.11'
+ 
+     name: npm-audit-fix-${{ matrix.branches }}
+ 

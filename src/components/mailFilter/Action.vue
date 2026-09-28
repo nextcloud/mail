@@ -39,6 +39,7 @@ import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import ActionAddflag from './ActionAddflag.vue'
 import ActionAddSystemFlag from './ActionAddSystemFlag.vue'
 import ActionFileinto from './ActionFileinto.vue'
+import ActionRedirect from './ActionRedirect.vue'
 import ActionStop from './ActionStop.vue'
 import { MailFilterActions } from '../../models/mailFilter.ts'
 
@@ -51,6 +52,7 @@ export default {
 		ActionFileinto,
 		ActionAddflag,
 		ActionStop,
+		ActionRedirect,
 		DeleteIcon,
 	},
 
@@ -82,6 +84,10 @@ export default {
 					label: this.t('mail', 'Move into folder'),
 				},
 				{
+					id: MailFilterActions.Redirect,
+					label: this.t('mail', 'Redirect to'),
+				},
+				{
 					id: MailFilterActions.Stop,
 					label: this.t('mail', 'Stop'),
 				},
@@ -103,6 +109,8 @@ export default {
 				return ActionStop
 			} else if (this.action.type === MailFilterActions.AddSystemFlag) {
 				return ActionAddSystemFlag
+			} else if (this.action.type === MailFilterActions.Redirect) {
+				return ActionRedirect
 			}
 			return null
 		},

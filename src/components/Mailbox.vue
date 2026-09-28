@@ -244,6 +244,7 @@ export default {
 
 		async loadEnvelopes() {
 			logger.debug(`Fetching envelopes for folder ${this.mailbox.databaseId} (${this.searchQuery})`, this.mailbox)
+			this.endReached = false
 			if (!this.syncedMailboxes.has(this.mailbox.databaseId + (this.searchQuery ?? ''))) {
 				// Only trigger skeleton if we didn't sync envelopes yet
 				this.loadingEnvelopes = true
@@ -297,6 +298,10 @@ export default {
 		},
 
 		async loadMore() {
+			if (!this.hasMessages || this.loadingEnvelopes || this.loadingMore || this.endReached || this.error) {
+				return
+			}
+
 			if (!this.expanded && this.envelopesToShow.length < this.envelopes.length) {
 				logger.debug('expanding envelope list')
 				this.expanded = true

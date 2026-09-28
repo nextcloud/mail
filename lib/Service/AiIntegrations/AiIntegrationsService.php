@@ -39,6 +39,8 @@ use function sprintf;
 
 class AiIntegrationsService {
 
+	public const RECENT_MESSAGE_MAX_AGE = 'P14D';
+
 	public function __construct(
 		private LoggerInterface $logger,
 		private Cache $cache,
@@ -140,10 +142,11 @@ class AiIntegrationsService {
 	 */
 	public function summarizeThread(Account $account, string $threadId, array $messages, string $currentUserId): ?string {
 		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[TextToTextSummary::ID])) {
-			$messageIds = array_map(fn ($message) => $message->getMessageId(), $messages);
-			$cachedSummary = $this->cache->getValue($this->cache->buildUrlKey($messageIds));
-			if ($cachedSummary) {
-				return $cachedSummary;
+			$messageIds = array_map(static fn (Message $message) => $message->getId(), $messages);
+			$cacheKey = 'threadSummary_' . $this->cache->buildUrlKey($messageIds);
+			$cachedSummary = $this->cache->getValue($cacheKey);
+			if (is_string($cachedSummary)) {
+				return $cachedSummary === Cache::FAILURE_MARKER ? null : $cachedSummary;
 			}
 			$client = $this->clientFactory->getClient($account);
 			try {
@@ -174,13 +177,22 @@ class AiIntegrationsService {
 				$currentUserId,
 				$threadId,
 			);
-			$summaryTask = $this->runTask($summaryTask);
+			try {
+				$summaryTask = $this->runTask($summaryTask);
+			} catch (ServiceException $e) {
+				$this->cache->addFailure($cacheKey);
+				throw $e;
+			}
 			$output = $summaryTask->getOutput()['output'] ?? null;
 			// output could be array<array<numeric|string>|numeric|string>|null depending on task type
 			// We expect Text in TextToTextSummary so should always resolve to (string)$output
 			$summary = $output !== null && !is_array($output) ? (string)$output : null;
+			if ($summary === null || trim($summary) === '') {
+				$this->cache->addFailure($cacheKey);
+				return null;
+			}
 
-			$this->cache->addValue($this->cache->buildUrlKey($messageIds), $summary);
+			$this->cache->addValue($cacheKey, $summary);
 
 			return $summary;
 		} else {

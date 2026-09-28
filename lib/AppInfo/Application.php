@@ -78,7 +78,8 @@ use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\ContextChat\Events\ContentProviderRegisterEvent;
 use OCP\DB\Events\AddMissingIndicesEvent;
-use OCP\IServerContainer;
+use OCP\Files\Folder;
+use OCP\Files\IRootFolder;
 use OCP\TaskProcessing\Events\TaskSuccessfulEvent;
 use OCP\User\Events\OutOfOfficeChangedEvent;
 use OCP\User\Events\OutOfOfficeClearedEvent;
@@ -105,11 +106,13 @@ final class Application extends App implements IBootstrap {
 	public function register(IRegistrationContext $context): void {
 		$context->registerParameter('hostname', Util::getServerHostName());
 
-		$context->registerService('userFolder', static function (ContainerInterface $c) {
-			$userContainer = $c->get(IServerContainer::class);
+		$context->registerService('userFolder', static function (ContainerInterface $c): ?Folder {
 			$uid = $c->get('userId');
+			if ($uid === null) {
+				return null;
+			}
 
-			return $userContainer->getUserFolder($uid);
+			return $c->get(IRootFolder::class)->getUserFolder($uid);
 		});
 		$context->registerService(Favicon::class, function (ContainerInterface $c) {
 			$favicon = new Favicon();
