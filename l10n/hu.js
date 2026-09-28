@@ -105,6 +105,7 @@ OC.L10N.register(
     "General" : "Általános",
     "Add mail account" : "E-mail-fiók hozzáadása",
     "Appearance" : "Megjelenés",
+    "Layout" : "Elrendezés",
     "List" : "Lista",
     "Sorting" : "Rendezés",
     "Newest first" : "Legújabb elöl",
