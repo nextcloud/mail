@@ -32,7 +32,9 @@ use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
+use OCP\AppFramework\Http\Attribute\UserRateLimit;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IAppConfig;
@@ -74,11 +76,11 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @return JSONResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
+	#[UserRateLimit(limit: 30, period: 60)]
 	public function index(): JSONResponse {
 		$mailAccounts = $this->accountService->findByUserId($this->userId);
 
@@ -101,13 +103,12 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 *
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function show(int $id): JSONResponse {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
@@ -116,11 +117,11 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
+	#[UserRateLimit(limit: 5, period: 60)]
 	public function update(int $id,
 		string $accountName,
 		string $emailAddress,
@@ -188,8 +189,6 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @param string|null $editorMode
 	 * @param int|null $order
@@ -206,7 +205,9 @@ class AccountsController extends Controller {
 	 *
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
+	#[UserRateLimit(limit: 30, period: 60)]
 	public function patchAccount(int $id,
 		?string $editorMode = null,
 		?int $order = null,
@@ -291,8 +292,6 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @param string|null $signature
 	 *
@@ -301,7 +300,9 @@ class AccountsController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
+	#[UserRateLimit(limit: 30, period: 60)]
 	public function updateSignature(int $id, ?string $signature = null): JSONResponse {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
 		$this->accountService->updateSignature($id, $effectiveUserId, $signature);
@@ -310,15 +311,15 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 *
 	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
+	#[UserRateLimit(limit: 30, period: 60)]
 	public function destroy(int $id): JSONResponse {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
 		$this->accountService->delete($effectiveUserId, $id);
@@ -326,10 +327,9 @@ class AccountsController extends Controller {
 		return new JSONResponse();
 	}
 
-	/**
-	 * @NoAdminRequired
-	 */
+	#[NoAdminRequired]
 	#[TrapError]
+	#[UserRateLimit(limit: 5, period: 60)]
 	public function create(string $accountName,
 		string $emailAddress,
 		string $imapHost,
@@ -414,13 +414,13 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
+	#[UserRateLimit(limit: 30, period: 60)]
 	public function draft(int $id,
 		string $subject,
 		string $body,
@@ -474,13 +474,13 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 *
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
+	#[UserRateLimit(limit: 30, period: 60)]
 	public function getQuota(int $id): JSONResponse {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
 		$account = $this->accountService->find($effectiveUserId, $id);
@@ -493,14 +493,14 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id Account id
 	 * @param ?int $smimeCertificateId
 	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
+	#[UserRateLimit(limit: 30, period: 60)]
 	public function updateSmimeCertificate(int $id, ?int $smimeCertificateId = null) {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
 		$account = $this->accountService->find($effectiveUserId, $id)->getMailAccount();
@@ -511,13 +511,13 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id Account id
 	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
+	#[UserRateLimit(limit: 30, period: 60)]
 	public function testAccountConnection(int $id) {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
 		return new JSONResponse([

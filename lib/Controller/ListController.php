@@ -19,7 +19,9 @@ use OCA\Mail\Service\DelegationService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
+use OCP\AppFramework\Http\Attribute\UserRateLimit;
 use OCP\Http\Client\IClientService;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface;
@@ -43,10 +45,8 @@ class ListController extends Controller {
 		$this->httpClientService = $httpClientService;
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @UserRateThrottle(limit=10, period=3600)
-	 */
+	#[NoAdminRequired]
+	#[UserRateLimit(limit: 10, period: 3600)]
 	public function unsubscribe(int $id): JsonResponse {
 		if ($this->userId === null) {
 			return JsonResponse::fail([], Http::STATUS_UNAUTHORIZED);
