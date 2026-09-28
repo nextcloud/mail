@@ -113,7 +113,14 @@
 								:max="1"
 								@option:selecting="addTag($event, 'from')"
 								@option:deselecting="removeTag($event, 'from')"
-								@search="searchRecipients($event)" />
+								@search="searchRecipients($event)">
+								<template #option="option">
+									{{ formatRecipient(option) }}
+								</template>
+								<template #selected-option="option">
+									{{ formatRecipient(option) }}
+								</template>
+							</NcSelect>
 						</div>
 					</div>
 
@@ -137,7 +144,14 @@
 								:preserve-search="true"
 								@option:selecting="addTag($event, 'to')"
 								@option:deselecting="removeTag($event, 'to')"
-								@search="searchRecipients($event)" />
+								@search="searchRecipients($event)">
+								<template #option="option">
+									{{ formatRecipient(option) }}
+								</template>
+								<template #selected-option="option">
+									{{ formatRecipient(option) }}
+								</template>
+							</NcSelect>
 						</div>
 					</div>
 
@@ -315,6 +329,7 @@ import Close from 'vue-material-design-icons/Close.vue'
 import FilterVariantIcon from 'vue-material-design-icons/FilterVariant.vue'
 import { findRecipient } from '../service/AutocompleteService.js'
 import useMainStore from '../store/mainStore.js'
+import { formatRecipient } from '../util/emailAddress.js'
 import { hiddenTags } from './tags.js'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
@@ -492,6 +507,8 @@ export default {
 	},
 
 	methods: {
+		formatRecipient,
+
 		hideButtonsWithDelay(delay = false) {
 			if (delay) {
 				setTimeout(() => {
