@@ -404,6 +404,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           run_command: empty-upload
+          force: true
 
   summary:
     runs-on: ubuntu-latest-low
