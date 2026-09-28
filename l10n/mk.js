@@ -429,6 +429,7 @@ OC.L10N.register(
     "Certificate" : "Сертификат",
     "The private key is only required if you intend to send signed and encrypted emails using this certificate." : "Приватниот клуч е потребен само ако планирате да испраќате потпишани и шифрирани е-пораки користејќи го овој сертификат.",
     "Submit" : "Испрати",
+    "Guest" : "Гостин",
     "Group" : "Група",
     "Shared" : "Споделено",
     "Shares" : "Споделувања",
