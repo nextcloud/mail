@@ -22,33 +22,6 @@ use Symfony\Component\Console\Question\Question;
  * @psalm-type ProvisioningData = array<string, mixed>
  */
 trait ProvisioningOptions {
-	private const SSL_MODES = ['none', 'ssl', 'tls'];
-
-	private const OPTION_MASTER_PASSWORD = 'master-password';
-	private const OPTION_NO_MASTER_PASSWORD = 'no-master-password';
-	private const OPTION_NO_SIEVE = 'no-sieve';
-	private const OPTION_NO_LDAP_ALIASES = 'no-ldap-aliases';
-
-	/** Option name => [data key, description] */
-	private const FIELDS = [
-		'provisioning-domain' => ['provisioningDomain', 'Email domain to provision, or * for all users'],
-		'email-template' => ['emailTemplate', 'Account email, supports %USERID%, %EMAIL% and %LDAP:attribute%'],
-		'imap-user' => ['imapUser', 'IMAP login, supports the same placeholders as the email template'],
-		'imap-host' => ['imapHost', 'IMAP host'],
-		'imap-port' => ['imapPort', 'IMAP port'],
-		'imap-ssl-mode' => ['imapSslMode', 'IMAP encryption: none, ssl or tls'],
-		'smtp-user' => ['smtpUser', 'SMTP login, supports the same placeholders as the email template'],
-		'smtp-host' => ['smtpHost', 'SMTP host'],
-		'smtp-port' => ['smtpPort', 'SMTP port'],
-		'smtp-ssl-mode' => ['smtpSslMode', 'SMTP encryption: none, ssl or tls'],
-		'sieve-user' => ['sieveUser', 'Sieve login, supports the same placeholders as the email template'],
-		'sieve-host' => ['sieveHost', 'Sieve host, enables Sieve when set'],
-		'sieve-port' => ['sievePort', 'Sieve port, required when Sieve is enabled'],
-		'sieve-ssl-mode' => ['sieveSslMode', 'Sieve encryption: none, ssl or tls'],
-		'master-user' => ['masterUser', 'Master user suffix appended to the login, e.g. *masteruser'],
-		'ldap-aliases-attribute' => ['ldapAliasesAttribute', 'LDAP attribute to read aliases from, enables alias provisioning when set'],
-	];
-
 	private function templatesHelp(): string {
 		return <<<'EOT'
 			The account email address and the IMAP, SMTP and Sieve logins are templates. They
@@ -62,19 +35,19 @@ trait ProvisioningOptions {
 	}
 
 	private function addProvisioningOptions(): void {
-		foreach (self::FIELDS as $option => [, $description]) {
+		foreach (ProvisioningOption::FIELDS as $option => [, $description]) {
 			$this->addOption($option, null, InputOption::VALUE_REQUIRED, $description);
 		}
 
 		$this->addOption(
-			self::OPTION_MASTER_PASSWORD,
+			ProvisioningOption::MASTER_PASSWORD,
 			null,
-			InputOption::VALUE_OPTIONAL,
-			'Master password used for all accounts instead of the login password. Pass without a value to read it from stdin',
+			InputOption::VALUE_NONE,
+			'Use a master password for all accounts instead of the login password, read from the prompt or stdin',
 		);
-		$this->addOption(self::OPTION_NO_MASTER_PASSWORD, null, InputOption::VALUE_NONE, 'Use the login password of each user');
-		$this->addOption(self::OPTION_NO_SIEVE, null, InputOption::VALUE_NONE, 'Disable Sieve');
-		$this->addOption(self::OPTION_NO_LDAP_ALIASES, null, InputOption::VALUE_NONE, 'Disable alias provisioning from LDAP');
+		$this->addOption(ProvisioningOption::NO_MASTER_PASSWORD, null, InputOption::VALUE_NONE, 'Use the login password of each user');
+		$this->addOption(ProvisioningOption::NO_SIEVE, null, InputOption::VALUE_NONE, 'Disable Sieve');
+		$this->addOption(ProvisioningOption::NO_LDAP_ALIASES, null, InputOption::VALUE_NONE, 'Disable alias provisioning from LDAP');
 	}
 
 	/**
@@ -84,7 +57,7 @@ trait ProvisioningOptions {
 	 */
 	private function buildProvisioningData(InputInterface $input, OutputInterface $output, array $defaults = []): array {
 		$data = $defaults;
-		foreach (self::FIELDS as $option => [$key]) {
+		foreach (ProvisioningOption::FIELDS as $option => [$key]) {
 			$value = $input->getOption($option);
 			if ($value !== null) {
 				$data[$key] = $value;
@@ -104,13 +77,13 @@ trait ProvisioningOptions {
 
 		foreach (['imapSslMode', 'smtpSslMode', 'sieveSslMode'] as $key) {
 			$sslMode = $data[$key] ?? '';
-			if ($sslMode !== '' && !in_array($sslMode, self::SSL_MODES, true)) {
-				throw new InvalidArgumentException($key . ' must be one of ' . implode(', ', self::SSL_MODES));
+			if ($sslMode !== '' && !in_array($sslMode, ProvisioningOption::SSL_MODES, true)) {
+				throw new InvalidArgumentException($key . ' must be one of ' . implode(', ', ProvisioningOption::SSL_MODES));
 			}
 		}
 
 		$data['sieveEnabled'] = $this->resolveToggle(
-			$input->getOption(self::OPTION_NO_SIEVE),
+			$input->getOption(ProvisioningOption::NO_SIEVE),
 			$input->getOption('sieve-host'),
 			$defaults['sieveEnabled'] ?? false,
 		);
@@ -118,19 +91,18 @@ trait ProvisioningOptions {
 			throw new InvalidArgumentException('sievePort is required when Sieve is enabled');
 		}
 		$data['ldapAliasesProvisioning'] = $this->resolveToggle(
-			$input->getOption(self::OPTION_NO_LDAP_ALIASES),
+			$input->getOption(ProvisioningOption::NO_LDAP_ALIASES),
 			$input->getOption('ldap-aliases-attribute'),
 			$defaults['ldapAliasesProvisioning'] ?? false,
 		);
 
-		if ($input->getOption(self::OPTION_NO_MASTER_PASSWORD)) {
+		if ($input->getOption(ProvisioningOption::NO_MASTER_PASSWORD)) {
 			$data['masterPasswordEnabled'] = false;
 			$data['masterPassword'] = '';
 			$data['masterUser'] = '';
-		} elseif ($input->hasParameterOption('--' . self::OPTION_MASTER_PASSWORD)) {
-			$masterPassword = $input->getOption(self::OPTION_MASTER_PASSWORD);
+		} elseif ($input->getOption(ProvisioningOption::MASTER_PASSWORD)) {
 			$data['masterPasswordEnabled'] = true;
-			$data['masterPassword'] = $masterPassword ?? $this->askMasterPassword($input, $output);
+			$data['masterPassword'] = $this->askMasterPassword($input, $output);
 		}
 
 		return $data;

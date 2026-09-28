@@ -16,12 +16,15 @@ use OCA\Mail\Exception\ValidationException;
 use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class CreateProvisioningTest extends TestCase {
 	private ProvisioningManager&MockObject $provisioningManager;
+	private CreateProvisioning $command;
 	private CommandTester $tester;
 
 	private array $options = [
@@ -41,9 +44,9 @@ class CreateProvisioningTest extends TestCase {
 		parent::setUp();
 
 		$this->provisioningManager = $this->createMock(ProvisioningManager::class);
-		$command = new CreateProvisioning($this->provisioningManager);
-		$command->setHelperSet(new HelperSet([new QuestionHelper()]));
-		$this->tester = new CommandTester($command);
+		$this->command = new CreateProvisioning($this->provisioningManager);
+		$this->command->setHelperSet(new HelperSet([new QuestionHelper()]));
+		$this->tester = new CommandTester($this->command);
 	}
 
 	public function testCreate(): void {
@@ -106,12 +109,21 @@ class CreateProvisioningTest extends TestCase {
 			}))
 			->willReturn(new Provisioning());
 
+		$this->tester->setInputs(['sesame']);
 		$status = $this->tester->execute(array_merge($this->options, [
-			'--master-password' => 'sesame',
+			'--master-password' => null,
 			'--master-user' => '*masteruser',
 		]));
 
 		self::assertSame(Command::SUCCESS, $status);
+	}
+
+	public function testRejectsMasterPasswordAsOptionValue(): void {
+		$input = new ArgvInput(['occ', '--master-password=sesame']);
+
+		$this->expectException(RuntimeException::class);
+
+		$input->bind($this->command->getDefinition());
 	}
 
 	public function testCreateWithoutMasterPassword(): void {
