@@ -13,6 +13,7 @@ use ChristophWurst\Nextcloud\Testing\ServiceMockObject;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OC\BackgroundJob\JobList;
 use OCA\Mail\Account;
+use OCA\Mail\AppInfo\Application;
 use OCA\Mail\BackgroundJob\SyncJob;
 use OCA\Mail\Db\MailAccount;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -36,15 +37,11 @@ class SyncJobTest extends TestCase {
 		$this->serviceMock->getParameter('time')
 			->method('getTime')
 			->willReturn(500000);
-		// Set our common argument
-		$this->job->setArgument([
-			'accountId' => 123,
-		]);
 	}
 
 	public function testAccountDoesntExist(): void {
 		$this->serviceMock->getParameter('accountService')
-			->expects(self::once())
+			->expects(self::exactly(2))
 			->method('findById')
 			->with(123)
 			->willThrowException(new DoesNotExistException(''));
@@ -80,7 +77,7 @@ class SyncJobTest extends TestCase {
 		$account->method('getMailAccount')->willReturn($mailAccount);
 
 		$this->serviceMock->getParameter('accountService')
-			->expects(self::once())
+			->expects(self::exactly(2))
 			->method('findById')
 			->with(123)
 			->willReturn($account);
@@ -113,7 +110,7 @@ class SyncJobTest extends TestCase {
 		$account->method('getUserId')->willReturn('user123');
 		$account->method('getMailAccount')->willReturn($mailAccount);
 		$this->serviceMock->getParameter('accountService')
-			->expects(self::once())
+			->expects(self::exactly(2))
 			->method('findById')
 			->with(123)
 			->willReturn($account);
@@ -157,5 +154,30 @@ class SyncJobTest extends TestCase {
 			->method('findById');
 
 		$serviceMock->getService()->start($this->createMock(JobList::class));
+	}
+
+	public function testInactiveAccountUsesSixHourIntervalBeforeRun(): void {
+		$mailAccount = $this->createConfiguredMock(MailAccount::class, [
+			'canAuthenticateImap' => true,
+		]);
+		$account = $this->createMock(Account::class);
+		$account->method('getUserId')->willReturn('user123');
+		$account->method('getMailAccount')->willReturn($mailAccount);
+		$this->serviceMock->getParameter('accountService')
+			->expects(self::once())
+			->method('findById')
+			->with(123)
+			->willReturn($account);
+		$this->serviceMock->getParameter('config')
+			->expects(self::once())
+			->method('getUserValue')
+			->with('user123', Application::APP_ID, 'ui-heartbeat', 500001)
+			->willReturn((string)(500000 - 4 * 24 * 3600));
+
+		$this->job->setArgument([
+			'accountId' => 123,
+		]);
+
+		self::assertSame(6 * 3600, $this->job->getInterval());
 	}
 }
