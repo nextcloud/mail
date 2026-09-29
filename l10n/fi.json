@@ -72,10 +72,9 @@
     "A signature is added to the text of new messages and replies." : "Allekirjoitus lisätään uusien viestien ja vastausten tekstiosaan.",
     "Default folders" : "Oletuskansiot",
     "Autoresponder" : "Automaattivastaukset",
-    "Go to Sieve settings" : "Siirry Sieve-asetuksiin",
     "Calendar settings" : "Kalenteriasetukset",
-    "Filters" : "Suodattimet",
     "Quick actions" : "Pikatoiminnot",
+    "Filters" : "Suodattimet",
     "Mail server" : "Sähköpostipalvelin",
     "Sieve server" : "Sieve-palvelin",
     "Email address" : "Sähköpostiosoite",
@@ -415,6 +414,7 @@
     "Sieve User" : "Sieve-käyttäjä",
     "Sieve Password" : "Sieve-salasana",
     "Save sieve settings" : "Tallenna sieve-asetukset",
+    "Go to Sieve settings" : "Siirry Sieve-asetuksiin",
     "The syntax seems to be incorrect:" : "Syntaksi vaikuttaa virheelliseltä:",
     "Signature …" : "Allekirjoitus …",
     "Save signature" : "Tallenna allekirjoitus",
@@ -487,7 +487,6 @@
     "Could not save filter" : "Suodatinta ei voitu tallentaa",
     "Filter deleted" : "Suodatin poistettu",
     "Could not delete filter" : "Suodatinta ei voitu poistaa",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Ota postikaaos hallintaan. Suodattimet auttavat asettamaan asioita tärkeysjärjestykseen ja minimoimaan turhuudet.",
     "Filter is active" : "Suodatin on aktiivinen",
     "Filter is not active" : "Suodatin ei ole aktiivinen",
     "Help" : "Ohje",
@@ -610,6 +609,7 @@
     "Tag already exists" : "Tunniste on jo olemassa",
     "Error loading message" : "Virhe viestiä ladatessa",
     "Show less" : "Näytä vähemmän",
-    "Show more" : "Näytä enemmän"
+    "Show more" : "Näytä enemmän",
+    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Ota postikaaos hallintaan. Suodattimet auttavat asettamaan asioita tärkeysjärjestykseen ja minimoimaan turhuudet."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
