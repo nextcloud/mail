@@ -168,7 +168,7 @@ SPDX-FileCopyrightText = "Nils Adermann, Jordi Boggiano"
 SPDX-License-Identifier = "MIT"
 
 [[annotations]]
-path = [".tx/backport"]
+path = [".tx/backport", ".github/workflows/*.patch"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "none"
 SPDX-License-Identifier = "CC0-1.0"
