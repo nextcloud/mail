@@ -9,7 +9,7 @@
 			<IconImageOff :size="20" />
 			{{ t('mail', 'The images have been blocked to protect your privacy.') }}
 		</div>
-		<NcActions variant="secondary" :menu-name="t('mail', 'Show images')">
+		<NcActions variant="secondary" :menuName="t('mail', 'Show images')">
 			<NcActionButton @click="$emit('show')">
 				<template #icon>
 					<IconImage :size="20" />
@@ -18,7 +18,7 @@
 			</NcActionButton>
 			<NcActionButton
 				v-if="sender"
-				@click="$emit('trust-sender')">
+				@click="$emit('trustSender')">
 				<template #icon>
 					<IconMail :size="20" />
 				</template>
@@ -26,7 +26,7 @@
 			</NcActionButton>
 			<NcActionButton
 				v-if="domain"
-				@click="$emit('trust-domain')">
+				@click="$emit('trustDomain')">
 				<template #icon>
 					<IconDomain :size="20" />
 				</template>
@@ -67,7 +67,7 @@ export default {
 		},
 	},
 
-	emits: ['show', 'trust-sender', 'trust-domain'],
+	emits: ['show', 'trustSender', 'trustDomain'],
 }
 </script>
 

@@ -8,14 +8,14 @@
 		v-if="deleteTagModal"
 		:tag="tagToDelete"
 		:envelopes="envelopes"
-		:account-id="envelopes[0].accountId"
+		:accountId="envelopes[0].accountId"
 		@close="closeDeleteModal" />
 	<NcModal
-		close-on-click-outside
 		v-else
+		closeOnClickOutside
 		class="tag-modal"
 		size="large"
-		label-id="tag-modal-heading"
+		labelId="tag-modal-heading"
 		@close="onClose">
 		<div class="modal-content">
 			<h2 id="tag-modal-heading" class="tag-title">
@@ -26,7 +26,7 @@
 				:key="tag.id"
 				:tag="tag"
 				:envelopes="envelopes"
-				@delete-tag="deleteTag" />
+				@deleteTag="deleteTag" />
 
 			<h2 class="tag-title">
 				{{ t('mail', 'Add tag') }}
@@ -83,7 +83,6 @@ function randomColor() {
 }
 export default {
 	name: 'TagModal',
-	emits: ['close'],
 	components: {
 		NcModal,
 		NcActionText,
@@ -103,6 +102,8 @@ export default {
 			type: Array,
 		},
 	},
+
+	emits: ['close'],
 
 	data() {
 		return {

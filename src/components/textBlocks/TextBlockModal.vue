@@ -13,16 +13,16 @@
 		<ListItem
 			v-for="textBlock in getMyTextBlocks()"
 			:key="textBlock.id"
-			:text-block="textBlock"
-			:is-view-mode="true"
+			:textBlock="textBlock"
+			:isViewMode="true"
 			:picked="textBlock.id === picked?.id"
 			@click="handleClick" />
 		<ListItem
 			v-for="textBlock in getSharedTextBlocks()"
 			:key="textBlock.id"
-			:text-block="textBlock"
+			:textBlock="textBlock"
 			:shared="true"
-			:is-view-mode="true"
+			:isViewMode="true"
 			:picked="textBlock.id === picked?.id"
 			@click="handleClick" />
 	</NcDialog>
@@ -43,11 +43,12 @@ import useMainStore from '../../store/mainStore.js'
 
 export default {
 	name: 'TextBlockModal',
-	emits: ['insert', 'close'],
 	components: {
 		ListItem,
 		NcDialog,
 	},
+
+	emits: ['insert', 'close'],
 
 	data() {
 		return {

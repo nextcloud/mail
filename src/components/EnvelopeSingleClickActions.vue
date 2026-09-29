@@ -9,7 +9,7 @@
 			v-if="isRead"
 			variant="tertiary"
 			:title="t('mail', 'Mark as unread')"
-			@click.prevent="$emit('toggle-seen')">
+			@click.prevent="$emit('toggleSeen')">
 			<template #icon>
 				<EmailRead :size="20" />
 			</template>
@@ -18,7 +18,7 @@
 			v-else
 			variant="tertiary"
 			:title="t('mail', 'Mark as read')"
-			@click.prevent="$emit('toggle-seen')">
+			@click.prevent="$emit('toggleSeen')">
 			<template #icon>
 				<EmailUnread :size="20" />
 			</template>
@@ -27,7 +27,7 @@
 			v-if="isImportant"
 			variant="tertiary"
 			:title="t('mail', 'Mark as unimportant')"
-			@click.prevent="$emit('toggle-important')">
+			@click.prevent="$emit('toggleImportant')">
 			<template #icon>
 				<ImportantIcon :size="20" />
 			</template>
@@ -36,7 +36,7 @@
 			v-else
 			variant="tertiary"
 			:title="t('mail', 'Mark as important')"
-			@click.prevent="$emit('toggle-important')">
+			@click.prevent="$emit('toggleImportant')">
 			<template #icon>
 				<ImportantOutlineIcon :size="20" />
 			</template>
@@ -63,7 +63,6 @@ import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 
 export default {
 	name: 'EnvelopeSingleClickActions',
-	emits: ['toggle-seen', 'toggle-important', 'delete'],
 	components: {
 		EmailRead,
 		EmailUnread,
@@ -84,6 +83,8 @@ export default {
 			default: false,
 		},
 	},
+
+	emits: ['toggleSeen', 'toggleImportant', 'delete'],
 }
 </script>
 

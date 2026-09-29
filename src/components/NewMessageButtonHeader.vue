@@ -7,7 +7,7 @@
 		<NcButton
 			:aria-label="t('mail', 'New message')"
 			variant="secondary"
-			button-id="mail_new_message"
+			buttonId="mail_new_message"
 			:wide="true"
 			@click="onNewMessage">
 			<template #icon>

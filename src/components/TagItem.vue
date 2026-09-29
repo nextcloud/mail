@@ -12,7 +12,7 @@
 			}">
 			{{ translateTagDisplayName(tag) }}
 		</button>
-		<NcActions :force-menu="true" @close="closeEditTag">
+		<NcActions :forceMenu="true" @close="closeEditTag">
 			<NcActionButton
 				v-if="renameTagLabel"
 				@click="openEditTag">
@@ -32,7 +32,7 @@
 				v-if="renameTagInput"
 				v-model="currentTagName"
 				:error="hasError()"
-				:helper-text="errorMessage"
+				:helperText="errorMessage"
 				@submit="renameTag(tag, $event)" />
 			<NcActionText v-if="showSaving">
 				<template #icon>
@@ -81,7 +81,6 @@ import { translateTagDisplayName, validateTag } from '../util/tag.js'
 
 export default {
 	name: 'TagItem',
-	emits: ['delete-tag'],
 	components: {
 		NcColorPicker,
 		NcActions,
@@ -105,6 +104,8 @@ export default {
 			type: Array,
 		},
 	},
+
+	emits: ['deleteTag'],
 
 	data() {
 		return {
@@ -134,7 +135,7 @@ export default {
 	methods: {
 		translateTagDisplayName,
 		deleteTag() {
-			this.$emit('delete-tag', this.tag)
+			this.$emit('deleteTag', this.tag)
 		},
 
 		async updateColor() {

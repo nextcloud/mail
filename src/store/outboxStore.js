@@ -224,7 +224,7 @@ export default defineStore('outbox', {
 			try {
 				await this.sendMessage({ id: message.id, force: false })
 				showSuccess(t('mail', 'Message copied to "Sent" folder'))
-			} catch (error) {
+			} catch {
 				showError(t('mail', 'Could not copy message to "Sent" folder'))
 				logger.error('Could not copy message to "Sent" folder ' + message.id, { message })
 			}

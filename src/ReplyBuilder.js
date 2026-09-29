@@ -78,8 +78,8 @@ export function buildRecipients(envelope, ownAddress, replyTo) {
 		}
 	}
 
-	let to = []
-	let cc = []
+	let to
+	let cc
 	if (recipientType === RecipientType.To) {
 		// Send to everyone except yourself, plus the original sender if not ourself
 		to = envelope.to.filter(isNotOwnAddress)

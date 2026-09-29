@@ -12,14 +12,9 @@
  */
 export default function toCalendar(calendar, currentUserPrincipal) {
 	const owner = calendar.owner
-	let isSharedWithMe = false
-	if (!currentUserPrincipal) {
-		// If the user is not authenticated, the calendar
-		// will always be marked as shared with them
-		isSharedWithMe = true
-	} else {
-		isSharedWithMe = (owner !== currentUserPrincipal.url)
-	}
+	// If the user is not authenticated, the calendar
+	// will always be marked as shared with them
+	const isSharedWithMe = !currentUserPrincipal || owner !== currentUserPrincipal.url
 	const displayname = calendar.displayname || getCalendarUriFromUrl(calendar.url)
 
 	const color = calendar.color

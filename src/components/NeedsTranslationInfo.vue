@@ -25,7 +25,6 @@ import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'NeedsTranslationInfo',
-	emits: ['translate'],
 	components: {
 		NcButton,
 	},
@@ -36,6 +35,8 @@ export default {
 			required: true,
 		},
 	},
+
+	emits: ['translate'],
 
 	computed: {
 		...mapState(useMainStore, {

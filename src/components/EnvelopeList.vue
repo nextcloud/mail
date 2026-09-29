@@ -58,7 +58,7 @@
 					<NcButton
 						variant="tertiary"
 						:title="n('mail', 'Unselect {number}', 'Unselect {number}', selection.length, { number: selection.length })"
-						:close-after-click="true"
+						:closeAfterClick="true"
 						@click.prevent="unselectAll">
 						<IconSelect :size="20" />
 					</NcButton>
@@ -71,13 +71,13 @@
 							selection.length,
 							{ number: selection.length },
 						)"
-						:close-after-click="true"
+						:closeAfterClick="true"
 						@click.prevent="deleteAllSelected">
 						<IconDelete :size="20" />
 					</NcButton>
 				</div>
 
-				<NcActions class="app-content-list-item-menu" menu-align="right">
+				<NcActions class="app-content-list-item-menu" menuAlign="right">
 					<NcActionButton
 						v-if="isAtLeastOneSelectedNotJunk"
 						@click.prevent="markSelectionJunk">
@@ -94,19 +94,19 @@
 						</template>
 						{{ n('mail', 'Mark {number} as not spam', 'Mark {number} as not spam', selection.length, { number: selection.length }) }}
 					</NcActionButton>
-					<NcActionButton :close-after-click="true" @click.prevent="onOpenTagModal">
+					<NcActionButton :closeAfterClick="true" @click.prevent="onOpenTagModal">
 						<template #icon>
 							<TagIcon :size="20" />
 						</template>
 						{{ n('mail', 'Edit tags for {number}', 'Edit tags for {number}', selection.length, { number: selection.length }) }}
 					</NcActionButton>
-					<NcActionButton v-if="!account.isUnified" :close-after-click="true" @click.prevent="onOpenMoveModal">
+					<NcActionButton v-if="!account.isUnified" :closeAfterClick="true" @click.prevent="onOpenMoveModal">
 						<template #icon>
 							<OpenInNewIcon :size="20" />
 						</template>
 						{{ n('mail', 'Move {number} thread', 'Move {number} threads', selection.length, { number: selection.length }) }}
 					</NcActionButton>
-					<NcActionButton :close-after-click="true" @click.prevent="forwardSelectedAsAttachment">
+					<NcActionButton :closeAfterClick="true" @click.prevent="forwardSelectedAsAttachment">
 						<template #icon>
 							<ShareIcon :size="20" />
 						</template>
@@ -123,20 +123,20 @@
 				:data="env"
 				:mailbox="mailbox"
 				:selected="selection.includes(env.databaseId)"
-				:select-mode="selectMode"
-				:has-multiple-accounts="hasMultipleAccounts"
-				:selected-envelopes="selectedEnvelopes"
-				:compact-mode="compactMode"
-				:date-grouped="dateGrouped"
+				:selectMode="selectMode"
+				:hasMultipleAccounts="hasMultipleAccounts"
+				:selectedEnvelopes="selectedEnvelopes"
+				:compactMode="compactMode"
+				:dateGrouped="dateGrouped"
 				@delete="$emit('delete', env.databaseId)"
 				@update:selected="onEnvelopeSelectToggle(env, index, $event)"
-				@select-multiple="onEnvelopeSelectMultiple(env, index)"
-				@open:quick-actions-settings="showQuickActionsSettings = true" />
+				@selectMultiple="onEnvelopeSelectMultiple(env, index)"
+				@open:quickActionsSettings="showQuickActionsSettings = true" />
 			<div
 				v-if="loadMoreButton && !loadingMore"
 				:key="'list-collapse-' + searchQuery"
 				class="load-more"
-				@click="$emit('load-more')">
+				@click="$emit('loadMore')">
 				<AddIcon :size="16" />
 				{{ loadMoreLabel }}
 			</div>
@@ -153,7 +153,7 @@
 			v-if="showMoveModal"
 			:account="account"
 			:envelopes="selectedEnvelopes"
-			:move-thread="true"
+			:moveThread="true"
 			@close="onCloseMoveModal" />
 
 		<NcDialog
@@ -199,7 +199,6 @@ import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'EnvelopeList',
-	emits: ['delete', 'load-more'],
 	components: {
 		IconUnFavorite,
 		EmailUnread,
@@ -277,6 +276,8 @@ export default {
 			default: false,
 		},
 	},
+
+	emits: ['delete', 'loadMore'],
 
 	data() {
 		return {

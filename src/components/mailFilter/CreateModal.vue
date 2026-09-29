@@ -5,7 +5,7 @@
 <template>
 	<NcModal
 		size="normal"
-		:close-on-click-outside="false"
+		:closeOnClickOutside="false"
 		@close="closeModal">
 		<form class="modal__content" @submit.prevent="createFilter">
 			<h2>{{ t('mail', 'Create a new mail filter') }}</h2>
@@ -50,7 +50,6 @@ import useMainStore from '../../store/mainStore.js'
 
 export default {
 	name: 'CreateModal',
-	emits: ['create-filter', 'close'],
 	components: {
 		NcModal,
 		NcCheckboxRadioSwitch,
@@ -76,6 +75,8 @@ export default {
 			required: false,
 		},
 	},
+
+	emits: ['createFilter', 'close'],
 
 	data() {
 		return {
@@ -127,7 +128,7 @@ export default {
 
 		createFilter() {
 			const headers = structuredClone(this.headers).filter((header) => header.enable)
-			this.$emit('create-filter', headers)
+			this.$emit('createFilter', headers)
 		},
 
 		closeModal() {

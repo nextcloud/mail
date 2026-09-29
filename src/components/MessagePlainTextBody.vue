@@ -6,7 +6,7 @@
 	<div id="mail-content">
 		<NeedsTranslationInfo
 			v-if="detectedForeignLanguage"
-			:is-html="false"
+			:isHtml="false"
 			@translate="$emit('translate', detectedForeignLanguage)" />
 		<MdnRequest :message="message" />
 		<div id="message-container" v-html="nl2br(enhancedBody)" />
@@ -26,7 +26,6 @@ const regFirstParagraph = /(.+\n\r?)+(\n\r?)+/
 
 export default {
 	name: 'MessagePlainTextBody',
-	emits: ['translate'],
 	components: { MdnRequest, NeedsTranslationInfo },
 	props: {
 		body: {
@@ -44,6 +43,8 @@ export default {
 			type: Object,
 		},
 	},
+
+	emits: ['translate'],
 
 	data() {
 		return {

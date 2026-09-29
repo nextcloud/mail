@@ -9,17 +9,17 @@
 				v-if="entry['@type'] === 'EventReservation'"
 				:data="entry"
 				:calendars="calendars"
-				:message-id="messageId" />
+				:messageId="messageId" />
 			<FlightReservation
 				v-else-if="entry['@type'] === 'FlightReservation'"
 				:data="entry"
 				:calendars="calendars"
-				:message-id="messageId" />
+				:messageId="messageId" />
 			<TrainReservation
 				v-else-if="entry['@type'] === 'TrainReservation'"
 				:data="entry"
 				:calendars="calendars"
-				:message-id="messageId" />
+				:messageId="messageId" />
 			<span v-else>{{
 				t('mail', 'Itinerary for {type} is not supported yet', { type: entry['@type'] })
 			}}</span>

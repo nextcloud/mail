@@ -9,11 +9,11 @@
 			<div class="recipient-info__header">
 				<div class="recipient-info__avatar">
 					<Avatar
-						:display-name="recipients[0].label"
+						:displayName="recipients[0].label"
 						:email="recipients[0].email"
 						:size="55"
-						:disable-tooltip="true"
-						:disable-menu="true"
+						:disableTooltip="true"
+						:disableMenu="true"
 						:avatar="getAvatarForRecipient(recipients[0])" />
 				</div>
 				<div class="recipient-info__contact">
@@ -44,11 +44,11 @@
 				<div class="recipient-info__header">
 					<div class="recipient-info__avatar recipient-info__avatar--small">
 						<Avatar
-							:display-name="recipient.label"
+							:displayName="recipient.label"
 							:email="recipient.email"
 							:size="36"
-							:disable-tooltip="true"
-							:disable-menu="true"
+							:disableTooltip="true"
+							:disableMenu="true"
 							:avatar="getAvatarForRecipient(recipient)" />
 					</div>
 					<div class="recipient-info__contact">

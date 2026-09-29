@@ -101,15 +101,15 @@
 								id="fromId"
 								class="modal-inner--container__select"
 								label="label"
-								track-by="email"
+								trackBy="email"
 								:options="autocompleteRecipients"
-								:model-value="searchInFrom"
+								:modelValue="searchInFrom"
 								:placeholder="t('mail', 'Select senders')"
 								:aria-label-combobox="t('mail', 'Select senders')"
 								:multiple="true"
 								:taggable="true"
-								:show-no-options="false"
-								:preserve-search="true"
+								:showNoOptions="false"
+								:preserveSearch="true"
 								:max="1"
 								@option:selecting="addTag($event, 'from')"
 								@option:deselecting="removeTag($event, 'from')"
@@ -126,15 +126,15 @@
 								id="toId"
 								class="modal-inner--container__select"
 								label="label"
-								track-by="email"
+								trackBy="email"
 								:options="autocompleteRecipients"
-								:model-value="searchInTo"
+								:modelValue="searchInTo"
 								:placeholder="t('mail', 'Select recipients')"
 								:aria-label-combobox="t('mail', 'Select recipients')"
 								:multiple="true"
 								:taggable="true"
-								:show-no-options="false"
-								:preserve-search="true"
+								:showNoOptions="false"
+								:preserveSearch="true"
 								@option:selecting="addTag($event, 'to')"
 								@option:deselecting="removeTag($event, 'to')"
 								@search="searchRecipients($event)" />
@@ -150,15 +150,15 @@
 								id="ccId"
 								class="modal-inner--container__select"
 								label="label"
-								track-by="email"
+								trackBy="email"
 								:options="autocompleteRecipients"
-								:model-value="searchInCc"
+								:modelValue="searchInCc"
 								:placeholder="t('mail', 'Select CC recipients')"
 								:aria-label-combobox="t('mail', 'Select CC recipients')"
 								:multiple="true"
 								:taggable="true"
-								:show-no-options="false"
-								:preserve-search="true"
+								:showNoOptions="false"
+								:preserveSearch="true"
 								@option:selecting="addTag($event, 'cc')"
 								@option:deselecting="removeTag($event, 'cc')"
 								@search="searchRecipients($event)" />
@@ -174,15 +174,15 @@
 								id="bccId"
 								class="modal-inner--container__select"
 								label="label"
-								track-by="email"
+								trackBy="email"
 								:options="autocompleteRecipients"
-								:model-value="searchInBcc"
+								:modelValue="searchInBcc"
 								:placeholder="t('mail', 'Select BCC recipients')"
 								:aria-label-combobox="t('mail', 'Select BCC recipients')"
 								:multiple="true"
 								:taggable="true"
-								:show-no-options="false"
-								:preserve-search="true"
+								:showNoOptions="false"
+								:preserveSearch="true"
 								@option:selecting="addTag($event, 'bcc')"
 								@option:deselecting="removeTag($event, 'bcc')"
 								@search="searchRecipients($event)" />
@@ -201,12 +201,12 @@
 								class="multiselect-search-tags "
 								:options="tags"
 								label="displayName"
-								:model-value="selectedTags"
+								:modelValue="selectedTags"
 								:placeholder="t('mail', 'Select tags')"
 								:aria-label-combobox="t('mail', 'Select tags')"
-								track-by="displayName"
+								trackBy="displayName"
 								:multiple="true"
-								:auto-limit="false">
+								:autoLimit="false">
 								<template #selected-option="option">
 									<div class="tag-group__search">
 										<div
@@ -276,19 +276,19 @@
 		<div v-if="showButtons" class="filter-buttons">
 			<NcChip
 				:text="t('mail', 'Has attachment')"
-				:no-close="true"
+				:noClose="true"
 				:variant="hasAttachmentActive ? 'primary' : 'secondary'"
 				:aria-label="t('mail', 'Has attachment')"
 				@click="toggleGetAttachments" />
 			<NcChip
 				:text="t('mail', 'Unread')"
-				:no-close="true"
+				:noClose="true"
 				:variant="hasUnreadActive ? 'primary' : 'secondary'"
 				:aria-label="t('mail', 'Unread')"
 				@click="toggleUnread" />
 			<NcChip
 				:text="t('mail', 'To me')"
-				:no-close="true"
+				:noClose="true"
 				:variant="hasToMeActive ? 'primary' : 'secondary'"
 				:aria-label="t('mail', 'To me')"
 				@click="toggleCurrentUser" />
@@ -321,7 +321,6 @@ const debouncedSearch = debouncePromise(findRecipient, 500)
 
 export default {
 	name: 'SearchMessages',
-	emits: ['search-changed'],
 	components: {
 		NcChip,
 		NcDialog,
@@ -344,6 +343,8 @@ export default {
 			required: true,
 		},
 	},
+
+	emits: ['searchChanged'],
 
 	data() {
 		return {
@@ -565,7 +566,7 @@ export default {
 		},
 
 		sendQueryEvent() {
-			this.$emit('search-changed', this.searchQuery)
+			this.$emit('searchChanged', this.searchQuery)
 		},
 
 		searchRecipients(term) {

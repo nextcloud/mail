@@ -5,8 +5,8 @@
 
 <template>
 	<NcAppContent
-		pane-config-key="mail-outbox"
-		:show-details="isMessageShown"
+		paneConfigKey="mail-outbox"
+		:showDetails="isMessageShown"
 		@update:showDetails="hideMessage">
 		<OutboxMessageContent />
 		<!-- List -->

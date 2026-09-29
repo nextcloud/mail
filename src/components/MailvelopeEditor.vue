@@ -13,7 +13,6 @@ import logger from '../logger.js'
 
 export default {
 	name: 'MailvelopeEditor',
-	emits: ['input'],
 	props: {
 		value: {
 			type: String,
@@ -36,6 +35,8 @@ export default {
 			default: false,
 		},
 	},
+
+	emits: ['input'],
 
 	data() {
 		return {

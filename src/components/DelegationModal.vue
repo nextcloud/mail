@@ -5,10 +5,10 @@
 
 <template>
 	<NcModal
-		close-on-click-outside
 		v-if="view === 'main'"
+		closeOnClickOutside
 		size="normal"
-		label-id="delegation-modal-title"
+		labelId="delegation-modal-title"
 		@close="$emit('close')">
 		<div class="delegation-modal">
 			<h2 id="delegation-modal-title">
@@ -29,7 +29,7 @@
 						:name="user.displayName || user.userId">
 						<template #icon>
 							<NcAvatar
-								disable-menu
+								disableMenu
 								:size="34"
 								:user="user.userId" />
 						</template>
@@ -69,7 +69,7 @@
 		<NcSelectUsers
 			v-model="selectedUser"
 			class="add-delegates-dialog__select"
-			:input-label="t('mail', 'Select a user')"
+			:inputLabel="t('mail', 'Select a user')"
 			:options="userSuggestions"
 			:loading="searchLoading"
 			:placeholder="t('mail', 'Select a user')"
@@ -114,7 +114,6 @@ import { delegate, fetchDelegatedUsers, unDelegate } from '../service/Delegation
 
 export default {
 	name: 'DelegationModal',
-	emits: ['close'],
 	components: {
 		NcAvatar,
 		NcButton,
@@ -133,6 +132,8 @@ export default {
 			required: true,
 		},
 	},
+
+	emits: ['close'],
 
 	data() {
 		return {

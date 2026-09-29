@@ -51,7 +51,6 @@ import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'ComposerSessionIndicator',
-	emits: ['close'],
 	components: {
 		NcActions,
 		NcActionButton,
@@ -59,6 +58,8 @@ export default {
 		ArrowExpandIcon,
 		CloseIcon,
 	},
+
+	emits: ['close'],
 
 	data() {
 		return {

@@ -11,14 +11,14 @@
 				<AliasForm
 					:account="account"
 					:alias="accountAlias"
-					:enable-update="false"
-					:enable-delete="false">
+					:enableUpdate="false"
+					:enableDelete="false">
 					<NcButton
 						v-if="!account.provisioningId"
 						variant="tertiary-no-background"
 						:aria-label="t('mail', 'Go back')"
 						:name="t('mail', 'Change name')"
-						@click="$emit('rename-primary-alias')">
+						@click="$emit('renamePrimaryAlias')">
 						<template #icon>
 							<IconRename :size="20" />
 						</template>
@@ -31,8 +31,8 @@
 				<AliasForm
 					:account="account"
 					:alias="alias"
-					:on-update-alias="updateAlias"
-					:on-delete="deleteAlias" />
+					:onUpdateAlias="updateAlias"
+					:onDelete="deleteAlias" />
 			</li>
 
 			<li v-if="showForm">
@@ -96,7 +96,6 @@ import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'AliasSettings',
-	emits: ['rename-primary-alias'],
 	components: {
 		AliasForm,
 		NcButton,
@@ -111,6 +110,8 @@ export default {
 			required: true,
 		},
 	},
+
+	emits: ['renamePrimaryAlias'],
 
 	data() {
 		return {

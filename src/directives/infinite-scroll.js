@@ -160,7 +160,7 @@ function doCheck(force) {
 	const viewportScrollTop = getScrollTop(scrollEventTarget)
 	const viewportBottom = viewportScrollTop + getVisibleHeight(scrollEventTarget)
 
-	let shouldTrigger = false
+	let shouldTrigger
 
 	if (scrollEventTarget === element) {
 		shouldTrigger = scrollEventTarget.scrollHeight - viewportBottom <= distance

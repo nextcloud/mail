@@ -5,8 +5,8 @@
 
 import { getRequestToken } from '@nextcloud/auth'
 import { registerDavProperty } from '@nextcloud/files/dav'
-import { generateFilePath } from '@nextcloud/router'
 import { n, t } from '@nextcloud/l10n'
+import { generateFilePath } from '@nextcloud/router'
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 import VueShortKey from 'vue3-shortkey'

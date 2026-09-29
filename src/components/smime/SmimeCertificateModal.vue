@@ -4,7 +4,7 @@
 -->
 
 <template>
-	<NcModal close-on-click-outside :name="showImportScreen ? t('mail', 'Import S/MIME certificate') : t('mail', 'S/MIME certificates')" @close="$emit('close')">
+	<NcModal closeOnClickOutside :name="showImportScreen ? t('mail', 'Import S/MIME certificate') : t('mail', 'S/MIME certificates')" @close="$emit('close')">
 		<div class="certificate-modal">
 			<div v-if="!showImportScreen" class="certificate-modal__list">
 				<h2>{{ t('mail', 'S/MIME certificates') }}</h2>
@@ -159,7 +159,6 @@ const TYPE_PEM = 'pem'
 
 export default {
 	name: 'SmimeCertificateModal',
-	emits: ['close'],
 	components: {
 		NcModal,
 		NcButton,
@@ -167,6 +166,8 @@ export default {
 		NcEmptyContent,
 		DeleteIcon,
 	},
+
+	emits: ['close'],
 
 	data() {
 		return {

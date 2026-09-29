@@ -28,7 +28,7 @@
 				:key="attachment.id"
 				:attachment="attachment"
 				:uploading="uploading"
-				@on-delete-attachment="onDelete(attachment)" />
+				@onDeleteAttachment="onDelete(attachment)" />
 		</ul>
 
 		<input
@@ -67,7 +67,6 @@ const mimes = [
 
 export default {
 	name: 'ComposerAttachments',
-	emits: ['update:modelValue', 'upload', 'on-delete-attachment'],
 	components: {
 		ComposerAttachment,
 		ChevronDown,
@@ -95,6 +94,8 @@ export default {
 			default: null,
 		},
 	},
+
+	emits: ['update:modelValue', 'upload', 'onDeleteAttachment'],
 
 	data() {
 		return {
@@ -449,7 +450,7 @@ export default {
 
 			this.uploads = updatedUploads
 
-			this.$emit('on-delete-attachment', attachment)
+			this.$emit('onDeleteAttachment', attachment)
 		},
 
 		appendToBodyAtCursor(toAppend) {

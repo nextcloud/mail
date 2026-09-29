@@ -35,7 +35,7 @@
 		<div
 			v-else-if="isCancel"
 			class="imip__type">
-			<CloseIcon :size="20" fill-color="red" />
+			<CloseIcon :size="20" fillColor="red" />
 			<span>{{ t('mail', 'This event was cancelled') }}</span>
 		</div>
 
@@ -52,8 +52,8 @@
 					<NcSelect
 						v-if="calendarsForPicker.length > 1"
 						:id="targetCalendarPickerId"
-						label-outside
 						v-model="targetCalendar"
+						labelOutside
 						:aria-label-combobox="t('mail', 'Select')"
 						label="displayname"
 						:options="calendarsForPicker">

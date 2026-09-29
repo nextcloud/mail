@@ -5,7 +5,7 @@
 <template>
 	<NcModal
 		size="normal"
-		:close-on-click-outside="false"
+		:closeOnClickOutside="false"
 		:name="t('mail', 'New filter')"
 		@close="closeModal">
 		<form class="modal__content" @submit.prevent="updateFilter">
@@ -27,8 +27,8 @@
 					v-for="test in clone.tests"
 					:key="test.id"
 					:test="test"
-					@update-test="updateTest"
-					@delete-test="deleteTest" />
+					@updateTest="updateTest"
+					@deleteTest="deleteTest" />
 
 				<NcButton
 					class="add-condition"
@@ -47,8 +47,8 @@
 					:key="action.id"
 					:action="action"
 					:account="account"
-					@update-action="updateAction"
-					@delete-action="deleteAction" />
+					@updateAction="updateAction"
+					@deleteAction="deleteAction" />
 
 				<NcButton
 					class="add-action"
@@ -104,7 +104,6 @@ import { randomId } from '../../util/randomId.js'
 
 export default {
 	name: 'UpdateModal',
-	emits: ['update-filter', 'close'],
 	components: {
 		IconCheck,
 		Action,
@@ -134,6 +133,8 @@ export default {
 			required: false,
 		},
 	},
+
+	emits: ['updateFilter', 'close'],
 
 	data() {
 		return {
@@ -190,7 +191,7 @@ export default {
 		},
 
 		updateFilter() {
-			this.$emit('update-filter', structuredClone(this.clone))
+			this.$emit('updateFilter', structuredClone(this.clone))
 		},
 
 		closeModal() {

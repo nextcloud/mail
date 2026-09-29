@@ -23,7 +23,7 @@ describe('Envelope', () => {
 
 		store = useMainStore()
 
-		store.accountsUnmapped[123] = { sentMailboxId: '1' }
+		store.accountsUnmapped[123] = { sentMailboxId: '1', archiveMailboxId: 99 }
 	})
 	it('allows toggling seen flag without ACLs', () => {
 		const view = shallowMount(Envelope, {

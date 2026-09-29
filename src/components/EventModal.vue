@@ -4,7 +4,7 @@
 -->
 <template>
 	<NcModal
-		close-on-click-outside
+		closeOnClickOutside
 		size="large"
 		:name="t('mail', 'Create event')"
 		@close="onClose">
@@ -23,20 +23,20 @@
 					v-model="startDate"
 					:format="dateFormat"
 					:clearable="false"
-					:minute-step="5"
-					:show-second="false"
+					:minuteStep="5"
+					:showSecond="false"
 					:type="datePickerType"
-					:show-timezone-select="true"
-					:timezone-id="startTimezoneId" />
+					:showTimezoneSelect="true"
+					:timezoneId="startTimezoneId" />
 				<NcDateTimePicker
 					v-model="endDate"
 					:format="dateFormat"
 					:clearable="false"
-					:minute-step="5"
-					:show-second="false"
+					:minuteStep="5"
+					:showSecond="false"
 					:type="datePickerType"
-					:show-timezone-select="true"
-					:timezone-id="endTimezoneId" />
+					:showTimezoneSelect="true"
+					:timezoneId="endTimezoneId" />
 			</div>
 			<div class="all-day">
 				<input
@@ -56,19 +56,19 @@
 				<NcSelect
 					v-else
 					id="attendee"
-					:model-value="attendeesList"
+					:modelValue="attendeesList"
 					class="select-users"
 					:multiple="true"
 					label="displayName"
-					track-by="email"
+					trackBy="email"
 					:clearable="true"
 					:searchable="true"
-					:label-outside="true"
-					input-id="uid"
+					:labelOutside="true"
+					inputId="uid"
 					:disabled="!organizerEmail"
 					:options="attendeesOptions"
 					:taggable="true"
-					:create-option="createRecipientOption"
+					:createOption="createRecipientOption"
 					@option:selecting="addAttendee">
 					<template #search="{ events, attributes }">
 						<input
@@ -82,7 +82,7 @@
 						<RecipientListItem
 							:option="option"
 							class="vs__selected selected"
-							@remove-recipient="removeAttendee(option)" />
+							@removeRecipient="removeAttendee(option)" />
 					</template>
 				</NcSelect>
 			</div>
@@ -97,7 +97,7 @@
 				</template>
 				<template #singleLabel="option">
 					<CalendarPickerOption
-						:display-icon="true"
+						:displayIcon="true"
 						v-bind="option" />
 				</template>
 			</NcSelect>
@@ -135,7 +135,6 @@ import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'EventModal',
-	emits: ['close'],
 	components: {
 		RecipientListItem,
 		CalendarPickerOption,
@@ -150,6 +149,8 @@ export default {
 			required: true,
 		},
 	},
+
+	emits: ['close'],
 
 	data() {
 		// Try to determine the current timezone, and fall back to UTC otherwise

@@ -40,7 +40,6 @@ import EmailArrowRightIcon from 'vue-material-design-icons/EmailArrowRightOutlin
 
 export default {
 	name: 'ComposerAttachment',
-	emits: ['on-delete-attachment'],
 	components: {
 		Close,
 		Cloud,
@@ -58,6 +57,8 @@ export default {
 			default: false,
 		},
 	},
+
+	emits: ['onDeleteAttachment'],
 
 	data() {
 		return {
@@ -88,7 +89,7 @@ export default {
 
 	methods: {
 		onDelete(attachment) {
-			this.$emit('on-delete-attachment', attachment)
+			this.$emit('onDeleteAttachment', attachment)
 		},
 	},
 

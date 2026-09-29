@@ -5,10 +5,10 @@
 <template>
 	<div :class="isInternal ? 'ncselect__tag--recipient' : 'ncselect__tag--recipient external'" :title="option.email">
 		<NcListItemIcon
-			:no-margin="true"
+			:noMargin="true"
 			:name="option.label || option.displayName || option.email"
 			:url="option.photo"
-			:avatar-size="24" />
+			:avatarSize="24" />
 		<Close
 			class="delete-recipient"
 			:size="20"
@@ -24,7 +24,6 @@ import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'RecipientListItem',
-	emits: ['remove-recipient'],
 	components: {
 		NcListItemIcon,
 		Close,
@@ -36,6 +35,8 @@ export default {
 			required: true,
 		},
 	},
+
+	emits: ['removeRecipient'],
 
 	data() {
 		return {
@@ -55,7 +56,7 @@ export default {
 
 	methods: {
 		removeRecipient(option, field) {
-			this.$emit('remove-recipient', option, field)
+			this.$emit('removeRecipient', option, field)
 		},
 	},
 }

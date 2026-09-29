@@ -2286,7 +2286,7 @@ export default function mainStoreActions() {
 			account,
 			alias,
 		}) {
-			Vue.set(account, 'aliases', sortAliases([...(account.aliases || []), alias]))
+			account.aliases = sortAliases([...(account.aliases || []), alias])
 		},
 		deleteAliasMutation({
 			account,
@@ -2305,7 +2305,7 @@ export default function mainStoreActions() {
 			const index = account.aliases.findIndex((temp) => aliasId === temp.id)
 			if (index !== -1) {
 				account.aliases[index] = { ...account.aliases[index], ...data }
-				Vue.set(account, 'aliases', sortAliases(account.aliases))
+				account.aliases = sortAliases(account.aliases)
 			}
 		},
 		setMailboxUnreadCountMutation({

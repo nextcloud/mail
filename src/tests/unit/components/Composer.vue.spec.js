@@ -261,6 +261,9 @@ describe('Composer', () => {
 			},
 		})
 
+		// Simulate a recipient whose certificate is not in the store
+		view.vm.selectTo = [{ email: 'john@foo.bar' }]
+
 		view.vm.wantsSmimeEncrypt = false
 		expect(view.vm.shouldSmimeEncrypt).toEqual(false)
 

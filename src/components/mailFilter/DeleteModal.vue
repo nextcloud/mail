@@ -19,7 +19,6 @@ import NcDialog from '@nextcloud/vue/components/NcDialog'
 
 export default {
 	name: 'DeleteModal',
-	emits: ['delete-filter', 'close'],
 	components: {
 		NcDialog,
 	},
@@ -35,6 +34,8 @@ export default {
 			required: true,
 		},
 	},
+
+	emits: ['deleteFilter', 'close'],
 
 	data() {
 		return {
@@ -56,7 +57,7 @@ export default {
 
 	methods: {
 		deleteFilter() {
-			this.$emit('delete-filter', this.filter)
+			this.$emit('deleteFilter', this.filter)
 		},
 
 		closeModal() {
