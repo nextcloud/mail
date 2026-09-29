@@ -65,7 +65,6 @@
       <code><![CDATA[$message->getMessageId()]]></code>
       <code><![CDATA[$message->getMessageId()]]></code>
       <code><![CDATA[$message->getPreviewText()]]></code>
-      <code><![CDATA[$recipient->getLabel()]]></code>
     </PossiblyNullArgument>
     <PossiblyNullArrayOffset>
       <code><![CDATA[$tags]]></code>
