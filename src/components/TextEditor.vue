@@ -15,6 +15,7 @@
 			:config="config"
 			:editor="editor"
 			:disabled="disabled"
+			:disable-watchdog="true"
 			class="editor"
 			@input="onEditorInput"
 			@ready="onEditorReady" />

@@ -5,6 +5,7 @@
 
 <template>
 	<NcModal
+		close-on-click-outside
 		v-if="view === 'main'"
 		size="normal"
 		label-id="delegation-modal-title"

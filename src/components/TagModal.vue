@@ -11,6 +11,7 @@
 		:account-id="envelopes[0].accountId"
 		@close="closeDeleteModal" />
 	<NcModal
+		close-on-click-outside
 		v-else
 		class="tag-modal"
 		size="large"

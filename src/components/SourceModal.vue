@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<NcModal size="full" @close="onClose">
+	<NcModal close-on-click-outside size="full" @close="onClose">
 		<div class="message-source">
 			<h2>{{ t('mail', 'Message source') }}</h2>
 			<pre>{{ rawMessage }}</pre>
