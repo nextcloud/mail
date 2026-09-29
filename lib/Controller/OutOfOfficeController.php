@@ -93,6 +93,7 @@ class OutOfOfficeController extends Controller {
 	public function update(
 		int $accountId,
 		bool $enabled,
+		bool $messageHtml,
 		?string $start,
 		?string $end,
 		string $subject,
@@ -120,6 +121,7 @@ class OutOfOfficeController extends Controller {
 
 		$state = new OutOfOfficeState(
 			$enabled,
+			$messageHtml,
 			$start ? new DateTimeImmutable($start) : null,
 			$end ? new DateTimeImmutable($end) : null,
 			$subject,
