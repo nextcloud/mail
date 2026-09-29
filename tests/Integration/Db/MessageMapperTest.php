@@ -12,7 +12,11 @@ namespace OCA\Mail\Tests\Integration\Db;
 use ChristophWurst\Nextcloud\Testing\DatabaseTransaction;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
+use OCA\Mail\Address;
+use OCA\Mail\AddressList;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\Search\SearchQuery;
@@ -328,5 +332,35 @@ class MessageMapperTest extends TestCase {
 
 		$mails = $this->mapper->findIdsAfter($mailbox, 2, 1234567890 + 200, 5);
 		$this->assertEquals([], $mails);
+	}
+
+	public function testInsertBulkConvertsNonUtf8Headers(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1);
+		$mailAccount->setUserId('user');
+		$message = new Message();
+		$message->setUid(1);
+		$message->setMessageId('<non-utf8@example.com>');
+		$message->setMailboxId(1);
+		// Raw 8-bit Windows-1252 bytes without a declared charset
+		$message->setSubject("Caf\xe9 \x801200");
+		$message->setSentAt(1);
+		foreach (['Answered', 'Deleted', 'Draft', 'Flagged', 'Seen', 'Forwarded', 'Junk', 'Notjunk', 'Important', 'Mdnsent'] as $flag) {
+			$message->{'setFlag' . $flag}(false);
+		}
+		$message->setFrom(new AddressList([Address::fromRaw("No\xebl", 'noel@example.com')]));
+
+		$this->mapper->insertBulk(new Account($mailAccount), $message);
+
+		$qb = $this->db->getQueryBuilder();
+		$result = $qb->select('m.subject', 'r.label')
+			->from($this->mapper->getTableName(), 'm')
+			->join('m', 'mail_recipients', 'r', $qb->expr()->eq('r.message_id', 'm.id'))
+			->where($qb->expr()->eq('m.message_id', $qb->createNamedParameter('<non-utf8@example.com>')))
+			->executeQuery();
+		$row = $result->fetch();
+		$result->closeCursor();
+		$this->assertSame('Café €1200', $row['subject']);
+		$this->assertSame('Noël', $row['label']);
 	}
 }
