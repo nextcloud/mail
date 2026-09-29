@@ -1,3 +1,22 @@
+## [5.12.3](https://github.com/nextcloud/mail/compare/v5.12.2...v5.12.3) (2026-09-29)
+
+
+### Bug Fixes
+
+* detect octet-stream ICS attachments ([ad6075a](https://github.com/nextcloud/mail/commit/ad6075a4ae68e43631c5178078756e01fef223da))
+* **l10n:** Update translations from Transifex ([44aecd7](https://github.com/nextcloud/mail/commit/44aecd77ebb0c5ebfc4f7ebc0ade0e23080709fa))
+* **l10n:** Update translations from Transifex ([b501add](https://github.com/nextcloud/mail/commit/b501adde4a41995c9e606e98d5f20913593c9197))
+* **l10n:** Update translations from Transifex ([ff36bb4](https://github.com/nextcloud/mail/commit/ff36bb493f0f2a6a54e195362b904c1b5af5df0e))
+* Reset array after filtering ([c21efc1](https://github.com/nextcloud/mail/commit/c21efc12cf698a9029552150e802c21e7824f2c7))
+* **sync:** apply the search filter as a restriction ([d8dea32](https://github.com/nextcloud/mail/commit/d8dea321b2b05aedb0d67b1ebf5a70259e16e69e))
+
+
+### Performance Improvements
+
+* **db:** index the iMIP invitation scan ([dd695d0](https://github.com/nextcloud/mail/commit/dd695d0c21fbb0c830ac0b44c7ed4b9fe19f75db)), closes [#2](https://github.com/nextcloud/mail/issues/2)
+
+
+
 ## [5.12.2](https://github.com/nextcloud/mail/compare/v5.12.1...v5.12.2) (2026-09-24)
 
 
