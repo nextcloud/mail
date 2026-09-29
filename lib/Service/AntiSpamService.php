@@ -26,7 +26,6 @@ use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 use OCA\Mail\Model\Message;
 use OCA\Mail\Service\DataUri\DataUriParser;
 use OCA\Mail\SMTP\SmtpClientFactory;
-use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IAppConfig;
 use Psr\Log\LoggerInterface;
 
@@ -87,12 +86,6 @@ class AntiSpamService {
 		}
 		$subject = ($flag === '$junk') ? $this->getSpamSubject() : $this->getHamSubject();
 
-		// Message to attach not found
-		$messageId = $this->dbMessageMapper->getIdForUid($mailbox, $uid);
-		if ($messageId === null) {
-			throw new ServiceException('Could not find reported message');
-		}
-
 		if ($account->getMailAccount()->getSentMailboxId() === null) {
 			throw new ServiceException('Could not find sent mailbox');
 		}
@@ -109,31 +102,25 @@ class AntiSpamService {
 		$message->setFrom($from);
 		$message->setContent($subject);
 
-		// Gets original of other message
+		// The message is fetched from IMAP because it might not be cached yet, e.g. right after a bulk move
 		$userId = $account->getMailAccount()->getUserId();
-		try {
-			$attachmentMessage = $this->mailManager->getMessage($userId, $messageId);
-		} catch (DoesNotExistException $e) {
-			$this->logger->error("Could not find reported email with message ID #$messageId", ['exception' => $e]);
-			return;
-		}
-
-		$mailbox = $this->mailManager->getMailbox($userId, $attachmentMessage->getMailboxId());
-
 		$client = $this->imapClientFactory->getClient($account);
 		try {
 			$fullText = $this->messageMapper->getFullText(
 				$client,
 				$mailbox->getName(),
-				$attachmentMessage->getUid(),
+				$uid,
 				$userId
 			);
 		} finally {
 			$client->logout();
 		}
+		if ($fullText === null) {
+			throw new ServiceException('Could not find reported message');
+		}
 
 		$message->addEmbeddedMessageAttachment(
-			$attachmentMessage->getSubject() . '.eml',
+			$this->getAttachmentName($mailbox, $uid),
 			$fullText
 		);
 
@@ -206,10 +193,17 @@ class AntiSpamService {
 				$mail->getRaw(false)
 			);
 		} catch (Horde_Imap_Client_Exception $e) {
-			$this->logger->error("Could not move report email to sent mailbox, but the report email was sent. Reported email was id: #$messageId", ['exception' => $e]);
+			$this->logger->error("Could not move report email to sent mailbox, but the report email was sent. Reported email was UID $uid in mailbox {$mailbox->getName()}", ['exception' => $e]);
 		} finally {
 			$client->logout();
 		}
 	}
 
+	private function getAttachmentName(Mailbox $mailbox, int $uid): string {
+		$cached = $this->dbMessageMapper->findByUids($mailbox, [$uid]);
+		if ($cached === []) {
+			return 'message.eml';
+		}
+		return $cached[0]->getSubject() . '.eml';
+	}
 }

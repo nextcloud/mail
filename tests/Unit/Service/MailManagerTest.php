@@ -394,6 +394,10 @@ class MailManagerTest extends TestCase {
 		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$account = $this->createStub(Account::class);
 
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
+		$this->mailboxMapper->method('find')
+			->willReturn($mailbox);
 		$this->imapClientFactory->expects($this->any())
 			->method('getClient')
 			->willReturn($client);
@@ -410,6 +414,10 @@ class MailManagerTest extends TestCase {
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$account = $this->createStub(Account::class);
 
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
+		$this->mailboxMapper->method('find')
+			->willReturn($mailbox);
 		$this->imapClientFactory->expects($this->any())
 			->method('getClient')
 			->willReturn($client);
@@ -426,6 +434,10 @@ class MailManagerTest extends TestCase {
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$account = $this->createStub(Account::class);
 
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
+		$this->mailboxMapper->method('find')
+			->willReturn($mailbox);
 		$this->imapClientFactory->expects($this->any())
 			->method('getClient')
 			->willReturn($client);
@@ -522,7 +534,8 @@ class MailManagerTest extends TestCase {
 		$this->imapClientFactory->expects($this->once())
 			->method('getClient')
 			->willReturn($client);
-		$mb = $this->createStub(Mailbox::class);
+		$mb = new Mailbox();
+		$mb->setName('INBOX');
 		$this->mailboxMapper->expects($this->once())
 			->method('find')
 			->with($account, 'INBOX')
@@ -534,6 +547,350 @@ class MailManagerTest extends TestCase {
 			->with($client, $mb, [123], '\\seen');
 
 		$this->manager->flagMessage($account, 'INBOX', 123, 'seen', false);
+	}
+
+	public function testFlagMessagesWithoutUids(): void {
+		$account = $this->createStub(Account::class);
+		$mailbox = new Mailbox();
+		$this->imapClientFactory->expects($this->never())
+			->method('getClient');
+
+		$this->manager->flagMessages($account, $mailbox, [], 'seen', true);
+	}
+
+	public function testFlagMessagesInChunks(): void {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$account = $this->createStub(Account::class);
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
+		$uids = range(1, 1200);
+		$this->imapClientFactory->expects($this->once())
+			->method('getClient')
+			->willReturn($client);
+		$chunks = [];
+		$this->imapMessageMapper->expects($this->exactly(3))
+			->method('addFlag')
+			->willReturnCallback(function ($c, $mb, array $chunk, string $flag) use (&$chunks, $client, $mailbox): void {
+				$this->assertSame($client, $c);
+				$this->assertSame($mailbox, $mb);
+				$this->assertSame(\Horde_Imap_Client::FLAG_SEEN, $flag);
+				$chunks[] = $chunk;
+			});
+		$this->imapMessageMapper->expects($this->never())
+			->method('removeFlag');
+		$client->expects($this->once())
+			->method('logout');
+
+		$this->manager->flagMessages($account, $mailbox, $uids, 'seen', true);
+
+		$this->assertSame($uids, array_merge(...$chunks));
+		$this->assertCount(500, $chunks[0]);
+	}
+
+	public function testUnflagMessages(): void {
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
+		$account = $this->createStub(Account::class);
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
+		$this->imapClientFactory->method('getClient')
+			->willReturn($client);
+		$this->imapMessageMapper->expects($this->never())
+			->method('addFlag');
+		$this->imapMessageMapper->expects($this->once())
+			->method('removeFlag')
+			->with($client, $mailbox, [1, 2], \Horde_Imap_Client::FLAG_FLAGGED);
+
+		$this->manager->flagMessages($account, $mailbox, [1, 2], 'flagged', false);
+	}
+
+	public function testFlagMessagesWrapsImapErrors(): void {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$account = $this->createStub(Account::class);
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
+		$this->imapClientFactory->method('getClient')
+			->willReturn($client);
+		$this->imapMessageMapper->method('addFlag')
+			->willThrowException(new \Horde_Imap_Client_Exception('connection lost'));
+		$client->expects($this->once())
+			->method('logout');
+		$this->expectException(ServiceException::class);
+
+		$this->manager->flagMessages($account, $mailbox, [1], 'seen', true);
+	}
+
+	private function mailbox(int $id, string $name): Mailbox {
+		$mailbox = new Mailbox();
+		$mailbox->setId($id);
+		$mailbox->setName($name);
+		return $mailbox;
+	}
+
+	private function accountWithTrash(?int $trashMailboxId): Account&MockObject {
+		$mailAccount = new MailAccount();
+		$mailAccount->setTrashMailboxId($trashMailboxId);
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
+		return $account;
+	}
+
+	public function testMoveMessagesWithoutUids(): void {
+		$account = $this->createStub(Account::class);
+		$this->imapClientFactory->expects($this->never())
+			->method('getClient');
+
+		$this->manager->moveMessages($account, $this->mailbox(1, 'INBOX'), [], $this->mailbox(2, 'Archive'));
+	}
+
+	public function testMoveMessagesInChunks(): void {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$account = $this->createStub(Account::class);
+		$inbox = $this->mailbox(1, 'INBOX');
+		$archive = $this->mailbox(2, 'Archive');
+		$uids = range(1, 700);
+		$this->imapClientFactory->method('getClient')
+			->willReturn($client);
+		$moved = [];
+		$this->imapMessageMapper->expects($this->exactly(2))
+			->method('moveMessages')
+			->willReturnCallback(function ($c, string $source, array $chunk, string $destination) use (&$moved): array {
+				$this->assertSame('INBOX', $source);
+				$this->assertSame('Archive', $destination);
+				$moved[] = $chunk;
+				return array_combine($chunk, array_map(static fn (int $uid): int => $uid + 1000, $chunk));
+			});
+		$cleared = [];
+		$this->dbMessageMapper->expects($this->exactly(2))
+			->method('deleteByUid')
+			->willReturnCallback(function (Mailbox $mailbox, int ...$chunk) use (&$cleared, $inbox): void {
+				$this->assertSame($inbox, $mailbox);
+				$cleared[] = $chunk;
+			});
+		$client->expects($this->once())
+			->method('logout');
+
+		$mapping = $this->manager->moveMessages($account, $inbox, $uids, $archive);
+
+		$this->assertSame($moved, $cleared);
+		$this->assertCount(700, $mapping);
+		$this->assertSame(1700, $mapping[700]);
+		$this->assertSame($uids, array_merge(...$moved));
+	}
+
+	public function testMoveMessagesKeepsCacheOfFailedChunk(): void {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$account = $this->createStub(Account::class);
+		$inbox = $this->mailbox(1, 'INBOX');
+		$this->imapClientFactory->method('getClient')
+			->willReturn($client);
+		$this->imapMessageMapper->method('moveMessages')
+			->willReturnCallback(function ($c, string $source, array $chunk): array {
+				if ($chunk[0] > 500) {
+					throw new ServiceException('connection lost');
+				}
+				return [];
+			});
+		$cleared = [];
+		$this->dbMessageMapper->method('deleteByUid')
+			->willReturnCallback(function (Mailbox $mailbox, int ...$chunk) use (&$cleared): void {
+				$cleared = array_merge($cleared, $chunk);
+			});
+		$client->expects($this->once())
+			->method('logout');
+
+		try {
+			$this->manager->moveMessages($account, $inbox, range(1, 700), $this->mailbox(2, 'Archive'));
+			$this->fail('Expected exception');
+		} catch (ServiceException $e) {
+		}
+
+		$this->assertSame(range(1, 500), $cleared);
+	}
+
+	public function testDeleteMessagesMovesToTrash(): void {
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
+		$account = $this->accountWithTrash(9);
+		$inbox = $this->mailbox(1, 'INBOX');
+		$this->mailboxMapper->method('findById')
+			->with(9)
+			->willReturn($this->mailbox(9, 'Trash'));
+		$this->imapClientFactory->method('getClient')
+			->willReturn($client);
+		$this->imapMessageMapper->expects($this->once())
+			->method('moveMessages')
+			->with($client, 'INBOX', [1, 2], 'Trash');
+		$this->imapMessageMapper->expects($this->never())
+			->method('expungeMessages');
+		$this->dbMessageMapper->expects($this->once())
+			->method('deleteByUid')
+			->with($inbox, 1, 2);
+
+		$this->manager->deleteMessages($account, $inbox, [1, 2]);
+	}
+
+	public function testDeleteMessagesExpungesInTrash(): void {
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
+		$account = $this->accountWithTrash(9);
+		$trash = $this->mailbox(9, 'Trash');
+		$this->mailboxMapper->method('findById')
+			->willReturn($this->mailbox(9, 'Trash'));
+		$this->imapClientFactory->method('getClient')
+			->willReturn($client);
+		$this->imapMessageMapper->expects($this->never())
+			->method('moveMessages');
+		$this->imapMessageMapper->expects($this->once())
+			->method('expungeMessages')
+			->with($client, 'Trash', [1, 2]);
+		$this->dbMessageMapper->expects($this->once())
+			->method('deleteByUid')
+			->with($trash, 1, 2);
+
+		$this->manager->deleteMessages($account, $trash, [1, 2]);
+	}
+
+	public function testDeleteMessagesWithoutTrash(): void {
+		$account = $this->accountWithTrash(null);
+		$this->imapClientFactory->expects($this->never())
+			->method('getClient');
+		$this->expectException(TrashMailboxNotSetException::class);
+
+		$this->manager->deleteMessages($account, $this->mailbox(1, 'INBOX'), [1]);
+	}
+
+	public function testDeleteMessagesTrashNotFound(): void {
+		$account = $this->accountWithTrash(9);
+		$this->mailboxMapper->method('findById')
+			->willThrowException(new DoesNotExistException(''));
+		$this->expectException(ServiceException::class);
+
+		$this->manager->deleteMessages($account, $this->mailbox(1, 'INBOX'), [1]);
+	}
+
+	public function testDeleteMessagesWithoutUids(): void {
+		$account = $this->accountWithTrash(9);
+		$this->mailboxMapper->expects($this->never())
+			->method('findById');
+
+		$this->manager->deleteMessages($account, $this->mailbox(1, 'INBOX'), []);
+	}
+
+	public function testTagMessagesByUidsInChunks(): void {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$account = $this->createConfiguredMock(Account::class, ['getUserId' => 'john']);
+		$inbox = $this->mailbox(1, 'INBOX');
+		$tag = new Tag();
+		$tag->setImapLabel('$label1');
+		$this->imapClientFactory->expects($this->once())
+			->method('getClient')
+			->willReturn($client);
+		$client->method('status')
+			->willReturn(['permflags' => ['\\*']]);
+		$loaded = [];
+		$this->dbMessageMapper->expects($this->exactly(2))
+			->method('findByUids')
+			->willReturnCallback(function (Mailbox $mailbox, array $uids) use (&$loaded): array {
+				$loaded[] = $uids;
+				return array_map(static function (int $uid): \OCA\Mail\Db\Message {
+					$message = new \OCA\Mail\Db\Message();
+					$message->setUid($uid);
+					$message->setMessageId("<$uid@example.com>");
+					return $message;
+				}, $uids);
+			});
+		$this->imapMessageMapper->expects($this->exactly(2))
+			->method('addFlag');
+		$this->tagMapper->expects($this->exactly(600))
+			->method('tagMessage');
+		$client->expects($this->once())
+			->method('logout');
+
+		$this->manager->tagMessagesByUids($account, $inbox, range(1, 600), $tag, true);
+
+		$this->assertSame(range(1, 600), array_merge(...$loaded));
+	}
+
+	public function testTagMessagesByUidsSkipsAlreadyTaggedMessages(): void {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$account = $this->createConfiguredMock(Account::class, ['getUserId' => 'john']);
+		$tag = new Tag();
+		$tag->setImapLabel('work');
+		$other = new Tag();
+		$other->setImapLabel('private');
+		$tagged = new \OCA\Mail\Db\Message();
+		$tagged->setUid(1);
+		$tagged->setMessageId('<1@example.com>');
+		$untagged = new \OCA\Mail\Db\Message();
+		$untagged->setUid(2);
+		$untagged->setMessageId('<2@example.com>');
+		$this->imapClientFactory->method('getClient')
+			->willReturn($client);
+		$client->method('status')
+			->willReturn(['permflags' => ['\\*']]);
+		$this->dbMessageMapper->method('findByUids')
+			->willReturn([$tagged, $untagged]);
+		$this->tagMapper->method('getAllTagsForMessages')
+			->willReturn([
+				'<1@example.com>' => [$other, $tag],
+				'<2@example.com>' => [$other],
+			]);
+		$this->imapMessageMapper->expects($this->once())
+			->method('addFlag')
+			->with($client, $this->anything(), [2], 'work');
+		$this->tagMapper->expects($this->once())
+			->method('tagMessage')
+			->with($tag, '<2@example.com>', 'john');
+
+		$this->manager->tagMessagesByUids($account, $this->mailbox(1, 'INBOX'), [1, 2], $tag, true);
+	}
+
+	public function testTagMessagesByUidsWhenAllAreTagged(): void {
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
+		$account = $this->createConfiguredMock(Account::class, ['getUserId' => 'john']);
+		$tag = new Tag();
+		$tag->setImapLabel('work');
+		$message = new \OCA\Mail\Db\Message();
+		$message->setUid(1);
+		$message->setMessageId('<1@example.com>');
+		$this->imapClientFactory->method('getClient')
+			->willReturn($client);
+		$this->dbMessageMapper->method('findByUids')
+			->willReturn([$message]);
+		$this->tagMapper->method('getAllTagsForMessages')
+			->willReturn(['<1@example.com>' => [$tag]]);
+		$this->imapMessageMapper->expects($this->never())
+			->method('addFlag');
+		$this->tagMapper->expects($this->never())
+			->method('tagMessage');
+
+		$this->manager->tagMessagesByUids($account, $this->mailbox(1, 'INBOX'), [1], $tag, true);
+	}
+
+	public function testUntagMessagesByUidsDoesNotCheckExistingTags(): void {
+		$client = $this->createStub(Horde_Imap_Client_Socket::class);
+		$account = $this->createConfiguredMock(Account::class, ['getUserId' => 'john']);
+		$tag = new Tag();
+		$tag->setImapLabel('work');
+		$message = new \OCA\Mail\Db\Message();
+		$message->setUid(1);
+		$message->setMessageId('<1@example.com>');
+		$this->imapClientFactory->method('getClient')
+			->willReturn($client);
+		$this->dbMessageMapper->method('findByUids')
+			->willReturn([$message]);
+		$this->tagMapper->expects($this->never())
+			->method('getAllTagsForMessages');
+		$this->tagMapper->expects($this->once())
+			->method('untagMessage')
+			->with($tag, '<1@example.com>');
+
+		$this->manager->tagMessagesByUids($account, $this->mailbox(1, 'INBOX'), [1], $tag, false);
+	}
+
+	public function testTagMessagesByUidsWithoutUids(): void {
+		$this->imapClientFactory->expects($this->never())
+			->method('getClient');
+
+		$this->manager->tagMessagesByUids($this->createStub(Account::class), $this->mailbox(1, 'INBOX'), [], new Tag(), true);
 	}
 
 	public function testTagMessage(): void {

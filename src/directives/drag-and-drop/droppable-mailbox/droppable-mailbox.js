@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 import logger from '../../../logger.js'
+import { ALL_MATCHING_DATA_TYPE } from '../draggable-envelope/draggable-envelope.js'
 import dragEventBus from '../util/dragEventBus.js'
 
 export class DroppableMailbox {
@@ -124,7 +125,25 @@ export class DroppableMailbox {
 
 		this.setInitialAttributes()
 		const envelopesBeingDragged = JSON.parse(event.dataTransfer.getData('text'))
+		const allMatching = event.dataTransfer.getData(ALL_MATCHING_DATA_TYPE)
 		dragEventBus.emit('envelopes-dropped', { envelopes: envelopesBeingDragged })
+
+		if (allMatching) {
+			try {
+				await this.mainStore.moveMatchingEnvelopes({
+					...JSON.parse(allMatching),
+					destMailboxId: this.options.mailboxId,
+				})
+			} catch (error) {
+				logger.error('could not move all matching messages', error)
+			} finally {
+				dragEventBus.emit('envelopes-moved', {
+					mailboxId: this.options.mailboxId,
+					movedEnvelopes: envelopesBeingDragged,
+				})
+			}
+			return
+		}
 
 		try {
 			const processedEnvelopes = envelopesBeingDragged.map(async (envelope) => {

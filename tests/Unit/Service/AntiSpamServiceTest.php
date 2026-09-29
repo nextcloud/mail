@@ -73,30 +73,39 @@ class AntiSpamServiceTest extends TestCase {
 			->method('getValueString')
 			->with(Application::APP_ID, ConfigLexicon::ANTISPAM_REPORTING_SPAM)
 			->willReturn('');
-		$this->dbMessageMapper->expects(self::never())
-			->method('getIdForUid');
+		$this->imapMessageMapper->expects(self::never())
+			->method('getFullText');
 
 		$this->service->sendReportEmail($event->getAccount(), $event->getMailbox(), 123, $event->getFlag());
 	}
 
 	public function testSendReportEmailNoMessageFound(): void {
-		$event = $this->createConfiguredMock(MessageFlaggedEvent::class, [
-			'getAccount' => $this->createMock(Account::class),
-			'getMailbox' => $this->createMock(Mailbox::class),
-			'getFlag' => '$junk'
-		]);
-
+		$mailAccount = new MailAccount();
+		$mailAccount->setSentMailboxId(10);
+		$mailAccount->setName('Test');
+		$mailAccount->setEmail('test@test.com');
+		$mailAccount->setUserId('test');
+		$account = new Account($mailAccount);
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
+		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
 		$this->appConfig->expects(self::once())
 			->method('getValueString')
 			->with(Application::APP_ID, ConfigLexicon::ANTISPAM_REPORTING_SPAM)
 			->willReturn('test@test.com');
-		$this->dbMessageMapper->expects(self::once())
-			->method('getIdForUid')
-			->with($event->getMailbox(), 123)
+		$this->imapClientFactory->method('getClient')
+			->willReturn($client);
+		$this->imapMessageMapper->expects(self::once())
+			->method('getFullText')
+			->with($client, 'INBOX', 123, 'test')
 			->willReturn(null);
+		$client->expects(self::once())
+			->method('logout');
+		$this->smtpClientFactory->expects(self::never())
+			->method('create');
 		$this->expectException(ServiceException::class);
 
-		$this->service->sendReportEmail($event->getAccount(), $event->getMailbox(), 123, $event->getFlag());
+		$this->service->sendReportEmail($account, $mailbox, 123, '$junk');
 	}
 
 	public function testSendReportEmailTransmissionError(): void {
@@ -120,11 +129,6 @@ class AntiSpamServiceTest extends TestCase {
 			[['id' => 123, 'type' => 'message/rfc822']]
 		);
 
-		$this->dbMessageMapper->expects(self::once())
-			->method('getIdForUid')
-			->with($event->getMailbox(), 123)
-			->willReturn(123);
-
 		$this->expectException(ServiceException::class);
 		$this->service->sendReportEmail($event->getAccount(), $event->getMailbox(), 123, $event->getFlag());
 	}
@@ -144,7 +148,7 @@ class AntiSpamServiceTest extends TestCase {
 		$mailbox->setName('INBOX');
 		$event = $this->createConfiguredMock(MessageFlaggedEvent::class, [
 			'getAccount' => $account,
-			'getMailbox' => $this->createMock(Mailbox::class),
+			'getMailbox' => $mailbox,
 			'getFlag' => '$junk'
 		]);
 		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
@@ -164,15 +168,12 @@ class AntiSpamServiceTest extends TestCase {
 		);
 
 		$this->dbMessageMapper->expects(self::once())
-			->method('getIdForUid')
-			->with($event->getMailbox(), 123)
-			->willReturn(123);
+			->method('findByUids')
+			->with($mailbox, [123])
+			->willReturn([$dbMessage]);
 		$this->mailManager->expects(self::once())
-			->method('getMessage')
-			->with('test', 123)
-			->willReturn($dbMessage);
-		$this->mailManager->expects(self::exactly(2))
 			->method('getMailbox')
+			->with('test', 10)
 			->willReturn($mailbox);
 		$this->imapClientFactory->expects(self::exactly(2))
 			->method('getClient')
@@ -210,7 +211,7 @@ class AntiSpamServiceTest extends TestCase {
 		$mailbox->setName('INBOX');
 		$event = $this->createConfiguredMock(MessageFlaggedEvent::class, [
 			'getAccount' => $account,
-			'getMailbox' => $this->createMock(Mailbox::class),
+			'getMailbox' => $mailbox,
 			'getFlag' => '$junk'
 		]);
 		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
@@ -230,15 +231,12 @@ class AntiSpamServiceTest extends TestCase {
 		);
 
 		$this->dbMessageMapper->expects(self::once())
-			->method('getIdForUid')
-			->with($event->getMailbox(), 123)
-			->willReturn(123);
+			->method('findByUids')
+			->with($mailbox, [123])
+			->willReturn([$dbMessage]);
 		$this->mailManager->expects(self::once())
-			->method('getMessage')
-			->with('test', 123)
-			->willReturn($dbMessage);
-		$this->mailManager->expects(self::exactly(2))
 			->method('getMailbox')
+			->with('test', 10)
 			->willReturn($mailbox);
 		$this->imapClientFactory->expects(self::exactly(2))
 			->method('getClient')

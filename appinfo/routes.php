@@ -186,6 +186,36 @@ return [
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'mailboxes#setFlags',
+			'url' => '/api/mailboxes/{id}/flags',
+			'verb' => 'PUT'
+		],
+		[
+			'name' => 'mailboxes#moveMessages',
+			'url' => '/api/mailboxes/{id}/move-messages',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'mailboxes#deleteMessages',
+			'url' => '/api/mailboxes/{id}/delete-messages',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'mailboxes#setTag',
+			'url' => '/api/mailboxes/{id}/tags/{imapLabel}',
+			'verb' => 'PUT'
+		],
+		[
+			'name' => 'mailboxes#removeTag',
+			'url' => '/api/mailboxes/{id}/tags/{imapLabel}',
+			'verb' => 'DELETE'
+		],
+		[
+			'name' => 'mailboxes#setJunk',
+			'url' => '/api/mailboxes/{id}/junk',
+			'verb' => 'PUT'
+		],
+		[
 			'name' => 'mailboxes#stats',
 			'url' => '/api/mailboxes/{id}/stats',
 			'verb' => 'GET'

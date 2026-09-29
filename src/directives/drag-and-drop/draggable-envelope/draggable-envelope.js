@@ -5,6 +5,8 @@
 import defer from 'lodash/defer.js'
 import dragEventBus from '../util/dragEventBus.js'
 
+export const ALL_MATCHING_DATA_TYPE = 'application/x-nextcloud-mail-all-matching'
+
 export class DraggableEnvelope {
 	constructor(el, options) {
 		this.el = el
@@ -59,6 +61,9 @@ export class DraggableEnvelope {
 		}
 
 		event.dataTransfer.setData('text/plain', JSON.stringify(envelopes))
+		if (this.options.allMatching) {
+			event.dataTransfer.setData(ALL_MATCHING_DATA_TYPE, JSON.stringify(this.options.allMatching))
+		}
 		this.attachGhost({ event, envelopes })
 
 		dragEventBus.emit('drag-start', {

@@ -5,8 +5,73 @@
 <template>
 	<div>
 		<transition name="multiselect-header">
-			<div v-if="selectMode" key="multiselect-header" class="multiselect-header">
-				<div class="action-buttons">
+			<div v-if="selectMode && !hideMultiselectHeader" key="multiselect-header" class="multiselect-header">
+				<div v-if="allMatchingSelected" class="action-buttons">
+					<NcButton
+						variant="tertiary"
+						:title="t('mail', 'Mark all as read')"
+						:disabled="allMatchingBusy"
+						@click.prevent="$emit('flag-all-matching', { seen: true })">
+						<EmailRead :size="20" />
+					</NcButton>
+					<NcButton
+						variant="tertiary"
+						:title="t('mail', 'Mark all as unread')"
+						:disabled="allMatchingBusy"
+						@click.prevent="$emit('flag-all-matching', { seen: false })">
+						<EmailUnread :size="20" />
+					</NcButton>
+					<NcButton
+						variant="tertiary"
+						:title="t('mail', 'Mark all as important')"
+						:disabled="allMatchingBusy"
+						@click.prevent="$emit('tag-all-matching', { imapLabel: '$label1', value: true })">
+						<ImportantIcon :size="20" />
+					</NcButton>
+					<NcButton
+						variant="tertiary"
+						:title="t('mail', 'Mark all as unimportant')"
+						:disabled="allMatchingBusy"
+						@click.prevent="$emit('tag-all-matching', { imapLabel: '$label1', value: false })">
+						<ImportantOutlineIcon :size="20" />
+					</NcButton>
+					<NcButton
+						variant="tertiary"
+						:title="t('mail', 'Favorite all')"
+						:disabled="allMatchingBusy"
+						@click.prevent="$emit('flag-all-matching', { flagged: true })">
+						<IconFavorite :size="20" />
+					</NcButton>
+					<NcButton
+						variant="tertiary"
+						:title="t('mail', 'Unfavorite all')"
+						:disabled="allMatchingBusy"
+						@click.prevent="$emit('flag-all-matching', { flagged: false })">
+						<IconUnFavorite :size="20" />
+					</NcButton>
+					<NcButton
+						variant="tertiary"
+						:title="t('mail', 'Move all')"
+						:disabled="allMatchingBusy"
+						@click.prevent="showMoveAllModal = true">
+						<OpenInNewIcon :size="20" />
+					</NcButton>
+					<NcButton
+						variant="tertiary"
+						:title="t('mail', 'Delete all')"
+						:disabled="allMatchingBusy"
+						@click.prevent="showDeleteAllConfirmation = true">
+						<IconDelete :size="20" />
+					</NcButton>
+					<NcButton
+						variant="tertiary"
+						:title="t('mail', 'Unselect all')"
+						:disabled="allMatchingBusy"
+						@click.prevent="unselectAll">
+						<IconSelect :size="20" />
+					</NcButton>
+				</div>
+				<div v-else class="action-buttons">
 					<NcButton
 						v-if="isAtLeastOneSelectedUnread"
 						variant="tertiary"
@@ -77,7 +142,30 @@
 					</NcButton>
 				</div>
 
-				<NcActions class="app-content-list-item-menu" menu-align="right">
+				<NcActions v-if="allMatchingSelected" class="app-content-list-item-menu" menu-align="right">
+					<NcActionButton :disabled="allMatchingBusy" @click.prevent="$emit('junk-all-matching', true)">
+						<template #icon>
+							<AlertOctagonIcon :size="20" />
+						</template>
+						{{ t('mail', 'Mark all as spam') }}
+					</NcActionButton>
+					<NcActionButton :disabled="allMatchingBusy" @click.prevent="$emit('junk-all-matching', false)">
+						<template #icon>
+							<AlertOctagonIcon :size="20" />
+						</template>
+						{{ t('mail', 'Mark all as not spam') }}
+					</NcActionButton>
+					<NcActionButton
+						:disabled="allMatchingBusy"
+						:close-after-click="true"
+						@click.prevent="showTagAllModal = true">
+						<template #icon>
+							<TagIcon :size="20" />
+						</template>
+						{{ t('mail', 'Edit tags of all') }}
+					</NcActionButton>
+				</NcActions>
+				<NcActions v-else class="app-content-list-item-menu" menu-align="right">
 					<NcActionButton
 						v-if="isAtLeastOneSelectedNotJunk"
 						@click.prevent="markSelectionJunk">
@@ -126,10 +214,11 @@
 				:select-mode="selectMode"
 				:has-multiple-accounts="hasMultipleAccounts"
 				:selected-envelopes="selectedEnvelopes"
+				:all-matching="allMatchingSelected ? { mailboxId: mailbox.databaseId, query: searchQuery } : null"
 				:compact-mode="compactMode"
 				:date-grouped="dateGrouped"
 				@delete="$emit('delete', env.databaseId)"
-				@update:selected="onEnvelopeSelectToggle(env, index, $event)"
+				@update:selected="onEnvelopeSelectToggle(env, $event)"
 				@select-multiple="onEnvelopeSelectMultiple(env, index)"
 				@open:quick-actions-settings="showQuickActionsSettings = true" />
 			<div
@@ -156,6 +245,32 @@
 			:move-thread="true"
 			@close="onCloseMoveModal" />
 
+		<MailboxPicker
+			v-if="showMoveAllModal"
+			:account="account"
+			:selected.sync="moveAllDestination"
+			:loading="allMatchingBusy"
+			:label-select="t('mail', 'Move all')"
+			:label-select-loading="t('mail', 'Moving messages')"
+			:select="onMoveAllMatching"
+			@close="showMoveAllModal = false" />
+
+		<TagAllMatchingModal
+			v-if="showTagAllModal"
+			:busy="allMatchingBusy"
+			@tag="onTagAllMatching"
+			@close="showTagAllModal = false" />
+
+		<ConfirmationModal
+			v-if="showDeleteAllConfirmation"
+			:title="t('mail', 'Delete all selected messages')"
+			:confirm-text="t('mail', 'Delete')"
+			:disabled="allMatchingBusy"
+			@confirm="onDeleteAllMatching"
+			@cancel="showDeleteAllConfirmation = false">
+			{{ isTrashMailbox ? t('mail', 'All selected messages will be deleted permanently.') : t('mail', 'All selected messages will be moved to the trash.') }}
+		</ConfirmationModal>
+
 		<NcDialog
 			v-if="showQuickActionsSettings"
 			:name="t('mail', 'Manage quick actions')"
@@ -169,7 +284,6 @@
 import { showError } from '@nextcloud/dialogs'
 import { NcActionButton, NcActions, NcButton, NcDialog } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
-import { differenceWith } from 'ramda'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
 import IconSelect from 'vue-material-design-icons/CloseThick.vue'
 import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
@@ -184,8 +298,11 @@ import IconUnFavorite from 'vue-material-design-icons/StarOutline.vue'
 import TagIcon from 'vue-material-design-icons/TagOutline.vue'
 import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 import Settings from '../components/quickActions/Settings.vue'
+import ConfirmationModal from './ConfirmationModal.vue'
 import Envelope from './Envelope.vue'
+import MailboxPicker from './MailboxPicker.vue'
 import MoveModal from './MoveModal.vue'
+import TagAllMatchingModal from './TagAllMatchingModal.vue'
 import TagModal from './TagModal.vue'
 import dragEventBus from '../directives/drag-and-drop/util/dragEventBus.js'
 import { matchError } from '../errors/match.js'
@@ -193,6 +310,7 @@ import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError.js'
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
+import { sortEnvelopes } from '../util/sortEnvelopes.js'
 
 export default {
 	name: 'EnvelopeList',
@@ -211,11 +329,14 @@ export default {
 		ImportantOutlineIcon,
 		IconFavorite,
 		IconSelect,
+		ConfirmationModal,
+		MailboxPicker,
 		MoveModal,
 		OpenInNewIcon,
 		ShareIcon,
 		AlertOctagonIcon,
 		TagIcon,
+		TagAllMatchingModal,
 		TagModal,
 		Settings,
 	},
@@ -272,14 +393,41 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+
+		selection: {
+			type: Array,
+			default: () => [],
+		},
+
+		flatIndex: {
+			type: Number,
+			default: 0,
+		},
+
+		hideMultiselectHeader: {
+			type: Boolean,
+			default: false,
+		},
+
+		allMatchingSelected: {
+			type: Boolean,
+			default: false,
+		},
+
+		allMatchingBusy: {
+			type: Boolean,
+			default: false,
+		},
 	},
 
 	data() {
 		return {
-			selection: [],
 			showMoveModal: false,
 			showTagModal: false,
-			lastToggledIndex: undefined,
+			showMoveAllModal: false,
+			showTagAllModal: false,
+			showDeleteAllConfirmation: false,
+			moveAllDestination: undefined,
 			defaultView: false,
 			showQuickActionsSettings: false,
 		}
@@ -292,12 +440,7 @@ export default {
 		},
 
 		sortedEnvelops() {
-			if (this.sortOrder === 'oldest') {
-				return [...this.envelopes].sort((a, b) => {
-					return a.dateInt < b.dateInt ? -1 : 1
-				})
-			}
-			return [...this.envelopes]
+			return sortEnvelopes(this.envelopes, this.sortOrder)
 		},
 
 		selectMode() {
@@ -354,7 +497,13 @@ export default {
 		},
 
 		selectedEnvelopes() {
-			return this.sortedEnvelops.filter((env) => this.selection.includes(env.databaseId))
+			return this.selection
+				.map((id) => this.mainStore.getEnvelope(id))
+				.filter((envelope) => envelope !== undefined)
+		},
+
+		isTrashMailbox() {
+			return this.mailbox.databaseId === this.account.trashMailboxId
 		},
 
 		hasMultipleAccounts() {
@@ -364,18 +513,6 @@ export default {
 
 		listTransitionName() {
 			return this.skipTransition ? 'disabled' : 'list'
-		},
-	},
-
-	watch: {
-		sortedEnvelops(newVal, oldVal) {
-			// Unselect vanished envelopes
-			const newIds = newVal.map((env) => env.databaseId)
-			this.selection = this.selection.filter((id) => newIds.includes(id))
-			differenceWith((a, b) => a.databaseId === b.databaseId, oldVal, newVal)
-				.forEach((env) => {
-					env.flags.selected = false
-				})
 		},
 	},
 
@@ -540,44 +677,32 @@ export default {
 			this.unselectAll()
 		},
 
-		setEnvelopeSelected(envelope, selected) {
-			const alreadySelected = this.selection.includes(envelope.databaseId)
-			if (selected && !alreadySelected) {
-				envelope.flags.selected = true
-				this.selection.push(envelope.databaseId)
-			} else if (!selected && alreadySelected) {
-				envelope.flags.selected = false
-				this.selection.splice(this.selection.indexOf(envelope.databaseId), 1)
-			}
-		},
-
-		onEnvelopeSelectToggle(envelope, index, selected) {
-			this.lastToggledIndex = index
-			this.setEnvelopeSelected(envelope, selected)
+		onEnvelopeSelectToggle(envelope, selected) {
+			this.$emit('select', envelope.databaseId, selected)
 		},
 
 		onEnvelopeSelectMultiple(envelope, index) {
-			const lastToggledIndex = this.lastToggledIndex
-				?? this.findSelectionIndex(parseInt(this.$route.params.threadId))
-				?? undefined
-			if (lastToggledIndex === undefined) {
-				return
-			}
-
-			const start = Math.min(lastToggledIndex, index)
-			const end = Math.max(lastToggledIndex, index)
-			const selected = this.selection.includes(envelope.databaseId)
-			for (let i = start; i <= end; i++) {
-				this.setEnvelopeSelected(this.sortedEnvelops[i], !selected)
-			}
-			this.lastToggledIndex = index
+			const deselect = this.selection.includes(envelope.databaseId)
+			this.$emit('select-range', this.flatIndex + index, deselect)
 		},
 
 		unselectAll() {
-			this.sortedEnvelops.forEach((env) => {
-				env.flags.selected = false
-			})
-			this.selection = []
+			this.$emit('update:selection', [])
+		},
+
+		onMoveAllMatching(destMailboxId) {
+			this.showMoveAllModal = false
+			this.$emit('move-all-matching', destMailboxId)
+		},
+
+		onTagAllMatching(change) {
+			this.showTagAllModal = false
+			this.$emit('tag-all-matching', change)
+		},
+
+		onDeleteAllMatching() {
+			this.showDeleteAllConfirmation = false
+			this.$emit('delete-all-matching')
 		},
 
 		onOpenMoveModal() {
@@ -602,22 +727,6 @@ export default {
 		onCloseMoveModal() {
 			this.showMoveModal = false
 			this.unselectAll()
-		},
-
-		/**
-		 * Find the envelope list index of a given envelope's database id.
-		 *
-		 * @param {number} databaseId of the given envelope
-		 * @return {number|undefined} Index or undefined if not found in the envelope list
-		 */
-		findSelectionIndex(databaseId) {
-			for (const [index, envelope] of this.sortedEnvelops.entries()) {
-				if (envelope.databaseId === databaseId) {
-					return index
-				}
-			}
-
-			return undefined
 		},
 	},
 }

@@ -22,6 +22,7 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\DelegationService;
+use OCA\Mail\Service\JunkService;
 use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -36,6 +37,8 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class MailboxesController extends Controller {
+	private const BULK_FLAGS = ['seen', 'flagged'];
+
 	public function __construct(
 		string $appName,
 		IRequest $request,
@@ -46,6 +49,8 @@ class MailboxesController extends Controller {
 		private readonly IConfig $config,
 		private readonly ITimeFactory $timeFactory,
 		private DelegationService $delegationService,
+		private IMailSearch $mailSearch,
+		private JunkService $junkService,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -217,6 +222,202 @@ class MailboxesController extends Controller {
 
 		$this->syncService->clearCache($account, $mailbox);
 		return new JSONResponse([]);
+	}
+
+	/**
+	 * Set flags on all messages of a mailbox that match a filter
+	 *
+	 * @param array<string, bool|string> $flags
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	#[TrapError]
+	#[NoAdminRequired]
+	public function setFlags(int $id, array $flags, ?string $filter = null): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+		if ($flags === [] || array_diff(array_keys($flags), self::BULK_FLAGS) !== []) {
+			return new JSONResponse([], Http::STATUS_UNPROCESSABLE_ENTITY);
+		}
+
+		try {
+			$effectiveUserId = $this->delegationService->resolveMailboxUserId($id, $this->userId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$mailbox = $this->mailManager->getMailbox($effectiveUserId, $id);
+		$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
+
+		$uids = $this->mailSearch->findMessageUids($account, $mailbox, $filter);
+		$flagChanges = [];
+		foreach ($flags as $flag => $value) {
+			$value = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+			$this->mailManager->flagMessages($account, $mailbox, $uids, $flag, $value);
+			$flagChanges[] = "$flag=" . ($value ? 'true' : 'false');
+		}
+
+		$flagsSummary = implode(', ', $flagChanges);
+		$count = count($uids);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated flags on $count messages in mailbox: $id with [$flagsSummary] on behalf of $effectiveUserId");
+
+		return new JSONResponse();
+	}
+
+	/**
+	 * Move all messages of a mailbox that match a filter to another mailbox of the same account
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	#[TrapError]
+	#[NoAdminRequired]
+	public function moveMessages(int $id, int $destinationId, ?string $filter = null): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+		if ($id === $destinationId) {
+			return new JSONResponse([], Http::STATUS_UNPROCESSABLE_ENTITY);
+		}
+
+		try {
+			$effectiveUserId = $this->delegationService->resolveMailboxUserId($id, $this->userId);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $id);
+			$destination = $this->mailManager->getMailbox($effectiveUserId, $destinationId);
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$this->delegationService->assertMailboxAccess($destinationId, $this->userId);
+		if ($destination->getAccountId() !== $mailbox->getAccountId()) {
+			return new JSONResponse([], Http::STATUS_UNPROCESSABLE_ENTITY);
+		}
+
+		$uids = $this->mailSearch->findMessageUids($account, $mailbox, $filter);
+		$this->mailManager->moveMessages($account, $mailbox, $uids, $destination);
+
+		$count = count($uids);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId moved $count messages from mailbox: $id to mailbox: $destinationId on behalf of $effectiveUserId");
+
+		return new JSONResponse();
+	}
+
+	/**
+	 * Delete all messages of a mailbox that match a filter
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	#[TrapError]
+	#[NoAdminRequired]
+	public function deleteMessages(int $id, ?string $filter = null): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
+		try {
+			$effectiveUserId = $this->delegationService->resolveMailboxUserId($id, $this->userId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$mailbox = $this->mailManager->getMailbox($effectiveUserId, $id);
+		$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
+
+		$uids = $this->mailSearch->findMessageUids($account, $mailbox, $filter);
+		$this->mailManager->deleteMessages($account, $mailbox, $uids);
+
+		$count = count($uids);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId deleted $count messages in mailbox: $id on behalf of $effectiveUserId");
+
+		return new JSONResponse();
+	}
+
+	/**
+	 * Add a tag to all messages of a mailbox that match a filter
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	#[TrapError]
+	#[NoAdminRequired]
+	public function setTag(int $id, string $imapLabel, ?string $filter = null): JSONResponse {
+		return $this->tagMessages($id, $imapLabel, $filter, true);
+	}
+
+	/**
+	 * Remove a tag from all messages of a mailbox that match a filter
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	#[TrapError]
+	#[NoAdminRequired]
+	public function removeTag(int $id, string $imapLabel, ?string $filter = null): JSONResponse {
+		return $this->tagMessages($id, $imapLabel, $filter, false);
+	}
+
+	/**
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	private function tagMessages(int $id, string $imapLabel, ?string $filter, bool $value): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
+		try {
+			$effectiveUserId = $this->delegationService->resolveMailboxUserId($id, $this->userId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$mailbox = $this->mailManager->getMailbox($effectiveUserId, $id);
+		$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
+		try {
+			$tag = $this->mailManager->getTagByImapLabel($imapLabel, $this->userId);
+		} catch (ClientException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+
+		$uids = $this->mailSearch->findMessageUids($account, $mailbox, $filter);
+		$this->mailManager->tagMessagesByUids($account, $mailbox, $uids, $tag, $value);
+
+		$count = count($uids);
+		$action = $value ? 'added' : 'removed';
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId $action tag <$imapLabel> on $count messages in mailbox: $id on behalf of $effectiveUserId");
+
+		return new JSONResponse($tag);
+	}
+
+	/**
+	 * Mark all messages of a mailbox that match a filter as junk or not junk
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	#[TrapError]
+	#[NoAdminRequired]
+	public function setJunk(int $id, bool $junk, ?string $filter = null): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
+		try {
+			$effectiveUserId = $this->delegationService->resolveMailboxUserId($id, $this->userId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$mailbox = $this->mailManager->getMailbox($effectiveUserId, $id);
+		$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
+
+		$uids = $this->mailSearch->findMessageUids($account, $mailbox, $filter);
+		$moved = $this->junkService->markMessages($account, $mailbox, $uids, $junk);
+
+		$count = count($uids);
+		$state = $junk ? 'junk' : 'not junk';
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId marked $count messages in mailbox: $id as $state on behalf of $effectiveUserId");
+
+		return new JSONResponse(['moved' => $moved]);
 	}
 
 	/**

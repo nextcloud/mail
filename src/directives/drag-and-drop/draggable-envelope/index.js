@@ -16,6 +16,7 @@ function onUpdate(el, binding) {
 	setTimeout(() => {
 		instances.forEach((instance) => {
 			instance.options.selectedEnvelopes = options.selectedEnvelopes
+			instance.options.allMatching = options.allMatching
 			instance.update(el, instance)
 		})
 	})
