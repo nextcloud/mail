@@ -457,4 +457,61 @@ class FollowUpClassifierJobTest extends TestCase {
 
 		$this->job->run($argument);
 	}
+
+	public function testRunHandleDifferentMailboxes(): void {
+		$argument = [
+			'messageId' => '<message1@foo.bar>',
+			'mailboxId' => 200,
+			'userId' => 'user',
+		];
+		$mailbox = new Mailbox();
+		$mailbox->setId(200);
+		$mailbox->setAccountId(100);
+		$mailbox->setName('Sent');
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(100);
+		$account = new Account($mailAccount);
+		$messageA = new Message();
+		$messageA->setMailboxId(100);
+		$messageA->setMessageId('<messageA@foo.bar>');
+		$messageB = new Message();
+		$messageB->setMailboxId(200);
+		$messageB->setMessageId('<messageB@foo.bar>');
+		$messages = [$messageA, $messageB];
+		$tag = new Tag();
+		$tag->setImapLabel('$follow_up');
+
+		$this->aiService->expects(self::once())
+			->method('isLlmProcessingEnabled')
+			->willReturn(true);
+		$this->mailManager->expects(self::once())
+			->method('getMailbox')
+			->with('user', 200)
+			->willReturn($mailbox);
+		$this->accountService->expects(self::once())
+			->method('find')
+			->with('user', 100)
+			->willReturn($account);
+		$this->mailManager->expects(self::once())
+			->method('getByMessageId')
+			->with($account, '<message1@foo.bar>')
+			->willReturn($messages);
+		$this->threadMapper->expects(self::once())
+			->method('findNewerMessageIdsInThread')
+			->with(100, $messageB)
+			->willReturn([]);
+		$this->aiService->expects(self::once())
+			->method('requiresFollowUp')
+			->with($account, $mailbox, $messageB, 'user')
+			->willReturn(true);
+		$this->mailManager->expects(self::once())
+			->method('createTag')
+			->with('Follow up', '#d77000', 'user')
+			->willReturn($tag);
+		$this->mailManager->expects(self::once())
+			->method('tagMessage')
+			->with($account, 'Sent', $messageB, $tag, true);
+
+		$this->job->run($argument);
+	}
 }

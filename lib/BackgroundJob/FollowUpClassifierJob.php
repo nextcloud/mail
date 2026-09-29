@@ -56,10 +56,10 @@ class FollowUpClassifierJob extends QueuedJob {
 		}
 
 		$messages = $this->mailManager->getByMessageId($account, $messageId);
-		$messages = array_filter(
+		$messages = array_values(array_filter(
 			$messages,
 			static fn (Message $message) => $message->getMailboxId() === $mailboxId,
-		);
+		));
 		if (count($messages) === 0) {
 			return;
 		}
