@@ -4,12 +4,12 @@
 -->
 
 <template>
-	<NcPopover popup-role="dialog" class="contact-popover">
+	<NcPopover popupRole="dialog" class="contact-popover">
 		<template #trigger="{ attrs }">
 			<NcUserBubble
 				v-bind="attrs"
-				:display-name="label"
-				:avatar-image="avatarUrlAbsolute"
+				:displayName="label"
+				:avatarImage="avatarUrlAbsolute"
 				:size="size"
 				@click="onClickOpenContactDialog" />
 		</template>
@@ -74,12 +74,12 @@
 						v-model="selectedContact"
 						:options="selectableContacts"
 						:taggable="true"
-						track-by="label"
+						trackBy="label"
 						:multiple="false"
 						:placeholder="t('name', 'Contact name …')"
-						:clear-search-on-select="true"
-						:show-no-options="false"
-						:append-to-body="false"
+						:clearSearchOnSelect="true"
+						:showNoOptions="false"
+						:appendToBody="false"
 						@search="onAutocomplete" />
 
 					<input v-else-if="selection === ContactSelectionStateEnum.new" v-model="newContactName">

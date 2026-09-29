@@ -13,7 +13,7 @@
 			:placeholder="t('mail', 'Select an alias')"
 			:aria-label-combobox="t('mail', 'Select an alias')"
 			label="name"
-			@update:model-value="savedCertificate = null" />
+			@update:modelValue="savedCertificate = null" />
 		<NcSelect
 			v-if="alias !== null"
 			v-model="savedCertificate"

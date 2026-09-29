@@ -4,11 +4,11 @@
 -->
 <template>
 	<MailboxPicker
-		:account="account"
 		v-model:selected="destMailboxId"
+		:account="account"
 		:loading="moving"
-		:label-select="moveThread ? t('mail', 'Move thread') : t('mail', 'Move message')"
-		:label-select-loading="moveThread ? t('mail', 'Moving thread') : t('mail', 'Moving message')"
+		:labelSelect="moveThread ? t('mail', 'Move thread') : t('mail', 'Move message')"
+		:labelSelectLoading="moveThread ? t('mail', 'Moving thread') : t('mail', 'Moving message')"
 		:select="onMove"
 		@close="onClose" />
 </template>
@@ -21,7 +21,6 @@ import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'MoveModal',
-	emits: ['close', 'move'],
 	components: {
 		MailboxPicker,
 	},
@@ -42,6 +41,8 @@ export default {
 			default: false,
 		},
 	},
+
+	emits: ['close', 'move'],
 
 	data() {
 		return {

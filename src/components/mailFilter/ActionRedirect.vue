@@ -6,11 +6,11 @@
 	<NcInputField
 		type="email"
 		:required="true"
-		:model-value="recipient"
-		:label-outside="true"
+		:modelValue="recipient"
+		:labelOutside="true"
 		:aria-label="t('mail', 'Recipient')"
 		:placeholder="t('mail', 'name@example.org')"
-		@update:model-value="onInput" />
+		@update:modelValue="onInput" />
 </template>
 
 <script>
@@ -34,7 +34,7 @@ export default {
 		},
 	},
 
-	emits: ['update-action'],
+	emits: ['updateAction'],
 
 	computed: {
 		recipient() {
@@ -44,7 +44,7 @@ export default {
 
 	methods: {
 		onInput(value) {
-			this.$emit('update-action', { recipient: value })
+			this.$emit('updateAction', { recipient: value })
 		},
 	},
 }

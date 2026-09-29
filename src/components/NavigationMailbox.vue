@@ -8,19 +8,19 @@
 		v-if="visible"
 		:id="genId(mailbox)"
 		:key="genId(mailbox)"
+		v-model:menuOpen="menuOpen"
+		v-model:open="showSubMailboxes"
 		v-droppable-mailbox="{
 			mainStore: mainStore,
 			mailboxId: mailbox.databaseId,
 			accountId: mailbox.accountId,
 			isValidDropTarget,
 		}"
-		:allow-collapse="hasSubMailboxes"
-		v-model:menu-open="menuOpen"
-		:force-menu="true"
+		:allowCollapse="hasSubMailboxes"
+		:forceMenu="true"
 		:name="title"
 		:to="to"
 		:active="isActive"
-		v-model:open="showSubMailboxes"
 		@update:menuOpen="onMenuToggle">
 		<template #icon="{ active }">
 			<div>
@@ -102,7 +102,7 @@
 			<NcActionButton
 				v-if="notVirtualOrSpecial && hasDelimiter && !hasSubMailboxes && hasDeleteAcl"
 				:id="genId(mailbox)"
-				:close-after-click="true"
+				:closeAfterClick="true"
 				@click.prevent="onOpenMoveModal">
 				<template #icon>
 					<IconExternal :size="20" />
@@ -131,23 +131,23 @@
 
 			<NcActionCheckbox
 				v-if="notVirtual"
-				:model-value="mailbox.isSubscribed"
+				:modelValue="mailbox.isSubscribed"
 				:disabled="changeSubscription"
-				@update:model-value="changeFolderSubscription">
+				@update:modelValue="changeFolderSubscription">
 				{{ t('mail', 'Subscribed') }}
 			</NcActionCheckbox>
 
 			<NcActionCheckbox
 				v-if="notVirtual && notInbox"
-				:model-value="mailbox.syncInBackground"
+				:modelValue="mailbox.syncInBackground"
 				:disabled="changingSyncInBackground"
-				@update:model-value="changeSyncInBackground">
+				@update:modelValue="changeSyncInBackground">
 				{{ t('mail', 'Sync in background') }}
 			</NcActionCheckbox>
 
 			<NcActionButton
 				v-if="notVirtual && hasClearMailboxAcl"
-				:close-after-click="true"
+				:closeAfterClick="true"
 				@click="clearMailbox">
 				<template #icon>
 					<IconDeleteOutline :size="20" />

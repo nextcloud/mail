@@ -5,96 +5,96 @@
 
 <template>
 	<NcAppNavigationCaption
-			v-if="visible"
-			:id="id"
-			:key="id"
-			:name="account.emailAddress">
-			<!-- Actions -->
-			<template #actions>
-				<template v-if="isDisabled">
-					<NcActionText :name="t('mail', 'Provisioned account is disabled')">
-						<template #icon>
-							<IconInfo :size="20" />
-						</template>
-						{{ t('mail', 'Please login using a password to enable this account. The current session is using passwordless authentication, e.g. SSO or WebAuthn.') }}
-					</NcActionText>
-				</template>
-				<template v-else>
-					<NcActionText v-if="!account.isUnified && account.quotaPercentage !== null" @vue:mounted="fetchQuota">
-						<template #icon>
-							<IconInfo :size="20" />
-						</template>
-						{{ quotaText }}
-					</NcActionText>
-					<NcActionButton
-						:close-after-click="true"
-						@click="showAccountSettings">
-						<template #icon>
-							<IconSettings :size="20" />
-						</template>
-						{{ t('mail', 'Account settings') }}
-					</NcActionButton>
-					<NcActionButton
-						v-if="canDelegate"
-						:close-after-click="true"
-						@click="showDelegationModal = true">
-						<template #icon>
-							<NcIconSvgWrapper
-								:size="20"
-								:title="t('mail', 'Delegate account')"
-								:svg="IconDelegation" />
-						</template>
-						{{ t('mail', 'Delegate account') }}
-					</NcActionButton>
-					<NcActionCheckbox
-						:model-value="account.showSubscribedOnly"
-						:disabled="savingShowOnlySubscribed"
-						@update:model-value="changeShowSubscribedOnly">
-						{{ t('mail', 'Show only subscribed folders') }}
-					</NcActionCheckbox>
-					<NcActionButton v-if="!editing && nameLabel" @click="openCreateMailbox">
-						<template #icon>
-							<IconFolderAdd :size="20" />
-						</template>
-						{{ t('mail', 'Add folder') }}
-					</NcActionButton>
-					<NcActionInput
-						v-if="editing && nameInput"
-						v-model="createMailboxName"
-						@submit.prevent.stop="createMailbox">
-						<template #icon>
-							<IconFolderAdd :size="20" />
-						</template>
-						{{ t('mail', 'Folder name') }}
-					</NcActionInput>
-					<NcActionText v-if="showSaving">
-						<template #icon>
-							<NcLoadingIcon :size="20" />
-						</template>
-						{{ t('mail', 'Saving') }}
-					</NcActionText>
-					<NcActionButton v-if="!isFirst" @click="changeAccountOrderUp">
-						<template #icon>
-							<MenuUp :size="20" />
-						</template>
-						{{ t('mail', 'Move up') }}
-					</NcActionButton>
-					<NcActionButton v-if="!isLast" @click="changeAccountOrderDown">
-						<template #icon>
-							<MenuDown :size="20" />
-						</template>
-						{{ t('mail', 'Move down') }}
-					</NcActionButton>
-					<NcActionButton v-if="!account.provisioningId && !account.isDelegated" @click="removeAccount">
-						<template #icon>
-							<IconDelete :size="20" />
-						</template>
-						{{ t('mail', 'Remove account') }}
-					</NcActionButton>
-				</template>
+		v-if="visible"
+		:id="id"
+		:key="id"
+		:name="account.emailAddress">
+		<!-- Actions -->
+		<template #actions>
+			<template v-if="isDisabled">
+				<NcActionText :name="t('mail', 'Provisioned account is disabled')">
+					<template #icon>
+						<IconInfo :size="20" />
+					</template>
+					{{ t('mail', 'Please login using a password to enable this account. The current session is using passwordless authentication, e.g. SSO or WebAuthn.') }}
+				</NcActionText>
 			</template>
-		</NcAppNavigationCaption>
-		<DelegationModal v-if="showDelegationModal" :account="account" @close="showDelegationModal = false" />
+			<template v-else>
+				<NcActionText v-if="!account.isUnified && account.quotaPercentage !== null" @vue:mounted="fetchQuota">
+					<template #icon>
+						<IconInfo :size="20" />
+					</template>
+					{{ quotaText }}
+				</NcActionText>
+				<NcActionButton
+					:closeAfterClick="true"
+					@click="showAccountSettings">
+					<template #icon>
+						<IconSettings :size="20" />
+					</template>
+					{{ t('mail', 'Account settings') }}
+				</NcActionButton>
+				<NcActionButton
+					v-if="canDelegate"
+					:closeAfterClick="true"
+					@click="showDelegationModal = true">
+					<template #icon>
+						<NcIconSvgWrapper
+							:size="20"
+							:title="t('mail', 'Delegate account')"
+							:svg="IconDelegation" />
+					</template>
+					{{ t('mail', 'Delegate account') }}
+				</NcActionButton>
+				<NcActionCheckbox
+					:modelValue="account.showSubscribedOnly"
+					:disabled="savingShowOnlySubscribed"
+					@update:modelValue="changeShowSubscribedOnly">
+					{{ t('mail', 'Show only subscribed folders') }}
+				</NcActionCheckbox>
+				<NcActionButton v-if="!editing && nameLabel" @click="openCreateMailbox">
+					<template #icon>
+						<IconFolderAdd :size="20" />
+					</template>
+					{{ t('mail', 'Add folder') }}
+				</NcActionButton>
+				<NcActionInput
+					v-if="editing && nameInput"
+					v-model="createMailboxName"
+					@submit.prevent.stop="createMailbox">
+					<template #icon>
+						<IconFolderAdd :size="20" />
+					</template>
+					{{ t('mail', 'Folder name') }}
+				</NcActionInput>
+				<NcActionText v-if="showSaving">
+					<template #icon>
+						<NcLoadingIcon :size="20" />
+					</template>
+					{{ t('mail', 'Saving') }}
+				</NcActionText>
+				<NcActionButton v-if="!isFirst" @click="changeAccountOrderUp">
+					<template #icon>
+						<MenuUp :size="20" />
+					</template>
+					{{ t('mail', 'Move up') }}
+				</NcActionButton>
+				<NcActionButton v-if="!isLast" @click="changeAccountOrderDown">
+					<template #icon>
+						<MenuDown :size="20" />
+					</template>
+					{{ t('mail', 'Move down') }}
+				</NcActionButton>
+				<NcActionButton v-if="!account.provisioningId && !account.isDelegated" @click="removeAccount">
+					<template #icon>
+						<IconDelete :size="20" />
+					</template>
+					{{ t('mail', 'Remove account') }}
+				</NcActionButton>
+			</template>
+		</template>
+	</NcAppNavigationCaption>
+	<DelegationModal v-if="showDelegationModal" :account="account" @close="showDelegationModal = false" />
 </template>
 
 <script>

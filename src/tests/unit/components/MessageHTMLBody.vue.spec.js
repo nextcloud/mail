@@ -90,7 +90,7 @@ describe('MessageHTMLBody', () => {
 			loadFrameWithBlockedImage(view)
 			await view.vm.$nextTick()
 
-			view.findComponent(BlockedContentWarning).vm.$emit('trust-sender')
+			view.findComponent(BlockedContentWarning).vm.$emit('trustSender')
 			await view.vm.$nextTick()
 
 			expect(trustSender).toHaveBeenCalledWith('alice@example.com', 'individual', true)
@@ -102,7 +102,7 @@ describe('MessageHTMLBody', () => {
 			loadFrameWithBlockedImage(view)
 			await view.vm.$nextTick()
 
-			view.findComponent(BlockedContentWarning).vm.$emit('trust-domain')
+			view.findComponent(BlockedContentWarning).vm.$emit('trustDomain')
 			await view.vm.$nextTick()
 
 			expect(trustSender).toHaveBeenCalledWith('example.com', 'domain', true)
@@ -129,7 +129,7 @@ describe('MessageHTMLBody', () => {
 			const event = keydown('p')
 			view.vm.getIframeDoc().dispatchEvent(event)
 
-			expect(view.emitted('print-shortcut')).toHaveLength(1)
+			expect(view.emitted('printShortcut')).toHaveLength(1)
 		})
 
 		it('keeps the browser from printing the page itself', () => {
@@ -149,7 +149,7 @@ describe('MessageHTMLBody', () => {
 			const event = keydown('a')
 			view.vm.getIframeDoc().dispatchEvent(event)
 
-			expect(view.emitted('print-shortcut')).toBeUndefined()
+			expect(view.emitted('printShortcut')).toBeUndefined()
 			expect(event.defaultPrevented).toBe(false)
 		})
 
@@ -160,7 +160,7 @@ describe('MessageHTMLBody', () => {
 
 			view.vm.getIframeDoc().dispatchEvent(keydown('p'))
 
-			expect(view.emitted('print-shortcut')).toHaveLength(1)
+			expect(view.emitted('printShortcut')).toHaveLength(1)
 		})
 
 		it('stops listening once the message is gone', () => {
@@ -172,7 +172,7 @@ describe('MessageHTMLBody', () => {
 			view.unmount()
 			doc.dispatchEvent(keydown('p'))
 
-			expect(view.emitted('print-shortcut')).toBeUndefined()
+			expect(view.emitted('printShortcut')).toBeUndefined()
 		})
 	})
 })

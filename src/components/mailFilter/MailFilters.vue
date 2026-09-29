@@ -45,14 +45,14 @@
 			:filter="currentFilter"
 			:account="account"
 			:loading="loading"
-			@update-filter="updateFilter"
+			@updateFilter="updateFilter"
 			@close="closeModal" />
 		<DeleteModal
 			v-if="showDeleteModal && currentFilter"
 			:filter="currentFilter"
 			:open="showDeleteModal"
 			:loading="loading"
-			@delete-filter="deleteFilter"
+			@deleteFilter="deleteFilter"
 			@close="closeModal" />
 	</div>
 </template>

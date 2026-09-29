@@ -22,10 +22,10 @@
 					v-if="group.account"
 					:key="group.account.id"
 					:account="group.account"
-					:first-mailbox="group.mailboxes[0]"
-					:is-first="isFirst(group.account)"
-					:is-last="isLast(group.account)"
-					:is-disabled="isDisabled(group.account)" />
+					:firstMailbox="group.mailboxes[0]"
+					:isFirst="isFirst(group.account)"
+					:isLast="isLast(group.account)"
+					:isDisabled="isDisabled(group.account)" />
 				<div
 					v-if="group.account.error"
 					:key="group.account.error"
@@ -70,7 +70,7 @@
 			<div class="mail-settings">
 				<NcAppNavigationItem
 					class="mail-settings__button"
-					:close-after-click="true"
+					:closeAfterClick="true"
 					:name="t('mail', 'Mail settings')"
 					@click="showMailSettings">
 					<template #icon>
@@ -88,7 +88,7 @@
 			v-if="settingsAccount"
 			:open="true"
 			:account="settingsAccount"
-			:scroll-to-section="settingsSection"
+			:scrollToSection="settingsSection"
 			@close="onCloseAccountSettings" />
 	</NcAppNavigation>
 </template>

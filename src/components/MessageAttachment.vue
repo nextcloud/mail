@@ -19,7 +19,7 @@
 			</span>
 			<span class="attachment-size">{{ humanReadable(size) }}</span>
 		</div>
-		<NcActions :boundaries-element="boundariesElement">
+		<NcActions :boundariesElement="boundariesElement">
 			<template v-if="!showCalendarPopover">
 				<NcActionButton
 					v-if="isCalendarEvent"
@@ -34,7 +34,7 @@
 				</NcActionButton>
 				<NcActionButton
 					class="attachment-download"
-					:close-after-click="true"
+					:closeAfterClick="true"
 					@click="download">
 					<template #icon>
 						<IconDownload :size="20" />
@@ -44,7 +44,7 @@
 				<NcActionButton
 					class="attachment-save-to-cloud"
 					:disabled="savingToCloud"
-					:close-after-click="true"
+					:closeAfterClick="true"
 					@click="saveToCloud">
 					<template #icon>
 						<IconSave v-if="!savingToCloud" :size="20" />
@@ -90,7 +90,6 @@ import { pickFolder } from '../util/filePicker.js'
 
 export default {
 	name: 'MessageAttachment',
-	emits: ['open'],
 	components: {
 		NcActions,
 		NcActionButton,
@@ -148,6 +147,8 @@ export default {
 			default: false,
 		},
 	},
+
+	emits: ['open'],
 
 	data() {
 		return {

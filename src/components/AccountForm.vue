@@ -7,7 +7,7 @@
 		<NcRadioGroup
 			v-model="mode"
 			:label="t('mail', 'Mail server configuration mode')"
-			hide-label>
+			hideLabel>
 			<NcRadioGroupButton :label="t('mail', 'Auto')" value="auto" :disabled="loading" />
 			<NcRadioGroupButton :label="t('mail', 'Manual')" value="manual" :disabled="loading" />
 		</NcRadioGroup>
@@ -83,37 +83,37 @@
 			<div class="flex-row">
 				<NcCheckboxRadioSwitch
 					id="man-imap-sec-none"
-					:button-variant="true"
-					:model-value="manualConfig.imapSslMode"
+					:buttonVariant="true"
+					:modelValue="manualConfig.imapSslMode"
 					type="radio"
 					name="man-imap-sec"
 					:disabled="loading"
 					value="none"
-					button-variant-grouped="horizontal"
+					buttonVariantGrouped="horizontal"
 					@update:modelValue="onImapSslModeChange">
 					{{ t('mail', 'None') }}
 				</NcCheckboxRadioSwitch>
 				<NcCheckboxRadioSwitch
 					id="man-imap-sec-ssl"
-					:button-variant="true"
-					:model-value="manualConfig.imapSslMode"
+					:buttonVariant="true"
+					:modelValue="manualConfig.imapSslMode"
 					type="radio"
 					name="man-imap-sec"
 					:disabled="loading"
 					value="ssl"
-					button-variant-grouped="horizontal"
+					buttonVariantGrouped="horizontal"
 					@update:modelValue="onImapSslModeChange">
 					{{ t('mail', 'SSL/TLS') }}
 				</NcCheckboxRadioSwitch>
 				<NcCheckboxRadioSwitch
 					id="man-imap-sec-tls"
-					:button-variant="true"
-					:model-value="manualConfig.imapSslMode"
+					:buttonVariant="true"
+					:modelValue="manualConfig.imapSslMode"
 					type="radio"
 					name="man-imap-sec"
 					:disabled="loading"
 					value="tls"
-					button-variant-grouped="horizontal"
+					buttonVariantGrouped="horizontal"
 					@update:modelValue="onImapSslModeChange">
 					{{ t('mail', 'STARTTLS') }}
 				</NcCheckboxRadioSwitch>
@@ -162,37 +162,37 @@
 			<div class="flex-row">
 				<NcCheckboxRadioSwitch
 					id="man-imap-sec-none"
-					:button-variant="true"
-					:model-value="manualConfig.smtpSslMode"
+					:buttonVariant="true"
+					:modelValue="manualConfig.smtpSslMode"
 					type="radio"
 					name="man-smtp-sec"
 					:disabled="loading"
 					value="none"
-					button-variant-grouped="horizontal"
+					buttonVariantGrouped="horizontal"
 					@update:modelValue="onSmtpSslModeChange">
 					{{ t('mail', 'None') }}
 				</NcCheckboxRadioSwitch>
 				<NcCheckboxRadioSwitch
 					id="man-imap-sec-ssl"
-					:button-variant="true"
-					:model-value="manualConfig.smtpSslMode"
+					:buttonVariant="true"
+					:modelValue="manualConfig.smtpSslMode"
 					type="radio"
 					name="man-smtp-sec"
 					:disabled="loading"
 					value="ssl"
-					button-variant-grouped="horizontal"
+					buttonVariantGrouped="horizontal"
 					@update:modelValue="onSmtpSslModeChange">
 					{{ t('mail', 'SSL/TLS') }}
 				</NcCheckboxRadioSwitch>
 				<NcCheckboxRadioSwitch
 					id="man-imap-sec-tls"
-					:button-variant="true"
-					:model-value="manualConfig.smtpSslMode"
+					:buttonVariant="true"
+					:modelValue="manualConfig.smtpSslMode"
 					type="radio"
 					name="man-smtp-sec"
 					:disabled="loading"
 					value="tls"
-					button-variant-grouped="horizontal"
+					buttonVariantGrouped="horizontal"
 					@update:modelValue="onSmtpSslModeChange">
 					{{ t('mail', 'STARTTLS') }}
 				</NcCheckboxRadioSwitch>
@@ -276,6 +276,7 @@
 <script>
 import { loadState } from '@nextcloud/initial-state'
 import { t } from '@nextcloud/l10n'
+import { mapState, mapStores } from 'pinia'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import NcInputField from '@nextcloud/vue/components/NcInputField'
@@ -283,7 +284,6 @@ import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import NcPasswordField from '@nextcloud/vue/components/NcPasswordField'
 import NcRadioGroup from '@nextcloud/vue/components/NcRadioGroup'
 import NcRadioGroupButton from '@nextcloud/vue/components/NcRadioGroupButton'
-import { mapState, mapStores } from 'pinia'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import { CONSENT_ABORTED, getUserConsent } from '../integration/oauth.js'
 import logger from '../logger.js'
@@ -297,7 +297,6 @@ import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'AccountForm',
-	emits: ['account-created'],
 	components: {
 		NcPasswordField,
 		NcInputField,
@@ -326,6 +325,8 @@ export default {
 			default: () => undefined,
 		},
 	},
+
+	emits: ['accountCreated'],
 
 	data() {
 		const fromAccountOr = (prop, def) => {
@@ -671,7 +672,7 @@ export default {
 					}
 					this.loadingMessage = t('mail', 'Loading account')
 					await this.mainStore.finishAccountSetup({ account })
-					this.$emit('account-created', account)
+					this.$emit('accountCreated', account)
 				} else {
 					const oldAccountData = this.account
 					const account = await this.mainStore.updateAccount({

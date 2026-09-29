@@ -12,9 +12,9 @@
 		@click="openModal">
 		<template #icon>
 			<Avatar
-				:display-name="avatarDisplayName"
+				:displayName="avatarDisplayName"
 				:email="avatarEmail"
-				:fetch-avatar="false"
+				:fetchAvatar="false"
 				:avatar="message.avatar" />
 		</template>
 		<template #subname>
@@ -23,7 +23,7 @@
 		<template #actions>
 			<NcActionButton
 				v-if="message.status === statusImapSentMailboxFail()"
-				:close-after-click="true"
+				:closeAfterClick="true"
 				@click="sendMessageNow">
 				{{ t('mail', 'Copy to "Sent" Folder') }}
 				<template #icon>
@@ -34,7 +34,7 @@
 			</NcActionButton>
 			<NcActionButton
 				v-if="message.status !== statusImapSentMailboxFail() && message.status !== statusSmtpError()"
-				:close-after-click="true"
+				:closeAfterClick="true"
 				@click="sendMessageNow">
 				{{ t('mail', 'Send now') }}
 				<template #icon>
@@ -44,7 +44,7 @@
 				</template>
 			</NcActionButton>
 			<NcActionButton
-				:close-after-click="true"
+				:closeAfterClick="true"
 				@click="deleteMessage">
 				<template #icon>
 					<IconDelete :size="24" />

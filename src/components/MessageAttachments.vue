@@ -12,14 +12,14 @@
 					:id="attachment.id"
 					ref="attachments"
 					:key="attachment.id"
-					:file-name="attachment.fileName"
+					:fileName="attachment.fileName"
 					:size="attachment.size"
 					:url="attachment.downloadUrl"
-					:is-image="attachment.isImage"
-					:is-calendar-event="attachment.isCalendarEvent"
+					:isImage="attachment.isImage"
+					:isCalendarEvent="attachment.isCalendarEvent"
 					:mime="attachment.mime"
-					:mime-url="attachment.mimeUrl"
-					:can-preview="canPreview(fileInfos[idx])"
+					:mimeUrl="attachment.mimeUrl"
+					:canPreview="canPreview(fileInfos[idx])"
 					@open="showViewer(fileInfos[idx])" />
 			</div>
 		</div>

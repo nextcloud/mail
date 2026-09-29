@@ -32,16 +32,16 @@
 			v-model:open="editModalOpen"
 			:name="t('mail', 'Edit text block')"
 			size="normal"
-			:is-form="true">
+			:isForm="true">
 			<p v-if="shared">
 				{{ localTextBlock.title }}
 			</p>
 			<NcInputField v-else v-model="localTextBlock.title" :label="t('mail', 'Title of the text block')" />
 			<TextEditor
 				v-model="localTextBlock.content"
-				:is-bordered="!shared"
+				:isBordered="!shared"
 				:html="true"
-				:read-only="shared"
+				:readOnly="shared"
 				:placeholder="t('mail', 'Content of the text block')"
 				:bus="bus" />
 			<template v-if="!shared">
@@ -49,13 +49,13 @@
 					{{ t('mail', 'Shares') }}
 				</h3>
 				<NcSelectUsers
-					:model-value="share"
+					:modelValue="share"
 					class="text-block-list-item__shares"
 					:placeholder="t('mail', 'Search for users or groups')"
-					:label-outside="true"
+					:labelOutside="true"
 					:loading="loading"
 					:options="options"
-					:get-option-label="option => option.displayName"
+					:getOptionLabel="option => option.displayName"
 					@update:modelValue="shareTextBlock"
 					@search="asyncFind" />
 
@@ -70,7 +70,7 @@
 								<AccountMultiple :size="20" />
 							</template>
 						</NcAvatar>
-						<NcAvatar v-else :user="user.shareWith" :display-name="user.displayName" />
+						<NcAvatar v-else :user="user.shareWith" :displayName="user.displayName" />
 					</template>
 					<template #extra-actions>
 						<NcButton variant="tertiary-no-background" @click="removeShare(user)">
@@ -136,7 +136,6 @@ import useMainStore from '../../store/mainStore.js'
 
 export default {
 	name: 'ListItem',
-	emits: ['click'],
 	components: {
 		NcActionButton,
 		NcLoadingIcon,
@@ -174,6 +173,8 @@ export default {
 			default: false,
 		},
 	},
+
+	emits: ['click'],
 
 	data() {
 		return {
@@ -264,7 +265,7 @@ export default {
 				ShareType.Group,
 			]
 
-			let request = null
+			let request
 			try {
 				request = await axios.get(generateOcsUrl('apps/files_sharing/api/v1/sharees'), {
 					params: {

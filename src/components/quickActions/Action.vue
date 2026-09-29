@@ -12,10 +12,10 @@
 			</p>
 			<NcSelect
 				v-else
-				:input-label="actionTitle"
+				:inputLabel="actionTitle"
 				:options="options"
 				label="value"
-				:model-value="selectedOption"
+				:modelValue="selectedOption"
 				@update:modelValue="update" />
 		</div>
 		<NcButton
@@ -42,7 +42,6 @@ import { hiddenTags } from '../tags.js'
 
 export default {
 	name: 'Action',
-	emits: ['delete', 'update'],
 	components: {
 		NcSelect,
 		CloseIcon,
@@ -67,6 +66,8 @@ export default {
 			required: true,
 		},
 	},
+
+	emits: ['delete', 'update'],
 
 	computed: {
 		mainStore() {

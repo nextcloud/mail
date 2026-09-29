@@ -15,7 +15,7 @@
 			{{ t('mail', 'Start writing a message by clicking below or select an existing message to display its contents') }}
 		</div>
 		<div class="no-message-selected__action">
-			<NewMessageButtonHeader :show-refresh="false" />
+			<NewMessageButtonHeader :showRefresh="false" />
 		</div>
 	</NcAppContentDetails>
 </template>

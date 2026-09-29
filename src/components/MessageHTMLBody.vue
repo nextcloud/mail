@@ -9,13 +9,13 @@
 			:sender="sender"
 			:domain="domain"
 			@show="displayIframe"
-			@trust-sender="onShowBlockedContent"
-			@trust-domain="onShowBlockedContentForDomain" />
+			@trustSender="onShowBlockedContent"
+			@trustDomain="onShowBlockedContentForDomain" />
 		<div class="html-message-body__content">
 			<MdnRequest :message="message" />
 			<NeedsTranslationInfo
 				v-if="detectedForeignLanguage"
-				:is-html="true"
+				:isHtml="true"
 				@translate="$emit('translate', detectedForeignLanguage)" />
 			<div id="message-container" :class="{ scroll: !fullHeight }">
 				<!-- allow-scripts: the server-injected iframe-resizer child must run to size the frame to its content.
@@ -46,7 +46,6 @@ import { isPrintShortcut } from '../util/printMessage.ts'
 
 export default {
 	name: 'MessageHTMLBody',
-	emits: ['translate', 'load', 'print-shortcut'],
 	components: {
 		BlockedContentWarning,
 		MdnRequest,
@@ -70,6 +69,8 @@ export default {
 			type: Object,
 		},
 	},
+
+	emits: ['translate', 'load', 'printShortcut'],
 
 	data() {
 		return {
@@ -145,7 +146,7 @@ export default {
 				return
 			}
 			event.preventDefault()
-			this.$emit('print-shortcut')
+			this.$emit('printShortcut')
 		},
 
 		displayIframe() {

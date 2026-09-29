@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<MailboxInlinePicker :account="account" :model-value="mailbox" @update:model-value="onInput" />
+	<MailboxInlinePicker :account="account" :modelValue="mailbox" @update:modelValue="onInput" />
 </template>
 
 <script>
@@ -14,7 +14,6 @@ import useMainStore from '../../store/mainStore.js'
 
 export default {
 	name: 'ActionFileinto',
-	emits: ['update-action'],
 	components: {
 		MailboxInlinePicker,
 	},
@@ -31,6 +30,8 @@ export default {
 		},
 	},
 
+	emits: ['updateAction'],
+
 	computed: {
 		...mapStores(useMainStore),
 		mailbox() {
@@ -40,7 +41,7 @@ export default {
 
 	methods: {
 		onInput(value) {
-			this.$emit('update-action', { mailbox: this.getMailboxNameByDatabaseId(value) })
+			this.$emit('updateAction', { mailbox: this.getMailboxNameByDatabaseId(value) })
 		},
 
 		getMailboxDatabaseIdByName(name) {

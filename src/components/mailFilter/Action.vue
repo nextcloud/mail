@@ -7,19 +7,19 @@
 		<div class="action__type">
 			<NcSelect
 				class="action__type__column action__type__column__select"
-				:model-value="currentAction"
+				:modelValue="currentAction"
 				:required="true"
-				:label-outside="true"
+				:labelOutside="true"
 				:options="availableTypes"
 				:clearable="false"
-				@update:model-value="updateAction({ type: $event.id })" />
+				@update:modelValue="updateAction({ type: $event.id })" />
 			<component
 				:is="componentInstance"
 				v-if="componentInstance"
 				class="action__type__column"
 				:action="action"
 				:account="account"
-				@update-action="updateAction" />
+				@updateAction="updateAction" />
 		</div>
 		<NcButton
 			:aria-label="t('mail', 'Delete action')"
@@ -47,7 +47,6 @@ import { MailFilterActions } from '../../models/mailFilter.ts'
 
 export default {
 	name: 'Action',
-	emits: ['update-action', 'delete-action'],
 	components: {
 		NcSelect,
 		NcTextField,
@@ -70,6 +69,8 @@ export default {
 			required: true,
 		},
 	},
+
+	emits: ['updateAction', 'deleteAction'],
 
 	data() {
 		return {
@@ -121,11 +122,11 @@ export default {
 
 	methods: {
 		updateAction(properties) {
-			this.$emit('update-action', { ...this.action, ...properties })
+			this.$emit('updateAction', { ...this.action, ...properties })
 		},
 
 		deleteAction() {
-			this.$emit('delete-action', this.action)
+			this.$emit('deleteAction', this.action)
 		},
 	},
 }

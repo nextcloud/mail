@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<NcContent app-name="mail">
+	<NcContent appName="mail">
 		<Navigation v-if="hasAccounts" />
 		<NcAppContent>
 			<div
@@ -19,11 +19,11 @@
 					</template>
 					<template #action>
 						<AccountForm
-							:display-name="displayName"
-							:email="email"
 							v-model:error="error"
+							:displayName="displayName"
+							:email="email"
 							class="setup__form-content__form"
-							@account-created="onAccountCreated" />
+							@accountCreated="onAccountCreated" />
 					</template>
 				</NcEmptyContent>
 				<NcEmptyContent v-else :name="t('mail', 'To add a mail account, please contact your administrator.')">

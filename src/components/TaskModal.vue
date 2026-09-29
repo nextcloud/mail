@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<NcModal close-on-click-outside @close="onClose">
+	<NcModal closeOnClickOutside @close="onClose">
 		<div class="modal-content">
 			<h2>{{ t('mail', 'Create task') }}</h2>
 			<div class="taskTitle">
@@ -15,20 +15,20 @@
 					v-model="startDate"
 					:format="dateFormat"
 					:clearable="false"
-					:minute-step="5"
-					:show-second="false"
+					:minuteStep="5"
+					:showSecond="false"
 					:type="datePickerType"
-					:show-timezone-select="true"
-					:timezone-id="startTimezoneId" />
+					:showTimezoneSelect="true"
+					:timezoneId="startTimezoneId" />
 				<NcDateTimePicker
 					v-model="endDate"
 					:format="dateFormat"
 					:clearable="false"
-					:minute-step="5"
-					:show-second="false"
+					:minuteStep="5"
+					:showSecond="false"
 					:type="datePickerType"
-					:show-timezone-select="true"
-					:timezone-id="endTimezoneId" />
+					:showTimezoneSelect="true"
+					:timezoneId="endTimezoneId" />
 			</div>
 			<label for="note">{{ t('mail', 'Description') }}</label>
 			<textarea id="note" v-model="note" rows="7" />
@@ -46,10 +46,10 @@
 			<NcSelect
 				v-model="selectedCalendarChoice"
 				label="displayname"
-				input-id="url"
+				inputId="url"
 				:placeholder="t('mail', 'Select calendar')"
 				:aria-label-combobox="t('mail', 'Select calendar')"
-				:allow-empty="false"
+				:allowEmpty="false"
 				:options="calendarChoices">
 				<template #option="{ id }">
 					<CalendarPickerOption
@@ -60,7 +60,7 @@
 					<CalendarPickerOption
 						:color="getCalendarById(id).color"
 						:displayname="getCalendarById(id).displayname"
-						:display-icon="getCalendarById(id).displayIcon" />
+						:displayIcon="getCalendarById(id).displayIcon" />
 				</template>
 				<template #no-options>
 					<span>{{ t('mail', 'No calendars with task list support') }}</span>
@@ -90,7 +90,6 @@ import Task from '../task.js'
 
 export default {
 	name: 'TaskModal',
-	emits: ['close'],
 	components: {
 		CalendarPickerOption,
 		NcDateTimePicker,
@@ -104,6 +103,8 @@ export default {
 			required: true,
 		},
 	},
+
+	emits: ['close'],
 
 	data() {
 		// Try to determine the current timezone, and fall back to UTC otherwise

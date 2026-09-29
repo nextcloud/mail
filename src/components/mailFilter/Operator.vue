@@ -5,15 +5,15 @@
 <template>
 	<div class="operator">
 		<NcSelect
-			:model-value="filter.operator"
+			:modelValue="filter.operator"
 			class="operator__select"
 			:required="true"
-			:label-outside="true"
+			:labelOutside="true"
 			:options="availableOperators"
 			:reduce="operator => operator.value"
 			:clearable="false"
-			@update:model-value="updateOperator($event)" />
-		<NcPopover class="operator__popover" :no-focus-trap="true" popup-role="dialog">
+			@update:modelValue="updateOperator($event)" />
+		<NcPopover class="operator__popover" :noFocusTrap="true" popupRole="dialog">
 			<template #trigger>
 				<NcButton variant="tertiary-no-background" :aria-label="t('mail', 'Help')">
 					<template #icon>
@@ -44,7 +44,6 @@ import { MailFilterOperator } from '../../models/mailFilter.ts'
 
 export default {
 	name: 'Operator',
-	emits: ['update:operator'],
 	components: {
 		IconInformationOutline,
 		NcPopover,
@@ -58,6 +57,8 @@ export default {
 			required: true,
 		},
 	},
+
+	emits: ['update:operator'],
 
 	data() {
 		return {

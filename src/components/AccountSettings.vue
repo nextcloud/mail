@@ -7,14 +7,14 @@
 	<NcAppSettingsDialog
 		id="app-settings-dialog"
 		:open="open"
-		:show-navigation="true"
-		:additional-trap-elements="trapElements"
+		:showNavigation="true"
+		:additionalTrapElements="trapElements"
 		:name="t('mail', 'Account settings')"
 		@update:open="onClose">
 		<NcAppSettingsSection
 			id="alias-settings"
 			:name="t('mail', 'Aliases')">
-			<AliasSettings :account="account" @rename-primary-alias="scrollToAccountSettings" />
+			<AliasSettings :account="account" @renamePrimaryAlias="scrollToAccountSettings" />
 		</NcAppSettingsSection>
 		<NcAppSettingsSection
 			id="certificate-settings"
@@ -74,9 +74,9 @@
 			:name="t('mail', 'Classification settings')">
 			<NcCheckboxRadioSwitch
 				id="auto-classification-enabled"
-				:model-value="account.classificationEnabled"
+				:modelValue="account.classificationEnabled"
 				:disabled="loadingClassificationToggle"
-				@update:model-value="onToggleClassification">
+				@update:modelValue="onToggleClassification">
 				{{ t('mail', 'Enable mark as important classification') }}
 			</NcCheckboxRadioSwitch>
 		</NcAppSettingsSection>
@@ -114,7 +114,7 @@
 				<AccountForm
 					:key="account.accountId"
 					ref="accountForm"
-					:display-name="displayName"
+					:displayName="displayName"
 					:email="email"
 					:account="account" />
 			</div>
@@ -162,7 +162,6 @@ import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'AccountSettings',
-	emits: ['close'],
 	components: {
 		SieveAccountForm,
 		SieveFilterForm,
@@ -206,6 +205,8 @@ export default {
 			default: undefined,
 		},
 	},
+
+	emits: ['close'],
 
 	data() {
 		return {

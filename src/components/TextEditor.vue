@@ -11,11 +11,11 @@
 
 		<Ckeditor
 			v-if="ready"
-			:model-value="modelValue"
+			:modelValue="modelValue"
 			:config="config"
 			:editor="editor"
 			:disabled="disabled"
-			:disable-watchdog="true"
+			:disableWatchdog="true"
 			class="editor"
 			@input="onEditorInput"
 			@ready="onEditorReady" />
@@ -69,7 +69,6 @@ import 'ckeditor5/ckeditor5.css'
 
 export default {
 	name: 'TextEditor',
-	emits: ['mention', 'submit', 'save', 'ready', 'update:modelValue'],
 	components: {
 		Ckeditor,
 	},
@@ -124,6 +123,8 @@ export default {
 			default: false,
 		},
 	},
+
+	emits: ['mention', 'submit', 'save', 'ready', 'update:modelValue'],
 
 	data() {
 		const plugins = [

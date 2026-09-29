@@ -20,7 +20,6 @@ import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'DeleteTagModal',
-	emits: ['close'],
 	components: {
 		ConfirmationModal,
 	},
@@ -42,6 +41,8 @@ export default {
 			required: true,
 		},
 	},
+
+	emits: ['close'],
 
 	data() {
 		return {

@@ -66,7 +66,6 @@ import { mailboxHasRights } from '../util/acl.js'
 
 export default {
 	name: 'MailboxPicker',
-	emits: ['update:selected', 'close'],
 	components: {
 		NcDialog,
 		NcEmptyContent,
@@ -122,6 +121,8 @@ export default {
 			required: true,
 		},
 	},
+
+	emits: ['update:selected', 'close'],
 
 	data() {
 		return {

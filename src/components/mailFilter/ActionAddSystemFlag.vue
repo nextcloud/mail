@@ -4,13 +4,13 @@
 -->
 <template>
 	<NcSelect
-		input-label="flag"
-		:model-value="flag"
+		inputLabel="flag"
+		:modelValue="flag"
 		:required="true"
-		:label-outside="true"
+		:labelOutside="true"
 		:options="flags"
 		:clearable="false"
-		@update:model-value="updateAction({ flag: $event })">
+		@update:modelValue="updateAction({ flag: $event })">
 		<template #selected-option="{ label }">
 			{{ getLabelForFlag(label) }}
 		</template>
@@ -26,7 +26,6 @@ import { MailFilterSystemFlag } from '../../models/mailFilter.ts'
 
 export default {
 	name: 'ActionAddSystemFlag',
-	emits: ['update-action'],
 	components: {
 		NcSelect,
 	},
@@ -42,6 +41,8 @@ export default {
 			required: true,
 		},
 	},
+
+	emits: ['updateAction'],
 
 	data() {
 		return {
@@ -63,7 +64,7 @@ export default {
 
 	methods: {
 		updateAction(value) {
-			this.$emit('update-action', value)
+			this.$emit('updateAction', value)
 		},
 
 		getLabelForFlag(field) {

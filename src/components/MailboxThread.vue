@@ -4,28 +4,28 @@
 -->
 <template>
 	<NcAppContent
-		:pane-config-key="'mail-' + layoutMode"
+		:paneConfigKey="'mail-' + layoutMode"
 		:layout="layoutMode"
-		:show-details="isThreadShown"
-		:list-min-width="horizontalListMinWidth"
-		:list-max-width="horizontalListMaxWidth"
+		:showDetails="isThreadShown"
+		:listMinWidth="horizontalListMinWidth"
+		:listMaxWidth="horizontalListMaxWidth"
 		@update:showDetails="hideMessage">
 		<template #list>
 			<div :class="{ list__wrapper: !showThread || !isMobile }">
 				<div v-if="!showThread || !isMobile" class="sticky-header">
 					<SearchMessages
 						:mailbox="mailbox"
-						:account-id="account.accountId"
-						@search-changed="onUpdateSearchQuery" />
+						:accountId="account.accountId"
+						@searchChanged="onUpdateSearchQuery" />
 				</div>
 				<NcAppContentList
 					v-infinite-scroll="onScroll"
 					v-shortkey.once="shortkeys"
 					class="envelope-list"
-					infinite-scroll-immediate-check="false"
-					:show-details="showThread"
-					:infinite-scroll-disabled="false"
-					:infinite-scroll-distance="300"
+					infiniteScrollImmediateCheck="false"
+					:showDetails="showThread"
+					:infiniteScrollDisabled="false"
+					:infiniteScrollDistance="300"
 					role="heading"
 					:aria-level="2"
 					@shortkey="onShortcut">
@@ -56,23 +56,23 @@
 						<Mailbox
 							v-if="sortFavorites"
 							v-show="hasFavoriteEnvelopes"
-							:load-more-label="t('mail', 'Load more favorites')"
+							:loadMoreLabel="t('mail', 'Load more favorites')"
 							:account="account"
 							:mailbox="mailbox"
-							:search-query="appendToSearch(favoriteQuery)"
+							:searchQuery="appendToSearch(favoriteQuery)"
 							paginate="manual"
-							:is-priority-inbox="true"
-							:initial-page-size="favoriteInitialPageSize"
+							:isPriorityInbox="true"
+							:initialPageSize="favoriteInitialPageSize"
 							:collapsible="true"
 							:bus="bus" />
 						<Mailbox
 							:account="account"
 							:mailbox="mailbox"
-							:search-query="query"
+							:searchQuery="query"
 							:bus="bus"
-							:open-first="mailbox.specialRole !== 'drafts'"
-							:group-envelopes="groupEnvelopes"
-							:initial-page-size="messagesOrderBydate"
+							:openFirst="mailbox.specialRole !== 'drafts'"
+							:groupEnvelopes="groupEnvelopes"
+							:initialPageSize="messagesOrderBydate"
 							:collapsible="true" />
 					</template>
 
@@ -103,13 +103,13 @@
 						<Mailbox
 							v-if="sortFavorites"
 							v-show="hasFavoriteEnvelopes"
-							:load-more-label="t('mail', 'Load more favorites')"
+							:loadMoreLabel="t('mail', 'Load more favorites')"
 							:account="unifiedAccount"
 							:mailbox="unifiedInbox"
-							:search-query="appendToSearch(favoriteQuery)"
+							:searchQuery="appendToSearch(favoriteQuery)"
 							paginate="manual"
-							:is-priority-inbox="true"
-							:initial-page-size="favoriteInitialPageSize"
+							:isPriorityInbox="true"
+							:initialPageSize="favoriteInitialPageSize"
 							:collapsible="true"
 							:bus="bus" />
 						<div
@@ -136,13 +136,13 @@
 						</div>
 						<Mailbox
 							v-show="hasFollowUpEnvelopes"
-							:load-more-label="t('mail', 'Load more follow ups')"
+							:loadMoreLabel="t('mail', 'Load more follow ups')"
 							:account="unifiedAccount"
 							:mailbox="followUpMailbox"
-							:search-query="appendToSearch(followUpQuery)"
+							:searchQuery="appendToSearch(followUpQuery)"
 							paginate="manual"
-							:is-priority-inbox="true"
-							:initial-page-size="followUpMessagesInitialPageSize"
+							:isPriorityInbox="true"
+							:initialPageSize="followUpMessagesInitialPageSize"
 							:collapsible="true"
 							:bus="bus" />
 						<div v-show="hasImportantEnvelopes" class="app-content-list-item">
@@ -168,13 +168,13 @@
 						<Mailbox
 							v-show="hasImportantEnvelopes"
 							class="nameimportant"
-							:load-more-label="t('mail', 'Load more important messages')"
+							:loadMoreLabel="t('mail', 'Load more important messages')"
 							:account="unifiedAccount"
 							:mailbox="unifiedInbox"
-							:search-query="appendToSearch(priorityImportantQuery)"
+							:searchQuery="appendToSearch(priorityImportantQuery)"
 							paginate="manual"
-							:is-priority-inbox="true"
-							:initial-page-size="importantMessagesInitialPageSize"
+							:isPriorityInbox="true"
+							:initialPageSize="importantMessagesInitialPageSize"
 							:collapsible="true"
 							:bus="bus" />
 						<SectionTitle
@@ -183,11 +183,11 @@
 							:name="t('mail', 'Other')" />
 						<Mailbox
 							class="nameother"
-							:load-more-label="t('mail', 'Load more other messages')"
+							:loadMoreLabel="t('mail', 'Load more other messages')"
 							:account="unifiedAccount"
 							:mailbox="unifiedInbox"
-							:search-query="appendToSearch(priorityOtherQuery)"
-							:is-priority-inbox="true"
+							:searchQuery="appendToSearch(priorityOtherQuery)"
+							:isPriorityInbox="true"
 							:bus="bus" />
 					</template>
 				</NcAppContentList>
@@ -200,14 +200,14 @@
 </template>
 
 <script>
-import NcAppContent from '@nextcloud/vue/components/NcAppContent'
-import NcAppContentList from '@nextcloud/vue/components/NcAppContentList'
-import NcButton from '@nextcloud/vue/components/NcButton'
-import NcPopover from '@nextcloud/vue/components/NcPopover'
 import { useIsMobile } from '@nextcloud/vue/composables/useIsMobile'
 import addressParser from 'address-rfc2822'
 import mitt from 'mitt'
 import { mapStores } from 'pinia'
+import NcAppContent from '@nextcloud/vue/components/NcAppContent'
+import NcAppContentList from '@nextcloud/vue/components/NcAppContentList'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcPopover from '@nextcloud/vue/components/NcPopover'
 import IconInfo from 'vue-material-design-icons/InformationOutline.vue'
 import Mailbox from './Mailbox.vue'
 import NoMessageSelected from './NoMessageSelected.vue'
@@ -251,12 +251,6 @@ export default {
 		Thread,
 	},
 
-	setup() {
-		return {
-			isMobile: useIsMobile(),
-		}
-	},
-
 	props: {
 		account: {
 			type: Object,
@@ -267,6 +261,12 @@ export default {
 			type: Object,
 			required: true,
 		},
+	},
+
+	setup() {
+		return {
+			isMobile: useIsMobile(),
+		}
 	},
 
 	data() {
@@ -514,7 +514,7 @@ export default {
 		onScroll(event) {
 			logger.debug('scroll', { event })
 
-			this.bus.emit('load-more')
+			this.bus.emit('loadMore')
 		},
 
 		onShortcut(e) {

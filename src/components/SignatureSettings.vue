@@ -10,13 +10,13 @@
 		</NcCheckboxRadioSwitch>
 		<NcSelect
 			v-if="identities.length > 1"
-			:allow-empty="false"
+			:allowEmpty="false"
 			:options="identities"
 			:aria-label-combobox="t('mail', 'Select an alias')"
 			:searchable="false"
-			:model-value="identity"
+			:modelValue="identity"
 			label="label"
-			track-by="id"
+			trackBy="id"
 			@option:selected="changeIdentity" />
 		<!-- Added wrapper to give the signature editor a clear input-style border -->
 		<div class="signature-editor-wrapper">
@@ -45,7 +45,7 @@
 				:aria-label="t('mail', 'Save signature')"
 				@click="saveSignature">
 				<template #icon>
-					<NcLoadingIcon v-if="loading" :size="20" fill-color="white" />
+					<NcLoadingIcon v-if="loading" :size="20" fillColor="white" />
 					<IconCheck v-else :size="20" />
 				</template>
 				{{ t('mail', 'Save signature') }}

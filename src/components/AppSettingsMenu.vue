@@ -6,11 +6,11 @@
 	<div class="app-settings">
 		<NcAppSettingsDialog
 			id="app-settings-dialog"
+			v-model:open="showSettings"
 			:name="t('mail', 'Mail settings')"
-			:show-navigation="true"
-			:additional-trap-elements="trapElements"
-			:legacy="false"
-			v-model:open="showSettings">
+			:showNavigation="true"
+			:additionalTrapElements="trapElements"
+			:legacy="false">
 			<NcAppSettingsSection id="general" :name="t('mail', 'General')">
 				<NcButton
 					variant="secondary"
@@ -97,7 +97,7 @@
 						:disabled="hasLoadingState('compact-mode')" />
 				</NcFormBox>
 
-				<NcRadioGroup :model-value="sortOrder" :label="t('mail', 'Sorting')" @update:modelValue="onSortByDate">
+				<NcRadioGroup :modelValue="sortOrder" :label="t('mail', 'Sorting')" @update:modelValue="onSortByDate">
 					<NcRadioGroupButton :label="t('mail', 'Newest first')" value="newest" :disabled="hasLoadingState('sort-order')" />
 					<NcRadioGroupButton :label="t('mail', 'Oldest first')" value="oldest" :disabled="hasLoadingState('sort-order')" />
 				</NcRadioGroup>
@@ -105,12 +105,12 @@
 				<NcDialog
 					v-model:open="textBlockDialogOpen"
 					:name="t('mail', 'New text block')"
-					:is-form="true"
+					:isForm="true"
 					size="normal">
 					<NcInputField v-model="localTextBlock.title" :label="t('mail', 'Title of the text block')" />
 					<TextEditor
 						v-model="localTextBlock.content"
-						:is-bordered="true"
+						:isBordered="true"
 						:html="true"
 						:placeholder="t('mail', 'Content of the text block')"
 						:bus="bus" />
@@ -153,14 +153,14 @@
 					</NcFormBoxSwitch>
 				</NcFormBox>
 
-				<NcRadioGroup :model-value="autoMarkAsRead" :label="t('mail', 'Mark messages as read')" @update:modelValue="onToggleAutoMarkAsRead">
+				<NcRadioGroup :modelValue="autoMarkAsRead" :label="t('mail', 'Mark messages as read')" @update:modelValue="onToggleAutoMarkAsRead">
 					<NcRadioGroupButton :label="t('mail', 'Immediately')" value="0" :disabled="hasLoadingState('auto-mark-as-read')" />
 					<NcRadioGroupButton :label="n('mail', 'After %n second', 'After %n seconds', 3)" value="3000" :disabled="hasLoadingState('auto-mark-as-read')" />
 					<NcRadioGroupButton :label="n('mail', 'After %n second', 'After %n seconds', 30)" value="30000" :disabled="hasLoadingState('auto-mark-as-read')" />
 					<NcRadioGroupButton :label="t('mail', 'Manually')" value="-1" :disabled="hasLoadingState('auto-mark-as-read')" />
 				</NcRadioGroup>
 
-				<NcRadioGroup :model-value="useBottomReplies" :label="t('mail', 'Reply position')" @update:modelValue="onToggleButtonReplies">
+				<NcRadioGroup :modelValue="useBottomReplies" :label="t('mail', 'Reply position')" @update:modelValue="onToggleButtonReplies">
 					<NcRadioGroupButton :label="t('mail', 'Top')" :value="false" :disabled="hasLoadingState('reply-mode')" />
 					<NcRadioGroupButton :label="t('mail', 'Bottom')" :value="true" :disabled="hasLoadingState('reply-mode')" />
 				</NcRadioGroup>
@@ -169,7 +169,7 @@
 					:label="t('mail', 'Text blocks')"
 					:description="t('mail', 'Reusable pieces of text that can be inserted in messages')">
 					<List
-						:text-blocks="getMyTextBlocks()" />
+						:textBlocks="getMyTextBlocks()" />
 					<NcButton variant="secondary" wide @click="() => textBlockDialogOpen = true">
 						<template #icon>
 							<IconAdd :size="20" />
@@ -179,7 +179,7 @@
 					<template v-if="getSharedTextBlocks().length > 0">
 						<h6>{{ t('mail', 'Shared with me') }}</h6>
 						<List
-							:text-blocks="getSharedTextBlocks()"
+							:textBlocks="getSharedTextBlocks()"
 							:shared="true" />
 					</template>
 				</NcFormGroup>
@@ -232,11 +232,11 @@
 							target="_blank"
 							:label="t('mail', 'Step 1')"
 							:description="t('mail', 'Install the browser extension')"
-							inverted-accent />
+							invertedAccent />
 						<NcFormBoxButton
 							:label="t('mail', 'Step 2')"
 							:description="t('mail', 'Enable for the current domain')"
-							inverted-accent
+							invertedAccent
 							@click="mailvelopeAuthorizeDomain">
 							<template #icon>
 								<IconDomain :size="20" />
@@ -332,7 +332,6 @@ import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'AppSettingsMenu',
-	emits: ['update:open'],
 	components: {
 		TrustedSenders,
 		InternalAddress,
@@ -377,6 +376,8 @@ export default {
 			type: Boolean,
 		},
 	},
+
+	emits: ['update:open'],
 
 	data() {
 		return {

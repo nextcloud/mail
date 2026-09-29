@@ -24,15 +24,15 @@
 				ref="envelopeRefs"
 				:key="env.databaseId"
 				:envelope="env"
-				:mailbox-id="$route.params.mailboxId"
-				:thread-subject="threadSubject"
+				:mailboxId="$route.params.mailboxId"
+				:threadSubject="threadSubject"
 				:expanded="expandedThreads.includes(env.databaseId)"
-				:full-height="thread.length === 1"
-				:thread-index="index"
+				:fullHeight="thread.length === 1"
+				:threadIndex="index"
 				@delete="$emit('delete', env.databaseId)"
 				@move="onMove(env.databaseId)"
-				@print-shortcut="printThread"
-				@toggle-expand="toggleExpand(env.databaseId)"
+				@printShortcut="printThread"
+				@toggleExpand="toggleExpand(env.databaseId)"
 				@print="print" />
 		</template>
 	</NcAppContentDetails>
@@ -81,7 +81,6 @@ const PRINT_CLEANUP_TIMEOUT = 60000
 
 export default {
 	name: 'Thread',
-	emits: ['delete'],
 	components: {
 		ThreadSummary,
 		NcAppContentDetails,
@@ -89,6 +88,8 @@ export default {
 		Loading,
 		ThreadEnvelope,
 	},
+
+	emits: ['delete'],
 
 	data() {
 		return {
@@ -318,7 +319,7 @@ export default {
 		/**
 		 * Take the print shortcut while the app itself has the focus. A message
 		 * has a window of its own and its keydowns never reach here, so
-		 * `MessageHTMLBody` listens in its frame and emits `print-shortcut`
+		 * `MessageHTMLBody` listens in its frame and emits `printShortcut`
 		 * instead — both end up in `printThread`.
 		 *
 		 * @param {KeyboardEvent} event the app window's keydown event

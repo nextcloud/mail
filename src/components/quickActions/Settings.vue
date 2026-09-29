@@ -12,13 +12,13 @@
 				<IconEmailFast :size="20" />
 			</template>
 			<template #actions>
-				<NcActionButton :close-after-click="true" @click="openEditModal(action)">
+				<NcActionButton :closeAfterClick="true" @click="openEditModal(action)">
 					<template #icon>
 						<IconEdit :size="20" />
 					</template>
 					{{ t('mail', 'Edit') }}
 				</NcActionButton>
-				<NcActionButton :close-after-click="true" variant="error" @click="deleteQuickAction(action.id)">
+				<NcActionButton :closeAfterClick="true" variant="error" @click="deleteQuickAction(action.id)">
 					<template #icon>
 						<IconDelete :size="20" />
 					</template>
@@ -29,7 +29,11 @@
 		<NcButton class="add-quick-action" variant="primary" @click="openEditModal()">
 			{{ t('mail', 'Add quick action') }}
 		</NcButton>
-		<NcModal close-on-click-outside v-if="editModal" :name="modalName" @close="closeEditModal">
+		<NcModal
+			v-if="editModal"
+			closeOnClickOutside
+			:name="modalName"
+			@close="closeEditModal">
 			<h2 class="modal-name" v-text="modalName" />
 			<div class="modal-content">
 				<NcTextField v-model="localAction.name" :label="t('mail', 'Quick action name')" />
@@ -39,7 +43,7 @@
 						v-for="item in actions"
 						:key="item.id"
 						class="modal-content__action"
-						:drag-not-allowed="item.name === 'deleteThread' || item.name === 'moveThread'">
+						:dragNotAllowed="item.name === 'deleteThread' || item.name === 'moveThread'">
 						<Action
 							:action="item"
 							:account="account"
@@ -48,53 +52,53 @@
 							@delete="deleteAction(item)" />
 					</Draggable>
 				</Container>
-				<NcActions :menu-name="t('mail', 'Add another action')">
+				<NcActions :menuName="t('mail', 'Add another action')">
 					<template #icon>
 						<PlusIcon :size="20" />
 					</template>
-					<NcActionButton v-if="!deletionAndMovingDisabled" :close-after-click="true" @click="addQuickAction('markAsSpam')">
+					<NcActionButton v-if="!deletionAndMovingDisabled" :closeAfterClick="true" @click="addQuickAction('markAsSpam')">
 						<template #icon>
 							<AlertOctagonIcon :size="20" />
 						</template>
 						{{ t('mail', 'Mark as spam') }}
 					</NcActionButton>
-					<NcActionButton :close-after-click="true" @click="addQuickAction('applyTag')">
+					<NcActionButton :closeAfterClick="true" @click="addQuickAction('applyTag')">
 						<template #icon>
 							<TagIcon :size="20" />
 						</template>
 						{{ t('mail', 'Tag') }}
 					</NcActionButton>
-					<NcActionButton v-if="!deletionAndMovingDisabled" :close-after-click="true" @click="addQuickAction('moveThread')">
+					<NcActionButton v-if="!deletionAndMovingDisabled" :closeAfterClick="true" @click="addQuickAction('moveThread')">
 						<template #icon>
 							<OpenInNewIcon :size="20" />
 						</template>
 						{{ t('mail', 'Move thread') }}
 					</NcActionButton>
-					<NcActionButton v-if="!deletionAndMovingDisabled" :close-after-click="true" @click="addQuickAction('deleteThread')">
+					<NcActionButton v-if="!deletionAndMovingDisabled" :closeAfterClick="true" @click="addQuickAction('deleteThread')">
 						<template #icon>
 							<IconDelete :size="20" />
 						</template>
 						{{ t('mail', 'Delete thread') }}
 					</NcActionButton>
-					<NcActionButton :close-after-click="true" @click="addQuickAction('markAsRead')">
+					<NcActionButton :closeAfterClick="true" @click="addQuickAction('markAsRead')">
 						<template #icon>
 							<EmailRead :size="20" />
 						</template>
 						{{ t('mail', 'Mark as read') }}
 					</NcActionButton>
-					<NcActionButton :close-after-click="true" @click="addQuickAction('markAsUnread')">
+					<NcActionButton :closeAfterClick="true" @click="addQuickAction('markAsUnread')">
 						<template #icon>
 							<EmailUnread :size="20" />
 						</template>
 						{{ t('mail', 'Mark as unread') }}
 					</NcActionButton>
-					<NcActionButton :close-after-click="true" @click="addQuickAction('markAsImportant')">
+					<NcActionButton :closeAfterClick="true" @click="addQuickAction('markAsImportant')">
 						<template #icon>
 							<ImportantIcon :size="20" />
 						</template>
 						{{ t('mail', 'Mark as important') }}
 					</NcActionButton>
-					<NcActionButton :close-after-click="true" @click="addQuickAction('markAsFavorite')">
+					<NcActionButton :closeAfterClick="true" @click="addQuickAction('markAsFavorite')">
 						<template #icon>
 							<IconFavorite :size="20" />
 						</template>

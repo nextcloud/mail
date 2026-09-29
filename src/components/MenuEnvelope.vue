@@ -60,7 +60,7 @@
 			<NcActionButton
 				v-if="hasWriteAcl"
 				:closeAfterClick="true"
-				@click.prevent="$emit('open-tag-modal')">
+				@click.prevent="$emit('openTagModal')">
 				<template #icon>
 					<TagIcon
 						:title="t('mail', 'Edit tags')"
@@ -71,7 +71,7 @@
 			<NcActionButton
 				v-if="hasDeleteAcl"
 				:closeAfterClick="true"
-				@click.prevent="$emit('open-move-modal')">
+				@click.prevent="$emit('openMoveModal')">
 				<template #icon>
 					<OpenInNewIcon
 						:title="t('mail', 'Move message')"
@@ -104,7 +104,7 @@
 			<NcActionButton
 				v-if="isTranslationEnabled ?? false"
 				:closeAfterClick="true"
-				@click.prevent="$emit('open-translation-modal')">
+				@click.prevent="$emit('openTranslationModal')">
 				<template #icon>
 					<TranslationIcon
 						:title="t('mail', 'Translate')"
@@ -154,7 +154,7 @@
 			</NcActionButton>
 			<NcActionButton
 				:closeAfterClick="true"
-				@click.prevent="$emit('open-event-modal')">
+				@click.prevent="$emit('openEventModal')">
 				<template #icon>
 					<CalendarBlankIcon
 						:title="t('mail', 'Reply with meeting')"
@@ -165,7 +165,7 @@
 			<NcActionButton
 				v-if="tasksEnabled"
 				:closeAfterClick="true"
-				@click.prevent="$emit('open-task-modal')">
+				@click.prevent="$emit('openTaskModal')">
 				<template #icon>
 					<TaskIcon
 						:title="t('mail', 'Create task')"
@@ -176,7 +176,7 @@
 			<NcActionButton
 				v-if="withShowSource"
 				:closeAfterClick="true"
-				@click.prevent="$emit('show-source-modal')">
+				@click.prevent="$emit('showSourceModal')">
 				<template #icon>
 					<InformationIcon
 						:title="t('mail', 'View source')"
@@ -214,7 +214,7 @@
 			<NcActionButton
 				v-if="isSieveEnabled"
 				:closeAfterClick="true"
-				@click.prevent="$emit('open-mail-filter-from-envelope')">
+				@click.prevent="$emit('openMailFilterFromEnvelope')">
 				<template #icon>
 					<FilterIcon
 						:title="t('mail', 'Create mail filter')"
@@ -390,13 +390,13 @@ export default {
 	},
 
 	emits: [
-		'open-tag-modal',
-		'open-move-modal',
-		'open-translation-modal',
-		'open-event-modal',
-		'open-task-modal',
-		'show-source-modal',
-		'open-mail-filter-from-envelope',
+		'openTagModal',
+		'openMoveModal',
+		'openTranslationModal',
+		'openEventModal',
+		'openTaskModal',
+		'showSourceModal',
+		'openMailFilterFromEnvelope',
 		'update:moreActionsOpen',
 		'unselect',
 		'delete',
