@@ -18,9 +18,21 @@
 			</h2>
 			<div class="floating-composer__actions">
 				<NcButton
+					v-if="showRecipientPane"
+					class="floating-composer__action--desktop-only"
 					variant="tertiary-no-background"
-					:aria-label="largerModal ? t('mail', 'Restore composer') : t('mail', 'Maximize composer')"
-					:title="largerModal ? t('mail', 'Restore composer') : t('mail', 'Maximize composer')"
+					:aria-label="recipientPaneOpen ? t('mail', 'Hide contact info') : t('mail', 'Show contact info')"
+					:title="recipientPaneOpen ? t('mail', 'Hide contact info') : t('mail', 'Show contact info')"
+					@click="recipientPaneOpen = !recipientPaneOpen">
+					<template #icon>
+						<AccountIcon :size="20" />
+					</template>
+				</NcButton>
+				<NcButton
+					class="floating-composer__action--fullscreen-toggle"
+					variant="tertiary-no-background"
+					:aria-label="largerModal ? t('mail', 'Exit full screen') : t('mail', 'Full screen')"
+					:title="largerModal ? t('mail', 'Exit full screen') : t('mail', 'Full screen')"
 					@click="onMaximize">
 					<template #icon>
 						<MaximizeIcon v-if="!largerModal" :size="20" />
@@ -156,6 +168,7 @@ import {
 	NcEmptyContent,
 } from '@nextcloud/vue'
 import { mapActions, mapState, mapStores } from 'pinia'
+import AccountIcon from 'vue-material-design-icons/Account.vue'
 import DefaultComposerIcon from 'vue-material-design-icons/ArrowCollapse.vue'
 import MaximizeIcon from 'vue-material-design-icons/ArrowExpand.vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
@@ -181,6 +194,7 @@ export default {
 		NcButton,
 		Composer,
 		NcEmptyContent,
+		AccountIcon,
 		MinimizeIcon,
 		RecipientInfo,
 		MaximizeIcon,
@@ -294,6 +308,7 @@ export default {
 	},
 
 	async mounted() {
+		document.body.appendChild(this.$el)
 		await this.$nextTick()
 		this.updateCookedComposerData()
 		await this.openModalSize()
@@ -301,6 +316,9 @@ export default {
 
 	beforeDestroy() {
 		window.removeEventListener('beforeunload', this.onBeforeUnload)
+		if (document.body.contains(this.$el)) {
+			document.body.removeChild(this.$el)
+		}
 	},
 
 	methods: {
@@ -680,7 +698,7 @@ $panel-max-height: calc(100vh - (var(--body-container-margin, 0px) + var(--defau
 	position: fixed;
 	bottom: $bottom-offset;
 	inset-inline-end: calc(var(--body-container-margin, 0px) + var(--default-grid-baseline));
-	z-index: 9999999;
+	z-index: 9001;
 
 	width: $composer-width;
 	max-width: calc(100vw - 2 * var(--default-grid-baseline));
@@ -698,8 +716,12 @@ $panel-max-height: calc(100vh - (var(--body-container-margin, 0px) + var(--defau
 	box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
 
 	&--maximized {
-		top: calc(var(--header-height, 44px) + var(--default-grid-baseline));
-		height: auto;
+		inset-inline-end: 10vw;
+		bottom: 10vh;
+		width: 80vw;
+		max-width: 80vw;
+		height: 80vh;
+		max-height: 80vh;
 	}
 
 	&--with-recipient {
@@ -709,12 +731,19 @@ $panel-max-height: calc(100vh - (var(--body-container-margin, 0px) + var(--defau
 	@media (max-width: #{$composer-width}) {
 		inset-inline-end: 0;
 		inset-inline-start: 0;
+		top: 0;
 		bottom: 0;
-		top: var(--header-height, 44px);
 		width: 100%;
-		height: calc(100% - var(--header-height, 44px));
-		max-height: calc(100% - var(--header-height, 44px));
+		max-width: 100%;
+		min-height: 0;
+		height: 100%;
+		max-height: 100%;
 		border-radius: 0;
+
+		.floating-composer__action--desktop-only,
+		.floating-composer__action--fullscreen-toggle {
+			display: none;
+		}
 	}
 }
 
