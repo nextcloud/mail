@@ -4,7 +4,7 @@
 -->
 
 <template>
-	<NcModal closeOnClickOutside @close="cancel">
+	<NcModal class="confirm-modal" :name="title" @close="cancel">
 		<div class="confirm-modal">
 			<h2>{{ title }}</h2>
 			<slot />
@@ -14,8 +14,8 @@
 				</NcButton>
 				<NcButton
 					:href="confirmUrl"
-					:rel="confirmUrl ? 'noopener noreferrer' : false"
-					:target="confirmUrl ? '_blank' : false"
+					:rel="confirmUrl ? 'noopener noreferrer' : undefined"
+					:target="confirmUrl ? '_blank' : undefined"
 					:disabled="disabled"
 					variant="primary"
 					@click="confirm">
