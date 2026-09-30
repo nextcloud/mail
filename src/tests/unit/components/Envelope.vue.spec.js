@@ -101,13 +101,9 @@ describe('Envelope', () => {
 		expect(view.vm.hasSeenAcl).toBe(true)
 	})
 	it('allows toggling archive action without ACLs', () => {
-<<<<<<< Updated upstream
 		store.accountsUnmapped[123].archiveMailboxId = '4'
 		store.mailboxes['4'] = { databaseId: '4', myAcls: undefined }
 
-=======
-		store.mailboxes[99] = { myAcls: undefined }
->>>>>>> Stashed changes
 		const view = shallowMount(Envelope, {
 			global: {
 				mixins: [Nextcloud],
@@ -133,13 +129,9 @@ describe('Envelope', () => {
 	})
 
 	it('source mailbox has te and archive mailbox has i ACLs for archiving', () => {
-<<<<<<< Updated upstream
 		store.accountsUnmapped[123].archiveMailboxId = '4'
 		store.mailboxes['4'] = { databaseId: '4', myAcls: 'i' }
 
-=======
-		store.mailboxes[99] = { myAcls: 'i' }
->>>>>>> Stashed changes
 		const view = shallowMount(Envelope, {
 			global: {
 				mixins: [Nextcloud],
@@ -165,13 +157,9 @@ describe('Envelope', () => {
 	})
 
 	it('source mailbox has te and archive mailbox has no ACLs for archiving', () => {
-<<<<<<< Updated upstream
 		store.accountsUnmapped[123].archiveMailboxId = '4'
 		store.mailboxes['4'] = { databaseId: '4', myAcls: undefined }
 
-=======
-		store.mailboxes[99] = { myAcls: undefined }
->>>>>>> Stashed changes
 		const view = shallowMount(Envelope, {
 			global: {
 				mixins: [Nextcloud],
@@ -197,13 +185,9 @@ describe('Envelope', () => {
 	})
 
 	it('source mailbox has no acls and archive mailbox has i ACL for archiving', () => {
-<<<<<<< Updated upstream
 		store.accountsUnmapped[123].archiveMailboxId = '4'
 		store.mailboxes['4'] = { databaseId: '4', myAcls: 'i' }
 
-=======
-		store.mailboxes[99] = { myAcls: 'i' }
->>>>>>> Stashed changes
 		const view = shallowMount(Envelope, {
 			global: {
 				mixins: [Nextcloud],

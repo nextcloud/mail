@@ -107,12 +107,7 @@ describe('TextEditor', () => {
 
 		wrapper.vm.onEditorInput('bonjour bonjour')
 
-<<<<<<< Updated upstream
 		expect(wrapper.emitted('update:modelValue')[0]).toEqual(['bonjour bonjour'])
-=======
-		expect(wrapper.emitted()['update:modelValue'][0]).toBeTruthy()
-		expect(wrapper.emitted()['update:modelValue'][0]).toEqual(['bonjour bonjour'])
->>>>>>> Stashed changes
 	})
 
 	it('emit event on ready', async () => {

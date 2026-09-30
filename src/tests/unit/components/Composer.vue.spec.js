@@ -176,12 +176,8 @@ describe('Composer', () => {
 	})
 
 	it('should S/MIME sign messages if there are certs', () => {
-<<<<<<< Updated upstream
 		store.smimeCertificates = [{ id: 1, emailAddress: 'test@example.com' }]
 
-=======
-		store.smimeCertificates = [{ id: 1 }]
->>>>>>> Stashed changes
 		const view = shallowMount(Composer, {
 			props: {
 				isFirstOpen: true,
@@ -239,12 +235,8 @@ describe('Composer', () => {
 	})
 
 	it('should not S/MIME encrypt messages if there are missing recipient certs', () => {
-<<<<<<< Updated upstream
 		store.smimeCertificates = [{ id: 1, emailAddress: 'test@example.com' }]
 
-=======
-		store.smimeCertificates = [{ id: 1 }]
->>>>>>> Stashed changes
 		const view = shallowMount(Composer, {
 			props: {
 				isFirstOpen: true,
@@ -280,12 +272,8 @@ describe('Composer', () => {
 	})
 
 	it('should S/MIME sign messages if there are certs', () => {
-<<<<<<< Updated upstream
 		store.smimeCertificates = [{ id: 1, emailAddress: 'test@example.com' }]
 
-=======
-		store.smimeCertificates = [{ id: 1 }]
->>>>>>> Stashed changes
 		const view = shallowMount(Composer, {
 			props: {
 				isFirstOpen: true,
@@ -575,11 +563,6 @@ describe('Composer', () => {
 				},
 			},
 		})
-<<<<<<< Updated upstream
-=======
-		const editorExecute = vi.fn()
-		view.getCurrentComponent().refs.editor = { editorExecute }
->>>>>>> Stashed changes
 		view.vm.selectedAlias = {
 			id: 123,
 			signature: '<p>Regards<img src="cid:logo"></p>',
@@ -619,11 +602,6 @@ describe('Composer', () => {
 				},
 			},
 		})
-<<<<<<< Updated upstream
-=======
-		const editorExecute = vi.fn()
-		view.getCurrentComponent().refs.editor = { editorExecute }
->>>>>>> Stashed changes
 		view.vm.selectedAlias = {
 			id: 123,
 			signature: '<p>Regards</p>',
