@@ -18,6 +18,7 @@ use OCA\Mail\Service\AutoConfig\IspDb;
 use OCA\Mail\Service\AutoConfig\MxRecord;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\Attribute\UserRateLimit;
 use OCP\IRequest;
@@ -42,11 +43,9 @@ class AutoConfigController extends Controller {
 	/**
 	 * @param string $email
 	 *
-	 * @NoAdminRequired
-	 * @UserRateThrottle(limit=5, period=60)
-	 *
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	#[UserRateLimit(limit: 5, period: 60)]
 	public function queryIspdb(string $host, string $email): JsonResponse {
@@ -62,11 +61,9 @@ class AutoConfigController extends Controller {
 	/**
 	 * @param string $email
 	 *
-	 * @NoAdminRequired
-	 * @UserRateThrottle(limit=5, period=60)
-	 *
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	#[UserRateLimit(limit: 5, period: 60)]
 	public function queryMx(string $email): JsonResponse {
@@ -84,11 +81,9 @@ class AutoConfigController extends Controller {
 	 * @param string $host
 	 * @param int $port
 	 *
-	 * @NoAdminRequired
-	 * @UserRateThrottle(limit=30, period=60)
-	 *
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	#[UserRateLimit(limit: 30, period: 60)]
 	public function testConnectivity(string $host, int $port): JsonResponse {

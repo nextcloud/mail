@@ -16,6 +16,8 @@ use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\Attribute\UserRateLimit;
 use OCP\AppFramework\Http\Response;
@@ -54,10 +56,6 @@ class ProxyController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 * @UserRateThrottle(limit=50, period=60)
-	 *
 	 * @param string $src
 	 *
 	 * TODO: Cache the proxied content to prevent unnecessary requests from the oC server
@@ -66,6 +64,8 @@ class ProxyController extends Controller {
 	 *
 	 * @return Response|ProxyDownloadResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	#[UserRateLimit(limit: 50, period: 60)]
 	public function proxy(string $src, ?int $id, ?string $hmac): Response {
 		// close the session to allow parallel downloads
