@@ -92,15 +92,16 @@ import IconRename from 'vue-material-design-icons/PencilOutline.vue'
 import AliasForm from './AliasForm.vue'
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
+import { sortAliases } from '../util/emailAddress.js'
 
 export default {
 	name: 'AliasSettings',
 	components: {
 		AliasForm,
-		NcButton,
-		NcLoadingIcon,
 		IconCheck,
 		IconRename,
+		NcButton,
+		NcLoadingIcon,
 	},
 
 	props: {
@@ -122,7 +123,7 @@ export default {
 	computed: {
 		...mapStores(useMainStore),
 		aliases() {
-			return this.account.aliases
+			return sortAliases(this.account.aliases)
 		},
 
 		accountAlias() {
@@ -136,6 +137,7 @@ export default {
 	},
 
 	methods: {
+
 		async createAlias() {
 			this.loading = true
 

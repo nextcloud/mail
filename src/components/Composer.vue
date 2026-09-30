@@ -583,7 +583,7 @@ import { findRecipient } from '../service/AutocompleteService.js'
 import { savePreference } from '../service/PreferenceService.js'
 import { EDITOR_MODE_HTML, EDITOR_MODE_TEXT } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
-import { parseEmailList } from '../util/emailAddress.js'
+import { parseEmailList, sortAliases } from '../util/emailAddress.js'
 import { formatDateTime } from '../util/formatDateTime.js'
 import { containsImage, detect, html, toHtml, toPlain } from '../util/text.js'
 import textBlockSvg from './../../img/text_snippet.svg'
@@ -853,7 +853,7 @@ export default {
 					smimeCertificateId: account.smimeCertificateId,
 					selectable: account.connectionStatus,
 				},
-				account.aliases.map((alias) => {
+				sortAliases(account.aliases).map((alias) => {
 					return {
 						id: account.id,
 						aliasId: alias.id,

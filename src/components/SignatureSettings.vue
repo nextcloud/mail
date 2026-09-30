@@ -70,6 +70,7 @@ import TextEditor from './TextEditor.vue'
 import logger from '../logger.js'
 import { EDITOR_MODE_HTML } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
+import { sortAliases } from '../util/emailAddress.js'
 import { containsImage, detect, toHtml } from '../util/text.js'
 
 export default {
@@ -107,7 +108,7 @@ export default {
 	computed: {
 		...mapStores(useMainStore),
 		identities() {
-			const identities = this.account.aliases.map((alias) => {
+			const identities = sortAliases(this.account.aliases).map((alias) => {
 				return {
 					id: alias.id,
 					label: alias.name + ' (' + alias.alias + ')',
