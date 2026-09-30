@@ -206,6 +206,16 @@ class MessagesControllerTest extends TestCase {
 		$this->attachment = $this->createMock(Attachment::class);
 	}
 
+	public function testCalendarEventAttachmentDetection(): void {
+		$method = new \ReflectionMethod(MessagesController::class, 'attachmentIsCalendarEvent');
+
+		$this->assertTrue($method->invoke($this->controller, ['mime' => 'text/calendar', 'fileName' => 'event.bin']));
+		$this->assertTrue($method->invoke($this->controller, ['mime' => 'application/ics', 'fileName' => 'event.bin']));
+		$this->assertTrue($method->invoke($this->controller, ['mime' => 'application/octet-stream', 'fileName' => 'event.ICS']));
+		$this->assertFalse($method->invoke($this->controller, ['mime' => 'application/octet-stream', 'fileName' => 'event.txt']));
+		$this->assertFalse($method->invoke($this->controller, ['mime' => 'text/plain', 'fileName' => 'event.ics']));
+	}
+
 	private function assertCachedFor(Response $response, int $seconds): void {
 		$headers = $response->getHeaders();
 

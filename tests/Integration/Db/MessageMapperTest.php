@@ -208,6 +208,65 @@ class MessageMapperTest extends TestCase {
 		self::assertEquals([3,2,1], $result);
 	}
 
+	public function testFindIdsByQueryRestrictedToIds(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$qb = $this->db->getQueryBuilder();
+
+		$values = [
+			[
+				'id' => 1,
+				'uid' => $qb->createNamedParameter(267, IQueryBuilder::PARAM_INT),
+				'message_id' => $qb->createNamedParameter('<abc@123.com>'),
+				'mailbox_id' => $qb->createNamedParameter(1, IQueryBuilder::PARAM_INT),
+				'subject' => $qb->createNamedParameter('needle'),
+				'sent_at' => $qb->createNamedParameter(1641216000, IQueryBuilder::PARAM_INT),
+			],
+			[
+				'id' => 2,
+				'uid' => $qb->createNamedParameter(268, IQueryBuilder::PARAM_INT),
+				'message_id' => $qb->createNamedParameter('<def@456.com>'),
+				'mailbox_id' => $qb->createNamedParameter(1, IQueryBuilder::PARAM_INT),
+				'subject' => $qb->createNamedParameter('needle'),
+				'sent_at' => $qb->createNamedParameter(1641216001, IQueryBuilder::PARAM_INT),
+			],
+			[
+				'id' => 3,
+				'uid' => $qb->createNamedParameter(269, IQueryBuilder::PARAM_INT),
+				'message_id' => $qb->createNamedParameter('<ghi@789.com>'),
+				'mailbox_id' => $qb->createNamedParameter(1, IQueryBuilder::PARAM_INT),
+				'subject' => $qb->createNamedParameter('unrelated'),
+				'sent_at' => $qb->createNamedParameter(1641216003, IQueryBuilder::PARAM_INT),
+			],
+		];
+
+		foreach ($values as $value) {
+			$qb->insert($this->mapper->getTableName())->values($value)->executeStatement();
+		}
+
+		$searchQuery = new SearchQuery();
+		$searchQuery->setMatch('anyof');
+		$searchQuery->addSubject('needle');
+
+		$result = $this->mapper->findIdsByQuery($mailbox, $searchQuery, 'DESC', null, null, [2, 3]);
+
+		self::assertEquals([2], $result);
+	}
+
+	public function testFindIdsByQueryRestrictedToNoIds(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$this->insertMessage(267, 1);
+
+		$searchQuery = new SearchQuery();
+		$searchQuery->setMatch('anyof');
+		$searchQuery->addSubject('TEST');
+
+		$result = $this->mapper->findIdsByQuery($mailbox, $searchQuery, 'DESC', null, null, []);
+
+		self::assertEquals([], $result);
+	}
+
 	public function testDeleteByUid(): void {
 		$mailbox = new Mailbox();
 		$mailbox->setId(1);

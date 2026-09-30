@@ -103,7 +103,7 @@ jobs:
       env:
         XDEBUG_MODE: ${{ matrix.coverage && 'coverage' || 'off' }}
     - name: Report coverage
-      uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+      uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
       if: ${{ !cancelled() && matrix.coverage }}
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
@@ -274,7 +274,7 @@ jobs:
             if: ${{ always() }}
             run: cat nextcloud/data/mail-*-*-imap.log
           - name: Report coverage
-            uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+            uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
             if: ${{ !cancelled() && matrix.coverage }}
             with:
               token: ${{ secrets.CODECOV_TOKEN }}
@@ -297,7 +297,7 @@ jobs:
               fallbackNode: '^14'
               fallbackNpm: '^7'
           - name: Set up node ${{ steps.versions.outputs.nodeVersion }}
-            uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+            uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
             with:
               node-version: ${{ steps.versions.outputs.nodeVersion }}
           - name: Set up npm ${{ steps.versions.outputs.npmVersion }}
@@ -321,7 +321,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Get version matrix
         id: versions
-        uses: icewind1991/nextcloud-version-matrix@8a7bac6300b2f0f3100088b297995a229558ddba # v1.3.2
+        uses: icewind1991/nextcloud-version-matrix@cd0211ffcef1065e2020cd579e4843b8746e7a58 # v1.3.3
 
   frontend-e2e-tests:
     runs-on: ubuntu-latest
@@ -354,7 +354,7 @@ jobs:
       - name: Install the app
         run: php -f nextcloud/occ app:enable mail --force
       - name: Set up node ${{ env.E2E_NODE_VERSION }}
-        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: ${{ env.E2E_NODE_VERSION }}
       - name: Install npm dependencies
@@ -400,10 +400,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Send empty Codecov upload so required coverage checks pass
-        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           run_command: empty-upload
+          force: true
 
   summary:
     runs-on: ubuntu-latest-low
