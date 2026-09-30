@@ -221,7 +221,11 @@ export default {
 	},
 
 	unmounted() {
+<<<<<<< Updated upstream
 		this.bus.off('loadMore', this.onScroll)
+=======
+		this.bus.off('load-more', this.onScroll)
+>>>>>>> Stashed changes
 		this.bus.off('delete', this.onDelete)
 		this.bus.off('archive', this.onArchive)
 		this.bus.off('shortcut', this.handleShortcut)

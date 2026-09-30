@@ -8,6 +8,11 @@
 import { readFileSync } from 'fs'
 import { join } from 'path'
 import { vi } from 'vitest'
+import { config } from '@vue/test-utils'
+
+// Stubs should render their default slot — this matches Vue Test Utils v1 behaviour
+// and is required for tests that assert on text inside stubbed component slots.
+config.global.renderStubDefaultSlot = true
 
 global.appName = 'mail'
 

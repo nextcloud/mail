@@ -333,7 +333,11 @@ describe('Thread', () => {
 					},
 				},
 			})
+<<<<<<< Updated upstream
 			setEnvelopeRefs(view, view.vm.thread.map((envelope) => ({
+=======
+			view.getCurrentComponent().refs.envelopeRefs = view.vm.thread.map((envelope) => ({
+>>>>>>> Stashed changes
 				envelope,
 				$el: document.createElement('div'),
 			})))
@@ -415,7 +419,11 @@ describe('Thread', () => {
 
 		it('gives every message a shadow root of its own so they cannot restyle each other', () => {
 			const view = mountThread()
+<<<<<<< Updated upstream
 			setEnvelopeRefs(view, [
+=======
+			view.getCurrentComponent().refs.envelopeRefs = [
+>>>>>>> Stashed changes
 				renderedMessage(1001, 'red', 'first'),
 				renderedMessage(1002, 'blue', 'second'),
 				{ envelope: { databaseId: 1003 }, $el: document.createElement('div') },
@@ -434,7 +442,11 @@ describe('Thread', () => {
 
 		it('prints the messages as part of the document, so they follow whatever paper is picked', () => {
 			const view = mountThread()
+<<<<<<< Updated upstream
 			setEnvelopeRefs(view, [renderedMessage(1001, 'red', 'first')])
+=======
+			view.getCurrentComponent().refs.envelopeRefs = [renderedMessage(1001, 'red', 'first')]
+>>>>>>> Stashed changes
 
 			view.vm.appendPrintMessage(parent, 0)
 
@@ -444,7 +456,11 @@ describe('Thread', () => {
 
 		it('keeps the header out of reach of the message styles', () => {
 			const view = mountThread()
+<<<<<<< Updated upstream
 			setEnvelopeRefs(view, [renderedMessage(1001, 'red', 'first')])
+=======
+			view.getCurrentComponent().refs.envelopeRefs = [renderedMessage(1001, 'red', 'first')]
+>>>>>>> Stashed changes
 
 			view.vm.appendPrintMessage(parent, 0)
 
@@ -455,7 +471,11 @@ describe('Thread', () => {
 
 		it('keeps the messages own styles out of the print document', () => {
 			const view = mountThread()
+<<<<<<< Updated upstream
 			setEnvelopeRefs(view, [renderedMessage(1001, 'red', 'first')])
+=======
+			view.getCurrentComponent().refs.envelopeRefs = [renderedMessage(1001, 'red', 'first')]
+>>>>>>> Stashed changes
 
 			view.vm.appendPrintMessage(parent, 0)
 
@@ -464,7 +484,11 @@ describe('Thread', () => {
 
 		it('renders a plain text message the same way, so both kinds print alike', () => {
 			const view = mountThread()
+<<<<<<< Updated upstream
 			setEnvelopeRefs(view, [
+=======
+			view.getCurrentComponent().refs.envelopeRefs = [
+>>>>>>> Stashed changes
 				renderedPlainTextMessage(1001, 'plain'),
 				renderedMessage(1002, 'blue', 'html'),
 			])
@@ -484,7 +508,11 @@ describe('Thread', () => {
 			const iframe = document.createElement('iframe')
 			el.appendChild(iframe)
 			Object.defineProperty(iframe, 'contentDocument', { value: null })
+<<<<<<< Updated upstream
 			setEnvelopeRefs(view, [
+=======
+			view.getCurrentComponent().refs.envelopeRefs = [
+>>>>>>> Stashed changes
 				{ envelope: { databaseId: 1001 }, $el: el },
 				renderedMessage(1002, 'blue', 'second'),
 			])
@@ -501,7 +529,11 @@ describe('Thread', () => {
 
 		it('pairs a message with its own body, whatever order the refs came in', () => {
 			const view = mountThread()
+<<<<<<< Updated upstream
 			setEnvelopeRefs(view, [
+=======
+			view.getCurrentComponent().refs.envelopeRefs = [
+>>>>>>> Stashed changes
 				renderedMessage(1002, 'blue', 'second'),
 				{ envelope: { databaseId: 1003 }, $el: document.createElement('div') },
 				renderedMessage(1001, 'red', 'first'),
@@ -537,7 +569,11 @@ describe('Thread', () => {
 					},
 				},
 			})
+<<<<<<< Updated upstream
 			setEnvelopeRefs(view, view.vm.thread.map((envelope) => ({
+=======
+			view.getCurrentComponent().refs.envelopeRefs = view.vm.thread.map((envelope) => ({
+>>>>>>> Stashed changes
 				envelope,
 				printable,
 				$el: document.createElement('div'),
@@ -649,7 +685,11 @@ describe('Thread', () => {
 
 		it('never copies a message into the app document', () => {
 			const view = mountThread()
+<<<<<<< Updated upstream
 			setEnvelopeRefs(view, view.vm.thread.map((envelope) => ({
+=======
+			view.getCurrentComponent().refs.envelopeRefs = view.vm.thread.map((envelope) => ({
+>>>>>>> Stashed changes
 				envelope,
 				$el: document.createElement('div'),
 			})))
