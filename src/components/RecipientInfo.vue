@@ -9,11 +9,11 @@
 			<div class="recipient-info__header">
 				<div class="recipient-info__avatar">
 					<Avatar
-						:display-name="recipients[0].label"
+						:displayName="recipients[0].label"
 						:email="recipients[0].email"
 						:size="55"
-						:disable-tooltip="true"
-						:disable-menu="true"
+						:disableTooltip="true"
+						:disableMenu="true"
 						:avatar="getAvatarForRecipient(recipients[0])" />
 				</div>
 				<div class="recipient-info__contact">
@@ -44,11 +44,11 @@
 				<div class="recipient-info__header">
 					<div class="recipient-info__avatar recipient-info__avatar--small">
 						<Avatar
-							:display-name="recipient.label"
+							:displayName="recipient.label"
 							:email="recipient.email"
 							:size="36"
-							:disable-tooltip="true"
-							:disable-menu="true"
+							:disableTooltip="true"
+							:disableMenu="true"
 							:avatar="getAvatarForRecipient(recipient)" />
 					</div>
 					<div class="recipient-info__contact">
@@ -70,8 +70,8 @@
 
 <script>
 import { t } from '@nextcloud/l10n'
-import { NcButton } from '@nextcloud/vue'
 import { mapGetters } from 'pinia'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import IconArrowDown from 'vue-material-design-icons/ArrowDown.vue'
 import IconArrowUp from 'vue-material-design-icons/ArrowUp.vue'
 import Avatar from './Avatar.vue'
@@ -108,7 +108,7 @@ export default {
 				const current = this.expandedRecipients.length
 				if (next > current) {
 					for (let i = current; i < next; i++) {
-						this.$set(this.expandedRecipients, i, false)
+						this.expandedRecipients[i] = false
 					}
 				} else if (next < current) {
 					this.expandedRecipients = this.expandedRecipients.slice(0, next)
@@ -119,7 +119,7 @@ export default {
 
 	methods: {
 		toggleExpand(index) {
-			this.$set(this.expandedRecipients, index, !this.expandedRecipients[index])
+			this.expandedRecipients[index] = !this.expandedRecipients[index]
 		},
 
 		isExpanded(index) {

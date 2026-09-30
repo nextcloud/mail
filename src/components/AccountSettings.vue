@@ -7,15 +7,15 @@
 	<NcAppSettingsDialog
 		id="app-settings-dialog"
 		:open="open"
-		:show-navigation="true"
-		:additional-trap-elements="trapElements"
+		:showNavigation="true"
+		:additionalTrapElements="trapElements"
 		:name="t('mail', 'Account settings')"
 		@update:open="onClose">
 		<NcAppSettingsSection
 			id="alias-settings"
 			key="alias-settings"
 			:name="t('mail', 'Aliases')">
-			<AliasSettings :account="account" @rename-primary-alias="scrollToAccountSettings" />
+			<AliasSettings :account="account" @renamePrimaryAlias="scrollToAccountSettings" />
 		</NcAppSettingsSection>
 		<NcAppSettingsSection
 			id="certificate-settings"
@@ -74,9 +74,9 @@
 			:name="t('mail', 'Classification settings')">
 			<NcCheckboxRadioSwitch
 				id="auto-classification-enabled"
-				:model-value="account.classificationEnabled"
+				:modelValue="account.classificationEnabled"
 				:disabled="loadingClassificationToggle"
-				@update:checked="onToggleClassification">
+				@update:modelValue="onToggleClassification">
 				{{ t('mail', 'Enable mark as important classification') }}
 			</NcCheckboxRadioSwitch>
 		</NcAppSettingsSection>
@@ -114,7 +114,7 @@
 				<AccountForm
 					:key="account.accountId"
 					ref="accountForm"
-					:display-name="displayName"
+					:displayName="displayName"
 					:email="email"
 					:account="account" />
 			</div>
@@ -147,8 +147,10 @@
 </template>
 
 <script>
-import { NcAppSettingsDialog, NcAppSettingsSection, NcCheckboxRadioSwitch } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcAppSettingsDialog from '@nextcloud/vue/components/NcAppSettingsDialog'
+import NcAppSettingsSection from '@nextcloud/vue/components/NcAppSettingsSection'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import AccountDefaultsSettings from '../components/AccountDefaultsSettings.vue'
 import AccountForm from '../components/AccountForm.vue'
 import AliasSettings from '../components/AliasSettings.vue'
@@ -213,6 +215,8 @@ export default {
 		},
 	},
 
+	emits: ['close'],
+
 	data() {
 		return {
 			trapElements: [],
@@ -276,35 +280,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.alias-item {
-	display: flex;
-	justify-content: space-between;
-}
-
-.button.icon-rename {
-	background-image: var(--icon-rename-000);
-	background-color: var(--color-main-background);
-	border: none;
-	opacity: 0.7;
-	&:hover,
-	&:focus {
-		opacity: 1;
-	}
-}
-
 .settings-hint {
 	margin-top: calc(var(--default-grid-baseline) * -3);
 	margin-bottom: calc(var(--default-grid-baseline) * 2);
 	color: var(--color-text-maxcontrast);
-}
-
-h2 {
-	font-weight: bold;
-	font-size: 20px;
-	margin-bottom: calc(var(--default-grid-baseline) * 3);
-	margin-inline-start: calc(var(--default-grid-baseline) * -7);
-	line-height: calc(var(--default-grid-baseline) * 7);
-	color: var(--color-text-light);
 }
 
 .app-settings-section {

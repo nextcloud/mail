@@ -9,13 +9,13 @@
 			:sender="sender"
 			:domain="domain"
 			@show="displayIframe"
-			@trust-sender="onShowBlockedContent"
-			@trust-domain="onShowBlockedContentForDomain" />
+			@trustSender="onShowBlockedContent"
+			@trustDomain="onShowBlockedContentForDomain" />
 		<div class="html-message-body__content">
 			<MdnRequest :message="message" />
 			<NeedsTranslationInfo
 				v-if="detectedForeignLanguage"
-				:is-html="true"
+				:isHtml="true"
 				@translate="$emit('translate', detectedForeignLanguage)" />
 			<div id="message-container" :class="{ scroll: !fullHeight }">
 				<!-- allow-scripts: the server-injected iframe-resizer child must run to size the frame to its content.
@@ -70,6 +70,8 @@ export default {
 		},
 	},
 
+	emits: ['translate', 'load', 'printShortcut'],
+
 	data() {
 		return {
 			hasBlockedContent: false,
@@ -98,7 +100,7 @@ export default {
 		this.detectedForeignLanguage = await detectForeignLanguage(this.message.body ?? '')
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		// The frame's document goes away with the frame, so this is housekeeping
 		// rather than a fix for a leak. It is done because the listener is added
 		// to a document this component does not own: nothing guarantees the frame
@@ -144,7 +146,7 @@ export default {
 				return
 			}
 			event.preventDefault()
-			this.$emit('print-shortcut')
+			this.$emit('printShortcut')
 		},
 
 		displayIframe() {

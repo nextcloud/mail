@@ -11,14 +11,14 @@
 				<AliasForm
 					:account="account"
 					:alias="accountAlias"
-					:enable-update="false"
-					:enable-delete="false">
+					:enableUpdate="false"
+					:enableDelete="false">
 					<NcButton
 						v-if="!account.provisioningId"
 						variant="tertiary-no-background"
 						:aria-label="t('mail', 'Go back')"
 						:name="t('mail', 'Change name')"
-						@click="$emit('rename-primary-alias')">
+						@click="$emit('renamePrimaryAlias')">
 						<template #icon>
 							<IconRename :size="20" />
 						</template>
@@ -31,8 +31,8 @@
 				<AliasForm
 					:account="account"
 					:alias="alias"
-					:on-update-alias="updateAlias"
-					:on-delete="deleteAlias" />
+					:onUpdateAlias="updateAlias"
+					:onDelete="deleteAlias" />
 			</li>
 
 			<li v-if="showForm">
@@ -85,8 +85,9 @@
 </template>
 
 <script>
-import { NcButton, NcLoadingIcon } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import IconRename from 'vue-material-design-icons/PencilOutline.vue'
 import AliasForm from './AliasForm.vue'
@@ -109,6 +110,8 @@ export default {
 			required: true,
 		},
 	},
+
+	emits: ['renamePrimaryAlias'],
 
 	data() {
 		return {

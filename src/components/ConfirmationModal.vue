@@ -4,7 +4,7 @@
 -->
 
 <template>
-	<NcModal class="confirm-modal" @close="cancel">
+	<NcModal closeOnClickOutside @close="cancel">
 		<div class="confirm-modal">
 			<h2>{{ title }}</h2>
 			<slot />
@@ -29,7 +29,8 @@
 <script>
 
 import { t } from '@nextcloud/l10n'
-import { NcButton, NcModal } from '@nextcloud/vue'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcModal from '@nextcloud/vue/components/NcModal'
 
 export default {
 	name: 'ConfirmationModal',
@@ -59,6 +60,8 @@ export default {
 			default: false,
 		},
 	},
+
+	emits: ['confirm', 'cancel'],
 
 	methods: {
 		confirm() {

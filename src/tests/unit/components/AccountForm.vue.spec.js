@@ -3,17 +3,13 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { createPinia, PiniaVuePlugin } from 'pinia'
+import { shallowMount } from '@vue/test-utils'
+import { createPinia } from 'pinia'
 import AccountForm from '../../../components/AccountForm.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 import { queryIspdb, queryMx, testConnectivity } from '../../../service/AutoConfigService.js'
 import useMainStore from '../../../store/mainStore.js'
 
-const localVue = createLocalVue()
-
-localVue.mixin(Nextcloud)
-localVue.use(PiniaVuePlugin)
 const pinia = createPinia()
 
 vi.mock('../../../service/AutoConfigService.js')
@@ -27,14 +23,15 @@ describe('AccountForm', () => {
 		save = vi.fn()
 
 		view = shallowMount(AccountForm, {
-			propsData: {
+			props: {
 				displayName: 'Tom Turbo',
 				email: 'tom@tom.turbo',
 				save,
 			},
-			localVue,
-			pinia,
-			store,
+			global: {
+				mixins: [Nextcloud],
+				plugins: [pinia],
+			},
 		})
 
 		store = useMainStore()
@@ -105,7 +102,7 @@ describe('AccountForm', () => {
 
 		expect(queryIspdb).toHaveBeenCalled()
 		expect(queryMx).toHaveBeenCalled()
-		expect(testConnectivity).toHaveBeenCalledTimes(8)
+		expect(testConnectivity).toHaveBeenCalledTimes(4)
 		expect(detected).toBe(true)
 		expect(view.vm.manualConfig.imapUser).toBe('tom@tom.turbo')
 		expect(view.vm.manualConfig.imapHost).toBe('mx.tom.turbo')

@@ -14,7 +14,8 @@
 </template>
 
 <script>
-import { NcButton, NcNoteCard } from '@nextcloud/vue'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 
 export default {
 	name: 'SieveDisabledHint',

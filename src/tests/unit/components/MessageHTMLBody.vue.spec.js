@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import BlockedContentWarning from '../../../components/BlockedContentWarning.vue'
 import MessageHTMLBody from '../../../components/MessageHTMLBody.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
@@ -14,16 +14,15 @@ vi.mock('@nextcloud/initial-state', () => ({ loadState: vi.fn().mockReturnValue(
 vi.mock('../../../util/languageDetection.ts', () => ({ detectForeignLanguage: vi.fn().mockResolvedValue(null) }))
 vi.mock('../../../service/TrustedSenderService.js', () => ({ trustSender: vi.fn() }))
 
-const localVue = createLocalVue()
-
-localVue.mixin(Nextcloud)
-
 describe('MessageHTMLBody', () => {
 	// Attached, because only an iframe that is part of a document has a
 	// `contentDocument` to listen on.
 	const mountBody = () => shallowMount(MessageHTMLBody, {
 		attachTo: document.body,
-		propsData: {
+		global: {
+			mixins: [Nextcloud],
+		},
+		props: {
 			url: 'https://cloud.example.com/apps/mail/api/messages/1/html',
 			message: {
 				databaseId: 1,
@@ -31,7 +30,6 @@ describe('MessageHTMLBody', () => {
 				isSenderTrusted: false,
 			},
 		},
-		localVue,
 	})
 
 	const keydown = (key, modifiers = { ctrlKey: true }) => new KeyboardEvent('keydown', {
@@ -92,7 +90,7 @@ describe('MessageHTMLBody', () => {
 			loadFrameWithBlockedImage(view)
 			await view.vm.$nextTick()
 
-			view.findComponent(BlockedContentWarning).vm.$emit('trust-sender')
+			view.findComponent(BlockedContentWarning).vm.$emit('trustSender')
 			await view.vm.$nextTick()
 
 			expect(trustSender).toHaveBeenCalledWith('alice@example.com', 'individual', true)
@@ -104,7 +102,7 @@ describe('MessageHTMLBody', () => {
 			loadFrameWithBlockedImage(view)
 			await view.vm.$nextTick()
 
-			view.findComponent(BlockedContentWarning).vm.$emit('trust-domain')
+			view.findComponent(BlockedContentWarning).vm.$emit('trustDomain')
 			await view.vm.$nextTick()
 
 			expect(trustSender).toHaveBeenCalledWith('example.com', 'domain', true)
@@ -131,7 +129,7 @@ describe('MessageHTMLBody', () => {
 			const event = keydown('p')
 			view.vm.getIframeDoc().dispatchEvent(event)
 
-			expect(view.emitted('print-shortcut')).toHaveLength(1)
+			expect(view.emitted('printShortcut')).toHaveLength(1)
 		})
 
 		it('keeps the browser from printing the page itself', () => {
@@ -151,7 +149,7 @@ describe('MessageHTMLBody', () => {
 			const event = keydown('a')
 			view.vm.getIframeDoc().dispatchEvent(event)
 
-			expect(view.emitted('print-shortcut')).toBeUndefined()
+			expect(view.emitted('printShortcut')).toBeUndefined()
 			expect(event.defaultPrevented).toBe(false)
 		})
 
@@ -162,7 +160,7 @@ describe('MessageHTMLBody', () => {
 
 			view.vm.getIframeDoc().dispatchEvent(keydown('p'))
 
-			expect(view.emitted('print-shortcut')).toHaveLength(1)
+			expect(view.emitted('printShortcut')).toHaveLength(1)
 		})
 
 		it('stops listening once the message is gone', () => {
@@ -171,10 +169,10 @@ describe('MessageHTMLBody', () => {
 			const doc = view.vm.getIframeDoc()
 			view.vm.$refs.iframe.iFrameResizer = { close: vi.fn() }
 
-			view.destroy()
+			view.unmount()
 			doc.dispatchEvent(keydown('p'))
 
-			expect(view.emitted('print-shortcut')).toBeUndefined()
+			expect(view.emitted('printShortcut')).toBeUndefined()
 		})
 	})
 })
