@@ -3,7 +3,62 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { getLabelAndAddress, parseEmailList, sortAliases } from '../../../util/emailAddress.js'
+import { getLabelAndAddress, isCompatibleAliasDomain, parseEmailList, sortAliases } from '../../../util/emailAddress.js'
+
+describe('isCompatibleAliasDomain', () => {
+	const accountWithDomains = {
+		emailAddress: 'aaron@gryzia.de',
+		aliasDomains: 'sarondra.gryzia.de, aaron.gryzia.de',
+		aliases: [
+			{ alias: 'info@solero.quietmail.eu' },
+		],
+	}
+
+	const accountEmptyDomains = {
+		emailAddress: 'aaron@gryzia.de',
+		aliases: [
+			{ alias: 'info@solero.quietmail.eu' },
+		],
+	}
+
+	it('allows configured alias domains and their subdomains', () => {
+		expect(isCompatibleAliasDomain('nek-adhs-pkh@sarondra.gryzia.de', accountWithDomains)).toBe(true)
+		expect(isCompatibleAliasDomain('test@aaron.gryzia.de', accountWithDomains)).toBe(true)
+		expect(isCompatibleAliasDomain('deep.sub@sarondra.gryzia.de', accountWithDomains)).toBe(true)
+	})
+
+	it('rejects domains not in allowed alias domains list even if in existing aliases', () => {
+		expect(isCompatibleAliasDomain('newreleases-g6f@solero.quietmail.eu', accountWithDomains)).toBe(false)
+		expect(isCompatibleAliasDomain('other@solero.quietmail.eu', accountWithDomains)).toBe(false)
+	})
+
+	it('returns false when no aliasDomains are configured', () => {
+		expect(isCompatibleAliasDomain('nek-adhs-pkh@sarondra.gryzia.de', accountEmptyDomains)).toBe(false)
+		expect(isCompatibleAliasDomain('newreleases-g6f@solero.quietmail.eu', accountEmptyDomains)).toBe(false)
+	})
+
+	it('rejects unrelated third-party domains', () => {
+		expect(isCompatibleAliasDomain('contact@microsoft.com', accountWithDomains)).toBe(false)
+		expect(isCompatibleAliasDomain('info@apple.com', accountWithDomains)).toBe(false)
+		expect(isCompatibleAliasDomain('user@gmail.com', accountWithDomains)).toBe(false)
+	})
+
+	it('normalizes domains with leading @, email syntax, or dots', () => {
+		const accountWithMessyDomains = {
+			emailAddress: 'user@example.com',
+			aliasDomains: ['@clean.com', 'admin@mail.org', '.dotted.net.'],
+		}
+		expect(isCompatibleAliasDomain('alias@clean.com', accountWithMessyDomains)).toBe(true)
+		expect(isCompatibleAliasDomain('alias@mail.org', accountWithMessyDomains)).toBe(true)
+		expect(isCompatibleAliasDomain('alias@dotted.net', accountWithMessyDomains)).toBe(true)
+	})
+
+	it('returns false for invalid inputs', () => {
+		expect(isCompatibleAliasDomain(null, accountWithDomains)).toBe(false)
+		expect(isCompatibleAliasDomain('invalid-email', accountWithDomains)).toBe(false)
+		expect(isCompatibleAliasDomain('test@gryzia.de', null)).toBe(false)
+	})
+})
 
 describe('getLabelAndAddress', () => {
 	it('parses a plain email address', () => {

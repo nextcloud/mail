@@ -132,6 +132,70 @@ export function parseEmailList(str) {
 }
 
 /**
+ * Check if a target email address can be added as an alias to the given account.
+ * Quick alias addition is strictly allowed only for domains explicitly configured
+ * in account.aliasDomains (or their subdomains).
+ *
+ * @param {string} targetEmail The target email address
+ * @param {object} account The active mail account (with optional aliasDomains)
+ * @return {boolean} True if the target email belongs to a compatible domain/subdomain
+ */
+export function isCompatibleAliasDomain(targetEmail, account) {
+	if (!targetEmail || !account) {
+		return false
+	}
+
+	const cleanTarget = targetEmail.trim().toLowerCase()
+	const targetAt = cleanTarget.lastIndexOf('@')
+	if (targetAt === -1) {
+		return false
+	}
+	const targetDomain = cleanTarget.slice(targetAt + 1)
+	if (!targetDomain) {
+		return false
+	}
+
+	// Parse explicitly configured alias domains (string or array)
+	let rawDomains = account.aliasDomains
+	if (typeof rawDomains === 'string') {
+		rawDomains = rawDomains.split(/[,;\s]+/).map((d) => d.trim().toLowerCase()).filter(Boolean)
+	}
+
+	const allowedDomains = new Set()
+	if (Array.isArray(rawDomains)) {
+		rawDomains.forEach((dom) => {
+			let cleanDom = dom.trim().toLowerCase()
+			const atIdx = cleanDom.lastIndexOf('@')
+			if (atIdx !== -1) {
+				cleanDom = cleanDom.slice(atIdx + 1)
+			}
+			cleanDom = cleanDom.replace(/^\.+|\.+$/g, '').trim()
+			if (cleanDom) {
+				allowedDomains.add(cleanDom)
+			}
+		})
+	}
+
+	// If no alias domains are explicitly configured, do not offer quick alias creation
+	if (allowedDomains.size === 0) {
+		return false
+	}
+
+	for (const accDomain of allowedDomains) {
+		// Exact match
+		if (targetDomain === accDomain) {
+			return true
+		}
+		// Target is a subdomain of allowed domain (e.g. nek-adhs-pkh@sarondra.gryzia.de for sarondra.gryzia.de or gryzia.de)
+		if (targetDomain.endsWith('.' + accDomain)) {
+			return true
+		}
+	}
+
+	return false
+}
+
+/**
  * Sort a list of alias objects or email addresses:
  * First by domain/host (case-insensitive), then alphabetically by local part / username.
  *

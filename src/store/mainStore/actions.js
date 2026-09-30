@@ -1957,6 +1957,9 @@ export default function mainStoreActions() {
 				newAccountSettings[key] = value
 				this.allAccountSettings.push(newAccountSettings)
 			}
+			if (this.accountsUnmapped[accountId]) {
+				Vue.set(this.accountsUnmapped[accountId], key, value)
+			}
 		},
 		addMailboxMutation({
 			account,
