@@ -159,6 +159,7 @@ OC.L10N.register(
     "Refresh" : "Оновити",
     "About" : "Про сервіс",
     "This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2." : "До складу цієї програми входить CKEditor, редактор з відкритим вихідним кодом. Авторське право належить авторам CKEditor. Поширюється за ліцензією GPLv2.",
+    "_After %n second_::_After %n seconds_" : ["Через %n секунду","Через %n секунди","Через %n секунд","Через %n секунд"],
     "The images have been blocked to protect your privacy." : "Зображення не показуються з міркувань безпеки.",
     "Show images" : "Показати зображення",
     "Show images temporarily" : "Показати зображення цього разу",
