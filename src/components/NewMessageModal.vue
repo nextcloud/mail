@@ -185,6 +185,7 @@ import { deleteDraft, saveDraft, updateDraft } from '../service/DraftService.js'
 import { UNDO_DELAY } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
 import useOutboxStore from '../store/outboxStore.js'
+import { embedBlobImages } from '../util/blobImages.js'
 import { messageBodyToTextInstance } from '../util/message.js'
 import { toPlain } from '../util/text.js'
 
@@ -367,7 +368,7 @@ export default {
 				this.draftSaved = false
 				try {
 					let idToReturn
-					const dataForServer = this.getDataForServer(data, true)
+					const dataForServer = await this.getDataForServer(data, true)
 					if (!id) {
 						if (dataForServer.draftId) {
 							this.mainStore.removeEnvelopeMutation({ id: dataForServer.draftId })
@@ -420,7 +421,7 @@ export default {
 			return this.draftsPromise
 		},
 
-		getDataForServer(data) {
+		async getDataForServer(data) {
 			const dataForServer = {
 				...data,
 				id: data.id,
@@ -437,6 +438,7 @@ export default {
 
 			if (data.isHtml) {
 				delete dataForServer.bodyPlain
+				dataForServer.bodyHtml = await embedBlobImages(data.bodyHtml)
 			} else {
 				delete dataForServer.bodyHtml
 			}
@@ -470,7 +472,7 @@ export default {
 						attachment.type = 'local'
 					}
 				}
-				const dataForServer = this.getDataForServer({
+				const dataForServer = await this.getDataForServer({
 					...data,
 					id: await this.draftsPromise,
 					sendAt: data.sendAt ? data.sendAt : Math.floor((now + UNDO_DELAY) / 1000),
