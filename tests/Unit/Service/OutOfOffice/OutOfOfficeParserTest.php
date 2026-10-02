@@ -184,4 +184,73 @@ class OutOfOfficeParserTest extends TestCase {
 		);
 		self::assertEquals($expected, $actual);
 	}
+
+	public function testBuildEnabledResponderWithForwardTo(): void {
+		$script = file_get_contents(__DIR__ . '/../../../data/sieve-vacation-cleaned.sieve');
+		$expected = file_get_contents(__DIR__ . '/../../../data/sieve-vacation-on-forward-to.sieve');
+
+		$actual = $this->outOfOfficeParser->buildSieveScript(
+			new OutOfOfficeState(
+				true,
+				new DateTimeImmutable('2022-09-02T00:00:00+0100'),
+				new DateTimeImmutable('2022-09-08T23:59:00+0100'),
+				'On vacation',
+				"I'm on vacation.",
+				'forward@example.org',
+			),
+			$script,
+			['Test Test <test@test.org>', 'Test Alias <alias@test.org>'],
+		);
+		self::assertEquals($expected, $actual);
+	}
+
+	public function testParseForwardToState(): void {
+		$script = file_get_contents(__DIR__ . '/../../../data/sieve-vacation-on-forward-to.sieve');
+		$cleanedScript = file_get_contents(__DIR__ . '/../../../data/sieve-vacation-cleaned.sieve');
+
+		$actual = $this->outOfOfficeParser->parseOutOfOfficeState($script);
+		self::assertEquals($script, $actual->getSieveScript());
+		self::assertEquals($cleanedScript, $actual->getUntouchedSieveScript());
+		self::assertEquals(1, $actual->getState()->getVersion());
+		self::assertEquals(true, $actual->getState()->isEnabled());
+		self::assertEquals('forward@example.org', $actual->getState()->getForwardTo());
+	}
+
+	public function testBuildDisabledResponderWithForwardTo(): void {
+		$script = file_get_contents(__DIR__ . '/../../../data/sieve-vacation-cleaned.sieve');
+
+		$actual = $this->outOfOfficeParser->buildSieveScript(
+			new OutOfOfficeState(
+				false,
+				null,
+				null,
+				'On vacation',
+				"I'm on vacation.",
+				'forward@example.org',
+			),
+			$script,
+			['Test Test <test@test.org>', 'Test Alias <alias@test.org>'],
+		);
+
+		self::assertStringNotContainsString('redirect', $actual);
+		self::assertStringContainsString('# DATA:', $actual);
+	}
+
+	public function testBuildSieveScriptIsIdempotent(): void {
+		$script = file_get_contents(__DIR__ . '/../../../data/sieve-vacation-cleaned.sieve');
+		$state = new OutOfOfficeState(
+			true,
+			new DateTimeImmutable('2022-09-02T00:00:00+0100'),
+			new DateTimeImmutable('2022-09-08T23:59:00+0100'),
+			'On vacation',
+			"I'm on vacation.",
+			'forward@example.org',
+		);
+
+		$firstBuild = $this->outOfOfficeParser->buildSieveScript($state, $script, ['Test Test <test@test.org>']);
+		$parsed = $this->outOfOfficeParser->parseOutOfOfficeState($firstBuild);
+		$secondBuild = $this->outOfOfficeParser->buildSieveScript($parsed->getState(), $parsed->getUntouchedSieveScript(), ['Test Test <test@test.org>']);
+
+		self::assertEquals($firstBuild, $secondBuild);
+	}
 }

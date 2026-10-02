@@ -41,12 +41,17 @@ class OutOfOfficeParser {
 		$state = self::STATE_COPY;
 		$nextState = $state;
 
+		$skipBlock = [];
+		$hasDataMarker = false;
+
 		$lines = preg_split('/\r?\n/', $sieveScript) ?: [];
 		foreach ($lines as $line) {
 			switch ($state) {
 				case self::STATE_COPY:
 					if (str_starts_with($line, self::SEPARATOR)) {
 						$nextState = self::STATE_SKIP;
+						$skipBlock = [];
+						$hasDataMarker = false;
 					} else {
 						$scriptOut[] = $line;
 					}
@@ -54,7 +59,11 @@ class OutOfOfficeParser {
 				case self::STATE_SKIP:
 					if (str_starts_with($line, self::SEPARATOR)) {
 						$nextState = self::STATE_COPY;
+						if (!$hasDataMarker) {
+							$scriptOut = array_merge($scriptOut, $skipBlock);
+						}
 					} elseif (str_starts_with($line, self::DATA_MARKER)) {
+						$hasDataMarker = true;
 						$json = substr($line, strlen(self::DATA_MARKER));
 						try {
 							$jsonData = json_decode($json, true, 10, JSON_THROW_ON_ERROR);
@@ -66,6 +75,8 @@ class OutOfOfficeParser {
 							);
 						}
 						$data = OutOfOfficeState::fromJson($jsonData);
+					} else {
+						$skipBlock[] = $line;
 					}
 					break;
 				default:
@@ -164,11 +175,24 @@ class OutOfOfficeParser {
 		if ($hasSubjectPlaceholder) {
 			$requireSection[] = 'require "variables";';
 		}
+		$forwardTo = $state->getForwardTo();
+		if ($forwardTo !== null) {
+			$requireSection[] = 'require "copy";';
+		}
 		$requireSection[] = self::SEPARATOR;
+
+		$redirectSection = [];
+		if ($forwardTo !== null) {
+			$redirectSection = [
+				self::SEPARATOR,
+				self::DATA_MARKER . $stateJsonString,
+				'redirect :copy "' . SieveUtils::escapeString($forwardTo) . '";',
+				self::SEPARATOR,
+			];
+		}
 
 		$vacationSection = [
 			self::SEPARATOR,
-			self::DATA_MARKER . $stateJsonString,
 		];
 		if ($hasSubjectPlaceholder) {
 			$vacationSection = array_merge($vacationSection, $subjectSection);
@@ -185,6 +209,7 @@ class OutOfOfficeParser {
 		return implode("\r\n", array_merge(
 			$requireSection,
 			[$untouchedScript],
+			$redirectSection,
 			$vacationSection,
 		));
 	}
