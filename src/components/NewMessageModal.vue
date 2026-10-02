@@ -308,7 +308,6 @@ export default {
 	},
 
 	async mounted() {
-		document.body.appendChild(this.$el)
 		await this.$nextTick()
 		this.updateCookedComposerData()
 		await this.openModalSize()
@@ -316,9 +315,6 @@ export default {
 
 	beforeDestroy() {
 		window.removeEventListener('beforeunload', this.onBeforeUnload)
-		if (document.body.contains(this.$el)) {
-			document.body.removeChild(this.$el)
-		}
 	},
 
 	methods: {
@@ -731,13 +727,13 @@ $panel-max-height: calc(100vh - (var(--body-container-margin, 0px) + var(--defau
 	@media (max-width: #{$composer-width}) {
 		inset-inline-end: 0;
 		inset-inline-start: 0;
-		top: 0;
+		top: var(--header-height, 44px);
 		bottom: 0;
 		width: 100%;
 		max-width: 100%;
 		min-height: 0;
-		height: 100%;
-		max-height: 100%;
+		height: calc(100% - var(--header-height, 44px));
+		max-height: calc(100% - var(--header-height, 44px));
 		border-radius: 0;
 
 		.floating-composer__action--desktop-only,
