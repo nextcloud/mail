@@ -16,7 +16,6 @@
 		class="list-item-style envelope"
 		:class="{ seen: data.flags.seen, draft, selected: selected }"
 		:to="link"
-		:exact="true"
 		:data-envelope-id="data.databaseId"
 		:name="addresses"
 		:details="formatted()"
