@@ -123,6 +123,7 @@
 				:data="env"
 				:mailbox="mailbox"
 				:selected="selection.includes(env.databaseId)"
+				:cursored="env.databaseId === cursorId"
 				:select-mode="selectMode"
 				:has-multiple-accounts="hasMultipleAccounts"
 				:selected-envelopes="selectedEnvelopes"
@@ -224,6 +225,12 @@ export default {
 		account: {
 			type: Object,
 			required: true,
+		},
+
+		/** databaseId of the envelope the keyboard cursor is on. */
+		cursorId: {
+			type: Number,
+			default: undefined,
 		},
 
 		loadMoreLabel: {
@@ -548,6 +555,77 @@ export default {
 			} else if (!selected && alreadySelected) {
 				envelope.flags.selected = false
 				this.selection.splice(this.selection.indexOf(envelope.databaseId), 1)
+			}
+		},
+
+		/**
+		 * Toggle the checkbox selection of one envelope by database id.
+		 *
+		 * Called from Mailbox.vue through a ref: the keyboard cursor lives there
+		 * while the selection lives here, and date grouped views mount one list
+		 * per group, so every list is asked in turn until one owns the envelope.
+		 *
+		 * @param {number} databaseId envelope to toggle
+		 * @return {boolean} whether this list holds that envelope
+		 */
+		toggleSelectionById(databaseId) {
+			const index = this.sortedEnvelops.findIndex((env) => env.databaseId === databaseId)
+			if (index === -1) {
+				return false
+			}
+
+			this.lastToggledIndex = index
+			this.setEnvelopeSelected(this.sortedEnvelops[index], !this.selection.includes(databaseId))
+			return true
+		},
+
+		/**
+		 * Run a keyboard shortcut against the current selection.
+		 *
+		 * The actions mirror the multiselect header buttons, direction included:
+		 * a mixed selection is pushed to whichever state the header offers first,
+		 * so the key and the button never disagree.
+		 *
+		 * @param {string} srcKey vue-shortkey action name
+		 * @return {boolean} whether the action applies to a selection
+		 */
+		handleBulkShortcut(srcKey) {
+			switch (srcKey) {
+				case 'del':
+				case 'delAlt':
+				case 'delBackspace':
+					this.deleteAllSelected()
+					return true
+				case 'flag':
+					if (this.isAtLeastOneSelectedUnFavorite) {
+						this.favoriteAll()
+					} else {
+						this.unfavoriteAll()
+					}
+					return true
+				case 'unseen':
+					if (this.isAtLeastOneSelectedUnread) {
+						this.markSelectedRead()
+					} else {
+						this.markSelectedUnread()
+					}
+					return true
+				case 'important':
+					if (this.isAtLeastOneSelectedUnimportant) {
+						this.markSelectionImportant()
+					} else {
+						this.markSelectionUnimportant()
+					}
+					return true
+				case 'junk':
+					if (this.isAtLeastOneSelectedNotJunk) {
+						this.markSelectionJunk()
+					} else {
+						this.markSelectionNotJunk()
+					}
+					return true
+				default:
+					return false
 			}
 		},
 

@@ -193,9 +193,22 @@ export default {
 		},
 	},
 
+	mounted() {
+		window.addEventListener('mail:show-settings', this.onShowSettings)
+	},
+
+	beforeDestroy() {
+		window.removeEventListener('mail:show-settings', this.onShowSettings)
+	},
+
 	methods: {
 		onCloseAccountSettings() {
 			this.mainStore.showSettingsForAccountMutation(null)
+		},
+
+		/** Opens app settings, which contains the shortcut list. */
+		onShowSettings() {
+			this.showSettings = true
 		},
 
 		showMailSettings() {
