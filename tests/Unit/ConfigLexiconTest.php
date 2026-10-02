@@ -51,6 +51,7 @@ class ConfigLexiconTest extends TestCase {
 			ConfigLexicon::MICROSOFT_OAUTH_TENANT_ID => [ValueType::STRING, 'common'],
 			ConfigLexicon::ANTISPAM_REPORTING_SPAM => [ValueType::STRING, null],
 			ConfigLexicon::ANTISPAM_REPORTING_HAM => [ValueType::STRING, null],
+			ConfigLexicon::MESSAGE_ID_PREFIX => [ValueType::STRING, 'nextcloud-mail'],
 		];
 	}
 
