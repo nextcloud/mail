@@ -25,7 +25,8 @@ export default function mainStore() {
 			return Object.values(state.tags).find((tag) => tag.imapLabel === FOLLOW_UP_TAG_LABEL)
 		},
 		getFollowUpReminderEnvelopes: (state) => {
-			return Object.values(state.envelopes)
+			return Object.values(state.threads)
+				.flatMap((thread) => Object.values(thread))
 				.filter((envelope) => envelope.tags
 					?.map((tagId) => state.tags[tagId])
 					.some((tag) => tag.imapLabel === FOLLOW_UP_TAG_LABEL))

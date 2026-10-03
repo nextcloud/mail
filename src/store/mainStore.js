@@ -80,6 +80,8 @@ export default defineStore('main', {
 				},
 			},
 			envelopes: {},
+			threads: {},
+			messageToThreadDictionnary: {},
 			messages: {},
 			newMessage: undefined,
 			showMessageComposer: false,

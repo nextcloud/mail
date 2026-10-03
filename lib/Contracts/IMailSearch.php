@@ -42,7 +42,7 @@ interface IMailSearch {
 	 * @param string|null $userId
 	 * @param string|null $view
 	 *
-	 * @return Message[]
+	 * @return Message[][]
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException

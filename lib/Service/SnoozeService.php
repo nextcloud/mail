@@ -11,6 +11,7 @@ namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
@@ -213,7 +214,7 @@ class SnoozeService {
 			}
 		}
 
-		$messages = $this->messageMapper->findThread($srcAccount, $selectedMessage->getThreadRootId());
+		$messages = $this->messageMapper->findThread($srcAccount, $selectedMessage->getThreadRootId(), IMailSearch::ORDER_NEWEST_FIRST);
 
 		foreach ($messages as $message) {
 			$this->mailManager->moveMessage(
