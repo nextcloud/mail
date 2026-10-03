@@ -5,7 +5,7 @@
 <template>
 	<div>
 		<transition name="multiselect-header">
-			<div v-if="selectMode" key="multiselect-header" class="multiselect-header">
+			<div v-if="selectMode && !hideMultiselectHeader" key="multiselect-header" class="multiselect-header">
 				<div class="action-buttons">
 					<NcButton
 						v-if="isAtLeastOneSelectedUnread"
@@ -129,7 +129,7 @@
 				:compact-mode="compactMode"
 				:date-grouped="dateGrouped"
 				@delete="$emit('delete', env.databaseId)"
-				@update:selected="onEnvelopeSelectToggle(env, index, $event)"
+				@update:selected="onEnvelopeSelectToggle(env, $event)"
 				@select-multiple="onEnvelopeSelectMultiple(env, index)"
 				@open:quick-actions-settings="showQuickActionsSettings = true" />
 			<div
@@ -169,7 +169,6 @@
 import { showError } from '@nextcloud/dialogs'
 import { NcActionButton, NcActions, NcButton, NcDialog } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
-import { differenceWith } from 'ramda'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
 import IconSelect from 'vue-material-design-icons/CloseThick.vue'
 import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
@@ -193,6 +192,7 @@ import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError.js'
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
+import { sortEnvelopes } from '../util/sortEnvelopes.js'
 
 export default {
 	name: 'EnvelopeList',
@@ -272,14 +272,27 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+
+		selection: {
+			type: Array,
+			default: () => [],
+		},
+
+		flatIndex: {
+			type: Number,
+			default: 0,
+		},
+
+		hideMultiselectHeader: {
+			type: Boolean,
+			default: false,
+		},
 	},
 
 	data() {
 		return {
-			selection: [],
 			showMoveModal: false,
 			showTagModal: false,
-			lastToggledIndex: undefined,
 			defaultView: false,
 			showQuickActionsSettings: false,
 		}
@@ -292,12 +305,7 @@ export default {
 		},
 
 		sortedEnvelops() {
-			if (this.sortOrder === 'oldest') {
-				return [...this.envelopes].sort((a, b) => {
-					return a.dateInt < b.dateInt ? -1 : 1
-				})
-			}
-			return [...this.envelopes]
+			return sortEnvelopes(this.envelopes, this.sortOrder)
 		},
 
 		selectMode() {
@@ -354,7 +362,9 @@ export default {
 		},
 
 		selectedEnvelopes() {
-			return this.sortedEnvelops.filter((env) => this.selection.includes(env.databaseId))
+			return this.selection
+				.map((id) => this.mainStore.getEnvelope(id))
+				.filter((envelope) => envelope !== undefined)
 		},
 
 		hasMultipleAccounts() {
@@ -364,18 +374,6 @@ export default {
 
 		listTransitionName() {
 			return this.skipTransition ? 'disabled' : 'list'
-		},
-	},
-
-	watch: {
-		sortedEnvelops(newVal, oldVal) {
-			// Unselect vanished envelopes
-			const newIds = newVal.map((env) => env.databaseId)
-			this.selection = this.selection.filter((id) => newIds.includes(id))
-			differenceWith((a, b) => a.databaseId === b.databaseId, oldVal, newVal)
-				.forEach((env) => {
-					env.flags.selected = false
-				})
 		},
 	},
 
@@ -540,44 +538,17 @@ export default {
 			this.unselectAll()
 		},
 
-		setEnvelopeSelected(envelope, selected) {
-			const alreadySelected = this.selection.includes(envelope.databaseId)
-			if (selected && !alreadySelected) {
-				envelope.flags.selected = true
-				this.selection.push(envelope.databaseId)
-			} else if (!selected && alreadySelected) {
-				envelope.flags.selected = false
-				this.selection.splice(this.selection.indexOf(envelope.databaseId), 1)
-			}
-		},
-
-		onEnvelopeSelectToggle(envelope, index, selected) {
-			this.lastToggledIndex = index
-			this.setEnvelopeSelected(envelope, selected)
+		onEnvelopeSelectToggle(envelope, selected) {
+			this.$emit('select', envelope.databaseId, selected)
 		},
 
 		onEnvelopeSelectMultiple(envelope, index) {
-			const lastToggledIndex = this.lastToggledIndex
-				?? this.findSelectionIndex(parseInt(this.$route.params.threadId))
-				?? undefined
-			if (lastToggledIndex === undefined) {
-				return
-			}
-
-			const start = Math.min(lastToggledIndex, index)
-			const end = Math.max(lastToggledIndex, index)
-			const selected = this.selection.includes(envelope.databaseId)
-			for (let i = start; i <= end; i++) {
-				this.setEnvelopeSelected(this.sortedEnvelops[i], !selected)
-			}
-			this.lastToggledIndex = index
+			const deselect = this.selection.includes(envelope.databaseId)
+			this.$emit('select-range', this.flatIndex + index, deselect)
 		},
 
 		unselectAll() {
-			this.sortedEnvelops.forEach((env) => {
-				env.flags.selected = false
-			})
-			this.selection = []
+			this.$emit('update:selection', [])
 		},
 
 		onOpenMoveModal() {
@@ -602,22 +573,6 @@ export default {
 		onCloseMoveModal() {
 			this.showMoveModal = false
 			this.unselectAll()
-		},
-
-		/**
-		 * Find the envelope list index of a given envelope's database id.
-		 *
-		 * @param {number} databaseId of the given envelope
-		 * @return {number|undefined} Index or undefined if not found in the envelope list
-		 */
-		findSelectionIndex(databaseId) {
-			for (const [index, envelope] of this.sortedEnvelops.entries()) {
-				if (envelope.databaseId === databaseId) {
-					return index
-				}
-			}
-
-			return undefined
 		},
 	},
 }
