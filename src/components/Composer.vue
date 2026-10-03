@@ -1449,9 +1449,7 @@ export default {
 			this.changeSignature = true
 
 			this.$emit('update:from-account', alias.id)
-			if (alias.aliasId) {
-				this.$emit('update:from-alias', alias.aliasId)
-			}
+			this.$emit('update:from-alias', alias.aliasId)
 
 			if (this.wantsSmimeSign || this.wantsSmimeEncrypt) {
 				if (!this.smimeCertificateForAlias(alias)) {

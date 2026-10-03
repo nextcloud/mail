@@ -165,6 +165,15 @@
 					<NcRadioGroupButton :label="t('mail', 'Bottom')" :value="true" :disabled="hasLoadingState('reply-mode')" />
 				</NcRadioGroup>
 
+				<NcFormBox>
+					<NcFormBoxSwitch
+						:model-value="replyFromMatchingAddress"
+						:label="t('mail', 'Automatically select the sender address for replies')"
+						:description="t('mail', 'Use the account or alias involved in the message')"
+						:disabled="hasLoadingState('reply-from-matching-address')"
+						@update:modelValue="onToggleReplyFromMatchingAddress" />
+				</NcFormBox>
+
 				<NcFormGroup
 					:label="t('mail', 'Text blocks')"
 					:description="t('mail', 'Reusable pieces of text that can be inserted in messages')">
@@ -382,6 +391,7 @@ export default {
 	data() {
 		return {
 			loadingStates: [],
+			pendingReplyFromMatchingAddress: null,
 			prioritySettingsText: t('mail', 'Search the body of messages in priority Inbox'),
 
 			optOutSettingsText: t('mail', 'Activate'),
@@ -418,6 +428,11 @@ export default {
 
 		useBottomReplies() {
 			return this.mainStore.getPreference('reply-mode', 'top') === 'bottom'
+		},
+
+		replyFromMatchingAddress() {
+			return this.pendingReplyFromMatchingAddress
+				?? (this.mainStore.getPreference('reply-from-matching-address', 'true') === 'true')
 		},
 
 		allowNewMailAccounts() {
@@ -649,6 +664,26 @@ export default {
 
 		async onOpen() {
 			this.showSettings = true
+		},
+
+		async onToggleReplyFromMatchingAddress(enabled) {
+			const key = 'reply-from-matching-address'
+			if (this.hasLoadingState(key)) {
+				return
+			}
+			this.setLoadingState(key, true)
+			this.pendingReplyFromMatchingAddress = enabled
+
+			try {
+				await this.$nextTick()
+				await this.mainStore.savePreference({ key, value: enabled ? 'true' : 'false' })
+			} catch (error) {
+				Logger.error('Could not save reply sender preference', { error })
+				showError(t('mail', 'Could not update preference'))
+			} finally {
+				this.pendingReplyFromMatchingAddress = null
+				this.setLoadingState(key, false)
+			}
 		},
 
 		onToggleButtonReplies(atBottom) {

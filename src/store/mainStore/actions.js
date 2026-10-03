@@ -42,6 +42,8 @@ import {
 	buildForwardSubject,
 	buildRecipients as buildReplyRecipients,
 	buildReplySubject,
+	isSameEmailAddress,
+	selectReplyIdentity,
 } from '../../ReplyBuilder.js'
 import {
 	create as createAccount,
@@ -461,6 +463,25 @@ export default function mainStoreActions() {
 				})
 			})
 		},
+		getReplyContext(envelope, { followUp = false } = {}) {
+			const account = this.getAccount(envelope.accountId)
+			const fallback = {
+				accountId: account.id,
+				aliasId: null,
+				email: account.emailAddress,
+				label: account.name,
+			}
+			const mailbox = this.getMailbox(envelope.mailboxId)
+			const preferSender = followUp || mailbox?.specialRole === 'sent'
+				|| (envelope.mailboxId !== undefined && envelope.mailboxId === account.sentMailboxId)
+			const matchingIdentity = selectReplyIdentity(envelope, this.getAccounts, preferSender) ?? fallback
+			const identity = this.getPreference('reply-from-matching-address', 'true') === 'true'
+				? matchingIdentity
+				: fallback
+			const isOwnMessage = envelope.from?.length > 0
+				&& envelope.from.every((address) => isSameEmailAddress(address.email, matchingIdentity.email))
+			return { identity, followUp: preferSender || isOwnMessage }
+		},
 		async startComposerSession({
 			type = 'imap',
 			data = {},
@@ -520,9 +541,16 @@ export default function mainStoreActions() {
 						}
 					}
 
+					let replyIdentity
+					let isFollowUp = false
+					if (reply.mode === 'reply' || reply.mode === 'replyAll') {
+						const context = this.getReplyContext(reply.data, { followUp: reply.followUp })
+						replyIdentity = context.identity
+						isFollowUp = context.followUp
+					}
+
 					if (reply.mode === 'reply') {
 						logger.debug('Show simple reply composer', { reply })
-						const account = this.getAccount(reply.data.accountId)
 						// For mailing list emails, "Reply to sender" must use From because
 						// Reply-To points to the list address, not the original sender.
 						// For regular emails, honor Reply-To if the sender set one.
@@ -530,18 +558,20 @@ export default function mainStoreActions() {
 						let to = (!isMailingList && original.replyTo?.length > 0)
 							? original.replyTo
 							: reply.data.from
+						let cc = []
 						// Replying to a message we sent ourselves: follow up with the
 						// original recipient(s) instead of addressing ourselves.
-						const isOwnMessage = to.length > 0
-							&& to.every((addr) => addr.email === account.emailAddress)
-						if (reply.followUp || isOwnMessage) {
-							to = reply.data.to
+						if (isFollowUp) {
+							const recipients = buildReplyRecipients(reply.data, replyIdentity, undefined, true)
+							to = recipients.to
+							cc = recipients.cc
 						}
 						this.startComposerSessionMutation({
 							data: {
-								accountId: reply.data.accountId,
+								accountId: replyIdentity.accountId,
+								aliasId: replyIdentity.aliasId,
 								to,
-								cc: [],
+								cc,
 								subject: buildReplySubject(reply.data.subject),
 								isHtml: data.isHtml,
 								bodyHtml: data.bodyHtml,
@@ -554,14 +584,16 @@ export default function mainStoreActions() {
 						return
 					} else if (reply.mode === 'replyAll') {
 						logger.debug('Show reply all reply composer', { reply })
-						const account = this.getAccount(reply.data.accountId)
-						const recipients = buildReplyRecipients(reply.data, {
-							email: account.emailAddress,
-							label: account.name,
-						}, original.replyTo)
+						const recipients = buildReplyRecipients(
+							reply.data,
+							replyIdentity,
+							original.replyTo,
+							isFollowUp,
+						)
 						this.startComposerSessionMutation({
 							data: {
-								accountId: reply.data.accountId,
+								accountId: replyIdentity.accountId,
+								aliasId: replyIdentity.aliasId,
 								to: recipients.to,
 								cc: recipients.cc,
 								subject: buildReplySubject(reply.data.subject),

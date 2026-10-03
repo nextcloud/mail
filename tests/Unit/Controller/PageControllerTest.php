@@ -184,17 +184,31 @@ class PageControllerTest extends TestCase {
 		);
 	}
 
-	public function testIndex(): void {
+	/**
+	 * @return array<string, array{string}>
+	 */
+	public static function replyFromMatchingAddressProvider(): array {
+		return [
+			'enabled' => ['true'],
+			'disabled' => ['false'],
+		];
+	}
+
+	/**
+	 * @dataProvider replyFromMatchingAddressProvider
+	 */
+	public function testIndex(string $replyFromMatchingAddress): void {
 		$account1 = $this->createMock(Account::class);
 		$account2 = $this->createMock(Account::class);
 		$mailbox = $this->createStub(Mailbox::class);
-		$this->preferences->expects($this->exactly(15))
+		$this->preferences->expects($this->exactly(16))
 			->method('getPreference')
 			->willReturnMap([
 				[$this->userId, 'account-settings', '[]', json_encode([])],
 				[$this->userId, 'sort-order', 'newest', 'newest'],
 				[$this->userId, 'external-avatars', 'true', 'true'],
 				[$this->userId, 'reply-mode', 'top', 'bottom'],
+				[$this->userId, 'reply-from-matching-address', 'true', $replyFromMatchingAddress],
 				[$this->userId, 'collect-data', 'true', 'true'],
 				[$this->userId, 'search-priority-body', 'false', 'false'],
 				[$this->userId, 'start-mailbox-id', null, '123'],
@@ -365,6 +379,7 @@ class PageControllerTest extends TestCase {
 					'attachment-size-limit' => 123,
 					'external-avatars' => 'true',
 					'reply-mode' => 'bottom',
+					'reply-from-matching-address' => $replyFromMatchingAddress,
 					'app-version' => '1.2.3',
 					'collect-data' => 'true',
 					'start-mailbox-id' => '123',

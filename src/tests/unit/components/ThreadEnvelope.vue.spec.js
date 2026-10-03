@@ -7,6 +7,10 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import ThreadEnvelope from '../../../components/ThreadEnvelope.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
+import * as MessageService from '../../../service/MessageService.js'
+import useMainStore from '../../../store/mainStore.js'
+
+vi.mock('../../../service/MessageService.js')
 
 const localVue = createLocalVue()
 
@@ -15,6 +19,71 @@ localVue.mixin(Nextcloud)
 describe('ThreadEnvelope', () => {
 	beforeEach(() => {
 		setActivePinia(createPinia())
+	})
+
+	afterEach(() => {
+		vi.restoreAllMocks()
+		vi.clearAllMocks()
+		vi.unstubAllGlobals()
+	})
+
+	it.each([
+		['one-to-one alias mail', [{ email: 'work@example.com' }], 'true', 'Reply'],
+		['group mail', [{ email: 'work@example.com' }, { email: 'other@example.com' }], 'true', 'Reply all'],
+		['disabled automatic selection', [{ email: 'work@example.com' }], 'false', 'Reply all'],
+	])('labels the reply action for %s', (_, to, preference, label) => {
+		vi.stubGlobal('t', vi.fn((_, message) => message))
+		const store = useMainStore()
+		store.addAccountMutation({
+			id: 123,
+			emailAddress: 'me@example.com',
+			aliases: [{ id: 21, alias: 'work@example.com', name: 'Work' }],
+		})
+		store.savePreferenceMutation({ key: 'reply-from-matching-address', value: preference })
+		const envelope = { databaseId: 42, accountId: 123, from: [{ email: 'sender@example.com' }], to, cc: [] }
+		const context = { mainStore: store, account: store.getAccount(123), envelope, showFollowUpHeader: false }
+
+		const hasMultipleRecipients = ThreadEnvelope.computed.hasMultipleRecipients.call(context)
+		const replyLabel = ThreadEnvelope.computed.replyButtonLabel.call({ ...context, hasMultipleRecipients })
+
+		expect(replyLabel).toBe(label)
+	})
+
+	it.each(['true', 'false'])('retains a Cc-only follow-up through the reply action when selection is %s', async (preference) => {
+		const store = useMainStore()
+		store.addAccountMutation({
+			id: 123,
+			emailAddress: 'me@example.com',
+			aliases: [{ id: 21, alias: 'work@example.com', name: 'Work' }],
+		})
+		store.mailboxes[11] = { databaseId: 11, accountId: 123, specialRole: 'sent' }
+		store.savePreferenceMutation({ key: 'reply-from-matching-address', value: preference })
+		MessageService.fetchMessage.mockResolvedValue({ body: '', attachments: [] })
+		const recipient = { email: 'recipient@example.com' }
+		const envelope = {
+			databaseId: 42,
+			accountId: 123,
+			mailboxId: 11,
+			from: [{ email: 'work@example.com' }],
+			to: [],
+			cc: [recipient],
+			subject: 'Test subject',
+		}
+		const context = { mainStore: store, account: store.getAccount(123), envelope, showFollowUpHeader: false }
+		context.hasMultipleRecipients = ThreadEnvelope.computed.hasMultipleRecipients.call(context)
+		const startComposer = vi.spyOn(store, 'startComposerSession')
+
+		ThreadEnvelope.methods.onReply.call(context)
+		await startComposer.mock.results[0].value
+
+		expect(context.hasMultipleRecipients).toBe(false)
+		expect(startComposer.mock.calls[0][0].reply.mode).toBe('reply')
+		expect(store.composerMessage.data).toMatchObject({
+			accountId: 123,
+			aliasId: preference === 'true' ? 21 : null,
+			to: [],
+			cc: [recipient],
+		})
 	})
 
 	it('allows toggling seen flag without ACLs', () => {
