@@ -461,7 +461,6 @@ export default {
 		mailbox() {
 			clearTimeout(this.startMailboxTimer)
 			setTimeout(this.saveStartMailbox, START_MAILBOX_DEBOUNCE)
-			this.fetchEnvelopes()
 		},
 	},
 
