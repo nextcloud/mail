@@ -313,7 +313,8 @@
 						:key="`${recipient.email}-${index}`"
 						:email="recipient.email"
 						:label="recipient.label"
-						:size="24" />
+						:size="24"
+						:account="account" />
 				</div>
 			</div>
 			<div v-if="envelope.cc && envelope.cc.length" class="recipients">
@@ -324,7 +325,8 @@
 						:key="`${recipient.email}-${index}`"
 						:email="recipient.email"
 						:label="recipient.label"
-						:size="24" />
+						:size="24"
+						:account="account" />
 				</div>
 			</div>
 			<div v-if="envelope.bcc && envelope.bcc.length" class="recipients">
@@ -335,7 +337,8 @@
 						:key="`${recipient.email}-${index}`"
 						:email="recipient.email"
 						:label="recipient.label"
-						:size="24" />
+						:size="24"
+						:account="account" />
 				</div>
 			</div>
 		</div>

@@ -65,6 +65,16 @@
 						</template>
 						{{ t('mail', 'Copy to clipboard') }}
 					</NcButton>
+					<NcButton
+						v-if="canBeAddedAsAlias"
+						variant="tertiary-no-background"
+						:aria-label="t('mail', 'Add as alias')"
+						@click="onClickStartAddAlias">
+						<template #icon>
+							<IconAlias :size="20" />
+						</template>
+						{{ t('mail', 'Add as alias') }}
+					</NcButton>
 				</div>
 				<div v-else class="contact-input-wrapper">
 					<NcSelect
@@ -83,6 +93,13 @@
 						@search="onAutocomplete" />
 
 					<input v-else-if="selection === ContactSelectionStateEnum.new" v-model="newContactName">
+
+					<input
+						v-else-if="selection === ContactSelectionStateEnum.alias"
+						v-model="newAliasName"
+						:aria-label="t('mail', 'Alias name')"
+						:placeholder="t('mail', 'Alias name')"
+						@keydown.enter.prevent="$refs.confirmAddButton?.$el?.click()">
 				</div>
 				<div v-if="selection !== ContactSelectionStateEnum.select">
 					<NcButton
@@ -96,11 +113,12 @@
 					</NcButton>
 
 					<NcButton
+						ref="confirmAddButton"
 						v-close-popover
 						:disabled="addButtonDisabled"
 						variant="tertiary-no-background"
 						:aria-label="t('mail', 'Add')"
-						@click="onClickAddToContact">
+						@click="onClickConfirmAdd">
 						<template #icon>
 							<IconCheck :size="20" />
 						</template>
@@ -118,20 +136,24 @@ import { generateUrl } from '@nextcloud/router'
 import { NcButton, NcPopover, NcSelect, NcUserBubble } from '@nextcloud/vue'
 import debouncePromise from 'debounce-promise'
 import uniqBy from 'lodash/fp/uniqBy.js'
+import { mapStores } from 'pinia'
 import IconUser from 'vue-material-design-icons/AccountOutline.vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import IconClipboard from 'vue-material-design-icons/ClipboardTextOutline.vue'
 import IconClose from 'vue-material-design-icons/CloseOutline.vue'
+import IconAlias from 'vue-material-design-icons/EmailPlusOutline.vue'
 import IconDetails from 'vue-material-design-icons/InformationOutline.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconReply from 'vue-material-design-icons/ReplyOutline.vue'
 import logger from '../logger.js'
 import { fetchAvatarUrlMemoized } from '../service/AvatarService.js'
 import { addToContact, autoCompleteByName, findMatches, newContact } from '../service/ContactIntegrationService.js'
+import useMainStore from '../store/mainStore.js'
+import { isCompatibleAliasDomain } from '../util/emailAddress.js'
 
 const debouncedSearch = debouncePromise(autoCompleteByName, 500)
 
-const ContactSelectionStateEnum = Object.freeze({ new: 1, existing: 2, select: 3 })
+const ContactSelectionStateEnum = Object.freeze({ new: 1, existing: 2, select: 3, alias: 4 })
 
 export default {
 	name: 'RecipientBubble',
@@ -147,6 +169,7 @@ export default {
 		IconClipboard,
 		IconDetails,
 		IconCheck,
+		IconAlias,
 	},
 
 	props: {
@@ -164,6 +187,11 @@ export default {
 			type: Number,
 			default: 26,
 		},
+
+		account: {
+			type: Object,
+			default: null,
+		},
 	},
 
 	data() {
@@ -174,6 +202,7 @@ export default {
 			autoCompleteContacts: [],
 			selectedContact: null,
 			newContactName: '',
+			newAliasName: '',
 			ContactSelectionStateEnum,
 			selection: ContactSelectionStateEnum.select,
 			isContactPopoverOpen: false,
@@ -181,6 +210,10 @@ export default {
 	},
 
 	computed: {
+		activeAccount() {
+			return this.account || null
+		},
+
 		avatarUrlAbsolute() {
 			if (!this.avatarUrl) {
 				return
@@ -206,7 +239,34 @@ export default {
 			return this.contactsWithEmail.slice(0, 3).map((e) => e.label).join(', ').concat(additional)
 		},
 
+		...mapStores(useMainStore),
+
+		canBeAddedAsAlias() {
+			if (!this.email) {
+				return false
+			}
+			const activeAccount = this.activeAccount
+			if (!activeAccount || activeAccount.isUnified || activeAccount.provisioningId) {
+				return false
+			}
+			const emailClean = this.email.trim().toLowerCase()
+			if (!emailClean.includes('@')) {
+				return false
+			}
+			if (activeAccount.emailAddress?.toLowerCase() === emailClean) {
+				return false
+			}
+			const isExistingAlias = (activeAccount.aliases || []).some((a) => (typeof a === 'string' ? a : a?.alias)?.toLowerCase() === emailClean)
+			if (isExistingAlias) {
+				return false
+			}
+			return isCompatibleAliasDomain(emailClean, activeAccount)
+		},
+
 		addButtonDisabled() {
+			if (this.selection === ContactSelectionStateEnum.alias) {
+				return !this.newAliasName.trim()
+			}
 			return !((this.selection === ContactSelectionStateEnum.existing && this.selectedContact)
 				|| (this.selection === ContactSelectionStateEnum.new && this.newContactName.trim() !== ''))
 		},
@@ -224,6 +284,22 @@ export default {
 	},
 
 	methods: {
+		onClickStartAddAlias() {
+			this.newAliasName = this.activeAccount?.name || this.label || ''
+			this.selection = ContactSelectionStateEnum.alias
+		},
+
+		async onClickConfirmAdd() {
+			if (this.addButtonDisabled) {
+				return
+			}
+			if (this.selection === ContactSelectionStateEnum.alias) {
+				await this.onClickAddAsAlias()
+			} else {
+				this.onClickAddToContact()
+			}
+		},
+
 		async onClickCopyToClipboard() {
 			try {
 				await navigator.clipboard.writeText(this.email)
@@ -231,6 +307,25 @@ export default {
 			} catch (e) {
 				logger.error('could not copy email address to clipboard', { error: e })
 				showError(t('mail', 'Could not copy email address to clipboard'))
+			}
+		},
+
+		async onClickAddAsAlias() {
+			const activeAccount = this.activeAccount
+			if (!activeAccount) {
+				return
+			}
+			try {
+				await this.mainStore.createAlias({
+					account: activeAccount,
+					alias: this.email,
+					name: this.newAliasName.trim() || activeAccount.name,
+				})
+				showSuccess(t('mail', 'Alias added successfully'))
+				this.selection = ContactSelectionStateEnum.select
+			} catch (error) {
+				logger.error('Failed to create alias', { error })
+				showError(t('mail', 'Could not add alias'))
 			}
 		},
 

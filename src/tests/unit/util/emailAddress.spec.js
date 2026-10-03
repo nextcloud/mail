@@ -3,7 +3,62 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { getLabelAndAddress, parseEmailList } from '../../../util/emailAddress.js'
+import { getLabelAndAddress, isCompatibleAliasDomain, parseEmailList, sortAliases } from '../../../util/emailAddress.js'
+
+describe('isCompatibleAliasDomain', () => {
+	const accountWithDomains = {
+		emailAddress: 'aaron@gryzia.de',
+		aliasDomains: 'sarondra.gryzia.de, aaron.gryzia.de',
+		aliases: [
+			{ alias: 'info@solero.quietmail.eu' },
+		],
+	}
+
+	const accountEmptyDomains = {
+		emailAddress: 'aaron@gryzia.de',
+		aliases: [
+			{ alias: 'info@solero.quietmail.eu' },
+		],
+	}
+
+	it('allows configured alias domains and their subdomains', () => {
+		expect(isCompatibleAliasDomain('nek-adhs-pkh@sarondra.gryzia.de', accountWithDomains)).toBe(true)
+		expect(isCompatibleAliasDomain('test@aaron.gryzia.de', accountWithDomains)).toBe(true)
+		expect(isCompatibleAliasDomain('deep.sub@sarondra.gryzia.de', accountWithDomains)).toBe(true)
+	})
+
+	it('rejects domains not in allowed alias domains list even if in existing aliases', () => {
+		expect(isCompatibleAliasDomain('newreleases-g6f@solero.quietmail.eu', accountWithDomains)).toBe(false)
+		expect(isCompatibleAliasDomain('other@solero.quietmail.eu', accountWithDomains)).toBe(false)
+	})
+
+	it('returns false when no aliasDomains are configured', () => {
+		expect(isCompatibleAliasDomain('nek-adhs-pkh@sarondra.gryzia.de', accountEmptyDomains)).toBe(false)
+		expect(isCompatibleAliasDomain('newreleases-g6f@solero.quietmail.eu', accountEmptyDomains)).toBe(false)
+	})
+
+	it('rejects unrelated third-party domains', () => {
+		expect(isCompatibleAliasDomain('contact@microsoft.com', accountWithDomains)).toBe(false)
+		expect(isCompatibleAliasDomain('info@apple.com', accountWithDomains)).toBe(false)
+		expect(isCompatibleAliasDomain('user@gmail.com', accountWithDomains)).toBe(false)
+	})
+
+	it('normalizes domains with leading @, email syntax, or dots', () => {
+		const accountWithMessyDomains = {
+			emailAddress: 'user@example.com',
+			aliasDomains: ['@clean.com', 'admin@mail.org', '.dotted.net.'],
+		}
+		expect(isCompatibleAliasDomain('alias@clean.com', accountWithMessyDomains)).toBe(true)
+		expect(isCompatibleAliasDomain('alias@mail.org', accountWithMessyDomains)).toBe(true)
+		expect(isCompatibleAliasDomain('alias@dotted.net', accountWithMessyDomains)).toBe(true)
+	})
+
+	it('returns false for invalid inputs', () => {
+		expect(isCompatibleAliasDomain(null, accountWithDomains)).toBe(false)
+		expect(isCompatibleAliasDomain('invalid-email', accountWithDomains)).toBe(false)
+		expect(isCompatibleAliasDomain('test@gryzia.de', null)).toBe(false)
+	})
+})
 
 describe('getLabelAndAddress', () => {
 	it('parses a plain email address', () => {
@@ -209,5 +264,49 @@ describe('parseEmailList', () => {
 		expect(emails).toContain('ian@example.ac.uk')
 		expect(emails).toContain('test@test.com')
 		expect(emails).toContain('testaaaa@aasd.com')
+	})
+})
+
+describe('sortAliases', () => {
+	it('sorts aliases first by domain and then by localpart alphabetically', () => {
+		const input = [
+			{ alias: 'bob@zebra.com' },
+			{ alias: 'charlie@alpha.org' },
+			{ alias: 'alice@alpha.org' },
+			{ alias: 'admin@zebra.com' },
+		]
+		const sorted = sortAliases(input)
+		expect(sorted).toEqual([
+			{ alias: 'alice@alpha.org' },
+			{ alias: 'charlie@alpha.org' },
+			{ alias: 'admin@zebra.com' },
+			{ alias: 'bob@zebra.com' },
+		])
+	})
+
+	it('handles objects with emailAddress property', () => {
+		const input = [
+			{ emailAddress: 'info@domain.com' },
+			{ emailAddress: 'contact@alpha.com' },
+		]
+		const sorted = sortAliases(input)
+		expect(sorted).toEqual([
+			{ emailAddress: 'contact@alpha.com' },
+			{ emailAddress: 'info@domain.com' },
+		])
+	})
+
+	it('handles raw email strings', () => {
+		const input = ['user2@b.com', 'user1@b.com', 'user1@a.com']
+		expect(sortAliases(input)).toEqual([
+			'user1@a.com',
+			'user1@b.com',
+			'user2@b.com',
+		])
+	})
+
+	it('returns empty array for invalid input', () => {
+		expect(sortAliases(null)).toEqual([])
+		expect(sortAliases(undefined)).toEqual([])
 	})
 })
