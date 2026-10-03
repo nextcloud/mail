@@ -9,8 +9,10 @@ declare(strict_types=1);
 
 namespace OCA\Mail\BackgroundJob;
 
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Events\SynchronizationEvent;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -25,6 +27,7 @@ class RepairSyncJob extends TimedJob {
 	public function __construct(
 		ITimeFactory $time,
 		private SyncService $syncService,
+		private ProtocolFactory $protocolFactory,
 		private AccountService $accountService,
 		private IUserManager $userManager,
 		private MailboxMapper $mailboxMapper,
@@ -55,6 +58,15 @@ class RepairSyncJob extends TimedJob {
 			return;
 		}
 
+		if ($account->getMailAccount()->getProtocol() !== MailAccount::PROTOCOL_IMAP) {
+			$this->logger->debug(sprintf(
+				'Account %d uses %s, skipping IMAP repair sync after mailbox refresh',
+				$account->getId(),
+				$account->getMailAccount()->getProtocol(),
+			));
+			return;
+		}
+
 		$user = $this->userManager->get($account->getUserId());
 		if ($user === null || !$user->isEnabled()) {
 			$this->logger->debug(sprintf(
@@ -64,6 +76,10 @@ class RepairSyncJob extends TimedJob {
 			));
 			return;
 		}
+
+		$this->protocolFactory
+			->mailboxConnector($account)
+			->syncAll($account, true);
 
 		$rebuildThreads = false;
 		$trashMailboxId = $account->getMailAccount()->getTrashMailboxId();
