@@ -131,6 +131,24 @@ class MessageMapperTest extends TestCase {
 		self::assertEquals([1], $result);
 	}
 
+	public function testFindIdsByQueryMatchesCcAndBcc(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$this->insertMessageWithId(1, 1);
+		$this->insertMessageWithId(2, 1);
+		$this->insertRecipient(1, Recipient::TYPE_CC, 'cc@example.com');
+		$this->insertRecipient(1, Recipient::TYPE_BCC, 'bcc@example.com');
+		$this->insertRecipient(2, Recipient::TYPE_CC, 'other@example.com');
+
+		$searchQuery = new SearchQuery();
+		$searchQuery->addCc('cc@example.com');
+		$searchQuery->addBcc('bcc@example.com');
+
+		$result = $this->mapper->findIdsByQuery($mailbox, $searchQuery, 'DESC', null);
+
+		self::assertEquals([1], $result);
+	}
+
 	public function testFindIdsByQueryDoesNotDuplicateAMessageWithSeveralMatchingRecipients(): void {
 		$mailbox = new Mailbox();
 		$mailbox->setId(1);
