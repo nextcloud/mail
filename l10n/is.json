@@ -410,7 +410,8 @@
     "You mentioned an attachment. Did you forget to add it?" : "Þú minntist á viðhengi. Gleymdirðu að bæta því við?",
     "Message discarded" : "Skilaboðum hent",
     "Could not discard message" : "Gat ekki hent skilaboðum",
-    "Maximize composer" : "Hámarka ritil",
+    "Exit full screen" : "Fara úr skjáfylliham",
+    "Full screen" : "Skjáfylli",
     "Minimize composer" : "Lágmarka ritil",
     "Error sending your message" : "Villa við að senda skilaboðin þín",
     "Retry" : "Reyna aftur",
@@ -700,6 +701,7 @@
     "Tag name is a hidden system tag" : "Heiti merkis er falið merki kerfisins",
     "Tag already exists" : "Merki er þegar til",
     "Error loading message" : "Villa við hleðslu á skilaboðum",
+    "Maximize composer" : "Hámarka ritil",
     "Show less" : "Birta minna",
     "Show more" : "Birta meira",
     "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% og %EMAIL% verður skipt út með UID-auðkenni notanda og tölvupóstfangi"

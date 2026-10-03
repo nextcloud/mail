@@ -125,6 +125,7 @@ OC.L10N.register(
     "New message" : "Jauna ziņa",
     "Draft" : "Melnraksts",
     "Reply" : "Atbildēt",
+    "Exit full screen" : "Iziet no pilnekrāna",
     "Retry" : "Mēģināt vēlreiz",
     "Autoresponder follows system settings" : "Automātiskais atbildētājs ievēro sistēmas iestatījumus",
     "Message" : "Ziņojums",

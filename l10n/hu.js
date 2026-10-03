@@ -381,6 +381,8 @@ OC.L10N.register(
     "You mentioned an attachment. Did you forget to add it?" : "Mellékletet említett. Nem felejtette el hozzáadni?",
     "Message discarded" : "Üzenet elvetése",
     "Could not discard message" : "Nem sikerült elvetni az üzenetet",
+    "Exit full screen" : "Kilépés a teljes képernyőből",
+    "Full screen" : "Teljes képernyő",
     "Minimize composer" : "Szerkesztő összecsukása",
     "Error sending your message" : "Hiba az üzenete elküldésekor",
     "Retry" : "Újra",

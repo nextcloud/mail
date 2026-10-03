@@ -433,6 +433,8 @@
     "attachment" : "vedhæftning",
     "attached" : "vedhæftet",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Du prøver at sende til mange modtagere i Til og/eller Cc. Overvej at bruge Bcc til at skjule modtageradresser.",
+    "Exit full screen" : "Afslut fuldskærm",
+    "Full screen" : "Fuld skærm",
     "Error sending your message" : "Fejl ved afsendelse af din besked",
     "Retry" : "Prøv igen",
     "Warning sending your message" : "Advarsel om at sende din besked",

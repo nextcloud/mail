@@ -368,6 +368,8 @@ OC.L10N.register(
     "Failed to save draft" : "Luonnoksen tallentaminen epäonnistui",
     "Message discarded" : "Viesti hylätty",
     "Could not discard message" : "Viestiä ei voitu hylätä",
+    "Exit full screen" : "Poistu koko näytön tilasta",
+    "Full screen" : "Koko näytön tila",
     "Minimize composer" : "Pienennä lähetysikkuna",
     "Error sending your message" : "Virhe viestiäsi lähettäessä",
     "Retry" : "Yritä uudelleen",
