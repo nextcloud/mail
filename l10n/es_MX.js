@@ -316,6 +316,8 @@ OC.L10N.register(
     "Subscribed" : "Suscrito",
     "New message" : "Mensaje nuevo",
     "Reply" : "Responder",
+    "Exit full screen" : "Salir de pantalla completa",
+    "Full screen" : "Pantalla completa",
     "Retry" : "Reintentar",
     "First day" : "Primer día",
     "Message" : "Mensaje",

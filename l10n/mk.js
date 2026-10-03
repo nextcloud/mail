@@ -318,6 +318,8 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Се обидувате да испратите до многу примачи во До и/или Cc. Можете да користите Bcc за да ги скриете адресите на примачите.",
     "Message discarded" : "Пораката е отфрлена",
     "Could not discard message" : "Неможе да се отфрли порака",
+    "Exit full screen" : "Излез од цел екран",
+    "Full screen" : "Цел екран",
     "Error sending your message" : "Грешка при испраќање на пораката",
     "Retry" : "Обидете се повторно",
     "Send anyway" : "Испрати секако",
