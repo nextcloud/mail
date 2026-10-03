@@ -185,6 +185,8 @@ OC.L10N.register(
     "Sync in background" : "סנכרון ברקע",
     "New message" : "הודעה חדשה",
     "Reply" : "תגובה",
+    "Exit full screen" : "יציאה ממסך מלא",
+    "Full screen" : "מסך מלא",
     "Error sending your message" : "שליחת ההודעה שלך נכשלה",
     "Retry" : "ניסיון חוזר",
     "Message" : "הודעה",

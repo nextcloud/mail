@@ -125,6 +125,8 @@ OC.L10N.register(
     "Draft" : "Arewway",
     "Reply" : "Err",
     "attachment" : "taceqquft yeddan",
+    "Exit full screen" : "Ffeɣ seg ugdil ačuran",
+    "Full screen" : "Agdil aččuran",
     "Retry" : "Ɛreḍ tikkelt-nniḍen",
     "Send anyway" : "Azen akken ibɣu yili",
     "Message" : "Izen",

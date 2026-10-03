@@ -443,6 +443,7 @@ OC.L10N.register(
     "Your message has no subject. Do you want to send it anyway?" : "Sua mensagem não tem assunto. Deseja enviá-la mesmo assim?",
     "Message discarded" : "Mensagem descartada",
     "Could not discard message" : "Não foi possível descartar a mensagem",
+    "Full screen" : "Tela cheia",
     "Minimize composer" : "Minimizar compositor",
     "Error sending your message" : "Erro ao enviar a sua mensagem",
     "Retry" : "Repetir",
