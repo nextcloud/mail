@@ -135,7 +135,7 @@ class SubmitContentJob extends TimedJob {
 				$fullMessage = $imapMessage->getFullMessage($imapMessage->getUid(), true);
 
 				$items[] = new ContentItem(
-					"{$mailbox->getId()}:{$message->getId()}",
+					ContextChatProvider::itemId($account->getId(), $mailbox->getId(), $message->getUid()),
 					$this->contextChatProvider->getId(),
 					$imapMessage->getSubject(),
 					$fullMessage['body'] ?? '',
