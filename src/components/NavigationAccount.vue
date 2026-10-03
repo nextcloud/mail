@@ -13,19 +13,6 @@
 				'navigation-account-header--folded': account.folded,
 				'navigation-account-header--active': account.folded && isInboxActive,
 			}">
-			<NcButton
-				v-if="!isDisabled"
-				class="navigation-account-header__toggle"
-				variant="tertiary"
-				:aria-label="foldLabel"
-				:title="foldLabel"
-				:aria-expanded="account.folded ? 'false' : 'true'"
-				:disabled="savingFolded"
-				@click="toggleFolded">
-				<template #icon>
-					<IconChevronRight class="navigation-account-header__chevron" :size="20" />
-				</template>
-			</NcButton>
 			<h2 :id="id" class="navigation-account-header__name">
 				<router-link
 					v-if="inboxRoute"
@@ -128,6 +115,19 @@
 					</NcActionButton>
 				</template>
 			</NcActions>
+			<NcButton
+				v-if="!isDisabled"
+				class="navigation-account-header__toggle"
+				variant="tertiary"
+				:aria-label="foldLabel"
+				:title="foldLabel"
+				:aria-expanded="account.folded ? 'false' : 'true'"
+				:disabled="savingFolded"
+				@click="toggleFolded">
+				<template #icon>
+					<IconChevronRight class="navigation-account-header__chevron" :size="20" />
+				</template>
+			</NcButton>
 		</li>
 		<DelegationModal v-if="showDelegationModal" :account="account" @close="showDelegationModal = false" />
 	</Fragment>
