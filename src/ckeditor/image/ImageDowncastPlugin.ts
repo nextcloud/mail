@@ -7,6 +7,12 @@ import type { ViewDocumentFragment, ViewElement } from 'ckeditor5'
 
 import { ImageUtils, Plugin, UpcastWriter } from 'ckeditor5'
 
+const ALIGNMENTS: Record<string, Record<string, string>> = {
+	'image-style-align-center': { 'margin-left': 'auto', 'margin-right': 'auto', 'text-align': 'center' },
+	'image-style-block-align-right': { 'margin-left': 'auto', 'margin-right': '0', 'text-align': 'right' },
+	'image-style-block-align-left': { 'margin-left': '0', 'margin-right': 'auto', 'text-align': 'left' },
+}
+
 /**
  * Parse a CSS length into whole pixels. Anything but an absolute pixel value
  * yields null.
@@ -49,13 +55,45 @@ export default class ImageDowncastPlugin extends Plugin {
 			const writer = new UpcastWriter(fragment.document)
 
 			for (const { item } of writer.createRangeIn(fragment)) {
+				const isImageFigure = item.is('element', 'figure') && item.hasClass('image')
+				if (isImageFigure) {
+					this._inlineAlignment(writer, item)
+				}
+
 				// A block image carries the resized width on its figure, an inline
 				// one on the img itself.
-				if ((item.is('element', 'figure') && item.hasClass('image')) || item.is('element', 'img')) {
+				if (isImageFigure || item.is('element', 'img')) {
 					this._mirrorResizedWidth(writer, item)
 				}
 			}
 		}, { priority: 'low' })
+	}
+
+	/**
+	 * Inlines the styles of the figure's alignment class. The class must stay,
+	 * reopening the draft reads the alignment from it.
+	 *
+	 * @param writer view writer of the data view
+	 * @param figure the figure to align
+	 */
+	_inlineAlignment(writer: UpcastWriter, figure: ViewElement): void {
+		const className = Object.keys(ALIGNMENTS).find((candidate) => figure.hasClass(candidate))
+			?? 'image-style-block-align-left'
+		const alignment = ALIGNMENTS[className]
+
+		writer.setStyle(alignment, figure)
+
+		const image = this.editor.plugins.get('ImageUtils').findViewImgElement(figure)
+		if (image === undefined) {
+			return
+		}
+
+		// For clients that drop <figure>; auto margins only move a block element.
+		writer.setStyle({
+			display: 'block',
+			'margin-left': alignment['margin-left'],
+			'margin-right': alignment['margin-right'],
+		}, image)
 	}
 
 	/**

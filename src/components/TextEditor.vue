@@ -39,6 +39,8 @@ import {
 	Heading,
 	Image,
 	ImageResize,
+	ImageStyle,
+	ImageToolbar,
 	ImageUpload,
 	Italic,
 	Link,
@@ -152,6 +154,8 @@ export default {
 				Image,
 				ImageUpload,
 				ImageResize,
+				ImageStyle,
+				ImageToolbar,
 				FilesImagePlugin,
 				ImageDowncastPlugin,
 				Font,
@@ -206,6 +210,15 @@ export default {
 				image: {
 					// A percentage would be relative to the recipient's unknown viewport.
 					resizeUnit: 'px',
+					styles: {
+						options: ['alignBlockLeft', 'alignCenter', 'alignBlockRight'],
+					},
+
+					toolbar: [
+						'imageStyle:alignBlockLeft',
+						'imageStyle:alignCenter',
+						'imageStyle:alignBlockRight',
+					],
 				},
 
 				mention: {
@@ -717,6 +730,11 @@ export default {
 :deep(p) {
 	cursor: text;
 	margin: 0 !important;
+}
+
+/* CKEditor centres unstyled block images, ImageDowncast sends them left aligned. */
+:deep(.ck-content .image:not([class*='image-style'])) {
+	margin-inline: 0 auto;
 }
 </style>
 
