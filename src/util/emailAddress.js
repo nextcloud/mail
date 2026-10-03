@@ -130,3 +130,38 @@ export function parseEmailList(str) {
 	}
 	return list
 }
+
+/**
+ * Sort a list of alias objects or email addresses:
+ * First by domain/host (case-insensitive), then alphabetically by local part / username.
+ *
+ * @template T
+ * @param {T[]} aliases List of alias objects (with .alias or .emailAddress) or raw email strings
+ * @return {T[]} Sorted array
+ */
+export function sortAliases(aliases) {
+	if (!Array.isArray(aliases)) {
+		return []
+	}
+
+	return [...aliases].sort((a, b) => {
+		const emailA = typeof a === 'string' ? a : (a?.alias || a?.emailAddress || '')
+		const emailB = typeof b === 'string' ? b : (b?.alias || b?.emailAddress || '')
+
+		const atIndexA = emailA.lastIndexOf('@')
+		const atIndexB = emailB.lastIndexOf('@')
+
+		const localA = (atIndexA !== -1 ? emailA.slice(0, atIndexA) : emailA).toLowerCase()
+		const domainA = (atIndexA !== -1 ? emailA.slice(atIndexA + 1) : '').toLowerCase()
+
+		const localB = (atIndexB !== -1 ? emailB.slice(0, atIndexB) : emailB).toLowerCase()
+		const domainB = (atIndexB !== -1 ? emailB.slice(atIndexB + 1) : '').toLowerCase()
+
+		const domainCompare = domainA.localeCompare(domainB)
+		if (domainCompare !== 0) {
+			return domainCompare
+		}
+
+		return localA.localeCompare(localB)
+	})
+}
