@@ -26,6 +26,7 @@ use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\ItineraryService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\OutboxService;
+use OCA\Mail\Service\SnoozeService;
 use OCA\Mail\Service\TrustedSenderService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -67,6 +68,7 @@ class MessageApiController extends OCSController {
 		private ItineraryService $itineraryService,
 		private TrustedSenderService $trustedSenderService,
 		private DelegationService $delegationService,
+		private SnoozeService $snoozeService,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -483,5 +485,44 @@ class MessageApiController extends OCSController {
 		}
 
 		return $messageAttachments;
+	}
+
+	/**
+	 * Snooze a mail message
+	 *
+	 * @param int $id the message id
+	 * @param int $destMailboxId the destination mail box
+	 * @param int $unixTimestamp the time the message should reappear
+	 * @return DataResponse<Http::STATUS_OK, string, array{}>|DataResponse<Http::STATUS_NOT_FOUND, string, array{}>
+	 *
+	 * 200: Mail Message snoozed successfully
+	 * 404: User, Message, Account or Mailbox not found
+	 * @throws ClientException
+	 * @throws ServiceException
+	 * @throws Throwable
+	 */
+	#[ApiRoute(verb: 'POST', url: '/message/{id}/snooze/{destMailboxId}')]
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
+	#[TrapError]
+	public function snooze(int $id, int $unixTimestamp, int $destMailboxId): DataResponse {
+		if ($this->userId === null) {
+			return new DataResponse('Account not found.', Http::STATUS_NOT_FOUND);
+		}
+		try {
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$srcMailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$dstMailbox = $this->mailManager->getMailbox($effectiveUserId, $destMailboxId);
+			$srcAccount = $this->accountService->find($effectiveUserId, $srcMailbox->getAccountId());
+			$dstAccount = $this->accountService->find($effectiveUserId, $dstMailbox->getAccountId());
+		} catch (DoesNotExistException $e) {
+			return new DataResponse('Message, Account or Mailbox not found', Http::STATUS_NOT_FOUND);
+		}
+
+		$this->snoozeService->snoozeMessage($message, $unixTimestamp, $srcAccount, $srcMailbox, $dstAccount, $dstMailbox);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId snoozed message <$id> to <$unixTimestamp> on behalf of $effectiveUserId");
+
+		return new DataResponse('', Http::STATUS_OK);
 	}
 }
