@@ -101,6 +101,16 @@ class MessageMapperTest extends TestCase {
 			->executeStatement();
 	}
 
+	private function insertTag(string $imapMessageId, string $tagId): void {
+		$qb = $this->db->getQueryBuilder();
+		$qb->insert('mail_message_tags')
+			->values([
+				'imap_message_id' => $qb->createNamedParameter($imapMessageId),
+				'tag_id' => $qb->createNamedParameter($tagId),
+			])
+			->executeStatement();
+	}
+
 	public function testFindIdsByQueryMatchesTheSender(): void {
 		$mailbox = new Mailbox();
 		$mailbox->setId(1);
@@ -160,6 +170,24 @@ class MessageMapperTest extends TestCase {
 
 		$searchQuery = new SearchQuery();
 		$searchQuery->addTo('alice@');
+
+		$result = $this->mapper->findIdsByQuery($mailbox, $searchQuery, 'DESC', null);
+
+		self::assertEquals([1], $result);
+	}
+
+	public function testFindIdsByQueryDoesNotDuplicateAMessageWithSeveralMatchingTags(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$this->insertMessageWithId(1, 1);
+		// Same concern as the recipient case: a message with several of the
+		// requested tags must not come back once per tag now that the join
+		// is a subquery and DISTINCT is gone.
+		$this->insertTag('<abc11@123.com>', 'tag-a');
+		$this->insertTag('<abc11@123.com>', 'tag-b');
+
+		$searchQuery = new SearchQuery();
+		$searchQuery->setTags(['tag-a', 'tag-b']);
 
 		$result = $this->mapper->findIdsByQuery($mailbox, $searchQuery, 'DESC', null);
 
