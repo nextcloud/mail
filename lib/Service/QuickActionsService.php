@@ -91,15 +91,16 @@ class QuickActionsService {
 	}
 
 	/**
-	 * @param string $name
-	 * @param int $order
-	 * @param int $actionId
-	 * @param string $parameter If the steps needs a parameter
-	 * @return ActionStep
+	 * @param ?int $tagId Required if $name is 'applyTag'
+	 * @param ?int $mailboxId Required if $name is 'moveThread'
 	 * @throws ServiceException
 	 */
 	public function createActionStep(string $name, int $order, int $actionId, ?int $tagId = null, ?int $mailboxId = null): ActionStep {
 		$this->validateActionStep($name, $order, $actionId, $tagId, $mailboxId);
+		foreach ($this->actionStepMapper->findStepsFromOrder($actionId, $order) as $stepToShift) {
+			$stepToShift->setOrder($stepToShift->getOrder() + 1);
+			$this->actionStepMapper->update($stepToShift);
+		}
 		$action = new ActionStep();
 		$action->setName($name);
 		$action->setOrder($order);
@@ -146,12 +147,18 @@ class QuickActionsService {
 				throw new ServiceException('Invalid action step order');
 			}
 
-			if ($highestOrderForAction && in_array($highestOrderForAction->getName(), ['deleteThread', 'moveThread', 'markAsSpam'], true)) {
-				throw new ServiceException('Cant perform actions after ' . $highestOrderForAction->getName());
-			}
+			if ($highestOrderForAction !== null) {
+				// A terminal step (delete/move/spam) always has to stay last. Inserting a
+				// step in front of it (i.e. at or before its current order) is fine, since
+				// createActionStep() shifts it and any steps after it up by one.
+				if (in_array($highestOrderForAction->getName(), ['deleteThread', 'moveThread', 'markAsSpam'], true)
+					&& $order > $highestOrderForAction->getOrder()) {
+					throw new ServiceException('Cant perform actions after ' . $highestOrderForAction->getName());
+				}
 
-			if ($highestOrderForAction !== null && $order !== $highestOrderForAction->getOrder() + 1) {
-				throw new ServiceException('Invalid action step order');
+				if ($order > $highestOrderForAction->getOrder() + 1) {
+					throw new ServiceException('Invalid action step order');
+				}
 			}
 		} catch (DoesNotExistException $th) {
 			if ($order > 1) {
