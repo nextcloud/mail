@@ -234,6 +234,7 @@ class PageController extends Controller {
 			'layout-mode' => $this->preferences->getPreference($this->userId, 'layout-mode', 'vertical-split'),
 			'layout-message-view' => $this->preferences->getPreference($this->userId, 'layout-message-view', $this->appConfig->getValueString(Application::APP_ID, ConfigLexicon::LAYOUT_MESSAGE_VIEW, 'threaded')),
 			'reply-mode' => $this->preferences->getPreference($this->userId, 'reply-mode', 'top'),
+			'reply-from-matching-address' => $this->preferences->getPreference($this->userId, 'reply-from-matching-address', 'true'),
 			'collect-data' => $this->preferences->getPreference($this->userId, 'collect-data', 'true'),
 			'search-priority-body' => $this->preferences->getPreference($this->userId, 'search-priority-body', 'false'),
 			'start-mailbox-id' => $this->preferences->getPreference($this->userId, 'start-mailbox-id'),
