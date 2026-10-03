@@ -807,11 +807,7 @@ class MessageMapper extends QBMapper {
 	public function findIdsByQuery(Mailbox $mailbox, SearchQuery $query, string $sortOrder, ?int $limit, ?array $uids = null, ?array $ids = null): array {
 		$qb = $this->db->getQueryBuilder();
 
-		if ($this->needDistinct($query)) {
-			$select = $qb->selectDistinct(['m.id', 'm.sent_at']);
-		} else {
-			$select = $qb->select(['m.id', 'm.sent_at']);
-		}
+		$select = $qb->select(['m.id', 'm.sent_at']);
 
 		$select->from($this->getTableName(), 'm');
 
@@ -830,91 +826,40 @@ class MessageMapper extends QBMapper {
 			$select->leftJoin('m', $this->getTableName(), 'm2', $selfJoin);
 		}
 
-		if (!empty($query->getFrom())) {
-			$select->innerJoin('m', 'mail_recipients', 'r0', 'm.id = r0.message_id');
-		}
-		if (!empty($query->getTo())) {
-			$select->innerJoin('m', 'mail_recipients', 'r1', 'm.id = r1.message_id');
-		}
-		if (!empty($query->getCc())) {
-			$select->innerJoin('m', 'mail_recipients', 'r2', 'm.id = r2.message_id');
-		}
-		if (!empty($query->getBcc())) {
-			$select->innerJoin('m', 'mail_recipients', 'r3', 'm.id = r3.message_id');
-		}
-
 		$select->where(
 			$qb->expr()->eq('m.mailbox_id', $qb->createNamedParameter($mailbox->getId()), IQueryBuilder::PARAM_INT)
 		);
 
 		if (!empty($query->getTags())) {
-			$select->innerJoin('m', 'mail_message_tags', 'tags', 'm.message_id = tags.imap_message_id');
+			$tagged = $this->db->getQueryBuilder();
+			$tagged->select('tags.imap_message_id')
+				->from('mail_message_tags', 'tags')
+				->where($tagged->expr()->in('tags.tag_id', $qb->createNamedParameter($query->getTags(), IQueryBuilder::PARAM_STR_ARRAY)));
 			$select->andWhere(
-				$qb->expr()->in('tags.tag_id', $qb->createNamedParameter($query->getTags(), IQueryBuilder::PARAM_STR_ARRAY))
+				$qb->expr()->in('m.message_id', $qb->createFunction($tagged->getSQL()), IQueryBuilder::PARAM_STR_ARRAY)
 			);
 		}
 
 		$textOrs = [];
 
-		if (!empty($query->getFrom())) {
-			if ($query->getMatch() === 'anyof') {
-				$textOrs[] = $qb->expr()->andX(
-					$qb->expr()->orX(
-						...array_map(fn (string $email) => $qb->expr()->iLike('r0.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR)), $query->getFrom()),
-						...array_map(fn (string $label) => $qb->expr()->iLike('r0.label', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($label) . '%', IQueryBuilder::PARAM_STR)), $query->getFrom()),
-					),
-					$qb->expr()->eq('r0.type', $qb->createNamedParameter(Recipient::TYPE_FROM, IQueryBuilder::PARAM_INT)),
-				);
-			} else {
-				$select->andWhere(
-					$qb->expr()->orX(
-						...array_map(fn (string $email) => $qb->expr()->iLike('r0.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR)), $query->getFrom()),
-						...array_map(fn (string $label) => $qb->expr()->iLike('r0.label', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($label) . '%', IQueryBuilder::PARAM_STR)), $query->getFrom()),
-					),
-					$qb->expr()->eq('r0.type', $qb->createNamedParameter(Recipient::TYPE_FROM, IQueryBuilder::PARAM_INT)),
-				);
-
+		foreach ([
+			Recipient::TYPE_FROM => $query->getFrom(),
+			Recipient::TYPE_TO => $query->getTo(),
+		] as $type => $values) {
+			if (empty($values)) {
+				continue;
 			}
-
-		}
-		if (!empty($query->getTo())) {
 			if ($query->getMatch() === 'anyof') {
-				$textOrs[] = $qb->expr()->andX(
-					$qb->expr()->orX(
-						...array_map(fn (string $email) => $qb->expr()->iLike('r1.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR)), $query->getTo()),
-						...array_map(fn (string $label) => $qb->expr()->iLike('r1.label', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($label) . '%', IQueryBuilder::PARAM_STR)), $query->getTo()),
-					),
-					$qb->expr()->eq('r1.type', $qb->createNamedParameter(Recipient::TYPE_TO, IQueryBuilder::PARAM_INT)),
-				);
+				$textOrs[] = $this->recipientsMatch($qb, $type, $values);
 			} else {
-
-				$select->andWhere(
-					$qb->expr()->orX(
-						...array_map(fn (string $email) => $qb->expr()->iLike('r1.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR)), $query->getTo()),
-						...array_map(fn (string $label) => $qb->expr()->iLike('r1.label', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($label) . '%', IQueryBuilder::PARAM_STR)), $query->getTo()),
-					),
-					$qb->expr()->eq('r1.type', $qb->createNamedParameter(Recipient::TYPE_TO, IQueryBuilder::PARAM_INT)),
-				);
+				$select->andWhere($this->recipientsMatch($qb, $type, $values));
 			}
-
 		}
 		if (!empty($query->getCc())) {
-			$select->andWhere(
-				$qb->expr()->orX(
-					...array_map(fn (string $email) => $qb->expr()->iLike('r2.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR)), $query->getCc()),
-					...array_map(fn (string $label) => $qb->expr()->iLike('r2.label', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($label) . '%', IQueryBuilder::PARAM_STR)), $query->getCc()),
-				),
-				$qb->expr()->eq('r2.type', $qb->createNamedParameter(Recipient::TYPE_CC, IQueryBuilder::PARAM_INT)),
-			);
+			$select->andWhere($this->recipientsMatch($qb, Recipient::TYPE_CC, $query->getCc()));
 		}
 		if (!empty($query->getBcc())) {
-			$select->andWhere(
-				$qb->expr()->orX(
-					...array_map(fn (string $email) => $qb->expr()->iLike('r3.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR)), $query->getBcc()),
-					...array_map(fn (string $label) => $qb->expr()->iLike('r3.label', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($label) . '%', IQueryBuilder::PARAM_STR)), $query->getBcc()),
-				),
-				$qb->expr()->eq('r3.type', $qb->createNamedParameter(Recipient::TYPE_BCC, IQueryBuilder::PARAM_INT)),
-			);
+			$select->andWhere($this->recipientsMatch($qb, Recipient::TYPE_BCC, $query->getBcc()));
 		}
 
 		if (!empty($query->getSubjects())) {
@@ -1164,6 +1109,25 @@ class MessageMapper extends QBMapper {
 		}
 
 		return array_map(static fn (Message $message) => $message->getId(), $this->findEntities($select));
+	}
+
+	/**
+	 * A subquery rather than a join: joining mail_recipients multiplies every message by its recipients
+	 *
+	 * @param string[] $values
+	 */
+	private function recipientsMatch(IQueryBuilder $qb, int $type, array $values): string {
+		$sub = $this->db->getQueryBuilder();
+		$sub->select('r.message_id')
+			->from('mail_recipients', 'r')
+			->where(
+				$sub->expr()->eq('r.type', $qb->createNamedParameter($type, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
+				$sub->expr()->orX(
+					...array_map(fn (string $email) => $sub->expr()->iLike('r.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR)), $values),
+					...array_map(fn (string $label) => $sub->expr()->iLike('r.label', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($label) . '%', IQueryBuilder::PARAM_STR)), $values),
+				),
+			);
+		return $qb->expr()->in('m.id', $qb->createFunction($sub->getSQL()), IQueryBuilder::PARAM_INT_ARRAY);
 	}
 
 	/**
