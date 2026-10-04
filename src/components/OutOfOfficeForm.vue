@@ -98,6 +98,20 @@
 					:disabled="followingSystem"
 					:bus="textEditorDummyBus" />
 			</fieldset>
+
+			<fieldset class="form__fieldset">
+				<label for="ooo-forward-to">{{ t('mail', 'Forward to (optional)') }}</label>
+				<NcTextField
+					id="ooo-forward-to"
+					v-model="forwardTo"
+					:disabled="followingSystem"
+					:placeholder="t('mail', 'email@example.org')"
+					:success="forwardTo !== '' && isValidEmail(forwardTo)"
+					:error="forwardTo !== '' && !isValidEmail(forwardTo)" />
+				<p class="form__fieldset__description">
+					{{ t('mail', 'The forwarding address and the out-of-office message should be consistent with each other.') }}
+				</p>
+			</fieldset>
 		</template>
 
 		<p v-if="errorMessage">
@@ -121,7 +135,7 @@
 <script>
 import { loadState } from '@nextcloud/initial-state'
 import { generateUrl } from '@nextcloud/router'
-import { NcButton, NcDateTimePicker } from '@nextcloud/vue'
+import { NcButton, NcDateTimePicker, NcTextField } from '@nextcloud/vue'
 import mitt from 'mitt'
 import { mapStores } from 'pinia'
 import CheckIcon from 'vue-material-design-icons/Check.vue'
@@ -140,6 +154,7 @@ export default {
 	components: {
 		NcDateTimePicker,
 		TextEditor,
+		NcTextField,
 		NcButton,
 		CheckIcon,
 		OpenInNewIcon,
@@ -167,6 +182,7 @@ export default {
 			lastDay: null,
 			subject: '',
 			message: '',
+			forwardTo: '',
 			loading: false,
 			errorMessage: '',
 			hasPersonalAbsenceSettings: nextcloudVersion >= 28 && enableSystemOutOfOffice,
@@ -281,6 +297,7 @@ export default {
 
 			this.subject = state.subject
 			this.message = toHtml(plain(state.message)).value
+			this.forwardTo = state.forwardTo ?? ''
 		},
 
 		async submit() {
@@ -315,6 +332,7 @@ export default {
 						subject: this.subject,
 						message: toPlain(html(this.message)).value, // CKEditor always returns html data
 						allowedRecipients: this.aliases,
+						forwardTo: this.forwardTo || null,
 					})
 
 					this.mainStore.patchAccountMutation({
@@ -330,6 +348,10 @@ export default {
 			} finally {
 				this.loading = false
 			}
+		},
+
+		isValidEmail(email) {
+			return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 		},
 	},
 }

@@ -115,6 +115,7 @@ class OutOfOfficeService {
 				new DateTimeImmutable('@' . $currentOutOfOfficeData->getEndDate()),
 				'Re: ${subject}',
 				$currentOutOfOfficeData->getMessage(),
+				null,
 			);
 			$this->update($mailAccount, $state);
 		} else {
