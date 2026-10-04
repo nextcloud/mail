@@ -168,7 +168,7 @@ jobs:
                   - 993:993
                   - 4190:4190
           mail-stalwart-service:
-              image: stalwartlabs/stalwart:v0.15.5
+              image: stalwartlabs/stalwart:v0.16.24
               env:
                   STALWART_ADMIN_PASSWORD: ${{ env.STALWART_PWD }}
               ports:
