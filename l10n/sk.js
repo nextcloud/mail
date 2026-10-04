@@ -547,6 +547,8 @@ OC.L10N.register(
     "You mentioned an attachment. Did you forget to add it?" : "Zmienili ste prílohu. Zabudli ste ju pridať?",
     "Message discarded" : "Správa bola zrušená",
     "Could not discard message" : "Správu sa nepodarilo zahodiť",
+    "Hide contact info" : "Skryť kontaktné informácie",
+    "Show contact info" : "Zobraziť kontaktné informácie",
     "Exit full screen" : "Ukončiť režim celej obrazovky",
     "Full screen" : "Celá obrazovka",
     "Minimize composer" : "Minimalizovať editor",
