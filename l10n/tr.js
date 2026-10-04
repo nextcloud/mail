@@ -547,6 +547,8 @@ OC.L10N.register(
     "You mentioned an attachment. Did you forget to add it?" : "Bir ek dosyayı andınız. Dosyayı eklemeyi unutmuş olabilir misiniz?",
     "Message discarded" : "İleti iptal edildi",
     "Could not discard message" : "İleti iptal edilemedi",
+    "Hide contact info" : "Kişi bilgilerini gizle",
+    "Show contact info" : "Kişi bilgilerini görüntüle",
     "Exit full screen" : "Tam ekrandan çık",
     "Full screen" : "Tam ekran",
     "Minimize composer" : "Oluşturucuyu küçült",
