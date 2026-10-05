@@ -498,7 +498,7 @@ OC.L10N.register(
     "Remove {email}" : "{email} entfernen",
     "could not delete account" : "Konto konnte nicht gelöscht werden",
     "Provisioned account is disabled" : "Bereitgestelltes Konto ist deaktiviert",
-    "Please login using a password to enable this account. The current session is using passwordless authentication, e.g. SSO or WebAuthn." : "Bitte melden Sie sich mit einem Passwort an, um dieses Konto zu aktivieren. Die aktuelle Sitzung verwendet eine passwortlose Authentifizierung, z. B. SSO oder WebAuthn.",
+    "Please login using a password to enable this account. The current session is using passwordless authentication, e.g. SSO or WebAuthn." : "Bitte melden Sie sich mit einem Passwort an, um dieses Konto zu aktivieren. Die aktuelle Sitzung verwendet eine passwortlose Authentifizierung, z. B. SSO oder WebAuthn.",
     "Delegate account" : "Konto delegieren",
     "Show only subscribed folders" : "Nur abonnierte Ordner anzeigen",
     "Add folder" : "Ordner hinzufügen",
