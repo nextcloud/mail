@@ -101,12 +101,12 @@ class MessageMapperTest extends TestCase {
 			->executeStatement();
 	}
 
-	private function insertTag(string $imapMessageId, string $tagId): void {
+	private function insertTag(string $imapMessageId, int $tagId): void {
 		$qb = $this->db->getQueryBuilder();
 		$qb->insert('mail_message_tags')
 			->values([
 				'imap_message_id' => $qb->createNamedParameter($imapMessageId),
-				'tag_id' => $qb->createNamedParameter($tagId),
+				'tag_id' => $qb->createNamedParameter($tagId, IQueryBuilder::PARAM_INT),
 			])
 			->executeStatement();
 	}
@@ -183,11 +183,11 @@ class MessageMapperTest extends TestCase {
 		// Same concern as the recipient case: a message with several of the
 		// requested tags must not come back once per tag now that the join
 		// is a subquery and DISTINCT is gone.
-		$this->insertTag('<abc11@123.com>', 'tag-a');
-		$this->insertTag('<abc11@123.com>', 'tag-b');
+		$this->insertTag('<abc11@123.com>', 101);
+		$this->insertTag('<abc11@123.com>', 102);
 
 		$searchQuery = new SearchQuery();
-		$searchQuery->setTags(['tag-a', 'tag-b']);
+		$searchQuery->setTags([101, 102]);
 
 		$result = $this->mapper->findIdsByQuery($mailbox, $searchQuery, 'DESC', null);
 

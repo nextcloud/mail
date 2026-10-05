@@ -831,10 +831,11 @@ class MessageMapper extends QBMapper {
 		);
 
 		if (!empty($query->getTags())) {
+			$tagIds = array_map('intval', $query->getTags());
 			$tagged = $this->db->getQueryBuilder();
 			$tagged->select('tags.imap_message_id')
 				->from('mail_message_tags', 'tags')
-				->where($tagged->expr()->in('tags.tag_id', $qb->createNamedParameter($query->getTags(), IQueryBuilder::PARAM_STR_ARRAY)));
+				->where($tagged->expr()->in('tags.tag_id', $qb->createNamedParameter($tagIds, IQueryBuilder::PARAM_INT_ARRAY)));
 			$select->andWhere(
 				$qb->expr()->in('m.message_id', $qb->createFunction($tagged->getSQL()), IQueryBuilder::PARAM_STR_ARRAY)
 			);
