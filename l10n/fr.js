@@ -547,6 +547,8 @@ OC.L10N.register(
     "You mentioned an attachment. Did you forget to add it?" : "Vous avez évoqué une pièce jointe. Avez-vous oublié de l'attacher ?",
     "Message discarded" : "Message ignoré",
     "Could not discard message" : "Impossible d'ignorer le message",
+    "Hide contact info" : "Masquer les informations du contact",
+    "Show contact info" : "Afficher les informations du contact",
     "Exit full screen" : "Quitter le plein écran",
     "Full screen" : "Plein écran",
     "Minimize composer" : "Minimiser la fenêtre de composition",

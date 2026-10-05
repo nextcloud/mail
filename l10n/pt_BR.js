@@ -547,6 +547,8 @@ OC.L10N.register(
     "You mentioned an attachment. Did you forget to add it?" : "Você mencionou um anexo. Você esqueceu de adicioná-lo?",
     "Message discarded" : "Mensagem descartada",
     "Could not discard message" : "Não foi possível descartar a mensagem",
+    "Hide contact info" : "Ocultar informações de contato",
+    "Show contact info" : "Mostrar informações de contato",
     "Exit full screen" : "Sair da tela cheia",
     "Full screen" : "Tela cheia",
     "Minimize composer" : "Minimizar compositor",
