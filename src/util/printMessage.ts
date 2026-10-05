@@ -353,7 +353,7 @@ function absolutizeUrls(root: Element, baseUrl: string): void {
  */
 export function buildMessageContent(sourceDocument: Document): HTMLElement {
 	const html = sourceDocument.documentElement.cloneNode(true) as HTMLElement
-	html.querySelectorAll('script, base, [data-iframe-size]').forEach((node) => node.remove())
+	html.querySelectorAll('script, base').forEach((node) => node.remove())
 	absolutizeUrls(html, sourceDocument.baseURI)
 
 	return html

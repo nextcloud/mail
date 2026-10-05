@@ -123,6 +123,8 @@ OC.L10N.register(
     "Edit message" : "Hariri ujumbe",
     "Draft" : "Draft",
     "Reply" : "Jibu",
+    "Exit full screen" : "Ondoka kwenye skrini nzima",
+    "Full screen" : "Skrini nzima",
     "Retry" : "Jaribu tene",
     "First day" : "First day",
     "Message" : "Message",

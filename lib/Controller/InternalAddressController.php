@@ -28,12 +28,11 @@ class InternalAddressController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param string $address
 	 * @param string $type
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function setAddress(string $address, string $type): JsonResponse {
 		if ($this->userId === null) {
@@ -53,12 +52,11 @@ class InternalAddressController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param string $address
 	 * @param string $type
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function removeAddress(string $address, string $type): JsonResponse {
 		if ($this->userId === null) {
@@ -76,10 +74,9 @@ class InternalAddressController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function list(): JsonResponse {
 		if ($this->userId === null) {
