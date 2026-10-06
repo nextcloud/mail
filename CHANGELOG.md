@@ -1,3 +1,24 @@
+## [5.12.4](https://github.com/nextcloud/mail/compare/v5.12.3...v5.12.4) (2026-10-06)
+
+
+### Bug Fixes
+
+* **ai:** back off exponentially after failed AI tasks ([7fa1aaa](https://github.com/nextcloud/mail/commit/7fa1aaac53756e445bf0e27f7a1c97f49190e286))
+* **aliases:** sort aliases by domain and localpart in store ([8b94f97](https://github.com/nextcloud/mail/commit/8b94f97c9dc14145c424e576ab93e4f7a4518021))
+* avatar endpoint doing user enumeration ([0ed3eba](https://github.com/nextcloud/mail/commit/0ed3eba378598e55798fad23f58a6dfef7cede46))
+* **dns:** Update public suffix list ([85af251](https://github.com/nextcloud/mail/commit/85af25148ceef42063895ff5efb4914df0141c61))
+* floating editor wide size ([42c14eb](https://github.com/nextcloud/mail/commit/42c14eba04b5c9c5e7786b6379d5b15d0e28efe9))
+* keep floating composer inside NcContent ([1510a30](https://github.com/nextcloud/mail/commit/1510a30b10373c8c4bb6f8eaf7aba61aaa762e5d))
+* **l10n:** Update translations from Transifex ([cc9ee02](https://github.com/nextcloud/mail/commit/cc9ee027f8c9231c0641492c451b1ae18bb418d0))
+* **l10n:** Update translations from Transifex ([9f48ac5](https://github.com/nextcloud/mail/commit/9f48ac50d01460fd99f03aff8c325ed124ff7085))
+* **l10n:** Update translations from Transifex ([1498828](https://github.com/nextcloud/mail/commit/14988288781e0eadad44b54625bb3cf894399186))
+* **l10n:** Update translations from Transifex ([94babff](https://github.com/nextcloud/mail/commit/94babff55f4950575fbffa6806bbd7af5eb8fd5b))
+* **l10n:** Update translations from Transifex ([7e0702b](https://github.com/nextcloud/mail/commit/7e0702b7af97eebc2b9df8bf20c2568dbbc223b1))
+* **l10n:** Update translations from Transifex ([70fbc34](https://github.com/nextcloud/mail/commit/70fbc345dfe4fa7c2a0aa4ab4c50317325db0fa7))
+* **l10n:** Update translations from Transifex ([0cf652b](https://github.com/nextcloud/mail/commit/0cf652b45163f22a1ebd3eb4b60782ed5eb9c173))
+
+
+
 ## [5.12.3](https://github.com/nextcloud/mail/compare/v5.12.2...v5.12.3) (2026-09-29)
 
 
