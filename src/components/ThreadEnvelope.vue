@@ -629,10 +629,8 @@ export default {
 					accountId: this.envelope.accountId,
 				})
 			}
-			const recipients = buildReplyRecipients(this.envelope, {
-				label: this.account.name,
-				email: this.account.emailAddress,
-			})
+			const { identity, followUp } = this.mainStore.getReplyContext(this.envelope, { followUp: this.showFollowUpHeader })
+			const recipients = buildReplyRecipients(this.envelope, identity, undefined, followUp)
 			return recipients.to.concat(recipients.cc).length > 1
 		},
 
