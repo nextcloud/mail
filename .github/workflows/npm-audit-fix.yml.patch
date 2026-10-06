@@ -9,8 +9,8 @@ index f525f7ebc..0fbc89cdb 100644
 -          - 'stable35'
 -          - 'stable34'
 -          - 'stable33'
++          - 'stable5.13'
 +          - 'stable5.12'
-+          - 'stable5.11'
  
      name: npm-audit-fix-${{ matrix.branches }}
  
