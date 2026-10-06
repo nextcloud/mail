@@ -547,6 +547,8 @@ OC.L10N.register(
     "You mentioned an attachment. Did you forget to add it?" : "您提及了附件。您忘記新增了嗎？",
     "Message discarded" : "郵件已捨棄",
     "Could not discard message" : "無法捨棄郵件",
+    "Hide contact info" : "隱藏聯絡人資訊",
+    "Show contact info" : "顯示聯絡人資訊",
     "Exit full screen" : "離開全螢幕",
     "Full screen" : "全螢幕",
     "Minimize composer" : "最小化編輯器",
