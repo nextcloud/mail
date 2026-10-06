@@ -902,9 +902,10 @@ export default function mainStoreActions() {
 
 				const mailbox = this.getMailbox(mailboxId)
 
-				// Skip superfluous requests if using passwordless authentication. They will fail anyway.
+				// Skip superfluous requests if using passwordless authentication without a
+				// master password. With a master password these requests succeed (#9008, #9653).
 				const passwordIsUnavailable = this.getPreference('password-is-unavailable', false)
-				const isDisabled = (account) => passwordIsUnavailable && !!account.provisioningId
+				const isDisabled = (account) => passwordIsUnavailable && !!account.provisioningId && !this.masterPasswordEnabled
 
 				if (mailbox.isUnified) {
 					return Promise.all(this.getAccounts
@@ -1004,9 +1005,10 @@ export default function mainStoreActions() {
 			})
 		},
 		async syncInboxes() {
-			// Skip superfluous requests if using passwordless authentication. They will fail anyway.
+			// Skip superfluous requests if using passwordless authentication without a
+			// master password. With a master password these requests succeed (#9008, #9653).
 			const passwordIsUnavailable = this.getPreference('password-is-unavailable', false)
-			const isDisabled = (account) => passwordIsUnavailable && !!account.provisioningId
+			const isDisabled = (account) => passwordIsUnavailable && !!account.provisioningId && !this.masterPasswordEnabled
 
 			return handleHttpAuthErrors(async () => {
 				const results = await Promise.all(this.getAccounts
