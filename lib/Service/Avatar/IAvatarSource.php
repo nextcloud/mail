@@ -18,9 +18,10 @@ interface IAvatarSource {
 	public function isExternal():bool ;
 
 	/**
+	 * @param string $userId uid of the user the lookup is performed for
 	 * @param string $email sender email address
 	 * @param AvatarFactory $factory
 	 * @return Avatar|null avatar URL if one can be found
 	 */
-	public function fetch(string $email, AvatarFactory $factory);
+	public function fetch(string $userId, string $email, AvatarFactory $factory);
 }
