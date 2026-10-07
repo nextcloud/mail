@@ -66,7 +66,7 @@ class AntiSpamServiceTest extends TestCase {
 		$event = $this->createConfiguredMock(MessageFlaggedEvent::class, [
 			'getAccount' => $this->createMock(Account::class),
 			'getMailbox' => $this->createMock(Mailbox::class),
-			'getFlag' => '$junk'
+			'getFlag' => '$Junk'
 		]);
 
 		$this->appConfig->expects(self::once())
@@ -83,7 +83,7 @@ class AntiSpamServiceTest extends TestCase {
 		$event = $this->createConfiguredMock(MessageFlaggedEvent::class, [
 			'getAccount' => $this->createMock(Account::class),
 			'getMailbox' => $this->createMock(Mailbox::class),
-			'getFlag' => '$junk'
+			'getFlag' => '$Junk'
 		]);
 
 		$this->appConfig->expects(self::once())
@@ -103,7 +103,7 @@ class AntiSpamServiceTest extends TestCase {
 		$event = $this->createConfiguredMock(MessageFlaggedEvent::class, [
 			'getAccount' => $this->createMock(Account::class),
 			'getMailbox' => $this->createMock(Mailbox::class),
-			'getFlag' => '$junk'
+			'getFlag' => '$Junk'
 		]);
 
 		$this->appConfig->expects(self::once())
@@ -145,7 +145,7 @@ class AntiSpamServiceTest extends TestCase {
 		$event = $this->createConfiguredMock(MessageFlaggedEvent::class, [
 			'getAccount' => $account,
 			'getMailbox' => $this->createMock(Mailbox::class),
-			'getFlag' => '$junk'
+			'getFlag' => '$Junk'
 		]);
 		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
 
@@ -211,7 +211,7 @@ class AntiSpamServiceTest extends TestCase {
 		$event = $this->createConfiguredMock(MessageFlaggedEvent::class, [
 			'getAccount' => $account,
 			'getMailbox' => $this->createMock(Mailbox::class),
-			'getFlag' => '$junk'
+			'getFlag' => '$Junk'
 		]);
 		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
 
