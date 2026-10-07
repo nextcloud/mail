@@ -50,11 +50,11 @@
 				@click.prevent="onToggleJunk">
 				<template #icon>
 					<AlertOctagonIcon
-						:title="envelope.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')"
+						:title="envelope.flags.$Junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')"
 						:size="20" />
 				</template>
 				{{
-					envelope.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
+					envelope.flags.$Junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
 				}}
 			</NcActionButton>
 			<NcActionButton

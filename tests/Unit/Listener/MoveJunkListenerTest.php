@@ -56,7 +56,7 @@ class MoveJunkListenerTest extends TestCase {
 
 		$event = $this->createMock(MessageFlaggedEvent::class);
 		$event->method('getFlag')
-			->willReturn('$junk');
+			->willReturn('$Junk');
 		$event->method('getAccount')
 			->willReturn($account);
 
@@ -84,7 +84,7 @@ class MoveJunkListenerTest extends TestCase {
 			$account,
 			$mailbox,
 			$message,
-			'$junk',
+			'$Junk',
 			true
 		);
 
@@ -111,7 +111,7 @@ class MoveJunkListenerTest extends TestCase {
 			$account,
 			$mailbox,
 			$message,
-			'$junk',
+			'$Junk',
 			true
 		);
 
@@ -144,7 +144,7 @@ class MoveJunkListenerTest extends TestCase {
 			$account,
 			$mailbox,
 			$message,
-			'$junk',
+			'$Junk',
 			true
 		);
 
@@ -172,7 +172,7 @@ class MoveJunkListenerTest extends TestCase {
 			$account,
 			$mailbox,
 			$message,
-			'$junk',
+			'$Junk',
 			false
 		);
 
@@ -205,7 +205,7 @@ class MoveJunkListenerTest extends TestCase {
 			$account,
 			$mailbox,
 			$message,
-			'$junk',
+			'$Junk',
 			false
 		);
 

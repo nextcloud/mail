@@ -584,7 +584,7 @@ describe('Vuex store actions', () => {
 		const removeEnvelope = await store.moveEnvelopeToJunk({
 			accountId: 42,
 			flags: {
-				$junk: true,
+				$Junk: true,
 			},
 			mailboxId: 1,
 		})
@@ -611,7 +611,7 @@ describe('Vuex store actions', () => {
 		const removeEnvelope = await store.moveEnvelopeToJunk({
 			accountId: 42,
 			flags: {
-				$junk: true,
+				$Junk: true,
 			},
 			mailboxId: 10,
 		})
@@ -628,7 +628,7 @@ describe('Vuex store actions', () => {
 		const removeEnvelope = await store.moveEnvelopeToJunk({
 			accountId: 42,
 			flags: {
-				$junk: true,
+				$Junk: true,
 			},
 			mailboxId: 10,
 		})

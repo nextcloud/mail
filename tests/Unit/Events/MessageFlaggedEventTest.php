@@ -56,11 +56,11 @@ class MessageFlaggedEventTest extends TestCase {
 		$message->setId(42);
 		$message->setUid(12345);
 
-		$event = new MessageFlaggedEvent($account, $mailbox, $message, '$junk', true);
+		$event = new MessageFlaggedEvent($account, $mailbox, $message, '$Junk', true);
 
 		$this->assertSame([
 			'accountId' => 7,
-			'flag' => '$junk',
+			'flag' => '$Junk',
 			'mailboxId' => 13,
 			'messageId' => 42,
 			'set' => true,
