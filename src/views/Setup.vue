@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<NcContent app-name="mail">
+	<NcContent appName="mail">
 		<Navigation v-if="hasAccounts" />
 		<NcAppContent>
 			<div
@@ -19,11 +19,11 @@
 					</template>
 					<template #action>
 						<AccountForm
-							:display-name="displayName"
+							v-model:error="error"
+							:displayName="displayName"
 							:email="email"
-							:error.sync="error"
 							class="setup__form-content__form"
-							@account-created="onAccountCreated" />
+							@accountCreated="onAccountCreated" />
 					</template>
 				</NcEmptyContent>
 				<NcEmptyContent v-else :name="t('mail', 'To add a mail account, please contact your administrator.')">
@@ -39,8 +39,10 @@
 <script>
 import { loadState } from '@nextcloud/initial-state'
 import { generateFilePath } from '@nextcloud/router'
-import { NcAppContent, NcContent, NcEmptyContent } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcAppContent from '@nextcloud/vue/components/NcAppContent'
+import NcContent from '@nextcloud/vue/components/NcContent'
+import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 import AccountForm from '../components/AccountForm.vue'
 import Navigation from '../components/Navigation.vue'
 import FluidMail from '../../img/mail-fluid.svg'
@@ -123,9 +125,9 @@ export default {
 
 		/* overrides for custom icon size and full opacity */
 		:deep(.empty-content__icon) {
-			width: 128px !important;
-			height: 128px !important;
-			opacity: 1 !important;
+			width: 128px;
+			height: 128px;
+			opacity: 1;
 
 			.setup__form-content__svg-wrapper {
 				width: 128px;

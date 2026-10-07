@@ -3,19 +3,17 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import SignatureSettings from '../../../components/SignatureSettings.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
-
-const localVue = createLocalVue()
-
-localVue.mixin(Nextcloud)
 
 describe('SignatureSettings', () => {
 	it('Show warning for large signatures', () => {
 		const wrapper = shallowMount(SignatureSettings, {
-			localVue,
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {
 					aliases: [],
 					signature: '<p>Lorem ipsum</p><img src="data:image/png;base64,' + 'A'.repeat(2 * 1024 * 1024) + '">',
@@ -32,8 +30,10 @@ describe('SignatureSettings', () => {
 		['plaintext', '<p>Lorem <img src="cid:logo"> ipsum</p>', true],
 	])('uses the %s writing mode for %s', (editorMode, signature, html) => {
 		const wrapper = shallowMount(SignatureSettings, {
-			localVue,
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {
 					aliases: [],
 					editorMode,
@@ -51,8 +51,10 @@ describe('SignatureSettings', () => {
 		['plaintext', '<p>Lorem <img src="cid:logo"> ipsum</p>', true],
 	])('warns about the overridden %s mode for %s', (editorMode, signature, warns) => {
 		const wrapper = shallowMount(SignatureSettings, {
-			localVue,
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {
 					aliases: [],
 					editorMode,
@@ -69,8 +71,10 @@ describe('SignatureSettings', () => {
 		['the signature is deleted', null],
 	])('drops the warning once %s', async (_, signature) => {
 		const wrapper = shallowMount(SignatureSettings, {
-			localVue,
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {
 					aliases: [],
 					editorMode: 'plaintext',
@@ -87,8 +91,10 @@ describe('SignatureSettings', () => {
 
 	it('keeps the editor when the image is deleted while editing', async () => {
 		const wrapper = shallowMount(SignatureSettings, {
-			localVue,
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {
 					aliases: [],
 					editorMode: 'plaintext',

@@ -12,10 +12,10 @@
 			</p>
 			<NcSelect
 				v-else
-				:input-label="actionTitle"
+				:inputLabel="actionTitle"
 				:options="options"
 				label="value"
-				:model-value="selectedOption"
+				:modelValue="selectedOption"
 				@update:modelValue="update" />
 		</div>
 		<NcButton
@@ -31,7 +31,8 @@
 </template>
 
 <script>
-import { NcButton, NcSelect } from '@nextcloud/vue'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 import DragIcon from 'vue-material-design-icons/Drag.vue'
 import Icon from './Icon.vue'
@@ -65,6 +66,8 @@ export default {
 			required: true,
 		},
 	},
+
+	emits: ['delete', 'update'],
 
 	computed: {
 		mainStore() {

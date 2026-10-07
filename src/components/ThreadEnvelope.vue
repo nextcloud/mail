@@ -28,10 +28,10 @@
 				<Avatar
 					v-if="envelope.from && envelope.from[0]"
 					:email="envelope.from[0].email"
-					:display-name="envelope.from[0].label"
-					:disable-tooltip="true"
+					:displayName="envelope.from[0].label"
+					:disableTooltip="true"
 					:size="40"
-					:fetch-avatar="envelope.fetchAvatarFromClient"
+					:fetchAvatar="envelope.fetchAvatarFromClient"
 					:avatar="envelope.avatar"
 					class="envelope__header__avatar-avatar" />
 				<div
@@ -42,7 +42,7 @@
 					v-html="importantSvg" />
 				<IconFavorite
 					v-if="envelope.flags.flagged"
-					fill-color="#f9cf3d"
+					fillColor="#f9cf3d"
 					:size="18"
 					class="app-content-list-item-star favorite-icon-style"
 					:data-starred="envelope.flags.flagged ? 'true' : 'false'"
@@ -60,9 +60,9 @@
 				:class="{ seen: envelope.flags.seen }"
 				role="button"
 				tabindex="0"
-				@click="$emit('toggle-expand', $event)"
-				@keydown.enter="$emit('toggle-expand', $event)"
-				@keydown.space.prevent="$emit('toggle-expand', $event)">
+				@click="$emit('toggleExpand', $event)"
+				@keydown.enter="$emit('toggleExpand', $event)"
+				@keydown.space.prevent="$emit('toggleExpand', $event)">
 				<div class="envelope__header__left__sender-subject-tags">
 					<div class="sender" :class="{ 'sender--expanded': expanded }">
 						{{ envelope.from && envelope.from[0] ? envelope.from[0].label : '' }}
@@ -133,15 +133,15 @@
 							<LockPlusIcon
 								v-if="smimeData.isEncrypted"
 								:size="20"
-								fill-color="#008000" />
+								fillColor="#008000" />
 							<LockIcon
 								v-else-if="smimeData.signatureIsValid"
 								:size="20"
-								fill-color="#008000" />
+								fillColor="#008000" />
 							<LockOffIcon
 								v-else
 								:size="20"
-								fill-color="red" />
+								fillColor="red" />
 						</template>
 						<NcActionText class="smime-text" :name="smimeHeading">
 							{{ smimeMessage }}
@@ -150,7 +150,7 @@
 					</NcActions>
 					<NcActions :inline="inlineMenuSize">
 						<NcActionButton
-							:close-after-click="true"
+							:closeAfterClick="true"
 							@click="onReply('', false)">
 							<template #icon>
 								<ReplyAllIcon
@@ -166,7 +166,7 @@
 						</NcActionButton>
 						<NcActionButton
 							v-if="hasMultipleRecipients"
-							:close-after-click="true"
+							:closeAfterClick="true"
 							@click="onReply('', false, true)">
 							<template #icon>
 								<ReplyIcon
@@ -180,7 +180,7 @@
 							type="tertiary-no-background"
 							class="action--primary"
 							:aria-label="envelope.flags.flagged ? t('mail', 'Mark as unfavorite') : t('mail', 'Mark as favorite')"
-							:close-after-click="true"
+							:closeAfterClick="true"
 							@click.prevent="onToggleFlagged">
 							<template #icon>
 								<IconFavorite
@@ -199,7 +199,7 @@
 							type="tertiary-no-background"
 							class="action--primary"
 							:aria-label="envelope.flags.seen ? t('mail', 'Mark as unread') : t('mail', 'Mark as read')"
-							:close-after-click="true"
+							:closeAfterClick="true"
 							@click.prevent="onToggleSeen">
 							<template #icon>
 								<EmailRead
@@ -215,7 +215,7 @@
 						</NcActionButton>
 						<NcActionButton
 							v-if="showArchiveButton && hasArchiveAcl && (inlineMenuSize >= 4 || !moreActionsOpen)"
-							:close-after-click="true"
+							:closeAfterClick="true"
 							:disabled="disableArchiveButton"
 							:aria-label="t('mail', 'Archive message')"
 							type="tertiary-no-background"
@@ -229,7 +229,7 @@
 						</NcActionButton>
 						<NcActionButton
 							v-if="hasDeleteAcl && (inlineMenuSize >= 5 || !moreActionsOpen)"
-							:close-after-click="true"
+							:closeAfterClick="true"
 							:aria-label="t('mail', 'Delete message')"
 							type="tertiary-no-background"
 							@click.prevent="onDelete">
@@ -241,26 +241,26 @@
 							{{ t('mail', 'Delete message') }}
 						</NcActionButton>
 						<MenuEnvelope
+							v-model:moreActionsOpen="moreActionsOpen"
 							class="app-content-list-item-menu"
 							:envelope="envelope"
 							:mailbox="mailbox"
-							:with-select="false"
-							:with-show-source="true"
-							:more-actions-open.sync="moreActionsOpen"
+							:withSelect="false"
+							:withShowSource="true"
 							@reply="onReply('', false, false)"
 							@delete="$emit('delete', envelope.databaseId)"
-							@show-source-modal="onShowSourceModal"
-							@open-tag-modal="onOpenTagModal"
-							@open-move-modal="onOpenMoveModal"
-							@open-event-modal="onOpenEventModal"
-							@open-task-modal="onOpenTaskModal"
-							@open-translation-modal="onOpenTranslationModal"
-							@open-mail-filter-from-envelope="showMailFilterFromEnvelope = true"
+							@showSourceModal="onShowSourceModal"
+							@openTagModal="onOpenTagModal"
+							@openMoveModal="onOpenMoveModal"
+							@openEventModal="onOpenEventModal"
+							@openTaskModal="onOpenTaskModal"
+							@openTranslationModal="onOpenTranslationModal"
+							@openMailFilterFromEnvelope="showMailFilterFromEnvelope = true"
 							@print="onPrint" />
 					</NcActions>
 					<SourceModal
 						v-if="showSourceModal"
-						:raw-message="rawMessage"
+						:rawMessage="rawMessage"
 						@close="onCloseSourceModal" />
 					<MoveModal
 						v-if="showMoveModal"
@@ -283,9 +283,9 @@
 						@close="onCloseTagModal" />
 					<TranslationModal
 						v-if="showTranslationModal"
-						:rich-parameters="{}"
+						:richParameters="{}"
 						:message="plainTextBody"
-						:detected-foreign-language="detectedForeignLanguage"
+						:detectedForeignLanguage="detectedForeignLanguage"
 						@close="onCloseTranslationModal" />
 					<MailFilterFromEnvelope
 						v-if="showMailFilterFromEnvelope"
@@ -345,11 +345,11 @@
 			v-show="loading === Loading.Done"
 			:envelope="envelope"
 			:message="message"
-			:full-height="fullHeight"
-			:smart-replies="showFollowUpHeader ? [] : smartReplies"
-			:reply-button-label="replyButtonLabel"
+			:fullHeight="fullHeight"
+			:smartReplies="showFollowUpHeader ? [] : smartReplies"
+			:replyButtonLabel="replyButtonLabel"
 			@load="onMessageLoaded"
-			@print-shortcut="$emit('print-shortcut')"
+			@printShortcut="$emit('printShortcut')"
 			@translate="onOpenTranslationModal"
 			@reply="(body) => onReply(body, showFollowUpHeader)" />
 		<Error
@@ -357,11 +357,11 @@
 			:error="error.message || t('mail', 'Not found')"
 			message=""
 			:data="error"
-			:auto-margin="true"
+			:autoMargin="true"
 			role="alert" />
 		<ConfirmModal
 			v-if="message && message.unsubscribeUrl && message.isOneClickUnsubscribe && showListUnsubscribeConfirmation"
-			:confirm-text="t('mail', 'Unsubscribe')"
+			:confirmText="t('mail', 'Unsubscribe')"
 			:title="t('mail', 'Unsubscribe via link')"
 			@cancel="showListUnsubscribeConfirmation = false"
 			@confirm="unsubscribeViaOneClick">
@@ -369,8 +369,8 @@
 		</ConfirmModal>
 		<ConfirmModal
 			v-else-if="message && message.unsubscribeUrl && showListUnsubscribeConfirmation"
-			:confirm-text="t('mail', 'Unsubscribe')"
-			:confirm-url="message.unsubscribeUrl"
+			:confirmText="t('mail', 'Unsubscribe')"
+			:confirmUrl="message.unsubscribeUrl"
 			:title="t('mail', 'Unsubscribe via link')"
 			@cancel="showListUnsubscribeConfirmation = false"
 			@confirm="showListUnsubscribeConfirmation = false">
@@ -378,7 +378,7 @@
 		</ConfirmModal>
 		<ConfirmModal
 			v-else-if="message && message.unsubscribeMailto && showListUnsubscribeConfirmation"
-			:confirm-text="t('mail', 'Send unsubscribe email')"
+			:confirmText="t('mail', 'Send unsubscribe email')"
 			:title="t('mail', 'Unsubscribe via email')"
 			:disabled="unsubscribing"
 			@cancel="showListUnsubscribeConfirmation = false"
@@ -394,11 +394,12 @@ import { showError, showSuccess } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
 import moment from '@nextcloud/moment'
 import { generateUrl } from '@nextcloud/router'
-import { NcActionButton, NcButton } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
 import NcActionText from '@nextcloud/vue/components/NcActionText'
 import AiIcon from '@nextcloud/vue/components/NcAssistantIcon'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import ArchiveIcon from 'vue-material-design-icons/ArchiveArrowDownOutline.vue'
 import ChevronDownIcon from 'vue-material-design-icons/ChevronDown.vue'
 import ChevronUpIcon from 'vue-material-design-icons/ChevronUp.vue'
@@ -534,6 +535,8 @@ export default {
 			type: Number,
 		},
 	},
+
+	emits: ['toggleExpand', 'delete', 'printShortcut', 'loaded', 'unselect', 'archive', 'move', 'print'],
 
 	data() {
 		return {
@@ -827,7 +830,7 @@ export default {
 		}, 100)
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		if (this.seenTimer !== undefined) {
 			logger.info('Navigating away before seenTimer delay, will not mark message as seen/read')
 			clearTimeout(this.seenTimer)
@@ -1271,20 +1274,6 @@ export default {
 		}
 	}
 
-	.button {
-		color: var(--color-main-background);
-		&:not(.active):not(.primary) {
-			display: none;
-
-			&.primary {
-				background-color: var(--color-primary-element);
-				opacity: 1;
-				margin-bottom: 0;
-
-			}
-		}
-	}
-
 	.envelope {
 		display: flex;
 		flex-direction: column;
@@ -1455,6 +1444,7 @@ export default {
 
 	.tag-group__label {
 		margin: 0 calc(var(--default-grid-baseline) * 2);
+		position: relative;
 		z-index: 2;
 		font-size: calc(var(--default-font-size) * 0.8);
 		font-weight: bold;

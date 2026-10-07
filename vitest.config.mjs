@@ -17,7 +17,9 @@ export default defineConfig({
 		pool: 'vmForks',
 		server: {
 			deps: {
-				inline: ['@nextcloud/vue'],
+				// emoji-mart-vue-fast ships as ESM inside a CJS package; inlining
+				// lets Vite handle the transformation so vmForks can load it.
+				inline: ['emoji-mart-vue-fast', '@nextcloud/vue'],
 			},
 		},
 	},

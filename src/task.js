@@ -514,12 +514,12 @@ export default class Task {
 	 */
 	set tags(newTags) {
 		if (newTags.length > 0) {
-			let tags = this.vtodo.getAllProperties('categories')
+			const tags = this.vtodo.getAllProperties('categories')
 			// If there are no tags set yet, just set them
 			if (tags.length < 1) {
 				const prop = new ICAL.Property('categories')
 				prop.setValues(newTags)
-				tags = this.vtodo.addProperty(prop)
+				this.vtodo.addProperty(prop)
 			// If there is only one tags property, overwrite it
 			} else if (tags.length < 2) {
 				tags[0].setValues(newTags)

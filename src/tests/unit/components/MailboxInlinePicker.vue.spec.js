@@ -4,24 +4,22 @@
  */
 
 import { createTestingPinia } from '@pinia/testing'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { PiniaVuePlugin, setActivePinia } from 'pinia'
+import { shallowMount } from '@vue/test-utils'
+import { setActivePinia } from 'pinia'
 import MailboxInlinePicker from '../../../components/MailboxInlinePicker.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 import useMainStore from '../../../store/mainStore.js'
-
-const localVue = createLocalVue()
-localVue.use(PiniaVuePlugin)
-localVue.mixin(Nextcloud)
 
 describe('MailboxInlinePicker', () => {
 	let store
 
 	const mount = () => shallowMount(MailboxInlinePicker, {
-		propsData: {
+		global: {
+			mixins: [Nextcloud],
+		},
+		props: {
 			account: { accountId: 1 },
 		},
-		localVue,
 	})
 
 	beforeEach(() => {

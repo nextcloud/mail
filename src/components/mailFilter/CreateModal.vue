@@ -5,7 +5,7 @@
 <template>
 	<NcModal
 		size="normal"
-		:close-on-click-outside="false"
+		:closeOnClickOutside="false"
 		@close="closeModal">
 		<form class="modal__content" @submit.prevent="createFilter">
 			<h2>{{ t('mail', 'Create a new mail filter') }}</h2>
@@ -38,13 +38,11 @@
 </template>
 
 <script>
-import {
-	NcButton,
-	NcCheckboxRadioSwitch,
-	NcLoadingIcon,
-	NcModal,
-} from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
+import NcModal from '@nextcloud/vue/components/NcModal'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import { MailFilterConditionField } from '../../models/mailFilter.ts'
 import useMailFilterStore from '../../store/mailFilterStore.ts'
@@ -77,6 +75,8 @@ export default {
 			required: false,
 		},
 	},
+
+	emits: ['createFilter', 'close'],
 
 	data() {
 		return {
@@ -128,7 +128,7 @@ export default {
 
 		createFilter() {
 			const headers = structuredClone(this.headers).filter((header) => header.enable)
-			this.$emit('create-filter', headers)
+			this.$emit('createFilter', headers)
 		},
 
 		closeModal() {
