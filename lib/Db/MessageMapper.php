@@ -835,7 +835,11 @@ class MessageMapper extends QBMapper {
 			$tagged = $this->db->getQueryBuilder();
 			$tagged->select('tags.imap_message_id')
 				->from('mail_message_tags', 'tags')
-				->where($tagged->expr()->in('tags.tag_id', $qb->createNamedParameter($tagIds, IQueryBuilder::PARAM_INT_ARRAY)));
+				->where(
+					// Redundant for the result, but without it SQLite reads the tags of all users
+					$tagged->expr()->eq('tags.imap_message_id', 'm.message_id', IQueryBuilder::PARAM_STR),
+					$tagged->expr()->in('tags.tag_id', $qb->createNamedParameter($tagIds, IQueryBuilder::PARAM_INT_ARRAY)),
+				);
 			$select->andWhere(
 				$qb->expr()->in('m.message_id', $qb->createFunction($tagged->getSQL()), IQueryBuilder::PARAM_STR_ARRAY)
 			);
@@ -1122,6 +1126,9 @@ class MessageMapper extends QBMapper {
 		$sub->select('r.message_id')
 			->from('mail_recipients', 'r')
 			->where(
+				// Redundant for the result. In the anyof OR, PostgreSQL would otherwise hash this subquery over
+				// the recipients of all users; referencing m.id makes it look up each message's recipients instead.
+				$sub->expr()->eq('r.message_id', 'm.id', IQueryBuilder::PARAM_INT),
 				$sub->expr()->eq('r.type', $qb->createNamedParameter($type, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
 				$sub->expr()->orX(
 					...array_map(fn (string $email) => $sub->expr()->iLike('r.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR)), $values),
