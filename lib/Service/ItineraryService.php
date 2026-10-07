@@ -56,6 +56,15 @@ class ItineraryService {
 			return $cached;
 		}
 
+		if (!$this->extractor->hasAdapter()) {
+			// Without an adapter, extraction is a no-op. Skip the expensive
+			// IMAP download of the message body and all attachments.
+			$this->logger->debug('No KItinerary adapter is available, skipping itinerary extraction');
+			$itinerary = new Itinerary();
+			$this->cache->set($this->buildCacheKey($account, $mailbox, $id), json_encode($itinerary), self::CACHE_TTL);
+			return $itinerary;
+		}
+
 		$client = $this->clientFactory->getClient($account);
 		try {
 			$itinerary = new Itinerary();
