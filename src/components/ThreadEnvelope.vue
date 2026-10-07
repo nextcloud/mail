@@ -48,10 +48,10 @@
 					:data-starred="envelope.flags.flagged ? 'true' : 'false'"
 					@click.prevent="hasWriteAcl ? onToggleFlagged() : false" />
 				<JunkIcon
-					v-if="envelope.flags.$junk"
+					v-if="envelope.flags.$Junk"
 					:size="18"
 					class="app-content-list-item-star junk-icon-style"
-					:data-starred="envelope.flags.$junk ? 'true' : 'false'"
+					:data-starred="envelope.flags.$Junk ? 'true' : 'false'"
 					@click.prevent="hasWriteAcl ? onToggleJunk() : false" />
 			</div>
 
