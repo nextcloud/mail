@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Migration;
 
+use OCA\Mail\Db\OracleQueryLimits;
+
 use Closure;
 use OCP\AppFramework\Services\IAppConfig;
 use OCP\DB\ISchemaWrapper;
@@ -86,7 +88,7 @@ class Version5007Date20251024153423 extends SimpleMigrationStep {
 		$qb->update('mail_accounts')
 			->set('classification_enabled', $qb->createNamedParameter(!$isEnabledBydefault, IQueryBuilder::PARAM_BOOL))
 			->where($qb->expr()->in('user_id', $qb->createParameter('users')));
-		foreach (array_chunk($users, 1000) as $chunk) {
+		foreach (array_chunk($users, OracleQueryLimits::MAX_IN_LIST_SIZE) as $chunk) {
 			$output->advance();
 			$qb->setParameter('users', $chunk, IQueryBuilder::PARAM_STR_ARRAY);
 			$qb->executeStatement();
