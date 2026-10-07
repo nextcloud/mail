@@ -48,6 +48,7 @@ OC.L10N.register(
     "Signature" : "חתימה",
     "A signature is added to the text of new messages and replies." : "נוספה חתימה לטקסט של הודעות חדשות ותגובות.",
     "Default folders" : "תיקיות בררת מחדל",
+    "Filters" : "מסננים",
     "Mail server" : "שרת דוא״ל",
     "Email address" : "כתובת דוא״ל",
     "Go back" : "חזרה",
@@ -77,6 +78,7 @@ OC.L10N.register(
     "Send" : "שליחה",
     "Refresh" : "רענון",
     "About" : "אודות",
+    "The images have been blocked to protect your privacy." : "התמונות נחסמו כדי להגן על הפרטיות שלך",
     "Message {id} could not be found" : "לא ניתן למצוא את הודעה {id}",
     "From" : "מאת",
     "Select account" : "בחר חשבון",
@@ -158,7 +160,6 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "נא לבחור תיקייה לאחסן בה את הקבצים המצורפים",
     "Save all to Files" : "שמירת הכו לקבצים",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "הודעה זו מוצפנת עם PGP. יש להתקין את Mailvelope כדי לפענח אותה.",
-    "The images have been blocked to protect your privacy." : "התמונות נחסמו כדי להגן על הפרטיות שלך",
     "Message frame" : "מסגרת הודעה",
     "Move" : "העברה",
     "Change password" : "שינוי ססמה",
@@ -184,6 +185,8 @@ OC.L10N.register(
     "Sync in background" : "סנכרון ברקע",
     "New message" : "הודעה חדשה",
     "Reply" : "תגובה",
+    "Exit full screen" : "יציאה ממסך מלא",
+    "Full screen" : "מסך מלא",
     "Error sending your message" : "שליחת ההודעה שלך נכשלה",
     "Retry" : "ניסיון חוזר",
     "Message" : "הודעה",
@@ -276,8 +279,6 @@ OC.L10N.register(
     "Could not load the message" : "לא ניתן לטעון את ההודעה",
     "Date:" : "בתאריך:",
     "Tag already exists" : "תגית כבר קיימת",
-    "Error loading message" : "שגיאה בהעלאת הודעה",
-    "Show less" : "להציג פחות",
-    "Show more" : "להציג יותר"
+    "Error loading message" : "שגיאה בהעלאת הודעה"
 },
 "nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;");

@@ -29,10 +29,9 @@ class TextBlockController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function index(): JsonResponse {
 		if ($this->userId === null) {
@@ -44,12 +43,12 @@ class TextBlockController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 * @param string $title
 	 * @param string $content
 	 *
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function create(string $title, string $content): JsonResponse {
 		if ($this->userId === null) {
@@ -61,13 +60,13 @@ class TextBlockController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 * @param int $id
 	 * @param string $title
 	 * @param string $content
 	 *
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function update(int $id, string $title, string $content): JsonResponse {
 
@@ -87,10 +86,9 @@ class TextBlockController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	public function destroy(int $id): JsonResponse {
 		if ($this->userId === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);

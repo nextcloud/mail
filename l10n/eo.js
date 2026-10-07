@@ -59,6 +59,7 @@ OC.L10N.register(
     "Search" : "Serĉi",
     "Send" : "Sendi",
     "Refresh" : "Aktualigi",
+    "The images have been blocked to protect your privacy." : "Bildoj ne montriĝis por protekti vian privatecon.",
     "From" : "De",
     "Select account" : "Elekti konton",
     "To" : "Al",
@@ -107,7 +108,6 @@ OC.L10N.register(
     "Save to Files" : "Konservi en „Dosieroj“",
     "Choose a folder to store the attachments in" : "Elektu dosierujon en kiu konservi la kunsendaĵojn",
     "Save all to Files" : "Konservi ĉiujn al „Dosieroj“",
-    "The images have been blocked to protect your privacy." : "Bildoj ne montriĝis por protekti vian privatecon.",
     "Move" : "Movi",
     "Remove account" : "Forigi konton",
     "Add folder" : "Aldoni dosierujon",
@@ -194,8 +194,6 @@ OC.L10N.register(
     "Could not load the message" : "Ne eblis ŝargi la mesaĝon",
     "Date:" : "Dato:",
     "Tag already exists" : "La etikedo jam ekzistas",
-    "Error loading message" : "Eraris ŝargi mesaĝon",
-    "Show less" : "Montri malpli",
-    "Show more" : "Montri pli"
+    "Error loading message" : "Eraris ŝargi mesaĝon"
 },
 "nplurals=2; plural=(n != 1);");

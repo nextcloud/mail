@@ -17,6 +17,7 @@ use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
@@ -33,14 +34,13 @@ class TagsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param string $displayName
 	 * @param string $color
 	 *
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function create(string $displayName, string $color): JSONResponse {
 		$this->validateDisplayName($displayName);
@@ -51,8 +51,6 @@ class TagsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @param string $displayName
 	 * @param string $color
@@ -60,6 +58,7 @@ class TagsController extends Controller {
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function update(int $id, string $displayName, string $color): JSONResponse {
 		$this->validateDisplayName($displayName);
@@ -69,10 +68,9 @@ class TagsController extends Controller {
 		return new JSONResponse($tag);
 	}
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function delete(int $id, int $accountId): JSONResponse {
 		try {

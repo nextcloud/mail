@@ -76,6 +76,11 @@ OC.L10N.register(
     "Send" : "Imbia",
     "Refresh" : "Agiorna",
     "About" : "In contu de",
+    "The images have been blocked to protect your privacy." : "Is immàgines sunt istadas blocadas pro amparare sa riservadesa tua.",
+    "Show images" : "Mustra immàgines",
+    "Show images temporarily" : "Mustra immàgines in manera temporale",
+    "Always show images from {sender}" : "Mustra semper immàgines dae {sender}",
+    "Always show images from {domain}" : "Mustra semper immàgines dae {domain}",
     "Message {id} could not be found" : "Su messàgiu {id} no s'est pòdidu agatare",
     "From" : "Dae",
     "Select account" : "Seletziona contu",
@@ -179,11 +184,6 @@ OC.L10N.register(
     "Save all to Files" : "Sarva totu in Archìvios",
     "Download Zip" : "Iscàrriga Zip",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Custu messàgiu est tzifradu cun PGP. Installa Mailvelope pro ddu detzifrare.",
-    "The images have been blocked to protect your privacy." : "Is immàgines sunt istadas blocadas pro amparare sa riservadesa tua.",
-    "Show images" : "Mustra immàgines",
-    "Show images temporarily" : "Mustra immàgines in manera temporale",
-    "Always show images from {sender}" : "Mustra semper immàgines dae {sender}",
-    "Always show images from {domain}" : "Mustra semper immàgines dae {domain}",
     "Message frame" : "Ricuadru de se messàgiu",
     "Quoted text" : "Testu tzitadu",
     "Move" : "Tràmuda",
@@ -341,8 +341,6 @@ OC.L10N.register(
     "Could not load the desired message" : "No at fatu a carrigare su messàgiu disigiadu",
     "Could not load the message" : "No at fatu a carrigare su messàgiu",
     "Date:" : "Data:",
-    "Error loading message" : "Errore in su carrigamentu de su messàgiu",
-    "Show less" : "Mustra prus pagu",
-    "Show more" : "Mustra de prus"
+    "Error loading message" : "Errore in su carrigamentu de su messàgiu"
 },
 "nplurals=2; plural=(n != 1);");

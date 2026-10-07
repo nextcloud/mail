@@ -57,7 +57,7 @@ describe('TextEditor', () => {
 		expect(wrapper.vm.config.htmlSupport.allow.some((rule) => rule.name === 'img')).toBe(true)
 	})
 
-	it('resizes images in pixels in html mode', async () => {
+	it('aligns and resizes images in html mode', async () => {
 		const wrapper = shallowMount(TextEditor, {
 			localVue,
 			provide: {
@@ -72,6 +72,7 @@ describe('TextEditor', () => {
 
 		expect(wrapper.vm.config.plugins).toContain(ImageDowncastPlugin)
 		expect(wrapper.vm.config.image.resizeUnit).toBe('px')
+		expect(wrapper.vm.config.image.toolbar).toContain('imageStyle:alignCenter')
 	})
 
 	it('throw when editor not ready', async () => {
