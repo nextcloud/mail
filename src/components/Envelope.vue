@@ -49,11 +49,11 @@
 					:class="{ 'important-one-line': oneLineLayout, 'icon-important': !oneLineLayout }"
 					data-starred="true" />
 				<JunkIcon
-					v-if="data.flags.$junk"
+					v-if="data.flags.$Junk"
 					:size="20"
 					class="app-content-list-item-star junk-icon-style"
 					:class="{ 'one-line': oneLineLayout, 'junk-icon-style': !oneLineLayout }"
-					:data-starred="data.flags.$junk ? 'true' : 'false'"
+					:data-starred="data.flags.$Junk ? 'true' : 'false'"
 					@click.prevent="hasWriteAcl ? onToggleJunk() : false" />
 			</div>
 			<div
@@ -115,10 +115,10 @@
 						@click.stop.prevent="hasWriteAcl ? onToggleFlagged() : false" />
 
 					<JunkIcon
-						v-if="data.flags.$junk"
+						v-if="data.flags.$Junk"
 						:size="20"
 						class="app-content-list-item-star junk-icon-style junk-icon--recipient"
-						:data-starred="data.flags.$junk ? 'true' : 'false'"
+						:data-starred="data.flags.$Junk ? 'true' : 'false'"
 						@click.stop.prevent="hasWriteAcl ? onToggleJunk() : false" />
 				</template>
 
@@ -158,7 +158,7 @@
 							@click.prevent="hasWriteAcl ? onToggleFlagged() : false" />
 
 						<JunkIcon
-							v-if="data.flags.$junk"
+							v-if="data.flags.$Junk"
 							:size="18"
 							class="junk-icon-style--compact"
 							@click.prevent="hasWriteAcl ? onToggleJunk() : false" />
@@ -267,7 +267,7 @@
 						<AlertOctagonIcon :size="20" />
 					</template>
 					{{
-						data.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
+						data.flags.$Junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
 					}}
 				</NcActionButton>
 				<NcActionButton
