@@ -27,7 +27,7 @@ class SpamReportListener implements IEventListener {
 
 	#[\Override]
 	public function handle(Event $event): void {
-		if (!$event instanceof MessageFlaggedEvent || $event->getFlag() !== '$junk') {
+		if (!$event instanceof MessageFlaggedEvent || $event->getFlag() !== '$Junk') {
 			return;
 		}
 

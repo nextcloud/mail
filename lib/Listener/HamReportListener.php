@@ -27,7 +27,7 @@ class HamReportListener implements IEventListener {
 
 	#[\Override]
 	public function handle(Event $event): void {
-		if (!$event instanceof MessageFlaggedEvent || $event->getFlag() !== '$notjunk') {
+		if (!$event instanceof MessageFlaggedEvent || $event->getFlag() !== '$NotJunk') {
 			return;
 		}
 
