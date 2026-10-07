@@ -84,8 +84,8 @@ class Message extends Entity implements JsonSerializable {
 		'flagged',
 		'seen',
 		'forwarded',
-		'$junk',
-		'$notjunk',
+		'$Junk',
+		'$NotJunk',
 		'$phishing',
 		'$mdnsent',
 		Tag::LABEL_IMPORTANT,
@@ -292,9 +292,9 @@ class Message extends Entity implements JsonSerializable {
 		}
 		if ($flag === Tag::LABEL_IMPORTANT) {
 			$this->setFlagImportant($value);
-		} elseif ($flag === '$junk') {
+		} elseif ($flag === '$Junk') {
 			$this->setFlagJunk($value);
-		} elseif ($flag === '$notjunk') {
+		} elseif ($flag === '$NotJunk') {
 			$this->setFlagNotjunk($value);
 		} elseif ($flag === '$mdnsent') {
 			$this->setFlagMdnsent($value);
@@ -357,8 +357,8 @@ class Message extends Entity implements JsonSerializable {
 				'forwarded' => ($this->getFlagForwarded() === true),
 				'hasAttachments' => ($this->getFlagAttachments() ?? false),
 				'important' => ($this->getFlagImportant() === true),
-				'$junk' => ($this->getFlagJunk() === true),
-				'$notjunk' => ($this->getFlagNotjunk() === true),
+				'$Junk' => ($this->getFlagJunk() === true),
+				'$NotJunk' => ($this->getFlagNotjunk() === true),
 				'$mdnsent' => ($this->getFlagMdnsent() === true),
 			],
 			'tags' => $indexed,
