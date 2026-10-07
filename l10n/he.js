@@ -279,8 +279,6 @@ OC.L10N.register(
     "Could not load the message" : "לא ניתן לטעון את ההודעה",
     "Date:" : "בתאריך:",
     "Tag already exists" : "תגית כבר קיימת",
-    "Error loading message" : "שגיאה בהעלאת הודעה",
-    "Show less" : "להציג פחות",
-    "Show more" : "להציג יותר"
+    "Error loading message" : "שגיאה בהעלאת הודעה"
 },
 "nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;");

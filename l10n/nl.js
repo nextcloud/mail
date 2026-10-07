@@ -922,12 +922,6 @@ OC.L10N.register(
     "Tag already exists" : "Markering bestaat al",
     "Error loading message" : "Fout bij laden bericht",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "De automatische beantwoorder gebruikt Sieve, een scripttaal die wordt gebruikt door veel e-mail aanbieders. Controleer bij uw aanbieder of deze de scripttaal ondersteund. Wanneer Sieve beschikbaar is, druk op de knop om naar de instellingen te gaan en deze te activeren.",
-    "Maximize composer" : "Opsteller maximaliseren",
-    "Show recipient details" : "Ontvangerdetails tonen",
-    "Hide recipient details" : "Ontvangerdetails verbergen",
-    "Show less" : "Toon minder",
-    "Show more" : "Toon meer",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Neem de controle over je e-mailchaos. Filters helpen je om te prioriteren wat belangrijk is en rommel te elimineren.",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% en %EMAIL% zal worden vervangen door de gebruikers UID en e-mail"
+    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Neem de controle over je e-mailchaos. Filters helpen je om te prioriteren wat belangrijk is en rommel te elimineren."
 },
 "nplurals=2; plural=(n != 1);");

@@ -962,12 +962,6 @@
     "Tag already exists" : "Mærket eksisterer allerede",
     "Error loading message" : "Fejl under indlæsning af besked",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Autosvaret bruger Sieve, et scriptsprog, som mange mailudbydere understøtter. Spørg din udbyder, hvis du ikke er sikker på, om din gør. Hvis Sieve er tilgængeligt, så klik på knappen for at gå til indstillingerne og aktivere det.",
-    "Maximize composer" : "Maksimer skrivevinduet",
-    "Show recipient details" : "Vis modtageroplysninger",
-    "Hide recipient details" : "Skjul modtageroplysninger",
-    "Show less" : "Vis mindre",
-    "Show more" : "Vis mere",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Få styr på kaosset i din indbakke. Filtre hjælper dig med at prioritere det vigtige og fjerne rod.",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% og %EMAIL% erstattes med brugerens UID og e-mail"
+    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Få styr på kaosset i din indbakke. Filtre hjælper dig med at prioritere det vigtige og fjerne rod."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

@@ -318,9 +318,6 @@ OC.L10N.register(
     "Date:" : "Data:",
     "Tag name cannot be empty" : "El nome de la etiqueta nun pue tar baleru",
     "Tag already exists" : "La etiqueta yá esiste",
-    "Error loading message" : "Hebo un error al cargar el mensaxe",
-    "Maximize composer" : "Maximizar el compositor",
-    "Show less" : "Amosar menos",
-    "Show more" : "Amosar más"
+    "Error loading message" : "Hebo un error al cargar el mensaxe"
 },
 "nplurals=2; plural=(n != 1);");

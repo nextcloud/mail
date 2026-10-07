@@ -194,8 +194,6 @@ OC.L10N.register(
     "Could not load the message" : "Ne eblis ŝargi la mesaĝon",
     "Date:" : "Dato:",
     "Tag already exists" : "La etikedo jam ekzistas",
-    "Error loading message" : "Eraris ŝargi mesaĝon",
-    "Show less" : "Montri malpli",
-    "Show more" : "Montri pli"
+    "Error loading message" : "Eraris ŝargi mesaĝon"
 },
 "nplurals=2; plural=(n != 1);");

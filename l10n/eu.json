@@ -708,10 +708,6 @@
     "Tag name is a hidden system tag" : "Etiketaren izena ezkutatutako sistema-etiketa da",
     "Tag already exists" : "Etiketa dagoeneko existitzen da",
     "Error loading message" : "Errorea mezua kargatzerakoan",
-    "Maximize composer" : "Maximizatu prestatzailea",
-    "Show less" : "Erakutsi gutxiago",
-    "Show more" : "Erakutsi gehiago",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Kontrolatu zure posta elektronikoaren kaosa. Iragazkiek garrantzitsuena lehenestu eta zaborra ezabatzen laguntzen dizute.",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% eta%EMAIL% erabiltzailearen UID eta e-postarekin ordeztuko dira"
+    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Kontrolatu zure posta elektronikoaren kaosa. Iragazkiek garrantzitsuena lehenestu eta zaborra ezabatzen laguntzen dizute."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

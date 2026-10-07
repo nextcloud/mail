@@ -642,9 +642,6 @@
     "Tag name cannot be empty" : "A címkenév nem lehet üres",
     "Tag name is a hidden system tag" : "A címkenév egy rejtett rendszercímke",
     "Tag already exists" : "A címke már létezik",
-    "Error loading message" : "Hiba történt az üzenet betöltése közben",
-    "Show less" : "Kevesebb megjelenítése",
-    "Show more" : "Több megjelenítése",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* a %USERID% és az %EMAIL% le lesz cserélve a felhasználó UID-jára és az e-mail-címére"
+    "Error loading message" : "Hiba történt az üzenet betöltése közben"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

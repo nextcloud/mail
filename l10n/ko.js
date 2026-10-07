@@ -636,9 +636,6 @@ OC.L10N.register(
     "Tag name cannot be empty" : "태그 이름을 비울 수 없음",
     "Tag name is a hidden system tag" : "태그 이름이 숨겨진 시스템 태그입니다",
     "Tag already exists" : "태그가 이미 존재합니다.",
-    "Error loading message" : "메시지 불러오기 오류",
-    "Show less" : "적게 보기",
-    "Show more" : "더 보기",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID%와(과) %EMAIL%이(가) 사용자의 UID와 이메일로 대체됩니다"
+    "Error loading message" : "메시지 불러오기 오류"
 },
 "nplurals=1; plural=0;");

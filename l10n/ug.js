@@ -877,12 +877,6 @@ OC.L10N.register(
     "Tag already exists" : "خەتكۈچ مەۋجۇت",
     "Error loading message" : "ئۇچۇر يۈكلەشتە خاتالىق",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "ئاپتوماتىك جاۋاب قايتۇرغۇچ نۇرغۇن ئېلخەت تەمىنلىگۈچىلىرى قوللايدىغان سىكرىپت تىلى Sieve نى ئىشلىتىدۇ. ئەگەر سىزنىڭكىنىڭ قوللايدىغان-قوللىمايدىغانلىقىغا ئىشەنمىسىڭىز، تەمىنلىگۈچىڭىز بىلەن ئالاقىلىشىڭ. ئەگەر Sieve بار بولسا، تەڭشەكلەرگە كىرىپ ئۇنى قوزغىتىش ئۈچۈن كۇنۇپكىنى چېكىڭ.",
-    "Maximize composer" : "كومپوزىتورنى چوڭايتىڭ",
-    "Show recipient details" : "تاپشۇرۋالغۇچى تەپسىلاتىنى كۆرسەت",
-    "Hide recipient details" : "تاپشۇرۋالغۇچى تەپسىلاتىنى يۇشۇر",
-    "Show less" : "ئازراق كۆرسەت",
-    "Show more" : "تېخىمۇ كۆپ كۆرسەت",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "ئېلېكترونلۇق خەت قالايمىقانچىلىقىڭىزنى كونترول قىلىڭ. سۈزگۈچلەر مۇھىم ئىشلارنى مۇھىم ئورۇنغا قويۇپ ، قالايمىقانچىلىقنى تۈگىتىشىڭىزگە ياردەم بېرىدۇ.",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "*%USERID% ۋە %EMAIL% ئىشلەتكۈچىنىڭ UID ۋە ئېلېكترونلۇق خەت ساندۇقىنىڭ ئورنىنى ئالىدۇ"
+    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "ئېلېكترونلۇق خەت قالايمىقانچىلىقىڭىزنى كونترول قىلىڭ. سۈزگۈچلەر مۇھىم ئىشلارنى مۇھىم ئورۇنغا قويۇپ ، قالايمىقانچىلىقنى تۈگىتىشىڭىزگە ياردەم بېرىدۇ."
 },
 "nplurals=2; plural=(n != 1);");

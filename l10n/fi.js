@@ -612,8 +612,6 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Tunnisteen nimi on piilotettu järjestelmätunniste",
     "Tag already exists" : "Tunniste on jo olemassa",
     "Error loading message" : "Virhe viestiä ladatessa",
-    "Show less" : "Näytä vähemmän",
-    "Show more" : "Näytä enemmän",
     "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Ota postikaaos hallintaan. Suodattimet auttavat asettamaan asioita tärkeysjärjestykseen ja minimoimaan turhuudet."
 },
 "nplurals=2; plural=(n != 1);");

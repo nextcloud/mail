@@ -901,12 +901,6 @@ OC.L10N.register(
     "Tag already exists" : "Štítek už existuje",
     "Error loading message" : "Chyba při načtení zprávy",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Nástroj pro automatické odpovědi používá Sieve – skriptovací jazyk podporovaný mnoho poskytovateli e-mailů. Pokud si nejste jistí, zda i ten vámi využívaný, dotažte se u něho. Pokud je Sieve k dispozici, klikněte na tlačítko pro přechod do nastavení a zapněte ho.",
-    "Maximize composer" : "Maximalizovat dialog editoru zprávy",
-    "Show recipient details" : "Zobrazit podrobnosti o příjemci",
-    "Hide recipient details" : "Skrýt podrobnosti o příjemci",
-    "Show less" : "Zobrazit méně",
-    "Show more" : "Zobrazit více",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Zkroťte chaos ve svých e-mailech. Filtry vám pomohou vypíchnout co je důlečité a eliminovat nepořádek.",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% a %EMAIL% budou nahrazeny identif. uživatele (UID) a e-mailovou adresou"
+    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Zkroťte chaos ve svých e-mailech. Filtry vám pomohou vypíchnout co je důlečité a eliminovat nepořádek."
 },
 "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;");
