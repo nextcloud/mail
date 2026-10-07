@@ -339,8 +339,6 @@
     "Could not load the desired message" : "No at fatu a carrigare su messàgiu disigiadu",
     "Could not load the message" : "No at fatu a carrigare su messàgiu",
     "Date:" : "Data:",
-    "Error loading message" : "Errore in su carrigamentu de su messàgiu",
-    "Show less" : "Mustra prus pagu",
-    "Show more" : "Mustra de prus"
+    "Error loading message" : "Errore in su carrigamentu de su messàgiu"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

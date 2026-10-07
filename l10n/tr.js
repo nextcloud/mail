@@ -964,12 +964,6 @@ OC.L10N.register(
     "Tag already exists" : "Etiket zaten var",
     "Error loading message" : "İleti yüklenirken sorun çıktı",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Otomatik yanıtlayıcı, birçok e-posta hizmeti sağlayıcısı tarafından desteklenen bir betik dili olan Sieve kullanır. Kullandığınız hizmette bulunup bulunmadığından emin değilseniz, hizmet sağlayıcınıza sorun. Sieve kullanılabiliyorsa, ayarlara gitmek ve açmak için düğmeye tıklayın.",
-    "Maximize composer" : "Oluşturucuyu büyüt",
-    "Show recipient details" : "Alıcı ayrıntıları görüntüle",
-    "Hide recipient details" : "Alıcı ayrıntılarını gizle",
-    "Show less" : "Daha az görüntüle",
-    "Show more" : "Daha çok görüntüle",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "E-posta karmaşanızı düzenleyin. Süzgeçler, önemli şeylere öncelik vermenize ve karmaşayı ortadan kaldırmanıza yardımcı olur.",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% ve %EMAIL% kodları yerine kullanıcının eşsiz kodu ve e-posta adresi geçer"
+    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "E-posta karmaşanızı düzenleyin. Süzgeçler, önemli şeylere öncelik vermenize ve karmaşayı ortadan kaldırmanıza yardımcı olur."
 },
 "nplurals=2; plural=(n > 1);");

@@ -570,9 +570,6 @@ OC.L10N.register(
     "Date:" : "Fecha:",
     "Tag name is a hidden system tag" : "El nombre de la etiqueta es una etiqueta oculta del sistema",
     "Tag already exists" : "La etiqueta ya existe",
-    "Error loading message" : "Se presentó un error al cargar el mensaje",
-    "Show less" : "Mostrar menos",
-    "Show more" : "Mostrar más",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% y %EMAIL% se reemplazarán con el UID y el correo electrónico del usuario"
+    "Error loading message" : "Se presentó un error al cargar el mensaje"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

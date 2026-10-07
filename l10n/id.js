@@ -956,12 +956,6 @@ OC.L10N.register(
     "Tag already exists" : "Tag sudah ada",
     "Error loading message" : "Kesalahan saat memuat pesan",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Balasan otomatis menggunakan Sieve, bahasa skrip yang didukung banyak penyedia email. Jika Anda tidak yakin apakah penyedia Anda mendukungnya, tanyakan kepada penyedia Anda. Jika Sieve tersedia, klik tombol untuk pergi ke pengaturan dan mengaktifkannya.",
-    "Maximize composer" : "Maksimalkan penyusun",
-    "Show recipient details" : "Tampilkan detail penerima",
-    "Hide recipient details" : "Sembunyikan detail penerima",
-    "Show less" : "Tampilkan lebih sedikit",
-    "Show more" : "Tampilkan lebih banyak",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Kendalikan kekacauan email Anda. Filter membantu Anda memprioritaskan hal yang penting dan menghilangkan kekacauan.",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% dan %EMAIL% akan diganti dengan UID dan email pengguna"
+    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Kendalikan kekacauan email Anda. Filter membantu Anda memprioritaskan hal yang penting dan menghilangkan kekacauan."
 },
 "nplurals=1; plural=0;");

@@ -379,8 +379,6 @@ OC.L10N.register(
     "Could not load the message" : "No fue posible cargar el mensaje",
     "Date:" : "Fecha:",
     "Tag already exists" : "La etiqueta ya existe",
-    "Error loading message" : "Se presentó un error al cargar el mensaje",
-    "Show less" : "Mostrar menos",
-    "Show more" : "Mostrar más"
+    "Error loading message" : "Se presentó un error al cargar el mensaje"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

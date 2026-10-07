@@ -956,12 +956,6 @@
     "Tag already exists" : "Taggen finns redan",
     "Error loading message" : "Fel vid inläsning av meddelande",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Autosvaret använder Sieve, ett skriptspråk som stöds av många e-postleverantörer. Om du är osäker på om din e-postleverantör gör det, kontrollera med din leverantör. Om Sieve är tillgängligt klickar du på knappen för att gå till inställningarna och aktivera det.",
-    "Maximize composer" : "Maximera editor",
-    "Show recipient details" : "Visa mottagarens detaljer",
-    "Hide recipient details" : "Dölj mottagarens detaljer",
-    "Show less" : "Visa mindre",
-    "Show more" : "Visa mer",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Ta kontroll över din e-post. Filter hjälper dig att prioritera det som är viktigt.",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% och %EMAIL% ersätts med användarens UID och e-postadress"
+    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Ta kontroll över din e-post. Filter hjälper dig att prioritera det som är viktigt."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

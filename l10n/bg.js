@@ -553,9 +553,6 @@ OC.L10N.register(
     "Date:" : "Дата:",
     "Tag name is a hidden system tag" : "Името на етикета е скрит системен етикет",
     "Tag already exists" : "Етикетът вече съществува",
-    "Error loading message" : "Грешка при зареждане съобщението",
-    "Show less" : "Покажи по-малко",
-    "Show more" : "Покажи повече",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% и %EMAIL% ще бъдат заменени с UID и имейл на потребителя"
+    "Error loading message" : "Грешка при зареждане съобщението"
 },
 "nplurals=2; plural=(n != 1);");
