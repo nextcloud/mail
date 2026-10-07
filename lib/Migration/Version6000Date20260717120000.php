@@ -22,7 +22,7 @@ use Override;
  *
  * @psalm-api
  */
-class Version5130Date20260717120000 extends SimpleMigrationStep {
+class Version6000Date20260717120000 extends SimpleMigrationStep {
 
 	/**
 	 * @param Closure(): ISchemaWrapper $schemaClosure
