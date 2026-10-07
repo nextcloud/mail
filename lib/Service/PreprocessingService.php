@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service;
 
+use OCA\Mail\Db\OracleQueryLimits;
+
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
@@ -33,7 +35,7 @@ class PreprocessingService {
 		$mailboxIds = array_unique(array_map(static fn (Mailbox $mailbox) => $mailbox->getId(), $mailboxes));
 
 		$messages = [];
-		foreach (array_chunk($mailboxIds, 1000) as $chunk) {
+		foreach (array_chunk($mailboxIds, OracleQueryLimits::MAX_IN_LIST_SIZE) as $chunk) {
 			$messages = array_merge($messages, $this->messageMapper->getUnanalyzed($limitTimestamp, $chunk));
 		}
 		if ($messages === []) {
