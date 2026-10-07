@@ -165,4 +165,102 @@ class IMAPMessageTest extends TestCase {
 		], $json);
 		$this->assertEquals(1234, $json['uid']);
 	}
+
+	public function testFullHtmlMessageIncludesPlainAlternative(): void {
+		$plainBody = "Plain body\n-- \nSignature";
+		$processedBody = 'Processed plain body';
+		$signature = 'Processed signature';
+		$this->htmlService->expects($this->once())
+			->method('convertLinks')
+			->with($plainBody)
+			->willReturn('Processed message');
+		$this->htmlService->expects($this->once())
+			->method('parseMailBody')
+			->with('Processed message')
+			->willReturn([$processedBody, $signature]);
+		$this->htmlService->expects($this->once())
+			->method('sanitizeHtmlMailBody')
+			->willReturn('<p>HTML body</p>');
+		$message = $this->createMessage($plainBody, '<p>HTML body</p>', true);
+
+		$result = $message->getFullMessage(123);
+
+		$this->assertTrue($result['hasHtmlBody']);
+		$this->assertTrue($result['hasPlainBody']);
+		$this->assertSame('<p>HTML body</p>', $result['body']);
+		$this->assertSame($processedBody, $result['plainBody']);
+		$this->assertSame($signature, $result['signature']);
+	}
+
+	public function testFullHtmlMessageWithoutPlainAlternative(): void {
+		$this->htmlService->expects($this->never())
+			->method('convertLinks');
+		$this->htmlService->expects($this->never())
+			->method('parseMailBody');
+		$this->htmlService->expects($this->once())
+			->method('sanitizeHtmlMailBody')
+			->willReturn('<p>HTML body</p>');
+		$message = $this->createMessage('', '<p>HTML body</p>', true);
+
+		$result = $message->getFullMessage(123);
+
+		$this->assertTrue($result['hasHtmlBody']);
+		$this->assertFalse($result['hasPlainBody']);
+		$this->assertArrayNotHasKey('plainBody', $result);
+		$this->assertNull($result['signature']);
+	}
+
+	public function testFullHtmlMessageDoesNotIncludeBodiesWhenBodyLoadingIsDisabled(): void {
+		$this->htmlService->expects($this->once())
+			->method('convertLinks')
+			->willReturn('Processed message');
+		$this->htmlService->expects($this->once())
+			->method('parseMailBody')
+			->willReturn(['Processed message', null]);
+		$this->htmlService->expects($this->never())
+			->method('sanitizeHtmlMailBody');
+		$message = $this->createMessage('Plain body', '<p>HTML body</p>', true);
+
+		$result = $message->getFullMessage(123, false);
+
+		$this->assertTrue($result['hasPlainBody']);
+		$this->assertArrayNotHasKey('body', $result);
+		$this->assertArrayNotHasKey('plainBody', $result);
+	}
+
+	private function createMessage(string $plainBody, string $htmlBody, bool $hasHtmlBody): IMAPMessage {
+		return new IMAPMessage(
+			1234,
+			'foo',
+			[],
+			AddressList::parse('from@mail.com'),
+			AddressList::parse('to@mail.com'),
+			AddressList::parse('cc@mail.com'),
+			AddressList::parse('bcc@mail.com'),
+			AddressList::parse('reply-to@mail.com'),
+			'subject',
+			$plainBody,
+			$htmlBody,
+			$hasHtmlBody,
+			[],
+			[],
+			false,
+			[],
+			new Horde_Imap_Client_DateTime('2016-01-01 00:00:00'),
+			'',
+			'',
+			false,
+			false,
+			[],
+			null,
+			false,
+			null,
+			'',
+			false,
+			false,
+			false,
+			$this->htmlService,
+			false,
+		);
+	}
 }

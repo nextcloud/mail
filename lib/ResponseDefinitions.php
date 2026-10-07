@@ -22,7 +22,10 @@ namespace OCA\Mail;
  *     dateInt: int<0, max>,
  *     flags: array{seen: bool, flagged: bool, answered: bool, deleted: bool, draft: bool, forwarded: bool, hasAttachments: bool, mdnsent: bool, important: bool},
  *     hasHtmlBody?: bool,
+ *     hasPlainBody: bool,
  *     body?: string,
+ *     plainBody?: string,
+ *     signature: ?string,
  *     dispositionNotificationTo: string,
  *     hasDkimSignature: bool,
  *     phishingDetails: array{checks: list<array{type: string, isPhishing: bool, message: string, additionalData: array<string, mixed>}>, warning: bool},
@@ -35,7 +38,6 @@ namespace OCA\Mail;
  * }
  *
  * @psalm-type MailMessageApiResponse = MailIMAPFullMessage&array{
- *     signature: ?string,
  *     itineraries?: array<string, mixed>,
  *     id: int<1, max>,
  *     isSenderTrusted: bool,

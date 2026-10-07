@@ -246,6 +246,8 @@
 							:mailbox="mailbox"
 							:with-select="false"
 							:with-show-source="true"
+							:has-plain-body="message?.hasHtmlBody === true && message?.hasPlainBody === true"
+							:showing-textual-version="showingTextualVersion"
 							:more-actions-open.sync="moreActionsOpen"
 							@reply="onReply('', false, false)"
 							@delete="$emit('delete', envelope.databaseId)"
@@ -255,6 +257,7 @@
 							@open-event-modal="onOpenEventModal"
 							@open-task-modal="onOpenTaskModal"
 							@open-translation-modal="onOpenTranslationModal"
+							@toggle-textual-version="onToggleTextualVersion"
 							@open-mail-filter-from-envelope="showMailFilterFromEnvelope = true"
 							@print="onPrint" />
 					</NcActions>
@@ -345,6 +348,7 @@
 			v-show="loading === Loading.Done"
 			:envelope="envelope"
 			:message="message"
+			:show-textual-version="showingTextualVersion"
 			:full-height="fullHeight"
 			:smart-replies="showFollowUpHeader ? [] : smartReplies"
 			:reply-button-label="replyButtonLabel"
@@ -562,6 +566,7 @@ export default {
 			enabledFreePrompt: loadState('mail', 'llm_freeprompt_available', false),
 			loadingBodyTimeout: undefined,
 			showMailFilterFromEnvelope: false,
+			showingTextualVersion: false,
 		}
 	},
 
@@ -795,6 +800,7 @@ export default {
 				this.message = undefined
 				this.loading = Loading.Done
 				this.showRecipients = false
+				this.showingTextualVersion = false
 			}
 		},
 
@@ -854,6 +860,13 @@ export default {
 			}
 
 			this.loading = Loading.Done
+		},
+
+		onToggleTextualVersion() {
+			this.showingTextualVersion = !this.showingTextualVersion
+			if (this.showingTextualVersion) {
+				this.onMessageLoaded()
+			}
 		},
 
 		async fetchMessage() {
