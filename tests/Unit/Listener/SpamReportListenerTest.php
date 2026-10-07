@@ -79,7 +79,7 @@ class SpamReportListenerTest extends TestCase {
 			$account,
 			$mailbox,
 			$message,
-			'$junk',
+			'$Junk',
 			false
 		);
 
@@ -99,14 +99,14 @@ class SpamReportListenerTest extends TestCase {
 			$account,
 			$mailbox,
 			$message,
-			'$junk',
+			'$Junk',
 			true
 		);
 
 		$this->serviceMock->getParameter('antiSpamService')
 			->expects(self::once())
 			->method('sendReportEmail')
-			->with($account, $mailbox, 123, '$junk')
+			->with($account, $mailbox, 123, '$Junk')
 			->willThrowException(new ServiceException());
 		$this->serviceMock->getParameter('logger')
 			->expects(self::once())
@@ -124,14 +124,14 @@ class SpamReportListenerTest extends TestCase {
 			$account,
 			$mailbox,
 			$message,
-			'$junk',
+			'$Junk',
 			true
 		);
 
 		$this->serviceMock->getParameter('antiSpamService')
 			->expects(self::once())
 			->method('sendReportEmail')
-			->with($account, $mailbox, 123, '$junk');
+			->with($account, $mailbox, 123, '$Junk');
 		$this->serviceMock->getParameter('logger')
 			->expects(self::never())
 			->method('error');
