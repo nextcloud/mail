@@ -1143,15 +1143,15 @@ export default function mainStoreActions() {
 		}) {
 			return handleHttpAuthErrors(async () => {
 				// Change immediately and switch back on error
-				const oldState = envelope.flags.$junk
+				const oldState = envelope.flags.$Junk
 				this.flagEnvelopeMutation({
 					envelope,
-					flag: '$junk',
+					flag: '$Junk',
 					value: !oldState,
 				})
 				this.flagEnvelopeMutation({
 					envelope,
-					flag: '$notjunk',
+					flag: '$NotJunk',
 					value: oldState,
 				})
 
@@ -1161,8 +1161,8 @@ export default function mainStoreActions() {
 
 				try {
 					await setEnvelopeFlags(envelope.databaseId, {
-						$junk: !oldState,
-						$notjunk: oldState,
+						$Junk: !oldState,
+						$NotJunk: oldState,
 					})
 				} catch (error) {
 					logger.error('could not toggle message junk state', { error })
@@ -1174,12 +1174,12 @@ export default function mainStoreActions() {
 					// Revert change
 					this.flagEnvelopeMutation({
 						envelope,
-						flag: '$junk',
+						flag: '$Junk',
 						value: oldState,
 					})
 					this.flagEnvelopeMutation({
 						envelope,
-						flag: '$notjunk',
+						flag: '$NotJunk',
 						value: !oldState,
 					})
 
@@ -1727,7 +1727,7 @@ export default function mainStoreActions() {
 				return false
 			}
 
-			if (!envelope.flags.$junk) {
+			if (!envelope.flags.$Junk) {
 				// move message to junk
 				return envelope.mailboxId !== account.junkMailboxId
 			}
