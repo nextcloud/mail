@@ -122,7 +122,7 @@ class TagMapper extends QBMapper {
 				$qb->expr()->eq('t.user_id', $qb->createNamedParameter($userId, IQueryBuilder::PARAM_STR))
 			);
 
-		foreach (array_chunk($ids, 1000) as $chunk) {
+		foreach (array_chunk($ids, OracleQueryLimits::MAX_IN_LIST_SIZE) as $chunk) {
 			$tagsQuery->setParameter('ids', $chunk, IQueryBuilder::PARAM_STR_ARRAY);
 			$queryResult = $tagsQuery->executeQuery();
 
@@ -164,7 +164,7 @@ class TagMapper extends QBMapper {
 			);
 
 		$messageIds = [];
-		foreach (array_chunk($ids, 1000) as $chunk) {
+		foreach (array_chunk($ids, OracleQueryLimits::MAX_IN_LIST_SIZE) as $chunk) {
 			$tagsQuery->setParameter('ids', $chunk, IQueryBuilder::PARAM_STR_ARRAY);
 			$queryResult = $tagsQuery->executeQuery();
 
@@ -247,7 +247,7 @@ class TagMapper extends QBMapper {
 		$deleteQB = $this->db->getQueryBuilder();
 		$deleteQB->delete('mail_message_tags')
 			->where($deleteQB->expr()->in('id', $deleteQB->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY));
-		foreach (array_chunk($ids, 1000) as $chunk) {
+		foreach (array_chunk($ids, OracleQueryLimits::MAX_IN_LIST_SIZE) as $chunk) {
 			$deleteQB->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 			$deleteQB->executeStatement();
 		}
@@ -276,7 +276,7 @@ class TagMapper extends QBMapper {
 		$deleteMT = $this->db->getQueryBuilder();
 		$deleteMT->delete('mail_message_tags')
 			->where($deleteMT->expr()->in('id', $deleteMT->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY));
-		foreach (array_chunk($ids, 1000) as $chunk) {
+		foreach (array_chunk($ids, OracleQueryLimits::MAX_IN_LIST_SIZE) as $chunk) {
 			$deleteMT->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 			$deleteMT->executeStatement();
 		}
@@ -300,7 +300,7 @@ class TagMapper extends QBMapper {
 			->where(
 				$deleteT->expr()->in('user_id', $deleteT->createParameter('user_ids'), IQueryBuilder::PARAM_STR_ARRAY)
 			);
-		foreach (array_chunk($user_ids, 1000) as $chunk) {
+		foreach (array_chunk($user_ids, OracleQueryLimits::MAX_IN_LIST_SIZE) as $chunk) {
 			$deleteT->setParameter('user_ids', $chunk, IQueryBuilder::PARAM_STR_ARRAY);
 			$deleteT->executeStatement();
 		}

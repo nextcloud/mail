@@ -135,7 +135,7 @@ class AliasMapper extends QBMapper {
 				$qb2->expr()->in('id', $qb2->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY)
 			);
 
-		foreach (array_chunk($ids, 1000) as $chunk) {
+		foreach (array_chunk($ids, OracleQueryLimits::MAX_IN_LIST_SIZE) as $chunk) {
 			$qb2->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 			$qb2->executeStatement();
 		}
@@ -168,7 +168,7 @@ class AliasMapper extends QBMapper {
 			->where(
 				$qb2->expr()->in('id', $qb2->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY)
 			);
-		foreach (array_chunk($ids, 1000) as $chunk) {
+		foreach (array_chunk($ids, OracleQueryLimits::MAX_IN_LIST_SIZE) as $chunk) {
 			$qb2->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 			$qb2->executeStatement();
 		}

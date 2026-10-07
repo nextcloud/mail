@@ -116,7 +116,7 @@ class CollectedAddressMapper extends QBMapper {
 		$query = $qb2
 			->delete($this->getTableName())
 			->where($qb2->expr()->in('id', $qb2->createParameter('ids')));
-		foreach (array_chunk($ids, 1000) as $chunk) {
+		foreach (array_chunk($ids, OracleQueryLimits::MAX_IN_LIST_SIZE) as $chunk) {
 			$query->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 			$query->executeStatement();
 		}

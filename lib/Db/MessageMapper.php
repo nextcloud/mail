@@ -54,9 +54,10 @@ class MessageMapper extends QBMapper {
 	private const PARAM_IDS = 'ids';
 
 	/**
+	 * @see OracleQueryLimits::MAX_IN_LIST_SIZE
 	 * TODO: replace with IQueryBuilder::MAX_IN_PARAMETERS once the minimum server version is 35
 	 */
-	private const MAX_IN_PARAMETERS = 1000;
+	private const MAX_IN_PARAMETERS = OracleQueryLimits::MAX_IN_LIST_SIZE;
 
 	/** @var ITimeFactory */
 	private $timeFactory;
@@ -190,7 +191,7 @@ class MessageMapper extends QBMapper {
 		return array_flat_map(function (array $chunk) use ($query) {
 			$query->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 			return $this->findUids($query);
-		}, array_chunk($ids, 1000));
+		}, array_chunk($ids, OracleQueryLimits::MAX_IN_LIST_SIZE));
 	}
 
 	/**
@@ -489,7 +490,7 @@ class MessageMapper extends QBMapper {
 						$queryTrue->expr()->eq('mailbox_id', $queryTrue->createNamedParameter($mailboxId, IQueryBuilder::PARAM_INT)),
 						$queryTrue->expr()->eq($flag, $queryTrue->createNamedParameter(0, IQueryBuilder::PARAM_INT))
 					));
-				foreach (array_chunk($updateData[$flag . '_true'], 1000) as $chunk) {
+				foreach (array_chunk($updateData[$flag . '_true'], OracleQueryLimits::MAX_IN_LIST_SIZE) as $chunk) {
 					$queryTrue->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 					$queryTrue->executeStatement();
 				}
@@ -503,7 +504,7 @@ class MessageMapper extends QBMapper {
 						$queryFalse->expr()->eq('mailbox_id', $queryFalse->createNamedParameter($mailboxId, IQueryBuilder::PARAM_INT)),
 						$queryFalse->expr()->eq($flag, $queryFalse->createNamedParameter(1, IQueryBuilder::PARAM_INT))
 					));
-				foreach (array_chunk($updateData[$flag . '_false'], 1000) as $chunk) {
+				foreach (array_chunk($updateData[$flag . '_false'], OracleQueryLimits::MAX_IN_LIST_SIZE) as $chunk) {
 					$queryFalse->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 					$queryFalse->executeStatement();
 				}
@@ -703,7 +704,7 @@ class MessageMapper extends QBMapper {
 		$deleteRecipientsQuery->delete('mail_recipients')
 			->where($deleteRecipientsQuery->expr()->in('message_id', $deleteRecipientsQuery->createParameter('ids')));
 
-		foreach (array_chunk($messageIds, 1000) as $chunk) {
+		foreach (array_chunk($messageIds, OracleQueryLimits::MAX_IN_LIST_SIZE) as $chunk) {
 			// delete all related recipient entries
 			$deleteRecipientsQuery->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 			$deleteRecipientsQuery->executeStatement();
@@ -737,7 +738,7 @@ class MessageMapper extends QBMapper {
 				$deleteMessagesQuery->expr()->in('id', $deleteMessagesQuery->createParameter('ids')),
 			);
 
-		foreach (array_chunk($uids, 1000) as $chunk) {
+		foreach (array_chunk($uids, OracleQueryLimits::MAX_IN_LIST_SIZE) as $chunk) {
 			$this->atomic(function () use ($selectMessageIdsQuery, $deleteRecipientsQuery, $deleteMessagesQuery, $chunk) {
 				$selectMessageIdsQuery->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 				$selectResult = $selectMessageIdsQuery->executeQuery();
@@ -1268,7 +1269,7 @@ class MessageMapper extends QBMapper {
 			->orderBy('sent_at', 'desc');
 
 		$results = [];
-		foreach (array_chunk($ids, 1000) as $chunk) {
+		foreach (array_chunk($ids, OracleQueryLimits::MAX_IN_LIST_SIZE) as $chunk) {
 			$qb->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 			$results[] = $this->findRelatedData($this->findEntities($qb), $userId);
 		}
@@ -1296,7 +1297,7 @@ class MessageMapper extends QBMapper {
 			->orderBy($orderBy, $direction);
 
 		$results = [];
-		foreach (array_chunk($ids, 1000) as $chunk) {
+		foreach (array_chunk($ids, OracleQueryLimits::MAX_IN_LIST_SIZE) as $chunk) {
 			$qb->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 			$results[] = $this->findRelatedData($this->findEntities($qb), $userId);
 		}
@@ -1321,7 +1322,7 @@ class MessageMapper extends QBMapper {
 			->where($qb2->expr()->in('message_id', $qb2->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY));
 
 		$recipientsResults = [];
-		foreach (array_chunk(array_keys($indexedMessages), 1000) as $chunk) {
+		foreach (array_chunk(array_keys($indexedMessages), OracleQueryLimits::MAX_IN_LIST_SIZE) as $chunk) {
 			$qb2->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 			$result = $qb2->executeQuery();
 			$recipientsResults[] = $result->fetchAll();
@@ -1435,7 +1436,7 @@ class MessageMapper extends QBMapper {
 			->orderBy('m.sent_at', $sortOrder === IMailSearch::ORDER_NEWEST_FIRST ? 'desc' : 'asc');
 
 		$results = [];
-		foreach (array_chunk($ids, 1000) as $chunk) {
+		foreach (array_chunk($ids, OracleQueryLimits::MAX_IN_LIST_SIZE) as $chunk) {
 			$select->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 			$results[] = $this->findIds($select);
 		}
@@ -1497,7 +1498,7 @@ class MessageMapper extends QBMapper {
 		$query = $qb2
 			->delete($this->getTableName())
 			->where($qb2->expr()->in('id', $qb2->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY));
-		foreach (array_chunk($ids, 1000) as $chunk) {
+		foreach (array_chunk($ids, OracleQueryLimits::MAX_IN_LIST_SIZE) as $chunk) {
 			$query->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 			$query->executeStatement();
 		}
@@ -1519,7 +1520,7 @@ class MessageMapper extends QBMapper {
 		$recipientsQuery = $qb4
 			->delete('mail_recipients')
 			->where($qb4->expr()->in('id', $qb4->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY));
-		foreach (array_chunk($ids, 1000) as $chunk) {
+		foreach (array_chunk($ids, OracleQueryLimits::MAX_IN_LIST_SIZE) as $chunk) {
 			$recipientsQuery->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 			$recipientsQuery->executeStatement();
 		}

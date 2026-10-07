@@ -58,7 +58,7 @@ class StatisticsDao {
 			->join('r', 'mail_messages', 'm', $qb->expr()->eq('m.id', 'r.message_id'))
 			->where($qb->expr()->eq('r.type', $qb->createNamedParameter(Address::TYPE_FROM, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT))
 			->andWhere($qb->expr()->in('m.mailbox_id', $qb->createParameter('mailbox_ids'), IQueryBuilder::PARAM_INT_ARRAY));
-		return array_reduce(array_chunk($mailboxIds, 1000), static function ($carry, $mailboxIds) use ($select) {
+		return array_reduce(array_chunk($mailboxIds, OracleQueryLimits::MAX_IN_LIST_SIZE), static function ($carry, $mailboxIds) use ($select) {
 			$select->setParameter('mailbox_ids', $mailboxIds, IQueryBuilder::PARAM_INT_ARRAY);
 			$result = $select->executeQuery();
 			$cnt = $result->fetchOne();
@@ -87,7 +87,7 @@ class StatisticsDao {
 				$data = $this->emailCountResultToIndexedArray($rows);
 				$result->closeCursor();
 				return $data;
-			}, array_chunk($mailboxIds, 1000))
+			}, array_chunk($mailboxIds, OracleQueryLimits::MAX_IN_LIST_SIZE))
 		);
 	}
 
@@ -117,7 +117,7 @@ class StatisticsDao {
 				$data = $this->emailCountResultToIndexedArray($rows);
 				$result->closeCursor();
 				return $data;
-			}, array_chunk($mailboxIds, 1000))
+			}, array_chunk($mailboxIds, OracleQueryLimits::MAX_IN_LIST_SIZE))
 		);
 	}
 
@@ -149,7 +149,7 @@ class StatisticsDao {
 				$data = $this->emailCountResultToIndexedArray($rows);
 				$result->closeCursor();
 				return $data;
-			}, array_chunk($mailboxIds, 1000))
+			}, array_chunk($mailboxIds, OracleQueryLimits::MAX_IN_LIST_SIZE))
 		);
 	}
 }
