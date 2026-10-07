@@ -81,11 +81,11 @@ class AntiSpamService {
 	 * @throws ServiceException
 	 */
 	public function sendReportEmail(Account $account, Mailbox $mailbox, int $uid, string $flag): void {
-		$reportEmail = ($flag === '$junk') ? $this->getSpamEmail() : $this->getHamEmail();
+		$reportEmail = ($flag === '$Junk') ? $this->getSpamEmail() : $this->getHamEmail();
 		if ($reportEmail === '') {
 			return;
 		}
-		$subject = ($flag === '$junk') ? $this->getSpamSubject() : $this->getHamSubject();
+		$subject = ($flag === '$Junk') ? $this->getSpamSubject() : $this->getHamSubject();
 
 		// Message to attach not found
 		$messageId = $this->dbMessageMapper->getIdForUid($mailbox, $uid);
