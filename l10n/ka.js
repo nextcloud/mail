@@ -615,9 +615,6 @@ OC.L10N.register(
     "Tag name cannot be empty" : "Tag name cannot be empty",
     "Tag name is a hidden system tag" : "Tag name is a hidden system tag",
     "Tag already exists" : "Tag already exists",
-    "Error loading message" : "Error loading message",
-    "Show less" : "Show less",
-    "Show more" : "Show more",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% and %EMAIL% will be replaced with the user's UID and email"
+    "Error loading message" : "Error loading message"
 },
 "nplurals=2; plural=(n!=1);");

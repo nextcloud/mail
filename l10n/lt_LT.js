@@ -949,12 +949,6 @@ OC.L10N.register(
     "Tag already exists" : "Žyma jau yra",
     "Error loading message" : "Klaida įkeliant laišką",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Automatinis atsakiklis naudoja „Sieve“ – scenarijų kalbą, kurią palaiko daugelis el. pašto paslaugų teikėjų. Jei nesate tikri, ar jūsų programa ją palaiko, pasitarkite su savo paslaugų teikėju. Jei „Sieve“ yra, spustelėkite mygtuką, kad pereitumėte į nustatymus ir ją įjungtumėte.",
-    "Maximize composer" : "Išdidinti rašymo langą",
-    "Show recipient details" : "Rodyti gavėjo informaciją",
-    "Hide recipient details" : "Slėpti gavėjo informaciją",
-    "Show less" : "Rodyti mažiau",
-    "Show more" : "Rodyti daugiau",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Imkitės tvarkyti savo elektroninio pašto chaosą. Filtrai padės jums nustatyti prioritetus ir atsikratyti nereikalingų laiškų.",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% ir %E MAIL% bus pakeistas vartotojo UID ir el. pašto adresu"
+    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Imkitės tvarkyti savo elektroninio pašto chaosą. Filtrai padės jums nustatyti prioritetus ir atsikratyti nereikalingų laiškų."
 },
 "nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);");

@@ -964,12 +964,6 @@ OC.L10N.register(
     "Tag already exists" : "Tag already exists",
     "Error loading message" : "Error loading message",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it.",
-    "Maximize composer" : "Maximize composer",
-    "Show recipient details" : "Show recipient details",
-    "Hide recipient details" : "Hide recipient details",
-    "Show less" : "Show less",
-    "Show more" : "Show more",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter.",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% and %EMAIL% will be replaced with the user's UID and email"
+    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter."
 },
 "nplurals=2; plural=(n != 1);");

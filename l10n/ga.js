@@ -964,12 +964,6 @@ OC.L10N.register(
     "Tag already exists" : "Tá clib ann cheana féin",
     "Error loading message" : "Earráid agus an teachtaireacht á lódáil",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Úsáideann an t-uathfhreagraí Sieve, teanga scriptithe a fhaigheann tacaíocht ó go leor soláthraithe ríomhphoist. Mura bhfuil tú cinnte cé acu an bhfuil, seiceáil le do sholáthraí. Má tá Sieve ar fáil, cliceáil ar an gcnaipe chun dul go dtí na socruithe agus é a chumasú.",
-    "Maximize composer" : "Cumadóir a uasmhéadú",
-    "Show recipient details" : "Taispeáin sonraí an fhaighteora",
-    "Hide recipient details" : "Folaigh sonraí an fhaighteora",
-    "Show less" : "Taispeáin níos lú",
-    "Show more" : "Taispeáin níos mó",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Tóg smacht ar do chaos ríomhphoist. Cuidíonn scagairí leat tosaíocht a thabhairt do na rudaí atá tábhachtach agus deireadh a chur le tranglam.",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* Cuirfear AitheantasÚsáideora agus ríomhphost an úsáideora in ionad % USERID agus %EMAIL%."
+    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Tóg smacht ar do chaos ríomhphoist. Cuidíonn scagairí leat tosaíocht a thabhairt do na rudaí atá tábhachtach agus deireadh a chur le tranglam."
 },
 "nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);");

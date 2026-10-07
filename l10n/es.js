@@ -831,12 +831,6 @@ OC.L10N.register(
     "Tag already exists" : "La etiqueta ya existe",
     "Error loading message" : "Error al cargar el mensaje",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "El sistema de respuesta automática usa Sieve, un lenguaje de scripting soportado por muchos proveedores de correo electrónico. Si no está seguro de si el suyo lo soporta, verifique con su proveedor. Si Sieve está disponible, haga clic en el botón para ir a los ajustes y habilitarlo.",
-    "Maximize composer" : "Maximizar compositor",
-    "Show recipient details" : "Mostrar detalles del recipiente",
-    "Hide recipient details" : "Ocultar detalles del recipiente",
-    "Show less" : "Ver menos",
-    "Show more" : "Ver mas",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Tome el control del caos de su correo electrónico. Los filtros le ayudan a priorizar lo que importa y eliminar el desorden.",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% y %EMAIL% será reemplazado con el UID y el correo electrónico del usuario"
+    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Tome el control del caos de su correo electrónico. Los filtros le ayudan a priorizar lo que importa y eliminar el desorden."
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

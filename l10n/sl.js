@@ -528,8 +528,6 @@ OC.L10N.register(
     "Date:" : "Datum:",
     "Tag name is a hidden system tag" : "Ime oznake je skrita sistemska oznaka",
     "Tag already exists" : "Oznaka že obstaja",
-    "Error loading message" : "Napaka nalaganja sporočila",
-    "Show less" : "Pokaži manj",
-    "Show more" : "Pokaži več"
+    "Error loading message" : "Napaka nalaganja sporočila"
 },
 "nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);");

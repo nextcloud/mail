@@ -964,12 +964,6 @@ OC.L10N.register(
     "Tag already exists" : "標籤已經存在",
     "Error loading message" : "載入信件錯誤",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "自動回覆使用 Sieve，這是一種許多電子郵件供應商都支援的命令稿語言。如果您不確定您的供應商是否支援，請向供應商查詢。如果 Sieve 可用，請按一下按鈕前往設定並啟用它。",
-    "Maximize composer" : "最大化編輯器",
-    "Show recipient details" : "顯示收件者詳細資訊",
-    "Hide recipient details" : "隱藏收件者詳細資訊",
-    "Show less" : "顯示較少",
-    "Show more" : "顯示更多",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "控制您混亂的電子郵件。篩選器會協助您排定優先順序並消除雜訊。",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% 與 %EMAIL% 將以使用者的 UID 與電子郵件取代"
+    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "控制您混亂的電子郵件。篩選器會協助您排定優先順序並消除雜訊。"
 },
 "nplurals=1; plural=0;");

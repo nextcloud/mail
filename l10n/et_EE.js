@@ -962,12 +962,6 @@ OC.L10N.register(
     "Tag already exists" : "Silt on juba olemas",
     "Error loading message" : "Viga kirja laadimisel",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Automaatvastaja on loodud Sieve'i skriptimiskeeles ja tavaliselt on selline võimalus toetatud paljude e-posti teenuste puhul. Kui sa pole enda omas kindel, siis palun küsi neilt üle. Kui Sieve on kasutatav, siis klõpsi järgnevat nuppu ja võta ta seadistustest kasutusele.",
-    "Maximize composer" : "Näita koostamisvaadet suurena",
-    "Show recipient details" : "Näita kirjasaaja üksikasju",
-    "Hide recipient details" : "Peida kirjasaaja üksikasjad",
-    "Show less" : "Näita vähem",
-    "Show more" : "Näita rohkem",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Halda e-kirjade kaost. Filtrid aitavad sul olulist esile tõsta ja müra eemaldada.",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% ja %EMAIL% asendatakse kasutajatunnuse (UID) ja e-posti aadressiga"
+    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Halda e-kirjade kaost. Filtrid aitavad sul olulist esile tõsta ja müra eemaldada."
 },
 "nplurals=2; plural=(n != 1);");

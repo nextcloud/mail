@@ -796,7 +796,7 @@ OC.L10N.register(
     "These settings can be used in conjunction with each other." : "Tieto nastavenia je možné používať zároveň.",
     "If you only want to provision one domain for all users, use the wildcard (*)." : "Ak chcete nasadiť iba jednu doménu pre všetkých užívateľov, použite znak (*).",
     "This setting only makes most sense if you use the same user back-end for your Nextcloud and mail server of your organization." : "Toto nastavenie dáva zmysel iba vtedy, ak pre server Nextcloud a poštový server vašej organizácie používate rovnaké užívateľské rozhranie.",
-    "Provisioning Configurations" : "Zriaďovanie Konfigurácie",
+    "Provisioning Configurations" : "Konfigurácie zriaďovania",
     "Add new config" : "Pridať novú konfiguráciu",
     "Provision all accounts" : "Nastaviť všetky účty",
     "Allow additional mail accounts" : "Povoliť ďalšie e-mailové účty",
@@ -964,12 +964,6 @@ OC.L10N.register(
     "Tag already exists" : "Štítok už existuje",
     "Error loading message" : "Chyba načítavania správy",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Automatická odpoveď používa Sieve, skriptovací jazyk podporovaný mnohými poskytovateľmi e-mailových služieb. Ak si nie ste istí, či ho váš poskytovateľ podporuje, overte si to u svojho poskytovateľa. Ak je Sieve k dispozícii, kliknite na tlačidlo a prejdite do nastavení, kde ho môžete povoliť.",
-    "Maximize composer" : "Maximalizovať editor",
-    "Show recipient details" : "Zobraziť podprobnosti o prijímateľovi",
-    "Hide recipient details" : "Skryť podrobnosti o prijímateľovy",
-    "Show less" : "Zobraziť menej",
-    "Show more" : "Zobraziť viac",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Prevezmite kontrolu nad svojim e-mailovým chaosom. Filtre vám pomôžu uprednostniť to, na čom záleží, a eliminovať neporiadok.",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "*% USERID% a MAIL% budú nahradené UID a e-mailom užívateľa"
+    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Prevezmite kontrolu nad svojim e-mailovým chaosom. Filtre vám pomôžu uprednostniť to, na čom záleží, a eliminovať neporiadok."
 },
 "nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);");
