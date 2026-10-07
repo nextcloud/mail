@@ -99,9 +99,9 @@ OC.L10N.register(
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Sjálfvirk svörun skilaboða sem berast. Ef einhver sendir þér mörg skilaboð, verður þetta sjálfvirka svar sent að hámarki á 4 daga fresti.",
     "Calendar settings" : "Stillingar dagatals",
     "Filters" : "Síur",
-    "Sieve script editor" : "Sieve-skrifturitill",
     "Mail server" : "Póstþjónn",
     "Sieve server" : "Sieve-þjónn",
+    "Sieve script editor" : "Sieve-skrifturitill",
     "Email address" : "Tölvupóstfang",
     "Update alias" : "Uppfæra samnefni",
     "Rename alias" : "Endurnefna samnefni",
@@ -412,7 +412,8 @@ OC.L10N.register(
     "You mentioned an attachment. Did you forget to add it?" : "Þú minntist á viðhengi. Gleymdirðu að bæta því við?",
     "Message discarded" : "Skilaboðum hent",
     "Could not discard message" : "Gat ekki hent skilaboðum",
-    "Maximize composer" : "Hámarka ritil",
+    "Exit full screen" : "Fara úr skjáfylliham",
+    "Full screen" : "Skjáfylli",
     "Minimize composer" : "Lágmarka ritil",
     "Error sending your message" : "Villa við að senda skilaboðin þín",
     "Retry" : "Reyna aftur",
@@ -701,9 +702,6 @@ OC.L10N.register(
     "Tag name cannot be empty" : "Nafn merkis má ekki vera tómt",
     "Tag name is a hidden system tag" : "Heiti merkis er falið merki kerfisins",
     "Tag already exists" : "Merki er þegar til",
-    "Error loading message" : "Villa við hleðslu á skilaboðum",
-    "Show less" : "Birta minna",
-    "Show more" : "Birta meira",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% og %EMAIL% verður skipt út með UID-auðkenni notanda og tölvupóstfangi"
+    "Error loading message" : "Villa við hleðslu á skilaboðum"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

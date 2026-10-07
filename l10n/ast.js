@@ -192,7 +192,8 @@ OC.L10N.register(
     "Failed to save draft" : "Nun se pue guardar el borrador",
     "Message discarded" : "Escartóse'l mensaxe",
     "Could not discard message" : "Nun se pudo escartar el mensaxe",
-    "Maximize composer" : "Maximizar el compositor",
+    "Exit full screen" : "Colar de la pantalla completa",
+    "Full screen" : "Pantalla completa",
     "Minimize composer" : "Minimizar el compositor",
     "Error sending your message" : "Hebo un error al unviar el mensaxe",
     "Retry" : "Retentar",
@@ -317,8 +318,6 @@ OC.L10N.register(
     "Date:" : "Data:",
     "Tag name cannot be empty" : "El nome de la etiqueta nun pue tar baleru",
     "Tag already exists" : "La etiqueta yá esiste",
-    "Error loading message" : "Hebo un error al cargar el mensaxe",
-    "Show less" : "Amosar menos",
-    "Show more" : "Amosar más"
+    "Error loading message" : "Hebo un error al cargar el mensaxe"
 },
 "nplurals=2; plural=(n != 1);");

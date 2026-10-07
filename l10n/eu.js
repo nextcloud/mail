@@ -94,9 +94,9 @@ OC.L10N.register(
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Sarrerako mezuei erantzun automatikoa. Norbaitek hainbat mezu bidaltzen badizu, erantzun automatizatu hau gehienez 4 egunean behin bidaliko da.",
     "Calendar settings" : "Egutegiaren ezarpenak",
     "Filters" : "Iragazkiak",
-    "Sieve script editor" : "Sieve script editorea",
     "Mail server" : "Posta-zerbitzaria",
     "Sieve server" : "Sieve zerbitzaria",
+    "Sieve script editor" : "Sieve script editorea",
     "Email address" : "Helbide elektronikoa",
     "Update alias" : "Eguneratu aliasa",
     "Rename alias" : "Aliasa berrizendatu",
@@ -406,7 +406,8 @@ OC.L10N.register(
     "You mentioned an attachment. Did you forget to add it?" : "Eranskin bat aipatu duzu. Gehitzea ahaztu al zaizu?",
     "Message discarded" : "Mezua bertan behera utzi da",
     "Could not discard message" : "Ezin izan da mezua baztertu",
-    "Maximize composer" : "Maximizatu prestatzailea",
+    "Exit full screen" : "Irten pantaila osotik",
+    "Full screen" : "Pantaila osoa",
     "Minimize composer" : "minimizatu egilea",
     "Error sending your message" : "Errorea zure mezua bidaltzerakoan",
     "Retry" : "Saiatu berriro",
@@ -551,7 +552,6 @@ OC.L10N.register(
     "Could not save filter" : "Ezin izan da iragazkia gorde",
     "Filter deleted" : "Iragazkia ezabatuta",
     "Could not delete filter" : "Ezin izan da iragazkia ezabatu",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Kontrolatu zure posta elektronikoaren kaosa. Iragazkiek garrantzitsuena lehenestu eta zaborra ezabatzen laguntzen dizute.",
     "Filter is active" : "Iragazkia gaituta dago",
     "Filter is not active" : "Iragazkia desgaituta dago",
     "Help" : "Laguntza",
@@ -710,8 +710,6 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Etiketaren izena ezkutatutako sistema-etiketa da",
     "Tag already exists" : "Etiketa dagoeneko existitzen da",
     "Error loading message" : "Errorea mezua kargatzerakoan",
-    "Show less" : "Erakutsi gutxiago",
-    "Show more" : "Erakutsi gehiago",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% eta%EMAIL% erabiltzailearen UID eta e-postarekin ordeztuko dira"
+    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Kontrolatu zure posta elektronikoaren kaosa. Iragazkiek garrantzitsuena lehenestu eta zaborra ezabatzen laguntzen dizute."
 },
 "nplurals=2; plural=(n != 1);");

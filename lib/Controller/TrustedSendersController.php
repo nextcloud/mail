@@ -15,6 +15,7 @@ use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Http\TrapError;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\IRequest;
 
@@ -29,12 +30,11 @@ class TrustedSendersController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param string $email
 	 * @param string $type
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function setTrusted(string $email, string $type): JsonResponse {
 		if ($this->userId === null) {
@@ -51,12 +51,11 @@ class TrustedSendersController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param string $email
 	 * @param string $type
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function removeTrust(string $email, string $type): JsonResponse {
 		if ($this->userId === null) {
@@ -73,10 +72,9 @@ class TrustedSendersController extends Controller {
 		return JsonResponse::success(null);
 	}
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function list(): JsonResponse {
 		if ($this->userId === null) {

@@ -25,8 +25,8 @@ OC.L10N.register(
     "Aliases" : "Alias",
     "Signature" : "Azmul",
     "Autoresponder" : "Amerri awurman",
-    "Filters" : "Imsizdigen",
     "Quick actions" : "Tigawin tiruradin",
+    "Filters" : "Imsizdigen",
     "Email address" : "Tansa imayl",
     "Go back" : "Tuɣalin",
     "Change name" : "Change name",
@@ -125,6 +125,8 @@ OC.L10N.register(
     "Draft" : "Arewway",
     "Reply" : "Err",
     "attachment" : "taceqquft yeddan",
+    "Exit full screen" : "Ffeɣ seg ugdil ačuran",
+    "Full screen" : "Agdil aččuran",
     "Retry" : "Ɛreḍ tikkelt-nniḍen",
     "Send anyway" : "Azen akken ibɣu yili",
     "Message" : "Izen",
@@ -195,8 +197,6 @@ OC.L10N.register(
     "Nextcloud Mail" : "Imayl n Nextcloud",
     "Discard changes" : "Sefsex ibeddilen",
     "Message sent" : "Izen yettwazen",
-    "Date:" : "Azemz:",
-    "Show less" : "Ssken cwiṭ",
-    "Show more" : "Sken ugar"
+    "Date:" : "Azemz:"
 },
 "nplurals=2; plural=(n != 1);");

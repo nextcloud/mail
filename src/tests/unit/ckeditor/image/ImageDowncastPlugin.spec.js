@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { ClassicEditor, ImageBlock, ImageInline, ImageResizeEditing, Paragraph } from 'ckeditor5'
+import { ClassicEditor, ImageBlock, ImageInline, ImageResizeEditing, ImageStyleEditing, Paragraph } from 'ckeditor5'
 import ImageDowncastPlugin from '../../../../ckeditor/image/ImageDowncastPlugin.ts'
 
 // The editor UI observes the size of its toolbar, which jsdom does not provide.
@@ -26,9 +26,12 @@ async function downcast(initialData) {
 	const editor = await ClassicEditor.create(element, {
 		licenseKey: 'GPL',
 		initialData,
-		plugins: [Paragraph, ImageBlock, ImageInline, ImageResizeEditing, ImageDowncastPlugin],
+		plugins: [Paragraph, ImageBlock, ImageInline, ImageResizeEditing, ImageStyleEditing, ImageDowncastPlugin],
 		image: {
 			resizeUnit: 'px',
+			styles: {
+				options: ['alignBlockLeft', 'alignCenter', 'alignBlockRight'],
+			},
 		},
 	})
 
@@ -108,5 +111,50 @@ describe('ImageDowncastPlugin', () => {
 		expect(resent).toContain('width="200"')
 		expect(resent).toContain('width:200px;')
 		expect(resent).not.toContain('height=')
+	})
+
+	it('inlines the styles of a centred image', async () => {
+		const data = await downcast('<figure class="image image-style-align-center"><img src="test.png"></figure>')
+
+		expect(data).toContain('margin-left:auto;')
+		expect(data).toContain('margin-right:auto;')
+		expect(data).toContain('text-align:center;')
+		expect(data).toContain('image-style-align-center')
+	})
+
+	it('inlines the styles of a right aligned image', async () => {
+		const data = await downcast('<figure class="image image-style-block-align-right"><img src="test.png"></figure>')
+
+		expect(data).toContain('margin-left:auto;')
+		expect(data).toContain('margin-right:0;')
+		expect(data).toContain('text-align:right;')
+	})
+
+	it('left aligns an image without a style class', async () => {
+		const data = await downcast('<figure class="image"><img src="test.png"></figure>')
+
+		expect(data).toContain('margin-left:0;')
+		expect(data).toContain('margin-right:auto;')
+		expect(data).toContain('text-align:left;')
+	})
+
+	it('aligns the img itself so it survives a stripped figure', async () => {
+		const data = await downcast('<figure class="image image-style-block-align-right"><img src="test.png"></figure>')
+
+		expect(data).toContain('<img style="display:block;margin-left:auto;margin-right:0;"')
+	})
+
+	it('leaves an inline image unaligned', async () => {
+		const data = await downcast('<p>text <img src="test.png"></p>')
+
+		expect(data).not.toContain('margin-left')
+		expect(data).not.toContain('text-align')
+	})
+
+	it('keeps the alignment when the message is reopened and sent again', async () => {
+		const sent = await downcast('<figure class="image image-style-align-center"><img src="test.png"></figure>')
+		const resent = await downcast(sent)
+
+		expect(resent).toContain('text-align:center;')
 	})
 })

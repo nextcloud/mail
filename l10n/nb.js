@@ -409,7 +409,8 @@ OC.L10N.register(
     "You mentioned an attachment. Did you forget to add it?" : "Du nevnte et vedlegg. Glemte du å legge det ved?",
     "Message discarded" : "Meldingen forkastet",
     "Could not discard message" : "Kunne ikke forkaste meldingen",
-    "Maximize composer" : "Maksimer skrivevindu",
+    "Exit full screen" : "Avslutt fullskjerm",
+    "Full screen" : "Fullskjerm",
     "Minimize composer" : "Minimer skrivevindu",
     "Error sending your message" : "Feil ved sending av meldingen din",
     "Retry" : "Prøv igjen",
@@ -696,9 +697,6 @@ OC.L10N.register(
     "Tag name cannot be empty" : "Navn for merkelapp kan ikke være tom",
     "Tag name is a hidden system tag" : "Tagnavn er en skjult systemtag",
     "Tag already exists" : "Merkelappen finnes allerede",
-    "Error loading message" : "Feil ved innlasting av melding",
-    "Show less" : "Vis mindre",
-    "Show more" : "Vis mer",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% og %E MAIL% vil bli erstattet med brukerens UID og e-post"
+    "Error loading message" : "Feil ved innlasting av melding"
 },
 "nplurals=2; plural=(n != 1);");

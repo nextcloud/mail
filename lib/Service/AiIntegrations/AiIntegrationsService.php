@@ -193,6 +193,7 @@ class AiIntegrationsService {
 			}
 
 			$this->cache->addValue($cacheKey, $summary);
+			$this->cache->resetFailures($cacheKey);
 
 			return $summary;
 		} else {
@@ -261,12 +262,16 @@ class AiIntegrationsService {
 	 */
 	public function getSmartReply(Account $account, Mailbox $mailbox, Message $message, string $currentUserId): ?array {
 		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[TextToText::ID])) {
-			$cachedReplies = $this->cache->getValue("smartReplies_{$message->getId()}");
-			if ($cachedReplies) {
+			$cacheKey = 'smartReplies_' . $message->getId();
+			$cachedReplies = $this->cache->getValue($cacheKey);
+			if ($cachedReplies === Cache::FAILURE_MARKER) {
+				return [];
+			}
+			if (is_string($cachedReplies)) {
 				try {
 					return json_decode($cachedReplies, true, 512, JSON_THROW_ON_ERROR);
 				} catch (JsonException $e) {
-					$this->cache->remove('smartReplies_' . $message->getId());
+					$this->cache->remove($cacheKey);
 					throw new ServiceException('Failed to decode smart replies JSON output', previous: $e);
 				}
 			}
@@ -291,28 +296,38 @@ class AiIntegrationsService {
 			}
 			$prompt = sprintf(DefaultPrompts::SMART_REPLY, $messageBody);
 			$task = new TaskProcessingTask(TextToText::ID, ['input' => $prompt], Application::APP_ID, $currentUserId);
-			$task = $this->runTask($task);
+			try {
+				$task = $this->runTask($task);
+			} catch (ServiceException $e) {
+				$this->cache->addFailure($cacheKey);
+				throw $e;
+			}
 			$output = $task->getOutput()['output'] ?? null;
 			$replies = is_string($output) ? trim($output) : '';
 			if ($replies === '') {
 				// The task can fail or return nothing (e.g. provider timeout); treat as no replies
 				$this->logger->warning('Smart reply task returned no output', ['status' => $task->getStatus(), 'errorMessage' => $task->getErrorMessage()]);
+				$this->cache->addFailure($cacheKey);
 				return [];
 			}
+			$cleaned = preg_replace('/^```json\s*|\s*```$/', '', $replies);
 			try {
-				$cleaned = preg_replace('/^```json\s*|\s*```$/', '', $replies);
 				$decoded = json_decode($cleaned, true, 512, JSON_THROW_ON_ERROR);
-				if (!is_array($decoded)
-					|| !isset($decoded['reply1'], $decoded['reply2'])
-					|| !is_string($decoded['reply1'])
-					|| !is_string($decoded['reply2'])) {
-					throw new ServiceException('Smart reply output has an unexpected structure');
-				}
-				$this->cache->addValue("smartReplies_{$message->getId()}", $cleaned);
-				return $decoded;
 			} catch (JsonException $e) {
+				$this->cache->addFailure($cacheKey);
 				throw new ServiceException('Failed to decode smart replies JSON output', previous: $e);
 			}
+			if (!is_array($decoded)
+				|| !isset($decoded['reply1'], $decoded['reply2'])
+				|| !is_string($decoded['reply1'])
+				|| !is_string($decoded['reply2'])) {
+				$this->cache->addFailure($cacheKey);
+				throw new ServiceException('Smart reply output has an unexpected structure');
+			}
+
+			$this->cache->addValue($cacheKey, $cleaned);
+			$this->cache->resetFailures($cacheKey);
+			return $decoded;
 		} else {
 			throw new ServiceException('No language model available for smart replies');
 		}

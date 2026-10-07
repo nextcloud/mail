@@ -326,6 +326,8 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Poskušate poslati prevelikemu številu naslovnikov in prejemnikov kopije sporočila. Razmislite o uporabi skrite kopije za izbrane naslove.",
     "Message discarded" : "Sporočilo je izbrisano",
     "Could not discard message" : "Sporočila ni mogoče zavreči",
+    "Exit full screen" : "Končaj celozaslonski način",
+    "Full screen" : "Celozaslonski način",
     "Error sending your message" : "Prošlo je do napake med pošiljanjem sporočila",
     "Retry" : "Poskusi  znova",
     "Warning sending your message" : "Opozorilo pred pošiljanjem sporočila",
@@ -526,8 +528,6 @@ OC.L10N.register(
     "Date:" : "Datum:",
     "Tag name is a hidden system tag" : "Ime oznake je skrita sistemska oznaka",
     "Tag already exists" : "Oznaka že obstaja",
-    "Error loading message" : "Napaka nalaganja sporočila",
-    "Show less" : "Pokaži manj",
-    "Show more" : "Pokaži več"
+    "Error loading message" : "Napaka nalaganja sporočila"
 },
 "nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);");

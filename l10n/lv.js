@@ -125,6 +125,7 @@ OC.L10N.register(
     "New message" : "Jauna ziņa",
     "Draft" : "Melnraksts",
     "Reply" : "Atbildēt",
+    "Exit full screen" : "Iziet no pilnekrāna",
     "Retry" : "Mēģināt vēlreiz",
     "Autoresponder follows system settings" : "Automātiskais atbildētājs ievēro sistēmas iestatījumus",
     "Message" : "Ziņojums",
@@ -186,7 +187,6 @@ OC.L10N.register(
     "Date:" : "Datums:",
     "Tag name is a hidden system tag" : "Birkas nosaukums ir slēpta sistēmas birka",
     "Tag already exists" : "Birka jau pastāv",
-    "Error loading message" : "Kļūda ielādējot vēstuli",
-    "Show more" : "Parādīt vairāk"
+    "Error loading message" : "Kļūda ielādējot vēstuli"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);");

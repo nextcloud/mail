@@ -94,9 +94,9 @@ OC.L10N.register(
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Respuesta automática a mensajes entrantes. Si alguien te envía varios mensajes, esta respuesta automática se enviará como máximo una vez cada 4 días.",
     "Calendar settings" : "Configuración del calendario",
     "Filters" : "Filtros",
-    "Sieve script editor" : "Editor de scripts Sieve",
     "Mail server" : "Servidor de correo",
     "Sieve server" : "Servidor Sieve",
+    "Sieve script editor" : "Editor de scripts Sieve",
     "Email address" : "Dirección de correo electrónico",
     "Update alias" : "Actualizar alias",
     "Rename alias" : "Renombrar alias",
@@ -316,6 +316,8 @@ OC.L10N.register(
     "Subscribed" : "Suscrito",
     "New message" : "Mensaje nuevo",
     "Reply" : "Responder",
+    "Exit full screen" : "Salir de pantalla completa",
+    "Full screen" : "Pantalla completa",
     "Retry" : "Reintentar",
     "First day" : "Primer día",
     "Message" : "Mensaje",
@@ -377,8 +379,6 @@ OC.L10N.register(
     "Could not load the message" : "No fue posible cargar el mensaje",
     "Date:" : "Fecha:",
     "Tag already exists" : "La etiqueta ya existe",
-    "Error loading message" : "Se presentó un error al cargar el mensaje",
-    "Show less" : "Mostrar menos",
-    "Show more" : "Mostrar más"
+    "Error loading message" : "Se presentó un error al cargar el mensaje"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");
