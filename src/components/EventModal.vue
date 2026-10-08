@@ -4,6 +4,7 @@
 -->
 <template>
 	<NcModal
+		closeOnClickOutside
 		size="large"
 		:name="t('mail', 'Create event')"
 		@close="onClose">
@@ -22,20 +23,20 @@
 					v-model="startDate"
 					:format="dateFormat"
 					:clearable="false"
-					:minute-step="5"
-					:show-second="false"
+					:minuteStep="5"
+					:showSecond="false"
 					:type="datePickerType"
-					:show-timezone-select="true"
-					:timezone-id="startTimezoneId" />
+					:showTimezoneSelect="true"
+					:timezoneId="startTimezoneId" />
 				<NcDateTimePicker
 					v-model="endDate"
 					:format="dateFormat"
 					:clearable="false"
-					:minute-step="5"
-					:show-second="false"
+					:minuteStep="5"
+					:showSecond="false"
 					:type="datePickerType"
-					:show-timezone-select="true"
-					:timezone-id="endTimezoneId" />
+					:showTimezoneSelect="true"
+					:timezoneId="endTimezoneId" />
 			</div>
 			<div class="all-day">
 				<input
@@ -55,19 +56,19 @@
 				<NcSelect
 					v-else
 					id="attendee"
-					:model-value="attendeesList"
+					:modelValue="attendeesList"
 					class="select-users"
 					:multiple="true"
 					label="displayName"
-					track-by="email"
+					trackBy="email"
 					:clearable="true"
 					:searchable="true"
-					:label-outside="true"
-					input-id="uid"
+					:labelOutside="true"
+					inputId="uid"
 					:disabled="!organizerEmail"
 					:options="attendeesOptions"
 					:taggable="true"
-					:create-option="createRecipientOption"
+					:createOption="createRecipientOption"
 					@option:selecting="addAttendee">
 					<template #search="{ events, attributes }">
 						<input
@@ -81,7 +82,7 @@
 						<RecipientListItem
 							:option="option"
 							class="vs__selected selected"
-							@remove-recipient="removeAttendee(option)" />
+							@removeRecipient="removeAttendee(option)" />
 					</template>
 				</NcSelect>
 			</div>
@@ -96,7 +97,7 @@
 				</template>
 				<template #singleLabel="option">
 					<CalendarPickerOption
-						:display-icon="true"
+						:displayIcon="true"
 						v-bind="option" />
 				</template>
 			</NcSelect>
@@ -120,9 +121,11 @@ import { AttendeeProperty, createEvent, DateTimeValue, TextProperty } from '@nex
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
 import { getTimezoneManager } from '@nextcloud/timezones'
-import { NcDateTimePicker, NcModal, NcSelect } from '@nextcloud/vue'
 import jstz from 'jstz'
 import { mapState, mapStores } from 'pinia'
+import NcDateTimePicker from '@nextcloud/vue/components/NcDateTimePicker'
+import NcModal from '@nextcloud/vue/components/NcModal'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import CalendarPickerOption from './CalendarPickerOption.vue'
 import RecipientListItem from './RecipientListItem.vue'
 import logger from '../logger.js'
@@ -146,6 +149,8 @@ export default {
 			required: true,
 		},
 	},
+
+	emits: ['close'],
 
 	data() {
 		// Try to determine the current timezone, and fall back to UTC otherwise
@@ -177,7 +182,7 @@ export default {
 		}),
 
 		dateFormat() {
-			return this.isAllDay ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm'
+			return this.isAllDay ? 'yyyy-MM-dd' : 'yyyy-MM-dd HH:mm'
 		},
 
 		datePickerType() {
@@ -364,10 +369,6 @@ input {
 	width: 100%;
 }
 
-:deep(input[type='text']) {
-	padding: 0 !important;
-}
-
 .all-day {
 	margin-inline-start: -1px;
 	margin-top: 5px;
@@ -380,10 +381,6 @@ input {
 
 .primary {
 	float: inline-end;
-}
-
-:deep(.mx-datepicker) {
-	width: 213px;
 }
 
 .vs__search {

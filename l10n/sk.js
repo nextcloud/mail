@@ -336,7 +336,7 @@ OC.L10N.register(
     "Snooze" : "Odložiť",
     "Unsnooze" : "Zrušiť odloženie",
     "Move thread" : "Presunúť konverzáciu",
-    "Move Message" : "Presunúť Správu",
+    "Move message" : "Presunúť správu",
     "Archive thread" : "Archivovať vlákno",
     "Archive message" : "Archivovať správu",
     "More actions" : "Viac akcií",
@@ -453,7 +453,6 @@ OC.L10N.register(
     "Forward" : "Preposlať",
     "Only for message recipients" : "Len pre príjemcov správy",
     "Link copied" : "Odkaz bol skopírovaný",
-    "Move message" : "Presunúť správu",
     "Translate" : "Preložiť",
     "Forward message as attachment" : "Preposlať správu ako prílohu",
     "View source" : "Zobraziť zdrojový kód",
@@ -964,6 +963,7 @@ OC.L10N.register(
     "Tag already exists" : "Štítok už existuje",
     "Error loading message" : "Chyba načítavania správy",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Automatická odpoveď používa Sieve, skriptovací jazyk podporovaný mnohými poskytovateľmi e-mailových služieb. Ak si nie ste istí, či ho váš poskytovateľ podporuje, overte si to u svojho poskytovateľa. Ak je Sieve k dispozícii, kliknite na tlačidlo a prejdite do nastavení, kde ho môžete povoliť.",
+    "Move Message" : "Presunúť Správu",
     "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Prevezmite kontrolu nad svojim e-mailovým chaosom. Filtre vám pomôžu uprednostniť to, na čom záleží, a eliminovať neporiadok."
 },
 "nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);");

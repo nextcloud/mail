@@ -112,47 +112,47 @@
 					<Composer
 						v-else
 						ref="composer"
-						:from-account="composerData.accountId"
-						:from-alias="composerData.aliasId"
+						:fromAccount="composerData.accountId"
+						:fromAlias="composerData.aliasId"
 						:to="composerData.to"
 						:cc="composerData.cc"
 						:bcc="composerData.bcc"
 						:subject="composerData.subject"
-						:attachments-data="composerData.attachments"
+						:attachmentsData="composerData.attachments"
 						:body="composerDataBodyAsTextInstance"
-						:editor-body="convertEditorBody(composerData)"
-						:in-reply-to-message-id="composerData.inReplyToMessageId"
-						:reply-to="composerData.replyTo"
-						:forward-from="composerData.forwardFrom"
-						:send-at="composerData.sendAt * 1000"
-						:forwarded-messages="forwardedMessages"
-						:smart-reply="smartReply"
-						:can-save-draft="canSaveDraft"
-						:saving-draft="savingDraft"
-						:draft-saved="draftSaved"
-						:smime-sign="composerData.smimeSign"
-						:smime-encrypt="composerData.smimeEncrypt"
-						:is-first-open="modalFirstOpen"
-						:is-draft="composerData.draftId !== undefined"
-						:request-mdn="composerData.requestMdn"
-						:is-ai-generated="composerData.isAiGenerated"
+						:editorBody="convertEditorBody(composerData)"
+						:inReplyToMessageId="composerData.inReplyToMessageId"
+						:replyTo="composerData.replyTo"
+						:forwardFrom="composerData.forwardFrom"
+						:sendAt="composerData.sendAt * 1000"
+						:forwardedMessages="forwardedMessages"
+						:smartReply="smartReply"
+						:canSaveDraft="canSaveDraft"
+						:savingDraft="savingDraft"
+						:draftSaved="draftSaved"
+						:smimeSign="composerData.smimeSign"
+						:smimeEncrypt="composerData.smimeEncrypt"
+						:isFirstOpen="modalFirstOpen"
+						:isDraft="composerData.draftId !== undefined"
+						:requestMdn="composerData.requestMdn"
+						:isAiGenerated="composerData.isAiGenerated"
 						:accounts="accounts"
-						@update:from-account="patchComposerData({ accountId: $event })"
-						@update:from-alias="patchComposerData({ aliasId: $event })"
+						@update:fromAccount="patchComposerData({ accountId: $event })"
+						@update:fromAlias="patchComposerData({ aliasId: $event })"
 						@update:to="patchComposerData({ to: $event })"
 						@update:cc="patchComposerData({ cc: $event })"
 						@update:bcc="patchComposerData({ bcc: $event })"
 						@update:subject="patchComposerData({ subject: $event })"
-						@update:attachments-data="patchComposerData({ attachments: $event })"
-						@update:editor-body="patchEditorBody"
-						@update:send-at="patchComposerData({ sendAt: $event / 1000 })"
-						@update:smime-sign="patchComposerData({ smimeSign: $event })"
-						@update:smime-encrypt="patchComposerData({ smimeSign: $event })"
-						@update:request-mdn="patchComposerData({ requestMdn: $event })"
-						@update:is-ai-generated="patchComposerData({ isAiGenerated: $event })"
+						@update:attachmentsData="patchComposerData({ attachments: $event })"
+						@update:editorBody="patchEditorBody"
+						@update:sendAt="patchComposerData({ sendAt: $event / 1000 })"
+						@update:smimeSign="patchComposerData({ smimeSign: $event })"
+						@update:smimeEncrypt="patchComposerData({ smimeSign: $event })"
+						@update:requestMdn="patchComposerData({ requestMdn: $event })"
+						@update:isAiGenerated="patchComposerData({ isAiGenerated: $event })"
 						@draft="onDraft"
-						@discard-draft="discardDraft"
-						@upload-attachment="onAttachmentUploading"
+						@discardDraft="discardDraft"
+						@uploadAttachment="onAttachmentUploading"
 						@send="onSend" />
 				</KeepAlive>
 			</div>
@@ -163,11 +163,9 @@
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { t } from '@nextcloud/l10n'
-import {
-	NcButton,
-	NcEmptyContent,
-} from '@nextcloud/vue'
 import { mapActions, mapState, mapStores } from 'pinia'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 import AccountIcon from 'vue-material-design-icons/Account.vue'
 import DefaultComposerIcon from 'vue-material-design-icons/ArrowCollapse.vue'
 import MaximizeIcon from 'vue-material-design-icons/ArrowExpand.vue'
@@ -215,6 +213,8 @@ export default {
 		},
 	},
 
+	emits: ['close'],
+
 	data() {
 		return {
 			original: undefined,
@@ -239,14 +239,6 @@ export default {
 
 			recipientPaneOpen: true,
 		}
-	},
-
-	watch: {
-		'composerData.to': function(newTo, oldTo) {
-			if (newTo?.length > 0 && !oldTo?.length) {
-				this.recipientPaneOpen = true
-			}
-		},
 	},
 
 	computed: {
@@ -299,6 +291,14 @@ export default {
 		},
 	},
 
+	watch: {
+		'composerData.to': function(newTo, oldTo) {
+			if (newTo?.length > 0 && !oldTo?.length) {
+				this.recipientPaneOpen = true
+			}
+		},
+	},
+
 	created() {
 		const id = this.composerData?.id
 		if (id) {
@@ -313,7 +313,7 @@ export default {
 		await this.openModalSize()
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		window.removeEventListener('beforeunload', this.onBeforeUnload)
 	},
 
@@ -650,7 +650,10 @@ export default {
 		async patchComposerData(data) {
 			this.changed = true
 			this.updateCookedComposerData()
-			await this.mainStore.patchComposerData({ ...data, isHtml: this.cookedComposerData.isHtml })
+			// The composer emits a last update while it is being torn down, when its
+			// ref is already gone and no cooked data can be extracted any more.
+			const isHtml = this.cookedComposerData?.isHtml ?? this.composerData.isHtml
+			await this.mainStore.patchComposerData({ ...data, isHtml })
 		},
 
 		onBeforeUnload(e) {

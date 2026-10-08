@@ -4,7 +4,7 @@
 -->
 
 <template>
-	<NcAppNavigation class="mail-navigation">
+	<NcAppNavigation class="mail-navigation" :aria-label="t('mail', 'Mail navigation')">
 		<template #search>
 			<NewMessageButtonHeader class="mail-navigation__new-message-button" />
 		</template>
@@ -22,10 +22,10 @@
 					v-if="group.account"
 					:key="group.account.id"
 					:account="group.account"
-					:first-mailbox="group.mailboxes[0]"
-					:is-first="isFirst(group.account)"
-					:is-last="isLast(group.account)"
-					:is-disabled="isDisabled(group.account)" />
+					:firstMailbox="group.mailboxes[0]"
+					:isFirst="isFirst(group.account)"
+					:isLast="isLast(group.account)"
+					:isDisabled="isDisabled(group.account)" />
 				<div
 					v-if="group.account.error"
 					:key="group.account.error"
@@ -41,19 +41,17 @@
 					</span>
 				</div>
 				<template v-else-if="!isDisabled(group.account)">
-					<template v-for="item in group.mailboxes">
+					<template v-for="item in group.mailboxes" :key="item.databaseId">
 						<NavigationMailbox
 							v-show="
 								!group.isCollapsible
 									|| !group.account.collapsed
 									|| !isCollapsed(group.account, item)
 							"
-							:key="'mailbox-' + item.databaseId"
 							:account="group.account"
 							:mailbox="item" />
 						<NavigationMailbox
 							v-if="!group.account.isUnified && item.specialRole === 'inbox'"
-							:key="item.databaseId + '-starred'"
 							:account="group.account"
 							:mailbox="item"
 							filter="starred" />
@@ -72,7 +70,7 @@
 			<div class="mail-settings">
 				<NcAppNavigationItem
 					class="mail-settings__button"
-					:close-after-click="true"
+					:closeAfterClick="true"
 					:name="t('mail', 'Mail settings')"
 					@click="showMailSettings">
 					<template #icon>
@@ -81,23 +79,26 @@
 				</NcAppNavigationItem>
 			</div>
 		</template>
-		<AppSettingsMenu :open.sync="showSettings" />
+		<AppSettingsMenu v-model:open="showSettings" />
 
-		<!-- Must stay outside the #list slot: within NavigationAccount's vue-frag
-		     fragment the dialog gets pulled back into the clipped sidebar after
-		     NcModal relocated it to <body>. -->
+		<!-- Must stay outside the #list slot: NcModal relocates the dialog to
+		     <body> but the clipped sidebar would pull it back in if it were
+		     rendered inside the slot. -->
 		<AccountSettings
 			v-if="settingsAccount"
 			:open="true"
 			:account="settingsAccount"
-			:scroll-to-section="settingsSection"
+			:scrollToSection="settingsSection"
 			@close="onCloseAccountSettings" />
 	</NcAppNavigation>
 </template>
 
 <script>
-import { NcAppNavigation, NcAppNavigationItem, NcButton } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import { defineAsyncComponent } from 'vue'
+import NcAppNavigation from '@nextcloud/vue/components/NcAppNavigation'
+import NcAppNavigationItem from '@nextcloud/vue/components/NcAppNavigationItem'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import IconAlertTriangle from 'vue-material-design-icons/AlertOutline.vue'
 import IconSetting from 'vue-material-design-icons/CogOutline.vue'
 import AppSettingsMenu from '../components/AppSettingsMenu.vue'
@@ -114,7 +115,7 @@ export default {
 	name: 'Navigation',
 	components: {
 		NcAppNavigation,
-		AccountSettings: () => import(/* webpackChunkName: "account-settings" */ './AccountSettings.vue'),
+		AccountSettings: defineAsyncComponent(() => import(/* webpackChunkName: "account-settings" */ './AccountSettings.vue')),
 		AppSettingsMenu,
 		NavigationAccount,
 		NavigationAccountExpandCollapse,
@@ -260,15 +261,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@keyframes rotation {
-from {
-	transform: rotate(-0deg);
-}
-to {
-		transform: rotate(-360deg);
-	}
-}
-
 .mail-navigation {
 	&__new-message-button {
 		padding: calc(var(--default-grid-baseline, 4px) * 2);
@@ -293,16 +285,6 @@ to {
 .mail-settings {
 	padding: calc(var(--default-grid-baseline, 4px) * 2);
 	padding-top: 0;
-
-	&__button {
-		display: flex;
-		width: 100% !important;
-		justify-content: start !important;
-	}
-}
-
-.v-popper__inner {
-	height: unset !important;
 }
 
 </style>

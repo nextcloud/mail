@@ -13,7 +13,6 @@ namespace OCA\Mail\Controller;
 use OCA\Contacts\Event\LoadContactsOcaApiEvent;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\ConfigLexicon;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Db\OidcProvider;
 use OCA\Mail\Db\SmimeCertificate;
@@ -25,6 +24,7 @@ use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCA\Mail\Service\ContextChat\ContextChatSettingsService;
 use OCA\Mail\Service\InternalAddressService;
+use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Service\QuickActionsService;
 use OCA\Mail\Service\SmimeService;
@@ -79,7 +79,7 @@ class PageController extends Controller {
 		private ?string $userId,
 		IUserSession $userSession,
 		private IUserPreferences $preferences,
-		private IMailManager $mailManager,
+		private MailManager $mailManager,
 		private TagMapper $tagMapper,
 		IInitialState $initialStateService,
 		private LoggerInterface $logger,

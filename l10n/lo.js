@@ -284,7 +284,7 @@ OC.L10N.register(
     "Snooze" : "Snooze",
     "Unsnooze" : "Unsnooze",
     "Move thread" : "Move thread",
-    "Move Message" : "Move Message",
+    "Move message" : "Move message",
     "Archive thread" : "Archive thread",
     "Archive message" : "Archive message",
     "More actions" : "More actions",
@@ -390,7 +390,6 @@ OC.L10N.register(
     "Direct link copied to clipboard" : "Direct link copied to clipboard",
     "Forward" : "ໄປຂ້າງຫນ້າ",
     "Link copied" : "ສຳເນົາລິ້ງແລ້ວ",
-    "Move message" : "Move message",
     "Translate" : "ແປ",
     "Forward message as attachment" : "Forward message as attachment",
     "View source" : "View source",
@@ -858,6 +857,7 @@ OC.L10N.register(
     "Tag already exists" : "Tag already exists",
     "Error loading message" : "Error loading message",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it.",
+    "Move Message" : "Move Message",
     "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter."
 },
 "nplurals=1; plural=0;");

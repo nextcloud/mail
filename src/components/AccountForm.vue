@@ -7,7 +7,7 @@
 		<NcRadioGroup
 			v-model="mode"
 			:label="t('mail', 'Mail server configuration mode')"
-			hide-label>
+			hideLabel>
 			<NcRadioGroupButton :label="t('mail', 'Auto')" value="auto" :disabled="loading" />
 			<NcRadioGroupButton :label="t('mail', 'Manual')" value="manual" :disabled="loading" />
 		</NcRadioGroup>
@@ -37,7 +37,6 @@
 				id="auto-password"
 				v-model="autoConfig.password"
 				:disabled="loading"
-				type="password"
 				:label="t('mail', 'Password')"
 				:required="!hasPasswordAlternatives"
 				@change="clearFeedback" />
@@ -85,38 +84,38 @@
 			<div class="flex-row">
 				<NcCheckboxRadioSwitch
 					id="man-imap-sec-none"
-					:button-variant="true"
-					:model-value="manualConfig.imapSslMode"
+					:buttonVariant="true"
+					:modelValue="manualConfig.imapSslMode"
 					type="radio"
 					name="man-imap-sec"
 					:disabled="loading"
 					value="none"
-					button-variant-grouped="horizontal"
-					@update:checked="onImapSslModeChange">
+					buttonVariantGrouped="horizontal"
+					@update:modelValue="onImapSslModeChange">
 					{{ t('mail', 'None') }}
 				</NcCheckboxRadioSwitch>
 				<NcCheckboxRadioSwitch
 					id="man-imap-sec-ssl"
-					:button-variant="true"
-					:model-value="manualConfig.imapSslMode"
+					:buttonVariant="true"
+					:modelValue="manualConfig.imapSslMode"
 					type="radio"
 					name="man-imap-sec"
 					:disabled="loading"
 					value="ssl"
-					button-variant-grouped="horizontal"
-					@update:checked="onImapSslModeChange">
+					buttonVariantGrouped="horizontal"
+					@update:modelValue="onImapSslModeChange">
 					{{ t('mail', 'SSL/TLS') }}
 				</NcCheckboxRadioSwitch>
 				<NcCheckboxRadioSwitch
 					id="man-imap-sec-tls"
-					:button-variant="true"
-					:model-value="manualConfig.imapSslMode"
+					:buttonVariant="true"
+					:modelValue="manualConfig.imapSslMode"
 					type="radio"
 					name="man-imap-sec"
 					:disabled="loading"
 					value="tls"
-					button-variant-grouped="horizontal"
-					@update:checked="onImapSslModeChange">
+					buttonVariantGrouped="horizontal"
+					@update:modelValue="onImapSslModeChange">
 					{{ t('mail', 'STARTTLS') }}
 				</NcCheckboxRadioSwitch>
 			</div>
@@ -142,7 +141,6 @@
 				v-if="!useOauth"
 				id="man-imap-password"
 				v-model="manualConfig.imapPassword"
-				type="password"
 				:label="t('mail', 'IMAP Password')"
 				:disabled="loading"
 				required
@@ -165,38 +163,38 @@
 			<div class="flex-row">
 				<NcCheckboxRadioSwitch
 					id="man-imap-sec-none"
-					:button-variant="true"
-					:model-value="manualConfig.smtpSslMode"
+					:buttonVariant="true"
+					:modelValue="manualConfig.smtpSslMode"
 					type="radio"
 					name="man-smtp-sec"
 					:disabled="loading"
 					value="none"
-					button-variant-grouped="horizontal"
-					@update:checked="onSmtpSslModeChange">
+					buttonVariantGrouped="horizontal"
+					@update:modelValue="onSmtpSslModeChange">
 					{{ t('mail', 'None') }}
 				</NcCheckboxRadioSwitch>
 				<NcCheckboxRadioSwitch
 					id="man-imap-sec-ssl"
-					:button-variant="true"
-					:model-value="manualConfig.smtpSslMode"
+					:buttonVariant="true"
+					:modelValue="manualConfig.smtpSslMode"
 					type="radio"
 					name="man-smtp-sec"
 					:disabled="loading"
 					value="ssl"
-					button-variant-grouped="horizontal"
-					@update:checked="onSmtpSslModeChange">
+					buttonVariantGrouped="horizontal"
+					@update:modelValue="onSmtpSslModeChange">
 					{{ t('mail', 'SSL/TLS') }}
 				</NcCheckboxRadioSwitch>
 				<NcCheckboxRadioSwitch
 					id="man-imap-sec-tls"
-					:button-variant="true"
-					:model-value="manualConfig.smtpSslMode"
+					:buttonVariant="true"
+					:modelValue="manualConfig.smtpSslMode"
 					type="radio"
 					name="man-smtp-sec"
 					:disabled="loading"
 					value="tls"
-					button-variant-grouped="horizontal"
-					@update:checked="onSmtpSslModeChange">
+					buttonVariantGrouped="horizontal"
+					@update:modelValue="onSmtpSslModeChange">
 					{{ t('mail', 'STARTTLS') }}
 				</NcCheckboxRadioSwitch>
 			</div>
@@ -223,7 +221,6 @@
 				id="man-smtp-password"
 				v-model="manualConfig.smtpPassword"
 				:label="t('mail', 'SMTP Password')"
-				type="password"
 				:disabled="loading"
 				required
 				@change="unsyncCredentials" />
@@ -283,8 +280,14 @@
 <script>
 import { loadState } from '@nextcloud/initial-state'
 import { t } from '@nextcloud/l10n'
-import { NcButton, NcCheckboxRadioSwitch, NcInputField, NcLoadingIcon, NcPasswordField, NcRadioGroup, NcRadioGroupButton } from '@nextcloud/vue'
 import { mapState, mapStores } from 'pinia'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
+import NcInputField from '@nextcloud/vue/components/NcInputField'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
+import NcPasswordField from '@nextcloud/vue/components/NcPasswordField'
+import NcRadioGroup from '@nextcloud/vue/components/NcRadioGroup'
+import NcRadioGroupButton from '@nextcloud/vue/components/NcRadioGroupButton'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import { CONSENT_ABORTED, getUserConsent } from '../integration/oauth.js'
 import logger from '../logger.js'
@@ -327,6 +330,8 @@ export default {
 			default: () => undefined,
 		},
 	},
+
+	emits: ['accountCreated'],
 
 	data() {
 		const fromAccountOr = (prop, def) => {
@@ -736,7 +741,7 @@ export default {
 					}
 					this.loadingMessage = t('mail', 'Loading account')
 					await this.mainStore.finishAccountSetup({ account })
-					this.$emit('account-created', account)
+					this.$emit('accountCreated', account)
 				} else {
 					const oldAccountData = this.account
 					const account = await this.mainStore.updateAccount({
@@ -817,17 +822,6 @@ export default {
 :deep(.input-field) {
 	margin: calc(var(--default-grid-baseline) * 3) 0;
 }
-
-.account-form__panel label {
-	text-align: start;
-	width: 100%;
-	display: inline-block;
-}
-
-.account-form__panel input,
-.account-form__panel select {
-	margin-bottom: calc(var(--default-grid-baseline) * 2);
-}
 </style>
 
 <style scoped>
@@ -838,23 +832,6 @@ h4 {
 
 .flex-row {
 	display: flex;
-}
-
-input.primary {
-	color: var(--color-main-background);
-}
-
-input[type='radio'] {
-	display: none;
-}
-
-input[type='radio'][disabled] + label {
-	cursor: default;
-	opacity: 0.5;
-}
-
-.account-form__label--required:after {
-	content:" *";
 }
 
 .account-form__heading--required:after {
@@ -890,10 +867,5 @@ input[type='radio'][disabled] + label {
 	padding-bottom: calc(var(--default-grid-baseline) * 12);
 	margin: 0 auto;
 	padding-top: calc(var(--default-grid-baseline) * 7);
-}
-
-#account-form input {
-	width: 100%;
-	box-sizing: border-box;
 }
 </style>

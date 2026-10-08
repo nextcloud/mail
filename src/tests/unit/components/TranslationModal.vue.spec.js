@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import TranslationModal from '../../../components/TranslationModal.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
@@ -16,10 +16,6 @@ vi.mock('@nextcloud/l10n', async () => ({
 	getLanguage,
 }))
 
-const localVue = createLocalVue()
-
-localVue.mixin(Nextcloud)
-
 describe('TranslationModal', () => {
 	const language = (value) => ({ id: value, value, name: value })
 
@@ -29,12 +25,14 @@ describe('TranslationModal', () => {
 		store.translationOutputLanguages = output.map(language)
 
 		return shallowMount(TranslationModal, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				message: 'Bonjour tout le monde',
 				richParameters: {},
 				detectedForeignLanguage,
 			},
-			localVue,
 		})
 	}
 

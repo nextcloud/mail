@@ -294,7 +294,7 @@ OC.L10N.register(
     "Snooze" : "مۈگدە",
     "Unsnooze" : "مۈگدىمە",
     "Move thread" : "تېمىنى يۆتكەڭ",
-    "Move Message" : "ئۇچۇر يۆتكە",
+    "Move message" : "ئۇچۇر يۆتكەش",
     "Archive thread" : "ئارخىپ تېمىسى",
     "Archive message" : "ئارخىپ ئۇچۇرى",
     "More actions" : "تېخىمۇ كۆپ ھەرىكەت",
@@ -402,7 +402,6 @@ OC.L10N.register(
     "Direct link copied to clipboard" : "چاپلاش تاختىسىغا كۆچۈرۈلگەن بىۋاسىتە ئۇلىنىش",
     "Forward" : "ئالدىغا",
     "Link copied" : "ئۇلىنىش كۆچۈرۈلدى",
-    "Move message" : "ئۇچۇر يۆتكەش",
     "Translate" : "تەرجىمە قىلىڭ",
     "Forward message as attachment" : "قوشۇمچە ئۇچۇر سۈپىتىدە قوشۇمچە ئۇچۇر",
     "View source" : "مەنبەنى كۆرۈش",
@@ -877,6 +876,7 @@ OC.L10N.register(
     "Tag already exists" : "خەتكۈچ مەۋجۇت",
     "Error loading message" : "ئۇچۇر يۈكلەشتە خاتالىق",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "ئاپتوماتىك جاۋاب قايتۇرغۇچ نۇرغۇن ئېلخەت تەمىنلىگۈچىلىرى قوللايدىغان سىكرىپت تىلى Sieve نى ئىشلىتىدۇ. ئەگەر سىزنىڭكىنىڭ قوللايدىغان-قوللىمايدىغانلىقىغا ئىشەنمىسىڭىز، تەمىنلىگۈچىڭىز بىلەن ئالاقىلىشىڭ. ئەگەر Sieve بار بولسا، تەڭشەكلەرگە كىرىپ ئۇنى قوزغىتىش ئۈچۈن كۇنۇپكىنى چېكىڭ.",
+    "Move Message" : "ئۇچۇر يۆتكە",
     "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "ئېلېكترونلۇق خەت قالايمىقانچىلىقىڭىزنى كونترول قىلىڭ. سۈزگۈچلەر مۇھىم ئىشلارنى مۇھىم ئورۇنغا قويۇپ ، قالايمىقانچىلىقنى تۈگىتىشىڭىزگە ياردەم بېرىدۇ."
 },
 "nplurals=2; plural=(n != 1);");

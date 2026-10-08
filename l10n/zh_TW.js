@@ -336,7 +336,7 @@ OC.L10N.register(
     "Snooze" : "延後",
     "Unsnooze" : "取消延後",
     "Move thread" : "移動討論串",
-    "Move Message" : "移動訊息",
+    "Move message" : "移動訊息",
     "Archive thread" : "封存討論串",
     "Archive message" : "封存訊息",
     "More actions" : "更多動作",
@@ -453,7 +453,6 @@ OC.L10N.register(
     "Forward" : "轉寄",
     "Only for message recipients" : "僅限訊息收件者",
     "Link copied" : "已複製連結",
-    "Move message" : "移動訊息",
     "Translate" : "翻譯",
     "Forward message as attachment" : "將郵件作為附件轉發",
     "View source" : "檢視原始碼",
@@ -964,6 +963,7 @@ OC.L10N.register(
     "Tag already exists" : "標籤已經存在",
     "Error loading message" : "載入信件錯誤",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "自動回覆使用 Sieve，這是一種許多電子郵件供應商都支援的命令稿語言。如果您不確定您的供應商是否支援，請向供應商查詢。如果 Sieve 可用，請按一下按鈕前往設定並啟用它。",
+    "Move Message" : "移動訊息",
     "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "控制您混亂的電子郵件。篩選器會協助您排定優先順序並消除雜訊。"
 },
 "nplurals=1; plural=0;");

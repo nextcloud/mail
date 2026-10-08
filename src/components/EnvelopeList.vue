@@ -58,7 +58,7 @@
 					<NcButton
 						variant="tertiary"
 						:title="n('mail', 'Unselect {number}', 'Unselect {number}', selection.length, { number: selection.length })"
-						:close-after-click="true"
+						:closeAfterClick="true"
 						@click.prevent="unselectAll">
 						<IconSelect :size="20" />
 					</NcButton>
@@ -71,13 +71,13 @@
 							selection.length,
 							{ number: selection.length },
 						)"
-						:close-after-click="true"
+						:closeAfterClick="true"
 						@click.prevent="deleteAllSelected">
 						<IconDelete :size="20" />
 					</NcButton>
 				</div>
 
-				<NcActions class="app-content-list-item-menu" menu-align="right">
+				<NcActions class="app-content-list-item-menu" menuAlign="right">
 					<NcActionButton
 						v-if="isAtLeastOneSelectedNotJunk"
 						@click.prevent="markSelectionJunk">
@@ -94,19 +94,19 @@
 						</template>
 						{{ n('mail', 'Mark {number} as not spam', 'Mark {number} as not spam', selection.length, { number: selection.length }) }}
 					</NcActionButton>
-					<NcActionButton :close-after-click="true" @click.prevent="onOpenTagModal">
+					<NcActionButton :closeAfterClick="true" @click.prevent="onOpenTagModal">
 						<template #icon>
 							<TagIcon :size="20" />
 						</template>
 						{{ n('mail', 'Edit tags for {number}', 'Edit tags for {number}', selection.length, { number: selection.length }) }}
 					</NcActionButton>
-					<NcActionButton v-if="!account.isUnified" :close-after-click="true" @click.prevent="onOpenMoveModal">
+					<NcActionButton v-if="!account.isUnified" :closeAfterClick="true" @click.prevent="onOpenMoveModal">
 						<template #icon>
 							<OpenInNewIcon :size="20" />
 						</template>
 						{{ n('mail', 'Move {number} thread', 'Move {number} threads', selection.length, { number: selection.length }) }}
 					</NcActionButton>
-					<NcActionButton :close-after-click="true" @click.prevent="forwardSelectedAsAttachment">
+					<NcActionButton :closeAfterClick="true" @click.prevent="forwardSelectedAsAttachment">
 						<template #icon>
 							<ShareIcon :size="20" />
 						</template>
@@ -123,20 +123,20 @@
 				:data="env"
 				:mailbox="mailbox"
 				:selected="selection.includes(env.databaseId)"
-				:select-mode="selectMode"
-				:has-multiple-accounts="hasMultipleAccounts"
-				:selected-envelopes="selectedEnvelopes"
-				:compact-mode="compactMode"
-				:date-grouped="dateGrouped"
+				:selectMode="selectMode"
+				:hasMultipleAccounts="hasMultipleAccounts"
+				:selectedEnvelopes="selectedEnvelopes"
+				:compactMode="compactMode"
+				:dateGrouped="dateGrouped"
 				@delete="$emit('delete', env.databaseId)"
 				@update:selected="onEnvelopeSelectToggle(env, index, $event)"
-				@select-multiple="onEnvelopeSelectMultiple(env, index)"
-				@open:quick-actions-settings="showQuickActionsSettings = true" />
+				@selectMultiple="onEnvelopeSelectMultiple(env, index)"
+				@open:quickActionsSettings="showQuickActionsSettings = true" />
 			<div
 				v-if="loadMoreButton && !loadingMore"
 				:key="'list-collapse-' + searchQuery"
 				class="load-more"
-				@click="$emit('load-more')">
+				@click="$emit('loadMore')">
 				<AddIcon :size="16" />
 				{{ loadMoreLabel }}
 			</div>
@@ -153,7 +153,7 @@
 			v-if="showMoveModal"
 			:account="account"
 			:envelopes="selectedEnvelopes"
-			:move-thread="true"
+			:moveThread="true"
 			@close="onCloseMoveModal" />
 
 		<NcDialog
@@ -167,9 +167,12 @@
 
 <script>
 import { showError } from '@nextcloud/dialogs'
-import { NcActionButton, NcActions, NcButton, NcDialog } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
 import { differenceWith } from 'ramda'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcActions from '@nextcloud/vue/components/NcActions'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
 import IconSelect from 'vue-material-design-icons/CloseThick.vue'
 import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
@@ -273,6 +276,8 @@ export default {
 			default: false,
 		},
 	},
+
+	emits: ['delete', 'loadMore'],
 
 	data() {
 		return {
@@ -383,7 +388,7 @@ export default {
 		dragEventBus.on('envelopes-dropped', this.unselectAll)
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		dragEventBus.off('envelopes-dropped', this.unselectAll)
 	},
 
@@ -487,7 +492,7 @@ export default {
 			if (this.selectedEnvelopes.length === this.sortedEnvelops.length) {
 				isAllSelected = true
 			} else {
-				const indexSelectedEnvelope = this.selectedEnvelopes.findIndex((selectedEnvelope) => selectedEnvelope.databaseId === this.$route.params.threadId)
+				const indexSelectedEnvelope = this.selectedEnvelopes.findIndex((selectedEnvelope) => selectedEnvelope.databaseId === parseInt(this.$route.params.threadId, 10))
 
 				// one of threads is selected
 				if (indexSelectedEnvelope !== -1) {
@@ -668,25 +673,12 @@ div {
 	transition: all calc(var(--animation-slow) / 2);
 }
 
-.multiselect-header-enter,
+.multiselect-header-enter-from,
 .multiselect-header-leave-to,
-.list-enter,
+.list-enter-from,
 .list-leave-to {
 	opacity: 0;
 	height: 0;
 	transform: scaleY(0);
-}
-
-#action-label {
-	vertical-align: middle;
-}
-@media only screen and (min-width: 600px) {
-	#action-label {
-		display: block;
-	}
-}
-
-:deep(.button-vue--text-only) {
-	padding: 0 !important;
 }
 </style>

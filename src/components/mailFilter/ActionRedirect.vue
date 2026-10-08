@@ -6,15 +6,15 @@
 	<NcInputField
 		type="email"
 		:required="true"
-		:model-value="recipient"
-		:label-outside="true"
+		:modelValue="recipient"
+		:labelOutside="true"
 		:aria-label="t('mail', 'Recipient')"
 		:placeholder="t('mail', 'name@example.org')"
-		@update:model-value="onInput" />
+		@update:modelValue="onInput" />
 </template>
 
 <script>
-import { NcInputField } from '@nextcloud/vue'
+import NcInputField from '@nextcloud/vue/components/NcInputField'
 
 export default {
 	name: 'ActionRedirect',
@@ -34,6 +34,8 @@ export default {
 		},
 	},
 
+	emits: ['updateAction'],
+
 	computed: {
 		recipient() {
 			return this.action.recipient ?? ''
@@ -42,7 +44,7 @@ export default {
 
 	methods: {
 		onInput(value) {
-			this.$emit('update-action', { recipient: value })
+			this.$emit('updateAction', { recipient: value })
 		},
 	},
 }

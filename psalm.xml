@@ -34,6 +34,14 @@
 				<referencedClass name="OCP\AppFramework\Http\Attribute\UserRateLimit" />
 			</errorLevel>
 		</UndefinedAttributeClass>
+		<MissingDependency>
+			<errorLevel type="suppress">
+				<file name="lib/Command/ACreateOrUpdateProvisioningCommand.php" />
+				<file name="lib/Command/CreateProvisioning.php" />
+				<file name="lib/Command/UpdateProvisioning.php" />
+				<file name="lib/Command/DeleteProvisioning.php" />
+			</errorLevel>
+		</MissingDependency>
 		<UndefinedClass>
 			<errorLevel type="suppress">
 				<referencedClass name="Doctrine\DBAL\Platforms\MySQLPlatform" />

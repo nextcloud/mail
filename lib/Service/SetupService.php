@@ -18,7 +18,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\CouldNotConnectException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCP\Security\ICrypto;
 use Psr\Log\LoggerInterface;
@@ -32,7 +32,7 @@ class SetupService {
 		private AccountService $accountService,
 		ICrypto $crypto,
 		private SmtpClientFactory $smtpClientFactory,
-		private IMAPClientFactory $imapClientFactory,
+		private ProtocolFactory $protocolFactory,
 		private LoggerInterface $logger,
 		private TagMapper $tagMapper,
 	) {
@@ -109,7 +109,7 @@ class SetupService {
 	protected function testConnectivity(Account $account): void {
 		$mailAccount = $account->getMailAccount();
 
-		$imapClient = $this->imapClientFactory->getClient($account);
+		$imapClient = $this->protocolFactory->imapClient($account);
 		try {
 			$imapClient->login();
 		} catch (Horde_Imap_Client_Exception $e) {

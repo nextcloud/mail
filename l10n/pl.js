@@ -316,7 +316,7 @@ OC.L10N.register(
     "Snooze" : "Odłóż",
     "Unsnooze" : "Przywróć",
     "Move thread" : "Przenieś wątek",
-    "Move Message" : "Przenieś wiadomość",
+    "Move message" : "Przenieś wiadomość",
     "Archive thread" : "Wątek archiwalny",
     "Archive message" : "Przenieś wiadomość do archiwum",
     "More actions" : "Więcej akcji",
@@ -427,7 +427,6 @@ OC.L10N.register(
     "Direct link copied to clipboard" : "Bezpośredni odnośnik skopiowany do schowka",
     "Forward" : "Przekaż dalej",
     "Link copied" : "Link skopiowany",
-    "Move message" : "Przenieś wiadomość",
     "Translate" : "Tłumaczenie",
     "Forward message as attachment" : "Wyślij wiadomość jako załącznik",
     "View source" : "Pokaż źródło",
@@ -911,6 +910,7 @@ OC.L10N.register(
     "Tag already exists" : "Tag już istnieje",
     "Error loading message" : "Błąd podczas wczytywania wiadomości",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Autoresponder używa Sieve, języka skryptowego obsługiwanego przez wielu dostawców poczty e-mail. Jeśli nie masz pewności, czy Twój dostawca go obsługuje, sprawdź u niego. Jeśli Sieve jest dostępny, kliknij przycisk, aby przejść do ustawień i go włączyć.",
+    "Move Message" : "Przenieś wiadomość",
     "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Przejmij kontrolę nad chaosem w poczcie. Filtry pomagają priorytetyzować to, co ważne, i eliminować bałagan."
 },
 "nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);");

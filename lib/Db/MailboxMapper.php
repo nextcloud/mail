@@ -51,6 +51,23 @@ class MailboxMapper extends QBMapper {
 	}
 
 	/**
+	 * @throws Exception
+	 */
+	public function countByAccount(Account $account): int {
+		$qb = $this->db->getQueryBuilder();
+
+		$select = $qb->select($qb->func()->count('*', 'count'))
+			->from($this->getTableName())
+			->where($qb->expr()->eq('account_id', $qb->createNamedParameter($account->getId())));
+
+		$result = $select->executeQuery();
+		$count = (int)$result->fetchOne();
+		$result->closeCursor();
+
+		return $count;
+	}
+
+	/**
 	 * @return \Generator<int>
 	 */
 	public function findAllIds(): \Generator {
@@ -167,6 +184,16 @@ class MailboxMapper extends QBMapper {
 
 		$row = $this->findOneQuery($qb);
 		return (int)$row['account_id'];
+	}
+
+	public function findSpecialUseMailbox(Account $account, string $specialUse): ?Mailbox {
+		foreach ($this->findAll($account) as $mailbox) {
+			if ($mailbox->isSpecialUse($specialUse) || ($specialUse === 'inbox' && $mailbox->isInbox())) {
+				return $mailbox;
+			}
+		}
+
+		return null;
 	}
 
 	/**

@@ -335,7 +335,7 @@ OC.L10N.register(
     "Snooze" : "Skjut upp",
     "Unsnooze" : "Ta bort uppskjutning",
     "Move thread" : "Flytta tråd",
-    "Move Message" : "Flytta meddelande",
+    "Move message" : "Flytta meddelande",
     "Archive thread" : "Arkivera tråd",
     "Archive message" : "Arkivera meddelandet",
     "More actions" : "Fler händelser",
@@ -452,7 +452,6 @@ OC.L10N.register(
     "Forward" : "Vidarebefordra",
     "Only for message recipients" : "Endast för meddelandets mottagare",
     "Link copied" : "Länken har kopierats",
-    "Move message" : "Flytta meddelande",
     "Translate" : "Översätt",
     "Forward message as attachment" : "Vidarebefordra medelande som bilaga",
     "View source" : "Visa källa",
@@ -958,6 +957,7 @@ OC.L10N.register(
     "Tag already exists" : "Taggen finns redan",
     "Error loading message" : "Fel vid inläsning av meddelande",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Autosvaret använder Sieve, ett skriptspråk som stöds av många e-postleverantörer. Om du är osäker på om din e-postleverantör gör det, kontrollera med din leverantör. Om Sieve är tillgängligt klickar du på knappen för att gå till inställningarna och aktivera det.",
+    "Move Message" : "Flytta meddelande",
     "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Ta kontroll över din e-post. Filter hjälper dig att prioritera det som är viktigt."
 },
 "nplurals=2; plural=(n != 1);");
