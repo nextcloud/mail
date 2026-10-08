@@ -110,8 +110,6 @@ class ImapToDbSynchronizer {
 			}
 		}
 
-		$client->logout();
-
 		$this->dispatcher->dispatchTyped(
 			new SynchronizationEvent(
 				$account,
@@ -302,53 +300,47 @@ class ImapToDbSynchronizer {
 
 		// Use a no-cache client for findAll. Horde accumulates cache state on
 		// every iteration of the findAll loop, causing a memory leak on large
-		// mailboxes (commit e50c214ff). Do NOT logout $client — the caller owns
-		// it and we need it below for getSyncToken.
+		// mailboxes (commit e50c214ff).
 		$noCacheClient = $this->protocolFactory->imapClient($account, false);
+		$highestKnownUid = $this->dbMapper->findHighestUid($mailbox);
 		try {
-			$highestKnownUid = $this->dbMapper->findHighestUid($mailbox);
-			try {
-				$imapMessages = $this->imapMapper->findAll(
-					$noCacheClient,
-					$mailbox->getName(),
-					self::MAX_NEW_MESSAGES,
-					$highestKnownUid ?? 0,
-					$logger,
-					$perf,
-					$account->getUserId(),
-				);
-				$perf->step(sprintf('fetch %d messages from IMAP', count($imapMessages)));
-			} catch (Horde_Imap_Client_Exception $e) {
-				throw new ServiceException('Can not get messages from mailbox ' . $mailbox->getName() . ': ' . $e->getMessage(), 0, $e);
-			}
+			$imapMessages = $this->imapMapper->findAll(
+				$noCacheClient,
+				$mailbox->getName(),
+				self::MAX_NEW_MESSAGES,
+				$highestKnownUid ?? 0,
+				$logger,
+				$perf,
+				$account->getUserId(),
+			);
+			$perf->step(sprintf('fetch %d messages from IMAP', count($imapMessages)));
+		} catch (Horde_Imap_Client_Exception $e) {
+			throw new ServiceException('Can not get messages from mailbox ' . $mailbox->getName() . ': ' . $e->getMessage(), 0, $e);
+		}
 
-			foreach (array_chunk($imapMessages['messages'], 500) as $chunk) {
-				$messages = array_map(static fn (IMAPMessage $imapMessage) => $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount()), $chunk);
-				$this->dbMapper->insertBulk($account, ...$messages);
-				$perf->step(sprintf('persist %d messages in database', count($chunk)));
-				// Free the memory
-				unset($messages);
-			}
+		foreach (array_chunk($imapMessages['messages'], 500) as $chunk) {
+			$messages = array_map(static fn (IMAPMessage $imapMessage) => $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount()), $chunk);
+			$this->dbMapper->insertBulk($account, ...$messages);
+			$perf->step(sprintf('persist %d messages in database', count($chunk)));
+			// Free the memory
+			unset($messages);
+		}
 
-			if (!$imapMessages['all']) {
-				// We might need more attempts to fill the cache
-				$loggingMailboxId = $account->getId() . ':' . $mailbox->getName();
-				$total = $imapMessages['total'];
-				$cached = count($this->dbMapper->findAllUids($mailbox));
-				$perf->step('find number of cached UIDs');
+		if (!$imapMessages['all']) {
+			// We might need more attempts to fill the cache
+			$loggingMailboxId = $account->getId() . ':' . $mailbox->getName();
+			$total = $imapMessages['total'];
+			$cached = count($this->dbMapper->findAllUids($mailbox));
+			$perf->step('find number of cached UIDs');
 
-				$perf->end();
-				throw new IncompleteSyncException("Initial sync is not complete for $loggingMailboxId ($cached of $total messages cached).");
-			}
-		} finally {
-			$noCacheClient->logout();
+			$perf->end();
+			throw new IncompleteSyncException("Initial sync is not complete for $loggingMailboxId ($cached of $total messages cached).");
 		}
 
 		// Use the cache-enabled $client passed in for the sync token. The no-cache
 		// client does not activate CONDSTORE/QRESYNC (commit 7980d9e40), so its
 		// token lacks HIGHESTMODSEQ — causing the first partial sync to resolve ALL
-		// UIDs and run OOM on large mailboxes. Do NOT logout $client here; the
-		// caller (syncAccount) owns and closes it.
+		// UIDs and run OOM on large mailboxes.
 		$syncToken = $client->getSyncToken($mailbox->getName());
 		$mailbox->setSyncNewToken($syncToken);
 		$mailbox->setSyncChangedToken($syncToken);
@@ -556,7 +548,6 @@ class ImapToDbSynchronizer {
 			throw new ServiceException($message, 0, $e);
 		} finally {
 			$this->mailboxMapper->unlockFromVanishedSync($mailbox);
-			$client->logout();
 		}
 
 		$perf->end();
