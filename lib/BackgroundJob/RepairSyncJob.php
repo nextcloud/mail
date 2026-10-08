@@ -77,33 +77,37 @@ class RepairSyncJob extends TimedJob {
 			return;
 		}
 
-		$this->protocolFactory
-			->mailboxConnector($account)
-			->syncAll($account, true);
+		try {
+			$this->protocolFactory
+				->mailboxConnector($account)
+				->syncAll($account, true);
 
-		$rebuildThreads = false;
-		$trashMailboxId = $account->getMailAccount()->getTrashMailboxId();
-		$snoozeMailboxId = $account->getMailAccount()->getSnoozeMailboxId();
-		$sentMailboxId = $account->getMailAccount()->getSentMailboxId();
-		$junkMailboxId = $account->getMailAccount()->getJunkMailboxId();
-		foreach ($this->mailboxMapper->findAll($account) as $mailbox) {
-			$isExcluded = [
-				$trashMailboxId === $mailbox->getId(),
-				$snoozeMailboxId === $mailbox->getId(),
-				$sentMailboxId === $mailbox->getId(),
-				$junkMailboxId === $mailbox->getId(),
-			];
-			if (in_array(true, $isExcluded, true)) {
-				continue;
+			$rebuildThreads = false;
+			$trashMailboxId = $account->getMailAccount()->getTrashMailboxId();
+			$snoozeMailboxId = $account->getMailAccount()->getSnoozeMailboxId();
+			$sentMailboxId = $account->getMailAccount()->getSentMailboxId();
+			$junkMailboxId = $account->getMailAccount()->getJunkMailboxId();
+			foreach ($this->mailboxMapper->findAll($account) as $mailbox) {
+				$isExcluded = [
+					$trashMailboxId === $mailbox->getId(),
+					$snoozeMailboxId === $mailbox->getId(),
+					$sentMailboxId === $mailbox->getId(),
+					$junkMailboxId === $mailbox->getId(),
+				];
+				if (in_array(true, $isExcluded, true)) {
+					continue;
+				}
+
+				if ($this->syncService->repairSync($account, $mailbox) > 0) {
+					$rebuildThreads = true;
+				}
 			}
 
-			if ($this->syncService->repairSync($account, $mailbox) > 0) {
-				$rebuildThreads = true;
-			}
+			$this->dispatcher->dispatchTyped(
+				new SynchronizationEvent($account, $this->logger, $rebuildThreads),
+			);
+		} finally {
+			$this->protocolFactory->releaseClients($account);
 		}
-
-		$this->dispatcher->dispatchTyped(
-			new SynchronizationEvent($account, $this->logger, $rebuildThreads),
-		);
 	}
 }
