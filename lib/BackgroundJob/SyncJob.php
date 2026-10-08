@@ -152,6 +152,8 @@ class SyncJob extends TimedJob {
 					'exception' => $e,
 				]);
 			}
+		} finally {
+			$this->protocolFactory->releaseClients($account);
 		}
 	}
 }
