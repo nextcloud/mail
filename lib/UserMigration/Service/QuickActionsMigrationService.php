@@ -105,7 +105,7 @@ class QuickActionsMigrationService {
 		if (count($accountMapping) === 0) {
 			$output->writeln(
 				$this->l10n->t(
-					'Missing account mapping when importing quick actions for user %s. Continue...',
+					'Missing account mapping when importing quick actions for user %s. Continue …',
 					[$user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);
@@ -118,7 +118,7 @@ class QuickActionsMigrationService {
 		} catch (UserMigrationException) {
 			$output->writeln(
 				$this->l10n->t(
-					'Quick actions for user %s not found. Continue...',
+					'Quick actions for user %s not found. Continue …',
 					[$user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);
@@ -132,7 +132,7 @@ class QuickActionsMigrationService {
 		} catch (JsonException|UserMigrationException) {
 			$output->writeln(
 				$this->l10n->t(
-					'Quick actions configuration for user %s is invalid and will be skipped. Continue...',
+					'Quick actions configuration for user %s is invalid and will be skipped. Continue …',
 					[$user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);
@@ -146,7 +146,7 @@ class QuickActionsMigrationService {
 			if (!array_key_exists($oldAccountId, $accountMapping)) {
 				$output->writeln(
 					$this->l10n->t(
-						'Skipping quick action %s because account %s was not imported. Continue...',
+						'Skipping quick action %s because account %s was not imported. Continue …',
 						[$quickAction['name'], (string)$oldAccountId]
 					), OutputInterface::VERBOSITY_VERBOSE
 				);
@@ -157,7 +157,7 @@ class QuickActionsMigrationService {
 			if ($actionSteps === null) {
 				$output->writeln(
 					$this->l10n->t(
-						'Skipping quick action %s because it references a tag or mailbox that was not imported. Continue...',
+						'Skipping quick action %s because it references a tag or mailbox that was not imported. Continue …',
 						[$quickAction['name']]
 					), OutputInterface::VERBOSITY_VERBOSE
 				);
@@ -181,7 +181,7 @@ class QuickActionsMigrationService {
 				]);
 				$output->writeln(
 					$this->l10n->t(
-						'Skipping quick action %s because it could not be recreated. Continue...',
+						'Skipping quick action %s because it could not be recreated. Continue …',
 						[$quickAction['name']]
 					), OutputInterface::VERBOSITY_VERBOSE
 				);

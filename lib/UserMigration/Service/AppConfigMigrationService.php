@@ -108,7 +108,7 @@ class AppConfigMigrationService {
 		} catch (UserMigrationException) {
 			$output->writeln(
 				$this->l10n->t(
-					'Mail app configuration for user %s not found. Continue...',
+					'Mail app configuration for user %s not found. Continue …',
 					[$user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);
@@ -122,7 +122,7 @@ class AppConfigMigrationService {
 		} catch (JsonException|UserMigrationException) {
 			$output->writeln(
 				$this->l10n->t(
-					'Mail app configuration for user %s is invalid and will be skipped. Continue...',
+					'Mail app configuration for user %s is invalid and will be skipped. Continue …',
 					[$user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);
@@ -141,7 +141,7 @@ class AppConfigMigrationService {
 			if ($value === null) {
 				$output->writeln(
 					$this->l10n->t(
-						'Mail app configuration key %s for user %s could not be migrated and will be removed. Continue...',
+						'Mail app configuration key %s for user %s could not be migrated and will be removed. Continue …',
 						[$key, $user->getUID()]
 					), OutputInterface::VERBOSITY_VERBOSE
 				);

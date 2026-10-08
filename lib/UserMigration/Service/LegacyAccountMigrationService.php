@@ -126,7 +126,7 @@ class LegacyAccountMigrationService {
 			);
 		} catch (JsonException|UserMigrationException) {
 			$output->writeln(
-				$this->l10n->t('No readable account index in the version 1 export. Continue...'),
+				$this->l10n->t('No readable account index in the version 1 export. Continue …'),
 				OutputInterface::VERBOSITY_VERBOSE
 			);
 
@@ -145,7 +145,7 @@ class LegacyAccountMigrationService {
 			$accountData = json_decode($importSource->getFileContents($path), true, flags: JSON_THROW_ON_ERROR);
 		} catch (JsonException|UserMigrationException) {
 			$output->writeln(
-				$this->l10n->t('Mail account %s could not be read and will be skipped. Continue...', [$path]),
+				$this->l10n->t('Mail account %s could not be read and will be skipped. Continue …', [$path]),
 				OutputInterface::VERBOSITY_VERBOSE
 			);
 
@@ -160,7 +160,7 @@ class LegacyAccountMigrationService {
 		);
 		if (!is_array($accountData) || !$hasInbound) {
 			$output->writeln(
-				$this->l10n->t('Mail account %s is invalid and will be skipped. Continue...', [$path]),
+				$this->l10n->t('Mail account %s is invalid and will be skipped. Continue …', [$path]),
 				OutputInterface::VERBOSITY_VERBOSE
 			);
 
