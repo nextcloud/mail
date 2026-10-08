@@ -15,8 +15,11 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Send\Chain;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Attachment\AttachmentService;
@@ -56,6 +59,7 @@ class OutboxServiceTest extends TestCase {
 	/** @var MockObject|LoggerInterface */
 	private $logger;
 	private MockObject|Chain $chain;
+	private ProtocolFactory&MockObject $protocolFactory;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -67,6 +71,7 @@ class OutboxServiceTest extends TestCase {
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->chain = $this->createMock(Chain::class);
+		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
 		$this->outboxService = new OutboxService(
 			$this->mapper,
 			$this->attachmentService,
@@ -76,6 +81,7 @@ class OutboxServiceTest extends TestCase {
 			$this->timeFactory,
 			$this->logger,
 			$this->chain,
+			$this->protocolFactory,
 		);
 		$this->userId = 'linus';
 		$this->time = $this->createMock(ITimeFactory::class);
@@ -495,5 +501,68 @@ class OutboxServiceTest extends TestCase {
 
 		$this->expectException(ClientException::class);
 		$this->outboxService->convertDraft($message, $sentAt);
+	}
+
+	public function testFlushReleasesClientsOfEveryAccount(): void {
+		$messageA = new LocalMessage();
+		$messageA->setId(1);
+		$messageA->setAccountId(1);
+		$messageB = new LocalMessage();
+		$messageB->setId(2);
+		$messageB->setAccountId(2);
+		$accountA = new Account(new MailAccount());
+		$accountB = new Account(new MailAccount());
+		$this->timeFactory->method('getTime')
+			->willReturn(123456);
+		$this->mapper->method('findDue')
+			->willReturn([$messageA, $messageB]);
+		$this->accountService->method('findById')
+			->willReturnCallback(fn (int $id) => $id === 1 ? $accountA : $accountB);
+		$this->chain->method('process')
+			->willReturnCallback(function (Account $account, LocalMessage $message) use ($accountB) {
+				if ($account === $accountB) {
+					throw new ServiceException('Could not send');
+				}
+				return $message;
+			});
+		$released = [];
+		$this->protocolFactory->expects(self::exactly(2))
+			->method('releaseClients')
+			->willReturnCallback(function (Account $account) use (&$released): void {
+				$released[] = $account;
+			});
+
+		$this->outboxService->flush();
+
+		self::assertSame([$accountA, $accountB], $released);
+	}
+
+	public function testFlushSkipsReleaseForDeletedAccount(): void {
+		$message = new LocalMessage();
+		$message->setId(1);
+		$message->setAccountId(1);
+		$this->timeFactory->method('getTime')
+			->willReturn(123456);
+		$this->mapper->method('findDue')
+			->willReturn([$message]);
+		$this->accountService->method('findById')
+			->willThrowException(new DoesNotExistException(''));
+		$this->chain->expects(self::never())
+			->method('process');
+		$this->protocolFactory->expects(self::never())
+			->method('releaseClients');
+
+		$this->outboxService->flush();
+	}
+
+	public function testFlushNoMessagesReleasesNothing(): void {
+		$this->timeFactory->method('getTime')
+			->willReturn(123456);
+		$this->mapper->method('findDue')
+			->willReturn([]);
+		$this->protocolFactory->expects(self::never())
+			->method('releaseClients');
+
+		$this->outboxService->flush();
 	}
 }

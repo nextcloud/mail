@@ -636,6 +636,9 @@ class DraftsServiceTest extends TestCase {
 			->willReturn($account);
 		$this->logger->expects(self::once())
 			->method('debug');
+		$this->protocolFactory->expects(self::once())
+			->method('releaseClients')
+			->with($account);
 
 		$this->draftsService->flush();
 	}
@@ -654,6 +657,8 @@ class DraftsServiceTest extends TestCase {
 			->method('findById');
 		$this->logger->expects(self::never())
 			->method('debug');
+		$this->protocolFactory->expects(self::never())
+			->method('releaseClients');
 		$this->logger->expects(self::never())
 			->method('warning');
 
