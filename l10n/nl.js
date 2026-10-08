@@ -260,6 +260,8 @@ OC.L10N.register(
     "Enter a date" : "Voeg een datum toe",
     "Remove attachment {fileName}" : "Verwijder bijlage {fileName}",
     "Choose a file" : "Kies een bestand",
+    "Add as attachment" : "Toevoegen als bijlage",
+    "Add as share link" : "Toevoegen als deellink",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["De bijlage overschrijdt de toegestane omvang van {size}. Deel de bestanden in plaats daarvan via een link.","De bijlagen overschrijden de toegestane omvang van {size}. Deel de bestanden in plaats daarvan via een link."],
     "_{count} attachment_::_{count} attachments_" : ["{count} bijlagen","{count} bijlagen"],
     "Untitled message" : "Naamloos bericht",
@@ -323,7 +325,7 @@ OC.L10N.register(
     "Snooze" : "Sluimeren",
     "Unsnooze" : "Gewekt",
     "Move thread" : "Verplaats",
-    "Move Message" : "Verplaats bericht",
+    "Move message" : "Verplaats bericht",
     "Archive thread" : "Archiveren",
     "Archive message" : "Archiveer bericht",
     "More actions" : "Meer acties",
@@ -438,7 +440,6 @@ OC.L10N.register(
     "Forward" : "Doorsturen",
     "Only for message recipients" : "Alleen voor ontvangers van het bericht",
     "Link copied" : "Link gekopieerd",
-    "Move message" : "Verplaats bericht",
     "Translate" : "Vertaal",
     "Forward message as attachment" : "Bericht als bijlage doorsturen",
     "View source" : "Bekijk bron",
@@ -922,6 +923,7 @@ OC.L10N.register(
     "Tag already exists" : "Markering bestaat al",
     "Error loading message" : "Fout bij laden bericht",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "De automatische beantwoorder gebruikt Sieve, een scripttaal die wordt gebruikt door veel e-mail aanbieders. Controleer bij uw aanbieder of deze de scripttaal ondersteund. Wanneer Sieve beschikbaar is, druk op de knop om naar de instellingen te gaan en deze te activeren.",
+    "Move Message" : "Verplaats bericht",
     "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Neem de controle over je e-mailchaos. Filters helpen je om te prioriteren wat belangrijk is en rommel te elimineren."
 },
 "nplurals=2; plural=(n != 1);");

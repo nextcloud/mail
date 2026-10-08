@@ -335,7 +335,7 @@ OC.L10N.register(
     "Snooze" : "延后",
     "Unsnooze" : "取消延后",
     "Move thread" : "移动线程",
-    "Move Message" : "移动邮件",
+    "Move message" : "移动邮件",
     "Archive thread" : "归档线程",
     "Archive message" : "归档邮件",
     "More actions" : "更多操作 ",
@@ -452,7 +452,6 @@ OC.L10N.register(
     "Forward" : "转发",
     "Only for message recipients" : "仅限邮件收件人",
     "Link copied" : "链接已复制",
-    "Move message" : "移动邮件",
     "Translate" : "翻译",
     "Forward message as attachment" : "将邮件作为附件转发",
     "View source" : "查看来源",
@@ -960,6 +959,7 @@ OC.L10N.register(
     "Tag already exists" : "标签已存在",
     "Error loading message" : "加载邮件时出错",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "自动回复使用 Sieve，这是许多电子邮件提供者支持的脚本语言。如果您不确定您的邮件是否如此，请咨询您的提供者。如果 Sieve 可用，请点击按钮转到设置并启用它。",
+    "Move Message" : "移动邮件",
     "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "控制您的电子邮件混乱。筛选器可以帮助您优先考虑重要的事情并消除混乱。"
 },
 "nplurals=1; plural=0;");

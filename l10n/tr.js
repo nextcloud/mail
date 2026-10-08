@@ -336,7 +336,7 @@ OC.L10N.register(
     "Snooze" : "Ertele",
     "Unsnooze" : "Ertelemeyi kaldır",
     "Move thread" : "Yazışmayı taşı",
-    "Move Message" : "İletiyi taşı",
+    "Move message" : "İletiyi taşı",
     "Archive thread" : "Yazışmayı arşivle",
     "Archive message" : "İletiyi arşivle",
     "More actions" : "Diğer işlemler",
@@ -453,7 +453,6 @@ OC.L10N.register(
     "Forward" : "İlet",
     "Only for message recipients" : "Yalnızca ileti alıcıları için",
     "Link copied" : "Bağlantı kopyalandı",
-    "Move message" : "İletiyi taşı",
     "Translate" : "Çevir",
     "Forward message as attachment" : "İletiyi ek dosya olarak ilet",
     "View source" : "Kaynağı görüntüle",
@@ -964,6 +963,7 @@ OC.L10N.register(
     "Tag already exists" : "Etiket zaten var",
     "Error loading message" : "İleti yüklenirken sorun çıktı",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Otomatik yanıtlayıcı, birçok e-posta hizmeti sağlayıcısı tarafından desteklenen bir betik dili olan Sieve kullanır. Kullandığınız hizmette bulunup bulunmadığından emin değilseniz, hizmet sağlayıcınıza sorun. Sieve kullanılabiliyorsa, ayarlara gitmek ve açmak için düğmeye tıklayın.",
+    "Move Message" : "İletiyi taşı",
     "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "E-posta karmaşanızı düzenleyin. Süzgeçler, önemli şeylere öncelik vermenize ve karmaşayı ortadan kaldırmanıza yardımcı olur."
 },
 "nplurals=2; plural=(n > 1);");

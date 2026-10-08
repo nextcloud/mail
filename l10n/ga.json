@@ -334,7 +334,7 @@
     "Snooze" : "Cur ar suan",
     "Unsnooze" : "Cuir ar suan",
     "Move thread" : "Bog snáithe",
-    "Move Message" : "Bog Teachtaireacht",
+    "Move message" : "Bog teachtaireacht",
     "Archive thread" : "Snáithe cartlainne",
     "Archive message" : "Teachtaireacht cartlainne",
     "More actions" : "Tuilleadh gníomhartha",
@@ -451,7 +451,6 @@
     "Forward" : "Ar aghaidh",
     "Only for message recipients" : "Do fhaighteoirí teachtaireachtaí amháin",
     "Link copied" : "Cóipeáladh an nasc",
-    "Move message" : "Bog teachtaireacht",
     "Translate" : "Aistrigh",
     "Forward message as attachment" : "Cuir teachtaireacht ar aghaidh mar cheangaltán",
     "View source" : "Féach ar an bhfoinse",
@@ -962,6 +961,7 @@
     "Tag already exists" : "Tá clib ann cheana féin",
     "Error loading message" : "Earráid agus an teachtaireacht á lódáil",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Úsáideann an t-uathfhreagraí Sieve, teanga scriptithe a fhaigheann tacaíocht ó go leor soláthraithe ríomhphoist. Mura bhfuil tú cinnte cé acu an bhfuil, seiceáil le do sholáthraí. Má tá Sieve ar fáil, cliceáil ar an gcnaipe chun dul go dtí na socruithe agus é a chumasú.",
+    "Move Message" : "Bog Teachtaireacht",
     "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Tóg smacht ar do chaos ríomhphoist. Cuidíonn scagairí leat tosaíocht a thabhairt do na rudaí atá tábhachtach agus deireadh a chur le tranglam."
 },"pluralForm" :"nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);"
 }
