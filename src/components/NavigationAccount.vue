@@ -30,7 +30,9 @@
 				aria-hidden="true" />
 			<span class="hidden-visually">{{ unreadLabel }}</span>
 		</template>
-		<NcActions class="navigation-account-header__actions">
+		<NcActions
+			class="navigation-account-header__actions"
+			:aria-label="t('mail', 'Actions for {email}', { email: account.emailAddress })">
 			<template v-if="isDisabled">
 				<NcActionText :name="t('mail', 'Provisioned account is disabled')">
 					<template #icon>

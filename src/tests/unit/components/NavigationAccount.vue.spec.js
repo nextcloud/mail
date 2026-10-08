@@ -86,6 +86,12 @@ describe('NavigationAccount', () => {
 		expect(view.find('.navigation-account-header__unread').exists()).toBe(false)
 	})
 
+	it('names the actions menu after the account', () => {
+		const view = mountAccount({ folded: false })
+
+		expect(view.findComponent('.navigation-account-header__actions').props('ariaLabel')).toBe('Actions for jane@example.com')
+	})
+
 	it('toggles the folded state through the store', async () => {
 		const view = mountAccount({ folded: false })
 
