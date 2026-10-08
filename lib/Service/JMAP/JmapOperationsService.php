@@ -21,8 +21,10 @@ use JmapClient\Requests\Mail\MailQuery;
 use JmapClient\Requests\Mail\MailQueryChanges;
 use JmapClient\Requests\Mail\MailSet;
 use JmapClient\Requests\Mail\MailSubmissionSet;
+use JmapClient\Requests\Quota\QuotaGet;
 use JmapClient\Responses\Mail\MailboxParameters as MailboxParametersResponse;
 use JmapClient\Responses\Mail\MailParameters as MailParametersResponse;
+use JmapClient\Responses\Quota\QuotaParameters as QuotaParametersResponse;
 use JmapClient\Responses\ResponseBundle;
 use JmapClient\Responses\ResponseException;
 use OCA\Mail\Account;
@@ -1176,5 +1178,38 @@ class JmapOperationsService {
 		if ($attachment['contentId'] !== null) {
 			$part->cid($attachment['contentId']);
 		}
+	}
+
+	/**
+	 * Retrieve quotas from remote storage
+	 *
+	 * @return list<QuotaParametersResponse> quotas, or an empty list if the server does not support quotas
+	 * @throws ServiceException
+	 */
+	public function quotaFetch(): array {
+		if (!$this->dataStore->sessionCapable('quota')) {
+			return [];
+		}
+		// construct request
+		$r0 = new QuotaGet($this->account());
+		// transceive
+		$bundle = $this->transceive([$r0]);
+		// extract response
+		$response = $bundle->first();
+		// check for command error
+		if ($response instanceof ResponseException) {
+			if ($response->type() === 'unknownMethod') {
+				throw new JmapUnknownMethod($response->description(), 1);
+			} else {
+				throw new ServiceException($response->type() . ': ' . $response->description(), 1);
+			}
+		}
+		$quotas = [];
+		foreach ($response->objects() as $quota) {
+			if ($quota instanceof QuotaParametersResponse) {
+				$quotas[] = $quota;
+			}
+		}
+		return $quotas;
 	}
 }

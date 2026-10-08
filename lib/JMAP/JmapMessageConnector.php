@@ -290,7 +290,26 @@ class JmapMessageConnector implements IMessageConnector {
 
 	#[\Override]
 	public function getQuota(Account $account): ?Quota {
-		return null;
+		$this->jmapOperationsService->connect($account);
+
+		// the storage quota closest to its limit is the one constraining the account
+		$selected = null;
+		foreach ($this->jmapOperationsService->quotaFetch() as $quota) {
+			$used = $quota->used();
+			$limit = $quota->hardLimit();
+			if ($quota->resource() !== 'octets'
+				|| !in_array('Email', $quota->types() ?? [], true)
+				|| $used === null
+				|| $limit === null
+				|| $limit <= 0) {
+				continue;
+			}
+			if ($selected === null || $used / $limit > $selected->getUsage() / $selected->getLimit()) {
+				$selected = new Quota($used, $limit);
+			}
+		}
+
+		return $selected;
 	}
 
 	#[\Override]
