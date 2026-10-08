@@ -43,7 +43,7 @@ class OptionalIndicesListener implements IEventListener {
 				'mail_messages_msgid_idx',
 				['message_id'],
 				[
-					'lengths' => [128],
+					'lengths' => [64],
 				],
 			);
 		}
