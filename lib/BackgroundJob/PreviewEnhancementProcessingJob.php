@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\BackgroundJob;
 
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\PreprocessingService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -29,6 +30,7 @@ class PreviewEnhancementProcessingJob extends TimedJob {
 		private PreprocessingService $preprocessingService,
 		private LoggerInterface $logger,
 		IJobList $jobList,
+		private ProtocolFactory $protocolFactory,
 	) {
 		parent::__construct($time);
 
@@ -70,6 +72,10 @@ class PreviewEnhancementProcessingJob extends TimedJob {
 		}
 
 		$limitTimestamp = $this->time->getTime() - (60 * 60 * 24 * 14); // Two weeks into the past
-		$this->preprocessingService->process($limitTimestamp, $account);
+		try {
+			$this->preprocessingService->process($limitTimestamp, $account);
+		} finally {
+			$this->protocolFactory->releaseClients($account);
+		}
 	}
 }

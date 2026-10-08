@@ -16,6 +16,7 @@ use OCA\Mail\Account;
 use OCA\Mail\BackgroundJob\QuotaJob;
 use OCA\Mail\BackgroundJob\SyncJob;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\Quota;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IUser;
@@ -62,6 +63,9 @@ class QuotaJobTest extends TestCase {
 		$this->serviceMock->getParameter('mailManager')
 			->expects(self::never())
 			->method('getQuota');
+		$this->serviceMock->getParameter('protocolFactory')
+			->expects(self::never())
+			->method('releaseClients');
 
 		$this->job->setArgument([
 			'accountId' => 123,
@@ -192,6 +196,10 @@ class QuotaJobTest extends TestCase {
 			->expects(self::once())
 			->method('update')
 			->with($mailAccount);
+		$this->serviceMock->getParameter('protocolFactory')
+			->expects(self::once())
+			->method('releaseClients')
+			->with($account);
 
 		$this->job->setArgument([
 			'accountId' => 123,
@@ -330,6 +338,44 @@ class QuotaJobTest extends TestCase {
 			->expects(self::once())
 			->method('update')
 			->with($mailAccount);
+
+		$this->job->setArgument([
+			'accountId' => 123,
+		]);
+		$this->job->start(
+			$this->createMock(JobList::class),
+		);
+	}
+
+	public function testQuotaFailureStillReleasesClients(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(123);
+		$mailAccount->setUserId('user123');
+		$mailAccount->setInboundPassword('password');
+		$account = $this->createConfiguredMock(Account::class, [
+			'getId' => 123,
+			'getUserId' => 'user123',
+			'getMailAccount' => $mailAccount,
+		]);
+		$user = $this->createConfiguredMock(IUser::class, [
+			'isEnabled' => true,
+		]);
+		$this->serviceMock->getParameter('accountService')
+			->method('findById')
+			->willReturn($account);
+		$this->serviceMock->getParameter('userManager')
+			->method('get')
+			->willReturn($user);
+		$this->serviceMock->getParameter('mailManager')
+			->method('getQuota')
+			->willThrowException(new ServiceException('Could not get quota from IMAP'));
+		$this->serviceMock->getParameter('accountService')
+			->expects(self::never())
+			->method('update');
+		$this->serviceMock->getParameter('protocolFactory')
+			->expects(self::once())
+			->method('releaseClients')
+			->with($account);
 
 		$this->job->setArgument([
 			'accountId' => 123,
