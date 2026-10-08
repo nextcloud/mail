@@ -11,6 +11,8 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\BackgroundJob\PreviewEnhancementProcessingJob;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\PreprocessingService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -18,9 +20,11 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
 use OCP\IUser;
 use OCP\IUserManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class PreviewEnhancementProcessingJobTest extends TestCase {
+	private ProtocolFactory&MockObject $protocolFactory;
 	/** @var ITimeFactory|ITimeFactory&MockObject|MockObject */
 	private $time;
 
@@ -51,13 +55,15 @@ class PreviewEnhancementProcessingJobTest extends TestCase {
 		$this->preprocessingService = $this->createMock(PreprocessingService::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->jobList = $this->createMock(IJobList::class);
+		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
 		$this->job = new PreviewEnhancementProcessingJob(
 			$this->time,
 			$this->manager,
 			$this->accountService,
 			$this->preprocessingService,
 			$this->logger,
-			$this->jobList
+			$this->jobList,
+			$this->protocolFactory,
 		);
 
 		self::$argument = ['accountId' => 1];
@@ -72,6 +78,8 @@ class PreviewEnhancementProcessingJobTest extends TestCase {
 			->method('debug');
 		$this->jobList->expects(self::once())
 			->method('remove');
+		$this->protocolFactory->expects(self::never())
+			->method('releaseClients');
 
 		$this->job->run(self::$argument);
 	}
@@ -141,6 +149,34 @@ class PreviewEnhancementProcessingJobTest extends TestCase {
 			->with(($time - (60 * 60 * 24 * 14)), $account);
 		$this->logger->expects(self::never())
 			->method('error');
+		$this->protocolFactory->expects(self::once())
+			->method('releaseClients')
+			->with($account);
+
+		$this->job->run(self::$argument);
+	}
+
+	public function testProcessingFailureStillReleasesClients(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setInboundPassword('pass');
+		$account = $this->createMock(Account::class);
+		$account->method('getUserId')->willReturn('user123');
+		$account->method('getMailAccount')->willReturn($mailAccount);
+		$user = $this->createConfiguredMock(IUser::class, [
+			'isEnabled' => true,
+		]);
+		$this->accountService->method('findById')
+			->willReturn($account);
+		$this->manager->method('get')
+			->willReturn($user);
+		$this->time->method('getTime')
+			->willReturn(time());
+		$this->preprocessingService->method('process')
+			->willThrowException(new ServiceException('Could not connect to IMAP'));
+		$this->protocolFactory->expects(self::once())
+			->method('releaseClients')
+			->with($account);
+		$this->expectException(ServiceException::class);
 
 		$this->job->run(self::$argument);
 	}
