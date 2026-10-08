@@ -245,6 +245,7 @@ OC.L10N.register(
     "Snooze" : "Slumre",
     "Unsnooze" : "Opphev slumring",
     "Move thread" : "Flytt tråden",
+    "Move message" : "Flytt melding",
     "Archive thread" : "Arkiver tråd",
     "Archive message" : "Arkiver melding",
     "More actions" : "Flere handlinger",
@@ -334,7 +335,6 @@ OC.L10N.register(
     "Direct link copied to clipboard" : "Direkte lenke kopiert til utklippstavlen",
     "Forward" : "Fremover",
     "Link copied" : "Lenke kopiert",
-    "Move message" : "Flytt melding",
     "Translate" : "Oversette",
     "Forward message as attachment" : "Videresend melding som et vedlegg",
     "View source" : "Vis kilde",
@@ -697,10 +697,6 @@ OC.L10N.register(
     "Tag name cannot be empty" : "Navn for merkelapp kan ikke være tom",
     "Tag name is a hidden system tag" : "Tagnavn er en skjult systemtag",
     "Tag already exists" : "Merkelappen finnes allerede",
-    "Error loading message" : "Feil ved innlasting av melding",
-    "Maximize composer" : "Maksimer skrivevindu",
-    "Show less" : "Vis mindre",
-    "Show more" : "Vis mer",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% og %E MAIL% vil bli erstattet med brukerens UID og e-post"
+    "Error loading message" : "Feil ved innlasting av melding"
 },
 "nplurals=2; plural=(n != 1);");

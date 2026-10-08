@@ -5,8 +5,8 @@
 
 import { showError } from '@nextcloud/dialogs'
 import { createTestingPinia } from '@pinia/testing'
-import { createLocalVue, RouterLinkStub, shallowMount } from '@vue/test-utils'
-import { PiniaVuePlugin, setActivePinia } from 'pinia'
+import { RouterLinkStub, shallowMount } from '@vue/test-utils'
+import { setActivePinia } from 'pinia'
 import NavigationAccount from '../../../components/NavigationAccount.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 import useMainStore from '../../../store/mainStore.js'
@@ -16,30 +16,28 @@ vi.mock('@nextcloud/dialogs', async (importOriginal) => ({
 	showError: vi.fn(),
 }))
 
-const localVue = createLocalVue()
-localVue.use(PiniaVuePlugin)
-
-localVue.mixin(Nextcloud)
-
 describe('NavigationAccount', () => {
 	let store
 
-	const mountAccount = (account, propsData = {}, route = { params: {} }) => shallowMount(NavigationAccount, {
-		propsData: {
+	const mountAccount = (account, props = {}, route = { params: {} }) => shallowMount(NavigationAccount, {
+		props: {
 			account: {
 				id: 13,
 				emailAddress: 'jane@example.com',
+				quotaPercentage: null,
 				folded: false,
 				...account,
 			},
-			...propsData,
+			...props,
 		},
-		localVue,
-		stubs: {
-			RouterLink: RouterLinkStub,
-		},
-		mocks: {
-			$route: route,
+		global: {
+			mixins: [Nextcloud],
+			stubs: {
+				RouterLink: RouterLinkStub,
+			},
+			mocks: {
+				$route: route,
+			},
 		},
 	})
 
@@ -106,13 +104,13 @@ describe('NavigationAccount', () => {
 		const saving = view.vm.toggleFolded()
 		await view.vm.$nextTick()
 
-		expect(view.find('.navigation-account-header__toggle').attributes('disabled')).toBeDefined()
+		expect(view.findComponent('.navigation-account-header__toggle').props('disabled')).toBe(true)
 
 		finishSaving()
 		await saving
 		await view.vm.$nextTick()
 
-		expect(view.find('.navigation-account-header__toggle').attributes('disabled')).toBeUndefined()
+		expect(view.findComponent('.navigation-account-header__toggle').props('disabled')).toBe(false)
 	})
 
 	it('shows an error when the folded state cannot be saved', async () => {

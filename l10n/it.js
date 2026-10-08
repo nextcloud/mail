@@ -328,7 +328,7 @@ OC.L10N.register(
     "Snooze" : "Posticipa",
     "Unsnooze" : "Annulla posticipo",
     "Move thread" : "Sposta conversazione",
-    "Move Message" : "Sposta messaggio",
+    "Move message" : "Sposta messaggio",
     "Archive thread" : "Archivia la discussione",
     "Archive message" : "Messaggio di archivio",
     "More actions" : "Altre azioni",
@@ -444,7 +444,6 @@ OC.L10N.register(
     "Forward" : "Inoltra",
     "Only for message recipients" : "Solo per i destinatari del messaggio",
     "Link copied" : "Collegamento copiato",
-    "Move message" : "Sposta messaggio",
     "Translate" : "Traduci",
     "Forward message as attachment" : "Inoltra il messaggio come allegato",
     "View source" : "Visualizza sorgente",
@@ -942,12 +941,7 @@ OC.L10N.register(
     "Tag already exists" : "L'etichetta esiste già",
     "Error loading message" : "Errore durante il caricamento del messaggio",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "La risposta automatica utilizza Sieve, un linguaggio di scripting supportato da molti provider di posta elettronica. Se non sei sicuro che il tuo lo supporti, verifica con il tuo provider. Se Sieve è disponibile, fai clic sul pulsante per accedere alle impostazioni e abilitarlo.",
-    "Maximize composer" : "Espandi finestra",
-    "Show recipient details" : "Mostra dettagli dei destinatari",
-    "Hide recipient details" : "Nascondi dettagli dei destinatari",
-    "Show less" : "Mostra meno",
-    "Show more" : "Mostra più",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Metti ordine nella tua posta. I filtri ti aiutano a dare priorità ai messaggi importanti e a ridurre il superfluo.",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% e %EMAIL% verranno sostituiti con l'UID e l'email dell'utente"
+    "Move Message" : "Sposta messaggio",
+    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Metti ordine nella tua posta. I filtri ti aiutano a dare priorità ai messaggi importanti e a ridurre il superfluo."
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

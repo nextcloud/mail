@@ -194,6 +194,7 @@ OC.L10N.register(
     "Mark not spam" : "Од-означи СПАМ",
     "Mark as spam" : "Означи како СПАМ",
     "Edit tags" : "Удери ознаки",
+    "Move message" : "Премести порака",
     "More actions" : "Повеќе акции",
     "Back" : "Назад",
     "Edit as new message" : "Измени како нова порака",
@@ -255,7 +256,6 @@ OC.L10N.register(
     "Direct link copied to clipboard" : "Линкот е копиран во клипборд",
     "Forward" : "Препрати",
     "Link copied" : "Линкот е копиран",
-    "Move message" : "Премести порака",
     "Translate" : "Преведи",
     "Forward message as attachment" : "Препрати ја пораката како прилог",
     "View source" : "Погледни извор",
@@ -465,9 +465,6 @@ OC.L10N.register(
     "Date:" : "Датум:",
     "Tag name is a hidden system tag" : "Името на ознаката е сокриена системска ознака",
     "Tag already exists" : "Тагот веќе постои",
-    "Error loading message" : "Грешка при вчитување на пораката",
-    "Show less" : "Помалку",
-    "Show more" : "Прикажи повеќе",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% и %EMAIL% ќе биде заменето со корнички ID и e-po[ta"
+    "Error loading message" : "Грешка при вчитување на пораката"
 },
 "nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;");

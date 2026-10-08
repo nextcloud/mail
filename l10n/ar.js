@@ -244,6 +244,7 @@ OC.L10N.register(
     "Snooze" : "غفوة ",
     "Unsnooze" : "الخروج من الغفوة",
     "Move thread" : "أنقُل النَّظْمَة thread",
+    "Move message" : "أنقُل الرسالة",
     "Archive thread" : "نشِّط النَّظْمَة thread",
     "Archive message" : "أَرْشِفِ الرسالة",
     "More actions" : "إجراءات أخرى",
@@ -331,7 +332,6 @@ OC.L10N.register(
     "Direct link copied to clipboard" : "تمّ نسخ الرابط المباشر إلى الحافظة",
     "Forward" : "إعادة توجيه ",
     "Link copied" : "تمّ نسخ الرابط",
-    "Move message" : "أنقُل الرسالة",
     "Translate" : "ترجِم",
     "Forward message as attachment" : "أعِد توجيه الرسالة كمُرفَقٍٍ",
     "View source" : "إطَّلِع علي المصدر",
@@ -718,10 +718,6 @@ OC.L10N.register(
     "Tag already exists" : "الوَسْمُ موجود سلفاً",
     "Error loading message" : "حدث خطأ أثناء تحميل الرسالة",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "الرد الآلي Autoresponder يستعمل برنامج \"الغِربَال\" Sieve؛ وهي لغة برمجة نصية يدعمها العديد من مزودي البريد الإلكتروني. إذا لم تكن متأكداً مما إذا كان برنامج الرد الآلي الخاص بك يدعم هذه اللغة، فتواصل مع مزود البريد الإلكتروني لديك. إذا كان تطبيق \"الغربال\" Sieve متاحاً، فانقر فوق الزر للانتقال إلى الإعدادات وتمكينه.",
-    "Maximize composer" : "استعمال الأداة \"كومبوزر\" composer في حدِّها الأقصى",
-    "Show less" : "عرض أقل",
-    "Show more" : "عرض المزيد",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "سيطر على فوضى بريدك. تساعدك الفلاتر في تصنيف أسبقية البريد المهم و التخلص من الفوضى.",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% و %EMAIL% سيتم استبدالها بمُعرّف المستخدم و البريد الالكتروني"
+    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "سيطر على فوضى بريدك. تساعدك الفلاتر في تصنيف أسبقية البريد المهم و التخلص من الفوضى."
 },
 "nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;");

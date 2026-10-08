@@ -262,6 +262,7 @@ OC.L10N.register(
     "Snooze" : "スヌーズ",
     "Unsnooze" : "スヌーズを解除する",
     "Move thread" : "スレッドを移動する",
+    "Move message" : "メッセージを移動",
     "Archive thread" : "スレッドをアーカイブする",
     "Archive message" : "メッセージをアーカイブする",
     "More actions" : "その他のアクション",
@@ -350,7 +351,6 @@ OC.L10N.register(
     "Direct link copied to clipboard" : "クリップボードにコピーされた直接リンク",
     "Forward" : "転送",
     "Link copied" : "リンクをコピーしました",
-    "Move message" : "メッセージを移動",
     "Translate" : "翻訳",
     "Forward message as attachment" : "メッセージを添付ファイルとして転送する",
     "View source" : "ソースを表示",
@@ -744,10 +744,6 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "タグ名は非表示のシステムタグです",
     "Tag already exists" : "タグはすでに存在します",
     "Error loading message" : "メッセージ読み込みエラー",
-    "Maximize composer" : "コンポーザーを最大化する",
-    "Show less" : "表示を減らす",
-    "Show more" : "表示を増やす",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "メールの混乱をコントロールしましょう。フィルタを使えば、重要なものに優先順位をつけ、乱雑さを解消できます。",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* USERID%と %E MAIL%は、ユーザーのUIDとEメールに置き換えられます。"
+    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "メールの混乱をコントロールしましょう。フィルタを使えば、重要なものに優先順位をつけ、乱雑さを解消できます。"
 },
 "nplurals=1; plural=0;");

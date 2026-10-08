@@ -244,6 +244,7 @@ OC.L10N.register(
     "Snooze" : "Posposa",
     "Unsnooze" : "Deixeu de posposar",
     "Move thread" : "Mou el fil",
+    "Move message" : "Mou el missatge",
     "Archive thread" : "Arxiva el fil",
     "Archive message" : "Arxiva el missatge",
     "More actions" : "Més accions",
@@ -331,7 +332,6 @@ OC.L10N.register(
     "Direct link copied to clipboard" : "Enllaç directe copiat al porta-retalls",
     "Forward" : "Reenvia",
     "Link copied" : "S'ha copiat l'enllaç",
-    "Move message" : "Mou el missatge",
     "Translate" : "Tradueix",
     "Forward message as attachment" : "Reenvia el missatge com a adjunt",
     "View source" : "Veure font",
@@ -723,10 +723,6 @@ OC.L10N.register(
     "Tag already exists" : "L'etiqueta ja existeix",
     "Error loading message" : "S'ha produït un error mentre es carregava el missatge",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "La resposta automàtica utilitza Sieve, un llenguatge de script compatible amb molts proveïdors de correu electrònic. Si no esteu segur de si el vostre, consulteu amb el vostre proveïdor. Si Sieve està disponible, feu clic al botó per anar als  paràmetres i activar-lo.",
-    "Maximize composer" : "Maximitzar el compositor",
-    "Show less" : "Mostra'n menys",
-    "Show more" : "Mostra'n més",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Preneu el control del vostre caos de correu electrònic. Els filtres us ajuden a prioritzar allò que importa i a eliminar el desordre.",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% i %EMAIL% es substituiran per l'UID i el correu electrònic de l'usuari"
+    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Preneu el control del vostre caos de correu electrònic. Els filtres us ajuden a prioritzar allò que importa i a eliminar el desordre."
 },
 "nplurals=2; plural=(n != 1);");

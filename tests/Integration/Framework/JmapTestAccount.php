@@ -31,8 +31,8 @@ trait JmapTestAccount {
 		$mailAccount->setName('Tester');
 		$mailAccount->setEmail('user@example.com');
 		$mailAccount->setProtocol(MailAccount::PROTOCOL_JMAP);
-		$mailAccount->setInboundHost('127.0.0.1');
-		$mailAccount->setInboundPort(10080);
+		$mailAccount->setInboundHost('stalwart');
+		$mailAccount->setInboundPort(8080);
 		$mailAccount->setInboundSslMode('none');
 		$mailAccount->setInboundUser('user@example.com');
 		$mailAccount->setInboundPassword(Server::get(ICrypto::class)->encrypt('mypassword'));

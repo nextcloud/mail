@@ -186,8 +186,6 @@ OC.L10N.register(
     "Nextcloud Mail" : "Nextcloud Mail",
     "Discard changes" : "Discard changes",
     "Message sent" : "Ujumbe umetumwa",
-    "Date:" : "Tarehe:",
-    "Show less" : "Show less",
-    "Show more" : "Show more"
+    "Date:" : "Tarehe:"
 },
 "nplurals=2; plural=(n != 1);");

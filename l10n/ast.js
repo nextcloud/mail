@@ -105,6 +105,7 @@ OC.L10N.register(
     "Read" : "Lleer",
     "Edit tags" : "Editar le setiquetes",
     "Move thread" : "Mover el filu",
+    "Move message" : "Mover el mensaxe",
     "Archive thread" : "Archivar el filu",
     "Archive message" : "Archivar el mensaxe",
     "More actions" : "Más aiciones",
@@ -156,7 +157,6 @@ OC.L10N.register(
     "Important info" : "Información importante",
     "Forward" : "Avanzar",
     "Link copied" : "Copióse l'enllaz",
-    "Move message" : "Mover el mensaxe",
     "Translate" : "Traducir",
     "View source" : "Ver l'orixe",
     "Message body" : "Cuerpu del mensaxe",
@@ -318,9 +318,6 @@ OC.L10N.register(
     "Date:" : "Data:",
     "Tag name cannot be empty" : "El nome de la etiqueta nun pue tar baleru",
     "Tag already exists" : "La etiqueta yá esiste",
-    "Error loading message" : "Hebo un error al cargar el mensaxe",
-    "Maximize composer" : "Maximizar el compositor",
-    "Show less" : "Amosar menos",
-    "Show more" : "Amosar más"
+    "Error loading message" : "Hebo un error al cargar el mensaxe"
 },
 "nplurals=2; plural=(n != 1);");

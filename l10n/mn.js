@@ -286,7 +286,7 @@ OC.L10N.register(
     "Snooze" : "Хойшлуулах",
     "Unsnooze" : "Хойшлуулалт цуцлах",
     "Move thread" : "Яриа зөөх",
-    "Move Message" : "Зурвас зөөх",
+    "Move message" : "Зурвас зөөх",
     "Archive thread" : "Яриа архивлах",
     "Archive message" : "Зурвас архивлах",
     "More actions" : "Нэмэлт үйлдлүүд",
@@ -395,7 +395,6 @@ OC.L10N.register(
     "Could not unsnooze message" : "Зурвасыг хойшлуулалтаас гаргах боломжгүй",
     "Forward" : "–¥–∞–º–∂–∏—Ö",
     "Link copied" : "Холбоос хуулагдсан",
-    "Move message" : "Зурвас зөөх",
     "Translate" : "–û—Ä—á—É—É–ª–≥–∞",
     "Forward message as attachment" : "Зурвасыг хавсралт болгож дамжуулах",
     "View source" : "Эх кодыг харах",
@@ -864,12 +863,7 @@ OC.L10N.register(
     "Tag already exists" : "Таг аль хэдийн байна",
     "Error loading message" : "–∞–ª–¥–∞–∞—Ç–∞–π –∞—á–∞–∞–ª–ª–∞—Ö –∑—É—Ä–≤–∞—Å",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Автомат хариу нь олон имэйл үйлчилгээ үзүүлэгчийн дэмждэг Sieve скрипт хэлийг ашигладаг. Таны үйлчилгээ үзүүлэгч дэмждэг эсэхийг мэдэхгүй бол тэдэнтэй холбогдож лавлана уу. Хэрэв Sieve боломжтой бол товчлуур дээр дарж тохиргоо руу орж идэвхжүүлнэ үү.",
-    "Maximize composer" : "Бичигчийг томруулах",
-    "Show recipient details" : "Хүлээн авагчийн дэлгэрэнгүйг харуулах",
-    "Hide recipient details" : "Хүлээн авагчийн дэлгэрэнгүйг нуух",
-    "Show less" : "Бага харуулах",
-    "Show more" : "Илүү харуулах",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Имэйлийн эмх замбараагүй байдлаа хянана уу. Шүүлтүүрүүд нь чухал зүйлийг эрэмбэлж, шаардлагагүй зүйлийг арилгахад тусална.",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% болон %EMAIL% хэрэглэгчийн UID болон и-мэйлээр солигдоно"
+    "Move Message" : "Зурвас зөөх",
+    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Имэйлийн эмх замбараагүй байдлаа хянана уу. Шүүлтүүрүүд нь чухал зүйлийг эрэмбэлж, шаардлагагүй зүйлийг арилгахад тусална."
 },
 "nplurals=2; plural=(n != 1);");

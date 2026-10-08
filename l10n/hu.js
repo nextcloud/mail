@@ -224,6 +224,7 @@ OC.L10N.register(
     "Snooze" : "Altatás",
     "Unsnooze" : "Felébresztés",
     "Move thread" : "Szál áthelyezése",
+    "Move message" : "Üzenet áthelyezése",
     "Archive thread" : "Szál archiválása",
     "Archive message" : "Üzenet archiválása",
     "More actions" : "További műveletek",
@@ -312,7 +313,6 @@ OC.L10N.register(
     "Direct link copied to clipboard" : "Közvetlen hivatkozás a vágólapra másolva",
     "Forward" : "Továbbítás",
     "Link copied" : "Hivatkozás másolva",
-    "Move message" : "Üzenet áthelyezése",
     "Translate" : "Lefordítás",
     "Forward message as attachment" : "Üzenet továbbítása mellékletként",
     "View source" : "Forrás megtekintése",
@@ -644,9 +644,6 @@ OC.L10N.register(
     "Tag name cannot be empty" : "A címkenév nem lehet üres",
     "Tag name is a hidden system tag" : "A címkenév egy rejtett rendszercímke",
     "Tag already exists" : "A címke már létezik",
-    "Error loading message" : "Hiba történt az üzenet betöltése közben",
-    "Show less" : "Kevesebb megjelenítése",
-    "Show more" : "Több megjelenítése",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* a %USERID% és az %EMAIL% le lesz cserélve a felhasználó UID-jára és az e-mail-címére"
+    "Error loading message" : "Hiba történt az üzenet betöltése közben"
 },
 "nplurals=2; plural=(n != 1);");

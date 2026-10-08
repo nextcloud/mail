@@ -13,9 +13,9 @@ use OCA\Mail\Account;
 use OCA\Mail\Contracts\IDkimService;
 use OCA\Mail\Contracts\IDkimValidator;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\IMAP\MessageMapper;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCP\ICache;
 use OCP\ICacheFactory;
 
@@ -27,8 +27,7 @@ class DkimService implements IDkimService {
 	private $cache;
 
 	public function __construct(
-		private IMAPClientFactory $clientFactory,
-		private MessageMapper $messageMapper,
+		private ProtocolFactory $protocolFactory,
 		ICacheFactory $cacheFactory,
 		private IDkimValidator $dkimValidator,
 	) {
@@ -36,32 +35,23 @@ class DkimService implements IDkimService {
 	}
 
 	#[\Override]
-	public function validate(Account $account, Mailbox $mailbox, int $id): bool {
-		$cached = $this->getCached($account, $mailbox, $id);
+	public function validate(Account $account, Mailbox $mailbox, Message $message): bool {
+		$cached = $this->getCached($account, $mailbox, $message->getId());
 		if (is_bool($cached)) {
 			return $cached;
 		}
 
-		$client = $this->clientFactory->getClient($account);
-		try {
-			$fullText = $this->messageMapper->getFullText(
-				$client,
-				$mailbox->getName(),
-				$id,
-				$account->getUserId(),
-				false,
-			);
+		$fullText = $this->protocolFactory
+			->messageConnector($account)
+			->fetchMessageRaw($account, $mailbox, $message);
 
-			if ($fullText === null) {
-				throw new ServiceException("Could not fetch message source for uid $id");
-			}
-		} finally {
-			$client->logout();
+		if ($fullText === null) {
+			throw new ServiceException('Could not fetch message source for uid ' . $message->getUid());
 		}
 
 		$result = $this->dkimValidator->validate($fullText);
 
-		$cache_key = $this->buildCacheKey($account, $mailbox, $id);
+		$cache_key = $this->buildCacheKey($account, $mailbox, $message->getId());
 		$this->cache->set($cache_key, $result, self::CACHE_TTL);
 
 		return $result;

@@ -62,7 +62,7 @@ class FaviconSourceTest extends TestCase {
 		$this->favicon->expects(self::never())
 			->method('get');
 
-		$avatar = $this->source->fetch($email, $avatarFactory);
+		$avatar = $this->source->fetch('currentUser', $email, $avatarFactory);
 
 		$this->assertNull($avatar);
 	}
@@ -79,7 +79,7 @@ class FaviconSourceTest extends TestCase {
 			->with('https://jancborchardt.net')
 			->willReturn(false);
 
-		$avatar = $this->source->fetch($email, $avatarFactory);
+		$avatar = $this->source->fetch('currentUser', $email, $avatarFactory);
 
 		$this->assertNull($avatar);
 	}
@@ -118,7 +118,7 @@ class FaviconSourceTest extends TestCase {
 			->with($iconUrl, 'image/png')
 			->willReturn($avatar);
 
-		$actualAvatar = $this->source->fetch($email, $avatarFactory);
+		$actualAvatar = $this->source->fetch('currentUser', $email, $avatarFactory);
 
 		$this->assertSame($avatar, $actualAvatar);
 	}
@@ -148,7 +148,7 @@ class FaviconSourceTest extends TestCase {
 			->method('getBody')
 			->willReturn('');
 
-		$avatar = $this->source->fetch($email, $avatarFactory);
+		$avatar = $this->source->fetch('currentUser', $email, $avatarFactory);
 
 		$this->assertNull($avatar);
 	}

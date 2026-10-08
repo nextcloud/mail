@@ -118,6 +118,7 @@ OC.L10N.register(
     "Mark as spam" : "Marca comente spam",
     "Edit tags" : "Modìfica etichetas",
     "Move thread" : "Tràmuda dibata",
+    "Move message" : "Tràmuda messàgiu",
     "More actions" : "Àteras atziones",
     "Back" : "In segus",
     "Edit as new message" : "Modìfica comente messàgiu nou",
@@ -169,7 +170,6 @@ OC.L10N.register(
     "You sent a read confirmation to the sender of this message." : "As imbiadu una cunfirma de letura a sa persone chi at imbiadu custu messàgiu.",
     "Forward" : "Torra a imbiare",
     "Link copied" : "Ligòngiu copiadu",
-    "Move message" : "Tràmuda messàgiu",
     "Translate" : "Borta",
     "View source" : "Visualiza sa fonte",
     "Download thread data for debugging" : "Iscàrriga is datos de sa dibata pro sa curretzione",
@@ -341,8 +341,6 @@ OC.L10N.register(
     "Could not load the desired message" : "No at fatu a carrigare su messàgiu disigiadu",
     "Could not load the message" : "No at fatu a carrigare su messàgiu",
     "Date:" : "Data:",
-    "Error loading message" : "Errore in su carrigamentu de su messàgiu",
-    "Show less" : "Mustra prus pagu",
-    "Show more" : "Mustra de prus"
+    "Error loading message" : "Errore in su carrigamentu de su messàgiu"
 },
 "nplurals=2; plural=(n != 1);");

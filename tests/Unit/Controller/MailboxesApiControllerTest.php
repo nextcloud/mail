@@ -11,7 +11,6 @@ namespace Unit\Controller;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Controller\MailboxesApiController;
 use OCA\Mail\Db\MailAccount;
@@ -20,6 +19,7 @@ use OCA\Mail\Db\Message as DbMessage;
 use OCA\Mail\Folder;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\DelegationService;
+use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\IRequest;
@@ -31,7 +31,7 @@ class MailboxesApiControllerTest extends TestCase {
 	private MailboxesApiController $controller;
 
 	private IRequest&MockObject $request;
-	private IMailManager|MockObject $mailManager;
+	private MailManager|MockObject $mailManager;
 	private AccountService&MockObject $accountService;
 	private MockObject|IMailSearch $mailSearch;
 	private DelegationService&MockObject $delegationService;
@@ -41,7 +41,7 @@ class MailboxesApiControllerTest extends TestCase {
 
 		$this->request = $this->createMock(IRequest::class);
 		$this->accountService = $this->createMock(AccountService::class);
-		$this->mailManager = $this->createMock(IMailManager::class);
+		$this->mailManager = $this->createMock(MailManager::class);
 		$this->mailSearch = $this->createMock(IMailSearch::class);
 		$this->delegationService = $this->createMock(DelegationService::class);
 		$this->delegationService->method('resolveAccountUserId')

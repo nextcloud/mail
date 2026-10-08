@@ -219,6 +219,7 @@ OC.L10N.register(
     "Snooze" : "다시 알림",
     "Unsnooze" : "다시 알림 해제",
     "Move thread" : "쓰레드 이동",
+    "Move message" : "메시지 이동",
     "Archive thread" : "쓰레드 보관",
     "Archive message" : "메시지 보관",
     "More actions" : "더 많은 동작",
@@ -298,7 +299,6 @@ OC.L10N.register(
     "Direct link copied to clipboard" : "직접 링크가 클립보드에 복사됨",
     "Forward" : "전달",
     "Link copied" : "링크 복사됨",
-    "Move message" : "메시지 이동",
     "Translate" : "번역:",
     "Forward message as attachment" : "메시지를 첨부파일로 전달",
     "View source" : "원본 보기",
@@ -636,9 +636,6 @@ OC.L10N.register(
     "Tag name cannot be empty" : "태그 이름을 비울 수 없음",
     "Tag name is a hidden system tag" : "태그 이름이 숨겨진 시스템 태그입니다",
     "Tag already exists" : "태그가 이미 존재합니다.",
-    "Error loading message" : "메시지 불러오기 오류",
-    "Show less" : "적게 보기",
-    "Show more" : "더 보기",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID%와(과) %EMAIL%이(가) 사용자의 UID와 이메일로 대체됩니다"
+    "Error loading message" : "메시지 불러오기 오류"
 },
 "nplurals=1; plural=0;");

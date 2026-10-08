@@ -15,15 +15,15 @@
 			{{ t('mail', 'Start writing a message by clicking below or select an existing message to display its contents') }}
 		</div>
 		<div class="no-message-selected__action">
-			<NewMessageButtonHeader :show-refresh="false" />
+			<NewMessageButtonHeader :showRefresh="false" />
 		</div>
 	</NcAppContentDetails>
 </template>
 
 <script>
 import { generateFilePath } from '@nextcloud/router'
-import { NcAppContentDetails } from '@nextcloud/vue'
 import { useIsDarkTheme } from '@nextcloud/vue/composables/useIsDarkTheme'
+import NcAppContentDetails from '@nextcloud/vue/components/NcAppContentDetails'
 import NewMessageButtonHeader from './NewMessageButtonHeader.vue'
 
 export default {
@@ -70,7 +70,6 @@ export default {
 	gap: calc(var(--default-grid-baseline, 4px) * 2);
 	padding-inline-start: 50px;
 	height: 100%;
-	max-width: 100% !important; /* restricted otherwise by stronger selector */
 
 	@include fluid.background;
 

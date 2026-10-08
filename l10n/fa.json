@@ -314,7 +314,7 @@
     "Snooze" : "Snooze",
     "Unsnooze" : "Unsnooze",
     "Move thread" : "انتقال موضوع",
-    "Move Message" : "انتقال پیام",
+    "Move message" : "انتقال پیام",
     "Archive thread" : "بایگانی موضوع",
     "Archive message" : "بایگانی پیام",
     "More actions" : "اقدامات بیشتر",
@@ -426,7 +426,6 @@
     "Direct link copied to clipboard" : "لینک مستقیم در کلیپ‌بورد کپی شد",
     "Forward" : "ارسال به جلو",
     "Link copied" : "پیوند کپی شد",
-    "Move message" : "انتقال پیام",
     "Translate" : "ترجمه",
     "Forward message as attachment" : "ارسال پیام به‌عنوان پیوست",
     "View source" : "مشاهده منبع",
@@ -910,12 +909,7 @@
     "Tag already exists" : "برچسب از قبل وجود دارد",
     "Error loading message" : "خطا در بارگذاری پیام",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "پاسخ‌دهنده خودکار از Sieve استفاده می‌کند، یک زبان اسکریپت‌نویسی که توسط بسیاری از ارائه‌دهندگان ایمیل پشتیبانی می‌شود. اگر مطمئن نیستید که ارائه‌دهنده شما از آن پشتیبانی می‌کند یا خیر، با ارائه‌دهنده خود بررسی کنید. اگر Sieve در دسترس است، روی دکمه کلیک کنید تا به تنظیمات بروید و آن را فعال کنید.",
-    "Maximize composer" : "بزرگ‌نمایی ویرایشگر",
-    "Show recipient details" : "نمایش جزئیات گیرنده",
-    "Hide recipient details" : "مخفی کردن جزئیات گیرنده",
-    "Show less" : "نمایش کمتر",
-    "Show more" : "نمایش بیشتر",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "کنترل هرج‌ومرج ایمیل‌های خود را به دست بگیرید. فیلترها به شما کمک می‌کنند تا اولویت‌بندی کنید و شلوغی را حذف نمایید.",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% و %EMAIL% با شناسه کاربری و ایمیل کاربر جایگزین می‌شوند"
+    "Move Message" : "انتقال پیام",
+    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "کنترل هرج‌ومرج ایمیل‌های خود را به دست بگیرید. فیلترها به شما کمک می‌کنند تا اولویت‌بندی کنید و شلوغی را حذف نمایید."
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

@@ -214,6 +214,7 @@ OC.L10N.register(
     "Snooze" : "Snooze",
     "Unsnooze" : "Unsnooze",
     "Move thread" : "Move thread",
+    "Move message" : "Move message",
     "Archive thread" : "Archive thread",
     "Archive message" : "Archive message",
     "More actions" : "More actions",
@@ -293,7 +294,6 @@ OC.L10N.register(
     "Could not unsnooze message" : "Could not unsnooze message",
     "Forward" : "Forward",
     "Link copied" : "ლინკი მოიკოპა",
-    "Move message" : "Move message",
     "Translate" : "Translate",
     "Forward message as attachment" : "Forward message as attachment",
     "View source" : "View source",
@@ -615,9 +615,6 @@ OC.L10N.register(
     "Tag name cannot be empty" : "Tag name cannot be empty",
     "Tag name is a hidden system tag" : "Tag name is a hidden system tag",
     "Tag already exists" : "Tag already exists",
-    "Error loading message" : "Error loading message",
-    "Show less" : "Show less",
-    "Show more" : "Show more",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% and %EMAIL% will be replaced with the user's UID and email"
+    "Error loading message" : "Error loading message"
 },
 "nplurals=2; plural=(n!=1);");

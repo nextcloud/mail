@@ -24,8 +24,8 @@
 	"ignoreUnstable": false,
 	"baseBranchPatterns": [
 		"main",
-		"stable5.12",
-		"stable5.11"
+		"stable5.13",
+		"stable5.12"
 	],
 	"enabledManagers": [
 		"composer",
@@ -66,56 +66,6 @@
 				"@ChristophWurst",
 				"@GretaD"
 			]
-		},
-		{
-			"description": "Ignore Vue 3 packages",
-			"matchManagers": [
-				"npm"
-			],
-			"matchPackageNames": [
-				"vue"
-			],
-			"allowedVersions": "<3.0"
-		},
-		{
-			"description": "Ignore Vue 3 packages",
-			"matchManagers": [
-				"npm"
-			],
-			"matchPackageNames": [
-				"vue-router"
-			],
-			"allowedVersions": "<4.0"
-		},
-		{
-			"description": "Ignore Vue 3 packages",
-			"matchManagers": [
-				"npm"
-			],
-			"matchPackageNames": [
-				"@vue/test-utils"
-			],
-			"allowedVersions": "<2.0"
-		},
-		{
-			"description": "Ignore Vue 3 packages",
-			"matchManagers": [
-				"npm"
-			],
-			"matchPackageNames": [
-				"vuex"
-			],
-			"allowedVersions": "<4.1.0"
-		},
-		{
-			"description": "Ignore Vue 3 packages",
-			"matchManagers": [
-				"npm"
-			],
-			"matchPackageNames": [
-				"vue-loader"
-			],
-			"allowedVersions": "<16.0.0"
 		},
 		{
 			"description": "Request PHP reviews",

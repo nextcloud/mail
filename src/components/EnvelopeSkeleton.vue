@@ -4,129 +4,121 @@
 -->
 
 <template>
-	<!-- This wrapper can be either a router link or a `<li>` -->
-	<component
-		:is="to ? 'router-link' : 'NcVNodes'"
-		v-slot="{ href: routerLinkHref, navigate, isActive }"
-		:custom="to ? true : null"
-		:to="to"
-		:exact="to ? exact : null">
-		<li
-			class="list-item__wrapper"
-			:class="{ 'list-item__wrapper--active': isActive || active }">
-			<div
-				ref="list-item"
-				class="list-item"
-				:class="{
-					'list-item--compact': compact,
-					'list-item--one-line': oneLine,
-					'list-item--multiline': !oneLine,
-				}"
-				@mouseover="handleMouseover"
-				@mouseleave="handleMouseleave">
-				<a
-					:id="anchorId || undefined"
-					:aria-label="linkAriaLabel"
-					class="list-item__anchor"
-					:href="routerLinkHref || href"
-					:target="target || (href === '#' ? undefined : '_blank')"
-					:rel="href === '#' ? undefined : 'noopener noreferrer'"
-					@focus="showActions"
-					@focusout="handleBlur"
-					@click="onClick($event, navigate, routerLinkHref)"
-					@contextmenu.prevent
-					@keydown.esc="hideActions">
-					<!-- @slot This slot is used for the NcAvatar or icon, the content of this slot must not be interactive -->
-					<slot name="icon" />
+	<li
+		class="list-item__wrapper"
+		:class="{ 'list-item__wrapper--active': isRouteActive || active }">
+		<div
+			ref="list-item"
+			class="list-item"
+			:class="{
+				'list-item--compact': compact,
+				'list-item--one-line': oneLine,
+				'list-item--multiline': !oneLine,
+			}"
+			@mouseover="handleMouseover"
+			@mouseleave="handleMouseleave">
+			<a
+				:id="anchorId || undefined"
+				:aria-label="linkAriaLabel"
+				class="list-item__anchor"
+				:href="routerLinkHref || href"
+				:target="target || (href === '#' ? undefined : '_blank')"
+				:rel="href === '#' ? undefined : 'noopener noreferrer'"
+				@focus="showActions"
+				@focusout="handleBlur"
+				@click="onClick($event)"
+				@contextmenu.prevent
+				@keydown.esc="hideActions">
+				<!-- @slot This slot is used for the NcAvatar or icon, the content of this slot must not be interactive -->
+				<slot name="icon" />
 
-					<div class="list-item-content">
-						<div class="list-item-content__name">
-							<!-- @slot Slot for the first line of the component. prop 'name' is used as a fallback is no slots are provided -->
-							<span>
-								<slot name="name">{{ name }}</slot>
-							</span>
-						</div>
-						<div class="list-item-content__inner">
-							<div class="list-item-content__inner__main">
-								<div
-									v-if="hasSubname"
-									class="list-item-content__inner__subname"
-									:class="{ 'list-item-content__inner__subname--bold': bold }">
-									<!-- @slot Slot for the second line of the component -->
-									<slot name="subname" />
-								</div>
-								<div
-									v-if="$slots.tags"
-									class="list-item-content__inner__tags"
-									@click.prevent.stop>
-									<!-- @slot This slot is used for the third line of the component -->
-									<slot name="tags" />
-								</div>
-							</div>
-
-							<div class="list-item-content__inner__details">
-								<div class="list-item-content__inner__details__details" :class="[{ 'list-item-content__inner__details__details--hidden': showDetails }]">
-									<!-- @slot This slot is used for some details in form of icon (prop `details` as a fallback) -->
-									<slot name="details">{{ details }}</slot>
-								</div>
-
-								<!-- Counter and indicator -->
-								<div
-									v-if="counterNumber || hasIndicator"
-									:class="{ 'extra--hidden': !showAdditionalElements }"
-									class="list-item-content__inner__details__extra">
-									<NcCounterBubble
-										v-if="counterNumber"
-										:active="isActive || active"
-										class="list-item-content__inner__details__extra__counter"
-										:type="counterType">
-										{{ counterNumber }}
-									</NcCounterBubble>
-
-									<span v-if="hasIndicator" class="list-item-content__inner__details__extra__indicator">
-										<!-- @slot This slot is used for some indicator in form of icon -->
-										<slot name="indicator" />
-									</span>
-								</div>
-							</div>
-						</div>
+				<div class="list-item-content">
+					<div class="list-item-content__name">
+						<!-- @slot Slot for the first line of the component. prop 'name' is used as a fallback is no slots are provided -->
+						<span>
+							<slot name="name">{{ name }}</slot>
+						</span>
 					</div>
-				</a>
+					<div class="list-item-content__inner">
+						<div class="list-item-content__inner__main">
+							<div
+								v-if="hasSubname"
+								class="list-item-content__inner__subname"
+								:class="{ 'list-item-content__inner__subname--bold': bold }">
+								<!-- @slot Slot for the second line of the component -->
+								<slot name="subname" />
+							</div>
+							<div
+								v-if="$slots.tags"
+								class="list-item-content__inner__tags"
+								@click.prevent.stop>
+								<!-- @slot This slot is used for the third line of the component -->
+								<slot name="tags" />
+							</div>
+						</div>
 
-				<div class="list-item__hoverable">
-					<EnvelopeSingleClickActions
-						:is-read="isRead"
-						:is-important="isImportant"
-						@delete="$emit('delete')"
-						@toggle-important="$emit('toggle-important')"
-						@toggle-seen="$emit('toggle-seen')" />
+						<div class="list-item-content__inner__details">
+							<div class="list-item-content__inner__details__details" :class="[{ 'list-item-content__inner__details__details--hidden': showDetails }]">
+								<!-- @slot This slot is used for some details in form of icon (prop `details` as a fallback) -->
+								<slot name="details">{{ details }}</slot>
+							</div>
 
-					<!-- Actions -->
-					<div
-						v-show="forceDisplayActions || displayActionsOnHoverFocus"
-						class="list-item__actions"
-						@focusout="handleBlur">
-						<NcActions
-							ref="actions"
-							:primary="isActive || active"
-							:aria-label="computedActionsAriaLabel"
-							variant="tertiary"
-							@update:open="handleActionsUpdateOpen">
-							<template #icon>
-								<DotsHorizontal :size="20" />
-							</template>
-							<!-- @slot Provide the actions for the right side quick menu -->
-							<slot name="actions" />
-						</NcActions>
+							<!-- Counter and indicator -->
+							<div
+								v-if="counterNumber || hasIndicator"
+								:class="{ 'extra--hidden': !showAdditionalElements }"
+								class="list-item-content__inner__details__extra">
+								<NcCounterBubble
+									v-if="counterNumber"
+									:count="counterNumber"
+									:active="isRouteActive || active"
+									class="list-item-content__inner__details__extra__counter"
+									:type="counterType" />
+
+								<span v-if="hasIndicator" class="list-item-content__inner__details__extra__indicator">
+									<!-- @slot This slot is used for some indicator in form of icon -->
+									<slot name="indicator" />
+								</span>
+							</div>
+						</div>
 					</div>
 				</div>
+			</a>
+
+			<div class="list-item__hoverable">
+				<EnvelopeSingleClickActions
+					:isRead="isRead"
+					:isImportant="isImportant"
+					@delete="$emit('delete')"
+					@toggleImportant="$emit('toggleImportant')"
+					@toggleSeen="$emit('toggleSeen')" />
+
+				<!-- Actions -->
+				<div
+					v-show="forceDisplayActions || displayActionsOnHoverFocus"
+					class="list-item__actions"
+					@focusout="handleBlur">
+					<NcActions
+						ref="actions"
+						:primary="isRouteActive || active"
+						:aria-label="computedActionsAriaLabel"
+						variant="tertiary"
+						@update:open="handleActionsUpdateOpen">
+						<template #icon>
+							<DotsHorizontal :size="20" />
+						</template>
+						<!-- @slot Provide the actions for the right side quick menu -->
+						<slot name="actions" />
+					</NcActions>
+				</div>
 			</div>
-		</li>
-	</component>
+		</div>
+	</li>
 </template>
 
 <script>
-import { NcActions, NcCounterBubble, NcVNodes } from '@nextcloud/vue'
+import NcActions from '@nextcloud/vue/components/NcActions'
+import NcCounterBubble from '@nextcloud/vue/components/NcCounterBubble'
 import DotsHorizontal from 'vue-material-design-icons/DotsHorizontal.vue'
 import EnvelopeSingleClickActions from './EnvelopeSingleClickActions.vue'
 
@@ -136,7 +128,6 @@ export default {
 	components: {
 		NcActions,
 		NcCounterBubble,
-		NcVNodes,
 		EnvelopeSingleClickActions,
 		DotsHorizontal,
 	},
@@ -285,6 +276,9 @@ export default {
 
 	emits: [
 		'click',
+		'delete',
+		'toggleImportant',
+		'toggleSeen',
 		'update:menuOpen',
 	],
 
@@ -301,6 +295,27 @@ export default {
 	},
 
 	computed: {
+		resolvedRoute() {
+			return this.to ? this.$router.resolve(this.to) : null
+		},
+
+		routerLinkHref() {
+			return this.resolvedRoute?.href ?? null
+		},
+
+		isRouteActive() {
+			if (!this.resolvedRoute) {
+				return false
+			}
+
+			const target = this.resolvedRoute.path
+			if (this.exact || this.$route.path === target) {
+				return this.$route.path === target
+			}
+
+			return this.$route.path.startsWith(target.endsWith('/') ? target : `${target}/`)
+		},
+
 		showAdditionalElements() {
 			return !this.displayActionsOnHoverFocus || this.forceDisplayActions
 		},
@@ -338,19 +353,17 @@ export default {
 		 * Handle link click
 		 *
 		 * @param {MouseEvent|KeyboardEvent} event - Native click or keydown event
-		 * @param {Function} [navigate] - VueRouter link's navigate if any
-		 * @param {string} [routerLinkHref] - VueRouter link's href
 		 */
-		onClick(event, navigate, routerLinkHref) {
+		onClick(event) {
 			// Always forward native event
 			this.$emit('click', event)
 			// Do not navigate with control keys - it is opening in a new tab
 			if (event.metaKey || event.altKey || event.ctrlKey || event.shiftKey) {
 				return
 			}
-			// Prevent default link behaviour if it's a router-link and navigate manually
-			if (routerLinkHref) {
-				navigate?.(event)
+			// Prevent default link behaviour if there is a route and navigate manually
+			if (this.to) {
+				this.$router.push(this.to)
 				event.preventDefault()
 			}
 		},
@@ -375,7 +388,7 @@ export default {
 				return
 			}
 			// do not hide if focus is kept within
-			if (this.$refs['list-item'].contains(event.relatedTarget)) {
+			if (this.$refs['list-item']?.contains(event.relatedTarget)) {
 				return
 			}
 			this.hideActions()
@@ -436,8 +449,7 @@ export default {
 		padding-block-end: 4px
 	}
 
-	&--active,
-	&.active {
+	&--active {
 		.list-item {
 			background-color: var(--color-primary-element);
 			&:hover,
@@ -448,10 +460,7 @@ export default {
 			}
 		}
 
-		.list-item-content__name,
-		.list-item-content__subname,
-		.list-item-content__details,
-		.list-item-details__details {
+		.list-item-content__name {
 			color: var(--color-primary-element-text);
 		}
 
@@ -459,20 +468,13 @@ export default {
 			fill: var(--color-primary-element-text) !important;
 		}
 	}
-	.list-item-content__name,
-	.list-item-content__subname,
-	.list-item-content__details,
-	.list-item-details__details {
+	.list-item-content__name {
 		white-space: nowrap;
 		margin-block: 0;
 		margin-inline-start: 0;
 		margin-inline-end: auto;
 		overflow: hidden;
 		text-overflow: ellipsis;
-
-		&--hidden {
-			visibility: hidden;
-		}
 	}
 }
 
@@ -522,8 +524,6 @@ export default {
 			min-width: 100px;
 			flex: 1 1 10%;
 			font-weight: 500;
-			// we changed the time/date and actions to be aligned with the name
-			max-width: 78%;
 			line-height: var(--default-line-height);
 
 			span {
@@ -576,8 +576,6 @@ export default {
 				align-items: end;
 				white-space: nowrap;
 				gap: 4px;
-				// to align details on top instead of in the center. The right way to do it would be to change the template, but that breaks one-line layout
-				margin-top: -22px;
 
 				&__details {
 					margin: 0 4px !important;
@@ -605,12 +603,33 @@ export default {
 		margin: 0;
 	}
 
-	.one-line .envelope__subtitle__subject {
-		max-width: 300px;
-	}
-
 	&--compact {
 		--list-item-padding: 2px;
+	}
+
+	&--multiline .list-item-content {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+
+		&__name {
+			grid-column: 1;
+			grid-row: 1;
+			max-width: 100%;
+		}
+
+		&__inner {
+			display: contents;
+		}
+
+		&__inner__main {
+			grid-column: 1;
+			grid-row: 2;
+		}
+
+		&__inner__details {
+			grid-column: 2;
+			grid-row: 1 / span 2;
+		}
 	}
 
 	&--one-line {
@@ -653,7 +672,6 @@ export default {
 				flex-direction: row;
 				align-items: unset;
 				justify-content: end;
-				margin-top: 0;
 				margin-inline-start: 0;
 			}
 		}
@@ -689,15 +707,6 @@ export default {
 		justify-content: space-between;
 		padding-inline-start: 8px;
 		min-width: 0;
-		&__main {
-			flex: 1 0;
-			width: 0;
-			margin: auto 0;
-
-			&--oneline {
-				display: flex;
-			}
-		}
 	}
 
 }
@@ -725,11 +734,6 @@ export default {
 	width: 100%;
 	max-width: unset;
 	max-height: calc(var(--default-font-size) * var(--default-line-height));
-}
-
-:deep(.app-content-list-item-icon) {
-	height: calc(var(--header-menu-item-height) - 4px);
-	width: calc(var(--header-menu-item-height) - 4px);
 }
 
 .extra--hidden {

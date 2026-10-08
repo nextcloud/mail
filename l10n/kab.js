@@ -197,8 +197,6 @@ OC.L10N.register(
     "Nextcloud Mail" : "Imayl n Nextcloud",
     "Discard changes" : "Sefsex ibeddilen",
     "Message sent" : "Izen yettwazen",
-    "Date:" : "Azemz:",
-    "Show less" : "Ssken cwiṭ",
-    "Show more" : "Sken ugar"
+    "Date:" : "Azemz:"
 },
 "nplurals=2; plural=(n != 1);");

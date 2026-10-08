@@ -4,142 +4,147 @@
 -->
 
 <template>
-	<Fragment>
-		<li
-			v-if="visible"
-			:key="id"
-			class="navigation-account-header"
-			:class="{
-				'navigation-account-header--folded': account.folded,
-				'navigation-account-header--active': account.folded && isInboxActive,
-			}">
-			<h2 :id="id" class="navigation-account-header__name">
-				<router-link
-					v-if="inboxRoute"
-					class="navigation-account-header__link"
-					:to="inboxRoute"
-					:title="account.emailAddress">
-					{{ account.emailAddress }}
-				</router-link>
-				<span v-else class="navigation-account-header__link">{{ account.emailAddress }}</span>
-			</h2>
-			<template v-if="account.folded && inboxUnread > 0">
-				<NcCounterBubble
-					class="navigation-account-header__unread"
-					:title="unreadLabel"
-					aria-hidden="true">
-					{{ inboxUnread }}
-				</NcCounterBubble>
-				<span class="hidden-visually">{{ unreadLabel }}</span>
+	<li
+		v-if="visible"
+		:key="id"
+		class="navigation-account-header"
+		:class="{
+			'navigation-account-header--folded': account.folded,
+			'navigation-account-header--active': account.folded && isInboxActive,
+		}">
+		<h2 :id="id" class="navigation-account-header__name">
+			<router-link
+				v-if="inboxRoute"
+				class="navigation-account-header__link"
+				:to="inboxRoute"
+				:title="account.emailAddress">
+				{{ account.emailAddress }}
+			</router-link>
+			<span v-else class="navigation-account-header__link">{{ account.emailAddress }}</span>
+		</h2>
+		<template v-if="account.folded && inboxUnread > 0">
+			<NcCounterBubble
+				class="navigation-account-header__unread"
+				:count="inboxUnread"
+				:title="unreadLabel"
+				aria-hidden="true" />
+			<span class="hidden-visually">{{ unreadLabel }}</span>
+		</template>
+		<NcActions class="navigation-account-header__actions">
+			<template v-if="isDisabled">
+				<NcActionText :name="t('mail', 'Provisioned account is disabled')">
+					<template #icon>
+						<IconInfo :size="20" />
+					</template>
+					{{ t('mail', 'Please login using a password to enable this account. The current session is using passwordless authentication, e.g. SSO or WebAuthn.') }}
+				</NcActionText>
 			</template>
-			<NcActions class="navigation-account-header__actions" @update:open="onMenuToggle">
-				<template v-if="isDisabled">
-					<NcActionText :name="t('mail', 'Provisioned account is disabled')">
-						<template #icon>
-							<IconInfo :size="20" />
-						</template>
-						{{ t('mail', 'Please login using a password to enable this account. The current session is using passwordless authentication, e.g. SSO or WebAuthn.') }}
-					</NcActionText>
-				</template>
-				<template v-else>
-					<NcActionText v-if="!account.isUnified && account.quotaPercentage !== null ">
-						<template #icon>
-							<IconInfo :size="20" />
-						</template>
-						{{ quotaText }}
-					</NcActionText>
-					<NcActionButton
-						:close-after-click="true"
-						@click="showAccountSettings">
-						<template #icon>
-							<IconSettings :size="20" />
-						</template>
-						{{ t('mail', 'Account settings') }}
-					</NcActionButton>
-					<NcActionButton
-						v-if="canDelegate"
-						:close-after-click="true"
-						@click="showDelegationModal = true">
-						<template #icon>
-							<NcIconSvgWrapper
-								:size="20"
-								:title="t('mail', 'Delegate account')"
-								:svg="IconDelegation" />
-						</template>
-						{{ t('mail', 'Delegate account') }}
-					</NcActionButton>
-					<NcActionCheckbox
-						:model-value="account.showSubscribedOnly"
-						:disabled="savingShowOnlySubscribed"
-						@update:checked="changeShowSubscribedOnly">
-						{{ t('mail', 'Show only subscribed folders') }}
-					</NcActionCheckbox>
-					<NcActionButton v-if="!editing && nameLabel" @click="openCreateMailbox">
-						<template #icon>
-							<IconFolderAdd :size="20" />
-						</template>
-						{{ t('mail', 'Add folder') }}
-					</NcActionButton>
-					<NcActionInput
-						v-if="editing && nameInput"
-						v-model="createMailboxName"
-						@submit.prevent.stop="createMailbox">
-						<template #icon>
-							<IconFolderAdd :size="20" />
-						</template>
-						{{ t('mail', 'Folder name') }}
-					</NcActionInput>
-					<NcActionText v-if="showSaving">
-						<template #icon>
-							<NcLoadingIcon :size="20" />
-						</template>
-						{{ t('mail', 'Saving') }}
-					</NcActionText>
-					<NcActionButton v-if="!isFirst" @click="changeAccountOrderUp">
-						<template #icon>
-							<MenuUp :size="20" />
-						</template>
-						{{ t('mail', 'Move up') }}
-					</NcActionButton>
-					<NcActionButton v-if="!isLast" @click="changeAccountOrderDown">
-						<template #icon>
-							<MenuDown :size="20" />
-						</template>
-						{{ t('mail', 'Move down') }}
-					</NcActionButton>
-					<NcActionButton v-if="!account.provisioningId && !account.isDelegated" @click="removeAccount">
-						<template #icon>
-							<IconDelete :size="20" />
-						</template>
-						{{ t('mail', 'Remove account') }}
-					</NcActionButton>
-				</template>
-			</NcActions>
-			<NcButton
-				v-if="!isDisabled"
-				class="navigation-account-header__toggle"
-				variant="tertiary"
-				:aria-label="foldLabel"
-				:title="foldLabel"
-				:aria-expanded="account.folded ? 'false' : 'true'"
-				:disabled="savingFolded"
-				@click="toggleFolded">
-				<template #icon>
-					<IconChevronRight class="navigation-account-header__chevron" :size="20" />
-				</template>
-			</NcButton>
-		</li>
-		<DelegationModal v-if="showDelegationModal" :account="account" @close="showDelegationModal = false" />
-	</Fragment>
+			<template v-else>
+				<NcActionText v-if="!account.isUnified && account.quotaPercentage !== null" @vue:mounted="fetchQuota">
+					<template #icon>
+						<IconInfo :size="20" />
+					</template>
+					{{ quotaText }}
+				</NcActionText>
+				<NcActionButton
+					:closeAfterClick="true"
+					@click="showAccountSettings">
+					<template #icon>
+						<IconSettings :size="20" />
+					</template>
+					{{ t('mail', 'Account settings') }}
+				</NcActionButton>
+				<NcActionButton
+					v-if="canDelegate"
+					:closeAfterClick="true"
+					@click="showDelegationModal = true">
+					<template #icon>
+						<NcIconSvgWrapper
+							:size="20"
+							:title="t('mail', 'Delegate account')"
+							:svg="IconDelegation" />
+					</template>
+					{{ t('mail', 'Delegate account') }}
+				</NcActionButton>
+				<NcActionCheckbox
+					:modelValue="account.showSubscribedOnly"
+					:disabled="savingShowOnlySubscribed"
+					@update:modelValue="changeShowSubscribedOnly">
+					{{ t('mail', 'Show only subscribed folders') }}
+				</NcActionCheckbox>
+				<NcActionButton v-if="!editing && nameLabel" @click="openCreateMailbox">
+					<template #icon>
+						<IconFolderAdd :size="20" />
+					</template>
+					{{ t('mail', 'Add folder') }}
+				</NcActionButton>
+				<NcActionInput
+					v-if="editing && nameInput"
+					v-model="createMailboxName"
+					@submit.prevent.stop="createMailbox">
+					<template #icon>
+						<IconFolderAdd :size="20" />
+					</template>
+					{{ t('mail', 'Folder name') }}
+				</NcActionInput>
+				<NcActionText v-if="showSaving">
+					<template #icon>
+						<NcLoadingIcon :size="20" />
+					</template>
+					{{ t('mail', 'Saving') }}
+				</NcActionText>
+				<NcActionButton v-if="!isFirst" @click="changeAccountOrderUp">
+					<template #icon>
+						<MenuUp :size="20" />
+					</template>
+					{{ t('mail', 'Move up') }}
+				</NcActionButton>
+				<NcActionButton v-if="!isLast" @click="changeAccountOrderDown">
+					<template #icon>
+						<MenuDown :size="20" />
+					</template>
+					{{ t('mail', 'Move down') }}
+				</NcActionButton>
+				<NcActionButton v-if="!account.provisioningId && !account.isDelegated" @click="removeAccount">
+					<template #icon>
+						<IconDelete :size="20" />
+					</template>
+					{{ t('mail', 'Remove account') }}
+				</NcActionButton>
+			</template>
+		</NcActions>
+		<NcButton
+			v-if="!isDisabled"
+			class="navigation-account-header__toggle"
+			variant="tertiary"
+			:aria-label="foldLabel"
+			:title="foldLabel"
+			:aria-expanded="account.folded ? 'false' : 'true'"
+			:disabled="savingFolded"
+			@click="toggleFolded">
+			<template #icon>
+				<IconChevronRight class="navigation-account-header__chevron" :size="20" />
+			</template>
+		</NcButton>
+	</li>
+	<DelegationModal v-if="showDelegationModal" :account="account" @close="showDelegationModal = false" />
 </template>
 
 <script>
 import { DialogBuilder, showError } from '@nextcloud/dialogs'
 import { formatFileSize } from '@nextcloud/files'
 import { generateUrl } from '@nextcloud/router'
-import { NcActionButton, NcActionCheckbox, NcActionInput, NcActions, NcActionText, NcButton, NcCounterBubble, NcIconSvgWrapper, NcLoadingIcon } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
-import { Fragment } from 'vue-frag'
+import { defineAsyncComponent } from 'vue'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcActionCheckbox from '@nextcloud/vue/components/NcActionCheckbox'
+import NcActionInput from '@nextcloud/vue/components/NcActionInput'
+import NcActions from '@nextcloud/vue/components/NcActions'
+import NcActionText from '@nextcloud/vue/components/NcActionText'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcCounterBubble from '@nextcloud/vue/components/NcCounterBubble'
+import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import MenuDown from 'vue-material-design-icons/ChevronDown.vue'
 import IconChevronRight from 'vue-material-design-icons/ChevronRight.vue'
 import MenuUp from 'vue-material-design-icons/ChevronUp.vue'
@@ -158,12 +163,11 @@ export default {
 		NcActions,
 		NcButton,
 		NcCounterBubble,
-		Fragment,
 		NcActionButton,
 		NcActionCheckbox,
 		NcActionInput,
 		NcActionText,
-		DelegationModal: () => import(/* webpackChunkName: "delegation-modal" */ './DelegationModal.vue'),
+		DelegationModal: defineAsyncComponent(() => import(/* webpackChunkName: "delegation-modal" */ './DelegationModal.vue')),
 		IconInfo,
 		IconSettings,
 		NcIconSvgWrapper,
@@ -333,7 +337,7 @@ export default {
 					},
 					{
 						label: t('mail', 'Remove {email}', { email: this.account.emailAddress }),
-						type: 'error',
+						variant: 'error',
 						callback: async () => {
 							this.loading.delete = true
 							try {
@@ -394,13 +398,6 @@ export default {
 					this.savingShowOnlySubscribed = false
 					throw error
 				})
-		},
-
-		onMenuToggle(open) {
-			if (open && this.account.quotaPercentage !== null) {
-				logger.debug('accounts menu opened, fetching quota')
-				this.fetchQuota()
-			}
 		},
 
 		async fetchQuota() {
@@ -503,14 +500,12 @@ export default {
 </style>
 
 <style lang="scss">
-// Fix very long button labels overflowing the modal
-.dialog {
-	&__actions {
-		flex-wrap: wrap;
+// Unscoped because DialogBuilder mounts outside this component; wraps the long "Remove {email}" label
+.nc-generic-dialog .dialog__actions {
+	flex-wrap: wrap;
 
-		> button {
-			flex: 1 auto;
-		}
+	> button {
+		flex: 1 auto;
 	}
 }
 </style>

@@ -246,6 +246,7 @@ OC.L10N.register(
     "Snooze" : "Blunda",
     "Unsnooze" : "Vekja af blundi",
     "Move thread" : "Færa spjallþráð",
+    "Move message" : "Færa skilaboð",
     "Archive thread" : "Setja spjallþráð í geymslu",
     "Archive message" : "Geyma skilaboð",
     "More actions" : "Fleiri aðgerðir",
@@ -334,7 +335,6 @@ OC.L10N.register(
     "Direct link copied to clipboard" : "Beinn tengill afritaður á klippispjald",
     "Forward" : "Áframsenda",
     "Link copied" : "Tengill afritaður",
-    "Move message" : "Færa skilaboð",
     "Translate" : "Þýða",
     "Forward message as attachment" : "Áframsenda skilaboð sem viðhengi",
     "View source" : "Skoða frumkóða",
@@ -702,10 +702,6 @@ OC.L10N.register(
     "Tag name cannot be empty" : "Nafn merkis má ekki vera tómt",
     "Tag name is a hidden system tag" : "Heiti merkis er falið merki kerfisins",
     "Tag already exists" : "Merki er þegar til",
-    "Error loading message" : "Villa við hleðslu á skilaboðum",
-    "Maximize composer" : "Hámarka ritil",
-    "Show less" : "Birta minna",
-    "Show more" : "Birta meira",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% og %EMAIL% verður skipt út með UID-auðkenni notanda og tölvupóstfangi"
+    "Error loading message" : "Villa við hleðslu á skilaboðum"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

@@ -22,7 +22,8 @@
 </template>
 
 <script>
-import { NcEmptyContent, NcLoadingIcon } from '@nextcloud/vue'
+import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 export default {
 	name: 'Loading',
 	components: {
@@ -59,7 +60,7 @@ export default {
 		}, 3500)
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		clearTimeout(this.slowTimer)
 	},
 }
@@ -71,7 +72,7 @@ export default {
 	transition: opacity 0.5s;
 }
 
-.fade-enter,
+.fade-enter-from,
 .fade-leave-to {
 	opacity: 0;
 }

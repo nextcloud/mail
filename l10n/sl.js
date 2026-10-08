@@ -192,6 +192,7 @@ OC.L10N.register(
     "Mark as spam" : "Označi kot neželeno",
     "Edit tags" : "Uredi oznake",
     "Move thread" : "Premakni nit",
+    "Move message" : "Premakni sporočilo",
     "Archive thread" : "Nit arhiva",
     "Archive message" : "Arhiviraj sporočilo",
     "More actions" : "Več dejanj",
@@ -262,7 +263,6 @@ OC.L10N.register(
     "Direct link copied to clipboard" : "Povezava je kopirana v odložišče.",
     "Forward" : "Posreduj",
     "Link copied" : "Povezava je kopirana",
-    "Move message" : "Premakni sporočilo",
     "Translate" : "Prevedi",
     "Forward message as attachment" : "Posreduj sporočilo kot prilogo",
     "View source" : "Pokaži kode sporočila",
@@ -528,8 +528,6 @@ OC.L10N.register(
     "Date:" : "Datum:",
     "Tag name is a hidden system tag" : "Ime oznake je skrita sistemska oznaka",
     "Tag already exists" : "Oznaka že obstaja",
-    "Error loading message" : "Napaka nalaganja sporočila",
-    "Show less" : "Pokaži manj",
-    "Show more" : "Pokaži več"
+    "Error loading message" : "Napaka nalaganja sporočila"
 },
 "nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);");

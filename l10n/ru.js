@@ -318,7 +318,7 @@ OC.L10N.register(
     "Snooze" : "Отложить",
     "Unsnooze" : "Отменить откладывание",
     "Move thread" : "Переместить ветку",
-    "Move Message" : "Переместить сообщение",
+    "Move message" : "Переместить сообщение",
     "Archive thread" : "Архивировать тему",
     "Archive message" : "Архивное сообщение",
     "More actions" : "Больше действий",
@@ -430,7 +430,6 @@ OC.L10N.register(
     "Direct link copied to clipboard" : "Прямая ссылка, скопированная в буфер обмена",
     "Forward" : "Переслать",
     "Link copied" : "Ссылка скопирована",
-    "Move message" : "Переместить сообщение",
     "Translate" : "Перевести",
     "Forward message as attachment" : "Переслать сообщение вложением",
     "View source" : "Просмотреть исходный текст",
@@ -914,12 +913,7 @@ OC.L10N.register(
     "Tag already exists" : "Метка уже существует",
     "Error loading message" : "Ошибка загрузки сообщения",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Автоответчик использует Sieve, язык сценариев, поддерживаемый многими поставщиками услуг электронной почты. Если вы не уверены, работает ли ваш язык, обратитесь к своему поставщику. Если Sieve доступен, нажмите кнопку, чтобы перейти к настройкам и включить его.",
-    "Maximize composer" : "Развернуть композер",
-    "Show recipient details" : "Показать сведения о получателе",
-    "Hide recipient details" : "Скрыть сведения о получателе",
-    "Show less" : "Показывать меньше",
-    "Show more" : "Показывать больше",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Возьмите под контроль хаос в своей электронной почте. Фильтры помогут вам расставить приоритеты и устранить беспорядок.",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "*В поля %USERID% and %EMAIL% будут подставлены значения идентификаторов и адресов эл. почты пользователей"
+    "Move Message" : "Переместить сообщение",
+    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Возьмите под контроль хаос в своей электронной почте. Фильтры помогут вам расставить приоритеты и устранить беспорядок."
 },
 "nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);");

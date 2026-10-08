@@ -240,6 +240,7 @@ OC.L10N.register(
     "Snooze" : "Geroko utzi",
     "Unsnooze" : "Ez utzi geroko",
     "Move thread" : "Mugitu haria",
+    "Move message" : "Mugitu mezua",
     "Archive thread" : "Artxibatu haria",
     "Archive message" : "Artxibatu mezua",
     "More actions" : "Ekintza gehiago",
@@ -328,7 +329,6 @@ OC.L10N.register(
     "Direct link copied to clipboard" : "Esteka zuzena arbelera kopiatuta",
     "Forward" : "Birbidali",
     "Link copied" : "Esteka kopiatu da",
-    "Move message" : "Mugitu mezua",
     "Translate" : "Itzuli",
     "Forward message as attachment" : "Birbidali mezua eranskin gisa",
     "View source" : "Ikusi iturburua",
@@ -710,10 +710,6 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Etiketaren izena ezkutatutako sistema-etiketa da",
     "Tag already exists" : "Etiketa dagoeneko existitzen da",
     "Error loading message" : "Errorea mezua kargatzerakoan",
-    "Maximize composer" : "Maximizatu prestatzailea",
-    "Show less" : "Erakutsi gutxiago",
-    "Show more" : "Erakutsi gehiago",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Kontrolatu zure posta elektronikoaren kaosa. Iragazkiek garrantzitsuena lehenestu eta zaborra ezabatzen laguntzen dizute.",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% eta%EMAIL% erabiltzailearen UID eta e-postarekin ordeztuko dira"
+    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Kontrolatu zure posta elektronikoaren kaosa. Iragazkiek garrantzitsuena lehenestu eta zaborra ezabatzen laguntzen dizute."
 },
 "nplurals=2; plural=(n != 1);");

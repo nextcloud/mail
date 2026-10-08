@@ -377,36 +377,6 @@ class ContactsIntegrationTest extends TestCase {
 			->will($this->returnValue($searchResult));
 	}
 
-	public function getPhotoDataProvider() {
-		return [
-			[
-				// Match with photo
-				'john@doe.com',
-				[
-					'id' => 2,
-					'FN' => 'John Doe',
-					'PHOTO' => 'abcdefg'
-				],
-				'abcdefg',
-			],
-			[
-				// Match without photo
-				'doe@john.com',
-				[
-					'id' => 2,
-					'FN' => 'John Doe',
-				],
-				null,
-			],
-			[
-				// No match
-				'abc@def.gh',
-				[],
-				null,
-			],
-		];
-	}
-
 	public function testGetContactsWithName(): void {
 		$name = 'John';
 		$searchResult = [
@@ -579,17 +549,176 @@ class ContactsIntegrationTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	/**
-	 * @dataProvider getPhotoDataProvider
-	 */
-	public function testGetPhoto($email, $searchResult, $expected) {
+	public function testGetPhotoReturnsUri(): void {
+		$email = 'john@doe.com';
+		$this->contactsManager->expects($this->once())
+			->method('isEnabled')
+			->willReturn(true);
+		$this->config->method('getAppValue')
+			->willReturnMap([
+				['core', 'shareapi_allow_share_dialog_user_enumeration', 'yes', 'yes'],
+				['core', 'shareapi_restrict_user_enumeration_to_group', 'no', 'no'],
+				['core', 'shareapi_restrict_user_enumeration_full_match', 'yes', 'no'],
+			]);
 		$this->contactsManager->expects($this->once())
 			->method('search')
-			->with($email, ['EMAIL'])
-			->will($this->returnValue([$searchResult]));
+			->with($email, ['EMAIL'], [
+				'enumeration' => true,
+				'fullmatch' => false,
+				'strict_search' => true,
+				'limit' => 20,
+			])
+			->willReturn([
+				[
+					'UID' => 'jd',
+					'FN' => 'John Doe',
+					'PHOTO' => 'VALUE=uri:https://next.cloud/photo.png',
+				],
+			]);
 
-		$actual = $this->contactsIntegration->getPhoto($email);
+		$actual = $this->contactsIntegration->getPhoto('currentUser', $email);
 
-		$this->assertEquals($actual, $actual);
+		$this->assertSame('https://next.cloud/photo.png', $actual);
+	}
+
+	public function testGetPhotoNoMatch(): void {
+		$email = 'nobody@example.com';
+		$this->contactsManager->expects($this->once())
+			->method('isEnabled')
+			->willReturn(true);
+		$this->config->method('getAppValue')
+			->willReturnMap([
+				['core', 'shareapi_allow_share_dialog_user_enumeration', 'yes', 'yes'],
+				['core', 'shareapi_restrict_user_enumeration_to_group', 'no', 'no'],
+				['core', 'shareapi_restrict_user_enumeration_full_match', 'yes', 'no'],
+			]);
+		$this->contactsManager->expects($this->once())
+			->method('search')
+			->willReturn([]);
+
+		$actual = $this->contactsIntegration->getPhoto('currentUser', $email);
+
+		$this->assertNull($actual);
+	}
+
+	public function testGetPhotoContactWithoutPhoto(): void {
+		$email = 'john@doe.com';
+		$this->contactsManager->expects($this->once())
+			->method('isEnabled')
+			->willReturn(true);
+		$this->config->method('getAppValue')
+			->willReturnMap([
+				['core', 'shareapi_allow_share_dialog_user_enumeration', 'yes', 'yes'],
+				['core', 'shareapi_restrict_user_enumeration_to_group', 'no', 'no'],
+				['core', 'shareapi_restrict_user_enumeration_full_match', 'yes', 'no'],
+			]);
+		$this->contactsManager->expects($this->once())
+			->method('search')
+			->willReturn([
+				[
+					'UID' => 'jd',
+					'FN' => 'John Doe',
+				],
+			]);
+
+		$actual = $this->contactsIntegration->getPhoto('currentUser', $email);
+
+		$this->assertNull($actual);
+	}
+
+	public function testGetPhotoDisabledContactsManager(): void {
+		$this->contactsManager->expects($this->once())
+			->method('isEnabled')
+			->willReturn(false);
+		$this->contactsManager->expects($this->never())
+			->method('search');
+
+		$actual = $this->contactsIntegration->getPhoto('currentUser', 'john@doe.com');
+
+		$this->assertNull($actual);
+	}
+
+	public function testGetPhotoFiltersSystemContactOutsideGroup(): void {
+		$email = 'victim@example.com';
+		$this->contactsManager->expects($this->once())
+			->method('isEnabled')
+			->willReturn(true);
+		$this->config->method('getAppValue')
+			->willReturnMap([
+				['core', 'shareapi_allow_share_dialog_user_enumeration', 'yes', 'yes'],
+				['core', 'shareapi_restrict_user_enumeration_to_group', 'no', 'yes'],
+				['core', 'shareapi_restrict_user_enumeration_full_match', 'yes', 'no'],
+			]);
+		$this->contactsManager->expects($this->once())
+			->method('search')
+			->with($email, ['EMAIL'], [
+				'enumeration' => true,
+				'fullmatch' => false,
+				'strict_search' => true,
+				'limit' => 20,
+			])
+			->willReturn([
+				[
+					'UID' => 'victim',
+					'FN' => 'Vic Victim',
+					'PHOTO' => 'VALUE=uri:https://next.cloud/victim.png',
+					'isLocalSystemBook' => true,
+				],
+			]);
+		$attacker = $this->createMock(IUser::class);
+		$this->userManager->expects($this->once())
+			->method('get')
+			->with('attacker')
+			->willReturn($attacker);
+		$this->groupManager->expects($this->once())
+			->method('getUserGroupIds')
+			->with($attacker)
+			->willReturn(['grp-attackers']);
+		$this->groupManager->method('isInGroup')
+			->with('victim', 'grp-attackers')
+			->willReturn(false);
+
+		$actual = $this->contactsIntegration->getPhoto('attacker', $email);
+
+		$this->assertNull($actual);
+	}
+
+	public function testGetPhotoReturnsSystemContactInSameGroup(): void {
+		$email = 'colleague@example.com';
+		$this->contactsManager->expects($this->once())
+			->method('isEnabled')
+			->willReturn(true);
+		$this->config->method('getAppValue')
+			->willReturnMap([
+				['core', 'shareapi_allow_share_dialog_user_enumeration', 'yes', 'yes'],
+				['core', 'shareapi_restrict_user_enumeration_to_group', 'no', 'yes'],
+				['core', 'shareapi_restrict_user_enumeration_full_match', 'yes', 'no'],
+			]);
+		$this->contactsManager->expects($this->once())
+			->method('search')
+			->willReturn([
+				[
+					'UID' => 'colleague',
+					'FN' => 'Col League',
+					'PHOTO' => 'VALUE=uri:https://next.cloud/colleague.png',
+					'isLocalSystemBook' => true,
+				],
+			]);
+		$caller = $this->createMock(IUser::class);
+		$this->userManager->expects($this->once())
+			->method('get')
+			->with('caller')
+			->willReturn($caller);
+		$this->groupManager->expects($this->once())
+			->method('getUserGroupIds')
+			->with($caller)
+			->willReturn(['shared-group']);
+		$this->groupManager->method('isInGroup')
+			->with('colleague', 'shared-group')
+			->willReturn(true);
+
+		$actual = $this->contactsIntegration->getPhoto('caller', $email);
+
+		$this->assertSame('https://next.cloud/colleague.png', $actual);
 	}
 }

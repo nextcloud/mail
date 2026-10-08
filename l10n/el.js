@@ -329,7 +329,7 @@ OC.L10N.register(
     "Snooze" : "Αναβολή",
     "Unsnooze" : "Ανάκληση αναβολής",
     "Move thread" : "Μετακίνηση νήματος",
-    "Move Message" : "Μετακίνηση μηνύματος",
+    "Move message" : "Μετακίνηση μηνύματος",
     "Archive thread" : "Αρχειοθέτηση νήματος",
     "Archive message" : "Αρχειοθέτηση μηνύματος",
     "More actions" : "Περισσότερες ενέργειες",
@@ -445,7 +445,6 @@ OC.L10N.register(
     "Forward" : "Προώθηση",
     "Only for message recipients" : "Μόνο για τους παραλήπτες του μηνύματος",
     "Link copied" : "Ο σύνδεσμος αντιγράφηκε",
-    "Move message" : "Μετακίνηση μηνύματος",
     "Translate" : "Μετάφραση",
     "Forward message as attachment" : "Προώθηση μηνύματος ως συνημμένο",
     "View source" : "Προβολή πηγής",
@@ -932,12 +931,7 @@ OC.L10N.register(
     "Tag already exists" : "Υπάρχει ήδη η ετικέτα",
     "Error loading message" : "Σφάλμα φόρτωσης μηνύματος",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Η αυτόματη απάντηση χρησιμοποιεί το Sieve, μια γλώσσα δέσμης ενεργειών που υποστηρίζεται από πολλούς πάροχους email. Εάν δεν είστε σίγουροι αν ο δικός σας την υποστηρίζει, ελέγξτε με τον πάροχό σας. Εάν το Sieve είναι διαθέσιμο, κάντε κλικ στο κουμπί για να μεταβείτε στις ρυθμίσεις και να το ενεργοποιήσετε.",
-    "Maximize composer" : "Μεγιστοποίηση σύνθεσης",
-    "Show recipient details" : "Εμφάνιση λεπτομερειών παραληπτών",
-    "Hide recipient details" : "Απόκρυψη λεπτομερειών παραληπτών",
-    "Show less" : "Εμφάνιση λιγότερων",
-    "Show more" : "Εμφάνιση περισσότερων",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Αποκτήστε τον έλεγχο του χάους των email σας. Τα φίλτρα σας βοηθούν να προτεραιοποιήσετε όσα έχουν σημασία και να εξαλείψετε την αταξία.",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* Το %USERID% και το %EMAIL% θα αντικατασταθούν με το UID και το email του χρήστη"
+    "Move Message" : "Μετακίνηση μηνύματος",
+    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Αποκτήστε τον έλεγχο του χάους των email σας. Τα φίλτρα σας βοηθούν να προτεραιοποιήσετε όσα έχουν σημασία και να εξαλείψετε την αταξία."
 },
 "nplurals=2; plural=(n != 1);");

@@ -301,7 +301,7 @@ OC.L10N.register(
     "Snooze" : "Adiar",
     "Unsnooze" : "Reabrir",
     "Move thread" : "Mover o fío",
-    "Move Message" : "Mover a mensaxe",
+    "Move message" : "Mover a mensaxe",
     "Archive thread" : "Arquivar o fío",
     "Archive message" : "Arquivar a mensaxe",
     "More actions" : "Máis accións",
@@ -412,7 +412,6 @@ OC.L10N.register(
     "Direct link copied to clipboard" : "A ligazón directa foi copiada no portapapeis",
     "Forward" : "Reenviar",
     "Link copied" : "Ligazón copiada",
-    "Move message" : "Mover a mensaxe",
     "Translate" : "Traducir",
     "Forward message as attachment" : "Reenviar a mensaxe como anexo",
     "View source" : "Ver a orixe",
@@ -889,12 +888,7 @@ OC.L10N.register(
     "Tag already exists" : "Xa existe a etiqueta",
     "Error loading message" : "Produciuse un erro ao cargar a mensaxe",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "A resposta automática emprega Sieve, unha linguaxe de «scripting» compatíbel con moitos provedores de correo. Se non está seguro de que o seu o sexa, consulte co seu provedor. Se Sieve está dispoñíbel, prema no botón para ir aos axustes e activalo.",
-    "Maximize composer" : "Maximizar a xanela de redacción",
-    "Show recipient details" : "Amosar os detalles do destinatario",
-    "Hide recipient details" : "Agochar os detalles do destinatario",
-    "Show less" : "Amosar menos",
-    "Show more" : "Amosar máis",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Tome o control do seu caos de correo. Os filtros axúdanlle a dar prioridade ao que importa e a eliminar a desorde.",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% e %EMAIL% substituiranse polo UID e o correo do usuario"
+    "Move Message" : "Mover a mensaxe",
+    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Tome o control do seu caos de correo. Os filtros axúdanlle a dar prioridade ao que importa e a eliminar a desorde."
 },
 "nplurals=2; plural=(n != 1);");

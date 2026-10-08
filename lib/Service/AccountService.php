@@ -22,7 +22,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJob;
@@ -45,7 +45,7 @@ class AccountService {
 		private MailAccountMapper $mapper,
 		private AliasesService $aliasesService,
 		IJobList $jobList,
-		private IMAPClientFactory $imapClientFactory,
+		private ProtocolFactory $protocolFactory,
 		private readonly IConfig $config,
 		private readonly ITimeFactory $timeFactory,
 		private DelegationMapper $delegationMapper,
@@ -174,13 +174,19 @@ class AccountService {
 
 	/**
 	 * @param MailAccount $newAccount
+	 * @param bool $scheduleBackgroundJobs Optional parameter to save the mail account
+	 *                                     without scheduling the corresponding background jobs. This can be useful if
+	 *                                     further database modifications must be done before running any background
+	 *                                     jobs. Defaults to `true`.
 	 * @return MailAccount
 	 */
-	public function save(MailAccount $newAccount): MailAccount {
+	public function save(MailAccount $newAccount, bool $scheduleBackgroundJobs = true): MailAccount {
 		$newAccount = $this->mapper->save($newAccount);
 
 		// Insert background jobs for this account
-		$this->scheduleBackgroundJobs($newAccount->getId());
+		if ($scheduleBackgroundJobs) {
+			$this->scheduleBackgroundJobs($newAccount->getId());
+		}
 
 		// Invalidate cache to ensure created account is being included
 		// in subsequent `findByUserId` and `findByUserIdAndAddress` calls
@@ -234,8 +240,7 @@ class AccountService {
 	public function testAccountConnection(string $currentUserId, int $accountId) :bool {
 		$account = $this->find($currentUserId, $accountId);
 		try {
-			$client = $this->imapClientFactory->getClient($account);
-			$client->close();
+			$this->protocolFactory->testConnection($account);
 			return true;
 		} catch (\Throwable $e) {
 			return false;
