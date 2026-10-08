@@ -82,7 +82,7 @@ class InternalAddressesMigrationService {
 		} catch (UserMigrationException) {
 			$output->writeln(
 				$this->l10n->t(
-					'Internal addresses for user %s not found. Continue...',
+					'Internal addresses for user %s not found. Continue …',
 					[$user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);
@@ -96,7 +96,7 @@ class InternalAddressesMigrationService {
 		} catch (JsonException|UserMigrationException) {
 			$output->writeln(
 				$this->l10n->t(
-					'Internal addresses configuration for user %s is invalid and will be skipped. Continue...',
+					'Internal addresses configuration for user %s is invalid and will be skipped. Continue …',
 					[$user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);

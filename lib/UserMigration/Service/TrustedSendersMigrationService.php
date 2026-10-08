@@ -76,7 +76,7 @@ class TrustedSendersMigrationService {
 		} catch (UserMigrationException) {
 			$output->writeln(
 				$this->l10n->t(
-					'Trusted senders configuration for user %s not found. Continue...',
+					'Trusted senders configuration for user %s not found. Continue …',
 					[$user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);
@@ -90,7 +90,7 @@ class TrustedSendersMigrationService {
 		} catch (JsonException|UserMigrationException) {
 			$output->writeln(
 				$this->l10n->t(
-					'Trusted senders configuration for user %s is invalid and will be skipped. Continue...',
+					'Trusted senders configuration for user %s is invalid and will be skipped. Continue …',
 					[$user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);

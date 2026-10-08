@@ -78,7 +78,7 @@ class TagsMigrationService {
 		} catch (UserMigrationException) {
 			$output->writeln(
 				$this->l10n->t(
-					'Tags for user %s not found. Continue...',
+					'Tags for user %s not found. Continue …',
 					[$user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);
@@ -92,7 +92,7 @@ class TagsMigrationService {
 		} catch (JsonException|UserMigrationException) {
 			$output->writeln(
 				$this->l10n->t(
-					'Tag configuration for user %s is invalid and will be skipped. Continue...',
+					'Tag configuration for user %s is invalid and will be skipped. Continue …',
 					[$user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);
@@ -108,7 +108,7 @@ class TagsMigrationService {
 			if ($existingTagId !== null) {
 				$output->writeln(
 					$this->l10n->t(
-						'Tag %s already exists for user %s and will be reused. Continue...',
+						'Tag %s already exists for user %s and will be reused. Continue …',
 						[$tag['imapLabel'], $user->getUID()]
 					), OutputInterface::VERBOSITY_VERBOSE
 				);

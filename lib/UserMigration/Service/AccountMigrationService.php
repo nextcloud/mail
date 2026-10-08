@@ -212,7 +212,7 @@ class AccountMigrationService {
 				]);
 				$output->writeln(
 					$this->l10n->t(
-						'A mail account of user %s is invalid and will be skipped. Continue...',
+						'A mail account of user %s is invalid and will be skipped. Continue …',
 						[$user->getUID()]
 					), OutputInterface::VERBOSITY_VERBOSE
 				);
@@ -573,7 +573,7 @@ class AccountMigrationService {
 				]);
 				$output->writeln(
 					$this->l10n->t(
-						'Mail account %s could not be read and will be skipped. Continue...',
+						'Mail account %s could not be read and will be skipped. Continue …',
 						[$accountFileName]
 					), OutputInterface::VERBOSITY_VERBOSE
 				);
