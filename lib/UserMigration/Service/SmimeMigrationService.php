@@ -139,7 +139,7 @@ class SmimeMigrationService {
 			} catch (JsonException|UserMigrationException) {
 				$output->writeln(
 					$this->l10n->t(
-						'S/MIME configuration %s for user %s is invalid and will be skipped. Continue...',
+						'S/MIME configuration %s for user %s is invalid and will be skipped. Continue …',
 						[$certificateFilePath, $user->getUID()]
 					), OutputInterface::VERBOSITY_VERBOSE
 				);
@@ -153,7 +153,7 @@ class SmimeMigrationService {
 			} catch (ServiceException|SmimeCertificateParserException) {
 				$output->writeln(
 					$this->l10n->t(
-						'S/MIME certificate %s for user %s could not be imported and will be skipped. Continue...',
+						'S/MIME certificate %s for user %s could not be imported and will be skipped. Continue …',
 						[$certificateFilePath, $user->getUID()]
 					), OutputInterface::VERBOSITY_VERBOSE
 				);
@@ -168,7 +168,7 @@ class SmimeMigrationService {
 		if (count($certificatesMapping) === 0) {
 			$output->writeln(
 				$this->l10n->t(
-					'No S/MIME certificates for user %s found. Continue...',
+					'No S/MIME certificates for user %s found. Continue …',
 					[$user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);

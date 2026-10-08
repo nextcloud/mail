@@ -90,7 +90,7 @@ class TextBlocksMigrationService {
 		} catch (UserMigrationException) {
 			$output->writeln(
 				$this->l10n->t(
-					'Text blocks for user %s not found. Continue...',
+					'Text blocks for user %s not found. Continue …',
 					[$user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);
@@ -104,7 +104,7 @@ class TextBlocksMigrationService {
 		} catch (JsonException|UserMigrationException) {
 			$output->writeln(
 				$this->l10n->t(
-					'Text blocks configuration for user %s is invalid and will be skipped. Continue...',
+					'Text blocks configuration for user %s is invalid and will be skipped. Continue …',
 					[$user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);
