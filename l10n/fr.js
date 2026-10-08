@@ -336,7 +336,7 @@ OC.L10N.register(
     "Snooze" : "Mettre en attente",
     "Unsnooze" : "Annuler la mise en attente",
     "Move thread" : "Déplacer ce fil de discussion",
-    "Move Message" : "Déplacer le message",
+    "Move message" : "Déplacer le message",
     "Archive thread" : "Archiver le fil de discussion",
     "Archive message" : "Archiver le message",
     "More actions" : "Plus d'actions…",
@@ -453,7 +453,6 @@ OC.L10N.register(
     "Forward" : "Transférer",
     "Only for message recipients" : "Réservé aux destinataires du message",
     "Link copied" : "Lien copié",
-    "Move message" : "Déplacer le message",
     "Translate" : "Traduire",
     "Forward message as attachment" : "Transférer le message en pièce jointe",
     "View source" : "Afficher la source",
@@ -964,6 +963,7 @@ OC.L10N.register(
     "Tag already exists" : "L'étiquette existe déjà",
     "Error loading message" : "Erreur lors du chargement du message",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Le répondeur automatique utilise Sieve, un langage de script pris en charge par de nombreux fournisseurs de messagerie. Si vous n'êtes pas sûr que le vôtre le prenne en charge, contactez votre fournisseur. Si Sieve est disponible, cliquez sur le bouton pour accéder aux paramètres et l'activer.",
+    "Move Message" : "Déplacer le message",
     "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Prenez le contrôle du chaos de vos e-mails. Les filtres vous aident à hiérarchiser ce qui compte et à éliminer le désordre."
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

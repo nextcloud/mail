@@ -263,7 +263,7 @@ OC.L10N.register(
     "Snooze" : "Diferir",
     "Unsnooze" : "Reanudar",
     "Move thread" : "Mover hilo",
-    "Move Message" : "Mover mensaje",
+    "Move message" : "Mover mensaje",
     "Archive thread" : "Archivar hilo",
     "Archive message" : "Archivar mensaje",
     "More actions" : "Más acciones",
@@ -368,7 +368,6 @@ OC.L10N.register(
     "Direct link copied to clipboard" : "Enlace directo copiado al portapapeles",
     "Forward" : "Reenviar",
     "Link copied" : "Enlace copiado",
-    "Move message" : "Mover mensaje",
     "Translate" : "Traducir",
     "Forward message as attachment" : "Reenviar mensaje como adjunto",
     "View source" : "Ver fuente",
@@ -831,6 +830,7 @@ OC.L10N.register(
     "Tag already exists" : "La etiqueta ya existe",
     "Error loading message" : "Error al cargar el mensaje",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "El sistema de respuesta automática usa Sieve, un lenguaje de scripting soportado por muchos proveedores de correo electrónico. Si no está seguro de si el suyo lo soporta, verifique con su proveedor. Si Sieve está disponible, haga clic en el botón para ir a los ajustes y habilitarlo.",
+    "Move Message" : "Mover mensaje",
     "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Tome el control del caos de su correo electrónico. Los filtros le ayudan a priorizar lo que importa y eliminar el desorden."
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

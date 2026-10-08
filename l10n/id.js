@@ -334,7 +334,7 @@ OC.L10N.register(
     "Snooze" : "Tunda",
     "Unsnooze" : "Batalkan penundaan",
     "Move thread" : "Pindahkan utas",
-    "Move Message" : "Pindahkan pesan",
+    "Move message" : "Pindahkan pesan",
     "Archive thread" : "Arsipkan utas",
     "Archive message" : "Arsipkan pesan",
     "More actions" : "Tindakan lainnya",
@@ -450,7 +450,6 @@ OC.L10N.register(
     "Forward" : "Teruskan",
     "Only for message recipients" : "Hanya untuk penerima pesan",
     "Link copied" : "Tautan disalin",
-    "Move message" : "Pindahkan pesan",
     "Translate" : "Terjemahkan",
     "Forward message as attachment" : "Teruskan pesan sebagai lampiran",
     "View source" : "Lihat sumber",
@@ -956,6 +955,7 @@ OC.L10N.register(
     "Tag already exists" : "Tag sudah ada",
     "Error loading message" : "Kesalahan saat memuat pesan",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Balasan otomatis menggunakan Sieve, bahasa skrip yang didukung banyak penyedia email. Jika Anda tidak yakin apakah penyedia Anda mendukungnya, tanyakan kepada penyedia Anda. Jika Sieve tersedia, klik tombol untuk pergi ke pengaturan dan mengaktifkannya.",
+    "Move Message" : "Pindahkan pesan",
     "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Kendalikan kekacauan email Anda. Filter membantu Anda memprioritaskan hal yang penting dan menghilangkan kekacauan."
 },
 "nplurals=1; plural=0;");

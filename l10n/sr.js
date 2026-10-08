@@ -280,7 +280,7 @@ OC.L10N.register(
     "Snooze" : "Одлагање",
     "Unsnooze" : "Прекини одлагање",
     "Move thread" : "Премести нит",
-    "Move Message" : "Премести поруку",
+    "Move message" : "Премести поруку",
     "Archive thread" : "Архивирај нит",
     "Archive message" : "Архивирај поруку",
     "More actions" : "Још акција",
@@ -386,7 +386,6 @@ OC.L10N.register(
     "Direct link copied to clipboard" : "Директни линк је копиран у клипборд",
     "Forward" : "Проследи",
     "Link copied" : "Веза ископирана",
-    "Move message" : "Премести поруку",
     "Translate" : "Превођење",
     "Forward message as attachment" : "Проследи поруку као прилог",
     "View source" : "Погледај изворни код",
@@ -853,6 +852,7 @@ OC.L10N.register(
     "Tag already exists" : "Ознака већ постоји",
     "Error loading message" : "Грешка при учитавању поруке",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Аутоматски одговарач користи Sieve, скриптинг језик који подржавају многи пружаоци и-мејл услуге. Ако нисте сигурни да ли га ваш подржава, питајте га. Ако Sieve није доступан, кликните на дугме да одете на подешавања и да га укључите.",
+    "Move Message" : "Премести поруку",
     "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Преузмите контролу над хаосом ваших и-мејл порука. Филтери вам помажу да задате приоритете ономе што је битно и елиминишете сметње."
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");
