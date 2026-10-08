@@ -78,62 +78,51 @@ class MailboxSync {
 			return;
 		}
 
-		if ($client === null) {
-			$client = $this->protocolFactory->imapClient($account);
-			$ownClient = true;
-		} else {
-			$ownClient = false;
-		}
+		$client ??= $this->protocolFactory->imapClient($account);
 		try {
-			try {
-				$namespaces = $client->getNamespaces([], [
-					'ob_return' => true,
-				]);
-				$personalNamespace = $this->getPersonalNamespace($namespaces);
-				$account->getMailAccount()->setPersonalNamespace(
-					$personalNamespace
-				);
-			} catch (Horde_Imap_Client_Exception $e) {
-				$id = $account->getId();
-				$logger->debug("Getting namespaces for account $id failed: " . $e->getMessage(), [
-					'exception' => $e,
-				]);
-				$namespaces = null;
-				$personalNamespace = null;
-			}
-
-			try {
-				$folders = $this->folderMapper->getFolders($account, $client);
-				$this->folderMapper->fetchFolderAcls($folders, $client);
-			} catch (Horde_Imap_Client_Exception $e) {
-				throw new ServiceException(
-					sprintf('IMAP error synchronizing account %d: %s', $account->getId(), $e->getMessage()),
-					$e->getCode(),
-					$e
-				);
-			}
-			$this->folderMapper->detectFolderSpecialUse($folders);
-
-			$mailboxes = $this->atomic(function () use ($account, $folders, $namespaces) {
-				$old = $this->mailboxMapper->findAll($account);
-				$indexedOld = array_combine(
-					array_map(static fn (Mailbox $mb) => $mb->getName(), $old),
-					$old
-				);
-
-				return $this->persist($account, $folders, $indexedOld, $namespaces);
-			}, $this->dbConnection);
-
-			$this->syncMailboxStatus($mailboxes, $personalNamespace, $client);
-
-			$this->dispatcher->dispatchTyped(
-				new MailboxesSynchronizedEvent($account)
+			$namespaces = $client->getNamespaces([], [
+				'ob_return' => true,
+			]);
+			$personalNamespace = $this->getPersonalNamespace($namespaces);
+			$account->getMailAccount()->setPersonalNamespace(
+				$personalNamespace
 			);
-		} finally {
-			if ($ownClient) {
-				$client->logout();
-			}
+		} catch (Horde_Imap_Client_Exception $e) {
+			$id = $account->getId();
+			$logger->debug("Getting namespaces for account $id failed: " . $e->getMessage(), [
+				'exception' => $e,
+			]);
+			$namespaces = null;
+			$personalNamespace = null;
 		}
+
+		try {
+			$folders = $this->folderMapper->getFolders($account, $client);
+			$this->folderMapper->fetchFolderAcls($folders, $client);
+		} catch (Horde_Imap_Client_Exception $e) {
+			throw new ServiceException(
+				sprintf('IMAP error synchronizing account %d: %s', $account->getId(), $e->getMessage()),
+				$e->getCode(),
+				$e
+			);
+		}
+		$this->folderMapper->detectFolderSpecialUse($folders);
+
+		$mailboxes = $this->atomic(function () use ($account, $folders, $namespaces) {
+			$old = $this->mailboxMapper->findAll($account);
+			$indexedOld = array_combine(
+				array_map(static fn (Mailbox $mb) => $mb->getName(), $old),
+				$old
+			);
+
+			return $this->persist($account, $folders, $indexedOld, $namespaces);
+		}, $this->dbConnection);
+
+		$this->syncMailboxStatus($mailboxes, $personalNamespace, $client);
+
+		$this->dispatcher->dispatchTyped(
+			new MailboxesSynchronizedEvent($account)
+		);
 	}
 
 	/**

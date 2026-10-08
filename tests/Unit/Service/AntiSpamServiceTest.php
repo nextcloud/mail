@@ -174,7 +174,7 @@ class AntiSpamServiceTest extends TestCase {
 		$this->protocolFactory->expects(self::exactly(2))
 			->method('imapClient')
 			->willReturn($client);
-		$client->expects(self::exactly(2))
+		$client->expects(self::never())
 			->method('logout');
 		$this->imapMessageMapper->expects(self::once())
 			->method('getFullText')
@@ -240,7 +240,7 @@ class AntiSpamServiceTest extends TestCase {
 		$this->protocolFactory->expects(self::exactly(2))
 			->method('imapClient')
 			->willReturn($client);
-		$client->expects(self::exactly(2))
+		$client->expects(self::never())
 			->method('logout');
 		$this->imapMessageMapper->expects(self::once())
 			->method('getFullText')
