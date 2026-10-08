@@ -59,7 +59,7 @@ class MailConnectionPerformance implements ISetupCheck {
 			foreach ($collection as $accountId) {
 				$account = new Account($this->accountMapper->findById((int)$accountId));
 				try {
-					$client = $this->protocolFactory->imapClient($account);
+					$client = $this->protocolFactory->newImapClient($account);
 				} catch (ServiceException $e) {
 					$this->logger->warning('Error occurred while getting IMAP client for setup check: ' . $e->getMessage(), [
 						'exception' => $e,
@@ -81,7 +81,7 @@ class MailConnectionPerformance implements ISetupCheck {
 				} catch (Throwable $e) {
 					$this->logger->warning("Error occurred while performing system check on mail account: {$account->getId()}");
 				} finally {
-					$client->close();
+					$client->logout();
 				}
 			}
 		}

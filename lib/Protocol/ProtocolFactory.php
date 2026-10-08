@@ -56,11 +56,26 @@ class ProtocolFactory {
 	}
 
 	/**
+	 * Get the account's shared IMAP client
+	 *
+	 * Callers must not log out; the connection is closed when the account is
+	 * released or the process ends.
+	 *
 	 * @throws ServiceException
 	 */
 	public function imapClient(Account $account, bool $useCache = true): Horde_Imap_Client_Socket {
 		$this->verifyProtocol($account, MailAccount::PROTOCOL_IMAP);
-		return $this->imapClientFactory->getClient($account, $useCache);
+		return $this->connectionPool->imap($account, $useCache);
+	}
+
+	/**
+	 * Get a new IMAP client that is not shared, the caller must log out
+	 *
+	 * @throws ServiceException
+	 */
+	public function newImapClient(Account $account): Horde_Imap_Client_Socket {
+		$this->verifyProtocol($account, MailAccount::PROTOCOL_IMAP);
+		return $this->imapClientFactory->getClient($account);
 	}
 
 	/**
@@ -86,7 +101,12 @@ class ProtocolFactory {
 		$protocol = $account->getMailAccount()->getProtocol();
 
 		if ($protocol === MailAccount::PROTOCOL_IMAP) {
-			$this->imapClient($account)->close();
+			$client = $this->newImapClient($account);
+			try {
+				$client->login();
+			} finally {
+				$client->logout();
+			}
 			return;
 		}
 
