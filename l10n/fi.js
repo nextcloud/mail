@@ -221,7 +221,7 @@ OC.L10N.register(
     "Edit tags" : "Muokkaa tunnisteita",
     "Snooze" : "Torkuta",
     "Move thread" : "Siirrä ketju",
-    "Move Message" : "Siirrä viesti",
+    "Move message" : "Siirrä viesti",
     "Archive thread" : "Arkistoi ketju",
     "Archive message" : "Arkistoi viesti",
     "More actions" : "Lisää toimintoja",
@@ -295,7 +295,6 @@ OC.L10N.register(
     "Direct link copied to clipboard" : "Suora linkki kopioitu työpöydälle",
     "Forward" : "Lähetä edelleen",
     "Link copied" : "Linkki kopioitu",
-    "Move message" : "Siirrä viesti",
     "Translate" : "Käännä",
     "Forward message as attachment" : "Välitä viesti liitteenä",
     "View source" : "Näytä lähde",
@@ -612,6 +611,7 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Tunnisteen nimi on piilotettu järjestelmätunniste",
     "Tag already exists" : "Tunniste on jo olemassa",
     "Error loading message" : "Virhe viestiä ladatessa",
+    "Move Message" : "Siirrä viesti",
     "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Ota postikaaos hallintaan. Suodattimet auttavat asettamaan asioita tärkeysjärjestykseen ja minimoimaan turhuudet."
 },
 "nplurals=2; plural=(n != 1);");
