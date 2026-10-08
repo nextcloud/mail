@@ -679,6 +679,9 @@ export default {
 					id: this.composerData.id,
 				})
 			}
+
+			window.removeEventListener('beforeunload', this.onBeforeUnload)
+			window.removeEventListener('resize', this.checkScreenSize)
 		},
 	},
 }
