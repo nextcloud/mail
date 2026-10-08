@@ -12,12 +12,15 @@ namespace OCA\Mail\Tests\Unit\Service\JMAP;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use JmapClient\Client;
 use JmapClient\Requests\Mail\MailParameters as MailParametersRequest;
+use JmapClient\Requests\Quota\QuotaGet;
+use JmapClient\Responses\Quota\QuotaParameters;
 use JmapClient\Responses\ResponseBundle;
 use JmapClient\Session\Account as JmapSessionAccount;
 use JmapClient\Session\Session;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\JMAP\Exception\JmapUnknownMethod;
 use OCA\Mail\JMAP\JmapMailboxAdapter;
 use OCA\Mail\JMAP\JmapMessageAdapter;
 use OCA\Mail\Protocol\ProtocolFactory;
@@ -296,5 +299,94 @@ class JmapOperationsServiceTest extends TestCase {
 		$this->service->connect($accountA);
 
 		self::assertSame('jmap-a', $this->requestedSessionAccountId($clientA));
+	}
+
+	private function mockQuotaCapability(bool $capable): void {
+		$this->dataStore->method('sessionCapable')
+			->willReturnCallback(static fn (string $capability): bool => match ($capability) {
+				'quota' => $capable,
+				default => false,
+			});
+	}
+
+	public function testQuotaFetchWithoutQuotaCapability(): void {
+		$this->mockQuotaCapability(false);
+		$this->dataStore->expects(self::never())
+			->method('perform');
+
+		$quotas = $this->service->quotaFetch();
+
+		self::assertSame([], $quotas);
+	}
+
+	public function testQuotaFetchReturnsQuotas(): void {
+		$this->mockQuotaCapability(true);
+		$this->dataStore->expects(self::once())
+			->method('perform')
+			->with(self::callback(static function (array $commands): bool {
+				return count($commands) === 1
+					&& $commands[0] instanceof QuotaGet
+					&& $commands[0]->getAccount() === 'account1';
+			}))
+			->willReturn(new ResponseBundle([
+				'methodResponses' => [[
+					'Quota/get',
+					[
+						'accountId' => 'account1',
+						'state' => 'state-1',
+						'list' => [[
+							'id' => 'quota-1',
+							'resourceType' => 'octets',
+							'used' => 1056,
+							'hardLimit' => 2000,
+							'scope' => 'account',
+							'name' => 'Storage',
+							'types' => ['Email'],
+						]],
+						'notFound' => [],
+					],
+					'0',
+				]],
+			]));
+
+		$quotas = $this->service->quotaFetch();
+
+		self::assertCount(1, $quotas);
+		self::assertInstanceOf(QuotaParameters::class, $quotas[0]);
+		self::assertSame(1056, $quotas[0]->used());
+		self::assertSame(2000, $quotas[0]->hardLimit());
+	}
+
+	public function testQuotaFetchUnknownMethod(): void {
+		$this->mockQuotaCapability(true);
+		$this->dataStore->method('perform')
+			->willReturn(new ResponseBundle([
+				'methodResponses' => [[
+					'error',
+					['type' => 'unknownMethod', 'description' => 'Quota/get'],
+					'0',
+				]],
+			]));
+
+		$this->expectException(JmapUnknownMethod::class);
+
+		$this->service->quotaFetch();
+	}
+
+	public function testQuotaFetchMethodError(): void {
+		$this->mockQuotaCapability(true);
+		$this->dataStore->method('perform')
+			->willReturn(new ResponseBundle([
+				'methodResponses' => [[
+					'error',
+					['type' => 'serverFail', 'description' => 'backend unavailable'],
+					'0',
+				]],
+			]));
+
+		$this->expectException(ServiceException::class);
+		$this->expectExceptionMessage('serverFail: backend unavailable');
+
+		$this->service->quotaFetch();
 	}
 }
