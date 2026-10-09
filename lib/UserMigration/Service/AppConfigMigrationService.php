@@ -66,7 +66,7 @@ class AppConfigMigrationService {
 	public function exportAppConfiguration(IUser $user, IExportDestination $exportDestination, OutputInterface $output): void {
 		$output->writeln(
 			$this->l10n->t(
-				'Exporting mail app configuration for user %s',
+				'Exporting mail app configuration for %s',
 				[$user->getUID()]
 			), OutputInterface::VERBOSITY_VERBOSE
 		);
@@ -98,7 +98,7 @@ class AppConfigMigrationService {
 		array $mailboxesMapping): void {
 		$output->writeln(
 			$this->l10n->t(
-				'Importing mail app configuration for user %s',
+				'Importing mail app configuration for %s',
 				[$user->getUID()]
 			), OutputInterface::VERBOSITY_VERBOSE
 		);
@@ -108,7 +108,7 @@ class AppConfigMigrationService {
 		} catch (UserMigrationException) {
 			$output->writeln(
 				$this->l10n->t(
-					'Mail app configuration for user %s not found. Continue …',
+					'Mail app configuration for %s not found. Continue …',
 					[$user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);
@@ -122,7 +122,7 @@ class AppConfigMigrationService {
 		} catch (JsonException|UserMigrationException) {
 			$output->writeln(
 				$this->l10n->t(
-					'Mail app configuration for user %s is invalid and will be skipped. Continue …',
+					'Mail app configuration for %s is invalid and will be skipped. Continue …',
 					[$user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);
@@ -141,7 +141,7 @@ class AppConfigMigrationService {
 			if ($value === null) {
 				$output->writeln(
 					$this->l10n->t(
-						'Mail app configuration key %s for user %s could not be migrated and will be removed. Continue …',
+						'Mail app configuration key %1$s for %2$s could not be migrated and will be removed. Continue …',
 						[$key, $user->getUID()]
 					), OutputInterface::VERBOSITY_VERBOSE
 				);
@@ -155,7 +155,7 @@ class AppConfigMigrationService {
 
 			$output->writeln(
 				$this->l10n->t(
-					'Importing mail app configuration key %s for user %s',
+					'Importing mail app configuration key %1$s for %2$s',
 					[$key, $user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);
