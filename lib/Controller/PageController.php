@@ -24,6 +24,7 @@ use OCA\Mail\Service\ContextChat\ContextChatSettingsService;
 use OCA\Mail\Service\InternalAddressService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\OutboxService;
+use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCA\Mail\Service\QuickActionsService;
 use OCA\Mail\Service\SmimeService;
 use OCA\Viewer\Event\LoadViewer;
@@ -94,6 +95,7 @@ class PageController extends Controller {
 		private ContextChatSettingsService $contextChatSettingsService,
 		private ClassificationSettingsService $classificationSettingsService,
 		private IAppConfig $appConfig,
+		private ProvisioningManager $provisioningManager,
 	) {
 		parent::__construct($appName, $request);
 
@@ -224,6 +226,26 @@ class PageController extends Controller {
 		$this->initialStateService->provideInitialState(
 			'password-is-unavailable',
 			$passwordIsUnavailable,
+		);
+
+		// Whether any of the user's provisioned accounts use a master password.
+		// Frontend skips INBOX sync for provisioned accounts when the session has
+		// no login password *unless* this is true (#13807, #9008, #9653).
+		$masterPasswordEnabled = false;
+		foreach ($mailAccounts as $mailAccount) {
+			$provisioningId = $mailAccount->getMailAccount()->getProvisioningId();
+			if ($provisioningId === null) {
+				continue;
+			}
+			$provisioning = $this->provisioningManager->getConfigById($provisioningId);
+			if ($provisioning !== null && $provisioning->getMasterPasswordEnabled() === true) {
+				$masterPasswordEnabled = true;
+				break;
+			}
+		}
+		$this->initialStateService->provideInitialState(
+			'master-password-enabled',
+			$masterPasswordEnabled,
 		);
 
 		$response = new TemplateResponse($this->appName, 'index');

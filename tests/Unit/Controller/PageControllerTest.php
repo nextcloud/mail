@@ -17,6 +17,7 @@ use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Controller\PageController;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
@@ -26,6 +27,7 @@ use OCA\Mail\Service\ContextChat\ContextChatSettingsService;
 use OCA\Mail\Service\InternalAddressService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\OutboxService;
+use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCA\Mail\Service\QuickActionsService;
 use OCA\Mail\Service\SmimeService;
 use OCP\App\IAppManager;
@@ -122,6 +124,10 @@ class PageControllerTest extends TestCase {
 	private ContextChatSettingsService $contextChatSettingsService;
 
 	private ClassificationSettingsService|MockObject $classificationSettingsService;
+
+	/** @var ProvisioningManager|MockObject */
+	private $provisioningManager;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -154,6 +160,7 @@ class PageControllerTest extends TestCase {
 		$this->contextChatSettingsService->method('isIndexingEnabled')->willReturn(true);
 
 		$this->classificationSettingsService = $this->createMock(ClassificationSettingsService::class);
+		$this->provisioningManager = $this->createMock(ProvisioningManager::class);
 		$this->controller = new PageController(
 			$this->appName,
 			$this->request,
@@ -180,7 +187,8 @@ class PageControllerTest extends TestCase {
 			$this->appManager,
 			$this->contextChatSettingsService,
 			$this->classificationSettingsService,
-			$this->appConfig
+			$this->appConfig,
+			$this->provisioningManager,
 		);
 	}
 
@@ -188,6 +196,12 @@ class PageControllerTest extends TestCase {
 		$account1 = $this->createMock(Account::class);
 		$account2 = $this->createMock(Account::class);
 		$mailbox = $this->createStub(Mailbox::class);
+		$mailAccount1 = $this->createMock(MailAccount::class);
+		$mailAccount1->method('getProvisioningId')->willReturn(null);
+		$mailAccount2 = $this->createMock(MailAccount::class);
+		$mailAccount2->method('getProvisioningId')->willReturn(null);
+		$account1->method('getMailAccount')->willReturn($mailAccount1);
+		$account2->method('getMailAccount')->willReturn($mailAccount2);
 		$this->preferences->expects($this->exactly(15))
 			->method('getPreference')
 			->willReturnMap([
@@ -347,7 +361,10 @@ class PageControllerTest extends TestCase {
 		$this->classificationSettingsService->expects(($this->once()))
 			->method(('isClassificationEnabledByDefault'))
 			->willReturn(true);
-		$this->initialState->expects($this->exactly(27))
+		$this->provisioningManager->expects($this->never())
+			->method('getConfigById');
+
+		$this->initialState->expects($this->exactly(28))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
@@ -361,6 +378,7 @@ class PageControllerTest extends TestCase {
 				['smime-sign-aliases',[]],
 				['sort-order', 'newest'],
 				['password-is-unavailable', true],
+				['master-password-enabled', false],
 				['preferences', [
 					'attachment-size-limit' => 123,
 					'external-avatars' => 'true',
