@@ -29,6 +29,8 @@ use function array_diff;
 use function array_map;
 
 class SyncService {
+	/** Same as the page size of the message list in the frontend */
+	private const MAX_NEW_WITHOUT_KNOWN_IDS = 20;
 
 	public function __construct(
 		private ProtocolFactory $protocolFactory,
@@ -131,14 +133,18 @@ class SyncService {
 		?int $lastMessageTimestamp,
 		string $sortOrder,
 		?SearchQuery $query): Response {
+		$order = $sortOrder === IMailSearch::ORDER_OLDEST_FIRST ? IMailSearch::ORDER_OLDEST_FIRST : IMailSearch::ORDER_NEWEST_FIRST;
 		if ($knownIds === []) {
-			$newIds = $this->messageMapper->findAllIds($mailbox);
+			// The client shows none of these messages: an empty mailbox, or one account in a
+			// combined list (such as the priority inbox) whose page is filled by other accounts.
+			// Send at most one page, like the first page the client would load;
+			// otherwise every message of the mailbox goes through the preview enhancer here.
+			$newIds = $this->messageMapper->findIdsByQuery($mailbox, $query ?? new SearchQuery(), $order, self::MAX_NEW_WITHOUT_KNOWN_IDS);
 		} else {
 			$newIds = $this->messageMapper->findNewIds($mailbox, $knownIds, $lastMessageTimestamp, $sortOrder);
-		}
-		$order = $sortOrder === 'oldest' ? IMailSearch::ORDER_OLDEST_FIRST : IMailSearch::ORDER_NEWEST_FIRST;
-		if ($query !== null) {
-			$newIds = $this->messageMapper->findIdsByQuery($mailbox, $query, $order, null, null, $newIds);
+			if ($query !== null) {
+				$newIds = $this->messageMapper->findIdsByQuery($mailbox, $query, $order, null, null, $newIds);
+			}
 		}
 		$new = $this->messageMapper->findByMailboxAndIds($mailbox, $account->getUserId(), $newIds);
 

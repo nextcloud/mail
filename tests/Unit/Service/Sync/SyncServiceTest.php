@@ -13,6 +13,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailboxConnector;
 use OCA\Mail\Contracts\IMessageConnector;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\IMAP\MailboxStats;
@@ -21,6 +22,7 @@ use OCA\Mail\IMAP\PreviewEnhancer;
 use OCA\Mail\IMAP\Sync\Response;
 use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\Search\FilterStringParser;
+use OCA\Mail\Service\Search\SearchQuery;
 use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
 use OCA\Mail\Service\Sync\SyncService;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -132,5 +134,54 @@ final class SyncServiceTest extends TestCase {
 		);
 
 		$this->assertEquals($expectedResponse, $response);
+	}
+
+	public function testSyncWithoutKnownIdsReturnsOnePageOfNewMessages(): void {
+		$account = $this->createMock(Account::class);
+		$account->method('getUserId')->willReturn('user');
+		$mailbox = new Mailbox();
+		$mailbox->setMessages(33000);
+		$mailbox->setUnseen(24000);
+		$this->messageConnector->method('syncMailbox')
+			->willReturn(new \OCA\Mail\Protocol\SyncResult());
+		$this->messageMapper->expects($this->never())
+			->method('findAllIds');
+		$this->messageMapper->expects($this->never())
+			->method('findNewIds');
+		$this->messageMapper->expects($this->once())
+			->method('findIdsByQuery')
+			->with($mailbox, $this->isInstanceOf(SearchQuery::class), 'DESC', 20)
+			->willReturn([3, 2, 1]);
+		$this->messageMapper->expects($this->exactly(2))
+			->method('findByMailboxAndIds')
+			->willReturnCallback(fn (Mailbox $mb, string $userId, array $ids) => array_map(static function (int $id): Message {
+				$message = new Message();
+				$message->setId($id);
+				return $message;
+			}, $ids));
+		$previewEnhancer = $this->createMock(PreviewEnhancer::class);
+		$previewEnhancer->method('process')
+			->willReturnArgument(2);
+		$syncService = new SyncService(
+			$this->protocolFactory,
+			$this->synchronizer,
+			$this->createStub(FilterStringParser::class),
+			$this->messageMapper,
+			$previewEnhancer,
+			$this->createStub(\Psr\Log\LoggerInterface::class),
+			$this->mailboxSync
+		);
+
+		$response = $syncService->syncMailbox(
+			$account,
+			$mailbox,
+			0,
+			false,
+			null,
+			[]
+		);
+
+		$this->assertSame([3, 2, 1], array_map(static fn (Message $message) => $message->getId(), $response->getNewMessages()));
+		$this->assertSame([], $response->getChangedMessages());
 	}
 }
