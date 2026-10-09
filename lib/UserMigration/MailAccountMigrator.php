@@ -79,7 +79,7 @@ class MailAccountMigrator implements IMigrator, ISizeEstimationMigrator {
 	): void {
 		$output->writeln(
 			$this->l10n->t(
-				'Exporting mail accounts for user %s',
+				'Exporting mail accounts for %s',
 				[$user->getUID()]
 			), OutputInterface::VERBOSITY_VERBOSE
 		);
@@ -108,7 +108,7 @@ class MailAccountMigrator implements IMigrator, ISizeEstimationMigrator {
 	public function import(IUser $user, IImportSource $importSource, OutputInterface $output): void {
 		$output->writeln(
 			$this->l10n->t(
-				'Importing mail accounts for user %s',
+				'Importing mail accounts for %s',
 				[$user->getUID()]
 			), OutputInterface::VERBOSITY_VERBOSE
 		);
