@@ -56,7 +56,7 @@ class LegacyAccountMigrationService {
 	public function importAccounts(IUser $user, IImportSource $importSource, OutputInterface $output): array {
 		$output->writeln(
 			$this->l10n->t(
-				'Importing mail accounts of user %s from a version 1 export',
+				'Importing mail accounts of %s from a version 1 export',
 				[$user->getUID()]
 			), OutputInterface::VERBOSITY_VERBOSE
 		);
@@ -74,7 +74,7 @@ class LegacyAccountMigrationService {
 			if ($protocol !== MailAccount::PROTOCOL_IMAP) {
 				$output->writeln(
 					$this->l10n->t(
-						'Skipping account %s because migrating %s accounts is not supported yet',
+						'Skipping account %1$s because migrating %2$s accounts is not supported yet',
 						[$accountFilePath, $protocol]
 					), OutputInterface::VERBOSITY_VERBOSE
 				);
@@ -97,7 +97,7 @@ class LegacyAccountMigrationService {
 				]);
 				$output->writeln(
 					$this->l10n->t(
-						'Failed to import a mail account of user %s, it will be skipped. See the log for details.',
+						'Failed to import a mail account of %s, it will be skipped. See the log for details.',
 						[$user->getUID()]
 					)
 				);
