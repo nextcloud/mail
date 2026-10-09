@@ -65,7 +65,7 @@ class QuickActionsMigrationService {
 		OutputInterface $output): void {
 		$output->writeln(
 			$this->l10n->t(
-				'Exporting quick actions for user %s',
+				'Exporting quick actions for %s',
 				[$user->getUID()]
 			), OutputInterface::VERBOSITY_VERBOSE
 		);
@@ -97,7 +97,7 @@ class QuickActionsMigrationService {
 		array $tagMapping): void {
 		$output->writeln(
 			$this->l10n->t(
-				'Importing quick actions for user %s',
+				'Importing quick actions for %s',
 				[$user->getUID()]
 			), OutputInterface::VERBOSITY_VERBOSE
 		);
@@ -105,7 +105,7 @@ class QuickActionsMigrationService {
 		if (count($accountMapping) === 0) {
 			$output->writeln(
 				$this->l10n->t(
-					'Missing account mapping when importing quick actions for user %s. Continue …',
+					'Missing account mapping when importing quick actions for %s. Continue …',
 					[$user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);
@@ -118,7 +118,7 @@ class QuickActionsMigrationService {
 		} catch (UserMigrationException) {
 			$output->writeln(
 				$this->l10n->t(
-					'Quick actions for user %s not found. Continue …',
+					'Quick actions for %s not found. Continue …',
 					[$user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);
@@ -132,7 +132,7 @@ class QuickActionsMigrationService {
 		} catch (JsonException|UserMigrationException) {
 			$output->writeln(
 				$this->l10n->t(
-					'Quick actions configuration for user %s is invalid and will be skipped. Continue …',
+					'Quick actions configuration for %s is invalid and will be skipped. Continue …',
 					[$user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);
@@ -146,7 +146,7 @@ class QuickActionsMigrationService {
 			if (!array_key_exists($oldAccountId, $accountMapping)) {
 				$output->writeln(
 					$this->l10n->t(
-						'Skipping quick action %s because account %s was not imported. Continue …',
+						'Skipping quick action %1$s because account %2$s was not imported. Continue …',
 						[$quickAction['name'], (string)$oldAccountId]
 					), OutputInterface::VERBOSITY_VERBOSE
 				);
