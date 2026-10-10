@@ -209,6 +209,9 @@ function transformMailboxName(account, mailbox) {
 }
 
 export default function mainStoreActions() {
+	let accountSettingsSave = Promise.resolve()
+	const foldedVersions = {}
+
 	return {
 		updateSyncTimestamp() {
 			this.syncTimestamp = Date.now()
@@ -313,7 +316,13 @@ export default function mainStoreActions() {
 					key,
 					value,
 				})
-				return await savePreference('account-settings', JSON.stringify(this.allAccountSettings))
+				// Every save sends the whole settings list, so queue them to keep an
+				// older snapshot from overwriting a newer one
+				const save = accountSettingsSave
+					.catch(() => {})
+					.then(() => savePreference('account-settings', JSON.stringify(this.allAccountSettings)))
+				accountSettingsSave = save
+				return await save
 			})
 		},
 		async deleteAccount(account) {
@@ -359,8 +368,44 @@ export default function mainStoreActions() {
 					key: 'collapsed',
 					value: false,
 				})
+				if (account.folded) {
+					foldedVersions[account.id] = (foldedVersions[account.id] ?? 0) + 1
+					this.toggleAccountFoldedMutation(account.id)
+					try {
+						await this.setAccountSetting({
+							accountId: account.id,
+							key: 'folded',
+							value: false,
+						})
+					} catch (error) {
+						logger.error(`could not save unfolded state of account ${account.id}`, { error })
+					}
+				}
 				return mailbox
 			})
+		},
+		async toggleAccountFolded(accountId) {
+			const previous = this.accountsUnmapped[accountId].folded
+			const version = (foldedVersions[accountId] ?? 0) + 1
+			foldedVersions[accountId] = version
+			this.toggleAccountFoldedMutation(accountId)
+			try {
+				await this.setAccountSetting({
+					accountId,
+					key: 'folded',
+					value: !previous,
+				})
+			} catch (error) {
+				if (foldedVersions[accountId] === version) {
+					this.toggleAccountFoldedMutation(accountId)
+					this.setAccountSettingMutation({
+						accountId,
+						key: 'folded',
+						value: previous,
+					})
+				}
+				throw error
+			}
 		},
 		async moveAccount({
 			account,
@@ -1905,6 +1950,7 @@ export default function mainStoreActions() {
 		},
 		addAccountMutation(account) {
 			account.collapsed = account.collapsed ?? true
+			account.folded = account.folded ?? false
 
 			this.accountsUnmapped[account.id] = account
 
@@ -1940,6 +1986,9 @@ export default function mainStoreActions() {
 		},
 		toggleAccountCollapsedMutation(accountId) {
 			this.accountsUnmapped[accountId].collapsed = !this.accountsUnmapped[accountId].collapsed
+		},
+		toggleAccountFoldedMutation(accountId) {
+			this.accountsUnmapped[accountId].folded = !this.accountsUnmapped[accountId].folded
 		},
 		expandAccountMutation(accountId) {
 			this.accountsUnmapped[accountId].collapsed = false
