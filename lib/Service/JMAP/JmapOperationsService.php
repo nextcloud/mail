@@ -64,8 +64,6 @@ use Throwable;
 class JmapOperationsService {
 	protected Client $dataStore;
 	protected ?string $dataAccount = null;
-	private ?int $sessionAccountId = null;
-	private bool $supportsBlob = false;
 
 	protected array $entityPropertiesBasic = [
 		'id', 'blobId', 'threadId', 'mailboxIds', 'messageId', 'size',
@@ -98,22 +96,17 @@ class JmapOperationsService {
 	public function connect(Account $account): bool {
 		$this->dataStore = $this->protocolFactory->jmapClient($account);
 		try {
-			// evaluate if client was already connected
 			if (!$this->dataStore->sessionStatus()) {
 				$this->dataStore->connect();
 			}
 		} catch (Throwable $e) {
 			throw new ServiceException('Could not connect to JMAP server: ' . $e->getMessage(), 0, $e);
 		}
-		if ($this->sessionAccountId !== $account->getId()) {
-			$sessionAccount = $this->dataStore->sessionAccountDefault('mail');
-			if ($sessionAccount === null) {
-				throw new ServiceException('JMAP session does not provide a default mail account', 1);
-			}
-			$this->sessionAccountId = $account->getId();
-			$this->dataAccount = $sessionAccount->id();
-			$this->supportsBlob = $this->dataStore->sessionCapable('blob');
+		$sessionAccount = $this->dataStore->sessionAccountDefault('mail');
+		if ($sessionAccount === null) {
+			throw new ServiceException('JMAP session does not provide a default mail account', 1);
 		}
+		$this->dataAccount = $sessionAccount->id();
 
 		return true;
 	}

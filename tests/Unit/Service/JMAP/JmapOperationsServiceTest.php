@@ -13,6 +13,10 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use JmapClient\Client;
 use JmapClient\Requests\Mail\MailParameters as MailParametersRequest;
 use JmapClient\Responses\ResponseBundle;
+use JmapClient\Session\Account as JmapSessionAccount;
+use JmapClient\Session\Session;
+use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\JMAP\JmapMailboxAdapter;
 use OCA\Mail\JMAP\JmapMessageAdapter;
@@ -186,5 +190,111 @@ class JmapOperationsServiceTest extends TestCase {
 		$this->expectExceptionMessage('Blob upload did not return a blob id');
 
 		$this->service->entitySave(new MailParametersRequest(), $attachments);
+	}
+
+	private function account(int $id): Account {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId($id);
+		$mailAccount->setProtocol(MailAccount::PROTOCOL_JMAP);
+		return new Account($mailAccount);
+	}
+
+	/**
+	 * @return Client&MockObject
+	 */
+	private function client(bool $connected, ?string $sessionAccountId = 'u1'): Client {
+		$client = $this->createMock(Client::class);
+		$client->method('sessionStatus')->willReturn($connected);
+		$client->method('sessionAccountDefault')
+			->with('mail')
+			->willReturn($sessionAccountId === null ? null : new JmapSessionAccount($sessionAccountId, []));
+		return $client;
+	}
+
+	/**
+	 * Returns the JMAP account id the service sends with its next request.
+	 */
+	private function requestedSessionAccountId(Client&MockObject $client): string {
+		$accountId = null;
+		$client->method('perform')
+			->willReturnCallback(function (array $commands) use (&$accountId) {
+				$accountId = $commands[0]->jsonSerialize()[1]['accountId'];
+				throw new \RuntimeException('stop');
+			});
+		try {
+			$this->service->collectionList();
+		} catch (ServiceException) {
+		}
+		return $accountId;
+	}
+
+	public function testConnectReusesConnectedClient(): void {
+		$account = $this->account(1);
+		$client = $this->client(true);
+		$client->expects(self::never())
+			->method('connect');
+		$this->protocolFactory->method('jmapClient')
+			->with($account)
+			->willReturn($client);
+
+		$result = $this->service->connect($account);
+
+		self::assertTrue($result);
+	}
+
+	public function testConnectEstablishesSessionWhenNotConnected(): void {
+		$account = $this->account(1);
+		$client = $this->client(false);
+		$client->expects(self::once())
+			->method('connect')
+			->willReturn(new Session([]));
+		$this->protocolFactory->method('jmapClient')
+			->willReturn($client);
+
+		$result = $this->service->connect($account);
+
+		self::assertTrue($result);
+	}
+
+	public function testConnectWrapsConnectionFailure(): void {
+		$account = $this->account(1);
+		$client = $this->client(false);
+		$client->method('connect')
+			->willThrowException(new \RuntimeException('Connection refused'));
+		$this->protocolFactory->method('jmapClient')
+			->willReturn($client);
+		$this->expectException(ServiceException::class);
+		$this->expectExceptionMessage('Could not connect to JMAP server: Connection refused');
+
+		$this->service->connect($account);
+	}
+
+	public function testConnectFailsWithoutDefaultMailAccount(): void {
+		$account = $this->account(1);
+		$client = $this->client(true, null);
+		$this->protocolFactory->method('jmapClient')
+			->willReturn($client);
+		$this->expectException(ServiceException::class);
+		$this->expectExceptionMessage('JMAP session does not provide a default mail account');
+
+		$this->service->connect($account);
+	}
+
+	public function testConnectSwitchesBetweenAccounts(): void {
+		$accountA = $this->account(1);
+		$accountB = $this->account(2);
+		$clientA = $this->client(true, 'jmap-a');
+		$clientB = $this->client(true, 'jmap-b');
+		$this->protocolFactory->method('jmapClient')
+			->willReturnCallback(fn (Account $account) => match ($account) {
+				$accountA => $clientA,
+				$accountB => $clientB,
+			});
+
+		$this->service->connect($accountA);
+		$this->service->connect($accountB);
+		$this->service->connect($accountA);
+
+		self::assertSame('jmap-a', $this->requestedSessionAccountId($clientA));
 	}
 }
