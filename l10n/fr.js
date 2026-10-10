@@ -242,7 +242,7 @@ OC.L10N.register(
     "Subject …" : "Sujet...",
     "This message came from a noreply address so your reply will probably not be read." : "Ce message provient d'une adresse « noreply » et votre réponse ne sera probablement pas lue.",
     "The following recipients do not have a S/MIME certificate: {recipients}." : "Les destinataires suivants ne disposent pas de certificat S/MIME : {recipients}.",
-    "The following recipients do not have a PGP key: {recipients}." : "Les destinataires suivants n'ont pas de clé PGP : {destinataires}.",
+    "The following recipients do not have a PGP key: {recipients}." : "Les destinataires suivants n'ont pas de clé PGP : {recipients}.",
     "Write message …" : "Écrire un message...",
     "Saving draft …" : "Sauvegarde du brouillon   en cours …",
     "Error saving draft" : "Une erreur est survenue lors de l'enregistrement du brouillon",
