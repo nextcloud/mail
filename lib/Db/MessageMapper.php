@@ -38,6 +38,7 @@ use function array_merge;
 use function array_udiff;
 use function get_class;
 use function ltrim;
+use function mb_check_encoding;
 use function mb_convert_encoding;
 use function mb_strcut;
 use function OCA\Mail\array_flat_map;
@@ -315,7 +316,7 @@ class MessageMapper extends QBMapper {
 				$threadRootId = self::filterMessageIdLength($message->getThreadRootId());
 				$qb1->setParameter('thread_root_id', $threadRootId, $threadRootId === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
 				$qb1->setParameter('mailbox_id', $message->getMailboxId(), IQueryBuilder::PARAM_INT);
-				$qb1->setParameter('subject', $message->getSubject(), IQueryBuilder::PARAM_STR);
+				$qb1->setParameter('subject', self::toUtf8($message->getSubject()), IQueryBuilder::PARAM_STR);
 				$qb1->setParameter('sent_at', $message->getSentAt(), IQueryBuilder::PARAM_INT);
 				$qb1->setParameter('flag_answered', $message->getFlagAnswered(), IQueryBuilder::PARAM_BOOL);
 				$qb1->setParameter('flag_deleted', $message->getFlagDeleted(), IQueryBuilder::PARAM_BOOL);
@@ -345,8 +346,8 @@ class MessageMapper extends QBMapper {
 
 						$qb2->setParameter('message_id', $message->getId(), IQueryBuilder::PARAM_INT);
 						$qb2->setParameter('type', $type, IQueryBuilder::PARAM_INT);
-						$qb2->setParameter('label', mb_strcut($recipient->getLabel(), 0, 255), IQueryBuilder::PARAM_STR);
-						$qb2->setParameter('email', mb_strcut($recipient->getEmail(), 0, 255), IQueryBuilder::PARAM_STR);
+						$qb2->setParameter('label', mb_strcut(self::toUtf8($recipient->getLabel()), 0, 255), IQueryBuilder::PARAM_STR);
+						$qb2->setParameter('email', mb_strcut(self::toUtf8($recipient->getEmail()), 0, 255), IQueryBuilder::PARAM_STR);
 
 						$qb2->executeStatement();
 					}
@@ -363,6 +364,17 @@ class MessageMapper extends QBMapper {
 
 			throw $e;
 		}
+	}
+
+	/**
+	 * Headers with raw 8-bit bytes and no declared charset are usually
+	 * Windows-1252. Convert them so the database does not reject the row.
+	 */
+	private static function toUtf8(?string $value): ?string {
+		if ($value === null || mb_check_encoding($value, 'UTF-8')) {
+			return $value;
+		}
+		return mb_convert_encoding($value, 'UTF-8', 'Windows-1252');
 	}
 
 	/**
