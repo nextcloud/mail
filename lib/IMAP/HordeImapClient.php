@@ -46,6 +46,10 @@ class HordeImapClient extends Horde_Imap_Client_Socket {
 		$this->hash = $hash;
 	}
 
+	public function isConnectionLost(): bool {
+		return $this->_connection !== null && !$this->_connection->connected;
+	}
+
 	#[\Override]
 	public function login() {
 		$initiallyAutheticated = $this->_isAuthenticated;

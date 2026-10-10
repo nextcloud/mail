@@ -60,25 +60,21 @@ class MigrateImportantJob extends QueuedJob {
 		$account = new Account($mailAccount);
 		$client = $this->protocolFactory->imapClient($account);
 
+		if ($this->mailManager->isPermflagsEnabled($account, $mailbox) === false) {
+			$this->logger->debug("Permflags not enabled for <{$accountId}>");
+			return;
+		}
+
 		try {
-			if ($this->mailManager->isPermflagsEnabled($account, $mailbox) === false) {
-				$this->logger->debug("Permflags not enabled for <{$accountId}>");
-				return;
-			}
+			$this->migration->migrateImportantOnImap($client, $account, $mailbox);
+		} catch (ServiceException $e) {
+			$this->logger->debug("Could not flag messages on IMAP for mailbox <{$mailboxId}>.");
+		}
 
-			try {
-				$this->migration->migrateImportantOnImap($client, $account, $mailbox);
-			} catch (ServiceException $e) {
-				$this->logger->debug("Could not flag messages on IMAP for mailbox <{$mailboxId}>.");
-			}
-
-			try {
-				$this->migration->migrateImportantFromDb($client, $account, $mailbox);
-			} catch (ServiceException $e) {
-				$this->logger->debug("Could not flag messages from DB on IMAP for mailbox <{$mailboxId}>.");
-			}
-		} finally {
-			$client->logout();
+		try {
+			$this->migration->migrateImportantFromDb($client, $account, $mailbox);
+		} catch (ServiceException $e) {
+			$this->logger->debug("Could not flag messages from DB on IMAP for mailbox <{$mailboxId}>.");
 		}
 	}
 }

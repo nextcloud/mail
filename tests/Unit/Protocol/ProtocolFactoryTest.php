@@ -10,11 +10,13 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Protocol;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Horde_Imap_Client_Exception;
 use JmapClient\Client as JmapClient;
 use JmapClient\Session\Session;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\IMAP\HordeImapClient;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\JMAP\JmapClientFactory;
 use OCA\Mail\Protocol\ConnectionPool;
@@ -23,6 +25,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
 
 class ProtocolFactoryTest extends TestCase {
+	private IMAPClientFactory&MockObject $imapClientFactory;
 	private JmapClientFactory&MockObject $jmapClientFactory;
 	private ConnectionPool&MockObject $connectionPool;
 	private ProtocolFactory $factory;
@@ -30,12 +33,13 @@ class ProtocolFactoryTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
+		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->jmapClientFactory = $this->createMock(JmapClientFactory::class);
 		$this->connectionPool = $this->createMock(ConnectionPool::class);
 
 		$this->factory = new ProtocolFactory(
 			$this->createMock(ContainerInterface::class),
-			$this->createMock(IMAPClientFactory::class),
+			$this->imapClientFactory,
 			$this->jmapClientFactory,
 			$this->connectionPool,
 		);
@@ -46,6 +50,83 @@ class ProtocolFactoryTest extends TestCase {
 		$mailAccount->setId(1);
 		$mailAccount->setProtocol($protocol);
 		return new Account($mailAccount);
+	}
+
+	public function testImapClientComesFromPool(): void {
+		$account = $this->account(MailAccount::PROTOCOL_IMAP);
+		$client = $this->createMock(HordeImapClient::class);
+		$this->connectionPool->expects(self::once())
+			->method('imap')
+			->with($account, false)
+			->willReturn($client);
+		$this->imapClientFactory->expects(self::never())
+			->method('getClient');
+
+		$result = $this->factory->imapClient($account, false);
+
+		self::assertSame($client, $result);
+	}
+
+	public function testImapClientRejectsJmapAccount(): void {
+		$account = $this->account(MailAccount::PROTOCOL_JMAP);
+		$this->connectionPool->expects(self::never())
+			->method('imap');
+		$this->expectException(ServiceException::class);
+
+		$this->factory->imapClient($account);
+	}
+
+	public function testNewImapClientBypassesPool(): void {
+		$account = $this->account(MailAccount::PROTOCOL_IMAP);
+		$client = $this->createMock(HordeImapClient::class);
+		$this->imapClientFactory->expects(self::once())
+			->method('getClient')
+			->with($account)
+			->willReturn($client);
+		$this->connectionPool->expects(self::never())
+			->method('imap');
+
+		$result = $this->factory->newImapClient($account);
+
+		self::assertSame($client, $result);
+	}
+
+	public function testNewImapClientRejectsJmapAccount(): void {
+		$account = $this->account(MailAccount::PROTOCOL_JMAP);
+		$this->imapClientFactory->expects(self::never())
+			->method('getClient');
+		$this->expectException(ServiceException::class);
+
+		$this->factory->newImapClient($account);
+	}
+
+	public function testTestConnectionLogsInWithFreshImapClient(): void {
+		$account = $this->account(MailAccount::PROTOCOL_IMAP);
+		$client = $this->createMock(HordeImapClient::class);
+		$client->expects(self::once())
+			->method('login');
+		$client->expects(self::once())
+			->method('logout');
+		$this->imapClientFactory->method('getClient')
+			->willReturn($client);
+		$this->connectionPool->expects(self::never())
+			->method('imap');
+
+		$this->factory->testConnection($account);
+	}
+
+	public function testTestConnectionLogsOutWhenImapLoginFails(): void {
+		$account = $this->account(MailAccount::PROTOCOL_IMAP);
+		$client = $this->createMock(HordeImapClient::class);
+		$client->method('login')
+			->willThrowException(new Horde_Imap_Client_Exception('Authentication failed.'));
+		$client->expects(self::once())
+			->method('logout');
+		$this->imapClientFactory->method('getClient')
+			->willReturn($client);
+		$this->expectException(Horde_Imap_Client_Exception::class);
+
+		$this->factory->testConnection($account);
 	}
 
 	public function testJmapClientComesFromPool(): void {

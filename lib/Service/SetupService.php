@@ -109,7 +109,7 @@ class SetupService {
 	protected function testConnectivity(Account $account): void {
 		$mailAccount = $account->getMailAccount();
 
-		$imapClient = $this->protocolFactory->imapClient($account);
+		$imapClient = $this->protocolFactory->newImapClient($account);
 		try {
 			$imapClient->login();
 		} catch (Horde_Imap_Client_Exception $e) {
