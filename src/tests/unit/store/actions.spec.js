@@ -740,6 +740,169 @@ describe('Vuex store actions', () => {
 		})
 	})
 
+	describe('reply sender identities', () => {
+		const primary = { email: 'me@example.com', label: 'Me' }
+		const alias = { email: 'work@example.com', label: 'Work' }
+		const external = { email: 'sender@example.com', label: 'Sender' }
+		const other = { email: 'other@example.com', label: 'Other' }
+		const envelope = {
+			databaseId: 42,
+			accountId: 1,
+			mailboxId: 10,
+			from: [external],
+			to: [alias],
+			cc: [],
+			subject: 'Test subject',
+			messageId: 'original-message',
+		}
+
+		beforeEach(() => {
+			store.addAccountMutation({
+				id: 1,
+				emailAddress: primary.email,
+				name: primary.label,
+				sentMailboxId: 11,
+				aliases: [{ id: 21, alias: alias.email, name: alias.label }],
+			})
+			store.addAccountMutation({
+				id: 2,
+				emailAddress: other.email,
+				name: other.label,
+				aliases: [{ id: 22, alias: 'other-alias@example.com', name: 'Other alias' }],
+			})
+			store.mailboxes[10] = { databaseId: 10, accountId: 1, specialRole: 'inbox' }
+			store.mailboxes[11] = { databaseId: 11, accountId: 1, specialRole: 'sent' }
+			MessageService.fetchMessage.mockResolvedValue({
+				databaseId: 42,
+				hasHtmlBody: false,
+				body: 'Message body',
+				attachments: [],
+			})
+		})
+
+		it.each(['reply', 'replyAll'])('initializes %s with the receiving alias', async (mode) => {
+			await store.startComposerSession({ reply: { mode, data: envelope } })
+
+			expect(store.composerMessage.data).toMatchObject({
+				accountId: 1,
+				aliasId: 21,
+				to: [external],
+				cc: [],
+				subject: 'Re: Test subject',
+				bodyPlain: 'Message body',
+				replyTo: envelope,
+			})
+		})
+
+		it.each([
+			['reply', [other], null],
+			['replyAll', [other], null],
+			['reply', [{ email: 'other-alias@example.com' }], 22],
+			['replyAll', [{ email: 'other-alias@example.com' }], 22],
+		])('switches account for %s to %j', async (mode, to, aliasId) => {
+			await store.startComposerSession({ reply: { mode, data: { ...envelope, to } } })
+
+			expect(store.composerMessage.data).toMatchObject({ accountId: 2, aliasId, to: [external], cc: [] })
+		})
+
+		it('uses the alias in Cc and keeps other identities in reply-all recipients', async () => {
+			await store.startComposerSession({ reply: {
+				mode: 'replyAll',
+				data: { ...envelope, to: [external], cc: [alias, other] },
+			} })
+
+			expect(store.composerMessage.data).toMatchObject({ accountId: 1, aliasId: 21, cc: [other] })
+			expect(store.composerMessage.data.to).not.toContainEqual(alias)
+		})
+
+		it.each([
+			['no match', { ...envelope, to: [external] }],
+			['hidden receiving alias', { ...envelope, to: [], cc: [], bcc: [alias] }],
+		])('falls back to the containing account primary for %s', (_, message) => {
+			expect(store.getReplyContext(message).identity).toEqual({ accountId: 1, aliasId: null, ...primary })
+		})
+
+		it.each([
+			['Sent role', { specialRole: 'sent' }],
+			['configured Sent mailbox', { specialRole: '' }],
+		])('recognizes %s using the message mailbox', (_, mailbox) => {
+			store.mailboxes[11] = { databaseId: 11, accountId: 1, ...mailbox }
+
+			const { identity } = store.getReplyContext({ ...envelope, mailboxId: 11, from: [alias], to: [primary] })
+
+			expect(identity).toMatchObject({ accountId: 1, aliasId: 21 })
+		})
+
+		it.each(['reply', 'replyAll'])('preserves the sent alias and original recipients for %s', async (mode) => {
+			MessageService.fetchMessage.mockResolvedValue({ body: '', replyTo: [{ email: 'reply-elsewhere@example.com' }] })
+
+			await store.startComposerSession({ reply: {
+				mode,
+				data: { ...envelope, mailboxId: 11, from: [alias], to: [other] },
+			} })
+
+			expect(store.composerMessage.data).toMatchObject({ accountId: 1, aliasId: 21, to: [other], cc: [] })
+		})
+
+		it.each([
+			['received copy', 10, false, 1, null, [alias]],
+			['Sent copy', 11, false, 1, 21, [primary]],
+			['explicit follow-up', 10, true, 1, 21, [primary]],
+		])('uses mailbox context for the %s of mail between own identities', async (_, mailboxId, followUp, accountId, aliasId, to) => {
+			await store.startComposerSession({ reply: {
+				mode: 'reply',
+				data: { ...envelope, mailboxId, from: [alias], to: [primary] },
+				followUp,
+			} })
+
+			expect(store.composerMessage.data).toMatchObject({ accountId, aliasId, to })
+		})
+
+		it('preserves the alias for archived outgoing messages', async () => {
+			await store.startComposerSession({ reply: {
+				mode: 'reply',
+				data: { ...envelope, from: [alias], to: [external] },
+			} })
+
+			expect(store.composerMessage.data).toMatchObject({ accountId: 1, aliasId: 21, to: [external] })
+		})
+
+		it.each(['reply', 'replyAll'])('keeps outgoing recipients for %s when the original alias is no longer configured', async (mode) => {
+			const previousAlias = { email: 'previous-alias@example.com' }
+			const cc = [{ email: 'cc-recipient@example.com' }]
+			MessageService.fetchMessage.mockResolvedValue({ body: '', replyTo: [previousAlias] })
+
+			await store.startComposerSession({ reply: {
+				mode,
+				data: { ...envelope, mailboxId: 11, from: [previousAlias], to: [external], cc },
+			} })
+
+			expect(store.composerMessage.data).toMatchObject({ accountId: 1, aliasId: null, to: [external], cc })
+		})
+
+		it.each([
+			['Sent reply', 'reply', 11, false],
+			['Sent reply-all', 'replyAll', 11, false],
+			['explicit follow-up', 'reply', 10, true],
+			['explicit group follow-up', 'replyAll', 10, true],
+		])('retains Cc-only recipients for %s', async (_, mode, mailboxId, followUp) => {
+			await store.startComposerSession({ reply: {
+				mode,
+				data: { ...envelope, mailboxId, from: [alias], to: [], cc: [external] },
+				followUp,
+			} })
+
+			expect(store.composerMessage.data).toMatchObject({ accountId: 1, aliasId: 21, to: [], cc: [external] })
+		})
+
+		it('does not select a matching alias when forwarding', async () => {
+			await store.startComposerSession({ reply: { mode: 'forward', data: envelope } })
+
+			expect(store.composerMessage.data.accountId).toBe(1)
+			expect(store.composerMessage.data.aliasId).toBeUndefined()
+		})
+	})
+
 	describe('startComposerSession reply-to resolution', () => {
 		const account = {
 			id: 1,

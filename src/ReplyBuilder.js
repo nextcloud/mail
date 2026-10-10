@@ -55,22 +55,67 @@ const RecipientType = Object.seal({
 	Cc: 2,
 })
 
-export function buildRecipients(envelope, ownAddress, replyTo) {
+export function isSameEmailAddress(left, right) {
+	const normalizedLeft = left?.trim().toLowerCase()
+	return !!normalizedLeft && normalizedLeft === right?.trim().toLowerCase()
+}
+
+export function selectReplyIdentity(envelope, accounts, preferSender = false) {
+	const identities = accounts
+		.filter((account) => !account.isUnified && account.connectionStatus !== false)
+		.flatMap((account) => [
+			{
+				accountId: account.id,
+				aliasId: null,
+				email: account.emailAddress,
+				label: account.name,
+			},
+			...(account.aliases ?? []).map((alias) => ({
+				accountId: account.id,
+				aliasId: alias.id,
+				email: alias.alias,
+				label: alias.name,
+			})),
+		])
+	const identityGroups = [
+		identities.filter((identity) => identity.accountId === envelope.accountId),
+		identities.filter((identity) => identity.accountId !== envelope.accountId),
+	]
+	const addressLists = preferSender
+		? [envelope.from, envelope.to, envelope.cc]
+		: [envelope.to, envelope.cc, envelope.from]
+
+	for (const addresses of addressLists) {
+		for (const candidates of identityGroups) {
+			for (const address of addresses ?? []) {
+				const identity = candidates.find((candidate) => isSameEmailAddress(candidate.email, address.email))
+				if (identity) {
+					return identity
+				}
+			}
+		}
+	}
+}
+
+export function buildRecipients(envelope, ownAddress, replyTo, followUp = false) {
 	let recipientType = RecipientType.None
-	const isOwnAddress = (a) => a.email === ownAddress.email
+	const isOwnAddress = (a) => isSameEmailAddress(a.email, ownAddress.email)
 	const isNotOwnAddress = negate(isOwnAddress)
+	const originalTo = envelope.to ?? []
+	const originalCc = envelope.cc ?? []
 
 	// The Reply-To header has higher precedence than the From header.
 	// This reuses Horde's handling of the reply_to field directly.
-	const from = replyTo?.length > 0 ? replyTo : envelope.from
+	const from = !followUp && replyTo?.length > 0 ? replyTo : (envelope.from ?? [])
+	const senders = followUp ? [] : from.filter(isNotOwnAddress)
 
 	// Locate why we received this envelope
 	// Can be in 'to', 'cc' or unknown
-	let replyingAddress = envelope.to.find(isOwnAddress)
+	let replyingAddress = originalTo.find(isOwnAddress)
 	if (replyingAddress !== undefined) {
 		recipientType = RecipientType.To
 	} else {
-		replyingAddress = envelope.cc.find(isOwnAddress)
+		replyingAddress = originalCc.find(isOwnAddress)
 		if (replyingAddress !== undefined) {
 			recipientType = RecipientType.Cc
 		} else {
@@ -82,29 +127,27 @@ export function buildRecipients(envelope, ownAddress, replyTo) {
 	let cc
 	if (recipientType === RecipientType.To) {
 		// Send to everyone except yourself, plus the original sender if not ourself
-		to = envelope.to.filter(isNotOwnAddress)
-		to = to.concat(from.filter(isNotOwnAddress))
+		to = originalTo.filter(isNotOwnAddress)
+		to = to.concat(senders)
 
-		// CC remains the same
-		cc = envelope.cc
+		cc = originalCc.filter(isNotOwnAddress)
 	} else if (recipientType === RecipientType.Cc) {
 		// Send to the same people, plus the sender if not ourself
-		to = envelope.to.concat(from.filter(isNotOwnAddress))
+		to = originalTo.concat(senders)
 
 		// All CC values are being kept except the replying address
-		cc = envelope.cc.filter(isNotOwnAddress)
+		cc = originalCc.filter(isNotOwnAddress)
 	} else {
 		// Send to the same recipient and the sender (if not ourself) -> answer all
-		to = envelope.to
-		to = to.concat(from.filter(isNotOwnAddress))
+		to = originalTo
+		to = to.concat(senders)
 
-		// Keep CC values
-		cc = envelope.cc
+		cc = originalCc.filter(isNotOwnAddress)
 	}
 
 	// edge case: pure self-sent email
-	if (to.length === 0) {
-		to = from
+	if (to.length === 0 && cc.length === 0) {
+		to = followUp ? (originalTo.length > 0 ? originalTo : originalCc) : from
 	}
 
 	return {
