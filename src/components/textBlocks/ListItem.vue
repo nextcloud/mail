@@ -133,6 +133,7 @@ import TextEditor from '../TextEditor.vue'
 import logger from '../../logger.js'
 import { getShares, shareTextBlock, unshareTextBlock } from '../../service/TextBlockService.js'
 import useMainStore from '../../store/mainStore.js'
+import { embedBlobImages } from '../../util/blobImages.js'
 
 export default {
 	name: 'ListItem',
@@ -386,7 +387,10 @@ export default {
 		async saveTextBlock() {
 			this.saveLoading = true
 			try {
-				await this.mainStore.patchTextBlock(this.localTextBlock)
+				await this.mainStore.patchTextBlock({
+					...this.localTextBlock,
+					content: await embedBlobImages(this.localTextBlock.content),
+				})
 				this.saveLoading = false
 				this.editModalOpen = false
 			} catch (error) {
