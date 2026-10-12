@@ -363,8 +363,8 @@
 			v-if="message && message.unsubscribeUrl && message.isOneClickUnsubscribe && showListUnsubscribeConfirmation"
 			:confirmText="t('mail', 'Unsubscribe')"
 			:title="t('mail', 'Unsubscribe via link')"
-			@cancel="showListUnsubscribeConfirmation = false"
-			@confirm="unsubscribeViaOneClick">
+			:confirm="unsubscribeViaOneClick"
+			@closing="showListUnsubscribeConfirmation = false">
 			{{ t('mail', 'Unsubscribing will stop all messages from the mailing list {sender}', { sender: from }) }}
 		</ConfirmModal>
 		<ConfirmModal
@@ -372,8 +372,8 @@
 			:confirmText="t('mail', 'Unsubscribe')"
 			:confirmUrl="message.unsubscribeUrl"
 			:title="t('mail', 'Unsubscribe via link')"
-			@cancel="showListUnsubscribeConfirmation = false"
-			@confirm="showListUnsubscribeConfirmation = false">
+			:confirm="showListUnsubscribeConfirmation = false"
+			@closing="showListUnsubscribeConfirmation = false">
 			{{ t('mail', 'Unsubscribing will stop all messages from the mailing list {sender}', { sender: from }) }}
 		</ConfirmModal>
 		<ConfirmModal
@@ -381,8 +381,8 @@
 			:confirmText="t('mail', 'Send unsubscribe email')"
 			:title="t('mail', 'Unsubscribe via email')"
 			:disabled="unsubscribing"
-			@cancel="showListUnsubscribeConfirmation = false"
-			@confirm="unsubscribeViaMailto">
+			:confirm="unsubscribeViaMailto"
+			@closing="showListUnsubscribeConfirmation = false">
 			{{ t('mail', 'Unsubscribing will stop all messages from the mailing list {sender}', { sender: from }) }}
 		</ConfirmModal>
 	</div>
