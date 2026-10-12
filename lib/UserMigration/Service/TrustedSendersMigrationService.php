@@ -42,7 +42,7 @@ class TrustedSendersMigrationService {
 	public function exportTrustedSenders(IUser $user, IExportDestination $exportDestination, OutputInterface $output): void {
 		$output->writeln(
 			$this->l10n->t(
-				'Exporting trusted senders for user %s',
+				'Exporting trusted senders for %s',
 				[$user->getUID()]
 			), OutputInterface::VERBOSITY_VERBOSE
 		);
@@ -66,7 +66,7 @@ class TrustedSendersMigrationService {
 	public function importTrustedSenders(IUser $user, IImportSource $importSource, OutputInterface $output): void {
 		$output->writeln(
 			$this->l10n->t(
-				'Importing trusted senders for user %s',
+				'Importing trusted senders for %s',
 				[$user->getUID()]
 			), OutputInterface::VERBOSITY_VERBOSE
 		);
@@ -76,7 +76,7 @@ class TrustedSendersMigrationService {
 		} catch (UserMigrationException) {
 			$output->writeln(
 				$this->l10n->t(
-					'Trusted senders configuration for user %s not found. Continue …',
+					'Trusted senders configuration for %s not found. Continue …',
 					[$user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);
@@ -90,7 +90,7 @@ class TrustedSendersMigrationService {
 		} catch (JsonException|UserMigrationException) {
 			$output->writeln(
 				$this->l10n->t(
-					'Trusted senders configuration for user %s is invalid and will be skipped. Continue …',
+					'Trusted senders configuration for %s is invalid and will be skipped. Continue …',
 					[$user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);
@@ -101,7 +101,7 @@ class TrustedSendersMigrationService {
 		foreach ($trustedSenders as $trustedSender) {
 			$output->writeln(
 				$this->l10n->t(
-					'Importing trusted sender %s for user %s',
+					'Importing trusted sender %1$s for %2$s',
 					[$trustedSender['email'], $user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);

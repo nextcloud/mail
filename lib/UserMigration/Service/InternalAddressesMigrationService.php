@@ -48,7 +48,7 @@ class InternalAddressesMigrationService {
 		OutputInterface $output): void {
 		$output->writeln(
 			$this->l10n->t(
-				'Exporting internal addresses for user %s',
+				'Exporting internal addresses for %s',
 				[$user->getUID()]
 			), OutputInterface::VERBOSITY_VERBOSE
 		);
@@ -72,7 +72,7 @@ class InternalAddressesMigrationService {
 	public function importInternalAddresses(IUser $user, IImportSource $importSource, OutputInterface $output): void {
 		$output->writeln(
 			$this->l10n->t(
-				'Importing internal addresses for user %s',
+				'Importing internal addresses for %s',
 				[$user->getUID()]
 			), OutputInterface::VERBOSITY_VERBOSE
 		);
@@ -82,7 +82,7 @@ class InternalAddressesMigrationService {
 		} catch (UserMigrationException) {
 			$output->writeln(
 				$this->l10n->t(
-					'Internal addresses for user %s not found. Continue …',
+					'Internal addresses for %s not found. Continue …',
 					[$user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);
@@ -96,7 +96,7 @@ class InternalAddressesMigrationService {
 		} catch (JsonException|UserMigrationException) {
 			$output->writeln(
 				$this->l10n->t(
-					'Internal addresses configuration for user %s is invalid and will be skipped. Continue …',
+					'Internal addresses configuration for %s is invalid and will be skipped. Continue …',
 					[$user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);

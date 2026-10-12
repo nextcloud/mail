@@ -134,7 +134,7 @@ class AccountMigrationService {
 	public function exportAccounts(IUser $user, IExportDestination $exportDestination, OutputInterface $output): void {
 		$output->writeln(
 			$this->l10n->t(
-				'Exporting mail accounts for user %s',
+				'Exporting mail accounts for %s',
 				[$user->getUID()]
 			), OutputInterface::VERBOSITY_VERBOSE
 		);
@@ -194,7 +194,7 @@ class AccountMigrationService {
 		array $certificatesMapping): array {
 		$output->writeln(
 			$this->l10n->t(
-				'Importing mail accounts for user %s',
+				'Importing mail accounts for %s',
 				[$user->getUID()]
 			), OutputInterface::VERBOSITY_VERBOSE
 		);
@@ -212,7 +212,7 @@ class AccountMigrationService {
 				]);
 				$output->writeln(
 					$this->l10n->t(
-						'A mail account of user %s is invalid and will be skipped. Continue …',
+						'A mail account of %s is invalid and will be skipped. Continue …',
 						[$user->getUID()]
 					), OutputInterface::VERBOSITY_VERBOSE
 				);
@@ -224,7 +224,7 @@ class AccountMigrationService {
 			if ($protocol !== MailAccount::PROTOCOL_IMAP) {
 				$output->writeln(
 					$this->l10n->t(
-						'Skipping account with ID %s because migrating %s accounts is not supported yet',
+						'Skipping account with ID %1$s because migrating %2$s accounts is not supported yet',
 						[$accountData['accountId'], $protocol]
 					), OutputInterface::VERBOSITY_VERBOSE
 				);
@@ -251,7 +251,7 @@ class AccountMigrationService {
 				]);
 				$output->writeln(
 					$this->l10n->t(
-						'Failed to import a mail account of user %s, it will be skipped. See the log for details.',
+						'Failed to import a mail account of %s, it will be skipped. See the log for details.',
 						[$user->getUID()]
 					)
 				);
@@ -420,7 +420,7 @@ class AccountMigrationService {
 
 		if ($mailAccount->getProtocol() !== MailAccount::PROTOCOL_IMAP) {
 			return $this->l10n->t(
-				'Skipping account with ID %s because migrating %s accounts is not supported yet',
+				'Skipping account with ID %1$s because migrating %2$s accounts is not supported yet',
 				[$mailAccount->getId(), $mailAccount->getProtocol()]
 			);
 		}
