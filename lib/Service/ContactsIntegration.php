@@ -50,7 +50,7 @@ class ContactsIntegration {
 		$result = $this->search($userId, $term, ['UID', 'FN', 'EMAIL']);
 		$receivers = [];
 		foreach ($result as $r) {
-			$id = $r['UID'];
+			$id = $r['UID'] ?? null;
 			$fn = $r['FN'] ?? null;
 			if (!isset($r['EMAIL'])) {
 				continue;
@@ -270,8 +270,8 @@ class ContactsIntegration {
 		$result = $this->search($userId, $term, $fields, $strictSearch);
 		$matches = [];
 		foreach ($result as $r) {
-			$id = $r['UID'];
-			$fn = $r['FN'];
+			$id = $r['UID'] ?? null;
+			$fn = $r['FN'] ?? null;
 			$email = $r['EMAIL'] ?? null;
 			$matches[] = [
 				'id' => $id,

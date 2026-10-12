@@ -73,7 +73,6 @@
 						ref="contact-selection-label"
 						v-model="selectedContact"
 						:options="selectableContacts"
-						:taggable="true"
 						track-by="label"
 						:multiple="false"
 						:placeholder="t('name', 'Contact name …')"
@@ -251,7 +250,7 @@ export default {
 			if (this.contactsWithEmail.length === 0) { // TODO fix me
 				findMatches(this.email).then((res) => {
 					if (res && res.length > 0) {
-						this.contactsWithEmail = res
+						this.contactsWithEmail = res.filter((contact) => contact.label)
 					}
 				})
 			}
@@ -274,7 +273,8 @@ export default {
 				return
 			}
 			debouncedSearch(term).then((results) => {
-				this.autoCompleteContacts = uniqBy('id')(this.autoCompleteContacts.concat(results))
+				const contactsWithUidAndName = results.filter((contact) => contact.id && contact.label)
+				this.autoCompleteContacts = uniqBy('id')(this.autoCompleteContacts.concat(contactsWithUidAndName))
 			})
 		},
 	},
