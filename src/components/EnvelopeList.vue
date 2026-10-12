@@ -604,6 +604,7 @@ export default {
 					}
 					return true
 				case 'unseen':
+				case 'unseenAlt':
 					if (this.isAtLeastOneSelectedUnread) {
 						this.markSelectedRead()
 					} else {

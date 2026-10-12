@@ -12,44 +12,46 @@
  * Values are `vue-shortkey` key arrays; an array with several entries means
  * those keys are pressed together.
  *
- * The bindings follow Gmail, because keyboard shortcuts are a product of
- * convention and most people arriving here come from there.
- *
- * Two deliberate departures from Gmail:
- *
- * - `refresh` is on Shift+R. In Gmail plain `r` is *reply*, so leaving refresh
- *   there is the single most confusing collision for anyone arriving from
- *   Gmail: they press `r` expecting a composer and silently resync the mailbox
- *   instead.
- * - Delete stays on Del, with Gmail's `#` as an alternative, because `#` is
- *   Shift+3 only on some keyboard layouts.
- * - Backspace also deletes, because the key labelled "delete" on Mac
- *   keyboards sends Backspace, not Delete, and most mail apps treat the two
- *   as interchangeable.
+ * The existing bindings are kept as they are, and the keys people know from
+ * Gmail are added next to them. Where Gmail uses a key for something else than
+ * this app does - `r` is refresh here and reply there, `a` archive vs. reply
+ * all, `u` unread vs. back - the Gmail binding is left out instead of taking a
+ * key away from users who already know it.
  */
 export const SHORTCUTS = {
+	// Existing bindings, unchanged.
 	del: ['del'],
+	arch: ['a'],
+	flag: ['s'],
+	next: ['arrowright'],
+	prev: ['arrowleft'],
+	refresh: ['r'],
+	unseen: ['u'],
+
+	// Delete on the keys the other mail clients use. Backspace is what the key
+	// labelled "delete" sends on Mac keyboards.
 	delAlt: ['shift', '#'],
 	delBackspace: ['backspace'],
-	arch: ['e'],
-	flag: ['s'],
-	select: ['x'],
-	next: ['j'],
-	prev: ['k'],
+
+	// Gmail aliases for actions that already had a binding.
+	archAlt: ['e'],
+	unseenAlt: ['shift', 'u'],
+
+	// Gmail bindings for actions that had none. Reply and reply all are on the
+	// Gmail keys for reply in a new window, because plain `r` and `a` are taken.
+	nextAlt: ['j'],
+	prevAlt: ['k'],
 	open: ['o'],
-	openAlt: ['enter'],
-	back: ['u'],
-	search: ['/'],
+	select: ['x'],
 	compose: ['c'],
-	reply: ['r'],
-	replyAll: ['a'],
+	reply: ['shift', 'r'],
+	replyAll: ['shift', 'a'],
 	forward: ['f'],
+	search: ['/'],
 	junk: ['shift', '!'],
 	important: ['='],
 	help: ['shift', '?'],
 	helpAlt: ['?'],
-	refresh: ['shift', 'r'],
-	unseen: ['shift', 'u'],
 }
 
 /** Registers nothing. Shared so the empty map keeps a stable identity. */
@@ -86,20 +88,22 @@ export function shortcutActions(t) {
 		{ action: 'replyAll', label: t('mail', 'Reply all') },
 		{ action: 'forward', label: t('mail', 'Forward') },
 		{ action: 'next', label: t('mail', 'Next message') },
+		{ action: 'nextAlt', label: t('mail', 'Next message') },
 		{ action: 'prev', label: t('mail', 'Previous message') },
+		{ action: 'prevAlt', label: t('mail', 'Previous message') },
 		{ action: 'arch', label: t('mail', 'Archive') },
+		{ action: 'archAlt', label: t('mail', 'Archive') },
 		{ action: 'del', label: t('mail', 'Delete') },
+		{ action: 'delAlt', label: t('mail', 'Delete') },
+		{ action: 'delBackspace', label: t('mail', 'Delete') },
 		{ action: 'flag', label: t('mail', 'Star') },
 		{ action: 'select', label: t('mail', 'Select message') },
 		{ action: 'open', label: t('mail', 'Open message') },
-		{ action: 'openAlt', label: t('mail', 'Open message') },
-		{ action: 'back', label: t('mail', 'Back to list') },
 		{ action: 'search', label: t('mail', 'Search') },
 		{ action: 'unseen', label: t('mail', 'Mark unread') },
+		{ action: 'unseenAlt', label: t('mail', 'Mark unread') },
 		{ action: 'junk', label: t('mail', 'Mark as spam') },
 		{ action: 'important', label: t('mail', 'Toggle important') },
-		{ action: 'delAlt', label: t('mail', 'Delete') },
-		{ action: 'delBackspace', label: t('mail', 'Delete') },
 		{ action: 'refresh', label: t('mail', 'Refresh') },
 		{ action: 'help', label: t('mail', 'Show keyboard shortcuts') },
 		{ action: 'helpAlt', label: t('mail', 'Show keyboard shortcuts') },
@@ -178,10 +182,11 @@ export function shortcutsAllowed() {
  *
  * These are not part of the vue-shortkey binding map - they are key sequences
  * handled separately - so they have to be described explicitly rather than
- * derived from the binding map.
+ * derived from the binding map. Each row carries its keys so the settings list
+ * can render them as separate keys with plain text between them.
  *
  * @param {(app: string, text: string) => string} t translation function
- * @return {Array<{action: string, label: string, hotkey: string}>} rows
+ * @return {Array<{action: string, label: string, keys: string[]}>} rows
  */
 export function jumpActions(t) {
 	const LABELS = {
@@ -200,7 +205,7 @@ export function jumpActions(t) {
 		.map(([key]) => ({
 			action: 'jump-' + key,
 			label: LABELS[key],
-			hotkey: 'g ' + t('mail', 'then') + ' ' + key,
+			keys: ['g', key],
 		}))
 }
 

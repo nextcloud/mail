@@ -27,15 +27,18 @@ describe('shortcuts', () => {
 			'delAlt',
 			'delBackspace',
 			'arch',
+			'archAlt',
 			'flag',
 			'select',
 			'next',
+			'nextAlt',
 			'prev',
+			'prevAlt',
 			'open',
-			'back',
 			'search',
 			'refresh',
 			'unseen',
+			'unseenAlt',
 			'compose',
 			'reply',
 			'replyAll',
@@ -43,7 +46,6 @@ describe('shortcuts', () => {
 			'junk',
 			'important',
 			'help',
-			'openAlt',
 			'helpAlt',
 		]
 
@@ -61,7 +63,11 @@ describe('shortcut help', () => {
 			.filter(({ action }) => SHORTCUTS[action])
 			.map((e) => e.action)
 
-		for (const expected of ['next', 'prev', 'arch', 'del', 'flag', 'unseen', 'refresh']) {
+		for (const expected of ['del', 'arch', 'flag', 'next', 'prev', 'refresh', 'unseen']) {
+			expect(actions).toContain(expected)
+		}
+
+		for (const expected of ['delAlt', 'delBackspace', 'archAlt', 'unseenAlt', 'nextAlt', 'prevAlt', 'select', 'open', 'compose', 'reply', 'replyAll', 'forward', 'search', 'junk', 'important', 'help']) {
 			expect(actions).toContain(expected)
 		}
 	})
@@ -124,24 +130,35 @@ describe('jump chords', () => {
 	})
 })
 
-describe('gmail parity', () => {
-	it('binds the Gmail keys for the actions Mail can perform', () => {
+describe('bindings', () => {
+	it('keeps the existing bindings', () => {
+		expect(SHORTCUTS.del).toEqual(['del'])
+		expect(SHORTCUTS.arch).toEqual(['a'])
+		expect(SHORTCUTS.flag).toEqual(['s'])
+		expect(SHORTCUTS.next).toEqual(['arrowright'])
+		expect(SHORTCUTS.prev).toEqual(['arrowleft'])
+		expect(SHORTCUTS.refresh).toEqual(['r'])
+		expect(SHORTCUTS.unseen).toEqual(['u'])
+	})
+
+	it('adds the Gmail keys next to them', () => {
 		expect(SHORTCUTS.compose).toEqual(['c'])
-		expect(SHORTCUTS.reply).toEqual(['r'])
-		expect(SHORTCUTS.replyAll).toEqual(['a'])
+		expect(SHORTCUTS.reply).toEqual(['shift', 'r'])
+		expect(SHORTCUTS.replyAll).toEqual(['shift', 'a'])
 		expect(SHORTCUTS.forward).toEqual(['f'])
-		expect(SHORTCUTS.arch).toEqual(['e'])
-		expect(SHORTCUTS.next).toEqual(['j'])
-		expect(SHORTCUTS.prev).toEqual(['k'])
+		expect(SHORTCUTS.archAlt).toEqual(['e'])
+		expect(SHORTCUTS.nextAlt).toEqual(['j'])
+		expect(SHORTCUTS.prevAlt).toEqual(['k'])
 		expect(SHORTCUTS.open).toEqual(['o'])
-		expect(SHORTCUTS.back).toEqual(['u'])
+		expect(SHORTCUTS.unseenAlt).toEqual(['shift', 'u'])
 		expect(SHORTCUTS.select).toEqual(['x'])
 		expect(SHORTCUTS.search).toEqual(['/'])
+		expect(SHORTCUTS.junk).toEqual(['shift', '!'])
+		expect(SHORTCUTS.important).toEqual(['='])
 		expect(SHORTCUTS.help).toEqual(['shift', '?'])
 	})
 
-	it('keeps delete off a bare single key', () => {
-		// Destructive actions should not be one keystroke away.
+	it('adds delete keys without changing the existing one', () => {
 		expect(SHORTCUTS.del).toEqual(['del'])
 		expect(SHORTCUTS.delAlt).toEqual(['shift', '#'])
 	})
@@ -169,7 +186,8 @@ describe('settings shortcut list', () => {
 
 		expect(rows).toHaveLength(Object.keys(SHORTCUT_JUMPS).length)
 		for (const row of rows) {
-			expect(row.hotkey).toMatch(/^g then [a-z]$/)
+			expect(row.keys).toHaveLength(2)
+			expect(row.keys[0]).toBe('g')
 			expect(row.label.length).toBeGreaterThan(0)
 		}
 	})
@@ -208,7 +226,7 @@ describe('jump chord key handling', () => {
 
 	it('swallows the keyup of a consumed chord key', () => {
 		// Regression: vue-shortkey bindings use .once and therefore fire on
-		// keyup, so g a also triggered whatever `a` is bound to (reply all).
+		// keyup, so g a also triggered whatever `a` is bound to (archive).
 		press('g')
 		press('a')
 		const keyup = press('a', 'keyup')
@@ -249,7 +267,7 @@ describe('chord listener ordering', () => {
 	it('keeps consumed chord keys away from document listeners', () => {
 		// vue-shortkey registers its listeners on document at module load, and
 		// its bindings fire on keyup. If a consumed chord key reaches it, `g a`
-		// runs reply-all as well as jumping. Capture goes window -> document,
+		// runs archive as well as jumping. Capture goes window -> document,
 		// so the chord handler must intercept before this listener sees it.
 		const leaked = []
 		const spy = (e) => leaked.push(e.type + ':' + e.key)

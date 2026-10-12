@@ -437,23 +437,6 @@ export default {
 			})
 		},
 
-		/** Close the open message, leaving the cursor on it. */
-		backToList() {
-			const currentId = parseInt(this.$route.params.threadId, 10)
-			if (!currentId) {
-				return
-			}
-
-			this.cursorId = currentId
-			this.$router.push({
-				name: 'mailbox',
-				params: {
-					mailboxId: this.$route.params.mailboxId,
-					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-				},
-			})
-		},
-
 		/** Focus the message search field. */
 		focusSearch() {
 			// SearchMessages renders a type="text" input, not type="search".
@@ -556,16 +539,11 @@ export default {
 			// guarding against here, so an unsupported verb does nothing at all.
 			const selectedLists = this.listsWithSelection()
 			if (selectedLists.length > 0) {
-				if (e.srcKey === 'back') {
-					selectedLists.forEach((list) => list.unselectAll())
-					return
-				}
-
-				if (e.srcKey === 'arch') {
+				if (e.srcKey === 'arch' || e.srcKey === 'archAlt') {
 					return this.archiveSelected(selectedLists)
 				}
 
-				if (['del', 'delAlt', 'delBackspace', 'flag', 'unseen', 'junk', 'important'].includes(e.srcKey)) {
+				if (['del', 'delAlt', 'delBackspace', 'flag', 'unseen', 'unseenAlt', 'junk', 'important'].includes(e.srcKey)) {
 					selectedLists.forEach((list) => list.handleBulkShortcut(e.srcKey))
 					return
 				}
@@ -574,9 +552,6 @@ export default {
 			// Verbs that work without an open message.
 			if (e.srcKey === 'search') {
 				return this.focusSearch()
-			}
-			if (e.srcKey === 'back') {
-				return this.backToList()
 			}
 			if (e.srcKey === 'help' || e.srcKey === 'helpAlt') {
 				return window.dispatchEvent(new CustomEvent('mail:show-settings'))
@@ -618,16 +593,16 @@ export default {
 				})
 			}
 
-			// Gmail's model: in the list a cursor moves without opening, and
-			// only 'open' follows it. Inside a message j/k walk the thread
-			// list as before.
+			// The Gmail cursor keys move in the list without opening anything;
+			// only 'open' follows the cursor. With a message open they walk the
+			// list like the arrow keys do, handled in the switch below.
 			if (!env && envelopes.length > 0) {
-				if (e.srcKey === 'next' || e.srcKey === 'prev') {
-					return this.moveCursor(e.srcKey === 'next' ? 1 : -1)
+				if (e.srcKey === 'nextAlt' || e.srcKey === 'prevAlt') {
+					return this.moveCursor(e.srcKey === 'nextAlt' ? 1 : -1)
 				}
-				if (e.srcKey === 'open' || e.srcKey === 'openAlt') {
-					return this.openCursor()
-				}
+			}
+			if (e.srcKey === 'open') {
+				return this.openCursor()
 			}
 
 			if (e.srcKey !== 'refresh' && !env) {
@@ -639,8 +614,10 @@ export default {
 
 			switch (e.srcKey) {
 				case 'next':
+				case 'nextAlt':
 				case 'prev':
-					if (e.srcKey === 'next') {
+				case 'prevAlt':
+					if (e.srcKey === 'next' || e.srcKey === 'nextAlt') {
 						next = envelopes[idx + 1]
 					} else {
 						next = envelopes[idx - 1]
@@ -696,6 +673,7 @@ export default {
 
 					break
 				case 'arch':
+				case 'archAlt':
 					logger.debug('archiving via shortcut')
 					await this.archiveEnvelope(env)
 					break
@@ -712,6 +690,7 @@ export default {
 
 					break
 				case 'unseen':
+				case 'unseenAlt':
 					logger.debug('marking as seen/unseen via shortcut')
 
 					if (!this.hasSeenAcl()) {

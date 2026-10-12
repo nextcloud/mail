@@ -272,7 +272,14 @@
 						v-for="entry in activeShortcuts"
 						:key="entry.action"
 						:label="entry.label"
-						:hotkey="entry.hotkey" />
+						:hotkey="entry.hotkey">
+						<template v-if="entry.keys" #hotkey>
+							<template v-for="(key, index) in entry.keys">
+								<span v-if="index > 0" :key="'separator-' + index">, </span>
+								<NcKbd :key="key" :symbol="key" />
+							</template>
+						</template>
+					</NcHotkey>
 				</NcHotkeyList>
 			</NcAppSettingsShortcutsSection>
 
@@ -307,6 +314,7 @@ import {
 } from '@nextcloud/vue'
 import mitt from 'mitt'
 import { mapState, mapStores } from 'pinia'
+import NcKbd from '@nextcloud/vue/components/NcKbd'
 import IconArrow from 'vue-material-design-icons/ArrowRight.vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import IconClose from 'vue-material-design-icons/Close.vue'
@@ -356,6 +364,7 @@ export default {
 		NcNoteCard,
 		NcHotkeyList,
 		NcHotkey,
+		NcKbd,
 		IconArrow,
 	},
 
@@ -467,7 +476,10 @@ export default {
 		 * the app does not implement (compose, search, send) and went stale
 		 * whenever a binding moved.
 		 *
-		 * @return {Array<{action: string, label: string, hotkey: string}>} rows
+		 * Rows carry either a `hotkey` string or, for key sequences, a `keys`
+		 * array that the template renders with plain text between the keys.
+		 *
+		 * @return {Array<{action: string, label: string, hotkey?: string, keys?: string[]}>} rows
 		 */
 		activeShortcuts() {
 			const bindings = resolveShortcuts()
