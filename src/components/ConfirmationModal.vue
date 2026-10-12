@@ -4,39 +4,23 @@
 -->
 
 <template>
-	<NcModal class="confirm-modal" :name="title" @close="cancel">
-		<div class="confirm-modal">
-			<h2>{{ title }}</h2>
-			<slot />
-			<div class="confirm-modal__buttons">
-				<NcButton variant="tertiary" :disabled="disabled" @click="cancel">
-					{{ t('mail', 'Cancel') }}
-				</NcButton>
-				<NcButton
-					:href="confirmUrl"
-					:rel="confirmUrl ? 'noopener noreferrer' : undefined"
-					:target="confirmUrl ? '_blank' : undefined"
-					:disabled="disabled"
-					variant="primary"
-					@click="confirm">
-					{{ confirmText }}
-				</NcButton>
-			</div>
-		</div>
-	</NcModal>
+	<NcDialog
+		:name="title"
+		:buttons="buttons"
+		@closing="cancel">
+		<slot />
+	</NcDialog>
 </template>
 
 <script>
 
 import { t } from '@nextcloud/l10n'
-import NcButton from '@nextcloud/vue/components/NcButton'
-import NcModal from '@nextcloud/vue/components/NcModal'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
 
 export default {
 	name: 'ConfirmationModal',
 	components: {
-		NcButton,
-		NcModal,
+		NcDialog,
 	},
 
 	props: {
@@ -63,9 +47,33 @@ export default {
 
 	emits: ['confirm', 'cancel'],
 
+	computed: {
+		buttons() {
+			return [
+				{
+					label: t('mail', 'Cancel'),
+					variant: 'tertiary',
+					disabled: this.disabled,
+					callback: this.cancel,
+				},
+				{
+					label: this.confirmText,
+					variant: 'primary',
+					disabled: this.disabled,
+					callback: this.confirm,
+					href: this.confirmUrl,
+					rel: this.confirmUrl ? 'noopener noreferrer' : undefined,
+					target: this.confirmUrl ? '_blank' : undefined,
+				},
+			]
+		},
+	},
+
 	methods: {
-		confirm() {
-			this.$emit('confirm')
+		async confirm() {
+			return new Promise((resolve) => {
+				this.$emit('confirm', null, () => resolve())
+			})
 		},
 
 		cancel() {
@@ -74,14 +82,3 @@ export default {
 	},
 }
 </script>
-
-<style lang="scss" scoped>
-.confirm-modal {
-	padding: 20px;
-
-	&__buttons {
-		display: flex;
-		justify-content: space-between;
-	}
-}
-</style>
