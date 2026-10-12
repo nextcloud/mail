@@ -43,14 +43,14 @@
 			<NcCheckboxRadioSwitch
 				v-for="mode in sslModes"
 				:key="'imap-' + mode.value"
-				:button-variant="true"
-				:model-value="imapSslMode"
+				:buttonVariant="true"
+				:modelValue="imapSslMode"
 				type="radio"
 				name="oidc-imap-ssl"
-				button-variant-grouped="horizontal"
+				buttonVariantGrouped="horizontal"
 				:value="mode.value"
 				:disabled="loading"
-				@update:checked="imapSslMode = $event">
+				@update:modelValue="imapSslMode = $event">
 				{{ mode.label }}
 			</NcCheckboxRadioSwitch>
 		</div>
@@ -75,14 +75,14 @@
 			<NcCheckboxRadioSwitch
 				v-for="mode in sslModes"
 				:key="'smtp-' + mode.value"
-				:button-variant="true"
-				:model-value="smtpSslMode"
+				:buttonVariant="true"
+				:modelValue="smtpSslMode"
 				type="radio"
 				name="oidc-smtp-ssl"
-				button-variant-grouped="horizontal"
+				buttonVariantGrouped="horizontal"
 				:value="mode.value"
 				:disabled="loading"
-				@update:checked="smtpSslMode = $event">
+				@update:modelValue="smtpSslMode = $event">
 				{{ mode.label }}
 			</NcCheckboxRadioSwitch>
 		</div>
@@ -142,7 +142,7 @@
 		</p>
 
 		<div class="actions">
-			<ButtonVue type="secondary" native-type="submit" :disabled="loading">
+			<ButtonVue type="secondary" nativeType="submit" :disabled="loading">
 				<template #icon>
 					<IconUpload :size="20" />
 				</template>

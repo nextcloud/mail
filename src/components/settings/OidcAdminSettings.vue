@@ -18,7 +18,7 @@
 			v-for="provider in providers"
 			:key="provider.id"
 			:setting="provider"
-			:redirect-url="redirectUrl"
+			:redirectUrl="redirectUrl"
 			:submit="saveProvider"
 			:remove="deleteProvider" />
 
@@ -26,7 +26,7 @@
 			v-if="addNew"
 			:key="formKey"
 			:setting="{}"
-			:redirect-url="redirectUrl"
+			:redirectUrl="redirectUrl"
 			:submit="createNewProvider" />
 
 		<ButtonVue
