@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { showError, showWarning, TOAST_DEFAULT_TIMEOUT } from '@nextcloud/dialogs'
+import { showError, TOAST_DEFAULT_TIMEOUT } from '@nextcloud/dialogs'
 import { t } from '@nextcloud/l10n'
 import DOMPurify from 'dompurify'
 import escapeRegExp from 'lodash/fp/escapeRegExp.js'
@@ -599,6 +599,7 @@ export default function mainStoreActions() {
 						...data,
 						message,
 						isAiGenerated: data.isAiGenerated ?? message.hasAiGeneratedHeader ?? false,
+						attachments: this.prepareAttachments(message, true),
 					}
 
 					// Fetch and transform the body into a rich text object
@@ -608,11 +609,6 @@ export default function mainStoreActions() {
 					} else {
 						data.isHtml = false
 						data.bodyPlain = message.body
-					}
-
-					// TODO: implement attachments
-					if (message.attachments.length) {
-						showWarning(t('mail', 'Attachments were not copied. Please add them manually.'))
 					}
 				}
 

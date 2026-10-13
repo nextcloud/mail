@@ -719,6 +719,62 @@ describe('Vuex store actions', () => {
 		})
 	})
 
+	describe('startComposerSession from a template message', () => {
+		beforeEach(() => {
+			vi.spyOn(store, 'startComposerSessionMutation')
+		})
+
+		it('copies the attachments of the template message', async () => {
+			MessageService.fetchMessage.mockResolvedValue({
+				databaseId: 42,
+				mailboxId: 1,
+				hasHtmlBody: false,
+				body: 'Draft body',
+				attachments: [{ id: 'att1', messageId: 7, fileName: 'doc.pdf' }],
+				inlineAttachments: [],
+			})
+
+			await store.startComposerSession({
+				data: {
+					draftId: 42,
+					attachments: [{ id: 'att1', fileName: 'doc.pdf' }],
+				},
+				templateMessageId: 42,
+			})
+
+			expect(store.startComposerSessionMutation).toHaveBeenCalledWith(expect.objectContaining({
+				data: expect.objectContaining({
+					attachments: [expect.objectContaining({
+						id: 'att1',
+						type: 'message-attachment',
+						mailboxId: 1,
+						uid: 7,
+					})],
+				}),
+			}))
+		})
+
+		it('starts without attachments when the template message has none', async () => {
+			MessageService.fetchMessage.mockResolvedValue({
+				databaseId: 43,
+				mailboxId: 1,
+				hasHtmlBody: false,
+				body: 'Draft body',
+				attachments: [],
+				inlineAttachments: [],
+			})
+
+			await store.startComposerSession({
+				data: { draftId: 43 },
+				templateMessageId: 43,
+			})
+
+			expect(store.startComposerSessionMutation).toHaveBeenCalledWith(expect.objectContaining({
+				data: expect.objectContaining({ attachments: [] }),
+			}))
+		})
+	})
+
 	describe('updateAccount', () => {
 		it('clears the error flag and syncs mailboxes after a successful settings update', async () => {
 			const account = {
