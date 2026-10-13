@@ -217,6 +217,8 @@ class ImapMessageFetcher {
 				$bodyPartId = $structure->findBody();
 				if (!is_null($bodyPartId)) {
 					$this->getPart($structure[$bodyPartId], $bodyPartId, $isEncrypted || $isSigned);
+				} else {
+					$this->getPart($structure, '1', $isEncrypted || $isSigned);
 				}
 			}
 		} elseif (is_null($fetch)) {
