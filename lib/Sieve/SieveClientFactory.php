@@ -80,7 +80,6 @@ class SieveClientFactory {
 				'ssl' => [
 					'verify_peer' => $this->config->getSystemValueBool('app.mail.verify-tls-peer', true),
 					'verify_peer_name' => $this->config->getSystemValueBool('app.mail.verify-tls-peer', true),
-
 				]
 			],
 		];

@@ -3,14 +3,14 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<NcContent app-name="mail">
+	<NcContent appName="mail">
 		<Navigation v-if="hasAccounts" />
-		<AppContent>
+		<NcAppContent>
 			<div
 				class="setup"
 				:class="{ 'setup--themed': isThemed }"
 				:style="{ backgroundImage: isThemed ? undefined : backgroundImgSrc }">
-				<EmptyContent
+				<NcEmptyContent
 					v-if="allowNewMailAccounts"
 					class="setup__form-content"
 					:name="t('mail', 'Connect your mail account')">
@@ -19,28 +19,30 @@
 					</template>
 					<template #action>
 						<AccountForm
-							:display-name="displayName"
+							v-model:error="error"
+							:displayName="displayName"
 							:email="email"
-							:error.sync="error"
 							class="setup__form-content__form"
-							@account-created="onAccountCreated" />
+							@accountCreated="onAccountCreated" />
 					</template>
-				</EmptyContent>
-				<EmptyContent v-else :name="t('mail', 'To add a mail account, please contact your administrator.')">
+				</NcEmptyContent>
+				<NcEmptyContent v-else :name="t('mail', 'To add a mail account, please contact your administrator.')">
 					<template #icon>
 						<div class="setup__form-content__svg-wrapper" v-html="FluidMail" />
 					</template>
-				</EmptyContent>
+				</NcEmptyContent>
 			</div>
-		</AppContent>
+		</NcAppContent>
 	</NcContent>
 </template>
 
 <script>
 import { loadState } from '@nextcloud/initial-state'
 import { generateFilePath } from '@nextcloud/router'
-import { NcAppContent as AppContent, NcEmptyContent as EmptyContent, NcContent } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcAppContent from '@nextcloud/vue/components/NcAppContent'
+import NcContent from '@nextcloud/vue/components/NcContent'
+import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 import AccountForm from '../components/AccountForm.vue'
 import Navigation from '../components/Navigation.vue'
 import FluidMail from '../../img/mail-fluid.svg'
@@ -50,10 +52,10 @@ import useMainStore from '../store/mainStore.js'
 export default {
 	name: 'Setup',
 	components: {
-		AppContent,
+		NcAppContent,
 		AccountForm,
 		NcContent,
-		EmptyContent,
+		NcEmptyContent,
 		Navigation,
 	},
 
@@ -123,9 +125,9 @@ export default {
 
 		/* overrides for custom icon size and full opacity */
 		:deep(.empty-content__icon) {
-			width: 128px !important;
-			height: 128px !important;
-			opacity: 1 !important;
+			width: 128px;
+			height: 128px;
+			opacity: 1;
 
 			.setup__form-content__svg-wrapper {
 				width: 128px;

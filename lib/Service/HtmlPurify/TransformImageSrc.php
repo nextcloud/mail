@@ -58,6 +58,9 @@ class TransformImageSrc extends HTMLPurifier_AttrTransform {
 		$url = $this->parser->parse($attr['src']);
 		if ($url->host === Util::getServerHostName() && $url->path === $this->urlGenerator->linkToRoute('mail.proxy.proxy')) {
 			$attr['data-original-src'] = $attr['src'];
+			if (isset($attr['style'])) {
+				$attr['data-original-style'] = $attr['style'];
+			}
 			$attr['src'] = $this->urlGenerator->imagePath('mail', 'blocked-image.png');
 			$attr = $this->setDisplayNone($attr);
 		}
@@ -65,17 +68,22 @@ class TransformImageSrc extends HTMLPurifier_AttrTransform {
 	}
 
 	/**
+	 * Hide a blocked image, keeping the rest of its style attribute.
+	 *
+	 * The declaration is appended rather than prepended, and marked important,
+	 * because an email's own style attribute commonly carries a `display` of its
+	 * own: a prepended `display: none` loses to it, and the 1x1 placeholder is
+	 * then laid out at the image's `width` attribute as a blank square the size
+	 * of the image that was blocked.
+	 *
 	 * @param array $attr
 	 * @return array
-	 *
-	 * Sets html attribute style="display: none;", keeps old style
-	 * attributes
 	 */
 	private function setDisplayNone(array $attr): array {
 		if (isset($attr['style'])) {
-			$attr['style'] = 'display: none;' . $attr['style']; // the space is important for jquery!
+			$attr['style'] = rtrim($attr['style'], "; \t\n\r") . '; display: none !important;';
 		} else {
-			$attr['style'] = 'display: none;';
+			$attr['style'] = 'display: none !important;';
 		}
 		return $attr;
 	}

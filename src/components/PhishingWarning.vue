@@ -14,7 +14,7 @@
 			</li>
 		</ul>
 		<div v-if="linkWarning !== undefined" class="phishing-warning__links">
-			<NcButton class="warning__links__button" variant="tertiary" @click="showMore = !showMore">
+			<NcButton class="phishing-warning__links__button" variant="tertiary" @click="showMore = !showMore">
 				{{ showMore ? t('mail', 'Hide suspicious links') : t('mail', 'Show suspicious links') }}
 			</NcButton>
 			<div v-if="showMore">
@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { NcButton } from '@nextcloud/vue'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import IconAlertOutline from 'vue-material-design-icons/AlertOutline.vue'
 
 export default {

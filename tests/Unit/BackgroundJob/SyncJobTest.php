@@ -16,6 +16,7 @@ use OCA\Mail\Account;
 use OCA\Mail\BackgroundJob\SyncJob;
 use OCA\Mail\Db\MailAccount;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\IConfig;
 use OCP\IUser;
 
 class SyncJobTest extends TestCase {
@@ -55,12 +56,9 @@ class SyncJobTest extends TestCase {
 			->expects(self::once())
 			->method('remove')
 			->with(SyncJob::class, ['accountId' => 123]);
-		$this->serviceMock->getParameter('mailboxSync')
+		$this->serviceMock->getParameter('protocolFactory')
 			->expects(self::never())
-			->method('sync');
-		$this->serviceMock->getParameter('syncService')
-			->expects(self::never())
-			->method('syncAccount');
+			->method('mailboxConnector');
 
 		$this->job->setArgument([
 			'accountId' => 123,
@@ -70,9 +68,8 @@ class SyncJobTest extends TestCase {
 	}
 
 	public function testNoAuthentication(): void {
-		$mailAccount = $this->createConfiguredMock(MailAccount::class, [
-			'canAuthenticateImap' => false,
-		]);
+		$mailAccount = new MailAccount();
+		$mailAccount->setProtocol(MailAccount::PROTOCOL_IMAP);
 		$account = $this->createMock(Account::class);
 		$account->method('getId')->willReturn(123);
 		$account->method('getUserId')->willReturn('user123');
@@ -90,12 +87,9 @@ class SyncJobTest extends TestCase {
 		$this->serviceMock->getParameter('userManager')
 			->expects(self::never())
 			->method('get');
-		$this->serviceMock->getParameter('mailboxSync')
+		$this->serviceMock->getParameter('protocolFactory')
 			->expects(self::never())
-			->method('sync');
-		$this->serviceMock->getParameter('syncService')
-			->expects(self::never())
-			->method('syncAccount');
+			->method('mailboxConnector');
 
 		$this->job->setArgument([
 			'accountId' => 123,
@@ -126,16 +120,32 @@ class SyncJobTest extends TestCase {
 			->expects(self::once())
 			->method('debug')
 			->with('Account 123 of user user123 could not be found or was disabled, skipping background sync');
-		$this->serviceMock->getParameter('mailboxSync')
+		$this->serviceMock->getParameter('protocolFactory')
 			->expects(self::never())
-			->method('sync');
-		$this->serviceMock->getParameter('syncService')
-			->expects(self::never())
-			->method('syncAccount');
+			->method('mailboxConnector');
 
 		$this->job->setArgument([
 			'accountId' => 123,
 		]);
 		$this->job->start($this->createMock(JobList::class));
+	}
+
+	public function testDisabledJob(): void {
+		$config = $this->createMock(IConfig::class);
+
+		$config->expects(self::once())
+			->method('getSystemValueInt')
+			->with('app.mail.background-sync-interval')
+			->willReturn(-1);
+
+		$serviceMock = $this->createServiceMock(SyncJob::class, [
+			'config' => $config,
+		]);
+
+		$serviceMock->getParameter('accountService')
+			->expects(self::never())
+			->method('findById');
+
+		$serviceMock->getService()->start($this->createMock(JobList::class));
 	}
 }

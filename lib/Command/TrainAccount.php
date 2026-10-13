@@ -26,18 +26,12 @@ final class TrainAccount extends Command {
 	public const ARGUMENT_DRY_RUN = 'dry-run';
 	public const ARGUMENT_FORCE = 'force';
 
-	private AccountService $accountService;
-	private ImportanceClassifier $classifier;
-	private LoggerInterface $logger;
-
-	public function __construct(AccountService $service,
-		ImportanceClassifier $classifier,
-		LoggerInterface $logger) {
+	public function __construct(
+		private AccountService $accountService,
+		private ImportanceClassifier $classifier,
+		private LoggerInterface $logger,
+	) {
 		parent::__construct();
-
-		$this->accountService = $service;
-		$this->classifier = $classifier;
-		$this->logger = $logger;
 	}
 
 	protected function configure(): void {

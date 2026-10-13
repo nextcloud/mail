@@ -9,12 +9,12 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\ResponseDefinitions;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\DelegationService;
+use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\ApiRoute;
@@ -32,7 +32,7 @@ class MailboxesApiController extends OCSController {
 		string $appName,
 		IRequest $request,
 		private readonly ?string $userId,
-		private IMailManager $mailManager,
+		private MailManager $mailManager,
 		private readonly AccountService $accountService,
 		private IMailSearch $mailSearch,
 		private DelegationService $delegationService,
@@ -69,15 +69,13 @@ class MailboxesApiController extends OCSController {
 		return new DataResponse($mailboxes, Http::STATUS_OK);
 	}
 
-
-
 	/**
 	 * List the newest messages in a mailbox of the user which is currently logged-in
 	 *
 	 * @param int $mailboxId the mailbox id
 	 * @param int $cursor the query cursor
 	 * @param string $filter the query filter
-	 * @param int|null $limit the number of messages to be returned, can be left ampty to get all messages
+	 * @param int|null $limit the number of messages to be returned, can be left empty to get all messages
 	 * @param string $view returns messages in requested view ('singleton' or 'threaded')
 	 * @param string|null $v Cache buster version to guarantee unique urls (will trigger HTTP caching if set)
 	 * @return DataResponse<Http::STATUS_OK, array<string, mixed>, array{}>|DataResponse<Http::STATUS_NOT_FOUND, array{}, array{}>|DataResponse<Http::STATUS_FORBIDDEN, array{}, array{}>

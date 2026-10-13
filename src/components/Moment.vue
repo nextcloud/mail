@@ -8,7 +8,7 @@
 
 <script>
 import moment from '@nextcloud/moment'
-import { shortRelativeDatetime } from '../util/shortRelativeDatetime.js'
+import { detailedRelativeDatetime } from '../util/relativeDatetime.js'
 
 export default {
 	name: 'Moment',
@@ -30,7 +30,7 @@ export default {
 		},
 
 		formatted() {
-			return shortRelativeDatetime(new Date(this.timestamp * 1000))
+			return detailedRelativeDatetime(new Date(this.timestamp * 1000))
 		},
 	},
 }

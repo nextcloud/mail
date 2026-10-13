@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
@@ -18,7 +17,7 @@ use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\DraftMessageCreatedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -27,33 +26,21 @@ use Psr\Log\LoggerInterface;
 use Throwable;
 
 class DraftsService {
-	private IMailTransmission $transmission;
-	private LocalMessageMapper $mapper;
-	private AttachmentService $attachmentService;
 	private IEventDispatcher $eventDispatcher;
-	private IMAPClientFactory $clientFactory;
-	private IMailManager $mailManager;
-	private LoggerInterface $logger;
-	private AccountService $accountService;
 	private ITimeFactory $time;
 
-	public function __construct(IMailTransmission $transmission,
-		LocalMessageMapper $mapper,
-		AttachmentService $attachmentService,
+	public function __construct(
+		private IMailTransmission $transmission,
+		private LocalMessageMapper $mapper,
+		private AttachmentService $attachmentService,
 		IEventDispatcher $eventDispatcher,
-		IMAPClientFactory $clientFactory,
-		IMailManager $mailManager,
-		LoggerInterface $logger,
-		AccountService $accountService,
-		ITimeFactory $time) {
-		$this->transmission = $transmission;
-		$this->mapper = $mapper;
-		$this->attachmentService = $attachmentService;
+		private ProtocolFactory $protocolFactory,
+		private MailManager $mailManager,
+		private LoggerInterface $logger,
+		private AccountService $accountService,
+		ITimeFactory $time,
+	) {
 		$this->eventDispatcher = $eventDispatcher;
-		$this->clientFactory = $clientFactory;
-		$this->mailManager = $mailManager;
-		$this->logger = $logger;
-		$this->accountService = $accountService;
 		$this->time = $time;
 	}
 
@@ -113,7 +100,7 @@ class DraftsService {
 			return $message;
 		}
 
-		$client = $this->clientFactory->getClient($account);
+		$client = $this->protocolFactory->imapClient($account);
 		try {
 			$attachmentIds = $this->attachmentService->handleAttachments($account, $attachments, $client);
 		} finally {
@@ -138,7 +125,6 @@ class DraftsService {
 		$ccRecipients = self::convertToRecipient($cc, Recipient::TYPE_CC);
 		$bccRecipients = self::convertToRecipient($bcc, Recipient::TYPE_BCC);
 
-
 		$message = $this->mapper->updateWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
 
 		if ($attachments === []) {
@@ -146,7 +132,7 @@ class DraftsService {
 			return $message;
 		}
 
-		$client = $this->clientFactory->getClient($account);
+		$client = $this->protocolFactory->imapClient($account);
 		try {
 			$attachmentIds = $this->attachmentService->handleAttachments($account, $attachments, $client);
 		} finally {

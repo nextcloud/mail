@@ -14,6 +14,7 @@ use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\IRequest;
@@ -36,11 +37,10 @@ class DeepLinkController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param string $messageId
 	 * @return RedirectResponse
 	 */
+	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function open(string $messageId): RedirectResponse {
 		$user = $this->userSession->getUser();

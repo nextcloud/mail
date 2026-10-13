@@ -83,7 +83,7 @@ export class DroppableMailbox {
 	}
 
 	onDragOver(event) {
-		if (!this.isCurrentlyDragging) {
+		if (!this.isCurrentlyDragging || !this.canBeDropped()) {
 			return
 		}
 
@@ -102,7 +102,7 @@ export class DroppableMailbox {
 	}
 
 	onDragLeave(event) {
-		if (!this.isCurrentlyDragging) {
+		if (!this.isCurrentlyDragging || !this.canBeDropped()) {
 			return
 		}
 
@@ -111,7 +111,7 @@ export class DroppableMailbox {
 	}
 
 	async onDrop(event) {
-		if (!this.isCurrentlyDragging) {
+		if (!this.isCurrentlyDragging || !this.canBeDropped()) {
 			return
 		}
 

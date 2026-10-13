@@ -15,7 +15,6 @@ use Horde_Mail_Transport;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalMessage;
@@ -25,11 +24,12 @@ use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message as DbMessage;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\Message;
 use OCA\Mail\Model\NewMessageData;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AliasesService;
+use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\Service\TransmissionService;
 use OCA\Mail\SMTP\SmtpClientFactory;
@@ -40,8 +40,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class MailTransmissionTest extends TestCase {
-	private IMAPClientFactory|MockObject $imapClientFactory;
-	private IMailManager|MockObject $mailManager;
+	private ProtocolFactory|MockObject $protocolFactory;
+	private MailManager|MockObject $mailManager;
 	private SmtpClientFactory|MockObject $smtpClientFactory;
 	private IEventDispatcher|MockObject $eventDispatcher;
 	private MailboxMapper|MockObject $mailboxMapper;
@@ -55,7 +55,7 @@ class MailTransmissionTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
+		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
 		$this->smtpClientFactory = $this->createMock(SmtpClientFactory::class);
 		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
@@ -64,10 +64,10 @@ class MailTransmissionTest extends TestCase {
 		$this->performanceLogger = $this->createMock(PerformanceLogger::class);
 		$this->aliasService = $this->createMock(AliasesService::class);
 		$this->transmissionService = $this->createMock(TransmissionService::class);
-		$this->mailManager = $this->createMock(IMailManager::class);
+		$this->mailManager = $this->createMock(MailManager::class);
 
 		$this->transmission = new MailTransmission(
-			$this->imapClientFactory,
+			$this->protocolFactory,
 			$this->smtpClientFactory,
 			$this->eventDispatcher,
 			$this->mailboxMapper,
@@ -347,8 +347,8 @@ class MailTransmissionTest extends TestCase {
 		$message = new Message();
 
 		$client = $this->createStub(Horde_Imap_Client_Socket::class);
-		$this->imapClientFactory->expects($this->once())
-			->method('getClient')
+		$this->protocolFactory->expects($this->once())
+			->method('imapClient')
 			->with($account)
 			->willReturn($client);
 		$draftsMailbox = new DbMailbox();
@@ -398,6 +398,40 @@ class MailTransmissionTest extends TestCase {
 		$this->transmission->saveLocalDraft(new Account($mailAccount), $localMessage);
 	}
 
+	public function testSaveLocalDraftWithAiGeneratedHeader(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(10);
+		$mailAccount->setUserId('gunther');
+		$mailAccount->setName('Gunther');
+		$mailAccount->setEmail('gunther@stardewvalley-museum.com');
+		$mailAccount->setDraftsMailboxId(123);
+		$localMessage = new LocalMessage();
+		$localMessage->setType(LocalMessage::TYPE_DRAFT);
+		$localMessage->setAccountId($mailAccount->getId());
+		$localMessage->setSubject('subject');
+		$localMessage->setBodyHtml('message');
+		$localMessage->setHtml(true);
+		$localMessage->setAttachments([]);
+		$localMessage->setAiGenerated(true);
+		$to = Recipient::fromParams([
+			'email' => 'emily@stardewvalleypub.com',
+			'label' => 'Emily',
+			'type' => Recipient::TYPE_TO
+		]);
+		$localMessage->setRecipients([$to]);
+
+		$this->messageMapper->expects(self::once())
+			->method('save')
+			->with(
+				self::anything(),
+				self::anything(),
+				self::callback(static fn (string $raw) => str_contains($raw, LocalMessage::HEADER_AI_GENERATED . ': 1')),
+				self::anything(),
+			);
+
+		$this->transmission->saveLocalDraft(new Account($mailAccount), $localMessage);
+	}
+
 	public function testCreateDraftsMailboxAndSave(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(10);
@@ -425,6 +459,62 @@ class MailTransmissionTest extends TestCase {
 			->method('save');
 
 		$this->transmission->saveLocalDraft(new Account($mailAccount), $localMessage);
+	}
+
+	public function testSendMessageWithAiGeneratedHeader(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setName('Bob');
+		$mailAccount->setEmail('bob@mail.example');
+		$mailAccount->setUserId('bob');
+		$mailAccount->setSentMailboxId(123);
+		$account = new Account($mailAccount);
+		$localMessage = new LocalMessage();
+		$localMessage->setSubject('Test');
+		$localMessage->setBodyPlain('Test');
+		$localMessage->setHtml(false);
+		$localMessage->setAiGenerated(true);
+		$transport = $this->createStub(Horde_Mail_Transport::class);
+		$this->smtpClientFactory->expects($this->once())
+			->method('create')
+			->willReturn($transport);
+		$this->transmissionService->expects(self::once())
+			->method('getSignMimePart')
+			->willReturnCallback(static fn ($localMessage, $account, $mimePart) => $mimePart);
+		$this->transmissionService->expects(self::once())
+			->method('getEncryptMimePart')
+			->willReturnCallback(static fn ($localMessage, $to, $cc, $bcc, $account, $mimePart) => $mimePart);
+
+		$this->transmission->sendMessage($account, $localMessage);
+
+		$this->assertStringContainsString(LocalMessage::HEADER_AI_GENERATED . ': 1', $localMessage->getRaw());
+	}
+
+	public function testSendMessageWithoutAiGeneratedHeader(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setName('Bob');
+		$mailAccount->setEmail('bob@mail.example');
+		$mailAccount->setUserId('bob');
+		$mailAccount->setSentMailboxId(123);
+		$account = new Account($mailAccount);
+		$localMessage = new LocalMessage();
+		$localMessage->setSubject('Test');
+		$localMessage->setBodyPlain('Test');
+		$localMessage->setHtml(false);
+		$localMessage->setAiGenerated(false);
+		$transport = $this->createStub(Horde_Mail_Transport::class);
+		$this->smtpClientFactory->expects($this->once())
+			->method('create')
+			->willReturn($transport);
+		$this->transmissionService->expects(self::once())
+			->method('getSignMimePart')
+			->willReturnCallback(static fn ($localMessage, $account, $mimePart) => $mimePart);
+		$this->transmissionService->expects(self::once())
+			->method('getEncryptMimePart')
+			->willReturnCallback(static fn ($localMessage, $to, $cc, $bcc, $account, $mimePart) => $mimePart);
+
+		$this->transmission->sendMessage($account, $localMessage);
+
+		$this->assertStringNotContainsString(LocalMessage::HEADER_AI_GENERATED, $localMessage->getRaw());
 	}
 
 	public function testSendMessageCc() {
@@ -464,13 +554,12 @@ class MailTransmissionTest extends TestCase {
 				return new AddressList($addresses);
 			});
 
-
 		$this->transmission->sendMessage($account, $localMessage);
 
 		$this->assertEquals(LocalMessage::STATUS_RAW, $localMessage->getStatus());
 		$this->assertStringContainsString('From: Bob <bob@mail.example>', $localMessage->getRaw());
 		$this->assertStringContainsString('Cc: Alice <alice@mail.example>', $localMessage->getRaw());
-		$this->assertStringNotContainsString('Bcc:', $localMessage->getRaw());
+		$this->assertStringContainsString('Bcc: Jane <jane@mail.example>', $localMessage->getRaw());
 	}
 
 	public function testSendMessageOmitCc() {

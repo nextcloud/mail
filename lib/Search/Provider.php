@@ -24,9 +24,6 @@ use OCP\Search\SearchResultEntry;
 use function array_map;
 
 class Provider implements IProvider {
-	/** @var IMailSearch */
-	private $mailSearch;
-
 	/** @var IL10N */
 	private $l10n;
 
@@ -37,13 +34,12 @@ class Provider implements IProvider {
 	private $urlGenerator;
 
 	public function __construct(
-		IMailSearch $mailSearch,
+		private IMailSearch $mailSearch,
 		IL10N $l10n,
 		IDateTimeFormatter $dateTimeFormatter,
 		IURLGenerator $urlGenerator,
 		private FilterStringParser $filterStringParser,
 	) {
-		$this->mailSearch = $mailSearch;
 		$this->l10n = $l10n;
 		$this->dateTimeFormatter = $dateTimeFormatter;
 		$this->urlGenerator = $urlGenerator;
@@ -120,10 +116,9 @@ class Provider implements IProvider {
 					]),
 					$message->getSubject(),
 					$subline,
-					$this->urlGenerator->linkToRouteAbsolute('mail.page.thread', [
-						'mailboxId' => $message->getMailboxId(),
-						'id' => $message->getId(),
-					]), // TODO: deep URL
+					$this->urlGenerator->linkToRouteAbsolute('mail.deep_link.open', [
+						'messageId' => $message->getMessageId(),
+					]),
 					'icon-mail',
 					!is_null($from)
 				);

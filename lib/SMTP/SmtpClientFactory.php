@@ -26,15 +26,13 @@ class SmtpClientFactory {
 	/** @var ICrypto */
 	private $crypto;
 
-	/** @var HostNameFactory */
-	private $hostNameFactory;
-
-	public function __construct(IConfig $config,
+	public function __construct(
+		IConfig $config,
 		ICrypto $crypto,
-		HostNameFactory $hostNameFactory) {
+		private HostNameFactory $hostNameFactory,
+	) {
 		$this->config = $config;
 		$this->crypto = $crypto;
-		$this->hostNameFactory = $hostNameFactory;
 	}
 
 	/**

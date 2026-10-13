@@ -9,42 +9,52 @@
 			v-if="isRead"
 			variant="tertiary"
 			:title="t('mail', 'Mark as unread')"
-			@click.prevent="$emit('toggle-seen')">
-			<EmailRead :size="20" />
+			@click.prevent="$emit('toggleSeen')">
+			<template #icon>
+				<EmailRead :size="20" />
+			</template>
 		</NcButton>
 		<NcButton
 			v-else
 			variant="tertiary"
 			:title="t('mail', 'Mark as read')"
-			@click.prevent="$emit('toggle-seen')">
-			<EmailUnread :size="20" />
+			@click.prevent="$emit('toggleSeen')">
+			<template #icon>
+				<EmailUnread :size="20" />
+			</template>
 		</NcButton>
 		<NcButton
 			v-if="isImportant"
 			variant="tertiary"
 			:title="t('mail', 'Mark as unimportant')"
-			@click.prevent="$emit('toggle-important')">
-			<ImportantIcon :size="20" />
+			@click.prevent="$emit('toggleImportant')">
+			<template #icon>
+				<ImportantIcon :size="20" />
+			</template>
 		</NcButton>
 		<NcButton
 			v-else
 			variant="tertiary"
 			:title="t('mail', 'Mark as important')"
-			@click.prevent="$emit('toggle-important')">
-			<ImportantOutlineIcon :size="20" />
+			@click.prevent="$emit('toggleImportant')">
+			<template #icon>
+				<ImportantOutlineIcon :size="20" />
+			</template>
 		</NcButton>
 		<NcButton
 			variant="tertiary"
 			:title="t('mail', 'Delete thread')"
 			@click.prevent="$emit('delete')">
-			<IconDelete :size="20" />
+			<template #icon>
+				<IconDelete :size="20" />
+			</template>
 		</NcButton>
 	</div>
 </template>
 
 <script>
 
-import { NcButton } from '@nextcloud/vue'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
 import EmailUnread from 'vue-material-design-icons/EmailOutline.vue'
 import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'
@@ -73,6 +83,8 @@ export default {
 			default: false,
 		},
 	},
+
+	emits: ['toggleSeen', 'toggleImportant', 'delete'],
 }
 </script>
 

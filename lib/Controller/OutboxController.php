@@ -21,48 +21,38 @@ use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class OutboxController extends Controller {
-	private OutboxService $service;
-	private string $userId;
-	private AccountService $accountService;
-	private SmimeService $smimeService;
-	private DelegationService $delegationService;
-
-	public function __construct(string $appName,
-		$userId,
+	public function __construct(
+		string $appName,
+		private string $userId,
 		IRequest $request,
-		OutboxService $service,
-		AccountService $accountService,
-		SmimeService $smimeService,
-		DelegationService $delegationService) {
+		private OutboxService $service,
+		private AccountService $accountService,
+		private SmimeService $smimeService,
+		private DelegationService $delegationService,
+	) {
 		parent::__construct($appName, $request);
-		$this->userId = $userId;
-		$this->service = $service;
-		$this->accountService = $accountService;
-		$this->smimeService = $smimeService;
-		$this->delegationService = $delegationService;
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function index(): JsonResponse {
 		return JsonResponse::success(['messages' => $this->service->getMessages($this->userId)]);
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function show(int $id): JsonResponse {
 		$effectiveUserId = $this->delegationService->resolveLocalMessageUserId($id, $this->userId);
@@ -71,8 +61,6 @@ class OutboxController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $accountId
 	 * @param string $subject
 	 * @param string $body
@@ -91,6 +79,7 @@ class OutboxController extends Controller {
 	 * @throws DoesNotExistException
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function create(
 		int $accountId,
@@ -112,6 +101,7 @@ class OutboxController extends Controller {
 		?int $sendAt = null,
 		bool $requestMdn = false,
 		bool $isPgpMime = false,
+		bool $isAiGenerated = false,
 	): JsonResponse {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->userId);
 		$account = $this->accountService->find($effectiveUserId, $accountId);
@@ -135,6 +125,7 @@ class OutboxController extends Controller {
 		$message->setSmimeSign($smimeSign);
 		$message->setSmimeEncrypt($smimeEncrypt);
 		$message->setRequestMdn($requestMdn);
+		$message->setAiGenerated($isAiGenerated);
 
 		if (!empty($smimeCertificateId)) {
 			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $effectiveUserId);
@@ -148,10 +139,9 @@ class OutboxController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function createFromDraft(DraftsService $draftsService, int $id, int $sendAt): JsonResponse {
 		$effectiveUserId = $this->delegationService->resolveLocalMessageUserId($id, $this->userId);
@@ -169,15 +159,12 @@ class OutboxController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @param int $accountId
 	 * @param string $subject
 	 * @param string $body
 	 * @param string $editorBody
 	 * @param bool $isHtml
-	 * @param bool $failed
 	 * @param array $to i. e. [['label' => 'Linus', 'email' => 'tent@stardewvalley.com'], ['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']]
 	 * @param array $cc
 	 * @param array $bcc
@@ -187,6 +174,7 @@ class OutboxController extends Controller {
 	 * @param int|null $sendAt
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function update(
 		int $id,
@@ -198,7 +186,6 @@ class OutboxController extends Controller {
 		bool $isHtml,
 		bool $smimeSign,
 		bool $smimeEncrypt,
-		bool $failed = false,
 		array $to = [],
 		array $cc = [],
 		array $bcc = [],
@@ -209,12 +196,15 @@ class OutboxController extends Controller {
 		?int $sendAt = null,
 		bool $requestMdn = false,
 		bool $isPgpMime = false,
+		bool $isAiGenerated = false,
 	): JsonResponse {
 		$effectiveUserId = $this->delegationService->resolveLocalMessageUserId($id, $this->userId);
 		$message = $this->service->getMessage($id, $effectiveUserId);
 		if ($message->getStatus() === LocalMessage::STATUS_PROCESSED) {
 			return JsonResponse::error('Cannot modify already sent message', Http::STATUS_FORBIDDEN, [$message]);
 		}
+
+		$this->delegationService->assertAccountAccess($accountId, $this->userId);
 		$account = $this->accountService->find($effectiveUserId, $accountId);
 
 		$message->setAccountId($accountId);
@@ -230,6 +220,11 @@ class OutboxController extends Controller {
 		$message->setSmimeSign($smimeSign);
 		$message->setSmimeEncrypt($smimeEncrypt);
 		$message->setRequestMdn($requestMdn);
+		$message->setAiGenerated($isAiGenerated);
+
+		// Reset the status to make it retryable.
+		$message->setFailed(false);
+		$message->setStatus(LocalMessage::STATUS_RAW);
 
 		if (!empty($smimeCertificateId)) {
 			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $effectiveUserId);
@@ -243,11 +238,10 @@ class OutboxController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function send(int $id): JsonResponse {
 		$effectiveUserId = $this->delegationService->resolveLocalMessageUserId($id, $this->userId);
@@ -270,11 +264,10 @@ class OutboxController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function destroy(int $id): JsonResponse {
 		$effectiveUserId = $this->delegationService->resolveLocalMessageUserId($id, $this->userId);

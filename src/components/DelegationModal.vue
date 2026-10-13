@@ -6,8 +6,9 @@
 <template>
 	<NcModal
 		v-if="view === 'main'"
+		closeOnClickOutside
 		size="normal"
-		label-id="delegation-modal-title"
+		labelId="delegation-modal-title"
 		@close="$emit('close')">
 		<div class="delegation-modal">
 			<h2 id="delegation-modal-title">
@@ -25,10 +26,10 @@
 					<NcListItem
 						v-for="user in delegates"
 						:key="user.userId"
-						:name="user.userId">
+						:name="user.displayName || user.userId">
 						<template #icon>
 							<NcAvatar
-								disable-menu
+								disableMenu
 								:size="34"
 								:user="user.userId" />
 						</template>
@@ -68,7 +69,7 @@
 		<NcSelectUsers
 			v-model="selectedUser"
 			class="add-delegates-dialog__select"
-			:input-label="t('mail', 'Select a user')"
+			:inputLabel="t('mail', 'Select a user')"
 			:options="userSuggestions"
 			:loading="searchLoading"
 			:placeholder="t('mail', 'Select a user')"
@@ -98,8 +99,14 @@ import axios from '@nextcloud/axios'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { generateOcsUrl } from '@nextcloud/router'
 import { ShareType } from '@nextcloud/sharing'
-import { NcAvatar, NcButton, NcDialog, NcListItem, NcLoadingIcon, NcModal, NcSelectUsers } from '@nextcloud/vue'
 import debounce from 'lodash/fp/debounce.js'
+import NcAvatar from '@nextcloud/vue/components/NcAvatar'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
+import NcListItem from '@nextcloud/vue/components/NcListItem'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
+import NcModal from '@nextcloud/vue/components/NcModal'
+import NcSelectUsers from '@nextcloud/vue/components/NcSelectUsers'
 import IconClose from 'vue-material-design-icons/Close.vue'
 import IconPlus from 'vue-material-design-icons/Plus.vue'
 import logger from '../logger.js'
@@ -126,6 +133,8 @@ export default {
 		},
 	},
 
+	emits: ['close'],
+
 	data() {
 		return {
 			view: 'main',
@@ -144,13 +153,13 @@ export default {
 			return [
 				{
 					label: t('mail', 'Cancel'),
-					type: 'tertiary',
+					variant: 'tertiary',
 					disabled: this.delegating,
 					callback: () => { this.closeDialog() },
 				},
 				{
 					label: t('mail', 'Delegate access'),
-					type: 'primary',
+					variant: 'primary',
 					icon: IconCheck,
 					disabled: !this.selectedUser || this.delegating,
 					callback: async () => { await this.addDelegate() },
@@ -162,12 +171,12 @@ export default {
 			return [
 				{
 					label: t('mail', 'Cancel'),
-					type: 'tertiary',
+					variant: 'tertiary',
 					callback: () => { this.closeDialog() },
 				},
 				{
 					label: t('mail', 'Revoke'),
-					type: 'error',
+					variant: 'error',
 					callback: async () => { await this.revokeDelegate() },
 				},
 			]
@@ -177,7 +186,7 @@ export default {
 			if (!this.revokeUser) {
 				return ''
 			}
-			return t('mail', '{userId} will no longer be able to act on your behalf', { userId: this.revokeUser.userId })
+			return t('mail', '{userId} will no longer be able to act on your behalf', { userId: this.revokeUser.displayName || this.revokeUser.userId })
 		},
 	},
 
@@ -260,8 +269,8 @@ export default {
 			this.delegating = true
 			try {
 				const delegation = await delegate(this.account.accountId, this.selectedUser.id)
-				this.delegates.push(delegation)
-				showSuccess(t('mail', 'Delegated access to {userId}', { userId: this.selectedUser.id }))
+				this.delegates.push({ ...delegation, displayName: this.selectedUser.displayName })
+				showSuccess(t('mail', 'Delegated access to {displayName}', { displayName: this.selectedUser.displayName || this.selectedUser.id }))
 			} catch (error) {
 				logger.error('Could not delegate access', { error })
 				showError(t('mail', 'Could not delegate access'))
@@ -279,7 +288,7 @@ export default {
 			try {
 				await unDelegate(this.account.accountId, this.revokeUser.userId)
 				this.delegates = this.delegates.filter((d) => d.userId !== this.revokeUser.userId)
-				showSuccess(t('mail', 'Revoked access for {userId}', { userId: this.revokeUser.userId }))
+				showSuccess(t('mail', 'Revoked access for {displayName}', { displayName: this.revokeUser.displayName }))
 			} catch (error) {
 				logger.error('Could not revoke delegation', { error })
 				showError(t('mail', 'Could not revoke delegation'))

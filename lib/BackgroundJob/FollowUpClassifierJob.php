@@ -9,12 +9,13 @@ declare(strict_types=1);
 
 namespace OCA\Mail\BackgroundJob;
 
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\ThreadMapper;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
+use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\QueuedJob;
 use OCP\DB\Exception;
@@ -30,7 +31,7 @@ class FollowUpClassifierJob extends QueuedJob {
 		ITimeFactory $time,
 		private LoggerInterface $logger,
 		private AccountService $accountService,
-		private IMailManager $mailManager,
+		private MailManager $mailManager,
 		private AiIntegrationsService $aiService,
 		private ThreadMapper $threadMapper,
 	) {
@@ -55,10 +56,10 @@ class FollowUpClassifierJob extends QueuedJob {
 		}
 
 		$messages = $this->mailManager->getByMessageId($account, $messageId);
-		$messages = array_filter(
+		$messages = array_values(array_filter(
 			$messages,
 			static fn (Message $message) => $message->getMailboxId() === $mailboxId,
-		);
+		));
 		if (count($messages) === 0) {
 			return;
 		}
@@ -84,24 +85,31 @@ class FollowUpClassifierJob extends QueuedJob {
 			return;
 		}
 
-		$requiresFollowup = $this->aiService->requiresFollowUp(
-			$account,
-			$mailbox,
-			$message,
-			$userId,
-		);
+		try {
+			$requiresFollowup = $this->aiService->requiresFollowUp(
+				$account,
+				$mailbox,
+				$message,
+				$userId,
+			);
+		} catch (ServiceException $e) {
+			$this->logger->error('Failed to classify message for follow-up: ' . $e->getMessage(), [
+				'exception' => $e,
+			]);
+			return;
+		}
 		if (!$requiresFollowup) {
 			return;
 		}
 
 		$this->logger->debug("Message requires follow-up: {$message->getId()}");
 		$tag = $this->mailManager->createTag('Follow up', '#d77000', $userId);
-		$this->mailManager->tagMessage(
+		$this->mailManager->tagMessages(
 			$account,
-			$mailbox->getName(),
-			$message,
+			$mailbox,
 			$tag,
 			true,
+			$message,
 		);
 	}
 }

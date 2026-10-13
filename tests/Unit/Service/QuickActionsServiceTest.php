@@ -52,7 +52,6 @@ class QuickActionsServiceTest extends TestCase {
 		$actionStep->setOrder(1);
 		$actionStep->setActionId(1);
 
-
 		$this->actionsMapper->expects($this->once())
 			->method('findAll')
 			->with($userId)
@@ -71,7 +70,6 @@ class QuickActionsServiceTest extends TestCase {
 		$this->assertIsArray($result);
 		$this->assertCount(1, $result);
 	}
-
 
 	public function testFind(): void {
 		$actionId = 1;
@@ -345,6 +343,5 @@ class QuickActionsServiceTest extends TestCase {
 
 		$this->quickActionsService->createActionStep('moveThread', 1, 1);
 	}
-
 
 }

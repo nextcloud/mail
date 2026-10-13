@@ -245,6 +245,70 @@ class MessageMapperTest extends TestCase {
 		$this->assertEquals($expected, $result);
 	}
 
+	public function testGetByIdsSkipsResultsWithoutUid(): void {
+		/** @var Horde_Imap_Client_Socket|MockObject $imapClient */
+		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);
+		$mailbox = 'inbox';
+		$ids = [1, 3];
+		$userId = 'user';
+		$loadBody = false;
+		$runPhishingCheck = false;
+
+		$imapMessageFetcher1 = $this->createMock(ImapMessageFetcher::class);
+		$message1 = $this->createStub(IMAPMessage::class);
+
+		$fetchResults = new Horde_Imap_Client_Fetch_Results();
+		$fetchResult1 = $this->createMock(Horde_Imap_Client_Data_Fetch::class);
+		$fetchResult2 = $this->createMock(Horde_Imap_Client_Data_Fetch::class);
+		$imapClient->expects(self::once())
+			->method('fetch')
+			->willReturn($fetchResults);
+		$fetchResults[0] = $fetchResult1;
+		$fetchResults[1] = $fetchResult2;
+		$fetchResult1->method('exists')
+			->with(Horde_Imap_Client::FETCH_ENVELOPE)
+			->willReturn(true);
+		$fetchResult2->method('exists')
+			->with(Horde_Imap_Client::FETCH_ENVELOPE)
+			->willReturn(true);
+		$fetchResult1->method('getUid')
+			->willReturn(1);
+		$fetchResult2->method('getUid')
+			->willReturn(null);
+		$this->imapMessageFactory->expects(self::once())
+			->method('build')
+			->willReturnMap([
+				[1, $mailbox, $imapClient, $userId, $imapMessageFetcher1],
+			]);
+
+		$imapMessageFetcher1->expects(self::once())
+			->method('withBody')
+			->with($loadBody)
+			->willReturnSelf();
+		$imapMessageFetcher1->expects(self::once())
+			->method('withPhishingCheck')
+			->with($runPhishingCheck)
+			->willReturnSelf();
+		$imapMessageFetcher1->expects(self::once())
+			->method('fetchMessage')
+			->with($fetchResult1)
+			->willReturn($message1);
+
+		$expected = [
+			$message1
+		];
+
+		$result = $this->mapper->findByIds(
+			$imapClient,
+			$mailbox,
+			new Horde_Imap_Client_Ids($ids),
+			$userId,
+			$loadBody
+		);
+
+		$this->assertEquals($expected, $result);
+	}
+
 	public function testFindAllEmptyMailbox(): void {
 		/** @var Horde_Imap_Client_Socket|MockObject $client */
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);

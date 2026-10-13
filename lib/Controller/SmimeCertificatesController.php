@@ -19,29 +19,26 @@ use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class SmimeCertificatesController extends Controller {
-	private ?string $userId;
-	private SmimeService $certificateService;
-
-	public function __construct(string $appName,
+	public function __construct(
+		string $appName,
 		IRequest $request,
-		?string $userId,
-		SmimeService $certificateService) {
+		private ?string $userId,
+		private SmimeService $certificateService,
+	) {
 		parent::__construct($appName, $request);
-		$this->userId = $userId;
-		$this->certificateService = $certificateService;
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @throws ServiceException
 	 * @throws SmimeCertificateParserException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function index(): JsonResponse {
 		if ($this->userId === null) {
@@ -54,13 +51,12 @@ class SmimeCertificatesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @return JsonResponse
 	 *
 	 * @throws DoesNotExistException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function destroy(int $id): JsonResponse {
 		if ($this->userId === null) {
@@ -72,13 +68,12 @@ class SmimeCertificatesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @return JsonResponse
 	 *
 	 * @throws ServiceException
 	 * @throws SmimeCertificateParserException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function create(): JsonResponse {
 		if ($this->userId === null) {

@@ -4,7 +4,7 @@
 -->
 
 <template>
-	<SettingsSection
+	<NcSettingsSection
 		:name="t('mail', 'Mail app')"
 		:description="t('mail', 'The mail app allows users to read mails on their IMAP accounts.')">
 		<p>
@@ -91,7 +91,7 @@
 			}}
 		</h3>
 		<p>
-			<ButtonVue
+			<NcButton
 				class="config-button"
 				:aria-label="t('mail', 'Add new config')"
 				@click="addNew = true">
@@ -99,8 +99,8 @@
 					<IconAdd :size="20" />
 				</template>
 				{{ t('mail', 'Add new config') }}
-			</ButtonVue>
-			<ButtonVue
+			</NcButton>
+			<NcButton
 				class="config-button"
 				:aria-label="t('mail', 'Provision all accounts')"
 				@click="provisionAll">
@@ -108,13 +108,13 @@
 					<IconSettings :size="20" />
 				</template>
 				{{ t('mail', 'Provision all accounts') }}
-			</ButtonVue>
+			</NcButton>
 			<ProvisioningSettings
 				v-if="addNew"
 				:key="formKey"
 				:setting="preview"
 				:submit="saveNewSettings"
-				:delete-button="false" />
+				:deleteButton="false" />
 			<ProvisioningSettings
 				v-for="setting in configs"
 				:id="setting.id"
@@ -130,7 +130,7 @@
 					<NcCheckboxRadioSwitch
 						v-model="allowNewMailAccounts"
 						type="switch"
-						@update:checked="updateAllowNewMailAccounts">
+						@update:modelValue="updateAllowNewMailAccounts">
 						{{ t('mail', 'Allow additional Mail accounts from User Settings') }}
 					</NcCheckboxRadioSwitch>
 				</p>
@@ -148,7 +148,7 @@
 					<NcCheckboxRadioSwitch
 						v-model="isLlmEnabled"
 						type="switch"
-						@update:checked="updateLlmEnabled">
+						@update:modelValue="updateLlmEnabled">
 						{{ t('mail', 'Enable LLM processing') }}
 					</NcCheckboxRadioSwitch>
 				</p>
@@ -163,8 +163,8 @@
 				<p>
 					<NcCheckboxRadioSwitch
 						type="switch"
-						:model-value="isImportanceClassificationEnabledByDefault"
-						@update:checked="setImportanceClassificationEnabledByDefault">
+						:modelValue="isImportanceClassificationEnabledByDefault"
+						@update:modelValue="setImportanceClassificationEnabledByDefault">
 						{{ t('mail', 'Enable classification of important mails by default') }}
 					</NcCheckboxRadioSwitch>
 				</p>
@@ -228,7 +228,7 @@
 					}}
 				</p>
 			</article>
-			<GmailAdminOauthSettings :client-id="googleOauthClientId" />
+			<GmailAdminOauthSettings :clientId="googleOauthClientId" />
 		</div>
 		<div class="app-description">
 			<h3>
@@ -243,7 +243,7 @@
 				</p>
 				<a :href="microsoftOauthDocs" target="_blank" rel="noopener noreferrer">{{ t('mail', 'For more details, please click here to open our documentation.') }}</a>
 			</article>
-			<MicrosoftAdminOauthSettings :tenant-id="microsoftOauthTenantId" :client-id="microsoftOauthClientId" />
+			<MicrosoftAdminOauthSettings :tenantId="microsoftOauthTenantId" :clientId="microsoftOauthClientId" />
 		</div>
 		<div class="app-description">
 			<h3>{{ t('mail', 'User Interface Preference Defaults') }}</h3>
@@ -263,7 +263,7 @@
 						type="radio"
 						name="message_view_mode_radio"
 						value="threaded"
-						@update:checked="setLayoutMessageView('threaded')">
+						@update:modelValue="setLayoutMessageView('threaded')">
 						{{ t('mail', 'Show all messages in thread') }}
 					</NcCheckboxRadioSwitch>
 					<NcCheckboxRadioSwitch
@@ -271,21 +271,21 @@
 						type="radio"
 						name="message_view_mode_radio"
 						value="singleton"
-						@update:checked="setLayoutMessageView('singleton')">
+						@update:modelValue="setLayoutMessageView('singleton')">
 						{{ t('mail', 'Show only the selected message') }}
 					</NcCheckboxRadioSwitch>
 				</p>
 			</article>
 		</div>
-	</SettingsSection>
+	</NcSettingsSection>
 </template>
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
-import ButtonVue from '@nextcloud/vue/components/NcButton'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
-import SettingsSection from '@nextcloud/vue/components/NcSettingsSection'
+import NcSettingsSection from '@nextcloud/vue/components/NcSettingsSection'
 import IconSettings from 'vue-material-design-icons/CogOutline.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import AntiSpamSettings from './AntiSpamSettings.vue'
@@ -318,8 +318,8 @@ export default {
 		AntiSpamSettings,
 		MicrosoftAdminOauthSettings,
 		ProvisioningSettings,
-		SettingsSection,
-		ButtonVue,
+		NcSettingsSection,
+		NcButton,
 		IconAdd,
 		IconSettings,
 		NcCheckboxRadioSwitch,

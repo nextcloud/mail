@@ -39,7 +39,7 @@ function flattenTrace(trace) {
 
 export function getReportUrl(error) {
 	logger.error('crash report', { error })
-	let message = error.message || 'An unkown error occurred.'
+	let message = error.message || 'An unknown error occurred.'
 	if (!message.endsWith('.')) {
 		message += '.'
 	}

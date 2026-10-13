@@ -16,6 +16,8 @@ use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\Attribute\UserRateLimit;
 use OCP\AppFramework\Http\Response;
@@ -34,36 +36,26 @@ class ProxyController extends Controller {
 	private IURLGenerator $urlGenerator;
 	private ISession $session;
 	private IClientService $clientService;
-	private LoggerInterface $logger;
-	private ProxyHmacGenerator $hmacGenerator;
-	private MailManager $mailManager;
-	private ?string $userId;
 
-	public function __construct(string $appName,
+	public function __construct(
+		string $appName,
 		IRequest $request,
 		IURLGenerator $urlGenerator,
 		ISession $session,
 		IClientService $clientService,
-		ProxyHmacGenerator $hmacGenerator,
-		LoggerInterface $logger,
-		MailManager $mailManager,
-		?string $userId) {
+		private ProxyHmacGenerator $hmacGenerator,
+		private LoggerInterface $logger,
+		private MailManager $mailManager,
+		private ?string $userId,
+	) {
 		parent::__construct($appName, $request);
 		$this->request = $request;
 		$this->urlGenerator = $urlGenerator;
 		$this->session = $session;
 		$this->clientService = $clientService;
-		$this->logger = $logger;
-		$this->hmacGenerator = $hmacGenerator;
-		$this->mailManager = $mailManager;
-		$this->userId = $userId;
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 * @UserRateThrottle(limit=50, period=60)
-	 *
 	 * @param string $src
 	 *
 	 * TODO: Cache the proxied content to prevent unnecessary requests from the oC server
@@ -72,6 +64,8 @@ class ProxyController extends Controller {
 	 *
 	 * @return Response|ProxyDownloadResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	#[UserRateLimit(limit: 50, period: 60)]
 	public function proxy(string $src, ?int $id, ?string $hmac): Response {
 		// close the session to allow parallel downloads

@@ -11,10 +11,12 @@ namespace OCA\Mail\IMAP;
 
 use Horde_Imap_Client_Exception;
 use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DbMapper;
 use OCA\Mail\IMAP\MessageMapper as ImapMapper;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\Avatar\Avatar;
 use OCA\Mail\Service\AvatarService;
@@ -25,34 +27,14 @@ use function array_merge;
 use function array_reduce;
 
 class PreviewEnhancer {
-	/** @var IMAPClientFactory */
-	private $clientFactory;
-
-	/** @var ImapMapper */
-	private $imapMapper;
-
-	/** @var DbMapper */
-	private $mapper;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var AvatarService */
-	private $avatarService;
-
 	public function __construct(
-		IMAPClientFactory $clientFactory,
-		ImapMapper $imapMapper,
-		DbMapper $dbMapper,
-		LoggerInterface $logger,
-		AvatarService $avatarService,
+		private readonly ProtocolFactory $protocolFactory,
+		private ImapMapper $imapMapper,
+		private DbMapper $mapper,
+		private LoggerInterface $logger,
+		private AvatarService $avatarService,
 		private AttachmentService $attachmentService,
 	) {
-		$this->clientFactory = $clientFactory;
-		$this->imapMapper = $imapMapper;
-		$this->mapper = $dbMapper;
-		$this->logger = $logger;
-		$this->avatarService = $avatarService;
 	}
 
 	/**
@@ -69,10 +51,9 @@ class PreviewEnhancer {
 
 			return array_merge($carry, [$message->getUid()]);
 		}, []);
-		$client = $this->clientFactory->getClient($account);
 
 		foreach ($messages as $message) {
-			$attachments = $this->attachmentService->getAttachmentNames($account, $mailbox, $message, $client);
+			$attachments = $this->attachmentService->getAttachmentNames($account, $mailbox, $message);
 			$message->setAttachments($attachments);
 		}
 
@@ -97,7 +78,19 @@ class PreviewEnhancer {
 			return $messages;
 		}
 
+		if ($account->getMailAccount()->getProtocol() === MailAccount::PROTOCOL_JMAP) {
+			foreach ($messages as $message) {
+				if ($message->getStructureAnalyzed()) {
+					continue;
+				}
 
+				$message->setStructureAnalyzed(true);
+			}
+
+			return $this->mapper->updatePreviewDataBulk(...$messages);
+		}
+
+		$client = $this->protocolFactory->imapClient($account);
 		try {
 			$data = $this->imapMapper->getBodyStructureData(
 				$client,

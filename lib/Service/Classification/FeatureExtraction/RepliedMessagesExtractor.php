@@ -17,17 +17,15 @@ use function array_map;
 use function array_unique;
 
 class RepliedMessagesExtractor implements IExtractor {
-	/** @var StatisticsDao */
-	private $statisticsDao;
-
 	/** @var int[] */
 	private $totalMessages;
 
 	/** @var int[] */
 	private $repliedMessages;
 
-	public function __construct(StatisticsDao $statisticsDao) {
-		$this->statisticsDao = $statisticsDao;
+	public function __construct(
+		private StatisticsDao $statisticsDao,
+	) {
 	}
 
 	#[\Override]

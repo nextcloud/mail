@@ -9,10 +9,8 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Service\Phishing;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-
 use OCA\Mail\Service\PhishingDetection\LinkCheck;
 use OCP\IL10N;
-
 use PHPUnit\Framework\MockObject\MockObject;
 
 class LinkCheckTest extends TestCase {

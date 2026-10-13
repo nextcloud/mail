@@ -5,35 +5,34 @@
 
 <template>
 	<NcDialog
-		ref="translateDialog"
 		class="translate-dialog"
 		:name="t('mail', 'Translate message')"
 		size="large"
-		close-on-click-outside
+		closeOnClickOutside
 		@update:open="$emit('close')">
 		<template v-if="isMounted" #default>
 			<div class="translate-dialog__wrapper">
 				<NcSelect
 					v-model="selectedFrom"
 					class="translate-dialog__select"
-					input-id="from"
+					inputId="from"
 					label="name"
 					:aria-label-combobox="t('mail', 'Source language to translate from')"
 					:placeholder="t('mail', 'Translate from')"
 					:options="availableInputLanguages"
-					no-wrap />
+					noWrap />
 
 				<ArrowRight />
 
 				<NcSelect
 					v-model="selectedTo"
 					class="translate-dialog__select"
-					input-id="to"
+					inputId="to"
 					label="name"
 					:aria-label-combobox="t('spreed', 'Target language to translate into')"
 					:placeholder="t('mail', 'Translate to')"
 					:options="availableOutputLanguages"
-					no-wrap />
+					noWrap />
 
 				<NcButton
 					variant="primary"
@@ -57,16 +56,16 @@
 				class="translate-dialog__message translate-dialog__message-source"
 				:text="message"
 				:arguments="richParameters"
-				:use-markdown="true"
-				:reference-limit="0" />
+				:useMarkdown="true"
+				:referenceLimit="0" />
 
 			<NcRichText
 				v-if="translatedMessage"
 				class="translate-dialog__message translate-dialog__message-translation"
 				:text="translatedMessage"
 				:arguments="richParameters"
-				:use-markdown="true"
-				:reference-limit="0" />
+				:useMarkdown="true"
+				:referenceLimit="0" />
 		</template>
 
 		<template v-if="translatedMessage" #actions>
@@ -83,14 +82,38 @@
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { getLanguage } from '@nextcloud/l10n'
-import { NcButton, NcDialog, NcLoadingIcon, NcRichText, NcSelect } from '@nextcloud/vue'
 import { mapState } from 'pinia'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
+import NcRichText from '@nextcloud/vue/components/NcRichText'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import WarningIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
 import ArrowRight from 'vue-material-design-icons/ArrowRight.vue'
 import ContentCopy from 'vue-material-design-icons/ContentCopy.vue'
 import logger from '../logger.js'
 import { translateText } from '../service/translationService.js'
 import useMainStore from '../store/mainStore.js'
+
+const normalize = (code) => code?.toLowerCase().replace(/_/g, '-')
+const primarySubtag = (code) => normalize(code)?.split('-')[0]
+
+/**
+ * Find the option closest to a language code.
+ *
+ * The interface reports `pt-BR` while providers list `pt_BR`, and either side
+ * may omit the region the other one has, so neither separators nor regions can
+ * be compared verbatim.
+ *
+ * @param {Array} languages options offered by the provider
+ * @param {string|null} code language code to look for
+ * @return {object|null} the matching option, or null when the provider has none
+ */
+function findLanguage(languages, code) {
+	return languages.find((language) => normalize(language.value) === normalize(code))
+		?? languages.find((language) => primarySubtag(language.value) === primarySubtag(code))
+		?? null
+}
 
 export default {
 	name: 'TranslationModal',
@@ -115,6 +138,11 @@ export default {
 		richParameters: {
 			type: Object,
 			required: true,
+		},
+
+		detectedForeignLanguage: {
+			type: String,
+			default: null,
 		},
 	},
 
@@ -152,11 +180,12 @@ export default {
 	},
 
 	async mounted() {
-		this.selectedTo = this.availableOutputLanguages.find((language) => language.value === this.userLanguage) || null
+		this.selectedTo = findLanguage(this.availableOutputLanguages, this.userLanguage)
 		this.selectedFrom = this.availableInputLanguages.find((language) => language.value === 'detect_language')
+			?? findLanguage(this.availableInputLanguages, this.detectedForeignLanguage)
 		this.$nextTick(() => {
 			// FIXME trick to avoid focusTrap() from activating on NcSelect
-			this.isMounted = !!this.$refs.translateDialog.navigationId
+			this.isMounted = true
 		})
 	},
 
@@ -188,6 +217,7 @@ export default {
 				await navigator.clipboard.writeText(this.translatedMessage)
 				showSuccess(t('mail', 'Translation copied to clipboard'))
 			} catch (error) {
+				logger.error('could not copy translation to clipboard', { error })
 				showError(t('mail', 'Translation could not be copied'))
 			}
 		},

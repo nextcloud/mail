@@ -23,11 +23,9 @@ class ImportantMessagesExtractor implements IExtractor {
 	/** @var int[] */
 	private $flaggedMessages = [];
 
-	/** @var StatisticsDao */
-	private $statisticsDao;
-
-	public function __construct(StatisticsDao $statisticsDao) {
-		$this->statisticsDao = $statisticsDao;
+	public function __construct(
+		private StatisticsDao $statisticsDao,
+	) {
 	}
 
 	#[\Override]

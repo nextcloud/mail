@@ -6,11 +6,11 @@
 	<div class="app-settings">
 		<NcAppSettingsDialog
 			id="app-settings-dialog"
+			v-model:open="showSettings"
 			:name="t('mail', 'Mail settings')"
-			:show-navigation="true"
-			:additional-trap-elements="trapElements"
-			:legacy="false"
-			:open.sync="showSettings">
+			:showNavigation="true"
+			:additionalTrapElements="trapElements"
+			:legacy="false">
 			<NcAppSettingsSection id="general" :name="t('mail', 'General')">
 				<NcButton
 					variant="secondary"
@@ -45,9 +45,9 @@
 						<NcButton
 							v-if="allowNewMailAccounts"
 							variant="secondary"
-							to="/setup"
 							:aria-label="t('mail', 'Add mail account')"
-							wide>
+							wide
+							@click="openAddMailAccount">
 							<template #icon>
 								<IconAdd :size="20" />
 							</template>
@@ -62,27 +62,28 @@
 					<NcFormBoxSwitch
 						v-model="layoutMessageView"
 						:label="t('mail', 'Show all messages in thread')"
+						:disabled="hasLoadingState('layout-message-view')"
 						:description="t('mail', 'When off, only the selected message will be shown')" />
 				</NcFormBox>
 				<NcFormBox>
 					<NcFormBoxSwitch
 						v-model="sortFavorites"
 						:label="t('mail', 'Sort favorites up')"
-						:disabled="loadingSortFavorites"
+						:disabled="hasLoadingState('sort-favorites')"
 						:description="t('mail', 'When on, favorite messages will be sorted to the top of folders')" />
 				</NcFormBox>
 				<NcRadioGroup v-model="layoutMode" :label="t('mail', 'Layout')">
-					<NcRadioGroupButton :label="t('mail', 'Vertical split')" value="vertical-split">
+					<NcRadioGroupButton :label="t('mail', 'Vertical split')" value="vertical-split" :disabled="hasLoadingState('layout-mode')">
 						<template #icon>
 							<VerticalSplit :size="20" />
 						</template>
 					</NcRadioGroupButton>
-					<NcRadioGroupButton :label="t('mail', 'Horizontal split')" value="horizontal-split">
+					<NcRadioGroupButton :label="t('mail', 'Horizontal split')" value="horizontal-split" :disabled="hasLoadingState('layout-mode')">
 						<template #icon>
 							<HorizontalSplit :size="20" />
 						</template>
 					</NcRadioGroupButton>
-					<NcRadioGroupButton :label="t('mail', 'List')" value="no-split">
+					<NcRadioGroupButton :label="t('mail', 'List')" value="no-split" :disabled="hasLoadingState('layout-mode')">
 						<template #icon>
 							<CompactMode :size="20" />
 						</template>
@@ -92,162 +93,24 @@
 				<NcFormBox>
 					<NcFormBoxSwitch
 						v-model="compactMode"
-						:label="t('mail', 'Use compact mode')" />
+						:label="t('mail', 'Use compact mode')"
+						:disabled="hasLoadingState('compact-mode')" />
 				</NcFormBox>
 
-				<NcRadioGroup :model-value="sortOrder" :label="t('mail', 'Sorting')" @update:modelValue="onSortByDate">
-					<NcRadioGroupButton :label="t('mail', 'Newest first')" value="newest" />
-					<NcRadioGroupButton :label="t('mail', 'Oldest first')" value="oldest" />
+				<NcRadioGroup :modelValue="sortOrder" :label="t('mail', 'Sorting')" @update:modelValue="onSortByDate">
+					<NcRadioGroupButton :label="t('mail', 'Newest first')" value="newest" :disabled="hasLoadingState('sort-order')" />
+					<NcRadioGroupButton :label="t('mail', 'Oldest first')" value="oldest" :disabled="hasLoadingState('sort-order')" />
 				</NcRadioGroup>
 
-				<NcAppSettingsSection id="messages" name="Messages">
-					<NcFormBox>
-						<NcFormBoxSwitch
-							v-model="useExternalAvatars"
-							:disabled="loadingAvatarSettings">
-							{{ t('mail', 'Avatars from Gravatar and favicons') }}
-						</NcFormBoxSwitch>
-
-						<NcFormBoxSwitch
-							v-model="searchPriorityBody"
-							:disabled="loadingPrioritySettings">
-							{{ prioritySettingsText }}
-						</NcFormBoxSwitch>
-					</NcFormBox>
-
-					<NcRadioGroup :model-value="useBottomReplies" :label="t('mail', 'Reply position')" @update:modelValue="onToggleButtonReplies">
-						<NcRadioGroupButton :label="t('mail', 'Top')" :value="false" />
-						<NcRadioGroupButton :label="t('mail', 'Bottom')" :value="true" />
-					</NcRadioGroup>
-
-					<NcFormGroup
-						:label="t('mail', 'Text blocks')"
-						:description="t('mail', 'Reusable pieces of text that can be inserted in messages')">
-						<List
-							:text-blocks="getMyTextBlocks()" />
-						<NcButton variant="secondary" wide @click="() => textBlockDialogOpen = true">
-							<template #icon>
-								<IconAdd :size="20" />
-							</template>
-							{{ t('mail', 'New text block') }}
-						</NcButton>
-						<template v-if="getSharedTextBlocks().length > 0">
-							<h6>{{ t('mail', 'Shared with me') }}</h6>
-							<List
-								:text-blocks="getSharedTextBlocks()"
-								:shared="true" />
-						</template>
-					</NcFormGroup>
-				</NcAppSettingsSection>
-
-				<NcAppSettingsSection id="privacy" :name="t('mail', 'Privacy')">
-					<NcFormBoxSwitch
-						v-model="useDataCollection"
-						:label="t('mail', 'Data collection')"
-						:description="t('mail', 'Allow the app to collect and process data locally to adapt to your preferences')" />
-
-					<NcFormGroup :label="t('mail', 'Always show images from')">
-						<TrustedSenders />
-					</NcFormGroup>
-				</NcAppSettingsSection>
-				<NcAppSettingsSection id="security" :name="t('mail', 'Security')">
-					<NcFormBoxSwitch
-						v-model="useInternalAddresses"
-						:disabled="loadingInternalAddresses"
-						:label="internalAddressText"
-						:description="t('mail', 'Manage your internal addresses and domains to ensure recognized contacts stay unmarked')" />
-					<InternalAddress />
-
-					<NcFormGroup :label="t('mail', 'S/MIME')">
-						<NcButton
-							class="app-settings-button"
-							variant="secondary"
-							:aria-label="t('mail', 'Manage certificates')"
-							wide
-							@click.prevent.stop="displaySmimeCertificateModal = true">
-							<template #icon>
-								<IconMedal :size="20" />
-							</template>
-							{{ t('mail', 'Manage certificates') }}
-						</NcButton>
-						<SmimeCertificateModal
-							v-if="displaySmimeCertificateModal"
-							@close="displaySmimeCertificateModal = false" />
-					</NcFormGroup>
-
-					<NcFormGroup :label="t('mail', 'Mailvelope')">
-						<NcNoteCard v-if="mailvelopeIsAvailable" type="success">
-							{{ t('mail', 'Mailvelope is enabled for the current domain.') }}
-						</NcNoteCard>
-
-						<NcFormBox v-else>
-							<NcFormBoxButton
-								href="https://www.mailvelope.com/"
-								target="_blank"
-								:label="t('mail', 'Step 1')"
-								:description="t('mail', 'Install the browser extension')"
-								inverted-accent />
-							<NcFormBoxButton
-								:label="t('mail', 'Step 2')"
-								:description="t('mail', 'Enable for the current domain')"
-								inverted-accent
-								@click="mailvelopeAuthorizeDomain">
-								<template #icon>
-									<IconDomain :size="20" />
-								</template>
-							</NcFormBoxButton>
-						</NcFormBox>
-					</NcFormGroup>
-				</NcAppSettingsSection>
-
-				<NcAppSettingsSection v-if="followUpFeatureAvailable" id="autotagging-settings" :name="t('mail', 'Assistance features')">
-					<NcFormBox>
-						<NcFormBoxSwitch
-							v-model="useFollowUpReminders"
-							:disabled="loadingFollowUpReminders">
-							{{ followUpReminderText }}
-						</NcFormBoxSwitch>
-					</NcFormBox>
-				</NcAppSettingsSection>
-				<NcAppSettingsSection v-if="contextChatFeatureAvailable" id="context-chat-settings" :name="t('mail', 'Context Chat integration')">
-					<NcFormBox>
-						<NcFormBoxSwitch
-							v-model="useContextChat"
-							:disabled="loadingContextChat">
-							{{ contextChatText }}
-						</NcFormBoxSwitch>
-					</NcFormBox>
-				</NcAppSettingsSection>
-				<NcAppSettingsShortcutsSection>
-					<NcHotkeyList>
-						<NcHotkey :label="t('mail', 'Compose new message')" hotkey="C" />
-						<NcHotkey :label="t('mail', 'Newer message')" hotkey="ArrowLeft" />
-						<NcHotkey :label="t('mail', 'Older message')" hotkey="ArrowRight" />
-						<NcHotkey :label="t('mail', 'Toggle star')" hotkey="S" />
-						<NcHotkey :label="t('mail', 'Toggle unread')" hotkey="U" />
-						<NcHotkey :label="t('mail', 'Archive')" hotkey="A" />
-						<NcHotkey :label="t('mail', 'Delete')" hotkey="Delete" />
-						<NcHotkey :label="t('mail', 'Search')" hotkey="Control F" />
-						<NcHotkey :label="t('mail', 'Send')" hotkey="Control Enter" />
-						<NcHotkey :label="t('mail', 'Refresh')" hotkey="R" />
-					</NcHotkeyList>
-				</NcAppSettingsShortcutsSection>
-
-				<NcAppSettingsSection id="about-settings" :name="t('mail', 'About')">
-					<NcFormGroup
-						:label="t('mail', 'Acknowledgements')"
-						:description="t('mail', 'This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2.')" />
-				</NcAppSettingsSection>
-
 				<NcDialog
-					:open.sync="textBlockDialogOpen"
+					v-model:open="textBlockDialogOpen"
 					:name="t('mail', 'New text block')"
-					:is-form="true"
+					:isForm="true"
 					size="normal">
 					<NcInputField v-model="localTextBlock.title" :label="t('mail', 'Title of the text block')" />
 					<TextEditor
 						v-model="localTextBlock.content"
-						:is-bordered="true"
+						:isBordered="true"
 						:html="true"
 						:placeholder="t('mail', 'Content of the text block')"
 						:bus="bus" />
@@ -274,6 +137,158 @@
 					</div>
 				</NcDialog>
 			</NcAppSettingsSection>
+
+			<NcAppSettingsSection id="messages" name="Messages">
+				<NcFormBox>
+					<NcFormBoxSwitch
+						v-model="useExternalAvatars"
+						:disabled="hasLoadingState('external-avatars')">
+						{{ t('mail', 'Avatars from Gravatar and favicons') }}
+					</NcFormBoxSwitch>
+
+					<NcFormBoxSwitch
+						v-model="searchPriorityBody"
+						:disabled="hasLoadingState('search-priority-body')">
+						{{ prioritySettingsText }}
+					</NcFormBoxSwitch>
+				</NcFormBox>
+
+				<NcRadioGroup :modelValue="autoMarkAsRead" :label="t('mail', 'Mark messages as read')" @update:modelValue="onToggleAutoMarkAsRead">
+					<NcRadioGroupButton :label="t('mail', 'Immediately')" value="0" :disabled="hasLoadingState('auto-mark-as-read')" />
+					<NcRadioGroupButton :label="n('mail', 'After %n second', 'After %n seconds', 3)" value="3000" :disabled="hasLoadingState('auto-mark-as-read')" />
+					<NcRadioGroupButton :label="n('mail', 'After %n second', 'After %n seconds', 30)" value="30000" :disabled="hasLoadingState('auto-mark-as-read')" />
+					<NcRadioGroupButton :label="t('mail', 'Manually')" value="-1" :disabled="hasLoadingState('auto-mark-as-read')" />
+				</NcRadioGroup>
+
+				<NcRadioGroup :modelValue="useBottomReplies" :label="t('mail', 'Reply position')" @update:modelValue="onToggleButtonReplies">
+					<NcRadioGroupButton :label="t('mail', 'Top')" :value="false" :disabled="hasLoadingState('reply-mode')" />
+					<NcRadioGroupButton :label="t('mail', 'Bottom')" :value="true" :disabled="hasLoadingState('reply-mode')" />
+				</NcRadioGroup>
+
+				<NcFormGroup
+					:label="t('mail', 'Text blocks')"
+					:description="t('mail', 'Reusable pieces of text that can be inserted in messages')">
+					<List
+						:textBlocks="getMyTextBlocks()" />
+					<NcButton variant="secondary" wide @click="() => textBlockDialogOpen = true">
+						<template #icon>
+							<IconAdd :size="20" />
+						</template>
+						{{ t('mail', 'New text block') }}
+					</NcButton>
+					<template v-if="getSharedTextBlocks().length > 0">
+						<h6>{{ t('mail', 'Shared with me') }}</h6>
+						<List
+							:textBlocks="getSharedTextBlocks()"
+							:shared="true" />
+					</template>
+				</NcFormGroup>
+			</NcAppSettingsSection>
+
+			<NcAppSettingsSection id="privacy" :name="t('mail', 'Privacy')">
+				<NcFormBoxSwitch
+					v-model="useDataCollection"
+					:label="t('mail', 'Data collection')"
+					:description="t('mail', 'Allow the app to collect and process data locally to adapt to your preferences')" />
+
+				<NcFormGroup :label="t('mail', 'Always show images from')">
+					<TrustedSenders />
+				</NcFormGroup>
+			</NcAppSettingsSection>
+
+			<NcAppSettingsSection id="security" :name="t('mail', 'Security')">
+				<NcFormBoxSwitch
+					v-model="useInternalAddresses"
+					:disabled="hasLoadingState('internal-addresses')"
+					:label="internalAddressText"
+					:description="t('mail', 'Manage your internal addresses and domains to ensure recognized contacts stay unmarked')" />
+				<InternalAddress />
+
+				<NcFormGroup :label="t('mail', 'S/MIME')">
+					<NcButton
+						class="app-settings-button"
+						variant="secondary"
+						:aria-label="t('mail', 'Manage certificates')"
+						wide
+						@click.prevent.stop="displaySmimeCertificateModal = true">
+						<template #icon>
+							<IconMedal :size="20" />
+						</template>
+						{{ t('mail', 'Manage certificates') }}
+					</NcButton>
+					<SmimeCertificateModal
+						v-if="displaySmimeCertificateModal"
+						@close="displaySmimeCertificateModal = false" />
+				</NcFormGroup>
+
+				<NcFormGroup :label="t('mail', 'Mailvelope')">
+					<NcNoteCard v-if="mailvelopeIsAvailable" type="success">
+						{{ t('mail', 'Mailvelope is enabled for the current domain.') }}
+					</NcNoteCard>
+
+					<NcFormBox v-else>
+						<NcFormBoxButton
+							href="https://www.mailvelope.com/"
+							target="_blank"
+							:label="t('mail', 'Step 1')"
+							:description="t('mail', 'Install the browser extension')"
+							invertedAccent />
+						<NcFormBoxButton
+							:label="t('mail', 'Step 2')"
+							:description="t('mail', 'Enable for the current domain')"
+							invertedAccent
+							@click="mailvelopeAuthorizeDomain">
+							<template #icon>
+								<IconDomain :size="20" />
+							</template>
+						</NcFormBoxButton>
+					</NcFormBox>
+				</NcFormGroup>
+			</NcAppSettingsSection>
+
+			<NcAppSettingsSection v-if="followUpFeatureAvailable" id="autotagging-settings" :name="t('mail', 'Assistance features')">
+				<NcFormBox>
+					<NcFormBoxSwitch
+						v-model="useFollowUpReminders"
+						:disabled="hasLoadingState('follow-up-reminders')">
+						{{ followUpReminderText }}
+					</NcFormBoxSwitch>
+				</NcFormBox>
+			</NcAppSettingsSection>
+
+			<NcAppSettingsSection v-if="contextChatFeatureAvailable" id="context-chat-settings" :name="t('mail', 'Context Chat integration')">
+				<NcFormBox>
+					<NcFormBoxSwitch
+						v-model="useContextChat"
+						:disabled="hasLoadingState('index-context-chat')">
+						{{ contextChatText }}
+					</NcFormBoxSwitch>
+				</NcFormBox>
+			</NcAppSettingsSection>
+
+			<NcAppSettingsShortcutsSection>
+				<NcHotkeyList>
+					<NcHotkey :label="t('mail', 'Compose new message')" hotkey="C" />
+					<NcHotkey :label="t('mail', 'Newer message')" hotkey="ArrowLeft" />
+					<NcHotkey :label="t('mail', 'Older message')" hotkey="ArrowRight" />
+					<NcHotkey :label="t('mail', 'Toggle star')" hotkey="S" />
+					<NcHotkey :label="t('mail', 'Toggle unread')" hotkey="U" />
+					<NcHotkey :label="t('mail', 'Archive')" hotkey="A" />
+					<NcHotkey :label="t('mail', 'Delete')" hotkey="Delete" />
+					<NcHotkey :label="t('mail', 'Search')" hotkey="Control F" />
+					<NcHotkey :label="t('mail', 'Send')" hotkey="Control Enter" />
+					<NcHotkey :label="t('mail', 'Refresh')" hotkey="R" />
+					<NcHotkey :label="t('mail', 'Heading1')" hotkey="Control Alt 1" />
+					<NcHotkey :label="t('mail', 'Heading2')" hotkey="Control Alt 2" />
+					<NcHotkey :label="t('mail', 'Heading3')" hotkey="Control Alt 3" />
+				</NcHotkeyList>
+			</NcAppSettingsShortcutsSection>
+
+			<NcAppSettingsSection id="about-settings" :name="t('mail', 'About')">
+				<NcFormGroup
+					:label="t('mail', 'Acknowledgements')"
+					:description="t('mail', 'This application includes CKEditor, an open-source editor. Copyright © CKEditor contributors. Licensed under GPLv2.')" />
+			</NcAppSettingsSection>
 		</NcAppSettingsDialog>
 	</div>
 </template>
@@ -281,25 +296,23 @@
 <script>
 import { showError } from '@nextcloud/dialogs'
 import { generateUrl } from '@nextcloud/router'
-import {
-	NcAppSettingsDialog,
-	NcAppSettingsSection,
-	NcAppSettingsShortcutsSection,
-	NcButton,
-	NcDialog,
-	NcFormBox,
-	NcFormBoxButton,
-	NcFormBoxSwitch,
-	NcFormGroup,
-	NcHotkey,
-	NcHotkeyList,
-	NcInputField,
-	NcNoteCard,
-	NcRadioGroup,
-	NcRadioGroupButton,
-} from '@nextcloud/vue'
 import mitt from 'mitt'
 import { mapState, mapStores } from 'pinia'
+import NcAppSettingsDialog from '@nextcloud/vue/components/NcAppSettingsDialog'
+import NcAppSettingsSection from '@nextcloud/vue/components/NcAppSettingsSection'
+import NcAppSettingsShortcutsSection from '@nextcloud/vue/components/NcAppSettingsShortcutsSection'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
+import NcFormBox from '@nextcloud/vue/components/NcFormBox'
+import NcFormBoxButton from '@nextcloud/vue/components/NcFormBoxButton'
+import NcFormBoxSwitch from '@nextcloud/vue/components/NcFormBoxSwitch'
+import NcFormGroup from '@nextcloud/vue/components/NcFormGroup'
+import NcHotkey from '@nextcloud/vue/components/NcHotkey'
+import NcHotkeyList from '@nextcloud/vue/components/NcHotkeyList'
+import NcInputField from '@nextcloud/vue/components/NcInputField'
+import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
+import NcRadioGroup from '@nextcloud/vue/components/NcRadioGroup'
+import NcRadioGroupButton from '@nextcloud/vue/components/NcRadioGroupButton'
 import IconArrow from 'vue-material-design-icons/ArrowRight.vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import IconClose from 'vue-material-design-icons/Close.vue'
@@ -364,23 +377,18 @@ export default {
 		},
 	},
 
+	emits: ['update:open'],
+
 	data() {
 		return {
-			loadingAvatarSettings: false,
+			loadingStates: [],
 			prioritySettingsText: t('mail', 'Search the body of messages in priority Inbox'),
-			loadingPrioritySettings: false,
 
 			optOutSettingsText: t('mail', 'Activate'),
-			loadingOptOutSettings: false,
-			loadingInternalAddresses: false,
-			loadingReplySettings: false,
 			contextChatText: t('mail', 'Make mails available to Context Chat'),
 			followUpReminderText: t('mail', 'Remind about messages that require a reply but received none'),
 			internalAddressText: t('mail', 'Highlight external addresses'),
 			toggleAutoTagging: false,
-			loadingContextChat: false,
-			loadingFollowUpReminders: false,
-			loadingSortFavorites: false,
 			displaySmimeCertificateModal: false,
 			sortOrder: 'newest',
 			showSettings: false,
@@ -445,6 +453,16 @@ export default {
 
 			set(value) {
 				this.onToggleSearchPriorityBody(value)
+			},
+		},
+
+		autoMarkAsRead: {
+			get() {
+				return this.mainStore.getPreference('auto-mark-as-read', '3000')
+			},
+
+			set(value) {
+				this.onToggleAutoMarkAsRead(value)
 			},
 		},
 
@@ -562,6 +580,19 @@ export default {
 	},
 
 	methods: {
+		hasLoadingState(key) {
+			return this.loadingStates.includes(key)
+		},
+
+		setLoadingState(key, value) {
+			const index = this.loadingStates.indexOf(key)
+			if (value && index === -1) {
+				this.loadingStates.push(key)
+			} else if (!value && index !== -1) {
+				this.loadingStates.splice(index, 1)
+			}
+		},
+
 		openAccountSettings(accountId) {
 			this.mainStore.showSettingsForAccountMutation(accountId)
 			this.showSettings = false
@@ -572,6 +603,8 @@ export default {
 		},
 
 		async setLayout(layoutMode) {
+			this.setLoadingState('layout-mode', true)
+
 			try {
 				await this.mainStore.savePreference({
 					key: 'layout-mode',
@@ -579,10 +612,14 @@ export default {
 				})
 			} catch (error) {
 				Logger.error('Could not save preferences', { error })
+			} finally {
+				this.setLoadingState('layout-mode', false)
 			}
 		},
 
 		async setCompactMode(value) {
+			this.setLoadingState('compact-mode', true)
+
 			try {
 				await this.mainStore.savePreference({
 					key: 'compact-mode',
@@ -590,10 +627,14 @@ export default {
 				})
 			} catch (error) {
 				Logger.error('Could not save preferences', { error })
+			} finally {
+				this.setLoadingState('compact-mode', false)
 			}
 		},
 
 		async setLayoutMessageView(value) {
+			this.setLoadingState('layout-message-view', true)
+
 			try {
 				await this.mainStore.savePreference({
 					key: 'layout-message-view',
@@ -601,6 +642,8 @@ export default {
 				})
 			} catch (error) {
 				Logger.error('Could not save preferences', { error })
+			} finally {
+				this.setLoadingState('layout-message-view', false)
 			}
 		},
 
@@ -608,8 +651,13 @@ export default {
 			this.showSettings = true
 		},
 
+		openAddMailAccount() {
+			this.showSettings = false
+			this.$router.push('/setup')
+		},
+
 		onToggleButtonReplies(atBottom) {
-			this.loadingReplySettings = true
+			this.setLoadingState('reply-mode', true)
 
 			this.mainStore.savePreference({
 				key: 'reply-mode',
@@ -617,12 +665,12 @@ export default {
 			})
 				.catch((error) => Logger.error('could not save preferences', { error }))
 				.then(() => {
-					this.loadingReplySettings = false
+					this.setLoadingState('reply-mode', false)
 				})
 		},
 
 		onToggleExternalAvatars(enabled) {
-			this.loadingAvatarSettings = true
+			this.setLoadingState('external-avatars', true)
 
 			this.mainStore.savePreference({
 				key: 'external-avatars',
@@ -630,12 +678,12 @@ export default {
 			})
 				.catch((error) => Logger.error('could not save preferences', { error }))
 				.then(() => {
-					this.loadingAvatarSettings = false
+					this.setLoadingState('external-avatars', false)
 				})
 		},
 
 		async onToggleSearchPriorityBody(enabled) {
-			this.loadingPrioritySettings = true
+			this.setLoadingState('search-priority-body', true)
 
 			try {
 				await this.mainStore.savePreference({
@@ -645,12 +693,28 @@ export default {
 			} catch (error) {
 				Logger.error('could not save preferences', { error })
 			} finally {
-				this.loadingPrioritySettings = false
+				this.setLoadingState('search-priority-body', false)
+			}
+		},
+
+		async onToggleAutoMarkAsRead(value) {
+			this.setLoadingState('auto-mark-as-read', true)
+
+			try {
+				await this.mainStore.savePreference({
+					key: 'auto-mark-as-read',
+					value: String(value),
+				})
+			} catch (error) {
+				Logger.error('could not save preferences', { error })
+				showError(t('mail', 'Could not update preference'))
+			} finally {
+				this.setLoadingState('auto-mark-as-read', false)
 			}
 		},
 
 		async onToggleSortFavorites(enabled) {
-			this.loadingSortFavorites = true
+			this.setLoadingState('sort-favorites', true)
 
 			try {
 				await this.mainStore.savePreference({
@@ -660,12 +724,12 @@ export default {
 			} catch (error) {
 				Logger.error('could not save preferences', { error })
 			} finally {
-				this.loadingSortFavorites = false
+				this.setLoadingState('sort-favorites', false)
 			}
 		},
 
 		onToggleCollectData(collect) {
-			this.loadingOptOutSettings = true
+			this.setLoadingState('collect-data', true)
 
 			this.mainStore.savePreference({
 				key: 'collect-data',
@@ -673,11 +737,13 @@ export default {
 			})
 				.catch((error) => Logger.error('could not save preferences', { error }))
 				.then(() => {
-					this.loadingOptOutSettings = false
+					this.setLoadingState('collect-data', false)
 				})
 		},
 
 		async onSortByDate(value) {
+			this.setLoadingState('sort-order', true)
+
 			const previousValue = this.sortOrder
 			try {
 				this.sortOrder = value
@@ -690,11 +756,13 @@ export default {
 				Logger.error('could not save preferences', { error })
 				this.sortOrder = previousValue
 				showError(t('mail', 'Could not update preference'))
+			} finally {
+				this.setLoadingState('sort-order', false)
 			}
 		},
 
 		async onToggleFollowUpReminders(enabled) {
-			this.loadingFollowUpReminders = true
+			this.setLoadingState('follow-up-reminders', true)
 
 			try {
 				await this.mainStore.savePreference({
@@ -705,12 +773,12 @@ export default {
 				Logger.error('Could not save preferences', { error })
 				showError(t('mail', 'Could not update preference'))
 			} finally {
-				this.loadingFollowUpReminders = false
+				this.setLoadingState('follow-up-reminders', false)
 			}
 		},
 
 		async onToggleContextChat(enabled) {
-			this.loadingContextChat = true
+			this.setLoadingState('index-context-chat', true)
 
 			try {
 				await this.mainStore.savePreference({
@@ -721,12 +789,12 @@ export default {
 				Logger.error('Could not save preferences', { error })
 				showError(t('mail', 'Could not update preference'))
 			} finally {
-				this.loadingContextChat = false
+				this.setLoadingState('index-context-chat', false)
 			}
 		},
 
 		async onToggleInternalAddress(enabled) {
-			this.loadingInternalAddresses = true
+			this.setLoadingState('internal-addresses', true)
 
 			try {
 				await this.mainStore.savePreference({
@@ -737,7 +805,7 @@ export default {
 				Logger.error('Could not save preferences', { error })
 				showError(t('mail', 'Could not update preference'))
 			} finally {
-				this.loadingInternalAddresses = false
+				this.setLoadingState('internal-addresses', false)
 			}
 		},
 

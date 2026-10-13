@@ -28,7 +28,7 @@
 				:key="attachment.id"
 				:attachment="attachment"
 				:uploading="uploading"
-				@on-delete-attachment="onDelete(attachment)" />
+				@onDeleteAttachment="onDelete(attachment)" />
 		</ul>
 
 		<input
@@ -37,33 +37,18 @@
 			multiple
 			style="display: none;"
 			@change="onLocalAttachmentSelected">
-		<FilePicker
-			v-if="isAttachementPickerOpen"
-			:name="t('mail', 'Choose a file to add as attachment')"
-			:buttons="attachementPickerButtons"
-			:filter-fn="filterAttachements"
-			@close="() => isAttachementPickerOpen = false" />
-		<FilePicker
-			v-if="isLinkPickerOpen"
-			:name="t('mail', 'Choose a file to share as a link')"
-			:multiselect="false"
-			:buttons="linkPickerButtons"
-			:filter-fn="filterAttachements"
-			@close="() => isLinkPickerOpen = false" />
 	</div>
 </template>
 
 <script>
 import { getRequestToken } from '@nextcloud/auth'
-import { showWarning } from '@nextcloud/dialogs'
-import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
+import { getFilePickerBuilder, showWarning } from '@nextcloud/dialogs'
 import { formatFileSize } from '@nextcloud/files'
-import { translatePlural as n, translate as t } from '@nextcloud/l10n'
+import { n, t } from '@nextcloud/l10n'
 import map from 'lodash/fp/map.js'
 import prop from 'lodash/fp/prop.js'
 import sumBy from 'lodash/fp/sumBy.js'
 import trimStart from 'lodash/fp/trimCharsStart.js'
-import Vue from 'vue'
 import ChevronDown from 'vue-material-design-icons/ChevronDown.vue'
 import ChevronUp from 'vue-material-design-icons/ChevronUp.vue'
 import ComposerAttachment from './ComposerAttachment.vue'
@@ -83,14 +68,13 @@ const mimes = [
 export default {
 	name: 'ComposerAttachments',
 	components: {
-		FilePicker,
 		ComposerAttachment,
 		ChevronDown,
 		ChevronUp,
 	},
 
 	props: {
-		value: {
+		modelValue: {
 			type: Array,
 			required: true,
 		},
@@ -104,7 +88,14 @@ export default {
 			type: Number,
 			default: 0,
 		},
+
+		accountId: {
+			type: Number,
+			default: null,
+		},
 	},
+
+	emits: ['update:modelValue', 'upload', 'onDeleteAttachment'],
 
 	data() {
 		return {
@@ -114,24 +105,6 @@ export default {
 			attachments: [],
 			isToggle: false,
 			hasNextLine: false,
-			isAttachementPickerOpen: false,
-			isLinkPickerOpen: false,
-			attachementPickerButtons: [
-				{
-					label: t('mail', 'Choose'),
-					callback: this.onAddCloudAttachment,
-					type: 'primary',
-				},
-			],
-
-			linkPickerButtons: [
-				{
-					label: t('mail', 'Choose'),
-					callback: this.onAddCloudAttachmentLink,
-					type: 'primary',
-				},
-			],
-
 		}
 	},
 
@@ -160,37 +133,40 @@ export default {
 	},
 
 	watch: {
-		attachments() {
-			this.$nextTick(function() {
-				let prevTop = null
-				this.$refs.attachments.some((attachment, i) => {
-					const top = attachment.$el.getBoundingClientRect().top
-					if (prevTop !== null && prevTop !== top) {
-						if (!this.hasNextLine) {
-							this.isToggle = true
-							this.hasNextLine = true
-						}
-						return true
-					} else {
-						prevTop = top
-						if (this.$refs.attachments.length === i + 1) {
-							this.hasNextLine = false
-							this.isToggle = false
+		attachments: {
+			deep: true,
+			handler() {
+				this.$nextTick(function() {
+					let prevTop = null
+					this.$refs.attachments.some((attachment, i) => {
+						const top = attachment.$el.getBoundingClientRect().top
+						if (prevTop !== null && prevTop !== top) {
+							if (!this.hasNextLine) {
+								this.isToggle = true
+								this.hasNextLine = true
+							}
 							return true
+						} else {
+							prevTop = top
+							if (this.$refs.attachments.length === i + 1) {
+								this.hasNextLine = false
+								this.isToggle = false
+								return true
+							}
 						}
-					}
-					return false
+						return false
+					})
 				})
-			})
+			},
 		},
 	},
 
 	created() {
 		this.bus.on('on-add-local-attachment', this.onAddLocalAttachment)
 		this.bus.on('on-add-cloud-attachment', this.openAttachementPicker)
-		this.bus.on('on-add-cloud-attachment-link', this.OpenLinkPicker)
 		this.bus.on('on-add-message-as-attachment', this.onAddMessageAsAttachment)
-		this.value.map((attachment) => {
+		this.bus.on('on-add-local-files', this.addLocalFiles)
+		this.modelValue.map((attachment) => {
 			this.attachments.push({
 				id: attachment.id,
 				fileName: attachment.fileName,
@@ -212,12 +188,27 @@ export default {
 			return (node.permissions & OC.PERMISSION_READ) && downloadPermissions
 		},
 
-		openAttachementPicker() {
-			this.isAttachementPickerOpen = true
-		},
+		async openAttachementPicker() {
+			const picker = getFilePickerBuilder(t('mail', 'Choose a file'))
+				.setMultiSelect(true)
+				.setFilter(this.filterAttachements)
+				.addButton({
+					label: t('mail', 'Add as attachment'),
+					variant: 'primary',
+					callback: this.onAddCloudAttachment,
+				})
+				.addButton({
+					label: t('mail', 'Add as share link'),
+					variant: 'primary',
+					callback: this.onAddCloudAttachmentLink,
+				})
+				.build()
 
-		OpenLinkPicker() {
-			this.isLinkPickerOpen = true
+			try {
+				await picker.pickNodes()
+			} catch (error) {
+				logger.debug('file picker closed without picking a file', { error })
+			}
 		},
 
 		onAddLocalAttachment() {
@@ -225,11 +216,11 @@ export default {
 		},
 
 		emitNewAttachments(attachments) {
-			this.$emit('input', this.value.concat(attachments))
+			this.$emit('update:modelValue', this.modelValue.concat(attachments))
 		},
 
 		totalSizeOfUpload() {
-			return Object.values(this.value).reduce((acc, upload) => {
+			return Object.values(this.modelValue).reduce((acc, upload) => {
 				if (!upload.type === 'local') {
 					// Ignore link shares
 					return acc
@@ -240,11 +231,15 @@ export default {
 		},
 
 		onLocalAttachmentSelected(e) {
+			return this.addLocalFiles(Array.from(e.target.files))
+		},
+
+		addLocalFiles(files) {
 			this.uploading = true
 			// BUG - if choose again - progress lost/ move to complete()
-			Vue.set(this, 'uploads', {})
+			this.uploads = {}
 
-			const toUpload = sumBy(prop('size'), Object.values(e.target.files))
+			const toUpload = sumBy(prop('size'), Object.values(files))
 			const newTotal = toUpload + this.totalSizeOfUpload()
 			logger.debug('checking upload size limit', {
 				existingUploads: this.totalSizeOfUpload(),
@@ -253,7 +248,7 @@ export default {
 				newTotal,
 			})
 			if (this.uploadSizeLimit && newTotal > this.uploadSizeLimit) {
-				this.showAttachmentFileSizeWarning(e.target.files.length)
+				this.showAttachmentFileSizeWarning(files.length)
 				this.uploading = false
 				return
 			}
@@ -287,16 +282,16 @@ export default {
 				}
 				this.attachments.push(attachment)
 
-				Vue.set(this.uploads, file.name, {
+				this.uploads[file.name] = {
 					total: file.size,
 					uploaded: 0,
-				})
+				}
 				try {
-					return uploadLocalAttachment(file, progress(file.name), controller)
+					return uploadLocalAttachment(file, this.accountId, progress(file.name), controller)
 						.catch(() => {
 							this.attachments.some((attachment) => {
 								if (attachment.displayName === file.name && !attachment.error) {
-									this.$set(attachment, 'error', true)
+									attachment.error = true
 									return true
 								}
 								return false
@@ -318,7 +313,7 @@ export default {
 				} catch (error) {
 					logger.error('Could not upload file', { file, error })
 				}
-			}, e.target.files)
+			}, files)
 
 			const done = Promise.all(promises)
 				.catch((error) => logger.error('could not upload all attachments', { error }))
@@ -362,7 +357,7 @@ export default {
 						total: filesFromCloud[i].size,
 						sizeString: this.formatBytes(filesFromCloud[i].size),
 						hasPreview: filesFromCloud[i]['has-preview'],
-						// dont know, may be it will be conflict if cloud & local has equal IDs?
+						// don't know, may be it will be conflict if cloud & local has equal IDs?
 						id: filesFromCloud[i].fileid,
 						uploaded: 0,
 					}
@@ -436,8 +431,8 @@ export default {
 			this.attachments = this.attachments.filter((a) => a !== attachment)
 
 			this.$emit(
-				'input',
-				this.value.filter((a) => {
+				'update:modelValue',
+				this.modelValue.filter((a) => {
 					if (val.type === 'cloud') {
 						return a.fileName !== val.fileName
 					} else {
@@ -455,7 +450,7 @@ export default {
 
 			this.uploads = updatedUploads
 
-			this.$emit('on-delete-attachment', attachment)
+			this.$emit('onDeleteAttachment', attachment)
 		},
 
 		appendToBodyAtCursor(toAppend) {
@@ -478,11 +473,11 @@ export default {
 				if (item.fileName === attachment.fileName) {
 					if (!attachment.finished) {
 						const _progress = progress <= attachment.total ? progress : attachment.total
-						this.$set(attachment, 'progress', _progress)
-						this.$set(attachment, 'sizeString', this.formatBytes(_progress))
-						this.$set(attachment, 'percent', (_progress / attachment.total) * 100).toFixed(1)
+						attachment.progress = _progress
+						attachment.sizeString = this.formatBytes(_progress)
+						attachment.percent = ((_progress / attachment.total) * 100).toFixed(1)
 						if (item.total <= _progress) {
-							this.$set(attachment, 'finished', true)
+							attachment.finished = true
 						}
 					}
 				}

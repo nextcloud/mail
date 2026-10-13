@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { getLabelAndAddress, parseEmailList } from '../../../util/emailAddress.js'
+import { getLabelAndAddress, parseEmailList, sortAliases } from '../../../util/emailAddress.js'
 
 describe('getLabelAndAddress', () => {
 	it('parses a plain email address', () => {
@@ -209,5 +209,49 @@ describe('parseEmailList', () => {
 		expect(emails).toContain('ian@example.ac.uk')
 		expect(emails).toContain('test@test.com')
 		expect(emails).toContain('testaaaa@aasd.com')
+	})
+})
+
+describe('sortAliases', () => {
+	it('sorts aliases first by domain and then by localpart alphabetically', () => {
+		const input = [
+			{ alias: 'bob@zebra.com' },
+			{ alias: 'charlie@alpha.org' },
+			{ alias: 'alice@alpha.org' },
+			{ alias: 'admin@zebra.com' },
+		]
+		const sorted = sortAliases(input)
+		expect(sorted).toEqual([
+			{ alias: 'alice@alpha.org' },
+			{ alias: 'charlie@alpha.org' },
+			{ alias: 'admin@zebra.com' },
+			{ alias: 'bob@zebra.com' },
+		])
+	})
+
+	it('handles objects with emailAddress property', () => {
+		const input = [
+			{ emailAddress: 'info@domain.com' },
+			{ emailAddress: 'contact@alpha.com' },
+		]
+		const sorted = sortAliases(input)
+		expect(sorted).toEqual([
+			{ emailAddress: 'contact@alpha.com' },
+			{ emailAddress: 'info@domain.com' },
+		])
+	})
+
+	it('handles raw email strings', () => {
+		const input = ['user2@b.com', 'user1@b.com', 'user1@a.com']
+		expect(sortAliases(input)).toEqual([
+			'user1@a.com',
+			'user1@b.com',
+			'user2@b.com',
+		])
+	})
+
+	it('returns empty array for invalid input', () => {
+		expect(sortAliases(null)).toEqual([])
+		expect(sortAliases(undefined)).toEqual([])
 	})
 })

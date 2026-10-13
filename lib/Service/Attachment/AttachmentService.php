@@ -14,7 +14,6 @@ use InvalidArgumentException;
 use OCA\Files_Sharing\SharedStorage;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IAttachmentService;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalAttachmentMapper;
 use OCA\Mail\Db\LocalMessage;
@@ -25,6 +24,7 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\Exception\UploadException;
 use OCA\Mail\IMAP\MessageMapper;
+use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\File;
@@ -38,50 +38,27 @@ use OCP\IURLGenerator;
 use Psr\Log\LoggerInterface;
 
 class AttachmentService implements IAttachmentService {
-	/** @var LocalAttachmentMapper */
-	private $mapper;
-
-	/** @var AttachmentStorage */
-	private $storage;
-	/**
-	 * @var IMailManager
-	 */
-	private $mailManager;
-	/**
-	 * @var MessageMapper
-	 */
-	private $messageMapper;
-
 	/**
 	 * @var Folder
 	 */
 	private $userFolder;
-	/**
-	 * @var LoggerInterface
-	 */
-	private $logger;
 
 	/**
 	 * @param Folder $userFolder
 	 */
 	public function __construct(
 		$userFolder,
-		LocalAttachmentMapper $mapper,
-		AttachmentStorage $storage,
-		IMailManager $mailManager,
-		MessageMapper $imapMessageMapper,
+		private LocalAttachmentMapper $mapper,
+		private AttachmentStorage $storage,
+		private MailManager $mailManager,
+		private MessageMapper $messageMapper,
 		private ICacheFactory $cacheFactory,
 		private IURLGenerator $urlGenerator,
 		private IMimeTypeDetector $mimeTypeDetector,
-		LoggerInterface $logger,
+		private LoggerInterface $logger,
 		private ITimeFactory $timeFactory,
 	) {
-		$this->mapper = $mapper;
-		$this->storage = $storage;
-		$this->mailManager = $mailManager;
-		$this->messageMapper = $imapMessageMapper;
 		$this->userFolder = $userFolder;
-		$this->logger = $logger;
 	}
 
 	/**
@@ -118,7 +95,6 @@ class AttachmentService implements IAttachmentService {
 		string $fileContents,
 		?string $contentId,
 		?string $disposition,
-
 	): LocalAttachment {
 		$attachment = new LocalAttachment();
 		$attachment->setUserId($userId);
@@ -236,7 +212,6 @@ class AttachmentService implements IAttachmentService {
 		return $this->mapper->findByLocalMessageId($userId, $message->getId());
 	}
 
-
 	/**
 	 * @param array $attachments
 	 * @return int[]
@@ -277,7 +252,7 @@ class AttachmentService implements IAttachmentService {
 	/**
 	 * @return list<array{id: string, fileName: string|null, mime: string, downloadUrl: string, mimeUrl: string}>
 	 */
-	public function getAttachmentNames(Account $account, Mailbox $mailbox, Message $message, \Horde_Imap_Client_Socket $client): array {
+	public function getAttachmentNames(Account $account, Mailbox $mailbox, Message $message): array {
 		if ($message->getStructureAnalyzed() === true && $message->getFlagAttachments() === false) {
 			// Structure analysis already confirmed no attachments, nothing to fetch.
 			return [];
@@ -301,10 +276,9 @@ class AttachmentService implements IAttachmentService {
 		$attachments = [];
 		try {
 			$imapMessage = $this->mailManager->getImapMessage(
-				$client,
 				$account,
 				$mailbox,
-				$message->getUid(),
+				$message,
 				true
 			);
 			$attachments = $imapMessage->getAttachments();
@@ -411,7 +385,6 @@ class AttachmentService implements IAttachmentService {
 			if ($attributes->getAttribute('permissions', 'download') === false) {
 				$this->logger->warning('Could not create attachment, no download permission for file: ' . $fileName);
 				return false;
-
 			}
 		}
 		return true;

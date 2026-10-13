@@ -22,15 +22,16 @@ jobs:
     runs-on: ubuntu-latest-low
     outputs:
       ocp-matrix: ${{ steps.versions.outputs.ocp-matrix }}
+      php-min: ${{ steps.versions.outputs.php-min }}
     steps:
       - name: Checkout app
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
       - name: Get version matrix
         id: versions
-        uses: icewind1991/nextcloud-version-matrix@58becf3b4bb6dc6cef677b15e2fd8e7d48c0908f # v1.3.1
+        uses: nextcloud-libraries/nextcloud-version-matrix@cd0211ffcef1065e2020cd579e4843b8746e7a58 # v1.3.3
 
       - name: Check enforcement of minimum PHP version ${{ steps.versions.outputs.php-min }} in psalm.xml
         run: grep 'phpVersion="${{ steps.versions.outputs.php-min }}' psalm.xml
@@ -46,14 +47,14 @@ jobs:
     name: static-psalm-analysis ${{ matrix.ocp-version }}
     steps:
       - name: Checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
-      - name: Set up php${{ matrix.php-min }}
-        uses: shivammathur/setup-php@85c019fd025f731a83ac9fbc1cdd9ba69d76b6e3 # v2.36.0 with verbose logging due to stuck runs
+      - name: Set up php${{ needs.matrix.outputs.php-min }}
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
         with:
-          php-version: ${{ matrix.php-min }}
+          php-version: ${{ needs.matrix.outputs.php-min }}
           extensions: bz2, ctype, curl, dom, fileinfo, gd, iconv, intl, json, libxml, mbstring, openssl, pcntl, posix, session, simplexml, xmlreader, xmlwriter, zip, zlib, sqlite, pdo_sqlite
           coverage: none
           ini-file: development
@@ -62,16 +63,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install dependencies
+      - name: Remove nextcloud/ocp
         run: |
           composer remove nextcloud/ocp --dev --no-scripts
-          composer i
 
-      - name: Check for vulnerable PHP dependencies
-        run: composer require --dev roave/security-advisories:dev-latest
+      - name: Install composer dependencies
+        uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda # 4.0.0
 
-      - name: Install dependencies # zizmor: ignore[template-injection]
-        run: composer require --dev 'nextcloud/ocp:${{ matrix.ocp-version }}' --ignore-platform-reqs --with-dependencies
+      - name: Install nextcloud/ocp:${{ matrix.ocp-version }}
+        env:
+          OCP_VERSION: ${{ matrix.ocp-version }}
+        run: composer require --dev "nextcloud/ocp:$OCP_VERSION" --ignore-platform-reqs --with-dependencies
 
       - name: Run coding standards check
         run: composer run psalm -- --threads=1 --monochrome --no-progress --output-format=github

@@ -31,23 +31,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 final class RunMetaEstimator extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
 	public const ARGUMENT_SHUFFLE = 'shuffle';
-
-	private AccountService $accountService;
-	private LoggerInterface $logger;
-	private ImportanceClassifier $classifier;
 	private IConfig $config;
 
 	public function __construct(
-		AccountService $accountService,
-		LoggerInterface $logger,
-		ImportanceClassifier $classifier,
+		private AccountService $accountService,
+		private LoggerInterface $logger,
+		private ImportanceClassifier $classifier,
 		IConfig $config,
 	) {
 		parent::__construct();
-
-		$this->accountService = $accountService;
-		$this->logger = $logger;
-		$this->classifier = $classifier;
 		$this->config = $config;
 	}
 

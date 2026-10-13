@@ -11,18 +11,18 @@
 				<AliasForm
 					:account="account"
 					:alias="accountAlias"
-					:enable-update="false"
-					:enable-delete="false">
-					<ButtonVue
+					:enableUpdate="false"
+					:enableDelete="false">
+					<NcButton
 						v-if="!account.provisioningId"
-						type="tertiary-no-background"
+						variant="tertiary-no-background"
 						:aria-label="t('mail', 'Go back')"
 						:name="t('mail', 'Change name')"
-						@click="$emit('rename-primary-alias')">
+						@click="$emit('renamePrimaryAlias')">
 						<template #icon>
 							<IconRename :size="20" />
 						</template>
-					</ButtonVue>
+					</NcButton>
 				</AliasForm>
 			</li>
 
@@ -31,8 +31,8 @@
 				<AliasForm
 					:account="account"
 					:alias="alias"
-					:on-update-alias="updateAlias"
-					:on-delete="deleteAlias" />
+					:onUpdateAlias="updateAlias"
+					:onDelete="deleteAlias" />
 			</li>
 
 			<li v-if="showForm">
@@ -51,43 +51,43 @@
 			</li>
 		</ul>
 
-		<div v-if="!account.provisioningId" class="aliases-controls">
-			<ButtonVue
+		<div v-if="!account.provisioningId" class="mail-button-row">
+			<NcButton
 				v-if="!showForm"
-				type="primary"
+				variant="primary"
 				:aria-label="t('mail', 'Add alias')"
 				@click="showForm = true">
 				{{ t('mail', 'Add alias') }}
-			</ButtonVue>
+			</NcButton>
 
-			<ButtonVue
+			<NcButton
 				v-if="showForm"
-				native-type="submit"
-				type="primary"
+				type="submit"
+				variant="primary"
 				form="createAliasForm"
 				:aria-label="t('mail', 'Create alias')"
 				:disabled="loading">
 				<template #icon>
-					<IconLoading v-if="loading" :size="20" />
+					<NcLoadingIcon v-if="loading" :size="20" />
 					<IconCheck v-else :size="20" />
 				</template>
 				{{ t('mail', 'Create alias') }}
-			</ButtonVue>
-			<ButtonVue
+			</NcButton>
+			<NcButton
 				v-if="showForm"
-				type="tertiary-no-background"
-				class="button-text"
+				variant="tertiary-no-background"
 				:aria-label="t('mail', 'Cancel')"
 				@click="resetCreate">
 				{{ t("mail", "Cancel") }}
-			</ButtonVue>
+			</NcButton>
 		</div>
 	</div>
 </template>
 
 <script>
-import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import IconRename from 'vue-material-design-icons/PencilOutline.vue'
 import AliasForm from './AliasForm.vue'
@@ -98,8 +98,8 @@ export default {
 	name: 'AliasSettings',
 	components: {
 		AliasForm,
-		ButtonVue,
-		IconLoading,
+		NcButton,
+		NcLoadingIcon,
 		IconCheck,
 		IconRename,
 	},
@@ -110,6 +110,8 @@ export default {
 			required: true,
 		},
 	},
+
+	emits: ['renamePrimaryAlias'],
 
 	data() {
 		return {
@@ -184,38 +186,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.primary {
-	padding-inline-start: 26px;
-	background-position: 6px;
-	color: var(--color-main-background);
-
-	&:after {
-		inset-inline-start: 14px;
-	}
-}
-
-.button-text {
-	background-color: transparent;
-	border: none;
-	color: var(--color-text-maxcontrast);
-	font-weight: normal;
-
-	&:hover,
-	&:focus {
-		color: var(--color-main-text);
-	}
-}
-
-.aliases-controls {
-	display: flex;
-}
-
 input {
 	width: 195px;
-}
-
-.button-vue:deep() {
-	display: inline-block !important;
-	margin-top: 4px !important;
 }
 </style>

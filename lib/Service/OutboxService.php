@@ -10,14 +10,13 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\OutboxMessageCreatedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Send\Chain;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -29,50 +28,25 @@ use Throwable;
 
 class OutboxService {
 
-
-	/** @var LocalMessageMapper */
-	private $mapper;
-
-	/** @var AttachmentService */
-	private $attachmentService;
-
 	/** @var IEventDispatcher */
 	private $eventDispatcher;
-
-	/** @var IMAPClientFactory */
-	private $clientFactory;
-
-	/** @var IMailManager */
-	private $mailManager;
-
-	/** @var AccountService */
-	private $accountService;
 
 	/** @var ITimeFactory */
 	private $timeFactory;
 
-	/** @var LoggerInterface */
-	private $logger;
-
 	public function __construct(
-		LocalMessageMapper $mapper,
-		AttachmentService $attachmentService,
+		private LocalMessageMapper $mapper,
+		private AttachmentService $attachmentService,
 		IEventDispatcher $eventDispatcher,
-		IMAPClientFactory $clientFactory,
-		IMailManager $mailManager,
-		AccountService $accountService,
+		private ProtocolFactory $protocolFactory,
+		private MailManager $mailManager,
+		private AccountService $accountService,
 		ITimeFactory $timeFactory,
-		LoggerInterface $logger,
+		private LoggerInterface $logger,
 		private Chain $sendChain,
 	) {
-		$this->mapper = $mapper;
-		$this->attachmentService = $attachmentService;
 		$this->eventDispatcher = $eventDispatcher;
-		$this->clientFactory = $clientFactory;
-		$this->mailManager = $mailManager;
 		$this->timeFactory = $timeFactory;
-		$this->logger = $logger;
-		$this->accountService = $accountService;
 	}
 
 	/**
@@ -143,7 +117,7 @@ class OutboxService {
 			return $message;
 		}
 
-		$client = $this->clientFactory->getClient($account);
+		$client = $this->protocolFactory->imapClient($account);
 		try {
 			$attachmentIds = $this->attachmentService->handleAttachments($account, $attachments, $client);
 		} finally {
@@ -175,7 +149,7 @@ class OutboxService {
 			return $message;
 		}
 
-		$client = $this->clientFactory->getClient($account);
+		$client = $this->protocolFactory->imapClient($account);
 		try {
 			$attachmentIds = $this->attachmentService->handleAttachments($account, $attachments, $client);
 		} finally {

@@ -12,16 +12,16 @@ namespace OCA\Mail\Tests\Unit\Service;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OC\EventDispatcher\EventDispatcher;
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Exception\ClientException;
-use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Send\Chain;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Attachment\AttachmentService;
+use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\OutboxService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -45,10 +45,10 @@ class OutboxServiceTest extends TestCase {
 	/** @var AttachmentService|MockObject */
 	private $attachmentService;
 
-	/** @var IMAPClientFactory|MockObject */
-	private $clientFactory;
+	/** @var ProtocolFactory|MockObject */
+	private $protocolFactory;
 
-	/** @var IMailManager|MockObject */
+	/** @var MailManager|MockObject */
 	private $mailManager;
 
 	/** @var AccountService|MockObject */
@@ -66,8 +66,8 @@ class OutboxServiceTest extends TestCase {
 
 		$this->mapper = $this->createMock(LocalMessageMapper::class);
 		$this->attachmentService = $this->createMock(AttachmentService::class);
-		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
-		$this->mailManager = $this->createMock(IMailManager::class);
+		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
+		$this->mailManager = $this->createMock(MailManager::class);
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
@@ -76,7 +76,7 @@ class OutboxServiceTest extends TestCase {
 			$this->mapper,
 			$this->attachmentService,
 			$this->createMock(EventDispatcher::class),
-			$this->clientFactory,
+			$this->protocolFactory,
 			$this->mailManager,
 			$this->accountService,
 			$this->timeFactory,
@@ -217,8 +217,8 @@ class OutboxServiceTest extends TestCase {
 			->method('saveWithRecipients')
 			->with($message, [$rTo], $cc, $bcc)
 			->willReturn($message2);
-		$this->clientFactory->expects(self::once())
-			->method('getClient')
+		$this->protocolFactory->expects(self::once())
+			->method('imapClient')
 			->with($account)
 			->willReturn($client);
 		$this->attachmentService->expects(self::once())
@@ -265,8 +265,8 @@ class OutboxServiceTest extends TestCase {
 			->method('saveWithRecipients')
 			->with($message, [$rTo], $cc, $bcc)
 			->willReturn($message2);
-		$this->clientFactory->expects(self::never())
-			->method('getClient');
+		$this->protocolFactory->expects(self::never())
+			->method('imapClient');
 		$this->attachmentService->expects(self::never())
 			->method('handleAttachments');
 		$this->attachmentService->expects(self::never())
@@ -319,8 +319,8 @@ class OutboxServiceTest extends TestCase {
 			->method('updateWithRecipients')
 			->with($message, [$rTo], $cc, $bcc)
 			->willReturn($message2);
-		$this->clientFactory->expects(self::once())
-			->method('getClient')
+		$this->protocolFactory->expects(self::once())
+			->method('imapClient')
 			->with($account)
 			->willReturn($client);
 		$this->attachmentService->expects(self::once())
@@ -377,8 +377,8 @@ class OutboxServiceTest extends TestCase {
 		$this->attachmentService->expects(self::once())
 			->method('updateLocalMessageAttachments')
 			->with($this->userId, $message2, $attachments);
-		$this->clientFactory->expects(self::never())
-			->method('getClient');
+		$this->protocolFactory->expects(self::never())
+			->method('imapClient');
 		$this->attachmentService->expects(self::never())
 			->method('handleAttachments');
 

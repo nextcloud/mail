@@ -42,21 +42,22 @@
 
 		<template v-if="followingSystem">
 			<p>{{ t('mail', 'The autoresponder follows your personal absence period settings.') }}</p>
-			<ButtonVue :href="personalAbsenceSettingsUrl" target="_blank" rel="noopener noreferrer">
+			<NcButton :href="personalAbsenceSettingsUrl" target="_blank" rel="noopener noreferrer">
 				<template #icon>
 					<OpenInNewIcon :size="20" />
 				</template>
 				{{ t('mail', 'Edit absence settings') }}
-			</ButtonVue>
+			</NcButton>
 		</template>
 		<template v-else>
 			<div class="form__multi-row">
 				<fieldset class="form__fieldset">
 					<label for="ooo-first-day">{{ t('mail', 'First day') }}</label>
-					<DatetimePicker
+					<NcDateTimePicker
 						id="ooo-first-day"
 						v-model="firstDay"
-						:disabled="!enabled" />
+						:class="{ 'form__date-picker--disabled': !enabled }"
+						:inert="!enabled" />
 				</fieldset>
 
 				<fieldset class="form__fieldset">
@@ -70,10 +71,11 @@
 							{{ t('mail', 'Last day (optional)') }}
 						</label>
 					</div>
-					<DatetimePicker
+					<NcDateTimePicker
 						id="ooo-last-day"
 						v-model="lastDay"
-						:disabled="!enabled || !enableLastDay" />
+						:class="{ 'form__date-picker--disabled': !enabled || !enableLastDay }"
+						:inert="!enabled || !enableLastDay" />
 				</fieldset>
 			</div>
 
@@ -105,25 +107,26 @@
 			{{ errorMessage }}
 		</p>
 
-		<ButtonVue
-			type="primary"
-			native-type="submit"
+		<NcButton
+			variant="primary"
+			type="submit"
 			:aria-label="t('mail', 'Save autoresponder')"
 			:disabled="loading || !valid">
 			<template #icon>
 				<CheckIcon :size="20" />
 			</template>
 			{{ t('mail', 'Save autoresponder') }}
-		</ButtonVue>
+		</NcButton>
 	</form>
 </template>
 
 <script>
 import { loadState } from '@nextcloud/initial-state'
 import { generateUrl } from '@nextcloud/router'
-import { NcButton as ButtonVue, NcDateTimePicker as DatetimePicker } from '@nextcloud/vue'
 import mitt from 'mitt'
 import { mapStores } from 'pinia'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcDateTimePicker from '@nextcloud/vue/components/NcDateTimePicker'
 import CheckIcon from 'vue-material-design-icons/Check.vue'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
 import TextEditor from './TextEditor.vue'
@@ -138,9 +141,9 @@ const OOO_FOLLOW_SYSTEM = 'system'
 export default {
 	name: 'OutOfOfficeForm',
 	components: {
-		DatetimePicker,
+		NcDateTimePicker,
 		TextEditor,
-		ButtonVue,
+		NcButton,
 		CheckIcon,
 		OpenInNewIcon,
 	},
@@ -351,13 +354,13 @@ export default {
 			gap: 5px;
 		}
 
-		&__input {
-			flex: 1 auto;
-		}
-
 		&__description {
 			color: var(--color-text-maxcontrast);
 		}
+	}
+
+	&__date-picker--disabled {
+		opacity: .5;
 	}
 
 	&__multi-row {
@@ -388,9 +391,4 @@ export default {
 	}
 }
 
-#ooo-first-day {
-	:deep(.mx-datepicker-popup) {
-		inset-inline-start: 0 !important;
-	}
-}
 </style>
