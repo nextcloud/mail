@@ -91,9 +91,6 @@ class DraftsController extends Controller {
 		bool $isAiGenerated = false) : JsonResponse {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->userId);
 		$account = $this->accountService->find($effectiveUserId, $accountId);
-		if ($draftId !== null) {
-			$this->service->handleDraft($account, $draftId);
-		}
 		$message = new LocalMessage();
 		$message->setType(LocalMessage::TYPE_DRAFT);
 		$message->setAccountId($accountId);
@@ -118,6 +115,9 @@ class DraftsController extends Controller {
 		}
 
 		$this->service->saveMessage($account, $message, $to, $cc, $bcc, $attachments);
+		if ($draftId !== null) {
+			$this->service->handleDraft($account, $draftId);
+		}
 		$id = $message->getId();
 		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId created draft: $id  on behalf of $effectiveUserId");
 		return JsonResponse::success($message, Http::STATUS_CREATED);
