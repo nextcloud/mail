@@ -4,7 +4,7 @@
 -->
 <template>
 	<ConfirmationModal
-		title="Delete tag"
+		:title="t('mail', 'Delete tag')"
 		:disabled="deleting"
 		@confirm="deleteTag"
 		@cancel="onClose">
