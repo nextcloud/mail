@@ -10,6 +10,7 @@ import { generateUrl } from '@nextcloud/router'
  * @property {number} id the delegation id
  * @property {number} accountId the account id
  * @property {string} userId the delegated user id
+ * @property {string} displayName the delegated user's display name
  */
 
 /**

@@ -10,57 +10,47 @@ declare(strict_types=1);
 namespace OCA\Mail\Controller;
 
 use OCA\Mail\AppInfo\Application;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class TagsController extends Controller {
-	private string $currentUserId;
-	private IMailManager $mailManager;
-
-	private AccountService $accountService;
-
-
-	public function __construct(IRequest $request,
-		string $userId,
-		IMailManager $mailManager,
-		AccountService $accountService,
+	public function __construct(
+		IRequest $request,
+		private string $userId,
+		private MailManager $mailManager,
+		private AccountService $accountService,
 	) {
 		parent::__construct(Application::APP_ID, $request);
-		$this->currentUserId = $userId;
-		$this->mailManager = $mailManager;
-		$this->accountService = $accountService;
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param string $displayName
 	 * @param string $color
 	 *
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function create(string $displayName, string $color): JSONResponse {
 		$this->validateDisplayName($displayName);
 		$this->validateColor($color);
 
-		$tag = $this->mailManager->createTag($displayName, $color, $this->currentUserId);
+		$tag = $this->mailManager->createTag($displayName, $color, $this->userId);
 		return new JSONResponse($tag);
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @param string $displayName
 	 * @param string $color
@@ -68,27 +58,27 @@ class TagsController extends Controller {
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function update(int $id, string $displayName, string $color): JSONResponse {
 		$this->validateDisplayName($displayName);
 		$this->validateColor($color);
 
-		$tag = $this->mailManager->updateTag($id, $displayName, $color, $this->currentUserId);
+		$tag = $this->mailManager->updateTag($id, $displayName, $color, $this->userId);
 		return new JSONResponse($tag);
 	}
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function delete(int $id, int $accountId): JSONResponse {
 		try {
-			$accounts = $this->accountService->findByUserId($this->currentUserId);
+			$accounts = $this->accountService->findByUserId($this->userId);
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
-		$this->mailManager->deleteTag($id, $this->currentUserId, $accounts);
+		$this->mailManager->deleteTag($id, $this->userId, $accounts);
 
 		return new JSONResponse([$id]);
 	}

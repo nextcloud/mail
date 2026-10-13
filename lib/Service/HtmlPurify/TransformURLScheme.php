@@ -89,24 +89,22 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 		$proxyUrl = $this->urlGenerator->linkToRoute('mail.proxy.proxy', [
 			'id' => $this->messageId,
 			'hmac' => $this->hmacGenerator->generate($this->messageId, $originalURL),
-			'src' => $originalURL
 		]);
 		$parsedProxyUrl = parse_url($proxyUrl);
 		/** @var array{path: string, query: string} $parsedProxyUrl */
+		$query = $parsedProxyUrl['query'] . '&src=' . rawurlencode($originalURL);
 		return new \HTMLPurifier_URI(
 			$this->request->getServerProtocol(),
 			null, $this->request->getServerHost(),
 			null,
 			$parsedProxyUrl['path'],
-			$parsedProxyUrl['query'],
+			$query,
 			null
 		);
 	}
 
 	private function replaceCidWithUrl(HTMLPurifier_URI $uri): HTMLPurifier_URI {
-		$inlineAttachment = array_find($this->inlineAttachments, static function ($attachment) use ($uri) {
-			return $attachment['cid'] === $uri->path;
-		});
+		$inlineAttachment = array_find($this->inlineAttachments, static fn ($attachment) => $attachment['cid'] === $uri->path);
 
 		if ($inlineAttachment === null) {
 			return $uri;

@@ -4,9 +4,8 @@
  */
 
 import { showError, showSuccess, showUndo } from '@nextcloud/dialogs'
-import { translate as t } from '@nextcloud/l10n'
+import { t } from '@nextcloud/l10n'
 import { defineStore } from 'pinia'
-import Vue from 'vue'
 import logger from '../logger.js'
 import * as OutboxService from '../service/OutboxService.js'
 import { UNDO_DELAY } from './constants.js'
@@ -30,7 +29,7 @@ export default defineStore('outbox', {
 
 		addMessageMutation({ message }) {
 			const existing = this.messages[message.id] ?? {}
-			Vue.set(this.messages, message.id, { ...existing, ...message })
+			this.messages[message.id] = { ...existing, ...message }
 			// Add the message only if it's new
 			if (this.messageList.indexOf(message.id) === -1) {
 				this.messageList.unshift(message.id)
@@ -39,16 +38,16 @@ export default defineStore('outbox', {
 
 		deleteMessageMutation({ id }) {
 			this.messageList = this.messageList.filter((i) => i !== id)
-			Vue.delete(this.messages, id)
+			delete this.messages[id]
 		},
 
 		stopMessageMutation({ message }) {
-			Vue.delete(message, 'sendAt')
+			delete message.sendAt
 		},
 
 		updateMessageMutation({ message }) {
 			const existing = this.messages[message.id] ?? {}
-			Vue.set(this.messages, message.id, Object.assign(existing, message))
+			this.messages[message.id] = Object.assign(existing, message)
 			// Add the message only if it's new
 			if (this.messageList.indexOf(message.id) === -1) {
 				this.messageList.unshift(message.id)
@@ -117,7 +116,7 @@ export default defineStore('outbox', {
 			this.stopMessageMutation({ message })
 			const updatedMessage = await OutboxService.updateMessage({
 				...message,
-				sentAt: undefined,
+				sendAt: null,
 			}, message.id)
 			this.updateMessageMutation({ message: updatedMessage })
 			return updatedMessage
@@ -225,7 +224,7 @@ export default defineStore('outbox', {
 			try {
 				await this.sendMessage({ id: message.id, force: false })
 				showSuccess(t('mail', 'Message copied to "Sent" folder'))
-			} catch (error) {
+			} catch {
 				showError(t('mail', 'Could not copy message to "Sent" folder'))
 				logger.error('Could not copy message to "Sent" folder ' + message.id, { message })
 			}

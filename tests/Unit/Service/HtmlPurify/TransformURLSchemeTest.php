@@ -199,9 +199,8 @@ class TransformURLSchemeTest extends TestCase {
 			->with('mail.proxy.proxy', [
 				'id' => 42,
 				'hmac' => $hmac,
-				'src' => $originalURL,
 			])
-			->willReturn('/apps/mail/proxy?id=42&hmac=abc123&src=https%3A%2F%2Fexample.com%2Fimage.png');
+			->willReturn('/apps/mail/proxy?id=42&hmac=abc123');
 
 		$this->filter->filter($uri, $config, $context);
 
@@ -271,9 +270,8 @@ class TransformURLSchemeTest extends TestCase {
 			->with('mail.proxy.proxy', [
 				'id' => 42,
 				'hmac' => $hmac,
-				'src' => $originalURL,
 			])
-			->willReturn('/apps/mail/proxy?id=42&hmac=abc123&src=https%3A%2F%2Fexample.com%2Fpage%3Fid%3D123%26name%3Dtest');
+			->willReturn('/apps/mail/proxy?id=42&hmac=abc123');
 
 		$this->filter->filter($uri, $config, $context);
 
@@ -306,13 +304,68 @@ class TransformURLSchemeTest extends TestCase {
 			->with('mail.proxy.proxy', [
 				'id' => 42,
 				'hmac' => $hmac,
-				'src' => $originalURL,
 			])
-			->willReturn('/apps/mail/proxy?id=42&hmac=abc123&src=https%3A%2F%2Fexample.com%2Fpage%23section');
+			->willReturn('/apps/mail/proxy?id=42&hmac=abc123');
 
 		$this->filter->filter($uri, $config, $context);
 
 		$this->assertStringContainsString('%23section', $uri->query);
+	}
+
+	public function testSrcWithPercentEncodedQueryPreservedForHmac(): void {
+		$uri = new HTMLPurifier_URI(
+			'https',
+			null,
+			'cdn.example.com',
+			null,
+			'/img.jpg',
+			'sig=%2Fabc%2Bdef%3D&t=123',
+			null,
+		);
+		$config = HTMLPurifier_Config::createDefault();
+		$context = new HTMLPurifier_Context();
+		$attr = 'src';
+		$context->register('CurrentAttr', $attr);
+
+		$originalURL = 'https://cdn.example.com/img.jpg?sig=%2Fabc%2Bdef%3D&t=123';
+		$hmac = 'deadbeef';
+
+		$this->hmacGenerator->expects($this->once())
+			->method('generate')
+			->with(42, $originalURL)
+			->willReturn($hmac);
+
+		$this->request->method('getServerProtocol')->willReturn('https');
+		$this->request->method('getServerHost')->willReturn('mail.example.com');
+		$this->urlGenerator->expects($this->once())
+			->method('linkToRoute')
+			->with('mail.proxy.proxy', [
+				'id' => 42,
+				'hmac' => $hmac,
+			])
+			->willReturnCallback(static function (string $route, array $args): string {
+				$query = http_build_query($args, '', '&', PHP_QUERY_RFC3986);
+				return '/index.php/apps/mail/proxy?' . strtr($query, [
+					'%2F' => '/',
+					'%252F' => '%2F',
+					'%3F' => '?',
+					'%40' => '@',
+					'%3A' => ':',
+					'%21' => '!',
+					'%3B' => ';',
+					'%2C' => ',',
+					'%2A' => '*',
+				]);
+			});
+
+		$this->filter->filter($uri, $config, $context);
+
+		parse_str($uri->query, $parsed);
+		$this->assertSame(
+			$originalURL,
+			$parsed['src'],
+			'The src reaching the server must be byte-identical to the value the HMAC was generated over',
+		);
 	}
 
 	public function testCidSchemeRewritesUriFromUrl(): void {

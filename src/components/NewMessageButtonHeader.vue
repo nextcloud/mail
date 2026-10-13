@@ -4,21 +4,21 @@
 -->
 <template>
 	<div class="header">
-		<ButtonVue
+		<NcButton
 			:aria-label="t('mail', 'New message')"
-			type="secondary"
-			button-id="mail_new_message"
+			variant="secondary"
+			buttonId="mail_new_message"
 			:wide="true"
 			@click="onNewMessage">
 			<template #icon>
 				<IconAdd :size="20" />
 			</template>
 			{{ t('mail', 'New message') }}
-		</ButtonVue>
-		<ButtonVue
+		</NcButton>
+		<NcButton
 			v-if="showRefresh && currentMailbox"
 			:aria-label="t('mail', 'Refresh')"
-			type="tertiary-no-background"
+			variant="tertiary-no-background"
 			class="refresh__button"
 			:disabled="refreshing"
 			@click="refreshMailbox">
@@ -26,18 +26,18 @@
 				<IconRefresh
 					v-if="!refreshing"
 					:size="20" />
-				<IconLoading
+				<NcLoadingIcon
 					v-if="refreshing"
 					:size="20" />
 			</template>
-		</ButtonVue>
+		</NcButton>
 	</div>
 </template>
 
 <script>
-import { NcButton as ButtonVue } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
-import IconLoading from '@nextcloud/vue/components/NcLoadingIcon'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconRefresh from 'vue-material-design-icons/Refresh.vue'
 import logger from '../logger.js'
@@ -46,10 +46,10 @@ import useMainStore from '../store/mainStore.js'
 export default {
 	name: 'NewMessageButtonHeader',
 	components: {
-		ButtonVue,
+		NcButton,
 		IconAdd,
 		IconRefresh,
-		IconLoading,
+		NcLoadingIcon,
 	},
 
 	props: {

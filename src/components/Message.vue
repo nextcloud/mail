@@ -8,20 +8,20 @@
 		:class="[message.hasHtmlBody ? 'mail-message-body mail-message-body-html' : 'mail-message-body']"
 		role="region"
 		:aria-label="t('mail', 'Message body')">
-		<PhishingWarning v-if="message.phishingDetails.warning" :phishing-data="message.phishingDetails.checks" />
+		<PhishingWarning v-if="message.phishingDetails.warning" :phishingData="message.phishingDetails.checks" />
 		<div
 			v-if="message.smime.isSigned && !message.smime.signatureIsValid"
 			class="invalid-signature-warning">
 			<LockOffIcon
 				:size="20"
-				fill-color="red"
+				fillColor="red"
 				class="invalid-signature-warning__icon" />
 			<p>
 				{{ t('mail', 'Warning: The S/MIME signature of this message is  unverified. The sender might be impersonating someone!') }}
 			</p>
 		</div>
 		<div v-if="itineraries.length > 0" class="message-itinerary">
-			<Itinerary :entries="itineraries" :message-id="message.messageId" />
+			<Itinerary :entries="itineraries" :messageId="message.messageId" />
 		</div>
 		<div v-if="hasCurrentUserPrincipalAndCollections && message.scheduling.length > 0" class="message-imip">
 			<Imip
@@ -33,9 +33,10 @@
 			v-if="message.hasHtmlBody"
 			:url="htmlUrl"
 			:message="message"
-			:full-height="fullHeight"
+			:fullHeight="fullHeight"
 			@load="$emit('load', $event)"
-			@translate="$emit('translate')" />
+			@printShortcut="$emit('printShortcut')"
+			@translate="$emit('translate', $event)" />
 		<MessageEncryptedBody
 			v-else-if="isEncrypted || isPgpMimeEncrypted"
 			:body="message.body"
@@ -46,7 +47,7 @@
 			:body="message.body"
 			:signature="message.signature"
 			:message="message"
-			@translate="$emit('translate')" />
+			@translate="$emit('translate', $event)" />
 		<MessageAttachments :attachments="message.attachments" :envelope="envelope" />
 		<div id="reply-composer" />
 		<div class="reply-buttons">
@@ -70,7 +71,7 @@
 					v-for="(reply, index) in smartReplies"
 					:key="index"
 					class="reply-buttons__suggested__button"
-					type="secondary"
+					variant="secondary"
 					@click="onReply(reply)">
 					{{ reply }}
 				</NcAssistantButton>
@@ -90,8 +91,10 @@
 
 <script>
 import { generateUrl } from '@nextcloud/router'
-import { NcAssistantButton, NcButton, NcPopover } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcAssistantButton from '@nextcloud/vue/components/NcAssistantButton'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcPopover from '@nextcloud/vue/components/NcPopover'
 import IconInfo from 'vue-material-design-icons/InformationOutline.vue'
 import LockOffIcon from 'vue-material-design-icons/LockOffOutline.vue'
 import ReplyIcon from 'vue-material-design-icons/ReplyOutline.vue'
@@ -153,6 +156,8 @@ export default {
 		},
 	},
 
+	emits: ['load', 'printShortcut', 'translate', 'reply'],
+
 	data() {
 		return {
 			aiInfo: t('mail', 'Suggested replies are using AI'),
@@ -198,11 +203,6 @@ export default {
 
 <style lang="scss" scoped>
 @use '../../css/variables.scss';
-
-.v-popover > .trigger > .action-item {
-	border-radius: 22px;
-	background-color: var(--color-background-darker);
-}
 
 .message-imip {
 	padding: 5px 10px;

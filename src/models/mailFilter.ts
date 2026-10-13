@@ -23,6 +23,7 @@ export enum MailFilterConditionOperator {
 
 export enum MailFilterActions {
 	AddSystemFlag = 'addsystemflag',
+	Redirect = 'redirect',
 	Stop = 'stop',
 }
 
@@ -82,6 +83,17 @@ export class MailFilterActionStop implements MailFilterAction {
 	constructor() {
 		this.id = randomId()
 		this.type = 'stop'
+	}
+}
+
+export class MailFilterActionRedirect implements MailFilterAction {
+	public id: number
+	public type: string
+	public recipient: string
+
+	constructor() {
+		this.id = randomId()
+		this.type = 'redirect'
 	}
 }
 

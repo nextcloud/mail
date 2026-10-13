@@ -21,19 +21,15 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 class FilterController extends Controller {
-	private string $currentUserId;
-
 	public function __construct(
 		IRequest $request,
-		string $userId,
+		private string $userId,
 		private FilterService $mailFilterService,
 		private AccountService $accountService,
 		private DelegationService $delegationService,
 	) {
 		parent::__construct(Application::APP_ID, $request);
-		$this->currentUserId = $userId;
 	}
-
 
 	/**
 	 * @psalm-return JSONResponse<200|404, array, array<never, never>>
@@ -41,7 +37,7 @@ class FilterController extends Controller {
 	#[Route(Route::TYPE_FRONTPAGE, verb: 'GET', url: '/api/filter/{accountId}', requirements: ['accountId' => '[\d]+'])]
 	#[NoAdminRequired]
 	public function getFilters(int $accountId): JSONResponse {
-		$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->currentUserId);
+		$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->userId);
 		$account = $this->accountService->findById($accountId);
 
 		if ($account->getUserId() !== $effectiveUserId) {
@@ -58,7 +54,7 @@ class FilterController extends Controller {
 	#[Route(Route::TYPE_FRONTPAGE, verb: 'PUT', url: '/api/filter/{accountId}', requirements: ['accountId' => '[\d]+'])]
 	#[NoAdminRequired]
 	public function updateFilters(int $accountId, array $filters): JSONResponse {
-		$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->currentUserId);
+		$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->userId);
 		$account = $this->accountService->findById($accountId);
 
 		if ($account->getUserId() !== $effectiveUserId) {
@@ -66,7 +62,7 @@ class FilterController extends Controller {
 		}
 
 		$this->mailFilterService->update($account->getMailAccount(), $filters);
-		$this->delegationService->logDelegatedAction($this->currentUserId, $effectiveUserId, "$this->currentUserId updated account: $accountId 's filters  on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated account: $accountId 's filters  on behalf of $effectiveUserId");
 
 		return new JSONResponse([]);
 	}

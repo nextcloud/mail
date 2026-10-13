@@ -22,42 +22,38 @@ use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\IRequest;
 
 class QuickActionsController extends Controller {
-	private ?string $uid;
-
 	public function __construct(
 		IRequest $request,
-		?string $userId,
+		private ?string $userId,
 		private QuickActionsService $quickActionsService,
 		private AccountService $accountService,
 	) {
 		parent::__construct(Application::APP_ID, $request);
-		$this->uid = $userId;
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function index(): JsonResponse {
-		if ($this->uid === null) {
+		if ($this->userId === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
-		$actions = $this->quickActionsService->findAll($this->uid);
+		$actions = $this->quickActionsService->findAll($this->userId);
 
 		return JsonResponse::success($actions);
 	}
 
 	/**
-	 * @NoAdminRequired
 	 * @param string $name
 	 *
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function create(string $name, int $accountId): JsonResponse {
-		if ($this->uid === null) {
+		if ($this->userId === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
 		try {
@@ -65,7 +61,7 @@ class QuickActionsController extends Controller {
 		} catch (DoesNotExistException $e) {
 			return JsonResponse::fail('Account not found', Http::STATUS_BAD_REQUEST);
 		}
-		if ($account->getUserId() !== $this->uid) {
+		if ($account->getUserId() !== $this->userId) {
 			return JsonResponse::fail('Account not found', Http::STATUS_BAD_REQUEST);
 		}
 		try {
@@ -78,20 +74,20 @@ class QuickActionsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 * @param int $id
 	 * @param string $name
 	 *
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function update(int $id, string $name): JsonResponse {
 
-		if ($this->uid === null) {
+		if ($this->userId === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
 
-		$quickAction = $this->quickActionsService->find($id, $this->uid);
+		$quickAction = $this->quickActionsService->find($id, $this->userId);
 
 		if ($quickAction === null) {
 			return JsonResponse::error('Quick action not found', Http::STATUS_NOT_FOUND);
@@ -103,16 +99,15 @@ class QuickActionsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	public function destroy(int $id): JsonResponse {
-		if ($this->uid === null) {
+		if ($this->userId === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
 		try {
-			$this->quickActionsService->delete($id, $this->uid);
+			$this->quickActionsService->delete($id, $this->userId);
 			return JsonResponse::success();
 		} catch (DoesNotExistException $e) {
 			return JsonResponse::fail('Quick action not found', Http::STATUS_NOT_FOUND);

@@ -11,12 +11,13 @@ declare(strict_types=1);
 namespace OCA\Mail\AppInfo;
 
 use Horde_Translation;
+use OCA\Mail\ConfigLexicon;
 use OCA\Mail\ContextChat\ContextChatProvider;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IAvatarService;
 use OCA\Mail\Contracts\IDkimService;
 use OCA\Mail\Contracts\IDkimValidator;
-use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\Contracts\IInternalAddressService;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Contracts\ITrustedSenderService;
@@ -62,7 +63,7 @@ use OCA\Mail\Service\Avatar\FaviconDataAccess;
 use OCA\Mail\Service\AvatarService;
 use OCA\Mail\Service\DkimService;
 use OCA\Mail\Service\DkimValidator;
-use OCA\Mail\Service\MailManager;
+use OCA\Mail\Service\InternalAddressService;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\Service\Search\MailSearch;
 use OCA\Mail\Service\TrustedSenderService;
@@ -77,7 +78,8 @@ use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\ContextChat\Events\ContentProviderRegisterEvent;
 use OCP\DB\Events\AddMissingIndicesEvent;
-use OCP\IServerContainer;
+use OCP\Files\Folder;
+use OCP\Files\IRootFolder;
 use OCP\TaskProcessing\Events\TaskSuccessfulEvent;
 use OCP\User\Events\OutOfOfficeChangedEvent;
 use OCP\User\Events\OutOfOfficeClearedEvent;
@@ -104,11 +106,13 @@ final class Application extends App implements IBootstrap {
 	public function register(IRegistrationContext $context): void {
 		$context->registerParameter('hostname', Util::getServerHostName());
 
-		$context->registerService('userFolder', static function (ContainerInterface $c) {
-			$userContainer = $c->get(IServerContainer::class);
+		$context->registerService('userFolder', static function (ContainerInterface $c): ?Folder {
 			$uid = $c->get('userId');
+			if ($uid === null) {
+				return null;
+			}
 
-			return $userContainer->getUserFolder($uid);
+			return $c->get(IRootFolder::class)->getUserFolder($uid);
 		});
 		$context->registerService(Favicon::class, function (ContainerInterface $c) {
 			$favicon = new Favicon();
@@ -120,9 +124,9 @@ final class Application extends App implements IBootstrap {
 
 		$context->registerServiceAlias(IAvatarService::class, AvatarService::class);
 		$context->registerServiceAlias(IAttachmentService::class, AttachmentService::class);
-		$context->registerServiceAlias(IMailManager::class, MailManager::class);
 		$context->registerServiceAlias(IMailSearch::class, MailSearch::class);
 		$context->registerServiceAlias(IMailTransmission::class, MailTransmission::class);
+		$context->registerServiceAlias(IInternalAddressService::class, InternalAddressService::class);
 		$context->registerServiceAlias(ITrustedSenderService::class, TrustedSenderService::class);
 		$context->registerServiceAlias(IUserPreferences::class, UserPreferenceService::class);
 		$context->registerServiceAlias(IDkimService::class, DkimService::class);
@@ -171,6 +175,8 @@ final class Application extends App implements IBootstrap {
 		$context->registerSetupCheck(MailConnectionPerformance::class);
 
 		$context->registerUserMigrator(MailAccountMigrator::class);
+
+		$context->registerConfigLexicon(ConfigLexicon::class);
 
 		// bypass Horde Translation system
 		Horde_Translation::setHandler('Horde_Imap_Client', new HordeTranslationHandler());

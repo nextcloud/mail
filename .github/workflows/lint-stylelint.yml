@@ -25,24 +25,21 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
       - name: Read package.json node and npm engines version
-        uses: skjnldsv/read-package-engines-version-actions@06d6baf7d8f41934ab630e97d9e6c0bc9c9ac5e4 # v3
+        uses: nextcloud-libraries/parse-package-engines-action@122ae05d4257008180a514e1ddeb0c1b9d094bdd # v0.1.0
         id: versions
-        with:
-          fallbackNode: '^24'
-          fallbackNpm: '^11.3'
 
-      - name: Set up node ${{ steps.versions.outputs.nodeVersion }}
-        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+      - name: Set up node ${{ steps.versions.outputs.node-version }}
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: ${{ steps.versions.outputs.nodeVersion }}
+          node-version: ${{ steps.versions.outputs.node-version }}
 
-      - name: Set up npm ${{ steps.versions.outputs.npmVersion }}
-        run: npm i -g 'npm@${{ steps.versions.outputs.npmVersion }}'
+      - name: Set up npm ${{ steps.versions.outputs.package-manager-version }}
+        run: npm i -g 'npm@${{ steps.versions.outputs.package-manager-version }}'
 
       - name: Install dependencies
         env:

@@ -14,6 +14,8 @@ use OCA\Mail\Http\AvatarDownloadResponse;
 use OCA\Mail\Http\TrapError;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
@@ -21,26 +23,21 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class AvatarsController extends Controller {
-	private IAvatarService $avatarService;
-	private string $uid;
-
-	public function __construct(string $appName,
+	public function __construct(
+		string $appName,
 		IRequest $request,
-		IAvatarService $avatarService,
-		string $userId) {
+		private IAvatarService $avatarService,
+		private string $userId,
+	) {
 		parent::__construct($appName, $request);
-
-		$this->avatarService = $avatarService;
-		$this->uid = $userId;
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
 	 * @param string $email
 	 * @return JSONResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	#[TrapError]
 	public function url(string $email): JSONResponse {
 		if (empty($email)) {
@@ -51,7 +48,7 @@ class AvatarsController extends Controller {
 			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
 		}
 
-		$avatar = $this->avatarService->getAvatar($email, $this->uid);
+		$avatar = $this->avatarService->getAvatar($email, $this->userId);
 		if (is_null($avatar)) {
 			// No avatar found
 			$response = new JSONResponse([], Http::STATUS_NO_CONTENT);
@@ -72,19 +69,18 @@ class AvatarsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
 	 * @param string $email
 	 * @return Response
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	#[TrapError]
 	public function image(string $email): Response {
 		if (empty($email)) {
 			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
 		}
 
-		$imageData = $this->avatarService->getAvatarImage($email, $this->uid);
+		$imageData = $this->avatarService->getAvatarImage($email, $this->userId);
 
 		if ($imageData === null) {
 			return $this->noAvatarFoundResponse();
@@ -108,8 +104,7 @@ class AvatarsController extends Controller {
 	private function noAvatarFoundResponse(): Response {
 		$response = new Response();
 		$response->setStatus(Http::STATUS_NOT_FOUND);
-		// Clear cache
-		$response->cacheFor(0);
+		$response->cacheFor(60 * 60, false, true);
 		return $response;
 	}
 }

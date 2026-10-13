@@ -4,14 +4,14 @@
 -->
 
 <template>
-	<AppContent
-		pane-config-key="mail-outbox"
-		:show-details="isMessageShown"
+	<NcAppContent
+		paneConfigKey="mail-outbox"
+		:showDetails="isMessageShown"
 		@update:showDetails="hideMessage">
 		<OutboxMessageContent />
 		<!-- List -->
 		<template #list>
-			<AppContentList class="outbox-list">
+			<NcAppContentList class="outbox-list">
 				<Error
 					v-if="error"
 					:error="t('mail', 'Could not open outbox')"
@@ -24,14 +24,15 @@
 					v-else
 					:key="message.id"
 					:message="message" />
-			</AppContentList>
+			</NcAppContentList>
 		</template>
-	</AppContent>
+	</NcAppContent>
 </template>
 
 <script>
-import { NcAppContent as AppContent, NcAppContentList as AppContentList } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcAppContent from '@nextcloud/vue/components/NcAppContent'
+import NcAppContentList from '@nextcloud/vue/components/NcAppContentList'
 import EmptyMailbox from './EmptyMailbox.vue'
 import Error from './Error.vue'
 import LoadingSkeleton from './LoadingSkeleton.vue'
@@ -43,8 +44,8 @@ import useOutboxStore from '../store/outboxStore.js'
 export default {
 	name: 'Outbox',
 	components: {
-		AppContent,
-		AppContentList,
+		NcAppContent,
+		NcAppContentList,
 		Error,
 		LoadingSkeleton,
 		EmptyMailbox,
@@ -117,13 +118,3 @@ export default {
 	},
 }
 </script>
-
-<style lang="scss" scoped>
-.outbox-list {
-	contain: none !important;
-}
-
-:deep(.button-vue--vue-secondary) {
-	box-shadow: none;
-}
-</style>

@@ -11,26 +11,15 @@ namespace OCA\Mail;
 use Horde_Mime_Part;
 
 class Attachment {
-	private ?string $id;
-	private ?string $name;
-	private string $type;
-	private string $content;
-	private int $size;
-
 	public function __construct(
-		?string $id,
-		?string $name,
-		string $type,
-		string $content,
-		int $size,
+		private ?string $id,
+		private ?string $name,
+		private string $type,
+		private string $content,
+		private int $size,
 		public readonly ?string $contentId,
 		public readonly ?string $disposition,
 	) {
-		$this->id = $id;
-		$this->name = $name;
-		$this->type = $type;
-		$this->content = $content;
-		$this->size = $size;
 	}
 
 	public static function fromMimePart(Horde_Mime_Part $mimePart): self {

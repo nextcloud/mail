@@ -24,4 +24,22 @@ class MessageSentEventTest extends TestCase {
 		$this->assertSame($account, $event->getAccount());
 		$this->assertSame($localMessage, $event->getLocalMessage());
 	}
+
+	public function testGetWebhookSerializable(): void {
+		$account = $this->createStub(Account::class);
+		$account->method('getId')->willReturn(7);
+		$localMessage = new LocalMessage();
+		$localMessage->setSendAt(1770000000);
+		$localMessage->setSubject('Hello');
+		$localMessage->setInReplyToMessageId('<parent@example.com>');
+
+		$event = new MessageSentEvent($account, $localMessage);
+
+		$this->assertSame([
+			'accountId' => 7,
+			'inReplyToRfcMessageId' => '<parent@example.com>',
+			'sendAt' => 1770000000,
+			'subject' => 'Hello',
+		], $event->getWebhookSerializable());
+	}
 }

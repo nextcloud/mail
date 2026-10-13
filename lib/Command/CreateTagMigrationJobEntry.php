@@ -9,22 +9,20 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Command;
 
-use OC\BackgroundJob\JobList;
 use OCA\Mail\BackgroundJob\MigrateImportantJob;
 use OCA\Mail\Db\MailboxMapper;
+use OCP\BackgroundJob\IJobList;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 final class CreateTagMigrationJobEntry extends Command {
-	private JobList $jobList;
-	private MailboxMapper $mailboxMapper;
-
-	public function __construct(JobList $jobList,
-		MailboxMapper $mailboxMapper) {
+	public function __construct(
+		private IJobList $jobList,
+		private MailboxMapper $mailboxMapper,
+	) {
 		parent::__construct();
 		$this->jobList = $jobList;
-		$this->mailboxMapper = $mailboxMapper;
 	}
 
 	protected function configure(): void {

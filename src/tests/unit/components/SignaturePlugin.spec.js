@@ -29,6 +29,28 @@ describe('SignaturePlugin', () => {
 				TRIGGER_EDITOR_READY,
 				'<p>Jane Doe</p>',
 				false,
+				true,
+			)
+
+			expect(editor.getData()).toEqual(expected)
+		})
+
+		it('Add signature without separator in html mode', async () => {
+			const text = '<p>bonjour bonjour</p>'
+			const expected = '<p>bonjour bonjour</p><div class="signature"><p>Jane Doe</p></div>'
+
+			const editor = await VirtualTestEditor.create({
+				licenseKey: 'GPL',
+				initialData: text,
+				plugins: [Paragraph, SignaturePlugin],
+			})
+
+			editor.execute(
+				'insertSignature',
+				TRIGGER_EDITOR_READY,
+				'<p>Jane Doe</p>',
+				false,
+				false,
 			)
 
 			expect(editor.getData()).toEqual(expected)
@@ -48,6 +70,7 @@ describe('SignaturePlugin', () => {
 				TRIGGER_EDITOR_READY,
 				'<p>Jane Doe</p>',
 				false,
+				true,
 			)
 
 			expect(editor.getData()).toEqual(text)
@@ -67,6 +90,7 @@ describe('SignaturePlugin', () => {
 				'insertSignature',
 				TRIGGER_EDITOR_READY,
 				'<p>Jane Doe</p>',
+				true,
 				true,
 			)
 
@@ -90,6 +114,7 @@ describe('SignaturePlugin', () => {
 				TRIGGER_CHANGE_ALIAS,
 				'<p>Jane Doe</p>',
 				false,
+				true,
 			)
 
 			expect(editor.getData()).toEqual(expected)

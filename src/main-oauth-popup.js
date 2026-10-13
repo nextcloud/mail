@@ -4,19 +4,19 @@
  */
 
 import { getRequestToken } from '@nextcloud/auth'
+import { n, t } from '@nextcloud/l10n'
 import { generateFilePath } from '@nextcloud/router'
-import Vue from 'vue'
+import { createApp } from 'vue'
 import OauthDone from './views/OauthDone.vue'
-import Nextcloud from './mixins/Nextcloud.js'
 
 __webpack_nonce__ = btoa(getRequestToken())
 
 __webpack_public_path__ = generateFilePath('mail', '', 'js/')
 
-Vue.mixin(Nextcloud)
-
-const View = Vue.extend(OauthDone)
-new View({}).$mount('#mail-oauth-done')
+const app = createApp(OauthDone)
+app.config.globalProperties.t = t
+app.config.globalProperties.n = n
+app.mount('#mail-oauth-done')
 
 if (window.opener) {
 	window.opener.postMessage('DONE')

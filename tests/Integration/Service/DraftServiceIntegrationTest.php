@@ -12,18 +12,18 @@ namespace OCA\Mail\Tests\Integration\Service;
 use ChristophWurst\Nextcloud\Testing\TestUser;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IAttachmentService;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\LocalAttachmentMapper;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\MailAccount;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\Attachment\AttachmentStorage;
 use OCA\Mail\Service\DraftsService;
+use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use OCA\Mail\Tests\Integration\Framework\ImapTestAccount;
@@ -33,13 +33,12 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\Folder;
 use OCP\Files\IMimeTypeDetector;
+use OCP\Files\IRootFolder;
 use OCP\ICacheFactory;
 use OCP\IDBConnection;
-use OCP\IServerContainer;
 use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\Server;
-use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -66,7 +65,7 @@ class DraftServiceIntegrationTest extends TestCase {
 	/** @var IEventDispatcher */
 	private $eventDispatcher;
 
-	/** @var IMAPClientFactory */
+	/** @var ProtocolFactory */
 	private $clientFactory;
 
 	/** @var LocalMessageMapper */
@@ -89,10 +88,9 @@ class DraftServiceIntegrationTest extends TestCase {
 
 		$this->user = $this->createTestUser();
 		$this->account = $this->createTestAccount($this->user->getUID());
-		$c = Server::get(ContainerInterface::class);
-		$userContainer = $c->get(IServerContainer::class);
-		$this->userFolder = $userContainer->getUserFolder($this->account->getUserId());
-		$mailManager = Server::get(IMailManager::class);
+		$rootFolder = Server::get(IRootFolder::class);
+		$this->userFolder = $rootFolder->getUserFolder($this->account->getUserId());
+		$mailManager = Server::get(MailManager::class);
 		$this->attachmentService = new AttachmentService(
 			$this->userFolder,
 			Server::get(LocalAttachmentMapper::class),
@@ -109,7 +107,7 @@ class DraftServiceIntegrationTest extends TestCase {
 		$this->mapper = Server::get(LocalMessageMapper::class);
 		$this->transmission = Server::get(IMailTransmission::class);
 		$this->eventDispatcher = Server::get(IEventDispatcher::class);
-		$this->clientFactory = Server::get(IMAPClientFactory::class);
+		$this->clientFactory = Server::get(ProtocolFactory::class);
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
 
@@ -239,7 +237,6 @@ class DraftServiceIntegrationTest extends TestCase {
 		$this->assertCount(2, $updated->getRecipients());
 		$this->assertEquals(LocalMessage::TYPE_OUTGOING, $saved->getType());
 	}
-
 
 	public function testSaveAndSendMessage(): void {
 		$message = new LocalMessage();

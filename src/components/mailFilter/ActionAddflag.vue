@@ -5,14 +5,14 @@
 <template>
 	<NcTextField
 		:required="true"
-		:model-value="flag"
-		:label-outside="true"
+		:modelValue="flag"
+		:labelOutside="true"
 		:placeholder="t('mail', 'Enter flag')"
-		@update:value="onInput" />
+		@update:modelValue="onInput" />
 </template>
 
 <script>
-import { NcTextField } from '@nextcloud/vue'
+import NcTextField from '@nextcloud/vue/components/NcTextField'
 
 export default {
 	name: 'ActionAddflag',
@@ -32,6 +32,8 @@ export default {
 		},
 	},
 
+	emits: ['updateAction'],
+
 	computed: {
 		flag() {
 			return this.action.flag ?? ''
@@ -40,7 +42,7 @@ export default {
 
 	methods: {
 		onInput(value) {
-			this.$emit('update-action', { flag: value })
+			this.$emit('updateAction', { flag: value })
 		},
 	},
 }

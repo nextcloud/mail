@@ -12,11 +12,9 @@ namespace OCA\Mail\Service\ContactIntegration;
 use OCA\Mail\Service\ContactsIntegration;
 
 class ContactIntegrationService {
-	/** @var ContactsIntegration */
-	private $contactsIntegration;
-
-	public function __construct(ContactsIntegration $ci) {
-		$this->contactsIntegration = $ci;
+	public function __construct(
+		private ContactsIntegration $contactsIntegration,
+	) {
 	}
 
 	public function findMatches(string $uid, string $mail): array {

@@ -16,6 +16,7 @@ use OCA\Mail\Controller\OutboxController;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\DelegationForbiddenException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Service\AccountService;
@@ -315,6 +316,7 @@ class OutboxControllerTest extends TestCase {
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$message->setRequestMdn(false);
 		$message->setPgpMime(false);
+		$message->setAiGenerated(false);
 		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
 		$cc = [['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']];
 
@@ -483,7 +485,6 @@ class OutboxControllerTest extends TestCase {
 			$message->isHtml(),
 			$message->getSmimeSign(),
 			$message->getSmimeEncrypt(),
-			false,
 			$to,
 			$cc,
 			[],
@@ -493,6 +494,37 @@ class OutboxControllerTest extends TestCase {
 		);
 
 		$this->assertEquals($expected, $actual);
+	}
+
+	public function testUpdateAccountNotDelegated(): void {
+		$message = new LocalMessage();
+		$message->setId(1);
+		$message->setAccountId(1);
+		$message->setStatus(LocalMessage::STATUS_RAW);
+		$this->service->expects(self::once())
+			->method('getMessage')
+			->with($message->getId(), $this->userId)
+			->willReturn($message);
+		$this->delegationService->expects(self::once())
+			->method('assertAccountAccess')
+			->with(99, $this->userId)
+			->willThrowException(new DelegationForbiddenException('no access'));
+		$this->service->expects(self::never())
+			->method('updateMessage');
+
+		$this->expectException(DelegationForbiddenException::class);
+
+		$this->controller->update(
+			$message->getId(),
+			99,
+			'subject',
+			null,
+			'<p>message</p>',
+			'<p>message</p>',
+			true,
+			false,
+			false,
+		);
 	}
 
 	public function testUpdateMessageNotFound(): void {
@@ -520,7 +552,6 @@ class OutboxControllerTest extends TestCase {
 		$this->service->expects(self::never())
 			->method('updateMessage');
 
-
 		$this->expectException(DoesNotExistException::class);
 		$expected = JsonResponse::fail('', Http::STATUS_NOT_FOUND);
 		$actual = $this->controller->update(
@@ -533,7 +564,6 @@ class OutboxControllerTest extends TestCase {
 			$message->isHtml(),
 			$message->getSmimeSign(),
 			$message->getSmimeEncrypt(),
-			false,
 			$to,
 			$cc,
 			[],
@@ -588,7 +618,6 @@ class OutboxControllerTest extends TestCase {
 			$message->isHtml(),
 			$message->getSmimeSign(),
 			$message->getSmimeEncrypt(),
-			false,
 			$to,
 			$cc,
 			[],
@@ -613,7 +642,6 @@ class OutboxControllerTest extends TestCase {
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
 		$cc = [['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']];
-
 
 		$this->smimeService
 			->method('findCertificate')
@@ -663,7 +691,6 @@ class OutboxControllerTest extends TestCase {
 		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
 		$cc = [['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']];
 
-
 		$this->smimeService
 			->method('findCertificate')
 			->willThrowException(new DoesNotExistException('No such certificate'));
@@ -688,7 +715,6 @@ class OutboxControllerTest extends TestCase {
 			$message->isHtml(),
 			$message->getSmimeSign(),
 			$message->getSmimeEncrypt(),
-			false,
 			$to,
 			$cc,
 			[],

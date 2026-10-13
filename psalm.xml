@@ -26,6 +26,7 @@
     </extraFiles>
 	<stubs>
 		<file name="tests/stubs/php-polyfill.php" />
+		<file name="tests/stubs/oc_hooks_emitter.php" />
 	</stubs>
 	<issueHandlers>
 		<UndefinedAttributeClass>
@@ -33,6 +34,14 @@
 				<referencedClass name="OCP\AppFramework\Http\Attribute\UserRateLimit" />
 			</errorLevel>
 		</UndefinedAttributeClass>
+		<MissingDependency>
+			<errorLevel type="suppress">
+				<file name="lib/Command/ACreateOrUpdateProvisioningCommand.php" />
+				<file name="lib/Command/CreateProvisioning.php" />
+				<file name="lib/Command/UpdateProvisioning.php" />
+				<file name="lib/Command/DeleteProvisioning.php" />
+			</errorLevel>
+		</MissingDependency>
 		<UndefinedClass>
 			<errorLevel type="suppress">
 				<referencedClass name="Doctrine\DBAL\Platforms\MySQLPlatform" />
@@ -40,6 +49,7 @@
 				<referencedClass name="Doctrine\DBAL\Platforms\PostgreSQL94Platform" />
 				<referencedClass name="Doctrine\DBAL\Platforms\SqlitePlatform" />
 				<referencedClass name="Doctrine\DBAL\Schema\Table" />
+				<referencedClass name="OCP\DB\Schema\ITable" />
 				<referencedClass name="Doctrine\DBAL\Types\Type" />
 				<referencedClass name="Doctrine\DBAL\Types\Types" />
 				<referencedClass name="IPLib\Factory" />
@@ -67,6 +77,7 @@
 				<referencedClass name="Doctrine\DBAL\Schema\Schema" />
 				<referencedClass name="Doctrine\DBAL\Schema\SchemaException" />
 				<referencedClass name="Doctrine\DBAL\Schema\Table" />
+				<referencedClass name="OCP\DB\Schema\ITable" />
 				<referencedClass name="OC\Security\CSP\ContentSecurityPolicyNonceManager" />
 				<referencedClass name="Symfony\Component\Console\Output\OutputInterface" />
 			</errorLevel>

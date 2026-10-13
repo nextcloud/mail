@@ -20,36 +20,22 @@ use OCA\Mail\Exception\MailboxLockedException;
 use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\PreviewEnhancer;
-use OCA\Mail\IMAP\Search\Provider as ImapSearchProvider;
+use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IUser;
 
 class MailSearch implements IMailSearch {
-	/** @var FilterStringParser */
-	private $filterStringParser;
-
-	/** @var ImapSearchProvider */
-	private $imapSearchProvider;
-
-	/** @var MessageMapper */
-	private $messageMapper;
-
-	/** @var PreviewEnhancer */
-	private $previewEnhancer;
-
 	/** @var ITimeFactory */
 	private $timeFactory;
 
-	public function __construct(FilterStringParser $filterStringParser,
-		ImapSearchProvider $imapSearchProvider,
-		MessageMapper $messageMapper,
-		PreviewEnhancer $previewEnhancer,
-		ITimeFactory $timeFactory) {
-		$this->filterStringParser = $filterStringParser;
-		$this->imapSearchProvider = $imapSearchProvider;
-		$this->messageMapper = $messageMapper;
-		$this->previewEnhancer = $previewEnhancer;
+	public function __construct(
+		private FilterStringParser $filterStringParser,
+		private MailManager $mailManager,
+		private MessageMapper $messageMapper,
+		private PreviewEnhancer $previewEnhancer,
+		ITimeFactory $timeFactory,
+	) {
 		$this->timeFactory = $timeFactory;
 	}
 
@@ -154,7 +140,7 @@ class MailSearch implements IMailSearch {
 			return $this->messageMapper->findIdsByQuery($mailbox, $query, $sortOrder, $limit);
 		}
 
-		$fromImap = $this->imapSearchProvider->findMatches(
+		$fromImap = $this->mailManager->findMessages(
 			$account,
 			$mailbox,
 			$query

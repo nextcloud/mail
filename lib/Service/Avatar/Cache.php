@@ -19,12 +19,11 @@ class Cache {
 	/** @var ICache */
 	private $cache;
 
-	/** @var AvatarFactory */
-	private $avatarFactory;
-
-	public function __construct(ICacheFactory $cacheFactory, AvatarFactory $avatarFactory) {
+	public function __construct(
+		ICacheFactory $cacheFactory,
+		private AvatarFactory $avatarFactory,
+	) {
 		$this->cache = $cacheFactory->createLocal('mail.avatars');
-		$this->avatarFactory = $avatarFactory;
 	}
 
 	/**

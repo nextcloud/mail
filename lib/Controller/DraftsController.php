@@ -20,40 +20,30 @@ use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class DraftsController extends Controller {
-	private DraftsService $service;
-	private string $userId;
-	private AccountService $accountService;
 	private ITimeFactory $timeFactory;
-	private SmimeService $smimeService;
-	private DelegationService $delegationService;
 
-
-	public function __construct(string $appName,
-		$userId,
+	public function __construct(
+		string $appName,
+		private string $userId,
 		IRequest $request,
-		DraftsService $service,
-		AccountService $accountService,
+		private DraftsService $service,
+		private AccountService $accountService,
 		ITimeFactory $timeFactory,
-		SmimeService $smimeService,
-		DelegationService $delegationService) {
+		private SmimeService $smimeService,
+		private DelegationService $delegationService,
+	) {
 		parent::__construct($appName, $request);
-		$this->userId = $userId;
-		$this->service = $service;
-		$this->accountService = $accountService;
 		$this->timeFactory = $timeFactory;
-		$this->smimeService = $smimeService;
-		$this->delegationService = $delegationService;
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $accountId
 	 * @param string $subject
 	 * @param string $body
@@ -76,6 +66,7 @@ class DraftsController extends Controller {
 	 * @throws DoesNotExistException
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function create(
 		int $accountId,
@@ -96,7 +87,8 @@ class DraftsController extends Controller {
 		?int $sendAt = null,
 		?int $draftId = null,
 		bool $requestMdn = false,
-		bool $isPgpMime = false) : JsonResponse {
+		bool $isPgpMime = false,
+		bool $isAiGenerated = false) : JsonResponse {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->userId);
 		$account = $this->accountService->find($effectiveUserId, $accountId);
 		if ($draftId !== null) {
@@ -118,6 +110,7 @@ class DraftsController extends Controller {
 		$message->setSmimeEncrypt($smimeEncrypt);
 		$message->setRequestMdn($requestMdn);
 		$message->setPgpMime($isPgpMime);
+		$message->setAiGenerated($isAiGenerated);
 
 		if (!empty($smimeCertificateId)) {
 			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $effectiveUserId);
@@ -131,8 +124,6 @@ class DraftsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @param int $accountId
 	 * @param string $subject
@@ -150,6 +141,7 @@ class DraftsController extends Controller {
 	 * @param int|null $sendAt
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function update(int $id,
 		int $accountId,
@@ -170,9 +162,12 @@ class DraftsController extends Controller {
 		?int $smimeCertificateId = null,
 		?int $sendAt = null,
 		bool $requestMdn = false,
-		bool $isPgpMime = false): JsonResponse {
+		bool $isPgpMime = false,
+		bool $isAiGenerated = false): JsonResponse {
 		$effectiveUserId = $this->delegationService->resolveLocalMessageUserId($id, $this->userId);
 		$message = $this->service->getMessage($id, $effectiveUserId);
+
+		$this->delegationService->assertAccountAccess($accountId, $this->userId);
 		$account = $this->accountService->find($effectiveUserId, $accountId);
 
 		$message->setType(LocalMessage::TYPE_DRAFT);
@@ -191,6 +186,7 @@ class DraftsController extends Controller {
 		$message->setSmimeEncrypt($smimeEncrypt);
 		$message->setRequestMdn($requestMdn);
 		$message->setPgpMime($isPgpMime);
+		$message->setAiGenerated($isAiGenerated);
 
 		if (!empty($smimeCertificateId)) {
 			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $effectiveUserId);
@@ -202,11 +198,10 @@ class DraftsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function destroy(int $id): JsonResponse {
 		$effectiveUserId = $this->delegationService->resolveLocalMessageUserId($id, $this->userId);
@@ -219,11 +214,10 @@ class DraftsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function move(int $id): JsonResponse {
 		$effectiveUserId = $this->delegationService->resolveLocalMessageUserId($id, $this->userId);

@@ -20,30 +20,30 @@
 		:data-envelope-id="data.databaseId"
 		:name="addresses"
 		:details="formatted()"
-		:one-line="oneLineLayout"
+		:oneLine="oneLineLayout"
 		:compact="compactMode"
-		:is-read="showImportantIconVariant"
-		:is-important="isImportant"
+		:isRead="showImportantIconVariant"
+		:isImportant="isImportant"
 		@click.exact="onClick"
 		@click.ctrl.exact.prevent="toggleSelected"
 		@click.shift.exact.prevent="onSelectMultiple"
 		@delete="onDelete"
-		@toggle-important="onToggleImportant"
-		@toggle-seen="onToggleSeen"
+		@toggleImportant="onToggleImportant"
+		@toggleSeen="onToggleSeen"
 		@update:menuOpen="closeMoreAndSnoozeOptions">
 		<template #icon>
 			<div v-if="!compactMode">
 				<Star
 					v-if="data.flags.flagged"
 					:size="22"
-					fill-color="#f9cf3d"
+					fillColor="#f9cf3d"
 					class="app-content-list-item-star favorite-icon-style"
 					:class="{ 'one-line': oneLineLayout, 'favorite-icon-style': !oneLineLayout }"
 					:data-starred="data.flags.flagged ? 'true' : 'false'"
 					@click.prevent="hasWriteAcl ? onToggleFlagged() : false" />
 				<ImportantIcon
 					v-if="isImportant"
-					fill-color="#00679e"
+					fillColor="#00679e"
 					:size="20"
 					class="app-content-list-item-star icon-important"
 					:class="{ 'important-one-line': oneLineLayout, 'icon-important': !oneLineLayout }"
@@ -70,13 +70,14 @@
 							type="checkbox"
 							class="compact-checkbox"
 							:class="{ 'compact-checkbox--active': selected }"
-							:model-value="selected"
-							@update:checked="toggleSelected" />
+							:modelValue="selected"
+							@update:modelValue="toggleSelected" />
 					</div>
 				</template>
 
 				<template v-else>
 					<div
+						class="avatar-select-wrapper"
 						@click.stop.exact.prevent="toggleSelected"
 						@click.shift.exact.prevent="onSelectMultiple">
 						<template v-if="hoveringAvatar || selected">
@@ -88,9 +89,9 @@
 
 						<template v-else>
 							<Avatar
-								:display-name="addresses"
+								:displayName="addresses"
 								:email="avatarEmail"
-								:fetch-avatar="data.fetchAvatarFromClient"
+								:fetchAvatar="data.fetchAvatarFromClient"
 								:avatar="data.avatar" />
 						</template>
 					</div>
@@ -102,13 +103,13 @@
 				<template v-if="compactMode && oneLineLayout">
 					<ImportantIcon
 						v-if="isImportant"
-						fill-color="#00679e"
+						fillColor="#00679e"
 						:size="20"
 						class="recipient-icon important-icon--recipient"
 						@click.stop.prevent="hasWriteAcl ? onToggleFlagged() : false" />
 					<Star
 						v-if="data.flags.flagged"
-						fill-color="#f9cf3d"
+						fillColor="#f9cf3d"
 						:size="20"
 						class="recipient-icon favorite-icon--recipient"
 						@click.stop.prevent="hasWriteAcl ? onToggleFlagged() : false" />
@@ -144,14 +145,14 @@
 						class="compact-subject-icons">
 						<ImportantIcon
 							v-if="isImportant"
-							fill-color="#00679e"
+							fillColor="#00679e"
 							:size="20"
 							class="icon-important--compact"
 							@click.stop.prevent="hasWriteAcl ? onToggleFlagged() : false" />
 
 						<Star
 							v-if="data.flags.flagged"
-							fill-color="#f9cf3d"
+							fillColor="#f9cf3d"
 							:size="22"
 							class="favorite-icon-style--compact"
 							@click.prevent="hasWriteAcl ? onToggleFlagged() : false" />
@@ -173,8 +174,12 @@
 				<div
 					v-if="!compactMode && (data.encrypted || data.previewText)"
 					class="envelope__preview-text"
-					:title="data.summary ? t('mail', 'This summary was AI generated') : null">
-					<NcAssistantIcon v-if="data.summary" :size="15" class="envelope__preview-text__icon" />
+					:title="data.summary ? data.summary.trim() : null">
+					<NcAssistantIcon
+						v-if="data.summary"
+						:size="15"
+						class="envelope__preview-text__icon"
+						:title="t('mail', 'This summary was AI-generated')" />
 					{{ isEncrypted ? t('mail', 'Encrypted message') : data.summary ? data.summary.trim() : data.previewText.trim() }}
 				</div>
 			</div>
@@ -186,14 +191,14 @@
 				:size="20"
 				:aria-hidden="false"
 				:aria-label="t('mail', 'This message is unread')"
-				fill-color="var(--color-primary-element)" />
+				fillColor="var(--color-primary-element)" />
 		</template>
 		<template #actions>
 			<EnvelopePrimaryActions v-if="!moreActionsOpen && !snoozeOptions" id="primary-actions">
-				<ActionButton
+				<NcActionButton
 					v-if="hasWriteAcl"
 					class="action--primary"
-					:close-after-click="true"
+					:closeAfterClick="true"
 					@click.prevent="onToggleFlagged">
 					<template #icon>
 						<StarOutline
@@ -206,11 +211,11 @@
 					{{
 						data.flags.flagged ? t('mail', 'Unfavorite') : t('mail', 'Favorite')
 					}}
-				</ActionButton>
-				<ActionButton
+				</NcActionButton>
+				<NcActionButton
 					v-if="hasSeenAcl"
 					class="action--primary"
-					:close-after-click="true"
+					:closeAfterClick="true"
 					@click.prevent="onToggleSeen">
 					<template #icon>
 						<EmailUnread
@@ -223,11 +228,11 @@
 					{{
 						data.flags.seen ? t('mail', 'Unread') : t('mail', 'Read')
 					}}
-				</ActionButton>
-				<ActionButton
+				</NcActionButton>
+				<NcActionButton
 					v-if="hasWriteAcl"
 					class="action--primary"
-					:close-after-click="true"
+					:closeAfterClick="true"
 					@click.prevent="onToggleImportant">
 					<template #icon>
 						<ImportantIcon v-if="isImportant" :size="24" />
@@ -236,27 +241,27 @@
 					{{
 						isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')
 					}}
-				</ActionButton>
+				</NcActionButton>
 			</EnvelopePrimaryActions>
 			<template v-if="!moreActionsOpen && !snoozeOptions && !quickActionMenu">
-				<ActionText>
+				<NcActionText>
 					<template #icon>
 						<ClockOutlineIcon :size="20" />
 					</template>
 					{{
 						messageLongDate
 					}}
-				</ActionText>
+				</NcActionText>
 				<NcActionSeparator />
-				<ActionButton :is-menu="true" @click="showQuickActionsMenu">
+				<NcActionButton :isMenu="true" @click="showQuickActionsMenu">
 					<template #icon>
 						<IconEmailFast :size="20" />
 					</template>
 					{{ t('mail', 'Quick actions') }}
-				</ActionButton>
-				<ActionButton
+				</NcActionButton>
+				<NcActionButton
 					v-if="hasWriteAcl"
-					:close-after-click="true"
+					:closeAfterClick="true"
 					@click.prevent="onToggleJunk">
 					<template #icon>
 						<AlertOctagonIcon :size="20" />
@@ -264,19 +269,19 @@
 					{{
 						data.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
 					}}
-				</ActionButton>
-				<ActionButton
+				</NcActionButton>
+				<NcActionButton
 					v-if="hasWriteAcl"
-					:close-after-click="true"
+					:closeAfterClick="true"
 					@click.prevent="onOpenTagModal">
 					<template #icon>
 						<TagIcon :size="20" />
 					</template>
 					{{ t('mail', 'Edit tags') }}
-				</ActionButton>
-				<ActionButton
+				</NcActionButton>
+				<NcActionButton
 					v-if="!isSnoozeDisabled && !isSnoozedMailbox"
-					:close-after-click="false"
+					:closeAfterClick="false"
 					@click="showSnoozeOptions">
 					<template #icon>
 						<AlarmIcon
@@ -286,10 +291,10 @@
 					{{
 						t('mail', 'Snooze')
 					}}
-				</ActionButton>
-				<ActionButton
+				</NcActionButton>
+				<NcActionButton
 					v-if="!isSnoozeDisabled && isSnoozedMailbox"
-					:close-after-click="true"
+					:closeAfterClick="true"
 					@click="onUnSnooze">
 					<template #icon>
 						<AlarmIcon
@@ -297,62 +302,38 @@
 							:size="20" />
 					</template>
 					{{ t('mail', 'Unsnooze') }}
-				</ActionButton>
-				<ActionButton
+				</NcActionButton>
+				<NcActionButton
 					v-if="hasDeleteAcl"
-					:close-after-click="true"
+					:closeAfterClick="true"
 					@click.prevent="onOpenMoveModal">
 					<template #icon>
 						<OpenInNewIcon :size="20" />
 					</template>
-					<template v-if="layoutMessageViewThreaded">
-						{{ t('mail', 'Move thread') }}
-					</template>
-					<template v-else>
-						{{ t('mail', 'Move Message') }}
-					</template>
-				</ActionButton>
-				<ActionButton
+					{{ layoutMessageViewThreaded ? t('mail', 'Move thread') : t('mail', 'Move message') }}
+				</NcActionButton>
+				<NcActionButton
 					v-if="showArchiveButton && hasArchiveAcl"
-					:close-after-click="true"
+					:closeAfterClick="true"
 					:disabled="disableArchiveButton"
 					@click.prevent="onArchive">
 					<template #icon>
 						<ArchiveIcon :size="20" />
 					</template>
-					<template v-if="layoutMessageViewThreaded">
-						{{ t('mail', 'Archive thread') }}
-					</template>
-					<template v-else>
-						{{ t('mail', 'Archive message') }}
-					</template>
-				</ActionButton>
-				<ActionButton
-					v-if="hasDeleteAcl"
-					:close-after-click="true"
-					@click.prevent="onDelete">
-					<template #icon>
-						<DeleteIcon :size="20" />
-					</template>
-					<template v-if="layoutMessageViewThreaded">
-						{{ t('mail', 'Delete thread') }}
-					</template>
-					<template v-else>
-						{{ t('mail', 'Delete message') }}
-					</template>
-				</ActionButton>
-				<ActionButton
-					:close-after-click="false"
+					{{ layoutMessageViewThreaded ? t('mail', 'Archive thread') : t('mail', 'Archive message') }}
+				</NcActionButton>
+				<NcActionButton
+					:closeAfterClick="false"
 					@click="showMoreActionOptions">
 					<template #icon>
 						<DotsHorizontalIcon :size="20" />
 					</template>
 					{{ t('mail', 'More actions') }}
-				</ActionButton>
+				</NcActionButton>
 			</template>
 			<template v-if="snoozeOptions">
-				<ActionButton
-					:close-after-click="false"
+				<NcActionButton
+					:closeAfterClick="false"
 					@click="snoozeOptions = false">
 					<template #icon>
 						<ChevronLeft :size="20" />
@@ -360,25 +341,25 @@
 					{{
 						t('mail', 'Back')
 					}}
-				</ActionButton>
+				</NcActionButton>
 
 				<NcActionSeparator />
 
-				<ActionButton
+				<NcActionButton
 					v-for="option in reminderOptions"
 					:key="option.key"
 					:aria-label="option.ariaLabel"
-					close-after-click
+					closeAfterClick
 					@click.stop="onSnooze(option.timestamp)">
 					{{ option.label }}
-				</ActionButton>
+				</NcActionButton>
 
 				<NcActionSeparator />
 
 				<NcActionInput
 					type="datetime-local"
-					is-native-picker
-					:model-value="customSnoozeDateTime"
+					isNativePicker
+					:modelValue="customSnoozeDateTime"
 					:min="new Date()"
 					@change="setCustomSnoozeDateTime">
 					<template #icon>
@@ -386,83 +367,103 @@
 					</template>
 				</NcActionInput>
 
-				<ActionButton
+				<NcActionButton
 					:aria-label="t('mail', 'Set custom snooze')"
-					close-after-click
+					closeAfterClick
 					@click.stop="setCustomSnooze(customSnoozeDateTime)">
 					<template #icon>
 						<CheckIcon :size="20" />
 					</template>
 					{{ t('mail', 'Set custom snooze') }}
-				</ActionButton>
+				</NcActionButton>
 			</template>
 			<template v-if="moreActionsOpen">
-				<ActionButton
-					:close-after-click="false"
+				<NcActionButton
+					:closeAfterClick="false"
 					@click="moreActionsOpen = false">
 					<template #icon>
 						<ChevronLeft :size="20" />
 					</template>
 					{{ t('mail', 'More actions') }}
-				</ActionButton>
-				<ActionButton
-					:close-after-click="true"
+				</NcActionButton>
+				<NcActionButton
+					:closeAfterClick="true"
 					@click.prevent="onOpenEditAsNew">
 					<template #icon>
 						<PlusIcon :size="20" />
 					</template>
 					{{ t('mail', 'Edit as new message') }}
-				</ActionButton>
-				<ActionButton
-					:close-after-click="true"
+				</NcActionButton>
+				<NcActionButton
+					:closeAfterClick="true"
 					@click.prevent="showEventModal = true">
 					<template #icon>
 						<IconCreateEvent :size="20" />
 					</template>
 					{{ t('mail', 'Reply with meeting') }}
-				</ActionButton>
-				<ActionButton
-					:close-after-click="true"
+				</NcActionButton>
+				<NcActionButton
+					v-if="tasksEnabled"
+					:closeAfterClick="true"
 					@click.prevent="showTaskModal = true">
 					<template #icon>
 						<TaskIcon :size="20" />
 					</template>
 					{{ t('mail', 'Create task') }}
-				</ActionButton>
-				<ActionLink
-					:close-after-click="true"
+				</NcActionButton>
+				<NcActionLink
+					:closeAfterClick="true"
 					:href="exportMessageLink">
 					<template #icon>
 						<DownloadIcon :size="20" />
 					</template>
 					{{ t('mail', 'Download message') }}
-				</ActionLink>
+				</NcActionLink>
+				<NcActionButton
+					class="message-save-to-cloud"
+					:disabled="savingToCloud"
+					:closeAfterClick="true"
+					@click="saveToCloud">
+					<template #icon>
+						<IconSave :size="20" />
+					</template>
+					{{ t('mail', 'Save message to Files') }}
+				</NcActionButton>
+				<NcActionButton
+					v-if="hasDeleteAcl"
+					:closeAfterClick="true"
+					@click.prevent="onDelete">
+					<template #icon>
+						<DeleteIcon :size="20" />
+					</template>
+					{{ layoutMessageViewThreaded ? t('mail', 'Delete thread') : t('mail', 'Delete message') }}
+				</NcActionButton>
 			</template>
 			<template v-if="quickActionMenu">
-				<ActionButton
-					:close-after-click="false"
+				<NcActionButton
+					:closeAfterClick="false"
 					@click="closeQuickActionsMenu()">
 					<template #icon>
 						<ChevronLeft :size="20" />
 					</template>
 					{{ t('mail', 'Back to all actions') }}
-				</ActionButton>
-				<ActionButton
+				</NcActionButton>
+				<NcActionButton
 					v-for="action in filteredQuickActions"
 					:key="action.id"
-					:close-after-click="true"
+					:closeAfterClick="true"
 					@click="executeQuickAction(action)">
 					<template #icon>
 						<Icon :action="action?.icon" />
 					</template>
 					{{ action.name }}
-				</ActionButton>
-				<ActionButton :close-after-click="true" @click="$emit('open:quick-actions-settings')">
+				</NcActionButton>
+				<NcActionButton :closeAfterClick="true" @click="$emit('open:quickActionsSettings')">
 					<template #icon>
 						<CogIcon :size="20" />
 					</template>
 					{{ t('mail', 'Manage quick actions') }}
-				</ActionButton>
+				</NcActionButton>
 			</template>
 		</template>
 		<template #tags>
@@ -479,11 +480,11 @@
 					{{ translateTagDisplayName(tag) }}
 				</span>
 			</div>
-			<div v-for="(attachment, idx) in attachments" :key="`attachement-${idx}`">
+			<div v-for="(attachment, idx) in attachments" :key="`attachment-${idx}`">
 				<AttachmentTag
-					:file-name="attachment.fileName"
-					:mime-type="attachment.mime"
-					:mime-url="attachment.mimeUrl"
+					:fileName="attachment.fileName"
+					:mimeType="attachment.mime"
+					:mimeUrl="attachment.mimeUrl"
 					@open="showViewer(fileInfos[idx])" />
 			</div>
 			<AttachmentTag v-if="remainingAttachements > 0" :remaining="remainingAttachements" />
@@ -491,7 +492,7 @@
 				v-if="showMoveModal"
 				:account="account"
 				:envelopes="[data]"
-				:move-thread="listViewThreaded"
+				:moveThread="layoutMessageViewThreaded"
 				@move="onMove"
 				@close="onCloseMoveModal" />
 			<EventModal
@@ -516,17 +517,15 @@ import { showError, showSuccess, showWarning } from '@nextcloud/dialogs'
 import { isRTL } from '@nextcloud/l10n'
 import moment from '@nextcloud/moment'
 import { generateUrl } from '@nextcloud/router'
-import {
-	NcActionButton as ActionButton,
-	NcActionLink as ActionLink,
-	NcActionText as ActionText,
-	NcActionInput,
-	NcActionSeparator,
-	NcAssistantIcon,
-	NcCheckboxRadioSwitch,
-} from '@nextcloud/vue'
 import escapeHtml from 'escape-html'
 import { mapState, mapStores } from 'pinia'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcActionInput from '@nextcloud/vue/components/NcActionInput'
+import NcActionLink from '@nextcloud/vue/components/NcActionLink'
+import NcActionSeparator from '@nextcloud/vue/components/NcActionSeparator'
+import NcActionText from '@nextcloud/vue/components/NcActionText'
+import NcAssistantIcon from '@nextcloud/vue/components/NcAssistantIcon'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import AlarmIcon from 'vue-material-design-icons/Alarm.vue'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
 import ArchiveIcon from 'vue-material-design-icons/ArchiveArrowDownOutline.vue'
@@ -542,6 +541,7 @@ import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal.vue'
 import IconEmailFast from 'vue-material-design-icons/EmailFastOutline.vue'
 import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
 import EmailUnread from 'vue-material-design-icons/EmailOutline.vue'
+import IconSave from 'vue-material-design-icons/FolderOutline.vue'
 import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'
 import ImportantOutlineIcon from 'vue-material-design-icons/LabelVariantOutline.vue'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
@@ -569,12 +569,14 @@ import { matchError } from '../errors/match.js'
 import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError.js'
 import logger from '../logger.js'
-import AttachementMixin from '../mixins/AttachementMixin.js'
+import AttachmentMixin from '../mixins/AttachmentMixin.js'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder.js'
+import { saveMessage } from '../service/MessageService.js'
 import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
 import { mailboxHasRights } from '../util/acl.js'
-import { messageDateTime, shortRelativeDatetime } from '../util/shortRelativeDatetime.js'
+import { pickFolder } from '../util/filePicker.js'
+import { flatRelativeDatetime, groupedRelativeDatetime, messageDateTime } from '../util/relativeDatetime.js'
 import { translateTagDisplayName } from '../util/tag.js'
 import { hiddenTags } from './tags.js'
 
@@ -593,12 +595,13 @@ export default {
 		DotsHorizontalIcon,
 		EnvelopePrimaryActions,
 		EventModal,
+		IconSave,
 		ImportantIcon,
 		ImportantOutlineIcon,
 		TaskModal,
 		EnvelopeSkeleton,
 		JunkIcon,
-		ActionButton,
+		NcActionButton,
 		NcCheckboxRadioSwitch,
 		MoveModal,
 		OpenInNewIcon,
@@ -612,8 +615,8 @@ export default {
 		IconAttachment,
 		IconBullet,
 		Reply,
-		ActionLink,
-		ActionText,
+		NcActionLink,
+		NcActionText,
 		DownloadIcon,
 		ClockOutlineIcon,
 		NcActionSeparator,
@@ -630,7 +633,7 @@ export default {
 		draggableEnvelope: DraggableEnvelopeDirective,
 	},
 
-	mixins: [AttachementMixin],
+	mixins: [AttachmentMixin],
 
 	props: {
 		withReply: {
@@ -670,7 +673,14 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+
+		dateGrouped: {
+			type: Boolean,
+			default: false,
+		},
 	},
+
+	emits: ['open:quickActionsSettings', 'update:selected', 'selectMultiple', 'delete', 'archive', 'move'],
 
 	data() {
 		return {
@@ -685,7 +695,8 @@ export default {
 			overwriteOneLineMobile: false,
 			hoveringAvatar: false,
 			quickActionLoading: false,
-			possibleAttachementsCount: 0,
+			possibleAttachmentsCount: 0,
+			savingToCloud: false,
 		}
 	},
 
@@ -821,7 +832,7 @@ export default {
 		},
 
 		attachments() {
-			return this.data.attachments.filter((e) => e.fileName && e.fileName.length > 0).slice(0, this.possibleAttachementsCount)
+			return this.data.attachments.filter((e) => e.fileName && e.fileName.length > 0).slice(0, this.possibleAttachmentsCount)
 		},
 
 		remainingAttachements() {
@@ -899,6 +910,10 @@ export default {
 
 		archiveMailbox() {
 			return this.mainStore.getMailbox(this.account.archiveMailboxId)
+		},
+
+		tasksEnabled() {
+			return this.mainStore.getTaskCalendarsForCurrentUser.length > 0
 		},
 
 		isSnoozedMailbox() {
@@ -1002,7 +1017,8 @@ export default {
 		},
 
 		formatted() {
-			return shortRelativeDatetime(new Date(this.data.dateInt * 1000))
+			const date = new Date(this.data.dateInt * 1000)
+			return this.dateGrouped ? groupedRelativeDatetime(date) : flatRelativeDatetime(date)
 		},
 
 		countPossibleAttachements() {
@@ -1015,8 +1031,8 @@ export default {
 			const detailsWidth = container.querySelector('.list-item-content__inner__details')?.clientWidth ?? 0
 			const availableWidth = (container.clientWidth ?? 0) - detailsWidth - tagsWidth - 30 // 30px for the extra (+n) indicator
 
-			const attachementSize = 140 + 4 // min-width + gap
-			this.possibleAttachementsCount = Math.min(3, Math.floor(availableWidth / attachementSize))
+			const attachmentSize = 140 + 4 // min-width + gap
+			this.possibleAttachmentsCount = Math.min(3, Math.floor(availableWidth / attachmentSize))
 		},
 
 		async executeQuickAction(action) {
@@ -1130,7 +1146,7 @@ export default {
 		},
 
 		onSelectMultiple() {
-			this.$emit('select-multiple')
+			this.$emit('selectMultiple')
 		},
 
 		onToggleImportant() {
@@ -1419,6 +1435,30 @@ export default {
 			this.showTagModal = false
 		},
 
+		async saveToCloud() {
+			let path
+			try {
+				path = await pickFolder(t('mail', 'Choose a folder to store the message in'))
+			} catch (error) {
+				logger.debug('file picker closed without picking a folder', { error })
+				return
+			}
+
+			this.savingToCloud = true
+			const id = this.data.databaseId
+
+			try {
+				await saveMessage(id, path)
+				logger.info('saved')
+				showSuccess(t('mail', 'Message saved to Files'))
+			} catch (e) {
+				logger.error('not saved', { error: e })
+				showError(t('mail', 'Message could not be saved'))
+			} finally {
+				this.savingToCloud = false
+			}
+		},
+
 		getTimestamp(momentObject) {
 			return momentObject?.minute(0).second(0).millisecond(0).valueOf() || null
 		},
@@ -1446,19 +1486,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.mail-message-account-color {
-	position: absolute;
-	inset-inline-start: 0px;
-	width: 2px;
-	height: 69px;
-	z-index: 1;
-}
-
 .envelope {
-	.app-content-list-item-icon {
-		height: 40px; // To prevent some unexpected spacing below the avatar
-	}
-
 	&__subtitle {
 		display: flex;
 		overflow: hidden;
@@ -1493,12 +1521,6 @@ export default {
 		-webkit-line-clamp: 2;
 		-webkit-box-orient: vertical;
 
-		.material-design-icon {
-			display: inline;
-
-			position: relative;
-			top: 2px;
-		}
 		&__icon {
 			display: inline;
 		}
@@ -1519,8 +1541,7 @@ export default {
 		stroke-width: 2;
 	}
 	.list-item:hover &,
-	.list-item:focus &,
-	.list-item.active & {
+	.list-item:focus & {
 		:deep(path) {
 			stroke: var(--color-background-dark);
 		}
@@ -1538,15 +1559,6 @@ export default {
 .important-one-line.app-content-list-item-star:deep() {
 	top: 4px !important;
 	inset-inline-start: 2px;
-}
-
-.app-content-list-item-select-checkbox {
-	display: inline-block;
-	vertical-align: middle;
-	position: absolute;
-	inset-inline-start: 33px;
-	top: 35px;
-	z-index: 50; // same as icon-starred
 }
 
 .list-item-style:not(.seen) {
@@ -1574,11 +1586,6 @@ export default {
 	top: 36px;
 }
 
-.icon-attachment {
-	-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=25)';
-	opacity: 0.25;
-}
-
 :deep(.action--primary) {
 	.material-design-icon {
 		margin-bottom: -14px;
@@ -1587,6 +1594,7 @@ export default {
 
 .tag-group__label {
 	margin: 0 7px;
+	position: relative;
 	z-index: 2;
 	font-size: calc(var(--default-font-size) * 0.8);
 	font-weight: bold;
@@ -1656,32 +1664,12 @@ export default {
 	margin-bottom: 6px;
 }
 
-:deep(.line-two__subtitle) {
-	display: flex;
-	flex-basis: 100%;
-	padding-inline-start: 40px;
-	width: 450px;
-}
-
-:deep(.line-one__title) {
-	flex-direction: row;
-	display: flex;
-	width: 200px;
-}
-
 .line-two.one-line {
 	display: flex;
 	overflow: hidden;
 	align-items: center;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-}
-
-.quick-actions-button{
-	width: 100%;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
 }
 
 .envelope__subtitle__subject.one-line {
@@ -1699,11 +1687,11 @@ export default {
 
 .app-content-list-item-avatar-selected {
 	background-color: var(--color-primary-element);
-	color: var(--color-primary-light);
+	color: var(--color-primary-element-text);
 	border-radius: 32px;
 	&:hover {
 		background-color: var(--color-primary-element);
-		color: var(--color-primary-light);
+		color: var(--color-primary-element-text);
 		border-radius: 32px;
 	}
 }
@@ -1717,10 +1705,17 @@ export default {
 }
 
 .hovering-status {
-	// Needs to be the same height as the check-icon and the avatar to prevent automatic resizing
-	// and height differences between hover state and normal state
 	height: calc(var(--default-grid-baseline) * 10);
-	padding-top: 3px;
+	width: calc(var(--default-grid-baseline) * 10);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.avatar-select-wrapper {
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .check-icon {
@@ -1775,15 +1770,7 @@ export default {
 	white-space: nowrap;
 }
 
-.envelope--compact.envelope--one-line {
-	.favorite-icon-style,
-	.icon-important {
-		display: none;
-	}
-}
-
-.list-item__wrapper--active :deep(.compact-checkbox .checkbox-radio-switch__content),
-.list-item__wrapper.active :deep(.compact-checkbox .checkbox-radio-switch__content) {
+.list-item__wrapper--active :deep(.compact-checkbox .checkbox-radio-switch__content) {
 	background-color: var(--color-primary-element-text) !important;
 	color: var(--color-primary-element) !important;
 }

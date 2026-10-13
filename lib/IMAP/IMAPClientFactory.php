@@ -43,20 +43,20 @@ class IMAPClientFactory {
 	private $eventDispatcher;
 
 	private ITimeFactory $timeFactory;
-	private HordeCacheFactory $hordeCacheFactory;
 
-	public function __construct(ICrypto $crypto,
+	public function __construct(
+		ICrypto $crypto,
 		IConfig $config,
 		ICacheFactory $cacheFactory,
 		IEventDispatcher $eventDispatcher,
 		ITimeFactory $timeFactory,
-		HordeCacheFactory $hordeCacheFactory) {
+		private HordeCacheFactory $hordeCacheFactory,
+	) {
 		$this->crypto = $crypto;
 		$this->config = $config;
 		$this->cacheFactory = $cacheFactory;
 		$this->eventDispatcher = $eventDispatcher;
 		$this->timeFactory = $timeFactory;
-		$this->hordeCacheFactory = $hordeCacheFactory;
 	}
 
 	/**

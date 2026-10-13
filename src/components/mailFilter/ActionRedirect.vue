@@ -1,0 +1,57 @@
+<!--
+  - SPDX-FileCopyrightText: 2026 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+<template>
+	<NcInputField
+		type="email"
+		:required="true"
+		:modelValue="recipient"
+		:labelOutside="true"
+		:aria-label="t('mail', 'Recipient')"
+		:placeholder="t('mail', 'name@example.org')"
+		@update:modelValue="onInput" />
+</template>
+
+<script>
+import NcInputField from '@nextcloud/vue/components/NcInputField'
+
+export default {
+	name: 'ActionRedirect',
+	components: {
+		NcInputField,
+	},
+
+	props: {
+		action: {
+			type: Object,
+			required: true,
+		},
+
+		account: {
+			type: Object,
+			required: true,
+		},
+	},
+
+	emits: ['updateAction'],
+
+	computed: {
+		recipient() {
+			return this.action.recipient ?? ''
+		},
+	},
+
+	methods: {
+		onInput(value) {
+			this.$emit('updateAction', { recipient: value })
+		},
+	},
+}
+</script>
+
+<style lang="scss" scoped>
+.input-field {
+	display: inline-block; /* for flex expand */
+}
+</style>

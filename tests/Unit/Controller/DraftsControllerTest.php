@@ -16,6 +16,7 @@ use OCA\Mail\Controller\DraftsController;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\DelegationForbiddenException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Service\AccountService;
@@ -218,6 +219,7 @@ class DraftsControllerTest extends TestCase {
 		$message->setUpdatedAt(123456);
 		$message->setRequestMdn(false);
 		$message->setPgpMime(false);
+		$message->setAiGenerated(false);
 		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
 		$cc = [['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']];
 
@@ -272,6 +274,7 @@ class DraftsControllerTest extends TestCase {
 		$message->setUpdatedAt(123456);
 		$message->setRequestMdn(false);
 		$message->setPgpMime(false);
+		$message->setAiGenerated(false);
 		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
 		$cc = [['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']];
 
@@ -329,6 +332,7 @@ class DraftsControllerTest extends TestCase {
 		$message->setUpdatedAt(123456);
 		$message->setRequestMdn(false);
 		$message->setPgpMime(false);
+		$message->setAiGenerated(false);
 
 		$account = new Account(new MailAccount());
 		$this->accountService->expects(self::once())
@@ -497,6 +501,36 @@ class DraftsControllerTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
+	public function testUpdateAccountNotDelegated(): void {
+		$message = new LocalMessage();
+		$message->setId(1);
+		$message->setAccountId(1);
+		$this->service->expects(self::once())
+			->method('getMessage')
+			->with($message->getId(), $this->userId)
+			->willReturn($message);
+		$this->delegationService->expects(self::once())
+			->method('assertAccountAccess')
+			->with(99, $this->userId)
+			->willThrowException(new DelegationForbiddenException('no access'));
+		$this->service->expects(self::never())
+			->method('updateMessage');
+
+		$this->expectException(DelegationForbiddenException::class);
+
+		$this->controller->update(
+			$message->getId(),
+			99,
+			'subject',
+			null,
+			'<p>message</p>',
+			'<p>message</p>',
+			true,
+			null,
+			null,
+		);
+	}
+
 	public function testUpdateMoveToOutbox(): void {
 		$message = new LocalMessage();
 		$message->setId(1);
@@ -552,7 +586,6 @@ class DraftsControllerTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-
 	public function testUpdateMessageNotFound(): void {
 		$message = new LocalMessage();
 		$message->setId(1);
@@ -575,7 +608,6 @@ class DraftsControllerTest extends TestCase {
 			->willThrowException(new DoesNotExistException(''));
 		$this->service->expects(self::never())
 			->method('updateMessage');
-
 
 		$this->expectException(DoesNotExistException::class);
 		$expected = JsonResponse::fail('', Http::STATUS_NOT_FOUND);

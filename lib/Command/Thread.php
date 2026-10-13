@@ -26,14 +26,11 @@ use function memory_get_peak_usage;
 final class Thread extends Command {
 	public const ARGUMENT_INPUT_FILE = 'thread-file';
 
-	private ThreadBuilder $builder;
-	private LoggerInterface $logger;
-
-	public function __construct(ThreadBuilder $builder,
-		LoggerInterface $logger) {
+	public function __construct(
+		private ThreadBuilder $builder,
+		private LoggerInterface $logger,
+	) {
 		parent::__construct();
-		$this->builder = $builder;
-		$this->logger = $logger;
 	}
 
 	/**

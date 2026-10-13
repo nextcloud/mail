@@ -4,7 +4,7 @@
 -->
 
 <template>
-	<AppNavigation class="mail-navigation">
+	<NcAppNavigation class="mail-navigation" :aria-label="t('mail', 'Mail navigation')">
 		<template #search>
 			<NewMessageButtonHeader class="mail-navigation__new-message-button" />
 		</template>
@@ -22,10 +22,10 @@
 					v-if="group.account"
 					:key="group.account.id"
 					:account="group.account"
-					:first-mailbox="group.mailboxes[0]"
-					:is-first="isFirst(group.account)"
-					:is-last="isLast(group.account)"
-					:is-disabled="isDisabled(group.account)" />
+					:firstMailbox="group.mailboxes[0]"
+					:isFirst="isFirst(group.account)"
+					:isLast="isLast(group.account)"
+					:isDisabled="isDisabled(group.account)" />
 				<div
 					v-if="group.account.error"
 					:key="group.account.error"
@@ -33,24 +33,25 @@
 					<IconAlertTriangle
 						:size="18"
 						:title="t('mail', 'This account cannot connect')" />
-					<span>
+					<span @click="showAccountSettings(group.account.id, 'mail-server')">
 						{{ t('mail', 'Connection failed. Please verify your information and try again') }}
+						<NcButton
+							:aria-label="t('mail', 'Change password')"
+							variant="tertiary">{{ t('mail', 'Change password') }}</NcButton>
 					</span>
 				</div>
 				<template v-else-if="!isDisabled(group.account)">
-					<template v-for="item in group.mailboxes">
+					<template v-for="item in group.mailboxes" :key="item.databaseId">
 						<NavigationMailbox
 							v-show="
 								!group.isCollapsible
 									|| !group.account.collapsed
 									|| !isCollapsed(group.account, item)
 							"
-							:key="'mailbox-' + item.databaseId"
 							:account="group.account"
 							:mailbox="item" />
 						<NavigationMailbox
 							v-if="!group.account.isUnified && item.specialRole === 'inbox'"
-							:key="item.databaseId + '-starred'"
 							:account="group.account"
 							:mailbox="item"
 							filter="starred" />
@@ -67,24 +68,37 @@
 				<NavigationOutbox class="outbox" />
 			</div>
 			<div class="mail-settings">
-				<AppNavigationItem
+				<NcAppNavigationItem
 					class="mail-settings__button"
-					:close-after-click="true"
+					:closeAfterClick="true"
 					:name="t('mail', 'Mail settings')"
 					@click="showMailSettings">
 					<template #icon>
 						<IconSetting :size="20" />
 					</template>
-				</AppNavigationItem>
+				</NcAppNavigationItem>
 			</div>
 		</template>
-		<AppSettingsMenu :open.sync="showSettings" />
-	</AppNavigation>
+		<AppSettingsMenu v-model:open="showSettings" />
+
+		<!-- Must stay outside the #list slot: NcModal relocates the dialog to
+		     <body> but the clipped sidebar would pull it back in if it were
+		     rendered inside the slot. -->
+		<AccountSettings
+			v-if="settingsAccount"
+			:open="true"
+			:account="settingsAccount"
+			:scrollToSection="settingsSection"
+			@close="onCloseAccountSettings" />
+	</NcAppNavigation>
 </template>
 
 <script>
-import { NcAppNavigation as AppNavigation, NcAppNavigationItem as AppNavigationItem } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import { defineAsyncComponent } from 'vue'
+import NcAppNavigation from '@nextcloud/vue/components/NcAppNavigation'
+import NcAppNavigationItem from '@nextcloud/vue/components/NcAppNavigationItem'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import IconAlertTriangle from 'vue-material-design-icons/AlertOutline.vue'
 import IconSetting from 'vue-material-design-icons/CogOutline.vue'
 import AppSettingsMenu from '../components/AppSettingsMenu.vue'
@@ -100,15 +114,17 @@ import useOutboxStore from '../store/outboxStore.js'
 export default {
 	name: 'Navigation',
 	components: {
-		AppNavigation,
+		NcAppNavigation,
+		AccountSettings: defineAsyncComponent(() => import(/* webpackChunkName: "account-settings" */ './AccountSettings.vue')),
 		AppSettingsMenu,
 		NavigationAccount,
 		NavigationAccountExpandCollapse,
 		NavigationMailbox,
 		NavigationOutbox,
+		NcButton,
 		NewMessageButtonHeader,
 		IconSetting,
-		AppNavigationItem,
+		NcAppNavigationItem,
 		IconAlertTriangle,
 	},
 
@@ -116,11 +132,17 @@ export default {
 		return {
 			refreshing: false,
 			showSettings: false,
+			settingsAccountId: null,
+			settingsSection: undefined,
 		}
 	},
 
 	computed: {
 		...mapStores(useOutboxStore, useMainStore),
+		settingsAccount() {
+			return this.settingsAccountId ? this.mainStore.getAccount(this.settingsAccountId) : null
+		},
+
 		menu() {
 			return this.mainStore.getAccounts
 				.filter((account) => account.id !== UNIFIED_ACCOUNT_ID)
@@ -160,9 +182,29 @@ export default {
 		},
 	},
 
+	watch: {
+		'mainStore.showAccountSettings': function(settings) {
+			if (settings?.accountId) {
+				this.settingsAccountId = settings.accountId
+				this.settingsSection = settings.section
+			} else {
+				this.settingsAccountId = null
+				this.settingsSection = undefined
+			}
+		},
+	},
+
 	methods: {
+		onCloseAccountSettings() {
+			this.mainStore.showSettingsForAccountMutation(null)
+		},
+
 		showMailSettings() {
 			this.showSettings = true
+		},
+
+		showAccountSettings(accountId, section) {
+			this.mainStore.showSettingsForAccountMutation(accountId, section)
 		},
 
 		isCollapsed(account, mailbox) {
@@ -206,15 +248,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@keyframes rotation {
-from {
-	transform: rotate(-0deg);
-}
-to {
-		transform: rotate(-360deg);
-	}
-}
-
 .mail-navigation {
 	&__new-message-button {
 		padding: calc(var(--default-grid-baseline, 4px) * 2);
@@ -239,16 +272,6 @@ to {
 .mail-settings {
 	padding: calc(var(--default-grid-baseline, 4px) * 2);
 	padding-top: 0;
-
-	&__button {
-		display: flex;
-		width: 100% !important;
-		justify-content: start !important;
-	}
-}
-
-.v-popper__inner {
-	height: unset !important;
 }
 
 </style>

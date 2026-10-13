@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace OCA\Mail\BackgroundJob;
 
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
@@ -21,26 +21,22 @@ use function sprintf;
 
 class QuotaJob extends TimedJob {
 	private IUserManager $userManager;
-	private AccountService $accountService;
-	private IMailManager $mailManager;
-	private LoggerInterface $logger;
 	private IJobList $jobList;
 	private IManager $notificationManager;
 
-	public function __construct(ITimeFactory $time,
+	public function __construct(
+		ITimeFactory $time,
 		IUserManager $userManager,
-		AccountService $accountService,
-		IMailManager $mailManager,
+		private AccountService $accountService,
+		private MailManager $mailManager,
 		IManager $notificationManager,
-		LoggerInterface $logger,
-		IJobList $jobList) {
+		private LoggerInterface $logger,
+		IJobList $jobList,
+	) {
 		parent::__construct($time);
 
 		$this->userManager = $userManager;
-		$this->accountService = $accountService;
-		$this->logger = $logger;
 		$this->jobList = $jobList;
-		$this->mailManager = $mailManager;
 
 		$this->setInterval(60 * 60 * 24 * 7);
 		$this->setTimeSensitivity(self::TIME_INSENSITIVE);

@@ -18,7 +18,7 @@ if header :matches "subject" "*" {
 	set "subject" "${1}";
 }
 if allof(currentdate :value "ge" "iso8601" "2022-09-01T23:00:00Z", currentdate :value "le" "iso8601" "2022-09-08T22:59:00Z") {
-	if not anyof(exists "List-Id", exists "List-Unsubscribe") {
+	if not anyof(exists "List-Id", exists "List-Unsubscribe", address :all :matches ["From", "Sender"] ["noreply@*", "no-reply@*"]) {
 		vacation :days 4 :subject "Re: ${subject}" :addresses ["Test Test <test@test.org>", "Test Alias <alias@test.org>"] "I'm on vacation.";
 	}
 }

@@ -61,8 +61,8 @@ export function buildRecipients(envelope, ownAddress, replyTo) {
 	const isNotOwnAddress = negate(isOwnAddress)
 
 	// The Reply-To header has higher precedence than the From header.
-	// This re-uses Horde's handling of the reply_to field directly.
-	const from = replyTo !== undefined ? replyTo : envelope.from
+	// This reuses Horde's handling of the reply_to field directly.
+	const from = replyTo?.length > 0 ? replyTo : envelope.from
 
 	// Locate why we received this envelope
 	// Can be in 'to', 'cc' or unknown
@@ -78,8 +78,8 @@ export function buildRecipients(envelope, ownAddress, replyTo) {
 		}
 	}
 
-	let to = []
-	let cc = []
+	let to
+	let cc
 	if (recipientType === RecipientType.To) {
 		// Send to everyone except yourself, plus the original sender if not ourself
 		to = envelope.to.filter(isNotOwnAddress)

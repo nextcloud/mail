@@ -5,6 +5,7 @@ declare(strict_types=1);
  * SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
+
 namespace OCA\Mail\Controller;
 
 use OCA\Mail\Contracts\IDkimService;
@@ -14,7 +15,6 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\Exception\UploadException;
 use OCA\Mail\Http\TrapError;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\SmimeData;
 use OCA\Mail\ResponseDefinitions;
 use OCA\Mail\Service\AccountService;
@@ -49,18 +49,15 @@ use function array_merge;
  */
 class MessageApiController extends OCSController {
 
-	private ?string $userId;
-
 	public function __construct(
 		string $appName,
-		?string $userId,
+		private ?string $userId,
 		IRequest $request,
 		private AccountService $accountService,
 		private AliasesService $aliasesService,
 		private AttachmentService $attachmentService,
 		private OutboxService $outboxService,
 		private MailManager $mailManager,
-		private IMAPClientFactory $clientFactory,
 		private LoggerInterface $logger,
 		private ITimeFactory $time,
 		private IURLGenerator $urlGenerator,
@@ -70,7 +67,6 @@ class MessageApiController extends OCSController {
 		private DelegationService $delegationService,
 	) {
 		parent::__construct($appName, $request);
-		$this->userId = $userId;
 	}
 
 	/**
@@ -91,8 +87,8 @@ class MessageApiController extends OCSController {
 	 * 202: The email was sent but could not be copied to the 'Sent' mailbox
 	 * 202: The email was accepted but not sent by the SMTP server and will be automatically retried
 	 * 400: No recipients
-	 * 400: Recipient fromat invalid
-	 * 400: A recipient array contained no email addresse
+	 * 400: Recipient format invalid
+	 * 400: A recipient array contained no email address
 	 * 400: Recipient email address malformed
 	 * 400: Message could not be processed
 	 * 403: No "Sent" mailbox set for account
@@ -142,7 +138,6 @@ class MessageApiController extends OCSController {
 		if (empty($to)) {
 			return new DataResponse('Recipients cannot be empty.', Http::STATUS_BAD_REQUEST);
 		}
-
 
 		try {
 			$messageAttachments = $this->handleAttachments();
@@ -220,7 +215,7 @@ class MessageApiController extends OCSController {
 			LocalMessage::STATUS_NO_SENT_MAILBOX => new DataResponse('Configuration error: Cannot send message without sent mailbox.', Http::STATUS_FORBIDDEN),
 			LocalMessage::STATUS_SMPT_SEND_FAIL => new DataResponse('SMTP error: could not send message. Message sending will be retried. Please check the logs.', Http::STATUS_INTERNAL_SERVER_ERROR),
 			LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL => new DataResponse('Email was sent but could not be copied to sent mailbox. Copying will be retried. Please check the logs.', Http::STATUS_ACCEPTED),
-			default => new DataResponse('An error occured. Please check the logs.', Http::STATUS_INTERNAL_SERVER_ERROR),
+			default => new DataResponse('An error occurred. Please check the logs.', Http::STATUS_INTERNAL_SERVER_ERROR),
 		};
 	}
 
@@ -255,13 +250,11 @@ class MessageApiController extends OCSController {
 		}
 
 		$loadBody = true;
-		$client = $this->clientFactory->getClient($account);
 		try {
 			$imapMessage = $this->mailManager->getImapMessage(
-				$client,
 				$account,
 				$mailbox,
-				$message->getUid(),
+				$message,
 				true
 			);
 		} catch (ServiceException $e) {
@@ -271,13 +264,10 @@ class MessageApiController extends OCSController {
 			$this->logger->warning('Message could not be decrypted', ['exception' => $e->getMessage()]);
 			$loadBody = false;
 			$imapMessage = $this->mailManager->getImapMessage(
-				$client,
 				$account,
 				$mailbox,
-				$message->getUid()
+				$message
 			);
-		} finally {
-			$client->logout();
 		}
 
 		$json = $imapMessage->getFullMessage($id, $loadBody);
@@ -347,19 +337,15 @@ class MessageApiController extends OCSController {
 			return new DataResponse('Message, Account or Mailbox not found', Http::STATUS_NOT_FOUND);
 		}
 
-		$client = $this->clientFactory->getClient($account);
 		try {
 			$source = $this->mailManager->getSource(
-				$client,
 				$account,
-				$mailbox->getName(),
-				$message->getUid()
+				$mailbox,
+				$message
 			);
 		} catch (ServiceException $e) {
 			$this->logger->error('Message not found on IMAP, or mail server went away', ['exception' => $e->getMessage()]);
 			return new DataResponse('Message not found', Http::STATUS_NOT_FOUND);
-		} finally {
-			$client->logout();
 		}
 
 		return new DataResponse($source, Http::STATUS_OK);
@@ -455,8 +441,7 @@ class MessageApiController extends OCSController {
 	 */
 	private function handleAttachments(): array {
 		$fileAttachments = $this->request->getUploadedFile('attachments');
-		$hasAttachments = isset($fileAttachments['name']);
-		if (!$hasAttachments) {
+		if (!isset($fileAttachments['name'])) {
 			return [];
 		}
 

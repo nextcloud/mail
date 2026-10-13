@@ -32,7 +32,9 @@
 				{{ attachment.sizeString }}
 			</span>
 		</div>
-		<button @click="onDelete(attachment)">
+		<button
+			:aria-label="t('mail', 'Remove attachment {fileName}', { fileName: attachment.displayName ?? attachment.fileName })"
+			@click="onDelete(attachment)">
 			<Close :size="20" />
 		</button>
 	</li>
@@ -63,6 +65,8 @@ export default {
 			default: false,
 		},
 	},
+
+	emits: ['onDeleteAttachment'],
 
 	data() {
 		return {
@@ -105,7 +109,7 @@ export default {
 
 	methods: {
 		onDelete(attachment) {
-			this.$emit('on-delete-attachment', attachment)
+			this.$emit('onDeleteAttachment', attachment)
 		},
 
 		onPreview() {
@@ -206,17 +210,6 @@ export default {
 	}
 }
 
-.attachments-upload-progress > div {
-	padding-inline-start: 3px;
-}
-
-.new-message-attachments-action {
-	display: inline-block;
-	vertical-align: middle;
-	padding: 18px;
-	opacity: 0.5;
-}
-
 .attachment-inner {
 	display: flex;
     flex-wrap: wrap;
@@ -236,21 +229,5 @@ export default {
 .new-message-attachment-size {
 	color: #6a6a6a;
 	width: 100%;
-}
-
-/* Colour the filename with a different color during attachment upload */
-.new-message-attachment-name.upload-ongoing {
-	color: #0082c9;
-}
-
-/* Colour the filename in red if the attachment upload failed */
-.new-message-attachment-name.upload-warning {
-	color: #d2322d;
-}
-
-/* Red ProgressBar for failed attachment uploads */
-.new-message-attachment-name.upload-warning .ui-progressbar-value {
-	border: 1px solid #e9322d;
-	background: #e9322d;
 }
 </style>

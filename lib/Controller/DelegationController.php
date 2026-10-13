@@ -24,18 +24,15 @@ use OCP\IUserManager;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class DelegationController extends Controller {
-	private ?string $currentUserId;
-
 	public function __construct(
 		string $appName,
 		IRequest $request,
 		private DelegationService $delegationService,
 		private AccountService $accountService,
 		private IUserManager $userManager,
-		?string $userId,
+		private ?string $userId,
 	) {
 		parent::__construct($appName, $request);
-		$this->currentUserId = $userId;
 	}
 
 	#[NoAdminRequired]
@@ -47,7 +44,7 @@ class DelegationController extends Controller {
 			return new JSONResponse([], Http::STATUS_NOT_FOUND);
 		}
 
-		if ($account->getUserId() !== $this->currentUserId) {
+		if ($account->getUserId() !== $this->userId) {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
 		}
 
@@ -59,11 +56,11 @@ class DelegationController extends Controller {
 	#[NoAdminRequired]
 	#[TrapError]
 	public function delegate(int $accountId, string $userId): JSONResponse {
-		if ($this->currentUserId === null) {
+		if ($this->userId === null) {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
 		}
 
-		if ($userId === $this->currentUserId) {
+		if ($userId === $this->userId) {
 			return new JSONResponse(['message' => 'Cannot delegate to yourself'], Http::STATUS_BAD_REQUEST);
 		}
 
@@ -73,7 +70,7 @@ class DelegationController extends Controller {
 			return new JSONResponse([], Http::STATUS_NOT_FOUND);
 		}
 
-		if ($account->getUserId() !== $this->currentUserId) {
+		if ($account->getUserId() !== $this->userId) {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
 		}
 
@@ -86,7 +83,7 @@ class DelegationController extends Controller {
 		}
 
 		try {
-			$delegation = $this->delegationService->delegate($account, $userId, $this->currentUserId);
+			$delegation = $this->delegationService->delegate($account, $userId, $this->userId);
 		} catch (DelegationExistsException) {
 			return new JSONResponse(['message' => 'Delegation already exists'], Http::STATUS_CONFLICT);
 		}
@@ -97,7 +94,7 @@ class DelegationController extends Controller {
 	#[NoAdminRequired]
 	#[TrapError]
 	public function unDelegate(int $accountId, string $userId): JSONResponse {
-		if ($this->currentUserId === null) {
+		if ($this->userId === null) {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
 		}
 
@@ -107,11 +104,11 @@ class DelegationController extends Controller {
 			return new JSONResponse([], Http::STATUS_NOT_FOUND);
 		}
 
-		if ($account->getUserId() !== $this->currentUserId) {
+		if ($account->getUserId() !== $this->userId) {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
 		}
 
-		$this->delegationService->unDelegate($account, $userId, $this->currentUserId);
+		$this->delegationService->unDelegate($account, $userId, $this->userId);
 		return new JSONResponse([], Http::STATUS_OK);
 	}
 }

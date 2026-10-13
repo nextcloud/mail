@@ -3,31 +3,32 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<Modal @close="onClose">
+	<NcModal closeOnClickOutside @close="onClose">
 		<div class="modal-content">
 			<h2>{{ t('mail', 'Create task') }}</h2>
 			<div class="taskTitle">
-				<input v-model="taskTitle" type="text">
+				<label for="taskTitle">{{ t('mail', 'Title') }}</label>
+				<input id="taskTitle" v-model="taskTitle" type="text">
 			</div>
 			<div class="all-day">
-				<DatetimePicker
+				<NcDateTimePicker
 					v-model="startDate"
 					:format="dateFormat"
 					:clearable="false"
-					:minute-step="5"
-					:show-second="false"
+					:minuteStep="5"
+					:showSecond="false"
 					:type="datePickerType"
-					:show-timezone-select="true"
-					:timezone-id="startTimezoneId" />
-				<DatetimePicker
+					:showTimezoneSelect="true"
+					:timezoneId="startTimezoneId" />
+				<NcDateTimePicker
 					v-model="endDate"
 					:format="dateFormat"
 					:clearable="false"
-					:minute-step="5"
-					:show-second="false"
+					:minuteStep="5"
+					:showSecond="false"
 					:type="datePickerType"
-					:show-timezone-select="true"
-					:timezone-id="endTimezoneId" />
+					:showTimezoneSelect="true"
+					:timezoneId="endTimezoneId" />
 			</div>
 			<label for="note">{{ t('mail', 'Description') }}</label>
 			<textarea id="note" v-model="note" rows="7" />
@@ -45,10 +46,10 @@
 			<NcSelect
 				v-model="selectedCalendarChoice"
 				label="displayname"
-				input-id="url"
+				inputId="url"
 				:placeholder="t('mail', 'Select calendar')"
 				:aria-label-combobox="t('mail', 'Select calendar')"
-				:allow-empty="false"
+				:allowEmpty="false"
 				:options="calendarChoices">
 				<template #option="{ id }">
 					<CalendarPickerOption
@@ -59,7 +60,7 @@
 					<CalendarPickerOption
 						:color="getCalendarById(id).color"
 						:displayname="getCalendarById(id).displayname"
-						:display-icon="getCalendarById(id).displayIcon" />
+						:displayIcon="getCalendarById(id).displayIcon" />
 				</template>
 				<template #no-options>
 					<span>{{ t('mail', 'No calendars with task list support') }}</span>
@@ -70,16 +71,18 @@
 				{{ t('mail', 'Create') }}
 			</button>
 		</div>
-	</Modal>
+	</NcModal>
 </template>
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import moment from '@nextcloud/moment'
-import { NcDateTimePicker as DatetimePicker, NcModal as Modal, NcSelect } from '@nextcloud/vue'
 import ICAL from 'ical.js'
 import jstz from 'jstz'
 import { mapStores } from 'pinia'
+import NcDateTimePicker from '@nextcloud/vue/components/NcDateTimePicker'
+import NcModal from '@nextcloud/vue/components/NcModal'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import CalendarPickerOption from './CalendarPickerOption.vue'
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
@@ -89,8 +92,8 @@ export default {
 	name: 'TaskModal',
 	components: {
 		CalendarPickerOption,
-		DatetimePicker,
-		Modal,
+		NcDateTimePicker,
+		NcModal,
 		NcSelect,
 	},
 
@@ -100,6 +103,8 @@ export default {
 			required: true,
 		},
 	},
+
+	emits: ['close'],
 
 	data() {
 		// Try to determine the current timezone, and fall back to UTC otherwise
@@ -127,7 +132,7 @@ export default {
 		},
 
 		dateFormat() {
-			return this.isAllDay ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm'
+			return this.isAllDay ? 'yyyy-MM-dd' : 'yyyy-MM-dd HH:mm'
 		},
 
 		datePickerType() {
@@ -265,10 +270,6 @@ input , textarea {
 	width: 100%;
 }
 
-:deep(input[type='text']) {
-	padding: 0 !important;
-}
-
 .all-day {
 	margin-inline-start: -1px;
 	margin-top: 5px;
@@ -284,7 +285,4 @@ input , textarea {
 	float: inline-end;
 }
 
-:deep(.mx-datepicker) {
-	width: 213px;
-}
 </style>

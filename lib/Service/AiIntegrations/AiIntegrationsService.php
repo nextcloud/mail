@@ -12,52 +12,55 @@ namespace OCA\Mail\Service\AiIntegrations;
 use JsonException;
 use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
-use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
+use OCA\Mail\Exception\PotentialPromptInjectionException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\EventData;
 use OCA\Mail\Model\IMAPMessage;
+use OCA\Mail\Service\MailManager;
 use OCP\IAppConfig;
-use OCP\IL10N;
 use OCP\IUserManager;
 use OCP\L10N\IFactory;
+use OCP\TaskProcessing\Exception\Exception as TaskProcessingException;
 use OCP\TaskProcessing\IManager as TaskProcessingManager;
 use OCP\TaskProcessing\Task as TaskProcessingTask;
 use OCP\TaskProcessing\TaskTypes\TextToText;
-use OCP\TextProcessing\FreePromptTaskType;
-use OCP\TextProcessing\IManager as TextProcessingManager;
-use OCP\TextProcessing\SummaryTaskType;
-use OCP\TextProcessing\Task as TextProcessingTask;
+use OCP\TaskProcessing\TaskTypes\TextToTextSummary;
 use Psr\Log\LoggerInterface;
-
 use function array_map;
 use function implode;
-use function in_array;
+use function is_array;
+use function is_string;
 use function json_decode;
+use function sprintf;
 
 class AiIntegrationsService {
 
-	private const EVENT_DATA_PROMPT_PREAMBLE = <<<PROMPT
-I am scheduling an event based on an email thread and need an event title and agenda. Provide the result as JSON with keys for "title" and "agenda". For example ```{ "title": "Project kick-off meeting", "agenda": "* Introduction\\n* Project goals\\n* Next steps" }```.
-
-The email contents are:
-
-PROMPT;
+	public const RECENT_MESSAGE_MAX_AGE = 'P14D';
 
 	public function __construct(
 		private LoggerInterface $logger,
 		private Cache $cache,
-		private IMAPClientFactory $clientFactory,
-		private IMailManager $mailManager,
+		private MailManager $mailManager,
 		private TaskProcessingManager $taskProcessingManager,
-		private TextProcessingManager $textProcessingManager,
-		private IL10N $l,
 		private IFactory $l10nFactory,
 		private IUserManager $userManager,
 		private IAppConfig $appConfig,
 	) {
+	}
+
+	/**
+	 * Reject untrusted mail content that carries its own START/END-OF-EMAIL
+	 * boundary, which would attempt tp break out of the surrounding prompt template.
+	 *
+	 * @throws PotentialPromptInjectionException
+	 */
+	private static function assertNoPromptInjection(string $body): void {
+		if (preg_match('/\*{0,3}\s*(?:START|END)_OF_E-?MAIL\s*\*{0,3}/i', $body) === 1) {
+			throw new PotentialPromptInjectionException('Message body contains prompt delimiters');
+		}
 	}
 
 	/**
@@ -76,51 +79,45 @@ PROMPT;
 		}
 		$user = $this->userManager->get($account->getUserId());
 		$language = explode('_', $this->l10nFactory->getUserLanguage($user))[0];
-		$client = $this->clientFactory->getClient($account);
-		try {
-			foreach ($messages as $entry) {
-				if (mb_strlen((string)$entry->getSummary()) !== 0) {
-					continue;
-				}
-				// retrieve full message from server
-				$userId = $account->getUserId();
-				$mailboxId = $entry->getMailboxId();
-				$messageLocalId = $entry->getId();
-				$messageRemoteId = $entry->getUid();
-				$mailbox = $this->mailManager->getMailbox($userId, $mailboxId);
-				$message = $this->mailManager->getImapMessage(
-					$client,
-					$account,
-					$mailbox,
-					$messageRemoteId,
-					true
-				);
-				// skip message if it is encrypted or empty
-				if ($message->isEncrypted() || empty(trim($message->getPlainBody()))) {
-					continue;
-				}
-				// construct prompt and task
-				$messageBody = $message->getPlainBody();
-				$prompt = "You are tasked with formulating a helpful summary of a email message. \r\n"
-						  . 'The summary should be in the language of this language code ' . $language . ". \r\n"
-						  . "The summary should be less than 160 characters. \r\n"
-						  . "Output *ONLY* the summary itself, leave out any introduction. \r\n"
-						  . "Here is the ***E-MAIL*** for which you must generate a helpful summary: \r\n"
-						  . "***START_OF_E-MAIL***\r\n$messageBody\r\n***END_OF_E-MAIL***\r\n";
-				$task = new TaskProcessingTask(
-					TextToText::ID,
-					[
-						'max_tokens' => 1024,
-						'input' => $prompt,
-					],
-					Application::APP_ID,
-					$userId,
-					'message:' . (string)$messageLocalId
-				);
-				$this->taskProcessingManager->scheduleTask($task);
+		foreach ($messages as $entry) {
+			if (mb_strlen((string)$entry->getSummary()) !== 0) {
+				continue;
 			}
-		} finally {
-			$client->logout();
+			// retrieve full message from server
+			$userId = $account->getUserId();
+			$mailboxId = $entry->getMailboxId();
+			$messageLocalId = $entry->getId();
+			$mailbox = $this->mailManager->getMailbox($userId, $mailboxId);
+			$message = $this->mailManager->getImapMessage(
+				$account,
+				$mailbox,
+				$entry,
+				true
+			);
+			// skip message if it is encrypted or empty
+			if ($message->isEncrypted() || empty(trim($message->getPlainBody()))) {
+				continue;
+			}
+			$messageBody = $message->getPlainBody();
+			try {
+				self::assertNoPromptInjection($messageBody);
+			} catch (PotentialPromptInjectionException $e) {
+				$this->logger->warning('Skipped message summary: potential prompt injection', ['exception' => $e, 'messageId' => $messageLocalId]);
+				continue;
+			}
+			// construct prompt and task
+			$prompt = sprintf(DefaultPrompts::SUMMARIZE_MESSAGE, $language, $messageBody);
+			$task = new TaskProcessingTask(
+				TextToText::ID,
+				[
+					'max_tokens' => 1024,
+					'input' => $prompt,
+				],
+				Application::APP_ID,
+				$userId,
+				'message:' . (string)$messageLocalId
+			);
+			$this->taskProcessingManager->scheduleTask($task);
 		}
 	}
 
@@ -135,35 +132,56 @@ PROMPT;
 	 * @throws ServiceException
 	 */
 	public function summarizeThread(Account $account, string $threadId, array $messages, string $currentUserId): ?string {
-		if (in_array(SummaryTaskType::class, $this->textProcessingManager->getAvailableTaskTypes(), true)) {
-			$messageIds = array_map(fn ($message) => $message->getMessageId(), $messages);
-			$cachedSummary = $this->cache->getValue($this->cache->buildUrlKey($messageIds));
-			if ($cachedSummary) {
-				return $cachedSummary;
+		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[TextToTextSummary::ID])) {
+			$messageIds = array_map(static fn (Message $message) => $message->getId(), $messages);
+			$cacheKey = 'threadSummary_' . $this->cache->buildUrlKey($messageIds);
+			$cachedSummary = $this->cache->getValue($cacheKey);
+			if (is_string($cachedSummary)) {
+				return $cachedSummary === Cache::FAILURE_MARKER ? null : $cachedSummary;
 			}
-			$client = $this->clientFactory->getClient($account);
 			try {
-				$messagesBodies = array_map(function ($message) use ($client, $account, $currentUserId) {
+				$messagesBodies = array_map(function ($message) use ($account, $currentUserId) {
 					$mailbox = $this->mailManager->getMailbox($currentUserId, $message->getMailboxId());
 					$imapMessage = $this->mailManager->getImapMessage(
-						$client,
 						$account,
 						$mailbox,
-						$message->getUid(), true
+						$message,
+						true
 					);
-					return $imapMessage->getPlainBody();
+					$body = $imapMessage->getPlainBody();
+					self::assertNoPromptInjection($body);
+					return $body;
 				}, $messages);
-
-			} finally {
-				$client->logout();
+			} catch (PotentialPromptInjectionException $e) {
+				$this->logger->warning('Skipped thread summary: potential prompt injection', ['exception' => $e, 'threadId' => $threadId]);
+				return null;
 			}
 
 			$taskPrompt = implode("\n", $messagesBodies);
-			$summaryTask = new TextProcessingTask(SummaryTaskType::class, $taskPrompt, 'mail', $currentUserId, $threadId);
-			$this->textProcessingManager->runTask($summaryTask);
-			$summary = $summaryTask->getOutput();
+			$summaryTask = new TaskProcessingTask(
+				TextToTextSummary::ID,
+				['input' => $taskPrompt],
+				Application::APP_ID,
+				$currentUserId,
+				$threadId,
+			);
+			try {
+				$summaryTask = $this->runTask($summaryTask);
+			} catch (ServiceException $e) {
+				$this->cache->addFailure($cacheKey);
+				throw $e;
+			}
+			$output = $summaryTask->getOutput()['output'] ?? null;
+			// output could be array<array<numeric|string>|numeric|string>|null depending on task type
+			// We expect Text in TextToTextSummary so should always resolve to (string)$output
+			$summary = $output !== null && !is_array($output) ? (string)$output : null;
+			if ($summary === null || trim($summary) === '') {
+				$this->cache->addFailure($cacheKey);
+				return null;
+			}
 
-			$this->cache->addValue($this->cache->buildUrlKey($messageIds), $summary);
+			$this->cache->addValue($cacheKey, $summary);
+			$this->cache->resetFailures($cacheKey);
 
 			return $summary;
 		} else {
@@ -173,37 +191,50 @@ PROMPT;
 
 	/**
 	 * @param Message[] $messages
+	 * @throws ServiceException
 	 */
 	public function generateEventData(Account $account, string $threadId, array $messages, string $currentUserId): ?EventData {
-		if (!in_array(FreePromptTaskType::class, $this->textProcessingManager->getAvailableTaskTypes(), true)) {
+		if (!isset($this->taskProcessingManager->getAvailableTaskTypes()[TextToText::ID])) {
 			return null;
 		}
-		$client = $this->clientFactory->getClient($account);
 		try {
-			$messageBodies = array_map(function ($message) use ($client, $account, $currentUserId) {
+			$messageBodies = array_map(function ($message) use ($account, $currentUserId) {
 				$mailbox = $this->mailManager->getMailbox($currentUserId, $message->getMailboxId());
 				$imapMessage = $this->mailManager->getImapMessage(
-					$client,
 					$account,
 					$mailbox,
-					$message->getUid(), true
+					$message,
+					true
 				);
-				return $imapMessage->getPlainBody();
+				$body = $imapMessage->getPlainBody();
+				self::assertNoPromptInjection($body);
+				return $body;
 			}, $messages);
-		} finally {
-			$client->logout();
+		} catch (PotentialPromptInjectionException $e) {
+			$this->logger->warning('Skipped event data generation: potential prompt injection', ['exception' => $e, 'threadId' => $threadId]);
+			return null;
 		}
 
-		$task = new TextProcessingTask(
-			FreePromptTaskType::class,
-			self::EVENT_DATA_PROMPT_PREAMBLE . implode("\n\n---\n\n", $messageBodies),
-			'mail',
+		$task = new TaskProcessingTask(
+			TextToText::ID,
+			['input' => DefaultPrompts::EVENT_DATA_PREAMBLE . implode("\n\n---\n\n", $messageBodies)],
+			Application::APP_ID,
 			$currentUserId,
 			"event_data_$threadId",
 		);
-		$result = $this->textProcessingManager->runTask($task);
+		$task = $this->runTask($task);
+		$result = $task->getOutput()['output'] ?? null;
+		if (!is_string($result)) {
+			return null;
+		}
 		try {
 			$decoded = json_decode($result, true, 512, JSON_THROW_ON_ERROR);
+			if (!is_array($decoded)
+				|| !isset($decoded['title'], $decoded['agenda'])
+				|| !is_string($decoded['title'])
+				|| !is_string($decoded['agenda'])) {
+				return null;
+			}
 			return new EventData($decoded['title'], $decoded['agenda']);
 		} catch (JsonException $e) {
 			return null;
@@ -215,57 +246,70 @@ PROMPT;
 	 * @throws ServiceException
 	 */
 	public function getSmartReply(Account $account, Mailbox $mailbox, Message $message, string $currentUserId): ?array {
-		if (in_array(FreePromptTaskType::class, $this->textProcessingManager->getAvailableTaskTypes(), true)) {
-			$cachedReplies = $this->cache->getValue("smartReplies_{$message->getId()}");
-			if ($cachedReplies) {
+		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[TextToText::ID])) {
+			$cacheKey = 'smartReplies_' . $message->getId();
+			$cachedReplies = $this->cache->getValue($cacheKey);
+			if ($cachedReplies === Cache::FAILURE_MARKER) {
+				return [];
+			}
+			if (is_string($cachedReplies)) {
 				try {
 					return json_decode($cachedReplies, true, 512, JSON_THROW_ON_ERROR);
 				} catch (JsonException $e) {
-					$this->cache->remove('smartReplies_' . $message->getId());
+					$this->cache->remove($cacheKey);
 					throw new ServiceException('Failed to decode smart replies JSON output', previous: $e);
 				}
 			}
-			$client = $this->clientFactory->getClient($account);
 			try {
 				$imapMessage = $this->mailManager->getImapMessage(
-					$client,
 					$account,
 					$mailbox,
-					$message->getUid(), true
+					$message,
+					true
 				);
 				if (!$this->isPersonalEmail($imapMessage)) {
 					return [];
 				}
 				$messageBody = $imapMessage->getPlainBody();
-
-			} finally {
-				$client->logout();
+				self::assertNoPromptInjection($messageBody);
+			} catch (PotentialPromptInjectionException $e) {
+				$this->logger->warning('Skipped smart replies: potential prompt injection', ['exception' => $e, 'messageId' => $message->getId()]);
+				return [];
 			}
-			$prompt = "You are tasked with formulating helpful replies or reply templates to e-mails provided that have been sent to me. If you don't know some relevant information for answering the e-mails (like my schedule) leave blanks in the text that can later be filled by me. You must write the replies from my point of view as replies to the original sender of the provided e-mail!
-
-			Formulate two extremely succinct reply suggestions to the provided ***E-MAIL***. Please, do not invent any context for the replies but, rather, leave blanks for me to fill in with relevant information where necessary. Provide the output formatted as valid JSON with the keys 'reply1' and 'reply2' for the reply suggestions.
-
-			Each suggestion must be of 25 characters or less.
-
-			Here is the ***E-MAIL*** for which you must suggest the replies to:
-
-			***START_OF_E-MAIL***" . $messageBody . "
-
-			***END_OF_E-MAIL***
-
-			Please, output *ONLY* a valid JSON string with the keys 'reply1' and 'reply2' for the reply suggestions. Leave out any other text besides the JSON! Be extremely succinct and write the replies from my point of view.
-			 ";
-			$task = new TextProcessingTask(FreePromptTaskType::class, $prompt, 'mail,', $currentUserId);
-			$this->textProcessingManager->runTask($task);
-			$replies = $task->getOutput();
+			$prompt = sprintf(DefaultPrompts::SMART_REPLY, $messageBody);
+			$task = new TaskProcessingTask(TextToText::ID, ['input' => $prompt], Application::APP_ID, $currentUserId);
 			try {
-				$cleaned = preg_replace('/^```json\s*|\s*```$/', '', trim($replies));
+				$task = $this->runTask($task);
+			} catch (ServiceException $e) {
+				$this->cache->addFailure($cacheKey);
+				throw $e;
+			}
+			$output = $task->getOutput()['output'] ?? null;
+			$replies = is_string($output) ? trim($output) : '';
+			if ($replies === '') {
+				// The task can fail or return nothing (e.g. provider timeout); treat as no replies
+				$this->logger->warning('Smart reply task returned no output', ['status' => $task->getStatus(), 'errorMessage' => $task->getErrorMessage()]);
+				$this->cache->addFailure($cacheKey);
+				return [];
+			}
+			$cleaned = preg_replace('/^```json\s*|\s*```$/', '', $replies);
+			try {
 				$decoded = json_decode($cleaned, true, 512, JSON_THROW_ON_ERROR);
-				$this->cache->addValue("smartReplies_{$message->getId()}", $replies);
-				return $decoded;
 			} catch (JsonException $e) {
+				$this->cache->addFailure($cacheKey);
 				throw new ServiceException('Failed to decode smart replies JSON output', previous: $e);
 			}
+			if (!is_array($decoded)
+				|| !isset($decoded['reply1'], $decoded['reply2'])
+				|| !is_string($decoded['reply1'])
+				|| !is_string($decoded['reply2'])) {
+				$this->cache->addFailure($cacheKey);
+				throw new ServiceException('Smart reply output has an unexpected structure');
+			}
+
+			$this->cache->addValue($cacheKey, $cleaned);
+			$this->cache->resetFailures($cacheKey);
+			return $decoded;
 		} else {
 			throw new ServiceException('No language model available for smart replies');
 		}
@@ -282,133 +326,46 @@ PROMPT;
 		Message $message,
 		string $currentUserId,
 	): bool {
-		if (!in_array(FreePromptTaskType::class, $this->textProcessingManager->getAvailableTaskTypes(), true)) {
+		if (!isset($this->taskProcessingManager->getAvailableTaskTypes()[TextToText::ID])) {
 			throw new ServiceException('No language model available for smart replies');
 		}
 
-		$client = $this->clientFactory->getClient($account);
-		try {
-			$imapMessage = $this->mailManager->getImapMessage(
-				$client,
-				$account,
-				$mailbox,
-				$message->getUid(),
-				true,
-			);
-		} finally {
-			$client->logout();
-		}
+		$imapMessage = $this->mailManager->getImapMessage(
+			$account,
+			$mailbox,
+			$message,
+			true,
+		);
 
 		if (!$this->isPersonalEmail($imapMessage)) {
 			return false;
 		}
 
 		$messageBody = $imapMessage->getPlainBody();
-		$messageBody = str_replace('"', '\"', $messageBody);
-
-		$prompt = "Consider the following TypeScript function prototype:
----
-/**
- * This function takes in an email text and returns a boolean indicating whether the email author expects a response.
- *
- * @param emailText - string with the email text
- * @returns boolean true if the email expects a reply, false if not
- */
-declare function doesEmailExpectReply(emailText: string): Promise<boolean>;
----
-Tell me what the function outputs for the following parameters.
-
-emailText: \"$messageBody\"
-The JSON output should be in the form: {\"expectsReply\": true}
-Never return null or undefined.";
-		$task = new TextProcessingTask(FreePromptTaskType::class, $prompt, Application::APP_ID, $currentUserId);
-
-		$this->textProcessingManager->runTask($task);
-
-		// Can't use json_decode() here because the output contains additional garbage
-		return preg_match('/{\s*"expectsReply"\s*:\s*true\s*}/i', $task->getOutput()) === 1;
-	}
-
-	/**
-	 * Analyze whether an email is written in a specific language.
-	 *
-	 * @throws ServiceException
-	 */
-	public function requiresTranslation(
-		Account $account,
-		Mailbox $mailbox,
-		Message $message,
-		string $currentUserId,
-	): ?bool {
-		if (!in_array(FreePromptTaskType::class, $this->textProcessingManager->getAvailableTaskTypes(), true)) {
-			$this->logger->info('No language model available for checking translation needs');
-			return null;
-		}
-
-		$language = explode('_', $this->l->getLanguageCode())[0];
-		$messageId = $message->getId();
-		$cachedValue = $this->cache->getValue("needsTranslation_{$language}{$messageId}");
-		if ($cachedValue) {
-			return  $cachedValue === 'true' ? true : false;
-		}
-
-		$client = $this->clientFactory->getClient($account);
 		try {
-			$imapMessage = $this->mailManager->getImapMessage(
-				$client,
-				$account,
-				$mailbox,
-				$message->getUid(),
-				true,
-			);
-		} finally {
-			$client->logout();
-		}
-
-		if (!$this->isPersonalEmail($imapMessage)) {
+			self::assertNoPromptInjection($messageBody);
+		} catch (PotentialPromptInjectionException $e) {
+			$this->logger->warning('Skipped follow-up classification: potential prompt injection', ['exception' => $e, 'messageId' => $message->getId()]);
 			return false;
 		}
-
-		$messageBody = $imapMessage->getPlainBody();
 		$messageBody = str_replace('"', '\"', $messageBody);
 
-		$prompt = "Consider the following TypeScript function prototype:
----
-/**
- * This function takes in an email text and returns a boolean indicating whether the email needs translation from a specific language.
- *
- * @param emailText - string with the email text
- * @param language - the language code to check against (e.g., 'en', 'de', etc.)
- * @returns boolean true if the email is written in a different language than the one specified and needs translation, false if it is written in the specified language.
- * only return true if whole sentences are written in a different language, not just a word or two.
- */
-declare function isEmailWrittenInLanguage(emailText: string, language: string): Promise<boolean>;
----
-Tell me what the function outputs for the following parameters.
+		$prompt = sprintf(DefaultPrompts::REQUIRES_FOLLOW_UP, $messageBody);
+		$task = new TaskProcessingTask(TextToText::ID, ['input' => $prompt], Application::APP_ID, $currentUserId);
 
-emailText: \"$messageBody\"
-language: \"$language\"
-The JSON output should be in the form: {\"needsTranslation\": true}
-Never return null or undefined.";
-		$task = new TextProcessingTask(FreePromptTaskType::class, $prompt, Application::APP_ID, $currentUserId);
-
-		$this->textProcessingManager->runTask($task);
-		$output = $task->getOutput();
-		if ($output === null) {
-			throw new ServiceException('Task output is null, possibly due to an error in the task processing', [
-				'messageId' => $message->getId(),
-				'language' => $language,
-				'output' => $output,
-			]);
+		$task = $this->runTask($task);
+		$output = $task->getOutput()['output'] ?? null;
+		if ($task->getStatus() === TaskProcessingTask::STATUS_FAILED || !is_string($output) || trim($output) === '') {
+			$this->logger->warning('Follow-up classification task returned no usable output', ['status' => $task->getStatus(), 'errorMessage' => $task->getErrorMessage()]);
+			throw new ServiceException('Follow-up classification task returned no usable output');
 		}
+
 		// Can't use json_decode() here because the output contains additional garbage
-		$result = preg_match('/{\s*"needsTranslation"\s*:\s*true\s*}/i', $output) === 1;
-		$this->cache->addValue("needsTranslation_{$language}{$messageId}", $result ? 'true' : 'false');
-		return $result;
+		return preg_match('/{\s*"expectsReply"\s*:\s*true\s*}/i', $output) === 1;
 	}
 
 	public function isLlmAvailable(string $taskType): bool {
-		return in_array($taskType, $this->textProcessingManager->getAvailableTaskTypes(), true);
+		return array_key_exists($taskType, $this->taskProcessingManager->getAvailableTaskTypes());
 	}
 
 	public function isTaskAvailable(string $taskName): bool {
@@ -420,7 +377,18 @@ Never return null or undefined.";
 	 * Whether the llm_processing admin setting is enabled globally on this instance.
 	 */
 	public function isLlmProcessingEnabled(): bool {
-		return $this->appConfig->getValueString(Application::APP_ID, 'llm_processing', 'no') === 'yes';
+		return $this->appConfig->getValueBool(Application::APP_ID, ConfigLexicon::LLM_PROCESSING, false);
+	}
+
+	/**
+	 * @throws ServiceException
+	 */
+	private function runTask(TaskProcessingTask $task): TaskProcessingTask {
+		try {
+			return $this->taskProcessingManager->runTask($task);
+		} catch (TaskProcessingException $e) {
+			throw new ServiceException('AI task processing failed', previous: $e);
+		}
 	}
 
 	private function isPersonalEmail(IMAPMessage $imapMessage): bool {
@@ -446,6 +414,5 @@ Never return null or undefined.";
 		}
 		return true;
 	}
-
 
 }

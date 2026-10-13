@@ -22,15 +22,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 final class DeleteAccount extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
 
-	private AccountService $accountService;
-	private LoggerInterface $logger;
-
-	public function __construct(AccountService $service,
-		LoggerInterface $logger) {
+	public function __construct(
+		private AccountService $accountService,
+		private LoggerInterface $logger,
+	) {
 		parent::__construct();
-
-		$this->accountService = $service;
-		$this->logger = $logger;
 	}
 
 	/**

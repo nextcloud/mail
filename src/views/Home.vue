@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<NcContent app-name="mail" class="mail-content">
+	<NcContent appName="mail" class="mail-content">
 		<Navigation />
 		<Outbox v-if="$route.name === 'outbox'" />
 		<MailboxThread
@@ -12,15 +12,16 @@
 			:mailbox="activeMailbox" />
 
 		<template v-if="hasComposerSession && accounts !== null">
-			<ComposerSessionIndicator @close="onCloseMessageModal" />
+			<ComposerSessionIndicator v-if="!showMessageComposer" @close="onCloseMessageModal" />
 			<NewMessageModal ref="newMessageModal" :accounts="accounts" />
 		</template>
 	</NcContent>
 </template>
 
 <script>
-import { NcContent } from '@nextcloud/vue'
 import { mapState, mapStores } from 'pinia'
+import { defineAsyncComponent } from 'vue'
+import NcContent from '@nextcloud/vue/components/NcContent'
 import ComposerSessionIndicator from '../components/ComposerSessionIndicator.vue'
 import MailboxThread from '../components/MailboxThread.vue'
 import Navigation from '../components/Navigation.vue'
@@ -37,7 +38,7 @@ export default {
 		NcContent,
 		MailboxThread,
 		Navigation,
-		NewMessageModal: () => import(/* webpackChunkName: "new-message-modal" */ '../components/NewMessageModal.vue'),
+		NewMessageModal: defineAsyncComponent(() => import(/* webpackChunkName: "new-message-modal" */ '../components/NewMessageModal.vue')),
 		Outbox,
 		ComposerSessionIndicator,
 	},
@@ -50,7 +51,7 @@ export default {
 
 	computed: {
 		...mapStores(useMainStore),
-		...mapState(useMainStore, ['composerSessionId']),
+		...mapState(useMainStore, ['composerSessionId', 'showMessageComposer']),
 		accounts() {
 			return this.mainStore.getAccounts.filter((a) => !a.isUnified)
 		},
@@ -177,28 +178,7 @@ export default {
 
 </script>
 
-<style lang="scss">
-@media print {
-	body {
-		/*
-		 * Nextcloud uses an inner scrolling but we need the
-		 * full page to scroll for print
-		 */
-		position: relative;
-		height: initial;
-	}
-}
-</style>
-
 <style lang="scss" scoped>
-@media print {
-	.mail-content {
-		height: initial;
-		/* needs important because of a more specific selector */
-		position: relative !important;
-	}
-}
-
 :deep(.app-content-details) {
 	margin: 0 auto;
 	display: flex;

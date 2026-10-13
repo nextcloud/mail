@@ -276,6 +276,16 @@ export function moveMessage(id, destFolderId) {
 	})
 }
 
+export async function saveMessage(id, directory) {
+	const url = generateUrl('/apps/mail/api/messages/{id}/file', {
+		id,
+	})
+
+	return await axios.post(url, {
+		targetPath: directory,
+	})
+}
+
 export function snoozeMessage(id, unixTimestamp, destMailboxId) {
 	const url = generateUrl('/apps/mail/api/messages/{id}/snooze', {
 		id,

@@ -17,33 +17,19 @@ use OCP\AppFramework\Http\Response;
  * @todo spec template with 28+
  */
 class HtmlResponse extends Response {
-	/** @var string */
-	private $content;
-
-	/** @var bool */
-	private $plain;
-
-	/** @var string|null */
-	private $nonce;
-
-	/** @var string|null */
-	private $scriptUrl;
-
 	/**
 	 * @param string $content message html content
 	 * @param bool $plain do not inject scripts if true (default=false)
 	 * @param string|null $nonce
 	 * @param string|null $scriptUrl
 	 */
-	private function __construct(string $content,
-		bool $plain = false,
-		?string $nonce = null,
-		?string $scriptUrl = null) {
+	private function __construct(
+		private string $content,
+		private bool $plain = false,
+		private ?string $nonce = null,
+		private ?string $scriptUrl = null,
+	) {
 		parent::__construct();
-		$this->content = $content;
-		$this->plain = $plain;
-		$this->nonce = $nonce;
-		$this->scriptUrl = $scriptUrl;
 	}
 
 	public static function plain(string $content): self {
@@ -72,6 +58,6 @@ class HtmlResponse extends Response {
 			return $this->content;
 		}
 
-		return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><script nonce="' . $this->nonce . '" src="' . $this->scriptUrl . '"></script></head><body>' . $this->content . '<div data-iframe-size></div></body></html>';
+		return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><script nonce="' . $this->nonce . '" src="' . $this->scriptUrl . '"></script></head><body>' . $this->content . '</body></html>';
 	}
 }

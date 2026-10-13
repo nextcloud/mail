@@ -22,11 +22,9 @@ class Address implements JsonSerializable {
 	public const TYPE_CC = 2;
 	public const TYPE_BCC = 3;
 
-	/** @var Horde_Mail_Rfc822_Address */
-	private $wrapped;
-
-	private function __construct(Horde_Mail_Rfc822_Address $wrapped) {
-		$this->wrapped = $wrapped;
+	private function __construct(
+		private Horde_Mail_Rfc822_Address $wrapped,
+	) {
 	}
 
 	public static function fromHorde(Horde_Mail_Rfc822_Address $horde): self {
