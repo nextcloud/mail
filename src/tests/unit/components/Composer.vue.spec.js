@@ -63,6 +63,84 @@ describe('Composer', () => {
 		}
 	})
 
+	it('initializes the alias identity, signature, certificate, and reply message ID', () => {
+		const alias = { id: 21, alias: 'work@example.com', name: 'Work', signature: 'Work signature', smimeCertificateId: 31 }
+		const view = shallowMount(Composer, {
+			props: {
+				fromAccount: 456,
+				fromAlias: alias.id,
+				isFirstOpen: true,
+				replyTo: { messageId: 'original-message', from: [{ email: 'sender@example.com' }], dateInt: 0 },
+				accounts: [{
+					id: 456,
+					emailAddress: 'other@example.com',
+					name: 'Other',
+					editorMode: 'plaintext',
+					connectionStatus: true,
+					aliases: [alias],
+				}],
+			},
+			global: {
+				mixins: [Nextcloud],
+				mocks: { $route },
+			},
+		})
+
+		const data = view.vm.getMessageData()
+
+		expect(data).toMatchObject({ accountId: 456, aliasId: 21, inReplyToMessageId: 'original-message' })
+		expect(view.vm.selectedAlias).toMatchObject({
+			emailAddress: alias.alias,
+			signature: alias.signature,
+			smimeCertificateId: alias.smimeCertificateId,
+		})
+	})
+
+	it.each([456, 789])('keeps a manually selected primary address on account %s when reopening', (accountId) => {
+		const accounts = [456, 789].map((id) => ({
+			id,
+			emailAddress: `account${id}@example.com`,
+			name: `Account ${id}`,
+			editorMode: 'plaintext',
+			connectionStatus: true,
+			aliases: id === 456 ? [{ id: 21, alias: 'work@example.com', name: 'Work' }] : [],
+		}))
+		for (const account of accounts) {
+			store.addAccountMutation(account)
+		}
+		store.startComposerSessionMutation({ data: { accountId: 456, aliasId: 21 } })
+		const mountComposer = () => shallowMount(Composer, {
+			props: {
+				accounts,
+				fromAccount: store.composerMessage.data.accountId,
+				fromAlias: store.composerMessage.data.aliasId,
+				isFirstOpen: true,
+				'onUpdate:fromAccount': (accountId) => store.patchComposerDataMutation({ accountId }),
+				'onUpdate:fromAlias': (aliasId) => store.patchComposerDataMutation({ aliasId }),
+			},
+			global: {
+				mixins: [Nextcloud],
+				mocks: { $route },
+				stubs: {
+					TextEditor: {
+						template: '<div />',
+						methods: { editorExecute: vi.fn() },
+					},
+				},
+			},
+		})
+		const view = mountComposer()
+		const primary = view.vm.aliases.find((identity) => identity.id === accountId && identity.aliasId === null)
+
+		view.vm.onAliasChange(primary)
+
+		expect(store.composerMessage.data).toMatchObject({ accountId, aliasId: null })
+		view.unmount()
+		const reopened = mountComposer()
+		expect(reopened.vm.getMessageData()).toMatchObject({ accountId, aliasId: null })
+		reopened.unmount()
+	})
+
 	it('does not drop the reply message ID', () => {
 		const view = shallowMount(Composer, {
 			props: {
