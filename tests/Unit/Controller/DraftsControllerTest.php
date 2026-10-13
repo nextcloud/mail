@@ -283,14 +283,23 @@ class DraftsControllerTest extends TestCase {
 			->method('find')
 			->with($this->userId, $message->getAccountId())
 			->willReturn($account);
+		$calls = [];
 		$this->service->expects(self::once())
-			->method('handleDraft');
+			->method('handleDraft')
+			->with($account, 1)
+			->willReturnCallback(static function () use (&$calls): void {
+				$calls[] = 'handleDraft';
+			});
 		$this->timeFactory->expects(self::once())
 			->method('getTime')
 			->willReturn(123456);
 		$this->service->expects(self::once())
 			->method('saveMessage')
-			->with($account, $message, $to, $cc, [], []);
+			->with($account, $message, $to, $cc, [], [])
+			->willReturnCallback(static function () use (&$calls, $message): LocalMessage {
+				$calls[] = 'saveMessage';
+				return $message;
+			});
 
 		$expected = JsonResponse::success($message, Http::STATUS_CREATED);
 		$actual = $this->controller->create(
@@ -315,6 +324,7 @@ class DraftsControllerTest extends TestCase {
 		);
 
 		$this->assertEquals($expected, $actual);
+		$this->assertSame(['saveMessage', 'handleDraft'], $calls);
 	}
 
 	public function testCreateWithEmptyRecipients(): void {

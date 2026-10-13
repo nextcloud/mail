@@ -79,7 +79,6 @@ class MailTransmission implements IMailTransmission {
 		$to = $this->transmissionService->getAddressList($localMessage, Recipient::TYPE_TO);
 		$cc = $this->transmissionService->getAddressList($localMessage, Recipient::TYPE_CC);
 		$bcc = $this->transmissionService->getAddressList($localMessage, Recipient::TYPE_BCC);
-		$attachments = $this->transmissionService->getAttachments($localMessage);
 
 		$name = $account->getName();
 		$emailAddress = $account->getEMailAddress();
@@ -98,14 +97,6 @@ class MailTransmission implements IMailTransmission {
 		}
 
 		$from = Address::fromRaw($name, $emailAddress);
-
-		$attachmentParts = [];
-		foreach ($attachments as $attachment) {
-			$part = $this->transmissionService->handleAttachment($account, $attachment);
-			if ($part !== null) {
-				$attachmentParts[] = $part;
-			}
-		}
 
 		$transport = $this->smtpClientFactory->create($account);
 
@@ -153,15 +144,7 @@ class MailTransmission implements IMailTransmission {
 		$smtpRecipients->add($bcc->toHorde());
 		$smtpRecipients->unique();
 
-		$mimeMessage = new MimeMessage(
-			new DataUriParser()
-		);
-		$mimePart = $mimeMessage->build(
-			$localMessage->getBodyPlain(),
-			$localMessage->getBodyHtml(),
-			$localMessage->isPgpMime() === true,
-			$attachmentParts,
-		);
+		$mimePart = $this->buildMimePart($account, $localMessage, $localMessage->isPgpMime() === true);
 
 		// TODO: add smimeEncrypt check if implemented
 		try {
@@ -228,15 +211,10 @@ class MailTransmission implements IMailTransmission {
 		$to = $this->transmissionService->getAddressList($message, Recipient::TYPE_TO);
 		$cc = $this->transmissionService->getAddressList($message, Recipient::TYPE_CC);
 		$bcc = $this->transmissionService->getAddressList($message, Recipient::TYPE_BCC);
-		$attachments = $this->transmissionService->getAttachments($message);
 
 		$perfLogger = $this->performanceLogger->start('save local draft');
 
 		$from = Address::fromRaw($account->getName(), $account->getEMailAddress());
-
-		foreach ($attachments as $attachment) {
-			$this->transmissionService->handleAttachment($account, $attachment);
-		}
 
 		$draftHeaders = $this->buildMimeHeaders($from, $to, $cc, $bcc, $message->getSubject());
 		if ($message->isAiGenerated()) {
@@ -244,11 +222,7 @@ class MailTransmission implements IMailTransmission {
 		}
 
 		$mail = new Horde_Mime_Mail();
-		if ($message->isHtml()) {
-			$mail->setHtmlBody($message->getBodyHtml());
-		} else {
-			$mail->setBody($message->getBodyPlain());
-		}
+		$mail->setBasePart($this->buildMimePart($account, $message, false));
 		$perfLogger->step('build local draft message');
 
 		// Use a null transport to trigger MIME body encoding without sending
@@ -280,6 +254,26 @@ class MailTransmission implements IMailTransmission {
 		$perfLogger->step('emit post local draft save event');
 
 		$perfLogger->end();
+	}
+
+	private function buildMimePart(Account $account, LocalMessage $message, bool $isPgpMime): Horde_Mime_Part {
+		$attachmentParts = [];
+		foreach ($this->transmissionService->getAttachments($message) as $attachment) {
+			$part = $this->transmissionService->handleAttachment($account, $attachment);
+			if ($part !== null) {
+				$attachmentParts[] = $part;
+			}
+		}
+
+		$mimeMessage = new MimeMessage(
+			new DataUriParser()
+		);
+		return $mimeMessage->build(
+			$message->getBodyPlain(),
+			$message->getBodyHtml(),
+			$isPgpMime,
+			$attachmentParts,
+		);
 	}
 
 	private function findOrCreateDraftsMailbox(Account $account): Mailbox {
