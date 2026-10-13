@@ -28,8 +28,7 @@
 				:key="attachment.id"
 				:attachment="attachment"
 				:uploading="uploading"
-				@onDeleteAttachment="onDelete(attachment)" />
-				@on-delete-attachment="onDelete(attachment)"
+				@onDeleteAttachment="onDelete(attachment)"
 				@preview="onPreviewAttachment" />
 		</ul>
 
@@ -264,8 +263,6 @@ export default {
 			this.uploads = {}
 
 			const toUpload = sumBy(prop('size'), Object.values(files))
-			Vue.set(this, 'uploads', {})
-			const toUpload = sumBy(prop('size'), Object.values(e.target.files))
 			const newTotal = toUpload + this.totalSizeOfUpload()
 			logger.debug('checking upload size limit', {
 				existingUploads: this.totalSizeOfUpload(),

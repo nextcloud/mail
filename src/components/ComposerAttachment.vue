@@ -66,7 +66,7 @@ export default {
 		},
 	},
 
-	emits: ['onDeleteAttachment'],
+	emits: ['onDeleteAttachment', 'preview'],
 
 	data() {
 		return {
