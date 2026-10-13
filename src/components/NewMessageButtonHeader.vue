@@ -42,6 +42,7 @@ import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconRefresh from 'vue-material-design-icons/Refresh.vue'
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
+import eventBus from '../util/eventBus.js'
 
 export default {
 	name: 'NewMessageButtonHeader',
@@ -78,8 +79,21 @@ export default {
 		},
 	},
 
+	mounted() {
+		if (this.showRefresh) {
+			eventBus.on('mail:refresh', this.refreshMailbox)
+		}
+	},
+
+	beforeUnmount() {
+		eventBus.off('mail:refresh', this.refreshMailbox)
+	},
+
 	methods: {
 		async refreshMailbox() {
+			if (!this.currentMailbox) {
+				return
+			}
 			if (this.refreshing === true) {
 				logger.debug('already sync\'ing mailbox.. aborting')
 				return
