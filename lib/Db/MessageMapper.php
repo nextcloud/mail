@@ -831,13 +831,14 @@ class MessageMapper extends QBMapper {
 		);
 
 		if (!empty($query->getTags())) {
+			$tagIds = array_map('intval', $query->getTags());
 			$tagged = $this->db->getQueryBuilder();
 			$tagged->select('tags.imap_message_id')
 				->from('mail_message_tags', 'tags')
 				->where(
 					// Redundant for the result, but without it SQLite reads the tags of all users
 					$tagged->expr()->eq('tags.imap_message_id', 'm.message_id', IQueryBuilder::PARAM_STR),
-					$tagged->expr()->in('tags.tag_id', $qb->createNamedParameter($query->getTags(), IQueryBuilder::PARAM_STR_ARRAY)),
+					$tagged->expr()->in('tags.tag_id', $qb->createNamedParameter($tagIds, IQueryBuilder::PARAM_INT_ARRAY)),
 				);
 			$select->andWhere(
 				$qb->expr()->in('m.message_id', $qb->createFunction($tagged->getSQL()), IQueryBuilder::PARAM_STR_ARRAY)
