@@ -88,8 +88,6 @@ class ImapTransmissionConnector implements ITransmissionConnector {
 				} catch (\Throwable $e) {
 					$this->logger->error('Retry copy-to-sent failed: ' . $e->getMessage(), ['exception' => $e]);
 					$message->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
-				} finally {
-					$client->logout();
 				}
 			} else {
 				$message->setStatus(LocalMessage::STATUS_ERROR);
@@ -244,8 +242,6 @@ class ImapTransmissionConnector implements ITransmissionConnector {
 			} catch (\Throwable $e) {
 				$this->logger->error('Copy to sent mailbox failed: ' . $e->getMessage(), ['exception' => $e]);
 				$message->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
-			} finally {
-				$client->logout();
 			}
 		}
 	}
@@ -311,8 +307,6 @@ class ImapTransmissionConnector implements ITransmissionConnector {
 			$perfLogger->step('save message on IMAP');
 		} catch (Horde_Exception $e) {
 			throw new ServiceException('Could not save message to IMAP mailbox', 0, $e);
-		} finally {
-			$client->logout();
 		}
 
 		$perfLogger->end();
@@ -330,14 +324,10 @@ class ImapTransmissionConnector implements ITransmissionConnector {
 		]);
 
 		$imapClient = $this->protocolFactory->imapClient($account);
-		try {
-			/** @var Horde_Imap_Client_Data_Fetch[] $fetchResults */
-			$fetchResults = iterator_to_array($imapClient->fetch($mailbox->getName(), $query, [
-				'ids' => new Horde_Imap_Client_Ids([$message->getUid()]),
-			]), false);
-		} finally {
-			$imapClient->logout();
-		}
+		/** @var Horde_Imap_Client_Data_Fetch[] $fetchResults */
+		$fetchResults = iterator_to_array($imapClient->fetch($mailbox->getName(), $query, [
+			'ids' => new Horde_Imap_Client_Ids([$message->getUid()]),
+		]), false);
 
 		if (count($fetchResults) < 1) {
 			throw new ServiceException("Message \"{$message->getId()}\" not found.");

@@ -9,6 +9,8 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\IMAP;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Horde_Imap_Client_Exception;
+use Horde_Imap_Client_Fetch_Results;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
@@ -18,6 +20,7 @@ use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Exception\AttachmentNotFoundException;
@@ -490,5 +493,84 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->assertNotNull($capturedRaw);
 		$this->assertStringContainsString('test.txt', $capturedRaw);
 		$this->assertStringContainsString('Attachment contents', $capturedRaw);
+	}
+
+	private function imapAccount(): Account {
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('bob');
+		$mailAccount->setName('Bob');
+		$mailAccount->setEmail('bob@example.com');
+		return new Account($mailAccount);
+	}
+
+	private function sharedImapClient(): Horde_Imap_Client_Socket&MockObject {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client->expects(self::never())
+			->method('logout');
+		$this->protocolFactory->method('imapClient')
+			->willReturn($client);
+		return $client;
+	}
+
+	public function testRetryCopyToSentKeepsSharedClient(): void {
+		$this->sharedImapClient();
+		$message = new LocalMessage();
+		$message->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
+		$message->setRaw('raw message');
+		$this->messageMapper->expects(self::once())
+			->method('save');
+
+		$this->connector->sendMessage($this->imapAccount(), $message, new Mailbox());
+
+		self::assertSame(LocalMessage::STATUS_PROCESSED, $message->getStatus());
+	}
+
+	public function testRetryCopyToSentFailureKeepsSharedClient(): void {
+		$this->sharedImapClient();
+		$message = new LocalMessage();
+		$message->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
+		$message->setRaw('raw message');
+		$this->messageMapper->method('save')
+			->willThrowException(new Horde_Imap_Client_Exception('Connection lost'));
+
+		$this->connector->sendMessage($this->imapAccount(), $message, new Mailbox());
+
+		self::assertSame(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL, $message->getStatus());
+	}
+
+	public function testSaveMessageFailureKeepsSharedClient(): void {
+		$this->sharedImapClient();
+		$mailbox = new Mailbox();
+		$mailbox->setName('Drafts');
+		$message = new LocalMessage();
+		$message->setSubject('Hello');
+		$message->setBodyPlain('Body');
+		$message->setHtml(false);
+		$this->transmissionService->method('getAddressList')
+			->willReturn(new AddressList([]));
+		$this->transmissionService->method('getAttachments')
+			->willReturn([]);
+		$this->performanceLogger->method('start')
+			->willReturn($this->createMock(PerformanceLoggerTask::class));
+		$this->messageMapper->method('save')
+			->willThrowException(new Horde_Imap_Client_Exception('APPEND failed'));
+		$this->expectException(ServiceException::class);
+
+		$this->connector->saveMessage($this->imapAccount(), $mailbox, $message);
+	}
+
+	public function testSendMdnKeepsSharedClient(): void {
+		$client = $this->sharedImapClient();
+		$client->method('fetch')
+			->willReturn(new Horde_Imap_Client_Fetch_Results());
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
+		$message = new Message();
+		$message->setId(1);
+		$message->setUid(42);
+		$this->expectException(ServiceException::class);
+		$this->expectExceptionMessage('Message "1" not found.');
+
+		$this->connector->sendMdn($this->imapAccount(), $mailbox, $message);
 	}
 }
