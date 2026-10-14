@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\BackgroundJob\ContextChat;
 
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\ContextChat\ContextChatSettingsService;
 use OCA\Mail\Service\ContextChat\TaskService;
@@ -34,6 +35,7 @@ class ScheduleJob extends TimedJob {
 		private IJobList $jobList,
 		private ContextChatSettingsService $contextChatSettingsService,
 		private IContentManager $contentManager,
+		private ProtocolFactory $protocolFactory,
 	) {
 		parent::__construct($time);
 
@@ -67,6 +69,8 @@ class ScheduleJob extends TimedJob {
 		} catch (ServiceException $e) {
 			$this->logger->debug("Could not find mailboxes for account <{$accountId}>");
 			return;
+		} finally {
+			$this->protocolFactory->releaseClients($account);
 		}
 
 		foreach ($mailboxes as $mailbox) {

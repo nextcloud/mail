@@ -18,6 +18,7 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\ThreadMapper;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\MailManager;
@@ -26,6 +27,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class FollowUpClassifierJobTest extends TestCase {
+	private ProtocolFactory&MockObject $protocolFactory;
 
 	private FollowUpClassifierJob $job;
 
@@ -57,6 +59,7 @@ class FollowUpClassifierJobTest extends TestCase {
 		$this->aiService = $this->createMock(AiIntegrationsService::class);
 		$this->threadMapper = $this->createMock(ThreadMapper::class);
 
+		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
 		$this->job = new FollowUpClassifierJob(
 			$this->time,
 			$this->logger,
@@ -64,6 +67,7 @@ class FollowUpClassifierJobTest extends TestCase {
 			$this->mailManager,
 			$this->aiService,
 			$this->threadMapper,
+			$this->protocolFactory,
 		);
 	}
 
@@ -117,6 +121,9 @@ class FollowUpClassifierJobTest extends TestCase {
 		$this->mailManager->expects(self::once())
 			->method('tagMessages')
 			->with($account, $mailbox, $tag, true, $message);
+		$this->protocolFactory->expects(self::once())
+			->method('releaseClients')
+			->with($account);
 
 		$this->job->run($argument);
 	}
@@ -151,6 +158,8 @@ class FollowUpClassifierJobTest extends TestCase {
 			->method('createTag');
 		$this->mailManager->expects(self::never())
 			->method('tagMessages');
+		$this->protocolFactory->expects(self::never())
+			->method('releaseClients');
 
 		$this->job->run($argument);
 	}
@@ -454,6 +463,9 @@ class FollowUpClassifierJobTest extends TestCase {
 			->with('Failed to classify message for follow-up: AI task processing failed', ['exception' => $exception]);
 		$this->mailManager->expects(self::never())->method('createTag');
 		$this->mailManager->expects(self::never())->method('tagMessages');
+		$this->protocolFactory->expects(self::once())
+			->method('releaseClients')
+			->with($account);
 
 		$this->job->run($argument);
 	}
