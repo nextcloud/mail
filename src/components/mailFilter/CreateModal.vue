@@ -127,7 +127,7 @@ export default {
 		},
 
 		createFilter() {
-			const headers = structuredClone(this.headers).filter((header) => header.enable)
+			const headers = this.headers.filter((header) => header.enable)
 			this.$emit('create-filter', headers)
 		},
 

@@ -37,6 +37,10 @@
 					@click="createTest">
 					{{ t('mail', 'Add condition') }}
 				</NcButton>
+
+				<NcNoteCard v-if="!hasTests" class="filter-note" type="error">
+					<p>{{ t('mail', 'Add at least one condition.') }}</p>
+				</NcNoteCard>
 			</div>
 
 			<div class="filter-actions">
@@ -58,7 +62,7 @@
 					{{ t('mail', 'Add action') }}
 				</NcButton>
 
-				<NcNoteCard v-if="hasRedirectAction" class="redirect-note" type="warning">
+				<NcNoteCard v-if="hasRedirectAction" class="filter-note" type="warning">
 					<p>{{ t('mail', 'Redirected messages might be rejected by the receiving server, and cannot be read by the recipient if encrypted.') }}</p>
 				</NcNoteCard>
 			</div>
@@ -77,7 +81,8 @@
 
 			<NcButton
 				variant="primary"
-				type="submit">
+				type="submit"
+				:disabled="!hasTests">
 				<template #icon>
 					<NcLoadingIcon v-if="loading" :size="20" />
 					<IconCheck v-else :size="20" />
@@ -96,6 +101,15 @@ import Operator from './Operator.vue'
 import Test from './Test.vue'
 import { MailFilterActions, MailFilterConditionField, MailFilterConditionOperator } from '../../models/mailFilter.ts'
 import { randomId } from '../../util/randomId.js'
+
+// TODO: replace with cloneDeep from es-toolkit once it is a direct dependency
+function cloneFilter(filter) {
+	return {
+		...filter,
+		tests: filter.tests.map((test) => ({ ...test, values: [...test.values] })),
+		actions: filter.actions.map((action) => ({ ...action })),
+	}
+}
 
 export default {
 	name: 'UpdateModal',
@@ -131,12 +145,16 @@ export default {
 
 	data() {
 		return {
-			clone: structuredClone(this.filter),
+			clone: cloneFilter(this.filter),
 			boundaryElement: null,
 		}
 	},
 
 	computed: {
+		hasTests() {
+			return this.clone.tests.length > 0
+		},
+
 		hasRedirectAction() {
 			return this.clone.actions.some((action) => action.type === MailFilterActions.Redirect)
 		},
@@ -184,7 +202,10 @@ export default {
 		},
 
 		updateFilter() {
-			this.$emit('update-filter', structuredClone(this.clone))
+			if (!this.hasTests) {
+				return
+			}
+			this.$emit('update-filter', cloneFilter(this.clone))
 		},
 
 		closeModal() {
@@ -227,7 +248,7 @@ export default {
 	width: calc(100% - (30px + var(--default-grid-baseline)));
 }
 
-.redirect-note {
+.filter-note {
 	box-sizing: border-box;
 }
 </style>
