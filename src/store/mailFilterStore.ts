@@ -35,21 +35,7 @@ export default defineStore('mailFilter', {
 			})
 		},
 		async store(accountId) {
-			let filters = structuredClone(this.filters)
-			filters = filters.map((filter) => {
-				delete filter.id
-				filter.tests.map((test) => {
-					delete test.id
-					return test
-				})
-				filter.actions.map((action) => {
-					delete action.id
-					return action
-				})
-				return filter
-			})
-
-			await MailFilterService.updateFilters(accountId, filters)
+			await MailFilterService.updateFilters(accountId, this.filters)
 		},
 		async update(filter: MailFilter) {
 			await this.$patch((state) => {
