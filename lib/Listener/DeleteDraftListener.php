@@ -9,8 +9,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Listener;
 
-use Horde_Imap_Client;
-use Horde_Imap_Client_Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
@@ -19,7 +17,6 @@ use OCA\Mail\Events\DraftMessageCreatedEvent;
 use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\OutboxMessageCreatedEvent;
-use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Protocol\ProtocolFactory;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\Event;
@@ -37,7 +34,6 @@ class DeleteDraftListener implements IEventListener {
 	public function __construct(
 		private ProtocolFactory $protocolFactory,
 		private MailboxMapper $mailboxMapper,
-		private MessageMapper $messageMapper,
 		private LoggerInterface $logger,
 		IEventDispatcher $eventDispatcher,
 	) {
@@ -56,36 +52,15 @@ class DeleteDraftListener implements IEventListener {
 	 * @param Message $draft
 	 */
 	private function deleteDraft(Account $account, Message $draft): void {
-		$client = $this->protocolFactory->imapClient($account);
 		try {
 			$draftsMailbox = $this->getDraftsMailbox($account);
 		} catch (DoesNotExistException $e) {
 			$this->logger->warning("Account has no draft mailbox set, can't delete the draft");
 			return;
-		} finally {
-			$client->logout();
 		}
 
-		try {
-			$this->messageMapper->addFlag(
-				$client,
-				$draftsMailbox,
-				[$draft->getUid()], // TODO: the UID could be from another mailbox
-				Horde_Imap_Client::FLAG_DELETED
-			);
-		} catch (Horde_Imap_Client_Exception $e) {
-			$this->logger->error('Could not flag draft as deleted', [
-				'exception' => $e,
-			]);
-		}
-
-		try {
-			$client->expunge($draftsMailbox->getName());
-		} catch (Horde_Imap_Client_Exception $e) {
-			$this->logger->error('Could not expunge drafts folder', [
-				'exception' => $e,
-			]);
-		}
+		// TODO: the UID could be from another mailbox
+		$this->protocolFactory->messageConnector($account)->deleteMessages($account, $draftsMailbox, $draft);
 
 		$this->eventDispatcher->dispatchTyped(
 			new MessageDeletedEvent($account, $draftsMailbox, $draft->getUid())
