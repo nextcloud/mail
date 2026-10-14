@@ -1007,16 +1007,16 @@ class MessageMapper extends QBMapper {
 			->leftJoin('m', $this->getTableName(), 'm2', $selfJoin);
 
 		if (!empty($query->getFrom())) {
-			$select->innerJoin('m', 'mail_recipients', 'r0', 'm.id = r0.message_id');
+			$select->innerJoin('m', 'mail_recipients', 'r0', $qb->expr()->eq('m.id', 'r0.message_id', IQueryBuilder::PARAM_INT));
 		}
 		if (!empty($query->getTo())) {
-			$select->innerJoin('m', 'mail_recipients', 'r1', 'm.id = r1.message_id');
+			$select->innerJoin('m', 'mail_recipients', 'r1', $qb->expr()->eq('m.id', 'r1.message_id', IQueryBuilder::PARAM_INT));
 		}
 		if (!empty($query->getCc())) {
-			$select->innerJoin('m', 'mail_recipients', 'r2', 'm.id = r2.message_id');
+			$select->innerJoin('m', 'mail_recipients', 'r2', $qb->expr()->eq('m.id', 'r2.message_id', IQueryBuilder::PARAM_INT));
 		}
 		if (!empty($query->getBcc())) {
-			$select->innerJoin('m', 'mail_recipients', 'r3', 'm.id = r3.message_id');
+			$select->innerJoin('m', 'mail_recipients', 'r3', $qb->expr()->eq('m.id', 'r3.message_id', IQueryBuilder::PARAM_INT));
 		}
 
 		$selectMailboxIds = $qbMailboxes->select('mb.id')
