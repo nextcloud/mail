@@ -6,7 +6,7 @@
 	<div class="action">
 		<div class="action__type">
 			<NcSelect
-				class="action__type__column action__type__column__select"
+				class="action__type__column"
 				:modelValue="currentAction"
 				:required="true"
 				:labelOutside="true"
@@ -143,7 +143,7 @@ export default {
 		&__column {
 			flex: 0 1 auto;
 			// Match NcSelect's own `.nc-select.v-select.select` so the reset still wins
-			&__select.nc-select {
+			&.nc-select {
 				margin: 0
 			}
 		}
