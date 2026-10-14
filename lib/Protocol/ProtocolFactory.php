@@ -51,6 +51,7 @@ class ProtocolFactory {
 		private ContainerInterface $container,
 		private IMAPClientFactory $imapClientFactory,
 		private JmapClientFactory $jmapClientFactory,
+		private ConnectionPool $connectionPool,
 	) {
 	}
 
@@ -63,11 +64,17 @@ class ProtocolFactory {
 	}
 
 	/**
+	 * Get the account's shared JMAP client, which may already be connected
+	 *
 	 * @throws ServiceException
 	 */
 	public function jmapClient(Account $account): JmapClient {
 		$this->verifyProtocol($account, MailAccount::PROTOCOL_JMAP);
-		return $this->jmapClientFactory->getClient($account);
+		return $this->connectionPool->jmap($account);
+	}
+
+	public function releaseClients(Account $account): void {
+		$this->connectionPool->release($account);
 	}
 
 	/**
@@ -84,10 +91,7 @@ class ProtocolFactory {
 		}
 
 		if ($protocol === MailAccount::PROTOCOL_JMAP) {
-			$client = $this->jmapClient($account);
-			if (!$client->sessionStatus()) {
-				$client->connect();
-			}
+			$this->jmapClientFactory->getClient($account)->connect();
 			return;
 		}
 
