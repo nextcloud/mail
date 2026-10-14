@@ -24,7 +24,7 @@
 
 <script>
 import { Ckeditor } from '@ckeditor/ckeditor5-vue'
-import { getLanguage } from '@nextcloud/l10n'
+import { getLanguage, t } from '@nextcloud/l10n'
 import { emojiAddRecent, emojiSearch } from '@nextcloud/vue/functions/emoji'
 import {
 	Alignment,
@@ -129,6 +129,76 @@ export default {
 	emits: ['mention', 'submit', 'save', 'ready', 'update:modelValue'],
 
 	data() {
+		const colorConfig = {
+			colors: [
+				{
+					color: '#000000',
+					label: t('mail', 'Black'),
+				},
+				{
+					color: '#4d4d4d',
+					label: t('mail', 'Dim grey'),
+				},
+				{
+					color: '#999999',
+					label: t('mail', 'Grey'),
+				},
+				{
+					color: '#e6e6e6',
+					label: t('mail', 'Light grey'),
+				},
+				{
+					color: '#ffffff',
+					label: t('mail', 'White'),
+					hasBorder: true,
+				},
+				{
+					color: '#e64c4c',
+					label: t('mail', 'Red'),
+				},
+				{
+					color: '#e6994c',
+					label: t('mail', 'Orange'),
+				},
+				{
+					color: '#e6e64c',
+					label: t('mail', 'Yellow'),
+				},
+				{
+					color: '#99e64c',
+					label: t('mail', 'Light green'),
+				},
+				{
+					color: '#4ce64c',
+					label: t('mail', 'Green'),
+				},
+				{
+					color: '#4ce699',
+					label: t('mail', 'Aquamarine'),
+				},
+				{
+					color: '#4ce6e6',
+					label: t('mail', 'Turquoise'),
+				},
+				{
+					color: '#4c99e6',
+					label: t('mail', 'Light blue'),
+				},
+				{
+					color: '#4c4ce6',
+					label: t('mail', 'Blue'),
+				},
+				{
+					color: '#994ce6',
+					label: t('mail', 'Purple'),
+				},
+			],
+
+			colorPicker: {
+				format: 'hex',
+			},
+		}
+
 		const plugins = [
 			Essentials,
 			Paragraph,
@@ -289,6 +359,9 @@ export default {
 					supportAllValues: true,
 				},
 
+				fontColor: colorConfig,
+
+				fontBackgroundColor: colorConfig,
 			},
 		}
 	},
