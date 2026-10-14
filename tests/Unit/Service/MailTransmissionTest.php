@@ -12,6 +12,7 @@ namespace OCA\Mail\Tests\Unit\Service;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Socket;
 use Horde_Mail_Transport;
+use Horde_Mime_Part;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
@@ -426,6 +427,48 @@ class MailTransmissionTest extends TestCase {
 				self::anything(),
 				self::anything(),
 				self::callback(static fn (string $raw) => str_contains($raw, LocalMessage::HEADER_AI_GENERATED . ': 1')),
+				self::anything(),
+			);
+
+		$this->transmission->saveLocalDraft(new Account($mailAccount), $localMessage);
+	}
+
+	public function testSaveLocalDraftWithAttachment(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(10);
+		$mailAccount->setUserId('gunther');
+		$mailAccount->setName('Gunther');
+		$mailAccount->setEmail('gunther@stardewvalley-museum.com');
+		$mailAccount->setDraftsMailboxId(123);
+		$localMessage = new LocalMessage();
+		$localMessage->setType(LocalMessage::TYPE_DRAFT);
+		$localMessage->setAccountId($mailAccount->getId());
+		$localMessage->setSubject('subject');
+		$localMessage->setBodyHtml('message');
+		$localMessage->setHtml(true);
+		$localMessage->setRecipients([]);
+		$attachment = ['id' => 1, 'type' => 'local'];
+		$part = new Horde_Mime_Part();
+		$part->setType('text/plain');
+		$part->setDisposition('attachment');
+		$part->setName('artifact.txt');
+		$part->setContents('Ancient Doll');
+
+		$this->transmissionService->expects(self::once())
+			->method('getAttachments')
+			->willReturn([$attachment]);
+		$this->transmissionService->expects(self::once())
+			->method('handleAttachment')
+			->with(self::anything(), $attachment)
+			->willReturn($part);
+		$this->messageMapper->expects(self::once())
+			->method('save')
+			->with(
+				self::anything(),
+				self::anything(),
+				self::callback(static fn (string $raw) => str_contains($raw, 'multipart/mixed')
+					&& str_contains($raw, 'filename=artifact.txt')
+					&& str_contains($raw, 'Ancient Doll')),
 				self::anything(),
 			);
 
