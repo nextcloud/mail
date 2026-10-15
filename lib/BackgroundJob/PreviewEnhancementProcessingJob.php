@@ -35,8 +35,9 @@ class PreviewEnhancementProcessingJob extends TimedJob {
 		$this->userManager = $userManager;
 		$this->jobList = $jobList;
 
-		$this->setInterval(3600);
-		$this->setTimeSensitivity(self::TIME_SENSITIVE);
+		// Background pre-warm only; previews are computed on demand on mailbox open, so run rarely and defer under load
+		$this->setInterval(24 * 3600);
+		$this->setTimeSensitivity(self::TIME_INSENSITIVE);
 	}
 
 	/**
