@@ -28,7 +28,8 @@
 				:key="attachment.id"
 				:attachment="attachment"
 				:uploading="uploading"
-				@onDeleteAttachment="onDelete(attachment)" />
+				@onDeleteAttachment="onDelete(attachment)"
+				@preview="onPreviewAttachment" />
 		</ul>
 
 		<input
@@ -54,7 +55,7 @@ import ChevronUp from 'vue-material-design-icons/ChevronUp.vue'
 import ComposerAttachment from './ComposerAttachment.vue'
 import logger from '../logger.js'
 import { uploadLocalAttachment } from '../service/AttachmentService.js'
-import { getFileData } from '../service/FileService.js'
+import { getFileData, getFileDavUrl } from '../service/FileService.js'
 import { shareFile } from '../service/FileSharingService.js'
 
 const mimes = [
@@ -129,6 +130,28 @@ export default {
 				total += this.uploads[id].total
 			}
 			return total
+		},
+
+		previewableFilesInfos() {
+			return this.attachments
+				.filter((attachment) => {
+					const mime = attachment?.mime || attachment?.fileType
+					return mime
+						&& (
+							mime.startsWith('image/')
+							|| mime.startsWith('video/')
+							|| mime.startsWith('audio/')
+							|| mime === 'application/pdf'
+						)
+				})
+				.map((attachment) => ({
+					filename: attachment?.previewBlobUrl || attachment?.davSource,
+					source: attachment?.previewBlobUrl || attachment?.davSource,
+					basename: attachment?.fileName,
+					mime: attachment?.mime || attachment?.fileType,
+					etag: attachment?.etag || 'fixme',
+					hasPreview: attachment?.hasPreview || false,
+				}))
 		},
 	},
 
@@ -270,6 +293,7 @@ export default {
 					fileName: file.name,
 					fileType: file.type,
 					imageBlobURL: this.generatePreview(file),
+					previewBlobUrl: this.generatePreviewBlobUrl(file),
 					displayName: trimStart('/', file.name),
 					progress: null,
 					percent: 0,
@@ -351,6 +375,7 @@ export default {
 						size: filesFromCloud[i].size,
 
 					}
+
 					const _toAttachmentData = {
 						finished: true,
 						imageBlobURL: this.generatePreview(_cloudFile),
@@ -360,6 +385,10 @@ export default {
 						// don't know, may be it will be conflict if cloud & local has equal IDs?
 						id: filesFromCloud[i].fileid,
 						uploaded: 0,
+						mime: filesFromCloud[i].getcontenttype,
+						etag: filesFromCloud[i].getetag,
+						davSource: getFileDavUrl(name),
+
 					}
 
 					this.attachments.push(Object.assign(_toAttachmentData, _cloudFile))
@@ -418,6 +447,10 @@ export default {
 			// If the attachment is still uploading, abort the upload
 			if (!attachment.finished && attachment.controller) {
 				attachment.controller.abort()
+			}
+
+			if (attachment.previewBlobUrl) {
+				URL.revokeObjectURL(attachment.previewBlobUrl)
 			}
 
 			const val = {
@@ -493,9 +526,54 @@ export default {
 			}
 		},
 
+		generatePreviewBlobUrl(file) {
+			return this.isPreviewable(file)
+				? URL.createObjectURL(file)
+				: null
+		},
+
+		isPreviewable(file) {
+			return file.type.startsWith('image/')
+				|| file.type.startsWith('video/')
+				|| file.type.startsWith('audio/')
+				|| file.type === 'application/pdf'
+		},
+
 		isImage(file) {
 			return file.type && mimes.indexOf(file.type) !== -1
 		},
+
+		onPreviewAttachment(attachment) {
+			if (!attachment.finished) {
+				return
+			}
+
+			const isCloudPreviewable = attachment?.type === 'cloud' && attachment?.hasPreview && attachment?.davSource
+			const isLocalPreviewable = attachment?.type !== 'cloud' && attachment?.previewBlobUrl
+
+			if (!isCloudPreviewable && !isLocalPreviewable) {
+				return
+			}
+
+			if (!OCA.Viewer) {
+				return
+			}
+
+			const fileInfo = {
+				filename: attachment?.previewBlobUrl || attachment?.davSource,
+				source: attachment?.previewBlobUrl || attachment?.davSource,
+				basename: attachment?.fileName,
+				mime: attachment?.mime || attachment?.fileType,
+				etag: attachment?.etag || 'fixme',
+				hasPreview: attachment?.hasPreview || false,
+			}
+
+			OCA.Viewer.open({
+				fileInfo,
+				list: this.previewableFilesInfos,
+			})
+		},
+
 	},
 }
 </script>
