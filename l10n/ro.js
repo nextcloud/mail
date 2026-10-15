@@ -483,7 +483,6 @@ OC.L10N.register(
     "Discard changes" : "Anulează modificările",
     "Discard unsaved changes" : "Anulează modificările nesalvate",
     "Keep editing message" : "Continuă editarea mesajului",
-    "Attachments were not copied. Please add them manually." : "Atașamentele nu au fost copiate. Adăugați-le manual.",
     "Could not create snooze mailbox" : "Nu s-a putut crea un folder pentru mesaje amânate",
     "Message sent" : "Mesajul a fost transmis",
     "Could not send message" : "Mesajul nu s-a putut transmite",

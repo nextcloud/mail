@@ -268,7 +268,6 @@
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["הודעה חדשה \nמאת {from}","2 הודעות חדשות \nמאת {from}","%n הודעות חדשות \nמאת {from}"],
     "Nextcloud Mail" : "דוא״ל Nextcloud",
-    "Attachments were not copied. Please add them manually." : "הקבצים המצורפים לא הועתקו. נא להוסיף אותם ידנית.",
     "Message sent" : "הודעה נשלחה",
     "Could not load {tag}{name}{endtag}" : "לא ניתן לטעון את {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "אירעה שגיאה בטעינה של {tag}{name}{endtag}",

@@ -881,7 +881,6 @@ OC.L10N.register(
     "Discard changes" : "Zahodit změny",
     "Discard unsaved changes" : "Zahodit neuložené změny",
     "Keep editing message" : "Pokračovat v upravování zprávy",
-    "Attachments were not copied. Please add them manually." : "Přílohy nebyly zkopírovány. Přidejte je ručně.",
     "Could not create snooze mailbox" : "Nepodařilo se vytvořit schránku pro odložené",
     "Sorry, the message could not be loaded. The draft may no longer exist. Please refresh the page and try again." : "Je nám líto, ale zprávu nebylo možné načíst. Její koncept už neexistuje. Načtěte stránku znovu a zkuste to znovu prosím.",
     "Sending message…" : "Odesílání zprávy …",

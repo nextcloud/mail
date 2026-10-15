@@ -703,7 +703,6 @@ OC.L10N.register(
     "Discard changes" : "تجاهل التغييرات",
     "Discard unsaved changes" : "تجاهل التغييرات غيرالمحفوظة",
     "Keep editing message" : "استمر في تحرير الرسالة",
-    "Attachments were not copied. Please add them manually." : "المُرفَقَات لم يتم َنسخُها. يُرجى إضافتُها يدوياً.",
     "Could not create snooze mailbox" : "تعذّر إنشاء صندوق للبريد المُستَغْفَى",
     "Message sent" : "تمّ الإرسال",
     "Could not send message" : "تعذّر إرسال الرسالة",
