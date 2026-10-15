@@ -845,7 +845,6 @@ OC.L10N.register(
     "Discard changes" : "Өөрчлөлтүүдийг хаях",
     "Discard unsaved changes" : "Хадгалаагүй өөрчлөлтийг хаях",
     "Keep editing message" : "Зурвас засахаа үргэлжлүүлэх",
-    "Attachments were not copied. Please add them manually." : "Хавсралтууд хуулагдсангүй. Гараар нэмнэ үү.",
     "Could not create snooze mailbox" : "Хойшлуулах шуудангийн хайрцаг үүсгэх боломжгүй",
     "Sorry, the message could not be loaded. The draft may no longer exist. Please refresh the page and try again." : "Уучлаарай, зурвасыг ачаалах боломжгүй байна. Ноорог байхгүй болсон байж магадгүй. Хуудсыг шинэчилж дахин оролдоно уу.",
     "Message sent" : "Мессеж илгээгдсэн",
