@@ -708,7 +708,6 @@ OC.L10N.register(
     "Discard changes" : "Descarta els canvis",
     "Discard unsaved changes" : "Descarta els canvis no desats",
     "Keep editing message" : "Continua editant el missatge",
-    "Attachments were not copied. Please add them manually." : "Els fitxers adjunts no s'han copiat. Si us plau, afegiu-los manualment.",
     "Could not create snooze mailbox" : "No s'ha pogut crear la bústia de posposats",
     "Message sent" : "Missatge enviat",
     "Could not send message" : "No s'ha pogut enviar el missatge",
