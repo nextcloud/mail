@@ -237,6 +237,7 @@ export default {
 			this.sync(true)
 				.then(() => {
 					this.loadingCacheInitialization = false
+					this.syncedMailboxes.add(this.mailbox.databaseId + (this.searchQuery ?? ''))
 
 					return this.loadEnvelopes()
 				})
