@@ -194,7 +194,7 @@
 			</div>
 		</template>
 
-		<Thread v-if="showThread" @delete="deleteMessage" />
+		<Thread v-if="showThread" @delete="deleteMessage" @archive="archiveMessage" />
 		<NoMessageSelected v-else-if="hasEnvelopes" />
 	</NcAppContent>
 </template>
@@ -509,6 +509,10 @@ export default {
 
 		deleteMessage(id) {
 			this.bus.emit('delete', id)
+		},
+
+		archiveMessage(id) {
+			this.bus.emit('archive', id)
 		},
 
 		onScroll(event) {
