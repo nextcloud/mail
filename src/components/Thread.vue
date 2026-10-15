@@ -30,6 +30,7 @@
 				:fullHeight="thread.length === 1"
 				:threadIndex="index"
 				@delete="$emit('delete', env.databaseId)"
+				@archive="$emit('archive', env.databaseId)"
 				@move="onMove(env.databaseId)"
 				@printShortcut="printThread"
 				@toggleExpand="toggleExpand(env.databaseId)"
@@ -89,7 +90,7 @@ export default {
 		ThreadEnvelope,
 	},
 
-	emits: ['delete'],
+	emits: ['delete', 'archive'],
 
 	data() {
 		return {
