@@ -584,7 +584,8 @@ export default {
 @media only screen and (max-width: #{variables.$breakpoint-mobile}) {
     #mail-thread-header {
         position: sticky !important;
-        top: 29px !important;
+        // NcAppContent's back button takes this much space above the details
+        top: var(--default-clickable-area) !important;
     }
 }
 
@@ -614,7 +615,7 @@ export default {
 
 @media only screen and (max-width: #{variables.$breakpoint-mobile}) {
 	#mail-thread-header-fields {
-		margin-top: -32px;
+		margin-top: calc(-1 * var(--default-clickable-area));
 	}
 }
 
