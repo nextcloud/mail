@@ -590,6 +590,10 @@ export default {
 			})
 		},
 
+		onArchive(id) {
+			this.onDelete(id)
+		},
+
 		onScroll() {
 			if (this.paginate !== 'scroll') {
 				logger.debug('ignoring scroll pagination')
