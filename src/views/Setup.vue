@@ -39,6 +39,7 @@
 <script>
 import { loadState } from '@nextcloud/initial-state'
 import { generateFilePath } from '@nextcloud/router'
+import { useIsDarkTheme } from '@nextcloud/vue/composables/useIsDarkTheme'
 import { mapStores } from 'pinia'
 import NcAppContent from '@nextcloud/vue/components/NcAppContent'
 import NcContent from '@nextcloud/vue/components/NcContent'
@@ -57,6 +58,12 @@ export default {
 		NcContent,
 		NcEmptyContent,
 		Navigation,
+	},
+
+	setup() {
+		return {
+			isDarkTheme: useIsDarkTheme(),
+		}
 	},
 
 	data() {
