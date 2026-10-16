@@ -1,0 +1,24 @@
+Return-Path: <debug@imap.localhost>
+Delivered-To: user@imap.localhost
+Received: from 0531f16fe281
+	by 0531f16fe281 (Dovecot) with LMTP id doHuJnh71GVlNwEAcWVang
+	for <user@imap.localhost>; Fri, 3 Jul 2026 00:35:01 +0000
+Received: from anton.vpn (unknown [172.17.0.1])
+	by 0531f16fe281 (Postfix) with ESMTP id 636C81E56
+	for <user@imap.localhost>; Fri, 3 Jul 2026 00:35:01 +0000 (UTC)
+From: debug@imap.localhost
+To: user@imap.localhost
+Cc:
+Subject: Just a file
+Message-ID: <20240220101506.Horde.UpbNuMMPVearQMy_n71Hu7U@anton.vpn>
+User-Agent: Horde Application Framework 5
+Date: Fri, 3 Jul 2026 00:35:01 +0000
+Content-Type: application/zip; name=attach.zip
+MIME-Version: 1.0
+Content-Disposition: attachment; filename=attach.zip
+Content-Transfer-Encoding: base64
+
+UEsDBAoAAAAAAC8E41wWNZYxBgAAAAYAAAAJABwAaGVsbG8udHh0VVQJAAM650ZqTedGanV4CwAB
+BOgDAAAE6AMAAEhlbGxvClBLAQIeAwoAAAAAAC8E41wWNZYxBgAAAAYAAAAJABgAAAAAAAEAAAC0
+gQAAAABoZWxsby50eHRVVAUAAzrnRmp1eAsAAQToAwAABOgDAABQSwUGAAAAAAEAAQBPAAAASQAA
+AAAA
