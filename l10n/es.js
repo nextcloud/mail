@@ -548,6 +548,7 @@ OC.L10N.register(
     "Could not create task" : "No fue posible crear la tarea",
     "No calendars with task list support" : "No hay calendarios con soporte a lista de tareas",
     "Red" : "Rojo",
+    "Yellow" : "Amarillo",
     "Green" : "Verde",
     "Summarizing thread failed." : "Fallo al resumir el hilo.",
     "Could not load your message thread" : "No se ha podido cargar su hilo de mensajes",

@@ -651,6 +651,7 @@ OC.L10N.register(
     "Could not create task" : "Could not create task",
     "No calendars with task list support" : "No calendars with task list support",
     "Red" : "Red",
+    "Yellow" : "Yellow",
     "Green" : "Green",
     "Summarizing thread failed." : "Summarizing thread failed.",
     "Could not load your message thread" : "Could not load your message thread",

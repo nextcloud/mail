@@ -637,6 +637,7 @@ OC.L10N.register(
     "Could not create task" : "Δεν ήταν δυνατή η δημιουργία της εργασίας",
     "No calendars with task list support" : "Δεν υπάρχουν ημερολόγια με υποστήριξη λίστας εργασιών",
     "Red" : "Κόκκινο",
+    "Yellow" : "Κίτρινο",
     "Green" : "Πράσινο",
     "Summarizing thread failed." : "Η σύνοψη της συζήτησης απέτυχε.",
     "Could not load your message thread" : "Δεν ήταν δυνατή η φόρτωση της συζήτησης μηνυμάτων σας",
