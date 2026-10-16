@@ -9,6 +9,7 @@ import * as AccountService from '../../../service/AccountService.js'
 import * as MailboxService from '../../../service/MailboxService.js'
 import * as MessageService from '../../../service/MessageService.js'
 import * as NotificationService from '../../../service/NotificationService.js'
+import * as PreferenceService from '../../../service/PreferenceService.js'
 import { PAGE_SIZE, UNIFIED_INBOX_ID } from '../../../store/constants.js'
 import useMainStore from '../../../store/mainStore.js'
 import { normalizedEnvelopeListId } from '../../../util/normalization.js'
@@ -17,6 +18,7 @@ vi.mock('../../../service/AccountService.js')
 vi.mock('../../../service/MailboxService.js')
 vi.mock('../../../service/MessageService.js')
 vi.mock('../../../service/NotificationService.js')
+vi.mock('../../../service/PreferenceService.js')
 vi.mock('../../../util/normalization.js', () => ({
 	__esModule: true,
 	// Supply a default list id ('') to prevent annoying errors
@@ -63,6 +65,184 @@ describe('Vuex store actions', () => {
 
 		expect(result).toEqual(mailbox)
 		expect(MailboxService.create).toHaveBeenCalledWith(13, 'Important')
+	})
+
+	it('unfolds a folded account when a mailbox is created in it', async () => {
+		const account = {
+			id: 13,
+			personalNamespace: '',
+			mailboxes: [],
+			folded: true,
+		}
+		MailboxService.create.mockResolvedValue({ name: 'Important' })
+		PreferenceService.savePreference.mockResolvedValue(undefined)
+		store.addAccountMutation(account)
+
+		await store.createMailbox({ account: store.accountsUnmapped[13], name: 'Important' })
+
+		expect(store.accountsUnmapped[13].folded).toBe(false)
+		expect(PreferenceService.savePreference).toHaveBeenCalledWith(
+			'account-settings',
+			JSON.stringify([{ accountId: 13, collapsed: false, folded: false }]),
+		)
+	})
+
+	it('still creates the mailbox when saving the unfolded state fails', async () => {
+		const account = {
+			id: 13,
+			personalNamespace: '',
+			mailboxes: [],
+			folded: true,
+		}
+		const mailbox = { name: 'Important' }
+		MailboxService.create.mockResolvedValue(mailbox)
+		PreferenceService.savePreference.mockRejectedValue(new Error('network down'))
+		store.addAccountMutation(account)
+
+		const result = await store.createMailbox({ account: store.accountsUnmapped[13], name: 'Important' })
+
+		expect(result).toEqual(mailbox)
+		expect(store.accountsUnmapped[13].folded).toBe(false)
+	})
+
+	it('does not save the folded state when a mailbox is created in an unfolded account', async () => {
+		const account = {
+			id: 13,
+			personalNamespace: '',
+			mailboxes: [],
+		}
+		MailboxService.create.mockResolvedValue({ name: 'Important' })
+		store.addAccountMutation(account)
+
+		await store.createMailbox({ account: store.accountsUnmapped[13], name: 'Important' })
+
+		expect(PreferenceService.savePreference).not.toHaveBeenCalled()
+	})
+
+	it('saves account settings in order so an older save cannot overwrite a newer one', async () => {
+		store.addAccountMutation({ id: 13, personalNamespace: '', mailboxes: [] })
+		store.addAccountMutation({ id: 14, personalNamespace: '', mailboxes: [] })
+		let finishFirstSave
+		PreferenceService.savePreference
+			.mockImplementationOnce(() => new Promise((resolve) => {
+				finishFirstSave = resolve
+			}))
+			.mockResolvedValue(undefined)
+
+		const first = store.toggleAccountFolded(13)
+		const second = store.toggleAccountFolded(14)
+		await vi.waitFor(() => expect(finishFirstSave).toBeDefined())
+
+		expect(PreferenceService.savePreference).toHaveBeenCalledTimes(1)
+
+		finishFirstSave()
+		await Promise.all([first, second])
+
+		expect(PreferenceService.savePreference).toHaveBeenCalledTimes(2)
+		expect(PreferenceService.savePreference).toHaveBeenLastCalledWith(
+			'account-settings',
+			JSON.stringify([{ accountId: 13, folded: true }, { accountId: 14, folded: true }]),
+		)
+	})
+
+	it('keeps saving account settings after a failed save', async () => {
+		store.addAccountMutation({ id: 13, personalNamespace: '', mailboxes: [] })
+		store.addAccountMutation({ id: 14, personalNamespace: '', mailboxes: [] })
+		PreferenceService.savePreference
+			.mockRejectedValueOnce(new Error('network down'))
+			.mockResolvedValue(undefined)
+
+		await expect(store.toggleAccountFolded(13)).rejects.toThrow('network down')
+		await store.toggleAccountFolded(14)
+
+		expect(store.accountsUnmapped[14].folded).toBe(true)
+		expect(PreferenceService.savePreference).toHaveBeenLastCalledWith(
+			'account-settings',
+			JSON.stringify([{ accountId: 13, folded: false }, { accountId: 14, folded: true }]),
+		)
+	})
+
+	it('does not undo a newer change when an older folded save fails', async () => {
+		store.addAccountMutation({ id: 13, personalNamespace: '', mailboxes: [] })
+		MailboxService.create.mockResolvedValue({ name: 'Important' })
+		let failSave
+		PreferenceService.savePreference
+			.mockImplementationOnce(() => new Promise((resolve, reject) => {
+				failSave = reject
+			}))
+			.mockResolvedValue(undefined)
+
+		const toggle = store.toggleAccountFolded(13)
+		await vi.waitFor(() => expect(failSave).toBeDefined())
+		const unfold = store.createMailbox({ account: store.accountsUnmapped[13], name: 'Important' })
+		await vi.waitFor(() => expect(store.accountsUnmapped[13].folded).toBe(false))
+		failSave(new Error('network down'))
+
+		await expect(toggle).rejects.toThrow('network down')
+		await unfold
+		expect(store.accountsUnmapped[13].folded).toBe(false)
+	})
+
+	it('does not undo a newer change that ends in the same folded state when an older save fails', async () => {
+		store.addAccountMutation({ id: 13, personalNamespace: '', mailboxes: [] })
+		MailboxService.create.mockResolvedValue({ name: 'Important' })
+		let failSave
+		PreferenceService.savePreference
+			.mockImplementationOnce(() => new Promise((resolve, reject) => {
+				failSave = reject
+			}))
+			.mockResolvedValue(undefined)
+
+		const firstToggle = store.toggleAccountFolded(13)
+		await vi.waitFor(() => expect(failSave).toBeDefined())
+		const unfold = store.createMailbox({ account: store.accountsUnmapped[13], name: 'Important' })
+		await vi.waitFor(() => expect(store.accountsUnmapped[13].folded).toBe(false))
+		const secondToggle = store.toggleAccountFolded(13)
+		failSave(new Error('network down'))
+
+		await expect(firstToggle).rejects.toThrow('network down')
+		await Promise.all([unfold, secondToggle])
+		expect(store.accountsUnmapped[13].folded).toBe(true)
+	})
+
+	it('restores the folded state when saving it fails', async () => {
+		store.addAccountMutation({
+			id: 13,
+			personalNamespace: '',
+			mailboxes: [],
+		})
+		const error = new Error('network down')
+		PreferenceService.savePreference.mockRejectedValue(error)
+
+		await expect(store.toggleAccountFolded(13)).rejects.toThrow(error)
+
+		expect(store.accountsUnmapped[13].folded).toBe(false)
+		expect(store.allAccountSettings).toContainEqual({ accountId: 13, folded: false })
+	})
+
+	it('toggles and persists the folded state of an account', async () => {
+		store.addAccountMutation({
+			id: 13,
+			personalNamespace: '',
+			mailboxes: [],
+		})
+		PreferenceService.savePreference.mockResolvedValue(undefined)
+
+		await store.toggleAccountFolded(13)
+
+		expect(store.accountsUnmapped[13].folded).toBe(true)
+		expect(PreferenceService.savePreference).toHaveBeenCalledWith(
+			'account-settings',
+			JSON.stringify([{ accountId: 13, folded: true }]),
+		)
+
+		await store.toggleAccountFolded(13)
+
+		expect(store.accountsUnmapped[13].folded).toBe(false)
+		expect(PreferenceService.savePreference).toHaveBeenLastCalledWith(
+			'account-settings',
+			JSON.stringify([{ accountId: 13, folded: false }]),
+		)
 	})
 
 	it('creates a sub-mailbox', async () => {
