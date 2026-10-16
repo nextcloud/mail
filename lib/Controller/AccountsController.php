@@ -15,6 +15,7 @@ use OCA\Mail\AppInfo\Application;
 use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\CouldNotConnectException;
+use OCA\Mail\Exception\DuplicateEmailAddress;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JsonResponse as MailJsonResponse;
 use OCA\Mail\Http\TrapError;
@@ -172,6 +173,11 @@ class AccountsController extends Controller {
 
 			$this->logger->info('Creating account failed: ' . $e->getMessage(), $data);
 			return MailJsonResponse::fail($data);
+		} catch (DuplicateEmailAddress $e) {
+			$this->logger->info('Trying to create already existing account.');
+			return MailJsonResponse::fail([
+				'error' => 'ACCOUNT_EXISTS',
+			]);
 		} catch (ServiceException $e) {
 			$this->logger->error('Creating account failed: ' . $e->getMessage(), [
 				'exception' => $e,
@@ -385,6 +391,11 @@ class AccountsController extends Controller {
 
 			$this->logger->info('Creating account failed: ' . $e->getMessage(), $data);
 			return MailJsonResponse::fail($data);
+		} catch (DuplicateEmailAddress $e) {
+			$this->logger->info('Trying to create already existing account.');
+			return MailJsonResponse::fail([
+				'error' => 'ACCOUNT_EXISTS',
+			]);
 		} catch (ServiceException $e) {
 			$this->logger->error('Creating account failed: ' . $e->getMessage(), [
 				'exception' => $e,
