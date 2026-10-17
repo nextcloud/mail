@@ -817,6 +817,7 @@ OC.L10N.register(
     "is exactly" : "точно совпадает с",
     "Conditions" : "Условия",
     "Add condition" : "Добавить условие",
+    "Add at least one condition." : "Добавьте хотя бы одно условие.",
     "Actions" : "Действия",
     "Add action" : "Добавить действие",
     "Redirected messages might be rejected by the receiving server, and cannot be read by the recipient if encrypted." : "Сервер получателя может отклонить перенаправленные письма, а зашифрованные получатель не сможет прочитать.",
