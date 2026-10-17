@@ -43,6 +43,11 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 	public function filter(&$uri, $config, $context) {
 		if ($uri->scheme === null) {
 			$uri->scheme = 'https';
+			// "www.example.com/path" parses as a relative path; without a host the browser resolves it against our own URL
+			if ($uri->host === null && $uri->path !== '' && $uri->path[0] !== '/') {
+				[$uri->host, $path] = explode('/', $uri->path, 2) + [1 => null];
+				$uri->path = $path === null ? '' : '/' . $path;
+			}
 		}
 
 		// Only HTTPS and HTTP urls should get rewritten
