@@ -817,6 +817,7 @@ OC.L10N.register(
     "is exactly" : "剛好是",
     "Conditions" : "條件",
     "Add condition" : "新增條件",
+    "Add at least one condition." : "新增至少一個條件。",
     "Actions" : "動作",
     "Add action" : "新增動作",
     "Redirected messages might be rejected by the receiving server, and cannot be read by the recipient if encrypted." : "轉寄的訊息可能會被收件伺服器拒絕，且若經過加密，收件人將無法閱讀。",

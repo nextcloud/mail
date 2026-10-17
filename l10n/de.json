@@ -815,6 +815,7 @@
     "is exactly" : "ist genau",
     "Conditions" : "Bedingungen",
     "Add condition" : "Bedingung hinzufügen",
+    "Add at least one condition." : "Mindestens eine Bedingung hinzufügen.",
     "Actions" : "Aktionen",
     "Add action" : "Aktion hinzufügen",
     "Redirected messages might be rejected by the receiving server, and cannot be read by the recipient if encrypted." : "Weitergeleitete Nachrichten können vom empfangenden Server abgelehnt werden und sind, falls verschlüsselt, für den Empfänger nicht lesbar.",

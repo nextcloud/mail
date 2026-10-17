@@ -817,6 +817,7 @@ OC.L10N.register(
     "is exactly" : "tam olarak şu olan",
     "Conditions" : "Koşullar",
     "Add condition" : "Koşul ekle",
+    "Add at least one condition." : "En az bir koşul ekleyin.",
     "Actions" : "İşlemler",
     "Add action" : "İşlem ekle",
     "Redirected messages might be rejected by the receiving server, and cannot be read by the recipient if encrypted." : "Yönlendirilen iletiler alıcının sunucusu tarafından reddedilebilir ve şifrelenmiş ise alıcı tarafından okunamaz.",

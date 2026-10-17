@@ -815,6 +815,7 @@
     "is exactly" : "je presne",
     "Conditions" : "Podmienky",
     "Add condition" : "Pridať podmienku",
+    "Add at least one condition." : "Pridajte aspoň jednu podmienku.",
     "Actions" : "Akcie",
     "Add action" : "Pridať akciu",
     "Redirected messages might be rejected by the receiving server, and cannot be read by the recipient if encrypted." : "Presmerované správy môžu byť odmietnuté prijímajúcim serverom a v prípade zašifrovania ich príjemca nemôže prečítať.",
