@@ -815,6 +815,7 @@
     "is exactly" : "är exakt",
     "Conditions" : "Villkor",
     "Add condition" : "Lägg till villkor",
+    "Add at least one condition." : "Lägg till minst ett villkor.",
     "Actions" : "Åtgärder",
     "Add action" : "Lägg till åtgärd",
     "Redirected messages might be rejected by the receiving server, and cannot be read by the recipient if encrypted." : "Omdirigerade meddelanden kan avvisas av mottagarservern, och mottagaren kan inte läsa dem om de är krypterade.",

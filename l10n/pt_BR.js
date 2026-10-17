@@ -817,6 +817,7 @@ OC.L10N.register(
     "is exactly" : "é exatamente",
     "Conditions" : "Condições",
     "Add condition" : "Adicionar condição",
+    "Add at least one condition." : "Adicione pelo menos uma condição.",
     "Actions" : "Ações",
     "Add action" : "Adicionar ação",
     "Redirected messages might be rejected by the receiving server, and cannot be read by the recipient if encrypted." : "As mensagens redirecionadas podem ser rejeitadas pelo servidor de destino e, se estiverem criptografadas, não poderão ser lidas pelo destinatário.",
