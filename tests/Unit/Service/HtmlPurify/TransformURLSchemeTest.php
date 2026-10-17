@@ -57,6 +57,42 @@ class TransformURLSchemeTest extends TestCase {
 		$this->assertSame('https', $uri->scheme);
 	}
 
+	public function testSchemelessLinkGetsHostFromPath(): void {
+		$uri = new HTMLPurifier_URI(null, null, null, null, 'www.example.com/unsubscribe', 'token=abc', null);
+		$config = HTMLPurifier_Config::createDefault();
+		$context = new HTMLPurifier_Context();
+		$attr = 'href';
+		$context->register('CurrentAttr', $attr);
+
+		$this->filter->filter($uri, $config, $context);
+
+		$this->assertSame('https://www.example.com/unsubscribe?token=abc', $uri->toString());
+	}
+
+	public function testSchemelessBareDomainLink(): void {
+		$uri = new HTMLPurifier_URI(null, null, null, null, 'www.example.com', null, null);
+		$config = HTMLPurifier_Config::createDefault();
+		$context = new HTMLPurifier_Context();
+		$attr = 'href';
+		$context->register('CurrentAttr', $attr);
+
+		$this->filter->filter($uri, $config, $context);
+
+		$this->assertSame('https://www.example.com', $uri->toString());
+	}
+
+	public function testFragmentOnlyLinkKeepsNoHost(): void {
+		$uri = new HTMLPurifier_URI(null, null, null, null, '', null, 'section');
+		$config = HTMLPurifier_Config::createDefault();
+		$context = new HTMLPurifier_Context();
+		$attr = 'href';
+		$context->register('CurrentAttr', $attr);
+
+		$this->filter->filter($uri, $config, $context);
+
+		$this->assertNull($uri->host);
+	}
+
 	public function testHttpSchemeHandledAsDirectLink(): void {
 		$uri = new HTMLPurifier_URI('http', null, 'example.com', null, '/path', null, null);
 		$config = HTMLPurifier_Config::createDefault();
