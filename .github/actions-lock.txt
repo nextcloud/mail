@@ -1,18 +1,18 @@
 # SPDX-FileCopyrightText: 2025 Nextcloud GmbH and Nextcloud contributors
 # SPDX-License-Identifier: MIT
-e456e5920f7020b8fef59329ab6ce54e ai-policy.yml
-93826e24ee7f83d32dc39574505abc5a appstore-build-publish.yml
+92678f1f5453d90fc2fd01698ade497c ai-policy.yml
+61aec074ea531e1039929ea028af5efe appstore-build-publish.yml
 19ab9c47c8d96de93f37fab242c398cc block-unconventional-commits.yml
 2581a67c5bcdcd570427e6d51db767d7 fixup.yml
-89736ea5a0440c90b73f5c722a456073 lint-eslint.yml
+92d7708f80f4e09d3aeb7d1d93168988 lint-eslint.yml
 43fd0c5fb704cabc5f11cdfaf513236d lint-info-xml.yml
-79006ab196f5664fc444e63645cfd8a7 lint-php-cs.yml
-300be6a756abda800e40850918f2d964 lint-php.yml
-69ab1f99e6b290ca48c6ad916fd567cd lint-stylelint.yml
-9cd1e572898a8118b6df3fc47eeb3b8a npm-audit-fix.yml
-f7a6f6f621446f9da93e4e4e2d3defc0 openapi.yml
+230493ed3855e3f7d9209cc63e9dbe13 lint-php-cs.yml
+994cce702e8c1ec02e45e113e48512b6 lint-php.yml
+ef5d06d720012cc3ea8fa9396682a133 lint-stylelint.yml
+b7e9debcd278ab33bbe8e272e010d8e0 npm-audit-fix.yml
+9d98bd8d893b0a24c0202bc1c4fd5ea4 openapi.yml
 2639f2b96989a4fcbb441ca8f1fecb2f pr-feedback.yml
-6c355cb7b5d4da4d56a58e6d7f82881b psalm-matrix.yml
+d1e7dba2e25a3921ba09a8357bcd47c5 psalm-matrix.yml
 bea8a43904976fa01f1e091046541b37 release-relay.yml
 2dbec18233063b42f4d8e03bbb43671c reuse.yml
-511439ba27869e0324f283142cc8b3df sync-workflow-templates.yml
+0bb535f552ee8f94dae6eeb16f7f4a4e sync-workflow-templates.yml
