@@ -591,7 +591,7 @@ export default {
 		 * a mixed selection is pushed to whichever state the header offers first,
 		 * so the key and the button never disagree.
 		 *
-		 * @param {string} srcKey vue-shortkey action name
+		 * @param {string} srcKey vue3-shortkey action name
 		 * @return {boolean} whether the action applies to a selection
 		 */
 		handleBulkShortcut(srcKey) {

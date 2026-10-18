@@ -295,7 +295,7 @@ export default {
 		 * Resolved through the shortcuts module rather than hardcoded here, so
 		 * the bindings can be switched off for accessibility.
 		 *
-		 * @return {object} vue-shortkey binding map
+		 * @return {object} vue3-shortkey binding map
 		 */
 		shortkeys() {
 			return resolveShortcuts()

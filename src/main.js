@@ -12,7 +12,7 @@ import { createApp } from 'vue'
 import VueShortKey from 'vue3-shortkey'
 import App from './App.vue'
 import router from './router.js'
-import { installJumpChords } from './shortcuts.js'
+import { installJumpChords, TYPING_SELECTORS } from './shortcuts.js'
 
 import '@nextcloud/dialogs/style.css'
 import './directives/drag-and-drop/styles/drag-and-drop.scss'
@@ -30,8 +30,8 @@ registerDavProperty('nc:share-attributes', { nc: 'http://nextcloud.org/ns' })
 const app = createApp(App)
 app.use(router)
 app.use(pinia)
-// 'div' made vue-shortkey ignore every key, because Nextcloud focuses plain divs; match editable elements only.
-app.use(VueShortKey, { prevent: ['input', 'textarea', '[contenteditable]:not([contenteditable="false"])'] })
+// 'div' made vue3-shortkey ignore every key, because Nextcloud focuses plain divs; match editable elements only.
+app.use(VueShortKey, { prevent: TYPING_SELECTORS })
 app.config.globalProperties.t = t
 app.config.globalProperties.n = n
 app.mount('#content')

@@ -186,18 +186,11 @@ describe('settings shortcut list', () => {
 
 		expect(rows).toHaveLength(Object.keys(SHORTCUT_JUMPS).length)
 		for (const row of rows) {
-			expect(row.keys).toHaveLength(2)
-			expect(row.keys[0]).toBe('g')
-			expect(row.label.length).toBeGreaterThan(0)
-		}
-	})
-
-	it('gives every jump chord row parts holding the g key and the jump key', () => {
-		const rows = jumpActions(t)
-
-		for (const row of rows) {
 			const keys = row.parts.filter((part) => part.type === 'key').map((part) => part.key)
-			expect(keys).toEqual(row.keys)
+			expect(keys).toHaveLength(2)
+			expect(keys[0]).toBe('g')
+			expect(keys[1]).toBe(row.action.replace('jump-', ''))
+			expect(row.label.length).toBeGreaterThan(0)
 		}
 	})
 
@@ -267,7 +260,7 @@ describe('jump chord key handling', () => {
 	})
 
 	it('swallows the keyup of a consumed chord key', () => {
-		// Regression: vue-shortkey bindings use .once and therefore fire on
+		// Regression: vue3-shortkey bindings use .once and therefore fire on
 		// keyup, so g a also triggered whatever `a` is bound to (archive).
 		press('g')
 		press('a')
@@ -307,7 +300,7 @@ describe('chord listener ordering', () => {
 	})
 
 	it('keeps consumed chord keys away from document listeners', () => {
-		// vue-shortkey registers its listeners on document at module load, and
+		// vue3-shortkey registers its listeners on document at module load, and
 		// its bindings fire on keyup. If a consumed chord key reaches it, `g a`
 		// runs archive as well as jumping. Capture goes window -> document,
 		// so the chord handler must intercept before this listener sees it.
