@@ -131,7 +131,7 @@ OC.L10N.register(
     "Mail address" : "Mailadresse",
     "name@example.org" : "name@example.org",
     "Please enter an email of the format name@example.com" : "Indtast en e-mailadresse i formatet navn@eksempel.com",
-    "Password" : "Kodeord",
+    "Password" : "Adgangskode",
     "Enable mark as important classification" : "Aktivér klassificering som vigtig",
     "IMAP Settings" : "IMAP-indstillinger",
     "IMAP Host" : "IMAP-vært",
