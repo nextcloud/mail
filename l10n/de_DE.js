@@ -702,7 +702,7 @@ OC.L10N.register(
     "Could not create task" : "Aufgabe konnte nicht erstellt werden",
     "No calendars with task list support" : "Keine Kalender mit Aufgabenlistenunterstützung",
     "Black" : "Schwarz",
-    "Dim grey" : "Dunkelgrau",
+    "Dim grey" : "Rauchgrau",
     "Grey" : "Grau",
     "Light grey" : "Hellgrau",
     "White" : "Weiss",
