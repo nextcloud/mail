@@ -178,6 +178,28 @@ export function shortcutsAllowed() {
 }
 
 /**
+ * Split the translated "{firstKey} then {secondKey}" string into ordered parts.
+ *
+ * @param {(app: string, text: string) => string} t translation function
+ * @param {string} firstKey key pressed first
+ * @param {string} secondKey key pressed second
+ * @return {Array<{type: 'key', key: string}|{type: 'text', text: string}>} parts in display order
+ */
+export function keySequenceParts(t, firstKey, secondKey) {
+	const keys = { firstKey, secondKey }
+
+	return t('mail', '{firstKey} then {secondKey}')
+		.split(/(\{firstKey\}|\{secondKey\})/)
+		.filter((part) => part !== '')
+		.map((part) => {
+			const name = part.slice(1, -1)
+			return part.startsWith('{') && name in keys
+				? { type: 'key', key: keys[name] }
+				: { type: 'text', text: part }
+		})
+}
+
+/**
  * Rows describing the jump chords for the settings shortcut list.
  *
  * These are not part of the vue-shortkey binding map - they are key sequences
@@ -186,7 +208,7 @@ export function shortcutsAllowed() {
  * can render them as separate keys with plain text between them.
  *
  * @param {(app: string, text: string) => string} t translation function
- * @return {Array<{action: string, label: string, keys: string[]}>} rows
+ * @return {Array<{action: string, label: string, keys: string[], parts: Array<{type: 'key', key: string}|{type: 'text', text: string}>}>} rows
  */
 export function jumpActions(t) {
 	const LABELS = {
@@ -206,6 +228,7 @@ export function jumpActions(t) {
 			action: 'jump-' + key,
 			label: LABELS[key],
 			keys: ['g', key],
+			parts: keySequenceParts(t, 'g', key),
 		}))
 }
 

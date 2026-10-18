@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { formatHotkey, hasJumps, installJumpChords, jumpActions, resolveShortcuts, setJumpsEnabled, SHORTCUT_JUMPS, shortcutActions, SHORTCUTS, shortcutsAllowed } from '../../shortcuts.js'
+import { formatHotkey, hasJumps, installJumpChords, jumpActions, keySequenceParts, resolveShortcuts, setJumpsEnabled, SHORTCUT_JUMPS, shortcutActions, SHORTCUTS, shortcutsAllowed } from '../../shortcuts.js'
 
 describe('shortcuts', () => {
 	afterEach(() => {
@@ -190,6 +190,48 @@ describe('settings shortcut list', () => {
 			expect(row.keys[0]).toBe('g')
 			expect(row.label.length).toBeGreaterThan(0)
 		}
+	})
+
+	it('gives every jump chord row parts holding the g key and the jump key', () => {
+		const rows = jumpActions(t)
+
+		for (const row of rows) {
+			const keys = row.parts.filter((part) => part.type === 'key').map((part) => part.key)
+			expect(keys).toEqual(row.keys)
+		}
+	})
+
+	it('splits the default translation into keys and connective text', () => {
+		const parts = keySequenceParts(t, 'g', 'i')
+
+		expect(parts).toEqual([
+			{ type: 'key', key: 'g' },
+			{ type: 'text', text: ' then ' },
+			{ type: 'key', key: 'i' },
+		])
+	})
+
+	it('honours a translation that reorders the placeholders', () => {
+		const reordered = () => '{secondKey} nach {firstKey}'
+
+		const parts = keySequenceParts(reordered, 'g', 'i')
+
+		expect(parts).toEqual([
+			{ type: 'key', key: 'i' },
+			{ type: 'text', text: ' nach ' },
+			{ type: 'key', key: 'g' },
+		])
+	})
+
+	it('drops empty text parts', () => {
+		const adjacent = () => '{firstKey}{secondKey}'
+
+		const parts = keySequenceParts(adjacent, 'g', 'i')
+
+		expect(parts).toEqual([
+			{ type: 'key', key: 'g' },
+			{ type: 'key', key: 'i' },
+		])
 	})
 })
 

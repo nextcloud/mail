@@ -273,10 +273,10 @@
 						:key="entry.action"
 						:label="entry.label"
 						:hotkey="entry.hotkey">
-						<template v-if="entry.keys" #hotkey>
-							<template v-for="(key, index) in entry.keys">
-								<span v-if="index > 0" :key="'separator-' + index">, </span>
-								<NcKbd :key="key" :symbol="key" />
+						<template v-if="entry.parts" #hotkey>
+							<template v-for="(part, index) in entry.parts">
+								<NcKbd v-if="part.type === 'key'" :key="'key-' + index" :symbol="part.key" />
+								<span v-else :key="'text-' + index">{{ part.text }}</span>
 							</template>
 						</template>
 					</NcHotkey>
@@ -476,10 +476,10 @@ export default {
 		 * the app does not implement (compose, search, send) and went stale
 		 * whenever a binding moved.
 		 *
-		 * Rows carry either a `hotkey` string or, for key sequences, a `keys`
-		 * array that the template renders with plain text between the keys.
+		 * Rows carry either a `hotkey` string or, for key sequences, a `parts`
+		 * array that the template renders as keys and connective text.
 		 *
-		 * @return {Array<{action: string, label: string, hotkey?: string, keys?: string[]}>} rows
+		 * @return {Array<{action: string, label: string, hotkey?: string, parts?: Array<{type: string, key?: string, text?: string}>}>} rows
 		 */
 		activeShortcuts() {
 			const bindings = resolveShortcuts()
