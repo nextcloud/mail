@@ -179,6 +179,7 @@
     "Revoke" : "Revoke",
     "Tag: {name} deleted" : "Tag: {name} deleted",
     "An error occurred, unable to delete the tag." : "An error occurred, unable to delete the tag.",
+    "Delete tag" : "Delete tag",
     "The tag will be deleted from all messages." : "The tag will be deleted from all messages.",
     "Plain text" : "Plain text",
     "Rich text" : "Rich text",
@@ -212,6 +213,7 @@
     "Snooze" : "Snooze",
     "Unsnooze" : "Unsnooze",
     "Move thread" : "Move thread",
+    "Move message" : "Move message",
     "Archive thread" : "Archive thread",
     "Archive message" : "Archive message",
     "More actions" : "More actions",
@@ -291,7 +293,6 @@
     "Could not unsnooze message" : "Could not unsnooze message",
     "Forward" : "Forward",
     "Link copied" : "ლინკი მოიკოპა",
-    "Move message" : "Move message",
     "Translate" : "Translate",
     "Forward message as attachment" : "Forward message as attachment",
     "View source" : "View source",
@@ -412,7 +413,6 @@
     "Message source" : "Message source",
     "An error occurred, unable to rename the tag." : "An error occurred, unable to rename the tag.",
     "Edit name or color" : "Edit name or color",
-    "Delete tag" : "Delete tag",
     "Set tag" : "Set tag",
     "Unset tag" : "Unset tag",
     "An error occurred, unable to create the tag." : "An error occurred, unable to create the tag.",
@@ -600,7 +600,6 @@
     "Discard changes" : "Discard changes",
     "Discard unsaved changes" : "Discard unsaved changes",
     "Keep editing message" : "Keep editing message",
-    "Attachments were not copied. Please add them manually." : "Attachments were not copied. Please add them manually.",
     "Could not create snooze mailbox" : "Could not create snooze mailbox",
     "Message sent" : "Message sent",
     "Could not send message" : "Could not send message",
@@ -613,9 +612,6 @@
     "Tag name cannot be empty" : "Tag name cannot be empty",
     "Tag name is a hidden system tag" : "Tag name is a hidden system tag",
     "Tag already exists" : "Tag already exists",
-    "Error loading message" : "Error loading message",
-    "Show less" : "Show less",
-    "Show more" : "Show more",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% and %EMAIL% will be replaced with the user's UID and email"
+    "Error loading message" : "Error loading message"
 },"pluralForm" :"nplurals=2; plural=(n!=1);"
 }

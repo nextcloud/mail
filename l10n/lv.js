@@ -74,6 +74,7 @@ OC.L10N.register(
     "Choose a file" : "Izvēlēties datni",
     "Confirm" : "Apstiprināt",
     "Revoke" : "Atsaukt",
+    "Delete tag" : "Izdzēst birku",
     "No messages in this folder" : "Šajā mapē nav neviens ziņojums",
     "Later today – {timeLocale}" : "Vēlāk šodien – {timeLocale}",
     "Set reminder for later today" : "Iestatīt atgādinājumu vēlākam šodien",
@@ -125,6 +126,7 @@ OC.L10N.register(
     "New message" : "Jauna ziņa",
     "Draft" : "Melnraksts",
     "Reply" : "Atbildēt",
+    "Exit full screen" : "Iziet no pilnekrāna",
     "Retry" : "Mēģināt vēlreiz",
     "Autoresponder follows system settings" : "Automātiskais atbildētājs ievēro sistēmas iestatījumus",
     "Message" : "Ziņojums",
@@ -139,7 +141,9 @@ OC.L10N.register(
     "Select tags" : "Atlasīt birkas",
     "Custom" : "Pielāgots",
     "An error occurred, unable to rename the tag." : "Atgadījās kļūda, nevar pārdēvēt birku.",
-    "Delete tag" : "Izdzēst birku",
+    "Red" : "Sarkans",
+    "Yellow" : "Dzeltens",
+    "Green" : "Zaļš",
     "Not found" : "Nav atrasts",
     "From:" : "No:",
     "To:" : "Kam:",
@@ -186,7 +190,6 @@ OC.L10N.register(
     "Date:" : "Datums:",
     "Tag name is a hidden system tag" : "Birkas nosaukums ir slēpta sistēmas birka",
     "Tag already exists" : "Birka jau pastāv",
-    "Error loading message" : "Kļūda ielādējot vēstuli",
-    "Show more" : "Parādīt vairāk"
+    "Error loading message" : "Kļūda ielādējot vēstuli"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);");

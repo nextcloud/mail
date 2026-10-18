@@ -19,7 +19,7 @@
 			</span>
 			<span class="attachment-size">{{ humanReadable(size) }}</span>
 		</div>
-		<NcActions :boundaries-element="boundariesElement">
+		<NcActions :boundariesElement="boundariesElement">
 			<template v-if="!showCalendarPopover">
 				<NcActionButton
 					v-if="isCalendarEvent"
@@ -34,7 +34,7 @@
 				</NcActionButton>
 				<NcActionButton
 					class="attachment-download"
-					:close-after-click="true"
+					:closeAfterClick="true"
 					@click="download">
 					<template #icon>
 						<IconDownload :size="20" />
@@ -44,7 +44,7 @@
 				<NcActionButton
 					class="attachment-save-to-cloud"
 					:disabled="savingToCloud"
-					:close-after-click="true"
+					:closeAfterClick="true"
 					@click="saveToCloud">
 					<template #icon>
 						<IconSave v-if="!savingToCloud" :size="20" />
@@ -76,7 +76,9 @@
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { formatFileSize } from '@nextcloud/files'
 import { t } from '@nextcloud/l10n'
-import { NcActionButton, NcActions, NcLoadingIcon } from '@nextcloud/vue'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcActions from '@nextcloud/vue/components/NcActions'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import IconArrow from 'vue-material-design-icons/ArrowLeft.vue'
 import IconSave from 'vue-material-design-icons/FolderOutline.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
@@ -146,6 +148,8 @@ export default {
 		},
 	},
 
+	emits: ['open'],
+
 	data() {
 		return {
 			savingToCloud: false,
@@ -188,7 +192,7 @@ export default {
 		document.addEventListener('click', this.handleClickOutside)
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		document.removeEventListener('click', this.handleClickOutside)
 	},
 
@@ -340,11 +344,6 @@ export default {
 	border-radius: var(--border-radius);
 }
 
-.attachment-import-popover {
-	inset-inline-end: 32px;
-	top: 42px;
-}
-
 .mail-attached-image:hover {
 	opacity: 0.8;
 }
@@ -374,10 +373,5 @@ export default {
 
 .action-item {
 	transition: 0.4s;
-}
-
-.mail-message-attachments {
-	overflow-x: auto;
-	overflow-y: auto;
 }
 </style>

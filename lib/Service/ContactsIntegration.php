@@ -50,7 +50,7 @@ class ContactsIntegration {
 		$result = $this->search($userId, $term, ['UID', 'FN', 'EMAIL']);
 		$receivers = [];
 		foreach ($result as $r) {
-			$id = $r['UID'];
+			$id = $r['UID'] ?? null;
 			$fn = $r['FN'] ?? null;
 			if (!isset($r['EMAIL'])) {
 				continue;
@@ -87,12 +87,13 @@ class ContactsIntegration {
 	}
 
 	/**
+	 * @param string $userId
 	 * @param string $email
 	 *
 	 * @return false|null|string
 	 */
-	public function getPhoto(string $email) {
-		$result = $this->contactsManager->search($email, ['EMAIL']);
+	public function getPhoto(string $userId, string $email) {
+		$result = $this->search($userId, $email, ['EMAIL'], true);
 		foreach ($result as $contact) {
 			if (!isset($contact['PHOTO']) || empty($contact['PHOTO'])) {
 				continue;
@@ -269,8 +270,8 @@ class ContactsIntegration {
 		$result = $this->search($userId, $term, $fields, $strictSearch);
 		$matches = [];
 		foreach ($result as $r) {
-			$id = $r['UID'];
-			$fn = $r['FN'];
+			$id = $r['UID'] ?? null;
+			$fn = $r['FN'] ?? null;
 			$email = $r['EMAIL'] ?? null;
 			$matches[] = [
 				'id' => $id,

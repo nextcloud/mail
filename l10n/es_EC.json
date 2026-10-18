@@ -183,6 +183,7 @@
     "Mark as spam" : "Marcar como spam",
     "Edit tags" : "Editar etiquetas",
     "Move thread" : "Mover hilo",
+    "Move message" : "Mover mensaje",
     "Archive thread" : "Archivar hilo",
     "Archive message" : "Archivar mensaje",
     "More actions" : "Más acciones",
@@ -255,7 +256,6 @@
     "You sent a read confirmation to the sender of this message." : "Enviaste una confirmación de lectura al remitente de este mensaje.",
     "Forward" : "Adelante",
     "Link copied" : "Enlace copiado",
-    "Move message" : "Mover mensaje",
     "Translate" : "Traducir",
     "Forward message as attachment" : "Reenviar mensaje como adjunto",
     "View source" : "Ver origen",
@@ -316,6 +316,8 @@
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Estás intentando enviar a muchos destinatarios en Para y/o Cc. Considera usar Bcc para ocultar las direcciones de los destinatarios.",
     "Message discarded" : "Mensaje descartado",
     "Could not discard message" : "No se pudo descartar el mensaje",
+    "Exit full screen" : "Salir de pantalla completa",
+    "Full screen" : "Pantalla completa",
     "Minimize composer" : "Minimizar editor",
     "Error sending your message" : "Error al enviar tu mensaje",
     "Retry" : "Reintentar",
@@ -376,6 +378,9 @@
     "Task created" : "Tarea creada",
     "Could not create task" : "No se pudo crear la tarea",
     "No calendars with task list support" : "No hay calendarios con soporte de lista de tareas",
+    "Red" : "Rojo",
+    "Yellow" : "Amarillo",
+    "Green" : "Verde",
     "Could not load your message thread" : "No se pudo cargar el hilo de mensajes",
     "The thread doesn't exist or has been deleted" : "El hilo no existe o ha sido eliminado",
     "Loading thread" : "Cargando hilo",
@@ -555,7 +560,6 @@
     "Discard changes" : "Descartar cambios",
     "Discard unsaved changes" : "Descartar cambios no guardados",
     "Keep editing message" : "Seguir editando mensaje",
-    "Attachments were not copied. Please add them manually." : "No se copiaron los adjuntos. Por favor, agrégales manualmente.",
     "Message sent" : "Mensaje enviado",
     "Could not send message" : "No se pudo enviar el mensaje",
     "Could not load {tag}{name}{endtag}" : "No fue posible cargar {tag}{name}{endtag}",
@@ -566,9 +570,6 @@
     "Date:" : "Fecha:",
     "Tag name is a hidden system tag" : "El nombre de la etiqueta es una etiqueta oculta del sistema",
     "Tag already exists" : "La etiqueta ya existe",
-    "Error loading message" : "Se presentó un error al cargar el mensaje",
-    "Show less" : "Mostrar menos",
-    "Show more" : "Mostrar más",
-    "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% y %EMAIL% se reemplazarán con el UID y el correo electrónico del usuario"
+    "Error loading message" : "Se presentó un error al cargar el mensaje"
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

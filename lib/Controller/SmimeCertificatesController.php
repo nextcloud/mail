@@ -19,6 +19,7 @@ use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\IRequest;
 
@@ -34,11 +35,10 @@ class SmimeCertificatesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @throws ServiceException
 	 * @throws SmimeCertificateParserException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function index(): JsonResponse {
 		if ($this->userId === null) {
@@ -51,13 +51,12 @@ class SmimeCertificatesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @return JsonResponse
 	 *
 	 * @throws DoesNotExistException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function destroy(int $id): JsonResponse {
 		if ($this->userId === null) {
@@ -69,13 +68,12 @@ class SmimeCertificatesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @return JsonResponse
 	 *
 	 * @throws ServiceException
 	 * @throws SmimeCertificateParserException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function create(): JsonResponse {
 		if ($this->userId === null) {

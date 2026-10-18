@@ -15,6 +15,7 @@ use OCA\Mail\Db\AliasMapper;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ClientException;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\DB\Exception;
 
 class AliasesService {
 	public function __construct(
@@ -30,6 +31,13 @@ class AliasesService {
 	 */
 	public function findAll(int $accountId, string $currentUserId): array {
 		return $this->aliasMapper->findAll($accountId, $currentUserId);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public function countByAccountId(int $accountId, string $currentUserId): int {
+		return $this->aliasMapper->countByAccountId($accountId, $currentUserId);
 	}
 
 	/**
@@ -53,21 +61,22 @@ class AliasesService {
 	}
 
 	/**
-	 * @param string $userId
-	 * @param int $accountId
-	 * @param string $alias
-	 * @param string $aliasName
-	 *
-	 * @return Alias
 	 * @throws DoesNotExistException
 	 */
-	public function create(string $userId, int $accountId, string $alias, string $aliasName): Alias {
+	public function create(string $userId,
+		int $accountId,
+		string $alias,
+		?string $aliasName,
+		?string $signature = null,
+		?int $smimeCertificateId = null): Alias {
 		$this->mailAccountMapper->find($userId, $accountId);
 
 		$aliasEntity = new Alias();
 		$aliasEntity->setAccountId($accountId);
 		$aliasEntity->setAlias($alias);
 		$aliasEntity->setName($aliasName);
+		$aliasEntity->setSignature($signature);
+		$aliasEntity->setSmimeCertificateId($smimeCertificateId);
 
 		return $this->aliasMapper->insert($aliasEntity);
 	}

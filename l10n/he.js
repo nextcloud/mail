@@ -185,6 +185,8 @@ OC.L10N.register(
     "Sync in background" : "סנכרון ברקע",
     "New message" : "הודעה חדשה",
     "Reply" : "תגובה",
+    "Exit full screen" : "יציאה ממסך מלא",
+    "Full screen" : "מסך מלא",
     "Error sending your message" : "שליחת ההודעה שלך נכשלה",
     "Retry" : "ניסיון חוזר",
     "Message" : "הודעה",
@@ -268,7 +270,6 @@ OC.L10N.register(
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["הודעה חדשה \nמאת {from}","2 הודעות חדשות \nמאת {from}","%n הודעות חדשות \nמאת {from}"],
     "Nextcloud Mail" : "דוא״ל Nextcloud",
-    "Attachments were not copied. Please add them manually." : "הקבצים המצורפים לא הועתקו. נא להוסיף אותם ידנית.",
     "Message sent" : "הודעה נשלחה",
     "Could not load {tag}{name}{endtag}" : "לא ניתן לטעון את {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "אירעה שגיאה בטעינה של {tag}{name}{endtag}",
@@ -277,8 +278,6 @@ OC.L10N.register(
     "Could not load the message" : "לא ניתן לטעון את ההודעה",
     "Date:" : "בתאריך:",
     "Tag already exists" : "תגית כבר קיימת",
-    "Error loading message" : "שגיאה בהעלאת הודעה",
-    "Show less" : "להציג פחות",
-    "Show more" : "להציג יותר"
+    "Error loading message" : "שגיאה בהעלאת הודעה"
 },
 "nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;");

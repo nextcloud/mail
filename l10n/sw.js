@@ -123,6 +123,8 @@ OC.L10N.register(
     "Edit message" : "Hariri ujumbe",
     "Draft" : "Draft",
     "Reply" : "Jibu",
+    "Exit full screen" : "Ondoka kwenye skrini nzima",
+    "Full screen" : "Skrini nzima",
     "Retry" : "Jaribu tene",
     "First day" : "First day",
     "Message" : "Message",
@@ -139,6 +141,9 @@ OC.L10N.register(
     "Custom" : "Mteja",
     "Add tag" : "Add tag",
     "Task created" : "Task created",
+    "Red" : "Nyekundu",
+    "Yellow" : "Njano",
+    "Green" : "Kijani",
     "Not found" : "Haipatikani",
     "Unsubscribe" : "Unsubscribe",
     "From:" : "Tangu:",
@@ -184,8 +189,6 @@ OC.L10N.register(
     "Nextcloud Mail" : "Nextcloud Mail",
     "Discard changes" : "Discard changes",
     "Message sent" : "Ujumbe umetumwa",
-    "Date:" : "Tarehe:",
-    "Show less" : "Show less",
-    "Show more" : "Show more"
+    "Date:" : "Tarehe:"
 },
 "nplurals=2; plural=(n != 1);");

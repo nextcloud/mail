@@ -34,7 +34,7 @@ The rating depends on the installed text processing backend. See [the rating ove
 
 Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/).
 	]]></description>
-	<version>5.12.0-rc.1</version>
+	<version>6.0.0-alpha.1</version>
 	<licence>agpl</licence>
 	<author homepage="https://github.com/ChristophWurst">Christoph Wurst</author>
 	<author homepage="https://github.com/GretaD">GretaD</author>
@@ -90,6 +90,11 @@ Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud
 		<command>OCA\Mail\Command\InspectMailbox</command>
 		<command>OCA\Mail\Command\ListMailboxes</command>
 		<command>OCA\Mail\Command\PredictImportance</command>
+		<command>OCA\Mail\Command\CreateProvisioning</command>
+		<command>OCA\Mail\Command\DeleteProvisioning</command>
+		<command>OCA\Mail\Command\ListProvisionings</command>
+		<command>OCA\Mail\Command\ProvisionAccounts</command>
+		<command>OCA\Mail\Command\UpdateProvisioning</command>
 		<command>OCA\Mail\Command\TestAccount</command>
 		<command>OCA\Mail\Command\SyncAccount</command>
 		<command>OCA\Mail\Command\Thread</command>

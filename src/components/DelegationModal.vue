@@ -6,8 +6,9 @@
 <template>
 	<NcModal
 		v-if="view === 'main'"
+		closeOnClickOutside
 		size="normal"
-		label-id="delegation-modal-title"
+		labelId="delegation-modal-title"
 		@close="$emit('close')">
 		<div class="delegation-modal">
 			<h2 id="delegation-modal-title">
@@ -28,7 +29,7 @@
 						:name="user.displayName || user.userId">
 						<template #icon>
 							<NcAvatar
-								disable-menu
+								disableMenu
 								:size="34"
 								:user="user.userId" />
 						</template>
@@ -68,7 +69,7 @@
 		<NcSelectUsers
 			v-model="selectedUser"
 			class="add-delegates-dialog__select"
-			:input-label="t('mail', 'Select a user')"
+			:inputLabel="t('mail', 'Select a user')"
 			:options="userSuggestions"
 			:loading="searchLoading"
 			:placeholder="t('mail', 'Select a user')"
@@ -98,8 +99,14 @@ import axios from '@nextcloud/axios'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { generateOcsUrl } from '@nextcloud/router'
 import { ShareType } from '@nextcloud/sharing'
-import { NcAvatar, NcButton, NcDialog, NcListItem, NcLoadingIcon, NcModal, NcSelectUsers } from '@nextcloud/vue'
 import debounce from 'lodash/fp/debounce.js'
+import NcAvatar from '@nextcloud/vue/components/NcAvatar'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
+import NcListItem from '@nextcloud/vue/components/NcListItem'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
+import NcModal from '@nextcloud/vue/components/NcModal'
+import NcSelectUsers from '@nextcloud/vue/components/NcSelectUsers'
 import IconClose from 'vue-material-design-icons/Close.vue'
 import IconPlus from 'vue-material-design-icons/Plus.vue'
 import logger from '../logger.js'
@@ -126,6 +133,8 @@ export default {
 		},
 	},
 
+	emits: ['close'],
+
 	data() {
 		return {
 			view: 'main',
@@ -144,13 +153,13 @@ export default {
 			return [
 				{
 					label: t('mail', 'Cancel'),
-					type: 'tertiary',
+					variant: 'tertiary',
 					disabled: this.delegating,
 					callback: () => { this.closeDialog() },
 				},
 				{
 					label: t('mail', 'Delegate access'),
-					type: 'primary',
+					variant: 'primary',
 					icon: IconCheck,
 					disabled: !this.selectedUser || this.delegating,
 					callback: async () => { await this.addDelegate() },
@@ -162,12 +171,12 @@ export default {
 			return [
 				{
 					label: t('mail', 'Cancel'),
-					type: 'tertiary',
+					variant: 'tertiary',
 					callback: () => { this.closeDialog() },
 				},
 				{
 					label: t('mail', 'Revoke'),
-					type: 'error',
+					variant: 'error',
 					callback: async () => { await this.revokeDelegate() },
 				},
 			]

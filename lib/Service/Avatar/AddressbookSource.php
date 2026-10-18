@@ -32,13 +32,14 @@ class AddressbookSource implements IAvatarSource {
 	}
 
 	/**
+	 * @param string $userId uid of the user the lookup is performed for
 	 * @param string $email sender email address
 	 * @param AvatarFactory $factory
 	 * @return Avatar|null avatar URL if one can be found
 	 */
 	#[\Override]
-	public function fetch(string $email, AvatarFactory $factory) {
-		$url = $this->contactsIntegration->getPhoto($email);
+	public function fetch(string $userId, string $email, AvatarFactory $factory) {
+		$url = $this->contactsIntegration->getPhoto($userId, $email);
 
 		if ($url === false || $url === null) {
 			return null;

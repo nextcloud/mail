@@ -31,11 +31,11 @@ class ActionStepController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 * @param string $name
 	 *
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function create(string $name, int $order, int $actionId, ?int $tagId = null, ?int $mailboxId = null): JsonResponse {
 		if ($this->userId === null) {
@@ -60,12 +60,12 @@ class ActionStepController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 * @param int $id
 	 * @param string $name
 	 *
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function update(int $id, string $name, int $order, ?int $tagId, ?int $mailboxId): JsonResponse {
 
@@ -81,10 +81,9 @@ class ActionStepController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	public function destroy(int $id): JsonResponse {
 		if ($this->userId === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);

@@ -10,10 +10,10 @@ namespace OCA\Mail\Tests\Integration\Service;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client;
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 use OCA\Mail\Service\AntiSpamService;
+use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\Sync\SyncService;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use OCA\Mail\Tests\Integration\Framework\ImapTestAccount;
@@ -51,8 +51,8 @@ class AntiSpamServiceIntegrationTest extends TestCase {
 		$imapMessageMapper = Server::get(ImapMessageMapper::class);
 		/** @var MessageMapper $messageMapper */
 		$messageMapper = Server::get(MessageMapper::class);
-		/** @var IMailManager $mailManager */
-		$mailManager = Server::get(IMailManager::class);
+		/** @var MailManager $mailManager */
+		$mailManager = Server::get(MailManager::class);
 		$mailBoxes = $mailManager->getMailboxes(new Account($account));
 		$inbox = null;
 		foreach ($mailBoxes as $mailBox) {
@@ -79,15 +79,17 @@ class AntiSpamServiceIntegrationTest extends TestCase {
 			null
 		);
 
+		$message = $messageMapper->findByUids($inbox, [$newUid])[0];
+
 		// now we flag this message as junk
-		$mailManager->flagMessage(new Account($account), $inbox->getName(), $newUid, 'junk', true);
+		$mailManager->flagMessages(new Account($account), $inbox, 'junk', true, $message);
 
 		// if everything runs through, we can assert the run has been fine,
 		// but we can't really test if Listener and Transmission have actually sent the message
 		$this->addToAssertionCount(1);
 
 		// now we flag this message as not junk
-		$mailManager->flagMessage(new Account($account), $inbox->getName(), $newUid, 'notjunk', true);
+		$mailManager->flagMessages(new Account($account), $inbox, 'notjunk', true, $message);
 
 		// same as before
 		$this->addToAssertionCount(1);

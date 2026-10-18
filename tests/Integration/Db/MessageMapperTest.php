@@ -12,20 +12,28 @@ namespace OCA\Mail\Tests\Integration\Db;
 use ChristophWurst\Nextcloud\Testing\DatabaseTransaction;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper;
+use OCA\Mail\Db\Recipient;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\Search\SearchQuery;
 use OCA\Mail\Support\PerformanceLogger;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
+use OCP\IUser;
 use function array_map;
 use function range;
 use function time;
 
 class MessageMapperTest extends TestCase {
 	use DatabaseTransaction;
+
+	/** A user that has no mail accounts on a development instance */
+	private const GLOBAL_SEARCH_USER_ID = 'message-mapper-test-user';
 
 	/** @var IDBConnection */
 	private $db;
@@ -59,7 +67,7 @@ class MessageMapperTest extends TestCase {
 		$delete->executeStatement();
 	}
 
-	private function insertMessage(int $uid, int $mailbox_id): void {
+	private function insertMessage(int $uid, int $mailbox_id): int {
 		$qb = $this->db->getQueryBuilder();
 		$insert = $qb->insert($this->mapper->getTableName())
 			->values([
@@ -71,6 +79,7 @@ class MessageMapperTest extends TestCase {
 				'in_reply_to' => $qb->createNamedParameter('<>')
 			]);
 		$insert->executeStatement();
+		return $qb->getLastInsertId();
 	}
 
 	private function insertMessageWithId(int $id, int $mailbox_id): void {
@@ -86,6 +95,219 @@ class MessageMapperTest extends TestCase {
 				'in_reply_to' => $qb->createNamedParameter('<>')
 			]);
 		$insert->executeStatement();
+	}
+
+	private function insertRecipient(int $messageId, int $type, string $email, string $label = ''): void {
+		$qb = $this->db->getQueryBuilder();
+		$qb->insert('mail_recipients')
+			->values([
+				'message_id' => $qb->createNamedParameter($messageId, IQueryBuilder::PARAM_INT),
+				'type' => $qb->createNamedParameter($type, IQueryBuilder::PARAM_INT),
+				'email' => $qb->createNamedParameter($email),
+				'label' => $qb->createNamedParameter($label),
+			])
+			->executeStatement();
+	}
+
+	private function insertMailboxOfUser(string $userId): Mailbox {
+		$account = new MailAccount();
+		$account->setUserId($userId);
+		$account->setEmail($userId . '@example.com');
+		$account->setInboundHost('imap.example.com');
+		$account->setInboundPort(993);
+		$account->setInboundSslMode('ssl');
+		$account->setInboundUser($userId);
+		$account = (new MailAccountMapper($this->db))->insert($account);
+
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
+		$mailbox->setNameHash(md5('INBOX'));
+		$mailbox->setAccountId($account->getId());
+		$mailbox->setAttributes('[]');
+		$mailbox->setDelimiter('.');
+		$mailbox->setMessages(0);
+		$mailbox->setUnseen(0);
+		$mailbox->setSelectable(true);
+		$mailbox->setSpecialUse('[]');
+		return (new MailboxMapper($this->db, $this->time))->insert($mailbox);
+	}
+
+	private function insertTag(string $imapMessageId, int $tagId): void {
+		$qb = $this->db->getQueryBuilder();
+		$qb->insert('mail_message_tags')
+			->values([
+				'imap_message_id' => $qb->createNamedParameter($imapMessageId),
+				'tag_id' => $qb->createNamedParameter($tagId, IQueryBuilder::PARAM_INT),
+			])
+			->executeStatement();
+	}
+
+	public function testFindIdsByQueryMatchesTheSender(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$this->insertMessageWithId(1, 1);
+		$this->insertMessageWithId(2, 1);
+		$this->insertRecipient(1, Recipient::TYPE_FROM, 'alice@example.com');
+		$this->insertRecipient(2, Recipient::TYPE_FROM, 'bob@example.com');
+
+		$searchQuery = new SearchQuery();
+		$searchQuery->addFrom('alice@example.com');
+
+		$result = $this->mapper->findIdsByQuery($mailbox, $searchQuery, 'DESC', null);
+
+		self::assertEquals([1], $result);
+	}
+
+	public function testFindIdsByQueryMatchesTheRecipientLabel(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$this->insertMessageWithId(1, 1);
+		$this->insertRecipient(1, Recipient::TYPE_TO, 'alice@example.com', 'Alice Doe');
+
+		$searchQuery = new SearchQuery();
+		$searchQuery->addTo('Alice');
+
+		$result = $this->mapper->findIdsByQuery($mailbox, $searchQuery, 'DESC', null);
+
+		self::assertEquals([1], $result);
+	}
+
+	public function testFindIdsByQueryMatchesCcAndBcc(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$this->insertMessageWithId(1, 1);
+		$this->insertMessageWithId(2, 1);
+		$this->insertRecipient(1, Recipient::TYPE_CC, 'cc@example.com');
+		$this->insertRecipient(1, Recipient::TYPE_BCC, 'bcc@example.com');
+		$this->insertRecipient(2, Recipient::TYPE_CC, 'other@example.com');
+
+		$searchQuery = new SearchQuery();
+		$searchQuery->addCc('cc@example.com');
+		$searchQuery->addBcc('bcc@example.com');
+
+		$result = $this->mapper->findIdsByQuery($mailbox, $searchQuery, 'DESC', null);
+
+		self::assertEquals([1], $result);
+	}
+
+	public function testFindIdsByQueryDoesNotDuplicateAMessageWithSeveralMatchingRecipients(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$this->insertMessageWithId(1, 1);
+		// Two "to" recipients both match the search, which used to multiply
+		// the message once per join before DISTINCT removed the duplicate.
+		$this->insertRecipient(1, Recipient::TYPE_TO, 'alice@example.com');
+		$this->insertRecipient(1, Recipient::TYPE_TO, 'alice@work.example.com');
+
+		$searchQuery = new SearchQuery();
+		$searchQuery->addTo('alice@');
+
+		$result = $this->mapper->findIdsByQuery($mailbox, $searchQuery, 'DESC', null);
+
+		self::assertEquals([1], $result);
+	}
+
+	public function testFindIdsByQueryDoesNotDuplicateAMessageWithSeveralMatchingTags(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$this->insertMessageWithId(1, 1);
+		// Same concern as the recipient case: a message with several of the
+		// requested tags must not come back once per tag now that the join
+		// is a subquery and DISTINCT is gone.
+		$this->insertTag('<abc11@123.com>', 101);
+		$this->insertTag('<abc11@123.com>', 102);
+
+		$searchQuery = new SearchQuery();
+		$searchQuery->setTags([101, 102]);
+
+		$result = $this->mapper->findIdsByQuery($mailbox, $searchQuery, 'DESC', null);
+
+		self::assertEquals([1], $result);
+	}
+
+	public function testFindIdsByQueryAllofRequiresBothSenderAndSubject(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$qb = $this->db->getQueryBuilder();
+		$qb->insert($this->mapper->getTableName())->values([
+			'id' => 1,
+			'uid' => $qb->createNamedParameter(1, IQueryBuilder::PARAM_INT),
+			'message_id' => $qb->createNamedParameter('<a@b.com>'),
+			'mailbox_id' => $qb->createNamedParameter(1, IQueryBuilder::PARAM_INT),
+			'subject' => $qb->createNamedParameter('needle'),
+			'sent_at' => $qb->createNamedParameter(1641216000, IQueryBuilder::PARAM_INT),
+		])->executeStatement();
+		$this->insertRecipient(1, Recipient::TYPE_FROM, 'alice@example.com');
+
+		$searchQuery = new SearchQuery();
+		$searchQuery->addFrom('alice@example.com');
+		$searchQuery->addSubject('nonexistent');
+
+		$result = $this->mapper->findIdsByQuery($mailbox, $searchQuery, 'DESC', null);
+
+		self::assertEquals([], $result);
+	}
+
+	public function testFindIdsByQueryAnyofMatchesEitherSenderOrSubject(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$qb = $this->db->getQueryBuilder();
+		$qb->insert($this->mapper->getTableName())->values([
+			'id' => 1,
+			'uid' => $qb->createNamedParameter(1, IQueryBuilder::PARAM_INT),
+			'message_id' => $qb->createNamedParameter('<a@b.com>'),
+			'mailbox_id' => $qb->createNamedParameter(1, IQueryBuilder::PARAM_INT),
+			'subject' => $qb->createNamedParameter('unrelated'),
+			'sent_at' => $qb->createNamedParameter(1641216000, IQueryBuilder::PARAM_INT),
+		])->executeStatement();
+		$this->insertRecipient(1, Recipient::TYPE_FROM, 'alice@example.com');
+
+		$searchQuery = new SearchQuery();
+		$searchQuery->setMatch('anyof');
+		$searchQuery->addFrom('alice@example.com');
+		$searchQuery->addSubject('needle');
+
+		$result = $this->mapper->findIdsByQuery($mailbox, $searchQuery, 'DESC', null);
+
+		self::assertEquals([1], $result);
+	}
+
+	public function testFindIdsGloballyByQueryMatchesTheSender(): void {
+		$user = $this->createMock(IUser::class);
+		$user->method('getUID')->willReturn(self::GLOBAL_SEARCH_USER_ID);
+		$mailbox = $this->insertMailboxOfUser(self::GLOBAL_SEARCH_USER_ID);
+		$fromAlice = $this->insertMessage(1, $mailbox->getId());
+		$fromBob = $this->insertMessage(2, $mailbox->getId());
+		$this->insertRecipient($fromAlice, Recipient::TYPE_FROM, 'alice@example.com');
+		$this->insertRecipient($fromBob, Recipient::TYPE_FROM, 'bob@example.com');
+
+		$searchQuery = new SearchQuery();
+		$searchQuery->addFrom('alice@example.com');
+
+		$result = $this->mapper->findIdsGloballyByQuery($user, $searchQuery, null);
+
+		self::assertEquals([$fromAlice], $result);
+	}
+
+	public function testFindIdsGloballyByQueryMatchesToCcAndBcc(): void {
+		$user = $this->createMock(IUser::class);
+		$user->method('getUID')->willReturn(self::GLOBAL_SEARCH_USER_ID);
+		$mailbox = $this->insertMailboxOfUser(self::GLOBAL_SEARCH_USER_ID);
+		$matching = $this->insertMessage(1, $mailbox->getId());
+		$onlyTo = $this->insertMessage(2, $mailbox->getId());
+		$this->insertRecipient($matching, Recipient::TYPE_TO, 'to@example.com');
+		$this->insertRecipient($matching, Recipient::TYPE_CC, 'cc@example.com');
+		$this->insertRecipient($matching, Recipient::TYPE_BCC, 'bcc@example.com');
+		$this->insertRecipient($onlyTo, Recipient::TYPE_TO, 'to@example.com');
+
+		$searchQuery = new SearchQuery();
+		$searchQuery->addTo('to@example.com');
+		$searchQuery->addCc('cc@example.com');
+		$searchQuery->addBcc('bcc@example.com');
+
+		$result = $this->mapper->findIdsGloballyByQuery($user, $searchQuery, null);
+
+		self::assertEquals([$matching], $result);
 	}
 
 	public function testResetInReplyTo() : void {
@@ -206,6 +428,65 @@ class MessageMapperTest extends TestCase {
 		$result = $this->mapper->findIdsByQuery($mailbox, $searchQuery, $sortOrder, 3, null);
 
 		self::assertEquals([3,2,1], $result);
+	}
+
+	public function testFindIdsByQueryRestrictedToIds(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$qb = $this->db->getQueryBuilder();
+
+		$values = [
+			[
+				'id' => 1,
+				'uid' => $qb->createNamedParameter(267, IQueryBuilder::PARAM_INT),
+				'message_id' => $qb->createNamedParameter('<abc@123.com>'),
+				'mailbox_id' => $qb->createNamedParameter(1, IQueryBuilder::PARAM_INT),
+				'subject' => $qb->createNamedParameter('needle'),
+				'sent_at' => $qb->createNamedParameter(1641216000, IQueryBuilder::PARAM_INT),
+			],
+			[
+				'id' => 2,
+				'uid' => $qb->createNamedParameter(268, IQueryBuilder::PARAM_INT),
+				'message_id' => $qb->createNamedParameter('<def@456.com>'),
+				'mailbox_id' => $qb->createNamedParameter(1, IQueryBuilder::PARAM_INT),
+				'subject' => $qb->createNamedParameter('needle'),
+				'sent_at' => $qb->createNamedParameter(1641216001, IQueryBuilder::PARAM_INT),
+			],
+			[
+				'id' => 3,
+				'uid' => $qb->createNamedParameter(269, IQueryBuilder::PARAM_INT),
+				'message_id' => $qb->createNamedParameter('<ghi@789.com>'),
+				'mailbox_id' => $qb->createNamedParameter(1, IQueryBuilder::PARAM_INT),
+				'subject' => $qb->createNamedParameter('unrelated'),
+				'sent_at' => $qb->createNamedParameter(1641216003, IQueryBuilder::PARAM_INT),
+			],
+		];
+
+		foreach ($values as $value) {
+			$qb->insert($this->mapper->getTableName())->values($value)->executeStatement();
+		}
+
+		$searchQuery = new SearchQuery();
+		$searchQuery->setMatch('anyof');
+		$searchQuery->addSubject('needle');
+
+		$result = $this->mapper->findIdsByQuery($mailbox, $searchQuery, 'DESC', null, null, [2, 3]);
+
+		self::assertEquals([2], $result);
+	}
+
+	public function testFindIdsByQueryRestrictedToNoIds(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$this->insertMessage(267, 1);
+
+		$searchQuery = new SearchQuery();
+		$searchQuery->setMatch('anyof');
+		$searchQuery->addSubject('TEST');
+
+		$result = $this->mapper->findIdsByQuery($mailbox, $searchQuery, 'DESC', null, null, []);
+
+		self::assertEquals([], $result);
 	}
 
 	public function testDeleteByUid(): void {

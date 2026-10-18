@@ -157,13 +157,12 @@ describe('printMessage', () => {
 			expect(content.querySelector('style').textContent).toContain('color: green')
 		})
 
-		it('strips scripts and the iframe-resizer marker from the printed content', () => {
-			const source = parse('<html><head></head><body><p>hi</p><script>alert(1)</script><div data-iframe-size></div></body></html>')
+		it('strips scripts from the printed content', () => {
+			const source = parse('<html><head></head><body><p>hi</p><script>alert(1)</script></body></html>')
 
 			const content = buildMessageContent(source)
 
 			expect(content.querySelector('script')).toBeNull()
-			expect(content.querySelector('[data-iframe-size]')).toBeNull()
 			expect(content.querySelector('p').textContent).toBe('hi')
 		})
 

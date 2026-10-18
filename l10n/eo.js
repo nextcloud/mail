@@ -72,6 +72,7 @@ OC.L10N.register(
     "Enter a date" : "Entajpu daton",
     "Confirm" : "Konfirmi",
     "Revoke" : "Senvalidigi",
+    "Delete tag" : "Forigi etikedon",
     "Plain text" : "Ebenaĵa teksto",
     "No messages in this folder" : "Neniu mesaĝo en tiu dosierujo",
     "Blind copy recipients only" : "Nur blindkopiaj ricevontoj",
@@ -136,7 +137,6 @@ OC.L10N.register(
     "Select tags" : "Elekti etikedojn",
     "Custom" : "Propra",
     "Save signature" : "Konservi subskribon",
-    "Delete tag" : "Forigi etikedon",
     "Not found" : "Ne trovita",
     "Reply to sender only" : "Respondi nur al sendinto",
     "From:" : "El:",
@@ -194,8 +194,6 @@ OC.L10N.register(
     "Could not load the message" : "Ne eblis ŝargi la mesaĝon",
     "Date:" : "Dato:",
     "Tag already exists" : "La etikedo jam ekzistas",
-    "Error loading message" : "Eraris ŝargi mesaĝon",
-    "Show less" : "Montri malpli",
-    "Show more" : "Montri pli"
+    "Error loading message" : "Eraris ŝargi mesaĝon"
 },
 "nplurals=2; plural=(n != 1);");

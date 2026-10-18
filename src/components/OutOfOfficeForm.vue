@@ -56,7 +56,8 @@
 					<NcDateTimePicker
 						id="ooo-first-day"
 						v-model="firstDay"
-						:disabled="!enabled" />
+						:class="{ 'form__date-picker--disabled': !enabled }"
+						:inert="!enabled" />
 				</fieldset>
 
 				<fieldset class="form__fieldset">
@@ -73,7 +74,8 @@
 					<NcDateTimePicker
 						id="ooo-last-day"
 						v-model="lastDay"
-						:disabled="!enabled || !enableLastDay" />
+						:class="{ 'form__date-picker--disabled': !enabled || !enableLastDay }"
+						:inert="!enabled || !enableLastDay" />
 				</fieldset>
 			</div>
 
@@ -121,9 +123,10 @@
 <script>
 import { loadState } from '@nextcloud/initial-state'
 import { generateUrl } from '@nextcloud/router'
-import { NcButton, NcDateTimePicker } from '@nextcloud/vue'
 import mitt from 'mitt'
 import { mapStores } from 'pinia'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcDateTimePicker from '@nextcloud/vue/components/NcDateTimePicker'
 import CheckIcon from 'vue-material-design-icons/Check.vue'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
 import TextEditor from './TextEditor.vue'
@@ -351,13 +354,13 @@ export default {
 			gap: 5px;
 		}
 
-		&__input {
-			flex: 1 auto;
-		}
-
 		&__description {
 			color: var(--color-text-maxcontrast);
 		}
+	}
+
+	&__date-picker--disabled {
+		opacity: .5;
 	}
 
 	&__multi-row {
@@ -388,9 +391,4 @@ export default {
 	}
 }
 
-#ooo-first-day {
-	:deep(.mx-datepicker-popup) {
-		inset-inline-start: 0 !important;
-	}
-}
 </style>

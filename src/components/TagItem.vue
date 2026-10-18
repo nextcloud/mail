@@ -12,62 +12,69 @@
 			}">
 			{{ translateTagDisplayName(tag) }}
 		</button>
-		<NcActions :force-menu="true" @close="closeEditTag">
-			<NcActionButton
-				v-if="renameTagLabel"
-				@click="openEditTag">
-				<template #icon>
-					<IconEdit :size="22" />
-				</template>
-				{{ t('mail', 'Edit name or color') }}
-			</NcActionButton>
-			<NcColorPicker
-				v-if="!renameTagLabel"
-				v-model="editColor"
-				class="app-navigation-entry-bullet-wrapper"
-				@submit="updateColor">
-				<div :style="{ backgroundColor: editColor }" class="color0 app-navigation-entry-bullet" />
-			</NcColorPicker>
-			<NcActionInput
-				v-if="renameTagInput"
-				v-model="currentTagName"
-				:error="hasError()"
-				:helper-text="errorMessage"
-				@submit="renameTag(tag, $event)" />
-			<NcActionText v-if="showSaving">
-				<template #icon>
-					<NcLoadingIcon :size="22" />
-				</template>
-				{{ t('mail', 'Saving new tag name …') }}
-			</NcActionText>
-			<NcActionButton
-				v-if="!tag.isDefaultTag || !renameTagLabel"
-				@click="deleteTag">
-				<template #icon>
-					<DeleteIcon :size="22" />
-				</template>
-				{{ t('mail', 'Delete tag') }}
-			</NcActionButton>
-		</NcActions>
-		<button
-			v-if="!isSet(tag.imapLabel)"
-			class="tag-actions"
-			@click="addTag(tag.imapLabel)">
-			{{ t('mail', 'Set tag') }}
-		</button>
-		<button
-			v-else
-			class="tag-actions"
-			@click="removeTag(tag.imapLabel)">
-			{{ t('mail', 'Unset tag') }}
-		</button>
+		<div class="tag-group__actions">
+			<NcActions :forceMenu="true" @close="closeEditTag">
+				<NcActionButton
+					v-if="renameTagLabel"
+					@click="openEditTag">
+					<template #icon>
+						<IconEdit :size="22" />
+					</template>
+					{{ t('mail', 'Edit name or color') }}
+				</NcActionButton>
+				<NcColorPicker
+					v-if="!renameTagLabel"
+					v-model="editColor"
+					class="app-navigation-entry-bullet-wrapper"
+					@submit="updateColor">
+					<div :style="{ backgroundColor: editColor }" class="color0 app-navigation-entry-bullet" />
+				</NcColorPicker>
+				<NcActionInput
+					v-if="renameTagInput"
+					v-model="currentTagName"
+					:error="hasError()"
+					:helperText="errorMessage"
+					@submit="renameTag(tag, $event)" />
+				<NcActionText v-if="showSaving">
+					<template #icon>
+						<NcLoadingIcon :size="22" />
+					</template>
+					{{ t('mail', 'Saving new tag name …') }}
+				</NcActionText>
+				<NcActionButton
+					v-if="!tag.isDefaultTag || !renameTagLabel"
+					@click="deleteTag">
+					<template #icon>
+						<DeleteIcon :size="22" />
+					</template>
+					{{ t('mail', 'Delete tag') }}
+				</NcActionButton>
+			</NcActions>
+			<button
+				v-if="!isSet(tag.imapLabel)"
+				class="tag-actions"
+				@click="addTag(tag.imapLabel)">
+				{{ t('mail', 'Set tag') }}
+			</button>
+			<button
+				v-else
+				class="tag-actions"
+				@click="removeTag(tag.imapLabel)">
+				{{ t('mail', 'Unset tag') }}
+			</button>
+		</div>
 	</div>
 </template>
 
 <script>
 import { showInfo } from '@nextcloud/dialogs'
-import { NcActionButton, NcActionInput, NcActions, NcActionText, NcColorPicker, NcLoadingIcon } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcActionInput from '@nextcloud/vue/components/NcActionInput'
+import NcActions from '@nextcloud/vue/components/NcActions'
+import NcActionText from '@nextcloud/vue/components/NcActionText'
+import NcColorPicker from '@nextcloud/vue/components/NcColorPicker'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import IconEdit from 'vue-material-design-icons/PencilOutline.vue'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import logger from '../logger.js'
@@ -100,6 +107,8 @@ export default {
 		},
 	},
 
+	emits: ['deleteTag'],
+
 	data() {
 		return {
 			isAdded: false,
@@ -128,7 +137,7 @@ export default {
 	methods: {
 		translateTagDisplayName,
 		deleteTag() {
-			this.$emit('delete-tag', this.tag)
+			this.$emit('deleteTag', this.tag)
 		},
 
 		async updateColor() {
@@ -165,7 +174,7 @@ export default {
 			return this.errorMessage !== ''
 		},
 
-		async renameTag(tag, event) {
+		async renameTag(tag) {
 			this.currentTagName = this.currentTagName.trim()
 
 			const otherTags = this.mainStore.getTags
@@ -253,36 +262,48 @@ export default {
 }
 
 .tag-group {
-	display: block;
-	position: relative;
-	margin: 0 1px;
+	display: flex;
+	align-items: center;
+	gap: var(--default-grid-baseline);
+	min-height: 44px;
+	padding-inline: var(--default-grid-baseline);
+}
+
+.tag-group__label {
+	flex: 0 1 auto;
+	min-width: 0;
+	font-weight: bold;
+	border: none;
+	background-color: transparent;
+	padding-inline: 10px;
+	padding-block: 4px;
+	border-radius: var(--border-radius-pill);
 	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	text-align: start;
+	cursor: default;
+}
+
+.tag-group__actions {
+	margin-inline-start: auto;
+	display: flex;
+	align-items: center;
+	flex-shrink: 0;
 }
 
 .tag-actions {
 	background-color: transparent;
 	border: none;
-	float: inline-end;
+	border-radius: var(--border-radius);
+	padding-inline: calc(var(--default-grid-baseline) * 2);
+	padding-block: var(--default-grid-baseline);
+	white-space: nowrap;
+	cursor: pointer;
 	&:hover,
 	&:focus {
 		background-color: var(--color-border-dark);
 	}
-}
-
-.tag-group__label {
-	z-index: 2;
-	font-weight: bold;
-	border: none;
-	background-color: transparent;
-	padding-inline: 10px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	max-width: 94px;
-}
-
-.action-item {
-	inset-inline-end: 8px;
-	float: inline-end;
 }
 
 :deep(.input-field) {

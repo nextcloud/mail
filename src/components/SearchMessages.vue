@@ -103,15 +103,15 @@
 								id="fromId"
 								class="modal-inner--container__select"
 								label="label"
-								track-by="email"
+								trackBy="email"
 								:options="autocompleteRecipients"
-								:model-value="searchInFrom"
+								:modelValue="searchInFrom"
 								:placeholder="t('mail', 'Select senders')"
 								:aria-label-combobox="t('mail', 'Select senders')"
 								:multiple="true"
 								:taggable="true"
-								:show-no-options="false"
-								:preserve-search="true"
+								:showNoOptions="false"
+								:preserveSearch="true"
 								:max="1"
 								@option:selecting="addTag($event, 'from')"
 								@option:deselecting="removeTag($event, 'from')"
@@ -128,15 +128,15 @@
 								id="toId"
 								class="modal-inner--container__select"
 								label="label"
-								track-by="email"
+								trackBy="email"
 								:options="autocompleteRecipients"
-								:model-value="searchInTo"
+								:modelValue="searchInTo"
 								:placeholder="t('mail', 'Select recipients')"
 								:aria-label-combobox="t('mail', 'Select recipients')"
 								:multiple="true"
 								:taggable="true"
-								:show-no-options="false"
-								:preserve-search="true"
+								:showNoOptions="false"
+								:preserveSearch="true"
 								@option:selecting="addTag($event, 'to')"
 								@option:deselecting="removeTag($event, 'to')"
 								@search="searchRecipients($event)" />
@@ -152,15 +152,15 @@
 								id="ccId"
 								class="modal-inner--container__select"
 								label="label"
-								track-by="email"
+								trackBy="email"
 								:options="autocompleteRecipients"
-								:model-value="searchInCc"
+								:modelValue="searchInCc"
 								:placeholder="t('mail', 'Select CC recipients')"
 								:aria-label-combobox="t('mail', 'Select CC recipients')"
 								:multiple="true"
 								:taggable="true"
-								:show-no-options="false"
-								:preserve-search="true"
+								:showNoOptions="false"
+								:preserveSearch="true"
 								@option:selecting="addTag($event, 'cc')"
 								@option:deselecting="removeTag($event, 'cc')"
 								@search="searchRecipients($event)" />
@@ -176,15 +176,15 @@
 								id="bccId"
 								class="modal-inner--container__select"
 								label="label"
-								track-by="email"
+								trackBy="email"
 								:options="autocompleteRecipients"
-								:model-value="searchInBcc"
+								:modelValue="searchInBcc"
 								:placeholder="t('mail', 'Select BCC recipients')"
 								:aria-label-combobox="t('mail', 'Select BCC recipients')"
 								:multiple="true"
 								:taggable="true"
-								:show-no-options="false"
-								:preserve-search="true"
+								:showNoOptions="false"
+								:preserveSearch="true"
 								@option:selecting="addTag($event, 'bcc')"
 								@option:deselecting="removeTag($event, 'bcc')"
 								@search="searchRecipients($event)" />
@@ -203,12 +203,12 @@
 								class="multiselect-search-tags "
 								:options="tags"
 								label="displayName"
-								:model-value="selectedTags"
+								:modelValue="selectedTags"
 								:placeholder="t('mail', 'Select tags')"
 								:aria-label-combobox="t('mail', 'Select tags')"
-								track-by="displayName"
+								trackBy="displayName"
 								:multiple="true"
-								:auto-limit="false">
+								:autoLimit="false">
 								<template #selected-option="option">
 									<div class="tag-group__search">
 										<div
@@ -278,22 +278,22 @@
 		<div v-if="showButtons" class="filter-buttons">
 			<NcChip
 				:text="t('mail', 'Has attachment')"
-				:no-close="true"
+				:noClose="true"
 				:variant="hasAttachmentActive ? 'primary' : 'secondary'"
 				:aria-label="t('mail', 'Has attachment')"
-				@click.native="toggleGetAttachments" />
+				@click="toggleGetAttachments" />
 			<NcChip
 				:text="t('mail', 'Unread')"
-				:no-close="true"
+				:noClose="true"
 				:variant="hasUnreadActive ? 'primary' : 'secondary'"
 				:aria-label="t('mail', 'Unread')"
-				@click.native="toggleUnread" />
+				@click="toggleUnread" />
 			<NcChip
 				:text="t('mail', 'To me')"
-				:no-close="true"
+				:noClose="true"
 				:variant="hasToMeActive ? 'primary' : 'secondary'"
 				:aria-label="t('mail', 'To me')"
-				@click.native="toggleCurrentUser" />
+				@click="toggleCurrentUser" />
 		</div>
 	</div>
 </template>
@@ -346,6 +346,8 @@ export default {
 		},
 	},
 
+	emits: ['searchChanged'],
+
 	data() {
 		return {
 			showButtons: false,
@@ -369,13 +371,13 @@ export default {
 				{
 					label: t('mail', 'Clear'),
 					callback: () => this.resetFilter(),
-					type: 'primary',
+					variant: 'primary',
 					icon: IconClose,
 				},
 				{
 					label: t('mail', 'Search'),
 					callback: () => this.closeSearchModal(),
-					type: 'primary',
+					variant: 'primary',
 					icon: IconMagnify,
 				},
 			],
@@ -566,7 +568,7 @@ export default {
 		},
 
 		sendQueryEvent() {
-			this.$emit('search-changed', this.searchQuery)
+			this.$emit('searchChanged', this.searchQuery)
 		},
 
 		searchRecipients(term) {
@@ -640,7 +642,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .search-messages {
 	border-bottom: 1px solid var(--color-border);
 	position: sticky;
@@ -660,28 +662,11 @@ export default {
 		input {
 			flex-grow: 1;
 		}
-
-		.action-item--single {
-			border: none;
-			background: none;
-			transition: 0.4s;
-		}
-
-		.action-item--single:hover {
-			transition: 0.4s;
-			background: var(--color-primary-element);
-		}
 	}
 }
 
 .search-input {
 	width: 100%;
-}
-
-.checkbox-radio-switch__label {
-	background: none !important;
-	padding: 0 !important;
-	margin: 0 !important;
 }
 
 .tag-group__search {
@@ -752,18 +737,6 @@ export default {
 	width: 100%;
 }
 
-.multiselect-search-tags .multiselect__tags .multiselect__tags-wrap {
-	flex-wrap: wrap !important;
-}
-
-.modal-inner-field--right {
-	display: flex;
-	align-items: center;
-	justify-content: flex-end;
-	padding: 0 33px;
-	margin-top: 15px;
-}
-
 .modal-inner--field {
 	display: flex;
 	align-items: center;
@@ -792,14 +765,8 @@ export default {
 	}
 }
 
-.modal-wrapper--normal .modal-container {
-	position: relative
-}
-
-.button-vue.search-messages--filter.button-vue--icon-only {
+.button-vue.search-messages--filter {
 	position: absolute;
-	width: auto;
-	height: auto;
 	z-index: 5;
 	inset-inline-end: 7px; /* same spacing to the input border as top/bottom */
 	inset-inline-start: auto;
@@ -809,10 +776,8 @@ export default {
 	padding: 0 !important;
 }
 
-.button-vue.search-messages--close.button-vue--icon-only {
+.button-vue.search-messages--close {
 	position: absolute;
-	width: auto;
-	height: auto;
 	z-index: 5;
 	inset-inline-end: 35px;
 	inset-inline-start: auto;
@@ -822,23 +787,15 @@ export default {
 	padding: 0 !important;
 }
 
-.button-reset-filter {
-	margin-inline-end: 10px;
-}
-
 .filter-changed {
 	width: 6px;
 	height: 6px;
-	background: var(--color-error);
+	background: var(--color-element-error);
 	position: absolute;
 	z-index: 10;
 	inset-inline-end: 12px;
 	border-radius: 50%;
 	top: 12px;
-}
-
-.mx-datepicker {
-	width:100%;
 }
 
 .filter-buttons {

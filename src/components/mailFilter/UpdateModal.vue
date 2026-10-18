@@ -5,7 +5,7 @@
 <template>
 	<NcModal
 		size="normal"
-		:close-on-click-outside="false"
+		:closeOnClickOutside="false"
 		:name="t('mail', 'New filter')"
 		@close="closeModal">
 		<form class="modal__content" @submit.prevent="updateFilter">
@@ -27,8 +27,8 @@
 					v-for="test in clone.tests"
 					:key="test.id"
 					:test="test"
-					@update-test="updateTest"
-					@delete-test="deleteTest" />
+					@updateTest="updateTest"
+					@deleteTest="deleteTest" />
 
 				<NcButton
 					class="add-condition"
@@ -37,6 +37,10 @@
 					@click="createTest">
 					{{ t('mail', 'Add condition') }}
 				</NcButton>
+
+				<NcNoteCard v-if="!hasTests" class="filter-note" type="error">
+					<p>{{ t('mail', 'Add at least one condition.') }}</p>
+				</NcNoteCard>
 			</div>
 
 			<div class="filter-actions">
@@ -47,8 +51,8 @@
 					:key="action.id"
 					:action="action"
 					:account="account"
-					@update-action="updateAction"
-					@delete-action="deleteAction" />
+					@updateAction="updateAction"
+					@deleteAction="deleteAction" />
 
 				<NcButton
 					class="add-action"
@@ -58,7 +62,7 @@
 					{{ t('mail', 'Add action') }}
 				</NcButton>
 
-				<NcNoteCard v-if="hasRedirectAction" class="redirect-note" type="warning">
+				<NcNoteCard v-if="hasRedirectAction" class="filter-note" type="warning">
 					<p>{{ t('mail', 'Redirected messages might be rejected by the receiving server, and cannot be read by the recipient if encrypted.') }}</p>
 				</NcNoteCard>
 			</div>
@@ -77,7 +81,8 @@
 
 			<NcButton
 				variant="primary"
-				type="submit">
+				type="submit"
+				:disabled="!hasTests">
 				<template #icon>
 					<NcLoadingIcon v-if="loading" :size="20" />
 					<IconCheck v-else :size="20" />
@@ -89,13 +94,27 @@
 </template>
 
 <script>
-import { NcButton, NcCheckboxRadioSwitch, NcLoadingIcon, NcModal, NcNoteCard, NcTextField } from '@nextcloud/vue'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
+import NcModal from '@nextcloud/vue/components/NcModal'
+import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
+import NcTextField from '@nextcloud/vue/components/NcTextField'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import Action from './Action.vue'
 import Operator from './Operator.vue'
 import Test from './Test.vue'
 import { MailFilterActions, MailFilterConditionField, MailFilterConditionOperator } from '../../models/mailFilter.ts'
 import { randomId } from '../../util/randomId.js'
+
+// TODO: replace with cloneDeep from es-toolkit once it is a direct dependency
+function cloneFilter(filter) {
+	return {
+		...filter,
+		tests: filter.tests.map((test) => ({ ...test, values: [...test.values] })),
+		actions: filter.actions.map((action) => ({ ...action })),
+	}
+}
 
 export default {
 	name: 'UpdateModal',
@@ -129,14 +148,20 @@ export default {
 		},
 	},
 
+	emits: ['updateFilter', 'close'],
+
 	data() {
 		return {
-			clone: structuredClone(this.filter),
+			clone: cloneFilter(this.filter),
 			boundaryElement: null,
 		}
 	},
 
 	computed: {
+		hasTests() {
+			return this.clone.tests.length > 0
+		},
+
 		hasRedirectAction() {
 			return this.clone.actions.some((action) => action.type === MailFilterActions.Redirect)
 		},
@@ -149,7 +174,7 @@ export default {
 
 		updateTest(test) {
 			const index = this.clone.tests.findIndex((items) => items.id === test.id)
-			this.$set(this.clone.tests, index, test)
+			this.clone.tests[index] = test
 		},
 
 		deleteTest(test) {
@@ -172,7 +197,7 @@ export default {
 
 		updateAction(action) {
 			const index = this.clone.actions.findIndex((item) => item.id === action.id)
-			this.$set(this.clone.actions, index, action)
+			this.clone.actions[index] = action
 		},
 
 		updateOperator(operator) {
@@ -184,7 +209,10 @@ export default {
 		},
 
 		updateFilter() {
-			this.$emit('update-filter', structuredClone(this.clone))
+			if (!this.hasTests) {
+				return
+			}
+			this.$emit('updateFilter', cloneFilter(this.clone))
 		},
 
 		closeModal() {
@@ -204,30 +232,11 @@ export default {
 	margin-bottom: calc(var(--default-grid-baseline) * 4)
 }
 
-.form-group {
-	margin: calc(var(--default-grid-baseline) * 4) 0;
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-}
-
-.external-label {
-	display: flex;
-	width: 100%;
-	margin-top: 1rem;
-}
-
-.external-label label {
-	padding-top: 7px;
-	padding-inline-end: 14px;
-	white-space: nowrap;
-}
-
-.add-condition, .add-action, .filter-name, .filter-settings, .redirect-note {
+.add-condition, .add-action, .filter-name, .filter-settings {
 	width: calc(100% - (30px + var(--default-grid-baseline)));
 }
 
-.redirect-note {
+.filter-note {
 	box-sizing: border-box;
 }
 </style>

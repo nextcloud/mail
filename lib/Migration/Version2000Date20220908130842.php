@@ -49,6 +49,12 @@ class Version2000Date20220908130842 extends SimpleMigrationStep {
 				'default' => false,
 			]);
 		}
+
+		// mail_msg_imip_idx was added later and may not exist until optional indices are created
+		if (!$messagesTable->hasIndex('mail_msg_imip_idx')) {
+			$messagesTable->addIndex(['imip_message', 'sent_at'], 'mail_msg_imip_idx');
+		}
+
 		return $schema;
 	}
 }

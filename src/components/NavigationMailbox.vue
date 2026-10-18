@@ -8,18 +8,19 @@
 		v-if="visible"
 		:id="genId(mailbox)"
 		:key="genId(mailbox)"
+		v-model:menuOpen="menuOpen"
+		v-model:open="showSubMailboxes"
 		v-droppable-mailbox="{
 			mainStore: mainStore,
 			mailboxId: mailbox.databaseId,
 			accountId: mailbox.accountId,
 			isValidDropTarget,
 		}"
-		:allow-collapse="hasSubMailboxes"
-		:menu-open.sync="menuOpen"
-		:force-menu="true"
+		:allowCollapse="hasSubMailboxes"
+		:forceMenu="true"
 		:name="title"
 		:to="to"
-		:open.sync="showSubMailboxes"
+		:active="isActive"
 		@update:menuOpen="onMenuToggle">
 		<template #icon="{ active }">
 			<div>
@@ -101,7 +102,7 @@
 			<NcActionButton
 				v-if="notVirtualOrSpecial && hasDelimiter && !hasSubMailboxes && hasDeleteAcl"
 				:id="genId(mailbox)"
-				:close-after-click="true"
+				:closeAfterClick="true"
 				@click.prevent="onOpenMoveModal">
 				<template #icon>
 					<IconExternal :size="20" />
@@ -130,23 +131,23 @@
 
 			<NcActionCheckbox
 				v-if="notVirtual"
-				:model-value="mailbox.isSubscribed"
+				:modelValue="mailbox.isSubscribed"
 				:disabled="changeSubscription"
-				@update:checked="changeFolderSubscription">
+				@update:modelValue="changeFolderSubscription">
 				{{ t('mail', 'Subscribed') }}
 			</NcActionCheckbox>
 
 			<NcActionCheckbox
 				v-if="notVirtual && notInbox"
-				:model-value="mailbox.syncInBackground"
+				:modelValue="mailbox.syncInBackground"
 				:disabled="changingSyncInBackground"
-				@update:checked="changeSyncInBackground">
+				@update:modelValue="changeSyncInBackground">
 				{{ t('mail', 'Sync in background') }}
 			</NcActionCheckbox>
 
 			<NcActionButton
 				v-if="notVirtual && hasClearMailboxAcl"
-				:close-after-click="true"
+				:closeAfterClick="true"
 				@click="clearMailbox">
 				<template #icon>
 					<IconDeleteOutline :size="20" />
@@ -164,12 +165,8 @@
 			</NcActionButton>
 		</template>
 		<template #counter>
-			<NcCounterBubble v-if="showUnreadCounter && subCounter">
-				{{ mailbox.unread }}&nbsp;({{ subCounter }})
-			</NcCounterBubble>
-			<NcCounterBubble v-else-if="showUnreadCounter">
-				{{ mailbox.unread }}
-			</NcCounterBubble>
+			<NcCounterBubble v-if="showUnreadCounter && subCounter" raw :count="unreadWithSubCounter" />
+			<NcCounterBubble v-else-if="showUnreadCounter" :count="mailbox.unread" />
 		</template>
 		<template #extra>
 			<MoveMailboxModal
@@ -191,8 +188,14 @@
 
 import { showError, showInfo } from '@nextcloud/dialogs'
 import { n } from '@nextcloud/l10n'
-import { NcActionButton, NcActionCheckbox, NcActionInput, NcActionText, NcAppNavigationItem, NcCounterBubble, NcLoadingIcon } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcActionCheckbox from '@nextcloud/vue/components/NcActionCheckbox'
+import NcActionInput from '@nextcloud/vue/components/NcActionInput'
+import NcActionText from '@nextcloud/vue/components/NcActionText'
+import NcAppNavigationItem from '@nextcloud/vue/components/NcAppNavigationItem'
+import NcCounterBubble from '@nextcloud/vue/components/NcCounterBubble'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import IconEmailCheck from 'vue-material-design-icons/EmailCheckOutline.vue'
 import IconFolderSync from 'vue-material-design-icons/FolderSyncOutline.vue'
 import IconInfo from 'vue-material-design-icons/InformationOutline.vue'
@@ -218,6 +221,7 @@ export default {
 	components: {
 		NcAppNavigationItem,
 		NcCounterBubble,
+		NcLoadingIcon,
 		NcActionText,
 		NcActionButton,
 		NcActionCheckbox,
@@ -364,7 +368,8 @@ export default {
 		},
 
 		isActive() {
-			return this.$route.params.mailboxId === this.mailbox.databaseId
+			return this.$route.params.mailboxId === String(this.mailbox.databaseId)
+				&& (this.$route.params.filter || '') === this.filter
 		},
 
 		isValidDropTarget() {
@@ -390,6 +395,10 @@ export default {
 
 		subCounter() {
 			return this.subMailboxes.reduce((carry, mb) => carry + mb.unread, 0)
+		},
+
+		unreadWithSubCounter() {
+			return `${this.mailbox.unread}\u00a0(${this.subCounter})`
 		},
 
 		hasRenameAcl() {
@@ -432,7 +441,7 @@ export default {
 		dragEventBus.on('envelopes-moved', this.onEnvelopesMoved)
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		dragEventBus.off('drag-start', this.onDragStart)
 		dragEventBus.off('drag-end', this.onDragEnd)
 		dragEventBus.off('envelopes-moved', this.onEnvelopesMoved)
@@ -753,10 +762,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.counter-bubble__counter {
-	max-width: initial;
-}
-
 :deep(.action-item__menutoggle) {
 	background-color: transparent !important;
 }

@@ -13,16 +13,16 @@
 		<ListItem
 			v-for="textBlock in getMyTextBlocks()"
 			:key="textBlock.id"
-			:text-block="textBlock"
-			:is-view-mode="true"
+			:textBlock="textBlock"
+			:isViewMode="true"
 			:picked="textBlock.id === picked?.id"
 			@click="handleClick" />
 		<ListItem
 			v-for="textBlock in getSharedTextBlocks()"
 			:key="textBlock.id"
-			:text-block="textBlock"
+			:textBlock="textBlock"
 			:shared="true"
-			:is-view-mode="true"
+			:isViewMode="true"
 			:picked="textBlock.id === picked?.id"
 			@click="handleClick" />
 	</NcDialog>
@@ -31,14 +31,13 @@
 		id="text-block-picker"
 		:name="t('mail', 'Text blocks')"
 		:message="t('mail', 'Text blocks are reusable pieces of text that can be inserted in messages. Visit the Settings panel to create your own.')"
-		@closing="handleClose">
-	</NcDialog>
+		@closing="handleClose" />
 </template>
 
 <script>
 import IconCheck from '@mdi/svg/svg/check.svg'
-import { NcDialog } from '@nextcloud/vue'
 import { mapState } from 'pinia'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
 import ListItem from './ListItem.vue'
 import useMainStore from '../../store/mainStore.js'
 
@@ -48,6 +47,8 @@ export default {
 		ListItem,
 		NcDialog,
 	},
+
+	emits: ['insert', 'close'],
 
 	data() {
 		return {

@@ -4,16 +4,16 @@
 -->
 
 <template>
-	<NcPopover popup-role="dialog" class="contact-popover">
+	<NcPopover popupRole="dialog" class="contact-popover">
 		<template #trigger="{ attrs }">
 			<NcUserBubble
 				v-bind="attrs"
-				:display-name="label"
-				:avatar-image="avatarUrlAbsolute"
+				:displayName="label"
+				:avatarImage="avatarUrlAbsolute"
 				:size="size"
 				@click="onClickOpenContactDialog" />
 		</template>
-		<template>
+		<template #default="{ hide }">
 			<div class="contact-wrapper">
 				<p class="contact-popover__email">
 					{{ email }}
@@ -73,13 +73,12 @@
 						ref="contact-selection-label"
 						v-model="selectedContact"
 						:options="selectableContacts"
-						:taggable="true"
-						track-by="label"
+						trackBy="label"
 						:multiple="false"
 						:placeholder="t('name', 'Contact name …')"
-						:clear-search-on-select="true"
-						:show-no-options="false"
-						:append-to-body="false"
+						:clearSearchOnSelect="true"
+						:showNoOptions="false"
+						:appendToBody="false"
 						@search="onAutocomplete" />
 
 					<input v-else-if="selection === ContactSelectionStateEnum.new" v-model="newContactName">
@@ -96,11 +95,10 @@
 					</NcButton>
 
 					<NcButton
-						v-close-popover
 						:disabled="addButtonDisabled"
 						variant="tertiary-no-background"
 						:aria-label="t('mail', 'Add')"
-						@click="onClickAddToContact">
+						@click="onClickAddToContact(); hide()">
 						<template #icon>
 							<IconCheck :size="20" />
 						</template>
@@ -115,9 +113,12 @@
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { generateUrl } from '@nextcloud/router'
-import { NcButton, NcPopover, NcSelect, NcUserBubble } from '@nextcloud/vue'
 import debouncePromise from 'debounce-promise'
 import uniqBy from 'lodash/fp/uniqBy.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcPopover from '@nextcloud/vue/components/NcPopover'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
+import NcUserBubble from '@nextcloud/vue/components/NcUserBubble'
 import IconUser from 'vue-material-design-icons/AccountOutline.vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import IconClipboard from 'vue-material-design-icons/ClipboardTextOutline.vue'
@@ -251,7 +252,7 @@ export default {
 			if (this.contactsWithEmail.length === 0) { // TODO fix me
 				findMatches(this.email).then((res) => {
 					if (res && res.length > 0) {
-						this.contactsWithEmail = res
+						this.contactsWithEmail = res.filter((contact) => contact.label)
 					}
 				})
 			}
@@ -274,7 +275,8 @@ export default {
 				return
 			}
 			debouncedSearch(term).then((results) => {
-				this.autoCompleteContacts = uniqBy('id')(this.autoCompleteContacts.concat(results))
+				const contactsWithUidAndName = results.filter((contact) => contact.id && contact.label)
+				this.autoCompleteContacts = uniqBy('id')(this.autoCompleteContacts.concat(contactsWithUidAndName))
 			})
 		},
 	},
@@ -282,10 +284,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.user-bubble__title {
-	max-width: 30vw;
-}
-
 .contact-menu {
 	display: flex;
 	flex-wrap: wrap;
@@ -302,13 +300,6 @@ export default {
 .contact-wrapper {
 	padding:10px;
 	min-width: 300px;
-
-	a {
-		opacity: 0.7;
-	}
-	a:hover {
-		opacity: 1;
-	}
 }
 
 .contact-input-wrapper {

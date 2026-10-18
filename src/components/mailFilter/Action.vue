@@ -7,19 +7,19 @@
 		<div class="action__type">
 			<NcSelect
 				class="action__type__column action__type__column__select"
-				:model-value="currentAction"
+				:modelValue="currentAction"
 				:required="true"
-				:label-outside="true"
+				:labelOutside="true"
 				:options="availableTypes"
 				:clearable="false"
-				@input="updateAction({ type: $event.id })" />
+				@update:modelValue="updateAction({ type: $event.id })" />
 			<component
 				:is="componentInstance"
 				v-if="componentInstance"
 				class="action__type__column"
 				:action="action"
 				:account="account"
-				@update-action="updateAction" />
+				@updateAction="updateAction" />
 		</div>
 		<NcButton
 			:aria-label="t('mail', 'Delete action')"
@@ -34,7 +34,9 @@
 </template>
 
 <script>
-import { NcButton, NcSelect, NcTextField } from '@nextcloud/vue'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
+import NcTextField from '@nextcloud/vue/components/NcTextField'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import ActionAddflag from './ActionAddflag.vue'
 import ActionAddSystemFlag from './ActionAddSystemFlag.vue'
@@ -67,6 +69,8 @@ export default {
 			required: true,
 		},
 	},
+
+	emits: ['updateAction', 'deleteAction'],
 
 	data() {
 		return {
@@ -118,11 +122,11 @@ export default {
 
 	methods: {
 		updateAction(properties) {
-			this.$emit('update-action', { ...this.action, ...properties })
+			this.$emit('updateAction', { ...this.action, ...properties })
 		},
 
 		deleteAction() {
-			this.$emit('delete-action', this.action)
+			this.$emit('deleteAction', this.action)
 		},
 	},
 }
@@ -138,7 +142,8 @@ export default {
 		width: 100%;
 		&__column {
 			flex: 0 1 auto;
-			&__select {
+			// Match NcSelect's own `.nc-select.v-select.select` so the reset still wins
+			&__select.nc-select {
 				margin: 0
 			}
 		}

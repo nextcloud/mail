@@ -9,7 +9,7 @@
 			<IconImageOff :size="20" />
 			{{ t('mail', 'The images have been blocked to protect your privacy.') }}
 		</div>
-		<NcActions variant="secondary" :menu-name="t('mail', 'Show images')">
+		<NcActions variant="secondary" :menuName="t('mail', 'Show images')">
 			<NcActionButton @click="$emit('show')">
 				<template #icon>
 					<IconImage :size="20" />
@@ -18,7 +18,7 @@
 			</NcActionButton>
 			<NcActionButton
 				v-if="sender"
-				@click="$emit('trust-sender')">
+				@click="$emit('trustSender')">
 				<template #icon>
 					<IconMail :size="20" />
 				</template>
@@ -26,7 +26,7 @@
 			</NcActionButton>
 			<NcActionButton
 				v-if="domain"
-				@click="$emit('trust-domain')">
+				@click="$emit('trustDomain')">
 				<template #icon>
 					<IconDomain :size="20" />
 				</template>
@@ -37,7 +37,8 @@
 </template>
 
 <script>
-import { NcActionButton, NcActions } from '@nextcloud/vue'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcActions from '@nextcloud/vue/components/NcActions'
 import IconDomain from 'vue-material-design-icons/Domain.vue'
 import IconMail from 'vue-material-design-icons/EmailOutline.vue'
 import IconImageOff from 'vue-material-design-icons/ImageOffOutline.vue'
@@ -65,6 +66,8 @@ export default {
 			default: null,
 		},
 	},
+
+	emits: ['show', 'trustSender', 'trustDomain'],
 }
 </script>
 

@@ -4,13 +4,13 @@
  */
 
 import { getRequestToken } from '@nextcloud/auth'
-import { registerDavProperty } from '@nextcloud/files'
+import { registerDavProperty } from '@nextcloud/files/dav'
+import { n, t } from '@nextcloud/l10n'
 import { generateFilePath } from '@nextcloud/router'
-import { createPinia, PiniaVuePlugin } from 'pinia'
-import Vue from 'vue'
-import VueShortKey from 'vue-shortkey'
+import { createPinia } from 'pinia'
+import { createApp } from 'vue'
+import VueShortKey from 'vue3-shortkey'
 import App from './App.vue'
-import Nextcloud from './mixins/Nextcloud.js'
 import router from './router.js'
 import { installJumpChords } from './shortcuts.js'
 
@@ -21,30 +21,17 @@ __webpack_nonce__ = btoa(getRequestToken())
 
 __webpack_public_path__ = generateFilePath('mail', '', 'js/')
 
-Vue.use(PiniaVuePlugin)
 const pinia = createPinia()
 
-Vue.mixin(Nextcloud)
-
-// Chord handling listens on window so it runs ahead of vue-shortkey's
-// document listeners regardless of import order.
 installJumpChords()
-
-// 'div' used to be in this list to stop shortcuts firing while typing in the
-// CKEditor composer, which is a contenteditable div. But vue-shortkey tests
-// document.activeElement against these selectors, and Nextcloud focuses plain
-// divs (#app-content, the envelope list), so every shortcut was suppressed
-// almost all of the time. Target the editable elements themselves instead.
-Vue.use(VueShortKey, {
-	prevent: ['input', 'textarea', '[contenteditable]:not([contenteditable="false"])'],
-})
 
 registerDavProperty('nc:share-attributes', { nc: 'http://nextcloud.org/ns' })
 
-export default new Vue({
-	el: '#content',
-	name: 'Mail',
-	router,
-	pinia,
-	render: (h) => h(App),
-})
+const app = createApp(App)
+app.use(router)
+app.use(pinia)
+// 'div' made vue-shortkey ignore every key, because Nextcloud focuses plain divs; match editable elements only.
+app.use(VueShortKey, { prevent: ['input', 'textarea', '[contenteditable]:not([contenteditable="false"])'] })
+app.config.globalProperties.t = t
+app.config.globalProperties.n = n
+app.mount('#content')

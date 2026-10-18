@@ -12,13 +12,13 @@
 			:error="t('mail', 'Could not open folder')"
 			message=""
 			role="alert" />
-		<LoadingSkeleton v-else-if="loadingEnvelopes" :number-of-lines="20" />
+		<LoadingSkeleton v-else-if="loadingEnvelopes" :numberOfLines="20" />
 		<Loading
 			v-else-if="loadingCacheInitialization"
 			:hint="t('mail', 'Loading messages …')"
-			:slow-hint="t('mail', 'Indexing your messages. This can take a bit longer for larger folders.')" />
-		<EmptyMailboxSection v-else-if="isPriorityInbox && !hasMessages" key="empty" />
-		<EmptyMailbox v-else-if="!hasMessages" key="empty" />
+			:slowHint="t('mail', 'Indexing your messages. This can take a bit longer for larger folders.')" />
+		<EmptyMailboxSection v-else-if="isPriorityInbox && !hasMessages" key="empty-priority-inbox" />
+		<EmptyMailbox v-else-if="!hasMessages" key="empty-mailbox" />
 		<template v-else-if="hasGroupedEnvelopes && !isPriorityInbox">
 			<div v-for="[label, group] in groupEnvelopes" :key="label">
 				<SectionTitle class="section-title" :name="getLabelForGroup(label)" />
@@ -26,13 +26,13 @@
 					ref="envelopeLists"
 					:account="account"
 					:mailbox="mailbox"
-					:cursor-id="cursorId"
-					:search-query="searchQuery"
+					:cursorId="cursorId"
+					:searchQuery="searchQuery"
 					:envelopes="group"
-					:loading-more="false"
-					:load-more-button="false"
-					:skip-transition="skipListTransition"
-					:date-grouped="true"
+					:loadingMore="false"
+					:loadMoreButton="false"
+					:skipTransition="skipListTransition"
+					:dateGrouped="true"
 					@delete="onDelete" />
 			</div>
 		</template>
@@ -40,16 +40,16 @@
 			v-else
 			ref="envelopeLists"
 			:account="account"
-			:load-more-label="loadMoreLabel"
+			:loadMoreLabel="loadMoreLabel"
 			:mailbox="mailbox"
-			:cursor-id="cursorId"
-			:search-query="searchQuery"
+			:cursorId="cursorId"
+			:searchQuery="searchQuery"
 			:envelopes="envelopesToShow"
-			:loading-more="loadingMore"
-			:load-more-button="showLoadMore"
-			:skip-transition="skipListTransition"
+			:loadingMore="loadingMore"
+			:loadMoreButton="showLoadMore"
+			:skipTransition="skipListTransition"
 			@delete="onDelete"
-			@load-more="loadMore" />
+			@loadMore="loadMore" />
 	</div>
 </template>
 
@@ -204,7 +204,7 @@ export default {
 	},
 
 	created() {
-		this.bus.on('load-more', this.onScroll)
+		this.bus.on('loadMore', this.onScroll)
 		this.bus.on('delete', this.onDelete)
 		this.bus.on('archive', this.onArchive)
 		this.bus.on('shortcut', this.handleShortcut)
@@ -225,7 +225,7 @@ export default {
 		this.mainStore.setHasFetchedInitialEnvelopesMutation(true)
 	},
 
-	destroyed() {
+	unmounted() {
 		this.bus.off('load-more', this.onScroll)
 		this.bus.off('delete', this.onDelete)
 		this.bus.off('archive', this.onArchive)
@@ -765,7 +765,7 @@ export default {
 				logger.debug('envelope to delete does not exist in envelope list')
 				return
 			}
-			if (id !== this.$route.params.threadId) {
+			if (id !== parseInt(this.$route.params.threadId, 10)) {
 				logger.debug('other message open, not jumping to the next/previous message')
 				return
 			}
@@ -786,6 +786,10 @@ export default {
 					threadId: next.databaseId,
 				},
 			})
+		},
+
+		onArchive(id) {
+			this.onDelete(id)
 		},
 
 		onScroll() {

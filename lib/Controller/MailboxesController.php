@@ -12,8 +12,8 @@ namespace OCA\Mail\Controller;
 
 use Horde_Imap_Client;
 use OCA\Mail\AppInfo\Application;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
+use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\IncompleteSyncException;
 use OCA\Mail\Exception\MailboxNotCachedException;
@@ -22,6 +22,7 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\DelegationService;
+use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -41,18 +42,17 @@ class MailboxesController extends Controller {
 		IRequest $request,
 		private AccountService $accountService,
 		private ?string $userId,
-		private IMailManager $mailManager,
+		private MailManager $mailManager,
 		private SyncService $syncService,
 		private readonly IConfig $config,
 		private readonly ITimeFactory $timeFactory,
 		private DelegationService $delegationService,
+		private MailboxMapper $mailboxMapper,
 	) {
 		parent::__construct($appName, $request);
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $accountId
 	 * @param bool $forceSync
 	 *
@@ -61,6 +61,7 @@ class MailboxesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function index(int $accountId, bool $forceSync = false): JSONResponse {
 		if ($this->userId === null) {
@@ -84,13 +85,12 @@ class MailboxesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @param string $name
 	 *
 	 * @return JSONResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function patch(int $id,
 		?string $name = null,
@@ -127,10 +127,8 @@ class MailboxesController extends Controller {
 
 		}
 		if ($syncInBackground !== null) {
-			$mailbox = $this->mailManager->enableMailboxBackgroundSync(
-				$mailbox,
-				$syncInBackground
-			);
+			$mailbox->setSyncInBackground($syncInBackground);
+			$this->mailboxMapper->update($mailbox);
 			$syncVerb = $syncInBackground ? 'enabled' : 'disabled';
 			$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId $syncVerb background sync for mailbox: $id on behalf of $effectiveUserId");
 		}
@@ -138,8 +136,6 @@ class MailboxesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @param int[] $ids
 	 *
@@ -150,6 +146,7 @@ class MailboxesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function sync(int $id, array $ids = [], ?int $lastMessageTimestamp = null, bool $init = false, string $sortOrder = 'newest', ?string $query = null): JSONResponse {
 		if ($this->userId === null) {
@@ -193,14 +190,13 @@ class MailboxesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 *
 	 * @return JSONResponse
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function clearCache(int $id): JSONResponse {
 		if ($this->userId === null) {
@@ -220,14 +216,13 @@ class MailboxesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 *
 	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function markAllAsRead(int $id): JSONResponse {
 		if ($this->userId === null) {
@@ -250,8 +245,6 @@ class MailboxesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 *
 	 * @return JSONResponse
@@ -259,6 +252,7 @@ class MailboxesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function stats(int $id): JSONResponse {
 		if ($this->userId === null) {
@@ -275,35 +269,29 @@ class MailboxesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
-	 *
 	 * @return never
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function show() {
 		throw new NotImplemented();
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
-	 *
 	 * @return never
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function update() {
 		throw new NotImplemented();
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
-	 *
 	 * @return JSONResponse
 	 * @throws ServiceException
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function create(int $accountId, string $name): JSONResponse {
 		if ($this->userId === null) {
@@ -324,14 +312,13 @@ class MailboxesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 *
 	 * @return JSONResponse
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function destroy(int $id): JSONResponse {
 		if ($this->userId === null) {
@@ -353,8 +340,6 @@ class MailboxesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 *
 	 * @return JSONResponse
@@ -362,6 +347,7 @@ class MailboxesController extends Controller {
 	 * @throws ServiceException
 	 * @throws \OCP\AppFramework\Db\DoesNotExistException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function clearMailbox(int $id): JSONResponse {
 		if ($this->userId === null) {
