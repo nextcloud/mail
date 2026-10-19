@@ -14,8 +14,10 @@ use OCA\Mail\Db\TextBlockMapper;
 use OCA\Mail\Db\TextBlockShare;
 use OCA\Mail\Db\TextBlockShareMapper;
 use OCA\Mail\Service\TextBlockService;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IGroupManager;
 use OCP\IUserManager;
+use OCP\Log\Audit\CriticalActionPerformedEvent;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -32,6 +34,8 @@ final class TextBlockServiceTest extends TestCase {
 	/** @var IGroupManager|MockObject */
 	private $groupManager;
 
+	private IEventDispatcher&MockObject $eventDispatcher;
+
 	/** @var TextBlockService */
 	private $textBlockService;
 
@@ -40,13 +44,27 @@ final class TextBlockServiceTest extends TestCase {
 		$this->textBlockShareMapper = $this->createMock(TextBlockShareMapper::class);
 		$this->userManager = $this->createMock(IUserManager::class);
 		$this->groupManager = $this->createMock(IGroupManager::class);
+		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 
 		$this->textBlockService = new TextBlockService(
 			$this->textBlockMapper,
 			$this->textBlockShareMapper,
 			$this->groupManager,
-			$this->userManager
+			$this->userManager,
+			$this->eventDispatcher,
 		);
+	}
+
+	private function expectShareAuditEvent(string $operation, string $message, string $shareType, string $sharedWith): void {
+		$this->eventDispatcher->expects($this->once())
+			->method('dispatchTyped')
+			->with($this->callback(fn (CriticalActionPerformedEvent $event): bool => $event->getOperation() === $operation
+				&& $event->getLogMessage() === $message
+				&& $event->getParameters() === [
+					'textBlockId' => 1,
+					'shareType' => $shareType,
+					'sharedWith' => $sharedWith,
+				]));
 	}
 
 	public function testFindAll(): void {
@@ -163,11 +181,13 @@ final class TextBlockServiceTest extends TestCase {
 				$this->assertSame(TextBlockShare::TYPE_USER, $s->getType());
 				return true;
 			}));
+		$this->expectShareAuditEvent('mail.text_block_share.created', 'Text block %s was shared with %s "%s"', TextBlockShare::TYPE_USER, $shareWith);
 
 		$this->textBlockService->share($textBlockId, $shareWith);
 	}
 
 	public function testShareExits(): void {
+		$this->eventDispatcher->expects($this->never())->method('dispatchTyped');
 		$textBlockId = 1;
 		$shareWith = 'alice';
 
@@ -217,6 +237,7 @@ final class TextBlockServiceTest extends TestCase {
 	}
 
 	public function testShareWithGroupAlreadyExists(): void {
+		$this->eventDispatcher->expects($this->never())->method('dispatchTyped');
 		$textBlockId = 1;
 		$groupId = 'existing-group';
 
@@ -257,6 +278,7 @@ final class TextBlockServiceTest extends TestCase {
 				$this->assertSame(TextBlockShare::TYPE_GROUP, $share->getType());
 				return true;
 			}));
+		$this->expectShareAuditEvent('mail.text_block_share.created', 'Text block %s was shared with %s "%s"', TextBlockShare::TYPE_GROUP, $groupId);
 
 		$this->textBlockService->shareWithGroup($textBlockId, $groupId);
 	}
@@ -265,6 +287,9 @@ final class TextBlockServiceTest extends TestCase {
 		$textBlockId = 1;
 		$shareWith = 'alice';
 		$textBlockShare = new TextBlockShare();
+		$textBlockShare->setTextBlockId($textBlockId);
+		$textBlockShare->setShareWith($shareWith);
+		$textBlockShare->setType(TextBlockShare::TYPE_USER);
 
 		$this->textBlockShareMapper->expects($this->once())
 			->method('find')
@@ -274,6 +299,7 @@ final class TextBlockServiceTest extends TestCase {
 		$this->textBlockShareMapper->expects($this->once())
 			->method('delete')
 			->with($textBlockShare);
+		$this->expectShareAuditEvent('mail.text_block_share.deleted', 'Text block %s was no longer shared with %s "%s"', TextBlockShare::TYPE_USER, $shareWith);
 
 		$this->textBlockService->unshare($textBlockId, $shareWith);
 	}

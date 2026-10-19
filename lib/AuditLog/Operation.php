@@ -31,6 +31,10 @@ enum Operation: string {
 	case SmimeCertificateCreated = 'mail.smime_certificate.created';
 	case SmimeCertificateDeleted = 'mail.smime_certificate.deleted';
 
+	// Text blocks
+	case TextBlockShareCreated = 'mail.text_block_share.created';
+	case TextBlockShareDeleted = 'mail.text_block_share.deleted';
+
 	/**
 	 * Short description of when the operation is logged, used for the documentation
 	 */
@@ -45,6 +49,8 @@ enum Operation: string {
 			self::SieveScriptUpdated => 'The active Sieve script of a mail account was replaced, including through mail filters and out-of-office replies',
 			self::SmimeCertificateCreated => 'An S/MIME certificate was uploaded, optionally with its private key',
 			self::SmimeCertificateDeleted => 'An S/MIME certificate was deleted with its private key',
+			self::TextBlockShareCreated => 'A text block was shared with a user or a group',
+			self::TextBlockShareDeleted => 'A text block was no longer shared with a user or a group',
 		};
 	}
 }

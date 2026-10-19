@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use Html2Text\Html2Text;
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Db\TextBlock;
 use OCA\Mail\Db\TextBlockMapper;
 use OCA\Mail\Db\TextBlockShare;
@@ -17,8 +18,10 @@ use OCA\Mail\Db\TextBlockShareMapper;
 use OCA\Mail\Exception\ShareeAlreadyExistsException;
 use OCA\Mail\Exception\UserNotFoundException;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IGroupManager;
 use OCP\IUserManager;
+use OCP\Log\Audit\CriticalActionPerformedEvent;
 
 class TextBlockService {
 
@@ -27,6 +30,7 @@ class TextBlockService {
 		private TextBlockShareMapper $textBlockShareMapper,
 		private IGroupManager $groupManager,
 		private IUserManager $userManager,
+		private IEventDispatcher $eventDispatcher,
 	) {
 	}
 
@@ -105,6 +109,7 @@ class TextBlockService {
 		$share->setTextBlockId($textBlockId);
 		$share->setType(TextBlockShare::TYPE_USER);
 		$this->textBlockShareMapper->insert($share);
+		$this->logShareChange($share, 'shared with', Operation::TextBlockShareCreated);
 	}
 
 	public function getShares(int $textBlockId): array {
@@ -139,6 +144,7 @@ class TextBlockService {
 		$share->setTextBlockId($textBlockId);
 		$share->setType(TextBlockShare::TYPE_GROUP);
 		$this->textBlockShareMapper->insert($share);
+		$this->logShareChange($share, 'shared with', Operation::TextBlockShareCreated);
 	}
 
 	/**
@@ -147,9 +153,23 @@ class TextBlockService {
 	public function unshare(int $textBlockId, string $shareWith): void {
 		$share = $this->textBlockShareMapper->find($textBlockId, $shareWith);
 		$this->textBlockShareMapper->delete($share);
+		$this->logShareChange($share, 'no longer shared with', Operation::TextBlockShareDeleted);
 	}
 
 	public function deleteByUserId(string $userId): void {
 		$this->textBlockMapper->deleteByUserId($userId);
+	}
+
+	private function logShareChange(TextBlockShare $share, string $change, Operation $operation): void {
+		$this->eventDispatcher->dispatchTyped(new CriticalActionPerformedEvent(
+			'Text block %s was ' . $change . ' %s "%s"',
+			[
+				'textBlockId' => $share->getTextBlockId(),
+				'shareType' => $share->getType(),
+				'sharedWith' => $share->getShareWith(),
+			],
+			false,
+			$operation->value,
+		));
 	}
 }
