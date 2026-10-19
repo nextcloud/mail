@@ -16,6 +16,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\CouldNotConnectException;
 use OCA\Mail\Sieve\NamedSieveScript;
 use OCA\Mail\Tests\Integration\TestCase;
+use OCP\Log\Audit\CriticalActionPerformedEvent;
 use OCP\Security\IRemoteHostValidator;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -50,12 +51,34 @@ class SieveControllerTest extends TestCase {
 		$this->sieveController = $this->serviceMock->getService();
 	}
 
+	private function expectSieveAccountAuditEvent(bool $sieveEnabled, ?string $sieveHost): void {
+		$this->serviceMock->getParameter('eventDispatcher')
+			->expects($this->once())
+			->method('dispatchTyped')
+			->with($this->callback(fn (CriticalActionPerformedEvent $event): bool => $event->getOperation() === 'mail.sieve_account.updated'
+				&& $event->getLogMessage() === 'Sieve settings of mail account %s of "%s" were updated'
+				&& $event->getParameters() === [
+					'accountId' => 2,
+					'owner' => $this->userId,
+					'sieveEnabled' => $sieveEnabled,
+					'sieveHost' => $sieveHost,
+				]));
+	}
+
+	private function createMailAccount(): MailAccount {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(2);
+		$mailAccount->setUserId($this->userId);
+		return $mailAccount;
+	}
+
 	public function testUpdateAccountDisable(): void {
 		$mailAccountMapper = $this->serviceMock->getParameter('mailAccountMapper');
 		$mailAccountMapper->expects($this->once())
 			->method('find')
 			->with($this->userId, 2)
-			->willReturn(new MailAccount());
+			->willReturn($this->createMailAccount());
+		$this->expectSieveAccountAuditEvent(false, null);
 		$mailAccountMapper->expects($this->once())
 			->method('save');
 		$this->serviceMock->getParameter('delegationService')
@@ -74,7 +97,8 @@ class SieveControllerTest extends TestCase {
 		$mailAccountMapper->expects($this->once())
 			->method('find')
 			->with($this->userId, 2)
-			->willReturn(new MailAccount());
+			->willReturn($this->createMailAccount());
+		$this->expectSieveAccountAuditEvent(true, 'localhost');
 		$mailAccountMapper->expects($this->once())
 			->method('save');
 
@@ -117,6 +141,9 @@ class SieveControllerTest extends TestCase {
 		$sieveClientFactory->expects($this->once())
 			->method('createClient')
 			->willThrowException(new Exception('Computer says no'));
+		$this->serviceMock->getParameter('eventDispatcher')
+			->expects($this->never())
+			->method('dispatchTyped');
 
 		$response = $this->sieveController->updateAccount(2, true, 'localhost', 4190, 'user', 'password', '');
 	}

@@ -11,6 +11,8 @@ namespace OCA\Mail\Controller;
 
 use Horde\ManageSieve\Exception as ManagesieveException;
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\AuditLog\Operation;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\CouldNotConnectException;
@@ -25,7 +27,9 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IRequest;
+use OCP\Log\Audit\CriticalActionPerformedEvent;
 use OCP\Security\ICrypto;
 use OCP\Security\IRemoteHostValidator;
 use Psr\Log\LoggerInterface;
@@ -45,6 +49,7 @@ class SieveController extends Controller {
 		private LoggerInterface $logger,
 		private SieveService $sieveService,
 		private DelegationService $delegationService,
+		private IEventDispatcher $eventDispatcher,
 	) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->crypto = $crypto;
@@ -143,6 +148,7 @@ class SieveController extends Controller {
 			$mailAccount->setSievePassword(null);
 
 			$this->mailAccountMapper->save($mailAccount);
+			$this->logSieveAccountUpdated($mailAccount);
 			$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated sieve settings for account <$id> on behalf of $effectiveUserId");
 			return new JSONResponse(['sieveEnabled' => $mailAccount->isSieveEnabled()]);
 		}
@@ -175,7 +181,22 @@ class SieveController extends Controller {
 		}
 
 		$this->mailAccountMapper->save($mailAccount);
+		$this->logSieveAccountUpdated($mailAccount);
 		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated sieve settings for account <$id> on behalf of $effectiveUserId");
 		return new JSONResponse(['sieveEnabled' => $mailAccount->isSieveEnabled()]);
+	}
+
+	private function logSieveAccountUpdated(MailAccount $mailAccount): void {
+		$this->eventDispatcher->dispatchTyped(new CriticalActionPerformedEvent(
+			'Sieve settings of mail account %s of "%s" were updated',
+			[
+				'accountId' => $mailAccount->getId(),
+				'owner' => $mailAccount->getUserId(),
+				'sieveEnabled' => $mailAccount->isSieveEnabled(),
+				'sieveHost' => $mailAccount->getSieveHost(),
+			],
+			false,
+			Operation::SieveAccountUpdated->value,
+		));
 	}
 }

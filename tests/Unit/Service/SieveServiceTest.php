@@ -16,6 +16,8 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\SieveService;
 use OCA\Mail\Sieve\SieveClientFactory;
+use OCP\EventDispatcher\IEventDispatcher;
+use OCP\Log\Audit\CriticalActionPerformedEvent;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class SieveServiceTest extends TestCase {
@@ -27,15 +29,19 @@ class SieveServiceTest extends TestCase {
 	/** @var AccountService|MockObject */
 	private $accountService;
 
+	private IEventDispatcher&MockObject $eventDispatcher;
+
 	protected function setUp(): void {
 		parent::setUp();
 
 		$this->sieveClientFactory = $this->createMock(SieveClientFactory::class);
 		$this->accountService = $this->createMock(AccountService::class);
+		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 
 		$this->sieveService = new SieveService(
 			$this->sieveClientFactory,
 			$this->accountService,
+			$this->eventDispatcher,
 		);
 	}
 
@@ -190,6 +196,11 @@ class SieveServiceTest extends TestCase {
 			->method('getClient')
 			->with($account)
 			->willReturn($client);
+		$this->eventDispatcher->expects(self::once())
+			->method('dispatchTyped')
+			->with(self::callback(fn (CriticalActionPerformedEvent $event): bool => $event->getOperation() === 'mail.sieve_script.updated'
+				&& $event->getLogMessage() === 'Active Sieve script of mail account %s of "%s" was updated'
+				&& $event->getParameters() === ['accountId' => 2, 'owner' => '1']));
 
 		$this->sieveService->updateActiveScript('1', 2, '# foo bar');
 	}
@@ -257,6 +268,8 @@ class SieveServiceTest extends TestCase {
 	public function testUpdateActiveScriptNoSieve(): void {
 		$this->expectException(ClientException::class);
 		$this->expectExceptionMessage('ManageSieve is disabled');
+		$this->eventDispatcher->expects(self::never())
+			->method('dispatchTyped');
 
 		$mailAccount = new MailAccount();
 		$mailAccount->setSieveEnabled(false);
