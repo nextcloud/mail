@@ -1008,6 +1008,12 @@ export default {
 		window.addEventListener('resize', this.onWindowResize)
 	},
 
+	beforeUnmount() {
+		// Without this cleanup every rendered envelope row leaks its component
+		// graph and keeps running forced-layout work on every window resize.
+		window.removeEventListener('resize', this.onWindowResize)
+	},
+
 	methods: {
 		translateTagDisplayName,
 		setSelected(value) {

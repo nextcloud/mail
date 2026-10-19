@@ -835,6 +835,9 @@ export default {
 			logger.info('Navigating away before seenTimer delay, will not mark message as seen/read')
 			clearTimeout(this.seenTimer)
 		}
+		if (this.$checkInterval !== undefined) {
+			clearInterval(this.$checkInterval)
+		}
 		window.removeEventListener('resize', this.redrawMenuBar)
 	},
 
