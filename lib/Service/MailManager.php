@@ -11,6 +11,7 @@ namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
 use OCA\Mail\Attachment;
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
@@ -33,6 +34,7 @@ use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\Search\SearchQuery;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\Log\Audit\CriticalActionPerformedEvent;
 use Psr\Log\LoggerInterface;
 use function array_map;
 use function array_values;
@@ -106,6 +108,7 @@ class MailManager {
 		$this->protocolFactory
 			->mailboxConnector($account)
 			->delete($account, $mailbox);
+		$this->logMailboxChange($account, $mailbox, 'deleted', Operation::MailboxDeleted);
 	}
 
 	/**
@@ -130,6 +133,23 @@ class MailManager {
 		// deleteMessages already moves to trash, or expunges if the mailbox is the trash
 		$messages = $this->dbMessageMapper->findByUids($mailbox, $uids);
 		$this->deleteMessages($account, $mailbox, ...$messages);
+		$this->logMailboxChange($account, $mailbox, 'cleared', Operation::MailboxCleared);
+	}
+
+	/**
+	 * The mailbox name is not logged, as it is chosen by the user and may hold personal data
+	 */
+	private function logMailboxChange(Account $account, Mailbox $mailbox, string $change, Operation $operation): void {
+		$this->eventDispatcher->dispatchTyped(new CriticalActionPerformedEvent(
+			'Mailbox %s of mail account %s of "%s" was ' . $change,
+			[
+				'mailboxId' => $mailbox->getId(),
+				'accountId' => $account->getId(),
+				'owner' => $account->getUserId(),
+			],
+			false,
+			$operation->value,
+		));
 	}
 
 	//** ============================ Message Operations ============================ */

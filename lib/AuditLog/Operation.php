@@ -51,6 +51,10 @@ enum Operation: string {
 	case LlmProcessingUpdated = 'mail.llm_processing.updated';
 	case AllowNewAccountsUpdated = 'mail.allow_new_accounts.updated';
 
+	// Mailboxes
+	case MailboxDeleted = 'mail.mailbox.deleted';
+	case MailboxCleared = 'mail.mailbox.cleared';
+
 	/**
 	 * Short description of when the operation is logged, used for the documentation
 	 */
@@ -79,6 +83,8 @@ enum Operation: string {
 			self::AntispamConfigDeleted => 'An admin removed the addresses that reported messages are forwarded to',
 			self::LlmProcessingUpdated => 'An admin allowed or disallowed processing mail content with large language models',
 			self::AllowNewAccountsUpdated => 'An admin allowed or disallowed users adding their own mail accounts',
+			self::MailboxDeleted => 'A mailbox (folder) was deleted with all its messages',
+			self::MailboxCleared => 'All messages of a mailbox were moved to the trash, or permanently deleted when it is the trash',
 		};
 	}
 }
