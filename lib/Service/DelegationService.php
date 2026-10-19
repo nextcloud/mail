@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Db\AliasMapper;
 use OCA\Mail\Db\Delegation;
 use OCA\Mail\Db\DelegationMapper;
@@ -58,6 +59,7 @@ class DelegationService {
 		$delegation->setAccountId($accountId);
 		$delegation->setUserId($userId);
 		$result = $this->delegationMapper->insert($delegation);
+		$this->logDelegationChange($account, $userId, 'is now allowed', Operation::DelegationCreated);
 		$this->notify($userId, $currentUserId, $account, true);
 		return $result;
 	}
@@ -79,6 +81,7 @@ class DelegationService {
 			$accountId = $account->getId();
 			$delegation = $this->delegationMapper->find($accountId, $userId);
 			$this->delegationMapper->delete($delegation);
+			$this->logDelegationChange($account, $userId, 'is no longer allowed', Operation::DelegationDeleted);
 			$this->notify($userId, $currentUserId, $account, false);
 		} catch (DoesNotExistException $e) {
 			// shouldn't end up here
@@ -188,6 +191,19 @@ class DelegationService {
 			return;
 		}
 		$this->eventDispatcher->dispatchTyped(new CriticalActionPerformedEvent($logMessage));
+	}
+
+	private function logDelegationChange(Account $account, string $delegateUserId, string $change, Operation $operation): void {
+		$this->eventDispatcher->dispatchTyped(new CriticalActionPerformedEvent(
+			'User "%s" ' . $change . ' to act on behalf of "%s" for mail account %s',
+			[
+				'delegateUserId' => $delegateUserId,
+				'owner' => $account->getUserId(),
+				'accountId' => $account->getId(),
+			],
+			false,
+			$operation->value,
+		));
 	}
 
 	/**

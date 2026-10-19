@@ -23,6 +23,8 @@ use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\SetupService;
 use OCA\Mail\SMTP\SmtpClientFactory;
+use OCP\EventDispatcher\IEventDispatcher;
+use OCP\Log\Audit\CriticalActionPerformedEvent;
 use OCP\Security\ICrypto;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
@@ -50,6 +52,7 @@ class SetupServiceTest extends TestCase {
 	private ProtocolFactory&MockObject $protocolFactory;
 	private LoggerInterface&MockObject $logger;
 	private TagMapper&MockObject $tagMapper;
+	private IEventDispatcher&MockObject $eventDispatcher;
 	private SetupService $setupService;
 
 	protected function setUp(): void {
@@ -61,6 +64,7 @@ class SetupServiceTest extends TestCase {
 		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->tagMapper = $this->createMock(TagMapper::class);
+		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 
 		$this->setupService = new SetupService(
 			$this->accountService,
@@ -68,7 +72,8 @@ class SetupServiceTest extends TestCase {
 			$this->smtpClientFactory,
 			$this->protocolFactory,
 			$this->logger,
-			$this->tagMapper
+			$this->tagMapper,
+			$this->eventDispatcher,
 		);
 	}
 
@@ -166,7 +171,23 @@ class SetupServiceTest extends TestCase {
 					self::AUTH_METHOD_PASSWORD
 				);
 				return true;
-			}));
+			}))
+			->willReturnCallback(function (MailAccount $account): MailAccount {
+				$account->setId(42);
+				return $account;
+			});
+		$this->eventDispatcher->expects(self::once())
+			->method('dispatchTyped')
+			->with(self::callback(fn (CriticalActionPerformedEvent $event): bool => $event->getOperation() === 'mail.account.created'
+				&& $event->getLogMessage() === 'Mail account %s of "%s" was created'
+				&& $event->getParameters() === [
+					'accountId' => 42,
+					'owner' => self::USER_ID,
+					'emailAddress' => self::EMAIL_ADDRESS,
+					'imapHost' => self::IMAP_HOST,
+					'smtpHost' => self::SMTP_HOST,
+					'authMethod' => self::AUTH_METHOD_PASSWORD,
+				]));
 
 		$this->tagMapper->expects(self::once())
 			->method('createDefaultTags')
@@ -238,7 +259,38 @@ class SetupServiceTest extends TestCase {
 		self::assertInstanceOf(Account::class, $result);
 	}
 
+	public function testUpdateExistingAccountLogsUpdate(): void {
+		$this->accountService->expects(self::once())
+			->method('save')
+			->willReturnArgument(0);
+		$this->eventDispatcher->expects(self::once())
+			->method('dispatchTyped')
+			->with(self::callback(fn (CriticalActionPerformedEvent $event): bool => $event->getOperation() === 'mail.account.updated'
+				&& $event->getLogMessage() === 'Mail account %s of "%s" was updated'
+				&& $event->getParameters()['accountId'] === 7
+				&& $event->getParameters()['authMethod'] === self::AUTH_METHOD_OAUTH2));
+
+		$this->setupService->createNewAccount(
+			'OAuth2 Account',
+			'oauth@example.com',
+			self::IMAP_HOST,
+			self::IMAP_PORT,
+			self::IMAP_SSL_MODE,
+			'oauth@example.com',
+			null,
+			self::SMTP_HOST,
+			self::SMTP_PORT,
+			self::SMTP_SSL_MODE,
+			'oauth@example.com',
+			null,
+			self::USER_ID,
+			self::AUTH_METHOD_OAUTH2,
+			7,
+		);
+	}
+
 	public function testCreateNewAccountWithInvalidAuthMethod(): void {
+		$this->eventDispatcher->expects(self::never())->method('dispatchTyped');
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid auth method invalid');
 
@@ -261,6 +313,7 @@ class SetupServiceTest extends TestCase {
 	}
 
 	public function testCreateNewAccountImapConnectionFailure(): void {
+		$this->eventDispatcher->expects(self::never())->method('dispatchTyped');
 		$this->expectException(CouldNotConnectException::class);
 
 		$this->mockPasswordEncryption();
@@ -295,6 +348,7 @@ class SetupServiceTest extends TestCase {
 	}
 
 	public function testCreateNewAccountSmtpConnectionFailure(): void {
+		$this->eventDispatcher->expects(self::never())->method('dispatchTyped');
 		$this->expectException(CouldNotConnectException::class);
 
 		$this->mockPasswordEncryption();

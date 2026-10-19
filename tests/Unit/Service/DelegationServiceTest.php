@@ -106,8 +106,22 @@ class DelegationServiceTest extends TestCase {
 		return $notification;
 	}
 
+	private function expectDelegationAuditEvent(string $operation, string $message): void {
+		$this->eventDispatcher->expects($this->once())
+			->method('dispatchTyped')
+			->with($this->callback(fn ($event) => $event instanceof CriticalActionPerformedEvent
+				&& $event->getOperation() === $operation
+				&& $event->getLogMessage() === $message
+				&& $event->getParameters() === [
+					'delegateUserId' => 'delegatee',
+					'owner' => 'owner',
+					'accountId' => 1,
+				]));
+	}
+
 	public function testDelegateSuccess(): void {
 		$this->mockNotification();
+		$this->expectDelegationAuditEvent('mail.delegation.created', 'User "%s" is now allowed to act on behalf of "%s" for mail account %s');
 
 		$this->delegationMapper->expects($this->once())
 			->method('find')
@@ -143,6 +157,8 @@ class DelegationServiceTest extends TestCase {
 
 		$this->delegationMapper->expects($this->never())
 			->method('insert');
+		$this->eventDispatcher->expects($this->never())
+			->method('dispatchTyped');
 
 		$this->expectException(DelegationExistsException::class);
 
@@ -173,6 +189,7 @@ class DelegationServiceTest extends TestCase {
 
 	public function testUnDelegateSuccess(): void {
 		$this->mockNotification();
+		$this->expectDelegationAuditEvent('mail.delegation.deleted', 'User "%s" is no longer allowed to act on behalf of "%s" for mail account %s');
 
 		$delegation = new Delegation();
 		$delegation->setId(10);
@@ -193,6 +210,8 @@ class DelegationServiceTest extends TestCase {
 
 	public function testUnDelegateWhenNotFound(): void {
 		$this->mockNotification();
+		$this->eventDispatcher->expects($this->never())
+			->method('dispatchTyped');
 
 		$this->delegationMapper->expects($this->once())
 			->method('find')

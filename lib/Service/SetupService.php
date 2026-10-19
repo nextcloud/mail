@@ -14,12 +14,15 @@ use Horde_Mail_Exception;
 use Horde_Mail_Transport_Smtphorde;
 use InvalidArgumentException;
 use OCA\Mail\Account;
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\CouldNotConnectException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\SMTP\SmtpClientFactory;
+use OCP\EventDispatcher\IEventDispatcher;
+use OCP\Log\Audit\CriticalActionPerformedEvent;
 use OCP\Security\ICrypto;
 use Psr\Log\LoggerInterface;
 use function in_array;
@@ -35,6 +38,7 @@ class SetupService {
 		private ProtocolFactory $protocolFactory,
 		private LoggerInterface $logger,
 		private TagMapper $tagMapper,
+		private IEventDispatcher $eventDispatcher,
 	) {
 		$this->crypto = $crypto;
 	}
@@ -96,6 +100,19 @@ class SetupService {
 
 		$this->accountService->save($newAccount);
 		$this->logger->debug("account created {$newAccount->getId()}");
+		$this->eventDispatcher->dispatchTyped(new CriticalActionPerformedEvent(
+			$accountId === null ? 'Mail account %s of "%s" was created' : 'Mail account %s of "%s" was updated',
+			[
+				'accountId' => $newAccount->getId(),
+				'owner' => $uid,
+				'emailAddress' => $emailAddress,
+				'imapHost' => $imapHost,
+				'smtpHost' => $smtpHost,
+				'authMethod' => $authMethod,
+			],
+			false,
+			($accountId === null ? Operation::AccountCreated : Operation::AccountUpdated)->value,
+		));
 
 		$this->tagMapper->createDefaultTags($newAccount);
 

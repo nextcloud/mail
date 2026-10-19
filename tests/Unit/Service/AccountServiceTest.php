@@ -22,8 +22,10 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
 use OCP\IL10N;
+use OCP\Log\Audit\CriticalActionPerformedEvent;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class AccountServiceTest extends TestCase {
@@ -63,6 +65,7 @@ class AccountServiceTest extends TestCase {
 	private IConfig&MockObject $config;
 	private ITimeFactory&MockObject $time;
 	private DelegationMapper&MockObject $delegationMapper;
+	private IEventDispatcher&MockObject $eventDispatcher;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -75,6 +78,7 @@ class AccountServiceTest extends TestCase {
 		$this->config = $this->createMock(IConfig::class);
 		$this->time = $this->createMock(ITimeFactory::class);
 		$this->delegationMapper = $this->createMock(DelegationMapper::class);
+		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 		$this->accountService = new AccountService(
 			$this->mapper,
 			$this->aliasesService,
@@ -83,6 +87,7 @@ class AccountServiceTest extends TestCase {
 			$this->config,
 			$this->time,
 			$this->delegationMapper,
+			$this->eventDispatcher,
 		);
 
 		$this->account1 = new MailAccount();
@@ -141,6 +146,9 @@ class AccountServiceTest extends TestCase {
 
 	public function testDelete() {
 		$accountId = 33;
+		$this->account1->setId($accountId);
+		$this->account1->setUserId($this->user);
+		$this->expectAccountDeletedAuditEvent($accountId);
 
 		$this->mapper->expects($this->once())
 			->method('find')
@@ -155,6 +163,9 @@ class AccountServiceTest extends TestCase {
 
 	public function testDeleteByAccountId() {
 		$accountId = 33;
+		$this->account1->setId($accountId);
+		$this->account1->setUserId($this->user);
+		$this->expectAccountDeletedAuditEvent($accountId);
 
 		$this->mapper->expects($this->once())
 			->method('findById')
@@ -165,6 +176,14 @@ class AccountServiceTest extends TestCase {
 			->with($this->account1);
 
 		$this->accountService->deleteByAccountId($accountId);
+	}
+
+	private function expectAccountDeletedAuditEvent(int $accountId): void {
+		$this->eventDispatcher->expects($this->once())
+			->method('dispatchTyped')
+			->with($this->callback(fn (CriticalActionPerformedEvent $event): bool => $event->getOperation() === 'mail.account.deleted'
+				&& $event->getLogMessage() === 'Mail account %s of "%s" was deleted'
+				&& $event->getParameters() === ['accountId' => $accountId, 'owner' => $this->user]));
 	}
 
 	public function testSave() {
