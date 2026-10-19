@@ -11,11 +11,13 @@ namespace OCA\Mail\Tests\Unit\Controller;
 
 use ChristophWurst\Nextcloud\Testing\ServiceMockObject;
 use Horde\ManageSieve\Exception;
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Controller\SieveController;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\CouldNotConnectException;
 use OCA\Mail\Sieve\NamedSieveScript;
 use OCA\Mail\Tests\Integration\TestCase;
+use OCA\Mail\Tests\Unit\DelegatedActionLog;
 use OCP\Log\Audit\CriticalActionPerformedEvent;
 use OCP\Security\IRemoteHostValidator;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -84,7 +86,8 @@ class SieveControllerTest extends TestCase {
 		$this->serviceMock->getParameter('delegationService')
 			->expects($this->once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId updated sieve settings for account <2> on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::SieveAccountUpdated)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId updated sieve settings for account <2> on behalf of $this->userId"));
 
 		$response = $this->sieveController->updateAccount(2, false, '', 0, '', '', '');
 
@@ -169,7 +172,8 @@ class SieveControllerTest extends TestCase {
 		$this->serviceMock->getParameter('delegationService')
 			->expects($this->once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId updated the active sieve script for account <2> on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::SieveScriptUpdated)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId updated the active sieve script for account <2> on behalf of $this->userId"));
 
 		$response = $this->sieveController->updateActiveScript(2, 'sieve script');
 

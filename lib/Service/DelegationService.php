@@ -186,11 +186,23 @@ class DelegationService {
 		return $this->resolveAccountUserId($accountId, $currentUserId);
 	}
 
-	public function logDelegatedAction(string $currentUserId, string $effectiveUserId, string $logMessage): void {
+	/**
+	 * Log an action a delegate performed on behalf of the account owner
+	 *
+	 * @param string $logMessage format string whose first placeholder is the delegate,
+	 *                           followed by one per parameter and the owner as the last one
+	 * @param array<string, mixed> $parameters
+	 */
+	public function logDelegatedAction(string $currentUserId, string $effectiveUserId, Operation $operation, string $logMessage, array $parameters = []): void {
 		if ($currentUserId === $effectiveUserId) {
 			return;
 		}
-		$this->eventDispatcher->dispatchTyped(new CriticalActionPerformedEvent($logMessage));
+		$this->eventDispatcher->dispatchTyped(new CriticalActionPerformedEvent(
+			$logMessage,
+			['delegate' => $currentUserId] + $parameters + ['owner' => $effectiveUserId],
+			false,
+			$operation->value,
+		));
 	}
 
 	private function logDelegationChange(Account $account, string $delegateUserId, string $change, Operation $operation): void {

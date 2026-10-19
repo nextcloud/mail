@@ -55,6 +55,46 @@ enum Operation: string {
 	case MailboxDeleted = 'mail.mailbox.deleted';
 	case MailboxCleared = 'mail.mailbox.cleared';
 
+	// Only logged when a delegate acts on behalf of the account owner
+	case DelegatedAccountSettingsUpdated = 'mail.delegated_account_settings.updated';
+	case DelegatedAccountSignatureUpdated = 'mail.delegated_account_signature.updated';
+	case DelegatedAccountSmimeCertificateUpdated = 'mail.delegated_account_smime_certificate.updated';
+	case DelegatedAliasCreated = 'mail.delegated_alias.created';
+	case DelegatedAliasUpdated = 'mail.delegated_alias.updated';
+	case DelegatedAliasDeleted = 'mail.delegated_alias.deleted';
+	case DelegatedAliasSignatureUpdated = 'mail.delegated_alias_signature.updated';
+	case DelegatedFiltersUpdated = 'mail.delegated_filters.updated';
+	case DelegatedMailboxCreated = 'mail.delegated_mailbox.created';
+	case DelegatedMailboxRenamed = 'mail.delegated_mailbox.renamed';
+	case DelegatedMailboxSubscribed = 'mail.delegated_mailbox.subscribed';
+	case DelegatedMailboxUnsubscribed = 'mail.delegated_mailbox.unsubscribed';
+	case DelegatedMailboxSyncEnabled = 'mail.delegated_mailbox_sync.enabled';
+	case DelegatedMailboxSyncDisabled = 'mail.delegated_mailbox_sync.disabled';
+	case DelegatedMailboxMarkedRead = 'mail.delegated_mailbox.marked_read';
+	case DelegatedMailboxRepaired = 'mail.delegated_mailbox.repaired';
+	case DelegatedMessageSent = 'mail.delegated_message.sent';
+	case DelegatedMessageSendFailed = 'mail.delegated_message.send_failed';
+	case DelegatedMessageMoved = 'mail.delegated_message.moved';
+	case DelegatedMessageSnoozed = 'mail.delegated_message.snoozed';
+	case DelegatedMessageUnsnoozed = 'mail.delegated_message.unsnoozed';
+	case DelegatedMessageFlagsUpdated = 'mail.delegated_message_flags.updated';
+	case DelegatedMessageTagAdded = 'mail.delegated_message_tag.added';
+	case DelegatedMessageTagRemoved = 'mail.delegated_message_tag.removed';
+	case DelegatedMessageDeleted = 'mail.delegated_message.deleted';
+	case DelegatedThreadMoved = 'mail.delegated_thread.moved';
+	case DelegatedThreadSnoozed = 'mail.delegated_thread.snoozed';
+	case DelegatedThreadUnsnoozed = 'mail.delegated_thread.unsnoozed';
+	case DelegatedThreadDeleted = 'mail.delegated_thread.deleted';
+	case DelegatedDraftCreated = 'mail.delegated_draft.created';
+	case DelegatedDraftMoved = 'mail.delegated_draft.moved';
+	case DelegatedDraftDeleted = 'mail.delegated_draft.deleted';
+	case DelegatedOutboxMessageCreated = 'mail.delegated_outbox_message.created';
+	case DelegatedOutboxMessageUpdated = 'mail.delegated_outbox_message.updated';
+	case DelegatedOutboxMessageDeleted = 'mail.delegated_outbox_message.deleted';
+	case DelegatedOutboxMessageSent = 'mail.delegated_outbox_message.sent';
+	case DelegatedOutboxMessageSendFailed = 'mail.delegated_outbox_message.send_failed';
+	case DelegatedMailingListUnsubscribed = 'mail.delegated_mailing_list.unsubscribed';
+
 	/**
 	 * Short description of when the operation is logged, used for the documentation
 	 */
@@ -85,6 +125,44 @@ enum Operation: string {
 			self::AllowNewAccountsUpdated => 'An admin allowed or disallowed users adding their own mail accounts',
 			self::MailboxDeleted => 'A mailbox (folder) was deleted with all its messages',
 			self::MailboxCleared => 'All messages of a mailbox were moved to the trash, or permanently deleted when it is the trash',
+			self::DelegatedAccountSettingsUpdated => 'A delegate changed settings of the mail account, such as the special mailboxes',
+			self::DelegatedAccountSignatureUpdated => 'A delegate changed the signature of the mail account',
+			self::DelegatedAccountSmimeCertificateUpdated => 'A delegate changed the S/MIME certificate used by the mail account',
+			self::DelegatedAliasCreated => 'A delegate created an alias of the mail account',
+			self::DelegatedAliasUpdated => 'A delegate changed an alias of the mail account',
+			self::DelegatedAliasDeleted => 'A delegate deleted an alias of the mail account',
+			self::DelegatedAliasSignatureUpdated => 'A delegate changed the signature of an alias',
+			self::DelegatedFiltersUpdated => 'A delegate changed the mail filters of the mail account',
+			self::DelegatedMailboxCreated => 'A delegate created a mailbox',
+			self::DelegatedMailboxRenamed => 'A delegate renamed a mailbox',
+			self::DelegatedMailboxSubscribed => 'A delegate subscribed to a mailbox',
+			self::DelegatedMailboxUnsubscribed => 'A delegate unsubscribed from a mailbox',
+			self::DelegatedMailboxSyncEnabled => 'A delegate turned on background sync of a mailbox',
+			self::DelegatedMailboxSyncDisabled => 'A delegate turned off background sync of a mailbox',
+			self::DelegatedMailboxMarkedRead => 'A delegate marked all messages of a mailbox as read',
+			self::DelegatedMailboxRepaired => 'A delegate repaired the synchronization of a mailbox',
+			self::DelegatedMessageSent => 'A delegate sent a message',
+			self::DelegatedMessageSendFailed => 'A delegate tried to send a message, but sending failed',
+			self::DelegatedMessageMoved => 'A delegate moved a message to another mailbox',
+			self::DelegatedMessageSnoozed => 'A delegate snoozed a message',
+			self::DelegatedMessageUnsnoozed => 'A delegate unsnoozed a message',
+			self::DelegatedMessageFlagsUpdated => 'A delegate changed flags of a message, such as read or important',
+			self::DelegatedMessageTagAdded => 'A delegate added a tag to a message',
+			self::DelegatedMessageTagRemoved => 'A delegate removed a tag from a message',
+			self::DelegatedMessageDeleted => 'A delegate deleted a message',
+			self::DelegatedThreadMoved => 'A delegate moved a thread to another mailbox',
+			self::DelegatedThreadSnoozed => 'A delegate snoozed a thread',
+			self::DelegatedThreadUnsnoozed => 'A delegate unsnoozed a thread',
+			self::DelegatedThreadDeleted => 'A delegate deleted a thread',
+			self::DelegatedDraftCreated => 'A delegate created a draft',
+			self::DelegatedDraftMoved => 'A delegate moved a draft to the IMAP server',
+			self::DelegatedDraftDeleted => 'A delegate deleted a draft',
+			self::DelegatedOutboxMessageCreated => 'A delegate created a message in the outbox',
+			self::DelegatedOutboxMessageUpdated => 'A delegate changed a message in the outbox',
+			self::DelegatedOutboxMessageDeleted => 'A delegate deleted a message from the outbox',
+			self::DelegatedOutboxMessageSent => 'A delegate sent a message from the outbox',
+			self::DelegatedOutboxMessageSendFailed => 'A delegate tried to send a message from the outbox, but sending failed',
+			self::DelegatedMailingListUnsubscribed => 'A delegate unsubscribed the mail account from a mailing list',
 		};
 	}
 }

@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Http\JsonResponse;
@@ -119,7 +120,7 @@ class DraftsController extends Controller {
 			$this->service->handleDraft($account, $draftId);
 		}
 		$id = $message->getId();
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId created draft: $id  on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedDraftCreated, '%s created draft: %s  on behalf of %s', ['draftId' => $id]);
 		return JsonResponse::success($message, Http::STATUS_CREATED);
 	}
 
@@ -209,7 +210,7 @@ class DraftsController extends Controller {
 		$this->accountService->find($effectiveUserId, $message->getAccountId());
 
 		$this->service->deleteMessage($effectiveUserId, $message);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId deleted draft: $id  on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedDraftDeleted, '%s deleted draft: %s  on behalf of %s', ['draftId' => $id]);
 		return JsonResponse::success('Message deleted', Http::STATUS_ACCEPTED);
 	}
 
@@ -225,7 +226,7 @@ class DraftsController extends Controller {
 		$account = $this->accountService->find($effectiveUserId, $message->getAccountId());
 
 		$this->service->sendMessage($message, $account);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId moved draft: $id to the IMAP server on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedDraftMoved, '%s moved draft: %s to the IMAP server on behalf of %s', ['draftId' => $id]);
 		return  JsonResponse::success(
 			'Message moved to IMAP', Http::STATUS_ACCEPTED
 		);

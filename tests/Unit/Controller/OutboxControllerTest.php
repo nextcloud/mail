@@ -12,6 +12,7 @@ namespace OCA\Mail\Tests\Unit\Controller;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OC\AppFramework\Http;
 use OCA\Mail\Account;
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Controller\OutboxController;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\MailAccount;
@@ -23,6 +24,7 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Service\SmimeService;
+use OCA\Mail\Tests\Unit\DelegatedActionLog;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\DB\Exception;
 use OCP\IRequest;
@@ -157,7 +159,8 @@ class OutboxControllerTest extends TestCase {
 			->willReturn($newMessage);
 		$this->delegationService->expects(self::once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId sent outbox message <{$message->getId()}> on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::DelegatedOutboxMessageSent)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId sent outbox message <{$message->getId()}> on behalf of $this->userId"));
 
 		$expected = JsonResponse::success('Message sent', Http::STATUS_ACCEPTED);
 		$actual = $this->controller->send($message->getId());
@@ -189,7 +192,8 @@ class OutboxControllerTest extends TestCase {
 			->willReturn($newMessage);
 		$this->delegationService->expects(self::once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId attempted sending outbox message <{$message->getId()}> on behalf of $this->userId but sending failed");
+			->with($this->userId, $this->userId, Operation::DelegatedOutboxMessageSendFailed)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId attempted sending outbox message <{$message->getId()}> on behalf of $this->userId but sending failed"));
 
 		$actual = $this->controller->send($message->getId());
 
@@ -274,7 +278,8 @@ class OutboxControllerTest extends TestCase {
 			->with($this->userId, $message);
 		$this->delegationService->expects(self::once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId deleted outbox message <{$message->getId()}> on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::DelegatedOutboxMessageDeleted)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId deleted outbox message <{$message->getId()}> on behalf of $this->userId"));
 
 		$expected = JsonResponse::success('Message deleted', Http::STATUS_ACCEPTED);
 		$actual = $this->controller->destroy($message->getId());
@@ -330,7 +335,8 @@ class OutboxControllerTest extends TestCase {
 			->with($account, $message, $to, $cc, [], []);
 		$this->delegationService->expects(self::once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId created an outbox message for account <{$message->getAccountId()}> on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::DelegatedOutboxMessageCreated)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId created an outbox message for account <{$message->getAccountId()}> on behalf of $this->userId"));
 
 		$expected = JsonResponse::success($message, Http::STATUS_CREATED);
 		$actual = $this->controller->create(
@@ -472,7 +478,8 @@ class OutboxControllerTest extends TestCase {
 			->willReturn($message);
 		$this->delegationService->expects(self::once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId updated outbox message <{$message->getId()}> for account <{$message->getAccountId()}> on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::DelegatedOutboxMessageUpdated)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId updated outbox message <{$message->getId()}> for account <{$message->getAccountId()}> on behalf of $this->userId"));
 
 		$expected = JsonResponse::success($message, Http::STATUS_ACCEPTED);
 		$actual = $this->controller->update(

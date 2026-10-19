@@ -95,7 +95,7 @@ class SieveController extends Controller {
 			$this->logger->error('Installing sieve script failed: ' . $e->getMessage(), ['app' => 'mail', 'exception' => $e]);
 			return new JSONResponse(data: ['message' => $e->getMessage()], statusCode: Http::STATUS_UNPROCESSABLE_ENTITY);
 		}
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated the active sieve script for account <$id> on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::SieveScriptUpdated, '%s updated the active sieve script for account <%s> on behalf of %s', ['accountId' => $id]);
 
 		return new JSONResponse();
 	}
@@ -149,7 +149,7 @@ class SieveController extends Controller {
 
 			$this->mailAccountMapper->save($mailAccount);
 			$this->logSieveAccountUpdated($mailAccount);
-			$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated sieve settings for account <$id> on behalf of $effectiveUserId");
+			$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::SieveAccountUpdated, '%s updated sieve settings for account <%s> on behalf of %s', ['accountId' => $id]);
 			return new JSONResponse(['sieveEnabled' => $mailAccount->isSieveEnabled()]);
 		}
 
@@ -182,7 +182,7 @@ class SieveController extends Controller {
 
 		$this->mailAccountMapper->save($mailAccount);
 		$this->logSieveAccountUpdated($mailAccount);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated sieve settings for account <$id> on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::SieveAccountUpdated, '%s updated sieve settings for account <%s> on behalf of %s', ['accountId' => $id]);
 		return new JSONResponse(['sieveEnabled' => $mailAccount->isSieveEnabled()]);
 	}
 

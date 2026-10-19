@@ -11,6 +11,7 @@ namespace OCA\Mail\Tests\Unit\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Db\AliasMapper;
 use OCA\Mail\Db\Delegation;
 use OCA\Mail\Db\DelegationMapper;
@@ -519,15 +520,21 @@ class DelegationServiceTest extends TestCase {
 		$this->eventDispatcher->expects($this->once())
 			->method('dispatchTyped')
 			->with($this->callback(fn ($event) => $event instanceof CriticalActionPerformedEvent
-				&& $event->getLogMessage() === 'delegatee performed an action on behalf of owner'));
+				&& $event->getOperation() === 'mail.mailbox.deleted'
+				&& $event->getLogMessage() === '%s deleted mailbox: %s on behalf of %s'
+				&& $event->getParameters() === [
+					'delegate' => 'delegatee',
+					'mailboxId' => 5,
+					'owner' => 'owner',
+				]));
 
-		$this->service->logDelegatedAction('delegatee', 'owner', 'delegatee performed an action on behalf of owner');
+		$this->service->logDelegatedAction('delegatee', 'owner', Operation::MailboxDeleted, '%s deleted mailbox: %s on behalf of %s', ['mailboxId' => 5]);
 	}
 
 	public function testLogDelegatedActionSkipsWhenNotDelegated(): void {
 		$this->eventDispatcher->expects($this->never())
 			->method('dispatchTyped');
 
-		$this->service->logDelegatedAction('owner', 'owner', 'owner performed an action on their own account');
+		$this->service->logDelegatedAction('owner', 'owner', Operation::MailboxDeleted, '%s deleted mailbox: %s on behalf of %s', ['mailboxId' => 5]);
 	}
 }

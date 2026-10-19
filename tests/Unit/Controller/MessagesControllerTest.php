@@ -17,6 +17,7 @@ use OC\Memcache\NullCache;
 use OC\Security\CSP\ContentSecurityPolicyNonceManager;
 use OCA\Mail\Account;
 use OCA\Mail\Attachment;
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Contracts\IDkimService;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Contracts\ITrustedSenderService;
@@ -41,6 +42,7 @@ use OCA\Mail\Service\ItineraryService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\SmimeService;
 use OCA\Mail\Service\SnoozeService;
+use OCA\Mail\Tests\Unit\DelegatedActionLog;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
@@ -692,7 +694,8 @@ class MessagesControllerTest extends TestCase {
 			->with($this->account, $mailbox, 'seen', false, $message);
 		$this->delegationService->expects($this->once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId updated flags on message <$id> with [seen=false] on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::DelegatedMessageFlagsUpdated)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId updated flags on message <$id> with [seen=false] on behalf of $this->userId"));
 
 		$expected = new JSONResponse();
 		$response = $this->controller->setFlags(
@@ -802,7 +805,8 @@ class MessagesControllerTest extends TestCase {
 			->with($this->account, $mailbox, $tag, true, $message);
 		$this->delegationService->expects($this->once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId added tag <{$tag->getImapLabel()}> on message <$id> on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::DelegatedMessageTagAdded)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId added tag <{$tag->getImapLabel()}> on message <$id> on behalf of $this->userId"));
 
 		$this->controller->setTag($id, $tag->getImapLabel());
 	}
@@ -906,7 +910,8 @@ class MessagesControllerTest extends TestCase {
 			->with($this->account, $mailbox, $tag, false, $message);
 		$this->delegationService->expects($this->once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId removed tag <{$tag->getImapLabel()}> on message <$id> on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::DelegatedMessageTagRemoved)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId removed tag <{$tag->getImapLabel()}> on message <$id> on behalf of $this->userId"));
 
 		$this->controller->removeTag($id, $tag->getImapLabel());
 	}
@@ -941,7 +946,8 @@ class MessagesControllerTest extends TestCase {
 			->with($this->account, $mailbox, 'flagged', true, $message);
 		$this->delegationService->expects($this->once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId updated flags on message <$id> with [flagged=true] on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::DelegatedMessageFlagsUpdated)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId updated flags on message <$id> with [flagged=true] on behalf of $this->userId"));
 
 		$expected = new JSONResponse();
 		$response = $this->controller->setFlags(
@@ -979,7 +985,8 @@ class MessagesControllerTest extends TestCase {
 			->with($this->account, $mailbox, $message);
 		$this->delegationService->expects($this->once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId deleted message <$id> on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::DelegatedMessageDeleted)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId deleted message <$id> on behalf of $this->userId"));
 
 		$expected = new JSONResponse();
 		$result = $this->controller->destroy($id);

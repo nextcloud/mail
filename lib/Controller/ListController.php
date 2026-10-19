@@ -11,6 +11,7 @@ namespace OCA\Mail\Controller;
 
 use Exception;
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\DelegationService;
@@ -83,7 +84,7 @@ class ListController extends Controller {
 			]);
 			return JsonResponse::error('Unknown error');
 		}
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId unsubscribed from mailing list: $id on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedMailingListUnsubscribed, '%s unsubscribed from mailing list: %s on behalf of %s', ['messageId' => $id]);
 
 		return JsonResponse::success();
 	}

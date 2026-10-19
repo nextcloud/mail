@@ -11,11 +11,13 @@ namespace OCA\Mail\Tests\Unit\Controller;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Controller\FilterController;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\FilterService;
+use OCA\Mail\Tests\Unit\DelegatedActionLog;
 use OCP\AppFramework\Http;
 use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -61,7 +63,8 @@ class FilterControllerTest extends TestCase {
 			->with($mailAccount, ['filter1']);
 		$this->delegationService->expects(self::once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId updated account: $accountId 's filters  on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::DelegatedFiltersUpdated)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId updated account: $accountId 's filters  on behalf of $this->userId"));
 
 		$response = $this->controller->updateFilters($accountId, ['filter1']);
 

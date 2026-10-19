@@ -8,6 +8,7 @@
 namespace OCA\Mail\Tests\Unit\Controller;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Controller\AliasesController;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\AliasMapper;
@@ -16,6 +17,7 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\DelegationService;
+use OCA\Mail\Tests\Unit\DelegatedActionLog;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -100,7 +102,8 @@ class AliasesControllerTest extends TestCase {
 			->willReturnArgument(0);
 		$this->delegationService->expects($this->once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId updated alias: {$alias->getId()} on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::DelegatedAliasUpdated)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId updated alias: {$alias->getId()} on behalf of $this->userId"));
 
 		$response = $this->controller->update($alias->getId(), 'john@doe.com', 'John Doe');
 		/** @var Alias $data */
@@ -154,7 +157,8 @@ class AliasesControllerTest extends TestCase {
 			->willReturnArgument(0);
 		$this->delegationService->expects($this->once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId deleted alias: {$alias->getId()} on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::DelegatedAliasDeleted)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId deleted alias: {$alias->getId()} on behalf of $this->userId"));
 
 		$expectedResponse = new JSONResponse($alias);
 		$response = $this->controller->destroy($alias->getId());
@@ -196,7 +200,8 @@ class AliasesControllerTest extends TestCase {
 			->willReturn($alias);
 		$this->delegationService->expects($this->once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId created alias: {$alias->getId()}  on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::DelegatedAliasCreated)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId created alias: {$alias->getId()}  on behalf of $this->userId"));
 
 		$expectedResponse = new JSONResponse(
 			$alias,
@@ -246,7 +251,8 @@ class AliasesControllerTest extends TestCase {
 			->willReturnArgument(0);
 		$this->delegationService->expects($this->once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId updated alias: {$alias->getId()} 's signature on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::DelegatedAliasSignatureUpdated)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId updated alias: {$alias->getId()} 's signature on behalf of $this->userId"));
 
 		$expectedResponse = new JSONResponse(
 			$alias,
