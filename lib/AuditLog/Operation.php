@@ -35,6 +35,12 @@ enum Operation: string {
 	case TextBlockShareCreated = 'mail.text_block_share.created';
 	case TextBlockShareDeleted = 'mail.text_block_share.deleted';
 
+	// Provisioning
+	case ProvisioningConfigCreated = 'mail.provisioning_config.created';
+	case ProvisioningConfigUpdated = 'mail.provisioning_config.updated';
+	case ProvisioningConfigDeleted = 'mail.provisioning_config.deleted';
+	case ProvisioningApplied = 'mail.provisioning.applied';
+
 	/**
 	 * Short description of when the operation is logged, used for the documentation
 	 */
@@ -51,6 +57,10 @@ enum Operation: string {
 			self::SmimeCertificateDeleted => 'An S/MIME certificate was deleted with its private key',
 			self::TextBlockShareCreated => 'A text block was shared with a user or a group',
 			self::TextBlockShareDeleted => 'A text block was no longer shared with a user or a group',
+			self::ProvisioningConfigCreated => 'An admin created a provisioning configuration that sets up mail accounts for matching users',
+			self::ProvisioningConfigUpdated => 'An admin changed the servers or credentials of a provisioning configuration',
+			self::ProvisioningConfigDeleted => 'An admin deleted a provisioning configuration together with all mail accounts provisioned from it',
+			self::ProvisioningApplied => 'Mail accounts were created or updated for all users from the provisioning configurations, from the admin settings, occ mail:account:provision or an app update',
 		};
 	}
 }

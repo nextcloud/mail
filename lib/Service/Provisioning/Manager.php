@@ -11,6 +11,7 @@ namespace OCA\Mail\Service\Provisioning;
 
 use Horde_Mail_Rfc822_Address;
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\AliasMapper;
 use OCA\Mail\Db\MailAccount;
@@ -25,10 +26,12 @@ use OCP\App\IAppManager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\DB\Exception;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\ICacheFactory;
 use OCP\IUser;
 use OCP\IUserManager;
 use OCP\LDAP\ILDAPProviderFactory;
+use OCP\Log\Audit\CriticalActionPerformedEvent;
 use OCP\Security\ICrypto;
 use Psr\Log\LoggerInterface;
 
@@ -62,6 +65,7 @@ class Manager {
 		ICacheFactory $cacheFactory,
 		private AccountService $accountService,
 		private ClassificationSettingsService $classificationSettingsService,
+		private IEventDispatcher $eventDispatcher,
 	) {
 		$this->appManager = $appManager;
 		$this->userManager = $userManager;
@@ -105,6 +109,12 @@ class Manager {
 				$counter++;
 			}
 		});
+		$this->eventDispatcher->dispatchTyped(new CriticalActionPerformedEvent(
+			'%s mail accounts were created or updated from the provisioning configurations',
+			['accountCount' => $counter],
+			false,
+			Operation::ProvisioningApplied->value,
+		));
 
 		return $counter;
 	}
@@ -273,6 +283,7 @@ class Manager {
 			$cache = $this->cacheFactory->createDistributed(self::MAIL_PROVISIONINGS);
 			$cache->clear();
 		}
+		$this->logProvisioningChange($provisioning, 'created', Operation::ProvisioningConfigCreated);
 		return $provisioning;
 	}
 
@@ -287,6 +298,7 @@ class Manager {
 			$cache = $this->cacheFactory->createDistributed(self::MAIL_PROVISIONINGS);
 			$cache->clear();
 		}
+		$this->logProvisioningChange($provisioning, 'updated', Operation::ProvisioningConfigUpdated);
 	}
 
 	/**
@@ -394,6 +406,19 @@ class Manager {
 			$cache = $this->cacheFactory->createDistributed(self::MAIL_PROVISIONINGS);
 			$cache->clear();
 		}
+		$this->logProvisioningChange($provisioning, 'deleted with its provisioned accounts', Operation::ProvisioningConfigDeleted);
+	}
+
+	private function logProvisioningChange(Provisioning $provisioning, string $change, Operation $operation): void {
+		$this->eventDispatcher->dispatchTyped(new CriticalActionPerformedEvent(
+			'Mail provisioning configuration %s for domain "%s" was ' . $change,
+			[
+				'provisioningId' => $provisioning->getId(),
+				'provisioningDomain' => $provisioning->getProvisioningDomain(),
+			],
+			false,
+			$operation->value,
+		));
 	}
 
 	/**
