@@ -41,6 +41,16 @@ enum Operation: string {
 	case ProvisioningConfigDeleted = 'mail.provisioning_config.deleted';
 	case ProvisioningApplied = 'mail.provisioning.applied';
 
+	// Admin settings
+	case GoogleOauthConfigured = 'mail.google_oauth.configured';
+	case GoogleOauthDeleted = 'mail.google_oauth.deleted';
+	case MicrosoftOauthConfigured = 'mail.microsoft_oauth.configured';
+	case MicrosoftOauthDeleted = 'mail.microsoft_oauth.deleted';
+	case AntispamConfigUpdated = 'mail.antispam_config.updated';
+	case AntispamConfigDeleted = 'mail.antispam_config.deleted';
+	case LlmProcessingUpdated = 'mail.llm_processing.updated';
+	case AllowNewAccountsUpdated = 'mail.allow_new_accounts.updated';
+
 	/**
 	 * Short description of when the operation is logged, used for the documentation
 	 */
@@ -61,6 +71,14 @@ enum Operation: string {
 			self::ProvisioningConfigUpdated => 'An admin changed the servers or credentials of a provisioning configuration',
 			self::ProvisioningConfigDeleted => 'An admin deleted a provisioning configuration together with all mail accounts provisioned from it',
 			self::ProvisioningApplied => 'Mail accounts were created or updated for all users from the provisioning configurations, from the admin settings, occ mail:account:provision or an app update',
+			self::GoogleOauthConfigured => 'An admin set the OAuth client used to connect Google accounts',
+			self::GoogleOauthDeleted => 'An admin removed the OAuth client used to connect Google accounts',
+			self::MicrosoftOauthConfigured => 'An admin set the OAuth client used to connect Microsoft accounts',
+			self::MicrosoftOauthDeleted => 'An admin removed the OAuth client used to connect Microsoft accounts',
+			self::AntispamConfigUpdated => 'An admin set the addresses that messages reported as spam or not spam are forwarded to',
+			self::AntispamConfigDeleted => 'An admin removed the addresses that reported messages are forwarded to',
+			self::LlmProcessingUpdated => 'An admin allowed or disallowed processing mail content with large language models',
+			self::AllowNewAccountsUpdated => 'An admin allowed or disallowed users adding their own mail accounts',
 		};
 	}
 }

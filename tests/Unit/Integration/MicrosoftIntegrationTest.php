@@ -16,11 +16,13 @@ use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Integration\MicrosoftIntegration;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
 use OCP\Http\Client\IResponse;
 use OCP\IAppConfig;
 use OCP\IURLGenerator;
+use OCP\Log\Audit\CriticalActionPerformedEvent;
 use OCP\Security\ICrypto;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
@@ -32,6 +34,7 @@ class MicrosoftIntegrationTest extends TestCase {
 	private IClientService&MockObject $clientService;
 	private IClient&MockObject $client;
 	private LoggerInterface&MockObject $logger;
+	private IEventDispatcher&MockObject $eventDispatcher;
 	private MicrosoftIntegration $integration;
 
 	protected function setUp(): void {
@@ -43,6 +46,7 @@ class MicrosoftIntegrationTest extends TestCase {
 		$this->clientService = $this->createMock(IClientService::class);
 		$this->client = $this->createMock(IClient::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 
 		$this->timeFactory->method('getTime')->willReturn(10000);
 		$this->appConfig->method('getValueString')
@@ -68,6 +72,7 @@ class MicrosoftIntegrationTest extends TestCase {
 			$this->clientService,
 			$this->createMock(IURLGenerator::class),
 			$this->logger,
+			$this->eventDispatcher,
 		);
 	}
 
@@ -139,5 +144,33 @@ class MicrosoftIntegrationTest extends TestCase {
 		$this->client->expects($this->never())->method('post');
 
 		$this->integration->refresh(new Account($mailAccount));
+	}
+
+	private function expectAuditEvent(string $operation, string $message, array $parameters): void {
+		$this->eventDispatcher->expects(self::once())
+			->method('dispatchTyped')
+			->with(self::callback(fn (CriticalActionPerformedEvent $event): bool => $event->getOperation() === $operation
+				&& $event->getLogMessage() === $message
+				&& $event->getParameters() === $parameters));
+	}
+
+	public function testConfigureLogsClientIdWithoutSecret(): void {
+		$this->appConfig->expects(self::exactly(3))
+			->method('setValueString');
+		$this->expectAuditEvent(
+			'mail.microsoft_oauth.configured',
+			'Microsoft OAuth client "%s" of tenant "%s" was configured for mail accounts',
+			['clientId' => 'client-id', 'tenantId' => 'tenant-id'],
+		);
+
+		$this->integration->configure('tenant-id', 'client-id', 'secret');
+	}
+
+	public function testUnlink(): void {
+		$this->appConfig->expects(self::exactly(3))
+			->method('deleteKey');
+		$this->expectAuditEvent('mail.microsoft_oauth.deleted', 'Microsoft OAuth client for mail accounts was removed', []);
+
+		$this->integration->unlink();
 	}
 }
