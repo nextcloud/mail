@@ -2100,13 +2100,20 @@ export default function mainStoreActions() {
 			const listId = normalizedEnvelopeListId(query)
 			const orderByDateInt = orderBy(idToDateInt, this.preferences['sort-order'] === 'newest' ? 'desc' : 'asc')
 
+			// Collect the mailboxes whose lists receive new ids, then rebuild
+			// each list once. Previously every list was re-sorted and replaced
+			// once per envelope, which caused O(n*m log m) work and needless
+			// re-renders for every batch of new messages.
+			const dirtyMailboxes = new Set()
+
 			envelopes.forEach((envelope) => {
 				const mailbox = this.mailboxes[envelope.mailboxId]
 				const existing = mailbox.envelopeLists[listId] || []
 				this.normalizeTags(envelope)
 				Vue.set(this.envelopes, envelope.databaseId, { ...this.envelopes[envelope.databaseId] || {}, ...envelope })
 				Vue.set(envelope, 'accountId', mailbox.accountId)
-				Vue.set(mailbox.envelopeLists, listId, uniq(orderByDateInt(this.appendOrReplaceEnvelopeId(existing, envelope))))
+				mailbox.envelopeLists[listId] = this.appendOrReplaceEnvelopeId(existing, envelope)
+				dirtyMailboxes.add(mailbox)
 				if (!addToUnifiedMailboxes) {
 					return
 				}
@@ -2116,12 +2123,13 @@ export default function mainStoreActions() {
 					.filter((mb) => mb.specialRole && mb.specialRole === mailbox.specialRole)
 					.forEach((mailbox) => {
 						const existing = mailbox.envelopeLists[listId] || []
-						Vue.set(
-							mailbox.envelopeLists,
-							listId,
-							uniq(orderByDateInt(existing.concat([envelope.databaseId]))),
-						)
+						mailbox.envelopeLists[listId] = existing.concat([envelope.databaseId])
+						dirtyMailboxes.add(mailbox)
 					})
+			})
+
+			dirtyMailboxes.forEach((mailbox) => {
+				Vue.set(mailbox.envelopeLists, listId, uniq(orderByDateInt(mailbox.envelopeLists[listId] || [])))
 			})
 		},
 		updateEnvelopeMutation({ envelope }) {
