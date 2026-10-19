@@ -168,7 +168,6 @@
 <script>
 import { showError } from '@nextcloud/dialogs'
 import { mapStores } from 'pinia'
-import { differenceWith } from 'ramda'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
 import NcButton from '@nextcloud/vue/components/NcButton'
@@ -374,10 +373,11 @@ export default {
 
 	watch: {
 		sortedEnvelops(newVal, oldVal) {
-			// Unselect vanished envelopes
-			const newIds = newVal.map((env) => env.databaseId)
-			this.selection = this.selection.filter((id) => newIds.includes(id))
-			differenceWith((a, b) => a.databaseId === b.databaseId, oldVal, newVal)
+			// Unselect vanished envelopes (Set-based lookup: O(n+m) instead of
+			// ramda's differenceWith which scans the full old list per new item)
+			const newIds = new Set(newVal.map((env) => env.databaseId))
+			this.selection = this.selection.filter((id) => newIds.has(id))
+			oldVal.filter((env) => !newIds.has(env.databaseId))
 				.forEach((env) => {
 					env.flags.selected = false
 				})
