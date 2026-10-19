@@ -27,6 +27,10 @@ enum Operation: string {
 	case SieveAccountUpdated = 'mail.sieve_account.updated';
 	case SieveScriptUpdated = 'mail.sieve_script.updated';
 
+	// S/MIME
+	case SmimeCertificateCreated = 'mail.smime_certificate.created';
+	case SmimeCertificateDeleted = 'mail.smime_certificate.deleted';
+
 	/**
 	 * Short description of when the operation is logged, used for the documentation
 	 */
@@ -39,6 +43,8 @@ enum Operation: string {
 			self::DelegationDeleted => 'A user was no longer allowed to act on behalf of the owner of a mail account',
 			self::SieveAccountUpdated => 'The Sieve server or credentials of a mail account were changed, or Sieve was turned on or off',
 			self::SieveScriptUpdated => 'The active Sieve script of a mail account was replaced, including through mail filters and out-of-office replies',
+			self::SmimeCertificateCreated => 'An S/MIME certificate was uploaded, optionally with its private key',
+			self::SmimeCertificateDeleted => 'An S/MIME certificate was deleted with its private key',
 		};
 	}
 }
