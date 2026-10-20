@@ -72,18 +72,17 @@ import IconEdit from 'vue-material-design-icons/PencilOutline.vue'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
-import { translateTagDisplayName, validateTag } from '../util/tag.js'
+import { tagBackgroundColor, tagTextColor, translateTagDisplayName, validateTag } from '../util/tag.js'
 
 export default {
 	name: 'TagItem',
 	components: {
+		NcButton,
+		NcCheckboxRadioSwitch,
 		NcColorPicker,
-		NcActions,
-		NcActionButton,
-		NcActionText,
-		NcActionInput,
-		NcLoadingIcon,
+		NcTextField,
 		DeleteIcon,
+		IconClose,
 		IconEdit,
 	},
 
@@ -103,14 +102,11 @@ export default {
 	data() {
 		return {
 			isAdded: false,
+			isDarkTheme: useIsDarkTheme(),
 			editing: false,
 			editColor: null,
-			tagLabel: true,
-			tagInput: false,
-			showSaving: false,
+			saving: false,
 			currentTagName: '',
-			renameTagLabel: true,
-			renameTagInput: false,
 			errorMessage: '',
 		}
 	},
@@ -126,39 +122,35 @@ export default {
 	},
 
 	methods: {
+		tagBackgroundColor,
+		tagTextColor,
 		translateTagDisplayName,
 		deleteTag() {
 			this.$emit('delete-tag', this.tag)
 		},
 
 		async updateColor() {
-			this.showSaving = false
 			try {
 				await this.mainStore.updateTag({
 					tag: this.tag,
 					displayName: this.tag.displayName,
 					color: this.editColor,
 				})
-				this.showSaving = false
 			} catch (error) {
 				showInfo(t('mail', 'An error occurred, unable to rename the tag.'))
 				logger.error('could not rename tag', { error })
-				this.showSaving = true
 			}
 		},
 
 		openEditTag() {
-			this.renameTagLabel = false
-			this.renameTagInput = true
-			this.showSaving = false
+			this.editing = true
 			this.currentTagName = this.tag.displayName
 			this.editColor = this.tag.color
 		},
 
 		closeEditTag() {
-			this.renameTagInput = false
-			this.renameTagLabel = true
-			this.showSaving = false
+			this.editing = false
+			this.errorMessage = ''
 		},
 
 		hasError() {
@@ -175,7 +167,7 @@ export default {
 				return
 			}
 
-			this.showSaving = false
+			this.saving = true
 			this.errorMessage = ''
 
 			try {
@@ -188,23 +180,8 @@ export default {
 			} catch (error) {
 				showInfo(t('mail', 'An error occurred, unable to rename the tag.'))
 				logger.error('could not rename tag', { error })
-				this.renameTagLabel = false
-				this.renameTagInput = false
-				this.showSaving = true
-			}
-		},
-
-		convertHex(color, opacity) {
-			if (color.length === 4) {
-				const r = parseInt(color.substring(1, 2), 16)
-				const g = parseInt(color.substring(2, 3), 16)
-				const b = parseInt(color.substring(3, 4), 16)
-				return `rgba(${r}, ${g}, ${b}, ${opacity})`
-			} else {
-				const r = parseInt(color.substring(1, 3), 16)
-				const g = parseInt(color.substring(3, 5), 16)
-				const b = parseInt(color.substring(5, 7), 16)
-				return `rgba(${r}, ${g}, ${b}, ${opacity})`
+			} finally {
+				this.saving = false
 			}
 		},
 
@@ -232,24 +209,14 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.app-navigation-entry-bullet-wrapper {
-	width: 44px;
-	height: 44px;
-	display: inline-block;
-	position: fixed;
-	list-style: none;
-	top: 18px;
-	inset-inline-start: 15px;
+.tag-group__color {
+	width: calc(var(--default-grid-baseline) * 5);
+	height: calc(var(--default-grid-baseline) * 5);
+	border-radius: 50%;
+}
 
-	.color0 {
-		width: 22px !important;
-		height: 22px;
-		border-radius: 50%;
-		background-size: 14px;
-		z-index: 2;
-		display: flex;
-		position: relative;
-	}
+.tag-group__name {
+	flex: 1;
 }
 
 .tag-group {

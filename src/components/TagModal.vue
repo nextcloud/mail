@@ -79,14 +79,11 @@ export default {
 	name: 'TagModal',
 	components: {
 		NcModal,
-		NcActionText,
-		NcActionInput,
+		NcColorPicker,
+		NcTextField,
 		DeleteTagModal,
-		IconTag,
-		NcLoadingIcon,
 		TagItem,
 		NcButton,
-		IconAdd,
 	},
 
 	props: {
@@ -99,20 +96,26 @@ export default {
 
 	data() {
 		return {
-			isAdded: false,
-			editing: false,
-			tagLabel: true,
-			tagInput: false,
-			showSaving: false,
 			deleteTagModal: false,
 			tagToDelete: null,
 			color: randomColor(),
-			editColor: '',
+			newTagName: '',
+			saving: false,
+			errorMessage: '',
 		}
 	},
 
 	computed: {
 		...mapStores(useMainStore),
+		heading() {
+			if (this.envelopes.length === 1) {
+				const subject = this.envelopes[0].subject || this.t('mail', 'No subject')
+				// TRANSLATORS: {subject} is the subject of the selected email
+				return this.t('mail', 'Assign tags to "{subject}"', { subject }, undefined, { escape: false })
+			}
+			return this.n('mail', 'Assign tags to %n message', 'Assign tags to %n messages', this.envelopes.length)
+		},
+
 		tags() {
 			return this.mainStore.getTags.filter((tag) => tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags)).sort((a, b) => {
 				if (a.isDefaultTag && !b.isDefaultTag) {
@@ -127,14 +130,14 @@ export default {
 					}
 					return -1
 				}
-				if (this.isSet(a.imapLabel) && !this.isSet(b.imapLabel)) {
-					return -1
-				}
-				if (!this.isSet(a.imapLabel) && this.isSet(b.imapLabel)) {
-					return 1
-				}
 				return a.displayName.localeCompare(b.displayName)
 			})
+		},
+	},
+
+	watch: {
+		newTagName() {
+			this.errorMessage = ''
 		},
 	},
 
@@ -147,42 +150,31 @@ export default {
 			this.deleteTagModal = false
 		},
 
-		isSet(imapLabel) {
-			return this.envelopes.some((envelope) => (
-				this.mainStore.getEnvelopeTags(envelope.databaseId).some((tag) => tag.imapLabel === imapLabel)
-			))
-		},
-
-		addTagInput() {
-			this.editing = true
-			this.showSaving = false
-		},
-
-		async createTag(event) {
-			this.editing = true
-			if (this.showSaving) {
+		async createTag() {
+			if (this.saving) {
 				return
 			}
 
-			const displayName = event.target.querySelector('input[type=text]').value.trim()
-			const otherTags = this.mainStore.getTags
-			const valid = validateTag(null, displayName, otherTags)
+			const displayName = this.newTagName.trim()
+			const valid = validateTag(null, displayName, this.mainStore.getTags)
 			if (valid !== true) {
-				showError(valid)
+				this.errorMessage = valid
 				return
 			}
 
+			this.saving = true
 			try {
 				await this.mainStore.createTag({
 					displayName,
-					color: randomColor(displayName),
+					color: this.color,
 				})
+				this.newTagName = ''
+				this.color = randomColor()
 			} catch (error) {
 				logger.error('could not create tag', { error })
 				showError(this.t('mail', 'An error occurred, unable to create the tag.'))
 			} finally {
-				this.showSaving = false
-				this.tagLabel = true
+				this.saving = false
 			}
 		},
 
