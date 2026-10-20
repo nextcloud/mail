@@ -1,3 +1,43 @@
+## [5.12.5](https://github.com/nextcloud/mail/compare/v5.12.4...v5.12.5) (2026-10-20)
+
+
+### Bug Fixes
+
+* **contacts:** Prevent undefined array key when using ldap_contacts_backend app ([89f7591](https://github.com/nextcloud/mail/commit/89f7591eff7d35ff0728c697d69b06f91d2821eb))
+* **db:** bind tag ids as integers in tag search ([6a99430](https://github.com/nextcloud/mail/commit/6a994309ad50c3c510910487da63e48e5ce52c6d))
+* **db:** Use expression builder for JOIN conditions ([4129a4c](https://github.com/nextcloud/mail/commit/4129a4ce426c11c86020e56eeaedc401a911beae))
+* **deps:** bump dompurify from ^3.4.13 to v3.4.16 ([e9094b8](https://github.com/nextcloud/mail/commit/e9094b82c575fe7a636ce02cb9beecba92ad4311))
+* **deps:** Fix npm audit ([3c0fd96](https://github.com/nextcloud/mail/commit/3c0fd96489698aefb10815d43fcf04b866a70031))
+* **dns:** Update public suffix list ([2f703ee](https://github.com/nextcloud/mail/commit/2f703ee9ef0e840b5b5862a8361da085d3504536))
+* **drafts:** keep attachments when saving drafts to IMAP ([5e7e4de](https://github.com/nextcloud/mail/commit/5e7e4de19af32cb440396c1e3970302b707da85e))
+* **filters:** require at least one condition per mail filter ([8232447](https://github.com/nextcloud/mail/commit/823244782f76333083c4b480c0c4a2568fc60238))
+* handling attachment when it is the only part of the message ([663b12b](https://github.com/nextcloud/mail/commit/663b12b8367c0b87b906eff3e95cd9d15a57b9d1))
+* **l10n:** translate delete tag dialog title ([a60e003](https://github.com/nextcloud/mail/commit/a60e003c9f997980d66461b744b211afc8b4dac1))
+* **l10n:** Update translations from Transifex ([06072e1](https://github.com/nextcloud/mail/commit/06072e126b2332f97ba21e6adea31ea944fc6f3e))
+* **l10n:** Update translations from Transifex ([96f7f20](https://github.com/nextcloud/mail/commit/96f7f2004ef431dfdf4f93c16f5d899c2c3b8535))
+* **l10n:** Update translations from Transifex ([745b9e2](https://github.com/nextcloud/mail/commit/745b9e2fe92b9040e89ed02cd91a879de4dacd4f))
+* **l10n:** Update translations from Transifex ([c8afb97](https://github.com/nextcloud/mail/commit/c8afb9756fd5eb1faa38fb7daaa70682b2cb85d2))
+* **l10n:** Update translations from Transifex ([8ce1661](https://github.com/nextcloud/mail/commit/8ce16612f4abe5dc54a0b2d84369ca78ab0e17f0))
+* **l10n:** Update translations from Transifex ([9b41205](https://github.com/nextcloud/mail/commit/9b41205d4a68a34d37d7629c744ff8ab61e0e98c))
+* **l10n:** Update translations from Transifex ([85e185c](https://github.com/nextcloud/mail/commit/85e185cfc1eebedc9e257682d703001b3ba1bcc7))
+* **l10n:** Update translations from Transifex ([90bb1a2](https://github.com/nextcloud/mail/commit/90bb1a27c4fb814d95f538defafb5fb437203ea5))
+* **l10n:** Update translations from Transifex ([cd6d85f](https://github.com/nextcloud/mail/commit/cd6d85f7a5851038ff72d9d9f1cb76fe3b53b591))
+* **l10n:** Update translations from Transifex ([a279e05](https://github.com/nextcloud/mail/commit/a279e05216402077af004132c499e401d72f43d0))
+* **l10n:** Update translations from Transifex ([dbfd2d4](https://github.com/nextcloud/mail/commit/dbfd2d43a6b2593a33998d49d145560142488627))
+* **l10n:** Update translations from Transifex ([cab8db9](https://github.com/nextcloud/mail/commit/cab8db9eeceea57663b964612de0bd360fd2c975))
+* **l10n:** Update translations from Transifex ([92b93b6](https://github.com/nextcloud/mail/commit/92b93b6038c8e663b688751d04aba5c50813b431))
+* **l10n:** Update translations from Transifex ([5ffdf64](https://github.com/nextcloud/mail/commit/5ffdf6456647dd91b9d649c9693364096d43c83e))
+* **oauth:** store the rotated Microsoft refresh token ([a6add16](https://github.com/nextcloud/mail/commit/a6add16e99a9162535a531e486e824fb6f59fb72))
+* **ui:** remove redundant envelope fetch on mailbox switch ([9e6de6a](https://github.com/nextcloud/mail/commit/9e6de6a3548ab78de6649c0745805302f97f0151))
+* use pdf viewer instead of office ([0957f6b](https://github.com/nextcloud/mail/commit/0957f6bec906800ff839ce6e7209676145229fd2))
+
+
+### Performance Improvements
+
+* **db:** use subqueries for recipient and tag search ([d9fe475](https://github.com/nextcloud/mail/commit/d9fe475fee37939cc30f714d4f4d04f5a018c21a))
+
+
+
 ## [5.12.4](https://github.com/nextcloud/mail/compare/v5.12.3...v5.12.4) (2026-10-06)
 
 
