@@ -267,20 +267,19 @@
 			</NcAppSettingsSection>
 
 			<NcAppSettingsShortcutsSection>
-				<NcHotkeyList>
-					<NcHotkey :label="t('mail', 'Compose new message')" hotkey="C" />
-					<NcHotkey :label="t('mail', 'Newer message')" hotkey="ArrowLeft" />
-					<NcHotkey :label="t('mail', 'Older message')" hotkey="ArrowRight" />
-					<NcHotkey :label="t('mail', 'Toggle star')" hotkey="S" />
-					<NcHotkey :label="t('mail', 'Toggle unread')" hotkey="U" />
-					<NcHotkey :label="t('mail', 'Archive')" hotkey="A" />
-					<NcHotkey :label="t('mail', 'Delete')" hotkey="Delete" />
-					<NcHotkey :label="t('mail', 'Search')" hotkey="Control F" />
-					<NcHotkey :label="t('mail', 'Send')" hotkey="Control Enter" />
-					<NcHotkey :label="t('mail', 'Refresh')" hotkey="R" />
-					<NcHotkey :label="t('mail', 'Heading1')" hotkey="Control Alt 1" />
-					<NcHotkey :label="t('mail', 'Heading2')" hotkey="Control Alt 2" />
-					<NcHotkey :label="t('mail', 'Heading3')" hotkey="Control Alt 3" />
+				<NcHotkeyList v-if="activeShortcuts.length > 0">
+					<NcHotkey
+						v-for="entry in activeShortcuts"
+						:key="entry.action"
+						:label="entry.label"
+						:hotkey="entry.hotkey">
+						<template v-if="entry.parts" #hotkey>
+							<template v-for="(part, index) in entry.parts" :key="index">
+								<NcKbd v-if="part.type === 'key'" :symbol="part.key" />
+								<span v-else>{{ part.text }}</span>
+							</template>
+						</template>
+					</NcHotkey>
 				</NcHotkeyList>
 			</NcAppSettingsShortcutsSection>
 
@@ -310,6 +309,7 @@ import NcFormGroup from '@nextcloud/vue/components/NcFormGroup'
 import NcHotkey from '@nextcloud/vue/components/NcHotkey'
 import NcHotkeyList from '@nextcloud/vue/components/NcHotkeyList'
 import NcInputField from '@nextcloud/vue/components/NcInputField'
+import NcKbd from '@nextcloud/vue/components/NcKbd'
 import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 import NcRadioGroup from '@nextcloud/vue/components/NcRadioGroup'
 import NcRadioGroupButton from '@nextcloud/vue/components/NcRadioGroupButton'
@@ -328,6 +328,7 @@ import List from './textBlocks/List.vue'
 import TextEditor from './TextEditor.vue'
 import TrustedSenders from './TrustedSenders.vue'
 import Logger from '../logger.js'
+import { formatHotkey, hasJumps, jumpActions, resolveShortcuts, shortcutActions } from '../shortcuts.js'
 import useMainStore from '../store/mainStore.js'
 
 export default {
@@ -361,6 +362,7 @@ export default {
 		NcNoteCard,
 		NcHotkeyList,
 		NcHotkey,
+		NcKbd,
 		IconArrow,
 	},
 
@@ -464,6 +466,47 @@ export default {
 			set(value) {
 				this.onToggleAutoMarkAsRead(value)
 			},
+		},
+
+		/**
+		 * Shortcut list for the settings dialog, derived from the bindings that
+		 * are actually registered.
+		 *
+		 * Previously this was a hardcoded NcHotkeyList that documented shortcuts
+		 * the app does not implement (compose, search, send) and went stale
+		 * whenever a binding moved.
+		 *
+		 * Rows carry either a `hotkey` string or, for key sequences, a `parts`
+		 * array that the template renders as keys and connective text.
+		 *
+		 * @return {Array<{action: string, label: string, hotkey?: string, parts?: Array<{type: string, key?: string, text?: string}>}>} rows
+		 */
+		activeShortcuts() {
+			const bindings = resolveShortcuts()
+
+			const rows = []
+
+			for (const { action, label } of shortcutActions(this.t)) {
+				if (!bindings[action]) {
+					continue
+				}
+
+				// Some actions have two bindings (Delete is on both Del and #);
+				// show them on one row rather than as duplicate entries.
+				const existing = rows.find((row) => row.label === label)
+				if (existing) {
+					existing.hotkey += ' / ' + formatHotkey(bindings[action])
+					continue
+				}
+
+				rows.push({ action, label, hotkey: formatHotkey(bindings[action]) })
+			}
+
+			if (hasJumps()) {
+				rows.push(...jumpActions(this.t))
+			}
+
+			return rows
 		},
 
 		useExternalAvatars: {
