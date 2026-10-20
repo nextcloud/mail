@@ -707,7 +707,7 @@ export default {
 		},
 	},
 
-	emits: ['open:quickActionsSettings', 'update:selected', 'selectMultiple', 'delete', 'archive', 'move'],
+	emits: ['open:quickActionsSettings', 'update:selected', 'selectMultiple', 'delete', 'archive', 'move', 'close'],
 
 	data() {
 		return {
@@ -1178,6 +1178,12 @@ export default {
 		},
 
 		async onClick(event) {
+			if (this.$route.name === 'message'
+				&& parseInt(this.$route.params.threadId, 10) === this.data.databaseId) {
+				event.preventDefault()
+				this.$emit('close')
+				return
+			}
 			if (!event.ctrlKey && this.draft && !event.defaultPrevented) {
 				await this.mainStore.startComposerSession({
 					data: {

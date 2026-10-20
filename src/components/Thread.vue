@@ -17,6 +17,16 @@
 						{{ threadSubject }}
 					</h2>
 				</div>
+				<NcButton
+					class="mail-thread-header__close"
+					variant="tertiary"
+					:aria-label="t('mail', 'Close message')"
+					:title="t('mail', 'Close message')"
+					@click="$emit('close')">
+					<template #icon>
+						<IconClose :size="20" />
+					</template>
+				</NcButton>
 			</div>
 			<ThreadSummary v-if="showSummaryBox" :loading="summaryLoading" :summary="summaryText" />
 			<ThreadEnvelope
@@ -44,6 +54,8 @@ import { showError } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
 import { mapStores } from 'pinia'
 import NcAppContentDetails from '@nextcloud/vue/components/NcAppContentDetails'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import IconClose from 'vue-material-design-icons/Close.vue'
 import Error from './Error.vue'
 import Loading from './Loading.vue'
 import ThreadEnvelope from './ThreadEnvelope.vue'
@@ -85,12 +97,14 @@ export default {
 	components: {
 		ThreadSummary,
 		NcAppContentDetails,
+		NcButton,
+		IconClose,
 		Error,
 		Loading,
 		ThreadEnvelope,
 	},
 
-	emits: ['delete', 'archive'],
+	emits: ['delete', 'archive', 'close'],
 
 	data() {
 		return {
@@ -587,6 +601,10 @@ export default {
         // NcAppContent's back button takes this much space above the details
         top: var(--default-clickable-area) !important;
     }
+}
+
+.mail-thread-header__close {
+	flex: 0 0 auto;
 }
 
 #mail-thread-header-fields {

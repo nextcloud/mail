@@ -109,6 +109,22 @@ describe('EnvelopeSkeleton', () => {
 		expect(view.emitted('click')).toHaveLength(1)
 	})
 
+	it('does not navigate when a parent cancels the click', () => {
+		const push = vi.fn()
+		const view = mountSkeleton({ push })
+
+		view.vm.onClick({
+			defaultPrevented: true,
+			metaKey: false,
+			altKey: false,
+			ctrlKey: false,
+			shiftKey: false,
+			preventDefault: vi.fn(),
+		})
+
+		expect(push).not.toHaveBeenCalled()
+	})
+
 	it('does not navigate when a modifier key opens the link in a new tab', () => {
 		const push = vi.fn()
 		const view = mountSkeleton({ push })
