@@ -277,6 +277,7 @@
 					<NcHotkey :label="t('mail', 'Delete')" hotkey="Delete" />
 					<NcHotkey :label="t('mail', 'Search')" hotkey="Control F" />
 					<NcHotkey :label="t('mail', 'Send')" hotkey="Control Enter" />
+					<NcHotkey :label="t('mail', 'Save draft')" hotkey="Control S" />
 					<NcHotkey :label="t('mail', 'Refresh')" hotkey="R" />
 					<NcHotkey :label="t('mail', 'Heading1')" hotkey="Control Alt 1" />
 					<NcHotkey :label="t('mail', 'Heading2')" hotkey="Control Alt 2" />

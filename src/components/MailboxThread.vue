@@ -283,7 +283,6 @@ export default {
 				flag: ['s'],
 				next: ['arrowright'],
 				prev: ['arrowleft'],
-				refresh: ['r'],
 				unseen: ['u'],
 			},
 
