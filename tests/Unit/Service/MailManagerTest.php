@@ -31,6 +31,7 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\ImapFlag;
 use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\MailManager;
+use OCA\Mail\Tests\Unit\AuditLog\AuditEvents;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Log\Audit\CriticalActionPerformedEvent;
@@ -972,7 +973,7 @@ class MailManagerTest extends TestCase {
 		$this->manager->clearMailbox($account, $inbox);
 
 		self::assertCount(1, $auditEvents);
-		self::assertSame('mail.mailbox.cleared', $auditEvents[0]->getOperation());
+		self::assertTrue(AuditEvents::hasOperation($auditEvents[0], 'mail.mailbox.cleared'));
 		self::assertSame('Mailbox %s of mail account %s of "%s" was cleared', $auditEvents[0]->getLogMessage());
 		self::assertSame(['mailboxId' => 1, 'accountId' => 5, 'owner' => 'user'], $auditEvents[0]->getParameters());
 	}
@@ -994,7 +995,7 @@ class MailManagerTest extends TestCase {
 			->with($account, $mailbox);
 		$this->eventDispatcher->expects(self::once())
 			->method('dispatchTyped')
-			->with(self::callback(fn (CriticalActionPerformedEvent $event): bool => $event->getOperation() === 'mail.mailbox.deleted'
+			->with(self::callback(fn (CriticalActionPerformedEvent $event): bool => AuditEvents::hasOperation($event, 'mail.mailbox.deleted')
 				&& $event->getLogMessage() === 'Mailbox %s of mail account %s of "%s" was deleted'
 				&& $event->getParameters() === ['mailboxId' => 7, 'accountId' => 5, 'owner' => 'user']));
 

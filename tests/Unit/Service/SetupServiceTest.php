@@ -23,6 +23,7 @@ use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\SetupService;
 use OCA\Mail\SMTP\SmtpClientFactory;
+use OCA\Mail\Tests\Unit\AuditLog\AuditEvents;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Log\Audit\CriticalActionPerformedEvent;
 use OCP\Security\ICrypto;
@@ -178,7 +179,7 @@ class SetupServiceTest extends TestCase {
 			});
 		$this->eventDispatcher->expects(self::once())
 			->method('dispatchTyped')
-			->with(self::callback(fn (CriticalActionPerformedEvent $event): bool => $event->getOperation() === 'mail.account.created'
+			->with(self::callback(fn (CriticalActionPerformedEvent $event): bool => AuditEvents::hasOperation($event, 'mail.account.created')
 				&& $event->getLogMessage() === 'Mail account %s of "%s" was created'
 				&& $event->getParameters() === [
 					'accountId' => 42,
@@ -265,7 +266,7 @@ class SetupServiceTest extends TestCase {
 			->willReturnArgument(0);
 		$this->eventDispatcher->expects(self::once())
 			->method('dispatchTyped')
-			->with(self::callback(fn (CriticalActionPerformedEvent $event): bool => $event->getOperation() === 'mail.account.updated'
+			->with(self::callback(fn (CriticalActionPerformedEvent $event): bool => AuditEvents::hasOperation($event, 'mail.account.updated')
 				&& $event->getLogMessage() === 'Mail account %s of "%s" was updated'
 				&& $event->getParameters()['accountId'] === 7
 				&& $event->getParameters()['authMethod'] === self::AUTH_METHOD_OAUTH2));

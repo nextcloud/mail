@@ -16,6 +16,7 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\SieveService;
 use OCA\Mail\Sieve\SieveClientFactory;
+use OCA\Mail\Tests\Unit\AuditLog\AuditEvents;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Log\Audit\CriticalActionPerformedEvent;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -198,7 +199,7 @@ class SieveServiceTest extends TestCase {
 			->willReturn($client);
 		$this->eventDispatcher->expects(self::once())
 			->method('dispatchTyped')
-			->with(self::callback(fn (CriticalActionPerformedEvent $event): bool => $event->getOperation() === 'mail.sieve_script.updated'
+			->with(self::callback(fn (CriticalActionPerformedEvent $event): bool => AuditEvents::hasOperation($event, 'mail.sieve_script.updated')
 				&& $event->getLogMessage() === 'Active Sieve script of mail account %s of "%s" was updated'
 				&& $event->getParameters() === ['accountId' => 2, 'owner' => '1']));
 

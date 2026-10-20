@@ -24,6 +24,7 @@ use OCA\Mail\Exception\DelegationExistsException;
 use OCA\Mail\Exception\DelegationForbiddenException;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\DelegationService;
+use OCA\Mail\Tests\Unit\AuditLog\AuditEvents;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -111,7 +112,7 @@ class DelegationServiceTest extends TestCase {
 		$this->eventDispatcher->expects($this->once())
 			->method('dispatchTyped')
 			->with($this->callback(fn ($event) => $event instanceof CriticalActionPerformedEvent
-				&& $event->getOperation() === $operation
+				&& AuditEvents::hasOperation($event, $operation)
 				&& $event->getLogMessage() === $message
 				&& $event->getParameters() === [
 					'delegateUserId' => 'delegatee',
@@ -520,7 +521,7 @@ class DelegationServiceTest extends TestCase {
 		$this->eventDispatcher->expects($this->once())
 			->method('dispatchTyped')
 			->with($this->callback(fn ($event) => $event instanceof CriticalActionPerformedEvent
-				&& $event->getOperation() === 'mail.mailbox.deleted'
+				&& AuditEvents::hasOperation($event, 'mail.mailbox.deleted')
 				&& $event->getLogMessage() === '%s deleted mailbox: %s on behalf of %s'
 				&& $event->getParameters() === [
 					'delegate' => 'delegatee',

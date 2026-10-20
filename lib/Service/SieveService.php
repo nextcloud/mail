@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use Horde\ManageSieve\Exception as ManagesieveException;
+use OCA\Mail\AuditLog\AuditEventFactory;
 use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\CouldNotConnectException;
@@ -17,7 +18,6 @@ use OCA\Mail\Sieve\NamedSieveScript;
 use OCA\Mail\Sieve\SieveClientFactory;
 use OCA\Mail\Sieve\SieveUtils;
 use OCP\EventDispatcher\IEventDispatcher;
-use OCP\Log\Audit\CriticalActionPerformedEvent;
 
 class SieveService {
 	public function __construct(
@@ -59,14 +59,13 @@ class SieveService {
 
 		$scriptName = $sieve->getActive() ?? 'nextcloud';
 		$sieve->installScript($scriptName, $this->enforceTrailingNewline($script), true);
-		$this->eventDispatcher->dispatchTyped(new CriticalActionPerformedEvent(
+		$this->eventDispatcher->dispatchTyped(AuditEventFactory::create(
+			Operation::SieveScriptUpdated,
 			'Active Sieve script of mail account %s of "%s" was updated',
 			[
 				'accountId' => $accountId,
 				'owner' => $userId,
 			],
-			false,
-			Operation::SieveScriptUpdated->value,
 		));
 	}
 

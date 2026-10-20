@@ -13,6 +13,7 @@ use ChristophWurst\Nextcloud\Testing\ServiceMockObject;
 use OCA\Mail\Controller\SettingsController;
 use OCA\Mail\Db\Provisioning;
 use OCA\Mail\Tests\Integration\TestCase;
+use OCA\Mail\Tests\Unit\AuditLog\AuditEvents;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\Log\Audit\CriticalActionPerformedEvent;
 
@@ -72,7 +73,7 @@ class SettingsControllerTest extends TestCase {
 		$this->mock->getParameter('eventDispatcher')
 			->expects(self::once())
 			->method('dispatchTyped')
-			->with(self::callback(fn (CriticalActionPerformedEvent $event): bool => $event->getOperation() === $operation
+			->with(self::callback(fn (CriticalActionPerformedEvent $event): bool => AuditEvents::hasOperation($event, $operation)
 				&& $event->getLogMessage() === $message
 				&& $event->getParameters() === $parameters));
 	}

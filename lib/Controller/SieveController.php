@@ -11,6 +11,7 @@ namespace OCA\Mail\Controller;
 
 use Horde\ManageSieve\Exception as ManagesieveException;
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\AuditLog\AuditEventFactory;
 use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
@@ -29,7 +30,6 @@ use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IRequest;
-use OCP\Log\Audit\CriticalActionPerformedEvent;
 use OCP\Security\ICrypto;
 use OCP\Security\IRemoteHostValidator;
 use Psr\Log\LoggerInterface;
@@ -187,7 +187,8 @@ class SieveController extends Controller {
 	}
 
 	private function logSieveAccountUpdated(MailAccount $mailAccount): void {
-		$this->eventDispatcher->dispatchTyped(new CriticalActionPerformedEvent(
+		$this->eventDispatcher->dispatchTyped(AuditEventFactory::create(
+			Operation::SieveAccountUpdated,
 			'Sieve settings of mail account %s of "%s" were updated',
 			[
 				'accountId' => $mailAccount->getId(),
@@ -195,8 +196,6 @@ class SieveController extends Controller {
 				'sieveEnabled' => $mailAccount->isSieveEnabled(),
 				'sieveHost' => $mailAccount->getSieveHost(),
 			],
-			false,
-			Operation::SieveAccountUpdated->value,
 		));
 	}
 }

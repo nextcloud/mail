@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Controller;
 
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\AuditLog\AuditEventFactory;
 use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Exception\ValidationException;
@@ -23,7 +24,6 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IAppConfig;
 use OCP\IRequest;
-use OCP\Log\Audit\CriticalActionPerformedEvent;
 use Psr\Container\ContainerInterface;
 use function array_merge;
 
@@ -139,11 +139,10 @@ class SettingsController extends Controller {
 	}
 
 	private function logCriticalAction(string $message, array $parameters, Operation $operation): void {
-		$this->eventDispatcher->dispatchTyped(new CriticalActionPerformedEvent(
+		$this->eventDispatcher->dispatchTyped(AuditEventFactory::create(
+			$operation,
 			$message,
 			$parameters,
-			false,
-			$operation->value,
 		));
 	}
 

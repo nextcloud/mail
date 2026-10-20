@@ -15,6 +15,7 @@ use OCA\Mail\Account;
 use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Integration\MicrosoftIntegration;
+use OCA\Mail\Tests\Unit\AuditLog\AuditEvents;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Http\Client\IClient;
@@ -149,7 +150,7 @@ class MicrosoftIntegrationTest extends TestCase {
 	private function expectAuditEvent(string $operation, string $message, array $parameters): void {
 		$this->eventDispatcher->expects(self::once())
 			->method('dispatchTyped')
-			->with(self::callback(fn (CriticalActionPerformedEvent $event): bool => $event->getOperation() === $operation
+			->with(self::callback(fn (CriticalActionPerformedEvent $event): bool => AuditEvents::hasOperation($event, $operation)
 				&& $event->getLogMessage() === $message
 				&& $event->getParameters() === $parameters));
 	}

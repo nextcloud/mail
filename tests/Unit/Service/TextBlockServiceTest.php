@@ -14,6 +14,7 @@ use OCA\Mail\Db\TextBlockMapper;
 use OCA\Mail\Db\TextBlockShare;
 use OCA\Mail\Db\TextBlockShareMapper;
 use OCA\Mail\Service\TextBlockService;
+use OCA\Mail\Tests\Unit\AuditLog\AuditEvents;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IGroupManager;
 use OCP\IUserManager;
@@ -58,7 +59,7 @@ final class TextBlockServiceTest extends TestCase {
 	private function expectShareAuditEvent(string $operation, string $message, string $shareType, string $sharedWith): void {
 		$this->eventDispatcher->expects($this->once())
 			->method('dispatchTyped')
-			->with($this->callback(fn (CriticalActionPerformedEvent $event): bool => $event->getOperation() === $operation
+			->with($this->callback(fn (CriticalActionPerformedEvent $event): bool => AuditEvents::hasOperation($event, $operation)
 				&& $event->getLogMessage() === $message
 				&& $event->getParameters() === [
 					'textBlockId' => 1,

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
+use OCA\Mail\AuditLog\AuditEventFactory;
 use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\BackgroundJob\ContextChat\ScheduleJob;
 use OCA\Mail\BackgroundJob\PreviewEnhancementProcessingJob;
@@ -30,7 +31,6 @@ use OCP\BackgroundJob\IJob;
 use OCP\BackgroundJob\IJobList;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
-use OCP\Log\Audit\CriticalActionPerformedEvent;
 use function array_map;
 
 class AccountService {
@@ -179,14 +179,13 @@ class AccountService {
 	}
 
 	private function logAccountDeleted(MailAccount $mailAccount): void {
-		$this->eventDispatcher->dispatchTyped(new CriticalActionPerformedEvent(
+		$this->eventDispatcher->dispatchTyped(AuditEventFactory::create(
+			Operation::AccountDeleted,
 			'Mail account %s of "%s" was deleted',
 			[
 				'accountId' => $mailAccount->getId(),
 				'owner' => $mailAccount->getUserId(),
 			],
-			false,
-			Operation::AccountDeleted->value,
 		));
 	}
 

@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use Html2Text\Html2Text;
+use OCA\Mail\AuditLog\AuditEventFactory;
 use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Db\TextBlock;
 use OCA\Mail\Db\TextBlockMapper;
@@ -21,7 +22,6 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IGroupManager;
 use OCP\IUserManager;
-use OCP\Log\Audit\CriticalActionPerformedEvent;
 
 class TextBlockService {
 
@@ -161,15 +161,14 @@ class TextBlockService {
 	}
 
 	private function logShareChange(TextBlockShare $share, string $change, Operation $operation): void {
-		$this->eventDispatcher->dispatchTyped(new CriticalActionPerformedEvent(
+		$this->eventDispatcher->dispatchTyped(AuditEventFactory::create(
+			$operation,
 			'Text block %s was ' . $change . ' %s "%s"',
 			[
 				'textBlockId' => $share->getTextBlockId(),
 				'shareType' => $share->getType(),
 				'sharedWith' => $share->getShareWith(),
 			],
-			false,
-			$operation->value,
 		));
 	}
 }

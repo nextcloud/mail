@@ -12,6 +12,7 @@ namespace OCA\Mail\Tests\Unit\Integration;
 use ChristophWurst\Nextcloud\Testing\ServiceMockObject;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Integration\GoogleIntegration;
+use OCA\Mail\Tests\Unit\AuditLog\AuditEvents;
 use OCP\Log\Audit\CriticalActionPerformedEvent;
 
 class GoogleIntegrationTest extends TestCase {
@@ -29,7 +30,7 @@ class GoogleIntegrationTest extends TestCase {
 		$this->serviceMock->getParameter('eventDispatcher')
 			->expects(self::once())
 			->method('dispatchTyped')
-			->with(self::callback(fn (CriticalActionPerformedEvent $event): bool => $event->getOperation() === $operation
+			->with(self::callback(fn (CriticalActionPerformedEvent $event): bool => AuditEvents::hasOperation($event, $operation)
 				&& $event->getLogMessage() === $message
 				&& $event->getParameters() === $parameters));
 	}

@@ -23,6 +23,7 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\SmimeCertificateInfo;
 use OCA\Mail\Model\SmimeCertificatePurposes;
 use OCA\Mail\Service\SmimeService;
+use OCA\Mail\Tests\Unit\AuditLog\AuditEvents;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\ICertificateManager;
 use OCP\ITempManager;
@@ -549,7 +550,7 @@ class SmimeServiceTest extends TestCase {
 	private function expectCertificateAuditEvent(string $operation, string $message, array $parameters): void {
 		$this->eventDispatcher->expects(self::once())
 			->method('dispatchTyped')
-			->with(self::callback(fn (CriticalActionPerformedEvent $event): bool => $event->getOperation() === $operation
+			->with(self::callback(fn (CriticalActionPerformedEvent $event): bool => AuditEvents::hasOperation($event, $operation)
 				&& $event->getLogMessage() === $message
 				&& $event->getParameters() === $parameters));
 	}

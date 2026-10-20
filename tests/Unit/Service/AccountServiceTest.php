@@ -20,6 +20,7 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
+use OCA\Mail\Tests\Unit\AuditLog\AuditEvents;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
 use OCP\EventDispatcher\IEventDispatcher;
@@ -181,7 +182,7 @@ class AccountServiceTest extends TestCase {
 	private function expectAccountDeletedAuditEvent(int $accountId): void {
 		$this->eventDispatcher->expects($this->once())
 			->method('dispatchTyped')
-			->with($this->callback(fn (CriticalActionPerformedEvent $event): bool => $event->getOperation() === 'mail.account.deleted'
+			->with($this->callback(fn (CriticalActionPerformedEvent $event): bool => AuditEvents::hasOperation($event, 'mail.account.deleted')
 				&& $event->getLogMessage() === 'Mail account %s of "%s" was deleted'
 				&& $event->getParameters() === ['accountId' => $accountId, 'owner' => $this->user]));
 	}

@@ -17,6 +17,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\CouldNotConnectException;
 use OCA\Mail\Sieve\NamedSieveScript;
 use OCA\Mail\Tests\Integration\TestCase;
+use OCA\Mail\Tests\Unit\AuditLog\AuditEvents;
 use OCA\Mail\Tests\Unit\DelegatedActionLog;
 use OCP\Log\Audit\CriticalActionPerformedEvent;
 use OCP\Security\IRemoteHostValidator;
@@ -57,7 +58,7 @@ class SieveControllerTest extends TestCase {
 		$this->serviceMock->getParameter('eventDispatcher')
 			->expects($this->once())
 			->method('dispatchTyped')
-			->with($this->callback(fn (CriticalActionPerformedEvent $event): bool => $event->getOperation() === 'mail.sieve_account.updated'
+			->with($this->callback(fn (CriticalActionPerformedEvent $event): bool => AuditEvents::hasOperation($event, 'mail.sieve_account.updated')
 				&& $event->getLogMessage() === 'Sieve settings of mail account %s of "%s" were updated'
 				&& $event->getParameters() === [
 					'accountId' => 2,

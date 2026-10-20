@@ -11,6 +11,7 @@ namespace OCA\Mail\Service\Provisioning;
 
 use Horde_Mail_Rfc822_Address;
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\AuditLog\AuditEventFactory;
 use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\AliasMapper;
@@ -31,7 +32,6 @@ use OCP\ICacheFactory;
 use OCP\IUser;
 use OCP\IUserManager;
 use OCP\LDAP\ILDAPProviderFactory;
-use OCP\Log\Audit\CriticalActionPerformedEvent;
 use OCP\Security\ICrypto;
 use Psr\Log\LoggerInterface;
 
@@ -109,11 +109,10 @@ class Manager {
 				$counter++;
 			}
 		});
-		$this->eventDispatcher->dispatchTyped(new CriticalActionPerformedEvent(
+		$this->eventDispatcher->dispatchTyped(AuditEventFactory::create(
+			Operation::ProvisioningApplied,
 			'%s mail accounts were created or updated from the provisioning configurations',
 			['accountCount' => $counter],
-			false,
-			Operation::ProvisioningApplied->value,
 		));
 
 		return $counter;
@@ -410,14 +409,13 @@ class Manager {
 	}
 
 	private function logProvisioningChange(Provisioning $provisioning, string $change, Operation $operation): void {
-		$this->eventDispatcher->dispatchTyped(new CriticalActionPerformedEvent(
+		$this->eventDispatcher->dispatchTyped(AuditEventFactory::create(
+			$operation,
 			'Mail provisioning configuration %s for domain "%s" was ' . $change,
 			[
 				'provisioningId' => $provisioning->getId(),
 				'provisioningDomain' => $provisioning->getProvisioningDomain(),
 			],
-			false,
-			$operation->value,
 		));
 	}
 

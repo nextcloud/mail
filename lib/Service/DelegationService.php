@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
+use OCA\Mail\AuditLog\AuditEventFactory;
 use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Db\AliasMapper;
 use OCA\Mail\Db\Delegation;
@@ -24,7 +25,6 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IUserManager;
-use OCP\Log\Audit\CriticalActionPerformedEvent;
 use OCP\Notification\IManager;
 use OCP\Notification\IncompleteNotificationException;
 use Psr\Log\LoggerInterface;
@@ -197,24 +197,22 @@ class DelegationService {
 		if ($currentUserId === $effectiveUserId) {
 			return;
 		}
-		$this->eventDispatcher->dispatchTyped(new CriticalActionPerformedEvent(
+		$this->eventDispatcher->dispatchTyped(AuditEventFactory::create(
+			$operation,
 			$logMessage,
 			['delegate' => $currentUserId] + $parameters + ['owner' => $effectiveUserId],
-			false,
-			$operation->value,
 		));
 	}
 
 	private function logDelegationChange(Account $account, string $delegateUserId, string $change, Operation $operation): void {
-		$this->eventDispatcher->dispatchTyped(new CriticalActionPerformedEvent(
+		$this->eventDispatcher->dispatchTyped(AuditEventFactory::create(
+			$operation,
 			'User "%s" ' . $change . ' to act on behalf of "%s" for mail account %s',
 			[
 				'delegateUserId' => $delegateUserId,
 				'owner' => $account->getUserId(),
 				'accountId' => $account->getId(),
 			],
-			false,
-			$operation->value,
 		));
 	}
 

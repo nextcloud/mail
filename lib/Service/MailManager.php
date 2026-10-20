@@ -11,6 +11,7 @@ namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
 use OCA\Mail\Attachment;
+use OCA\Mail\AuditLog\AuditEventFactory;
 use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
@@ -34,7 +35,6 @@ use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\Search\SearchQuery;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
-use OCP\Log\Audit\CriticalActionPerformedEvent;
 use Psr\Log\LoggerInterface;
 use function array_map;
 use function array_values;
@@ -140,15 +140,14 @@ class MailManager {
 	 * The mailbox name is not logged, as it is chosen by the user and may hold personal data
 	 */
 	private function logMailboxChange(Account $account, Mailbox $mailbox, string $change, Operation $operation): void {
-		$this->eventDispatcher->dispatchTyped(new CriticalActionPerformedEvent(
+		$this->eventDispatcher->dispatchTyped(AuditEventFactory::create(
+			$operation,
 			'Mailbox %s of mail account %s of "%s" was ' . $change,
 			[
 				'mailboxId' => $mailbox->getId(),
 				'accountId' => $account->getId(),
 				'owner' => $account->getUserId(),
 			],
-			false,
-			$operation->value,
 		));
 	}
 

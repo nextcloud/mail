@@ -12,6 +12,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Provisioning;
 use OCA\Mail\Service\Provisioning\Manager;
+use OCA\Mail\Tests\Unit\AuditLog\AuditEvents;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IUser;
 use OCP\LDAP\ILDAPProvider;
@@ -37,7 +38,7 @@ class ManagerTest extends TestCase {
 		$this->mock->getParameter('eventDispatcher')
 			->expects($this->once())
 			->method('dispatchTyped')
-			->with($this->callback(fn (CriticalActionPerformedEvent $event): bool => $event->getOperation() === $operation
+			->with($this->callback(fn (CriticalActionPerformedEvent $event): bool => AuditEvents::hasOperation($event, $operation)
 				&& $event->getLogMessage() === $message
 				&& $event->getParameters() === $parameters));
 	}
