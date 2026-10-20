@@ -16,12 +16,12 @@ class FilterValidator {
 	private const TEST_FIELDS = ['subject', 'from', 'to'];
 	private const TEST_OPERATORS = ['is', 'contains', 'matches'];
 	private const ACTION_PARAMETERS = [
-		'fileinto' => 'mailbox',
-		'addflag' => 'flag',
-		'addsystemflag' => 'flag',
-		'keep' => null,
-		'stop' => null,
-		'redirect' => 'recipient',
+		'fileinto' => ['mailbox'],
+		'addflag' => ['flag'],
+		'addsystemflag' => ['flag'],
+		'keep' => [],
+		'stop' => [],
+		'redirect' => ['recipient'],
 	];
 
 	/**
@@ -115,9 +115,10 @@ class FilterValidator {
 			throw InvalidFilterException::invalidProperty($index, 'action');
 		}
 
-		$parameter = self::ACTION_PARAMETERS[$type];
-		if ($parameter !== null && !is_string($action[$parameter] ?? null)) {
-			throw InvalidFilterException::invalidProperty($index, 'action');
+		foreach (self::ACTION_PARAMETERS[$type] as $parameter) {
+			if (!is_string($action[$parameter] ?? null)) {
+				throw InvalidFilterException::invalidProperty($index, 'action');
+			}
 		}
 	}
 }
