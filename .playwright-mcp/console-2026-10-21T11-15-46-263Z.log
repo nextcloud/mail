@@ -1,0 +1,23 @@
+[    1178ms] [INFO] [INFO] core: session heartbeat polling started {app: core, level: 0} @ https://localhost/dist/sr-wTOgW3op.chunk.mjs:3
+[    1181ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://localhost/core/img/manifest.json:0
+[    1181ms] [ERROR] Manifest fetch from https://localhost/core/img/manifest.json failed, code 404 @ https://localhost/login:0
+[    1279ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://localhost/core/img/manifest.json:0
+[    1279ms] [ERROR] Manifest fetch from https://localhost/core/img/manifest.json failed, code 404 @ https://localhost/login:0
+[    1860ms] [ERROR] Failed to load resource: the server responded with a status of 500 () @ https://localhost/apps/theming/favicon?v=f7edddaa:0
+[   39044ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://localhost/apps/calendar/css/calendar-contacts-menu.css:0
+[   39448ms] [WARNING] [WARN] viewer: Some mimes were ignored because they are not enabled in the server previews config {app: viewer, uid: admin, level: 0, ignoredMimes: Array(5)} @ https://localhost/dist/sr-wTOgW3op.chunk.mjs:3
+[   39459ms] [INFO] [INFO] viewer: Registered viewer file action {app: viewer, uid: admin, level: 0, id: viewer-open} @ https://localhost/dist/sr-wTOgW3op.chunk.mjs:3
+[   39459ms] [INFO] [INFO] viewer: Registered viewer file action {app: viewer, uid: admin, level: 0, id: viewer-open-with} @ https://localhost/dist/sr-wTOgW3op.chunk.mjs:3
+[   39459ms] [INFO] [INFO] viewer: Registered viewer file action {app: viewer, uid: admin, level: 0, id: viewer-open-slideshow} @ https://localhost/dist/sr-wTOgW3op.chunk.mjs:3
+[   39459ms] [INFO] [INFO] viewer: Audio handler registered {app: viewer, uid: admin, level: 0, tagName: oca-viewer-audio} @ https://localhost/dist/sr-wTOgW3op.chunk.mjs:3
+[   39460ms] [INFO] [INFO] viewer: Video handler registered {app: viewer, uid: admin, level: 0, tagName: oca-viewer-video} @ https://localhost/dist/sr-wTOgW3op.chunk.mjs:3
+[   39460ms] [INFO] [INFO] viewer: Image handler registered {app: viewer, uid: admin, level: 0, tagName: oca-viewer-image, enabledMimes: Array(1)} @ https://localhost/dist/sr-wTOgW3op.chunk.mjs:3
+[   39461ms] [INFO] [INFO] viewer: Sheet music handler registered {app: viewer, uid: admin, level: 0, tagName: oca-viewer-sheetmusic} @ https://localhost/dist/sr-wTOgW3op.chunk.mjs:3
+[   39485ms] [WARNING] [WARN] viewer: Some mimes were ignored because they are not enabled in the server previews config {app: viewer, uid: admin, level: 0, ignoredMimes: Array(5)} @ https://localhost/apps/text/js/index-CmC2kfdz.chunk.mjs:3
+[   39873ms] [INFO] [INFO] core: session heartbeat polling started {app: core, uid: admin, level: 0} @ https://localhost/dist/sr-wTOgW3op.chunk.mjs:3
+[   40432ms] [INFO] Notifications permissions not yet requested @ https://localhost/apps/notifications/js/NotificationsApp-DfnOTcPA.chunk.mjs:77
+[   40561ms] [ERROR] Failed to load resource: the server responded with a status of 500 () @ https://localhost/ocs/v2.php/apps/notifications/api/v2/notifications:0
+[   40563ms] [INFO] Slowing down notifications: Status 500 @ https://localhost/apps/notifications/js/NotificationsApp-DfnOTcPA.chunk.mjs:77
+[   41182ms] [ERROR] Failed to load resource: the server responded with a status of 500 () @ https://localhost/apps/theming/favicon/dashboard?v=f7edddaa:0
+[   41352ms] [ERROR] Failed to load resource: the server responded with a status of 500 () @ https://localhost/apps/theming/icon/dashboard?v=129:0
+[   41353ms] [WARNING] Error while trying to use the following icon from the Manifest: https://localhost/apps/theming/icon/dashboard?v=129 (Download error or resource isn't a valid image) @ https://localhost/apps/dashboard/:0

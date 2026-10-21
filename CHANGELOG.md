@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 ### Performance
 * Prefix the internal-address index with the user id
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 * Quick actions for special folders
 * Show the unified inbox icon
 * Detect message language in the browser for translation
@@ -47,6 +48,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 * Translations
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 * Reply to sender only
 * Replying to your own message now addresses the original recipient
 * Rate limit all IMAP server authentication rejections
@@ -62,6 +64,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 * Translations
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 * Printing messages
 * Drag and drop into sub-mailboxes blocked by a disabled parent mailbox
 * Prefer sans-serif font over Noto Color Emoji for text rendering
@@ -79,6 +82,7 @@ All notable changes to this project will be documented in this file.
 ### Performance
 * Reuse IMAP client connections during initial sync
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 * Attachment actions menu closes after Download or Save to Files
 * Correct favorite/unfavorite bulk action behavior
 * Detect and warn about Microsoft accounts without OAuth configured
@@ -94,6 +98,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 * Translations
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 * Compact view alignment issues
 * S/MIME: parse email addresses from Subject Alternative Names
 * Composer: no dropdown shown when recipient field focused without input
@@ -137,6 +142,7 @@ All notable changes to this project will be documented in this file.
 * One feature setting for all LLM features
 * Faster background sync
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 * Database index usages
 * Division by zero
 * Autoconfig via MX DNS records
@@ -158,6 +164,7 @@ All notable changes to this project will be documented in this file.
 - Updated and new translations
 - App store screenshot
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Calendar event color picker
 - Thread summaries using preview text instead of full body text
 - Showing contact name in thread header
@@ -181,6 +188,7 @@ All notable changes to this project will be documented in this file.
 - Parse mailto addresses
 
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Add loading skeletons without avatars
 - Return to primary actions if envelope actions are closed with more actions open
 - No message selected message only displayed after 30 seconds on priority inbox
@@ -229,6 +237,7 @@ All notable changes to this project will be documented in this file.
 - Title to account settings modal
 
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Update interface to match implementation
 - Truncate email addresses that are more than 244 characters long
 - Ignore no select mailboxes for MYRIGHTS
@@ -258,6 +267,7 @@ All notable changes to this project will be documented in this file.
 
 ## 3.2.5 - 2023-07-31
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Make nested toolbar working for signature editor
 - Make system address book searchable not just full matches
 - Fix force sending emails
@@ -265,12 +275,14 @@ All notable changes to this project will be documented in this file.
 
 ## 3.2.4 - 2023-07-12
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Show starred messages in Favourites again
 - Reduce number of STATUS commands for background mailbox sync
 - Mailboxes not being synced due to short-circuiting
 
 ## 3.2.3 - 2023-06-28
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Ignore no select mailboxes for MYRIGHTS
 - Ignore non existent mailboxes (again)
 - Truncate email addresses that are more than 244 characters long
@@ -280,6 +292,7 @@ All notable changes to this project will be documented in this file.
 
 ## 3.2.2 - 2023-06-19
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Calendar import popup
 - PHP8.2 warnings about string interpolation
 - OAuth access token written to wrong database field
@@ -288,6 +301,7 @@ All notable changes to this project will be documented in this file.
 
 ## 3.2.1 - 2023-06-14
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Allow dynamic autoloading for classes added during upgrade
 
 ## 3.2.0- 2023-06-07
@@ -301,6 +315,7 @@ All notable changes to this project will be documented in this file.
 - Verify signature of encrypted messages
 - One-click unsubscribe
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - The preview string is shown outside the box of the thread
 - Position thread envelope icons relative to avatar
 - Display email address instead of label
@@ -316,6 +331,7 @@ All notable changes to this project will be documented in this file.
 
 ## 3.1.1 - 2023-04-19
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Delete old draft when saving new version
 - App between primary actions
 - Button styles
@@ -326,6 +342,7 @@ All notable changes to this project will be documented in this file.
 - Warning when a signature is not verified
 - Respect acl for MailboxInlinePicker
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Certificate to alias mapping UI
 - Login using xoauth2
 - Message preview
@@ -343,16 +360,19 @@ All notable changes to this project will be documented in this file.
 
 ## 3.0.3 – 2023-03-29
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - OAuth account setup
 
 ## 3.0.2 - 2023-03-23
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Validate favicon hosts
 - Message preview
 - Attachments width
 
 ## 3.0.1 - 2023-03-23
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Hide "Has Cal" tag
 - HTML messages dont expand depending on size
 
@@ -366,6 +386,7 @@ All notable changes to this project will be documented in this file.
 - Nextcloud 25 support
 
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - The composer jumps when adding format
 - Archiving messages via shortcut
 - Dashboard loading forever
@@ -381,6 +402,7 @@ All notable changes to this project will be documented in this file.
 
 ## 2.2.7 - 2023-06-28
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Truncate email addresses that are more than 244 characters long
 - Check strict cookies for image proxy
 - Only fetch mailbox STATUS once
@@ -388,6 +410,7 @@ All notable changes to this project will be documented in this file.
 
 ## 2.2.6 - 2023-04-20
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Gap between primary actions
 - Button style
 - Clear config cache after every mutation
@@ -395,18 +418,21 @@ All notable changes to this project will be documented in this file.
 
 ## 2.2.5 - 2023-03-23
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Validate favicon hosts
 - Attachments width
 - Message preview
 
 ## 2.2.4 - 2023-02-24
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Open composer actions after changing encryption mode
 - Close button position in SearchMessages.vue
 - Background touches search input
 
 ## 2.2.3 - 2023-02-09
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Allow sending of messages with empty body content
 - Check if  is empty before trying to make it an iterator
 - ProvisioningMiddleware method return type
@@ -415,6 +441,7 @@ All notable changes to this project will be documented in this file.
 
 ## 2.2.2 – 2022-12-21
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Validate remote hosts
 - Sending password for OAUTH accounts
 - Storing password when we don't expect one
@@ -422,6 +449,7 @@ All notable changes to this project will be documented in this file.
 
 ## 2.2.1 – 2022-12-06
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Mailbox cache sync scope of current mailbox
 
 ## 2.2.0 - 2022-12-05
@@ -436,6 +464,7 @@ All notable changes to this project will be documented in this file.
 - Search box for outbox and PI
 - Support for email field
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Advanced search does not scroll
 - Dark theme loading envelops and thread colour
 - Scrolling for long threads on narrow screens
@@ -466,16 +495,19 @@ All notable changes to this project will be documented in this file.
 
 ## 2.1.4 - 2022-11-30
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Show all mailboxes
 
 ## 2.1.3 – 2022-11-29
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Show only existing mailboxes, not all subscribed mailboxes
 - Scrolling for long threads on narrow screens
 - XOAUTH2 auth via SMTP
 
 ## 2.1.2 – 2022-11-22
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Don't collapse if threading has one message only
 - Saving provisioning and anti-spam settings
 - Undefined errorMessage in ThreadEnvelope
@@ -483,6 +515,7 @@ All notable changes to this project will be documented in this file.
 
 ## 2.1.1 – 2022-11-14
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Improve the size of padding bottom on threads
 - Don't decode content for preview twice
 - Broken encoding for outgoing messages
@@ -502,6 +535,7 @@ All notable changes to this project will be documented in this file.
 - Implement IAPIWidget
 - Implement IIconWidget and IOptionWidget interfaces
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Signature above quote
 - Background for default folders
 - Loading-refresh-icon
@@ -513,14 +547,17 @@ All notable changes to this project will be documented in this file.
 
 ## 2.0.3 – 2022-10-18
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Signature above quote
 
 ## 2.0.2 – 2022-10-17
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Modal glitches on Firefox when toggling autoresponder
 
 ## 2.0.1 – 2022-10-13
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Int value out of range when accepting calendar invitation
 - Editor block quote handling
 
@@ -535,6 +572,7 @@ All notable changes to this project will be documented in this file.
 - Add ckeditor plugin for mail
 
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Enable last day checkbox not being parsed correctly
 - Date formatting for sieve autoresponder
 - Missing line breaks when parsing message from sieve script
@@ -554,6 +592,7 @@ All notable changes to this project will be documented in this file.
 
 ## 1.14.3 - 2022-11-14
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Improve the size of padding bottom on threads
 - Improving the appearance of the modal window of composer
 - Scrolling and bottom padding for threads
@@ -565,6 +604,7 @@ All notable changes to this project will be documented in this file.
 
 ## 1.14.2 - 2022-11-03
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Transfer encoding issue
 
 ## 1.14.1 - 2022-10-13
@@ -589,6 +629,7 @@ All notable changes to this project will be documented in this file.
 
 
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Performance logger message for vanished messages
 - Two-way binding for envelope unselect after delete
 - Split auto config and account creation
@@ -623,6 +664,7 @@ All notable changes to this project will be documented in this file.
 
 ## 1.13.6 - 2022-06-29
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Editing draft
 - Image attachment viewer
 
@@ -632,15 +674,18 @@ All notable changes to this project will be documented in this file.
 
 ## 1.13.4 - 2022-06-13
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Better signature detection
 - Forwarding more than one attachment
 
 ## 1.13.3 - 2022-06-08
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Editing of outbox messages
 
 ## 1.13.2 - 2022-06-07
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Quoting forwarded messages
 - Sending erroneous message repeatedly
 - Database platform check with Nextcloud <22.2
@@ -648,6 +693,7 @@ All notable changes to this project will be documented in this file.
 
 ## 1.13.1 – 2022-06-07
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Upgrade error on Nextcloud <22.2
 - Missing reply flagging and headers for edited outbox messages
 
@@ -659,12 +705,14 @@ All notable changes to this project will be documented in this file.
 
 ## 1.12.3 – 2022-06-07
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Missing reply flagging and headers for edited outbox messages
 
 - New material icons
 - Dropped Nextcloud 21 support (EOL)
 - Dropped PHP7.3 support (EOL)
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Leaking database cursor
 - Memory leaks
 - Causal read during outbox message/recipient insert
@@ -676,6 +724,7 @@ All notable changes to this project will be documented in this file.
 
 ## 1.12.2 – 2022-06-02
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Modal width
 - Attachment forwarding
 - Reply/forward editor body
@@ -686,6 +735,7 @@ All notable changes to this project will be documented in this file.
 
 ## 1.12.1 - 2022-05-24
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Prevent causal read for outbox message and recipient inserts
 - Hide subscribed / unsubscribed checkbox for "Favourites" folder
 - Fix attachment loss during outbox message update
@@ -715,6 +765,7 @@ All notable changes to this project will be documented in this file.
 - Account setup error reporting
 - Downgrade KItinerary log line to info
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - TypeError spamming logs when user not logged in
 - Sync error with empty UID list
 - array_merge needs at least one argument
@@ -724,10 +775,12 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Loading indicator for recipient suggestions
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Move KItinerary warning message to info
 
 ## 1.11.6 - 2022-01-25
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Priority Inbox Sync
 - New Messages not loaded
 - Full links in plain text mails
@@ -736,6 +789,7 @@ All notable changes to this project will be documented in this file.
 
 ## 1.11.5 – 2021-12-28
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Use Parameters instead of Named Parameters for chunked queries
 - Mailbox showing at the wrong account
 - Column for account name that is too narrow
@@ -744,18 +798,22 @@ All notable changes to this project will be documented in this file.
 
 ## 1.11.4 – 2021-12-15
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Erroneous repair step during app store upgrade
 
 ## 1.11.3 – 2021-12-15
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Fix message_id repair step
 
 ## 1.11.2 – 2021-12-14
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Invalid message cache message_id and in_reply_to values
 
 ## 1.11.1 – 2021-12-09
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Upgrades with Nextcloud 20
 - Initial sync runs into infinite loop
 - Initial sync stops too early
@@ -779,6 +837,7 @@ All notable changes to this project will be documented in this file.
 - Improved auto config
 - Removed unread counter from trash mailbox
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - IFrame sizing after print
 - Text quotes in plain text messages
 - Non-translatable strings
@@ -786,6 +845,7 @@ All notable changes to this project will be documented in this file.
 
 ## 1.10.5 – 2021-09-28
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Wrong iframe height
 - Missing tags for provisioned accounts
 - Catch all errors of faulty accounts
@@ -795,6 +855,7 @@ All notable changes to this project will be documented in this file.
 
 ## 1.10.4 – 2021-09-15
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - External image handling when URL schema is missing
 - Reply settings loading spinner
 
@@ -802,6 +863,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Remove link proxy for external links
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Reply in quote block
 - Handling of invalid IMAP message IDs
 - Catch Guzzle error in proxy
@@ -812,6 +874,7 @@ All notable changes to this project will be documented in this file.
 
 ## 1.10.2 – 2021–07-29
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Junk and nonjunk flagging
 - Calendar ics attachment import
 - Missing HTML headers inside the HTML message iframe
@@ -822,6 +885,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Updated and new translations
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Upgrade error due to missing method in cached application code
 
 ## 1.10.0 – 2021-07-05
@@ -843,6 +907,7 @@ All notable changes to this project will be documented in this file.
 - Updated and new translations
 - Dependency updates
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Handling of missing IMAP message IDs
 - Handling of inline message forwards
 - Drafts handling
@@ -854,6 +919,7 @@ All notable changes to this project will be documented in this file.
 - Reload mailbox when current mailbox is clicked in sidebar
 - Dependency updates
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Don't run background syncs for disabled users
 - Sanitize CSS style sheets
 - Missing routes
@@ -862,6 +928,7 @@ All notable changes to this project will be documented in this file.
 
 ## 1.9.5 – 2021-04-08
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Handling of some inline attachments
 - Missing lock for the initial sync
 - Missing check for group sharing settings
@@ -872,6 +939,7 @@ All notable changes to this project will be documented in this file.
 
 ## 1.9.4 – 2021-03-25
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - "Show images" icon in HTML mails using Nextcloud's dark theme
 - Drafts synchronization
 - Drafts auto save timer
@@ -879,10 +947,12 @@ All notable changes to this project will be documented in this file.
 
 ## 1.9.3 – 2021-03-12
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Upgrade error from v1.9.1
 
 ## 1.9.2 – 2021-03-11
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Handling of IMAP messages without a Message-Id header
 - Missing reply action
 - Scrolling of message source
@@ -892,6 +962,7 @@ All notable changes to this project will be documented in this file.
 
 ## 1.9.1 - 2021-03-03
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Missing route for attachments zip response
 
 ## 1.9.0 - 2021-03-03
@@ -915,6 +986,7 @@ All notable changes to this project will be documented in this file.
 - Updated and new translations
 - Dependency updates
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Threading algorithm running into endless recursion and therefore causing a memory exhaustion
 - Dependency conflicts with server and other apps
 - App navigation toggle issues
@@ -932,15 +1004,18 @@ All notable changes to this project will be documented in this file.
 
 ## 1.8.3 - 2021-02-19
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Compatibility issues with PHP8
 - Update account only if it exists
 
 ## 1.4.3 - 2021-02-19
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Update account only if it exists
 
 ## 1.8.2 – 2021-02-18
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Missing label for SMTP host setting
 - Priority inbox filter expression
 - Missing name of local attachments
@@ -954,6 +1029,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Updated translations
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Filter out invalid UTF-8 in subjects
 - Regression that picks wrong attachment
 - Rendering accounts in the navigation even when authentication fails
@@ -972,6 +1048,7 @@ All notable changes to this project will be documented in this file.
 - Improve the ckeditor list plugin
 - Automatically sync mailbox on opening
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Always show Mail search results first
 - Improve reply button icon styling
 - Saving signature problems
@@ -986,23 +1063,28 @@ All notable changes to this project will be documented in this file.
 
 ## 1.7.2 – 2020-12-07
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Priority inbox classifier input vector size
 
 ## 1.6.3 – 2020-12-07
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Priority inbox classifier input vector size
 
 ## 1.5.5 – 2020-12-07
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Priority inbox classifier input vector size
 
 ## 1.4.2 – 2020-12-07
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Priority inbox classifier input vector size
 - CKEditor crashes on Firefox
 
 ## 1.7.1 – 2020-12-02
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Saving signatures
 - Deletion of previous draft
 - Mailto route
@@ -1013,6 +1095,7 @@ All notable changes to this project will be documented in this file.
 
 ## 1.6.2 – 2020-12-02
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Mail search results not shown on top
 - Saving signatures
 - Deletion of previous draft
@@ -1024,6 +1107,7 @@ All notable changes to this project will be documented in this file.
 
 ## 1.5.4 – 2020-12-02
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Mail search results not shown on top
 - Saving signatures
 - Deletion of previous draft
@@ -1041,6 +1125,7 @@ All notable changes to this project will be documented in this file.
 * Admin documentation now contains more troubleshooting instructions
 * Show admin and developer documentation on app store
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 * Null error for messages with no sender information
 * Overlapping message with same timestamp
 * Wrong php7.2 support claimed in info.xml of v1.6.0
@@ -1049,6 +1134,7 @@ All notable changes to this project will be documented in this file.
 
 ## 1.6.1 – 2020-11-11
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 * Null error for messages with no sender information
 * Wrong php7.2 support claimed in info.xml of v1.6.0
 * Unexpected borders on recipient pickers
@@ -1056,6 +1142,7 @@ All notable changes to this project will be documented in this file.
 
 ## 1.5.3 – 2020-11-11
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 * Null error for messages with no sender information
 * Unexpected borders on recipient pickers
 * Styling of automatic/manual account settings tabs
@@ -1072,6 +1159,7 @@ All notable changes to this project will be documented in this file.
 - Internal code cleanup
 - Dependency updates
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Saving all attachments of an email to Nextcloud Files
 - Quoting the forwarded email
 - Seen/unseen handling in multiselect
@@ -1081,6 +1169,7 @@ All notable changes to this project will be documented in this file.
 
 ## 1.5.2 – 2020-11-04
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Saving all attachments of an email to Nextcloud Files
 - Quoting the forwarded email
 - Seen/unseen handling in multiselect
@@ -1107,6 +1196,7 @@ All notable changes to this project will be documented in this file.
 - Collapse quoted text and signatures: hide the parts of a message that are less important, but make it possible to expand if needed
 - Create new folders when saving attachments
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Fix formatting when it is checked individually from the account default
 - Catch throwable's during account sync
 - Fix icon color in dark theme
@@ -1134,6 +1224,7 @@ All notable changes to this project will be documented in this file.
 
 ## 1.4.1 - 2020-06-30
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Importance classifier debuggability
 - Fix classification of senders with no email
 - Add action menu to subfolders
@@ -1142,6 +1233,7 @@ All notable changes to this project will be documented in this file.
 
 ## 1.3.6 - 2020-06-30
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - User data cleanup after account deletion
 - Navigating back on mobile
 - Formatting toggle in message composer
@@ -1164,6 +1256,7 @@ All notable changes to this project will be documented in this file.
 - Change empty-content message on mail
 - Incomplete initial sync now logs the current progress
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Delete all user's accounts when the user is being deleted
 - Navigation from account settings to new message composer
 - Navigating back from small screens
@@ -1176,6 +1269,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Incomplete initial sync now logs the current progress
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Sync'ing of provisioned accounts before their password is set
 - UidValidityChangedException namespace error
 - UID validity change logic
@@ -1185,6 +1279,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - UI option to clear the cache of a single mailbox (debug mode only)
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Long recipient labels that are too big for the database column
 ### Changed
 - Sync also the currently viewed mailbox in the background, not just the inboxes
@@ -1193,10 +1288,12 @@ All notable changes to this project will be documented in this file.
 
 ## 1.3.2 - 2020-04-16
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Initial synchronization on installations with high message UID numbers
 
 ## 1.3.1 - 2020-04-16
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Also sync mailboxes before sync'ing messages in cron
 - Handling of partial initial sync
 - Endless loading of paginated unified inbox
@@ -1217,6 +1314,7 @@ All notable changes to this project will be documented in this file.
 - Update dependencies
 - Update CKEditor to v18
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Handling of plain/html replies in plain/html
 - Formatting of aliases in recipient dropdown
 - Navigation from account settings to new message composer
@@ -1242,22 +1340,26 @@ All notable changes to this project will be documented in this file.
 
 ## 1.1.4 - 2020-03-23
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Security: verify TLS host by default. This can be a *breaking change* for self-hosted servers. If you want to return to the old insecure behavior, set `app.mail.verify-tls-peer` to `true` in `config.php`.
 
 ## 1.1.3 - 2020-03-02
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Error in recipient selection
 
 ## 1.1.2 - 2020-01-30
 ### Changed
 - New and updated translations
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Saving all attachments to Files
 - Saving embedded messages to Files
 - Octal value of KItinerary binary chmod from 744 to 0744
 
 ## 1.1.1 - 2020-01-27
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Missing file in release tarball
 
 ## 1.1.0 - 2020-01-27
@@ -1267,6 +1369,7 @@ All notable changes to this project will be documented in this file.
 - New and updated translations
 - Updated dependencies
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Clearing recipient input when focus is lost
 - Broken mailbox stats on unified inbox
 - Invisible embedded message parts
@@ -1291,6 +1394,7 @@ All notable changes to this project will be documented in this file.
 - New and updated translations
 - Updated dependencies
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Vanishing newlines in plaintext drafts
 - Missing newlines on top of the reply body
 - Unnecessary spaces in reply recipient line
@@ -1302,6 +1406,7 @@ All notable changes to this project will be documented in this file.
 - New and updated translations
 - Updated dependencies
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Move delete action down in folder actions menu
 - Fix image hover effect on attachment
 - Encoding of mailbox in URL
@@ -1314,6 +1419,7 @@ All notable changes to this project will be documented in this file.
 - New and updated translations
 - Updated dependencies
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Default enable state for imported provisioned account
 - Don't provision accounts when config is disabled
 - Caching of Favicon library to a local app directory
@@ -1322,6 +1428,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - New and updated translations
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Attachment handling of non-integer MIME IDs like `2.2`
 - Php warning of `each` usage in a Horde library
 
@@ -1329,6 +1436,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - New and updated translations
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - JavaScript vulnerability in `serialize-javascript` dependency
 
 ## 0.20.1 - 2019-12-09
@@ -1338,6 +1446,7 @@ All notable changes to this project will be documented in this file.
 - New and updated translations
 - Updated dependencies
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Provisioned account update password check when password is set to empty string
 
 ## 0.20.0 - 2019-12-04
@@ -1359,6 +1468,7 @@ All notable changes to this project will be documented in this file.
 - Composer attachment buttons moved into action menu
 - Simpler wording for plain text/rich text switch
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Fix opening messages with attachment content-type and content-disposition
 - Spacing in settings section
 - No popover for addresses without a display name
@@ -1375,6 +1485,7 @@ All notable changes to this project will be documented in this file.
 
 ## 0.18.1 - 2019-11-04
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - JavaScript transpilation for older browsers
 - Groups expansion with special characters and spaces
 
@@ -1388,6 +1499,7 @@ All notable changes to this project will be documented in this file.
 - Account setup error feedback
 - Account settings page design overhaul
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Removed reply-to email address from quoted text
 - Logging error in drafts error handler
 - Unnecessary line breaks in quoted reply text
@@ -1413,6 +1525,7 @@ All notable changes to this project will be documented in this file.
 - Warning when a message does not have a subject
 - Cache mailbox special use as well for faster page loads
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - SQL error at mailbox initialization
 - SQL error at mailbox cache update
 - Handling of avatars for invalid e-mail addresses
@@ -1429,12 +1542,14 @@ All notable changes to this project will be documented in this file.
 
 ## 0.15.5 - 2019-08-28
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Wrong navigation to deleted message
 - Wrong navigation to next/prev message of deleted message
 - Non-translatable "forward" button
 
 ## 0.15.4 - 2019-08-26
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Vulnerable eslint-utils
 
 ## 0.15.3 - 2019-08-26
@@ -1443,18 +1558,21 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - New and updated translations
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - JavaScript errors caused by a bug in the logging library
 
 ## 0.15.2 - 2019-08-06
 ### Added
 - Better logging on the client-side
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Vulnerable `lodash` dependencies
 ### Changed
 - New and updated translations
 
 ## 0.15.1 - 2019-05-14
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Cached Webpack chunks cause errors on upgrade
 ### Changed
 - New and updated translations
@@ -1473,6 +1591,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - New and updated translations
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Update vulnerable js dependencies
 - Navigation toggle on mobile
 
@@ -1482,6 +1601,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - New and updated translations
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Mailvelope hint in settings menu
 
 ## 0.11.1 – 2019-04-10
@@ -1496,6 +1616,7 @@ All notable changes to this project will be documented in this file.
 - Many UX enhancements
 - New and updated translations
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Various front-end issues
 ### Removed
 - Nextcloud 15 support
@@ -1505,6 +1626,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Nextcloud 15 support
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Recipient autocompletion
 - New message composer width
 - Database incompatibilites
@@ -1520,6 +1642,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - New and updated translations
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Non-existent variable access warning
 - SMTP FQDN hostname when sending messages
 - Text alignment on redirect page
@@ -1529,6 +1652,7 @@ All notable changes to this project will be documented in this file.
 
 ## 0.9.0 – 2018-08-09
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Nextcloud 14 compatibility
 - Cache permissions of favicon library
 ### Changed
@@ -1545,6 +1669,7 @@ All notable changes to this project will be documented in this file.
 - Advanced search
 - New and updated translations
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Preserve URI hash in sanitized HTML messages
 - Pagination of incoming messages
 - Autoconfig issues
@@ -1556,10 +1681,12 @@ All notable changes to this project will be documented in this file.
 ### Added
 - New and updated translations
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Installation on Nextcloud 13.x
 
 ## 0.8.0 – 2018-05-07
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Nextcloud version requirements
 - Auto completion suggestions of other users
 - Exception logging of handled errors
@@ -1574,6 +1701,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Compatible with Nextcloud 13 and 14
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Dovecot INBOX prefixes
 - Deprecation warning on php7.2
 - Dovecot sieve folder error
@@ -1583,12 +1711,14 @@ All notable changes to this project will be documented in this file.
 
 ## 0.7.9 – 2018-01-23
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Undefined variable warning in nextcloud.log
 - Inconsistent spelling
 - Saving attachments to Nextcloud files
 
 ## 0.7.8 – 2018-01-15
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Loading of text messages
 - HTML to text conversion for replies
 - Recipient name rendering in sent folder
@@ -1602,6 +1732,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Opt-out for external avatars (Gravatar, favicon)
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Icon scraper warnings
 - Undefined index bugs
 - Draft message active state in message list
@@ -1611,6 +1742,7 @@ All notable changes to this project will be documented in this file.
 - Avatar from Gravatar and favicons
 - Sourcemap support to debug release erros on client-side
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Attachment download to Nextcloud files
 - Setup autoconfig issues
 - Reply to/cc field prefilling
@@ -1626,6 +1758,7 @@ All notable changes to this project will be documented in this file.
 - IMAP/SMTP logging enabled by default if debug mode is turned on
 - Stricter CSRF checks
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Button loading state when saving all attachments
 - Icon for 'Add from files' button
 - Handling of to/bb/bcc values
@@ -1636,6 +1769,7 @@ All notable changes to this project will be documented in this file.
 
 ## 0.7.3 – 2017-09-12
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Notification favicon for incoming messages
 - Background sync if only one account is configured
 - Error propagation in case folders cannot be loaded
@@ -1644,6 +1778,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Earlier loading feedback
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Subject of replied messages
 - Navigation to next message in unified inbox
 - Encoding of saved messages (new, draft)
@@ -1652,6 +1787,7 @@ All notable changes to this project will be documented in this file.
 
 ## 0.7.1 – 2017-08-31
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Drafts encoding of special characters
 
 ## 0.7.0 – 2017-08-24
@@ -1672,6 +1808,7 @@ All notable changes to this project will be documented in this file.
 - Improved message synchronization
 
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Use IDBConnection instead of removed IDb
 - Missing files in release package
 - Loading messages with undisclosed recipients
@@ -1687,6 +1824,7 @@ All notable changes to this project will be documented in this file.
 
 ## 0.6.4 – 2017-05-02
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - NC12 incompatibility (usage of deprecated interface)
 
 ## 0.6.3 – 2017-04-25
@@ -1713,6 +1851,7 @@ All notable changes to this project will be documented in this file.
 - Messages that cannot be deleted are added back to the list
 
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - FTP url filtering in HTML mails
 - Noopener attribute for external links
 - Downloading attachments does no longer abort other connections
@@ -1763,6 +1902,7 @@ All notable changes to this project will be documented in this file.
 - Enhanced client-side paging algorithm for IMAP servers without SORT
   [#1486](https://github.com/owncloud/mail/pull/1486) @ChristophWurst
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Close popover on clicking somewhere else
   [#1521](https://github.com/owncloud/mail/pull/1521) @tahaalibra
 - Fix email length in the database
@@ -1773,6 +1913,7 @@ All notable changes to this project will be documented in this file.
 ## 0.5.1 – 2016-05-30
 
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Sub-folders can not be selected
   [#1505](https://github.com/owncloud/mail/pull/1505) @ChristophWurst
 
@@ -1783,6 +1924,7 @@ All notable changes to this project will be documented in this file.
   [#1473](https://github.com/owncloud/mail/pull/1473) @ChristophWurst
 
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Bring back menu toggle button for mobile
   [#1483](https://github.com/owncloud/mail/pull/1483) @ChristophWurst
 - Narrow address collector column width to 255 for compatibility with MySql/InnoDB
@@ -1803,6 +1945,7 @@ All notable changes to this project will be documented in this file.
   [#1448](https://github.com/owncloud/mail/pull/1448) @ChristophWurst
 
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Fix button and sidebar layout
   [#1476](https://github.com/owncloud/mail/pull/1476) @skjnldsv
 - Invalidate js cache if app version changes
@@ -1828,6 +1971,7 @@ All notable changes to this project will be documented in this file.
   [#1428](https://github.com/owncloud/mail/pull/1425) @skjnldsv
 
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Fix bug with address collector (Data too long for column)
   [#1421](https://github.com/owncloud/mail/pull/1433) @ChristophWurst
 
@@ -1838,12 +1982,14 @@ All notable changes to this project will be documented in this file.
   [#1396](https://github.com/owncloud/mail/pull/1396) @tahaalibra
 
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Fix autocompletion (regression)
   [#1394](https://github.com/owncloud/mail/pull/1394) @ChristophWurst
 
 ## 0.4.1 – 2016-03-30
 
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Fix js error when adding attachments
   [#1378](https://github.com/owncloud/mail/pull/1378) @ChristophWurst
 
@@ -1864,6 +2010,7 @@ All notable changes to this project will be documented in this file.
 ## 0.3.1
 
 ### Fixed
+* Prevent a stuck dialog when moving a folder onto itself
 - Message list is not hidden when adding a secondary account
   [#1295](https://github.com/owncloud/mail/issues/1295) @Gomez
 - Sub-sub folders not handled correctly

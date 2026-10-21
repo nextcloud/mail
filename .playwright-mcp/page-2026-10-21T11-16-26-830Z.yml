@@ -1,0 +1,149 @@
+- generic [active] [ref=f1e1]:
+  - link "Skip to main content" [ref=f1e3] [cursor=pointer]:
+    - /url: "#app-dashboard"
+  - banner [ref=f1e4]:
+    - generic [ref=f1e5]:
+      - link "Go to Dashboard" [ref=f1e6] [cursor=pointer]:
+        - /url: /
+      - navigation "Applications" [ref=f1e8]:
+        - generic [ref=f1e10]:
+          - button "Open apps menu" [ref=f1e11] [cursor=pointer]
+          - button "Open apps menu, currently in Dashboard" [ref=f1e17] [cursor=pointer]:
+            - generic [ref=f1e18]: Dashboard
+    - search [ref=f1e26]:
+      - generic [ref=f1e27]:
+        - generic [aria-hidden]:
+          - generic: Apps, files, messages, and more
+        - combobox "Apps, files, messages, and more" [ref=f1e28] [cursor=pointer]
+        - generic [aria-hidden]:
+          - generic: Ctrl
+          - generic: K
+    - navigation "Notifications, contacts and settings" [ref=f1e29]:
+      - list [ref=f1e30]:
+        - listitem [ref=f1e31]:
+          - generic "Notifications" [ref=f1e33]:
+            - button "Notifications" [ref=f1e34] [cursor=pointer]
+        - listitem [ref=f1e41]:
+          - button "Search contacts" [ref=f1e43] [cursor=pointer]
+        - listitem [ref=f1e49]:
+          - generic [ref=f1e50]:
+            - button "Settings menu" [ref=f1e51] [cursor=pointer]:
+              - 'img "User status: do not disturb" [ref=f1e55]'
+            - generic [ref=f1e58]: Avatar of Christoph Wurst — Do not disturb
+  - generic [ref=f1e59]:
+    - heading "Dashboard" [level=1] [ref=f1e60]
+    - main [ref=f1e62]:
+      - heading "Good afternoon, Christoph Wurst" [level=2] [ref=f1e63]
+      - list [ref=f1e64]:
+        - listitem [ref=f1e65]:
+          - button "Do not disturb" [ref=f1e68] [cursor=pointer]
+      - generic [ref=f1e75]:
+        - generic [ref=f1e76]:
+          - heading "Recommended files" [level=2] [ref=f1e78]
+          - generic [ref=f1e82]:
+            - list
+            - note [ref=f1e83]:
+              - paragraph [ref=f1e84]: No recommendations yet
+        - generic [ref=f1e85]:
+          - heading "Recent statuses" [level=2] [ref=f1e87]
+          - generic [ref=f1e89]:
+            - list
+            - note [ref=f1e90]:
+              - paragraph [ref=f1e95]: No recent status changes
+        - generic [ref=f1e96]:
+          - heading "Important mail" [level=2] [ref=f1e98]
+          - list [ref=f1e101]:
+            - listitem [ref=f1e102]:
+              - 'link "Mail Delivery System Mail delivery failed: returning message to sender" [ref=f1e104] [cursor=pointer]':
+                - /url: https://localhost/apps/mail/box/9588/thread/8342506
+                - generic [ref=f1e106]:
+                  - heading "Mail Delivery System" [level=3] [ref=f1e107]
+                  - 'generic "Mail delivery failed: returning message to sender" [ref=f1e108]'
+            - listitem [ref=f1e109]:
+              - link "Christoph Wurst asdfsa" [ref=f1e111] [cursor=pointer]:
+                - /url: https://localhost/apps/mail/box/9591/thread/8333112
+                - generic [ref=f1e113]:
+                  - heading "Christoph Wurst" [level=3] [ref=f1e114]
+                  - generic "asdfsa" [ref=f1e115]
+            - listitem [ref=f1e116]:
+              - link "Christoph Wurst unload" [ref=f1e118] [cursor=pointer]:
+                - /url: https://localhost/apps/mail/box/9591/thread/8312261
+                - generic [ref=f1e120]:
+                  - heading "Christoph Wurst" [level=3] [ref=f1e121]
+                  - generic "unload" [ref=f1e122]
+            - listitem [ref=f1e123]:
+              - link "Christoph Wurst aa" [ref=f1e125] [cursor=pointer]:
+                - /url: https://localhost/apps/mail/box/9591/thread/8312226
+                - generic [ref=f1e127]:
+                  - heading "Christoph Wurst" [level=3] [ref=f1e128]
+                  - generic "aa" [ref=f1e129]
+            - listitem [ref=f1e130]:
+              - link "Christoph Wurst aa" [ref=f1e132] [cursor=pointer]:
+                - /url: https://localhost/apps/mail/box/9591/thread/8312227
+                - generic [ref=f1e134]:
+                  - heading "Christoph Wurst" [level=3] [ref=f1e135]
+                  - generic "aa" [ref=f1e136]
+            - listitem [ref=f1e137]:
+              - 'link "Mail Delivery System Mail delivery failed: returning message to sender" [ref=f1e139] [cursor=pointer]':
+                - /url: https://localhost/apps/mail/box/9591/thread/8312213
+                - generic [ref=f1e141]:
+                  - heading "Mail Delivery System" [level=3] [ref=f1e142]
+                  - 'generic "Mail delivery failed: returning message to sender" [ref=f1e143]'
+            - listitem [ref=f1e144]:
+              - 'link "Mail Delivery System Mail delivery failed: returning message to sender" [ref=f1e146] [cursor=pointer]':
+                - /url: https://localhost/apps/mail/box/9591/thread/8312208
+                - generic [ref=f1e148]:
+                  - heading "Mail Delivery System" [level=3] [ref=f1e149]
+                  - 'generic "Mail delivery failed: returning message to sender" [ref=f1e150]'
+        - generic [ref=f1e151]:
+          - heading "Unread mail" [level=2] [ref=f1e153]
+          - list [ref=f1e156]:
+            - listitem [ref=f1e157]:
+              - 'link "Bob Test: inline text part after HTML" [ref=f1e159] [cursor=pointer]':
+                - /url: https://localhost/apps/mail/box/9591/thread/8333116
+                - generic [ref=f1e161]:
+                  - heading "Bob" [level=3] [ref=f1e162]
+                  - 'generic "Test: inline text part after HTML" [ref=f1e163]'
+            - listitem [ref=f1e164]:
+              - 'link "Bob Test: inline text parts (plain)" [ref=f1e166] [cursor=pointer]':
+                - /url: https://localhost/apps/mail/box/9591/thread/8333117
+                - generic [ref=f1e168]:
+                  - heading "Bob" [level=3] [ref=f1e169]
+                  - 'generic "Test: inline text parts (plain)" [ref=f1e170]'
+            - listitem [ref=f1e171]:
+              - link "Christoph Wurst asdfsa" [ref=f1e173] [cursor=pointer]:
+                - /url: https://localhost/apps/mail/box/9590/thread/8333113
+                - generic [ref=f1e175]:
+                  - heading "Christoph Wurst" [level=3] [ref=f1e176]
+                  - generic "asdfsa" [ref=f1e177]
+            - listitem [ref=f1e178]:
+              - link "Christoph Wurst test" [ref=f1e180] [cursor=pointer]:
+                - /url: https://localhost/apps/mail/box/9588/thread/8342508
+                - generic [ref=f1e182]:
+                  - heading "Christoph Wurst" [level=3] [ref=f1e183]
+                  - generic "test" [ref=f1e184]
+            - listitem [ref=f1e185]:
+              - link "Christoph Wurst Hello" [ref=f1e187] [cursor=pointer]:
+                - /url: https://localhost/apps/mail/box/9591/thread/8333108
+                - generic [ref=f1e189]:
+                  - heading "Christoph Wurst" [level=3] [ref=f1e190]
+                  - generic "Hello" [ref=f1e191]
+            - listitem [ref=f1e192]:
+              - link "Christoph Wurst Hello" [ref=f1e194] [cursor=pointer]:
+                - /url: https://localhost/apps/mail/box/9590/thread/8333109
+                - generic [ref=f1e196]:
+                  - heading "Christoph Wurst" [level=3] [ref=f1e197]
+                  - generic "Hello" [ref=f1e198]
+            - listitem [ref=f1e199]:
+              - link "Christoph Wurst self" [ref=f1e201] [cursor=pointer]:
+                - /url: https://localhost/apps/mail/box/9591/thread/8312198
+                - generic [ref=f1e203]:
+                  - heading "Christoph Wurst" [level=3] [ref=f1e204]
+                  - generic "self" [ref=f1e205]
+        - generic [ref=f1e206]:
+          - heading "Favorite files" [level=2] [ref=f1e208]
+          - generic [ref=f1e210]:
+            - list
+            - note [ref=f1e211]:
+              - paragraph [ref=f1e216]: No favorites
+      - button "Customize" [ref=f1e218] [cursor=pointer]

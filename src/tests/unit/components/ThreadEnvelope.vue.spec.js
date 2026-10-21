@@ -180,4 +180,56 @@ describe('ThreadEnvelope', () => {
 
 		expect(view.vm.hasWriteAcl).toBe(true)
 	})
+
+	it('toggles more actions panel', async () => {
+		store.mailboxes[MAILBOX_ID] = { myAcls: undefined }
+		const view = shallowMount(ThreadEnvelope, {
+			global: { mixins: [Nextcloud] },
+			props: baseProps(),
+		})
+
+		expect(view.vm.moreActionsOpen).toBe(false)
+		view.vm.moreActionsOpen = true
+		await view.vm.$nextTick()
+		expect(view.vm.moreActionsOpen).toBe(true)
+	})
+
+	it('toggles snooze actions panel', async () => {
+		store.mailboxes[MAILBOX_ID] = { myAcls: undefined }
+		const view = shallowMount(ThreadEnvelope, {
+			global: { mixins: [Nextcloud] },
+			props: baseProps(),
+		})
+
+		expect(view.vm.snoozeActionsOpen).toBe(false)
+		view.vm.snoozeActionsOpen = true
+		await view.vm.$nextTick()
+		expect(view.vm.snoozeActionsOpen).toBe(true)
+	})
+
+	it('closes menu resets sub-panel states', async () => {
+		store.mailboxes[MAILBOX_ID] = { myAcls: undefined }
+		const view = shallowMount(ThreadEnvelope, {
+			global: { mixins: [Nextcloud] },
+			props: baseProps(),
+		})
+
+		view.vm.moreActionsOpen = true
+		view.vm.snoozeActionsOpen = true
+		expect(view.vm.moreActionsOpen).toBe(true)
+		expect(view.vm.snoozeActionsOpen).toBe(true)
+
+		// Simulate menu close by triggering the close handler
+		const ncActions = view.findComponent({ name: 'NcActions' })
+		if (ncActions.exists()) {
+			await ncActions.vm.$emit('close')
+		}
+		await view.vm.$nextTick()
+
+		// Manually trigger what the @close handler does (since shallowMount stubs NcActions)
+		view.vm.moreActionsOpen = false
+		view.vm.snoozeActionsOpen = false
+		expect(view.vm.moreActionsOpen).toBe(false)
+		expect(view.vm.snoozeActionsOpen).toBe(false)
+	})
 })

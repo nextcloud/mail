@@ -1,0 +1,234 @@
+- generic [active] [ref=f2e1]:
+  - generic [ref=f2e3]:
+    - generic [ref=f2e4]: Keyboard navigation help
+    - generic [ref=f2e5]:
+      - link "Skip to app navigation" [ref=f2e6] [cursor=pointer]:
+        - /url: "#app-navigation-vue"
+      - link "Skip to main content" [ref=f2e9] [cursor=pointer]:
+        - /url: "#app-content-vue"
+  - banner [ref=f2e35]:
+    - generic [ref=f2e36]:
+      - link "Go to Dashboard" [ref=f2e37] [cursor=pointer]:
+        - /url: /
+      - navigation "Applications" [ref=f2e39]:
+        - generic [ref=f2e41]:
+          - button "Open apps menu" [ref=f2e42] [cursor=pointer]
+          - button "Open apps menu, currently in Mail" [ref=f2e48] [cursor=pointer]:
+            - generic [ref=f2e49]: Mail
+    - search [ref=f2e57]:
+      - generic [ref=f2e58]:
+        - generic [aria-hidden]:
+          - generic: Apps, files, messages, and more
+        - combobox "Apps, files, messages, and more" [ref=f2e59] [cursor=pointer]
+        - generic [aria-hidden]:
+          - generic: Ctrl
+          - generic: K
+    - navigation "Notifications, contacts and settings" [ref=f2e60]:
+      - list [ref=f2e61]:
+        - listitem [ref=f2e62]:
+          - generic "Notifications" [ref=f2e64]:
+            - button "Notifications" [ref=f2e65] [cursor=pointer]
+        - listitem [ref=f2e72]:
+          - button "Search contacts" [ref=f2e74] [cursor=pointer]
+        - listitem [ref=f2e80]:
+          - generic [ref=f2e81]:
+            - button "Settings menu" [ref=f2e82] [cursor=pointer]:
+              - 'img "User status: do not disturb" [ref=f2e86]'
+            - generic [ref=f2e89]: Avatar of Christoph Wurst — Do not disturb
+  - generic [ref=f2e91]:
+    - generic [ref=f2e92]:
+      - navigation "Mail navigation" [ref=f2e93]:
+        - generic [ref=f2e95]:
+          - button "New message" [ref=f2e96] [cursor=pointer]
+          - button "Refresh" [ref=f2e103] [cursor=pointer]
+        - list [ref=f2e109]:
+          - listitem [ref=f2e110]:
+            - link "Priority inbox" [ref=f2e112] [cursor=pointer]:
+              - /url: /apps/mail/box/priority
+            - list
+          - listitem [ref=f2e120]:
+            - generic [ref=f2e121]: oc1@winzerhof-wurst.at
+            - button "Actions" [ref=f2e125] [cursor=pointer]
+          - listitem [ref=f2e131]:
+            - generic [ref=f2e132]:
+              - link "Inbox" [ref=f2e133] [cursor=pointer]:
+                - /url: /apps/mail/box/9591
+              - generic [ref=f2e140]:
+                - generic [ref=f2e141]: "23"
+                - generic:
+                  - generic:
+                    - button "Actions"
+            - list
+          - listitem [ref=f2e143]:
+            - generic [ref=f2e144]:
+              - link "Favorites" [ref=f2e145] [cursor=pointer]:
+                - /url: /apps/mail/box/starred/9591
+              - generic [ref=f2e152]:
+                - generic:
+                  - generic:
+                    - button "Actions"
+            - list
+          - listitem [ref=f2e153]:
+            - generic [ref=f2e154]:
+              - link "Drafts" [ref=f2e155] [cursor=pointer]:
+                - /url: /apps/mail/box/9585
+              - generic [ref=f2e162]:
+                - generic:
+                  - generic:
+                    - button "Actions"
+            - list
+          - listitem [ref=f2e163]:
+            - generic [ref=f2e164]:
+              - link "Sent" [ref=f2e165] [cursor=pointer]:
+                - /url: /apps/mail/box/9590
+              - generic [ref=f2e172]:
+                - generic [ref=f2e173]: "2"
+                - generic:
+                  - generic:
+                    - button "Actions"
+            - list
+          - listitem [ref=f2e175]:
+            - generic [ref=f2e176]:
+              - link "Junk" [ref=f2e177] [cursor=pointer]:
+                - /url: /apps/mail/box/9584
+              - generic [ref=f2e184]:
+                - generic:
+                  - generic:
+                    - button "Actions"
+            - list
+          - listitem [ref=f2e185]:
+            - generic [ref=f2e186]:
+              - link "Trash" [ref=f2e187] [cursor=pointer]:
+                - /url: /apps/mail/box/9586
+              - generic [ref=f2e194]:
+                - generic:
+                  - generic:
+                    - button "Actions"
+            - list
+          - listitem [ref=f2e195]:
+            - generic [ref=f2e196]:
+              - link "Snooze" [ref=f2e197] [cursor=pointer]:
+                - /url: /apps/mail/box/9582
+              - generic [ref=f2e204]:
+                - generic [ref=f2e205]: "3"
+                - generic:
+                  - generic:
+                    - button "Actions"
+            - list
+          - listitem [ref=f2e207]:
+            - generic [ref=f2e208]:
+              - link "ARCH" [ref=f2e209] [cursor=pointer]:
+                - /url: /apps/mail/box/9583
+              - generic [ref=f2e216]:
+                - generic [ref=f2e217]: "945"
+                - generic:
+                  - generic:
+                    - button "Actions"
+            - list
+          - listitem [ref=f2e219]:
+            - generic [ref=f2e220]:
+              - link "Archiv" [ref=f2e221] [cursor=pointer]:
+                - /url: /apps/mail/box/9588
+              - generic [ref=f2e228]:
+                - generic [ref=f2e229]: "1"
+                - button "Actions" [ref=f2e233] [cursor=pointer]
+              - button "Open menu" [ref=f2e239] [cursor=pointer]
+          - listitem [ref=f2e245]:
+            - generic [ref=f2e246]:
+              - link "Attachments for Hamza" [ref=f2e247] [cursor=pointer]:
+                - /url: /apps/mail/box/9577
+              - generic [ref=f2e254]:
+                - generic:
+                  - generic:
+                    - button "Actions"
+            - list
+          - listitem [ref=f2e255]:
+            - generic [ref=f2e256]:
+              - link "Drafts" [ref=f2e257] [cursor=pointer]:
+                - /url: /apps/mail/box/9581
+              - generic [ref=f2e264]:
+                - generic:
+                  - generic:
+                    - button "Actions"
+            - list
+          - listitem [ref=f2e265]:
+            - generic [ref=f2e266]:
+              - link "Level 1" [ref=f2e267] [cursor=pointer]:
+                - /url: /apps/mail/box/9578
+              - generic [ref=f2e274]:
+                - generic:
+                  - generic:
+                    - button "Actions"
+              - button "Open menu" [ref=f2e275] [cursor=pointer]
+          - listitem [ref=f2e281]:
+            - generic [ref=f2e282]:
+              - link "Ungewünscht" [ref=f2e283] [cursor=pointer]:
+                - /url: /apps/mail/box/9587
+              - generic [ref=f2e290]:
+                - generic:
+                  - generic:
+                    - button "Actions"
+            - list
+          - listitem [ref=f2e291]:
+            - link "Collapse folders" [ref=f2e293] [cursor=pointer]:
+              - /url: "#"
+        - listitem [ref=f2e297]:
+          - generic [ref=f2e298]:
+            - link "Outbox" [ref=f2e299] [cursor=pointer]:
+              - /url: /apps/mail/outbox
+            - generic [ref=f2e305]: "4"
+        - listitem [ref=f2e309]:
+          - link "Mail settings" [ref=f2e311] [cursor=pointer]:
+            - /url: "#"
+      - button "Close navigation" [expanded] [ref=f2e318] [cursor=pointer]
+    - main [ref=f2e324]:
+      - generic [ref=f2e326]:
+        - generic [ref=f2e328]:
+          - generic [ref=f2e331]:
+            - textbox "Search in folder" [ref=f2e332] [cursor=pointer]
+            - button "Open search modal" [ref=f2e333] [cursor=pointer]
+          - heading [level=2] [ref=f2e339]:
+            - generic [ref=f2e340]:
+              - generic [ref=f2e341]:
+                - heading "Juli" [level=2] [ref=f2e344]
+                - generic [ref=f2e345]:
+                  - listitem [ref=f2e346]:
+                    - 'link "MS Mail Delivery System Mail delivery failed: returning message to sender \"Christoph Wurst\" oc1@winzerhof-wurst.at – December 9, 2025 at 4:06 PM > > > CHRISTOPH WURST UPDATED THE EVENT \"&AUML;\" > > > > _Title:_ > &auml; > &auml; > > > > _When:_ > In 53 minutes on Tuesday, December 9, 2025 between Jul 16" [ref=f2e348] [cursor=pointer]':
+                      - /url: /apps/mail/box/9588/thread/8342506
+                      - generic "Mail Delivery System" [ref=f2e354]: MS
+                      - generic [ref=f2e357]:
+                        - generic [ref=f2e358]: Mail Delivery System
+                        - generic [ref=f2e362]:
+                          - generic [ref=f2e365]:
+                            - generic [ref=f2e366]: "Mail delivery failed: returning message to sender"
+                            - generic [ref=f2e368]: "\"Christoph Wurst\" oc1@winzerhof-wurst.at – December 9, 2025 at 4:06 PM > > > CHRISTOPH WURST UPDATED THE EVENT \"&AUML;\" > > > > _Title:_ > &auml; > &auml; > > > > _When:_ > In 53 minutes on Tuesday, December 9, 2025 between"
+                          - generic [ref=f2e369]: Jul 16
+                  - listitem [ref=f2e372]:
+                    - link "Christoph Wurst Christoph Wurst test sdaff Jul 15" [ref=f2e374] [cursor=pointer]:
+                      - /url: /apps/mail/box/9588/thread/8342509
+                      - generic "Christoph Wurst" [ref=f2e377]
+                      - generic [ref=f2e378]:
+                        - generic [ref=f2e379]: Christoph Wurst
+                        - generic [ref=f2e383]:
+                          - generic [ref=f2e386]:
+                            - generic [ref=f2e387]: test
+                            - generic [ref=f2e389]: sdaff
+                          - generic [ref=f2e390]: Jul 15
+              - generic [ref=f2e393]:
+                - heading "2025" [level=2] [ref=f2e396]
+                - listitem [ref=f2e398]:
+                  - 'link "Christoph Wurst Christoph Wurst Fwd: Aktualisierung der Meta-Datenschutzrichtlinie \"Instagram\" no-reply@mail.instagram.com – June 8, 2025 7:53 PM > Wir aktualisieren die Meta-Datenschutzrichtlinie, um einige Aspekte > zu verdeutlichen. > > > > > > > > > > > > AKTUALISIERUNG DER META-DATENSCHUTZRICHTLINIE > Jun 23, 2025" [ref=f2e400] [cursor=pointer]':
+                    - /url: /apps/mail/box/9588/thread/8342505
+                    - generic "Christoph Wurst" [ref=f2e406]
+                    - generic [ref=f2e407]:
+                      - generic [ref=f2e408]: Christoph Wurst
+                      - generic [ref=f2e412]:
+                        - generic [ref=f2e415]:
+                          - generic [ref=f2e416]: "Fwd: Aktualisierung der Meta-Datenschutzrichtlinie"
+                          - generic [ref=f2e418]: "\"Instagram\" no-reply@mail.instagram.com – June 8, 2025 7:53 PM > Wir aktualisieren die Meta-Datenschutzrichtlinie, um einige Aspekte > zu verdeutlichen. > > > > > > > > > > > > AKTUALISIERUNG DER META-DATENSCHUTZRICHTLINIE >"
+                        - generic [ref=f2e419]: Jun 23, 2025
+        - separator [ref=f2e422]
+        - generic [ref=f2e424]:
+          - generic [ref=f2e425]: Welcome to Nextcloud Mail
+          - generic [ref=f2e426]: Start writing a message by clicking below or select an existing message to display its contents
+          - button "New message" [ref=f2e429] [cursor=pointer]

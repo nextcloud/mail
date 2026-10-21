@@ -1,0 +1,28 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - banner [ref=e4]
+    - generic [ref=e7]:
+      - heading "Nextcloud" [level=1] [ref=e8]
+      - generic [ref=e12]:
+        - group [ref=e14]:
+          - heading "Anmelden bei Nextcloud" [level=2] [ref=e15]
+          - generic [ref=e17]:
+            - textbox "Kontoname oder E-Mail-Adresse" [active] [ref=e18]:
+              - /placeholder: ""
+            - generic: Kontoname oder E-Mail-Adresse
+          - generic [ref=e20]:
+            - textbox "Passwort" [ref=e21] [cursor=pointer]:
+              - /placeholder: ""
+            - generic: Passwort
+            - button "Passwort anzeigen" [ref=e22] [cursor=pointer]
+          - generic [ref=e28]:
+            - checkbox "An mich erinnern" [checked] [ref=e29] [cursor=pointer]
+            - generic [ref=e30] [cursor=pointer]: An mich erinnern
+          - button "Anmelden" [ref=e37] [cursor=pointer]
+        - button "Mit einem Gerät anmelden" [ref=e44] [cursor=pointer]
+        - button "Passwort vergessen?" [ref=e47] [cursor=pointer]
+  - contentinfo [ref=e50]:
+    - paragraph [ref=e51]:
+      - link "Nextcloud" [ref=e52] [cursor=pointer]:
+        - /url: https://nextcloud.com
+      - text: "– #C935BA"

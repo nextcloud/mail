@@ -148,7 +148,7 @@
 						</NcActionText>
 						<!-- TODO: display information about signer and/or CA certificate -->
 					</NcActions>
-					<NcActions :inline="inlineMenuSize">
+					<NcActions :inline="inlineMenuSize" @close="moreActionsOpen = false; snoozeActionsOpen = false">
 						<NcActionButton
 							:closeAfterClick="true"
 							@click="onReply('', false)">
@@ -833,11 +833,7 @@ export default {
 			moreActionsOpen: false,
 			snoozeActionsOpen: false,
 			customSnoozeDateTime: new Date(moment().add(2, 'hours').minute(0).second(0).valueOf()),
-			copied: false,
-			copyResetTimer: null,
-			savingToCloud: false,
 			debug: window?.OC?.debug || false,
-			forwardMessages: undefined,
 			smartReplies: [],
 			showSourceModal: false,
 			showMoveModal: false,
@@ -1108,26 +1104,26 @@ export default {
 				{
 					key: 'laterToday',
 					timestamp: this.getTimestamp(laterTodayTime),
-					label: t('spreed', 'Later today – {timeLocale}', { timeLocale: laterTodayTime?.format('LT') }),
-					ariaLabel: t('spreed', 'Set reminder for later today'),
+					label: t('mail', 'Later today – {timeLocale}', { timeLocale: laterTodayTime?.format('LT') }),
+					ariaLabel: t('mail', 'Set reminder for later today'),
 				},
 				{
 					key: 'tomorrow',
 					timestamp: this.getTimestamp(tomorrowTime),
-					label: t('spreed', 'Tomorrow – {timeLocale}', { timeLocale: tomorrowTime?.format('ddd LT') }),
-					ariaLabel: t('spreed', 'Set reminder for tomorrow'),
+					label: t('mail', 'Tomorrow – {timeLocale}', { timeLocale: tomorrowTime?.format('ddd LT') }),
+					ariaLabel: t('mail', 'Set reminder for tomorrow'),
 				},
 				{
 					key: 'thisWeekend',
 					timestamp: this.getTimestamp(thisWeekendTime),
-					label: t('spreed', 'This weekend – {timeLocale}', { timeLocale: thisWeekendTime?.format('ddd LT') }),
-					ariaLabel: t('spreed', 'Set reminder for this weekend'),
+					label: t('mail', 'This weekend – {timeLocale}', { timeLocale: thisWeekendTime?.format('ddd LT') }),
+					ariaLabel: t('mail', 'Set reminder for this weekend'),
 				},
 				{
 					key: 'nextWeek',
 					timestamp: this.getTimestamp(nextWeekTime),
-					label: t('spreed', 'Next week – {timeLocale}', { timeLocale: nextWeekTime?.format('ddd LT') }),
-					ariaLabel: t('spreed', 'Set reminder for next week'),
+					label: t('mail', 'Next week – {timeLocale}', { timeLocale: nextWeekTime?.format('ddd LT') }),
+					ariaLabel: t('mail', 'Set reminder for next week'),
 				},
 			].filter((option) => option.timestamp !== null)
 		},
@@ -1442,20 +1438,6 @@ export default {
 			this.onSnooze(this.customSnoozeDateTime.valueOf())
 		},
 
-		onCopyMessageLink() {
-			const url = generateUrl('/apps/mail/messages/{id}', {
-				id: this.envelope.databaseId,
-			})
-			navigator.clipboard.writeText(url)
-			this.copied = true
-			if (this.copyResetTimer) {
-				clearTimeout(this.copyResetTimer)
-			}
-			this.copyResetTimer = setTimeout(() => {
-				this.copied = false
-			}, 3000)
-		},
-
 		async forwardSelectedAsAttachment() {
 			await this.mainStore.startComposerSession({
 				forwardedMessages: [this.envelope.databaseId],
@@ -1467,19 +1449,6 @@ export default {
 				templateMessageId: this.envelope.databaseId,
 				data: this.envelope,
 			})
-		},
-
-		async saveToCloud() {
-			this.savingToCloud = true
-			try {
-				// Implementation for saving to cloud
-				showSuccess(t('mail', 'Message saved'))
-			} catch (error) {
-				logger.error('Could not save message', error)
-				showError(t('mail', 'Could not save message'))
-			} finally {
-				this.savingToCloud = false
-			}
 		},
 
 		isSieveEnabled() {
