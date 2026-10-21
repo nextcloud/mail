@@ -847,3 +847,15 @@ export default {
 	},
 }
 </script>
+
+<style lang="scss" scoped>
+.text-block-buttons {
+	width: 100%;
+	justify-self: end;
+	display: flex;
+	justify-content: flex-end;
+	&__button {
+		margin: var(--default-grid-baseline);
+	}
+}
+</style>
