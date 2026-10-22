@@ -55,7 +55,7 @@ describe('NewMessageModal', () => {
 	})
 
 	it('cooks the format off the composer while it is still rendered', async () => {
-		const view = mountModal({ data: { isHtml: false }, composerOpen: true })
+		const view = mountModal({ data: { isHtml: false }, composerOpen: 'open' })
 
 		await view.vm.patchComposerData({ subject: 'Hello' })
 
@@ -63,7 +63,7 @@ describe('NewMessageModal', () => {
 	})
 
 	it('falls back to the stored format once the composer is torn down', async () => {
-		const view = mountModal({ data: { isHtml: true }, composerOpen: false })
+		const view = mountModal({ data: { isHtml: true }, composerOpen: 'close' })
 
 		await view.vm.patchComposerData({ bodyHtml: '<p>Bye</p>' })
 
@@ -71,7 +71,7 @@ describe('NewMessageModal', () => {
 	})
 
 	it('patches the body the composer emits on teardown instead of throwing', () => {
-		const view = mountModal({ data: { isHtml: false }, composerOpen: false })
+		const view = mountModal({ data: { isHtml: false }, composerOpen: 'close' })
 
 		expect(() => view.vm.patchEditorBody('a last keystroke')).not.toThrow()
 		expect(view.vm.mainStore.patchComposerData).toHaveBeenCalledWith({
