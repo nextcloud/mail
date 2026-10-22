@@ -83,6 +83,7 @@ export default defineStore('main', {
 			messages: {},
 			newMessage: undefined,
 			showMessageComposer: false,
+			composerLoading: false,
 			composerMessageIsSaved: false,
 			composerSessionId: undefined,
 			nextComposerSessionId: 1,

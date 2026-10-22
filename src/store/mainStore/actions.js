@@ -482,6 +482,8 @@ export default function mainStoreActions() {
 			templateMessageId,
 			isBlankMessage = false,
 		}) {
+			this.showMessageComposer = true
+
 			// Silently close old session if already saved and show a discard modal otherwise
 			if (this.composerSessionId && !this.composerMessageIsSaved) {
 				// TODO: Nice to have: Add button to save current pending message
@@ -499,10 +501,13 @@ export default function mainStoreActions() {
 					},
 				))
 				if (!discard) {
-					this.showMessageComposer()
 					return
 				}
 			}
+
+			this.composerLoading = true
+			this.composerSessionId = this.nextComposerSessionId
+			this.nextComposerSessionId++
 
 			return handleHttpAuthErrors(async () => {
 				if (reply) {
@@ -2023,8 +2028,7 @@ export default function mainStoreActions() {
 			originalSendAt,
 			smartReply,
 		}) {
-			this.composerSessionId = this.nextComposerSessionId
-			this.nextComposerSessionId++
+			this.composerLoading = false
 			this.newMessage = {
 				type,
 				data,
@@ -2047,6 +2051,7 @@ export default function mainStoreActions() {
 			this.composerSessionId = undefined
 			this.newMessage = undefined
 			this.showMessageComposer = false
+			this.composerLoading = false
 		},
 		/**
 		 * Show composer modal if there is an ongoing session.
