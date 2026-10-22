@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\HtmlPurify;
 
+use HTMLPurifier_AttrDef_URI_Host;
 use HTMLPurifier_Config;
 use HTMLPurifier_Context;
 use HTMLPurifier_URI;
@@ -42,11 +43,19 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 	#[\Override]
 	public function filter(&$uri, $config, $context) {
 		if ($uri->scheme === null) {
-			$uri->scheme = 'https';
 			// "www.example.com/path" parses as a relative path; without a host the browser resolves it against our own URL
 			if ($uri->host === null && $uri->path !== '' && $uri->path[0] !== '/') {
-				[$uri->host, $path] = explode('/', $uri->path, 2) + [1 => null];
-				$uri->path = $path === null ? '' : '/' . $path;
+				[$host, $path] = explode('/', $uri->path, 2) + [1 => null];
+				$host = (new HTMLPurifier_AttrDef_URI_Host())->validate(rawurldecode($host), $config, $context);
+				if (is_string($host)) {
+					$uri->host = $host;
+					$uri->path = $path === null ? '' : '/' . $path;
+				}
+			}
+			// on an http instance browsers read a host-less "https:path" as "https://path"
+			$attr = $context->exists('CurrentAttr') ? $context->get('CurrentAttr') : null;
+			if ($uri->host !== null || $attr !== 'href') {
+				$uri->scheme = 'https';
 			}
 		}
 
