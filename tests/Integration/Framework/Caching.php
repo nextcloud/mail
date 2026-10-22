@@ -12,6 +12,7 @@ namespace OCA\Mail\Tests\Integration\Framework;
 use OC\Memcache\Factory;
 use OCA\Mail\Cache\HordeCacheFactory;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Support\DebugLogPathFactory;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
@@ -60,6 +61,7 @@ class Caching {
 			Server::get(IEventDispatcher::class),
 			Server::get(ITimeFactory::class),
 			Server::get(HordeCacheFactory::class),
+			new DebugLogPathFactory($config),
 		);
 		return [$imapClient, $cacheFactory];
 	}
