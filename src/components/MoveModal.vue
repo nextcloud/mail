@@ -6,6 +6,7 @@
 	<MailboxPicker
 		v-model:selected="destMailboxId"
 		:account="account"
+		:pickedMailbox="pickedMailbox"
 		:loading="moving"
 		:labelSelect="moveThread ? t('mail', 'Move thread') : t('mail', 'Move message')"
 		:labelSelectLoading="moveThread ? t('mail', 'Moving thread') : t('mail', 'Moving message')"
@@ -53,6 +54,12 @@ export default {
 
 	computed: {
 		...mapStores(useMainStore),
+		pickedMailbox() {
+			if (this.envelopes.length > 0) {
+				return this.mainStore.getMailbox(this.envelopes[0].mailboxId)
+			}
+			return undefined
+		},
 	},
 
 	methods: {

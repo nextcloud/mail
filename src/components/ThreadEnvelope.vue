@@ -148,7 +148,7 @@
 						</NcActionText>
 						<!-- TODO: display information about signer and/or CA certificate -->
 					</NcActions>
-					<NcActions :inline="inlineMenuSize">
+					<NcActions :inline="inlineMenuSize" @close="moreActionsOpen = false; snoozeActionsOpen = false">
 						<NcActionButton
 							:closeAfterClick="true"
 							@click="onReply('', false)">
@@ -240,23 +240,260 @@
 							</template>
 							{{ t('mail', 'Delete message') }}
 						</NcActionButton>
-						<MenuEnvelope
-							v-model:moreActionsOpen="moreActionsOpen"
-							class="app-content-list-item-menu"
-							:envelope="envelope"
-							:mailbox="mailbox"
-							:withSelect="false"
-							:withShowSource="true"
-							@reply="onReply('', false, false)"
-							@delete="$emit('delete', envelope.databaseId)"
-							@showSourceModal="onShowSourceModal"
-							@openTagModal="onOpenTagModal"
-							@openMoveModal="onOpenMoveModal"
-							@openEventModal="onOpenEventModal"
-							@openTaskModal="onOpenTaskModal"
-							@openTranslationModal="onOpenTranslationModal"
-							@openMailFilterFromEnvelope="showMailFilterFromEnvelope = true"
-							@print="onPrint" />
+
+						<!-- Inlined MenuEnvelope template: main actions -->
+						<template v-if="!moreActionsOpen && !snoozeActionsOpen">
+							<NcActionButton
+								v-if="hasWriteAcl"
+								class="action--primary"
+								:closeAfterClick="true"
+								@click.prevent="onToggleImportant">
+								<template #icon>
+									<ImportantIcon v-if="isImportant" :size="20" />
+									<ImportantOutlineIcon v-else :size="20" />
+								</template>
+								{{
+									isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')
+								}}
+							</NcActionButton>
+							<NcActionButton
+								:closeAfterClick="true"
+								@click="onForward">
+								<template #icon>
+									<ShareIcon
+										:title="t('mail', 'Forward')"
+										:size="20" />
+								</template>
+								{{ t('mail', 'Forward') }}
+							</NcActionButton>
+							<NcActionButton
+								v-if="hasWriteAcl"
+								:closeAfterClick="true"
+								@click.prevent="onToggleJunk">
+								<template #icon>
+									<AlertOctagonIcon
+										:title="envelope.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')"
+										:size="20" />
+								</template>
+								{{
+									envelope.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
+								}}
+							</NcActionButton>
+							<NcActionButton
+								v-if="hasWriteAcl"
+								:closeAfterClick="true"
+								@click.prevent="onOpenTagModal">
+								<template #icon>
+									<TagIcon
+										:title="t('mail', 'Edit tags')"
+										:size="20" />
+								</template>
+								{{ t('mail', 'Edit tags') }}
+							</NcActionButton>
+							<NcActionButton
+								v-if="hasDeleteAcl"
+								:closeAfterClick="true"
+								@click.prevent="onOpenMoveModal">
+								<template #icon>
+									<OpenInNewIcon
+										:title="t('mail', 'Move message')"
+										:size="20" />
+								</template>
+								{{ t('mail', 'Move message') }}
+							</NcActionButton>
+							<NcActionButton
+								v-if="!isSnoozeDisabled && !isSnoozedMailbox"
+								:closeAfterClick="false"
+								@click="snoozeActionsOpen = true">
+								<template #icon>
+									<AlarmIcon
+										:title="t('mail', 'Snooze')"
+										:size="20" />
+								</template>
+								{{ t('mail', 'Snooze') }}
+							</NcActionButton>
+							<NcActionButton
+								v-if="!isSnoozeDisabled && isSnoozedMailbox"
+								:closeAfterClick="true"
+								@click="onUnSnooze">
+								<template #icon>
+									<AlarmIcon
+										:title="t('mail', 'Unsnooze')"
+										:size="20" />
+								</template>
+								{{ t('mail', 'Unsnooze') }}
+							</NcActionButton>
+							<NcActionButton
+								v-if="isTranslationEnabled ?? false"
+								:closeAfterClick="true"
+								@click.prevent="onOpenTranslationModal">
+								<template #icon>
+									<TranslationIcon
+										:title="t('mail', 'Translate')"
+										:size="20" />
+								</template>
+								{{ t('mail', 'Translate') }}
+							</NcActionButton>
+							<NcActionButton
+								:closeAfterClick="false"
+								@click="moreActionsOpen = true">
+								<template #icon>
+									<DotsHorizontalIcon
+										:title="t('mail', 'More actions')"
+										:size="20" />
+								</template>
+								{{ t('mail', 'More actions') }}
+							</NcActionButton>
+						</template>
+
+						<!-- Inlined MenuEnvelope template: more actions sub-panel -->
+						<template v-if="moreActionsOpen">
+							<NcActionButton
+								:closeAfterClick="false"
+								@click="moreActionsOpen = false">
+								<template #icon>
+									<ChevronLeftIcon
+										:title="t('mail', 'More actions')"
+										:size="20" />
+								</template>
+								{{ t('mail', 'More actions') }}
+							</NcActionButton>
+							<NcActionButton
+								:closeAfterClick="true"
+								@click.prevent="forwardSelectedAsAttachment">
+								<template #icon>
+									<ShareIcon
+										:title="t('mail', 'Forward message as attachment')"
+										:size="20" />
+								</template>
+								{{ t('mail', 'Forward message as attachment') }}
+							</NcActionButton>
+							<NcActionButton
+								:closeAfterClick="true"
+								@click="onOpenEditAsNew">
+								<template #icon>
+									<PlusIcon
+										:title="t('mail', 'Edit as new message')"
+										:size="20" />
+								</template>
+								{{ t('mail', 'Edit as new message') }}
+							</NcActionButton>
+							<NcActionButton
+								:closeAfterClick="true"
+								@click.prevent="onOpenEventModal">
+								<template #icon>
+									<CalendarBlankIcon
+										:title="t('mail', 'Reply with meeting')"
+										:size="20" />
+								</template>
+								{{ t('mail', 'Reply with meeting') }}
+							</NcActionButton>
+							<NcActionButton
+								:closeAfterClick="true"
+								@click.prevent="onOpenTaskModal">
+								<template #icon>
+									<TaskIcon
+										:title="t('mail', 'Create task')"
+										:size="20" />
+								</template>
+								{{ t('mail', 'Create task') }}
+							</NcActionButton>
+							<NcActionButton
+								:closeAfterClick="true"
+								@click.prevent="onShowSourceModal">
+								<template #icon>
+									<InformationIcon
+										:title="t('mail', 'View source')"
+										:size="20" />
+								</template>
+								{{ t('mail', 'View source') }}
+							</NcActionButton>
+							<NcActionButton
+								:closeAfterClick="true"
+								@click="onPrint">
+								<template #icon>
+									<PrinterIcon :size="20" />
+								</template>
+								{{ t('mail', 'Print message') }}
+							</NcActionButton>
+							<NcActionLink
+								:closeAfterClick="true"
+								:href="exportMessageLink">
+								<template #icon>
+									<DownloadIcon :size="20" />
+								</template>
+								{{ t('mail', 'Download message') }}
+							</NcActionLink>
+							<NcActionButton
+								v-if="isSieveEnabled()"
+								:closeAfterClick="true"
+								@click.prevent="onOpenMailFilterFromEnvelope">
+								<template #icon>
+									<FilterIcon
+										:title="t('mail', 'Create mail filter')"
+										:size="20" />
+								</template>
+								{{ t('mail', 'Create mail filter') }}
+							</NcActionButton>
+							<NcActionLink
+								v-if="debug"
+								:download="threadingFileName"
+								:href="threadingFile"
+								:closeAfterClick="true">
+								<template #icon>
+									<DownloadIcon
+										:title="t('mail', 'Download thread data for debugging')"
+										:size="20" />
+								</template>
+								{{ t('mail', 'Download thread data for debugging') }}
+							</NcActionLink>
+						</template>
+
+						<!-- Inlined MenuEnvelope template: snooze sub-panel -->
+						<template v-if="snoozeActionsOpen">
+							<NcActionButton
+								:closeAfterClick="false"
+								@click="snoozeActionsOpen = false">
+								<template #icon>
+									<ChevronLeftIcon :size="20" />
+								</template>
+								{{
+									t('mail', 'Back')
+								}}
+							</NcActionButton>
+
+							<NcActionButton
+								v-for="option in reminderOptions"
+								:key="option.key"
+								:aria-label="option.ariaLabel"
+								:closeAfterClick="true"
+								@click.stop="onSnooze(option.timestamp)">
+								{{ option.label }}
+							</NcActionButton>
+
+							<NcActionSeparator />
+
+							<NcActionInput
+								type="datetime-local"
+								:isNativePicker="true"
+								:modelValue="customSnoozeDateTime"
+								:min="new Date()"
+								@change="setCustomSnoozeDateTime">
+								<template #icon>
+									<CalendarClock :size="20" />
+								</template>
+							</NcActionInput>
+
+							<NcActionButton
+								:aria-label="t('spreed', 'Set custom snooze')"
+								:closeAfterClick="true"
+								@click.stop="setCustomSnooze">
+								<template #icon>
+									<CheckIcon :size="20" />
+								</template>
+								{{ t('spreed', 'Set custom snooze') }}
+							</NcActionButton>
+						</template>
 					</NcActions>
 					<SourceModal
 						v-if="showSourceModal"
@@ -394,32 +631,54 @@ import { showError, showSuccess } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
 import moment from '@nextcloud/moment'
 import { generateUrl } from '@nextcloud/router'
-import { mapStores } from 'pinia'
+import { Base64 } from 'js-base64'
+import { mapState, mapStores } from 'pinia'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcActionInput from '@nextcloud/vue/components/NcActionInput'
+import NcActionLink from '@nextcloud/vue/components/NcActionLink'
 import NcActions from '@nextcloud/vue/components/NcActions'
+import NcActionSeparator from '@nextcloud/vue/components/NcActionSeparator'
 import NcActionText from '@nextcloud/vue/components/NcActionText'
 import AiIcon from '@nextcloud/vue/components/NcAssistantIcon'
 import NcButton from '@nextcloud/vue/components/NcButton'
+import AlarmIcon from 'vue-material-design-icons/Alarm.vue'
+import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
 import ArchiveIcon from 'vue-material-design-icons/ArchiveArrowDownOutline.vue'
+import CalendarBlankIcon from 'vue-material-design-icons/CalendarBlankOutline.vue'
+import CalendarClock from 'vue-material-design-icons/CalendarClockOutline.vue'
+import CheckIcon from 'vue-material-design-icons/Check.vue'
+import TaskIcon from 'vue-material-design-icons/CheckboxMarkedCirclePlusOutline.vue'
 import ChevronDownIcon from 'vue-material-design-icons/ChevronDown.vue'
+import ChevronLeftIcon from 'vue-material-design-icons/ChevronLeft.vue'
 import ChevronUpIcon from 'vue-material-design-icons/ChevronUp.vue'
+import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal.vue'
 import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
 import EmailUnread from 'vue-material-design-icons/EmailOutline.vue'
+import FilterIcon from 'vue-material-design-icons/FilterOutline.vue'
+import InformationIcon from 'vue-material-design-icons/InformationOutline.vue'
+import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'
+import ImportantOutlineIcon from 'vue-material-design-icons/LabelVariantOutline.vue'
 import LockOffIcon from 'vue-material-design-icons/LockOffOutline.vue'
 import LockIcon from 'vue-material-design-icons/LockOutline.vue'
 import LockPlusIcon from 'vue-material-design-icons/LockPlusOutline.vue'
+import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
+import PlusIcon from 'vue-material-design-icons/Plus.vue'
+import PrinterIcon from 'vue-material-design-icons/PrinterOutline.vue'
 import ReplyAllIcon from 'vue-material-design-icons/ReplyAllOutline.vue'
 import ReplyIcon from 'vue-material-design-icons/ReplyOutline.vue'
+import ShareIcon from 'vue-material-design-icons/ShareOutline.vue'
 import IconFavorite from 'vue-material-design-icons/Star.vue'
 import StarOutline from 'vue-material-design-icons/StarOutline.vue'
+import TagIcon from 'vue-material-design-icons/TagOutline.vue'
+import TranslationIcon from 'vue-material-design-icons/Translate.vue'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
+import DownloadIcon from 'vue-material-design-icons/TrayArrowDown.vue'
 import Avatar from './Avatar.vue'
 import ConfirmModal from './ConfirmationModal.vue'
 import Error from './Error.vue'
 import EventModal from './EventModal.vue'
 import JunkIcon from './icons/JunkIcon.vue'
 import MailFilterFromEnvelope from './mailFilter/MailFilterFromEnvelope.vue'
-import MenuEnvelope from './MenuEnvelope.vue'
 import Message from './Message.vue'
 import MessageLoadingSkeleton from './MessageLoadingSkeleton.vue'
 import Moment from './Moment.vue'
@@ -456,6 +715,8 @@ export default {
 	name: 'ThreadEnvelope',
 	components: {
 		AiIcon,
+		AlertOctagonIcon,
+		AlarmIcon,
 		MailFilterFromEnvelope,
 		EventModal,
 		TaskModal,
@@ -466,12 +727,16 @@ export default {
 		Avatar,
 		RecipientBubble,
 		NcActionButton,
+		NcActionInput,
+		NcActionLink,
+		NcActionSeparator,
 		NcButton,
 		Error,
 		IconFavorite,
+		ImportantIcon,
+		ImportantOutlineIcon,
 		JunkIcon,
 		MessageLoadingSkeleton,
-		MenuEnvelope,
 		Moment,
 		Message,
 		StarOutline,
@@ -479,15 +744,30 @@ export default {
 		EmailUnread,
 		DeleteIcon,
 		ArchiveIcon,
+		CalendarBlankIcon,
+		CalendarClock,
+		CheckIcon,
 		ChevronDownIcon,
+		ChevronLeftIcon,
 		ChevronUpIcon,
+		DotsHorizontalIcon,
+		DownloadIcon,
+		FilterIcon,
+		InformationIcon,
 		LockIcon,
 		LockOffIcon,
 		LockPlusIcon,
 		NcActions,
 		NcActionText,
+		OpenInNewIcon,
+		PlusIcon,
+		PrinterIcon,
 		ReplyIcon,
 		ReplyAllIcon,
+		ShareIcon,
+		TagIcon,
+		TaskIcon,
+		TranslationIcon,
 		SourceModal,
 	},
 
@@ -551,6 +831,9 @@ export default {
 			Loading,
 			recomputeMenuSize: 0,
 			moreActionsOpen: false,
+			snoozeActionsOpen: false,
+			customSnoozeDateTime: new Date(moment().add(2, 'hours').minute(0).second(0).valueOf()),
+			debug: window?.OC?.debug || false,
 			smartReplies: [],
 			showSourceModal: false,
 			showMoveModal: false,
@@ -570,6 +853,11 @@ export default {
 
 	computed: {
 		...mapStores(useOutboxStore, useMainStore),
+		...mapState(useMainStore, [
+			'isSnoozeDisabled',
+			'isTranslationEnabled',
+		]),
+
 		senderEmail() {
 			return this.envelope.from?.[0]?.email ?? ''
 		},
@@ -787,6 +1075,77 @@ export default {
 			}
 
 			return t('mail', 'Reply')
+		},
+
+		isSnoozedMailbox() {
+			return this.mailbox.databaseId === this.account.snoozeMailboxId
+		},
+
+		reminderOptions() {
+			const currentDateTime = moment()
+
+			// Same day 18:00 PM (or hidden)
+			const laterTodayTime = (currentDateTime.hour() < 18)
+				? moment().hour(18)
+				: null
+
+			// Tomorrow 08:00 AM
+			const tomorrowTime = moment().add(1, 'days').hour(8)
+
+			// Saturday 08:00 AM (or hidden)
+			const thisWeekendTime = (currentDateTime.day() !== 6 && currentDateTime.day() !== 0)
+				? moment().day(6).hour(8)
+				: null
+
+			// Next Monday 08:00 AM
+			const nextWeekTime = moment().add(1, 'weeks').day(1).hour(8)
+
+			return [
+				{
+					key: 'laterToday',
+					timestamp: this.getTimestamp(laterTodayTime),
+					label: t('mail', 'Later today – {timeLocale}', { timeLocale: laterTodayTime?.format('LT') }),
+					ariaLabel: t('mail', 'Set reminder for later today'),
+				},
+				{
+					key: 'tomorrow',
+					timestamp: this.getTimestamp(tomorrowTime),
+					label: t('mail', 'Tomorrow – {timeLocale}', { timeLocale: tomorrowTime?.format('ddd LT') }),
+					ariaLabel: t('mail', 'Set reminder for tomorrow'),
+				},
+				{
+					key: 'thisWeekend',
+					timestamp: this.getTimestamp(thisWeekendTime),
+					label: t('mail', 'This weekend – {timeLocale}', { timeLocale: thisWeekendTime?.format('ddd LT') }),
+					ariaLabel: t('mail', 'Set reminder for this weekend'),
+				},
+				{
+					key: 'nextWeek',
+					timestamp: this.getTimestamp(nextWeekTime),
+					label: t('mail', 'Next week – {timeLocale}', { timeLocale: nextWeekTime?.format('ddd LT') }),
+					ariaLabel: t('mail', 'Set reminder for next week'),
+				},
+			].filter((option) => option.timestamp !== null)
+		},
+
+		exportMessageLink() {
+			return generateUrl('/apps/mail/api/messages/{id}/export', {
+				id: this.envelope.databaseId,
+			})
+		},
+
+		threadingFile() {
+			return `data:text/plain;base64,${Base64.encode(JSON.stringify({
+				subject: this.envelope.subject,
+				messageId: this.envelope.messageId,
+				inReplyTo: this.envelope.inReplyTo,
+				references: this.envelope.references,
+				threadRootId: this.envelope.threadRootId,
+			}, null, 2))}`
+		},
+
+		threadingFileName() {
+			return `${this.envelope.databaseId}.json`
 		},
 	},
 
@@ -1012,6 +1371,92 @@ export default {
 					followUp,
 				},
 			})
+		},
+
+		onForward() {
+			this.mainStore.startComposerSession({
+				reply: {
+					mode: 'forward',
+					data: this.envelope,
+				},
+			})
+		},
+
+		async onSnooze(timestamp) {
+			// Remove from selection first
+			if (this.withSelect) {
+				this.$emit('unselect')
+			}
+
+			logger.info(`snoozing message ${this.envelope.databaseId}`)
+
+			if (!this.account.snoozeMailboxId) {
+				await this.mainStore.createAndSetSnoozeMailbox(this.account)
+			}
+
+			try {
+				await this.mainStore.snoozeMessage({
+					id: this.envelope.databaseId,
+					unixTimestamp: timestamp / 1000,
+					destMailboxId: this.account.snoozeMailboxId,
+				})
+				showSuccess(t('mail', 'Message was snoozed'))
+			} catch (error) {
+				logger.error('Could not snooze message', error)
+				showError(t('mail', 'Could not snooze message'))
+			}
+		},
+
+		async onUnSnooze() {
+			// Remove from selection first
+			if (this.withSelect) {
+				this.$emit('unselect')
+			}
+
+			logger.info(`unSnoozing message ${this.envelope.databaseId}`)
+
+			try {
+				await this.mainStore.unSnoozeMessage({
+					id: this.envelope.databaseId,
+				})
+				showSuccess(t('mail', 'Message was unsnoozed'))
+			} catch (error) {
+				logger.error('Could not unsnooze message', error)
+				showError(t('mail', 'Could not unsnooze message'))
+			}
+		},
+
+		getTimestamp(momentObject) {
+			return momentObject?.minute(0).second(0).millisecond(0).valueOf() || null
+		},
+
+		setCustomSnoozeDateTime(event) {
+			this.customSnoozeDateTime = new Date(event.target.value)
+		},
+
+		setCustomSnooze() {
+			this.onSnooze(this.customSnoozeDateTime.valueOf())
+		},
+
+		async forwardSelectedAsAttachment() {
+			await this.mainStore.startComposerSession({
+				forwardedMessages: [this.envelope.databaseId],
+			})
+		},
+
+		async onOpenEditAsNew() {
+			await this.mainStore.startComposerSession({
+				templateMessageId: this.envelope.databaseId,
+				data: this.envelope,
+			})
+		},
+
+		isSieveEnabled() {
+			return this.account.sieveEnabled
+		},
+
+		onOpenMailFilterFromEnvelope() {
+			this.showMailFilterFromEnvelope = true
 		},
 
 		onToggleImportant() {
