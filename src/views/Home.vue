@@ -11,8 +11,8 @@
 			:account="activeAccount"
 			:mailbox="activeMailbox" />
 
-		<template v-if="hasComposerSession && accounts !== null">
-			<ComposerSessionIndicator v-if="!showMessageComposer" @close="onCloseMessageModal" />
+		<template v-if="showMessageComposer !== 'disable' && accounts !== null">
+			<ComposerSessionIndicator v-if="showMessageComposer === 'close'" @close="onCloseMessageModal" />
 			<NewMessageModal ref="newMessageModal" :accounts="accounts" />
 		</template>
 	</NcContent>
@@ -43,15 +43,9 @@ export default {
 		ComposerSessionIndicator,
 	},
 
-	data() {
-		return {
-			hasComposerSession: false,
-		}
-	},
-
 	computed: {
 		...mapStores(useMainStore),
-		...mapState(useMainStore, ['composerSessionId', 'showMessageComposer']),
+		...mapState(useMainStore, ['showMessageComposer']),
 		accounts() {
 			return this.mainStore.getAccounts.filter((a) => !a.isUnified)
 		},
@@ -62,26 +56,6 @@ export default {
 
 		activeMailbox() {
 			return this.mainStore.getMailbox(this.$route.params.mailboxId)
-		},
-	},
-
-	watch: {
-		async composerSessionId(id) {
-			// Session was closed or discarded
-			if (!id) {
-				this.hasComposerSession = false
-				return
-			}
-
-			// A new session is replacing the old session.  Fully reset the NewMessageModal
-			// component in this case and wait for the template to fully render before showing the
-			// modal again.
-			if (this.hasComposerSession) {
-				this.hasComposerSession = false
-				await this.$nextTick()
-			}
-
-			this.hasComposerSession = true
 		},
 	},
 
