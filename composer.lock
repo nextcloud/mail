@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "80dee14ce7614c4c0f3d150687df88e0",
+    "content-hash": "95d2cc35c825780de5d0a12249ad127e",
     "packages": [
         {
             "name": "amphp/amp",
@@ -824,16 +824,16 @@
         },
         {
             "name": "bytestream/horde-imap-client",
-            "version": "v2.34.1",
+            "version": "v2.34.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Imap_Client.git",
-                "reference": "0171a72c144fa050250e4b40dc0160507c265300"
+                "reference": "f01ae2032800430b033a4b36624124fdba46216f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Imap_Client/zipball/0171a72c144fa050250e4b40dc0160507c265300",
-                "reference": "0171a72c144fa050250e4b40dc0160507c265300",
+                "url": "https://api.github.com/repos/bytestream/Imap_Client/zipball/f01ae2032800430b033a4b36624124fdba46216f",
+                "reference": "f01ae2032800430b033a4b36624124fdba46216f",
                 "shasum": ""
             },
             "require": {
@@ -875,9 +875,9 @@
             "description": "Horde IMAP client library",
             "homepage": "https://www.horde.org/libraries/Horde_Imap_Client",
             "support": {
-                "source": "https://github.com/bytestream/Imap_Client/tree/v2.34.1"
+                "source": "https://github.com/bytestream/Imap_Client/tree/v2.34.2"
             },
-            "time": "2026-04-23T09:47:18+00:00"
+            "time": "2026-09-21T09:19:14+00:00"
         },
         {
             "name": "bytestream/horde-listheaders",
@@ -4225,5 +4225,5 @@
     "platform-overrides": {
         "php": "8.1"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }

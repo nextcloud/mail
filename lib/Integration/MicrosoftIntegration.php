@@ -179,6 +179,9 @@ class MicrosoftIntegration {
 		$encryptedAccessToken = $this->crypto->encrypt($data['access_token']);
 		$account->getMailAccount()->setOauthAccessToken($encryptedAccessToken);
 		$account->getMailAccount()->setOauthTokenTtl($this->timeFactory->getTime() + $data['expires_in']);
+		if (isset($data['refresh_token'])) {
+			$account->getMailAccount()->setOauthRefreshToken($this->crypto->encrypt($data['refresh_token']));
+		}
 
 		return $account;
 	}
