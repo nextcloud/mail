@@ -192,9 +192,8 @@ OC.L10N.register(
     "Tags" : "Тэгі",
     "Custom" : "Карыстальніцкі",
     "Signature …" : "Подпіс …",
-    "Saving new tag name …" : "Захаванне новай назвы тэга …",
+    "Edit" : "Рэдагаваць",
     "Add tag" : "Дадаць тэг",
-    "Saving tag …" : "Захаванне тэга …",
     "Task created" : "Заданне створана",
     "Could not create task" : "Не ўдалося стварыць заданне",
     "No calendars with task list support" : "Няма календароў з падтрымкай спісаў заднняў",
@@ -244,7 +243,6 @@ OC.L10N.register(
     "Enable filter" : "Уключыць фільтр",
     "Tag" : "Тэг",
     "delete" : "выдаліць",
-    "Edit" : "Рэдагаваць",
     "Reset" : "Скінуць",
     "Client ID" : "Ідэнтыфікатар кліента",
     "IMAP: {user} on {host}:{port} ({ssl} encryption)" : "IMAP: {user} на {host}:{port} (шыфраванне {ssl})",
@@ -291,6 +289,8 @@ OC.L10N.register(
     "Could not load your message" : "Не ўдалося загрузіць ваша паведамленне",
     "Could not load the message" : "Не ўдалося загрузіць паведамленне",
     "Date:" : "Дата:",
-    "Error loading message" : "Памылка пры загрузцы паведамлення"
+    "Error loading message" : "Памылка пры загрузцы паведамлення",
+    "Saving new tag name …" : "Захаванне новай назвы тэга …",
+    "Saving tag …" : "Захаванне тэга …"
 },
 "nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);");

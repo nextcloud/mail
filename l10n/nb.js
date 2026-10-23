@@ -483,11 +483,8 @@ OC.L10N.register(
     "Place signature above quoted text" : "Plasser signatur over sitert tekst",
     "Message source" : "Melding kilde",
     "An error occurred, unable to rename the tag." : "Det oppsto en feil, kan ikke gi nytt navn til taggen.",
-    "Edit name or color" : "Rediger navn eller farge",
-    "Set tag" : "Sett merkelapp",
-    "Unset tag" : "Opphev merkelapp",
+    "Edit" : "Rediger",
     "An error occurred, unable to create the tag." : "Det oppsto en feil, kan ikke opprette taggen.",
-    "Add default tags" : "Legg til standardtags",
     "Add tag" : "Legg til merkelapp",
     "Task created" : "Oppgave opprettet",
     "Could not create task" : "Kunne ikke opprette oppgave",
@@ -554,7 +551,6 @@ OC.L10N.register(
     "Actions" : "Handlinger",
     "Priority" : "Prioritet",
     "delete" : "slett",
-    "Edit" : "Rediger",
     "Successfully updated config for \"{domain}\"" : "Vellykket oppdatert konfigurasjon for «{domain}»",
     "Error saving config" : "Feil ved lagring av konfigurasjon",
     "Saved config for \"{domain}\"" : "Lagret konfigurasjon for «{domain}»",
@@ -699,6 +695,10 @@ OC.L10N.register(
     "Tag name cannot be empty" : "Navn for merkelapp kan ikke være tom",
     "Tag name is a hidden system tag" : "Tagnavn er en skjult systemtag",
     "Tag already exists" : "Merkelappen finnes allerede",
-    "Error loading message" : "Feil ved innlasting av melding"
+    "Error loading message" : "Feil ved innlasting av melding",
+    "Edit name or color" : "Rediger navn eller farge",
+    "Set tag" : "Sett merkelapp",
+    "Unset tag" : "Opphev merkelapp",
+    "Add default tags" : "Legg til standardtags"
 },
 "nplurals=2; plural=(n != 1);");

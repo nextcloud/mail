@@ -577,11 +577,8 @@
     "Place signature above quoted text" : "Гарын үсгийг эшлэсэн текстийн дээр байрлуулах",
     "Message source" : "Зурвасын эх",
     "An error occurred, unable to rename the tag." : "Алдаа гарлаа, таг нэр өөрчлөх боломжгүй.",
-    "Edit name or color" : "Нэр эсвэл өнгө засах",
-    "Set tag" : "Таг тохируулах",
-    "Unset tag" : "Таг арилгах",
+    "Edit" : "”®”©—Ä—á–ª”©—Ö",
     "An error occurred, unable to create the tag." : "Алдаа гарлаа, таг үүсгэх боломжгүй.",
-    "Add default tags" : "Өгөгдмөл тагууд нэмэх",
     "Add tag" : "Таг нэмэх",
     "Task created" : "Даалгавар үүслээ",
     "Could not create task" : "Даалгавар үүсгэх боломжгүй",
@@ -695,7 +692,6 @@
     "Quick action created" : "Түргэн үйлдэл үүслээ",
     "Failed to delete action step" : "Үйлдлийн алхмыг устгахад алдаа гарлаа",
     "No quick actions yet." : "Түргэн үйлдэл байхгүй байна.",
-    "Edit" : "”®”©—Ä—á–ª”©—Ö",
     "Quick action name" : "Түргэн үйлдлийн нэр",
     "Do the following actions" : "Дараах үйлдлүүдийг хийх",
     "Add another action" : "Өөр үйлдэл нэмэх",
@@ -869,6 +865,10 @@
     "Error loading message" : "–∞–ª–¥–∞–∞—Ç–∞–π –∞—á–∞–∞–ª–ª–∞—Ö –∑—É—Ä–≤–∞—Å",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Автомат хариу нь олон имэйл үйлчилгээ үзүүлэгчийн дэмждэг Sieve скрипт хэлийг ашигладаг. Таны үйлчилгээ үзүүлэгч дэмждэг эсэхийг мэдэхгүй бол тэдэнтэй холбогдож лавлана уу. Хэрэв Sieve боломжтой бол товчлуур дээр дарж тохиргоо руу орж идэвхжүүлнэ үү.",
     "Move Message" : "Зурвас зөөх",
+    "Edit name or color" : "Нэр эсвэл өнгө засах",
+    "Set tag" : "Таг тохируулах",
+    "Unset tag" : "Таг арилгах",
+    "Add default tags" : "Өгөгдмөл тагууд нэмэх",
     "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Имэйлийн эмх замбараагүй байдлаа хянана уу. Шүүлтүүрүүд нь чухал зүйлийг эрэмбэлж, шаардлагагүй зүйлийг арилгахад тусална."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

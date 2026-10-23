@@ -427,9 +427,8 @@ OC.L10N.register(
     "Place signature above quoted text" : "Aseta allekirjoitus lainatun tekstin yläpuolelle",
     "Message source" : "Viestin lähde",
     "An error occurred, unable to rename the tag." : "Tapahtui virhe, tunnistetta ei voitu nimetä uudelleen.",
-    "Edit name or color" : "Muokkaa nimeä tai väriä",
+    "Edit" : "Muokkaa",
     "An error occurred, unable to create the tag." : "Tapahtui virhe, tunnistetta ei voitu luoda.",
-    "Add default tags" : "Lisää oletustunnisteet",
     "Add tag" : "Lisää tunniste",
     "Task created" : "Tehtävä luotu",
     "Could not create task" : "Tehtävää ei voitu luoda",
@@ -515,7 +514,6 @@ OC.L10N.register(
     "Failed to create quick action" : "Pikatoiminnon luonti epäonnistui",
     "Quick action created" : "Pikatoiminto luotu",
     "No quick actions yet." : "Ei pikatoimintoja vielä",
-    "Edit" : "Muokkaa",
     "Quick action name" : "Pikatoiminnon nimi",
     "Do the following actions" : "Tee seuraavat toiminnot",
     "Add another action" : "Lisää toinen toiminto",
@@ -614,6 +612,8 @@ OC.L10N.register(
     "Tag already exists" : "Tunniste on jo olemassa",
     "Error loading message" : "Virhe viestiä ladatessa",
     "Move Message" : "Siirrä viesti",
+    "Edit name or color" : "Muokkaa nimeä tai väriä",
+    "Add default tags" : "Lisää oletustunnisteet",
     "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Ota postikaaos hallintaan. Suodattimet auttavat asettamaan asioita tärkeysjärjestykseen ja minimoimaan turhuudet."
 },
 "nplurals=2; plural=(n != 1);");

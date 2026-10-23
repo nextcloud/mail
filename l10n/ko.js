@@ -428,11 +428,8 @@ OC.L10N.register(
     "Place signature above quoted text" : "인용 문구 상단에 서명 삽입",
     "Message source" : "메시지 원본",
     "An error occurred, unable to rename the tag." : "오류가 발생하여 태그 이름을 변경할 수 없습니다",
-    "Edit name or color" : "이름 또는 색깔 편집",
-    "Set tag" : "태그 설정",
-    "Unset tag" : "태그 설정 해제",
+    "Edit" : "편집",
     "An error occurred, unable to create the tag." : "오류가 발생하여 태그 이름을 생성할 수 없습니다",
-    "Add default tags" : "기본 태그 추가",
     "Add tag" : "태그 추가",
     "Task created" : "작업이 생성됨",
     "Could not create task" : "작업을 만들 수 없음",
@@ -495,7 +492,6 @@ OC.L10N.register(
     "Actions" : "동작",
     "Priority" : "우선 순위",
     "delete" : "삭제",
-    "Edit" : "편집",
     "Successfully updated config for \"{domain}\"" : "\"{domail}\"에 대한 설정을 성공적으로 갱신함",
     "Error saving config" : "설정을 저장하는 중 오류 발생",
     "Saved config for \"{domain}\"" : "\"{domail}\"에 대한 설정을 저장함",
@@ -638,6 +634,10 @@ OC.L10N.register(
     "Tag name cannot be empty" : "태그 이름을 비울 수 없음",
     "Tag name is a hidden system tag" : "태그 이름이 숨겨진 시스템 태그입니다",
     "Tag already exists" : "태그가 이미 존재합니다.",
-    "Error loading message" : "메시지 불러오기 오류"
+    "Error loading message" : "메시지 불러오기 오류",
+    "Edit name or color" : "이름 또는 색깔 편집",
+    "Set tag" : "태그 설정",
+    "Unset tag" : "태그 설정 해제",
+    "Add default tags" : "기본 태그 추가"
 },
 "nplurals=1; plural=0;");

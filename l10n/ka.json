@@ -414,11 +414,8 @@
     "Place signature above quoted text" : "Place signature above quoted text",
     "Message source" : "Message source",
     "An error occurred, unable to rename the tag." : "An error occurred, unable to rename the tag.",
-    "Edit name or color" : "Edit name or color",
-    "Set tag" : "Set tag",
-    "Unset tag" : "Unset tag",
+    "Edit" : "Edit",
     "An error occurred, unable to create the tag." : "An error occurred, unable to create the tag.",
-    "Add default tags" : "Add default tags",
     "Add tag" : "Add tag",
     "Task created" : "Task created",
     "Could not create task" : "Could not create task",
@@ -475,7 +472,6 @@
     "matches" : "matches",
     "Actions" : "Actions",
     "Priority" : "Priority",
-    "Edit" : "Edit",
     "Successfully updated config for \"{domain}\"" : "Successfully updated config for \"{domain}\"",
     "Error saving config" : "Error saving config",
     "Saved config for \"{domain}\"" : "Saved config for \"{domain}\"",
@@ -612,6 +608,10 @@
     "Tag name cannot be empty" : "Tag name cannot be empty",
     "Tag name is a hidden system tag" : "Tag name is a hidden system tag",
     "Tag already exists" : "Tag already exists",
-    "Error loading message" : "Error loading message"
+    "Error loading message" : "Error loading message",
+    "Edit name or color" : "Edit name or color",
+    "Set tag" : "Set tag",
+    "Unset tag" : "Unset tag",
+    "Add default tags" : "Add default tags"
 },"pluralForm" :"nplurals=2; plural=(n!=1);"
 }

@@ -491,11 +491,8 @@ OC.L10N.register(
     "Place signature above quoted text" : "Setja undirskrift fyrir ofan tilvitnaðan texta",
     "Message source" : "Uppruni skilaboða",
     "An error occurred, unable to rename the tag." : "Villa kom upp, gat ekki endurnefnt merkið.",
-    "Edit name or color" : "Breyta heiti eða lit",
-    "Set tag" : "Setja merki",
-    "Unset tag" : "Afsetja merki",
+    "Edit" : "Breyta",
     "An error occurred, unable to create the tag." : "Villa kom upp, gat ekki búið til merkið.",
-    "Add default tags" : "Bæta við sjálfgefnum merkjum",
     "Add tag" : "Bæta við merki",
     "Task created" : "Verk búið til",
     "Could not create task" : "Tókst ekki að búa til verk",
@@ -569,7 +566,6 @@ OC.L10N.register(
     "Enable filter" : "Virkja síu",
     "Tag" : "Merki",
     "delete" : "eytt",
-    "Edit" : "Breyta",
     "Successfully updated config for \"{domain}\"" : "Tókst að uppfæra uppsetningu fyrir \"{domain}\"",
     "Error saving config" : "Villa við að vista uppsetningu",
     "Saved config for \"{domain}\"" : "Vistaði uppsetningu fyrir \"{domain}\"",
@@ -702,6 +698,10 @@ OC.L10N.register(
     "Tag name cannot be empty" : "Nafn merkis má ekki vera tómt",
     "Tag name is a hidden system tag" : "Heiti merkis er falið merki kerfisins",
     "Tag already exists" : "Merki er þegar til",
-    "Error loading message" : "Villa við hleðslu á skilaboðum"
+    "Error loading message" : "Villa við hleðslu á skilaboðum",
+    "Edit name or color" : "Breyta heiti eða lit",
+    "Set tag" : "Setja merki",
+    "Unset tag" : "Afsetja merki",
+    "Add default tags" : "Bæta við sjálfgefnum merkjum"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

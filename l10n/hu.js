@@ -439,11 +439,8 @@ OC.L10N.register(
     "Place signature above quoted text" : "Az aláírás az idézett szöveg fölé helyezése",
     "Message source" : "Üzenet forrása",
     "An error occurred, unable to rename the tag." : "Hiba történt, a címke nem nevezhető át",
-    "Edit name or color" : "Név vagy szín szerkesztése",
-    "Set tag" : "Címke beállítása",
-    "Unset tag" : "Címke eltávolítása",
+    "Edit" : "Szerkesztés",
     "An error occurred, unable to create the tag." : "HIba történt, a címke nem hozható létre.",
-    "Add default tags" : "Alapértelmezett címkék hozzáadása",
     "Add tag" : "Címke hozzáadása",
     "Task created" : "Feladat létrehozva",
     "Could not create task" : "Nem sikerült létrehozni a feladatot",
@@ -508,7 +505,6 @@ OC.L10N.register(
     "Priority" : "Prioritás",
     "Tag" : "Címke",
     "delete" : "töröl",
-    "Edit" : "Szerkesztés",
     "Successfully updated config for \"{domain}\"" : "A(z) „{domain}” konfigurációja sikeresen frissítve",
     "Error saving config" : "Hiba a konfiguráció mentése során",
     "Saved config for \"{domain}\"" : "Konfiguráció mentése ehhez: „{domain}”",
@@ -646,6 +642,10 @@ OC.L10N.register(
     "Tag name cannot be empty" : "A címkenév nem lehet üres",
     "Tag name is a hidden system tag" : "A címkenév egy rejtett rendszercímke",
     "Tag already exists" : "A címke már létezik",
-    "Error loading message" : "Hiba történt az üzenet betöltése közben"
+    "Error loading message" : "Hiba történt az üzenet betöltése közben",
+    "Edit name or color" : "Név vagy szín szerkesztése",
+    "Set tag" : "Címke beállítása",
+    "Unset tag" : "Címke eltávolítása",
+    "Add default tags" : "Alapértelmezett címkék hozzáadása"
 },
 "nplurals=2; plural=(n != 1);");
