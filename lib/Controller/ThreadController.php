@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\TrapError;
@@ -77,7 +78,7 @@ class ThreadController extends Controller {
 			$dstMailbox,
 			$threadRootId
 		);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId moved thread <$id> to mailbox <$destMailboxId> on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedThreadMoved, '%s moved thread <%s> to mailbox <%s> on behalf of %s', ['messageId' => $id, 'destinationMailboxId' => $destMailboxId]);
 
 		return new JSONResponse();
 	}
@@ -108,7 +109,7 @@ class ThreadController extends Controller {
 		$this->delegationService->assertMailboxAccess($destMailboxId, $this->userId);
 
 		$this->snoozeService->snoozeThread($selectedMessage, $unixTimestamp, $srcAccount, $srcMailbox, $dstAccount, $dstMailbox);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId snoozed thread <$id> until <$unixTimestamp> in mailbox <$destMailboxId> on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedThreadSnoozed, '%s snoozed thread <%s> until <%s> in mailbox <%s> on behalf of %s', ['messageId' => $id, 'snoozedUntil' => $unixTimestamp, 'destinationMailboxId' => $destMailboxId]);
 
 		return new JSONResponse();
 	}
@@ -131,7 +132,7 @@ class ThreadController extends Controller {
 		}
 
 		$this->snoozeService->unSnoozeThread($selectedMessage, $effectiveUserId);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId unsnoozed thread <$id> on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedThreadUnsnoozed, '%s unsnoozed thread <%s> on behalf of %s', ['messageId' => $id]);
 
 		return new JSONResponse();
 	}
@@ -233,7 +234,7 @@ class ThreadController extends Controller {
 			$mailbox,
 			$threadRootId
 		);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId deleted thread <$id> on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedThreadDeleted, '%s deleted thread <%s> on behalf of %s', ['messageId' => $id]);
 
 		return new JSONResponse();
 	}

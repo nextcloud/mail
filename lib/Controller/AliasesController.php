@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Http\TrapError;
@@ -69,7 +70,7 @@ class AliasesController extends Controller {
 			$aliasName,
 			$smimeCertificateId,
 		);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated alias: $id on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedAliasUpdated, '%s updated alias: %s on behalf of %s', ['aliasId' => $id]);
 		return new JSONResponse($alias);
 	}
 
@@ -82,7 +83,7 @@ class AliasesController extends Controller {
 	public function destroy(int $id): JSONResponse {
 		$effectiveUserId = $this->delegationService->resolveAliasUserId($id, $this->userId);
 		$alias = $this->aliasService->delete($effectiveUserId, $id);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId deleted alias: $id on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedAliasDeleted, '%s deleted alias: %s on behalf of %s', ['aliasId' => $id]);
 		return new JSONResponse($alias);
 	}
 
@@ -101,7 +102,7 @@ class AliasesController extends Controller {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->userId);
 		$alias = $this->aliasService->create($effectiveUserId, $accountId, $alias, $aliasName);
 		$id = $alias->getId();
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId created alias: $id  on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedAliasCreated, '%s created alias: %s  on behalf of %s', ['aliasId' => $id]);
 		return new JSONResponse(
 			$alias,
 			Http::STATUS_CREATED
@@ -121,7 +122,7 @@ class AliasesController extends Controller {
 	public function updateSignature(int $id, ?string $signature = null): JSONResponse {
 		$effectiveUserId = $this->delegationService->resolveAliasUserId($id, $this->userId);
 		$alias = $this->aliasService->updateSignature($effectiveUserId, $id, $signature);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated alias: $id 's signature on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedAliasSignatureUpdated, "%s updated alias: %s 's signature on behalf of %s", ['aliasId' => $id]);
 		return new JSONResponse($alias);
 	}
 }

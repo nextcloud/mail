@@ -12,6 +12,7 @@ namespace OCA\Mail\Controller;
 
 use Horde_Imap_Client;
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Exception\ClientException;
@@ -114,7 +115,7 @@ class MailboxesController extends Controller {
 				$mailbox,
 				$name
 			);
-			$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId changed mailbox: $id's name to $name on behalf of $effectiveUserId");
+			$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedMailboxRenamed, "%s changed mailbox: %s's name to %s on behalf of %s", ['mailboxId' => $id, 'name' => $name]);
 		}
 		if ($subscribed !== null) {
 			$mailbox = $this->mailManager->updateSubscription(
@@ -122,15 +123,25 @@ class MailboxesController extends Controller {
 				$mailbox,
 				$subscribed
 			);
-			$subscribedVerb = $subscribed ? 'subscribed' : 'unsubscribed';
-			$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId $subscribedVerb to mailbox: $id on behalf of $effectiveUserId");
+			$this->delegationService->logDelegatedAction(
+				$this->userId,
+				$effectiveUserId,
+				$subscribed ? Operation::DelegatedMailboxSubscribed : Operation::DelegatedMailboxUnsubscribed,
+				$subscribed ? '%s subscribed to mailbox: %s on behalf of %s' : '%s unsubscribed to mailbox: %s on behalf of %s',
+				['mailboxId' => $id],
+			);
 
 		}
 		if ($syncInBackground !== null) {
 			$mailbox->setSyncInBackground($syncInBackground);
 			$this->mailboxMapper->update($mailbox);
-			$syncVerb = $syncInBackground ? 'enabled' : 'disabled';
-			$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId $syncVerb background sync for mailbox: $id on behalf of $effectiveUserId");
+			$this->delegationService->logDelegatedAction(
+				$this->userId,
+				$effectiveUserId,
+				$syncInBackground ? Operation::DelegatedMailboxSyncEnabled : Operation::DelegatedMailboxSyncDisabled,
+				$syncInBackground ? '%s enabled background sync for mailbox: %s on behalf of %s' : '%s disabled background sync for mailbox: %s on behalf of %s',
+				['mailboxId' => $id],
+			);
 		}
 		return new JSONResponse($mailbox);
 	}
@@ -239,7 +250,7 @@ class MailboxesController extends Controller {
 
 		$this->mailManager->markFolderAsRead($account, $mailbox);
 
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId marked all messages as read in mailbox: $id on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedMailboxMarkedRead, '%s marked all messages as read in mailbox: %s on behalf of %s', ['mailboxId' => $id]);
 
 		return new JSONResponse([]);
 	}
@@ -306,7 +317,7 @@ class MailboxesController extends Controller {
 		$account = $this->accountService->find($effectiveUserId, $accountId);
 		$mailbox = $this->mailManager->createMailbox($account, $name);
 		$id = $mailbox->getId();
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId created mailbox: $id on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedMailboxCreated, '%s created mailbox: %s on behalf of %s', ['mailboxId' => $id]);
 
 		return new JSONResponse($mailbox);
 	}
@@ -334,7 +345,7 @@ class MailboxesController extends Controller {
 		$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 
 		$this->mailManager->deleteMailbox($account, $mailbox);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId deleted mailbox: $id on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::MailboxDeleted, '%s deleted mailbox: %s on behalf of %s', ['mailboxId' => $id]);
 
 		return new JSONResponse();
 	}
@@ -363,7 +374,7 @@ class MailboxesController extends Controller {
 		$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 
 		$this->mailManager->clearMailbox($account, $mailbox);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId cleared mailbox: $id on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::MailboxCleared, '%s cleared mailbox: %s on behalf of %s', ['mailboxId' => $id]);
 		return new JSONResponse();
 	}
 
@@ -387,7 +398,7 @@ class MailboxesController extends Controller {
 		$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 
 		$this->syncService->repairSync($account, $mailbox);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId repaired mailbox: $id on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedMailboxRepaired, '%s repaired mailbox: %s on behalf of %s', ['mailboxId' => $id]);
 
 		return new JsonResponse();
 	}

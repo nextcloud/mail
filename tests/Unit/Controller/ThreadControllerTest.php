@@ -11,6 +11,7 @@ namespace OCA\Mail\Tests\Unit\Controller;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Controller\ThreadController;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
@@ -23,6 +24,7 @@ use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\SnoozeService;
+use OCA\Mail\Tests\Unit\DelegatedActionLog;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\IRequest;
@@ -131,7 +133,8 @@ class ThreadControllerTest extends TestCase {
 			->method('moveThread');
 		$this->delegationService->expects(self::once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId moved thread <{$message->getId()}> to mailbox <{$dstMailbox->getId()}> on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::DelegatedThreadMoved)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId moved thread <{$message->getId()}> to mailbox <{$dstMailbox->getId()}> on behalf of $this->userId"));
 
 		$response = $this->controller->move($message->getId(), $dstMailbox->getId());
 
@@ -286,7 +289,8 @@ class ThreadControllerTest extends TestCase {
 			->method('deleteThread');
 		$this->delegationService->expects(self::once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId deleted thread <{$message->getId()}> on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::DelegatedThreadDeleted)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId deleted thread <{$message->getId()}> on behalf of $this->userId"));
 
 		$response = $this->controller->delete(300);
 

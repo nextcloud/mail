@@ -19,6 +19,8 @@ use Horde_Mime_Headers;
 use Horde_Mime_Headers_ContentParam_ContentType;
 use Horde_Mime_Part;
 use OCA\Mail\AddressList;
+use OCA\Mail\AuditLog\AuditEventFactory;
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Db\SmimeCertificateMapper;
 use OCA\Mail\Exception\ServiceException;
@@ -31,6 +33,7 @@ use OCA\Mail\Model\SmimeCertificateInfo;
 use OCA\Mail\Model\SmimeCertificatePurposes;
 use OCA\Mail\Model\SmimeDecryptionResult;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\ICertificateManager;
 use OCP\ITempManager;
 use OCP\Security\ICrypto;
@@ -45,6 +48,7 @@ class SmimeService {
 		ICertificateManager $certificateManager,
 		ICrypto $crypto,
 		private SmimeCertificateMapper $certificateMapper,
+		private IEventDispatcher $eventDispatcher,
 	) {
 		$this->tempManager = $tempManager;
 		$this->certificateManager = $certificateManager;
@@ -341,6 +345,14 @@ class SmimeService {
 	public function deleteCertificate(int $id, string $userId): void {
 		$certificate = $this->certificateMapper->find($id, $userId);
 		$this->certificateMapper->delete($certificate);
+		$this->eventDispatcher->dispatchTyped(AuditEventFactory::create(
+			Operation::SmimeCertificateDeleted,
+			'S/MIME certificate %s of "%s" was deleted',
+			[
+				'certificateId' => $id,
+				'owner' => $userId,
+			],
+		));
 	}
 
 	/**
@@ -368,7 +380,17 @@ class SmimeService {
 			}
 			$certificate->setPrivateKey($this->crypto->encrypt($privateKeyData));
 		}
-		return $this->certificateMapper->insert($certificate);
+		$certificate = $this->certificateMapper->insert($certificate);
+		$this->eventDispatcher->dispatchTyped(AuditEventFactory::create(
+			Operation::SmimeCertificateCreated,
+			'S/MIME certificate %s of "%s" was uploaded',
+			[
+				'certificateId' => $certificate->getId(),
+				'owner' => $userId,
+				'hasPrivateKey' => $privateKeyData !== null,
+			],
+		));
+		return $certificate;
 	}
 
 	/**

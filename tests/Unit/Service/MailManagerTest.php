@@ -31,8 +31,10 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\ImapFlag;
 use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\MailManager;
+use OCA\Mail\Tests\Unit\AuditLog\AuditEvents;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\Log\Audit\CriticalActionPerformedEvent;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
@@ -914,12 +916,16 @@ class MailManagerTest extends TestCase {
 			->method('findByUids');
 		$this->protocolFactory->expects(self::never())
 			->method('messageConnector');
+		$this->eventDispatcher->expects(self::never())
+			->method('dispatchTyped');
 
 		$this->manager->clearMailbox($account, $mailbox);
 	}
 
 	public function testClearMailboxMovesAllMessagesToTrash(): void {
 		$account = $this->createMock(Account::class);
+		$account->method('getId')->willReturn(5);
+		$account->method('getUserId')->willReturn('user');
 		$mailAccount = new MailAccount();
 		$mailAccount->setTrashMailboxId(123);
 		$account->method('getMailAccount')->willReturn($mailAccount);
@@ -956,8 +962,44 @@ class MailManagerTest extends TestCase {
 			->willReturn([$message1, $message2]);
 		$this->dbMessageMapper->expects(self::exactly(2))
 			->method('update');
+		$auditEvents = [];
+		$this->eventDispatcher->method('dispatchTyped')
+			->willReturnCallback(function (object $event) use (&$auditEvents): void {
+				if ($event instanceof CriticalActionPerformedEvent) {
+					$auditEvents[] = $event;
+				}
+			});
 
 		$this->manager->clearMailbox($account, $inbox);
+
+		self::assertCount(1, $auditEvents);
+		self::assertTrue(AuditEvents::hasOperation($auditEvents[0], 'mail.mailbox.cleared'));
+		self::assertSame('Mailbox %s of mail account %s of "%s" was cleared', $auditEvents[0]->getLogMessage());
+		self::assertSame(['mailboxId' => 1, 'accountId' => 5, 'owner' => 'user'], $auditEvents[0]->getParameters());
+	}
+
+	public function testDeleteMailboxLogsCriticalAction(): void {
+		$account = $this->createMock(Account::class);
+		$account->method('getId')->willReturn(5);
+		$account->method('getUserId')->willReturn('user');
+		$mailbox = new Mailbox();
+		$mailbox->setId(7);
+		$mailbox->setName('Private folder');
+		$mailboxConnector = $this->createMock(IMailboxConnector::class);
+		$this->protocolFactory->expects(self::once())
+			->method('mailboxConnector')
+			->with($account)
+			->willReturn($mailboxConnector);
+		$mailboxConnector->expects(self::once())
+			->method('delete')
+			->with($account, $mailbox);
+		$this->eventDispatcher->expects(self::once())
+			->method('dispatchTyped')
+			->with(self::callback(fn (CriticalActionPerformedEvent $event): bool => AuditEvents::hasOperation($event, 'mail.mailbox.deleted')
+				&& $event->getLogMessage() === 'Mailbox %s of mail account %s of "%s" was deleted'
+				&& $event->getParameters() === ['mailboxId' => 7, 'accountId' => 5, 'owner' => 'user']));
+
+		$this->manager->deleteMailbox($account, $mailbox);
 	}
 
 	public function testDeleteTagUntagsMessagesGroupedByMailbox(): void {

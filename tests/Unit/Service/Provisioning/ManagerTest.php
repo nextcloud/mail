@@ -12,9 +12,11 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Provisioning;
 use OCA\Mail\Service\Provisioning\Manager;
+use OCA\Mail\Tests\Unit\AuditLog\AuditEvents;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IUser;
 use OCP\LDAP\ILDAPProvider;
+use OCP\Log\Audit\CriticalActionPerformedEvent;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class ManagerTest extends TestCase {
@@ -32,6 +34,15 @@ class ManagerTest extends TestCase {
 		$this->manager = $this->mock->getService();
 	}
 
+	private function expectAuditEvent(string $operation, string $message, array $parameters): void {
+		$this->mock->getParameter('eventDispatcher')
+			->expects($this->once())
+			->method('dispatchTyped')
+			->with($this->callback(fn (CriticalActionPerformedEvent $event): bool => AuditEvents::hasOperation($event, $operation)
+				&& $event->getLogMessage() === $message
+				&& $event->getParameters() === $parameters));
+	}
+
 	public function testProvision(): void {
 		$config = new Provisioning();
 		$config->setId(1);
@@ -46,6 +57,11 @@ class ManagerTest extends TestCase {
 		$this->mock->getParameter('userManager')
 			->expects($this->once())
 			->method('callForAllUsers');
+		$this->expectAuditEvent(
+			'mail.provisioning.applied',
+			'%s mail accounts were created or updated from the provisioning configurations',
+			['accountCount' => 0],
+		);
 
 		$count = $this->manager->provision();
 
@@ -56,6 +72,9 @@ class ManagerTest extends TestCase {
 		$this->mock->getParameter('userManager')
 			->expects($this->never())
 			->method('callForAllUsers');
+		$this->mock->getParameter('eventDispatcher')
+			->expects($this->never())
+			->method('dispatchTyped');
 
 		$count = $this->manager->provision();
 
@@ -255,6 +274,11 @@ class ManagerTest extends TestCase {
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('deleteProvisionedAccounts');
+		$this->expectAuditEvent(
+			'mail.provisioning_config.deleted',
+			'Mail provisioning configuration %s for domain "%s" was deleted with its provisioned accounts',
+			['provisioningId' => 1, 'provisioningDomain' => '*'],
+		);
 
 		$this->manager->deprovision($config);
 	}
@@ -345,6 +369,13 @@ class ManagerTest extends TestCase {
 
 	public function testNewProvisioning(): void {
 		$config = new Provisioning();
+		$config->setId(3);
+		$config->setProvisioningDomain('domain.com');
+		$this->expectAuditEvent(
+			'mail.provisioning_config.created',
+			'Mail provisioning configuration %s for domain "%s" was created',
+			['provisioningId' => 3, 'provisioningDomain' => 'domain.com'],
+		);
 		$this->mock->getParameter('provisioningMapper')
 			->expects($this->once())
 			->method('validate')
@@ -373,6 +404,28 @@ class ManagerTest extends TestCase {
 		]);
 
 		self::assertInstanceOf(Provisioning::class, $result);
+	}
+
+	public function testUpdateProvisioning(): void {
+		$config = new Provisioning();
+		$config->setId(3);
+		$config->setProvisioningDomain('domain.com');
+		$this->mock->getParameter('provisioningMapper')
+			->expects($this->once())
+			->method('validate')
+			->with(['id' => 3])
+			->willReturn($config);
+		$this->mock->getParameter('provisioningMapper')
+			->expects($this->once())
+			->method('update')
+			->with($config);
+		$this->expectAuditEvent(
+			'mail.provisioning_config.updated',
+			'Mail provisioning configuration %s for domain "%s" was updated',
+			['provisioningId' => 3, 'provisioningDomain' => 'domain.com'],
+		);
+
+		$this->manager->updateProvisioning(['id' => 3]);
 	}
 
 	private function ldapPlaceholderConfig(): Provisioning {

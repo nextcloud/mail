@@ -11,6 +11,9 @@ namespace OCA\Mail\Controller;
 
 use Horde\ManageSieve\Exception as ManagesieveException;
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\AuditLog\AuditEventFactory;
+use OCA\Mail\AuditLog\Operation;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\CouldNotConnectException;
@@ -25,6 +28,7 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IRequest;
 use OCP\Security\ICrypto;
 use OCP\Security\IRemoteHostValidator;
@@ -45,6 +49,7 @@ class SieveController extends Controller {
 		private LoggerInterface $logger,
 		private SieveService $sieveService,
 		private DelegationService $delegationService,
+		private IEventDispatcher $eventDispatcher,
 	) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->crypto = $crypto;
@@ -90,7 +95,7 @@ class SieveController extends Controller {
 			$this->logger->error('Installing sieve script failed: ' . $e->getMessage(), ['app' => 'mail', 'exception' => $e]);
 			return new JSONResponse(data: ['message' => $e->getMessage()], statusCode: Http::STATUS_UNPROCESSABLE_ENTITY);
 		}
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated the active sieve script for account <$id> on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::SieveScriptUpdated, '%s updated the active sieve script for account <%s> on behalf of %s', ['accountId' => $id]);
 
 		return new JSONResponse();
 	}
@@ -143,7 +148,8 @@ class SieveController extends Controller {
 			$mailAccount->setSievePassword(null);
 
 			$this->mailAccountMapper->save($mailAccount);
-			$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated sieve settings for account <$id> on behalf of $effectiveUserId");
+			$this->logSieveAccountUpdated($mailAccount);
+			$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::SieveAccountUpdated, '%s updated sieve settings for account <%s> on behalf of %s', ['accountId' => $id]);
 			return new JSONResponse(['sieveEnabled' => $mailAccount->isSieveEnabled()]);
 		}
 
@@ -175,7 +181,21 @@ class SieveController extends Controller {
 		}
 
 		$this->mailAccountMapper->save($mailAccount);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated sieve settings for account <$id> on behalf of $effectiveUserId");
+		$this->logSieveAccountUpdated($mailAccount);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::SieveAccountUpdated, '%s updated sieve settings for account <%s> on behalf of %s', ['accountId' => $id]);
 		return new JSONResponse(['sieveEnabled' => $mailAccount->isSieveEnabled()]);
+	}
+
+	private function logSieveAccountUpdated(MailAccount $mailAccount): void {
+		$this->eventDispatcher->dispatchTyped(AuditEventFactory::create(
+			Operation::SieveAccountUpdated,
+			'Sieve settings of mail account %s of "%s" were updated',
+			[
+				'accountId' => $mailAccount->getId(),
+				'owner' => $mailAccount->getUserId(),
+				'sieveEnabled' => $mailAccount->isSieveEnabled(),
+				'sieveHost' => $mailAccount->getSieveHost(),
+			],
+		));
 	}
 }
