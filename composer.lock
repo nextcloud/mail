@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "22bb34debd941d4310e188ca6f51c9c8",
+    "content-hash": "e55b463b6974003b8d9140953cd142a8",
     "packages": [
         {
             "name": "amphp/amp",
@@ -3550,31 +3550,38 @@
         },
         {
             "name": "youthweb/urllinker",
-            "version": "2.1.0",
+            "version": "2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Art4/urllinker.git",
-                "reference": "d72c28bd68698ebb912783bc0e5caf6a8f0904b5"
+                "reference": "1e9345cb2f85fecb87514c2ce4578660b81c44fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Art4/urllinker/zipball/d72c28bd68698ebb912783bc0e5caf6a8f0904b5",
-                "reference": "d72c28bd68698ebb912783bc0e5caf6a8f0904b5",
+                "url": "https://api.github.com/repos/Art4/urllinker/zipball/1e9345cb2f85fecb87514c2ce4578660b81c44fb",
+                "reference": "1e9345cb2f85fecb87514c2ce4578660b81c44fb",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.1"
+                "php": "^8.2"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.84",
+                "friendsofphp/php-cs-fixer": "^3.95",
+                "phpstan/extension-installer": "^1.4",
                 "phpstan/phpstan": "^2.0",
-                "phpunit/phpunit": "^9.6 || ^11.0 || ^12.0",
+                "phpstan/phpstan-deprecation-rules": "^2.0",
+                "phpstan/phpstan-phpunit": "^2.0",
+                "phpstan/phpstan-strict-rules": "^2.0",
+                "phpunit/phpunit": "^11.0 || ^12.0",
                 "rector/rector": "^2.1"
             },
             "type": "library",
             "autoload": {
+                "files": [
+                    "src/compat.php"
+                ],
                 "psr-4": {
-                    "Youthweb\\UrlLinker\\": "src"
+                    "Art4\\UrlLinker\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3596,9 +3603,9 @@
             "homepage": "https://github.com/Art4/urllinker",
             "support": {
                 "issues": "https://github.com/Art4/urllinker/issues",
-                "source": "https://github.com/Art4/urllinker/tree/2.1.0"
+                "source": "https://github.com/Art4/urllinker/tree/2.2.1"
             },
-            "time": "2025-07-22T10:44:28+00:00"
+            "time": "2026-08-19T19:39:51+00:00"
         }
     ],
     "packages-dev": [
