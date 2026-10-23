@@ -70,8 +70,6 @@ jobs:
           - php-versions: '8.4'
             nextcloud-versions: 'master'
             coverage: true
-          - php-versions: '8.1'
-            nextcloud-versions: 'stable32'
           - php-versions: '8.2'
             nextcloud-versions: 'stable33'
           - php-versions: '8.3'
@@ -129,13 +127,9 @@ jobs:
                   db: 'mysql'
                   cache: 'nocache'
                   coverage: true
-                - php-versions: 8.1
-                  nextcloud-versions: 'stable32'
-                  db: 'sqlite'
-                  cache: 'redis'
                 - php-versions: 8.2
-                  nextcloud-versions: 'stable32'
-                  db: 'pgsql'
+                  nextcloud-versions: 'stable33'
+                  db: 'sqlite'
                   cache: 'redis'
                 - php-versions: 8.4
                   nextcloud-versions: 'stable33'

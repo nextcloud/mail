@@ -109,7 +109,7 @@
 								:style="{ 'background-color': tag.color }" />
 							<span
 								class="tag-group__label"
-								:style="{ color: tag.color }">
+								:style="{ color: tagTextColor(tag.color, isDarkTheme) }">
 								{{ translateTagDisplayName(tag) }}
 							</span>
 						</div>
@@ -394,6 +394,7 @@ import { showError, showSuccess } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
 import moment from '@nextcloud/moment'
 import { generateUrl } from '@nextcloud/router'
+import { useIsDarkTheme } from '@nextcloud/vue/composables/useIsDarkTheme'
 import { mapStores } from 'pinia'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
@@ -441,7 +442,7 @@ import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
 import useOutboxStore from '../store/outboxStore.js'
 import { mailboxHasRights } from '../util/acl.js'
-import { translateTagDisplayName } from '../util/tag.js'
+import { tagTextColor, translateTagDisplayName } from '../util/tag.js'
 import { Text, toPlain } from '../util/text.js'
 import { hiddenTags } from './tags.js'
 
@@ -540,6 +541,7 @@ export default {
 
 	data() {
 		return {
+			isDarkTheme: useIsDarkTheme(),
 			loading: Loading.Done,
 			showRecipients: false,
 			showListUnsubscribeConfirmation: false,
@@ -839,6 +841,7 @@ export default {
 	},
 
 	methods: {
+		tagTextColor,
 		translateTagDisplayName,
 		redrawMenuBar() {
 			this.$nextTick(() => {

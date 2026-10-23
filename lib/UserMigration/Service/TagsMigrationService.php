@@ -43,7 +43,7 @@ class TagsMigrationService {
 	public function exportTags(IUser $user, IExportDestination $exportDestination, OutputInterface $output): void {
 		$output->writeln(
 			$this->l10n->t(
-				'Exporting tags for user %s',
+				'Exporting tags for %s',
 				[$user->getUID()]
 			), OutputInterface::VERBOSITY_VERBOSE
 		);
@@ -68,7 +68,7 @@ class TagsMigrationService {
 	public function importTags(IUser $user, IImportSource $importSource, OutputInterface $output): array {
 		$output->writeln(
 			$this->l10n->t(
-				'Importing tags for user %s',
+				'Importing tags for %s',
 				[$user->getUID()]
 			), OutputInterface::VERBOSITY_VERBOSE
 		);
@@ -78,7 +78,7 @@ class TagsMigrationService {
 		} catch (UserMigrationException) {
 			$output->writeln(
 				$this->l10n->t(
-					'Tags for user %s not found. Continue …',
+					'Tags for %s not found. Continue …',
 					[$user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);
@@ -92,7 +92,7 @@ class TagsMigrationService {
 		} catch (JsonException|UserMigrationException) {
 			$output->writeln(
 				$this->l10n->t(
-					'Tag configuration for user %s is invalid and will be skipped. Continue …',
+					'Tag configuration for %s is invalid and will be skipped. Continue …',
 					[$user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);
@@ -108,7 +108,7 @@ class TagsMigrationService {
 			if ($existingTagId !== null) {
 				$output->writeln(
 					$this->l10n->t(
-						'Tag %s already exists for user %s and will be reused. Continue …',
+						'Tag %1$s already exists for %2$s and will be reused. Continue …',
 						[$tag['imapLabel'], $user->getUID()]
 					), OutputInterface::VERBOSITY_VERBOSE
 				);

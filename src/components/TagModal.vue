@@ -20,7 +20,7 @@
 		<div class="modal-content">
 			<div class="tag-list">
 				<h2 id="tag-modal-heading" class="tag-title">
-					{{ t('mail', 'Add default tags') }}
+					{{ heading }}
 				</h2>
 				<TagItem
 					v-for="tag in tags"
@@ -30,32 +30,26 @@
 					@deleteTag="deleteTag" />
 			</div>
 
-			<div class="create-tag-section">
-				<h2 class="tag-title">
-					{{ t('mail', 'Add tag') }}
-				</h2>
-				<div class="create-tag">
-					<NcButton
-						v-if="!editing"
-						class="tagButton"
-						@click="addTagInput">
+			<div class="create-tag">
+				<NcColorPicker v-model="color">
+					<NcButton variant="tertiary" :aria-label="t('mail', 'Change tag color')">
 						<template #icon>
-							<IconAdd :size="20" />
+							<div class="create-tag__color" :style="{ backgroundColor: color }" />
 						</template>
-						{{ t('mail', 'Add tag') }}
 					</NcButton>
-					<NcActionInput v-if="editing" :disabled="showSaving" @submit="createTag">
-						<template #icon>
-							<IconTag :size="20" />
-						</template>
-					</NcActionInput>
-					<NcActionText v-if="showSaving">
-						<template #icon>
-							<NcLoadingIcon :size="20" />
-						</template>
-						{{ t('mail', 'Saving tag …') }}
-					</NcActionText>
-				</div>
+				</NcColorPicker>
+				<NcTextField
+					v-model="newTagName"
+					class="create-tag__name"
+					:label="t('mail', 'Add tag')"
+					:disabled="saving"
+					:error="errorMessage !== ''"
+					:helperText="errorMessage"
+					showTrailingButton
+					trailingButtonIcon="arrowEnd"
+					:trailingButtonLabel="t('mail', 'Add tag')"
+					@keyup.enter="createTag"
+					@trailingButtonClick="createTag" />
 			</div>
 		</div>
 	</NcModal>
@@ -64,13 +58,10 @@
 <script>
 import { showError } from '@nextcloud/dialogs'
 import { mapStores } from 'pinia'
-import NcActionInput from '@nextcloud/vue/components/NcActionInput'
-import NcActionText from '@nextcloud/vue/components/NcActionText'
 import NcButton from '@nextcloud/vue/components/NcButton'
-import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
+import NcColorPicker from '@nextcloud/vue/components/NcColorPicker'
 import NcModal from '@nextcloud/vue/components/NcModal'
-import IconAdd from 'vue-material-design-icons/Plus.vue'
-import IconTag from 'vue-material-design-icons/TagOutline.vue'
+import NcTextField from '@nextcloud/vue/components/NcTextField'
 import DeleteTagModal from './DeleteTagModal.vue'
 import TagItem from './TagItem.vue'
 import logger from '../logger.js'
@@ -89,14 +80,11 @@ export default {
 	name: 'TagModal',
 	components: {
 		NcModal,
-		NcActionText,
-		NcActionInput,
+		NcColorPicker,
+		NcTextField,
 		DeleteTagModal,
-		IconTag,
-		NcLoadingIcon,
 		TagItem,
 		NcButton,
-		IconAdd,
 	},
 
 	props: {
@@ -111,20 +99,26 @@ export default {
 
 	data() {
 		return {
-			isAdded: false,
-			editing: false,
-			tagLabel: true,
-			tagInput: false,
-			showSaving: false,
 			deleteTagModal: false,
 			tagToDelete: null,
 			color: randomColor(),
-			editColor: '',
+			newTagName: '',
+			saving: false,
+			errorMessage: '',
 		}
 	},
 
 	computed: {
 		...mapStores(useMainStore),
+		heading() {
+			if (this.envelopes.length === 1) {
+				const subject = this.envelopes[0].subject || this.t('mail', 'No subject')
+				// TRANSLATORS: {subject} is the subject of the selected email
+				return this.t('mail', 'Assign tags to "{subject}"', { subject }, undefined, { escape: false })
+			}
+			return this.n('mail', 'Assign tags to %n message', 'Assign tags to %n messages', this.envelopes.length)
+		},
+
 		tags() {
 			return this.mainStore.getTags.filter((tag) => tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags)).sort((a, b) => {
 				if (a.isDefaultTag && !b.isDefaultTag) {
@@ -139,14 +133,14 @@ export default {
 					}
 					return -1
 				}
-				if (this.isSet(a.imapLabel) && !this.isSet(b.imapLabel)) {
-					return -1
-				}
-				if (!this.isSet(a.imapLabel) && this.isSet(b.imapLabel)) {
-					return 1
-				}
 				return a.displayName.localeCompare(b.displayName)
 			})
+		},
+	},
+
+	watch: {
+		newTagName() {
+			this.errorMessage = ''
 		},
 	},
 
@@ -159,42 +153,31 @@ export default {
 			this.deleteTagModal = false
 		},
 
-		isSet(imapLabel) {
-			return this.envelopes.some((envelope) => (
-				this.mainStore.getEnvelopeTags(envelope.databaseId).some((tag) => tag.imapLabel === imapLabel)
-			))
-		},
-
-		addTagInput() {
-			this.editing = true
-			this.showSaving = false
-		},
-
-		async createTag(event) {
-			this.editing = true
-			if (this.showSaving) {
+		async createTag() {
+			if (this.saving) {
 				return
 			}
 
-			const displayName = event.target.querySelector('input[type=text]').value.trim()
-			const otherTags = this.mainStore.getTags
-			const valid = validateTag(null, displayName, otherTags)
+			const displayName = this.newTagName.trim()
+			const valid = validateTag(null, displayName, this.mainStore.getTags)
 			if (valid !== true) {
-				showError(valid)
+				this.errorMessage = valid
 				return
 			}
 
+			this.saving = true
 			try {
 				await this.mainStore.createTag({
 					displayName,
-					color: randomColor(displayName),
+					color: this.color,
 				})
+				this.newTagName = ''
+				this.color = randomColor()
 			} catch (error) {
 				logger.error('could not create tag', { error })
 				showError(this.t('mail', 'An error occurred, unable to create the tag.'))
 			} finally {
-				this.showSaving = false
-				this.tagLabel = true
+				this.saving = false
 			}
 		},
 
@@ -229,25 +212,32 @@ export default {
 	padding-bottom: calc(var(--default-grid-baseline) * 3);
 }
 
-.create-tag-section {
+.create-tag {
+	display: flex;
+	align-items: center;
+	gap: var(--default-grid-baseline);
 	flex-shrink: 0;
 	border-top: 1px solid var(--color-border);
 	padding: calc(var(--default-grid-baseline) * 3) calc(var(--default-grid-baseline) * 5);
 }
 
+.create-tag__color {
+	width: calc(var(--default-grid-baseline) * 5);
+	height: calc(var(--default-grid-baseline) * 5);
+	border-radius: 50%;
+}
+
+.create-tag__name {
+	flex: 1;
+}
+
 .tag-title {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 	margin-top: 0;
 	margin-bottom: calc(var(--default-grid-baseline) * 2);
 	margin-inline-start: var(--default-grid-baseline);
-}
-
-.tagButton {
-	display: inline-block;
-	margin-inline-start: var(--default-grid-baseline);
-}
-
-.create-tag {
-	list-style: none;
 }
 
 @media only screen and (max-width: 512px) {

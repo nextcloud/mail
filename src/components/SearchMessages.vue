@@ -473,8 +473,9 @@ export default {
 	},
 
 	watch: {
-		query() {
-			if (this.query.length === 0) {
+		query(newQuery, oldQuery) {
+			if (newQuery.length === 0) {
+				this.clearQueryFilters(oldQuery)
 				return
 			}
 
@@ -567,6 +568,34 @@ export default {
 
 		sendQueryEvent() {
 			this.$emit('searchChanged', this.searchQuery)
+		},
+
+		clearQueryFilters(oldQuery) {
+			const isQueryAddress = (addresses) => addresses.length === 1 && addresses[0].email === oldQuery
+			let cleared = false
+
+			if (this.searchInSubject === oldQuery) {
+				this.searchInSubject = null
+				cleared = true
+			}
+			if (this.searchInMessageBody === oldQuery) {
+				this.searchInMessageBody = null
+				cleared = true
+			}
+			if (isQueryAddress(this.searchInFrom)) {
+				this.searchInFrom = []
+				cleared = true
+			}
+			if (isQueryAddress(this.searchInTo)) {
+				this.searchInTo = []
+				cleared = true
+			}
+			if (!cleared) {
+				return
+			}
+
+			this.match = 'allof'
+			this.debouncedSearchQuery()
 		},
 
 		searchRecipients(term) {

@@ -30,6 +30,7 @@
 				:fullHeight="thread.length === 1"
 				:threadIndex="index"
 				@delete="$emit('delete', env.databaseId)"
+				@archive="$emit('archive', env.databaseId)"
 				@move="onMove(env.databaseId)"
 				@printShortcut="printThread"
 				@toggleExpand="toggleExpand(env.databaseId)"
@@ -89,7 +90,7 @@ export default {
 		ThreadEnvelope,
 	},
 
-	emits: ['delete'],
+	emits: ['delete', 'archive'],
 
 	data() {
 		return {
@@ -583,7 +584,8 @@ export default {
 @media only screen and (max-width: #{variables.$breakpoint-mobile}) {
     #mail-thread-header {
         position: sticky !important;
-        top: 29px !important;
+        // NcAppContent's back button takes this much space above the details
+        top: var(--default-clickable-area) !important;
     }
 }
 
@@ -613,7 +615,7 @@ export default {
 
 @media only screen and (max-width: #{variables.$breakpoint-mobile}) {
 	#mail-thread-header-fields {
-		margin-top: -32px;
+		margin-top: calc(-1 * var(--default-clickable-area));
 	}
 }
 

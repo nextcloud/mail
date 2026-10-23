@@ -56,7 +56,7 @@ class TextBlocksMigrationService {
 	public function exportTextBlocks(IUser $user, IExportDestination $exportDestination, OutputInterface $output): void {
 		$output->writeln(
 			$this->l10n->t(
-				'Exporting text blocks for user %s',
+				'Exporting text blocks for %s',
 				[$user->getUID()]
 			), OutputInterface::VERBOSITY_VERBOSE
 		);
@@ -80,7 +80,7 @@ class TextBlocksMigrationService {
 	public function importTextBlocks(IUser $user, IImportSource $importSource, OutputInterface $output): void {
 		$output->writeln(
 			$this->l10n->t(
-				'Importing text blocks for user %s',
+				'Importing text blocks for %s',
 				[$user->getUID()]
 			), OutputInterface::VERBOSITY_VERBOSE
 		);
@@ -90,7 +90,7 @@ class TextBlocksMigrationService {
 		} catch (UserMigrationException) {
 			$output->writeln(
 				$this->l10n->t(
-					'Text blocks for user %s not found. Continue …',
+					'Text blocks for %s not found. Continue …',
 					[$user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);
@@ -104,7 +104,7 @@ class TextBlocksMigrationService {
 		} catch (JsonException|UserMigrationException) {
 			$output->writeln(
 				$this->l10n->t(
-					'Text blocks configuration for user %s is invalid and will be skipped. Continue …',
+					'Text blocks configuration for %s is invalid and will be skipped. Continue …',
 					[$user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);
@@ -115,7 +115,7 @@ class TextBlocksMigrationService {
 		foreach ($textBlocks as $textBlock) {
 			$output->writeln(
 				$this->l10n->t(
-					'Importing text block %s for user %s',
+					'Importing text block %1$s for %2$s',
 					[$textBlock['title'], $user->getUID()]
 				), OutputInterface::VERBOSITY_VERBOSE
 			);

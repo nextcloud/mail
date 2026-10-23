@@ -48,7 +48,7 @@ class ImapMailboxConnector implements IMailboxConnector {
 	public function create(Account $account, string $name, array $specialUse = []): Mailbox {
 		$client = $this->protocolFactory->imapClient($account);
 		try {
-			$folder = $this->folderMapper->createFolder($client, $name, $specialUse);
+			$folder = $this->folderMapper->createFolder($client, $name, $this->toImapSpecialUse($specialUse));
 			$this->folderMapper->fetchFolderAcls([$folder], $client);
 			$this->folderMapper->detectFolderSpecialUse([$folder]);
 			$this->mailboxSync->sync($account, $this->logger, true, $client);
@@ -117,5 +117,17 @@ class ImapMailboxConnector implements IMailboxConnector {
 		}
 
 		return $this->mailboxMapper->find($account, $mailbox->getName());
+	}
+
+	/**
+	 * @param string[] $specialUse special-use names such as Mailbox::SPECIAL_USE_DRAFTS
+	 * @return string[] RFC 6154 mailbox attributes
+	 */
+	private function toImapSpecialUse(array $specialUse): array {
+		$attributes = [];
+		foreach ($specialUse as $use) {
+			$attributes[] = '\\' . ucfirst(strtolower(ltrim($use, '\\')));
+		}
+		return $attributes;
 	}
 }

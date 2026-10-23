@@ -80,12 +80,43 @@ class ItineraryServiceTest extends TestCase {
 			->with($account, $mailbox, $message)
 			->willReturn([]);
 		$this->itineraryExtractor->expects($this->once())
+			->method('hasAdapter')
+			->willReturn(true);
+		$this->itineraryExtractor->expects($this->once())
 			->method('extract')
 			->willReturn(new Itinerary());
 
 		$itinerary = $this->service->extract($account, $mailbox, $message);
 
 		$this->assertEquals([], $itinerary->jsonSerialize());
+	}
+
+	public function testExtractWithoutAdapterSkipsImapFetch(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(100);
+		$mailAccount->setUserId('1');
+		$account = new Account($mailAccount);
+
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
+
+		$message = new Message();
+		$message->setId(13);
+
+		$this->itineraryExtractor->expects($this->once())
+			->method('hasAdapter')
+			->willReturn(false);
+		$this->itineraryExtractor->expects($this->never())
+			->method('extract');
+		$this->mailManager->expects($this->never())
+			->method('getImapMessage');
+		$this->mailManager->expects($this->never())
+			->method('getMailAttachments');
+
+		$itinerary = $this->service->extract($account, $mailbox, $message);
+
+		$this->assertEquals([], $itinerary->jsonSerialize());
+		$this->assertNotNull($this->service->getCached($account, $mailbox, 13));
 	}
 
 	public function testExtractFromBody() {
@@ -111,6 +142,9 @@ class ItineraryServiceTest extends TestCase {
 			->method('getMailAttachments')
 			->with($account, $mailbox, $message)
 			->willReturn([]);
+		$this->itineraryExtractor->expects($this->once())
+			->method('hasAdapter')
+			->willReturn(true);
 		$this->itineraryExtractor->expects($this->exactly(2))
 			->method('extract')
 			->withConsecutive([$body], ['["datafrombody"]'])
@@ -147,6 +181,9 @@ class ItineraryServiceTest extends TestCase {
 			->method('getMailAttachments')
 			->with($account, $mailbox, $message)
 			->willReturn([$attachment]);
+		$this->itineraryExtractor->expects($this->once())
+			->method('hasAdapter')
+			->willReturn(true);
 		$this->itineraryExtractor->expects($this->exactly(2))
 			->method('extract')
 			->withConsecutive([$pdf], ['["datafrompdf"]'])
@@ -155,6 +192,42 @@ class ItineraryServiceTest extends TestCase {
 		$itinerary = $this->service->extract($account, $mailbox, $message);
 
 		$this->assertEquals(['datafrompdf'], $itinerary->jsonSerialize());
+	}
+
+	public function testExtractSecondCallIsServedFromCacheWithoutImapIo(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(100);
+		$mailAccount->setUserId('1');
+		$account = new Account($mailAccount);
+
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
+
+		$message = new Message();
+		$message->setId(13);
+
+		$imapMessage = $this->createMock(IMAPMessage::class);
+		$imapMessage->htmlMessage = '<html><body>hello</body></html>';
+		$this->mailManager->expects($this->once())
+			->method('getImapMessage')
+			->with($account, $mailbox, $message, true)
+			->willReturn($imapMessage);
+		$this->mailManager->expects($this->once())
+			->method('getMailAttachments')
+			->with($account, $mailbox, $message)
+			->willReturn([]);
+		$this->itineraryExtractor->expects($this->once())
+			->method('hasAdapter')
+			->willReturn(true);
+		$this->itineraryExtractor->expects($this->exactly(2))
+			->method('extract')
+			->willReturn(new Itinerary(['datafrombody']));
+
+		$first = $this->service->extract($account, $mailbox, $message);
+		$second = $this->service->extract($account, $mailbox, $message);
+
+		$this->assertEquals($first->jsonSerialize(), $second->jsonSerialize());
+		$this->assertEquals(['datafrombody'], $second->jsonSerialize());
 	}
 
 	public function testGetCachedMiss(): void {

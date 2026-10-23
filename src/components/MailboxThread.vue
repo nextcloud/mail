@@ -194,7 +194,7 @@
 			</div>
 		</template>
 
-		<Thread v-if="showThread" @delete="deleteMessage" />
+		<Thread v-if="showThread" @delete="deleteMessage" @archive="archiveMessage" />
 		<NoMessageSelected v-else-if="hasEnvelopes" />
 	</NcAppContent>
 </template>
@@ -283,7 +283,6 @@ export default {
 				flag: ['s'],
 				next: ['arrowright'],
 				prev: ['arrowleft'],
-				refresh: ['r'],
 				unseen: ['u'],
 			},
 
@@ -464,7 +463,6 @@ export default {
 		mailbox() {
 			clearTimeout(this.startMailboxTimer)
 			setTimeout(this.saveStartMailbox, START_MAILBOX_DEBOUNCE)
-			this.fetchEnvelopes()
 		},
 	},
 
@@ -509,6 +507,10 @@ export default {
 
 		deleteMessage(id) {
 			this.bus.emit('delete', id)
+		},
+
+		archiveMessage(id) {
+			this.bus.emit('archive', id)
 		},
 
 		onScroll(event) {

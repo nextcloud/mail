@@ -378,7 +378,7 @@ export default {
 			const idx = envelopes.indexOf(env)
 			let next
 
-			if (e.srcKey !== 'refresh' && !env) {
+			if (!env) {
 				logger.debug('envelope is not in the list, ignoring shortcut', {
 					srcKey: e.srcKey,
 				})
@@ -487,11 +487,6 @@ export default {
 						error,
 					}))
 					break
-				case 'refresh':
-					logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.searchQuery}) per shortcut`)
-					this.sync(false)
-
-					break
 				case 'unseen':
 					logger.debug('marking as seen/unseen via shortcut')
 
@@ -588,6 +583,10 @@ export default {
 					threadId: next.databaseId,
 				},
 			})
+		},
+
+		onArchive(id) {
+			this.onDelete(id)
 		},
 
 		onScroll() {

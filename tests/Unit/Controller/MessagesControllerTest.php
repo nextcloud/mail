@@ -19,7 +19,6 @@ use OCA\Mail\Account;
 use OCA\Mail\Attachment;
 use OCA\Mail\Contracts\IDkimService;
 use OCA\Mail\Contracts\IMailSearch;
-use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Contracts\ITrustedSenderService;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Controller\MessagesController;
@@ -34,6 +33,7 @@ use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Model\Message;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\DelegationService;
@@ -113,8 +113,8 @@ class MessagesControllerTest extends TestCase {
 	/** @var MockObject|ITrustedSenderService */
 	private $trustedSenderService;
 
-	/** @var MockObject|IMailTransmission */
-	private $mailTransmission;
+	/** @var MockObject|ProtocolFactory */
+	private $protocolFactory;
 
 	/** @var MockObject|SmimeService */
 	private $smimeService;
@@ -150,7 +150,7 @@ class MessagesControllerTest extends TestCase {
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
 		$this->nonceManager = $this->createMock(ContentSecurityPolicyNonceManager::class);
 		$this->trustedSenderService = $this->createMock(ITrustedSenderService::class);
-		$this->mailTransmission = $this->createMock(IMailTransmission::class);
+		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
 		$this->smimeService = $this->createMock(SmimeService::class);
 		$this->dkimService = $this->createMock(IDkimService::class);
 		$this->userPreferences = $this->createMock(IUserPreferences::class);
@@ -185,7 +185,7 @@ class MessagesControllerTest extends TestCase {
 			$this->urlGenerator,
 			$this->nonceManager,
 			$this->trustedSenderService,
-			$this->mailTransmission,
+			$this->protocolFactory,
 			$this->smimeService,
 			$this->dkimService,
 			$this->userPreferences,
@@ -285,21 +285,13 @@ class MessagesControllerTest extends TestCase {
 		$this->assertCachedFor($actualRichResponse, 60 * 60);
 	}
 
-	public function testDownloadAttachment() {
+	private function mockAttachmentDownload(int $id, string $attachmentId, string $contents, ?string $name, string $type): void {
 		$accountId = 17;
 		$mailboxId = 987;
-		$id = 123;
-		$uid = 321;
-		$attachmentId = '3';
-
-		// Attachment data
-		$contents = 'abcdef';
-		$name = 'cat.jpg';
-		$type = 'image/jpg';
-		$message = new \OCA\Mail\Db\Message();
+		$message = new DbMessage();
 		$message->setMailboxId($mailboxId);
-		$message->setUid($uid);
-		$mailbox = new \OCA\Mail\Db\Mailbox();
+		$message->setUid(321);
+		$mailbox = new Mailbox();
 		$mailbox->setName('INBOX');
 		$mailbox->setAccountId($accountId);
 		$this->mailManager->expects($this->once())
@@ -313,28 +305,48 @@ class MessagesControllerTest extends TestCase {
 		$this->mailManager->expects($this->once())
 			->method('getMailAttachment')
 			->with($this->account, $mailbox, $message, $attachmentId)
-			->will($this->returnValue($this->attachment));
+			->willReturn($this->attachment);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 		$this->attachment->expects($this->once())
 			->method('getContent')
-			->will($this->returnValue($contents));
-		$this->attachment->expects($this->any())
-			->method('getName')
-			->will($this->returnValue($name));
+			->willReturn($contents);
+		$this->attachment->method('getName')
+			->willReturn($name);
 		$this->attachment->expects($this->once())
 			->method('getType')
-			->will($this->returnValue($type));
+			->willReturn($type);
+	}
 
-		$expected = new AttachmentDownloadResponse($contents, $name, $type);
-		$response = $this->controller->downloadAttachment(
-			$id,
-			$attachmentId
-		);
+	public function testDownloadAttachment(): void {
+		$this->mockAttachmentDownload(123, '3', 'abcdef', 'cat.jpg', 'image/jpg');
+		$expected = new AttachmentDownloadResponse('abcdef', 'cat.jpg', 'image/jpg');
 
-		$this->assertEquals($expected, $response);
+		$response = $this->controller->downloadAttachment(123, '3');
+
+		$this->assertSame($expected->render(), $response->render());
+		$this->assertSame($expected->getHeaders()['Content-Disposition'], $response->getHeaders()['Content-Disposition']);
+		$this->assertSame($expected->getHeaders()['Content-Type'], $response->getHeaders()['Content-Type']);
+		$this->assertCachedFor($response, 60 * 60);
+	}
+
+	public function testDownloadEmbeddedMessageAttachment(): void {
+		$this->mockAttachmentDownload(123, '2', 'embedded rfc822 bytes', null, 'message/rfc822');
+
+		$response = $this->controller->downloadAttachment(123, '2');
+
+		$this->assertStringContainsString('.eml', $response->getHeaders()['Content-Disposition']);
+		$this->assertCachedFor($response, 60 * 60);
+	}
+
+	public function testDownloadEmptyAttachmentIsNotCached(): void {
+		$this->mockAttachmentDownload(123, '3', '', 'cat.jpg', 'image/jpg');
+
+		$response = $this->controller->downloadAttachment(123, '3');
+
+		$this->assertSame('no-cache, no-store, must-revalidate', $response->getHeaders()['Cache-Control']);
 	}
 
 	public function testSaveSingleAttachment() {
@@ -1391,7 +1403,7 @@ class MessagesControllerTest extends TestCase {
 			$this->urlGenerator,
 			$this->nonceManager,
 			$this->trustedSenderService,
-			$this->mailTransmission,
+			$this->protocolFactory,
 			$this->smimeService,
 			$this->dkimService,
 			$this->userPreferences,

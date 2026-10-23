@@ -1,7 +1,7 @@
 {
 	"config": {
 		"platform": {
-			"php": "8.1"
+			"php": "8.2"
 		},
 		"sort-packages": true,
 		"allow-plugins": {
@@ -13,12 +13,12 @@
 		"autoloader-suffix": "Mail"
 	},
 	"require": {
-		"php": ">=8.1 <=8.4",
+		"php": ">=8.2 <=8.4",
 		"ext-openssl": "*",
 		"arthurhoaro/favicon": "^2.0.1",
 		"bamarni/composer-bin-plugin": "^1.9.1",
 		"bytestream/horde-exception": "^2.2.0",
-		"bytestream/horde-imap-client": "^2.34.1",
+		"bytestream/horde-imap-client": "^2.34.2",
 		"bytestream/horde-mail": "^2.7.2",
 		"bytestream/horde-mime": "^2.14.1",
 		"bytestream/horde-stream": "^1.7.2",
@@ -43,9 +43,9 @@
 		"phpmailer/dkimvalidator": "^0.3.1",
 		"rubix/ml": "2.6.0",
 		"sabberworm/php-css-parser": "^9.5.0",
-		"sebastiankrupinski/jmap-client-php": "^2.1.0",
+		"sebastiankrupinski/jmap-client-php": "^2.4.0",
 		"wamania/php-stemmer": "4.0 as 3.0",
-		"youthweb/urllinker": "^2.1.0"
+		"youthweb/urllinker": "^2.2.1"
 	},
 	"provide": {
 		"psr/log": "^1.0.4|^2|^3"

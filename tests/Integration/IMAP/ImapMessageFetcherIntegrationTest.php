@@ -272,6 +272,7 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 		$this->assertCount(1, $message->attachments);
 		$this->assertSame('document.pdf', $message->attachments[0]['fileName']);
 		$this->assertSame('application/pdf', $message->attachments[0]['mime']);
+		$this->assertTrue($message->jsonSerialize()['flags']['hasAttachments']);
 	}
 
 	public function testFetchMessageWithSinglePartInlineImage(): void {
@@ -303,6 +304,7 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 		$this->assertCount(1, $message->inlineAttachments);
 		$this->assertSame('scan.jpg', $message->inlineAttachments[0]['fileName']);
 		$this->assertSame('image/jpeg', $message->inlineAttachments[0]['mime']);
+		$this->assertFalse($message->jsonSerialize()['flags']['hasAttachments']);
 	}
 
 	public function testFetchMessageWithOpaqueSignedMessage(): void {
@@ -324,5 +326,26 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 		$this->assertFalse($message->isEncrypted());
 		$this->assertTrue($message->isSigned());
 		$this->assertTrue($message->isSignatureValid());
+	}
+
+	public function testFetchMessageWithoutBody(): void {
+		$mimeMessage = file_get_contents(__DIR__ . '/../../data/nobody-message.txt');
+		$uid = $this->saveMimeMessage('INBOX', $mimeMessage);
+		$fetcher = $this->fetcherFactory
+			->build(
+				$uid,
+				'INBOX',
+				$this->getTestClient(),
+				$this->account->getUserId()
+			)
+			->withBody(true);
+
+		$message = $fetcher->fetchMessage();
+
+		$this->assertFalse($message->isEncrypted());
+		$this->assertCount(1, $message->attachments);
+		$attachment = $message->attachments[0];
+		$this->assertEquals('attach.zip', $attachment['fileName']);
+		$this->assertSame('application/zip', $attachment['mime']);
 	}
 }

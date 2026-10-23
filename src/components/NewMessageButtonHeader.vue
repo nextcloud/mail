@@ -5,11 +5,13 @@
 <template>
 	<div class="header">
 		<NcButton
+			v-shortkey.once="['c']"
 			:aria-label="t('mail', 'New message')"
 			variant="secondary"
 			buttonId="mail_new_message"
 			:wide="true"
-			@click="onNewMessage">
+			@click="onNewMessage"
+			@shortkey="onNewMessage">
 			<template #icon>
 				<IconAdd :size="20" />
 			</template>
@@ -17,11 +19,13 @@
 		</NcButton>
 		<NcButton
 			v-if="showRefresh && currentMailbox"
+			v-shortkey.once="['r']"
 			:aria-label="t('mail', 'Refresh')"
 			variant="tertiary-no-background"
 			class="refresh__button"
 			:disabled="refreshing"
-			@click="refreshMailbox">
+			@click="refreshMailbox"
+			@shortkey="refreshMailbox">
 			<template #icon>
 				<IconRefresh
 					v-if="!refreshing"

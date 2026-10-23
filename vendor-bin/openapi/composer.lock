@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8cc1c763949bb02013bd28fb929cf294",
+    "content-hash": "b16133cb2d50a809301826b3141ed72d",
     "packages": [
         {
             "name": "adhocore/cli",
@@ -241,7 +241,7 @@
     "platform": {},
     "platform-dev": {},
     "platform-overrides": {
-        "php": "8.1"
+        "php": "8.2"
     },
     "plugin-api-version": "2.9.0"
 }
