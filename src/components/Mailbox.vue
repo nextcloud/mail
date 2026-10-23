@@ -31,7 +31,8 @@
 					:loadMoreButton="false"
 					:skipTransition="skipListTransition"
 					:dateGrouped="true"
-					@delete="onDelete" />
+					@delete="onDelete"
+					@close="onClose" />
 			</div>
 		</template>
 		<EnvelopeList
@@ -45,6 +46,7 @@
 			:loadMoreButton="showLoadMore"
 			:skipTransition="skipListTransition"
 			@delete="onDelete"
+			@close="onClose"
 			@loadMore="loadMore" />
 	</div>
 </template>
@@ -596,6 +598,10 @@ export default {
 			}
 
 			this.loadMore()
+		},
+
+		onClose() {
+			this.bus.emit('close')
 		},
 
 		async loadMailbox() {

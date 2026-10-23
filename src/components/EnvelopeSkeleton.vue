@@ -357,6 +357,9 @@ export default {
 		onClick(event) {
 			// Always forward native event
 			this.$emit('click', event)
+			if (event.defaultPrevented) {
+				return
+			}
 			// Do not navigate with control keys - it is opening in a new tab
 			if (event.metaKey || event.altKey || event.ctrlKey || event.shiftKey) {
 				return
