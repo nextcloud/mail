@@ -223,7 +223,7 @@ class JmapMessageAdapter {
 			return $references;
 		}
 		if (is_array($references)) {
-			return json_encode(array_values(array_filter($references, static fn (mixed $value): bool => is_string($value) && $value !== '')));
+			return json_encode(array_values(array_filter($references, static fn (mixed $value): bool => is_string($value) && $value !== '')), JSON_THROW_ON_ERROR);
 		}
 
 		return null;

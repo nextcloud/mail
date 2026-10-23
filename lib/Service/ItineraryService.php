@@ -87,12 +87,12 @@ class ItineraryService {
 
 		// Lastly, we put the extracted data through the tool again, so it can combine
 		// and pick the most relevant information
-		$final = $this->extractor->extract(json_encode($itinerary));
+		$final = $this->extractor->extract(json_encode($itinerary, JSON_THROW_ON_ERROR));
 		$nItinerary = count($itinerary);
 		$nFinal = count($final);
 		$this->logger->debug("Reduced $nItinerary itinerary entries to $nFinal entries");
 
-		$this->cache->set($cacheKey, json_encode($final), self::CACHE_TTL);
+		$this->cache->set($cacheKey, json_encode($final, JSON_THROW_ON_ERROR), self::CACHE_TTL);
 
 		return $final;
 	}
