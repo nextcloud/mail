@@ -8,6 +8,7 @@ import { t } from '@nextcloud/l10n'
 import { ButtonView, IconImageAssetManager, ImageInsertUI, MenuBarMenuListItemButtonView, Plugin } from 'ckeditor5'
 import { getClient } from '../../dav/client.js'
 import logger from '../../logger.js'
+import { createBlobUrl } from '../../util/blobImages.js'
 
 const MIME_TYPES = ['image/png', 'image/jpeg', 'image/gif', 'image/bmp', 'image/webp']
 
@@ -84,22 +85,12 @@ export default class FilesImagePlugin extends Plugin {
 		try {
 			const response = await getClient('files').getFileContents(node.path, { details: true })
 			const blob = new Blob([response.data as BlobPart], { type: response.headers['content-type'] })
-			const dataUri = await this._readBlobAsDataUri(blob)
 
-			this.editor.execute('insertImage', { source: dataUri })
+			this.editor.execute('insertImage', { source: createBlobUrl(blob) })
 			this.editor.editing.view.focus()
 		} catch (error) {
 			logger.error('Could not insert image from Files', { error })
 			showError(t('mail', 'Could not insert the selected image'))
 		}
-	}
-
-	_readBlobAsDataUri(blob: Blob): Promise<string> {
-		return new Promise((resolve, reject) => {
-			const reader = new FileReader()
-			reader.onload = () => resolve(reader.result as string)
-			reader.onerror = () => reject(reader.error)
-			reader.readAsDataURL(blob)
-		})
 	}
 }
