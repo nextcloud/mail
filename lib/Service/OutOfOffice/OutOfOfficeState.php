@@ -18,6 +18,7 @@ class OutOfOfficeState implements JsonSerializable {
 
 	public function __construct(
 		private bool $enabled,
+		private bool $messageHtml,
 		private ?DateTimeImmutable $start,
 		private ?DateTimeImmutable $end,
 		private string $subject,
@@ -29,6 +30,7 @@ class OutOfOfficeState implements JsonSerializable {
 	public static function fromJson(array $data): self {
 		return new self(
 			$data['enabled'],
+			$data['messageHtml'],
 			isset($data['start']) ? new DateTimeImmutable($data['start']) : null,
 			isset($data['end']) ? new DateTimeImmutable($data['end']) : null,
 			$data['subject'],
@@ -51,6 +53,14 @@ class OutOfOfficeState implements JsonSerializable {
 
 	public function setEnabled(bool $enabled): void {
 		$this->enabled = $enabled;
+	}
+
+	public function isMessageHtml(): bool {
+		return $this->messageHtml;
+	}
+
+	public function setMessageHtml(bool $messageHtml): void {
+		$this->messageHtml = $messageHtml;
 	}
 
 	public function getStart(): ?DateTimeImmutable {
@@ -91,6 +101,7 @@ class OutOfOfficeState implements JsonSerializable {
 		$json = [
 			'version' => $this->getVersion(),
 			'enabled' => $this->isEnabled(),
+			'messageHtml' => $this->isMessageHtml(),
 		];
 
 		$start = $this->getStart();

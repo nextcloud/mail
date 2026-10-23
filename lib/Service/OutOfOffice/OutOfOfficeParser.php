@@ -142,7 +142,23 @@ class OutOfOfficeParser {
 		}
 
 		$escapedMessage = SieveUtils::escapeString($state->getMessage());
-		$vacation[] = "\"$escapedMessage\"";
+
+		// whether the incoming message is plaintext or html
+		if ($state->isMessageHtml() === false) {
+			// ORIGINAL HANDLING FOR PLAIN-TEXT
+			$vacation[] = "\"$escapedMessage\"";
+		} else {
+			// NEW HANDLING FOR HTML
+			$htmlMessage = "<!DOCTYPE html><html><head></head><body>$escapedMessage</body></html>";
+
+			$mimeLines[] = ":mime \"MIME-Version: 1.0";
+			$mimeLines[] = "Content-Type: text/html; charset=UTF-8";
+			$mimeLines[] = "Content-Transfer-Encoding: 7bit";
+			$mimeLines[] = "$htmlMessage\"";
+
+			$vacation[] = implode("\r\n", $mimeLines);
+		}
+
 		$vacationCommand = implode(' ', $vacation);
 
 		$subjectSection = [
