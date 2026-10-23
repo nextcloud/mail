@@ -19,6 +19,7 @@ use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Send\Chain;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Attachment\AttachmentService;
@@ -119,7 +120,8 @@ class OutboxServiceIntegrationTest extends TestCase {
 			$this->accountService,
 			$this->timeFactory,
 			$this->createMock(LoggerInterface::class),
-			$this->chain
+			$this->chain,
+			Server::get(ProtocolFactory::class),
 		);
 	}
 
