@@ -16,7 +16,7 @@ describe('SignaturePlugin', () => {
 	describe('TRIGGER_EDITOR_READY', () => {
 		it('Add signature to content', async () => {
 			const text = '<p>bonjour bonjour</p>'
-			const expected = '<p>bonjour bonjour</p><div class="signature">--&nbsp;<p>&nbsp;</p><p>Jane Doe</p></div>'
+			const expected = '<p>bonjour bonjour</p><div class="signature"><p>--&nbsp;</p><p>&nbsp;</p><p>Jane Doe</p></div>'
 
 			const editor = await VirtualTestEditor.create({
 				licenseKey: 'GPL',
@@ -78,7 +78,7 @@ describe('SignaturePlugin', () => {
 
 		it('Add signature to content above quote', async () => {
 			const text = '<p>bonjour bonjour</p><div class="quote">"John Doe" john.doe@localhost - January 1, 1970 1:00 AM <blockquote><p>bonjour bonjour</p></blockquote></div>'
-			const expected = '<p>bonjour bonjour</p><div class="signature">--&nbsp;<p>&nbsp;</p><p>Jane Doe</p><p>&nbsp;</p></div><div class="quote"><p>"John Doe" john.doe@localhost - January 1, 1970 1:00 AM</p><p>bonjour bonjour</p></div>'
+			const expected = '<p>bonjour bonjour</p><div class="signature"><p>--&nbsp;</p><p>&nbsp;</p><p>Jane Doe</p><p>&nbsp;</p></div><div class="quote"><p>"John Doe" john.doe@localhost - January 1, 1970 1:00 AM</p><p>bonjour bonjour</p></div>'
 
 			const editor = await VirtualTestEditor.create({
 				licenseKey: 'GPL',
@@ -101,7 +101,7 @@ describe('SignaturePlugin', () => {
 	describe('TRIGGER_CHANGE_ALIAS', () => {
 		it('Replace existing signature', async () => {
 			const text = '<p>bonjour bonjour</p><div class="signature"><p>--&nbsp;</p><p>Bob</p></div>'
-			const expected = '<p>bonjour bonjour</p><div class="signature">--&nbsp;<p>&nbsp;</p><p>Jane Doe</p></div>'
+			const expected = '<p>bonjour bonjour</p><div class="signature"><p>--&nbsp;</p><p>&nbsp;</p><p>Jane Doe</p></div>'
 
 			const editor = await VirtualTestEditor.create({
 				licenseKey: 'GPL',
