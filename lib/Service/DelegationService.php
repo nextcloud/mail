@@ -226,4 +226,10 @@ class DelegationService {
 			$this->logger->warning('Failed to send delegation notification to {userId}', ['userId' => $userId,'exception' => $e]);
 		}
 	}
+
+	public function updateSignatureForDelegatedUser(int $accountId, string $userId, ?string $signature): void {
+		$delegation = $this->delegationMapper->find($accountId, $userId);
+		$delegation->setSignature($signature);
+		$this->delegationMapper->update($delegation);
+	}
 }
