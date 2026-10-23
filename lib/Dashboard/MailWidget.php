@@ -9,7 +9,9 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Dashboard;
 
+use OCA\Mail\Address;
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\Contracts\IAvatarService;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ClientException;
@@ -40,6 +42,7 @@ abstract class MailWidget implements IAPIWidget, IAPIWidgetV2, IIconWidget, IOpt
 		IL10N $l10n,
 		IURLGenerator $urlGenerator,
 		IUserManager $userManager,
+		private IAvatarService $avatarService,
 		protected AccountService $accountService,
 		protected IMailSearch $mailSearch,
 		IInitialState $initialState,
@@ -128,6 +131,37 @@ abstract class MailWidget implements IAPIWidget, IAPIWidgetV2, IIconWidget, IOpt
 		return array_values(array_filter($mailboxIdsToExclude));
 	}
 
+	protected function getAvatar(string $userId, ?Address $from): string {
+		if ($from) {
+			$email = $from->getEmail();
+			if ($email) {
+				$avatar = $this->avatarService->getAvatar($email, $userId);
+				if ($avatar) {
+					if ($avatar->isExternal()) {
+						return $this->urlGenerator->getAbsoluteURL(
+							$this->urlGenerator->linkToRoute('mail.avatars.image', [
+								'email' => $email,
+							])
+						);
+					}
+
+					return $avatar->getUrl();
+				}
+			}
+		}
+
+		return $this->urlGenerator->getAbsoluteURL(
+			$this->urlGenerator->linkToRoute('core.GuestAvatar.getAvatar', [
+				'guestName' => $from
+					? ($from->getLabel()
+						? str_replace('/', '-', $from->getLabel())
+						: $from->getEmail())
+					: '',
+				'size' => 44,
+			])
+		);
+	}
+
 	/**
 	 * @inheritDoc
 	 */
@@ -137,7 +171,7 @@ abstract class MailWidget implements IAPIWidget, IAPIWidgetV2, IIconWidget, IOpt
 		$emails = $this->getEmails($userId, $intSince, $limit);
 
 		/** @var list<WidgetItem> */
-		return array_map(function (Message $email) {
+		return array_map(function (Message $email) use ($userId) {
 			$firstFrom = $email->getFrom()->first();
 			return new WidgetItem(
 				$firstFrom ? $firstFrom->getLabel() : '',
@@ -145,16 +179,7 @@ abstract class MailWidget implements IAPIWidget, IAPIWidgetV2, IIconWidget, IOpt
 				$this->urlGenerator->getAbsoluteURL(
 					$this->urlGenerator->linkToRoute('mail.page.thread', ['mailboxId' => $email->getMailboxId(), 'id' => $email->getId()])
 				),
-				$this->urlGenerator->getAbsoluteURL(
-					$this->urlGenerator->linkToRoute('core.GuestAvatar.getAvatar', [
-						'guestName' => $firstFrom
-							? ($firstFrom->getLabel()
-								? str_replace('/', '-', $firstFrom->getLabel())
-								: $firstFrom->getEmail())
-							: '',
-						'size' => 44,
-					])
-				),
+				$this->getAvatar($userId, $firstFrom),
 				(string)$email->getSentAt()
 			);
 		}, $emails);
