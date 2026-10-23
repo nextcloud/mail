@@ -609,8 +609,11 @@ class MessageMapper extends QBMapper {
 				$previewText = null;
 				if ($message->getPreviewText() !== null) {
 					$convertedText = mb_convert_encoding($message->getPreviewText(), 'UTF-8', 'UTF-8');
+					if ($convertedText === false) {
+						$convertedText = $message->getPreviewText();
+					}
 					//converting the spaces is necessary for ltrim to work
-					$previewText = mb_strcut(ltrim(preg_replace('/\s/u', ' ', $convertedText)), 0, 255);
+					$previewText = mb_strcut(ltrim(preg_replace('/\s/u', ' ', $convertedText) ?? $convertedText), 0, 255);
 
 					// Make sure modifications are visible when these objects are used right away
 					$message->setPreviewText($previewText);
