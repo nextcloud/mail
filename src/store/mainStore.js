@@ -82,7 +82,14 @@ export default defineStore('main', {
 			envelopes: {},
 			messages: {},
 			newMessage: undefined,
-			showMessageComposer: false,
+
+			// Possible statuses:
+			// disable: no composer in action
+			// open: the composer is opened
+			// close: the composer is minified
+			// waiting: loading state, will be open when ready
+			showMessageComposer: 'disable',
+
 			composerMessageIsSaved: false,
 			composerSessionId: undefined,
 			nextComposerSessionId: 1,
