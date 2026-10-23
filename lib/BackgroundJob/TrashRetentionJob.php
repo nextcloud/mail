@@ -16,6 +16,7 @@ use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Db\MessageRetentionMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -31,6 +32,7 @@ class TrashRetentionJob extends TimedJob {
 		private MailAccountMapper $accountMapper,
 		private MailboxMapper $mailboxMapper,
 		private MailManager $mailManager,
+		private ProtocolFactory $protocolFactory,
 	) {
 		parent::__construct($time);
 
@@ -63,6 +65,8 @@ class TrashRetentionJob extends TimedJob {
 					'accountId' => $account->getId(),
 					'trashMailboxId' => $account->getMailAccount()->getTrashMailboxId(),
 				]);
+			} finally {
+				$this->protocolFactory->releaseClients($account);
 			}
 		}
 

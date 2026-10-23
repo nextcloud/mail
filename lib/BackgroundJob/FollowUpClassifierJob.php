@@ -13,6 +13,7 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Db\ThreadMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\MailManager;
@@ -34,6 +35,7 @@ class FollowUpClassifierJob extends QueuedJob {
 		private MailManager $mailManager,
 		private AiIntegrationsService $aiService,
 		private ThreadMapper $threadMapper,
+		private ProtocolFactory $protocolFactory,
 	) {
 		parent::__construct($time);
 	}
@@ -55,61 +57,65 @@ class FollowUpClassifierJob extends QueuedJob {
 			return;
 		}
 
-		$messages = $this->mailManager->getByMessageId($account, $messageId);
-		$messages = array_values(array_filter(
-			$messages,
-			static fn (Message $message) => $message->getMailboxId() === $mailboxId,
-		));
-		if (count($messages) === 0) {
-			return;
-		}
-
-		if (count($messages) > 1) {
-			$this->logger->warning('Trying to analyze multiple messages with the same message id for follow-ups');
-		}
-		$message = $messages[0];
-
 		try {
-			$newerMessages = $this->threadMapper->findNewerMessageIdsInThread(
-				$mailbox->getAccountId(),
-				$message,
-			);
-		} catch (Exception $e) {
-			$this->logger->error(
-				'Failed to check if a message needs a follow-up: ' . $e->getMessage(),
-				[ 'exception' => $e ],
-			);
-			return;
-		}
-		if (count($newerMessages) > 0) {
-			return;
-		}
+			$messages = $this->mailManager->getByMessageId($account, $messageId);
+			$messages = array_values(array_filter(
+				$messages,
+				static fn (Message $message) => $message->getMailboxId() === $mailboxId,
+			));
+			if (count($messages) === 0) {
+				return;
+			}
 
-		try {
-			$requiresFollowup = $this->aiService->requiresFollowUp(
+			if (count($messages) > 1) {
+				$this->logger->warning('Trying to analyze multiple messages with the same message id for follow-ups');
+			}
+			$message = $messages[0];
+
+			try {
+				$newerMessages = $this->threadMapper->findNewerMessageIdsInThread(
+					$mailbox->getAccountId(),
+					$message,
+				);
+			} catch (Exception $e) {
+				$this->logger->error(
+					'Failed to check if a message needs a follow-up: ' . $e->getMessage(),
+					[ 'exception' => $e ],
+				);
+				return;
+			}
+			if (count($newerMessages) > 0) {
+				return;
+			}
+
+			try {
+				$requiresFollowup = $this->aiService->requiresFollowUp(
+					$account,
+					$mailbox,
+					$message,
+					$userId,
+				);
+			} catch (ServiceException $e) {
+				$this->logger->error('Failed to classify message for follow-up: ' . $e->getMessage(), [
+					'exception' => $e,
+				]);
+				return;
+			}
+			if (!$requiresFollowup) {
+				return;
+			}
+
+			$this->logger->debug("Message requires follow-up: {$message->getId()}");
+			$tag = $this->mailManager->createTag('Follow up', '#d77000', $userId);
+			$this->mailManager->tagMessages(
 				$account,
 				$mailbox,
+				$tag,
+				true,
 				$message,
-				$userId,
 			);
-		} catch (ServiceException $e) {
-			$this->logger->error('Failed to classify message for follow-up: ' . $e->getMessage(), [
-				'exception' => $e,
-			]);
-			return;
+		} finally {
+			$this->protocolFactory->releaseClients($account);
 		}
-		if (!$requiresFollowup) {
-			return;
-		}
-
-		$this->logger->debug("Message requires follow-up: {$message->getId()}");
-		$tag = $this->mailManager->createTag('Follow up', '#d77000', $userId);
-		$this->mailManager->tagMessages(
-			$account,
-			$mailbox,
-			$tag,
-			true,
-			$message,
-		);
 	}
 }
