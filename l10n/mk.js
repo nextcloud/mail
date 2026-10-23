@@ -368,8 +368,8 @@ OC.L10N.register(
     "Place signature above quoted text" : "Постави го потписот над цитираниот текст",
     "Message source" : "Извор на пораката",
     "An error occurred, unable to rename the tag." : "Настана грешка, неможе да се преименува ознака.",
+    "Edit" : "Уреди",
     "An error occurred, unable to create the tag." : "Настана грешка, неможе да се креира ознака.",
-    "Add default tags" : "Додади стандардни ознаки",
     "Add tag" : "Додади ознака",
     "Could not load your message thread" : "Неможат да се преземат информации за пораката",
     "Not found" : "Не е пронајдено",
@@ -393,7 +393,6 @@ OC.L10N.register(
     "Actions" : "Акции",
     "Priority" : "Приоритет",
     "delete" : "избриши",
-    "Edit" : "Уреди",
     "Mail app" : "Апликација Електронска пошта",
     "The mail app allows users to read mails on their IMAP accounts." : "Апликацијата за електронска пошта дозволува на корисниците да ги читаат својте пораки од IMAP сметки.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Овде може да се пронајде поопшитно прилагодување. Специфични параметри за корисниците може да се пронајдат во самата апликација (доле-лево).",
@@ -464,6 +463,7 @@ OC.L10N.register(
     "Date:" : "Датум:",
     "Tag name is a hidden system tag" : "Името на ознаката е сокриена системска ознака",
     "Tag already exists" : "Тагот веќе постои",
-    "Error loading message" : "Грешка при вчитување на пораката"
+    "Error loading message" : "Грешка при вчитување на пораката",
+    "Add default tags" : "Додади стандардни ознаки"
 },
 "nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;");

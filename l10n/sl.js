@@ -377,10 +377,8 @@ OC.L10N.register(
     "Place signature above quoted text" : "Postavi podpis nad navedeno besedilo.",
     "Message source" : "Vir sporočila",
     "An error occurred, unable to rename the tag." : "Prišlo je do napake, oznake ni mogoče preimenovati.",
-    "Set tag" : "Nastavi oznako",
-    "Unset tag" : "Odstrani oznako",
+    "Edit" : "Uredi",
     "An error occurred, unable to create the tag." : "Prišlo je do napake, oznake ni mogoče ustvariti.",
-    "Add default tags" : "Dodaj privzete oznake",
     "Add tag" : "Dodaj oznako",
     "Task created" : "Naloga je ustvarjena",
     "Could not create task" : "Naloge ni mogoče ustvariti",
@@ -432,7 +430,6 @@ OC.L10N.register(
     "Priority" : "Prednost",
     "Tag" : "Oznaka",
     "delete" : "izbriši",
-    "Edit" : "Uredi",
     "Successfully updated config for \"{domain}\"" : "Nastavitve za domeno »{domain}« so uspešno posodobljene.",
     "Error saving config" : "Napaka shranjevanja nastavitev",
     "Saved config for \"{domain}\"" : "Nastavitve za domeno »{domain}« so shranjene.",
@@ -530,6 +527,9 @@ OC.L10N.register(
     "Date:" : "Datum:",
     "Tag name is a hidden system tag" : "Ime oznake je skrita sistemska oznaka",
     "Tag already exists" : "Oznaka že obstaja",
-    "Error loading message" : "Napaka nalaganja sporočila"
+    "Error loading message" : "Napaka nalaganja sporočila",
+    "Set tag" : "Nastavi oznako",
+    "Unset tag" : "Odstrani oznako",
+    "Add default tags" : "Dodaj privzete oznake"
 },
 "nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);");

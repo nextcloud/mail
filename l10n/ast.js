@@ -230,8 +230,7 @@ OC.L10N.register(
     "Save sieve script" : "Guardar el script de sieve",
     "Message source" : "Orixe del mensaxe",
     "An error occurred, unable to rename the tag." : "Prodúxose un error, nun ye posible renomar la bandexa de corréu.",
-    "Set tag" : "Afitar la etiqueta",
-    "Unset tag" : "Quitar la etiqueta",
+    "Edit" : "Editar",
     "An error occurred, unable to create the tag." : "Prodúxose un error, nun ye posible crear la bandexa de corréu.",
     "Add tag" : "Amestar una etiqueta",
     "Task created" : "Creóse la xera",
@@ -262,7 +261,6 @@ OC.L10N.register(
     "Actions" : "Aiciones",
     "Priority" : "Prioridá",
     "delete" : "desaniciar",
-    "Edit" : "Editar",
     "Error saving config" : "Hebo un error al guardar la configuración",
     "Anti Spam Service" : "Serviciu de antispam",
     "Gmail integration" : "Integración con Gmail",
@@ -321,6 +319,8 @@ OC.L10N.register(
     "Date:" : "Data:",
     "Tag name cannot be empty" : "El nome de la etiqueta nun pue tar baleru",
     "Tag already exists" : "La etiqueta yá esiste",
-    "Error loading message" : "Hebo un error al cargar el mensaxe"
+    "Error loading message" : "Hebo un error al cargar el mensaxe",
+    "Set tag" : "Afitar la etiqueta",
+    "Unset tag" : "Quitar la etiqueta"
 },
 "nplurals=2; plural=(n != 1);");
