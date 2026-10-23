@@ -31,9 +31,11 @@ use OCP\L10N\IFactory;
 use OCP\TaskProcessing\Exception\ValidationException;
 use OCP\TaskProcessing\IManager as TaskProcessingManager;
 use OCP\TaskProcessing\IProvider as TaskProcessingProvider;
+use OCP\TaskProcessing\ShapeEnumValue;
 use OCP\TaskProcessing\Task as TaskProcessingTask;
 use OCP\TaskProcessing\TaskTypes\TextToText;
 use OCP\TaskProcessing\TaskTypes\TextToTextSummary;
+use OCP\TaskProcessing\TaskTypes\TextToTextTranslate;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 
@@ -949,6 +951,147 @@ class AiIntegrationsServiceTest extends TestCase {
 		$result = $this->aiIntegrationsService->summarizeThread($account, 'thread-id', [$message], 'user');
 
 		self::assertSame('a summary', $result);
+	}
+
+	public function testGetTranslationLanguages(): void {
+		$this->taskProcessingManager
+			->method('getAvailableTaskTypes')
+			->willReturn([TextToTextTranslate::ID => [
+				'inputShapeEnumValues' => [
+					'origin_language' => [new ShapeEnumValue('Detect language', 'detect_language'), new ShapeEnumValue('German', 'de')],
+					'target_language' => [new ShapeEnumValue('English', 'en')],
+				],
+			]]);
+
+		self::assertSame([
+			'input' => [['name' => 'Detect language', 'value' => 'detect_language'], ['name' => 'German', 'value' => 'de']],
+			'output' => [['name' => 'English', 'value' => 'en']],
+		], $this->aiIntegrationsService->getTranslationLanguages());
+	}
+
+	public function testGetTranslationLanguagesNoProvider(): void {
+		$this->taskProcessingManager->method('getAvailableTaskTypes')->willReturn([]);
+
+		self::assertSame(['input' => [], 'output' => []], $this->aiIntegrationsService->getTranslationLanguages());
+	}
+
+	public function testTranslateMessageLlmProcessingDisabled(): void {
+		$this->appConfig->method('getValueBool')->with(Application::APP_ID, ConfigLexicon::LLM_PROCESSING, false)->willReturn(false);
+		$this->taskProcessingManager->method('getAvailableTaskTypes')->willReturn([TextToTextTranslate::ID => []]);
+		$this->taskProcessingManager->expects(self::never())->method('runTask');
+
+		$this->expectException(ServiceException::class);
+		$this->aiIntegrationsService->translateMessage(new Account(new MailAccount()), new Mailbox(), new Message(), 'de', 'en', 'user');
+	}
+
+	public function testTranslateMessageNoProvider(): void {
+		$this->appConfig->method('getValueBool')->willReturn(true);
+		$this->taskProcessingManager->method('getAvailableTaskTypes')->willReturn([]);
+		$this->taskProcessingManager->expects(self::never())->method('runTask');
+
+		$this->expectException(ServiceException::class);
+		$this->aiIntegrationsService->translateMessage(new Account(new MailAccount()), new Mailbox(), new Message(), 'de', 'en', 'user');
+	}
+
+	public function testTranslateMessageCached(): void {
+		$message = new Message();
+		$message->setId(42);
+		$this->appConfig->method('getValueBool')->willReturn(true);
+		$this->taskProcessingManager->method('getAvailableTaskTypes')->willReturn([TextToTextTranslate::ID => []]);
+		$this->cache->method('buildUrlKey')->with([42, 'de', 'en'])->willReturn('key');
+		$this->cache->method('getValue')->with('translation_key')->willReturn('Hello');
+		$this->mailManager->expects(self::never())->method('getImapMessage');
+		$this->taskProcessingManager->expects(self::never())->method('runTask');
+
+		$result = $this->aiIntegrationsService->translateMessage(new Account(new MailAccount()), new Mailbox(), $message, 'de', 'en', 'user');
+
+		self::assertSame('Hello', $result);
+	}
+
+	public function testTranslateMessagePlainBody(): void {
+		$message = new Message();
+		$message->setId(42);
+		$imapMessage = $this->createMock(IMAPMessage::class);
+		$imapMessage->method('isEncrypted')->willReturn(false);
+		$imapMessage->method('getPlainBody')->willReturn("  Hallo Welt\n");
+		$this->appConfig->method('getValueBool')->willReturn(true);
+		$this->taskProcessingManager->method('getAvailableTaskTypes')->willReturn([TextToTextTranslate::ID => []]);
+		$this->cache->method('buildUrlKey')->with([42, 'de', 'en'])->willReturn('key');
+		$this->cache->method('getValue')->willReturn(false);
+		$this->mailManager->method('getImapMessage')->willReturn($imapMessage);
+		$this->taskProcessingManager->expects(self::once())
+			->method('runTask')
+			->willReturnCallback(function (TaskProcessingTask $task) {
+				self::assertSame(TextToTextTranslate::ID, $task->getTaskTypeId());
+				self::assertSame(['origin_language' => 'de', 'input' => 'Hallo Welt', 'target_language' => 'en'], $task->getInput());
+				self::assertSame('user', $task->getUserId());
+				$task->setOutput(['output' => 'Hello world']);
+				return $task;
+			});
+		$this->cache->expects(self::once())
+			->method('addValue')
+			->with('translation_key', 'Hello world');
+
+		$result = $this->aiIntegrationsService->translateMessage(new Account(new MailAccount()), new Mailbox(), $message, 'de', 'en', 'user');
+
+		self::assertSame('Hello world', $result);
+	}
+
+	public function testTranslateMessageHtmlOnlyBody(): void {
+		$message = new Message();
+		$message->setId(42);
+		$imapMessage = $this->createMock(IMAPMessage::class);
+		$imapMessage->method('isEncrypted')->willReturn(false);
+		$imapMessage->method('getPlainBody')->willReturn('');
+		$imapMessage->method('hasHtmlMessage')->willReturn(true);
+		$imapMessage->htmlMessage = '<p>Hallo <b>Welt</b></p>';
+		$this->appConfig->method('getValueBool')->willReturn(true);
+		$this->taskProcessingManager->method('getAvailableTaskTypes')->willReturn([TextToTextTranslate::ID => []]);
+		$this->cache->method('getValue')->willReturn(false);
+		$this->mailManager->method('getImapMessage')->willReturn($imapMessage);
+		$this->taskProcessingManager->expects(self::once())
+			->method('runTask')
+			->willReturnCallback(function (TaskProcessingTask $task) {
+				self::assertSame('Hallo WELT', $task->getInput()['input']);
+				$task->setOutput(['output' => 'Hello world']);
+				return $task;
+			});
+
+		$result = $this->aiIntegrationsService->translateMessage(new Account(new MailAccount()), new Mailbox(), $message, 'de', 'en', 'user');
+
+		self::assertSame('Hello world', $result);
+	}
+
+	public function testTranslateMessageEncrypted(): void {
+		$imapMessage = $this->createMock(IMAPMessage::class);
+		$imapMessage->method('isEncrypted')->willReturn(true);
+		$this->appConfig->method('getValueBool')->willReturn(true);
+		$this->taskProcessingManager->method('getAvailableTaskTypes')->willReturn([TextToTextTranslate::ID => []]);
+		$this->cache->method('getValue')->willReturn(false);
+		$this->mailManager->method('getImapMessage')->willReturn($imapMessage);
+		$this->taskProcessingManager->expects(self::never())->method('runTask');
+
+		$this->expectException(ServiceException::class);
+		$this->aiIntegrationsService->translateMessage(new Account(new MailAccount()), new Mailbox(), new Message(), 'de', 'en', 'user');
+	}
+
+	public function testTranslateMessageEmptyOutput(): void {
+		$imapMessage = $this->createMock(IMAPMessage::class);
+		$imapMessage->method('isEncrypted')->willReturn(false);
+		$imapMessage->method('getPlainBody')->willReturn('Hallo');
+		$this->appConfig->method('getValueBool')->willReturn(true);
+		$this->taskProcessingManager->method('getAvailableTaskTypes')->willReturn([TextToTextTranslate::ID => []]);
+		$this->cache->method('getValue')->willReturn(false);
+		$this->mailManager->method('getImapMessage')->willReturn($imapMessage);
+		$this->taskProcessingManager->method('runTask')
+			->willReturnCallback(function (TaskProcessingTask $task) {
+				$task->setOutput(['output' => '  ']);
+				return $task;
+			});
+		$this->cache->expects(self::never())->method('addValue');
+
+		$this->expectException(ServiceException::class);
+		$this->aiIntegrationsService->translateMessage(new Account(new MailAccount()), new Mailbox(), new Message(), 'de', 'en', 'user');
 	}
 
 }

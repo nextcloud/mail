@@ -1547,6 +1547,61 @@ class MessagesControllerTest extends TestCase {
 		$this->assertEquals($expectedResponse, $actualResponse);
 	}
 
+	public function testTranslateNoMessage(): void {
+		$this->mailManager->expects($this->once())
+			->method('getMessage')
+			->with($this->userId, 100)
+			->willThrowException(new DoesNotExistException(''));
+		$this->aiIntegrationsService->expects($this->never())
+			->method('translateMessage');
+
+		$actualResponse = $this->controller->translate(100, 'de', 'en');
+
+		$this->assertEquals(new JSONResponse([], Http::STATUS_FORBIDDEN), $actualResponse);
+	}
+
+	public function testTranslateServiceException(): void {
+		$message = new \OCA\Mail\Db\Message();
+		$message->setId(100);
+		$message->setMailboxId(1);
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$mailbox->setAccountId(1);
+		$this->mailManager->method('getMessage')->willReturn($message);
+		$this->mailManager->method('getMailbox')->willReturn($mailbox);
+		$this->accountService->method('find')->willReturn(new Account(new MailAccount()));
+		$this->aiIntegrationsService->expects($this->once())
+			->method('translateMessage')
+			->willThrowException(new ServiceException('AI service error'));
+		$this->logger->expects($this->once())
+			->method('error');
+
+		$actualResponse = $this->controller->translate(100, 'de', 'en');
+
+		$this->assertEquals(new JSONResponse([], Http::STATUS_NO_CONTENT), $actualResponse);
+	}
+
+	public function testTranslateSuccessful(): void {
+		$message = new \OCA\Mail\Db\Message();
+		$message->setId(100);
+		$message->setMailboxId(1);
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$mailbox->setAccountId(1);
+		$account = new Account(new MailAccount());
+		$this->mailManager->method('getMessage')->with($this->userId, 100)->willReturn($message);
+		$this->mailManager->method('getMailbox')->with($this->userId, 1)->willReturn($mailbox);
+		$this->accountService->method('find')->with($this->userId, 1)->willReturn($account);
+		$this->aiIntegrationsService->expects($this->once())
+			->method('translateMessage')
+			->with($account, $mailbox, $message, 'de', 'en', $this->userId)
+			->willReturn('Hello world');
+
+		$actualResponse = $this->controller->translate(100, 'de', 'en');
+
+		$this->assertEquals(new JSONResponse(['data' => 'Hello world']), $actualResponse);
+	}
+
 	public function testSmartReplyEmptyReplies(): void {
 		$message = new \OCA\Mail\Db\Message();
 		$message->setId(100);

@@ -49,6 +49,7 @@ use OCP\IUserManager;
 use OCP\IUserSession;
 use OCP\TaskProcessing\TaskTypes\TextToText;
 use OCP\TaskProcessing\TaskTypes\TextToTextSummary;
+use OCP\TaskProcessing\TaskTypes\TextToTextTranslate;
 use OCP\User\IAvailabilityCoordinator;
 use Psr\Log\LoggerInterface;
 use Throwable;
@@ -319,9 +320,15 @@ class PageController extends Controller {
 			$this->aiIntegrationsService->isLlmProcessingEnabled() && $this->aiIntegrationsService->isLlmAvailable(TextToTextSummary::ID)
 		);
 
+		$llmTranslationEnabled = $this->aiIntegrationsService->isLlmProcessingEnabled()
+			&& $this->aiIntegrationsService->isTaskAvailable(TextToTextTranslate::ID);
 		$this->initialStateService->provideInitialState(
 			'llm_translation_enabled',
-			$this->aiIntegrationsService->isLlmProcessingEnabled() && $this->aiIntegrationsService->isTaskAvailable('core:text2text:translate')
+			$llmTranslationEnabled
+		);
+		$this->initialStateService->provideInitialState(
+			'llm_translation_languages',
+			$llmTranslationEnabled ? $this->aiIntegrationsService->getTranslationLanguages() : ['input' => [], 'output' => []]
 		);
 
 		$this->initialStateService->provideInitialState(
