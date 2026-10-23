@@ -48,6 +48,7 @@ class ReadMessagesExtractor implements IExtractor {
 		}
 
 		$email = $sender->getEmail();
+		/** @psalm-suppress PossiblyNullArrayOffset */
 		$total = $this->totalMessages[$email] ?? 0;
 
 		// Prevent division by zero and just say no emails are read
