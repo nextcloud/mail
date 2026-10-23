@@ -374,10 +374,8 @@ OC.L10N.register(
     "Place signature above quoted text" : "Colocar firma sobre el texto citado",
     "Message source" : "Origen del mensaje",
     "An error occurred, unable to rename the tag." : "Ocurrió un error, no se pudo cambiar el nombre de la etiqueta.",
-    "Set tag" : "Establecer etiqueta",
-    "Unset tag" : "Quitar etiqueta",
+    "Edit" : "Editar",
     "An error occurred, unable to create the tag." : "Ocurrió un error, no se pudo crear la etiqueta.",
-    "Add default tags" : "Agregar etiquetas predeterminadas",
     "Add tag" : "Agregar etiqueta",
     "Task created" : "Tarea creada",
     "Could not create task" : "No se pudo crear la tarea",
@@ -438,7 +436,6 @@ OC.L10N.register(
     "Priority" : "Prioridad",
     "Tag" : "Etiqueta",
     "delete" : "borrar",
-    "Edit" : "Editar",
     "Successfully updated config for \"{domain}\"" : "Configuración actualizada con éxito para \"{domain}\"",
     "Error saving config" : "Error al guardar la configuración",
     "Saved config for \"{domain}\"" : "Configuración guardada para \"{domain}\"",
@@ -572,6 +569,9 @@ OC.L10N.register(
     "Date:" : "Fecha:",
     "Tag name is a hidden system tag" : "El nombre de la etiqueta es una etiqueta oculta del sistema",
     "Tag already exists" : "La etiqueta ya existe",
-    "Error loading message" : "Se presentó un error al cargar el mensaje"
+    "Error loading message" : "Se presentó un error al cargar el mensaje",
+    "Set tag" : "Establecer etiqueta",
+    "Unset tag" : "Quitar etiqueta",
+    "Add default tags" : "Agregar etiquetas predeterminadas"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

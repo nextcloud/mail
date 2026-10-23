@@ -511,10 +511,8 @@
     "Place signature above quoted text" : "Colocar a assinatura acima do texto citado ",
     "Message source" : "Fonte da mensagem",
     "An error occurred, unable to rename the tag." : "Ocorreu um erro, não foi possível renomear a etiqueta.",
-    "Saving new tag name …" : "Salvando o novo nome da etiqueta …",
-    "Unset tag" : "Redefinir etiqueta",
+    "Edit" : "Editar",
     "An error occurred, unable to create the tag." : "Ocorreu um erro, não foi possível criar a etiqueta.",
-    "Add default tags" : "Adicionar etiquetas padrão",
     "Add tag" : "Adicionar etiqueta",
     "Task created" : "Tarefa criada",
     "Could not create task" : "Não foi possível criar a tarefa",
@@ -614,7 +612,6 @@
     "Quick action created" : "Ação rápida criada",
     "Failed to delete action step" : "Falha ao excluir a etapa da ação",
     "No quick actions yet." : "Ainda sem ações rápidas.",
-    "Edit" : "Editar",
     "Add another action" : "Adicionar outra ação",
     "Successfully updated config for \"{domain}\"" : "Atualizada com sucesso a configuração de \"{domain}\"",
     "Error saving config" : "Erro ao salvar a configuração",
@@ -753,6 +750,9 @@
     "Tag already exists" : "A etiqueta já existe",
     "Error loading message" : "Erro ao carregar a mensagem",
     "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "A resposta automática usa o Sieve, uma linguagem de script suportada por muitos provedores de e-mail. Se não tiver certeza de que o seu suporta, verifique com seu provedor. Se o Sieve estiver disponível, clique no botão para acessar as configurações e ativá-lo.",
+    "Saving new tag name …" : "Salvando o novo nome da etiqueta …",
+    "Unset tag" : "Redefinir etiqueta",
+    "Add default tags" : "Adicionar etiquetas padrão",
     "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Assuma o controle do caos do seu e-mail. Os filtros ajudam você a priorizar o que importa e eliminar a desordem."
 },"pluralForm" :"nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

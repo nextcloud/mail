@@ -380,10 +380,8 @@ OC.L10N.register(
     "Place signature above quoted text" : "Поставяне на подпис над цитирания текст",
     "Message source" : "Източник на съобщение",
     "An error occurred, unable to rename the tag." : "Възникна грешка, не може да се преименува етикет.",
-    "Set tag" : "Задаване на етикет",
-    "Unset tag" : "Отмяна на етикет",
+    "Edit" : "Промяна",
     "An error occurred, unable to create the tag." : "Възникна грешка, не може да се създаде етикет.",
-    "Add default tags" : "Добавяне на етикети по подразбиране",
     "Add tag" : "Добавяне на етикет",
     "Task created" : "Задачата е създадена",
     "Red" : "Червен",
@@ -426,7 +424,6 @@ OC.L10N.register(
     "Priority" : "Приоритет",
     "Tag" : "Етикет",
     "delete" : "изтриване",
-    "Edit" : "Промяна",
     "Successfully updated config for \"{domain}\"" : "Конфигурацията за „{domain}“ беше актуализирана успешно",
     "Error saving config" : "Грешка при записване на конфигурацията",
     "Saved config for \"{domain}\"" : "Конфигурацията за „{domain}“ е записана",
@@ -555,6 +552,9 @@ OC.L10N.register(
     "Date:" : "Дата:",
     "Tag name is a hidden system tag" : "Името на етикета е скрит системен етикет",
     "Tag already exists" : "Етикетът вече съществува",
-    "Error loading message" : "Грешка при зареждане съобщението"
+    "Error loading message" : "Грешка при зареждане съобщението",
+    "Set tag" : "Задаване на етикет",
+    "Unset tag" : "Отмяна на етикет",
+    "Add default tags" : "Добавяне на етикети по подразбиране"
 },
 "nplurals=2; plural=(n != 1);");
