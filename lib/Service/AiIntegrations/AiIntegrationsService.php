@@ -402,7 +402,10 @@ class AiIntegrationsService {
 		}
 		$cacheKey = 'translation_' . $this->cache->buildUrlKey([$message->getId(), $fromLanguage, $toLanguage]);
 		$cachedTranslation = $this->cache->getValue($cacheKey);
-		if (is_string($cachedTranslation) && $cachedTranslation !== Cache::FAILURE_MARKER) {
+		if ($cachedTranslation === Cache::FAILURE_MARKER) {
+			throw new ServiceException('Translation recently failed, retry later');
+		}
+		if (is_string($cachedTranslation)) {
 			return $cachedTranslation;
 		}
 
@@ -434,14 +437,21 @@ class AiIntegrationsService {
 			$currentUserId,
 			'translation:' . $message->getId(),
 		);
-		$task = $this->runTask($task);
+		try {
+			$task = $this->runTask($task);
+		} catch (ServiceException $e) {
+			$this->cache->addFailure($cacheKey);
+			throw $e;
+		}
 		$output = $task->getOutput()['output'] ?? null;
 		if (!is_string($output) || trim($output) === '') {
 			$this->logger->warning('Translation task returned no output', ['status' => $task->getStatus(), 'errorMessage' => $task->getErrorMessage()]);
+			$this->cache->addFailure($cacheKey);
 			throw new ServiceException('Translation task returned no output');
 		}
 
 		$this->cache->addValue($cacheKey, $output);
+		$this->cache->resetFailures($cacheKey);
 		return $output;
 	}
 

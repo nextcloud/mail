@@ -1008,6 +1008,39 @@ class AiIntegrationsServiceTest extends TestCase {
 		self::assertSame('Hello', $result);
 	}
 
+	public function testTranslateMessageRecentFailure(): void {
+		$message = new Message();
+		$message->setId(42);
+		$this->appConfig->method('getValueBool')->willReturn(true);
+		$this->taskProcessingManager->method('getAvailableTaskTypes')->willReturn([TextToTextTranslate::ID => []]);
+		$this->cache->method('buildUrlKey')->willReturn('key');
+		$this->cache->method('getValue')->with('translation_key')->willReturn(Cache::FAILURE_MARKER);
+		$this->mailManager->expects(self::never())->method('getImapMessage');
+		$this->taskProcessingManager->expects(self::never())->method('runTask');
+
+		$this->expectException(ServiceException::class);
+		$this->aiIntegrationsService->translateMessage(new Account(new MailAccount()), new Mailbox(), $message, 'de', 'en', 'user');
+	}
+
+	public function testTranslateMessageTaskFailureRecordsFailure(): void {
+		$imapMessage = $this->createMock(IMAPMessage::class);
+		$imapMessage->method('isEncrypted')->willReturn(false);
+		$imapMessage->method('getPlainBody')->willReturn('Hallo');
+		$this->appConfig->method('getValueBool')->willReturn(true);
+		$this->taskProcessingManager->method('getAvailableTaskTypes')->willReturn([TextToTextTranslate::ID => []]);
+		$this->cache->method('buildUrlKey')->willReturn('key');
+		$this->cache->method('getValue')->willReturn(false);
+		$this->mailManager->method('getImapMessage')->willReturn($imapMessage);
+		$this->taskProcessingManager->method('runTask')->willThrowException(new ValidationException('invalid'));
+		$this->cache->expects(self::once())
+			->method('addFailure')
+			->with('translation_key');
+		$this->cache->expects(self::never())->method('addValue');
+
+		$this->expectException(ServiceException::class);
+		$this->aiIntegrationsService->translateMessage(new Account(new MailAccount()), new Mailbox(), new Message(), 'de', 'en', 'user');
+	}
+
 	public function testTranslateMessagePlainBody(): void {
 		$message = new Message();
 		$message->setId(42);
@@ -1031,6 +1064,10 @@ class AiIntegrationsServiceTest extends TestCase {
 		$this->cache->expects(self::once())
 			->method('addValue')
 			->with('translation_key', 'Hello world');
+		$this->cache->expects(self::never())->method('addFailure');
+		$this->cache->expects(self::once())
+			->method('resetFailures')
+			->with('translation_key');
 
 		$result = $this->aiIntegrationsService->translateMessage(new Account(new MailAccount()), new Mailbox(), $message, 'de', 'en', 'user');
 
@@ -1070,6 +1107,7 @@ class AiIntegrationsServiceTest extends TestCase {
 		$this->cache->method('getValue')->willReturn(false);
 		$this->mailManager->method('getImapMessage')->willReturn($imapMessage);
 		$this->taskProcessingManager->expects(self::never())->method('runTask');
+		$this->cache->expects(self::never())->method('addFailure');
 
 		$this->expectException(ServiceException::class);
 		$this->aiIntegrationsService->translateMessage(new Account(new MailAccount()), new Mailbox(), new Message(), 'de', 'en', 'user');
@@ -1088,7 +1126,11 @@ class AiIntegrationsServiceTest extends TestCase {
 				$task->setOutput(['output' => '  ']);
 				return $task;
 			});
+		$this->cache->method('buildUrlKey')->willReturn('key');
 		$this->cache->expects(self::never())->method('addValue');
+		$this->cache->expects(self::once())
+			->method('addFailure')
+			->with('translation_key');
 
 		$this->expectException(ServiceException::class);
 		$this->aiIntegrationsService->translateMessage(new Account(new MailAccount()), new Mailbox(), new Message(), 'de', 'en', 'user');
