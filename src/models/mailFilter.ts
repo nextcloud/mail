@@ -6,6 +6,7 @@ import { randomId } from '../util/randomId.js'
 
 export enum MailFilterOperator {
 	All = 'allof',
+	Always = 'true',
 	Any = 'anyof',
 }
 

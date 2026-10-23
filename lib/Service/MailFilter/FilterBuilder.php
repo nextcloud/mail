@@ -14,6 +14,10 @@ use OCA\Mail\IMAP\ImapFlag;
 use OCA\Mail\Sieve\SieveUtils;
 
 class FilterBuilder {
+	public const OPERATOR_ALL = 'allof';
+	public const OPERATOR_ANY = 'anyof';
+	public const OPERATOR_TRUE = 'true';
+
 	private const SEPARATOR = '### Nextcloud Mail: Filters ### DON\'T EDIT ###';
 	private const DATA_MARKER = '# FILTER: ';
 	/** @deprecated use SieveUtils::NEWLINE */
@@ -37,6 +41,9 @@ class FilterBuilder {
 
 			$tests = [];
 			foreach ($filter['tests'] as $test) {
+				if ($test['values'] === []) {
+					continue;
+				}
 				if ($test['field'] === 'subject') {
 					$tests[] = sprintf(
 						'header :%s "Subject" %s',
@@ -58,6 +65,10 @@ class FilterBuilder {
 						SieveUtils::stringList($test['values']),
 					);
 				}
+			}
+
+			if ($filter['operator'] === self::OPERATOR_TRUE) {
+				$tests[] = 'true';
 			}
 
 			if (count($tests) === 0) {
