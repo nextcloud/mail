@@ -21,6 +21,22 @@ describe('ReplyBuilder', () => {
 		expect(replyBodyBottom).toEqual(html('<div class="quote"><br>&gt; Newsletter<br>&gt; hello<br>&gt; cheers</div><p></p><p></p>'))
 	})
 
+	it('escapes HTML special characters in plain-text reply body and sender', () => {
+		const body = plain('Hello <script>alert(1)</script> & "quoted"')
+		const from = {
+			label: 'Attacker <img src=x>',
+			email: 'evil@example.com',
+		}
+
+		const reply = buildReplyBody(body, from, 1541426237)
+
+		expect(reply.value).toContain('&lt;script&gt;alert(1)&lt;/script&gt;')
+		expect(reply.value).toContain('&amp;')
+		expect(reply.value).toContain('&quot;quoted&quot;')
+		expect(reply.value).toContain('&lt;img src=x&gt;')
+		expect(reply.value).not.toContain('<script>')
+	})
+
 	it('creates a reply body', () => {
 		const body = plain('Newsletter\nhello')
 
