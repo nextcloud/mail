@@ -25,7 +25,7 @@ class IspDb {
 	/** @var IClient */
 	private $client;
 
-	/** @returns string[] */
+	/** @return string[] */
 	public function getUrls(): array {
 		return [
 			'https://autoconfig.{DOMAIN}/mail/config-v1.1.xml?emailaddress={EMAIL}',
