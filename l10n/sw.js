@@ -139,6 +139,8 @@ OC.L10N.register(
     "Tags" : "Maoni",
     "Select tags" : "Chagua ukumbusho",
     "Custom" : "Mteja",
+    "Change tag color" : "Badilisha rangi ya lebo",
+    "Tag name" : "Jina la lebo",
     "Edit" : "Hariri",
     "Add tag" : "Add tag",
     "Task created" : "Task created",

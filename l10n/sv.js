@@ -692,6 +692,8 @@ OC.L10N.register(
     "Place signature above quoted text" : "Placera signaturen ovanför citerad text",
     "Message source" : "Meddelandekälla",
     "An error occurred, unable to rename the tag." : "Ett fel uppstod. Det gick inte att byta namn på taggen.",
+    "Change tag color" : "Ändra färg på tagg",
+    "Tag name" : "Namn på tagg",
     "Edit" : "Redigera",
     "An error occurred, unable to create the tag." : "Ett fel uppstod. Det gick inte att skapa taggen.",
     "Add tag" : "Lägg till tagg",

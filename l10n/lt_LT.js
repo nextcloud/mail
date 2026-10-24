@@ -635,6 +635,8 @@ OC.L10N.register(
     "Place signature above quoted text" : "Parašą įrašykite virš cituojamo teksto",
     "Message source" : "Pirminis laiško kodas",
     "An error occurred, unable to rename the tag." : "Įvyko klaida, nepavyko pervadinti žymos.",
+    "Change tag color" : "Keisti žymos spalvą",
+    "Tag name" : "Žymos pavadinimas",
     "Edit" : "Redaguoti",
     "An error occurred, unable to create the tag." : "Įvyko klaida, nepavyko sukurti žymos.",
     "Add tag" : "Pridėti žymą",

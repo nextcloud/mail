@@ -330,6 +330,7 @@ OC.L10N.register(
     "Tags" : "Etiquetas",
     "Select tags" : "Selecciona las etiquetas",
     "Custom" : "Personalizado",
+    "Tag name" : "Nombre de la etiqueta",
     "Edit" : "Editar",
     "Add tag" : "Añadir etiqueta",
     "Red" : "Rojo",

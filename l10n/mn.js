@@ -579,6 +579,8 @@ OC.L10N.register(
     "Place signature above quoted text" : "Гарын үсгийг эшлэсэн текстийн дээр байрлуулах",
     "Message source" : "Зурвасын эх",
     "An error occurred, unable to rename the tag." : "Алдаа гарлаа, таг нэр өөрчлөх боломжгүй.",
+    "Change tag color" : "Тагийн өнгө өөрчлөх",
+    "Tag name" : "Тагийн нэр",
     "Edit" : "”®”©—Ä—á–ª”©—Ö",
     "An error occurred, unable to create the tag." : "Алдаа гарлаа, таг үүсгэх боломжгүй.",
     "Add tag" : "Таг нэмэх",

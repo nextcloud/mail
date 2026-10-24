@@ -426,6 +426,7 @@
     "Place signature above quoted text" : "인용 문구 상단에 서명 삽입",
     "Message source" : "메시지 원본",
     "An error occurred, unable to rename the tag." : "오류가 발생하여 태그 이름을 변경할 수 없습니다",
+    "Tag name" : "태그 이름",
     "Edit" : "편집",
     "An error occurred, unable to create the tag." : "오류가 발생하여 태그 이름을 생성할 수 없습니다",
     "Add tag" : "태그 추가",

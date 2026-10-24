@@ -610,6 +610,8 @@ OC.L10N.register(
     "Place signature above quoted text" : "قرار دادن امضا بالای متن نقل‌قول‌شده",
     "Message source" : "منبع پیام",
     "An error occurred, unable to rename the tag." : "خطایی رخ داد، امکان تغییر نام برچسب وجود ندارد.",
+    "Change tag color" : "تغییر رنگ برچسب",
+    "Tag name" : "نام برچسب",
     "Edit" : "ویرایش",
     "An error occurred, unable to create the tag." : "خطایی رخ داد، امکان ایجاد برچسب وجود ندارد.",
     "Add tag" : "افزودن برچسب",
