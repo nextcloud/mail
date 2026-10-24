@@ -144,6 +144,7 @@ OC.L10N.register(
     "Select recipients" : "Fren iɣarwaḍen",
     "Tags" : "Tibzimin",
     "Custom" : "Udmawan",
+    "Tag name" : "Isem n ticṛeṭ",
     "Edit" : "Ẓreg",
     "Add tag" : "Rnu tabzimt",
     "Task created" : "Tawuri tettwarna",

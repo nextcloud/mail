@@ -192,6 +192,8 @@ OC.L10N.register(
     "Tags" : "Тэгі",
     "Custom" : "Карыстальніцкі",
     "Signature …" : "Подпіс …",
+    "Change tag color" : "Змяніць колер тэга",
+    "Tag name" : "Назва тэга",
     "Edit" : "Рэдагаваць",
     "Add tag" : "Дадаць тэг",
     "Task created" : "Заданне створана",

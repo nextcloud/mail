@@ -588,6 +588,8 @@ OC.L10N.register(
     "Place signature above quoted text" : "Stavi potpis iznad citiranog teksta",
     "Message source" : "Izvor poruke",
     "An error occurred, unable to rename the tag." : "Došlo je do pogreške, nije moguće promijeniti naziv oznake.",
+    "Change tag color" : "Promjeni boju oznake",
+    "Tag name" : "Naziv oznake",
     "Edit" : "Uredi",
     "An error occurred, unable to create the tag." : "Došlo je do pogreške, nije moguće stvoriti oznaku.",
     "Add tag" : "Dodaj oznaku",

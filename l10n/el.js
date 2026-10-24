@@ -627,6 +627,8 @@ OC.L10N.register(
     "Place signature above quoted text" : "Τοποθετήστε την υπογραφή πάνω από το παρατιθέμενο κείμενο",
     "Message source" : "Πηγή μηνύματος",
     "An error occurred, unable to rename the tag." : "Παρουσιάστηκε σφάλμα, δεν ήταν δυνατή η μετονομασία της ετικέτας.",
+    "Change tag color" : "Αλλαγή χρώματος ετικέτας",
+    "Tag name" : "Όνομα ετικέτας",
     "Edit" : "Επεξεργασία",
     "An error occurred, unable to create the tag." : "Παρουσιάστηκε σφάλμα, δεν ήταν δυνατή η δημιουργία της ετικέτας.",
     "Add tag" : "Προσθήκη ετικέτας",

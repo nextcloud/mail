@@ -489,6 +489,8 @@
     "Place signature above quoted text" : "Setja undirskrift fyrir ofan tilvitnaðan texta",
     "Message source" : "Uppruni skilaboða",
     "An error occurred, unable to rename the tag." : "Villa kom upp, gat ekki endurnefnt merkið.",
+    "Change tag color" : "Breyta lit merkis",
+    "Tag name" : "Heiti merkis",
     "Edit" : "Breyta",
     "An error occurred, unable to create the tag." : "Villa kom upp, gat ekki búið til merkið.",
     "Add tag" : "Bæta við merki",

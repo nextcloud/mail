@@ -635,6 +635,8 @@
     "Place signature above quoted text" : "把签名放在引用文本上方",
     "Message source" : "邮件来源",
     "An error occurred, unable to rename the tag." : "发生错误，无法重命名标签",
+    "Change tag color" : "更改标签颜色",
+    "Tag name" : "标签名称",
     "Edit" : "编辑",
     "An error occurred, unable to create the tag." : "发生了一个错误，无法创建标签",
     "Add tag" : "添加标签",

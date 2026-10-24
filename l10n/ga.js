@@ -692,6 +692,8 @@ OC.L10N.register(
     "Place signature above quoted text" : "Cuir síniú os cionn an téacs luaite",
     "Message source" : "Foinse na teachtaireachta",
     "An error occurred, unable to rename the tag." : "Tharla earráid agus níorbh fhéidir an chlib a athainmniú.",
+    "Change tag color" : "Athraigh dath an chlib",
+    "Tag name" : "Ainm chlib",
     "Edit" : "Cuir in eagar",
     "An error occurred, unable to create the tag." : "Tharla earráid, níorbh fhéidir an chlib a chruthú.",
     "Add tag" : "Cuir clib leis",

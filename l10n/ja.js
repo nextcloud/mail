@@ -508,6 +508,8 @@ OC.L10N.register(
     "Place signature above quoted text" : "引用文の上に署名を配置する",
     "Message source" : "メッセージソース",
     "An error occurred, unable to rename the tag." : "エラー:タグの名前を変更できませんでした",
+    "Change tag color" : "タグの色を変更する",
+    "Tag name" : "タグの名前",
     "Edit" : "編集",
     "An error occurred, unable to create the tag." : "エラー:タグを作成できませんでした",
     "Add tag" : "タグを追加",

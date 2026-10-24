@@ -641,6 +641,7 @@ OC.L10N.register(
     "Place signature above quoted text" : "將簽名置於引用文字上方",
     "Message source" : "郵件原始碼",
     "An error occurred, unable to rename the tag." : "發生錯誤，無法重新命名標籤。",
+    "Change tag color" : "更新標籤顏色",
     "Tag name" : "標籤名稱",
     "Edit" : "編輯",
     "An error occurred, unable to create the tag." : "發生錯誤，無法建立標籤。",

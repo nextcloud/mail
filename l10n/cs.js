@@ -608,6 +608,8 @@ OC.L10N.register(
     "Place signature above quoted text" : "Vložit podpis nad citovaný text",
     "Message source" : "Zdrojový kód zprávy",
     "An error occurred, unable to rename the tag." : "Došlo k chybě, štítek se nedaří přejmenovat.",
+    "Change tag color" : "Změnit barvu štítku",
+    "Tag name" : "Název štítku",
     "Edit" : "Upravit",
     "An error occurred, unable to create the tag." : "Došlo k chybě, štítek se nepodařilo vytvořit.",
     "Add tag" : "Přidat štítek",

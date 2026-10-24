@@ -540,6 +540,8 @@ OC.L10N.register(
     "Place signature above quoted text" : "Coloca la firma encima del texto citado",
     "Message source" : "Origen del mensaje",
     "An error occurred, unable to rename the tag." : "Se ha producido un error y no se ha podido renombrar la etiqueta.",
+    "Change tag color" : "Cambiar color de etiqueta",
+    "Tag name" : "Nombre de la etiqueta",
     "Edit" : "Editar",
     "An error occurred, unable to create the tag." : "Ocurrió un error, no fue posible crear la etiqueta.",
     "Add tag" : "Añadir etiqueta",

@@ -609,6 +609,8 @@ OC.L10N.register(
     "Place signature above quoted text" : "Umieść podpis nad cytowanym tekstem",
     "Message source" : "Źródło wiadomości",
     "An error occurred, unable to rename the tag." : "Wystąpił błąd, nie można zmienić nazwy etykiety.",
+    "Change tag color" : "Zmień kolor etykiety",
+    "Tag name" : "Nazwa etykiety",
     "Edit" : "Edycja",
     "An error occurred, unable to create the tag." : "Wystąpił błąd, nie można utworzyć etykiety.",
     "Add tag" : "Dodaj etykietę",

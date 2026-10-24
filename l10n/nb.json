@@ -481,6 +481,8 @@
     "Place signature above quoted text" : "Plasser signatur over sitert tekst",
     "Message source" : "Melding kilde",
     "An error occurred, unable to rename the tag." : "Det oppsto en feil, kan ikke gi nytt navn til taggen.",
+    "Change tag color" : "Endre farge på merkelapp",
+    "Tag name" : "Navn på merkelapp",
     "Edit" : "Rediger",
     "An error occurred, unable to create the tag." : "Det oppsto en feil, kan ikke opprette taggen.",
     "Add tag" : "Legg til merkelapp",
