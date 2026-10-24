@@ -565,6 +565,8 @@ OC.L10N.register(
     "Place signature above quoted text" : "Place signature above quoted text",
     "Message source" : "Message source",
     "An error occurred, unable to rename the tag." : "An error occurred, unable to rename the tag.",
+    "Change tag color" : "Change tag color",
+    "Tag name" : "Tag name",
     "Edit" : "ແກ້ໄຂ",
     "An error occurred, unable to create the tag." : "An error occurred, unable to create the tag.",
     "Add tag" : "Add tag",

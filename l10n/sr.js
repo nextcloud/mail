@@ -560,6 +560,8 @@ OC.L10N.register(
     "Place signature above quoted text" : "Постави потпис изнад цитираног текста",
     "Message source" : "Изворни код поруке",
     "An error occurred, unable to rename the tag." : "Дошло је до грешке, не може да се промени назив ознаке.",
+    "Change tag color" : "Промени боју ознаке",
+    "Tag name" : "Назив ознаке",
     "Edit" : "Измени",
     "An error occurred, unable to create the tag." : "Дошло је до грешке, ознака не може да се креира.",
     "Add tag" : "Додајте ознаку",

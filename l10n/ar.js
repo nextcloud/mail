@@ -488,6 +488,8 @@ OC.L10N.register(
     "Place signature above quoted text" : "ضع التوقيع فوق النص المقتبس",
     "Message source" : "مصدر الرسالة",
     "An error occurred, unable to rename the tag." : "حدث خطأ. يتعذّر تغيير تسمية الوَسْم",
+    "Change tag color" : "تغيير لون الوسم",
+    "Tag name" : "اسم الوسم",
     "Edit" : "تحرير",
     "An error occurred, unable to create the tag." : "حدث خطأ. يتعذّر إنشاء الوَسْم",
     "Add tag" : "إضافة وسم",

@@ -647,6 +647,8 @@ OC.L10N.register(
     "Place signature above quoted text" : "Aseta allkiri tsiteeritud teksti ette",
     "Message source" : "Kirja lähtekood",
     "An error occurred, unable to rename the tag." : "Tekkis viga ning sildi nime ei saanud muuta.",
+    "Change tag color" : "Muuda sildi värvi",
+    "Tag name" : "Sildi nimi",
     "Edit" : "Muuda",
     "An error occurred, unable to create the tag." : "Tekkis viga ning silti ei saanud luua.",
     "Add tag" : "Lisa silt",

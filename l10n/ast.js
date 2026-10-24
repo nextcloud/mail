@@ -230,6 +230,7 @@ OC.L10N.register(
     "Save sieve script" : "Guardar el script de sieve",
     "Message source" : "Orixe del mensaxe",
     "An error occurred, unable to rename the tag." : "Prodúxose un error, nun ye posible renomar la bandexa de corréu.",
+    "Tag name" : "Nome de la etiqueta",
     "Edit" : "Editar",
     "An error occurred, unable to create the tag." : "Prodúxose un error, nun ye posible crear la bandexa de corréu.",
     "Add tag" : "Amestar una etiqueta",

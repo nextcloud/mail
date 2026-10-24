@@ -545,6 +545,8 @@ OC.L10N.register(
     "Place signature above quoted text" : "Розмістити підпис над цитованим текстом",
     "Message source" : "Джерело повідомлення",
     "An error occurred, unable to rename the tag." : "Сталася помилка. Неможливо перейменувати мітку.",
+    "Change tag color" : "Змінити колір мітки",
+    "Tag name" : "Назва мітки",
     "Edit" : "Редагувати",
     "An error occurred, unable to create the tag." : "Сталася помилка. Неможливо створити мітку.",
     "Add tag" : "Додати мітку",

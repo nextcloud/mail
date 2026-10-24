@@ -484,6 +484,8 @@ OC.L10N.register(
     "Place signature above quoted text" : "Jarri sinadura aipatutako testuaren gainean",
     "Message source" : "Mezuaren iturburua",
     "An error occurred, unable to rename the tag." : "Errore bat gertatu da, ezin izan zaio etiketa aldatu.",
+    "Change tag color" : "Aldatu etiketaren kolorea",
+    "Tag name" : "Etiketaren izena",
     "Edit" : "Editatu",
     "An error occurred, unable to create the tag." : "Errore bat gertatu da, ezin da etiketa sortu.",
     "Add tag" : "Gehitu etiketa",

@@ -439,6 +439,8 @@ OC.L10N.register(
     "Place signature above quoted text" : "Az aláírás az idézett szöveg fölé helyezése",
     "Message source" : "Üzenet forrása",
     "An error occurred, unable to rename the tag." : "Hiba történt, a címke nem nevezhető át",
+    "Change tag color" : "Címkeszín módosítása",
+    "Tag name" : "Címkenév",
     "Edit" : "Szerkesztés",
     "An error occurred, unable to create the tag." : "HIba történt, a címke nem hozható létre.",
     "Add tag" : "Címke hozzáadása",

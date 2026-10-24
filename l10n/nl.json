@@ -620,6 +620,8 @@
     "Place signature above quoted text" : "Plaats handtekening boven de aangehaalde tekst",
     "Message source" : "Bericht brontekst",
     "An error occurred, unable to rename the tag." : "Er is een fout opgetreden, kan tag niet hernoemen",
+    "Change tag color" : "Verander de labelkleur",
+    "Tag name" : "Tagnaam",
     "Edit" : "Bewerken",
     "An error occurred, unable to create the tag." : "Er trad een fout op, tag kon niet worden gecreëerd.",
     "Add tag" : "Toevoegen tag",
