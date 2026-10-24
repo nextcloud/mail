@@ -164,6 +164,9 @@ class ContactsIntegration {
 		if (!isset($addressbook)) {
 			$addressbook = key($this->contactsManager->getUserAddressBooks());
 		}
+		if ($addressbook === null) {
+			return null;
+		}
 
 		$contact = [
 			'FN' => $name,

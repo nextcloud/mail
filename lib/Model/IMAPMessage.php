@@ -572,7 +572,8 @@ class IMAPMessage implements IMessage, JsonSerializable {
 
 			$displayName = str_replace(['_', '$'], [' ', ''], $keyword);
 			$displayName = strtoupper($displayName);
-			$displayName = mb_convert_encoding($displayName, 'UTF-8', 'UTF7-IMAP');
+			$convertedDisplayName = mb_convert_encoding($displayName, 'UTF-8', 'UTF7-IMAP');
+			$displayName = $convertedDisplayName === false ? $displayName : $convertedDisplayName;
 			$displayName = strtolower($displayName);
 			$displayName = ucwords($displayName);
 
