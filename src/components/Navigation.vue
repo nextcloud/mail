@@ -234,14 +234,15 @@ export default {
 		},
 
 		/**
-		 * Disable provisioned accounts when no password is available.
+		 * Disable provisioned accounts when no password is available and no master password is configured.
 		 * Loading messages of those accounts will fail and an endless spinner will be shown.
 		 *
 		 * @param {object} account Account object
 		 * @return {boolean} True if the account should be disabled
 		 */
 		isDisabled(account) {
-			return (this.passwordIsUnavailable && !!account.provisioningId) && !!this.mainStore.masterPasswordEnabled
+			// Disable provisioned accounts on passwordless sessions unless a master password is configured.
+			return this.passwordIsUnavailable && !!account.provisioningId && !this.mainStore.masterPasswordEnabled
 		},
 	},
 }
