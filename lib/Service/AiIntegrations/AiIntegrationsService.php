@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\AiIntegrations;
 
+use Html2Text\Html2Text;
 use JsonException;
 use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
@@ -25,11 +26,14 @@ use OCP\IUserManager;
 use OCP\L10N\IFactory;
 use OCP\TaskProcessing\Exception\Exception as TaskProcessingException;
 use OCP\TaskProcessing\IManager as TaskProcessingManager;
+use OCP\TaskProcessing\ShapeEnumValue;
 use OCP\TaskProcessing\Task as TaskProcessingTask;
 use OCP\TaskProcessing\TaskTypes\TextToText;
 use OCP\TaskProcessing\TaskTypes\TextToTextSummary;
+use OCP\TaskProcessing\TaskTypes\TextToTextTranslate;
 use Psr\Log\LoggerInterface;
 use function array_map;
+use function array_values;
 use function implode;
 use function is_array;
 use function is_string;
@@ -362,6 +366,93 @@ class AiIntegrationsService {
 
 		// Can't use json_decode() here because the output contains additional garbage
 		return preg_match('/{\s*"expectsReply"\s*:\s*true\s*}/i', $output) === 1;
+	}
+
+	/**
+	 * Languages offered by the translation provider, as `{name, value}` pairs
+	 *
+	 * @return array{input: list<array{name: string, value: string}>, output: list<array{name: string, value: string}>}
+	 */
+	public function getTranslationLanguages(): array {
+		$taskType = $this->taskProcessingManager->getAvailableTaskTypes()[TextToTextTranslate::ID] ?? null;
+		$enumValues = $taskType['inputShapeEnumValues'] ?? [];
+		$serialize = static fn (array $values): array => array_values(array_map(
+			static fn (ShapeEnumValue $value): array => $value->jsonSerialize(),
+			$values,
+		));
+		return [
+			'input' => $serialize($enumValues['origin_language'] ?? []),
+			'output' => $serialize($enumValues['target_language'] ?? []),
+		];
+	}
+
+	/**
+	 * @throws ServiceException
+	 */
+	public function translateMessage(
+		Account $account,
+		Mailbox $mailbox,
+		Message $message,
+		string $fromLanguage,
+		string $toLanguage,
+		string $currentUserId,
+	): string {
+		if (!$this->isLlmProcessingEnabled() || !$this->isTaskAvailable(TextToTextTranslate::ID)) {
+			throw new ServiceException('No translation provider available');
+		}
+		$cacheKey = 'translation_' . $this->cache->buildUrlKey([$message->getId(), $fromLanguage, $toLanguage]);
+		$cachedTranslation = $this->cache->getValue($cacheKey);
+		if ($cachedTranslation === Cache::FAILURE_MARKER) {
+			throw new ServiceException('Translation recently failed, retry later');
+		}
+		if (is_string($cachedTranslation)) {
+			return $cachedTranslation;
+		}
+
+		$imapMessage = $this->mailManager->getImapMessage(
+			$account,
+			$mailbox,
+			$message,
+			true,
+		);
+		if ($imapMessage->isEncrypted()) {
+			throw new ServiceException('Encrypted messages can not be translated');
+		}
+		$text = trim($imapMessage->getPlainBody());
+		if ($text === '' && $imapMessage->hasHtmlMessage()) {
+			$text = trim((new Html2Text($imapMessage->htmlMessage, ['do_links' => 'none', 'alt_image' => 'hide']))->getText());
+		}
+		if ($text === '') {
+			throw new ServiceException('Message has no text to translate');
+		}
+
+		$task = new TaskProcessingTask(
+			TextToTextTranslate::ID,
+			[
+				'origin_language' => $fromLanguage,
+				'input' => $text,
+				'target_language' => $toLanguage,
+			],
+			Application::APP_ID,
+			$currentUserId,
+			'translation:' . $message->getId(),
+		);
+		try {
+			$task = $this->runTask($task);
+		} catch (ServiceException $e) {
+			$this->cache->addFailure($cacheKey);
+			throw $e;
+		}
+		$output = $task->getOutput()['output'] ?? null;
+		if (!is_string($output) || trim($output) === '') {
+			$this->logger->warning('Translation task returned no output', ['status' => $task->getStatus(), 'errorMessage' => $task->getErrorMessage()]);
+			$this->cache->addFailure($cacheKey);
+			throw new ServiceException('Translation task returned no output');
+		}
+
+		$this->cache->addValue($cacheKey, $output);
+		$this->cache->resetFailures($cacheKey);
+		return $output;
 	}
 
 	public function isLlmAvailable(string $taskType): bool {

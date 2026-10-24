@@ -347,7 +347,7 @@ class PageControllerTest extends TestCase {
 		$this->classificationSettingsService->expects(($this->once()))
 			->method(('isClassificationEnabledByDefault'))
 			->willReturn(true);
-		$this->initialState->expects($this->exactly(27))
+		$this->initialState->expects($this->exactly(28))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
@@ -387,6 +387,7 @@ class PageControllerTest extends TestCase {
 				['allow-new-accounts', true],
 				['llm_summaries_available', false],
 				['llm_translation_enabled', false],
+				['llm_translation_languages', ['input' => [], 'output' => []]],
 				['llm_freeprompt_available', false],
 				['llm_followup_available', false],
 				['context_chat_available', true],
