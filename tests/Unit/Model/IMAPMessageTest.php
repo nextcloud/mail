@@ -22,6 +22,7 @@ use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\Html;
 use OCP\IRequest;
 use OCP\IURLGenerator;
+use RuntimeException;
 
 class IMAPMessageTest extends TestCase {
 	/** @var Html|MockObject */
@@ -90,6 +91,79 @@ class IMAPMessageTest extends TestCase {
 
 		$actualPlainTextBody = $message->getPlainBody();
 		$this->assertEquals($plainTextBody, $actualPlainTextBody);
+	}
+
+	private function createHtmlMessage(): IMAPMessage {
+		return new IMAPMessage(
+			1234,
+			'<memo-test@example.com>',
+			[],
+			AddressList::parse('from@mail.com'),
+			AddressList::parse('to@mail.com'),
+			AddressList::parse('cc@mail.com'),
+			AddressList::parse('bcc@mail.com'),
+			AddressList::parse('reply-to@mail.com'),
+			'subject',
+			'plain body',
+			'<p>html body</p>',
+			true,
+			[],
+			[],
+			false,
+			[],
+			new Horde_Imap_Client_DateTime('2016-01-01 00:00:00'),
+			'',
+			'disposition',
+			false,
+			false,
+			[],
+			null,
+			false,
+			'',
+			'',
+			false,
+			false,
+			false,
+			$this->htmlService,
+			false,
+		);
+	}
+
+	public function testGetHtmlBodyIsMemoized(): void {
+		$this->htmlService->expects($this->exactly(2))
+			->method('sanitizeHtmlMailBody')
+			->willReturnCallback(fn (int $id) => "<p>$id</p>");
+		$message = $this->createHtmlMessage();
+
+		$first = $message->getHtmlBody(123);
+		$second = $message->getHtmlBody(123);
+		$other = $message->getHtmlBody(456);
+
+		$this->assertSame('<p>123</p>', $first);
+		$this->assertSame('<p>123</p>', $second);
+		$this->assertSame('<p>456</p>', $other);
+	}
+
+	public function testGetHtmlBodyIsNotMemoizedWhenSanitizingFails(): void {
+		$failed = false;
+		$this->htmlService->method('sanitizeHtmlMailBody')
+			->willReturnCallback(function (int $id) use (&$failed) {
+				if ($id === 456 && !$failed) {
+					$failed = true;
+					throw new RuntimeException('sanitizing failed');
+				}
+				return "<p>$id</p>";
+			});
+		$message = $this->createHtmlMessage();
+		$message->getHtmlBody(123);
+		try {
+			$message->getHtmlBody(456);
+		} catch (RuntimeException) {
+		}
+
+		$retry = $message->getHtmlBody(456);
+
+		$this->assertSame('<p>456</p>', $retry);
 	}
 
 	public function testSerialize() {
