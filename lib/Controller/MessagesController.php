@@ -775,19 +775,23 @@ class MessagesController extends Controller {
 		// Body party and embedded messages do not have a name
 		$attachmentName = $attachment->getName();
 		if ($attachmentName === null) {
-			return new AttachmentDownloadResponse(
-				$attachment->getContent(),
-				$this->l10n->t('Embedded message %s', [
-					$attachmentId,
-				]) . '.eml',
-				$attachment->getType()
-			);
+			$attachmentName = $this->l10n->t('Embedded message %s', [
+				$attachmentId,
+			]) . '.eml';
 		}
-		return new AttachmentDownloadResponse(
-			$attachment->getContent(),
+
+		$content = $attachment->getContent();
+		$response = new AttachmentDownloadResponse(
+			$content,
 			$attachmentName,
 			$attachment->getType()
 		);
+
+		if ($content !== '') {
+			$response->cacheFor(60 * 60, false, true);
+		}
+
+		return $response;
 	}
 
 	/**
