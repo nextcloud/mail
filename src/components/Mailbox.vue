@@ -138,6 +138,7 @@ export default {
 			refreshing: false,
 			loadingMore: false,
 			loadingEnvelopes: false,
+			lockedRetries: 0,
 			loadingCacheInitialization: false,
 			loadMailboxInterval: undefined,
 			expanded: false,
@@ -268,11 +269,19 @@ export default {
 				logger.debug(envelopes.length + ' envelopes fetched', { envelopes })
 
 				this.syncedMailboxes.add(this.mailbox.databaseId + (this.searchQuery ?? ''))
+				this.lockedRetries = 0
 				this.loadingEnvelopes = false
 			} catch (error) {
 				await matchError(error, {
 					[MailboxLockedError.getName()]: async (error) => {
-						logger.info(`Mailbox ${this.mailbox.databaseId} (${this.searchQuery}) is locked`, { error })
+						if (this.lockedRetries >= 20) {
+							logger.error(`Mailbox ${this.mailbox.databaseId} (${this.searchQuery}) is still locked after ${this.lockedRetries} attempts, giving up`, { error })
+							this.loadingEnvelopes = false
+							return
+						}
+
+						this.lockedRetries++
+						logger.info(`Mailbox ${this.mailbox.databaseId} (${this.searchQuery}) is locked, retrying in 15s (attempt ${this.lockedRetries}/20)`, { error })
 						await wait(15 * 1000)
 						// Keep trying
 						await this.loadEnvelopes()
