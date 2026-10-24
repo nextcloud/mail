@@ -56,10 +56,18 @@ class ConverterTest extends TestCase {
 		$iso88591MimePart_noCharset = new Horde_Mime_Part();
 		$iso88591MimePart_noCharset->setContents('בה בדף לחבר ממונרכיה, בקר בגרסה ואמנות דת');
 		// Japanese
+		$iso2022jpText = '外せ園査リツハワ題';
+		$iso2022jpBytes = mb_convert_encoding($iso2022jpText, 'ISO-2022-JP', 'UTF-8');
+
 		$iso2022jpMimePart = new Horde_Mime_Part();
 		$iso2022jpMimePart->setType('text/plain');
 		$iso2022jpMimePart->setCharset('ISO-2022-JP');
-		$iso2022jpMimePart->setContents(mb_convert_encoding('外せ園査リツハワ題', 'ISO-2022-JP', 'UTF-8'));
+		$iso2022jpMimePart->setContents($iso2022jpBytes);
+
+		$iso2022jpLowerMimePart = new Horde_Mime_Part();
+		$iso2022jpLowerMimePart->setType('text/plain');
+		$iso2022jpLowerMimePart->setCharset('iso-2022-jp');
+		$iso2022jpLowerMimePart->setContents($iso2022jpBytes);
 		// Korean (Outlook) - all ks_c_5601 spellings map to UHC (CP949). Encode
 		// with iconv to avoid depending on mbstring's UHC support, and cover the
 		// case-insensitive charset spellings.
@@ -84,7 +92,8 @@ class ConverterTest extends TestCase {
 			[$utfMimePart, '😊'],
 			[$utfMimeStreamPart, '💦'],
 			[$iso88591MimePart, 'Ümlaut'],
-			[$iso2022jpMimePart, '外せ園査リツハワ題'],
+			[$iso2022jpMimePart, $iso2022jpText],
+			[$iso2022jpLowerMimePart, $iso2022jpText],
 			[$iso88591MimePart_noCharset, 'בה בדף לחבר ממונרכיה, בקר בגרסה ואמנות דת'],
 		], $koreanCases, [
 			[$windowsMimePart, 'قام زهاء أوراقهم ما,'],
