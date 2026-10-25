@@ -891,6 +891,7 @@ export default function mainStoreActions() {
 			mailboxId,
 			query,
 			init = false,
+			attempt = 0,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				logger.debug(`starting mailbox sync of ${mailboxId} (${query})`)
@@ -970,12 +971,20 @@ export default function mainStoreActions() {
 					.catch((error) => {
 						return matchError(error, {
 							[SyncIncompleteError.getName()]: () => {
-								logger.warn(`(initial) sync of mailbox ${mailboxId} (${query}) is incomplete, retriggering`)
-								return this.syncEnvelopes({
+								if (attempt >= 60) {
+									logger.error(`sync of mailbox ${mailboxId} (${query}) is still incomplete after ${attempt} attempts, giving up until the next sync`, { mailboxId, query, attempt })
+									throw new SyncIncompleteError(`Sync of mailbox ${mailboxId} did not complete after ${attempt} attempts`)
+								}
+
+								logger.warn(`(initial) sync of mailbox ${mailboxId} (${query}) is incomplete, retriggering in 1s (attempt ${attempt + 1}/60)`)
+								// Wait between attempts instead of hammering the server with
+								// immediate re-sync requests (a tight POST loop for large mailboxes)
+								return wait(1000).then(() => this.syncEnvelopes({
 									mailboxId,
 									query,
 									init,
-								})
+									attempt: attempt + 1,
+								}))
 							},
 							[MailboxLockedError.getName()]: (error) => {
 								if (init) {
@@ -983,11 +992,17 @@ export default function mainStoreActions() {
 									throw error
 								}
 
-								logger.info('Sync failed because the mailbox is locked, retriggering', { error })
+								if (attempt >= 40) {
+									logger.error(`Sync of mailbox ${mailboxId} (${query}) failed because the mailbox is still locked after ${attempt} attempts, giving up`, { error, mailboxId, query, attempt })
+									throw error
+								}
+
+								logger.info(`Sync failed because the mailbox is locked, retriggering (attempt ${attempt + 1}/40)`, { error })
 								return wait(1500).then(() => this.syncEnvelopes({
 									mailboxId,
 									query,
 									init,
+									attempt: attempt + 1,
 								}))
 							},
 							default(error) {
@@ -2080,13 +2095,20 @@ export default function mainStoreActions() {
 			const listId = normalizedEnvelopeListId(query)
 			const orderByDateInt = orderBy(idToDateInt, this.preferences['sort-order'] === 'newest' ? 'desc' : 'asc')
 
+			// Collect the mailboxes whose lists receive new ids, then rebuild
+			// each list once. Previously every list was re-sorted and replaced
+			// once per envelope, which caused O(n*m log m) work and needless
+			// re-renders for every batch of new messages.
+			const dirtyMailboxes = new Set()
+
 			envelopes.forEach((envelope) => {
 				const mailbox = this.mailboxes[envelope.mailboxId]
 				const existing = mailbox.envelopeLists[listId] || []
 				this.normalizeTags(envelope)
 				this.envelopes[envelope.databaseId] = { ...this.envelopes[envelope.databaseId] || {}, ...envelope }
 				envelope.accountId = mailbox.accountId
-				mailbox.envelopeLists[listId] = uniq(orderByDateInt(this.appendOrReplaceEnvelopeId(existing, envelope)))
+				mailbox.envelopeLists[listId] = this.appendOrReplaceEnvelopeId(existing, envelope)
+				dirtyMailboxes.add(mailbox)
 				if (!addToUnifiedMailboxes) {
 					return
 				}
@@ -2096,8 +2118,13 @@ export default function mainStoreActions() {
 					.filter((mb) => mb.specialRole && mb.specialRole === mailbox.specialRole)
 					.forEach((mailbox) => {
 						const existing = mailbox.envelopeLists[listId] || []
-						mailbox.envelopeLists[listId] = uniq(orderByDateInt(existing.concat([envelope.databaseId])))
+						mailbox.envelopeLists[listId] = existing.concat([envelope.databaseId])
+						dirtyMailboxes.add(mailbox)
 					})
+			})
+
+			dirtyMailboxes.forEach((mailbox) => {
+				mailbox.envelopeLists[listId] = uniq(orderByDateInt(mailbox.envelopeLists[listId] || []))
 			})
 		},
 		updateEnvelopeMutation({ envelope }) {
