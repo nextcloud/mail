@@ -52,7 +52,7 @@
 		<div id="reply-composer" />
 		<div class="reply-buttons">
 			<div v-if="smartReplies.length > 0" class="reply-buttons__suggested">
-				<NcPopover trigger="hover focus">
+				<NcPopover :triggers="['hover', 'focus']">
 					<template #trigger>
 						<NcButton
 							variant="tertiary-no-background"
