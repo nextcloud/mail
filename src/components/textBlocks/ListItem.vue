@@ -387,11 +387,12 @@ export default {
 			this.saveLoading = true
 			try {
 				await this.mainStore.patchTextBlock(this.localTextBlock)
-				this.saveLoading = false
 				this.editModalOpen = false
 			} catch (error) {
 				showError(t('mail', 'Failed to save text block'))
 				logger.error('Failed to save text block', error)
+			} finally {
+				this.saveLoading = false
 			}
 		},
 	},
