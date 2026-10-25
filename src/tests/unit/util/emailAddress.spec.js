@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { getLabelAndAddress, parseEmailList, sortAliases } from '../../../util/emailAddress.js'
+import { getLabelAndAddress, isValidEmail, parseEmailList, sortAliases } from '../../../util/emailAddress.js'
 
 describe('getLabelAndAddress', () => {
 	it('parses a plain email address', () => {
@@ -43,6 +43,10 @@ describe('getLabelAndAddress', () => {
 
 	it('returns null for invalid input', () => {
 		expect(getLabelAndAddress('not an email')).toBeNull()
+	})
+
+	it('returns null for partially invalid input', () => {
+		expect(getLabelAndAddress('alice@example')).toBeNull()
 	})
 
 	it('returns null for empty string', () => {
@@ -146,6 +150,12 @@ describe('parseEmailList', () => {
 		])
 	})
 
+	it('ignores broken email entries in a list', () => {
+		expect(parseEmailList('bob@example, alice@example.com')).toEqual([
+			{ label: 'alice@example.com', email: 'alice@example.com' },
+		])
+	})
+
 	it('skips entries without any email address', () => {
 		expect(parseEmailList('just-text')).toEqual([])
 	})
@@ -209,6 +219,15 @@ describe('parseEmailList', () => {
 		expect(emails).toContain('ian@example.ac.uk')
 		expect(emails).toContain('test@test.com')
 		expect(emails).toContain('testaaaa@aasd.com')
+	})
+})
+
+describe('isValidEmail', () => {
+	it('tests email validation', () => {
+		expect(isValidEmail('test@test.com')).toBe(true)
+		expect(isValidEmail('test+aaaaa@test.com')).toBe(true)
+		expect(isValidEmail('test')).toBe(false)
+		expect(isValidEmail('test@test')).toBe(false)
 	})
 })
 
