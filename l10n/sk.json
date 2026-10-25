@@ -693,6 +693,8 @@
     "Change tag color" : "Zmeniť farbu štítkov",
     "Tag name" : "Názov štítku",
     "Edit" : "Upraviť",
+    "Assign tags to \"{subject}\"" : "Priradiť značky k správe \"{subject}\"",
+    "_Assign tags to %n message_::_Assign tags to %n messages_" : ["Priradiť značky k %n správe","Priradiť značky k %n správam","Priradiť značky k %n správam","Priradiť značky k %n správam"],
     "An error occurred, unable to create the tag." : "Vyskytla sa chyba, nie je možné vytvoriť štítok.",
     "Add tag" : "Pridať štítok",
     "Task created" : "Úloha vytvorená",

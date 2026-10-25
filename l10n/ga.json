@@ -693,6 +693,8 @@
     "Change tag color" : "Athraigh dath an chlib",
     "Tag name" : "Ainm chlib",
     "Edit" : "Cuir in eagar",
+    "Assign tags to \"{subject}\"" : "Sann clibeanna do \"{subject}\"",
+    "_Assign tags to %n message_::_Assign tags to %n messages_" : ["Sann clibeanna do %n teachtaireacht","Sann clibeanna do %n theachtaireacht","Sann clibeanna do %n theachtaireacht","Sann clibeanna do %n theachtaireacht","Sann clibeanna do %n teachtaireacht"],
     "An error occurred, unable to create the tag." : "Tharla earráid, níorbh fhéidir an chlib a chruthú.",
     "Add tag" : "Cuir clib leis",
     "Task created" : "Tasc cruthaithe",
