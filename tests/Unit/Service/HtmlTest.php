@@ -274,4 +274,47 @@ class HtmlTest extends TestCase {
 		$this->assertStringContainsString('<figure class="image image-style-align-center">', $result);
 		$this->assertStringContainsString('<figcaption>Caption</figcaption>', $result);
 	}
+
+	/**
+	 * @dataProvider schemelessHrefProvider
+	 */
+	public function testSanitizeHtmlMailBodyResolvesSchemelessHref(string $href, string $expected): void {
+		$urlGenerator = $this->createStub(IURLGenerator::class);
+		$request = $this->createStub(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$result = $html->sanitizeHtmlMailBody(42, "<a href=\"$href\">link</a>", []);
+
+		$this->assertStringContainsString("href=\"$expected\"", $result);
+	}
+
+	public function schemelessHrefProvider(): array {
+		return [
+			'domain with path and query' => ['www.example.com/unsubscribe?token=abc', 'https://www.example.com/unsubscribe?token=abc'],
+			'bare domain' => ['www.example.com', 'https://www.example.com'],
+			'internationalized domain' => ['bücher.de/x', 'https://xn--bcher-kva.de/x'],
+			'userinfo in first segment' => ['trusted.example@other.example/path', 'trusted.example@other.example/path'],
+			'relative path' => ['unsubscribe/confirm', 'https://unsubscribe/confirm'],
+			'absolute path' => ['/unsubscribe', '/unsubscribe'],
+			'fragment only' => ['#section', '#section'],
+			'query only' => ['?token=abc', '?token=abc'],
+		];
+	}
+
+	public function testSanitizeHtmlMailBodyProxiesSchemelessImage(): void {
+		$urlGenerator = $this->createStub(IURLGenerator::class);
+		$urlGenerator->method('linkToRoute')->willReturn('/apps/mail/proxy?id=42&hmac=abc');
+		$request = $this->createStub(IRequest::class);
+		$hmacGenerator = $this->createMock(ProxyHmacGenerator::class);
+		$hmacGenerator->expects(self::once())
+			->method('generate')
+			->with(42, 'https://www.example.com/logo.png')
+			->willReturn('abc');
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$result = $html->sanitizeHtmlMailBody(42, '<img src="www.example.com/logo.png" alt="">', []);
+
+		$this->assertStringContainsString('src=https%3A%2F%2Fwww.example.com%2Flogo.png', $result);
+	}
 }
