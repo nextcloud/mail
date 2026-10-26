@@ -64,7 +64,10 @@ class Html {
 			// actually sending a different charset. UrlLinker's escapeHtml() calls
 			// htmlspecialchars() without ENT_SUBSTITUTE/ENT_IGNORE, which returns an
 			// empty string for the whole input on the first invalid byte it hits.
-			$data = mb_convert_encoding($data, 'UTF-8', 'UTF-8');
+			$convertedData = mb_convert_encoding($data, 'UTF-8', 'UTF-8');
+			if ($convertedData !== false) {
+				$data = $convertedData;
+			}
 		}
 
 		$linker = new UrlLinker([
@@ -108,6 +111,9 @@ class Html {
 	public function parseMailBody(string $body): array {
 		$signature = null;
 		$parts = preg_split("/-- (\n|(\r\n))/", $body);
+		if ($parts === false) {
+			$parts = [$body];
+		}
 		if (count($parts) > 1) {
 			$signature = array_pop($parts);
 			$body = implode("-- \r\n", $parts);
