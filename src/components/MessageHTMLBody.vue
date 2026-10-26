@@ -36,11 +36,13 @@
 
 <script>
 import iframeResize from '@iframe-resizer/parent'
+import { mapStores } from 'pinia'
 import BlockedContentWarning from './BlockedContentWarning.vue'
 import MdnRequest from './MdnRequest.vue'
 import NeedsTranslationInfo from './NeedsTranslationInfo.vue'
 import logger from '../logger.js'
 import { trustSender } from '../service/TrustedSenderService.js'
+import useMainStore from '../store/mainStore.js'
 import { detectForeignLanguage } from '../util/languageDetection.ts'
 import { isPrintShortcut } from '../util/printMessage.ts'
 
@@ -81,6 +83,8 @@ export default {
 	},
 
 	computed: {
+		...mapStores(useMainStore),
+
 		sender() {
 			return this.message.from[0]?.email
 		},
@@ -132,7 +136,7 @@ export default {
 					|| iframeDoc.querySelectorAll('style[data-original-content]').length > 0
 
 			this.$emit('load')
-			if (this.isSenderTrusted) {
+			if (this.isSenderTrusted || this.mainStore.getPreference('always-show-external-images', 'false') === 'true') {
 				this.displayIframe()
 			}
 		},

@@ -188,7 +188,7 @@ class PageControllerTest extends TestCase {
 		$account1 = $this->createMock(Account::class);
 		$account2 = $this->createMock(Account::class);
 		$mailbox = $this->createStub(Mailbox::class);
-		$this->preferences->expects($this->exactly(15))
+		$this->preferences->expects($this->exactly(16))
 			->method('getPreference')
 			->willReturnMap([
 				[$this->userId, 'account-settings', '[]', json_encode([])],
@@ -206,6 +206,7 @@ class PageControllerTest extends TestCase {
 				[$this->userId, 'sort-favorites', 'false', 'false'],
 				[$this->userId, 'compact-mode', 'false', 'false'],
 				[$this->userId, 'auto-mark-as-read', '3000', '3000'],
+				[$this->userId, 'always-show-external-images', 'false', 'false'],
 			]);
 		$this->accountService->expects($this->once())
 			->method('findByUserId')
@@ -376,6 +377,7 @@ class PageControllerTest extends TestCase {
 					'index-context-chat' => 'true',
 					'compact-mode' => 'false',
 					'auto-mark-as-read' => '3000',
+					'always-show-external-images' => 'false',
 				]],
 				['prefill_displayName', 'Jane Doe'],
 				['importance_classification_default', true],

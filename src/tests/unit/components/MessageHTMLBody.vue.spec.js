@@ -4,10 +4,12 @@
  */
 
 import { shallowMount } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
 import BlockedContentWarning from '../../../components/BlockedContentWarning.vue'
 import MessageHTMLBody from '../../../components/MessageHTMLBody.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 import { trustSender } from '../../../service/TrustedSenderService.js'
+import useMainStore from '../../../store/mainStore.js'
 
 vi.mock('@iframe-resizer/parent', () => ({ default: vi.fn() }))
 vi.mock('@nextcloud/initial-state', () => ({ loadState: vi.fn().mockReturnValue(false) }))
@@ -15,6 +17,10 @@ vi.mock('../../../util/languageDetection.ts', () => ({ detectForeignLanguage: vi
 vi.mock('../../../service/TrustedSenderService.js', () => ({ trustSender: vi.fn() }))
 
 describe('MessageHTMLBody', () => {
+	beforeEach(() => {
+		setActivePinia(createPinia())
+	})
+
 	// Attached, because only an iframe that is part of a document has a
 	// `contentDocument` to listen on.
 	const mountBody = () => shallowMount(MessageHTMLBody, {
@@ -106,6 +112,19 @@ describe('MessageHTMLBody', () => {
 			await view.vm.$nextTick()
 
 			expect(trustSender).toHaveBeenCalledWith('example.com', 'domain', true)
+			expect(view.findComponent(BlockedContentWarning).exists()).toBe(false)
+		})
+
+		it('shows images from every sender when the reader chose so', async () => {
+			useMainStore().savePreferenceMutation({ key: 'always-show-external-images', value: 'true' })
+			const view = mountBody()
+
+			loadFrameWithBlockedImage(view)
+			await view.vm.$nextTick()
+
+			expect(view.vm.getIframeDoc().querySelector('img').getAttribute('src'))
+				.toBe('https://example.com/tracker.gif')
+			expect(trustSender).not.toHaveBeenCalled()
 			expect(view.findComponent(BlockedContentWarning).exists()).toBe(false)
 		})
 	})
