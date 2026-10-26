@@ -17,7 +17,7 @@ vi.mock('../../../service/TrustedSenderService.js', () => ({ trustSender: vi.fn(
 describe('MessageHTMLBody', () => {
 	// Attached, because only an iframe that is part of a document has a
 	// `contentDocument` to listen on.
-	const mountBody = () => shallowMount(MessageHTMLBody, {
+	const mountBody = (props = {}) => shallowMount(MessageHTMLBody, {
 		attachTo: document.body,
 		global: {
 			mixins: [Nextcloud],
@@ -29,6 +29,7 @@ describe('MessageHTMLBody', () => {
 				from: [{ email: 'alice@example.com' }],
 				isSenderTrusted: false,
 			},
+			...props,
 		},
 	})
 
@@ -106,6 +107,18 @@ describe('MessageHTMLBody', () => {
 			await view.vm.$nextTick()
 
 			expect(trustSender).toHaveBeenCalledWith('example.com', 'domain', true)
+			expect(view.findComponent(BlockedContentWarning).exists()).toBe(false)
+		})
+
+		it('shows images from every sender when the reader chose so', async () => {
+			const view = mountBody({ alwaysShowExternalImages: true })
+
+			loadFrameWithBlockedImage(view)
+			await view.vm.$nextTick()
+
+			expect(view.vm.getIframeDoc().querySelector('img').getAttribute('src'))
+				.toBe('https://example.com/tracker.gif')
+			expect(trustSender).not.toHaveBeenCalled()
 			expect(view.findComponent(BlockedContentWarning).exists()).toBe(false)
 		})
 	})

@@ -68,6 +68,12 @@ export default {
 			required: true,
 			type: Object,
 		},
+
+		alwaysShowExternalImages: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
 	},
 
 	emits: ['translate', 'load', 'printShortcut'],
@@ -132,7 +138,7 @@ export default {
 					|| iframeDoc.querySelectorAll('style[data-original-content]').length > 0
 
 			this.$emit('load')
-			if (this.isSenderTrusted) {
+			if (this.isSenderTrusted || this.alwaysShowExternalImages) {
 				this.displayIframe()
 			}
 		},
