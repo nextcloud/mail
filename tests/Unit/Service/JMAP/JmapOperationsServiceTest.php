@@ -12,10 +12,15 @@ namespace OCA\Mail\Tests\Unit\Service\JMAP;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use JmapClient\Client;
 use JmapClient\Requests\Mail\MailParameters as MailParametersRequest;
+use JmapClient\Requests\Request;
+use JmapClient\Responses\Mail\MailParameters as MailParametersResponse;
 use JmapClient\Responses\ResponseBundle;
 use JmapClient\Responses\ResponseException;
+use JmapClient\Session\Session;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\JMAP\Exception\JmapException;
+use OCA\Mail\JMAP\Exception\JmapUnknownMethod;
 use OCA\Mail\JMAP\JmapMailboxAdapter;
 use OCA\Mail\JMAP\JmapMessageAdapter;
 use OCA\Mail\Protocol\ProtocolFactory;
@@ -349,5 +354,155 @@ class JmapOperationsServiceTest extends TestCase {
 		} catch (JmapException $e) {
 			$this->assertSame(ResponseException::SERVER_UNAVAILABLE, $e->getType());
 		}
+	}
+
+	public function testEntityIdentifiersReturnsEveryPage(): void {
+		$ids = $this->remoteIds(1204);
+		$requests = [];
+		$this->dataStore->method('sessionStatus')->willReturn(true);
+		$this->dataStore->method('perform')
+			->willReturnCallback(function (array $commands) use ($ids, &$requests) {
+				$requests[] = $commands[0]->jsonSerialize()[1];
+				return $this->queryResponse($ids, $commands[0]);
+			});
+
+		$result = $this->service->entityIdentifiers('mailbox-1');
+
+		$this->assertSame(['state' => 'query-state', 'list' => $ids], $result);
+		$this->assertCount(3, $requests);
+		$this->assertSame('mailbox-1', $requests[0]['filter']->inMailbox);
+		$this->assertSame(1000, $requests[2]['position']);
+	}
+
+	public function testEntityDeltaWithoutStateReturnsEveryIdentifierAsAddition(): void {
+		$ids = $this->remoteIds(600);
+		$this->dataStore->method('sessionStatus')->willReturn(true);
+		$this->dataStore->method('perform')
+			->willReturnCallback(fn (array $commands) => $this->queryResponse($ids, $commands[0]));
+
+		$delta = $this->service->entityDelta('mailbox-1', '');
+
+		$this->assertSame([
+			'state' => 'query-state',
+			'additions' => $ids,
+			'modifications' => [],
+			'deletions' => [],
+		], $delta);
+	}
+
+	public function testEntityIdentifiersThrowsUnknownMethod(): void {
+		$this->dataStore->method('sessionStatus')->willReturn(true);
+		$this->dataStore->method('perform')->willReturn(new ResponseBundle([
+			'methodResponses' => [
+				['error', ['type' => ResponseException::UNKNOWN_METHOD, 'description' => 'no query'], 'c0'],
+			],
+		]));
+
+		$this->expectException(JmapUnknownMethod::class);
+		$this->expectExceptionMessage('no query');
+
+		$this->service->entityIdentifiers('mailbox-1');
+	}
+
+	public function testEntityFetchMessagePagesFetchesWithinTheServerLimit(): void {
+		$this->dataStore->method('sessionStatus')->willReturn(true);
+		$this->dataStore->method('sessionData')->willReturn(new Session([
+			'capabilities' => ['urn:ietf:params:jmap:core' => ['maxObjectsInGet' => 2, 'maxCallsInRequest' => 1]],
+		]));
+		$requested = [];
+		$this->dataStore->expects(self::exactly(3))
+			->method('perform')
+			->willReturnCallback(function (array $commands) use (&$requested) {
+				$ids = $commands[0]->jsonSerialize()[1]['ids'];
+				$requested[] = $ids;
+				return $this->getResponse($ids);
+			});
+		$this->jmapMessageAdapter->method('convertToDatabaseMessage')
+			->willReturnCallback(static function (MailParametersResponse $entry): Message {
+				$message = new Message();
+				$message->setRemoteId($entry->id());
+				return $message;
+			});
+
+		$pages = iterator_to_array($this->service->entityFetchMessagePages('m1', 'm2', 'm3', 'm4', 'm5'), false);
+
+		$this->assertSame([['m1', 'm2'], ['m3', 'm4'], ['m5']], $requested);
+		$this->assertSame([['m1', 'm2'], ['m3', 'm4'], ['m5']], array_map(array_keys(...), $pages));
+		$this->assertSame('m3', $pages[1]['m3']->getRemoteId());
+	}
+
+	public function testEntityFetchMessagePagesThrowsServiceExceptionOnMethodError(): void {
+		$this->dataStore->method('sessionStatus')->willReturn(true);
+		$this->dataStore->method('perform')->willReturn(new ResponseBundle([
+			'methodResponses' => [
+				['error', ['type' => ResponseException::SERVER_FAIL, 'description' => 'broken'], 'c0'],
+			],
+		]));
+
+		$this->expectException(ServiceException::class);
+		$this->expectExceptionMessage('serverFail: broken');
+
+		iterator_to_array($this->service->entityFetchMessagePages('m1'), false);
+	}
+
+	public function testEntityFetchNativeCollectsEveryPage(): void {
+		$this->dataStore->method('sessionStatus')->willReturn(true);
+		$this->dataStore->method('sessionData')->willReturn(new Session([
+			'capabilities' => ['urn:ietf:params:jmap:core' => ['maxObjectsInGet' => 2]],
+		]));
+		$this->dataStore->method('perform')
+			->willReturnCallback(fn (array $commands) => $this->getResponse(...array_map(
+				static fn ($command) => $command->jsonSerialize()[1]['ids'],
+				$commands,
+			)));
+
+		$result = $this->service->entityFetchNative('m1', 'm2', 'm3');
+
+		$this->assertSame(['m1', 'm2', 'm3'], array_keys($result));
+		$this->assertContainsOnlyInstancesOf(MailParametersResponse::class, $result);
+	}
+
+	public function testEntityFetchNativeWithoutIdentifiersSendsNothing(): void {
+		$this->dataStore->expects(self::never())->method('perform');
+
+		$this->assertSame([], $this->service->entityFetchNative());
+	}
+
+	/**
+	 * @return list<string>
+	 */
+	private function remoteIds(int $count): array {
+		return array_map(static fn (int $n): string => 'm' . $n, range(1, $count));
+	}
+
+	/**
+	 * @param list<string> $ids
+	 */
+	private function queryResponse(array $ids, Request $query): ResponseBundle {
+		$arguments = $query->jsonSerialize()[1];
+		$position = $arguments['position'] ?? 0;
+		return new ResponseBundle([
+			'methodResponses' => [
+				['Email/query', [
+					'queryState' => 'query-state',
+					'position' => $position,
+					'total' => count($ids),
+					'limit' => 500,
+					'ids' => array_slice($ids, $position, 500),
+				], $query->getIdentifier()],
+			],
+		]);
+	}
+
+	/**
+	 * @param list<string> ...$calls ids requested by each get call
+	 */
+	private function getResponse(array ...$calls): ResponseBundle {
+		$responses = [];
+		foreach ($calls as $index => $ids) {
+			$list = array_map(static fn (string $id): array => ['id' => $id], $ids);
+			$responses[] = ['Email/get', ['state' => 'state-1', 'list' => $list, 'notFound' => []], 'c' . $index];
+		}
+		return new ResponseBundle(['methodResponses' => $responses]);
 	}
 }

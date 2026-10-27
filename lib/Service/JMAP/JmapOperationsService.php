@@ -9,7 +9,12 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\JMAP;
 
+use Generator;
 use JmapClient\Client;
+use JmapClient\Exceptions\MethodException;
+use JmapClient\Exceptions\QueryChangedException;
+use JmapClient\Exceptions\RequestException;
+use JmapClient\Exceptions\TransportException;
 use JmapClient\Requests\Mail\MailboxGet;
 use JmapClient\Requests\Mail\MailboxQuery;
 use JmapClient\Requests\Mail\MailboxSet;
@@ -25,6 +30,7 @@ use JmapClient\Responses\Mail\MailboxParameters as MailboxParametersResponse;
 use JmapClient\Responses\Mail\MailParameters as MailParametersResponse;
 use JmapClient\Responses\ResponseBundle;
 use JmapClient\Responses\ResponseException;
+use JmapClient\Traversal\Traverser;
 use OCA\Mail\Account;
 use OCA\Mail\Attachment;
 use OCA\Mail\Db\Mailbox;
@@ -143,6 +149,36 @@ class JmapOperationsService {
 		} catch (Throwable $e) {
 			throw new ServiceException('JMAP request failed: ' . $e->getMessage(), 0, $e);
 		}
+	}
+
+	private function traverser(): Traverser {
+		return new Traverser($this->dataStore);
+	}
+
+	/**
+	 * Iterates traversal pages, converting traversal failures as transceive() does
+	 *
+	 * @template T
+	 * @param Generator<int, T> $pages
+	 * @return Generator<int, T>
+	 *
+	 * @throws ServiceException
+	 */
+	private function traversalPages(Generator $pages): Generator {
+		try {
+			foreach ($pages as $page) {
+				yield $page;
+			}
+		} catch (MethodException|QueryChangedException|RequestException|TransportException $e) {
+			throw $this->traversalException($e);
+		}
+	}
+
+	private function traversalException(MethodException|QueryChangedException|RequestException|TransportException $e): ServiceException {
+		if ($e instanceof MethodException && $e->getType() === ResponseException::UNKNOWN_METHOD) {
+			return new JmapUnknownMethod($e->getResponse()->description(), 1, $e);
+		}
+		return new ServiceException('JMAP request failed: ' . $e->getMessage(), 0, $e);
 	}
 
 	/**
@@ -439,48 +475,7 @@ class JmapOperationsService {
 	 */
 	public function entityList(?string $location = null, array $filter = [], array $sort = [], ?array $range = null, ?string $granularity = null): array {
 		// construct first request
-		$r0 = new MailQuery($this->account());
-		// define location
-		if (!empty($location)) {
-			$r0->filter()->in($location);
-		}
-		// define filter
-		foreach ($filter as $condition) {
-			$value = $condition['value'];
-			match($condition['attribute']) {
-				'*' => $r0->filter()->text($value),
-				'in' => $r0->filter()->in($value),
-				'inOmit' => $r0->filter()->inOmit($value),
-				'from' => $r0->filter()->from($value),
-				'to' => $r0->filter()->to($value),
-				'cc' => $r0->filter()->cc($value),
-				'bcc' => $r0->filter()->bcc($value),
-				'subject' => $r0->filter()->subject($value),
-				'body' => $r0->filter()->body($value),
-				'attachmentPresent' => $r0->filter()->hasAttachment($value),
-				'tagPresent' => $r0->filter()->keywordPresent($value),
-				'tagAbsent' => $r0->filter()->keywordAbsent($value),
-				'before' => $r0->filter()->receivedBefore($value),
-				'after' => $r0->filter()->receivedAfter($value),
-				'min' => $r0->filter()->sizeMin((int)$value),
-				'max' => $r0->filter()->sizeMax((int)$value),
-				default => null
-			};
-		}
-		// define order
-		foreach ($sort as $condition) {
-			$direction = $condition['direction'];
-			match($condition['attribute']) {
-				'from' => $r0->sort()->from($direction),
-				'to' => $r0->sort()->to($direction),
-				'subject' => $r0->sort()->subject($direction),
-				'received' => $r0->sort()->received($direction),
-				'sent' => $r0->sort()->sent($direction),
-				'size' => $r0->sort()->size($direction),
-				'tag' => $r0->sort()->keyword($direction),
-				default => null
-			};
-		}
+		$r0 = $this->entityQuery($location, $filter, $sort);
 		// define range
 		if ($range !== null) {
 			$anchor = $range['anchor'] ?? null;
@@ -518,6 +513,83 @@ class JmapOperationsService {
 		}
 		// return message collection
 		return ['list' => $list, 'state' => $state];
+	}
+
+	/**
+	 * Retrieve the identifiers of every matching entity from remote storage, across as many pages as the server requires
+	 *
+	 * @param string|null $location optional location constraint
+	 * @param list<JmapEntityListFilter> $filter optional filter conditions
+	 * @param list<JmapEntityListSort> $sort optional sort conditions
+	 *
+	 * @return array{state:string, list:list<string>} query state and remote identifiers
+	 *
+	 * @throws ServiceException
+	 */
+	public function entityIdentifiers(?string $location = null, array $filter = [], array $sort = []): array {
+		$query = $this->entityQuery($location, $filter, $sort);
+		try {
+			$result = $this->traverser()->query($query);
+		} catch (MethodException|QueryChangedException|RequestException|TransportException $e) {
+			throw $this->traversalException($e);
+		}
+		$list = [];
+		foreach ($this->traversalPages($result->pages()) as $page) {
+			foreach ($page as $id) {
+				$list[] = $id;
+			}
+		}
+		return ['state' => $result->queryState(), 'list' => $list];
+	}
+
+	/**
+	 * @param list<JmapEntityListFilter> $filter
+	 * @param list<JmapEntityListSort> $sort
+	 */
+	private function entityQuery(?string $location, array $filter, array $sort): MailQuery {
+		$query = new MailQuery($this->account());
+		// define location
+		if (!empty($location)) {
+			$query->filter()->in($location);
+		}
+		// define filter
+		foreach ($filter as $condition) {
+			$value = $condition['value'];
+			match($condition['attribute']) {
+				'*' => $query->filter()->text($value),
+				'in' => $query->filter()->in($value),
+				'inOmit' => $query->filter()->inOmit($value),
+				'from' => $query->filter()->from($value),
+				'to' => $query->filter()->to($value),
+				'cc' => $query->filter()->cc($value),
+				'bcc' => $query->filter()->bcc($value),
+				'subject' => $query->filter()->subject($value),
+				'body' => $query->filter()->body($value),
+				'attachmentPresent' => $query->filter()->hasAttachment($value),
+				'tagPresent' => $query->filter()->keywordPresent($value),
+				'tagAbsent' => $query->filter()->keywordAbsent($value),
+				'before' => $query->filter()->receivedBefore($value),
+				'after' => $query->filter()->receivedAfter($value),
+				'min' => $query->filter()->sizeMin((int)$value),
+				'max' => $query->filter()->sizeMax((int)$value),
+				default => null
+			};
+		}
+		// define order
+		foreach ($sort as $condition) {
+			$direction = $condition['direction'];
+			match($condition['attribute']) {
+				'from' => $query->sort()->from($direction),
+				'to' => $query->sort()->to($direction),
+				'subject' => $query->sort()->subject($direction),
+				'received' => $query->sort()->received($direction),
+				'sent' => $query->sort()->sent($direction),
+				'size' => $query->sort()->size($direction),
+				'tag' => $query->sort()->keyword($direction),
+				default => null
+			};
+		}
+		return $query;
 	}
 
 	/**
@@ -562,21 +634,13 @@ class JmapOperationsService {
 	public function entityDelta(?string $location, string $state): array {
 		// if no state is given, return all entities as additions
 		if (empty($state)) {
-			$results = $this->entityList($location, [], [], null, 'basic');
-			$delta = [
+			$results = $this->entityIdentifiers($location);
+			return [
 				'state' => $results['state'],
-				'additions' => [],
+				'additions' => $results['list'],
 				'modifications' => [],
 				'deletions' => [],
 			];
-			foreach ($results['list'] as $entry) {
-				$remoteId = $entry->getRemoteId();
-				if ($remoteId === null) {
-					continue;
-				}
-				$delta['additions'][] = $remoteId;
-			}
-			return $delta;
 		}
 		// if location is given, perform delta for specific collection, otherwise perform delta for all collections
 		if (empty($location)) {
@@ -712,19 +776,22 @@ class JmapOperationsService {
 	}
 
 	/**
-	 * Retrieve entities from remote storage
+	 * Retrieve entities from remote storage, one page at a time within the server limits
 	 *
 	 * @param string ...$identifiers remote identifiers
 	 *
-	 * @return Message[]
+	 * @return Generator<int, array<string, Message>> pages of messages keyed by remote identifier
+	 *
+	 * @throws ServiceException
 	 */
-	public function entityFetchMessage(string ...$identifiers): array {
-		$responses = $this->entityFetchNative(...$identifiers);
-		$list = [];
-		foreach ($responses as $id => $entry) {
-			$list[$id] = $this->jmapMessageAdapter->convertToDatabaseMessage($entry);
+	public function entityFetchMessagePages(string ...$identifiers): Generator {
+		foreach ($this->entityFetchNativePages(...$identifiers) as $page) {
+			$list = [];
+			foreach ($page as $id => $entry) {
+				$list[$id] = $this->jmapMessageAdapter->convertToDatabaseMessage($entry);
+			}
+			yield $list;
 		}
-		return $list;
 	}
 
 	/**
@@ -733,32 +800,45 @@ class JmapOperationsService {
 	 * @param string ...$identifiers remote identifiers
 	 *
 	 * @return MailParametersResponse[]
+	 *
+	 * @throws ServiceException
 	 */
 	public function entityFetchNative(string ...$identifiers): array {
+		$list = [];
+		foreach ($this->entityFetchNativePages(...$identifiers) as $page) {
+			foreach ($page as $id => $entry) {
+				$list[$id] = $entry;
+			}
+		}
+		return $list;
+	}
+
+	/**
+	 * @return Generator<int, array<string, MailParametersResponse>>
+	 *
+	 * @throws ServiceException
+	 */
+	private function entityFetchNativePages(string ...$identifiers): Generator {
 		// construct request
 		$r0 = new MailGet($this->account());
-		$r0->target(...$identifiers);
 		// select properties to return
 		$r0->property(...$this->entityPropertiesDefault);
 		$r0->bodyAll(true);
-		// transceive
-		$bundle = $this->transceive([$r0]);
-		// extract response
-		$response = $bundle->first();
 		// convert json objects to message objects
-		$list = [];
-		foreach ($response->objects() as $so) {
-			if (!$so instanceof MailParametersResponse) {
-				continue;
+		foreach ($this->traversalPages($this->traverser()->fetch($identifiers, $r0)) as $objects) {
+			$list = [];
+			foreach ($objects as $so) {
+				if (!$so instanceof MailParametersResponse) {
+					continue;
+				}
+				$id = $so->id();
+				if ($id === null) {
+					continue;
+				}
+				$list[$id] = $so;
 			}
-			$id = $so->id();
-			if ($id === null) {
-				continue;
-			}
-			$list[$id] = $so;
+			yield $list;
 		}
-		// return message collection
-		return $list;
 	}
 
 	/**
