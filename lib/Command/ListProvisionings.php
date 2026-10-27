@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Command;
 
+use OCA\Mail\Db\Provisioning;
 use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -54,14 +55,22 @@ final class ListProvisionings extends Command {
 				$provisioning->getId(),
 				$provisioning->getProvisioningDomain(),
 				$provisioning->getEmailTemplate(),
-				$provisioning->getImapUser() . '@' . $provisioning->getImapHost() . ':' . $provisioning->getImapPort(),
-				$provisioning->getSmtpUser() . '@' . $provisioning->getSmtpHost() . ':' . $provisioning->getSmtpPort(),
-				$provisioning->getSieveEnabled() === true ? $provisioning->getSieveHost() . ':' . $provisioning->getSievePort() : 'no',
-				$provisioning->getMasterPasswordEnabled() === true ? 'yes' : 'no',
+				$provisioning->getImapUser() . '@' . $provisioning->getImapHost() . ':' . $provisioning->getImapPort() . ' (' . $provisioning->getImapSslMode() . ')',
+				$provisioning->getSmtpUser() . '@' . $provisioning->getSmtpHost() . ':' . $provisioning->getSmtpPort() . ' (' . $provisioning->getSmtpSslMode() . ')',
+				$provisioning->getSieveEnabled() === true ? $provisioning->getSieveHost() . ':' . $provisioning->getSievePort() . ' (' . ($provisioning->getSieveSslMode() ?? 'none') . ')' : 'no',
+				$this->formatMasterPassword($provisioning),
 			]);
 		}
 		$table->render();
 
 		return self::SUCCESS;
+	}
+
+	private function formatMasterPassword(Provisioning $provisioning): string {
+		if ($provisioning->getMasterPasswordEnabled() !== true) {
+			return 'no';
+		}
+		$masterUser = $provisioning->getMasterUser() ?? '';
+		return $masterUser === '' ? 'yes' : 'yes (user: ' . $masterUser . ')';
 	}
 }
