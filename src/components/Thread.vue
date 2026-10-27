@@ -581,7 +581,7 @@ export default {
 	}
 }
 
-@media only screen and (max-width: #{variables.$breakpoint-mobile}) {
+@media only screen and (width < #{variables.$breakpoint-mobile}) {
     #mail-thread-header {
         position: sticky !important;
         // NcAppContent's back button takes this much space above the details
@@ -607,13 +607,13 @@ export default {
 	}
 }
 
-@media only screen and (max-width: #{variables.$breakpoint-mobile}) {
+@media only screen and (width < #{variables.$breakpoint-mobile}) {
     #mail-thread-header-fields {
         padding-inline-start: 48px;
     }
 }
 
-@media only screen and (max-width: #{variables.$breakpoint-mobile}) {
+@media only screen and (width < #{variables.$breakpoint-mobile}) {
 	#mail-thread-header-fields {
 		margin-top: calc(-1 * var(--default-clickable-area));
 	}
@@ -623,7 +623,7 @@ export default {
 	margin: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 10) 0 calc(var(--default-grid-baseline) * 14);
 }
 
-@media only screen and (max-width: #{variables.$breakpoint-mobile}) {
+@media only screen and (width < #{variables.$breakpoint-mobile}) {
     #mail-message :deep(#mail-content) {
         margin: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 3) 0 calc(var(--default-grid-baseline) * 3);
     }
