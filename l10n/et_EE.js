@@ -650,6 +650,8 @@ OC.L10N.register(
     "Change tag color" : "Muuda sildi värvi",
     "Tag name" : "Sildi nimi",
     "Edit" : "Muuda",
+    "Assign tags to \"{subject}\"" : "Seo sildid kirjaga „{subject}“",
+    "_Assign tags to %n message_::_Assign tags to %n messages_" : ["Seo sildid %n e-kirjaga","Seo sildid %n e-kirjaga"],
     "An error occurred, unable to create the tag." : "Tekkis viga ning silti ei saanud luua.",
     "Add tag" : "Lisa silt",
     "Task created" : "Ülesanne on koostatud",

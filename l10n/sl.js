@@ -89,6 +89,7 @@ OC.L10N.register(
     "General" : "Splošno",
     "Add mail account" : "Dodaj račun elektronske pošte",
     "Appearance" : "Videz",
+    "Layout" : "Postavitev",
     "List" : "Seznam",
     "Sorting" : "Razvrščanje",
     "Newest first" : "najprej najnovejše",

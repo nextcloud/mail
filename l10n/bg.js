@@ -91,6 +91,7 @@ OC.L10N.register(
     "General" : "Общи",
     "Add mail account" : "Добавяне на профил",
     "Appearance" : "Изглед",
+    "Layout" : "Оформление",
     "List" : "Списък",
     "Sorting" : "Сортиране",
     "Newest first" : "Първо най-новият",
