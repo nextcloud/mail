@@ -15,4 +15,4 @@ bd5935b32142ff805a1e195f9c8c9cd4 openapi.yml
 d1e7dba2e25a3921ba09a8357bcd47c5 psalm-matrix.yml
 bea8a43904976fa01f1e091046541b37 release-relay.yml
 2dbec18233063b42f4d8e03bbb43671c reuse.yml
-0bb535f552ee8f94dae6eeb16f7f4a4e sync-workflow-templates.yml
+3688c8c5aa6a98dcd3b5019dcecccddd sync-workflow-templates.yml
