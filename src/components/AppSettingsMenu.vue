@@ -191,7 +191,13 @@
 					:label="t('mail', 'Data collection')"
 					:description="t('mail', 'Allow the app to collect and process data locally to adapt to your preferences')" />
 
-				<NcFormGroup :label="t('mail', 'Always show images from')">
+				<NcFormBoxSwitch
+					v-model="useAlwaysShowExternalImages"
+					:disabled="hasLoadingState('always-show-external-images')"
+					:label="t('mail', 'Always show images')"
+					:description="t('mail', 'Load remote images in all messages without asking. Senders can then track when you open their messages.')" />
+
+				<NcFormGroup v-if="!useAlwaysShowExternalImages" :label="t('mail', 'Always show images from')">
 					<TrustedSenders />
 				</NcFormGroup>
 			</NcAppSettingsSection>
@@ -484,6 +490,16 @@ export default {
 
 			set(value) {
 				this.onToggleCollectData(value)
+			},
+		},
+
+		useAlwaysShowExternalImages: {
+			get() {
+				return this.mainStore.getPreference('always-show-external-images', 'false') === 'true'
+			},
+
+			set(value) {
+				this.onToggleAlwaysShowExternalImages(value)
 			},
 		},
 
@@ -791,6 +807,22 @@ export default {
 				showError(t('mail', 'Could not update preference'))
 			} finally {
 				this.setLoadingState('index-context-chat', false)
+			}
+		},
+
+		async onToggleAlwaysShowExternalImages(enabled) {
+			this.setLoadingState('always-show-external-images', true)
+
+			try {
+				await this.mainStore.savePreference({
+					key: 'always-show-external-images',
+					value: enabled ? 'true' : 'false',
+				})
+			} catch (error) {
+				Logger.error('Could not save preferences', { error })
+				showError(t('mail', 'Could not update preference'))
+			} finally {
+				this.setLoadingState('always-show-external-images', false)
 			}
 		},
 

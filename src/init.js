@@ -105,6 +105,10 @@ export default function initAfterAppCreation() {
 		key: 'auto-mark-as-read',
 		value: preferences['auto-mark-as-read'],
 	})
+	mainStore.savePreferenceMutation({
+		key: 'always-show-external-images',
+		value: preferences['always-show-external-images'],
+	})
 
 	mainStore.setQuickActions(loadState('mail', 'quick-actions', []))
 
