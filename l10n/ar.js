@@ -572,6 +572,7 @@ OC.L10N.register(
     "Actions" : "الإجراءات",
     "Priority" : "الأولوية",
     "Enable filter" : "تمكين الفلتر",
+    "Tag" : "وسم",
     "delete" : "حذف",
     "Successfully updated config for \"{domain}\"" : "تمّ بنجاح تحديث التكوين لـ \"{domain}\"",
     "Error saving config" : "خطأ في حفظ التهيئة",
