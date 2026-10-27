@@ -552,6 +552,7 @@ OC.L10N.register(
     "matches" : "passer",
     "Actions" : "Handlinger",
     "Priority" : "Prioritet",
+    "Tag" : "Tagg",
     "delete" : "slett",
     "Successfully updated config for \"{domain}\"" : "Vellykket oppdatert konfigurasjon for «{domain}»",
     "Error saving config" : "Feil ved lagring av konfigurasjon",

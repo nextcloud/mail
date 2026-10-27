@@ -236,6 +236,7 @@ OC.L10N.register(
     "Filter is active" : "Фільтр актыўны",
     "Filter is not active" : "Фільтр неактыўны",
     "Help" : "Даведка",
+    "contains" : "змяшчае",
     "Enter subject" : "Увядзіце тэму",
     "Conditions" : "Умовы",
     "Add condition" : "Дадаць умову",
