@@ -1,3 +1,24 @@
+## [5.12.6](https://github.com/nextcloud/mail/compare/v5.12.5...v5.12.6) (2026-10-27)
+
+
+### Bug Fixes
+
+* **deps:** bump dompurify from ^3.4.13 to v3.4.17 ([70c8b78](https://github.com/nextcloud/mail/commit/70c8b78e1870e01913823624576365d3c3f8eb76))
+* **l10n:** Update translations from Transifex ([1dfbbb3](https://github.com/nextcloud/mail/commit/1dfbbb3e5e4fb700f7d0926873d04354a81de47b))
+* **l10n:** Update translations from Transifex ([726150a](https://github.com/nextcloud/mail/commit/726150a30dc20e63b39d7caa99084e8b2314156f))
+* **l10n:** Update translations from Transifex ([3c8a4f8](https://github.com/nextcloud/mail/commit/3c8a4f8f86f0cfed42f6512ff556b383011c21a9))
+* **l10n:** Update translations from Transifex ([03ad41b](https://github.com/nextcloud/mail/commit/03ad41b5f25047436b96440b09ec42465bf61376))
+* **l10n:** Update translations from Transifex ([b5c56a2](https://github.com/nextcloud/mail/commit/b5c56a2601b98d7be39d3080d9b2406a8800d0ef))
+* **l10n:** Update translations from Transifex ([ad37dfd](https://github.com/nextcloud/mail/commit/ad37dfd2a9b49f77aca063a5f6a60e7361657d4b))
+* **l10n:** Update translations from Transifex ([0290f0e](https://github.com/nextcloud/mail/commit/0290f0eb34b6015f949569edab665307dbbfa666))
+
+
+### Performance Improvements
+
+* **messages:** cut redundant work when opening a message ([009e17e](https://github.com/nextcloud/mail/commit/009e17e8af68ad19dee4864348f9ce204c605da2))
+
+
+
 ## [5.12.5](https://github.com/nextcloud/mail/compare/v5.12.4...v5.12.5) (2026-10-20)
 
 
