@@ -141,7 +141,7 @@ class SmimeMigrationService {
 					$this->l10n->t(
 						'S/MIME configuration %1$s for %2$s is invalid and will be skipped. Continue …',
 						[$certificateFilePath, $user->getUID()]
-					), OutputInterface::VERBOSITY_VERBOSE
+					)
 				);
 
 				continue;
@@ -155,7 +155,7 @@ class SmimeMigrationService {
 					$this->l10n->t(
 						'S/MIME certificate %1$s for %2$s could not be imported and will be skipped. Continue …',
 						[$certificateFilePath, $user->getUID()]
-					), OutputInterface::VERBOSITY_VERBOSE
+					)
 				);
 
 				continue;

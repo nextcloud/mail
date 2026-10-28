@@ -98,20 +98,30 @@ class InternalAddressesMigrationService {
 				$this->l10n->t(
 					'Internal addresses configuration for %s is invalid and will be skipped. Continue …',
 					[$user->getUID()]
-				), OutputInterface::VERBOSITY_VERBOSE
+				)
 			);
 
 			return;
 		}
 
 		foreach ($internalAddresses as $internalAddress) {
+			if (!$this->isWellFormedInternalAddress($internalAddress)) {
+				$output->writeln(
+					$this->l10n->t(
+						'An internal address of %s is invalid and will be skipped. Continue …',
+						[$user->getUID()]
+					)
+				);
+
+				continue;
+			}
+
 			$this->internalAddressService->add($user->getUID(), $internalAddress['address'], $internalAddress['type']);
 		}
 	}
 
 	/**
-	 * Validate the parsed internal addresses to ensure they
-	 * have the expected structure and types.
+	 * Validate that the parsed internal addresses are a list.
 	 *
 	 * @throws UserMigrationException
 	 */
@@ -120,34 +130,30 @@ class InternalAddressesMigrationService {
 		if (!$internalAddressesArrayIsValid) {
 			throw new UserMigrationException('Invalid internal addresses export structure');
 		}
+	}
 
-		foreach ($internalAddresses as $internalAddress) {
-			$internalAddressArrayIsValid = is_array($internalAddress);
+	private function isWellFormedInternalAddress(mixed $internalAddress): bool {
+		$internalAddressArrayIsValid = is_array($internalAddress);
 
-			$idIsValid = $internalAddressArrayIsValid
-				&& array_key_exists('id', $internalAddress)
-				&& is_int($internalAddress['id']);
+		$idIsValid = $internalAddressArrayIsValid
+			&& array_key_exists('id', $internalAddress)
+			&& is_int($internalAddress['id']);
 
-			$addressIsValid = $internalAddressArrayIsValid
-				&& array_key_exists('address', $internalAddress)
-				&& is_string($internalAddress['address']);
+		$addressIsValid = $internalAddressArrayIsValid
+			&& array_key_exists('address', $internalAddress)
+			&& is_string($internalAddress['address']);
 
-			$uidIsValid = $internalAddressArrayIsValid
-				&& array_key_exists('uid', $internalAddress)
-				&& is_string($internalAddress['uid']);
+		$uidIsValid = $internalAddressArrayIsValid
+			&& array_key_exists('uid', $internalAddress)
+			&& is_string($internalAddress['uid']);
 
-			$typeIsValid = $internalAddressArrayIsValid
-				&& array_key_exists('type', $internalAddress)
-				&& is_string($internalAddress['type']);
+		$typeIsValid = $internalAddressArrayIsValid
+			&& array_key_exists('type', $internalAddress)
+			&& is_string($internalAddress['type']);
 
-			if (
-				!$idIsValid
-				|| !$addressIsValid
-				|| !$uidIsValid
-				|| !$typeIsValid
-			) {
-				throw new UserMigrationException('Invalid internal address entry');
-			}
-		}
+		return $idIsValid
+			&& $addressIsValid
+			&& $uidIsValid
+			&& $typeIsValid;
 	}
 }

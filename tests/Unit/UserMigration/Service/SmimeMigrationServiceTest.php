@@ -15,6 +15,7 @@ use Exception;
 use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\SmimeCertificateParserException;
+use OCA\Mail\Tests\Unit\UserMigration\RecordsConsoleOutput;
 use OCA\Mail\UserMigration\MailAccountMigrator;
 use OCA\Mail\UserMigration\Service\SmimeMigrationService;
 use OCP\IUser;
@@ -23,6 +24,8 @@ use OCP\UserMigration\IImportSource;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class SmimeMigrationServiceTest extends TestCase {
+	use RecordsConsoleOutput;
+
 	private const USER_ID = '123';
 	private OutputInterface $output;
 	private IUser $user;
@@ -241,6 +244,34 @@ class SmimeMigrationServiceTest extends TestCase {
 		$mappedCertificates = $this->migrationService->importCertificates($this->user, $this->importSource, $this->output);
 
 		self::assertSame([$chainCertificate->getId() => 500], $mappedCertificates);
+	}
+
+	public function testImportReportsAnInvalidCertificateFileAsANotice(): void {
+		$this->recordConsoleOutput();
+		$this->importSource->method('getFolderListing')->willReturn(['broken.json']);
+		$this->importSource->method('getFileContents')->willReturn('this is not valid json {{{');
+
+		$this->migrationService->importCertificates($this->user, $this->importSource, $this->output);
+
+		$this->assertWritten('broken.json', 0);
+	}
+
+	public function testImportReportsACertificateThatCannotBeCreatedAsANotice(): void {
+		$this->recordConsoleOutput();
+		$userCertificate = $this->getUserCertificate();
+		$this->importSource->method('getFolderListing')->willReturn(['broken.json']);
+		$this->importSource->method('getFileContents')->willReturn(json_encode([
+			'id' => $userCertificate->getId(),
+			'certificate' => $userCertificate->getCertificate(),
+			'privateKey' => $userCertificate->getPrivateKey(),
+		]));
+		$this->serviceMock->getParameter('smimeService')
+			->method('createCertificate')
+			->willThrowException(new ServiceException('Private key does not match certificate'));
+
+		$this->migrationService->importCertificates($this->user, $this->importSource, $this->output);
+
+		$this->assertWritten('broken.json', 0);
 	}
 
 	public static function provideFileContentsWithNoCertificatesImported(): array {
