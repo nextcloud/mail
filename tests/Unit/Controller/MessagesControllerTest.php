@@ -1650,6 +1650,32 @@ class MessagesControllerTest extends TestCase {
 		$this->controller->snooze(300, 1234567890, 40);
 	}
 
+	public function testCopyDestinationMailboxNotDelegated(): void {
+		$this->mockMoveDestination();
+		$this->delegationService->expects($this->once())
+			->method('assertMailboxAccess')
+			->with(40, $this->userId)
+			->willThrowException(new DelegationForbiddenException('no access'));
+		$this->mailManager->expects($this->never())
+			->method('copyMessage');
+
+		$this->expectException(DelegationForbiddenException::class);
+
+		$this->controller->copy(300, 40);
+	}
+
+	public function testCopySuccessful(): void {
+		$this->mockMoveDestination();
+		$this->delegationService->expects($this->once())
+			->method('assertMailboxAccess')
+			->with(40, $this->userId);
+		$this->mailManager->expects($this->once())
+			->method('copyMessage');
+
+		$response = $this->controller->copy(300, 40);
+		$this->assertEquals(new JSONResponse(), $response);
+	}
+
 	private function mockMoveDestination(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(1);

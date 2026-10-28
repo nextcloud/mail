@@ -225,6 +225,53 @@ class ImapMessageConnector implements IMessageConnector {
 	}
 
 	#[\Override]
+	public function copyMessages(Account $account, Mailbox $targetMailbox, Mailbox $sourceMailbox, Message ...$messages): array {
+		if ($messages === []) {
+			return [];
+		}
+		$client = $this->protocolFactory->imapClient($account);
+
+		$copiedMessages = [];
+		try {
+			foreach ($messages as $message) {
+				try {
+					$newUid = $this->imapMessageMapper->copy($client, $sourceMailbox->getName(), $message->getUid(), $targetMailbox->getName());
+					if ($newUid === null) {
+						// The IMAP server does not support UIDPLUS and the message has no Message-ID
+						// header, so the new UID is unknown. It will be reconciled on the next sync.
+						$this->logger->debug('Copied message but could not determine its new UID', [
+							'userId' => $account->getUserId(),
+							'accountId' => $account->getId(),
+							'sourceMailboxId' => $sourceMailbox->getId(),
+							'targetMailboxId' => $targetMailbox->getId(),
+							'messageUid' => $message->getUid(),
+						]);
+						continue;
+					}
+					$copiedMessage = clone $message;
+					$copiedMessage->setId(0);
+					$copiedMessage->setUid($newUid);
+					$copiedMessage->setMailboxId($targetMailbox->getId());
+					$copiedMessages[] = $copiedMessage;
+				} catch (Horde_Imap_Client_Exception $e) {
+					$this->logger->error('Could not copy message on remote IMAP server', [
+						'exception' => $e,
+						'userId' => $account->getUserId(),
+						'accountId' => $account->getId(),
+						'sourceMailboxId' => $sourceMailbox->getId(),
+						'targetMailboxId' => $targetMailbox->getId(),
+						'messageUid' => $message->getUid(),
+					]);
+				}
+			}
+		} finally {
+			$client->logout();
+		}
+
+		return $copiedMessages;
+	}
+
+	#[\Override]
 	public function deleteMessages(Account $account, Mailbox $mailbox, Message ...$messages): array {
 		if ($messages === []) {
 			return [];
