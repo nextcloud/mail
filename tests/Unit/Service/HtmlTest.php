@@ -97,6 +97,19 @@ class HtmlTest extends TestCase {
 		self::assertStringContainsString("\u{1F609}", $withLinks);
 	}
 
+	public function testDoNotLinkAmbiguousExtensions(): void {
+		$urlGenerator = Server::get(IURLGenerator::class);
+		$request = Server::get(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$text = '/home/user/something/text.java';
+		$result = $html->convertLinks($text);
+
+		self::assertStringContainsString('/home/user/something/text.java', $result);
+		$this->assertStringNotContainsString('http', $result);
+	}
+
 	/**
 	 * @dataProvider parseMailBodyProvider
 	 * @param $expected

@@ -70,6 +70,7 @@ class Html {
 		$linker = new UrlLinker([
 			'allowFtpAddresses' => true,
 			'allowUpperCaseUrlSchemes' => false,
+			'skipAmbiguousTlds' => true,
 			'htmlLinkCreator' => static fn ($url)
 				// Render full url for the link description. Otherwise, potentially malicious query
 				// params might be hidden.
