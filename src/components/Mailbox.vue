@@ -229,17 +229,26 @@ export default {
 	},
 
 	methods: {
-		initializeCache() {
+		async initializeCache() {
 			this.loadingCacheInitialization = true
 			this.error = false
 
 			logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.query}) during cache initialization`)
-			this.sync(true)
-				.then(() => {
-					this.loadingCacheInitialization = false
-
-					return this.loadEnvelopes()
+			try {
+				await this.sync(true)
+			} catch (error) {
+				await matchError(error, {
+					[MailboxLockedError.getName()]: () => {
+						logger.info(`Folder ${this.mailbox.databaseId} (${this.searchQuery}) is already being initialized, loading its messages instead`)
+					},
+					default: (error) => {
+						throw error
+					},
 				})
+			}
+
+			this.loadingCacheInitialization = false
+			await this.loadEnvelopes()
 		},
 
 		async loadEnvelopes() {
