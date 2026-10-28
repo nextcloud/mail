@@ -28,6 +28,9 @@ class AppConfigMigrationService {
 
 	public const START_MAILBOX_ID_KEY = 'start-mailbox-id';
 
+	/** The length core's user preferences accept for a key. */
+	private const KEY_MAX_LENGTH = 64;
+
 	public function __construct(
 		private readonly IConfig $config,
 		private readonly IL10N $l10n,
@@ -124,13 +127,24 @@ class AppConfigMigrationService {
 				$this->l10n->t(
 					'Mail app configuration for %s is invalid and will be skipped. Continue …',
 					[$user->getUID()]
-				), OutputInterface::VERBOSITY_VERBOSE
+				)
 			);
 
 			return;
 		}
 
 		foreach ($appConfig as $appSetting) {
+			if (!$this->isWellFormedAppSetting($appSetting)) {
+				$output->writeln(
+					$this->l10n->t(
+						'A mail app configuration entry of %s is invalid and will be skipped. Continue …',
+						[$user->getUID()]
+					)
+				);
+
+				continue;
+			}
+
 			$key = $appSetting['key'];
 			$value = match ($key) {
 				self::ACCOUNT_SETTINGS_KEY => $this->remapAccountSettings($appSetting['value'], $accountsMapping),
@@ -143,7 +157,7 @@ class AppConfigMigrationService {
 					$this->l10n->t(
 						'Mail app configuration key %1$s for %2$s could not be migrated and will be removed. Continue …',
 						[$key, $user->getUID()]
-					), OutputInterface::VERBOSITY_VERBOSE
+					)
 				);
 
 				// user_migration restores every preference before the migrators
@@ -216,8 +230,7 @@ class AppConfigMigrationService {
 	}
 
 	/**
-	 * Validate the parsed app configuration and their containing
-	 * settings to ensure they have the expected structure and types.
+	 * Validate that the parsed mail app configuration entries are a list.
 	 *
 	 * @throws UserMigrationException
 	 */
@@ -226,21 +239,20 @@ class AppConfigMigrationService {
 		if (!$appConfigArrayIsValid) {
 			throw new UserMigrationException('Invalid mail app configuration export structure');
 		}
+	}
 
-		foreach ($appConfig as $appSetting) {
-			$appSettingArrayIsValid = is_array($appSetting);
+	private function isWellFormedAppSetting(mixed $appSetting): bool {
+		$appSettingArrayIsValid = is_array($appSetting);
 
-			$keyIsValid = $appSettingArrayIsValid
-				&& array_key_exists('key', $appSetting)
-				&& is_string($appSetting['key']);
+		$keyIsValid = $appSettingArrayIsValid
+			&& array_key_exists('key', $appSetting)
+			&& is_string($appSetting['key'])
+			&& strlen($appSetting['key']) <= self::KEY_MAX_LENGTH;
 
-			$valueIsValid = $appSettingArrayIsValid
-				&& array_key_exists('value', $appSetting)
-				&& is_string($appSetting['value']);
+		$valueIsValid = $appSettingArrayIsValid
+			&& array_key_exists('value', $appSetting)
+			&& is_string($appSetting['value']);
 
-			if (!$keyIsValid || !$valueIsValid) {
-				throw new UserMigrationException('Invalid mail app configuration entry');
-			}
-		}
+		return $keyIsValid && $valueIsValid;
 	}
 }

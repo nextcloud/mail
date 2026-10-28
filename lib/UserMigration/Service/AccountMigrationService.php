@@ -24,6 +24,7 @@ use OCP\IDBConnection;
 use OCP\IL10N;
 use OCP\IUser;
 use OCP\Security\ICrypto;
+use OCP\Security\IRemoteHostValidator;
 use OCP\UserMigration\IExportDestination;
 use OCP\UserMigration\IImportSource;
 use OCP\UserMigration\UserMigrationException;
@@ -88,6 +89,8 @@ class AccountMigrationService {
 
 	private const REQUIRED_ALIAS_KEYS = ['alias', 'name', 'signature', 'smimeCertificateId'];
 
+	private const HOST_KEYS = ['imapHost', 'smtpHost', 'sieveHost'];
+
 	public function __construct(
 		private readonly AccountService $accountService,
 		private readonly AliasesService $aliasesService,
@@ -95,6 +98,7 @@ class AccountMigrationService {
 		private readonly ICrypto $crypto,
 		private readonly IL10N $l10n,
 		private readonly IDBConnection $connection,
+		private readonly IRemoteHostValidator $hostValidator,
 		private readonly LoggerInterface $logger,
 	) {
 	}
@@ -146,7 +150,7 @@ class AccountMigrationService {
 
 			$skipReason = $this->getExportSkipReason($mailAccount);
 			if ($skipReason !== null) {
-				$output->writeln($skipReason, OutputInterface::VERBOSITY_VERBOSE);
+				$output->writeln($skipReason);
 
 				continue;
 			}
@@ -203,18 +207,19 @@ class AccountMigrationService {
 		$accountAndMailboxMappings = ['accounts' => [], 'mailboxes' => []];
 		$orderOffset = $this->getNextAccountOrder($user);
 
-		foreach ($accounts as $accountData) {
+		foreach ($accounts as $accountFileName => $accountData) {
 			try {
 				$this->validateAccount($accountData);
 			} catch (UserMigrationException $exception) {
 				$this->logger->warning('Skipping an invalid mail account while importing user ' . $user->getUID(), [
 					'exception' => $exception,
+					'file' => $accountFileName,
 				]);
 				$output->writeln(
 					$this->l10n->t(
-						'A mail account of %s is invalid and will be skipped. Continue …',
-						[$user->getUID()]
-					), OutputInterface::VERBOSITY_VERBOSE
+						'Mail account %s is invalid and will be skipped. Continue …',
+						[$accountFileName]
+					)
 				);
 
 				continue;
@@ -226,7 +231,18 @@ class AccountMigrationService {
 					$this->l10n->t(
 						'Skipping account with ID %1$s because migrating %2$s accounts is not supported yet',
 						[$accountData['accountId'], $protocol]
-					), OutputInterface::VERBOSITY_VERBOSE
+					)
+				);
+
+				continue;
+			}
+
+			if (isset($accountAndMailboxMappings['accounts'][$accountData['accountId']])) {
+				$output->writeln(
+					$this->l10n->t(
+						'Mail account %s has the same ID as another account of the export and will be skipped. Continue …',
+						[$accountFileName]
+					)
 				);
 
 				continue;
@@ -370,8 +386,35 @@ class AccountMigrationService {
 			throw new UserMigrationException('Invalid account id in account export');
 		}
 
+		if (!in_array($accountData['authMethod'], MailAccount::AUTH_METHODS, true)) {
+			throw new UserMigrationException('Invalid auth method in account export');
+		}
+
+		$this->assertHostsAllowed($accountData);
+
 		$this->assertListOfRequiredKeys($accountData['mailboxes'], self::REQUIRED_MAILBOX_KEYS, 'mailbox');
 		$this->assertListOfRequiredKeys($accountData['aliases'], self::REQUIRED_ALIAS_KEYS, 'alias');
+	}
+
+	/**
+	 * @throws UserMigrationException
+	 */
+	private function assertHostsAllowed(array $accountData): void {
+		foreach (self::HOST_KEYS as $hostKey) {
+			$host = $accountData[$hostKey];
+			if ($host === null) {
+				continue;
+			}
+
+			// The remote host validator throws on a host that is empty without its trailing dots
+			if (!is_string($host) || rtrim($host, '.') === '') {
+				throw new UserMigrationException("Invalid $hostKey in account export");
+			}
+
+			if (!$this->hostValidator->isValid($host)) {
+				throw new UserMigrationException("Exported $hostKey $host is not allowed");
+			}
+		}
 	}
 
 	/**
@@ -438,7 +481,7 @@ class AccountMigrationService {
 	 */
 	private function serialiseAccount(Account $account): array {
 		$mailAccount = $account->getMailAccount();
-		$authMethod = $mailAccount->getAuthMethod() ?? 'password';
+		$authMethod = $mailAccount->getAuthMethod() ?? MailAccount::DEFAULT_AUTH_METHOD;
 		$usesPassword = $authMethod === 'password';
 		$usesOauth = $authMethod === 'xoauth2';
 
@@ -552,7 +595,7 @@ class AccountMigrationService {
 	 * be prefixed again. It is also the only way to test for a folder: the export
 	 * writes no directory entries, so `pathExists()` on a folder is always false.
 	 *
-	 * @return Generator<array>
+	 * @return Generator<string, mixed> Decoded account files keyed by their file name
 	 * @throws UserMigrationException
 	 */
 	private function getAccounts(IImportSource $importSource, OutputInterface $output): Generator {
@@ -562,7 +605,7 @@ class AccountMigrationService {
 			}
 
 			try {
-				yield json_decode(
+				yield $accountFileName => json_decode(
 					$importSource->getFileContents(self::ACCOUNT_FOLDER . $accountFileName),
 					true,
 					flags: JSON_THROW_ON_ERROR
@@ -575,7 +618,7 @@ class AccountMigrationService {
 					$this->l10n->t(
 						'Mail account %s could not be read and will be skipped. Continue …',
 						[$accountFileName]
-					), OutputInterface::VERBOSITY_VERBOSE
+					)
 				);
 			}
 		}
