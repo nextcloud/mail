@@ -5,7 +5,6 @@
 import { loadState } from '@nextcloud/initial-state'
 import logger from './logger.js'
 import { fixAccountId } from './service/AccountService.js'
-import { fetchAvailableLanguages } from './service/translationService.js'
 import useMainStore from './store/mainStore.js'
 import useOutboxStore from './store/outboxStore.js'
 
@@ -151,9 +150,8 @@ export default function initAfterAppCreation() {
 	const outboxStore = useOutboxStore()
 	outboxMessages.forEach((message) => outboxStore.addMessageMutation({ message }))
 
-	const llmTranslationEnabled = loadState('mail', 'llm_translation_enabled', false)
-	mainStore.isTranslationEnabled = llmTranslationEnabled
-	if (llmTranslationEnabled) {
-		fetchAvailableLanguages().then(() => {})
-	}
+	mainStore.isTranslationEnabled = loadState('mail', 'llm_translation_enabled', false)
+	const translationLanguages = loadState('mail', 'llm_translation_languages', { input: [], output: [] })
+	mainStore.translationInputLanguages = translationLanguages.input
+	mainStore.translationOutputLanguages = translationLanguages.output
 }

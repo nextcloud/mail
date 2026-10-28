@@ -282,6 +282,7 @@
 						@close="onCloseTagModal" />
 					<TranslationModal
 						v-if="showTranslationModal"
+						:messageId="envelope.databaseId"
 						:richParameters="{}"
 						:message="plainTextBody"
 						:detectedForeignLanguage="detectedForeignLanguage"
