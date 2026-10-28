@@ -13,14 +13,13 @@ use JsonException;
 use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\ConfigLexicon;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\PotentialPromptInjectionException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\EventData;
 use OCA\Mail\Model\IMAPMessage;
+use OCA\Mail\Service\MailManager;
 use OCP\IAppConfig;
 use OCP\IUserManager;
 use OCP\L10N\IFactory;
@@ -39,11 +38,12 @@ use function sprintf;
 
 class AiIntegrationsService {
 
+	public const RECENT_MESSAGE_MAX_AGE = 'P14D';
+
 	public function __construct(
 		private LoggerInterface $logger,
 		private Cache $cache,
-		private IMAPClientFactory $clientFactory,
-		private IMailManager $mailManager,
+		private MailManager $mailManager,
 		private TaskProcessingManager $taskProcessingManager,
 		private IFactory $l10nFactory,
 		private IUserManager $userManager,
@@ -79,52 +79,45 @@ class AiIntegrationsService {
 		}
 		$user = $this->userManager->get($account->getUserId());
 		$language = explode('_', $this->l10nFactory->getUserLanguage($user))[0];
-		$client = $this->clientFactory->getClient($account);
-		try {
-			foreach ($messages as $entry) {
-				if (mb_strlen((string)$entry->getSummary()) !== 0) {
-					continue;
-				}
-				// retrieve full message from server
-				$userId = $account->getUserId();
-				$mailboxId = $entry->getMailboxId();
-				$messageLocalId = $entry->getId();
-				$messageRemoteId = $entry->getUid();
-				$mailbox = $this->mailManager->getMailbox($userId, $mailboxId);
-				$message = $this->mailManager->getImapMessage(
-					$client,
-					$account,
-					$mailbox,
-					$messageRemoteId,
-					true
-				);
-				// skip message if it is encrypted or empty
-				if ($message->isEncrypted() || empty(trim($message->getPlainBody()))) {
-					continue;
-				}
-				$messageBody = $message->getPlainBody();
-				try {
-					self::assertNoPromptInjection($messageBody);
-				} catch (PotentialPromptInjectionException $e) {
-					$this->logger->warning('Skipped message summary: potential prompt injection', ['exception' => $e, 'messageId' => $messageLocalId]);
-					continue;
-				}
-				// construct prompt and task
-				$prompt = sprintf(DefaultPrompts::SUMMARIZE_MESSAGE, $language, $messageBody);
-				$task = new TaskProcessingTask(
-					TextToText::ID,
-					[
-						'max_tokens' => 1024,
-						'input' => $prompt,
-					],
-					Application::APP_ID,
-					$userId,
-					'message:' . (string)$messageLocalId
-				);
-				$this->taskProcessingManager->scheduleTask($task);
+		foreach ($messages as $entry) {
+			if (mb_strlen((string)$entry->getSummary()) !== 0) {
+				continue;
 			}
-		} finally {
-			$client->logout();
+			// retrieve full message from server
+			$userId = $account->getUserId();
+			$mailboxId = $entry->getMailboxId();
+			$messageLocalId = $entry->getId();
+			$mailbox = $this->mailManager->getMailbox($userId, $mailboxId);
+			$message = $this->mailManager->getImapMessage(
+				$account,
+				$mailbox,
+				$entry,
+				true
+			);
+			// skip message if it is encrypted or empty
+			if ($message->isEncrypted() || empty(trim($message->getPlainBody()))) {
+				continue;
+			}
+			$messageBody = $message->getPlainBody();
+			try {
+				self::assertNoPromptInjection($messageBody);
+			} catch (PotentialPromptInjectionException $e) {
+				$this->logger->warning('Skipped message summary: potential prompt injection', ['exception' => $e, 'messageId' => $messageLocalId]);
+				continue;
+			}
+			// construct prompt and task
+			$prompt = sprintf(DefaultPrompts::SUMMARIZE_MESSAGE, $language, $messageBody);
+			$task = new TaskProcessingTask(
+				TextToText::ID,
+				[
+					'max_tokens' => 1024,
+					'input' => $prompt,
+				],
+				Application::APP_ID,
+				$userId,
+				'message:' . (string)$messageLocalId
+			);
+			$this->taskProcessingManager->scheduleTask($task);
 		}
 	}
 
@@ -140,20 +133,20 @@ class AiIntegrationsService {
 	 */
 	public function summarizeThread(Account $account, string $threadId, array $messages, string $currentUserId): ?string {
 		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[TextToTextSummary::ID])) {
-			$messageIds = array_map(fn ($message) => $message->getMessageId(), $messages);
-			$cachedSummary = $this->cache->getValue($this->cache->buildUrlKey($messageIds));
-			if ($cachedSummary) {
-				return $cachedSummary;
+			$messageIds = array_map(static fn (Message $message) => $message->getId(), $messages);
+			$cacheKey = 'threadSummary_' . $this->cache->buildUrlKey($messageIds);
+			$cachedSummary = $this->cache->getValue($cacheKey);
+			if (is_string($cachedSummary)) {
+				return $cachedSummary === Cache::FAILURE_MARKER ? null : $cachedSummary;
 			}
-			$client = $this->clientFactory->getClient($account);
 			try {
-				$messagesBodies = array_map(function ($message) use ($client, $account, $currentUserId) {
+				$messagesBodies = array_map(function ($message) use ($account, $currentUserId) {
 					$mailbox = $this->mailManager->getMailbox($currentUserId, $message->getMailboxId());
 					$imapMessage = $this->mailManager->getImapMessage(
-						$client,
 						$account,
 						$mailbox,
-						$message->getUid(), true
+						$message,
+						true
 					);
 					$body = $imapMessage->getPlainBody();
 					self::assertNoPromptInjection($body);
@@ -162,8 +155,6 @@ class AiIntegrationsService {
 			} catch (PotentialPromptInjectionException $e) {
 				$this->logger->warning('Skipped thread summary: potential prompt injection', ['exception' => $e, 'threadId' => $threadId]);
 				return null;
-			} finally {
-				$client->logout();
 			}
 
 			$taskPrompt = implode("\n", $messagesBodies);
@@ -174,13 +165,23 @@ class AiIntegrationsService {
 				$currentUserId,
 				$threadId,
 			);
-			$summaryTask = $this->runTask($summaryTask);
+			try {
+				$summaryTask = $this->runTask($summaryTask);
+			} catch (ServiceException $e) {
+				$this->cache->addFailure($cacheKey);
+				throw $e;
+			}
 			$output = $summaryTask->getOutput()['output'] ?? null;
 			// output could be array<array<numeric|string>|numeric|string>|null depending on task type
 			// We expect Text in TextToTextSummary so should always resolve to (string)$output
 			$summary = $output !== null && !is_array($output) ? (string)$output : null;
+			if ($summary === null || trim($summary) === '') {
+				$this->cache->addFailure($cacheKey);
+				return null;
+			}
 
-			$this->cache->addValue($this->cache->buildUrlKey($messageIds), $summary);
+			$this->cache->addValue($cacheKey, $summary);
+			$this->cache->resetFailures($cacheKey);
 
 			return $summary;
 		} else {
@@ -196,15 +197,14 @@ class AiIntegrationsService {
 		if (!isset($this->taskProcessingManager->getAvailableTaskTypes()[TextToText::ID])) {
 			return null;
 		}
-		$client = $this->clientFactory->getClient($account);
 		try {
-			$messageBodies = array_map(function ($message) use ($client, $account, $currentUserId) {
+			$messageBodies = array_map(function ($message) use ($account, $currentUserId) {
 				$mailbox = $this->mailManager->getMailbox($currentUserId, $message->getMailboxId());
 				$imapMessage = $this->mailManager->getImapMessage(
-					$client,
 					$account,
 					$mailbox,
-					$message->getUid(), true
+					$message,
+					true
 				);
 				$body = $imapMessage->getPlainBody();
 				self::assertNoPromptInjection($body);
@@ -213,8 +213,6 @@ class AiIntegrationsService {
 		} catch (PotentialPromptInjectionException $e) {
 			$this->logger->warning('Skipped event data generation: potential prompt injection', ['exception' => $e, 'threadId' => $threadId]);
 			return null;
-		} finally {
-			$client->logout();
 		}
 
 		$task = new TaskProcessingTask(
@@ -249,22 +247,25 @@ class AiIntegrationsService {
 	 */
 	public function getSmartReply(Account $account, Mailbox $mailbox, Message $message, string $currentUserId): ?array {
 		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[TextToText::ID])) {
-			$cachedReplies = $this->cache->getValue("smartReplies_{$message->getId()}");
-			if ($cachedReplies) {
+			$cacheKey = 'smartReplies_' . $message->getId();
+			$cachedReplies = $this->cache->getValue($cacheKey);
+			if ($cachedReplies === Cache::FAILURE_MARKER) {
+				return [];
+			}
+			if (is_string($cachedReplies)) {
 				try {
 					return json_decode($cachedReplies, true, 512, JSON_THROW_ON_ERROR);
 				} catch (JsonException $e) {
-					$this->cache->remove('smartReplies_' . $message->getId());
+					$this->cache->remove($cacheKey);
 					throw new ServiceException('Failed to decode smart replies JSON output', previous: $e);
 				}
 			}
-			$client = $this->clientFactory->getClient($account);
 			try {
 				$imapMessage = $this->mailManager->getImapMessage(
-					$client,
 					$account,
 					$mailbox,
-					$message->getUid(), true
+					$message,
+					true
 				);
 				if (!$this->isPersonalEmail($imapMessage)) {
 					return [];
@@ -274,33 +275,41 @@ class AiIntegrationsService {
 			} catch (PotentialPromptInjectionException $e) {
 				$this->logger->warning('Skipped smart replies: potential prompt injection', ['exception' => $e, 'messageId' => $message->getId()]);
 				return [];
-			} finally {
-				$client->logout();
 			}
 			$prompt = sprintf(DefaultPrompts::SMART_REPLY, $messageBody);
 			$task = new TaskProcessingTask(TextToText::ID, ['input' => $prompt], Application::APP_ID, $currentUserId);
-			$task = $this->runTask($task);
+			try {
+				$task = $this->runTask($task);
+			} catch (ServiceException $e) {
+				$this->cache->addFailure($cacheKey);
+				throw $e;
+			}
 			$output = $task->getOutput()['output'] ?? null;
 			$replies = is_string($output) ? trim($output) : '';
 			if ($replies === '') {
 				// The task can fail or return nothing (e.g. provider timeout); treat as no replies
 				$this->logger->warning('Smart reply task returned no output', ['status' => $task->getStatus(), 'errorMessage' => $task->getErrorMessage()]);
+				$this->cache->addFailure($cacheKey);
 				return [];
 			}
+			$cleaned = preg_replace('/^```json\s*|\s*```$/', '', $replies);
 			try {
-				$cleaned = preg_replace('/^```json\s*|\s*```$/', '', $replies);
 				$decoded = json_decode($cleaned, true, 512, JSON_THROW_ON_ERROR);
-				if (!is_array($decoded)
-					|| !isset($decoded['reply1'], $decoded['reply2'])
-					|| !is_string($decoded['reply1'])
-					|| !is_string($decoded['reply2'])) {
-					throw new ServiceException('Smart reply output has an unexpected structure');
-				}
-				$this->cache->addValue("smartReplies_{$message->getId()}", $cleaned);
-				return $decoded;
 			} catch (JsonException $e) {
+				$this->cache->addFailure($cacheKey);
 				throw new ServiceException('Failed to decode smart replies JSON output', previous: $e);
 			}
+			if (!is_array($decoded)
+				|| !isset($decoded['reply1'], $decoded['reply2'])
+				|| !is_string($decoded['reply1'])
+				|| !is_string($decoded['reply2'])) {
+				$this->cache->addFailure($cacheKey);
+				throw new ServiceException('Smart reply output has an unexpected structure');
+			}
+
+			$this->cache->addValue($cacheKey, $cleaned);
+			$this->cache->resetFailures($cacheKey);
+			return $decoded;
 		} else {
 			throw new ServiceException('No language model available for smart replies');
 		}
@@ -321,18 +330,12 @@ class AiIntegrationsService {
 			throw new ServiceException('No language model available for smart replies');
 		}
 
-		$client = $this->clientFactory->getClient($account);
-		try {
-			$imapMessage = $this->mailManager->getImapMessage(
-				$client,
-				$account,
-				$mailbox,
-				$message->getUid(),
-				true,
-			);
-		} finally {
-			$client->logout();
-		}
+		$imapMessage = $this->mailManager->getImapMessage(
+			$account,
+			$mailbox,
+			$message,
+			true,
+		);
 
 		if (!$this->isPersonalEmail($imapMessage)) {
 			return false;

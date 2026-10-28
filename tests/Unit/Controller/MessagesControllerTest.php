@@ -18,9 +18,7 @@ use OC\Security\CSP\ContentSecurityPolicyNonceManager;
 use OCA\Mail\Account;
 use OCA\Mail\Attachment;
 use OCA\Mail\Contracts\IDkimService;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
-use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Contracts\ITrustedSenderService;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Controller\MessagesController;
@@ -33,9 +31,9 @@ use OCA\Mail\Exception\DelegationForbiddenException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Model\Message;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\DelegationService;
@@ -47,8 +45,8 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\ZipResponse;
-use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\Folder;
 use OCP\Files\IFilenameValidator;
 use OCP\Files\IMimeTypeDetector;
@@ -115,17 +113,12 @@ class MessagesControllerTest extends TestCase {
 	/** @var MockObject|ITrustedSenderService */
 	private $trustedSenderService;
 
-	/** @var MockObject|IMailTransmission */
-	private $mailTransmission;
-
-	/** @var ITimeFactory */
-	private $oldFactory;
+	/** @var MockObject|ProtocolFactory */
+	private $protocolFactory;
 
 	/** @var MockObject|SmimeService */
 	private $smimeService;
 
-	/** @var MockObject|IMAPClientFactory */
-	private $clientFactory;
 	private IDkimService $dkimService;
 
 	/** @var MockObject|IUserPreferences */
@@ -145,7 +138,7 @@ class MessagesControllerTest extends TestCase {
 		$this->appName = 'mail';
 		$this->request = $this->getMockBuilder(IRequest::class)->getMock();
 		$this->accountService = $this->createMock(AccountService::class);
-		$this->mailManager = $this->createMock(IMailManager::class);
+		$this->mailManager = $this->createMock(MailManager::class);
 		$this->mailSearch = $this->createMock(IMailSearch::class);
 		$this->itineraryService = $this->createMock(ItineraryService::class);
 		$this->userId = 'john';
@@ -157,9 +150,8 @@ class MessagesControllerTest extends TestCase {
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
 		$this->nonceManager = $this->createMock(ContentSecurityPolicyNonceManager::class);
 		$this->trustedSenderService = $this->createMock(ITrustedSenderService::class);
-		$this->mailTransmission = $this->createMock(IMailTransmission::class);
+		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
 		$this->smimeService = $this->createMock(SmimeService::class);
-		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->dkimService = $this->createMock(IDkimService::class);
 		$this->userPreferences = $this->createMock(IUserPreferences::class);
 		$this->snoozeService = $this->createMock(SnoozeService::class);
@@ -177,13 +169,6 @@ class MessagesControllerTest extends TestCase {
 		$this->filenameValidator->method('sanitizeFilename')
 			->willReturn('core_master has new results');
 
-		$timeFactory = $this->createMocK(ITimeFactory::class);
-		$timeFactory->expects($this->any())
-			->method('getTime')
-			->willReturn(10000);
-		$this->oldFactory = \OC::$server->offsetGet(ITimeFactory::class);
-		\OC::$server->registerService(ITimeFactory::class, fn () => $timeFactory);
-
 		$this->controller = new MessagesController(
 			$this->appName,
 			$this->request,
@@ -200,9 +185,8 @@ class MessagesControllerTest extends TestCase {
 			$this->urlGenerator,
 			$this->nonceManager,
 			$this->trustedSenderService,
-			$this->mailTransmission,
+			$this->protocolFactory,
 			$this->smimeService,
-			$this->clientFactory,
 			$this->dkimService,
 			$this->userPreferences,
 			$this->snoozeService,
@@ -216,11 +200,21 @@ class MessagesControllerTest extends TestCase {
 		$this->attachment = $this->createMock(Attachment::class);
 	}
 
-	protected function tearDown(): void {
-		parent::tearDown();
+	public function testCalendarEventAttachmentDetection(): void {
+		$method = new \ReflectionMethod(MessagesController::class, 'attachmentIsCalendarEvent');
 
-		\OC::$server->offsetUnset(ITimeFactory::class);
-		\OC::$server->offsetSet(ITimeFactory::class, $this->oldFactory);
+		$this->assertTrue($method->invoke($this->controller, ['mime' => 'text/calendar', 'fileName' => 'event.bin']));
+		$this->assertTrue($method->invoke($this->controller, ['mime' => 'application/ics', 'fileName' => 'event.bin']));
+		$this->assertTrue($method->invoke($this->controller, ['mime' => 'application/octet-stream', 'fileName' => 'event.ICS']));
+		$this->assertFalse($method->invoke($this->controller, ['mime' => 'application/octet-stream', 'fileName' => 'event.txt']));
+		$this->assertFalse($method->invoke($this->controller, ['mime' => 'text/plain', 'fileName' => 'event.ics']));
+	}
+
+	private function assertCachedFor(Response $response, int $seconds): void {
+		$headers = $response->getHeaders();
+
+		$this->assertSame("private, max-age=$seconds, immutable", $headers['Cache-Control']);
+		$this->assertGreaterThan(time(), strtotime($headers['Expires']));
 	}
 
 	public function testGetHtmlBody(): void {
@@ -249,19 +243,13 @@ class MessagesControllerTest extends TestCase {
 			->method('find')
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->returnValue($this->account));
-		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$imapMessage = $this->createStub(IMAPMessage::class);
 		$this->mailManager->expects($this->exactly(2))
 			->method('getImapMessage')
-			->with($client, $this->account, $mailbox, 123, true)
+			->with($this->account, $mailbox, $message, true)
 			->willReturn($imapMessage);
-		$this->clientFactory->expects($this->exactly(2))
-			->method('getClient')
-			->with($this->account)
-			->willReturn($client);
 
 		$expectedPlainResponse = HtmlResponse::plain('');
-		$expectedPlainResponse->cacheFor(3600);
 
 		$nonce = 'abc123';
 		$relativeScriptUrl = '/script.js';
@@ -278,40 +266,32 @@ class MessagesControllerTest extends TestCase {
 			->with($relativeScriptUrl)
 			->willReturn($scriptUrl);
 		$expectedRichResponse = HtmlResponse::withResizer('', $nonce, $scriptUrl);
-		$expectedRichResponse->cacheFor(3600);
 
 		$policy = new ContentSecurityPolicy();
 		$policy->disallowScriptDomain('\'self\'');
 		$policy->disallowConnectDomain('\'self\'');
 		$policy->disallowFontDomain('\'self\'');
 		$policy->disallowMediaDomain('\'self\'');
-		$expectedPlainResponse->setContentSecurityPolicy($policy);
-		$expectedPlainResponse->cacheFor(60 * 60, false, true);
-		$expectedRichResponse->setContentSecurityPolicy($policy);
-		$expectedRichResponse->cacheFor(60 * 60, false, true);
 
 		$actualPlainResponse = $this->controller->getHtmlBody($messageId, true);
 		$actualRichResponse = $this->controller->getHtmlBody($messageId, false);
 
-		$this->assertEquals($expectedPlainResponse, $actualPlainResponse);
-		$this->assertEquals($expectedRichResponse, $actualRichResponse);
+		$this->assertSame($expectedPlainResponse->render(), $actualPlainResponse->render());
+		$this->assertEquals($policy, $actualPlainResponse->getContentSecurityPolicy());
+		$this->assertCachedFor($actualPlainResponse, 60 * 60);
+
+		$this->assertSame($expectedRichResponse->render(), $actualRichResponse->render());
+		$this->assertEquals($policy, $actualRichResponse->getContentSecurityPolicy());
+		$this->assertCachedFor($actualRichResponse, 60 * 60);
 	}
 
-	public function testDownloadAttachment() {
+	private function mockAttachmentDownload(int $id, string $attachmentId, string $contents, ?string $name, string $type): void {
 		$accountId = 17;
 		$mailboxId = 987;
-		$id = 123;
-		$uid = 321;
-		$attachmentId = '3';
-
-		// Attachment data
-		$contents = 'abcdef';
-		$name = 'cat.jpg';
-		$type = 'image/jpg';
-		$message = new \OCA\Mail\Db\Message();
+		$message = new DbMessage();
 		$message->setMailboxId($mailboxId);
-		$message->setUid($uid);
-		$mailbox = new \OCA\Mail\Db\Mailbox();
+		$message->setUid(321);
+		$mailbox = new Mailbox();
 		$mailbox->setName('INBOX');
 		$mailbox->setAccountId($accountId);
 		$this->mailManager->expects($this->once())
@@ -325,28 +305,48 @@ class MessagesControllerTest extends TestCase {
 		$this->mailManager->expects($this->once())
 			->method('getMailAttachment')
 			->with($this->account, $mailbox, $message, $attachmentId)
-			->will($this->returnValue($this->attachment));
+			->willReturn($this->attachment);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 		$this->attachment->expects($this->once())
 			->method('getContent')
-			->will($this->returnValue($contents));
-		$this->attachment->expects($this->any())
-			->method('getName')
-			->will($this->returnValue($name));
+			->willReturn($contents);
+		$this->attachment->method('getName')
+			->willReturn($name);
 		$this->attachment->expects($this->once())
 			->method('getType')
-			->will($this->returnValue($type));
+			->willReturn($type);
+	}
 
-		$expected = new AttachmentDownloadResponse($contents, $name, $type);
-		$response = $this->controller->downloadAttachment(
-			$id,
-			$attachmentId
-		);
+	public function testDownloadAttachment(): void {
+		$this->mockAttachmentDownload(123, '3', 'abcdef', 'cat.jpg', 'image/jpg');
+		$expected = new AttachmentDownloadResponse('abcdef', 'cat.jpg', 'image/jpg');
 
-		$this->assertEquals($expected, $response);
+		$response = $this->controller->downloadAttachment(123, '3');
+
+		$this->assertSame($expected->render(), $response->render());
+		$this->assertSame($expected->getHeaders()['Content-Disposition'], $response->getHeaders()['Content-Disposition']);
+		$this->assertSame($expected->getHeaders()['Content-Type'], $response->getHeaders()['Content-Type']);
+		$this->assertCachedFor($response, 60 * 60);
+	}
+
+	public function testDownloadEmbeddedMessageAttachment(): void {
+		$this->mockAttachmentDownload(123, '2', 'embedded rfc822 bytes', null, 'message/rfc822');
+
+		$response = $this->controller->downloadAttachment(123, '2');
+
+		$this->assertStringContainsString('.eml', $response->getHeaders()['Content-Disposition']);
+		$this->assertCachedFor($response, 60 * 60);
+	}
+
+	public function testDownloadEmptyAttachmentIsNotCached(): void {
+		$this->mockAttachmentDownload(123, '3', '', 'cat.jpg', 'image/jpg');
+
+		$response = $this->controller->downloadAttachment(123, '3');
+
+		$this->assertSame('no-cache, no-store, must-revalidate', $response->getHeaders()['Cache-Control']);
 	}
 
 	public function testSaveSingleAttachment() {
@@ -700,8 +700,8 @@ class MessagesControllerTest extends TestCase {
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->returnValue($this->account));
 		$this->mailManager->expects($this->once())
-			->method('flagMessage')
-			->with($this->account, 'INBOX', 444, 'seen', false);
+			->method('flagMessages')
+			->with($this->account, $mailbox, 'seen', false, $message);
 		$this->delegationService->expects($this->once())
 			->method('logDelegatedAction')
 			->with($this->userId, $this->userId, "$this->userId updated flags on message <$id> with [seen=false] on behalf of $this->userId");
@@ -739,9 +739,9 @@ class MessagesControllerTest extends TestCase {
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->willThrowException(new DoesNotExistException(''));
 		$this->mailManager->expects($this->never())
-			->method('getTagByImapLabel');
+			->method('getTagByLabel');
 		$this->mailManager->expects($this->never())
-			->method('tagMessage');
+			->method('tagMessages');
 
 		$this->controller->setTag($id, Tag::LABEL_IMPORTANT);
 	}
@@ -771,11 +771,11 @@ class MessagesControllerTest extends TestCase {
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->returnValue($this->account));
 		$this->mailManager->expects($this->once())
-			->method('getTagByImapLabel')
+			->method('getTagByLabel')
 			->with($imapLabel, $this->userId)
 			->willThrowException(new ClientException('Computer says no'));
 		$this->mailManager->expects($this->never())
-			->method('tagMessage');
+			->method('tagMessages');
 
 		$this->controller->setTag($id, $imapLabel);
 	}
@@ -806,12 +806,12 @@ class MessagesControllerTest extends TestCase {
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->returnValue($this->account));
 		$this->mailManager->expects($this->once())
-			->method('getTagByImapLabel')
+			->method('getTagByLabel')
 			->with($tag->getImapLabel(), $this->userId)
 			->willReturn($tag);
 		$this->mailManager->expects($this->once())
-			->method('tagMessage')
-			->with($this->account, $mailbox->getName(), $message, $tag, true);
+			->method('tagMessages')
+			->with($this->account, $mailbox, $tag, true, $message);
 		$this->delegationService->expects($this->once())
 			->method('logDelegatedAction')
 			->with($this->userId, $this->userId, "$this->userId added tag <{$tag->getImapLabel()}> on message <$id> on behalf of $this->userId");
@@ -843,9 +843,9 @@ class MessagesControllerTest extends TestCase {
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->willThrowException(new DoesNotExistException(''));
 		$this->mailManager->expects($this->never())
-			->method('getTagByImapLabel');
+			->method('getTagByLabel');
 		$this->mailManager->expects($this->never())
-			->method('tagMessage');
+			->method('tagMessages');
 
 		$this->controller->removeTag($id, Tag::LABEL_IMPORTANT);
 	}
@@ -875,11 +875,11 @@ class MessagesControllerTest extends TestCase {
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->returnValue($this->account));
 		$this->mailManager->expects($this->once())
-			->method('getTagByImapLabel')
+			->method('getTagByLabel')
 			->with($imapLabel, $this->userId)
 			->willThrowException(new ClientException('Computer says no'));
 		$this->mailManager->expects($this->never())
-			->method('tagMessage');
+			->method('tagMessages');
 
 		$this->controller->removeTag($id, $imapLabel);
 	}
@@ -910,12 +910,12 @@ class MessagesControllerTest extends TestCase {
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->returnValue($this->account));
 		$this->mailManager->expects($this->once())
-			->method('getTagByImapLabel')
+			->method('getTagByLabel')
 			->with($tag->getImapLabel(), $this->userId)
 			->willReturn($tag);
 		$this->mailManager->expects($this->once())
-			->method('tagMessage')
-			->with($this->account, $mailbox->getName(), $message, $tag, false);
+			->method('tagMessages')
+			->with($this->account, $mailbox, $tag, false, $message);
 		$this->delegationService->expects($this->once())
 			->method('logDelegatedAction')
 			->with($this->userId, $this->userId, "$this->userId removed tag <{$tag->getImapLabel()}> on message <$id> on behalf of $this->userId");
@@ -949,8 +949,8 @@ class MessagesControllerTest extends TestCase {
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->returnValue($this->account));
 		$this->mailManager->expects($this->once())
-			->method('flagMessage')
-			->with($this->account, 'INBOX', 444, 'flagged', true);
+			->method('flagMessages')
+			->with($this->account, $mailbox, 'flagged', true, $message);
 		$this->delegationService->expects($this->once())
 			->method('logDelegatedAction')
 			->with($this->userId, $this->userId, "$this->userId updated flags on message <$id> with [flagged=true] on behalf of $this->userId");
@@ -988,7 +988,7 @@ class MessagesControllerTest extends TestCase {
 			->will($this->returnValue($this->account));
 		$this->mailManager->expects($this->once())
 			->method('deleteMessage')
-			->with($this->account, 'INBOX', 444);
+			->with($this->account, $mailbox, $message);
 		$this->delegationService->expects($this->once())
 			->method('logDelegatedAction')
 			->with($this->userId, $this->userId, "$this->userId deleted message <$id> on behalf of $this->userId");
@@ -1051,7 +1051,7 @@ class MessagesControllerTest extends TestCase {
 			->will($this->returnValue($this->account));
 		$this->mailManager->expects($this->once())
 			->method('deleteMessage')
-			->with($this->account, 'INBOX', 444)
+			->with($this->account, $mailbox, $message)
 			->willThrowException(new ServiceException());
 		$this->expectException(ServiceException::class);
 
@@ -1177,14 +1177,10 @@ class MessagesControllerTest extends TestCase {
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->returnValue($this->account));
 		$source = file_get_contents(__DIR__ . '/../../data/mail-message-123.txt');
-		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$this->mailManager->expects($this->exactly(1))
 			->method('getSource')
-			->with($client, $this->account, $folderId, 123)
+			->with($this->account, $mailbox, $message)
 			->willReturn($source);
-		$this->clientFactory->expects($this->once())
-			->method('getClient')
-			->willReturn($client);
 
 		$expectedResponse = new AttachmentDownloadResponse(
 			$source,
@@ -1225,10 +1221,9 @@ class MessagesControllerTest extends TestCase {
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->returnValue($this->account));
 		$source = file_get_contents(__DIR__ . '/../../data/mail-message-123.txt');
-		$client = $this->createStub(Horde_Imap_Client_Socket::class);
 		$this->mailManager->expects($this->exactly(1))
 			->method('getSource')
-			->with($client, $this->account, $folderId, 123)
+			->with($this->account, $mailbox, $message)
 			->willReturn($source);
 		$folderNode = $this->createStub(Folder::class);
 		$this->userFolder->expects($this->once())
@@ -1246,9 +1241,6 @@ class MessagesControllerTest extends TestCase {
 			->method('newFile')
 			->with('Downloads/core_master has new results.eml')
 			->will($this->returnValue($file));
-		$this->clientFactory->expects($this->once())
-			->method('getClient')
-			->willReturn($client);
 
 		$expectedResponse = new JSONResponse();
 		$actualResponse = $this->controller->saveFile($messageId, $targetPath);
@@ -1287,7 +1279,7 @@ class MessagesControllerTest extends TestCase {
 			->will($this->returnValue($account));
 		$this->dkimService->expects($this->exactly(1))
 			->method('validate')
-			->with($account, $mailbox, $message->getUid())
+			->with($account, $mailbox, $message)
 			->willReturn(true);
 
 		$actualResponse = $this->controller->getDkim($message->getId());
@@ -1411,9 +1403,8 @@ class MessagesControllerTest extends TestCase {
 			$this->urlGenerator,
 			$this->nonceManager,
 			$this->trustedSenderService,
-			$this->mailTransmission,
+			$this->protocolFactory,
 			$this->smimeService,
-			$this->clientFactory,
 			$this->dkimService,
 			$this->userPreferences,
 			$this->snoozeService,

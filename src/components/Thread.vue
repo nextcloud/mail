@@ -24,15 +24,16 @@
 				ref="envelopeRefs"
 				:key="env.databaseId"
 				:envelope="env"
-				:mailbox-id="$route.params.mailboxId"
-				:thread-subject="threadSubject"
+				:mailboxId="$route.params.mailboxId"
+				:threadSubject="threadSubject"
 				:expanded="expandedThreads.includes(env.databaseId)"
-				:full-height="thread.length === 1"
-				:thread-index="index"
+				:fullHeight="thread.length === 1"
+				:threadIndex="index"
 				@delete="$emit('delete', env.databaseId)"
+				@archive="$emit('archive', env.databaseId)"
 				@move="onMove(env.databaseId)"
-				@print-shortcut="printThread"
-				@toggle-expand="toggleExpand(env.databaseId)"
+				@printShortcut="printThread"
+				@toggleExpand="toggleExpand(env.databaseId)"
 				@print="print" />
 		</template>
 	</NcAppContentDetails>
@@ -41,8 +42,8 @@
 <script>
 import { showError } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
-import { NcAppContentDetails } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcAppContentDetails from '@nextcloud/vue/components/NcAppContentDetails'
 import Error from './Error.vue'
 import Loading from './Loading.vue'
 import ThreadEnvelope from './ThreadEnvelope.vue'
@@ -88,6 +89,8 @@ export default {
 		Loading,
 		ThreadEnvelope,
 	},
+
+	emits: ['delete', 'archive'],
 
 	data() {
 		return {
@@ -212,7 +215,7 @@ export default {
 		}
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		window.removeEventListener('keydown', this.handleKeyDown)
 		document.getElementById(BROWSER_PRINT_NOTICE_ID)?.remove()
 	},
@@ -317,7 +320,7 @@ export default {
 		/**
 		 * Take the print shortcut while the app itself has the focus. A message
 		 * has a window of its own and its keydowns never reach here, so
-		 * `MessageHTMLBody` listens in its frame and emits `print-shortcut`
+		 * `MessageHTMLBody` listens in its frame and emits `printShortcut`
 		 * instead — both end up in `printThread`.
 		 *
 		 * @param {KeyboardEvent} event the app window's keydown event
@@ -530,21 +533,15 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @use '../../css/variables.scss';
 
 #mail-message {
 	width: 100%;
 	max-width: 100%;
-
-	.icon-loading {
-		&:only-child:after {
-			margin-top: calc(var(--default-line-height) - var(--default-grid-baseline));
-		}
-	}
 }
 
-.mail-message-body {
+#mail-message :deep(.mail-message-body) {
 	flex: 1;
 	margin-bottom: 0;
 	position: relative;
@@ -584,10 +581,11 @@ export default {
 	}
 }
 
-@media only screen and (max-width: #{variables.$breakpoint-mobile}) {
+@media only screen and (width < #{variables.$breakpoint-mobile}) {
     #mail-thread-header {
         position: sticky !important;
-        top: 29px !important;
+        // NcAppContent's back button takes this much space above the details
+        top: var(--default-clickable-area) !important;
     }
 }
 
@@ -601,106 +599,44 @@ export default {
 	flex: 1 1 auto;
 	background: var(--color-main-background);
 	margin-inline-end: 5px;
-	h2,
-	p {
+	h2 {
 		padding-bottom: calc(var(--default-grid-baseline) * 2);
 		margin-bottom: 0;
 		// some h2 styling coming from server add some space on top
 		margin-top: var(--default-grid-baseline);
 	}
-
-	p {
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-	.transparency {
-		opacity: 0.6;
-		a {
-			font-weight: bold;
-		}
-	}
 }
 
-@media only screen and (max-width: #{variables.$breakpoint-mobile}) {
+@media only screen and (width < #{variables.$breakpoint-mobile}) {
     #mail-thread-header-fields {
         padding-inline-start: 48px;
     }
 }
 
-@media only screen and (max-width: #{variables.$breakpoint-mobile}) {
+@media only screen and (width < #{variables.$breakpoint-mobile}) {
 	#mail-thread-header-fields {
-		margin-top: -32px;
+		margin-top: calc(-1 * var(--default-clickable-area));
 	}
 }
 
-.attachment-popover {
-	position: sticky;
-	bottom: calc(var(--default-grid-baseline) * 3);
-	text-align: center;
-}
-
-.tooltip-inner {
-	text-align: start;
-}
-
-#mail-content {
+#mail-message :deep(#mail-content) {
 	margin: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 10) 0 calc(var(--default-grid-baseline) * 14);
 }
 
-@media only screen and (max-width: #{variables.$breakpoint-mobile}) {
-    #mail-content {
+@media only screen and (width < #{variables.$breakpoint-mobile}) {
+    #mail-message :deep(#mail-content) {
         margin: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 3) 0 calc(var(--default-grid-baseline) * 3);
     }
 }
 
-#mail-content iframe {
+#mail-message :deep(#mail-content iframe) {
 	width: 100%;
 }
 
-#show-images-text {
-	display: none;
-}
-
-#mail-content a,
-.mail-signature a {
+#mail-message :deep(#mail-content a) {
 	color: #07d;
 	border-bottom: var(--border-width-input) dotted #07d;
 	text-decoration: none;
 	overflow-wrap: break-word;
-}
-
-/* Show action button label and move icon to the left
-   on screens larger than 600px */
-@media only screen and (max-width: 600px) {
-	.action-label {
-		display: none;
-	}
-}
-@media only screen and (min-width: 600px) {
-	.icon-reply-white,
-	.icon-reply-all-white {
-		background-position: calc(var(--default-grid-baseline) * 3) center;
-	}
-}
-
-.app-content-list-item-star.icon-starred {
-	display: none;
-}
-
-.v-popper__popper--shown .user-bubble__wrapper {
-	margin-inline-end: 0 !important;
-
-	.user-bubble__content {
-		padding: calc(var(--default-grid-baseline));
-	}
-
-	.user-bubble__wrapper {
-		padding: 0;
-	}
-}
-
-.user-bubble__title {
-	cursor: pointer;
 }
 </style>

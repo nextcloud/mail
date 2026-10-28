@@ -10,15 +10,16 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
-use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
+use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\DraftMessageCreatedEvent;
+use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -31,12 +32,12 @@ class DraftsService {
 	private ITimeFactory $time;
 
 	public function __construct(
-		private IMailTransmission $transmission,
 		private LocalMessageMapper $mapper,
 		private AttachmentService $attachmentService,
 		IEventDispatcher $eventDispatcher,
-		private IMAPClientFactory $clientFactory,
-		private IMailManager $mailManager,
+		private ProtocolFactory $protocolFactory,
+		private MailManager $mailManager,
+		private MailboxMapper $mailboxMapper,
 		private LoggerInterface $logger,
 		private AccountService $accountService,
 		ITimeFactory $time,
@@ -101,12 +102,7 @@ class DraftsService {
 			return $message;
 		}
 
-		$client = $this->clientFactory->getClient($account);
-		try {
-			$attachmentIds = $this->attachmentService->handleAttachments($account, $attachments, $client);
-		} finally {
-			$client->logout();
-		}
+		$attachmentIds = $this->attachmentService->handleAttachments($account, $attachments);
 
 		$message->setAttachments($this->attachmentService->saveLocalMessageAttachments($account->getUserId(), $message->getId(), $attachmentIds));
 		return $message;
@@ -133,12 +129,7 @@ class DraftsService {
 			return $message;
 		}
 
-		$client = $this->clientFactory->getClient($account);
-		try {
-			$attachmentIds = $this->attachmentService->handleAttachments($account, $attachments, $client);
-		} finally {
-			$client->logout();
-		}
+		$attachmentIds = $this->attachmentService->handleAttachments($account, $attachments);
 		$message->setAttachments($this->attachmentService->updateLocalMessageAttachments($account->getUserId(), $message, $attachmentIds));
 		return $message;
 	}
@@ -149,22 +140,21 @@ class DraftsService {
 	}
 
 	/**
-	 * "Send" the message
-	 *
-	 * @param LocalMessage $message
-	 * @param Account $account
-	 * @return void
+	 * @throws ClientException
+	 * @throws ServiceException
 	 */
 	public function sendMessage(LocalMessage $message, Account $account): void {
 		try {
-			$this->transmission->saveLocalDraft($account, $message);
+			$draftsMailbox = $this->findOrCreateDraftsMailbox($account);
+			$this->protocolFactory->transmissionConnector($account)->saveMessage($account, $draftsMailbox, $message, ['$draft']);
 		} catch (ClientException|ServiceException $e) {
-			$this->logger->error('Could not move draft to IMAP', ['exception' => $e]);
+			$this->logger->error('Could not save draft', ['exception' => $e]);
 			// Mark as failed so the message is not moved repeatedly in background
 			$message->setFailed(true);
 			$this->mapper->update($message);
 			throw $e;
 		}
+		$this->eventDispatcher->dispatchTyped(new DraftSavedEvent($account, null));
 		$this->attachmentService->deleteLocalMessageAttachments($account->getUserId(), $message->getId());
 		$this->mapper->deleteWithRecipients($message);
 	}
@@ -222,6 +212,33 @@ class DraftsService {
 					'exception' => $e,
 				]);
 			}
+		}
+	}
+
+	/**
+	 * Find the account's drafts mailbox, creating one if none is configured.
+	 *
+	 * @param Account $account
+	 * @return Mailbox
+	 * @throws ServiceException
+	 */
+	private function findOrCreateDraftsMailbox(Account $account): Mailbox {
+		$draftsMailboxId = $account->getMailAccount()->getDraftsMailboxId();
+		if ($draftsMailboxId === null) {
+			try {
+				return $this->mailManager->createMailbox(
+					$account,
+					'Drafts',
+					[Mailbox::SPECIAL_USE_DRAFTS]
+				);
+			} catch (DoesNotExistException $e) {
+				throw new ServiceException('Could not create drafts mailbox for account ' . $account->getId(), 0, $e);
+			}
+		}
+		try {
+			return $this->mailboxMapper->findById($draftsMailboxId);
+		} catch (DoesNotExistException $e) {
+			throw new ServiceException('Drafts mailbox ' . $draftsMailboxId . ' of account ' . $account->getId() . ' does not exist', 0, $e);
 		}
 	}
 }

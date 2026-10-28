@@ -31,7 +31,7 @@
 				</div>
 			</div>
 			<div class="summary__body">
-				<LoadingSkeleton v-if="loading" :number-of-lines="1" :with-avatar="false" />
+				<LoadingSkeleton v-if="loading" :numberOfLines="1" :withAvatar="false" />
 				<p v-else>
 					{{ summary }}
 				</p>

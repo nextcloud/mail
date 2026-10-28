@@ -4,7 +4,7 @@
 -->
 <template>
 	<ConfirmationModal
-		title="Delete tag"
+		:title="t('mail', 'Delete tag')"
 		:disabled="deleting"
 		@confirm="deleteTag"
 		@cancel="onClose">
@@ -41,6 +41,8 @@ export default {
 			required: true,
 		},
 	},
+
+	emits: ['close'],
 
 	data() {
 		return {

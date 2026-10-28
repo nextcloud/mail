@@ -4,16 +4,11 @@
  */
 
 import { createTestingPinia } from '@pinia/testing'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { PiniaVuePlugin, setActivePinia } from 'pinia'
+import { shallowMount } from '@vue/test-utils'
+import { setActivePinia } from 'pinia'
 import NavigationMailbox from '../../../components/NavigationMailbox.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 import useMainStore from '../../../store/mainStore.js'
-
-const localVue = createLocalVue()
-localVue.use(PiniaVuePlugin)
-
-localVue.mixin(Nextcloud)
 
 describe('NavigationMailbox', () => {
 	const subMailboxes = []
@@ -28,13 +23,15 @@ describe('NavigationMailbox', () => {
 
 	it('shows no counter', () => {
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					unread: 0,
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.showUnreadCounter).toBe(false)
@@ -46,13 +43,15 @@ describe('NavigationMailbox', () => {
 			unread: 0,
 		})
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					unread: 3,
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.showUnreadCounter).toBe(true)
@@ -71,13 +70,15 @@ describe('NavigationMailbox', () => {
 		})
 		store.getSubMailboxes = vi.fn().mockReturnValue(subMailboxes)
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					unread: 0,
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.showUnreadCounter).toBe(true)
@@ -86,13 +87,15 @@ describe('NavigationMailbox', () => {
 
 	it('allows rename with no ACLs set', () => {
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: undefined,
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasRenameAcl).toBe(true)
@@ -103,13 +106,15 @@ describe('NavigationMailbox', () => {
 			myAcls: undefined,
 		})
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: 'x',
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasRenameAcl).toBe(true)
@@ -117,13 +122,15 @@ describe('NavigationMailbox', () => {
 
 	it('allows rename with x ACL right', () => {
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: 'x',
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasRenameAcl).toBe(true)
@@ -131,13 +138,15 @@ describe('NavigationMailbox', () => {
 
 	it('disallows rename without x ACL right', () => {
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: 's',
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasRenameAcl).toBe(false)
@@ -149,13 +158,15 @@ describe('NavigationMailbox', () => {
 		})
 
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: 'x',
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasRenameAcl).toBe(false)
@@ -163,13 +174,15 @@ describe('NavigationMailbox', () => {
 
 	it('allows rename with k ACL right on parent', () => {
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: 'x',
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasRenameAcl).toBe(true)
@@ -177,13 +190,15 @@ describe('NavigationMailbox', () => {
 
 	it('allows toggling seen flag without ACLs', () => {
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: undefined,
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasSeenAcl).toBe(true)
@@ -191,13 +206,15 @@ describe('NavigationMailbox', () => {
 
 	it('disallows toggling seen flag without s ACL right', () => {
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: 'x',
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasSeenAcl).toBe(false)
@@ -205,52 +222,60 @@ describe('NavigationMailbox', () => {
 
 	it('allows toggling seen flag with s ACL right', () => {
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: 's',
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasSeenAcl).toBe(true)
 	})
 	it('allows toggling submailbox action without ACLs', () => {
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: undefined,
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasSubmailboxActionAcl).toBe(true)
 	})
 	it('disallows toggling submailbox action without k ACL right', () => {
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: 'x',
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasSubmailboxActionAcl).toBe(false)
 	})
 	it('allows toggling submailbox action with k ACL right', () => {
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: 'k',
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasSubmailboxActionAcl).toBe(true)
@@ -258,41 +283,95 @@ describe('NavigationMailbox', () => {
 
 	it('allows toggling delete action without ACLs', () => {
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: undefined,
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasDeleteAcl).toBe(true)
 	})
 	it('disallows toggling delete action without x ACL right', () => {
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: 's',
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasDeleteAcl).toBe(false)
 	})
 	it('allows toggling delete action with x ACL right', () => {
 		const view = shallowMount(NavigationMailbox, {
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				account: {},
 				mailbox: {
 					myAcls: 'x',
 				},
 			},
-			localVue,
 		})
 
 		expect(view.vm.hasDeleteAcl).toBe(true)
+	})
+
+	describe('when envelopes are dropped onto it', () => {
+		const mountWithRoute = (route, push) => shallowMount(NavigationMailbox, {
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route: route,
+					$router: { push },
+				},
+			},
+			props: {
+				account: {},
+				mailbox: {
+					databaseId: 7,
+				},
+			},
+		})
+
+		it('navigates to the folder root when the open message was moved', () => {
+			const push = vi.fn()
+			const view = mountWithRoute({ name: 'message', params: { mailboxId: '3', threadId: '42' } }, push)
+
+			view.vm.onEnvelopesMoved({ mailboxId: 7, movedEnvelopes: [{ databaseId: 41 }, { databaseId: 42 }] })
+
+			expect(push).toHaveBeenCalledWith({
+				name: 'mailbox',
+				params: { mailboxId: '3', filter: undefined },
+			})
+		})
+
+		it('stays on the open message when other messages were moved', () => {
+			const push = vi.fn()
+			const view = mountWithRoute({ name: 'message', params: { mailboxId: '3', threadId: '42' } }, push)
+
+			view.vm.onEnvelopesMoved({ mailboxId: 7, movedEnvelopes: [{ databaseId: 41 }] })
+
+			expect(push).not.toHaveBeenCalled()
+		})
+
+		it('ignores moves into another mailbox', () => {
+			const push = vi.fn()
+			const view = mountWithRoute({ name: 'message', params: { mailboxId: '3', threadId: '42' } }, push)
+
+			view.vm.onEnvelopesMoved({ mailboxId: 8, movedEnvelopes: [{ databaseId: 42 }] })
+
+			expect(push).not.toHaveBeenCalled()
+		})
 	})
 })

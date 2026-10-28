@@ -20,6 +20,7 @@ use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IRequest;
@@ -43,8 +44,6 @@ class DraftsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $accountId
 	 * @param string $subject
 	 * @param string $body
@@ -67,6 +66,7 @@ class DraftsController extends Controller {
 	 * @throws DoesNotExistException
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function create(
 		int $accountId,
@@ -91,9 +91,6 @@ class DraftsController extends Controller {
 		bool $isAiGenerated = false) : JsonResponse {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->userId);
 		$account = $this->accountService->find($effectiveUserId, $accountId);
-		if ($draftId !== null) {
-			$this->service->handleDraft($account, $draftId);
-		}
 		$message = new LocalMessage();
 		$message->setType(LocalMessage::TYPE_DRAFT);
 		$message->setAccountId($accountId);
@@ -118,14 +115,15 @@ class DraftsController extends Controller {
 		}
 
 		$this->service->saveMessage($account, $message, $to, $cc, $bcc, $attachments);
+		if ($draftId !== null) {
+			$this->service->handleDraft($account, $draftId);
+		}
 		$id = $message->getId();
 		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId created draft: $id  on behalf of $effectiveUserId");
 		return JsonResponse::success($message, Http::STATUS_CREATED);
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @param int $accountId
 	 * @param string $subject
@@ -143,6 +141,7 @@ class DraftsController extends Controller {
 	 * @param int|null $sendAt
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function update(int $id,
 		int $accountId,
@@ -199,11 +198,10 @@ class DraftsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function destroy(int $id): JsonResponse {
 		$effectiveUserId = $this->delegationService->resolveLocalMessageUserId($id, $this->userId);
@@ -216,11 +214,10 @@ class DraftsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function move(int $id): JsonResponse {
 		$effectiveUserId = $this->delegationService->resolveLocalMessageUserId($id, $this->userId);

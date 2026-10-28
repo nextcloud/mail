@@ -9,14 +9,14 @@
 			:account="account"
 			:envelope="envelope"
 			:loading="loading"
-			@create-filter="createFilter"
+			@createFilter="createFilter"
 			@close="closeModal" />
 		<UpdateModal
 			v-else
 			:filter="currentFilter"
 			:account="account"
 			:loading="loading"
-			@update-filter="updateFilter"
+			@updateFilter="updateFilter"
 			@close="closeModal" />
 	</div>
 </template>
@@ -58,6 +58,8 @@ export default {
 			required: true,
 		},
 	},
+
+	emits: ['close'],
 
 	data() {
 		return {

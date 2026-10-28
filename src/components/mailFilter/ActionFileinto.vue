@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<MailboxInlinePicker :account="account" :value="mailbox" @input="onInput" />
+	<MailboxInlinePicker :account="account" :modelValue="mailbox" @update:modelValue="onInput" />
 </template>
 
 <script>
@@ -30,6 +30,8 @@ export default {
 		},
 	},
 
+	emits: ['updateAction'],
+
 	computed: {
 		...mapStores(useMainStore),
 		mailbox() {
@@ -39,7 +41,7 @@ export default {
 
 	methods: {
 		onInput(value) {
-			this.$emit('update-action', { mailbox: this.getMailboxNameByDatabaseId(value) })
+			this.$emit('updateAction', { mailbox: this.getMailboxNameByDatabaseId(value) })
 		},
 
 		getMailboxDatabaseIdByName(name) {
@@ -54,7 +56,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-:deep(.v-select) {
+.v-select {
 	width: 100%; /* todo: fix MailboxInlinePicker.vue styling instead */
 }
 </style>

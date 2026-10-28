@@ -4,13 +4,13 @@
 -->
 <template>
 	<MailboxPicker
+		v-model:selected="destMailboxId"
 		:account="account"
-		:selected.sync="destMailboxId"
 		:loading="moving"
-		:picked-mailbox="mailbox"
-		:allow-root="true"
-		:label-select="t('mail', 'Move')"
-		:label-select-loading="t('mail', 'Moving')"
+		:pickedMailbox="mailbox"
+		:allowRoot="true"
+		:labelSelect="t('mail', 'Move')"
+		:labelSelectLoading="t('mail', 'Moving')"
 		:select="onMove"
 		@close="onClose" />
 </template>
@@ -38,6 +38,8 @@ export default {
 			required: true,
 		},
 	},
+
+	emits: ['close'],
 
 	data() {
 		return {

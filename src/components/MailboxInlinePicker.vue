@@ -4,14 +4,14 @@
 -->
 <template>
 	<NcSelect
-		:model-value="value"
+		:modelValue="modelValue"
 		:options="mailboxes"
 		:reduce="(option) => option.id"
 		:clearable="false"
 		:disabled="disabled"
 		:aria-label-combobox="t('mail', 'Select a mailbox')"
 		label="label"
-		@update:model-value="$emit('input', $event)">
+		@update:modelValue="$emit('update:modelValue', $event)">
 		<template #option="option">
 			<NcEllipsisedOption
 				class="mailbox-option"
@@ -22,8 +22,9 @@
 </template>
 
 <script>
-import { NcEllipsisedOption, NcSelect } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcEllipsisedOption from '@nextcloud/vue/components/NcEllipsisedOption'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import useMainStore from '../store/mainStore.js'
 import { mailboxHasRights } from '../util/acl.js'
 
@@ -45,11 +46,13 @@ export default {
 			default: false,
 		},
 
-		value: {
+		modelValue: {
 			type: Number,
 			default: undefined,
 		},
 	},
+
+	emits: ['update:modelValue'],
 
 	computed: {
 		...mapStores(useMainStore),

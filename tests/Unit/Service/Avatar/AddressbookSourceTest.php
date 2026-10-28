@@ -34,6 +34,7 @@ class AddressbookSourceTest extends TestCase {
 		$avatarFactory = $this->createMock(AvatarFactory::class);
 		$this->ci->expects($this->once())
 			->method('getPhoto')
+			->with('currentUser', $email)
 			->willReturn('https://next.cloud/photo');
 		$avatar = new Avatar('https://next.cloud/photo');
 		$avatarFactory->expects($this->once())
@@ -41,7 +42,7 @@ class AddressbookSourceTest extends TestCase {
 			->with('https://next.cloud/photo')
 			->willReturn($avatar);
 
-		$actualAvatar = $this->source->fetch($email, $avatarFactory);
+		$actualAvatar = $this->source->fetch('currentUser', $email, $avatarFactory);
 
 		$this->assertSame($avatar, $actualAvatar);
 	}
@@ -51,9 +52,10 @@ class AddressbookSourceTest extends TestCase {
 		$avatarFactory = $this->createStub(AvatarFactory::class);
 		$this->ci->expects($this->once())
 			->method('getPhoto')
+			->with('currentUser', $email)
 			->willReturn(null);
 
-		$avatar = $this->source->fetch($email, $avatarFactory);
+		$avatar = $this->source->fetch('currentUser', $email, $avatarFactory);
 
 		$this->assertNull($avatar);
 	}

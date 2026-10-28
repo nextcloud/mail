@@ -129,6 +129,13 @@ the same things — but the author should not need the bot to learn them.
   `?string $userId` from the predefined core services and return 401 when it is null.
 
 ### Mappers & entities
+- **Build every query with `IQueryBuilder`, never with raw SQL strings.** Use `expr()` for
+  conditions, `func()` for SQL functions and `createNamedParameter()` for values — the
+  builder handles quoting, table prefixes and dialect differences (Oracle, Postgres,
+  SQLite). Don't pass hand-written SQL to `IDBConnection`, and don't concatenate
+  keywords, operators or fragments into `createFunction()`. The one accepted use of
+  `createFunction()` is embedding a builder-generated subquery:
+  `$qb->expr()->in('col', $qb->createFunction($sub->getSQL()))`.
 - Let mappers propagate `DoesNotExistException` / `OCP\DB\Exception` to the caller — don't
   catch not-found inside the mapper. Reuse the `QBMapper` `insert`/`update`/`find` helpers
   instead of hand-writing queries.

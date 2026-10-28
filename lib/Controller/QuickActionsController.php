@@ -32,10 +32,9 @@ class QuickActionsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function index(): JsonResponse {
 		if ($this->userId === null) {
@@ -47,11 +46,11 @@ class QuickActionsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 * @param string $name
 	 *
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function create(string $name, int $accountId): JsonResponse {
 		if ($this->userId === null) {
@@ -75,12 +74,12 @@ class QuickActionsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 * @param int $id
 	 * @param string $name
 	 *
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function update(int $id, string $name): JsonResponse {
 
@@ -100,10 +99,9 @@ class QuickActionsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	public function destroy(int $id): JsonResponse {
 		if ($this->userId === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);

@@ -8,59 +8,60 @@
 		v-if="deleteTagModal"
 		:tag="tagToDelete"
 		:envelopes="envelopes"
-		:account-id="envelopes[0].accountId"
+		:accountId="envelopes[0].accountId"
 		@close="closeDeleteModal" />
 	<NcModal
 		v-else
+		closeOnClickOutside
+		class="tag-modal"
 		size="large"
-		label-id="tag-modal-heading"
+		labelId="tag-modal-heading"
 		@close="onClose">
 		<div class="modal-content">
-			<h2 id="tag-modal-heading" class="tag-title">
-				{{ t('mail', 'Add default tags') }}
-			</h2>
-			<TagItem
-				v-for="tag in tags"
-				:key="tag.id"
-				:tag="tag"
-				:envelopes="envelopes"
-				@delete-tag="deleteTag" />
+			<div class="tag-list">
+				<h2 id="tag-modal-heading" class="tag-title">
+					{{ heading }}
+				</h2>
+				<TagItem
+					v-for="tag in tags"
+					:key="tag.id"
+					:tag="tag"
+					:envelopes="envelopes"
+					@deleteTag="deleteTag" />
+			</div>
 
-			<h2 class="tag-title">
-				{{ t('mail', 'Add tag') }}
-			</h2>
 			<div class="create-tag">
-				<NcButton
-					v-if="!editing"
-					class="tagButton"
-					@click="addTagInput">
-					<template #icon>
-						<IconAdd :size="20" />
-					</template>
-					{{ t('mail', 'Add tag') }}
-				</NcButton>
-				<NcActionInput v-if="editing" :disabled="showSaving" @submit="createTag">
-					<template #icon>
-						<IconTag :size="20" />
-					</template>
-				</NcActionInput>
-				<NcActionText v-if="showSaving">
-					<template #icon>
-						<NcLoadingIcon :size="20" />
-					</template>
-					{{ t('mail', 'Saving tag …') }}
-				</NcActionText>
+				<NcColorPicker v-model="color">
+					<NcButton variant="tertiary" :aria-label="t('mail', 'Change tag color')">
+						<template #icon>
+							<div class="create-tag__color" :style="{ backgroundColor: color }" />
+						</template>
+					</NcButton>
+				</NcColorPicker>
+				<NcTextField
+					v-model="newTagName"
+					class="create-tag__name"
+					:label="t('mail', 'Add tag')"
+					:disabled="saving"
+					:error="errorMessage !== ''"
+					:helperText="errorMessage"
+					showTrailingButton
+					trailingButtonIcon="arrowEnd"
+					:trailingButtonLabel="t('mail', 'Add tag')"
+					@keyup.enter="createTag"
+					@trailingButtonClick="createTag" />
 			</div>
 		</div>
 	</NcModal>
 </template>
 
 <script>
-import { showError, showInfo } from '@nextcloud/dialogs'
-import { NcActionInput, NcActionText, NcButton, NcLoadingIcon, NcModal } from '@nextcloud/vue'
+import { showError } from '@nextcloud/dialogs'
 import { mapStores } from 'pinia'
-import IconAdd from 'vue-material-design-icons/Plus.vue'
-import IconTag from 'vue-material-design-icons/TagOutline.vue'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcColorPicker from '@nextcloud/vue/components/NcColorPicker'
+import NcModal from '@nextcloud/vue/components/NcModal'
+import NcTextField from '@nextcloud/vue/components/NcTextField'
 import DeleteTagModal from './DeleteTagModal.vue'
 import TagItem from './TagItem.vue'
 import logger from '../logger.js'
@@ -79,14 +80,11 @@ export default {
 	name: 'TagModal',
 	components: {
 		NcModal,
-		NcActionText,
-		NcActionInput,
+		NcColorPicker,
+		NcTextField,
 		DeleteTagModal,
-		IconTag,
-		NcLoadingIcon,
 		TagItem,
 		NcButton,
-		IconAdd,
 	},
 
 	props: {
@@ -97,22 +95,30 @@ export default {
 		},
 	},
 
+	emits: ['close'],
+
 	data() {
 		return {
-			isAdded: false,
-			editing: false,
-			tagLabel: true,
-			tagInput: false,
-			showSaving: false,
 			deleteTagModal: false,
 			tagToDelete: null,
 			color: randomColor(),
-			editColor: '',
+			newTagName: '',
+			saving: false,
+			errorMessage: '',
 		}
 	},
 
 	computed: {
 		...mapStores(useMainStore),
+		heading() {
+			if (this.envelopes.length === 1) {
+				const subject = this.envelopes[0].subject || this.t('mail', 'No subject')
+				// TRANSLATORS: {subject} is the subject of the selected email
+				return this.t('mail', 'Assign tags to "{subject}"', { subject }, undefined, { escape: false })
+			}
+			return this.n('mail', 'Assign tags to %n message', 'Assign tags to %n messages', this.envelopes.length)
+		},
+
 		tags() {
 			return this.mainStore.getTags.filter((tag) => tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags)).sort((a, b) => {
 				if (a.isDefaultTag && !b.isDefaultTag) {
@@ -127,14 +133,14 @@ export default {
 					}
 					return -1
 				}
-				if (this.isSet(a.imapLabel) && !this.isSet(b.imapLabel)) {
-					return -1
-				}
-				if (!this.isSet(a.imapLabel) && this.isSet(b.imapLabel)) {
-					return 1
-				}
 				return a.displayName.localeCompare(b.displayName)
 			})
+		},
+	},
+
+	watch: {
+		newTagName() {
+			this.errorMessage = ''
 		},
 	},
 
@@ -147,42 +153,31 @@ export default {
 			this.deleteTagModal = false
 		},
 
-		isSet(imapLabel) {
-			return this.envelopes.some((envelope) => (
-				this.mainStore.getEnvelopeTags(envelope.databaseId).some((tag) => tag.imapLabel === imapLabel)
-			))
-		},
-
-		addTagInput() {
-			this.editing = true
-			this.showSaving = false
-		},
-
-		async createTag(event) {
-			this.editing = true
-			if (this.showSaving) {
+		async createTag() {
+			if (this.saving) {
 				return
 			}
 
-			const displayName = event.target.querySelector('input[type=text]').value.trim()
-			const otherTags = this.mainStore.getTags
-			const valid = validateTag(null, displayName, otherTags)
+			const displayName = this.newTagName.trim()
+			const valid = validateTag(null, displayName, this.mainStore.getTags)
 			if (valid !== true) {
-				showError(valid)
+				this.errorMessage = valid
 				return
 			}
 
+			this.saving = true
 			try {
 				await this.mainStore.createTag({
 					displayName,
-					color: randomColor(displayName),
+					color: this.color,
 				})
+				this.newTagName = ''
+				this.color = randomColor()
 			} catch (error) {
 				logger.error('could not create tag', { error })
 				showError(this.t('mail', 'An error occurred, unable to create the tag.'))
 			} finally {
-				this.showSaving = false
-				this.tagLabel = true
+				this.saving = false
 			}
 		},
 
@@ -198,37 +193,57 @@ export default {
 
 <style lang="scss" scoped>
 :deep(.modal-content) {
-	padding: 20px 20px 20px 20px;
-	max-height: calc(100vh - 210px);
-	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
+	height: calc(100vh - 210px);
+	min-width: min(480px, 90vw);
+	padding: 0;
 }
 
 :deep(.modal-container) {
-	width: auto !important;
+	min-width: min(480px, 90vw);
 }
 
-.icon-colorpicker {
-	background-image: var(--icon-add-fff);
-}
-
-.tagButton {
-	display: inline-block;
-	margin-inline-start: 10px;
-}
-
-.tag-title {
-	margin-top: 20px;
-	margin-inline-start: 10px;
+.tag-list {
+	flex: 1;
+	min-height: 0;
+	overflow-y: auto;
+	padding: calc(var(--default-grid-baseline) * 5);
+	padding-bottom: calc(var(--default-grid-baseline) * 3);
 }
 
 .create-tag {
-	list-style: none;
-	margin-bottom:12px;
+	display: flex;
+	align-items: center;
+	gap: var(--default-grid-baseline);
+	flex-shrink: 0;
+	border-top: 1px solid var(--color-border);
+	padding: calc(var(--default-grid-baseline) * 3) calc(var(--default-grid-baseline) * 5);
 }
+
+.create-tag__color {
+	width: calc(var(--default-grid-baseline) * 5);
+	height: calc(var(--default-grid-baseline) * 5);
+	border-radius: 50%;
+}
+
+.create-tag__name {
+	flex: 1;
+}
+
+.tag-title {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	margin-top: 0;
+	margin-bottom: calc(var(--default-grid-baseline) * 2);
+	margin-inline-start: var(--default-grid-baseline);
+}
+
 @media only screen and (max-width: 512px) {
 	:deep(.modal-container) {
-	top: 100px !important;
-	max-height: calc(100vh - 170px) !important
+		top: 100px !important;
+		max-height: calc(100vh - 170px) !important;
 	}
 }
 </style>

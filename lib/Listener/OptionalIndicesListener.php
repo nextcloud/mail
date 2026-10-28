@@ -61,6 +61,12 @@ class OptionalIndicesListener implements IEventListener {
 		);
 
 		$event->addMissingIndex(
+			'mail_messages',
+			'mail_msg_imip_idx',
+			['imip_message', 'sent_at'],
+		);
+
+		$event->addMissingIndex(
 			'mail_classifiers',
 			'mail_class_creat_idx',
 			['created_at']

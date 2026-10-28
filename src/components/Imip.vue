@@ -35,7 +35,7 @@
 		<div
 			v-else-if="isCancel"
 			class="imip__type">
-			<CloseIcon :size="20" fill-color="red" />
+			<CloseIcon :size="20" fillColor="red" />
 			<span>{{ t('mail', 'This event was cancelled') }}</span>
 		</div>
 
@@ -53,6 +53,7 @@
 						v-if="calendarsForPicker.length > 1"
 						:id="targetCalendarPickerId"
 						v-model="targetCalendar"
+						labelOutside
 						:aria-label-combobox="t('mail', 'Select')"
 						label="displayname"
 						:options="calendarsForPicker">
@@ -120,10 +121,12 @@
 import { AttendeeProperty, CalendarComponent, DateTimeValue, EventComponent, getParserManager, Parameter, Property } from '@nextcloud/calendar-js'
 import { namespaces as NS } from '@nextcloud/cdav-library'
 import { showError } from '@nextcloud/dialogs'
-import { NcButton, NcLoadingIcon, NcSelect } from '@nextcloud/vue'
 import pLimit from 'p-limit'
 import { mapState } from 'pinia'
 import { flatten } from 'ramda'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import CalendarIcon from 'vue-material-design-icons/CalendarOutline.vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 import CalendarPickerOption from './CalendarPickerOption.vue'

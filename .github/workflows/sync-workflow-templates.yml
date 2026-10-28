@@ -1,0 +1,166 @@
+# This workflow is provided via the organization template repository
+#
+# https://github.com/nextcloud/.github
+# https://docs.github.com/en/actions/learn-github-actions/sharing-workflows-with-your-organization
+#
+# SPDX-FileCopyrightText: 2025 Nextcloud GmbH and Nextcloud contributors
+# SPDX-License-Identifier: MIT
+
+# This workflow will update all workflow templates
+# Additionally it will reapply `workflow.yml.patch` files after syncing and only then commit the result
+name: Update workflows
+on:
+  workflow_dispatch:
+  schedule:
+      - cron: "45 22 * * 6"
+
+permissions:
+  contents: read
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        branches:
+          - ${{ github.event.repository.default_branch }}
+          - 'stable5.13'
+          - 'stable5.12'
+
+    name: Update workflows in ${{ matrix.branches }}
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Check actor permission
+        uses: skjnldsv/check-actor-permission@69e92a3c4711150929bca9fcf34448c5bf5526e7 # v3.0
+        with:
+          require: admin
+
+      - name: Checkout workflow repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          path: source
+          repository: ${{ github.repository_owner }}/.github
+
+      - name: Checkout app
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          path: target
+          ref: ${{ matrix.branches }}
+
+      - name: Check for active merge freeze
+        id: freeze
+        env:
+          BRANCH_NAME: ${{ matrix.branches }}
+        run: |
+          if [[ ! -f target/.github/workflows/block-merge-freeze.yml ]]; then
+            echo 'No block-merge-freeze workflow, continuing'
+            exit 0
+          fi
+          if [[ "$BRANCH_NAME" == 'main' || "$BRANCH_NAME" == 'master' ]]; then
+            SERVER_REF='master'
+          elif [[ "$BRANCH_NAME" =~ ^stable[0-9]+$ ]]; then
+            SERVER_REF="$BRANCH_NAME"
+          else
+            echo 'Not based on master/main/stable*, so skipping freeze check'
+            exit 0
+          fi
+          curl -sf "https://raw.githubusercontent.com/nextcloud/server/$SERVER_REF/version.php" --output version.php
+          if grep 'OC_VersionString' version.php | grep -q -i -E '(\.0\.0 RC[3-9]|\.[1-9][0-9]* RC)'; then
+            echo "Merge freeze is active for $SERVER_REF, skipping"
+            echo 'active=true' >> $GITHUB_OUTPUT
+          fi
+          rm version.php
+
+      - name: Copy all workflow templates
+        if: steps.freeze.outputs.active != 'true'
+        run: |
+          echo 'SUMMARY<<EOF' >> $GITHUB_ENV
+          draft_only=0
+          for workflow in ./source/workflow-templates/*.yml; do
+            echo "❓ Looking for $workflow"
+            if [ -f "$workflow" ]; then
+              filename=$(basename "$workflow")
+              target_file="./target/.github/workflows/$filename"
+
+              # Only copy if the file exists in the target repository
+              if [ -f "$target_file" ]; then
+                if [ -f "./target/.github/actions-lock.txt" ]; then
+                  locked_version=$(grep " $filename" ./target/.github/actions-lock.txt | cat)
+                else
+                  echo "# SPDX-FileCopyrightText: 2025 Nextcloud GmbH and Nextcloud contributors" >> ./target/.github/actions-lock.txt
+                  echo "# SPDX-License""-Identifier: MIT" >> ./target/.github/actions-lock.txt
+                  locked_version=""
+                fi
+                locked_version=$(echo $locked_version | cut -f 1 -d " ")
+                new_version=$(md5sum $workflow | cut -f 1 -d " ")
+
+                # Only update if the action changes
+                if [[ "$locked_version" != "$new_version" ]]; then
+                  echo "ℹ️ Locked version: $locked_version"
+                  echo "ℹ️ Current version: $new_version"
+                  echo "🆙 Updating existing workflow: $filename"
+                  echo "- 🆙 Updated [$filename](https://github.com/${GITHUB_REPOSITORY_OWNER}/.github/commits/HEAD/workflow-templates/$filename)" >> $GITHUB_ENV
+
+                  cp "$workflow" "$target_file"
+
+                  # Apply patch if one exists
+                  if [ -f "$target_file.patch" ]; then
+                    echo "🩹 Applying patch"
+                    cd ./target
+                    set +e
+                    patch -p1 < ".github/workflows/$filename.patch"
+                    patch_worked=$?
+                    set -e
+                    cd -
+                    if [[ "$patch_worked" == "0" ]]; then
+                      echo "  - Patch applied" >> $GITHUB_ENV
+                    else
+                      echo "  - [ ] ❌ Patch failed" >> $GITHUB_ENV
+                      draft_only=1
+                    fi
+                  fi
+
+                  if [[ "$locked_version" != "" ]]; then
+                    sed -i "s/$locked_version $filename/$new_version $filename/" ./target/.github/actions-lock.txt
+                  else
+                    echo "$new_version $filename" >> ./target/.github/actions-lock.txt
+                  fi
+                else
+                  echo "✅ Skipping $filename: already up to date"
+                fi
+              else
+                echo "⏭️ Skipping $filename: does not exist in target repository"
+              fi
+            fi
+          done
+          echo 'EOF' >> $GITHUB_ENV
+          echo "DRAFT_ONLY=${draft_only}" >> $GITHUB_ENV
+
+      - name: Create Pull Request
+        if: steps.freeze.outputs.active != 'true'
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          token: ${{ secrets.COMMAND_BOT_WORKFLOWS }}
+          commit-message: 'ci(actions): Update workflow templates from organization template repository'
+          committer: GitHub <noreply@github.com>
+          author: nextcloud-command <nextcloud-command@users.noreply.github.com>
+          path: target
+          signoff: true
+          branch: 'automated/noid/${{ matrix.branches }}-update-workflows'
+          title: '[${{ matrix.branches }}] ci(actions): Update workflow templates from organization template repository'
+          draft: ${{ env.DRAFT_ONLY == 1 }}
+          add-paths: .github/workflows/*.yml,.github/actions-lock.txt
+          body: |
+            Automated update of all workflow templates from [${{ github.repository_owner }}/.github](https://github.com/${{ github.repository_owner }}/.github)
+            ${{ env.SUMMARY }}
+          labels: |
+            dependencies
+            3. to review

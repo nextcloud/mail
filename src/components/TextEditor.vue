@@ -11,10 +11,11 @@
 
 		<Ckeditor
 			v-if="ready"
-			:value="value"
+			:modelValue="modelValue"
 			:config="config"
 			:editor="editor"
 			:disabled="disabled"
+			:disableWatchdog="true"
 			class="editor"
 			@input="onEditorInput"
 			@ready="onEditorReady" />
@@ -22,8 +23,8 @@
 </template>
 
 <script>
-import CKEditor from '@ckeditor/ckeditor5-vue2'
-import { getLanguage } from '@nextcloud/l10n'
+import { Ckeditor } from '@ckeditor/ckeditor5-vue'
+import { getLanguage, t } from '@nextcloud/l10n'
 import { emojiAddRecent, emojiSearch } from '@nextcloud/vue/functions/emoji'
 import {
 	Alignment,
@@ -39,6 +40,8 @@ import {
 	Heading,
 	Image,
 	ImageResize,
+	ImageStyle,
+	ImageToolbar,
 	ImageUpload,
 	Italic,
 	Link,
@@ -69,7 +72,7 @@ import 'ckeditor5/ckeditor5.css'
 export default {
 	name: 'TextEditor',
 	components: {
-		Ckeditor: CKEditor.component,
+		Ckeditor,
 	},
 
 	inject: {
@@ -77,7 +80,7 @@ export default {
 	},
 
 	props: {
-		value: {
+		modelValue: {
 			type: String,
 			required: true,
 		},
@@ -123,7 +126,79 @@ export default {
 		},
 	},
 
+	emits: ['mention', 'submit', 'save', 'ready', 'update:modelValue'],
+
 	data() {
+		const colorConfig = {
+			colors: [
+				{
+					color: '#000000',
+					label: t('mail', 'Black'),
+				},
+				{
+					color: '#4d4d4d',
+					label: t('mail', 'Dim grey'),
+				},
+				{
+					color: '#999999',
+					label: t('mail', 'Grey'),
+				},
+				{
+					color: '#e6e6e6',
+					label: t('mail', 'Light grey'),
+				},
+				{
+					color: '#ffffff',
+					label: t('mail', 'White'),
+					hasBorder: true,
+				},
+				{
+					color: '#e64c4c',
+					label: t('mail', 'Red'),
+				},
+				{
+					color: '#e6994c',
+					label: t('mail', 'Orange'),
+				},
+				{
+					color: '#e6e64c',
+					label: t('mail', 'Yellow'),
+				},
+				{
+					color: '#99e64c',
+					label: t('mail', 'Light green'),
+				},
+				{
+					color: '#4ce64c',
+					label: t('mail', 'Green'),
+				},
+				{
+					color: '#4ce699',
+					label: t('mail', 'Aquamarine'),
+				},
+				{
+					color: '#4ce6e6',
+					label: t('mail', 'Turquoise'),
+				},
+				{
+					color: '#4c99e6',
+					label: t('mail', 'Light blue'),
+				},
+				{
+					color: '#4c4ce6',
+					label: t('mail', 'Blue'),
+				},
+				{
+					color: '#994ce6',
+					label: t('mail', 'Purple'),
+				},
+			],
+
+			colorPicker: {
+				format: 'hex',
+			},
+		}
+
 		const plugins = [
 			Essentials,
 			Paragraph,
@@ -152,6 +227,8 @@ export default {
 				Image,
 				ImageUpload,
 				ImageResize,
+				ImageStyle,
+				ImageToolbar,
 				FilesImagePlugin,
 				ImageDowncastPlugin,
 				Font,
@@ -206,6 +283,15 @@ export default {
 				image: {
 					// A percentage would be relative to the recipient's unknown viewport.
 					resizeUnit: 'px',
+					styles: {
+						options: ['alignBlockLeft', 'alignCenter', 'alignBlockRight'],
+					},
+
+					toolbar: [
+						'imageStyle:alignBlockLeft',
+						'imageStyle:alignCenter',
+						'imageStyle:alignBlockRight',
+					],
 				},
 
 				mention: {
@@ -273,6 +359,9 @@ export default {
 					supportAllValues: true,
 				},
 
+				fontColor: colorConfig,
+
+				fontBackgroundColor: colorConfig,
 			},
 		}
 	},
@@ -281,7 +370,7 @@ export default {
 		this.loadEditorTranslations(getLanguage())
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		this.unregisterSourceEditingInputListener()
 
 		if (this.editorInstance?.plugins.has('SourceEditing') && this.sourceEditingModeHandler) {
@@ -636,9 +725,9 @@ export default {
 		},
 
 		onEditorInput(text) {
-			if (text !== this.value) {
+			if (text !== this.modelValue) {
 				logger.debug(`TextEditor input changed to <${text}>`)
-				this.$emit('input', text)
+				this.$emit('update:modelValue', text)
 			}
 		},
 
@@ -673,6 +762,23 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.editor-wrapper {
+	display: flex;
+	flex-direction: column-reverse;
+	height: 100%;
+
+	.toolbar {
+		position: sticky;
+		bottom: 0;
+		z-index: 10;
+	}
+
+	.editable {
+		flex-grow: 1;
+		overflow-y: auto;
+	}
+}
+
 .editor-wrapper--bordered{
 	--border-offset: calc(var(--border-width-input-focused, 2px) - var(--border-width-input, 2px));
 	margin-top: var(--default-grid-baseline);
@@ -697,19 +803,6 @@ export default {
 	}
 }
 
-.editor {
-	width: 100%;
-	height: calc(100% - 75px);
-	overflow: scroll;
-	margin-bottom: 10px;
-
-	&.ck {
-		border: none !important;
-		box-shadow: none !important;
-		padding: 0;
-	}
-}
-
 :deep(a) {
 	color: #07d;
 }
@@ -718,241 +811,224 @@ export default {
 	cursor: text;
 	margin: 0 !important;
 }
+
+/* CKEditor centres unstyled block images, ImageDowncast sends them left aligned. */
+:deep(.ck-content .image:not([class*='image-style'])) {
+	margin-inline: 0 auto;
+}
 </style>
 
-<style>
+<style lang="scss">
+// CKEditor moves its toolbar and editable into .editor-wrapper but renders balloons,
+// tooltips and dialogs into its own .ck-body-wrapper on <body>, out of reach of the scope id.
+// :where() keeps the specificity these overrides were tuned against.
+:where(.editor-wrapper, .ck-body-wrapper) {
+	.ck .ck-reset {
+		background: var(--color-main-background);
+	}
+
+	// Default ckeditor value of padding-inline-start, to overwrite the global styling from server
+	.ck-content ul, .ck-content ol {
+		padding-inline-start: 40px;
+	}
+
+	.ck-read-only {
+		color: var(--color-main-text) !important;
+		background-color: var(--color-main-background) !important;
+		opacity: 1 !important;
+		font-size: 100% !important;
+	}
+
+	.ck-list__item {
+		.ck-off {
+			background:var(--color-main-background) !important;
+		}
+		.ck-on {
+			background:var(--color-primary-element-light) !important;
+		}
+	}
+
+	.custom-item-username {
+		color: var(--color-main-text) !important;
+	}
+
+	.link-title {
+		color: var(--color-main-text) !important;
+		margin-inline-start: var(--default-grid-baseline) !important;
+	}
+
+	.custom-item {
+		width : 100% !important;
+		border-radius : 8px !important;
+		padding : 4px 8px !important;
+		display :block;
+		background:var(--color-main-background)!important;
+	}
+
+	.custom-item:hover {
+		background:var(--color-primary-element-light)!important;
+	}
+
+	.link-container{
+		border-radius :8px !important;
+		padding :4px 8px !important;
+		display : block;
+		width : 100% !important;
+		background:var(--color-main-background)!important;
+		img.link-icon {
+			width: 16px;
+			height: 16px;
+		}
+	}
+
+	.link-container:hover {
+		background:var(--color-primary-element-light)!important;
+	}
+
+	.ck.ck-toolbar {
+		border-radius: var(--border-radius-large) !important;
+		background: var(--color-main-background) !important;
+		color: var(--color-main-text) !important;
+		border: 1px solid var(--color-border) !important;
+
+		.ck.ck-toolbar__separator {
+			background: var(--color-border);
+		}
+	}
+
+	.ck-rounded-corners .ck.ck-dropdown__panel, .ck.ck-dropdown__panel.ck-rounded-corners {
+		border-radius: var(--border-radius-large) !important;
+		overflow: visible;
+	}
+
+	.ck.ck-button {
+		border-radius: var(--border-radius-element) !important;
+	}
+
+	.ck-powered-by-balloon {
+		display: none !important;
+	}
+
+	.ck.ck-editor__editable.ck-focused:not(.ck-editor__nested-editable) {
+		border: none;
+		box-shadow: none;
+		width: 99%;
+		height: 97%;
+	}
+
+	.ck.ck-button, a.ck.ck-button {
+		font-size: small;
+		font-weight: normal;
+	}
+
+	.ck-source-editing-area {
+		height: 97%;
+		overflow: scroll;
+	}
+
+	.ck-source-editing-area textarea {
+		border: 0;
+	}
+
+	.ck.ck-editor__editable_inline {
+		width: 99%;
+		height: 97%;
+		border: 0;
+	}
+
+	// We need the paragraph field a bit smaller so it doesn't break the toolbar for signature
+	.ck.ck-dropdown.ck-heading-dropdown .ck-dropdown__button .ck-button__label {
+		width: 6em;
+	}
+
+	.ck.ck-editor__top .ck-sticky-panel .ck-sticky-panel__content {
+		border: none;
+	}
+
+	.ck.ck-balloon-panel_visible {
+		border-radius: calc(var(--border-radius-large) + 1px) !important;
+		background: var(--color-main-background) !important;
+		color: var(--color-main-text);
+		box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+	}
+
+	.ck.ck-tooltip__text{
+		color: var(--color-main-text) !important;
+	}
+
+	.ck.ck-toolbar .ck-button {
+		color: var(--color-main-text) !important;
+	}
+
+	.ck.ck-toolbar .ck-button:hover,
+	.ck.ck-toolbar .ck-button.ck-on,
+	.ck.ck-toolbar .ck-button:focus {
+		background: var(--color-primary-element-light) !important;
+		color: var(--color-main-text) !important;
+	}
+
+	.ck.ck-toolbar .ck-button .ck-button__label {
+		color: var(--color-main-text) !important;
+	}
+
+	.ck.ck-dropdown__panel .ck.ck-list {
+		border-radius: var(--border-radius-large);
+	}
+
+	.ck-dropdown__panel.ck-dropdown__panel-visible {
+		border-radius: var(--border-radius-large) !important;
+	}
+
+	// Needs to be set to flex, bececause else it breaks the toolbar - it is shown in 2 lines instead of 1
+	.ck.ck-splitbutton.ck-dropdown__button{
+		display: flex;
+	}
+
+	.ck.ck-input.ck-input-text{
+		background: var(--color-main-background);
+		color: var(--color-main-text);
+		cursor: text;
+	}
+
+	.ck.ck-labeled-field-view__input-wrapper .ck.ck-label {
+		background: var(--color-main-background) !important;
+		color: var(--color-main-text) !important;
+	}
+
+	.ck.ck-button.ck-splitbutton__action {
+		margin: 0;
+	}
+
+	.ck.ck-splitbutton.ck-dropdown__button:hover .ck-button,
+	.ck.ck-splitbutton.ck-dropdown__button:hover .ck-splitbutton__action,
+	.ck.ck-splitbutton.ck-dropdown__button:hover .ck-splitbutton__arrow {
+		background: var(--color-primary-element-light) !important;
+		color: var(--color-main-text) !important;
+	}
+
+	.ck.ck-splitbutton .ck-button:focus,
+	.ck.ck-splitbutton .ck-button:focus-visible,
+	.ck.ck-splitbutton .ck-button:active,
+	.ck.ck-splitbutton .ck-button.ck-on {
+		background: var(--color-primary-element-light) !important;
+		color: var(--color-main-text) !important;
+		outline: none !important;
+	}
+
+	.ck.ck-splitbutton.ck-splitbutton_open .ck-button,
+	.ck.ck-splitbutton.ck-splitbutton_open .ck-splitbutton__action,
+	.ck.ck-splitbutton.ck-splitbutton_open .ck-splitbutton__arrow {
+		background: var(--color-primary-element-light) !important;
+		color: var(--color-main-text) !important;
+	}
+}
+
 /*
 Overwrite the default z-index for CKEditor
 https://github.com/ckeditor/ckeditor5/issues/1142
  */
- .ck .ck-reset {
-	background: var(--color-main-background) !important;
- }
-/* Default ckeditor value of padding-inline-start, to overwrite the global styling from server */
-.ck-content ul, .ck-content ol {
-	padding-inline-start: 40px;
-}
-
-.ck-read-only {
-	color: var(--color-main-text) !important;
-	background-color: var(--color-main-background) !important;
-	opacity: 1 !important;
-	font-size: 100% !important;
-}
-
-.ck-list__item {
-	.ck-off {
-		background:var(--color-main-background) !important;
-	}
-	.ck-on {
-		background:var(--color-primary-element-light) !important;
-	}
-}
-
-.custom-item-username {
-	color: var(--color-main-text) !important;
- }
-
-.link-title {
-	color: var(--color-main-text) !important;
-	margin-inline-start: var(--default-grid-baseline) !important;
-}
-
-.custom-item {
-	width : 100% !important;
-	border-radius : 8px !important;
-	padding : 4px 8px !important;
-	display :block;
-	background:var(--color-main-background)!important;
-}
-
-.custom-item:hover {
-	background:var(--color-primary-element-light)!important;
-}
-
-.link-container{
-	border-radius :8px !important;
-	padding :4px 8px !important;
-	display : block;
-	width : 100% !important;
-	background:var(--color-main-background)!important;
-	img.link-icon {
-		width: 16px;
-		height: 16px;
-	}
-}
-
-.link-container:hover {
-	background:var(--color-primary-element-light)!important;
-}
-
 :root {
 	--ck-z-default: 10000;
 	--ck-balloon-border-width:  0;
 }
-
-.ck.ck-toolbar {
-	border-radius: var(--border-radius-large) !important;
-	background: var(--color-main-background) !important;
-    color: var(--color-main-text) !important;
-	border: 1px solid var(--color-border) !important;
-
-	.ck.ck-toolbar__separator {
-		background: var(--color-border) !important;
-	}
-}
-
-.ck-rounded-corners .ck.ck-dropdown__panel, .ck.ck-dropdown__panel.ck-rounded-corners {
-	border-radius: var(--border-radius-large) !important;
-	overflow: visible;
-}
-
-.ck.ck-list-styles-list {
-/* our composer is very small, having menus vertically shown is better */
-	grid-template-rows: repeat(3,auto) !important;
-	grid-template-columns: unset !important;
-}
-
-.ck.ck-button {
-	border-radius: var(--border-radius-element) !important;
-}
-
-.ck-powered-by-balloon {
-	display: none !important;
-}
-
-.editor-wrapper {
-	display: flex;
-	flex-direction: column-reverse;
-	height: 100%;
-
-	.toolbar {
-		position: sticky;
-		bottom: 0;
-		z-index: 10;
-	}
-
-	.editable {
-		flex-grow: 1;
-		overflow-y: auto;
-	}
-}
-
-.ck.ck-editor__editable.ck-focused:not(.ck-editor__nested-editable) {
-	border: none;
-	box-shadow: none;
-	width: 99%;
-	height: 97%;
-}
-
-.ck.ck-button, a.ck.ck-button {
-	font-size: small;
-	font-weight: normal;
-}
-
-.ck-source-editing-area {
-	height: 97%;
-	overflow: scroll;
-}
-
-.ck-source-editing-area textarea {
-	border: 0;
-}
-
-.ck.ck-editor__editable_inline {
-	width: 99%;
-	height: 97%;
-	border: 0;
-}
-
-.select, button:not(.button-vue,[class^=vs__]), .button, input[type=button], input[type=submit], input[type=reset] {
-	color: var(--color-main-text);
-}
-
-/* We need the paragraph field a bit smaller so it doesn't break the toolbar for signature */
-.ck.ck-dropdown.ck-heading-dropdown .ck-dropdown__button .ck-button__label {
-	width: 6em !important;
-}
-
-.ck.ck-editor__top .ck-sticky-panel .ck-sticky-panel__content {
-	border: none;
-}
-
-.ck.ck-balloon-panel_visible {
-    border-radius: calc(var(--border-radius-large) + 1px) !important;
-    background: var(--color-main-background) !important;
-    color: var(--color-main-text) !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-}
-
-.ck.ck-tooltip__text{
-	color: var(--color-main-text) !important;
-}
-
-.ck.ck-toolbar .ck-button {
-	color: var(--color-main-text) !important;
-}
-
-.ck.ck-toolbar .ck-button:hover,
-.ck.ck-toolbar .ck-button.ck-on,
-.ck.ck-toolbar .ck-button:focus {
-	background: var(--color-primary-element-light) !important;
-    color: var(--color-main-text) !important;
-}
-
-.ck.ck-toolbar .ck-button .ck-button__label {
-	color: var(--color-main-text) !important;
-}
-
-.ck.ck-dropdown__panel .ck.ck-list {
-	border-radius: var(--border-radius-large) !important;
-}
-
-.ck-dropdown__panel.ck-dropdown__panel-visible {
-	border-radius: var(--border-radius-large) !important;
-}
-
-/* Needs to be set to flex, bececause else it breaks the toolbar - it is shown in 2 lines instead of 1 */
-.ck.ck-splitbutton.ck-dropdown__button{
-	display: flex !important;
-}
-
-.ck.ck-input.ck-input-text{
-	background: var(--color-main-background) !important;
-    color: var(--color-main-text) !important;
-	cursor: text !important;
-}
-
-.ck.ck-labeled-field-view__input-wrapper .ck.ck-label {
-	background: var(--color-main-background) !important;
-    color: var(--color-main-text) !important;
-}
-
-.ck.ck-button.ck-splitbutton__action {
-    margin: 0 !important;
-}
-
-.ck.ck-splitbutton.ck-dropdown__button:hover .ck-button,
-.ck.ck-splitbutton.ck-dropdown__button:hover .ck-splitbutton__action,
-.ck.ck-splitbutton.ck-dropdown__button:hover .ck-splitbutton__arrow {
-	background: var(--color-primary-element-light) !important;
-	color: var(--color-main-text) !important;
-}
-
-.ck.ck-splitbutton .ck-button:focus,
-.ck.ck-splitbutton .ck-button:focus-visible,
-.ck.ck-splitbutton .ck-button:active,
-.ck.ck-splitbutton .ck-button.ck-on {
-	background: var(--color-primary-element-light) !important;
-	color: var(--color-main-text) !important;
-	outline: none !important;
-}
-
-.ck.ck-splitbutton.ck-splitbutton_open .ck-button,
-.ck.ck-splitbutton.ck-splitbutton_open .ck-splitbutton__action,
-.ck.ck-splitbutton.ck-splitbutton_open .ck-splitbutton__arrow {
-    background: var(--color-primary-element-light) !important;
-    color: var(--color-main-text) !important;
-}
-
 </style>

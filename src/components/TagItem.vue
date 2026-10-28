@@ -4,86 +4,89 @@
 -->
 <template>
 	<div class="tag-group">
-		<button
-			class="tag-group__label"
-			:style="{
-				color: convertHex(tag.color, 1),
-				'background-color': convertHex(tag.color, 0.15),
-			}">
-			{{ translateTagDisplayName(tag) }}
-		</button>
-		<NcActions :force-menu="true" @close="closeEditTag">
-			<NcActionButton
-				v-if="renameTagLabel"
-				@click="openEditTag">
-				<template #icon>
-					<IconEdit :size="22" />
-				</template>
-				{{ t('mail', 'Edit name or color') }}
-			</NcActionButton>
-			<NcColorPicker
-				v-if="!renameTagLabel"
-				v-model="editColor"
-				class="app-navigation-entry-bullet-wrapper"
-				@submit="updateColor">
-				<div :style="{ backgroundColor: editColor }" class="color0 app-navigation-entry-bullet" />
+		<template v-if="editing">
+			<NcColorPicker v-model="editColor" @submit="updateColor">
+				<NcButton variant="tertiary" :aria-label="t('mail', 'Change tag color')">
+					<template #icon>
+						<div class="tag-group__color" :style="{ backgroundColor: editColor }" />
+					</template>
+				</NcButton>
 			</NcColorPicker>
-			<NcActionInput
-				v-if="renameTagInput"
+			<NcTextField
 				v-model="currentTagName"
+				class="tag-group__name"
+				:label="t('mail', 'Tag name')"
+				:disabled="saving"
 				:error="hasError()"
-				:helper-text="errorMessage"
-				@submit="renameTag(tag, $event)" />
-			<NcActionText v-if="showSaving">
+				:helperText="errorMessage"
+				showTrailingButton
+				trailingButtonIcon="arrowEnd"
+				:trailingButtonLabel="t('mail', 'Save')"
+				@keyup.enter="renameTag(tag)"
+				@trailingButtonClick="renameTag(tag)" />
+			<NcButton variant="tertiary" :aria-label="t('mail', 'Cancel')" @click="closeEditTag">
 				<template #icon>
-					<NcLoadingIcon :size="22" />
+					<IconClose :size="20" />
 				</template>
-				{{ t('mail', 'Saving new tag name …') }}
-			</NcActionText>
-			<NcActionButton
-				v-if="!tag.isDefaultTag || !renameTagLabel"
-				@click="deleteTag">
+			</NcButton>
+		</template>
+		<template v-else>
+			<NcCheckboxRadioSwitch
+				class="tag-group__checkbox"
+				:modelValue="isSet(tag.imapLabel)"
+				@update:modelValue="$event ? addTag(tag.imapLabel) : removeTag(tag.imapLabel)">
+				<span
+					class="tag-group__label"
+					:style="{
+						color: tagTextColor(tag.color, isDarkTheme),
+						'background-color': tagBackgroundColor(tag.color),
+					}">
+					{{ translateTagDisplayName(tag) }}
+				</span>
+			</NcCheckboxRadioSwitch>
+			<NcButton variant="tertiary" @click="openEditTag">
 				<template #icon>
-					<DeleteIcon :size="22" />
+					<IconEdit :size="20" />
 				</template>
-				{{ t('mail', 'Delete tag') }}
-			</NcActionButton>
-		</NcActions>
-		<button
-			v-if="!isSet(tag.imapLabel)"
-			class="tag-actions"
-			@click="addTag(tag.imapLabel)">
-			{{ t('mail', 'Set tag') }}
-		</button>
-		<button
-			v-else
-			class="tag-actions"
-			@click="removeTag(tag.imapLabel)">
-			{{ t('mail', 'Unset tag') }}
-		</button>
+				{{ t('mail', 'Edit') }}
+			</NcButton>
+		</template>
+		<NcButton
+			v-if="!tag.isDefaultTag || editing"
+			variant="tertiary"
+			@click="deleteTag">
+			<template #icon>
+				<DeleteIcon :size="20" />
+			</template>
+			{{ t('mail', 'Delete') }}
+		</NcButton>
 	</div>
 </template>
 
 <script>
 import { showInfo } from '@nextcloud/dialogs'
-import { NcActionButton, NcActionInput, NcActions, NcActionText, NcColorPicker, NcLoadingIcon } from '@nextcloud/vue'
+import { useIsDarkTheme } from '@nextcloud/vue/composables/useIsDarkTheme'
 import { mapStores } from 'pinia'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
+import NcColorPicker from '@nextcloud/vue/components/NcColorPicker'
+import NcTextField from '@nextcloud/vue/components/NcTextField'
+import IconClose from 'vue-material-design-icons/Close.vue'
 import IconEdit from 'vue-material-design-icons/PencilOutline.vue'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
-import { translateTagDisplayName, validateTag } from '../util/tag.js'
+import { tagBackgroundColor, tagTextColor, translateTagDisplayName, validateTag } from '../util/tag.js'
 
 export default {
 	name: 'TagItem',
 	components: {
+		NcButton,
+		NcCheckboxRadioSwitch,
 		NcColorPicker,
-		NcActions,
-		NcActionButton,
-		NcActionText,
-		NcActionInput,
-		NcLoadingIcon,
+		NcTextField,
 		DeleteIcon,
+		IconClose,
 		IconEdit,
 	},
 
@@ -100,17 +103,16 @@ export default {
 		},
 	},
 
+	emits: ['deleteTag'],
+
 	data() {
 		return {
 			isAdded: false,
+			isDarkTheme: useIsDarkTheme(),
 			editing: false,
 			editColor: null,
-			tagLabel: true,
-			tagInput: false,
-			showSaving: false,
+			saving: false,
 			currentTagName: '',
-			renameTagLabel: true,
-			renameTagInput: false,
 			errorMessage: '',
 		}
 	},
@@ -126,46 +128,42 @@ export default {
 	},
 
 	methods: {
+		tagBackgroundColor,
+		tagTextColor,
 		translateTagDisplayName,
 		deleteTag() {
-			this.$emit('delete-tag', this.tag)
+			this.$emit('deleteTag', this.tag)
 		},
 
 		async updateColor() {
-			this.showSaving = false
 			try {
 				await this.mainStore.updateTag({
 					tag: this.tag,
 					displayName: this.tag.displayName,
 					color: this.editColor,
 				})
-				this.showSaving = false
 			} catch (error) {
 				showInfo(t('mail', 'An error occurred, unable to rename the tag.'))
 				logger.error('could not rename tag', { error })
-				this.showSaving = true
 			}
 		},
 
 		openEditTag() {
-			this.renameTagLabel = false
-			this.renameTagInput = true
-			this.showSaving = false
+			this.editing = true
 			this.currentTagName = this.tag.displayName
 			this.editColor = this.tag.color
 		},
 
 		closeEditTag() {
-			this.renameTagInput = false
-			this.renameTagLabel = true
-			this.showSaving = false
+			this.editing = false
+			this.errorMessage = ''
 		},
 
 		hasError() {
 			return this.errorMessage !== ''
 		},
 
-		async renameTag(tag, event) {
+		async renameTag(tag) {
 			this.currentTagName = this.currentTagName.trim()
 
 			const otherTags = this.mainStore.getTags
@@ -175,7 +173,7 @@ export default {
 				return
 			}
 
-			this.showSaving = false
+			this.saving = true
 			this.errorMessage = ''
 
 			try {
@@ -188,23 +186,8 @@ export default {
 			} catch (error) {
 				showInfo(t('mail', 'An error occurred, unable to rename the tag.'))
 				logger.error('could not rename tag', { error })
-				this.renameTagLabel = false
-				this.renameTagInput = false
-				this.showSaving = true
-			}
-		},
-
-		convertHex(color, opacity) {
-			if (color.length === 4) {
-				const r = parseInt(color.substring(1, 2), 16)
-				const g = parseInt(color.substring(2, 3), 16)
-				const b = parseInt(color.substring(3, 4), 16)
-				return `rgba(${r}, ${g}, ${b}, ${opacity})`
-			} else {
-				const r = parseInt(color.substring(1, 3), 16)
-				const g = parseInt(color.substring(3, 5), 16)
-				const b = parseInt(color.substring(5, 7), 16)
-				return `rgba(${r}, ${g}, ${b}, ${opacity})`
+			} finally {
+				this.saving = false
 			}
 		},
 
@@ -232,60 +215,36 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.app-navigation-entry-bullet-wrapper {
-	width: 44px;
-	height: 44px;
-	display: inline-block;
-	position: fixed;
-	list-style: none;
-	top: 18px;
-	inset-inline-start: 15px;
+.tag-group__color {
+	width: calc(var(--default-grid-baseline) * 5);
+	height: calc(var(--default-grid-baseline) * 5);
+	border-radius: 50%;
+}
 
-	.color0 {
-		width: 22px !important;
-		height: 22px;
-		border-radius: 50%;
-		background-size: 14px;
-		z-index: 2;
-		display: flex;
-		position: relative;
-	}
+.tag-group__name {
+	flex: 1;
 }
 
 .tag-group {
-	display: block;
-	position: relative;
-	margin: 0 1px;
-	overflow: hidden;
+	display: flex;
+	align-items: center;
+	gap: var(--default-grid-baseline);
+	min-height: 44px;
+	padding-inline: var(--default-grid-baseline);
 }
 
-.tag-actions {
-	background-color: transparent;
-	border: none;
-	float: inline-end;
-	&:hover,
-	&:focus {
-		background-color: var(--color-border-dark);
-	}
+.tag-group__checkbox {
+	flex: 1;
+	min-width: 0;
 }
 
 .tag-group__label {
-	z-index: 2;
 	font-weight: bold;
-	border: none;
-	background-color: transparent;
 	padding-inline: 10px;
+	padding-block: 4px;
+	border-radius: var(--border-radius-pill);
 	overflow: hidden;
 	text-overflow: ellipsis;
-	max-width: 94px;
-}
-
-.action-item {
-	inset-inline-end: 8px;
-	float: inline-end;
-}
-
-:deep(.input-field) {
-	margin-top: 3px;
+	white-space: nowrap;
 }
 </style>

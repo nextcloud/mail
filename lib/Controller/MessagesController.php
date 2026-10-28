@@ -14,9 +14,7 @@ use Exception;
 use OC\Security\CSP\ContentSecurityPolicyNonceManager;
 use OCA\Mail\Attachment;
 use OCA\Mail\Contracts\IDkimService;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
-use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Contracts\ITrustedSenderService;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Db\Message;
@@ -25,17 +23,20 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
 use OCA\Mail\Http\TrapError;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\SmimeData;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\ItineraryService;
+use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\SmimeService;
 use OCA\Mail\Service\SnoozeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
@@ -67,7 +68,7 @@ class MessagesController extends Controller {
 		string $appName,
 		IRequest $request,
 		private AccountService $accountService,
-		private IMailManager $mailManager,
+		private MailManager $mailManager,
 		private IMailSearch $mailSearch,
 		private ItineraryService $itineraryService,
 		private ?string $userId,
@@ -79,9 +80,8 @@ class MessagesController extends Controller {
 		IURLGenerator $urlGenerator,
 		ContentSecurityPolicyNonceManager $nonceManager,
 		private ITrustedSenderService $trustedSenderService,
-		private IMailTransmission $mailTransmission,
+		private ProtocolFactory $protocolFactory,
 		private SmimeService $smimeService,
-		private IMAPClientFactory $clientFactory,
 		private IDkimService $dkimService,
 		private IUserPreferences $preferences,
 		private SnoozeService $snoozeService,
@@ -97,8 +97,6 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $mailboxId
 	 * @param int $cursor
 	 * @param string $filter
@@ -111,6 +109,7 @@ class MessagesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function index(int $mailboxId,
 		?int $cursor = null,
@@ -155,13 +154,12 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function show(int $id): JSONResponse {
 		if ($this->userId === null) {
@@ -188,8 +186,6 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 *
 	 * @return JSONResponse
@@ -197,6 +193,7 @@ class MessagesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function getBody(int $id): JSONResponse {
 		if ($this->userId === null) {
@@ -214,25 +211,20 @@ class MessagesController extends Controller {
 		$cacheInstance = $this->getCacheForAccount($account->getId());
 		$imapMessageCacheKey = "message_$id";
 
-		$client = $this->clientFactory->getClient($account);
-		try {
-			$imapMessage = $this->mailManager->getImapMessage(
-				$client,
-				$account,
-				$mailbox,
-				$message->getUid(), true
-			);
+		$imapMessage = $this->mailManager->getImapMessage(
+			$account,
+			$mailbox,
+			$message,
+			true
+		);
 
-			if ($imapMessage->hasHtmlMessage()) {
-				$cacheInstance->set($imapMessageCacheKey, $imapMessage->getHtmlBody($id), 600);
-			}
-
-			$json = $imapMessage->getFullMessage($id);
-		} finally {
-			$client->logout();
+		if ($imapMessage->hasHtmlMessage()) {
+			$cacheInstance->set($imapMessageCacheKey, $imapMessage->getHtmlBody($id), 600);
 		}
 
-		$itineraries = $this->itineraryService->getCached($account, $mailbox, $message->getUid());
+		$json = $imapMessage->getFullMessage($id);
+
+		$itineraries = $this->itineraryService->getCached($account, $mailbox, $message->getId());
 		if ($itineraries) {
 			$json['itineraries'] = $itineraries;
 		}
@@ -251,7 +243,7 @@ class MessagesController extends Controller {
 		}
 		$json['smime'] = $smimeData;
 
-		$dkimResult = $this->dkimService->getCached($account, $mailbox, $message->getUid());
+		$dkimResult = $this->dkimService->getCached($account, $mailbox, $message->getId());
 		if (is_bool($dkimResult)) {
 			$json['dkimValid'] = $dkimResult;
 		}
@@ -265,14 +257,13 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 *
 	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function getItineraries(int $id): JSONResponse {
 		if ($this->userId === null) {
@@ -287,16 +278,16 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$response = new JsonResponse($this->itineraryService->extract($account, $mailbox, $message->getUid()));
+		$response = new JsonResponse($this->itineraryService->extract($account, $mailbox, $message));
 		$response->cacheFor(24 * 60 * 60, false, true);
 		return $response;
 	}
 
 	/**
-	 * @NoAdminRequired
 	 * @param int $id
 	 * @return JSONResponse
 	 */
+	#[NoAdminRequired]
 	public function getDkim(int $id): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
@@ -310,7 +301,7 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$response = new JSONResponse(['valid' => $this->dkimService->validate($account, $mailbox, $message->getUid())]);
+		$response = new JSONResponse(['valid' => $this->dkimService->validate($account, $mailbox, $message)]);
 		$response->cacheFor(24 * 60 * 60, false, true);
 		return $response;
 	}
@@ -335,14 +326,13 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
 	 * @param int $id
 	 *
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	#[TrapError]
 	public function getThread(int $id): JSONResponse {
 		if ($this->userId === null) {
@@ -365,8 +355,6 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @param int $destFolderId
 	 *
@@ -375,6 +363,7 @@ class MessagesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function move(int $id, int $destFolderId): JSONResponse {
 		if ($this->userId === null) {
@@ -395,10 +384,10 @@ class MessagesController extends Controller {
 
 		$this->mailManager->moveMessage(
 			$srcAccount,
-			$srcMailbox->getName(),
-			$message->getUid(),
+			$srcMailbox,
+			$message,
 			$dstAccount,
-			$dstMailbox->getName()
+			$dstMailbox
 		);
 
 		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId moved message <$id> to mailbox <$destFolderId> on behalf of $effectiveUserId");
@@ -407,8 +396,6 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @param int $unixTimestamp
 	 * @param int $destMailboxId
@@ -417,6 +404,7 @@ class MessagesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function snooze(int $id, int $unixTimestamp, int $destMailboxId): JSONResponse {
 		if ($this->userId === null) {
@@ -442,14 +430,13 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 *
 	 * @return JSONResponse
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function unSnooze(int $id): JSONResponse {
 		if ($this->userId === null) {
@@ -469,8 +456,6 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 *
 	 * @return JSONResponse
@@ -478,6 +463,7 @@ class MessagesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function mdn(int $id): JSONResponse {
 		if ($this->userId === null) {
@@ -497,8 +483,8 @@ class MessagesController extends Controller {
 		}
 
 		try {
-			$this->mailTransmission->sendMdn($account, $mailbox, $message);
-			$this->mailManager->flagMessage($account, $mailbox->getName(), $message->getUid(), '$mdnsent', true);
+			$this->protocolFactory->transmissionConnector($account)->sendMdn($account, $mailbox, $message);
+			$this->mailManager->flagMessages($account, $mailbox, '$mdnsent', true, $message);
 		} catch (ServiceException $ex) {
 			$this->logger->error('Sending mdn failed: ' . $ex->getMessage());
 			throw $ex;
@@ -508,11 +494,10 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
 	 * @throws ServiceException
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	#[TrapError]
 	public function getSource(int $id): JSONResponse {
 		if ($this->userId === null) {
@@ -527,19 +512,13 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$client = $this->clientFactory->getClient($account);
-		try {
-			$response = new JSONResponse([
-				'source' => $this->mailManager->getSource(
-					$client,
-					$account,
-					$mailbox->getName(),
-					$message->getUid()
-				)
-			]);
-		} finally {
-			$client->logout();
-		}
+		$response = new JSONResponse([
+			'source' => $this->mailManager->getSource(
+				$account,
+				$mailbox,
+				$message
+			)
+		]);
 
 		// Enable caching
 		$response->cacheFor(60 * 60, false, true);
@@ -550,14 +529,13 @@ class MessagesController extends Controller {
 	/**
 	 * Export a whole message as an .eml file.
 	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
 	 * @param int $id
 	 * @return Response
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	#[TrapError]
 	public function export(int $id): Response {
 		if ($this->userId === null) {
@@ -572,17 +550,11 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$client = $this->clientFactory->getClient($account);
-		try {
-			$source = $this->mailManager->getSource(
-				$client,
-				$account,
-				$mailbox->getName(),
-				$message->getUid()
-			);
-		} finally {
-			$client->logout();
-		}
+		$source = $this->mailManager->getSource(
+			$account,
+			$mailbox,
+			$message
+		);
 
 		return new AttachmentDownloadResponse(
 			$source ?? '',
@@ -593,8 +565,6 @@ class MessagesController extends Controller {
 
 	/**
 	 * Save a whole message as an .eml file in the local storage
-	 *
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 * @param string $targetPath
@@ -607,6 +577,7 @@ class MessagesController extends Controller {
 	 * @throws LockedException
 	 * @throws ServiceException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function saveFile(int $id, string $targetPath): Response {
 		if ($this->userId === null) {
@@ -630,17 +601,11 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$client = $this->clientFactory->getClient($account);
-		try {
-			$source = $this->mailManager->getSource(
-				$client,
-				$account,
-				$mailbox->getName(),
-				$message->getUid()
-			);
-		} finally {
-			$client->logout();
-		}
+		$source = $this->mailManager->getSource(
+			$account,
+			$mailbox,
+			$message
+		);
 
 		if ($source === null) {
 			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
@@ -662,9 +627,6 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
 	 * @param int $id
 	 * @param bool $plain do not inject scripts if true (default=false)
 	 *
@@ -672,6 +634,8 @@ class MessagesController extends Controller {
 	 *
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	#[TrapError]
 	public function getHtmlBody(int $id, bool $plain = false): Response {
 		if ($this->userId === null) {
@@ -704,18 +668,12 @@ class MessagesController extends Controller {
 
 			$html = $cacheInstance->get($imapMessageCacheKey);
 			if ($html === null) {
-				$client = $this->clientFactory->getClient($account);
-				try {
-					$html = $this->mailManager->getImapMessage(
-						$client,
-						$account,
-						$mailbox,
-						$message->getUid(),
-						true
-					)->getHtmlBody($id);
-				} finally {
-					$client->logout();
-				}
+				$html = $this->mailManager->getImapMessage(
+					$account,
+					$mailbox,
+					$message,
+					true
+				)->getHtmlBody($id);
 			}
 
 			$htmlResponse = $plain
@@ -752,9 +710,6 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
 	 * @param int $id
 	 * @param string $attachmentId
 	 *
@@ -762,6 +717,8 @@ class MessagesController extends Controller {
 	 *
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	#[TrapError]
 	public function downloadAttachment(int $id,
 		string $attachmentId): Response {
@@ -787,25 +744,26 @@ class MessagesController extends Controller {
 		// Body party and embedded messages do not have a name
 		$attachmentName = $attachment->getName();
 		if ($attachmentName === null) {
-			return new AttachmentDownloadResponse(
-				$attachment->getContent(),
-				$this->l10n->t('Embedded message %s', [
-					$attachmentId,
-				]) . '.eml',
-				$attachment->getType()
-			);
+			$attachmentName = $this->l10n->t('Embedded message %s', [
+				$attachmentId,
+			]) . '.eml';
 		}
-		return new AttachmentDownloadResponse(
-			$attachment->getContent(),
+
+		$content = $attachment->getContent();
+		$response = new AttachmentDownloadResponse(
+			$content,
 			$attachmentName,
 			$attachment->getType()
 		);
+
+		if ($content !== '') {
+			$response->cacheFor(60 * 60, false, true);
+		}
+
+		return $response;
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
 	 * @param int $id the message id
 	 *
 	 * @return ZipResponse|JSONResponse
@@ -814,6 +772,8 @@ class MessagesController extends Controller {
 	 * @throws ServiceException
 	 * @throws DoesNotExistException
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	#[TrapError]
 	public function downloadAttachments(int $id): Response {
 		if ($this->userId === null) {
@@ -846,8 +806,6 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @param string $attachmentId
 	 * @param string $targetPath
@@ -859,6 +817,7 @@ class MessagesController extends Controller {
 	 * @throws NotPermittedException
 	 * @throws LockedException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function saveAttachment(int $id,
 		string $attachmentId,
@@ -922,8 +881,6 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @param array $flags
 	 *
@@ -932,6 +889,7 @@ class MessagesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function setFlags(int $id, array $flags): JSONResponse {
 		if ($this->userId === null) {
@@ -949,7 +907,7 @@ class MessagesController extends Controller {
 		$flagChanges = [];
 		foreach ($flags as $flag => $value) {
 			$value = filter_var($value, FILTER_VALIDATE_BOOLEAN);
-			$this->mailManager->flagMessage($account, $mailbox->getName(), $message->getUid(), $flag, $value);
+			$this->mailManager->flagMessages($account, $mailbox, $flag, $value, $message);
 			$flagChanges[] = "$flag=" . ($value ? 'true' : 'false');
 		}
 		$flagsSummary = implode(', ', $flagChanges);
@@ -958,8 +916,6 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @param string $imapLabel
 	 *
@@ -968,6 +924,7 @@ class MessagesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function setTag(int $id, string $imapLabel): JSONResponse {
 		if ($this->userId === null) {
@@ -983,19 +940,17 @@ class MessagesController extends Controller {
 		}
 
 		try {
-			$tag = $this->mailManager->getTagByImapLabel($imapLabel, $this->userId);
+			$tag = $this->mailManager->getTagByLabel($imapLabel, $this->userId);
 		} catch (ClientException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$this->mailManager->tagMessage($account, $mailbox->getName(), $message, $tag, true);
+		$this->mailManager->tagMessages($account, $mailbox, $tag, true, $message);
 		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId added tag <$imapLabel> on message <$id> on behalf of $effectiveUserId");
 		return new JSONResponse($tag);
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @param string $imapLabel
 	 *
@@ -1004,6 +959,7 @@ class MessagesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function removeTag(int $id, string $imapLabel): JSONResponse {
 		if ($this->userId === null) {
@@ -1019,24 +975,23 @@ class MessagesController extends Controller {
 		}
 
 		try {
-			$tag = $this->mailManager->getTagByImapLabel($imapLabel, $this->userId);
+			$tag = $this->mailManager->getTagByLabel($imapLabel, $this->userId);
 		} catch (ClientException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$this->mailManager->tagMessage($account, $mailbox->getName(), $message, $tag, false);
+		$this->mailManager->tagMessages($account, $mailbox, $tag, false, $message);
 		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId removed tag <$imapLabel> on message <$id> on behalf of $effectiveUserId");
 		return new JSONResponse($tag);
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function destroy(int $id): JSONResponse {
 		if ($this->userId === null) {
@@ -1055,20 +1010,19 @@ class MessagesController extends Controller {
 
 		$this->mailManager->deleteMessage(
 			$account,
-			$mailbox->getName(),
-			$message->getUid()
+			$mailbox,
+			$message
 		);
 		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId deleted message <$id> on behalf of $effectiveUserId");
 		return new JSONResponse();
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $messageId
 	 *
 	 * @return JSONResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function smartReply(int $messageId):JSONResponse {
 		if ($this->userId === null) {
@@ -1142,7 +1096,12 @@ class MessagesController extends Controller {
 	 * @return boolean
 	 */
 	private function attachmentIsCalendarEvent(array $attachment): bool {
-		return in_array($attachment['mime'], ['text/calendar', 'application/ics'], true);
+		if (in_array($attachment['mime'], ['text/calendar', 'application/ics'], true)) {
+			return true;
+		}
+
+		return $attachment['mime'] === 'application/octet-stream'
+			&& str_ends_with(strtolower($attachment['fileName'] ?? ''), '.ics');
 	}
 
 	private function getCacheForAccount(int $accountId): ICache {

@@ -90,7 +90,7 @@ class AvatarServiceTest extends TestCase {
 			->willReturn(null);
 		$this->source->expects($this->once())
 			->method('fetch')
-			->with($email, $this->avatarFactory, true)
+			->with($uid, $email, $this->avatarFactory, true)
 			->willReturn(null);
 		$this->cache->expects($this->once())
 			->method('add')
@@ -115,7 +115,7 @@ class AvatarServiceTest extends TestCase {
 		$avatar = new Avatar('http://…', 'application/xml');
 		$this->source->expects($this->once())
 			->method('fetch')
-			->with($email, $this->avatarFactory, true)
+			->with($uid, $email, $this->avatarFactory, true)
 			->willReturn($avatar);
 		$this->cache->expects($this->once())
 			->method('add')
@@ -140,7 +140,7 @@ class AvatarServiceTest extends TestCase {
 			->willReturn(null);
 		$this->source->expects($this->once())
 			->method('fetch')
-			->with($email, $this->avatarFactory, false)
+			->with($uid, $email, $this->avatarFactory, false)
 			->willReturn($avatar);
 		$this->cache->expects($this->once())
 			->method('add')
@@ -165,7 +165,7 @@ class AvatarServiceTest extends TestCase {
 			->willReturn(null);
 		$this->source->expects($this->once())
 			->method('fetch')
-			->with($email, $this->avatarFactory, true)
+			->with($uid, $email, $this->avatarFactory, true)
 			->willReturn($avatar);
 		$this->cache->expects($this->once())
 			->method('add')

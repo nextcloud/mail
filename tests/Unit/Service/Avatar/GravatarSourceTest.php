@@ -53,7 +53,7 @@ class GravatarSourceTest extends TestCase {
 			->with('https://secure.gravatar.com/avatar/2fd3f4d5d762955e5b603794a888fa97?size=128&d=404')
 			->willReturn($avatar);
 
-		$actualAvatar = $this->source->fetch($email, $avatarFactory);
+		$actualAvatar = $this->source->fetch('currentUser', $email, $avatarFactory);
 
 		$this->assertEquals($avatar, $actualAvatar);
 	}
@@ -70,7 +70,7 @@ class GravatarSourceTest extends TestCase {
 			->with('https://secure.gravatar.com/avatar/2fd3f4d5d762955e5b603794a888fa97?size=128&d=404')
 			->willThrowException(new Exception());
 
-		$actualAvatar = $this->source->fetch($email, $avatarFactory);
+		$actualAvatar = $this->source->fetch('currentUser', $email, $avatarFactory);
 
 		$this->assertNull($actualAvatar);
 	}

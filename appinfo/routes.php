@@ -76,11 +76,6 @@ return [
 			'verb' => 'GET'
 		],
 		[
-			'name' => 'accounts#draft',
-			'url' => '/api/accounts/{id}/draft',
-			'verb' => 'POST'
-		],
-		[
 			'name' => 'accounts#patchAccount',
 			'url' => '/api/accounts/{id}',
 			'verb' => 'PATCH'

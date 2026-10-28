@@ -54,6 +54,59 @@ describe('Pinia store mutations', () => {
 		})
 	})
 
+	it('adds an account with sorted aliases', () => {
+		store.addAccountMutation({
+			accountId: 13,
+			id: 13,
+			mailboxes: [],
+			aliases: [
+				{ id: 1, alias: 'user@zebra.com' },
+				{ id: 2, alias: 'user@alpha.com' },
+			],
+		})
+
+		expect(store.accountsUnmapped[13].aliases).toEqual([
+			{ id: 2, alias: 'user@alpha.com' },
+			{ id: 1, alias: 'user@zebra.com' },
+		])
+	})
+
+	it('sorts aliases on createAliasMutation', () => {
+		const account = {
+			id: 1,
+			aliases: [
+				{ id: 1, alias: 'user@zebra.com' },
+			],
+		}
+		store.createAliasMutation({
+			account,
+			alias: { id: 2, alias: 'user@alpha.com' },
+		})
+		expect(account.aliases).toEqual([
+			{ id: 2, alias: 'user@alpha.com' },
+			{ id: 1, alias: 'user@zebra.com' },
+		])
+	})
+
+	it('sorts aliases on patchAliasMutation', () => {
+		const account = {
+			id: 1,
+			aliases: [
+				{ id: 1, alias: 'user@beta.com' },
+				{ id: 2, alias: 'user@gamma.com' },
+			],
+		}
+		store.patchAliasMutation({
+			account,
+			aliasId: 2,
+			data: { alias: 'user@alpha.com' },
+		})
+		expect(account.aliases).toEqual([
+			{ id: 2, alias: 'user@alpha.com' },
+			{ id: 1, alias: 'user@beta.com' },
+		])
+	})
+
 	it('adds an account with one level of mailboxes', () => {
 		store.addAccountMutation({
 			accountId: 13,

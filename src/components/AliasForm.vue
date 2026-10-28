@@ -73,7 +73,8 @@
 </template>
 
 <script>
-import { NcButton, NcLoadingIcon } from '@nextcloud/vue'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import IconRename from 'vue-material-design-icons/PencilOutline.vue'
 import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
@@ -180,11 +181,6 @@ $form-gap: 10px;
 		display: flex;
 		flex: 1 auto;
 		gap: 10px; // Gap between inputs
-
-		&--expand {
-			// Prevent the submit button from being wrapped to the next line on normal sized screens
-			flex-basis: calc(100% - 44px - $form-gap);
-		}
 
 		&__input {
 			flex: 1 auto;

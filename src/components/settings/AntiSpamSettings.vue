@@ -138,12 +138,6 @@ export default {
 	flex-direction: row;
 	flex-wrap: nowrap;
 
-	.group-title {
-		min-width: 100px;
-		text-align: end;
-		margin: 10px;
-		font-weight: bold;
-	}
 	.group-inputs {
 		margin: 10px;
 		flex-grow: 1;
@@ -157,27 +151,6 @@ export default {
 
 h4 {
 	font-weight: bold;
-}
-
-.previews {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	margin: 0 -10px;
-
-	.preview-item {
-		flex-grow: 1;
-		margin: 10px;
-		padding: 25px;
-	}
-}
-
-input[type='radio'] {
-	display: none;
-}
-
-.flex-row {
-	display: flex;
 }
 
 form {
