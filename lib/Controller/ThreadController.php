@@ -83,6 +83,42 @@ class ThreadController extends Controller {
 	}
 
 	/**
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	#[NoAdminRequired]
+	#[TrapError]
+	public function copy(int $id, int $destMailboxId): JSONResponse {
+		try {
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$srcMailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$srcAccount = $this->accountService->find($effectiveUserId, $srcMailbox->getAccountId());
+			$dstMailbox = $this->mailManager->getMailbox($effectiveUserId, $destMailboxId);
+			$dstAccount = $this->accountService->find($effectiveUserId, $dstMailbox->getAccountId());
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+
+		$this->delegationService->assertMailboxAccess($destMailboxId, $this->userId);
+
+		$threadRootId = $message->getThreadRootId();
+		if ($threadRootId === null) {
+			return new JSONResponse([], Http::STATUS_NOT_FOUND);
+		}
+		$this->mailManager->copyThread(
+			$srcAccount,
+			$srcMailbox,
+			$dstAccount,
+			$dstMailbox,
+			$threadRootId
+		);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId copied thread <$id> to mailbox <$destMailboxId> on behalf of $effectiveUserId");
+
+		return new JSONResponse();
+	}
+
+	/**
 	 * @param int $id
 	 * @param int $unixTimestamp
 	 * @param int $destMailboxId

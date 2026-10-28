@@ -94,6 +94,15 @@ interface IMessageConnector {
 	public function moveMessages(Account $account, Mailbox $targetMailbox, Mailbox $sourceMailbox, Message ...$messages): array;
 
 	/**
+	 * Copy a message to a different mailbox.
+	 *
+	 * @return Message[] The copied messages
+	 *
+	 * @throws ServiceException
+	 */
+	public function copyMessages(Account $account, Mailbox $targetMailbox, Mailbox $sourceMailbox, Message ...$messages): array;
+
+	/**
 	 * Permanently delete a message.
 	 *
 	 * @return Message[] The deleted messages
