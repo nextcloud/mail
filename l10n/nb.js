@@ -385,6 +385,7 @@ OC.L10N.register(
     "Collapse folders" : "Skjul mapper",
     "_{total} message_::_{total} messages_" : ["{total} melding","{total} meldinger"],
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} ulest av {total}","{unread} uleste av {total}"],
+    "Loading …" : "Laster inn ...",
     "All messages in mailbox will be deleted." : "Alle meldinger i postkassen blir slettet.",
     "Clear mailbox {name}" : "Tøm postboks {name}",
     "Clear folder" : "Tøm mappe",

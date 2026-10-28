@@ -693,6 +693,8 @@
     "Change tag color" : "變更標籤顏色",
     "Tag name" : "標籤名稱",
     "Edit" : "編輯",
+    "Assign tags to \"{subject}\"" : "為「{subject}」指派標籤",
+    "_Assign tags to %n message_::_Assign tags to %n messages_" : ["指派標籤給 %n 則訊息"],
     "An error occurred, unable to create the tag." : "遇到錯誤，無法建立標籤。",
     "Add tag" : "新增標籤",
     "Task created" : "已建立工作",
