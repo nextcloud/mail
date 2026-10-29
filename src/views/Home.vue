@@ -12,7 +12,7 @@
 			:mailbox="activeMailbox" />
 
 		<template v-if="hasComposerSession && accounts !== null">
-			<ComposerSessionIndicator v-if="!showMessageComposer" @close="onCloseMessageModal" />
+			<ComposerSessionIndicator v-if="!showMessageComposer && !composerMessage?.indicatorDisabled" @close="onCloseMessageModal" />
 			<NewMessageModal ref="newMessageModal" :accounts="accounts" />
 		</template>
 	</NcContent>
@@ -51,7 +51,7 @@ export default {
 
 	computed: {
 		...mapStores(useMainStore),
-		...mapState(useMainStore, ['composerSessionId', 'showMessageComposer']),
+		...mapState(useMainStore, ['composerSessionId', 'showMessageComposer', 'composerMessage']),
 		accounts() {
 			return this.mainStore.getAccounts.filter((a) => !a.isUnified)
 		},
