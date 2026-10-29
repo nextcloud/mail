@@ -508,7 +508,7 @@ class ImportanceClassifier {
 			'recall' => $recallImportant,
 			'precision' => $precisionImportant,
 			'f1Score' => $f1ScoreImportant,
-		]));
+		], JSON_THROW_ON_ERROR));
 		$logger->debug("classifier validated: recall(important)=$recallImportant, precision(important)=$precisionImportant f1(important)=$f1ScoreImportant");
 
 		$classifier = new Classifier();
