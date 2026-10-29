@@ -3,11 +3,17 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import { showError } from '@nextcloud/dialogs'
 import { shallowMount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import NewMessageModal from '../../../components/NewMessageModal.vue'
 import useMainStore from '../../../store/mainStore.js'
+
+vi.mock('@nextcloud/dialogs', async (importOriginal) => ({
+	...await importOriginal(),
+	showError: vi.fn(),
+}))
 
 const ComposerStub = {
 	name: 'Composer',
@@ -68,6 +74,16 @@ describe('NewMessageModal', () => {
 		await view.vm.patchComposerData({ bodyHtml: '<p>Bye</p>' })
 
 		expect(view.vm.mainStore.patchComposerData).toHaveBeenCalledWith({ bodyHtml: '<p>Bye</p>', isHtml: true })
+	})
+
+	it('re-enables the session indicator when closing fails', async () => {
+		const view = mountModal({ data: { isHtml: false }, composerOpen: true })
+		view.vm.mainStore.stopComposerSession = vi.fn().mockRejectedValue(new Error('IMAP unavailable'))
+
+		await view.vm.onClose()
+
+		expect(view.vm.mainStore.composerMessage.indicatorDisabled).toBe(false)
+		expect(showError).toHaveBeenCalledWith('Failed to save draft')
 	})
 
 	it('patches the body the composer emits on teardown instead of throwing', () => {

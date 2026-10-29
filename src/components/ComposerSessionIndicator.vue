@@ -8,7 +8,8 @@
 		:class="{ 'composer-session--disabled': disabled }"
 		@click="onShowComposer">
 		<div class="composer-session__icon">
-			<PencilIcon :size="20" />
+			<NcLoadingIcon v-if="saving" :size="20" />
+			<PencilIcon v-else :size="20" />
 		</div>
 
 		<div class="composer-session__text">
@@ -41,9 +42,11 @@
 </template>
 
 <script>
+import { t } from '@nextcloud/l10n'
 import { mapState, mapStores } from 'pinia'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import ArrowExpandIcon from 'vue-material-design-icons/ArrowExpand.vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 import PencilIcon from 'vue-material-design-icons/PencilOutline.vue'
@@ -54,6 +57,7 @@ export default {
 	components: {
 		NcActions,
 		NcActionButton,
+		NcLoadingIcon,
 		PencilIcon,
 		ArrowExpandIcon,
 		CloseIcon,
@@ -71,10 +75,20 @@ export default {
 		...mapStores(useMainStore),
 		...mapState(useMainStore, ['composerMessage']),
 		title() {
+			if (this.saving) {
+				return this.composerMessage.type === 'outbox'
+					? t('mail', 'Saving message')
+					: t('mail', 'Saving draft')
+			}
+
 			return this.composerMessage?.data.subject || t('mail', 'Untitled message')
 		},
 
 		disabled() {
+			return this.saving
+		},
+
+		saving() {
 			return this.composerMessage?.indicatorDisabled ?? false
 		},
 	},

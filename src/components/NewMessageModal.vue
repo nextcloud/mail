@@ -129,6 +129,7 @@
 						:smartReply="smartReply"
 						:canSaveDraft="canSaveDraft"
 						:savingDraft="savingDraft"
+						:sending="sending"
 						:draftSaved="draftSaved"
 						:smimeSign="composerData.smimeSign"
 						:smimeEncrypt="composerData.smimeEncrypt"
@@ -673,11 +674,21 @@ export default {
 			// End the session only if all unsaved changes have been saved
 			if (this.canSaveDraft && ((this.changed && this.draftSaved) || !this.changed)) {
 				logger.debug('Closing composer session due to close button click')
-				await this.mainStore.stopComposerSession({
-					restoreOriginalSendAt: true,
-					moveToImap: this.changed,
-					id: this.composerData.id,
-				})
+				try {
+					await this.mainStore.stopComposerSession({
+						restoreOriginalSendAt: true,
+						moveToImap: this.changed,
+						id: this.composerData.id,
+					})
+				} catch (error) {
+					logger.error('Could not close composer session', { error })
+					this.mainStore.setComposerIndicatorDisabledMutation(false)
+					if (this.composerMessage.type === 'outbox') {
+						showError(t('mail', 'Failed to save message'))
+					} else {
+						showError(t('mail', 'Failed to save draft'))
+					}
+				}
 			}
 		},
 	},
