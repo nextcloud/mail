@@ -67,7 +67,7 @@ import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import DeleteModal from './DeleteModal.vue'
 import UpdateModal from './UpdateModal.vue'
 import logger from '../../logger.js'
-import { MailFilterConditionField, MailFilterConditionOperator } from '../../models/mailFilter.ts'
+import { MailFilterActions, MailFilterConditionField, MailFilterConditionOperator } from '../../models/mailFilter.ts'
 import useMailFilterStore from '../../store/mailFilterStore.ts'
 import useMainStore from '../../store/mainStore.js'
 import { randomId } from '../../util/randomId.js'
@@ -151,7 +151,7 @@ export default {
 
 				actions: [{
 					id: randomId(),
-					type: 'fileinto',
+					type: MailFilterActions.FileInto,
 				}],
 
 				priority,

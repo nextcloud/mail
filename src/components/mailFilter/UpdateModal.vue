@@ -68,8 +68,12 @@
 					<p>{{ t('mail', 'Redirected messages might be rejected by the receiving server, and cannot be read by the recipient if encrypted.') }}</p>
 				</NcNoteCard>
 
-				<NcNoteCard v-if="appliesToAll && hasMoveOrStopAction" class="filter-note" type="warning">
-					<p>{{ t('mail', 'This filter moves all incoming messages or stops all filters and the autoresponder after it.') }}</p>
+				<NcNoteCard v-if="appliesToAll && hasFileIntoAction" class="filter-note" type="warning">
+					<p>{{ t('mail', 'All incoming messages will be moved out of your inbox.') }}</p>
+				</NcNoteCard>
+
+				<NcNoteCard v-if="appliesToAll && hasStopAction" class="filter-note" type="warning">
+					<p>{{ t('mail', 'Filters after this one and the autoresponder will not run for any incoming message.') }}</p>
 				</NcNoteCard>
 			</div>
 
@@ -180,8 +184,12 @@ export default {
 			return this.appliesToAll || (this.hasTests && !this.hasTestWithoutValues)
 		},
 
-		hasMoveOrStopAction() {
-			return this.clone.actions.some((action) => action.type === 'fileinto' || action.type === MailFilterActions.Stop)
+		hasFileIntoAction() {
+			return this.clone.actions.some((action) => action.type === MailFilterActions.FileInto)
+		},
+
+		hasStopAction() {
+			return this.clone.actions.some((action) => action.type === MailFilterActions.Stop)
 		},
 
 		hasRedirectAction() {
@@ -204,7 +212,7 @@ export default {
 		},
 
 		createAction() {
-			this.clone.actions.push({ id: randomId(), type: 'fileinto' })
+			this.clone.actions.push({ id: randomId(), type: MailFilterActions.FileInto })
 			this.clone.actions.sort((a, b) => {
 				// ensure the stop action is always last
 				if (a.type === 'stop') {

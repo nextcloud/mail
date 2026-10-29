@@ -7,7 +7,7 @@ import { shallowMount } from '@vue/test-utils'
 import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 import UpdateModal from '../../../components/mailFilter/UpdateModal.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
-import { MailFilterConditionField, MailFilterConditionOperator, MailFilterOperator } from '../../../models/mailFilter.ts'
+import { MailFilterActions, MailFilterConditionField, MailFilterConditionOperator, MailFilterOperator } from '../../../models/mailFilter.ts'
 
 function mountWithTests(tests, operator = MailFilterOperator.All) {
 	return shallowMount(UpdateModal, {
@@ -22,7 +22,7 @@ function mountWithTests(tests, operator = MailFilterOperator.All) {
 				enable: true,
 				operator,
 				tests,
-				actions: [{ id: 2, type: 'fileinto', mailbox: 'INBOX' }],
+				actions: [{ id: 2, type: MailFilterActions.FileInto, mailbox: 'INBOX' }],
 				priority: 10,
 			},
 		},
@@ -125,5 +125,29 @@ describe('UpdateModal', () => {
 
 		const [emitted] = view.emitted('updateFilter')[0]
 		expect(emitted.tests).toEqual([test])
+	})
+
+	it('warns only about moving when a filter for all incoming messages moves messages', () => {
+		const view = mountWithTests([], MailFilterOperator.Always)
+
+		expect(view.vm.hasFileIntoAction).toBe(true)
+		expect(view.vm.hasStopAction).toBe(false)
+		expect(view.findAllComponents(NcNoteCard)).toHaveLength(1)
+	})
+
+	it('warns about moving and stopping when a filter for all incoming messages has both actions', async () => {
+		const view = mountWithTests([], MailFilterOperator.Always)
+
+		view.vm.clone.actions.push({ id: 4, type: MailFilterActions.Stop })
+		await view.vm.$nextTick()
+
+		expect(view.vm.hasStopAction).toBe(true)
+		expect(view.findAllComponents(NcNoteCard)).toHaveLength(2)
+	})
+
+	it('does not warn about moving or stopping for a filter with conditions', () => {
+		const view = mountWithTests([{ id: 3, field: MailFilterConditionField.Subject, operator: MailFilterConditionOperator.Is, values: ['Hello'] }])
+
+		expect(view.findAllComponents(NcNoteCard)).toHaveLength(0)
 	})
 })

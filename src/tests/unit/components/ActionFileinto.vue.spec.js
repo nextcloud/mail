@@ -8,6 +8,7 @@ import { createPinia, setActivePinia } from 'pinia'
 import MailboxInlinePicker from '../../../components/MailboxInlinePicker.vue'
 import ActionFileinto from '../../../components/mailFilter/ActionFileinto.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
+import { MailFilterActions } from '../../../models/mailFilter.ts'
 
 describe('ActionFileinto', () => {
 	let pinia
@@ -24,7 +25,7 @@ describe('ActionFileinto', () => {
 				plugins: [pinia],
 			},
 			props: {
-				action: { id: 1, type: 'fileinto' },
+				action: { id: 1, type: MailFilterActions.FileInto },
 				account: { id: 1 },
 			},
 		})

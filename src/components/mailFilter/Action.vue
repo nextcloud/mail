@@ -84,7 +84,7 @@ export default {
 					label: this.t('mail', 'Add flag'),
 				},
 				{
-					id: 'fileinto',
+					id: MailFilterActions.FileInto,
 					label: this.t('mail', 'Move into folder'),
 				},
 				{
@@ -105,7 +105,7 @@ export default {
 		},
 
 		componentInstance() {
-			if (this.action.type === 'fileinto') {
+			if (this.action.type === MailFilterActions.FileInto) {
 				return ActionFileinto
 			} else if (this.action.type === 'addflag') {
 				return ActionAddflag
