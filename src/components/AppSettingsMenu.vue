@@ -177,7 +177,9 @@
 						{{ t('mail', 'New text block') }}
 					</NcButton>
 					<template v-if="getSharedTextBlocks().length > 0">
-						<h6>{{ t('mail', 'Shared with me') }}</h6>
+						<h6 class="text-blocks-shared-heading">
+							{{ t('mail', 'Shared with me') }}
+						</h6>
 						<List
 							:textBlocks="getSharedTextBlocks()"
 							:shared="true" />
@@ -858,5 +860,12 @@ export default {
 	&__button {
 		margin: var(--default-grid-baseline);
 	}
+}
+
+.text-blocks-shared-heading {
+	margin: calc(2 * var(--default-grid-baseline)) 0 0;
+	padding-inline: var(--form-element-label-offset);
+	font-size: var(--font-size);
+	font-weight: var(--font-weight-heading, bold);
 }
 </style>
