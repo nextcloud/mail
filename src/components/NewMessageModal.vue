@@ -43,7 +43,7 @@
 					variant="tertiary-no-background"
 					:aria-label="t('mail', 'Minimize composer')"
 					:title="t('mail', 'Minimize composer')"
-					@click="onMinimize">
+					@click="onMinimize()">
 					<template #icon>
 						<MinimizeIcon :size="20" />
 					</template>
@@ -129,7 +129,6 @@
 						:smartReply="smartReply"
 						:canSaveDraft="canSaveDraft"
 						:savingDraft="savingDraft"
-						:sending="sending"
 						:draftSaved="draftSaved"
 						:smimeSign="composerData.smimeSign"
 						:smimeEncrypt="composerData.smimeEncrypt"
@@ -162,7 +161,7 @@
 </template>
 
 <script>
-import { showError, showSuccess } from '@nextcloud/dialogs'
+import { showError, showLoading, showSuccess } from '@nextcloud/dialogs'
 import { t } from '@nextcloud/l10n'
 import { mapActions, mapState, mapStores } from 'pinia'
 import NcButton from '@nextcloud/vue/components/NcButton'
@@ -213,8 +212,6 @@ export default {
 			required: true,
 		},
 	},
-
-	emits: ['close'],
 
 	data() {
 		return {
@@ -340,12 +337,12 @@ export default {
 			}
 		},
 
-		async onMinimize() {
+		async onMinimize({ showToast = true } = {}) {
 			this.modalFirstOpen = false
 
 			await this.mainStore.hideMessageComposerMutation()
 			if (!this.mainStore.composerMessageIsSaved && this.changed) {
-				await this.onDraft(this.cookedComposerData, { showToast: true })
+				await this.onDraft(this.cookedComposerData, { showToast })
 			}
 		},
 
@@ -459,26 +456,9 @@ export default {
 			if (this.sending) {
 				return
 			}
-			await this.attachmentsPromise
-			this.uploadingAttachments = false
 			this.sending = true
-			this.$emit('close')
+			let sendingToast
 			try {
-				const now = new Date().getTime()
-				for (const attachment of data.attachments) {
-					if (!attachment.type) {
-						// todo move to backend: https://github.com/nextcloud/mail/issues/6227
-						attachment.type = 'local'
-					}
-				}
-				const dataForServer = this.getDataForServer({
-					...data,
-					id: await this.draftsPromise,
-					sendAt: data.sendAt ? data.sendAt : Math.floor((now + UNDO_DELAY) / 1000),
-				})
-				if (dataForServer.sendAt < Math.floor((now + UNDO_DELAY) / 1000)) {
-					dataForServer.sendAt = Math.floor((now + UNDO_DELAY) / 1000)
-				}
 				if (!force && !data.subject?.trim()) {
 					throw new SubjectMissingError()
 				}
@@ -495,6 +475,28 @@ export default {
 							throw new AttachmentMissingError()
 						}
 					}
+				}
+
+				this.mainStore.setComposerIndicatorDisabledMutation(true)
+				this.mainStore.hideMessageComposerMutation()
+				sendingToast = showLoading(t('mail', 'Preparing message…'))
+
+				await this.attachmentsPromise
+				this.uploadingAttachments = false
+				const now = new Date().getTime()
+				for (const attachment of data.attachments) {
+					if (!attachment.type) {
+						// todo move to backend: https://github.com/nextcloud/mail/issues/6227
+						attachment.type = 'local'
+					}
+				}
+				const dataForServer = this.getDataForServer({
+					...data,
+					id: await this.draftsPromise,
+					sendAt: data.sendAt ? data.sendAt : Math.floor((now + UNDO_DELAY) / 1000),
+				})
+				if (dataForServer.sendAt < Math.floor((now + UNDO_DELAY) / 1000)) {
+					dataForServer.sendAt = Math.floor((now + UNDO_DELAY) / 1000)
 				}
 
 				if (!this.composerData.id) {
@@ -534,6 +536,10 @@ export default {
 				}
 				await this.mainStore.stopComposerSession()
 			} catch (error) {
+				if (sendingToast) {
+					this.mainStore.setComposerIndicatorDisabledMutation(false)
+					this.mainStore.showMessageComposerMutation()
+				}
 				this.error = await matchError(error, {
 					[NoSentMailboxConfiguredError.getName()]() {
 						logger.error('could not send message', { error })
@@ -561,6 +567,7 @@ export default {
 					},
 				})
 			} finally {
+				sendingToast?.hideToast()
 				this.sending = false
 			}
 
@@ -661,35 +668,45 @@ export default {
 			if (this.canSaveDraft && this.changed) {
 				e.preventDefault()
 				e.returnValue = true
-				this.mainStore.showMessageComposerMutation()
+				if (!this.composerMessage.indicatorDisabled) {
+					this.mainStore.showMessageComposerMutation()
+				}
 			} else {
 				logger.debug('no unsaved changes, closing')
 			}
 		},
 
 		async onClose() {
+			const isOutbox = this.composerMessage.type === 'outbox'
+			const savingToast = this.changed
+				? showLoading(isOutbox ? t('mail', 'Saving message…') : t('mail', 'Saving draft…'))
+				: undefined
 			this.mainStore.setComposerIndicatorDisabledMutation(true)
-			await this.onMinimize()
+			try {
+				await this.onMinimize({ showToast: false })
 
-			// End the session only if all unsaved changes have been saved
-			if (this.canSaveDraft && ((this.changed && this.draftSaved) || !this.changed)) {
-				logger.debug('Closing composer session due to close button click')
-				try {
+				// End the session only if all unsaved changes have been saved
+				if (this.canSaveDraft && (!this.changed || this.draftSaved)) {
+					logger.debug('Closing composer session due to close button click')
 					await this.mainStore.stopComposerSession({
 						restoreOriginalSendAt: true,
 						moveToImap: this.changed,
 						id: this.composerData.id,
 					})
-				} catch (error) {
-					logger.error('Could not close composer session', { error })
-					this.mainStore.setComposerIndicatorDisabledMutation(false)
-					if (this.composerMessage.type === 'outbox') {
-						showError(t('mail', 'Failed to save message'))
-					} else {
-						showError(t('mail', 'Failed to save draft'))
+					if (this.changed) {
+						showSuccess(isOutbox ? t('mail', 'Message saved') : t('mail', 'Draft saved'))
 					}
+					return
 				}
+			} catch (error) {
+				logger.error('Could not close composer session', { error })
+			} finally {
+				savingToast?.hideToast()
 			}
+
+			this.mainStore.setComposerIndicatorDisabledMutation(false)
+			this.mainStore.showMessageComposerMutation()
+			showError(isOutbox ? t('mail', 'Failed to save message') : t('mail', 'Failed to save draft'))
 		},
 	},
 }

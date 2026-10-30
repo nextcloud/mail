@@ -4,7 +4,7 @@
  */
 
 import { showError, showSuccess, showUndo } from '@nextcloud/dialogs'
-import { t } from '@nextcloud/l10n'
+import { n, t } from '@nextcloud/l10n'
 import { defineStore } from 'pinia'
 import logger from '../logger.js'
 import * as OutboxService from '../service/OutboxService.js'
@@ -178,7 +178,7 @@ export default defineStore('outbox', {
 				const message = this.getMessage(id)
 
 				showUndo(
-					t('mail', 'Sending message…'),
+					n('mail', 'Message will be sent in %n second', 'Message will be sent in %n seconds', UNDO_DELAY / 1000),
 					async () => {
 						logger.info('Attempting to stop sending message ' + message.id)
 						const stopped = await this.stopMessage({ message })

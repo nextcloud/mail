@@ -147,37 +147,6 @@ describe('Composer', () => {
 		expect(canSend).toEqual(true)
 	})
 
-	it('disables the send button while sending', () => {
-		const view = shallowMount(Composer, {
-			props: {
-				to: [
-					{ label: 'test', email: 'test@domain.tld' },
-				],
-				sending: true,
-				isFirstOpen: true,
-				accounts: [
-					{
-						id: 123,
-						editorMode: 'plaintext',
-						isUnified: false,
-						aliases: [],
-					},
-				],
-			},
-			global: {
-				mixins: [Nextcloud],
-				mocks: {
-					$route,
-				},
-			},
-		})
-
-		const sendButton = view.find('[type="submit"]')
-
-		expect(view.vm.canSend).toEqual(true)
-		expect(sendButton.attributes('disabled')).toEqual('true')
-	})
-
 	it('should not S/MIME sign messages if there are no certs', () => {
 		const view = shallowMount(Composer, {
 			props: {

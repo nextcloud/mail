@@ -537,9 +537,7 @@
 					:aria-label="submitButtonTitle"
 					@click="onSend">
 					<template #icon>
-						<NcLoadingIcon v-if="sending" :size="20" />
 						<Send
-							v-else
 							:title="submitButtonTitle"
 							:size="20" />
 					</template>
@@ -568,7 +566,6 @@ import NcActions from '@nextcloud/vue/components/NcActions'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
 import NcListItemIcon from '@nextcloud/vue/components/NcListItemIcon'
-import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import { NcReferencePickerModal } from '@nextcloud/vue/components/NcRichText'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
@@ -627,7 +624,6 @@ export default {
 		Paperclip,
 		TextEditor,
 		NcListItemIcon,
-		NcLoadingIcon,
 		RecipientListItem,
 		Send,
 		SendClock,
@@ -735,11 +731,6 @@ export default {
 			default: false,
 		},
 
-		sending: {
-			type: Boolean,
-			default: false,
-		},
-
 		draftSaved: {
 			type: Boolean,
 			default: false,
@@ -808,6 +799,7 @@ export default {
 		selectedDate.setHours(selectedDate.getHours() + 1)
 
 		return {
+			sending: false,
 			textBlockSvg,
 			showCC: this.cc.length > 0,
 			showBCC: this.bcc.length > 0,
