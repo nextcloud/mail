@@ -101,6 +101,8 @@ export default defineStore('main', {
 			followUpFeatureAvailable: false,
 			contextChatFeatureAvailable: false,
 			internalAddress: [],
+			trustedSenders: [],
+			trustedSendersRevision: 0,
 			hasCurrentUserPrincipalAndCollections: false,
 			showAccountSettings: null,
 			isTranslationEnabled: false,

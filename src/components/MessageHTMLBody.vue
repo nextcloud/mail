@@ -36,11 +36,13 @@
 
 <script>
 import iframeResize from '@iframe-resizer/parent'
+import { showError } from '@nextcloud/dialogs'
+import { mapStores } from 'pinia'
 import BlockedContentWarning from './BlockedContentWarning.vue'
 import MdnRequest from './MdnRequest.vue'
 import NeedsTranslationInfo from './NeedsTranslationInfo.vue'
 import logger from '../logger.js'
-import { trustSender } from '../service/TrustedSenderService.js'
+import useMainStore from '../store/mainStore.js'
 import { keepAttributeAspectRatio } from '../util/imageAspectRatio.ts'
 import { detectForeignLanguage } from '../util/languageDetection.ts'
 import { isPrintShortcut } from '../util/printMessage.ts'
@@ -82,18 +84,31 @@ export default {
 	data() {
 		return {
 			hasBlockedContent: false,
-			isSenderTrusted: this.message.isSenderTrusted,
 			detectedForeignLanguage: null,
 		}
 	},
 
 	computed: {
+		...mapStores(useMainStore),
+
 		sender() {
 			return this.message.from[0]?.email
 		},
 
 		domain() {
 			return this.sender?.split('@').pop()
+		},
+
+		isSenderTrusted() {
+			return this.mainStore.isSenderTrusted(this.sender)
+		},
+	},
+
+	watch: {
+		isSenderTrusted(trusted) {
+			if (trusted && this.hasBlockedContent) {
+				this.displayIframe()
+			}
 		},
 	},
 
@@ -180,13 +195,21 @@ export default {
 
 		async onShowBlockedContent() {
 			this.displayIframe()
-			await trustSender(this.message.from[0].email, 'individual', true)
+			await this.trust(this.sender, 'individual')
 		},
 
 		async onShowBlockedContentForDomain() {
 			this.displayIframe()
-			// TODO: there might be more than one @ in an email address
-			await trustSender(this.domain, 'domain', true)
+			await this.trust(this.domain, 'domain')
+		},
+
+		async trust(email, type) {
+			try {
+				await this.mainStore.trustSender({ email, type })
+			} catch (error) {
+				logger.error(`Could not add trusted sender ${email}`, { error })
+				showError(t('mail', 'Could not add trusted sender {sender}', { sender: email }))
+			}
 		},
 	},
 }

@@ -115,6 +115,7 @@ export default function initAfterAppCreation() {
 	const accountSettings = loadState('mail', 'account-settings')
 	const accounts = loadState('mail', 'accounts', [])
 	const internalAddressesList = loadState('mail', 'internal-addresses-list', [])
+	const trustedSendersList = loadState('mail', 'trusted-senders-list', [])
 	const tags = loadState('mail', 'tags', [])
 	const outboxMessages = loadState('mail', 'outbox-messages')
 	const disableScheduledSend = loadState('mail', 'disable-scheduled-send')
@@ -141,6 +142,7 @@ export default function initAfterAppCreation() {
 
 	tags.forEach((tag) => mainStore.addTagMutation({ tag }))
 	internalAddressesList.forEach((internalAddress) => mainStore.addInternalAddressMutation(internalAddress))
+	mainStore.setTrustedSendersMutation(trustedSendersList)
 
 	mainStore.setScheduledSendingDisabledMutation(disableScheduledSend)
 	mainStore.setSnoozeDisabledMutation(disableSnooze)
