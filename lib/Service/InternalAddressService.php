@@ -12,6 +12,7 @@ namespace OCA\Mail\Service;
 use OCA\Mail\Contracts\IInternalAddressService;
 use OCA\Mail\Db\InternalAddress;
 use OCA\Mail\Db\InternalAddressMapper;
+use OCP\DB\Exception;
 
 class InternalAddressService implements IInternalAddressService {
 	public function __construct(
@@ -35,11 +36,20 @@ class InternalAddressService implements IInternalAddressService {
 		}
 
 		if ($trust) {
-			$this->mapper->create(
-				$uid,
-				$address,
-				$type
-			);
+			try {
+				$this->mapper->create(
+					$uid,
+					$address,
+					$type
+				);
+			} catch (Exception $exception) {
+				if ($exception->getReason() !== Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
+					throw $exception;
+				}
+
+				// isInternal() doesn't match a domain itself, and requests can race
+				return null;
+			}
 			return $this->getInternalAddress($uid, $address);
 		} else {
 			$this->mapper->remove(

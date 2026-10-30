@@ -12,6 +12,7 @@ namespace OCA\Mail\Tests\Unit\Service;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\TrustedSenderMapper;
 use OCA\Mail\Service\TrustedSenderService;
+use OCP\DB\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class TrustedSenderServiceTest extends TestCase {
@@ -95,6 +96,46 @@ class TrustedSenderServiceTest extends TestCase {
 			$uid,
 			$email,
 			'individual'
+		);
+	}
+
+	public function testTrustAlreadyStoredDomain(): void {
+		$uid = 'alice';
+		$domain = 'example.test';
+		$uniqueViolation = $this->createMock(Exception::class);
+		$uniqueViolation->method('getReason')->willReturn(Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION);
+		$this->mapper->expects($this->once())
+			->method('exists')
+			->with($uid, $domain)
+			->willReturn(false);
+		$this->mapper->expects($this->once())
+			->method('create')
+			->with($uid, $domain, 'domain')
+			->willThrowException($uniqueViolation);
+
+		$this->service->trust(
+			$uid,
+			$domain,
+			'domain'
+		);
+	}
+
+	public function testTrustRethrowsOtherDatabaseErrors(): void {
+		$uid = 'alice';
+		$domain = 'example.test';
+		$databaseError = $this->createMock(Exception::class);
+		$databaseError->method('getReason')->willReturn(Exception::REASON_CONNECTION_LOST);
+		$this->mapper->method('exists')
+			->willReturn(false);
+		$this->mapper->method('create')
+			->willThrowException($databaseError);
+
+		$this->expectExceptionObject($databaseError);
+
+		$this->service->trust(
+			$uid,
+			$domain,
+			'domain'
 		);
 	}
 

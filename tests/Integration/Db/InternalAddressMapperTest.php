@@ -14,6 +14,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use ChristophWurst\Nextcloud\Testing\TestUser;
 use OCA\Mail\Db\InternalAddress;
 use OCA\Mail\Db\InternalAddressMapper;
+use OCP\DB\Exception;
 use OCP\IDBConnection;
 use OCP\IUser;
 use OCP\Server;
@@ -151,6 +152,18 @@ class InternalAddressMapperTest extends TestCase {
 		$rows = $result->fetchAll();
 		$result->closeCursor();
 		$this->assertCount(1, $rows);
+	}
+
+	public function testCreateStoredDomainViolatesUniqueIndex(): void {
+		$uid = $this->user->getUID();
+		$this->mapper->create($uid, 'example.test', 'domain');
+
+		try {
+			$this->mapper->create($uid, 'example.test', 'domain');
+			$this->fail('Storing the same domain twice must fail');
+		} catch (Exception $exception) {
+			$this->assertSame(Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION, $exception->getReason());
+		}
 	}
 
 	public function testRemoveDomain(): void {
