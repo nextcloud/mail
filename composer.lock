@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e55b463b6974003b8d9140953cd142a8",
+    "content-hash": "72c6829d4d5d83ad01adbedf0bff5504",
     "packages": [
         {
             "name": "amphp/amp",
@@ -933,16 +933,16 @@
         },
         {
             "name": "bytestream/horde-mail",
-            "version": "v2.7.2",
+            "version": "v2.7.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Mail.git",
-                "reference": "5054666fe1a43f86a85e911111c115a133d80334"
+                "reference": "1dce1f9e84ce747e9075fdfa1a4c9391c7ba9244"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Mail/zipball/5054666fe1a43f86a85e911111c115a133d80334",
-                "reference": "5054666fe1a43f86a85e911111c115a133d80334",
+                "url": "https://api.github.com/repos/bytestream/Mail/zipball/1dce1f9e84ce747e9075fdfa1a4c9391c7ba9244",
+                "reference": "1dce1f9e84ce747e9075fdfa1a4c9391c7ba9244",
                 "shasum": ""
             },
             "require": {
@@ -982,9 +982,9 @@
             "description": "Horde mail library",
             "homepage": "https://www.horde.org/libraries/Horde_Mail",
             "support": {
-                "source": "https://github.com/bytestream/Mail/tree/v2.7.2"
+                "source": "https://github.com/bytestream/Mail/tree/v2.7.3"
             },
-            "time": "2026-02-12T11:00:50+00:00"
+            "time": "2026-10-19T07:51:05+00:00"
         },
         {
             "name": "bytestream/horde-mime",
