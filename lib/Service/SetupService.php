@@ -77,21 +77,25 @@ class SetupService {
 			'classificationEnabled' => $classificationEnabled,
 		]);
 		$newAccount->setUserId($uid);
-		if ($authMethod === 'password' && $imapPassword !== null) {
-			$newAccount->setInboundPassword($this->crypto->encrypt($imapPassword));
-		}
-		if ($authMethod === 'password' && $smtpPassword !== null) {
-			$newAccount->setOutboundPassword($this->crypto->encrypt($smtpPassword));
-		}
+
 		if (!in_array($authMethod, ['password', 'xoauth2'], true)) {
 			throw new InvalidArgumentException('Invalid auth method ' . $authMethod);
 		}
 		$newAccount->setAuthMethod($authMethod);
 
-		$account = new Account($newAccount);
-		if ($authMethod === 'password' && $imapPassword !== null) {
-			$this->logger->debug('Connecting to account {account}', ['account' => $newAccount->getEmail()]);
-			$this->testConnectivity($account);
+		if ($authMethod === 'password') {
+			if ($imapPassword !== null) {
+				$newAccount->setInboundPassword($this->crypto->encrypt($imapPassword));
+			}
+			if ($smtpPassword !== null) {
+				$newAccount->setOutboundPassword($this->crypto->encrypt($smtpPassword));
+			}
+
+			if ($imapPassword !== null && $smtpPassword !== null) {
+				$account = new Account($newAccount);
+				$this->logger->debug('Connecting to account {account}', ['account' => $newAccount->getEmail()]);
+				$this->testConnectivity($account);
+			}
 		}
 
 		$this->accountService->save($newAccount);
@@ -99,7 +103,7 @@ class SetupService {
 
 		$this->tagMapper->createDefaultTags($newAccount);
 
-		return $account;
+		return $this->accountService->findById($newAccount->getId());
 	}
 
 	/**
