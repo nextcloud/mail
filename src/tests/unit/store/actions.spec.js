@@ -9,6 +9,7 @@ import * as AccountService from '../../../service/AccountService.js'
 import * as MailboxService from '../../../service/MailboxService.js'
 import * as MessageService from '../../../service/MessageService.js'
 import * as NotificationService from '../../../service/NotificationService.js'
+import * as ThreadService from '../../../service/ThreadService.js'
 import { PAGE_SIZE, UNIFIED_INBOX_ID } from '../../../store/constants.js'
 import useMainStore from '../../../store/mainStore.js'
 import { normalizedEnvelopeListId } from '../../../util/normalization.js'
@@ -17,6 +18,7 @@ vi.mock('../../../service/AccountService.js')
 vi.mock('../../../service/MailboxService.js')
 vi.mock('../../../service/MessageService.js')
 vi.mock('../../../service/NotificationService.js')
+vi.mock('../../../service/ThreadService.js')
 vi.mock('../../../util/normalization.js', () => ({
 	__esModule: true,
 	// Supply a default list id ('') to prevent annoying errors
@@ -634,6 +636,25 @@ describe('Vuex store actions', () => {
 		})
 
 		expect(removeEnvelope).toBeFalsy()
+	})
+
+	it('copies a message without removing it from the store', async () => {
+		MessageService.copyMessage.mockResolvedValue()
+		store.messages[7] = { id: 7, databaseId: 7 }
+
+		await store.copyMessage({ id: 7, destMailboxId: 99 })
+
+		expect(MessageService.copyMessage).toHaveBeenCalledWith(7, 99)
+		expect(store.messages[7]).toBeDefined()
+	})
+
+	it('copies a thread', async () => {
+		ThreadService.copyThread.mockResolvedValue()
+		const envelope = { databaseId: 101 }
+
+		await store.copyThread({ envelope, destMailboxId: 99 })
+
+		expect(ThreadService.copyThread).toHaveBeenCalledWith(101, 99)
 	})
 
 	it('includes a cache buster if requested', async () => {

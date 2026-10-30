@@ -267,6 +267,47 @@ class MailManager {
 	}
 
 	/**
+	 * @param Account $sourceAccount
+	 * @param Mailbox $sourceMailbox
+	 * @param Message $message
+	 * @param Account $destinationAccount
+	 * @param Mailbox $destinationMailbox
+	 *
+	 * @return ?int the new UID (or null if couldn't be determined)
+	 * @throws ServiceException
+	 */
+	public function copyMessage(Account $sourceAccount, Mailbox $sourceMailbox, Message $message, Account $destinationAccount, Mailbox $destinationMailbox): ?int {
+		if ($sourceAccount->getId() !== $destinationAccount->getId()) {
+			throw new ServiceException('It is not possible to copy across accounts yet');
+		}
+
+		$copiedUids = $this->copyMessages($sourceAccount, $destinationMailbox, $sourceMailbox, $message);
+
+		return $copiedUids[0] ?? null;
+	}
+
+	/**
+	 * @throws ServiceException
+	 */
+	public function copyMessages(Account $account, Mailbox $targetMailbox, Mailbox $sourceMailbox, Message ...$messages): array {
+		if ($messages === []) {
+			return [];
+		}
+
+		// update remote store
+		$copiedMessages = $this->protocolFactory
+			->messageConnector($account)
+			->copyMessages($account, $targetMailbox, $sourceMailbox, ...$messages);
+
+		$copiedUids = [];
+		foreach ($copiedMessages as $copiedMessage) {
+			$copiedUids[] = $copiedMessage->getUid();
+		}
+
+		return $copiedUids;
+	}
+
+	/**
 	 * @throws ClientException
 	 * @throws ServiceException
 	 * @todo evaluate if we should sync mailboxes first
@@ -439,6 +480,24 @@ class MailManager {
 		}
 
 		return array_merge(...$mutatedUids);
+	}
+
+	/**
+	 * @throws DoesNotExistException
+	 * @throws ServiceException
+	 */
+	public function copyThread(Account $srcAccount, Mailbox $srcMailbox, Account $dstAccount, Mailbox $dstMailbox, string $threadRootId): array {
+		if ($srcAccount->getId() !== $dstAccount->getId()) {
+			throw new ServiceException('It is not possible to copy across accounts yet');
+		}
+
+		$messagesByMailbox = $this->fetchThread($srcAccount, $srcMailbox, $threadRootId);
+		$copiedUids = [];
+		foreach ($messagesByMailbox as $group) {
+			$copiedUids[] = $this->copyMessages($srcAccount, $dstMailbox, $group['mailbox'], ...$group['messages']);
+		}
+
+		return array_merge(...$copiedUids);
 	}
 
 	/**

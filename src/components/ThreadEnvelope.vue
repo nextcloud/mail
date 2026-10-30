@@ -160,6 +160,7 @@
 						@showSourceModal="onShowSourceModal"
 						@openTagModal="onOpenTagModal"
 						@openMoveModal="onOpenMoveModal"
+						@openCopyModal="onOpenCopyModal"
 						@openEventModal="onOpenEventModal"
 						@openTaskModal="onOpenTaskModal"
 						@openTranslationModal="onOpenTranslationModal"
@@ -267,6 +268,12 @@
 						:envelopes="[envelope]"
 						@move="onMove"
 						@close="onCloseMoveModal" />
+					<MoveModal
+						v-if="showCopyModal"
+						:account="account"
+						:envelopes="[envelope]"
+						mode="copy"
+						@close="onCloseCopyModal" />
 					<EventModal
 						v-if="showEventModal"
 						:envelope="envelope"
@@ -555,6 +562,7 @@ export default {
 			smartReplies: [],
 			showSourceModal: false,
 			showMoveModal: false,
+			showCopyModal: false,
 			showEventModal: false,
 			showTaskModal: false,
 			showTagModal: false,
@@ -1170,8 +1178,16 @@ export default {
 			this.showMoveModal = true
 		},
 
+		onOpenCopyModal() {
+			this.showCopyModal = true
+		},
+
 		onCloseMoveModal() {
 			this.showMoveModal = false
+		},
+
+		onCloseCopyModal() {
+			this.showCopyModal = false
 		},
 
 		onOpenEventModal() {

@@ -73,6 +73,7 @@ import {
 	patchMailbox,
 } from '../../service/MailboxService.js'
 import {
+	copyMessage,
 	createEnvelopeTag,
 	deleteMessage,
 	deleteTag,
@@ -1422,6 +1423,14 @@ export default function mainStoreActions() {
 				this.removeMessageMutation({ id })
 			})
 		},
+		async copyMessage({
+			id,
+			destMailboxId,
+		}) {
+			return handleHttpAuthErrors(async () => {
+				await copyMessage(id, destMailboxId)
+			})
+		},
 		async snoozeMessage({
 			id,
 			unixTimestamp,
@@ -1571,6 +1580,20 @@ export default function mainStoreActions() {
 					logger.debug('thread moved')
 				} catch (e) {
 					logger.error('could not move thread', { error: e })
+					throw e
+				}
+			})
+		},
+		async copyThread({
+			envelope,
+			destMailboxId,
+		}) {
+			return handleHttpAuthErrors(async () => {
+				try {
+					await ThreadService.copyThread(envelope.databaseId, destMailboxId)
+					logger.debug('thread copied')
+				} catch (e) {
+					logger.error('could not copy thread', { error: e })
 					throw e
 				}
 			})

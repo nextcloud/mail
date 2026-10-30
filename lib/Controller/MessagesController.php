@@ -397,6 +397,46 @@ class MessagesController extends Controller {
 
 	/**
 	 * @param int $id
+	 * @param int $destFolderId
+	 *
+	 * @return JSONResponse
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	#[NoAdminRequired]
+	#[TrapError]
+	public function copy(int $id, int $destFolderId): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+		try {
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$srcMailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$dstMailbox = $this->mailManager->getMailbox($effectiveUserId, $destFolderId);
+			$srcAccount = $this->accountService->find($effectiveUserId, $srcMailbox->getAccountId());
+			$dstAccount = $this->accountService->find($effectiveUserId, $dstMailbox->getAccountId());
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+
+		$this->delegationService->assertMailboxAccess($destFolderId, $this->userId);
+
+		$this->mailManager->copyMessage(
+			$srcAccount,
+			$srcMailbox,
+			$message,
+			$dstAccount,
+			$dstMailbox
+		);
+
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId copied message <$id> to mailbox <$destFolderId> on behalf of $effectiveUserId");
+
+		return new JSONResponse();
+	}
+
+	/**
+	 * @param int $id
 	 * @param int $unixTimestamp
 	 * @param int $destMailboxId
 	 *

@@ -994,6 +994,43 @@ class JmapOperationsService {
 	}
 
 	/**
+	 * @param string $target remote identifier of target collection to copy entities to
+	 * @param string ...$identifiers remote identifiers of entities to copy
+	 *
+	 * @return array<string, bool|string> map of remote identifiers to copy result (true for success, error type for failure)
+	 */
+	public function entityCopy(string $target, string ...$identifiers): array {
+		// construct set request
+		$r0 = new MailSet($this->account());
+		foreach ($identifiers as $id) {
+			$r0->patch($id)->path("mailboxIds/$target", true);
+		}
+		// transceive
+		$bundle = $this->transceive([$r0]);
+		// extract response
+		$response = $bundle->first();
+		// check for command error
+		if ($response instanceof ResponseException) {
+			if ($response->type() === 'unknownMethod') {
+				throw new JmapUnknownMethod($response->description(), 1);
+			} else {
+				throw new ServiceException($response->type() . ': ' . $response->description(), 1);
+			}
+		}
+
+		$results = [];
+		// map successful and failed copies to their identifiers
+		foreach ($response->updateSuccesses() as $id => $data) {
+			$results[$id] = true;
+		}
+		foreach ($response->updateFailures() as $id => $data) {
+			$results[$id] = $data['type'] ?? 'unknownError';
+		}
+
+		return $results;
+	}
+
+	/**
 	 * Send an email via JMAP, atomically staging it in Drafts and filing the sent copy in the Sent mailbox.
 	 *
 	 * Batches an Email/set create with an EmailSubmission/set create in a single HTTP request.

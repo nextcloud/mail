@@ -240,6 +240,33 @@ class JmapMessageConnector implements IMessageConnector {
 	}
 
 	#[\Override]
+	public function copyMessages(Account $account, Mailbox $targetMailbox, Mailbox $sourceMailbox, Message ...$messages): array {
+		$targetRemoteId = $targetMailbox->getRemoteId();
+		if ($targetRemoteId === null) {
+			throw new ServiceException("Destination mailbox {$targetMailbox->getId()} does not have a remote id");
+		}
+		$messages = $this->mapMessagesByRemoteId(...$messages);
+		// update remote store
+		$this->jmapOperationsService->connect($account);
+		$results = $this->jmapOperationsService->entityCopy($targetRemoteId, ...array_keys($messages));
+		// compute copied messages with new mailbox id and uid if copy was successful
+		$copiedMessages = [];
+		$nextUid = ($this->dbMessageMapper->findHighestUid($targetMailbox) ?? 0) + 1;
+		foreach ($results as $remoteId => $status) {
+			if (!isset($messages[$remoteId]) || $status !== true) {
+				continue;
+			}
+			$copied = clone $messages[$remoteId];
+			$copied->setId(0);
+			$copied->setMailboxId($targetMailbox->getId());
+			$copied->setUid($nextUid++);
+			$copiedMessages[] = $copied;
+		}
+
+		return $copiedMessages;
+	}
+
+	#[\Override]
 	public function deleteMessages(Account $account, Mailbox $mailbox, Message ...$messages): array {
 		if ($messages === []) {
 			return [];

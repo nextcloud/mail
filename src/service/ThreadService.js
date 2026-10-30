@@ -30,6 +30,18 @@ export async function moveThread(id, destMailboxId) {
 	}
 }
 
+export async function copyThread(id, destMailboxId) {
+	const url = generateUrl('/apps/mail/api/thread/{id}/copy', {
+		id,
+	})
+
+	try {
+		return await axios.post(url, { destMailboxId })
+	} catch (e) {
+		throw convertAxiosError(e)
+	}
+}
+
 export async function snoozeThread(id, unixTimestamp, destMailboxId) {
 	const url = generateUrl('/apps/mail/api/thread/{id}/snooze', {
 		id,
