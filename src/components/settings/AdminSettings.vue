@@ -277,6 +277,28 @@
 				</p>
 			</article>
 		</div>
+		<div class="app-description">
+			<h3>{{ t('mail', 'Message-ID prefix') }}</h3>
+			<article>
+				<p>
+					{{ t('mail', 'This setting is used to customize the prefix in the RFC 5322 compliant Message-ID header for outgoing mail.') }}
+				</p>
+			</article>
+			<br>
+			<article>
+				<form @submit.prevent="updateMessageIdPrefix">
+					<label for="mail-message-id-prefix"> {{ t('mail', 'Message-ID prefix') }} </label>
+					<input
+						id="mail-message-id-prefix"
+						v-model="messageIdPrefixVal"
+						:disabled="loading"
+						type="text">
+					<button type="submit" :disabled="loading" class="primary">
+						{{ t('mail', 'Update') }}
+					</button>
+				</form>
+			</article>
+		</div>
 	</NcSettingsSection>
 </template>
 
@@ -302,6 +324,7 @@ import {
 	updateAllowNewMailAccounts,
 	updateEnabledSmartReply,
 	updateLlmEnabled,
+	updateMessageIdPrefix,
 	updateProvisioningSettings,
 } from '../../service/SettingsService.js'
 
@@ -330,12 +353,19 @@ export default {
 			type: Array,
 			required: true,
 		},
+
+		messageIdPrefix: {
+			type: String,
+			required: true,
+		},
 	},
 
 	data() {
 		return {
 			addNew: false,
+			loading: false,
 			formKey: Math.random(),
+			messageIdPrefixVal: this.messageIdPrefix,
 			configs: this.provisioningSettings,
 			googleOauthClientId,
 			googleOauthRedirectUrl,
@@ -434,6 +464,10 @@ export default {
 
 		async updateLlmEnabled(checked) {
 			await updateLlmEnabled(checked)
+		},
+
+		async updateMessageIdPrefix() {
+			await updateMessageIdPrefix(this.messageIdPrefixVal)
 		},
 
 		async updateEnabledSmartReply(checked) {
