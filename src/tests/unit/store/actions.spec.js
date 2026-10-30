@@ -6,6 +6,7 @@
 import { createPinia, setActivePinia } from 'pinia'
 import { curry, range, reverse } from 'ramda'
 import * as AccountService from '../../../service/AccountService.js'
+import * as InternalAddressService from '../../../service/InternalAddressService.js'
 import * as MailboxService from '../../../service/MailboxService.js'
 import * as MessageService from '../../../service/MessageService.js'
 import * as NotificationService from '../../../service/NotificationService.js'
@@ -14,6 +15,7 @@ import useMainStore from '../../../store/mainStore.js'
 import { normalizedEnvelopeListId } from '../../../util/normalization.js'
 
 vi.mock('../../../service/AccountService.js')
+vi.mock('../../../service/InternalAddressService.js')
 vi.mock('../../../service/MailboxService.js')
 vi.mock('../../../service/MessageService.js')
 vi.mock('../../../service/NotificationService.js')
@@ -793,6 +795,28 @@ describe('Vuex store actions', () => {
 
 			expect(store.accountsUnmapped[7].error).toBe(false)
 			expect(MailboxService.fetchAll).toHaveBeenCalledWith(7, true)
+		})
+	})
+
+	describe('addInternalAddress', () => {
+		it('adds the created internal address', async () => {
+			const internalAddress = { id: 3, address: 'example.test', type: 'domain' }
+			InternalAddressService.addInternalAddress.mockResolvedValue(internalAddress)
+
+			await store.addInternalAddress({ address: 'example.test', type: 'domain' })
+
+			expect(InternalAddressService.addInternalAddress).toHaveBeenCalledWith('example.test', 'domain')
+			expect(store.getInternalAddresses).toEqual([internalAddress])
+		})
+
+		it('keeps the internal addresses unchanged if the address already exists', async () => {
+			const internalAddress = { id: 3, address: 'example.test', type: 'domain' }
+			store.addInternalAddressMutation(internalAddress)
+			InternalAddressService.addInternalAddress.mockResolvedValue(null)
+
+			await store.addInternalAddress({ address: 'example.test', type: 'domain' })
+
+			expect(store.getInternalAddresses).toEqual([internalAddress])
 		})
 	})
 
