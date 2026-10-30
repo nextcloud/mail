@@ -22,7 +22,7 @@ export async function removeInternalAddress(address, type) {
 	await axios.delete(url)
 }
 
-export async function fetchInternalAdresses() {
+export async function fetchInternalAddresses() {
 	const url = generateUrl('/apps/mail/api/internalAddress')
 	const response = await axios.get(url)
 	return response.data.data

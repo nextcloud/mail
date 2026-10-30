@@ -70,6 +70,15 @@ class JsonResponse extends Base {
 		);
 	}
 
+	/**
+	 * Lets the browser revalidate the response, so an unchanged one is answered with 304 Not Modified
+	 */
+	public function revalidateWithETag(): self {
+		$this->setETag(hash('xxh128', $this->render()));
+		$this->addHeader('Cache-Control', 'private, no-cache');
+		return $this;
+	}
+
 	public static function failWith(ClientException $exception): self {
 		return self::fail(
 			[

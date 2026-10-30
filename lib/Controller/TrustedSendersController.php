@@ -85,6 +85,6 @@ class TrustedSendersController extends Controller {
 			$this->userId
 		);
 
-		return JsonResponse::success($list);
+		return JsonResponse::success($list)->revalidateWithETag();
 	}
 }

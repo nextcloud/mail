@@ -62,6 +62,7 @@ import { moveDraft, updateDraft } from '../../service/DraftService.js'
 import * as FollowUpService from '../../service/FollowUpService.js'
 import {
 	addInternalAddress,
+	fetchInternalAddresses,
 	removeInternalAddress,
 } from '../../service/InternalAddressService.js'
 import {
@@ -1284,6 +1285,16 @@ export default function mainStoreActions() {
 				return result
 			})
 		},
+		async fetchInternalAddresses() {
+			return handleHttpAuthErrors(async () => {
+				const revision = this.internalAddressesRevision
+				const internalAddresses = await fetchInternalAddresses()
+				// The response doesn't know about an address changed while it was loading
+				if (revision === this.internalAddressesRevision) {
+					this.setInternalAddressesMutation(internalAddresses)
+				}
+			})
+		},
 		async addInternalAddress({
 			address,
 			type,
@@ -1291,6 +1302,7 @@ export default function mainStoreActions() {
 			return handleHttpAuthErrors(async () => {
 				const internalAddress = await addInternalAddress(address, type)
 				this.addInternalAddressMutation(internalAddress)
+				this.internalAddressesRevision++
 				logger.debug('internal address added')
 			})
 		},
@@ -1303,6 +1315,7 @@ export default function mainStoreActions() {
 				try {
 					await removeInternalAddress(address, type)
 					this.removeInternalAddressMutation({ addressId: id })
+					this.internalAddressesRevision++
 					logger.debug('internal address removed')
 				} catch (error) {
 					logger.error('could not delete internal address', { error })
@@ -1310,13 +1323,28 @@ export default function mainStoreActions() {
 				}
 			})
 		},
-		async fetchTrustedSenders() {
+		async fetchTrustedSenders({ stale = false } = {}) {
 			return handleHttpAuthErrors(async () => {
+				if (stale) {
+					this.setTrustedSendersStaleMutation(true)
+					// Older requests must neither replace nor confirm the list loaded now
+					this.trustedSendersRevision++
+				}
+
 				const revision = this.trustedSendersRevision
-				const trustedSenders = await TrustedSenderService.fetchTrustedSenders()
-				// The response doesn't know about a trust change made while it was loading
-				if (revision === this.trustedSendersRevision) {
-					this.setTrustedSendersMutation(trustedSenders)
+				try {
+					const trustedSenders = await TrustedSenderService.fetchTrustedSenders()
+					// The response doesn't know about a trust change made while it was loading
+					if (revision === this.trustedSendersRevision) {
+						this.setTrustedSendersMutation(trustedSenders)
+					} else if (stale) {
+						// Changes from other devices are still unknown, so the list stays stale until reloaded
+						await this.fetchTrustedSenders({ stale: true })
+					}
+				} finally {
+					if (stale || revision === this.trustedSendersRevision) {
+						this.setTrustedSendersStaleMutation(false)
+					}
 				}
 			})
 		},
@@ -2177,11 +2205,18 @@ export default function mainStoreActions() {
 		addInternalAddressMutation(address) {
 			this.internalAddress[address.id] = address
 		},
+		setInternalAddressesMutation(addresses) {
+			this.internalAddress = []
+			addresses.forEach((address) => this.addInternalAddressMutation(address))
+		},
 		removeInternalAddressMutation({ addressId }) {
 			this.internalAddress = this.internalAddress.filter((address) => address.id !== addressId)
 		},
 		setTrustedSendersMutation(trustedSenders) {
 			this.trustedSenders = trustedSenders
+		},
+		setTrustedSendersStaleMutation(stale) {
+			this.trustedSendersStale = stale
 		},
 		addTrustedSenderMutation(trustedSender) {
 			if (!this.trustedSenders.some((sender) => isSameTrustedSender(sender, trustedSender))) {
@@ -2545,7 +2580,7 @@ export default function mainStoreActions() {
 			return this.internalAddress.some((internalAddress) => internalAddress.address === address || internalAddress.address === domain)
 		},
 		isSenderTrusted(email) {
-			if (!email) {
+			if (!email || this.trustedSendersStale) {
 				return false
 			}
 

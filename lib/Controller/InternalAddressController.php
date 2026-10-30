@@ -86,6 +86,6 @@ class InternalAddressController extends Controller {
 			$this->userId
 		);
 
-		return JsonResponse::success($list);
+		return JsonResponse::success($list)->revalidateWithETag();
 	}
 }

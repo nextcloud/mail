@@ -6,6 +6,7 @@
 import { createPinia, setActivePinia } from 'pinia'
 import { curry, range, reverse } from 'ramda'
 import * as AccountService from '../../../service/AccountService.js'
+import * as InternalAddressService from '../../../service/InternalAddressService.js'
 import * as MailboxService from '../../../service/MailboxService.js'
 import * as MessageService from '../../../service/MessageService.js'
 import * as NotificationService from '../../../service/NotificationService.js'
@@ -15,6 +16,7 @@ import useMainStore from '../../../store/mainStore.js'
 import { normalizedEnvelopeListId } from '../../../util/normalization.js'
 
 vi.mock('../../../service/AccountService.js')
+vi.mock('../../../service/InternalAddressService.js')
 vi.mock('../../../service/MailboxService.js')
 vi.mock('../../../service/MessageService.js')
 vi.mock('../../../service/NotificationService.js')
@@ -1018,6 +1020,32 @@ describe('Vuex store actions', () => {
 			expect(store.trustedSenders).toEqual([alice])
 		})
 
+		it('trusts nobody while the list is stale', () => {
+			store.setTrustedSendersMutation([alice])
+			store.setTrustedSendersStaleMutation(true)
+
+			expect(store.isSenderTrusted('alice@example.test')).toBe(false)
+		})
+
+		it('trusts again once a stale list is reloaded', async () => {
+			store.setTrustedSendersStaleMutation(true)
+			TrustedSenderService.fetchTrustedSenders.mockResolvedValueOnce([alice])
+
+			await store.fetchTrustedSenders()
+
+			expect(store.isSenderTrusted('alice@example.test')).toBe(true)
+		})
+
+		it('falls back to the known list when reloading a stale list fails', async () => {
+			store.setTrustedSendersMutation([alice])
+			store.setTrustedSendersStaleMutation(true)
+			TrustedSenderService.fetchTrustedSenders.mockRejectedValueOnce(new Error('Request failed with status code 500'))
+
+			await expect(store.fetchTrustedSenders()).rejects.toThrow()
+
+			expect(store.isSenderTrusted('alice@example.test')).toBe(true)
+		})
+
 		it('replaces the trusted senders with the server\'s list', async () => {
 			store.setTrustedSendersMutation([alice])
 			TrustedSenderService.fetchTrustedSenders.mockResolvedValueOnce([exampleDomain])
@@ -1099,6 +1127,73 @@ describe('Vuex store actions', () => {
 			expect(store.isSenderTrusted('alice@example.test')).toBe(false)
 		})
 
+		it('trusts nobody until a list reloaded as stale arrives', async () => {
+			store.setTrustedSendersMutation([alice])
+			const request = pendingRequest()
+			TrustedSenderService.fetchTrustedSenders.mockReturnValueOnce(request.promise)
+
+			const reloading = store.fetchTrustedSenders({ stale: true })
+			const trustedWhileReloading = store.isSenderTrusted('alice@example.test')
+			request.finish([alice])
+			await reloading
+
+			expect(trustedWhileReloading).toBe(false)
+			expect(store.isSenderTrusted('alice@example.test')).toBe(true)
+		})
+
+		it('keeps trusting nobody when a list requested before it went stale arrives', async () => {
+			const earlier = pendingRequest()
+			const current = pendingRequest()
+			TrustedSenderService.fetchTrustedSenders
+				.mockReturnValueOnce(earlier.promise)
+				.mockReturnValueOnce(current.promise)
+			const loadingEarlier = store.fetchTrustedSenders()
+			const reloading = store.fetchTrustedSenders({ stale: true })
+
+			earlier.finish([alice])
+			await loadingEarlier
+
+			expect(store.isSenderTrusted('alice@example.test')).toBe(false)
+			current.finish([exampleDomain])
+			await reloading
+			expect(store.trustedSenders).toEqual([exampleDomain])
+			expect(store.isSenderTrusted('bob@example.test')).toBe(true)
+		})
+
+		it('keeps trusting nobody when a list requested before it went stale fails', async () => {
+			store.setTrustedSendersMutation([alice])
+			let failEarlier
+			TrustedSenderService.fetchTrustedSenders
+				.mockReturnValueOnce(new Promise((resolve, reject) => {
+					failEarlier = reject
+				}))
+				.mockReturnValueOnce(new Promise(() => {}))
+			const loadingEarlier = store.fetchTrustedSenders()
+			store.fetchTrustedSenders({ stale: true })
+
+			failEarlier(new Error('Network Error'))
+			await expect(loadingEarlier).rejects.toThrow()
+
+			expect(store.isSenderTrusted('alice@example.test')).toBe(false)
+		})
+
+		it('reloads a stale list again when a trust change voided the response', async () => {
+			const bob = { email: 'bob@other.test', type: 'individual' }
+			store.setTrustedSendersMutation([alice, exampleDomain])
+			TrustedSenderService.fetchTrustedSenders
+				.mockImplementationOnce(async () => {
+					await store.trustSender(bob)
+					return [alice, exampleDomain]
+				})
+				.mockResolvedValueOnce([alice, bob])
+
+			await store.fetchTrustedSenders({ stale: true })
+
+			expect(TrustedSenderService.fetchTrustedSenders).toHaveBeenCalledTimes(2)
+			expect(store.isSenderTrusted('carol@example.test')).toBe(false)
+			expect(store.isSenderTrusted('bob@other.test')).toBe(true)
+		})
+
 		it('lists a sender once when a failed removal restores it after a reload', async () => {
 			store.setTrustedSendersMutation([alice])
 			TrustedSenderService.trustSender.mockImplementationOnce(async () => {
@@ -1109,6 +1204,44 @@ describe('Vuex store actions', () => {
 			await expect(store.removeTrustedSender(alice)).rejects.toThrow()
 
 			expect(store.trustedSenders).toEqual([alice])
+		})
+	})
+
+	describe('internal address refresh', () => {
+		const exampleDomain = { id: 3, address: 'example.test', type: 'domain' }
+		const bob = { id: 4, address: 'bob@other.test', type: 'individual' }
+
+		it('replaces the internal addresses with the server\'s list', async () => {
+			store.addInternalAddressMutation(bob)
+			InternalAddressService.fetchInternalAddresses.mockResolvedValueOnce([exampleDomain])
+
+			await store.fetchInternalAddresses()
+
+			expect(store.getInternalAddresses).toEqual([exampleDomain])
+		})
+
+		it('keeps an internal address added while the list loads', async () => {
+			InternalAddressService.addInternalAddress.mockResolvedValueOnce(exampleDomain)
+			InternalAddressService.fetchInternalAddresses.mockImplementationOnce(async () => {
+				await store.addInternalAddress({ address: 'example.test', type: 'domain' })
+				return []
+			})
+
+			await store.fetchInternalAddresses()
+
+			expect(store.getInternalAddresses).toEqual([exampleDomain])
+		})
+
+		it('keeps an internal address removed while the list loads', async () => {
+			store.addInternalAddressMutation(exampleDomain)
+			InternalAddressService.fetchInternalAddresses.mockImplementationOnce(async () => {
+				await store.removeInternalAddress(exampleDomain)
+				return [exampleDomain]
+			})
+
+			await store.fetchInternalAddresses()
+
+			expect(store.getInternalAddresses).toEqual([])
 		})
 	})
 })

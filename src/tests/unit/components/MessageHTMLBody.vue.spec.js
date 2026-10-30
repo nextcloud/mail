@@ -176,6 +176,20 @@ describe('MessageHTMLBody', () => {
 			expect(view.findComponent(BlockedContentWarning).exists()).toBe(false)
 		})
 
+		it('shows the images of a trusted sender once a stale list is confirmed', async () => {
+			store.setTrustedSendersMutation([{ email: 'example.test', type: 'domain' }])
+			store.setTrustedSendersStaleMutation(true)
+			const view = mountBody(bob)
+			loadFrameWithBlockedImage(view)
+			await view.vm.$nextTick()
+			expect(imageRevealed(view)).toBe(false)
+
+			store.setTrustedSendersStaleMutation(false)
+			await view.vm.$nextTick()
+
+			expect(imageRevealed(view)).toBe(true)
+		})
+
 		it('tells the reader when the sender could not be trusted', async () => {
 			trustSender.mockRejectedValueOnce(new Error('Request failed with status code 422'))
 			const view = mountBody(bob)

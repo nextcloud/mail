@@ -15,13 +15,16 @@ import MailboxLockedError from './errors/MailboxLockedError.js'
 import { matchError } from './errors/match.js'
 import initAfterAppCreation from './init.js'
 import logger from './logger.js'
+import { ADDRESS_LISTS_TIMEOUT, SYNC_INTERVAL } from './store/constants.js'
 import useMainStore from './store/mainStore.js'
+import { wait } from './util/wait.js'
 
 export default {
 	name: 'App',
 	data() {
 		return {
 			syncing: false,
+			addressListsRefreshedAt: Date.now(),
 		}
 	},
 
@@ -57,10 +60,15 @@ export default {
 			})
 		}
 
+		document.addEventListener('visibilitychange', this.onVisibilityChange)
 		this.sync()
 		await this.mainStore.fetchCurrentUserPrincipal()
 		await this.mainStore.loadCollections()
 		this.mainStore.hasCurrentUserPrincipalAndCollectionsMutation(true)
+	},
+
+	beforeUnmount() {
+		document.removeEventListener('visibilitychange', this.onVisibilityChange)
 	},
 
 	methods: {
@@ -78,6 +86,10 @@ export default {
 
 				this.syncing = true
 				try {
+					// Before the inbox sync, so new mail meets changes from other devices; hidden tabs catch up later
+					if (document.visibilityState === 'visible' && this.addressListsAreDue()) {
+						await Promise.race([this.refreshAddressLists(), wait(ADDRESS_LISTS_TIMEOUT)])
+					}
 					await this.mainStore.syncInboxes()
 
 					logger.debug("Inboxes sync'ed in background")
@@ -95,7 +107,33 @@ export default {
 					// Start over
 					this.sync()
 				}
-			}, 30 * 1000)
+			}, SYNC_INTERVAL)
+		},
+
+		onVisibilityChange() {
+			if (document.visibilityState !== 'visible' || !this.addressListsAreDue()) {
+				return
+			}
+
+			// A message opened right away waits for the current list before it loads images
+			this.refreshAddressLists({ stale: true })
+		},
+
+		addressListsAreDue() {
+			return Date.now() - this.addressListsRefreshedAt >= SYNC_INTERVAL
+		},
+
+		async refreshAddressLists({ stale = false } = {}) {
+			this.addressListsRefreshedAt = Date.now()
+			const refreshes = [this.mainStore.fetchTrustedSenders({ stale })]
+			if (this.mainStore.getPreference('internal-addresses', 'false') === 'true') {
+				refreshes.push(this.mainStore.fetchInternalAddresses())
+			}
+
+			const results = await Promise.allSettled(refreshes)
+			results
+				.filter((result) => result.status === 'rejected')
+				.forEach((result) => logger.warn('Could not refresh the trusted senders or internal addresses', { error: result.reason }))
 		},
 	},
 }
