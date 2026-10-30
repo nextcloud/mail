@@ -92,13 +92,24 @@ class TrustedSendersMigrationService {
 				$this->l10n->t(
 					'Trusted senders configuration for %s is invalid and will be skipped. Continue …',
 					[$user->getUID()]
-				), OutputInterface::VERBOSITY_VERBOSE
+				)
 			);
 
 			return;
 		}
 
 		foreach ($trustedSenders as $trustedSender) {
+			if (!$this->isWellFormedTrustedSender($trustedSender)) {
+				$output->writeln(
+					$this->l10n->t(
+						'A trusted sender of %s is invalid and will be skipped. Continue …',
+						[$user->getUID()]
+					)
+				);
+
+				continue;
+			}
+
 			$output->writeln(
 				$this->l10n->t(
 					'Importing trusted sender %1$s for %2$s',
@@ -111,8 +122,7 @@ class TrustedSendersMigrationService {
 	}
 
 	/**
-	 * Validate the parsed trusted senders to ensure they
-	 * have the expected structure and types.
+	 * Validate that the parsed trusted senders are a list.
 	 *
 	 * @throws UserMigrationException
 	 */
@@ -121,21 +131,19 @@ class TrustedSendersMigrationService {
 		if (!$trustedSendersArrayIsValid) {
 			throw new UserMigrationException('Invalid trusted senders export structure');
 		}
+	}
 
-		foreach ($trustedSenders as $trustedSender) {
-			$trustedSenderArrayIsValid = is_array($trustedSender);
+	private function isWellFormedTrustedSender(mixed $trustedSender): bool {
+		$trustedSenderArrayIsValid = is_array($trustedSender);
 
-			$emailIsValid = $trustedSenderArrayIsValid
-				&& array_key_exists('email', $trustedSender)
-				&& is_string($trustedSender['email']);
+		$emailIsValid = $trustedSenderArrayIsValid
+			&& array_key_exists('email', $trustedSender)
+			&& is_string($trustedSender['email']);
 
-			$typeIsValid = $trustedSenderArrayIsValid
-				&& array_key_exists('type', $trustedSender)
-				&& is_string($trustedSender['type']);
+		$typeIsValid = $trustedSenderArrayIsValid
+			&& array_key_exists('type', $trustedSender)
+			&& is_string($trustedSender['type']);
 
-			if (!$emailIsValid || !$typeIsValid) {
-				throw new UserMigrationException('Invalid trusted sender entry');
-			}
-		}
+		return $emailIsValid && $typeIsValid;
 	}
 }

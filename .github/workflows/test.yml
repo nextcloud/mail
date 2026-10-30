@@ -451,8 +451,8 @@ jobs:
         run: |
           php -f nextcloud/occ mail:account:create-imap \
             $TEST_USER 'Test Account' $TEST_EMAIL \
-            imap.localhost 993 ssl $TEST_EMAIL imap-password \
-            smtp.localhost 465 ssl $TEST_EMAIL smtp-password
+            imap.mail.test 993 ssl $TEST_EMAIL imap-password \
+            smtp.mail.test 465 ssl $TEST_EMAIL smtp-password
       - name: Test basic mail export
         run: php -f nextcloud/occ user:export -t mail_account $TEST_USER $EXPORT_DIRECTORY
       - name: Assert the account was written to the export

@@ -12,6 +12,7 @@ namespace Unit\UserMigration\Service;
 use ChristophWurst\Nextcloud\Testing\ServiceMockObject;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\InternalAddress;
+use OCA\Mail\Tests\Unit\UserMigration\RecordsConsoleOutput;
 use OCA\Mail\UserMigration\Service\InternalAddressesMigrationService;
 use OCP\IUser;
 use OCP\UserMigration\IExportDestination;
@@ -20,6 +21,8 @@ use OCP\UserMigration\UserMigrationException;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class InternalAddressesMigrationServiceTest extends TestCase {
+	use RecordsConsoleOutput;
+
 	private const USER_ID = '123';
 	private OutputInterface $output;
 	private IUser $user;
@@ -160,5 +163,34 @@ class InternalAddressesMigrationServiceTest extends TestCase {
 		$domainSender->setType('domain');
 
 		return $domainSender;
+	}
+
+	public function testImportReportsInvalidInternalAddressesAsANotice(): void {
+		$this->recordConsoleOutput();
+		$this->importSource->method('getFileContents')
+			->with(InternalAddressesMigrationService::INTERNAL_ADDRESSES_FILE)
+			->willReturn('this is not valid json {{{');
+
+		$this->migrationService->importInternalAddresses($this->user, $this->importSource, $this->output);
+
+		$this->assertWritten('is invalid and will be skipped', 0);
+	}
+
+	public function testImportSkipsOnlyTheMalformedInternalAddress(): void {
+		$this->recordConsoleOutput();
+		$this->importSource->method('getFileContents')
+			->with(InternalAddressesMigrationService::INTERNAL_ADDRESSES_FILE)
+			->willReturn(json_encode([
+				['id' => 1, 'address' => null, 'uid' => self::USER_ID, 'type' => 'individual'],
+				['id' => 2, 'address' => 'jane@doe.com', 'uid' => self::USER_ID, 'type' => 'individual'],
+			]));
+		$this->serviceMock->getParameter('internalAddressService')
+			->expects(self::once())
+			->method('add')
+			->with(self::USER_ID, 'jane@doe.com', 'individual');
+
+		$this->migrationService->importInternalAddresses($this->user, $this->importSource, $this->output);
+
+		$this->assertWritten('An internal address of ' . self::USER_ID . ' is invalid', 0);
 	}
 }

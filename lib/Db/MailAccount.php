@@ -117,6 +117,8 @@ class MailAccount extends Entity {
 	public const PROTOCOL_JMAP = 'jmap';
 	public const SIGNATURE_MODE_PLAIN = 0;
 	public const SIGNATURE_MODE_HTML = 1;
+	public const AUTH_METHODS = ['password', 'xoauth2'];
+	public const DEFAULT_AUTH_METHOD = 'password';
 
 	protected $userId;
 	protected $name;
