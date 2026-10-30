@@ -33,11 +33,11 @@ class InternalAddressMapper extends QBMapper {
 				$qb->expr()->orX(
 					$qb->expr()->andX(
 						$qb->expr()->eq('address', $qb->createNamedParameter($address)),
-						$qb->expr()->eq('type', $qb->createNamedParameter('individual'))
+						$qb->expr()->eq('type', $qb->createNamedParameter(AddressEntryType::Individual->value))
 					),
 					$qb->expr()->andX(
 						$qb->expr()->eq('address', $qb->createNamedParameter($host)),
-						$qb->expr()->eq('type', $qb->createNamedParameter('domain'))
+						$qb->expr()->eq('type', $qb->createNamedParameter(AddressEntryType::Domain->value))
 					)
 				),
 				$qb->expr()->eq('user_id', $qb->createNamedParameter($uid))

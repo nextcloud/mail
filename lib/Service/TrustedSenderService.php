@@ -10,13 +10,16 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Contracts\ITrustedSenderService;
+use OCA\Mail\Db\AddressEntryType;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\TrustedSenderMapper;
+use OCA\Mail\Exception\InvalidAddressException;
 use OCP\DB\Exception;
 
 class TrustedSenderService implements ITrustedSenderService {
 	public function __construct(
 		private TrustedSenderMapper $mapper,
+		private AddressEntryNormalizer $normalizer,
 	) {
 	}
 
@@ -45,14 +48,19 @@ class TrustedSenderService implements ITrustedSenderService {
 		);
 	}
 
+	/**
+	 * @throws InvalidAddressException
+	 */
 	#[\Override]
 	public function trust(string $uid, string $email, string $type, ?bool $trust = true): void {
-		if ($trust && $this->isTrusted($uid, $email)) {
-			// Nothing to do
-			return;
-		}
-
 		if ($trust) {
+			$entryType = AddressEntryType::tryFrom($type) ?? throw new InvalidAddressException('Invalid type');
+			$email = $this->normalizer->normalize($email, $entryType);
+			if ($this->isTrusted($uid, $email)) {
+				// Nothing to do
+				return;
+			}
+
 			try {
 				$this->mapper->create(
 					$uid,
@@ -72,6 +80,15 @@ class TrustedSenderService implements ITrustedSenderService {
 				$email,
 				$type
 			);
+			// Valid values are stored normalized, older entries as they were entered
+			$normalized = $this->normalizer->tryNormalize($email, $type);
+			if ($normalized !== null && $normalized !== $email) {
+				$this->mapper->remove(
+					$uid,
+					$normalized,
+					$type
+				);
+			}
 		}
 	}
 

@@ -10,13 +10,16 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Contracts\IInternalAddressService;
+use OCA\Mail\Db\AddressEntryType;
 use OCA\Mail\Db\InternalAddress;
 use OCA\Mail\Db\InternalAddressMapper;
+use OCA\Mail\Exception\InvalidAddressException;
 use OCP\DB\Exception;
 
 class InternalAddressService implements IInternalAddressService {
 	public function __construct(
 		private InternalAddressMapper $mapper,
+		private AddressEntryNormalizer $normalizer,
 	) {
 	}
 
@@ -28,14 +31,19 @@ class InternalAddressService implements IInternalAddressService {
 		);
 	}
 
+	/**
+	 * @throws InvalidAddressException
+	 */
 	#[\Override]
 	public function add(string $uid, string $address, string $type, ?bool $trust = true): ?InternalAddress {
-		if ($trust && $this->isInternal($uid, $address)) {
-			// Nothing to do
-			return null;
-		}
-
 		if ($trust) {
+			$entryType = AddressEntryType::tryFrom($type) ?? throw new InvalidAddressException('Invalid type');
+			$address = $this->normalizer->normalize($address, $entryType);
+			if ($this->isInternal($uid, $address)) {
+				// Nothing to do
+				return null;
+			}
+
 			try {
 				$this->mapper->create(
 					$uid,
@@ -57,6 +65,15 @@ class InternalAddressService implements IInternalAddressService {
 				$address,
 				$type
 			);
+			// Valid values are stored normalized, older entries as they were entered
+			$normalized = $this->normalizer->tryNormalize($address, $type);
+			if ($normalized !== null && $normalized !== $address) {
+				$this->mapper->remove(
+					$uid,
+					$normalized,
+					$type
+				);
+			}
 		}
 		return null;
 	}
