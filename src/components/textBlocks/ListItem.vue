@@ -25,9 +25,14 @@
 					v-if="!isViewMode"
 					icon="icon-delete"
 					:title="t('mail', 'Delete {title}', { title: textBlock.title })"
-					@click="deleteTextBlock()" />
+					@click="deleteDialogOpen = true" />
 			</template>
 		</NcListItem>
+		<NcDialog
+			v-model:open="deleteDialogOpen"
+			:name="t('mail', 'Delete text block?')"
+			:message="t('mail', 'The text block {title} will be permanently deleted.', { title: textBlock.title })"
+			:buttons="deleteButtons" />
 		<NcDialog
 			v-model:open="editModalOpen"
 			:name="t('mail', 'Edit text block')"
@@ -181,6 +186,7 @@ export default {
 			shares: [],
 			localTextBlock: JSON.parse(JSON.stringify(this.textBlock)),
 			editModalOpen: false,
+			deleteDialogOpen: false,
 			loading: false,
 			saveLoading: false,
 			share: null,
@@ -193,6 +199,20 @@ export default {
 		...mapStores(useMainStore),
 		options() {
 			return this.suggestions.filter((suggestion) => this.shares.find((share) => share.shareWith === suggestion.shareWith) === undefined && suggestion.shareWith !== getCurrentUser().uid)
+		},
+
+		deleteButtons() {
+			return [
+				{
+					label: t('mail', 'Cancel'),
+					variant: 'tertiary',
+				},
+				{
+					label: t('mail', 'Delete'),
+					variant: 'error',
+					callback: async () => { await this.deleteTextBlock() },
+				},
+			]
 		},
 
 		sortedShares() {
