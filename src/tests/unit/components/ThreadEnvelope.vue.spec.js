@@ -180,4 +180,47 @@ describe('ThreadEnvelope', () => {
 
 		expect(view.vm.hasWriteAcl).toBe(true)
 	})
+
+	describe('internal sender', () => {
+		const mountWithSenders = (from) => shallowMount(ThreadEnvelope, {
+			global: { mixins: [Nextcloud] },
+			props: { ...baseProps(), envelope: { ...baseProps().envelope, from } },
+		})
+
+		const highlightExternalAddresses = () => store.savePreferenceMutation({ key: 'internal-addresses', value: 'true' })
+
+		it('treats every sender as internal while external addresses aren\'t highlighted', () => {
+			const view = mountWithSenders([{ email: 'bob@other.test' }])
+
+			expect(view.vm.isInternal).toBe(true)
+		})
+
+		it('treats a sender outside the internal addresses as external', () => {
+			highlightExternalAddresses()
+			store.addInternalAddressMutation({ id: 1, address: 'example.test', type: 'domain' })
+
+			const view = mountWithSenders([{ email: 'bob@other.test' }])
+
+			expect(view.vm.isInternal).toBe(false)
+		})
+
+		it('treats a message without a sender as internal', () => {
+			highlightExternalAddresses()
+
+			const view = mountWithSenders([])
+
+			expect(view.vm.isInternal).toBe(true)
+		})
+
+		it('follows changes of the internal addresses', async () => {
+			highlightExternalAddresses()
+			const view = mountWithSenders([{ email: 'bob@other.test' }])
+			expect(view.vm.isInternal).toBe(false)
+
+			store.addInternalAddressMutation({ id: 1, address: 'other.test', type: 'domain' })
+			await view.vm.$nextTick()
+
+			expect(view.vm.isInternal).toBe(true)
+		})
+	})
 })

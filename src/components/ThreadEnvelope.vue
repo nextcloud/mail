@@ -562,7 +562,6 @@ export default {
 			detectedForeignLanguage: null,
 			plainTextBody: '',
 			rawMessage: '', // Will hold the raw source of the message when requested
-			isInternal: true,
 			enabledFreePrompt: loadState('mail', 'llm_freeprompt_available', false),
 			loadingBodyTimeout: undefined,
 			showMailFilterFromEnvelope: false,
@@ -615,6 +614,12 @@ export default {
 		 */
 		printable() {
 			return this.loading === Loading.Done && this.message !== undefined
+		},
+
+		isInternal() {
+			return this.mainStore.getPreference('internal-addresses', 'false') !== 'true'
+				|| !this.senderEmail
+				|| this.mainStore.isInternalAddress(this.senderEmail)
 		},
 
 		senderEmailColor() {
@@ -828,9 +833,6 @@ export default {
 			// Only one envelope is expanded at the time of mounting so we can
 			// assume that this is the relevant envelope to be scrolled to.
 			this.$nextTick(() => this.handleThreadScrolling())
-		}
-		if (this.mainStore.getPreference('internal-addresses', 'false') === 'true') {
-			this.isInternal = this.mainStore.isInternalAddress(this.envelope.from[0].email)
 		}
 		this.$checkInterval = setInterval(() => {
 			const { envelope } = this.$refs

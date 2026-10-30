@@ -38,20 +38,14 @@ export default {
 
 	emits: ['removeRecipient'],
 
-	data() {
-		return {
-			isInternal: true,
-		}
-	},
-
 	computed: {
 		...mapStores(useMainStore),
-	},
 
-	async mounted() {
-		if (this.mainStore.getPreference('internal-addresses', 'false') === 'true') {
-			this.isInternal = this.mainStore.isInternalAddress(this.option.email)
-		}
+		isInternal() {
+			return this.mainStore.getPreference('internal-addresses', 'false') !== 'true'
+				|| !this.option.email
+				|| this.mainStore.isInternalAddress(this.option.email)
+		},
 	},
 
 	methods: {
