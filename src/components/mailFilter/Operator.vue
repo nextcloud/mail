@@ -65,6 +65,7 @@ export default {
 			availableOperators: [
 				{ value: MailFilterOperator.All, label: t('mail', 'If all the conditions are met, the actions will be performed') },
 				{ value: MailFilterOperator.Any, label: t('mail', 'If any of the conditions are met, the actions will be performed') },
+				{ value: MailFilterOperator.Always, label: t('mail', 'Perform the actions on all incoming messages') },
 			],
 		}
 	},
@@ -84,6 +85,10 @@ export default {
 	&__select {
 		margin-inline-end: var(--default-grid-baseline);
 		width: 100%;
+		// Match NcSelect's own `.nc-select.v-select.select` so the reset still wins
+		&.nc-select {
+			margin-block: 0;
+		}
 	}
 	&__popover {
 		width: 30px;

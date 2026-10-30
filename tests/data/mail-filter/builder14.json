@@ -1,0 +1,15 @@
+[
+	{
+		"name": "Test 14",
+		"enable": true,
+		"operator": "true",
+		"tests": [],
+		"actions": [
+			{
+				"type": "addflag",
+				"flag": "Incoming"
+			}
+		],
+		"priority": 10
+	}
+]

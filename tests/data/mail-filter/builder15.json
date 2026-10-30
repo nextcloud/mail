@@ -1,0 +1,27 @@
+[
+	{
+		"name": "Test 15",
+		"enable": true,
+		"operator": "anyof",
+		"tests": [
+			{
+				"operator": "is",
+				"values": [],
+				"field": "subject"
+			},
+			{
+				"operator": "contains",
+				"values": [
+					"alice@example.org"
+				],
+				"field": "from"
+			}
+		],
+		"actions": [
+			{
+				"type": "keep"
+			}
+		],
+		"priority": 10
+	}
+]

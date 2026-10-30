@@ -6,7 +6,7 @@
 	<div class="action">
 		<div class="action__type">
 			<NcSelect
-				class="action__type__column action__type__column__select"
+				class="action__type__column"
 				:modelValue="currentAction"
 				:required="true"
 				:labelOutside="true"
@@ -84,7 +84,7 @@ export default {
 					label: this.t('mail', 'Add flag'),
 				},
 				{
-					id: 'fileinto',
+					id: MailFilterActions.FileInto,
 					label: this.t('mail', 'Move into folder'),
 				},
 				{
@@ -105,7 +105,7 @@ export default {
 		},
 
 		componentInstance() {
-			if (this.action.type === 'fileinto') {
+			if (this.action.type === MailFilterActions.FileInto) {
 				return ActionFileinto
 			} else if (this.action.type === 'addflag') {
 				return ActionAddflag
@@ -143,7 +143,7 @@ export default {
 		&__column {
 			flex: 0 1 auto;
 			// Match NcSelect's own `.nc-select.v-select.select` so the reset still wins
-			&__select.nc-select {
+			&.nc-select {
 				margin: 0
 			}
 		}

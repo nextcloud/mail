@@ -4,10 +4,12 @@
  */
 
 import { shallowMount } from '@vue/test-utils'
+import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 import UpdateModal from '../../../components/mailFilter/UpdateModal.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
+import { MailFilterActions, MailFilterConditionField, MailFilterConditionOperator, MailFilterOperator } from '../../../models/mailFilter.ts'
 
-function mountWithTests(tests) {
+function mountWithTests(tests, operator = MailFilterOperator.All) {
 	return shallowMount(UpdateModal, {
 		global: {
 			mixins: [Nextcloud],
@@ -18,9 +20,9 @@ function mountWithTests(tests) {
 				id: 1,
 				name: 'Filter',
 				enable: true,
-				operator: 'allof',
+				operator,
 				tests,
-				actions: [{ id: 2, type: 'fileinto', mailbox: 'INBOX' }],
+				actions: [{ id: 2, type: MailFilterActions.FileInto, mailbox: 'INBOX' }],
 				priority: 10,
 			},
 		},
@@ -29,7 +31,7 @@ function mountWithTests(tests) {
 
 describe('UpdateModal', () => {
 	it('emits updateFilter for a filter with a condition', () => {
-		const view = mountWithTests([{ id: 3, field: 'subject', operator: 'is', values: ['Hello'] }])
+		const view = mountWithTests([{ id: 3, field: MailFilterConditionField.Subject, operator: MailFilterConditionOperator.Is, values: ['Hello'] }])
 
 		view.vm.updateFilter()
 
@@ -38,7 +40,7 @@ describe('UpdateModal', () => {
 	})
 
 	it('emits a copy that later edits do not change', () => {
-		const view = mountWithTests([{ id: 3, field: 'subject', operator: 'is', values: ['Hello'] }])
+		const view = mountWithTests([{ id: 3, field: MailFilterConditionField.Subject, operator: MailFilterConditionOperator.Is, values: ['Hello'] }])
 
 		view.vm.updateFilter()
 		view.vm.clone.tests[0].values.push('World')
@@ -59,7 +61,7 @@ describe('UpdateModal', () => {
 	})
 
 	it('blocks saving after the last condition is deleted', () => {
-		const test = { id: 3, field: 'subject', operator: 'is', values: ['Hello'] }
+		const test = { id: 3, field: MailFilterConditionField.Subject, operator: MailFilterConditionOperator.Is, values: ['Hello'] }
 		const view = mountWithTests([test])
 
 		view.vm.deleteTest(test)
@@ -67,5 +69,85 @@ describe('UpdateModal', () => {
 
 		expect(view.vm.hasTests).toBe(false)
 		expect(view.emitted('updateFilter')).toBeUndefined()
+	})
+
+	it('does not emit updateFilter for a condition without values', () => {
+		const view = mountWithTests([{ id: 3, field: MailFilterConditionField.Subject, operator: MailFilterConditionOperator.Is, values: [] }])
+
+		view.vm.updateFilter()
+
+		expect(view.vm.isValid).toBe(false)
+		expect(view.emitted('updateFilter')).toBeUndefined()
+	})
+
+	it('hides the validation error until the filter is submitted', () => {
+		const view = mountWithTests([])
+
+		expect(view.findComponent(NcNoteCard).exists()).toBe(false)
+	})
+
+	it('shows the validation error after an invalid submit', async () => {
+		const view = mountWithTests([])
+
+		view.vm.updateFilter()
+		await view.vm.$nextTick()
+
+		expect(view.findComponent(NcNoteCard).exists()).toBe(true)
+	})
+
+	it('emits a filter for all incoming messages without conditions', () => {
+		const view = mountWithTests([{ id: 3, field: MailFilterConditionField.Subject, operator: MailFilterConditionOperator.Is, values: ['Hello'] }])
+
+		view.vm.updateOperator(MailFilterOperator.Always)
+		view.vm.updateFilter()
+
+		const [emitted] = view.emitted('updateFilter')[0]
+		expect(emitted.operator).toBe(MailFilterOperator.Always)
+		expect(emitted.tests).toEqual([])
+	})
+
+	it('saves a filter for all incoming messages that has no conditions', () => {
+		const view = mountWithTests([], MailFilterOperator.Always)
+
+		view.vm.updateFilter()
+
+		expect(view.vm.isValid).toBe(true)
+		expect(view.emitted('updateFilter')).toHaveLength(1)
+	})
+
+	it('restores the conditions when switching back from all incoming messages', () => {
+		const test = { id: 3, field: MailFilterConditionField.Subject, operator: MailFilterConditionOperator.Is, values: ['Hello'] }
+		const view = mountWithTests([test])
+
+		view.vm.updateOperator(MailFilterOperator.Always)
+		view.vm.updateOperator(MailFilterOperator.Any)
+		view.vm.updateFilter()
+
+		const [emitted] = view.emitted('updateFilter')[0]
+		expect(emitted.tests).toEqual([test])
+	})
+
+	it('warns only about moving when a filter for all incoming messages moves messages', () => {
+		const view = mountWithTests([], MailFilterOperator.Always)
+
+		expect(view.vm.hasFileIntoAction).toBe(true)
+		expect(view.vm.hasStopAction).toBe(false)
+		expect(view.findAllComponents(NcNoteCard)).toHaveLength(1)
+	})
+
+	it('warns about moving and stopping when a filter for all incoming messages has both actions', async () => {
+		const view = mountWithTests([], MailFilterOperator.Always)
+
+		view.vm.clone.actions.push({ id: 4, type: MailFilterActions.Stop })
+		await view.vm.$nextTick()
+
+		expect(view.vm.hasStopAction).toBe(true)
+		expect(view.findAllComponents(NcNoteCard)).toHaveLength(2)
+	})
+
+	it('does not warn about moving or stopping for a filter with conditions', () => {
+		const view = mountWithTests([{ id: 3, field: MailFilterConditionField.Subject, operator: MailFilterConditionOperator.Is, values: ['Hello'] }])
+
+		expect(view.findAllComponents(NcNoteCard)).toHaveLength(0)
 	})
 })
