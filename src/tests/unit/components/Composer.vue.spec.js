@@ -63,6 +63,35 @@ describe('Composer', () => {
 		}
 	})
 
+	it('emits the recipients when one is picked', async () => {
+		const view = shallowMount(Composer, {
+			props: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
+		})
+
+		view.vm.onNewToAddr({ id: 1, email: 'test@domain.tld', label: 'test' })
+		await view.vm.$nextTick()
+
+		expect(view.emitted('update:to').at(-1)[0]).toEqual([
+			expect.objectContaining({ email: 'test@domain.tld' }),
+		])
+	})
+
 	it('does not drop the reply message ID', () => {
 		const view = shallowMount(Composer, {
 			props: {
