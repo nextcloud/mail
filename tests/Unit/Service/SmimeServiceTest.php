@@ -19,11 +19,15 @@ use OCA\Mail\Address;
 use OCA\Mail\AddressList;
 use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Db\SmimeCertificateMapper;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\SmimeCertificateInfo;
 use OCA\Mail\Model\SmimeCertificatePurposes;
 use OCA\Mail\Service\SmimeService;
+use OCA\Mail\Tests\Unit\AuditLog\AuditEvents;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\ICertificateManager;
 use OCP\ITempManager;
+use OCP\Log\Audit\CriticalActionPerformedEvent;
 use OCP\Security\ICrypto;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -42,6 +46,8 @@ class SmimeServiceTest extends TestCase {
 	/** @var SmimeCertificateMapper|MockObject */
 	private $certificateMapper;
 
+	private IEventDispatcher&MockObject $eventDispatcher;
+
 	/** @var SmimeService&MockObject */
 	private $smimeService;
 
@@ -52,12 +58,14 @@ class SmimeServiceTest extends TestCase {
 		$this->certificateManager = $this->createMock(ICertificateManager::class);
 		$this->crypto = $this->createMock(ICrypto::class);
 		$this->certificateMapper = $this->createMock(SmimeCertificateMapper::class);
+		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 
 		$this->smimeService = new SmimeService(
 			$this->tempManager,
 			$this->certificateManager,
 			$this->crypto,
 			$this->certificateMapper,
+			$this->eventDispatcher,
 		);
 	}
 
@@ -530,5 +538,95 @@ class SmimeServiceTest extends TestCase {
 		);
 		$this->assertTrue($decryptionResult->isSigned());
 		$this->assertTrue($decryptionResult->isSignatureValid());
+	}
+
+	private function mockCertificateParsing(): void {
+		$this->certificateManager->method('getAbsoluteBundlePath')
+			->willReturn(__DIR__ . '/../../data/smime-certs/imap.localhost.ca.crt');
+		$this->tempManager->method('getTemporaryFile')
+			->willReturnCallback(fn () => $this->createTempFile());
+	}
+
+	private function expectCertificateAuditEvent(string $operation, string $message, array $parameters): void {
+		$this->eventDispatcher->expects(self::once())
+			->method('dispatchTyped')
+			->with(self::callback(fn (CriticalActionPerformedEvent $event): bool => AuditEvents::hasOperation($event, $operation)
+				&& $event->getLogMessage() === $message
+				&& $event->getParameters() === $parameters));
+	}
+
+	public function testCreateCertificateWithPrivateKeyLogsCriticalAction(): void {
+		$rawCert = file_get_contents(__DIR__ . '/../../data/smime-certs/user@imap.localhost.crt');
+		$rawKey = file_get_contents(__DIR__ . '/../../data/smime-certs/user@imap.localhost.key');
+		$this->mockCertificateParsing();
+		$this->crypto->method('encrypt')->willReturnArgument(0);
+		$this->certificateMapper->expects(self::once())
+			->method('insert')
+			->willReturnCallback(function (SmimeCertificate $certificate): SmimeCertificate {
+				$certificate->setId(42);
+				return $certificate;
+			});
+		$this->expectCertificateAuditEvent(
+			'mail.smime_certificate.created',
+			'S/MIME certificate %s of "%s" was uploaded',
+			['certificateId' => 42, 'owner' => 'user', 'hasPrivateKey' => true],
+		);
+
+		$certificate = $this->smimeService->createCertificate('user', $rawCert, $rawKey);
+
+		$this->assertSame(42, $certificate->getId());
+	}
+
+	public function testCreateCertificateWithoutPrivateKeyLogsCriticalAction(): void {
+		$rawCert = file_get_contents(__DIR__ . '/../../data/smime-certs/user@imap.localhost.crt');
+		$this->mockCertificateParsing();
+		$this->crypto->method('encrypt')->willReturnArgument(0);
+		$this->certificateMapper->expects(self::once())
+			->method('insert')
+			->willReturnCallback(function (SmimeCertificate $certificate): SmimeCertificate {
+				$certificate->setId(43);
+				return $certificate;
+			});
+		$this->expectCertificateAuditEvent(
+			'mail.smime_certificate.created',
+			'S/MIME certificate %s of "%s" was uploaded',
+			['certificateId' => 43, 'owner' => 'user', 'hasPrivateKey' => false],
+		);
+
+		$this->smimeService->createCertificate('user', $rawCert, null);
+	}
+
+	public function testCreateCertificateWithMismatchingPrivateKeyDoesNotLog(): void {
+		$rawCert = file_get_contents(__DIR__ . '/../../data/smime-certs/user@imap.localhost.crt');
+		$rawKey = file_get_contents(__DIR__ . '/../../data/smime-certs/debug@imap.localhost.key');
+		$this->mockCertificateParsing();
+		$this->crypto->method('encrypt')->willReturnArgument(0);
+		$this->certificateMapper->expects(self::never())
+			->method('insert');
+		$this->eventDispatcher->expects(self::never())
+			->method('dispatchTyped');
+
+		$this->expectException(ServiceException::class);
+		$this->expectExceptionMessage('Private key does not match certificate');
+
+		$this->smimeService->createCertificate('user', $rawCert, $rawKey);
+	}
+
+	public function testDeleteCertificateLogsCriticalAction(): void {
+		$certificate = new SmimeCertificate();
+		$this->certificateMapper->expects(self::once())
+			->method('find')
+			->with(42, 'user')
+			->willReturn($certificate);
+		$this->certificateMapper->expects(self::once())
+			->method('delete')
+			->with($certificate);
+		$this->expectCertificateAuditEvent(
+			'mail.smime_certificate.deleted',
+			'S/MIME certificate %s of "%s" was deleted',
+			['certificateId' => 42, 'owner' => 'user'],
+		);
+
+		$this->smimeService->deleteCertificate(42, 'user');
 	}
 }

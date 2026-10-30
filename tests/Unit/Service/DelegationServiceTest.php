@@ -11,6 +11,7 @@ namespace OCA\Mail\Tests\Unit\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Db\AliasMapper;
 use OCA\Mail\Db\Delegation;
 use OCA\Mail\Db\DelegationMapper;
@@ -23,6 +24,7 @@ use OCA\Mail\Exception\DelegationExistsException;
 use OCA\Mail\Exception\DelegationForbiddenException;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\DelegationService;
+use OCA\Mail\Tests\Unit\AuditLog\AuditEvents;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -106,8 +108,22 @@ class DelegationServiceTest extends TestCase {
 		return $notification;
 	}
 
+	private function expectDelegationAuditEvent(string $operation, string $message): void {
+		$this->eventDispatcher->expects($this->once())
+			->method('dispatchTyped')
+			->with($this->callback(fn ($event) => $event instanceof CriticalActionPerformedEvent
+				&& AuditEvents::hasOperation($event, $operation)
+				&& $event->getLogMessage() === $message
+				&& $event->getParameters() === [
+					'delegateUserId' => 'delegatee',
+					'owner' => 'owner',
+					'accountId' => 1,
+				]));
+	}
+
 	public function testDelegateSuccess(): void {
 		$this->mockNotification();
+		$this->expectDelegationAuditEvent('mail.delegation.created', 'User "%s" is now allowed to act on behalf of "%s" for mail account %s');
 
 		$this->delegationMapper->expects($this->once())
 			->method('find')
@@ -143,6 +159,8 @@ class DelegationServiceTest extends TestCase {
 
 		$this->delegationMapper->expects($this->never())
 			->method('insert');
+		$this->eventDispatcher->expects($this->never())
+			->method('dispatchTyped');
 
 		$this->expectException(DelegationExistsException::class);
 
@@ -173,6 +191,7 @@ class DelegationServiceTest extends TestCase {
 
 	public function testUnDelegateSuccess(): void {
 		$this->mockNotification();
+		$this->expectDelegationAuditEvent('mail.delegation.deleted', 'User "%s" is no longer allowed to act on behalf of "%s" for mail account %s');
 
 		$delegation = new Delegation();
 		$delegation->setId(10);
@@ -193,6 +212,8 @@ class DelegationServiceTest extends TestCase {
 
 	public function testUnDelegateWhenNotFound(): void {
 		$this->mockNotification();
+		$this->eventDispatcher->expects($this->never())
+			->method('dispatchTyped');
 
 		$this->delegationMapper->expects($this->once())
 			->method('find')
@@ -500,15 +521,21 @@ class DelegationServiceTest extends TestCase {
 		$this->eventDispatcher->expects($this->once())
 			->method('dispatchTyped')
 			->with($this->callback(fn ($event) => $event instanceof CriticalActionPerformedEvent
-				&& $event->getLogMessage() === 'delegatee performed an action on behalf of owner'));
+				&& AuditEvents::hasOperation($event, 'mail.mailbox.deleted')
+				&& $event->getLogMessage() === '%s deleted mailbox: %s on behalf of %s'
+				&& $event->getParameters() === [
+					'delegate' => 'delegatee',
+					'mailboxId' => 5,
+					'owner' => 'owner',
+				]));
 
-		$this->service->logDelegatedAction('delegatee', 'owner', 'delegatee performed an action on behalf of owner');
+		$this->service->logDelegatedAction('delegatee', 'owner', Operation::MailboxDeleted, '%s deleted mailbox: %s on behalf of %s', ['mailboxId' => 5]);
 	}
 
 	public function testLogDelegatedActionSkipsWhenNotDelegated(): void {
 		$this->eventDispatcher->expects($this->never())
 			->method('dispatchTyped');
 
-		$this->service->logDelegatedAction('owner', 'owner', 'owner performed an action on their own account');
+		$this->service->logDelegatedAction('owner', 'owner', Operation::MailboxDeleted, '%s deleted mailbox: %s on behalf of %s', ['mailboxId' => 5]);
 	}
 }

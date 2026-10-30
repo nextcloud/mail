@@ -13,6 +13,7 @@ namespace OCA\Mail\Controller;
 use Exception;
 use OC\Security\CSP\ContentSecurityPolicyNonceManager;
 use OCA\Mail\Attachment;
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Contracts\IDkimService;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Contracts\ITrustedSenderService;
@@ -390,7 +391,7 @@ class MessagesController extends Controller {
 			$dstMailbox
 		);
 
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId moved message <$id> to mailbox <$destFolderId> on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedMessageMoved, '%s moved message <%s> to mailbox <%s> on behalf of %s', ['messageId' => $id, 'destinationMailboxId' => $destFolderId]);
 
 		return new JSONResponse();
 	}
@@ -424,7 +425,7 @@ class MessagesController extends Controller {
 		$this->delegationService->assertMailboxAccess($destMailboxId, $this->userId);
 
 		$this->snoozeService->snoozeMessage($message, $unixTimestamp, $srcAccount, $srcMailbox, $dstAccount, $dstMailbox);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId snoozed message <$id> to <$unixTimestamp> on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedMessageSnoozed, '%s snoozed message <%s> to <%s> on behalf of %s', ['messageId' => $id, 'snoozedUntil' => $unixTimestamp]);
 
 		return new JSONResponse();
 	}
@@ -450,7 +451,7 @@ class MessagesController extends Controller {
 		}
 
 		$this->snoozeService->unSnoozeMessage($message, $effectiveUserId);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId unsnoozed message <$id> on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedMessageUnsnoozed, '%s unsnoozed message <%s> on behalf of %s', ['messageId' => $id]);
 
 		return new JSONResponse();
 	}
@@ -911,7 +912,7 @@ class MessagesController extends Controller {
 			$flagChanges[] = "$flag=" . ($value ? 'true' : 'false');
 		}
 		$flagsSummary = implode(', ', $flagChanges);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated flags on message <$id> with [$flagsSummary] on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedMessageFlagsUpdated, '%s updated flags on message <%s> with [%s] on behalf of %s', ['messageId' => $id, 'flags' => $flagsSummary]);
 		return new JSONResponse();
 	}
 
@@ -946,7 +947,7 @@ class MessagesController extends Controller {
 		}
 
 		$this->mailManager->tagMessages($account, $mailbox, $tag, true, $message);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId added tag <$imapLabel> on message <$id> on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedMessageTagAdded, '%s added tag <%s> on message <%s> on behalf of %s', ['tag' => $imapLabel, 'messageId' => $id]);
 		return new JSONResponse($tag);
 	}
 
@@ -981,7 +982,7 @@ class MessagesController extends Controller {
 		}
 
 		$this->mailManager->tagMessages($account, $mailbox, $tag, false, $message);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId removed tag <$imapLabel> on message <$id> on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedMessageTagRemoved, '%s removed tag <%s> on message <%s> on behalf of %s', ['tag' => $imapLabel, 'messageId' => $id]);
 		return new JSONResponse($tag);
 	}
 
@@ -1013,7 +1014,7 @@ class MessagesController extends Controller {
 			$mailbox,
 			$message
 		);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId deleted message <$id> on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedMessageDeleted, '%s deleted message <%s> on behalf of %s', ['messageId' => $id]);
 		return new JSONResponse();
 	}
 
