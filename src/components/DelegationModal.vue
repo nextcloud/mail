@@ -297,6 +297,8 @@ export default {
 
 		closeDialog() {
 			this.view = 'main'
+			this.selectedUser = null
+			this.userSuggestions = []
 		},
 	},
 }
