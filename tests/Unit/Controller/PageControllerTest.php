@@ -14,10 +14,12 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\ConfigLexicon;
+use OCA\Mail\Contracts\ITrustedSenderService;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Controller\PageController;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\TagMapper;
+use OCA\Mail\Db\TrustedSender;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
@@ -114,6 +116,8 @@ class PageControllerTest extends TestCase {
 	/** @var InternalAddressService|MockObject */
 	private $internalAddressService;
 
+	private ITrustedSenderService&MockObject $trustedSenderService;
+
 	private QuickActionsService|MockObject $quickActionsService;
 
 	private IAvailabilityCoordinator&MockObject $availabilityCoordinator;
@@ -146,6 +150,7 @@ class PageControllerTest extends TestCase {
 		$this->smimeService = $this->createMock(SmimeService::class);
 		$this->userManager = $this->createMock(IUserManager::class);
 		$this->internalAddressService = $this->createMock(InternalAddressService::class);
+		$this->trustedSenderService = $this->createMock(ITrustedSenderService::class);
 		$this->availabilityCoordinator = $this->createMock(IAvailabilityCoordinator::class);
 		$this->quickActionsService = $this->createMock(QuickActionsService::class);
 		$this->appManager = $this->createMock(IAppManager::class);
@@ -175,6 +180,7 @@ class PageControllerTest extends TestCase {
 			$this->aiIntegrationsService,
 			$this->userManager,
 			$this->internalAddressService,
+			$this->trustedSenderService,
 			$this->availabilityCoordinator,
 			$this->quickActionsService,
 			$this->appManager,
@@ -347,7 +353,12 @@ class PageControllerTest extends TestCase {
 		$this->classificationSettingsService->expects(($this->once()))
 			->method(('isClassificationEnabledByDefault'))
 			->willReturn(true);
-		$this->initialState->expects($this->exactly(27))
+		$trustedSenders = [new TrustedSender()];
+		$this->trustedSenderService->expects($this->once())
+			->method('getTrusted')
+			->with($this->userId)
+			->willReturn($trustedSenders);
+		$this->initialState->expects($this->exactly(28))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
@@ -357,6 +368,7 @@ class PageControllerTest extends TestCase {
 				['account-settings', []],
 				['tags', []],
 				['internal-addresses-list', []],
+				['trusted-senders', $trustedSenders],
 				['internal-addresses', false],
 				['smime-sign-aliases',[]],
 				['sort-order', 'newest'],

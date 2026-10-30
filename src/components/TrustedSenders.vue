@@ -36,13 +36,14 @@
 import { showError } from '@nextcloud/dialogs'
 import prop from 'lodash/fp/prop.js'
 import sortBy from 'lodash/fp/sortBy.js'
+import { mapStores } from 'pinia'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcListItem from '@nextcloud/vue/components/NcListItem'
 import IconDomain from 'vue-material-design-icons/Domain.vue'
 import IconEmail from 'vue-material-design-icons/EmailOutline.vue'
 import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 import logger from '../logger.js'
-import { fetchTrustedSenders, trustSender } from '../service/TrustedSenderService.js'
+import useMainStore from '../store/mainStore.js'
 
 const sortByEmail = sortBy(prop('email'))
 
@@ -56,32 +57,26 @@ export default {
 		IconEmail,
 	},
 
-	data() {
-		return {
-			list: [],
-		}
-	},
-
 	computed: {
+		...mapStores(useMainStore),
+
 		sortedSenders() {
-			return sortByEmail(this.list)
+			return sortByEmail(this.mainStore.trustedSenders)
 		},
 	},
 
 	async mounted() {
-		this.list = await fetchTrustedSenders()
+		try {
+			await this.mainStore.fetchTrustedSenders()
+		} catch (error) {
+			logger.error('Could not fetch trusted senders', { error })
+		}
 	},
 
 	methods: {
 		async removeSender(sender) {
-			// Remove the item immediately
-			this.list = this.list.filter((s) => s.id !== sender.id)
 			try {
-				await trustSender(
-					sender.email,
-					sender.type,
-					false,
-				)
+				await this.mainStore.removeTrustedSender(sender)
 			} catch (error) {
 				logger.error(`Could not remove trusted sender ${sender.email}`, {
 					error,
@@ -89,8 +84,6 @@ export default {
 				showError(t('mail', 'Could not remove trusted sender {sender}', {
 					sender: sender.email,
 				}))
-				// Put the sender back
-				this.list.push(sender)
 			}
 		},
 

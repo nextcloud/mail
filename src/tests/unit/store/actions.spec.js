@@ -9,6 +9,7 @@ import * as AccountService from '../../../service/AccountService.js'
 import * as MailboxService from '../../../service/MailboxService.js'
 import * as MessageService from '../../../service/MessageService.js'
 import * as NotificationService from '../../../service/NotificationService.js'
+import * as TrustedSenderService from '../../../service/TrustedSenderService.js'
 import { PAGE_SIZE, UNIFIED_INBOX_ID } from '../../../store/constants.js'
 import useMainStore from '../../../store/mainStore.js'
 import { normalizedEnvelopeListId } from '../../../util/normalization.js'
@@ -17,6 +18,7 @@ vi.mock('../../../service/AccountService.js')
 vi.mock('../../../service/MailboxService.js')
 vi.mock('../../../service/MessageService.js')
 vi.mock('../../../service/NotificationService.js')
+vi.mock('../../../service/TrustedSenderService.js')
 vi.mock('../../../util/normalization.js', () => ({
 	__esModule: true,
 	// Supply a default list id ('') to prevent annoying errors
@@ -911,6 +913,202 @@ describe('Vuex store actions', () => {
 			expect(store.startComposerSessionMutation).toHaveBeenCalledWith(expect.objectContaining({
 				data: expect.objectContaining({ to }),
 			}))
+		})
+	})
+
+	describe('trusted senders', () => {
+		const alice = { id: 1, email: 'alice@example.test', type: 'individual' }
+		const exampleDomain = { id: 2, email: 'example.test', type: 'domain' }
+
+		it('trusts an individual sender by the exact address', () => {
+			store.setTrustedSendersMutation([alice])
+
+			expect(store.isSenderTrusted('alice@example.test')).toBe(true)
+			expect(store.isSenderTrusted('ALICE@example.test')).toBe(false)
+			expect(store.isSenderTrusted('bob@example.test')).toBe(false)
+		})
+
+		it('trusts every sender of a trusted domain, but not of its subdomains', () => {
+			store.setTrustedSendersMutation([exampleDomain])
+
+			expect(store.isSenderTrusted('bob@example.test')).toBe(true)
+			expect(store.isSenderTrusted('bob@mail.example.test')).toBe(false)
+		})
+
+		it('takes the domain after the last at sign, so a quoted local part cannot claim a trusted domain', () => {
+			store.setTrustedSendersMutation([exampleDomain])
+			expect(store.isSenderTrusted('bob@example.test@other.test')).toBe(false)
+
+			store.setTrustedSendersMutation([{ email: 'other.test', type: 'domain' }])
+			expect(store.isSenderTrusted('bob@example.test@other.test')).toBe(true)
+		})
+
+		it('never matches a domain for a sender without an at sign', () => {
+			store.setTrustedSendersMutation([exampleDomain])
+
+			expect(store.isSenderTrusted('example.test')).toBe(false)
+		})
+
+		it('keeps individual and domain entries apart', () => {
+			store.setTrustedSendersMutation([{ email: 'alice@example.test', type: 'domain' }, { email: 'example.test', type: 'individual' }])
+
+			expect(store.isSenderTrusted('alice@example.test')).toBe(false)
+			expect(store.isSenderTrusted('bob@example.test')).toBe(false)
+		})
+
+		it('does not trust a message without a sender', () => {
+			store.setTrustedSendersMutation([alice, exampleDomain])
+
+			expect(store.isSenderTrusted(undefined)).toBe(false)
+		})
+
+		it('trusts a sender before the server confirms it', async () => {
+			let trustedWhileSaving
+			TrustedSenderService.trustSender.mockImplementationOnce(async () => {
+				trustedWhileSaving = store.isSenderTrusted('alice@example.test')
+			})
+
+			await store.trustSender({ email: 'alice@example.test', type: 'individual' })
+
+			expect(trustedWhileSaving).toBe(true)
+			expect(TrustedSenderService.trustSender).toHaveBeenCalledWith('alice@example.test', 'individual', true)
+			expect(store.isSenderTrusted('alice@example.test')).toBe(true)
+		})
+
+		it('stops trusting a sender the server rejects', async () => {
+			const error = new Error('Request failed with status code 422')
+			TrustedSenderService.trustSender.mockRejectedValueOnce(error)
+
+			await expect(store.trustSender({ email: 'alice@example.test', type: 'individual' })).rejects.toBe(error)
+
+			expect(store.trustedSenders).toEqual([])
+		})
+
+		it('does not save a sender that is already trusted', async () => {
+			store.setTrustedSendersMutation([alice])
+
+			await store.trustSender({ email: 'alice@example.test', type: 'individual' })
+
+			expect(TrustedSenderService.trustSender).not.toHaveBeenCalled()
+			expect(store.trustedSenders).toEqual([alice])
+		})
+
+		it('stops trusting a sender before the server confirms the removal', async () => {
+			const otherDomain = { id: 3, email: 'other.test', type: 'domain' }
+			store.setTrustedSendersMutation([alice, otherDomain])
+			let trustedWhileRemoving
+			TrustedSenderService.trustSender.mockImplementationOnce(async () => {
+				trustedWhileRemoving = store.isSenderTrusted('alice@example.test')
+			})
+
+			await store.removeTrustedSender(alice)
+
+			expect(trustedWhileRemoving).toBe(false)
+			expect(TrustedSenderService.trustSender).toHaveBeenCalledWith('alice@example.test', 'individual', false)
+			expect(store.trustedSenders).toEqual([otherDomain])
+		})
+
+		it('trusts a sender again when the server could not remove it', async () => {
+			store.setTrustedSendersMutation([alice])
+			const error = new Error('Request failed with status code 500')
+			TrustedSenderService.trustSender.mockRejectedValueOnce(error)
+
+			await expect(store.removeTrustedSender(alice)).rejects.toBe(error)
+
+			expect(store.trustedSenders).toEqual([alice])
+		})
+
+		it('replaces the trusted senders with the server\'s list', async () => {
+			store.setTrustedSendersMutation([alice])
+			TrustedSenderService.fetchTrustedSenders.mockResolvedValueOnce([exampleDomain])
+
+			await store.fetchTrustedSenders()
+
+			expect(store.trustedSenders).toEqual([exampleDomain])
+		})
+
+		const pendingRequest = () => {
+			let finish
+			const promise = new Promise((resolve) => {
+				finish = resolve
+			})
+			return { promise, finish }
+		}
+
+		it('keeps a sender trusted when saving starts while the list loads', async () => {
+			const request = pendingRequest()
+			TrustedSenderService.trustSender.mockReturnValueOnce(request.promise)
+			let saving
+			TrustedSenderService.fetchTrustedSenders.mockImplementationOnce(async () => {
+				saving = store.trustSender({ email: 'alice@example.test', type: 'individual' })
+				return []
+			})
+
+			await store.fetchTrustedSenders()
+			request.finish()
+			await saving
+
+			expect(store.isSenderTrusted('alice@example.test')).toBe(true)
+		})
+
+		it('keeps a sender trusted when saving finishes while the list loads', async () => {
+			const request = pendingRequest()
+			TrustedSenderService.trustSender.mockReturnValueOnce(request.promise)
+			const saving = store.trustSender({ email: 'alice@example.test', type: 'individual' })
+			TrustedSenderService.fetchTrustedSenders.mockImplementationOnce(async () => {
+				request.finish()
+				await saving
+				return []
+			})
+
+			await store.fetchTrustedSenders()
+
+			expect(store.isSenderTrusted('alice@example.test')).toBe(true)
+		})
+
+		it('keeps a sender removed when removing starts while the list loads', async () => {
+			store.setTrustedSendersMutation([alice])
+			const request = pendingRequest()
+			TrustedSenderService.trustSender.mockReturnValueOnce(request.promise)
+			let removing
+			TrustedSenderService.fetchTrustedSenders.mockImplementationOnce(async () => {
+				removing = store.removeTrustedSender(alice)
+				return [alice]
+			})
+
+			await store.fetchTrustedSenders()
+			request.finish()
+			await removing
+
+			expect(store.isSenderTrusted('alice@example.test')).toBe(false)
+		})
+
+		it('keeps a sender removed when removing finishes while the list loads', async () => {
+			store.setTrustedSendersMutation([alice])
+			const request = pendingRequest()
+			TrustedSenderService.trustSender.mockReturnValueOnce(request.promise)
+			const removing = store.removeTrustedSender(alice)
+			TrustedSenderService.fetchTrustedSenders.mockImplementationOnce(async () => {
+				request.finish()
+				await removing
+				return [alice]
+			})
+
+			await store.fetchTrustedSenders()
+
+			expect(store.isSenderTrusted('alice@example.test')).toBe(false)
+		})
+
+		it('lists a sender once when a failed removal restores it after a reload', async () => {
+			store.setTrustedSendersMutation([alice])
+			TrustedSenderService.trustSender.mockImplementationOnce(async () => {
+				store.setTrustedSendersMutation([alice])
+				throw new Error('Request failed with status code 500')
+			})
+
+			await expect(store.removeTrustedSender(alice)).rejects.toThrow()
+
+			expect(store.trustedSenders).toEqual([alice])
 		})
 	})
 })

@@ -15,9 +15,7 @@ use OC\Security\CSP\ContentSecurityPolicyNonceManager;
 use OCA\Mail\Attachment;
 use OCA\Mail\Contracts\IDkimService;
 use OCA\Mail\Contracts\IMailSearch;
-use OCA\Mail\Contracts\ITrustedSenderService;
 use OCA\Mail\Contracts\IUserPreferences;
-use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\AttachmentDownloadResponse;
@@ -79,7 +77,6 @@ class MessagesController extends Controller {
 		IMimeTypeDetector $mimeTypeDetector,
 		IURLGenerator $urlGenerator,
 		ContentSecurityPolicyNonceManager $nonceManager,
-		private ITrustedSenderService $trustedSenderService,
 		private ProtocolFactory $protocolFactory,
 		private SmimeService $smimeService,
 		private IDkimService $dkimService,
@@ -233,7 +230,6 @@ class MessagesController extends Controller {
 		$json['accountId'] = $account->getId();
 		$json['mailboxId'] = $mailbox->getId();
 		$json['databaseId'] = $message->getId();
-		$json['isSenderTrusted'] = $this->isSenderTrusted($message);
 
 		$smimeData = new SmimeData();
 		$smimeData->setIsEncrypted($message->isEncrypted() || $imapMessage->isEncrypted());
@@ -304,25 +300,6 @@ class MessagesController extends Controller {
 		$response = new JSONResponse(['valid' => $this->dkimService->validate($account, $mailbox, $message)]);
 		$response->cacheFor(24 * 60 * 60, false, true);
 		return $response;
-	}
-
-	private function isSenderTrusted(Message $message): bool {
-		if ($this->userId === null) {
-			return false;
-		}
-		$from = $message->getFrom();
-		$first = $from->first();
-		if ($first === null) {
-			return false;
-		}
-		$email = $first->getEmail();
-		if ($email === null) {
-			return false;
-		}
-		return $this->trustedSenderService->isTrusted(
-			$this->userId,
-			$email
-		);
 	}
 
 	/**

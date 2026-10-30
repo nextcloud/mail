@@ -3,23 +3,40 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import { showError } from '@nextcloud/dialogs'
 import { shallowMount } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
 import BlockedContentWarning from '../../../components/BlockedContentWarning.vue'
 import MessageHTMLBody from '../../../components/MessageHTMLBody.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 import { trustSender } from '../../../service/TrustedSenderService.js'
+import useMainStore from '../../../store/mainStore.js'
 
 vi.mock('@iframe-resizer/parent', () => ({ default: vi.fn() }))
+vi.mock('@nextcloud/dialogs', async (importOriginal) => ({
+	...(await importOriginal()),
+	showError: vi.fn(),
+}))
 vi.mock('@nextcloud/initial-state', () => ({ loadState: vi.fn().mockReturnValue(false) }))
 vi.mock('../../../util/languageDetection.ts', () => ({ detectForeignLanguage: vi.fn().mockResolvedValue(null) }))
 vi.mock('../../../service/TrustedSenderService.js', () => ({ trustSender: vi.fn() }))
 
 describe('MessageHTMLBody', () => {
+	let pinia
+	let store
+
+	beforeEach(() => {
+		pinia = createPinia()
+		setActivePinia(pinia)
+		store = useMainStore()
+	})
+
 	// Attached, because only an iframe that is part of a document has a
 	// `contentDocument` to listen on.
-	const mountBody = () => shallowMount(MessageHTMLBody, {
+	const mountBody = (message = {}) => shallowMount(MessageHTMLBody, {
 		attachTo: document.body,
 		global: {
+			plugins: [pinia],
 			mixins: [Nextcloud],
 		},
 		props: {
@@ -27,7 +44,7 @@ describe('MessageHTMLBody', () => {
 			message: {
 				databaseId: 1,
 				from: [{ email: 'alice@example.com' }],
-				isSenderTrusted: false,
+				...message,
 			},
 		},
 	})
@@ -49,8 +66,15 @@ describe('MessageHTMLBody', () => {
 
 	describe('blocked content', () => {
 		beforeEach(() => {
-			trustSender.mockClear()
+			trustSender.mockReset()
+			showError.mockClear()
 		})
+
+		const imageRevealed = (view) => {
+			const image = view.vm.getIframeDoc().querySelector('img')
+			return image.getAttribute('src') === image.getAttribute('data-original-src')
+		}
+		const bob = { from: [{ email: 'bob@example.test' }] }
 
 		it('warns about images the message would have loaded', async () => {
 			const view = mountBody()
@@ -107,6 +131,62 @@ describe('MessageHTMLBody', () => {
 
 			expect(trustSender).toHaveBeenCalledWith('example.com', 'domain', true)
 			expect(view.findComponent(BlockedContentWarning).exists()).toBe(false)
+		})
+
+		it('shows the images of a trusted sender right away', async () => {
+			store.setTrustedSendersMutation([{ email: 'bob@example.test', type: 'individual' }])
+			const view = mountBody(bob)
+
+			loadFrameWithBlockedImage(view)
+			await view.vm.$nextTick()
+
+			expect(imageRevealed(view)).toBe(true)
+			expect(view.findComponent(BlockedContentWarning).exists()).toBe(false)
+		})
+
+		it('shows the images of a sender whose domain is trusted right away', async () => {
+			store.setTrustedSendersMutation([{ email: 'example.test', type: 'domain' }])
+			const view = mountBody(bob)
+
+			loadFrameWithBlockedImage(view)
+			await view.vm.$nextTick()
+
+			expect(imageRevealed(view)).toBe(true)
+		})
+
+		it('ignores the trust flag of a body cached before the sender was removed', async () => {
+			const view = mountBody({ ...bob, isSenderTrusted: true })
+
+			loadFrameWithBlockedImage(view)
+			await view.vm.$nextTick()
+
+			expect(imageRevealed(view)).toBe(false)
+			expect(view.findComponent(BlockedContentWarning).exists()).toBe(true)
+		})
+
+		it('shows the images once the sender is trusted in another message', async () => {
+			const view = mountBody(bob)
+			loadFrameWithBlockedImage(view)
+			await view.vm.$nextTick()
+
+			store.addTrustedSenderMutation({ email: 'example.test', type: 'domain' })
+			await view.vm.$nextTick()
+
+			expect(imageRevealed(view)).toBe(true)
+			expect(view.findComponent(BlockedContentWarning).exists()).toBe(false)
+		})
+
+		it('tells the reader when the sender could not be trusted', async () => {
+			trustSender.mockRejectedValueOnce(new Error('Request failed with status code 422'))
+			const view = mountBody(bob)
+			loadFrameWithBlockedImage(view)
+			await view.vm.$nextTick()
+
+			await view.vm.onShowBlockedContent()
+
+			expect(showError).toHaveBeenCalledOnce()
+			expect(t).toHaveBeenCalledWith('mail', 'Could not add trusted sender {sender}', { sender: 'bob@example.test' })
+			expect(store.isSenderTrusted('bob@example.test')).toBe(false)
 		})
 	})
 

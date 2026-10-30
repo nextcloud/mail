@@ -114,6 +114,7 @@ import {
 	updateTextBlock,
 } from '../../service/TextBlockService.js'
 import * as ThreadService from '../../service/ThreadService.js'
+import * as TrustedSenderService from '../../service/TrustedSenderService.js'
 import { sortAliases } from '../../util/emailAddress.js'
 import { normalizedEnvelopeListId } from '../../util/normalization.js'
 import {
@@ -207,6 +208,8 @@ function transformMailboxName(account, mailbox) {
 		mailbox.path = ''
 	}
 }
+
+const isSameTrustedSender = (a, b) => a.email === b.email && a.type === b.type
 
 export default function mainStoreActions() {
 	return {
@@ -1307,6 +1310,48 @@ export default function mainStoreActions() {
 				}
 			})
 		},
+		async fetchTrustedSenders() {
+			return handleHttpAuthErrors(async () => {
+				const revision = this.trustedSendersRevision
+				const trustedSenders = await TrustedSenderService.fetchTrustedSenders()
+				// The response doesn't know about a trust change made while it was loading
+				if (revision === this.trustedSendersRevision) {
+					this.setTrustedSendersMutation(trustedSenders)
+				}
+			})
+		},
+		async trustSender({ email, type }) {
+			return handleHttpAuthErrors(async () => {
+				if (this.trustedSenders.some((sender) => isSameTrustedSender(sender, { email, type }))) {
+					return
+				}
+
+				this.trustedSendersRevision++
+				this.addTrustedSenderMutation({ email, type })
+				try {
+					await TrustedSenderService.trustSender(email, type, true)
+				} catch (error) {
+					this.removeTrustedSenderMutation({ email, type })
+					throw error
+				} finally {
+					this.trustedSendersRevision++
+				}
+			})
+		},
+		async removeTrustedSender(trustedSender) {
+			return handleHttpAuthErrors(async () => {
+				this.trustedSendersRevision++
+				this.removeTrustedSenderMutation(trustedSender)
+				try {
+					await TrustedSenderService.trustSender(trustedSender.email, trustedSender.type, false)
+				} catch (error) {
+					this.addTrustedSenderMutation(trustedSender)
+					throw error
+				} finally {
+					this.trustedSendersRevision++
+				}
+			})
+		},
 		async deleteMessage({ id }) {
 			return handleHttpAuthErrors(async () => {
 				this.removeEnvelopeMutation({ id })
@@ -2135,6 +2180,17 @@ export default function mainStoreActions() {
 		removeInternalAddressMutation({ addressId }) {
 			this.internalAddress = this.internalAddress.filter((address) => address.id !== addressId)
 		},
+		setTrustedSendersMutation(trustedSenders) {
+			this.trustedSenders = trustedSenders
+		},
+		addTrustedSenderMutation(trustedSender) {
+			if (!this.trustedSenders.some((sender) => isSameTrustedSender(sender, trustedSender))) {
+				this.trustedSenders.push(trustedSender)
+			}
+		},
+		removeTrustedSenderMutation(trustedSender) {
+			this.trustedSenders = this.trustedSenders.filter((sender) => !isSameTrustedSender(sender, trustedSender))
+		},
 		deleteTagMutation({ tagId }) {
 			this.tagList = this.tagList.filter((id) => id !== tagId)
 			delete this.tags[tagId]
@@ -2487,6 +2543,16 @@ export default function mainStoreActions() {
 		isInternalAddress(address) {
 			const domain = address.split('@')[1]
 			return this.internalAddress.some((internalAddress) => internalAddress.address === address || internalAddress.address === domain)
+		},
+		isSenderTrusted(email) {
+			if (!email) {
+				return false
+			}
+
+			const { individuals, domains } = this.trustedSenderLookup
+			const separator = email.lastIndexOf('@')
+			return individuals.has(email)
+				|| (separator !== -1 && domains.has(email.slice(separator + 1)))
 		},
 		getActiveSieveScript(accountId) {
 			return this.sieveScript[accountId]

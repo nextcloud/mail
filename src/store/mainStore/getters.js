@@ -59,6 +59,10 @@ export default function mainStore() {
 
 		isOneLineLayout: (state) => state.list,
 		getInternalAddresses: (state) => state.internalAddress?.filter((internalAddress) => internalAddress !== undefined),
+		trustedSenderLookup: (state) => ({
+			individuals: new Set(state.trustedSenders.filter((sender) => sender.type === 'individual').map((sender) => sender.email)),
+			domains: new Set(state.trustedSenders.filter((sender) => sender.type === 'domain').map((sender) => sender.email)),
+		}),
 		getMailboxesAndSubmailboxesByAccountId: (state) => (accountId) => Object.values(state.mailboxes).filter((mailbox) => mailbox.accountId === accountId),
 	}
 }

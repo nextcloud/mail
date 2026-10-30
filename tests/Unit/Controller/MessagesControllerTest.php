@@ -19,7 +19,6 @@ use OCA\Mail\Account;
 use OCA\Mail\Attachment;
 use OCA\Mail\Contracts\IDkimService;
 use OCA\Mail\Contracts\IMailSearch;
-use OCA\Mail\Contracts\ITrustedSenderService;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Controller\MessagesController;
 use OCA\Mail\Db\MailAccount;
@@ -110,9 +109,6 @@ class MessagesControllerTest extends TestCase {
 	/** @var MockObject|ContentSecurityPolicyNonceManager */
 	private $nonceManager;
 
-	/** @var MockObject|ITrustedSenderService */
-	private $trustedSenderService;
-
 	/** @var MockObject|ProtocolFactory */
 	private $protocolFactory;
 
@@ -149,7 +145,6 @@ class MessagesControllerTest extends TestCase {
 		$this->mimeTypeDetector = $this->createMock(IMimeTypeDetector::class);
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
 		$this->nonceManager = $this->createMock(ContentSecurityPolicyNonceManager::class);
-		$this->trustedSenderService = $this->createMock(ITrustedSenderService::class);
 		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
 		$this->smimeService = $this->createMock(SmimeService::class);
 		$this->dkimService = $this->createMock(IDkimService::class);
@@ -184,7 +179,6 @@ class MessagesControllerTest extends TestCase {
 			$this->mimeTypeDetector,
 			$this->urlGenerator,
 			$this->nonceManager,
-			$this->trustedSenderService,
 			$this->protocolFactory,
 			$this->smimeService,
 			$this->dkimService,
@@ -283,6 +277,40 @@ class MessagesControllerTest extends TestCase {
 		$this->assertSame($expectedRichResponse->render(), $actualRichResponse->render());
 		$this->assertEquals($policy, $actualRichResponse->getContentSecurityPolicy());
 		$this->assertCachedFor($actualRichResponse, 60 * 60);
+	}
+
+	public function testGetBodyIsCachedWithoutSenderTrust(): void {
+		$accountId = 17;
+		$mailboxId = 13;
+		$messageId = 4321;
+		$this->account->method('getId')->willReturn($accountId);
+		$mailbox = new Mailbox();
+		$mailbox->setAccountId($accountId);
+		$message = new DbMessage();
+		$message->setId($messageId);
+		$message->setMailboxId($mailboxId);
+		$this->mailManager->method('getMessage')
+			->with($this->userId, $messageId)
+			->willReturn($message);
+		$this->mailManager->method('getMailbox')
+			->with($this->userId, $mailboxId)
+			->willReturn($mailbox);
+		$this->accountService->method('find')
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
+		$imapMessage = $this->createStub(IMAPMessage::class);
+		$imapMessage->method('getFullMessage')
+			->willReturn(['attachments' => [], 'inlineAttachments' => []]);
+		$this->mailManager->method('getImapMessage')
+			->with($this->account, $mailbox, $message, true)
+			->willReturn($imapMessage);
+
+		$response = $this->controller->getBody($messageId);
+
+		$this->assertSame(Http::STATUS_OK, $response->getStatus());
+		$this->assertSame($messageId, $response->getData()['databaseId']);
+		$this->assertArrayNotHasKey('isSenderTrusted', $response->getData());
+		$this->assertCachedFor($response, 60 * 60);
 	}
 
 	private function mockAttachmentDownload(int $id, string $attachmentId, string $contents, ?string $name, string $type): void {
@@ -1402,7 +1430,6 @@ class MessagesControllerTest extends TestCase {
 			$this->mimeTypeDetector,
 			$this->urlGenerator,
 			$this->nonceManager,
-			$this->trustedSenderService,
 			$this->protocolFactory,
 			$this->smimeService,
 			$this->dkimService,

@@ -13,6 +13,7 @@ namespace OCA\Mail\Controller;
 use OCA\Contacts\Event\LoadContactsOcaApiEvent;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\ConfigLexicon;
+use OCA\Mail\Contracts\ITrustedSenderService;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Db\TagMapper;
@@ -88,6 +89,7 @@ class PageController extends Controller {
 		private AiIntegrationsService $aiIntegrationsService,
 		IUserManager $userManager,
 		private InternalAddressService $internalAddressService,
+		private ITrustedSenderService $trustedSenderService,
 		IAvailabilityCoordinator $availabilityCoordinator,
 		private QuickActionsService $quickActionsService,
 		private IAppManager $appManager,
@@ -198,6 +200,11 @@ class PageController extends Controller {
 		$this->initialStateService->provideInitialState(
 			'internal-addresses-list',
 			$this->internalAddressService->getInternalAddresses($this->userId)
+		);
+
+		$this->initialStateService->provideInitialState(
+			'trusted-senders',
+			$this->trustedSenderService->getTrusted($this->userId)
 		);
 
 		$this->initialStateService->provideInitialState(
