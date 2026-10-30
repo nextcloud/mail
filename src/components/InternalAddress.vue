@@ -66,10 +66,13 @@
 			:noClose="saving"
 			@close="openDialog = false">
 			<NcTextField
+				ref="addressField"
 				v-model="newAddress"
 				class="input"
 				:label="t('mail', 'Add internal email or domain')"
-				:readonly="saving" />
+				:readonly="saving"
+				:error="errorMessage !== ''"
+				:helperText="errorMessage" />
 		</NcDialog>
 	</div>
 </template>
@@ -116,6 +119,7 @@ export default {
 			openDialog: false,
 			newAddress: '',
 			saving: false,
+			errorMessage: '',
 		}
 	},
 
@@ -157,6 +161,19 @@ export default {
 		},
 	},
 
+	watch: {
+		newAddress() {
+			this.errorMessage = ''
+		},
+
+		openDialog(open) {
+			if (!open) {
+				this.newAddress = ''
+				this.errorMessage = ''
+			}
+		},
+	},
+
 	methods: {
 		async removeInternalAddress(sender) {
 			// Remove the item immediately
@@ -174,15 +191,22 @@ export default {
 
 		async addInternalAddress() {
 			const { address, type } = this.newEntry
+			this.errorMessage = ''
 			this.saving = true
 			try {
 				await this.mainStore.addInternalAddress({
 					address,
 					type,
 				})
-				this.newAddress = ''
 				this.openDialog = false
 			} catch (error) {
+				if (error.response?.status === 422) {
+					this.errorMessage = t('mail', 'Enter a valid email address or domain')
+					await this.$nextTick()
+					this.$refs.addressField?.focus()
+					return false
+				}
+
 				logger.error(`Could not add internal address ${address}`, {
 					error,
 				})

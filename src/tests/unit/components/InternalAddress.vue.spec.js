@@ -8,6 +8,7 @@ import { createTestingPinia } from '@pinia/testing'
 import { enableAutoUnmount, flushPromises, shallowMount } from '@vue/test-utils'
 import { setActivePinia } from 'pinia'
 import { nextTick } from 'vue'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import NcDialog from '@nextcloud/vue/components/NcDialog'
 import NcTextField from '@nextcloud/vue/components/NcTextField'
 import InternalAddress from '../../../components/InternalAddress.vue'
@@ -44,6 +45,7 @@ describe('InternalAddress', () => {
 				},
 			},
 		})
+		wrapper.findComponent(NcButton).vm.$emit('click')
 		await wrapper.findComponent(NcTextField).setValue(address)
 		return wrapper
 	}
@@ -163,5 +165,90 @@ describe('InternalAddress', () => {
 		expect(findCancelButton(wrapper).disabled).toBe(false)
 		expect(findOkButton(wrapper).disabled).toBe(false)
 		expect(wrapper.findComponent(NcDialog).props('noClose')).toBe(false)
+		expect(wrapper.findComponent(NcTextField).props('error')).toBe(false)
+	})
+
+	describe('when the server rejects the address', () => {
+		const validationError = () => Object.assign(new Error('Request failed with status code 422'), {
+			response: { status: 422 },
+		})
+
+		async function addRejectedAddress() {
+			store.addInternalAddress.mockRejectedValue(validationError())
+			const wrapper = await mountWithAddress('not valid')
+			const result = await findOkButton(wrapper).callback()
+			await nextTick()
+			return { wrapper, result }
+		}
+
+		it('shows the error at the text field instead of a toast', async () => {
+			const { wrapper, result } = await addRejectedAddress()
+
+			expect(result).toBe(false)
+			expect(showError).not.toHaveBeenCalled()
+			expect(t).toHaveBeenCalledWith('mail', 'Enter a valid email address or domain')
+			expect(wrapper.findComponent(NcTextField).props('error')).toBe(true)
+			expect(wrapper.findComponent(NcTextField).props('helperText')).not.toBe('')
+			expect(enteredAddress(wrapper)).toBe('not valid')
+			expect(document.activeElement).toBe(wrapper.find('input').element)
+		})
+
+		it('moves the focus to the field once the error is rendered', async () => {
+			store.addInternalAddress.mockRejectedValue(validationError())
+			const wrapper = await mountWithAddress('not valid')
+			const input = wrapper.find('input').element
+			let describedByOnFocus = null
+			input.addEventListener('focus', () => {
+				describedByOnFocus = input.getAttribute('aria-describedby')
+			})
+
+			await findOkButton(wrapper).callback()
+
+			expect(document.activeElement).toBe(input)
+			expect(describedByOnFocus).toContain('helper-text')
+		})
+
+		it('hides the previous error while the address is sent again', async () => {
+			const { wrapper } = await addRejectedAddress()
+			store.addInternalAddress.mockReturnValue(new Promise(() => {}))
+
+			findOkButton(wrapper).callback()
+			await nextTick()
+
+			expect(wrapper.findComponent(NcTextField).props('error')).toBe(false)
+		})
+
+		it('ignores a rejection that arrives after the dialog is gone', async () => {
+			let rejectAdding
+			store.addInternalAddress.mockReturnValue(new Promise((resolve, reject) => {
+				rejectAdding = reject
+			}))
+			const wrapper = await mountWithAddress('not valid')
+			const result = findOkButton(wrapper).callback()
+
+			wrapper.unmount()
+			rejectAdding(validationError())
+
+			expect(await result).toBe(false)
+		})
+
+		it('clears the error when the address is edited', async () => {
+			const { wrapper } = await addRejectedAddress()
+
+			await wrapper.findComponent(NcTextField).setValue('example.test')
+
+			expect(wrapper.findComponent(NcTextField).props('error')).toBe(false)
+			expect(wrapper.findComponent(NcTextField).props('helperText')).toBe('')
+		})
+
+		it('resets the address and the error when the dialog is closed', async () => {
+			const { wrapper } = await addRejectedAddress()
+
+			findCancelButton(wrapper).callback()
+			await nextTick()
+
+			expect(enteredAddress(wrapper)).toBe('')
+			expect(wrapper.findComponent(NcTextField).props('error')).toBe(false)
+		})
 	})
 })
