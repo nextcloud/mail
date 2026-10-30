@@ -11,7 +11,10 @@ namespace Unit\UserMigration;
 
 use ChristophWurst\Nextcloud\Testing\ServiceMockObject;
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use OCA\Mail\AppInfo\Application;
+use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Tests\Unit\UserMigration\RecordsConsoleOutput;
 use OCA\Mail\UserMigration\MailAccountMigrator;
 use OCP\IUser;
 use OCP\UserMigration\IExportDestination;
@@ -20,6 +23,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class MailAccountMigratorTest extends TestCase {
+	use RecordsConsoleOutput;
+
 	private const EXPORT_DELEGATIONS = [
 		'appConfigMigrationService' => 'exportAppConfiguration',
 		'internalAddressesMigrationService' => 'exportInternalAddresses',
@@ -40,6 +45,7 @@ class MailAccountMigratorTest extends TestCase {
 	/** @var ServiceMockObject<MailAccountMigrator> */
 	private ServiceMockObject $serviceMock;
 	private OutputInterface|MockObject $output;
+	private bool $newAccountsAllowed = true;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -48,6 +54,10 @@ class MailAccountMigratorTest extends TestCase {
 		$this->serviceMock->getParameter('l10n')
 			->method('t')
 			->willReturnArgument(0);
+		$this->serviceMock->getParameter('appConfig')
+			->method('getValueBool')
+			->with(Application::APP_ID, ConfigLexicon::ALLOW_NEW_MAIL_ACCOUNTS, true)
+			->willReturnCallback(fn (): bool => $this->newAccountsAllowed);
 		$this->migrator = $this->serviceMock->getService();
 
 		$this->output = $this->createMock(OutputInterface::class);
@@ -282,6 +292,82 @@ class MailAccountMigratorTest extends TestCase {
 		}
 
 		$this->migrator->import($user, $importSource, $this->output);
+	}
+
+	public function testImportSkipsAccountsWhileNewAccountsAreDisabled(): void {
+		$this->newAccountsAllowed = false;
+		$user = $this->createMock(IUser::class);
+		$user->method('getUID')->willReturn('jane');
+		$this->serviceMock->getParameter('tagsMigrationService')
+			->expects(self::once())
+			->method('importTags')
+			->willReturn(self::TAGS_MAPPING);
+		$this->serviceMock->getParameter('accountMigrationService')
+			->expects(self::never())
+			->method('importAccounts');
+		$this->serviceMock->getParameter('appConfigMigrationService')
+			->expects(self::once())
+			->method('importAppConfiguration')
+			->with(self::anything(), self::anything(), self::anything(), [], []);
+		$this->serviceMock->getParameter('quickActionsMigrationService')
+			->expects(self::once())
+			->method('importQuickActions')
+			->with(self::anything(), self::anything(), self::anything(), [], [], self::TAGS_MAPPING);
+		$this->serviceMock->getParameter('accountMigrationService')
+			->expects(self::once())
+			->method('scheduleBackgroundJobs')
+			->with([]);
+		$this->serviceMock->getParameter('logger')
+			->expects(self::once())
+			->method('info')
+			->with(self::stringContains('jane'));
+		$this->recordConsoleOutput();
+
+		$this->migrator->import($user, $this->createMock(IImportSource::class), $this->output);
+
+		$this->assertWritten('Adding mail accounts is disabled', 0);
+	}
+
+	public function testImportReportsNothingWhileNewAccountsAreAllowed(): void {
+		$user = $this->createMock(IUser::class);
+		$user->method('getUID')->willReturn('jane');
+		$this->serviceMock->getParameter('accountMigrationService')
+			->method('importAccounts')
+			->willReturn(['accounts' => [], 'mailboxes' => []]);
+		$this->serviceMock->getParameter('logger')
+			->expects(self::never())
+			->method('info');
+		$this->recordConsoleOutput();
+
+		$this->migrator->import($user, $this->createMock(IImportSource::class), $this->output);
+
+		self::assertSame([], array_filter($this->writtenLines, static fn (array $line): bool => str_starts_with($line['message'], 'Adding mail accounts is disabled')));
+	}
+
+	public function testImportSkipsVersionOneAccountsWhileNewAccountsAreDisabled(): void {
+		$this->newAccountsAllowed = false;
+		$user = $this->createMock(IUser::class);
+		$user->method('getUID')->willReturn('jane');
+		$importSource = $this->createMock(IImportSource::class);
+		$importSource->method('getMigratorVersion')
+			->with('mail_account')
+			->willReturn(MailAccountMigrator::LEGACY_VERSION);
+
+		$this->serviceMock->getParameter('legacyAccountMigrationService')
+			->expects(self::never())
+			->method('importAccounts');
+		$this->serviceMock->getParameter('accountMigrationService')
+			->expects(self::never())
+			->method('scheduleBackgroundJobs');
+		$this->serviceMock->getParameter('logger')
+			->expects(self::once())
+			->method('info')
+			->with(self::stringContains('jane'));
+		$this->recordConsoleOutput();
+
+		$this->migrator->import($user, $importSource, $this->output);
+
+		$this->assertWritten('Adding mail accounts is disabled', 0);
 	}
 
 	public function testCanImportVersionOne(): void {

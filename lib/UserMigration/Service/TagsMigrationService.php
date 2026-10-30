@@ -13,6 +13,8 @@ use JsonException;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\UserMigration\MailAccountMigrator;
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\DB\Exception;
 use OCP\IL10N;
 use OCP\IUser;
 use OCP\UserMigration\IExportDestination;
@@ -63,7 +65,8 @@ class TagsMigrationService {
 	/**
 	 * Import all tags the user used on export.
 	 *
-	 * @throws \OCP\DB\Exception
+	 * @throws DoesNotExistException
+	 * @throws Exception
 	 */
 	public function importTags(IUser $user, IImportSource $importSource, OutputInterface $output): array {
 		$output->writeln(
@@ -94,7 +97,7 @@ class TagsMigrationService {
 				$this->l10n->t(
 					'Tag configuration for %s is invalid and will be skipped. Continue …',
 					[$user->getUID()]
-				), OutputInterface::VERBOSITY_VERBOSE
+				)
 			);
 
 			return [];
@@ -104,6 +107,17 @@ class TagsMigrationService {
 		$existingTagIds = $this->getTagIdsByImapLabel($user->getUID());
 
 		foreach ($tags as $tag) {
+			if (!$this->isWellFormedTag($tag)) {
+				$output->writeln(
+					$this->l10n->t(
+						'A tag of %s is invalid and will be skipped. Continue …',
+						[$user->getUID()]
+					)
+				);
+
+				continue;
+			}
+
 			$existingTagId = $existingTagIds[$tag['imapLabel']] ?? null;
 			if ($existingTagId !== null) {
 				$output->writeln(
@@ -118,6 +132,17 @@ class TagsMigrationService {
 				continue;
 			}
 
+			if (!$this->isValidTag($tag)) {
+				$output->writeln(
+					$this->l10n->t(
+						'Tag %1$s of %2$s is invalid and will be skipped. Continue …',
+						[$tag['imapLabel'], $user->getUID()]
+					)
+				);
+
+				continue;
+			}
+
 			$newTag = new Tag();
 
 			$newTag->setUserId($user->getUID());
@@ -126,10 +151,30 @@ class TagsMigrationService {
 			$newTag->setColor($tag['color']);
 			$newTag->setIsDefaultTag($tag['isDefaultTag']);
 
-			$newTags[$tag['id']] = $this->tagMapper->insert($newTag)->getId();
+			try {
+				$newTagId = $this->tagMapper->insert($newTag)->getId();
+			} catch (Exception $exception) {
+				if ($exception->getReason() !== Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
+					throw $exception;
+				}
+
+				// A case-insensitive collation treats labels that only differ in case as the same tag
+				$newTagId = $this->tagMapper->getTagByImapLabel($tag['imapLabel'], $user->getUID())->getId();
+			}
+
+			$newTags[$tag['id']] = $newTagId;
+			$existingTagIds[$tag['imapLabel']] = $newTagId;
 		}
 
 		return $newTags;
+	}
+
+	/** IMAP labels are limited to what the tag form and mail servers produce: printable ASCII, no system flags. */
+	private function isValidTag(array $tag): bool {
+		return preg_match('/^[\x21-\x7e]{1,' . Tag::IMAP_LABEL_MAX_LENGTH . '}$/D', $tag['imapLabel']) === 1
+			&& !str_starts_with($tag['imapLabel'], '\\')
+			&& mb_strlen($tag['displayName']) <= Tag::DISPLAY_NAME_MAX_LENGTH
+			&& mb_strlen($tag['color']) <= Tag::COLOR_MAX_LENGTH;
 	}
 
 	/**
@@ -149,8 +194,7 @@ class TagsMigrationService {
 	}
 
 	/**
-	 * Validate the parsed tags to ensure they
-	 * have the expected structure and types.
+	 * Validate that the parsed tags are a list.
 	 *
 	 * @throws UserMigrationException
 	 */
@@ -159,39 +203,35 @@ class TagsMigrationService {
 		if (!$tagsArrayIsValid) {
 			throw new UserMigrationException('Invalid tags export structure');
 		}
+	}
 
-		foreach ($tags as $tag) {
-			$tagArrayIsValid = is_array($tag);
+	private function isWellFormedTag(mixed $tag): bool {
+		$tagArrayIsValid = is_array($tag);
 
-			$idIsValid = $tagArrayIsValid
-				&& array_key_exists('id', $tag)
-				&& is_int($tag['id']);
+		$idIsValid = $tagArrayIsValid
+			&& array_key_exists('id', $tag)
+			&& is_int($tag['id']);
 
-			$displayNameIsValid = $tagArrayIsValid
-				&& array_key_exists('displayName', $tag)
-				&& is_string($tag['displayName']);
+		$displayNameIsValid = $tagArrayIsValid
+			&& array_key_exists('displayName', $tag)
+			&& is_string($tag['displayName']);
 
-			$imapLabelIsValid = $tagArrayIsValid
-				&& array_key_exists('imapLabel', $tag)
-				&& is_string($tag['imapLabel']);
+		$imapLabelIsValid = $tagArrayIsValid
+			&& array_key_exists('imapLabel', $tag)
+			&& is_string($tag['imapLabel']);
 
-			$colorIsValid = $tagArrayIsValid
-				&& array_key_exists('color', $tag)
-				&& is_string($tag['color']);
+		$colorIsValid = $tagArrayIsValid
+			&& array_key_exists('color', $tag)
+			&& is_string($tag['color']);
 
-			$isDefaultTagIsValid = $tagArrayIsValid
-				&& array_key_exists('isDefaultTag', $tag)
-				&& is_bool($tag['isDefaultTag']);
+		$isDefaultTagIsValid = $tagArrayIsValid
+			&& array_key_exists('isDefaultTag', $tag)
+			&& is_bool($tag['isDefaultTag']);
 
-			if (
-				!$idIsValid
-				|| !$displayNameIsValid
-				|| !$imapLabelIsValid
-				|| !$colorIsValid
-				|| !$isDefaultTagIsValid
-			) {
-				throw new UserMigrationException('Invalid tag entry');
-			}
-		}
+		return $idIsValid
+			&& $displayNameIsValid
+			&& $imapLabelIsValid
+			&& $colorIsValid
+			&& $isDefaultTagIsValid;
 	}
 }

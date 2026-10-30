@@ -16,6 +16,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Tests\Unit\UserMigration\RecordsConsoleOutput;
 use OCA\Mail\UserMigration\Service\AccountMigrationService;
 use OCP\IUser;
 use OCP\UserMigration\IExportDestination;
@@ -24,6 +25,8 @@ use OCP\UserMigration\UserMigrationException;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class AccountMigrationServiceTest extends TestCase {
+	use RecordsConsoleOutput;
+
 	private const USER_ID = 'test_user';
 	private const EXPORTED_ACCOUNT_ID = 19;
 	private const IMPORTED_ACCOUNT_ID = 42;
@@ -31,6 +34,7 @@ class AccountMigrationServiceTest extends TestCase {
 	private const IMPORTED_INBOX_ID = 500;
 	private const EXPORTED_SENT_ID = 201;
 	private const IMPORTED_SENT_ID = 501;
+	private const DISALLOWED_HOST = '127.0.0.1';
 
 	private OutputInterface $output;
 	private IUser $user;
@@ -66,6 +70,10 @@ class AccountMigrationServiceTest extends TestCase {
 				}
 				return substr($encryptedValue, 0, strlen($encryptedValue) - strlen('_encrypted'));
 			});
+
+		$this->serviceMock->getParameter('hostValidator')
+			->method('isValid')
+			->willReturnCallback(static fn (string $host): bool => $host !== self::DISALLOWED_HOST);
 
 		$this->migrationService = $this->serviceMock->getService();
 	}
@@ -620,6 +628,12 @@ class AccountMigrationServiceTest extends TestCase {
 			'aliases are not a list' => [['aliases' => ['unexpected' => 'object']]],
 			'mailbox is not an object' => [['mailboxes' => ['not-a-mailbox']]],
 			'alias is not an object' => [['aliases' => ['not-an-alias']]],
+			'unknown auth method' => [['authMethod' => 'plain']],
+			'imap host is not a string' => [['imapHost' => 42]],
+			'smtp host is not a string' => [['smtpHost' => ['smtp.doe.com']]],
+			'sieve host is not a string' => [['sieveHost' => true]],
+			'empty smtp host' => [['smtpHost' => '']],
+			'sieve host made of dots' => [['sieveHost' => '..']],
 		];
 	}
 
@@ -637,6 +651,56 @@ class AccountMigrationServiceTest extends TestCase {
 		$mappings = $this->migrationService->importAccounts($this->user, $this->importSource, $this->output, []);
 
 		self::assertSame(['accounts' => [], 'mailboxes' => []], $mappings);
+	}
+
+	public static function provideHostKeys(): array {
+		return [
+			'imap host' => ['imapHost'],
+			'smtp host' => ['smtpHost'],
+			'sieve host' => ['sieveHost'],
+		];
+	}
+
+	/**
+	 * @dataProvider provideHostKeys
+	 */
+	public function testImportSkipsAccountsWithADisallowedHost(string $hostKey): void {
+		$accountData = $this->getExportedAccountData();
+		$accountData['sieveEnabled'] = false;
+		$accountData[$hostKey] = self::DISALLOWED_HOST;
+		$this->expectAccountFileToBeImported($accountData);
+		$this->serviceMock->getParameter('accountService')
+			->expects(self::never())
+			->method('save');
+		$this->serviceMock->getParameter('logger')
+			->expects(self::once())
+			->method('warning')
+			->with(self::stringContains(self::USER_ID), self::callback(
+				static fn (array $context): bool => str_contains($context['exception']->getMessage(), self::DISALLOWED_HOST),
+			));
+
+		$mappings = $this->migrationService->importAccounts($this->user, $this->importSource, $this->output, []);
+
+		self::assertSame(['accounts' => [], 'mailboxes' => []], $mappings);
+	}
+
+	public function testImportSkipsValidationOfNullHosts(): void {
+		$accountData = $this->getExportedAccountData();
+		$accountData['smtpHost'] = null;
+		$accountData['sieveEnabled'] = false;
+		$accountData['sieveHost'] = null;
+		$this->expectAccountFileToBeImported($accountData);
+		$this->expectAccountToBeSaved();
+		$this->expectMailboxesAndAliasesToBeImported();
+		$this->serviceMock->getParameter('hostValidator')
+			->expects(self::once())
+			->method('isValid')
+			->with('imap.doe.com');
+
+		$mappings = $this->migrationService->importAccounts($this->user, $this->importSource, $this->output, []);
+
+		self::assertSame([self::EXPORTED_ACCOUNT_ID => self::IMPORTED_ACCOUNT_ID], $mappings['accounts']);
+		self::assertSame('imap.doe.com', $this->savedAccount->getInboundHost());
 	}
 
 	public function testImportSkipsMailboxesWithMissingColumns(): void {
@@ -690,8 +754,8 @@ class AccountMigrationServiceTest extends TestCase {
 	}
 
 	/**
-	 * `validateAccount()` only checks that keys exist, so a wrongly typed value
-	 * first shows up as a TypeError while the account is being built.
+	 * `validateAccount()` does not type-check every value, so a wrongly typed
+	 * value first shows up as a TypeError while the account is being built.
 	 *
 	 * @dataProvider provideWronglyTypedAccountValues
 	 */
@@ -774,6 +838,21 @@ class AccountMigrationServiceTest extends TestCase {
 		$mappings = $this->migrationService->importAccounts($this->user, $this->importSource, $this->output, []);
 
 		self::assertSame(['accounts' => [], 'mailboxes' => []], $mappings);
+	}
+
+	public function testImportSkipsASecondAccountWithTheSameId(): void {
+		$this->recordConsoleOutput();
+		$this->expectAccountFileToBeImported($this->getExportedAccountData(), $this->getExportedAccountData());
+		$this->expectAccountToBeSaved();
+		$this->serviceMock->getParameter('accountService')
+			->expects(self::once())
+			->method('save');
+		$this->expectMailboxesAndAliasesToBeImported();
+
+		$mappings = $this->migrationService->importAccounts($this->user, $this->importSource, $this->output, []);
+
+		self::assertSame([self::EXPORTED_ACCOUNT_ID => self::IMPORTED_ACCOUNT_ID], $mappings['accounts']);
+		$this->assertWritten('has the same ID as another account', 0);
 	}
 
 	public function testImportCommitsOneTransactionPerAccount(): void {
@@ -1025,5 +1104,53 @@ class AccountMigrationServiceTest extends TestCase {
 					'smimeCertificateId' => 11],
 			],
 		];
+	}
+
+	public function testImportReportsAnUnsupportedProtocolAsANotice(): void {
+		$this->recordConsoleOutput();
+		$accountData = $this->getExportedAccountData();
+		$accountData['protocol'] = MailAccount::PROTOCOL_JMAP;
+		$this->expectAccountFileToBeImported($accountData);
+
+		$this->migrationService->importAccounts($this->user, $this->importSource, $this->output, []);
+
+		$this->assertWritten(MailAccount::PROTOCOL_JMAP, 0);
+	}
+
+	public function testImportReportsAnUnreadableAccountFileAsANotice(): void {
+		$this->recordConsoleOutput();
+		$this->importSource->method('getFolderListing')
+			->with(AccountMigrationService::ACCOUNT_FOLDER)
+			->willReturn(['broken.json']);
+		$this->importSource->method('getFileContents')
+			->willThrowException(new UserMigrationException('not readable'));
+
+		$this->migrationService->importAccounts($this->user, $this->importSource, $this->output, []);
+
+		$this->assertWritten('broken.json', 0);
+	}
+
+	public function testImportReportsAnInvalidAccountAsANotice(): void {
+		$this->recordConsoleOutput();
+		$accountData = $this->getExportedAccountData();
+		unset($accountData['aliases']);
+		$this->expectAccountFileToBeImported($accountData);
+
+		$this->migrationService->importAccounts($this->user, $this->importSource, $this->output, []);
+
+		$this->assertWritten('Mail account ' . self::EXPORTED_ACCOUNT_ID . '.json is invalid', 0);
+	}
+
+	public function testExportReportsASkippedAccountAsANotice(): void {
+		$this->recordConsoleOutput();
+		$mailAccount = $this->getExportableMailAccount();
+		$mailAccount->setProvisioningId(7);
+		$this->serviceMock->getParameter('accountService')
+			->method('findByUserId')
+			->willReturn([new Account($mailAccount)]);
+
+		$this->migrationService->exportAccounts($this->user, $this->exportDestination, $this->output);
+
+		$this->assertWritten('Skipping provisioned account', 0);
 	}
 }
