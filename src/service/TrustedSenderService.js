@@ -4,6 +4,7 @@
  */
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
+import { fetchIfChanged } from './RevalidationService.js'
 
 export async function trustSender(email, type, trustFlag) {
 	const url = generateUrl('/apps/mail/api/trustedsenders/{email}?type={type}', {
@@ -17,8 +18,6 @@ export async function trustSender(email, type, trustFlag) {
 		await axios.delete(url)
 	}
 }
-export async function fetchTrustedSenders() {
-	const url = generateUrl('/apps/mail/api/trustedsenders')
-	const response = await axios.get(url)
-	return response.data.data
+export async function fetchTrustedSenders(etag) {
+	return fetchIfChanged(generateUrl('/apps/mail/api/trustedsenders'), etag)
 }

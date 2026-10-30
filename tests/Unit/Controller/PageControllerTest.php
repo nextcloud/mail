@@ -21,6 +21,7 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\OidcProvider;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Db\TrustedSender;
+use OCA\Mail\Http\ListETag;
 use OCA\Mail\Integration\OidcIntegration;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
@@ -381,7 +382,7 @@ class PageControllerTest extends TestCase {
 			->method('getTrusted')
 			->with($this->userId)
 			->willReturn($trustedSenders);
-		$this->initialState->expects($this->exactly(29))
+		$this->initialState->expects($this->exactly(31))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
@@ -391,7 +392,9 @@ class PageControllerTest extends TestCase {
 				['account-settings', []],
 				['tags', []],
 				['internal-addresses-list', []],
+				['internal-addresses-etag', ListETag::header([])],
 				['trusted-senders-list', $trustedSenders],
+				['trusted-senders-etag', ListETag::header($trustedSenders)],
 				['internal-addresses', false],
 				['smime-sign-aliases',[]],
 				['sort-order', 'newest'],

@@ -46,6 +46,7 @@ import useMainStore from '../store/mainStore.js'
 import { keepAttributeAspectRatio } from '../util/imageAspectRatio.ts'
 import { detectForeignLanguage } from '../util/languageDetection.ts'
 import { isPrintShortcut } from '../util/printMessage.ts'
+import { emailDomain } from '../util/trustedSender.js'
 
 export default {
 	name: 'MessageHTMLBody',
@@ -96,7 +97,7 @@ export default {
 		},
 
 		domain() {
-			return this.sender?.split('@').pop()
+			return this.sender ? emailDomain(this.sender) : null
 		},
 
 		isSenderTrusted() {

@@ -4,6 +4,7 @@
  */
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
+import { fetchIfChanged } from './RevalidationService.js'
 
 export async function addInternalAddress(address, type) {
 	const url = generateUrl('/apps/mail/api/internalAddress/{address}?type={type}', {
@@ -22,8 +23,6 @@ export async function removeInternalAddress(address, type) {
 	await axios.delete(url)
 }
 
-export async function fetchInternalAdresses() {
-	const url = generateUrl('/apps/mail/api/internalAddress')
-	const response = await axios.get(url)
-	return response.data.data
+export async function fetchInternalAddresses(etag) {
+	return fetchIfChanged(generateUrl('/apps/mail/api/internalAddress'), etag)
 }

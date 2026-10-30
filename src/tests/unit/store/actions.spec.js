@@ -11,7 +11,7 @@ import * as MailboxService from '../../../service/MailboxService.js'
 import * as MessageService from '../../../service/MessageService.js'
 import * as NotificationService from '../../../service/NotificationService.js'
 import * as TrustedSenderService from '../../../service/TrustedSenderService.js'
-import { PAGE_SIZE, UNIFIED_INBOX_ID } from '../../../store/constants.js'
+import { PAGE_SIZE, TRUSTED_SENDERS_MAX_AGE, UNIFIED_INBOX_ID } from '../../../store/constants.js'
 import useMainStore from '../../../store/mainStore.js'
 import { normalizedEnvelopeListId } from '../../../util/normalization.js'
 
@@ -34,6 +34,8 @@ const mockEnvelope = curry((mailboxId, uid) => ({
 	dateInt: uid * 10000,
 	threadRootId: Math.random().toString(),
 }))
+
+const fetched = (data, etag = '"list"') => ({ data, etag })
 
 describe('Vuex store actions', () => {
 	let store
@@ -1042,85 +1044,526 @@ describe('Vuex store actions', () => {
 			expect(store.trustedSenders).toEqual([alice])
 		})
 
+		it('trusts nobody while the list is stale', () => {
+			store.setTrustedSendersMutation([alice])
+			store.setTrustedSendersStaleMutation(true)
+
+			expect(store.isSenderTrusted('alice@example.test')).toBe(false)
+		})
+
+		it('trusts again once a stale list is reloaded', async () => {
+			store.setTrustedSendersStaleMutation(true)
+			TrustedSenderService.fetchTrustedSenders.mockResolvedValueOnce(fetched([alice]))
+
+			await store.fetchTrustedSenders()
+
+			expect(store.isSenderTrusted('alice@example.test')).toBe(true)
+		})
+
+		it('keeps trusting nobody when reloading a stale list fails', async () => {
+			store.setTrustedSendersMutation([alice])
+			store.setTrustedSendersStaleMutation(true)
+			TrustedSenderService.fetchTrustedSenders.mockRejectedValueOnce(new Error('Request failed with status code 500'))
+
+			await expect(store.fetchTrustedSenders()).rejects.toThrow()
+
+			expect(store.isSenderTrusted('alice@example.test')).toBe(false)
+		})
+
+		it('trusts again once a reload after a failed one succeeds', async () => {
+			store.setTrustedSendersMutation([alice], '"known"')
+			store.setTrustedSendersStaleMutation(true)
+			TrustedSenderService.fetchTrustedSenders
+				.mockRejectedValueOnce(new Error('Request failed with status code 500'))
+				.mockResolvedValueOnce(null)
+
+			await expect(store.fetchTrustedSenders()).rejects.toThrow()
+			await store.fetchTrustedSenders()
+
+			expect(store.isSenderTrusted('alice@example.test')).toBe(true)
+		})
+
+		describe('confirmation of the list', () => {
+			beforeEach(() => {
+				vi.useFakeTimers({ toFake: ['Date'] })
+				store.setTrustedSendersMutation([alice], '"known"')
+				store.confirmTrustedSendersMutation()
+			})
+
+			afterEach(() => {
+				vi.useRealTimers()
+			})
+
+			it('trusts nobody while reloading a list that wasn\'t confirmed for two sync intervals', async () => {
+				const request = Promise.withResolvers()
+				TrustedSenderService.fetchTrustedSenders.mockReturnValueOnce(request.promise)
+				vi.setSystemTime(Date.now() + TRUSTED_SENDERS_MAX_AGE)
+
+				const loading = store.fetchTrustedSenders()
+				const trustedWhileLoading = store.isSenderTrusted('alice@example.test')
+				request.resolve(null)
+				await loading
+
+				expect(trustedWhileLoading).toBe(false)
+				expect(store.isSenderTrusted('alice@example.test')).toBe(true)
+			})
+
+			it('keeps trusting while reloading a list confirmed within two sync intervals', async () => {
+				const request = Promise.withResolvers()
+				TrustedSenderService.fetchTrustedSenders.mockReturnValueOnce(request.promise)
+				vi.setSystemTime(Date.now() + TRUSTED_SENDERS_MAX_AGE - 1)
+
+				const loading = store.fetchTrustedSenders()
+				const trustedWhileLoading = store.isSenderTrusted('alice@example.test')
+				request.resolve(null)
+				await loading
+
+				expect(trustedWhileLoading).toBe(true)
+			})
+
+			it('counts an unchanged list as confirmed', async () => {
+				const request = Promise.withResolvers()
+				TrustedSenderService.fetchTrustedSenders
+					.mockResolvedValueOnce(null)
+					.mockReturnValueOnce(request.promise)
+				vi.setSystemTime(Date.now() + TRUSTED_SENDERS_MAX_AGE - 1)
+				await store.fetchTrustedSenders()
+				vi.setSystemTime(Date.now() + TRUSTED_SENDERS_MAX_AGE - 1)
+
+				const loading = store.fetchTrustedSenders()
+				const trustedWhileLoading = store.isSenderTrusted('alice@example.test')
+				request.resolve(null)
+				await loading
+
+				expect(trustedWhileLoading).toBe(true)
+			})
+
+			it('doesn\'t count a failed reload as a confirmation', async () => {
+				const request = Promise.withResolvers()
+				TrustedSenderService.fetchTrustedSenders
+					.mockRejectedValueOnce(new Error('Request failed with status code 500'))
+					.mockReturnValueOnce(request.promise)
+				vi.setSystemTime(Date.now() + TRUSTED_SENDERS_MAX_AGE - 1)
+				await expect(store.fetchTrustedSenders()).rejects.toThrow()
+				vi.setSystemTime(Date.now() + 1)
+
+				const loading = store.fetchTrustedSenders()
+				const trustedWhileLoading = store.isSenderTrusted('alice@example.test')
+				request.resolve(null)
+				await loading
+
+				expect(trustedWhileLoading).toBe(false)
+			})
+		})
+
 		it('replaces the trusted senders with the server\'s list', async () => {
 			store.setTrustedSendersMutation([alice])
-			TrustedSenderService.fetchTrustedSenders.mockResolvedValueOnce([exampleDomain])
+			TrustedSenderService.fetchTrustedSenders.mockResolvedValueOnce(fetched([exampleDomain]))
 
 			await store.fetchTrustedSenders()
 
 			expect(store.trustedSenders).toEqual([exampleDomain])
 		})
 
-		const pendingRequest = () => {
-			let finish
-			const promise = new Promise((resolve) => {
-				finish = resolve
+		describe.each([
+			{
+				change: 'trusting',
+				listBefore: [],
+				act: () => store.trustSender({ email: 'alice@example.test', type: 'individual' }),
+				trusted: true,
+			},
+			{
+				change: 'removing',
+				listBefore: [alice],
+				act: () => store.removeTrustedSender(alice),
+				trusted: false,
+			},
+		])('when $change alice', ({ listBefore, act, trusted }) => {
+			beforeEach(() => {
+				store.setTrustedSendersMutation(listBefore)
 			})
-			return { promise, finish }
-		}
 
-		it('keeps a sender trusted when saving starts while the list loads', async () => {
-			const request = pendingRequest()
-			TrustedSenderService.trustSender.mockReturnValueOnce(request.promise)
-			let saving
-			TrustedSenderService.fetchTrustedSenders.mockImplementationOnce(async () => {
-				saving = store.trustSender({ email: 'alice@example.test', type: 'individual' })
-				return []
+			it('keeps the change when it starts while the list loads', async () => {
+				const request = Promise.withResolvers()
+				TrustedSenderService.trustSender.mockReturnValueOnce(request.promise)
+				let changing
+				TrustedSenderService.fetchTrustedSenders.mockImplementationOnce(async () => {
+					changing = act()
+					return fetched(listBefore)
+				})
+
+				await store.fetchTrustedSenders()
+				request.resolve()
+				await changing
+
+				expect(store.isSenderTrusted('alice@example.test')).toBe(trusted)
 			})
 
+			it('keeps the change when it is saved while the list loads', async () => {
+				const request = Promise.withResolvers()
+				TrustedSenderService.trustSender.mockReturnValueOnce(request.promise)
+				const changing = act()
+				TrustedSenderService.fetchTrustedSenders.mockImplementationOnce(async () => {
+					request.resolve()
+					await changing
+					return fetched(listBefore)
+				})
+
+				await store.fetchTrustedSenders()
+
+				expect(store.isSenderTrusted('alice@example.test')).toBe(trusted)
+			})
+
+			it('keeps the change when the list loads while it is saved', async () => {
+				const request = Promise.withResolvers()
+				TrustedSenderService.trustSender.mockReturnValueOnce(request.promise)
+				TrustedSenderService.fetchTrustedSenders.mockResolvedValueOnce(fetched(listBefore))
+
+				const changing = act()
+				await store.fetchTrustedSenders()
+				const trustedWhileSaving = store.isSenderTrusted('alice@example.test')
+				request.resolve()
+				await changing
+
+				expect(trustedWhileSaving).toBe(trusted)
+				expect(store.isSenderTrusted('alice@example.test')).toBe(trusted)
+			})
+		})
+
+		it('applies the pending changes in the order they were made to a list that loads meanwhile', async () => {
+			store.setTrustedSendersMutation([alice])
+			const removal = Promise.withResolvers()
+			const trusting = Promise.withResolvers()
+			TrustedSenderService.trustSender
+				.mockReturnValueOnce(removal.promise)
+				.mockReturnValueOnce(trusting.promise)
+			TrustedSenderService.fetchTrustedSenders
+				.mockResolvedValueOnce(fetched([alice]))
+				.mockResolvedValueOnce(fetched([]))
+
+			const removing = store.removeTrustedSender(alice)
+			const saving = store.trustSender(alice)
 			await store.fetchTrustedSenders()
-			request.finish()
+			const trustedWhileBothSave = store.isSenderTrusted('alice@example.test')
+			removal.resolve()
+			await removing
+			await store.fetchTrustedSenders()
+			const trustedWhileTrustingSaves = store.isSenderTrusted('alice@example.test')
+			trusting.resolve()
 			await saving
 
-			expect(store.isSenderTrusted('alice@example.test')).toBe(true)
+			expect(trustedWhileBothSave).toBe(true)
+			expect(trustedWhileTrustingSaves).toBe(true)
 		})
 
-		it('keeps a sender trusted when saving finishes while the list loads', async () => {
-			const request = pendingRequest()
-			TrustedSenderService.trustSender.mockReturnValueOnce(request.promise)
-			const saving = store.trustSender({ email: 'alice@example.test', type: 'individual' })
-			TrustedSenderService.fetchTrustedSenders.mockImplementationOnce(async () => {
-				request.finish()
-				await saving
-				return []
-			})
-
-			await store.fetchTrustedSenders()
-
-			expect(store.isSenderTrusted('alice@example.test')).toBe(true)
-		})
-
-		it('keeps a sender removed when removing starts while the list loads', async () => {
+		it('keeps the last change of a sender when an earlier change of it fails', async () => {
 			store.setTrustedSendersMutation([alice])
-			const request = pendingRequest()
-			TrustedSenderService.trustSender.mockReturnValueOnce(request.promise)
-			let removing
-			TrustedSenderService.fetchTrustedSenders.mockImplementationOnce(async () => {
-				removing = store.removeTrustedSender(alice)
-				return [alice]
-			})
+			const firstRemoval = Promise.withResolvers()
+			const trusting = Promise.withResolvers()
+			const secondRemoval = Promise.withResolvers()
+			TrustedSenderService.trustSender
+				.mockReturnValueOnce(firstRemoval.promise)
+				.mockReturnValueOnce(trusting.promise)
+				.mockReturnValueOnce(secondRemoval.promise)
 
+			const removingFirst = store.removeTrustedSender(alice)
+			const saving = store.trustSender(alice)
+			const removingAgain = store.removeTrustedSender(alice)
+			firstRemoval.reject(new Error('Request failed with status code 500'))
+			await expect(removingFirst).rejects.toThrow()
+			const trustedAfterFailure = store.isSenderTrusted('alice@example.test')
+			trusting.resolve()
+			secondRemoval.resolve()
+			await Promise.all([saving, removingAgain])
+
+			expect(trustedAfterFailure).toBe(false)
+			expect(store.isSenderTrusted('alice@example.test')).toBe(false)
+		})
+
+		it('doesn\'t apply a rejected change to a list that loads later', async () => {
+			TrustedSenderService.trustSender.mockRejectedValueOnce(new Error('Request failed with status code 500'))
+			TrustedSenderService.fetchTrustedSenders.mockResolvedValueOnce(fetched([]))
+
+			await expect(store.trustSender(alice)).rejects.toThrow()
 			await store.fetchTrustedSenders()
-			request.finish()
-			await removing
+
+			expect(store.trustedSenders).toEqual([])
+		})
+
+		it('trusts again once a stale list loads while a change is still saving', async () => {
+			store.setTrustedSendersMutation([alice])
+			const request = Promise.withResolvers()
+			TrustedSenderService.trustSender.mockReturnValueOnce(request.promise)
+			TrustedSenderService.fetchTrustedSenders.mockResolvedValueOnce(fetched([alice]))
+
+			const saving = store.trustSender(exampleDomain)
+			await store.fetchTrustedSenders({ stale: true })
+			const trustedWhileSaving = store.isSenderTrusted('bob@example.test')
+			request.resolve()
+			await saving
+
+			expect(trustedWhileSaving).toBe(true)
+			expect(TrustedSenderService.fetchTrustedSenders).toHaveBeenCalledOnce()
+		})
+
+		it('trusts nobody until a list reloaded as stale arrives', async () => {
+			store.setTrustedSendersMutation([alice])
+			const request = Promise.withResolvers()
+			TrustedSenderService.fetchTrustedSenders.mockReturnValueOnce(request.promise)
+
+			const reloading = store.fetchTrustedSenders({ stale: true })
+			const trustedWhileReloading = store.isSenderTrusted('alice@example.test')
+			request.resolve(fetched([alice]))
+			await reloading
+
+			expect(trustedWhileReloading).toBe(false)
+			expect(store.isSenderTrusted('alice@example.test')).toBe(true)
+		})
+
+		it('keeps trusting nobody when a list requested before it went stale arrives', async () => {
+			const earlier = Promise.withResolvers()
+			const current = Promise.withResolvers()
+			TrustedSenderService.fetchTrustedSenders
+				.mockReturnValueOnce(earlier.promise)
+				.mockReturnValueOnce(current.promise)
+			const loadingEarlier = store.fetchTrustedSenders()
+			const reloading = store.fetchTrustedSenders({ stale: true })
+
+			earlier.resolve(fetched([alice]))
+			await loadingEarlier
+
+			expect(store.isSenderTrusted('alice@example.test')).toBe(false)
+			current.resolve(fetched([exampleDomain]))
+			await reloading
+			expect(store.trustedSenders).toEqual([exampleDomain])
+			expect(store.isSenderTrusted('bob@example.test')).toBe(true)
+		})
+
+		it('keeps trusting nobody when a list requested before it went stale fails', async () => {
+			store.setTrustedSendersMutation([alice])
+			const earlier = Promise.withResolvers()
+			TrustedSenderService.fetchTrustedSenders
+				.mockReturnValueOnce(earlier.promise)
+				.mockReturnValueOnce(new Promise(() => {}))
+			const loadingEarlier = store.fetchTrustedSenders()
+			store.fetchTrustedSenders({ stale: true })
+
+			earlier.reject(new Error('Network Error'))
+			await expect(loadingEarlier).rejects.toThrow()
 
 			expect(store.isSenderTrusted('alice@example.test')).toBe(false)
 		})
 
-		it('keeps a sender removed when removing finishes while the list loads', async () => {
-			store.setTrustedSendersMutation([alice])
-			const request = pendingRequest()
-			TrustedSenderService.trustSender.mockReturnValueOnce(request.promise)
-			const removing = store.removeTrustedSender(alice)
-			TrustedSenderService.fetchTrustedSenders.mockImplementationOnce(async () => {
-				request.finish()
-				await removing
-				return [alice]
-			})
+		it('reloads a stale list again when a trust change voided the response', async () => {
+			const bob = { email: 'bob@other.test', type: 'individual' }
+			store.setTrustedSendersMutation([alice, exampleDomain])
+			TrustedSenderService.fetchTrustedSenders
+				.mockImplementationOnce(async () => {
+					await store.trustSender(bob)
+					return fetched([alice, exampleDomain])
+				})
+				.mockResolvedValueOnce(fetched([alice, bob]))
+
+			await store.fetchTrustedSenders({ stale: true })
+
+			expect(TrustedSenderService.fetchTrustedSenders).toHaveBeenCalledTimes(2)
+			expect(store.isSenderTrusted('carol@example.test')).toBe(false)
+			expect(store.isSenderTrusted('bob@other.test')).toBe(true)
+		})
+
+		it('asks only for changes of the loaded list', async () => {
+			TrustedSenderService.fetchTrustedSenders
+				.mockResolvedValueOnce(fetched([alice], '"first"'))
+				.mockResolvedValueOnce(null)
 
 			await store.fetchTrustedSenders()
+			await store.fetchTrustedSenders()
+
+			expect(TrustedSenderService.fetchTrustedSenders).toHaveBeenNthCalledWith(1, null)
+			expect(TrustedSenderService.fetchTrustedSenders).toHaveBeenNthCalledWith(2, '"first"')
+			expect(store.trustedSenders).toEqual([alice])
+		})
+
+		it('trusts again when the server confirms a stale list', async () => {
+			store.setTrustedSendersMutation([alice], '"known"')
+			TrustedSenderService.fetchTrustedSenders.mockResolvedValueOnce(null)
+
+			await store.fetchTrustedSenders({ stale: true })
+
+			expect(TrustedSenderService.fetchTrustedSenders).toHaveBeenCalledExactlyOnceWith('"known"')
+			expect(store.isSenderTrusted('alice@example.test')).toBe(true)
+		})
+
+		it('reloads the whole list after trusting a sender', async () => {
+			store.setTrustedSendersMutation([alice], '"known"')
+			TrustedSenderService.fetchTrustedSenders.mockResolvedValueOnce(fetched([alice]))
+
+			await store.trustSender(exampleDomain)
+			await store.fetchTrustedSenders()
+
+			expect(TrustedSenderService.fetchTrustedSenders).toHaveBeenCalledExactlyOnceWith(null)
+			expect(store.trustedSenders).toEqual([alice])
+		})
+
+		it('reloads the whole list after removing a sender', async () => {
+			store.setTrustedSendersMutation([alice, exampleDomain], '"known"')
+			TrustedSenderService.fetchTrustedSenders.mockResolvedValueOnce(fetched([alice, exampleDomain]))
+
+			await store.removeTrustedSender(exampleDomain)
+			await store.fetchTrustedSenders()
+
+			expect(TrustedSenderService.fetchTrustedSenders).toHaveBeenCalledExactlyOnceWith(null)
+			expect(store.trustedSenders).toEqual([alice, exampleDomain])
+		})
+
+		it('still asks only for changes of the loaded list after saving a listed sender again', async () => {
+			store.setTrustedSendersMutation([alice], '"known"')
+			store.setTrustedSendersStaleMutation(true)
+			TrustedSenderService.fetchTrustedSenders.mockResolvedValueOnce(null)
+
+			await store.trustSender(alice)
+			await store.fetchTrustedSenders()
+
+			expect(TrustedSenderService.fetchTrustedSenders).toHaveBeenCalledExactlyOnceWith('"known"')
+			expect(store.trustedSenders).toEqual([alice])
+		})
+
+		it('still asks only for changes of the loaded list after trusting a sender failed', async () => {
+			store.setTrustedSendersMutation([alice], '"known"')
+			TrustedSenderService.trustSender.mockRejectedValueOnce(new Error('Request failed with status code 500'))
+			TrustedSenderService.fetchTrustedSenders.mockResolvedValueOnce(fetched([alice, exampleDomain]))
+
+			await expect(store.trustSender(exampleDomain)).rejects.toThrow()
+			await store.fetchTrustedSenders()
+
+			expect(TrustedSenderService.fetchTrustedSenders).toHaveBeenCalledExactlyOnceWith('"known"')
+			expect(store.trustedSenders).toEqual([alice, exampleDomain])
+		})
+
+		it('doesn\'t remember the ETag of a discarded response', async () => {
+			store.setTrustedSendersMutation([alice], '"known"')
+			TrustedSenderService.fetchTrustedSenders
+				.mockImplementationOnce(async () => {
+					await store.trustSender(exampleDomain)
+					return fetched([alice], '"discarded"')
+				})
+				.mockResolvedValueOnce(fetched([alice, exampleDomain]))
+
+			await store.fetchTrustedSenders()
+			await store.fetchTrustedSenders()
+
+			expect(TrustedSenderService.fetchTrustedSenders).toHaveBeenNthCalledWith(2, null)
+		})
+
+		it('ignores a list that arrives after a newer one', async () => {
+			const earlier = Promise.withResolvers()
+			TrustedSenderService.fetchTrustedSenders
+				.mockReturnValueOnce(earlier.promise)
+				.mockResolvedValueOnce(fetched([alice], '"newer"'))
+			const loadingEarlier = store.fetchTrustedSenders()
+
+			await store.fetchTrustedSenders()
+			earlier.resolve(fetched([exampleDomain], '"older"'))
+			await loadingEarlier
+
+			expect(store.trustedSenders).toEqual([alice])
+			expect(store.trustedSendersETag).toBe('"newer"')
+		})
+
+		it('doesn\'t reload a stale list that a newer request already refreshed', async () => {
+			const earlier = Promise.withResolvers()
+			TrustedSenderService.fetchTrustedSenders
+				.mockReturnValueOnce(earlier.promise)
+				.mockResolvedValueOnce(fetched([alice]))
+			const reloading = store.fetchTrustedSenders({ stale: true })
+
+			await store.fetchTrustedSenders()
+			earlier.resolve(fetched([exampleDomain]))
+			await reloading
+
+			expect(TrustedSenderService.fetchTrustedSenders).toHaveBeenCalledTimes(2)
+			expect(store.trustedSenders).toEqual([alice])
+			expect(store.isSenderTrusted('alice@example.test')).toBe(true)
+		})
+
+		it('doesn\'t keep reloading when stale reloads overlap', async () => {
+			const earlier = Promise.withResolvers()
+			const current = Promise.withResolvers()
+			TrustedSenderService.fetchTrustedSenders
+				.mockReturnValueOnce(earlier.promise)
+				.mockReturnValueOnce(current.promise)
+				.mockReturnValue(new Promise(() => {}))
+			const reloadingEarlier = store.fetchTrustedSenders({ stale: true })
+			const reloading = store.fetchTrustedSenders({ stale: true })
+
+			earlier.resolve(fetched([exampleDomain]))
+			await reloadingEarlier
+			current.resolve(fetched([alice]))
+			await reloading
+
+			expect(TrustedSenderService.fetchTrustedSenders).toHaveBeenCalledTimes(2)
+			expect(store.trustedSenders).toEqual([alice])
+			expect(store.isSenderTrusted('alice@example.test')).toBe(true)
+		})
+
+		it('trusts nobody until the newest request arrives when a stale reload is outdated', async () => {
+			store.setTrustedSendersMutation([alice])
+			const earlier = Promise.withResolvers()
+			const current = Promise.withResolvers()
+			TrustedSenderService.fetchTrustedSenders
+				.mockReturnValueOnce(earlier.promise)
+				.mockReturnValueOnce(current.promise)
+			const reloading = store.fetchTrustedSenders({ stale: true })
+			const loading = store.fetchTrustedSenders()
+
+			earlier.resolve(fetched([alice]))
+			await reloading
 
 			expect(store.isSenderTrusted('alice@example.test')).toBe(false)
+			current.resolve(fetched([alice]))
+			await loading
+			expect(store.isSenderTrusted('alice@example.test')).toBe(true)
+		})
+
+		it('reloads a stale list again when a trust change voided a newer request', async () => {
+			const bob = { email: 'bob@other.test', type: 'individual' }
+			const earlier = Promise.withResolvers()
+			TrustedSenderService.fetchTrustedSenders
+				.mockReturnValueOnce(earlier.promise)
+				.mockImplementationOnce(async () => {
+					await store.trustSender(bob)
+					return fetched([alice])
+				})
+				.mockResolvedValueOnce(fetched([alice, bob]))
+			const reloading = store.fetchTrustedSenders({ stale: true })
+
+			await store.fetchTrustedSenders()
+			earlier.resolve(fetched([alice]))
+			await reloading
+
+			expect(TrustedSenderService.fetchTrustedSenders).toHaveBeenCalledTimes(3)
+			expect(store.trustedSenders).toEqual([alice, bob])
+			expect(store.isSenderTrusted('alice@example.test')).toBe(true)
+		})
+
+		it('keeps a listed sender when trusting it again fails while the list is stale', async () => {
+			store.setTrustedSendersMutation([alice])
+			store.setTrustedSendersStaleMutation(true)
+			TrustedSenderService.trustSender.mockRejectedValueOnce(new Error('Request failed with status code 500'))
+
+			await expect(store.trustSender(alice)).rejects.toThrow()
+
+			expect(store.trustedSenders).toEqual([alice])
+		})
+
+		it('saves a sender trusted while the list is stale', async () => {
+			store.setTrustedSendersMutation([alice])
+			store.setTrustedSendersStaleMutation(true)
+
+			await store.trustSender(alice)
+
+			expect(TrustedSenderService.trustSender).toHaveBeenCalledExactlyOnceWith('alice@example.test', 'individual', true)
+			expect(store.trustedSenders).toEqual([alice])
 		})
 
 		it('lists a sender once when a failed removal restores it after a reload', async () => {
@@ -1133,6 +1576,111 @@ describe('Vuex store actions', () => {
 			await expect(store.removeTrustedSender(alice)).rejects.toThrow()
 
 			expect(store.trustedSenders).toEqual([alice])
+		})
+	})
+
+	describe('internal address refresh', () => {
+		const exampleDomain = { id: 3, address: 'example.test', type: 'domain' }
+		const bob = { id: 4, address: 'bob@other.test', type: 'individual' }
+
+		it('replaces the internal addresses with the server\'s list', async () => {
+			store.addInternalAddressMutation(bob)
+			InternalAddressService.fetchInternalAddresses.mockResolvedValueOnce(fetched([exampleDomain]))
+
+			await store.fetchInternalAddresses()
+
+			expect(store.getInternalAddresses).toEqual([exampleDomain])
+		})
+
+		it('keeps an internal address added while the list loads', async () => {
+			InternalAddressService.addInternalAddress.mockResolvedValueOnce(exampleDomain)
+			InternalAddressService.fetchInternalAddresses.mockImplementationOnce(async () => {
+				await store.addInternalAddress({ address: 'example.test', type: 'domain' })
+				return fetched([])
+			})
+
+			await store.fetchInternalAddresses()
+
+			expect(store.getInternalAddresses).toEqual([exampleDomain])
+		})
+
+		it('keeps an internal address removed while the list loads', async () => {
+			store.addInternalAddressMutation(exampleDomain)
+			InternalAddressService.fetchInternalAddresses.mockImplementationOnce(async () => {
+				await store.removeInternalAddress(exampleDomain)
+				return fetched([exampleDomain])
+			})
+
+			await store.fetchInternalAddresses()
+
+			expect(store.getInternalAddresses).toEqual([])
+		})
+
+		it('ignores a list that arrives after a newer one', async () => {
+			const earlier = Promise.withResolvers()
+			InternalAddressService.fetchInternalAddresses
+				.mockReturnValueOnce(earlier.promise)
+				.mockResolvedValueOnce(fetched([bob], '"newer"'))
+			const loadingEarlier = store.fetchInternalAddresses()
+
+			await store.fetchInternalAddresses()
+			earlier.resolve(fetched([exampleDomain], '"older"'))
+			await loadingEarlier
+
+			expect(store.getInternalAddresses).toEqual([bob])
+			expect(store.internalAddressesETag).toBe('"newer"')
+		})
+
+		it('asks only for changes of the loaded list', async () => {
+			InternalAddressService.fetchInternalAddresses
+				.mockResolvedValueOnce(fetched([exampleDomain], '"first"'))
+				.mockResolvedValueOnce(null)
+
+			await store.fetchInternalAddresses()
+			await store.fetchInternalAddresses()
+
+			expect(InternalAddressService.fetchInternalAddresses).toHaveBeenNthCalledWith(1, null)
+			expect(InternalAddressService.fetchInternalAddresses).toHaveBeenNthCalledWith(2, '"first"')
+			expect(store.getInternalAddresses).toEqual([exampleDomain])
+		})
+
+		it('reloads the whole list after adding an address', async () => {
+			store.setInternalAddressesMutation([bob], '"known"')
+			InternalAddressService.addInternalAddress.mockResolvedValueOnce(exampleDomain)
+			InternalAddressService.fetchInternalAddresses.mockResolvedValueOnce(fetched([bob]))
+
+			await store.addInternalAddress({ address: 'example.test', type: 'domain' })
+			await store.fetchInternalAddresses()
+
+			expect(InternalAddressService.fetchInternalAddresses).toHaveBeenCalledExactlyOnceWith(null)
+			expect(store.getInternalAddresses).toEqual([bob])
+		})
+
+		it('reloads the whole list after removing an address', async () => {
+			store.setInternalAddressesMutation([bob, exampleDomain], '"known"')
+			InternalAddressService.fetchInternalAddresses.mockResolvedValueOnce(fetched([bob, exampleDomain]))
+
+			await store.removeInternalAddress(exampleDomain)
+			await store.fetchInternalAddresses()
+
+			expect(InternalAddressService.fetchInternalAddresses).toHaveBeenCalledExactlyOnceWith(null)
+			expect(store.getInternalAddresses).toEqual([exampleDomain, bob])
+		})
+
+		it('doesn\'t remember the ETag of a discarded response', async () => {
+			store.setInternalAddressesMutation([bob], '"known"')
+			InternalAddressService.addInternalAddress.mockResolvedValueOnce(exampleDomain)
+			InternalAddressService.fetchInternalAddresses
+				.mockImplementationOnce(async () => {
+					await store.addInternalAddress({ address: 'example.test', type: 'domain' })
+					return fetched([bob], '"discarded"')
+				})
+				.mockResolvedValueOnce(fetched([bob, exampleDomain]))
+
+			await store.fetchInternalAddresses()
+			await store.fetchInternalAddresses()
+
+			expect(InternalAddressService.fetchInternalAddresses).toHaveBeenNthCalledWith(2, null)
 		})
 	})
 })

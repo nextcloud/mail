@@ -62,6 +62,7 @@ import { moveDraft, updateDraft } from '../../service/DraftService.js'
 import * as FollowUpService from '../../service/FollowUpService.js'
 import {
 	addInternalAddress,
+	fetchInternalAddresses,
 	removeInternalAddress,
 } from '../../service/InternalAddressService.js'
 import {
@@ -122,11 +123,13 @@ import {
 	priorityImportantQuery,
 	priorityOtherQuery,
 } from '../../util/priorityInbox.js'
+import { applyTrustedSenderChange, emailDomain, isTrustedSenderListed } from '../../util/trustedSender.js'
 import { wait } from '../../util/wait.js'
 import {
 	FOLLOW_UP_MAILBOX_ID,
 	FOLLOW_UP_TAG_LABEL,
 	PAGE_SIZE,
+	TRUSTED_SENDERS_MAX_AGE,
 	UNIFIED_ACCOUNT_ID,
 	UNIFIED_INBOX_ID,
 } from '../constants.js'
@@ -208,8 +211,6 @@ function transformMailboxName(account, mailbox) {
 		mailbox.path = ''
 	}
 }
-
-const isSameTrustedSender = (a, b) => a.email === b.email && a.type === b.type
 
 export default function mainStoreActions() {
 	return {
@@ -1297,6 +1298,16 @@ export default function mainStoreActions() {
 				return result
 			})
 		},
+		async fetchInternalAddresses() {
+			return handleHttpAuthErrors(async () => {
+				// A newer request or a change made here voids this response
+				const revision = ++this.internalAddressesRevision
+				const changed = await fetchInternalAddresses(this.internalAddressesETag)
+				if (changed && revision === this.internalAddressesRevision) {
+					this.setInternalAddressesMutation(changed.data, changed.etag)
+				}
+			})
+		},
 		async addInternalAddress({
 			address,
 			type,
@@ -1309,6 +1320,7 @@ export default function mainStoreActions() {
 				}
 
 				this.addInternalAddressMutation(internalAddress)
+				this.internalAddressesRevision++
 				logger.debug('internal address added')
 			})
 		},
@@ -1321,6 +1333,7 @@ export default function mainStoreActions() {
 				try {
 					await removeInternalAddress(address, type)
 					this.removeInternalAddressMutation({ addressId: id })
+					this.internalAddressesRevision++
 					logger.debug('internal address removed')
 				} catch (error) {
 					logger.error('could not delete internal address', { error })
@@ -1328,47 +1341,53 @@ export default function mainStoreActions() {
 				}
 			})
 		},
-		async fetchTrustedSenders() {
+		async fetchTrustedSenders({ stale = false } = {}) {
 			return handleHttpAuthErrors(async () => {
-				const revision = this.trustedSendersRevision
-				const trustedSenders = await TrustedSenderService.fetchTrustedSenders()
-				// The response doesn't know about a trust change made while it was loading
+				// Changes from other devices may be missing from a list that wasn't confirmed for a while
+				if (stale || Date.now() - this.trustedSendersConfirmedAt >= TRUSTED_SENDERS_MAX_AGE) {
+					this.setTrustedSendersStaleMutation(true)
+				}
+
+				// A newer request or a change saved meanwhile voids this response
+				const revision = ++this.trustedSendersRevision
+				this.trustedSendersNewestRequest = revision
+				const changed = await TrustedSenderService.fetchTrustedSenders(this.trustedSendersETag)
 				if (revision === this.trustedSendersRevision) {
-					this.setTrustedSendersMutation(trustedSenders)
+					if (changed) {
+						this.setTrustedSendersMutation(changed.data, changed.etag)
+					}
+					// Only a list the store could use settles a stale one, a failed reload leaves the changes from other devices unknown
+					this.confirmTrustedSendersMutation()
+				} else if (revision === this.trustedSendersNewestRequest && this.trustedSendersStale) {
+					// Only the newest request reloads again, so overlapping reloads don't restart each other
+					await this.fetchTrustedSenders({ stale: true })
 				}
 			})
 		},
 		async trustSender({ email, type }) {
 			return handleHttpAuthErrors(async () => {
-				if (this.trustedSenders.some((sender) => isSameTrustedSender(sender, { email, type }))) {
+				if (isTrustedSenderListed(this.trustedSenders, { email, type }) && !this.trustedSendersStale) {
 					return
 				}
 
-				this.trustedSendersRevision++
-				this.addTrustedSenderMutation({ email, type })
-				try {
-					await TrustedSenderService.trustSender(email, type, true)
-				} catch (error) {
-					this.removeTrustedSenderMutation({ email, type })
-					throw error
-				} finally {
-					this.trustedSendersRevision++
-				}
+				await this.changeTrustedSender({ email, type }, true)
 			})
 		},
 		async removeTrustedSender(trustedSender) {
 			return handleHttpAuthErrors(async () => {
-				this.trustedSendersRevision++
-				this.removeTrustedSenderMutation(trustedSender)
-				try {
-					await TrustedSenderService.trustSender(trustedSender.email, trustedSender.type, false)
-				} catch (error) {
-					this.addTrustedSenderMutation(trustedSender)
-					throw error
-				} finally {
-					this.trustedSendersRevision++
-				}
+				await this.changeTrustedSender(trustedSender, false)
 			})
+		},
+		async changeTrustedSender(trustedSender, trust) {
+			const change = { trustedSender, trust }
+			this.trustedSendersPendingChanges.push(change)
+			try {
+				await TrustedSenderService.trustSender(trustedSender.email, trustedSender.type, trust)
+				this.applyTrustedSenderChangeMutation(change)
+				this.trustedSendersRevision++
+			} finally {
+				this.trustedSendersPendingChanges.splice(this.trustedSendersPendingChanges.indexOf(change), 1)
+			}
 		},
 		async deleteMessage({ id }) {
 			return handleHttpAuthErrors(async () => {
@@ -2194,20 +2213,36 @@ export default function mainStoreActions() {
 		},
 		addInternalAddressMutation(address) {
 			this.internalAddress[address.id] = address
+			this.internalAddressesETag = null
+		},
+		setInternalAddressesMutation(addresses, etag = null) {
+			this.internalAddress = []
+			addresses.forEach((address) => {
+				this.internalAddress[address.id] = address
+			})
+			this.internalAddressesETag = etag
 		},
 		removeInternalAddressMutation({ addressId }) {
 			this.internalAddress = this.internalAddress.filter((address) => address.id !== addressId)
+			this.internalAddressesETag = null
 		},
-		setTrustedSendersMutation(trustedSenders) {
-			this.trustedSenders = trustedSenders
+		setTrustedSendersMutation(trustedSenders, etag = null) {
+			this.savedTrustedSenders = trustedSenders
+			this.trustedSendersETag = etag
 		},
-		addTrustedSenderMutation(trustedSender) {
-			if (!this.trustedSenders.some((sender) => isSameTrustedSender(sender, trustedSender))) {
-				this.trustedSenders.push(trustedSender)
+		setTrustedSendersStaleMutation(stale) {
+			this.trustedSendersStale = stale
+		},
+		confirmTrustedSendersMutation() {
+			this.trustedSendersConfirmedAt = Date.now()
+			this.trustedSendersStale = false
+		},
+		applyTrustedSenderChangeMutation(change) {
+			const trustedSenders = applyTrustedSenderChange(this.savedTrustedSenders, change)
+			if (trustedSenders !== this.savedTrustedSenders) {
+				this.savedTrustedSenders = trustedSenders
+				this.trustedSendersETag = null
 			}
-		},
-		removeTrustedSenderMutation(trustedSender) {
-			this.trustedSenders = this.trustedSenders.filter((sender) => !isSameTrustedSender(sender, trustedSender))
 		},
 		deleteTagMutation({ tagId }) {
 			this.tagList = this.tagList.filter((id) => id !== tagId)
@@ -2563,14 +2598,12 @@ export default function mainStoreActions() {
 			return this.internalAddress.some((internalAddress) => internalAddress.address === address || internalAddress.address === domain)
 		},
 		isSenderTrusted(email) {
-			if (!email) {
+			if (!email || this.trustedSendersStale) {
 				return false
 			}
 
-			const { individuals, domains } = this.trustedSenderLookup
-			const separator = email.lastIndexOf('@')
-			return individuals.has(email)
-				|| (separator !== -1 && domains.has(email.slice(separator + 1)))
+			return isTrustedSenderListed(this.trustedSenders, { email, type: 'individual' })
+				|| isTrustedSenderListed(this.trustedSenders, { email: emailDomain(email), type: 'domain' })
 		},
 		getActiveSieveScript(accountId) {
 			return this.sieveScript[accountId]

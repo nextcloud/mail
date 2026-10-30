@@ -18,6 +18,7 @@ use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Db\OidcProvider;
 use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Db\TagMapper;
+use OCA\Mail\Http\ListETag;
 use OCA\Mail\Integration\OidcIntegration;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
@@ -200,14 +201,24 @@ class PageController extends Controller {
 			$this->tagMapper->getAllTagsForUser($this->userId)
 		);
 
+		$internalAddresses = $this->internalAddressService->getInternalAddresses($this->userId);
 		$this->initialStateService->provideInitialState(
 			'internal-addresses-list',
-			$this->internalAddressService->getInternalAddresses($this->userId)
+			$internalAddresses
+		);
+		$this->initialStateService->provideInitialState(
+			'internal-addresses-etag',
+			ListETag::header($internalAddresses)
 		);
 
+		$trustedSenders = $this->trustedSenderService->getTrusted($this->userId);
 		$this->initialStateService->provideInitialState(
 			'trusted-senders-list',
-			$this->trustedSenderService->getTrusted($this->userId)
+			$trustedSenders
+		);
+		$this->initialStateService->provideInitialState(
+			'trusted-senders-etag',
+			ListETag::header($trustedSenders)
 		);
 
 		$this->initialStateService->provideInitialState(

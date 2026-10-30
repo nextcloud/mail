@@ -151,6 +151,17 @@ describe('MessageHTMLBody', () => {
 			expect(view.findComponent(BlockedContentWarning).exists()).toBe(false)
 		})
 
+		it('offers no domain to trust for a sender without an at sign', async () => {
+			const view = mountBody({ from: [{ email: 'undisclosed-recipients' }] })
+			loadFrameWithBlockedImage(view)
+			await view.vm.$nextTick()
+
+			const warning = view.findComponent(BlockedContentWarning)
+
+			expect(warning.props('domain')).toBeNull()
+			expect(warning.props('sender')).toBe('undisclosed-recipients')
+		})
+
 		it('shows images from every sender when the reader chose so', async () => {
 			const view = mountBody({}, { alwaysShowExternalImages: true })
 
@@ -199,11 +210,25 @@ describe('MessageHTMLBody', () => {
 			loadFrameWithBlockedImage(view)
 			await view.vm.$nextTick()
 
-			store.addTrustedSenderMutation({ email: 'example.test', type: 'domain' })
+			store.setTrustedSendersMutation([{ email: 'example.test', type: 'domain' }])
 			await view.vm.$nextTick()
 
 			expect(imageRevealed(view)).toBe(true)
 			expect(view.findComponent(BlockedContentWarning).exists()).toBe(false)
+		})
+
+		it('shows the images of a trusted sender once a stale list is confirmed', async () => {
+			store.setTrustedSendersMutation([{ email: 'example.test', type: 'domain' }])
+			store.setTrustedSendersStaleMutation(true)
+			const view = mountBody(bob)
+			loadFrameWithBlockedImage(view)
+			await view.vm.$nextTick()
+			expect(imageRevealed(view)).toBe(false)
+
+			store.setTrustedSendersStaleMutation(false)
+			await view.vm.$nextTick()
+
+			expect(imageRevealed(view)).toBe(true)
 		})
 
 		it('tells the reader when the sender could not be trusted', async () => {

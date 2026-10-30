@@ -58,7 +58,7 @@ describe('TrustedSenders', () => {
 
 	it('lists the current trusted senders when opened', async () => {
 		store.setTrustedSendersMutation([alice])
-		fetchTrustedSenders.mockResolvedValue([exampleDomain, alice])
+		fetchTrustedSenders.mockResolvedValue({ data: [exampleDomain, alice], etag: '"list"' })
 
 		const wrapper = await mountList()
 
@@ -78,7 +78,7 @@ describe('TrustedSenders', () => {
 	})
 
 	it('removes a trusted sender', async () => {
-		fetchTrustedSenders.mockResolvedValue([alice, exampleDomain])
+		fetchTrustedSenders.mockResolvedValue({ data: [alice, exampleDomain], etag: '"list"' })
 		const wrapper = await mountList()
 
 		wrapper.findAllComponents(NcButton)[0].vm.$emit('click')
@@ -90,7 +90,7 @@ describe('TrustedSenders', () => {
 	})
 
 	it('keeps a sender listed and says so when it could not be removed', async () => {
-		fetchTrustedSenders.mockResolvedValue([alice])
+		fetchTrustedSenders.mockResolvedValue({ data: [alice], etag: '"list"' })
 		trustSender.mockRejectedValue(new Error('Request failed with status code 500'))
 		const wrapper = await mountList()
 
