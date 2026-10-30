@@ -12,11 +12,13 @@ namespace OCA\Mail\Service;
 use OCA\Mail\Contracts\IInternalAddressService;
 use OCA\Mail\Db\InternalAddress;
 use OCA\Mail\Db\InternalAddressMapper;
+use OCA\Mail\Exception\InvalidAddressException;
 use OCP\DB\Exception;
 
 class InternalAddressService implements IInternalAddressService {
 	public function __construct(
 		private InternalAddressMapper $mapper,
+		private AddressOrDomainNormalizer $normalizer,
 	) {
 	}
 
@@ -28,14 +30,18 @@ class InternalAddressService implements IInternalAddressService {
 		);
 	}
 
+	/**
+	 * @throws InvalidAddressException
+	 */
 	#[\Override]
 	public function add(string $uid, string $address, string $type, ?bool $trust = true): ?InternalAddress {
-		if ($trust && $this->isInternal($uid, $address)) {
-			// Nothing to do
-			return null;
-		}
-
 		if ($trust) {
+			$address = $this->normalizer->normalize($address, $type);
+			if ($this->isInternal($uid, $address)) {
+				// Nothing to do
+				return null;
+			}
+
 			try {
 				$this->mapper->create(
 					$uid,
