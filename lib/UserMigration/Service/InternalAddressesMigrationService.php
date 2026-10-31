@@ -11,6 +11,7 @@ namespace OCA\Mail\UserMigration\Service;
 
 use JsonException;
 use OCA\Mail\Contracts\IInternalAddressService;
+use OCA\Mail\Exception\InvalidAddressException;
 use OCA\Mail\UserMigration\MailAccountMigrator;
 use OCP\IL10N;
 use OCP\IUser;
@@ -106,18 +107,26 @@ class InternalAddressesMigrationService {
 
 		foreach ($internalAddresses as $internalAddress) {
 			if (!$this->isWellFormedInternalAddress($internalAddress)) {
-				$output->writeln(
-					$this->l10n->t(
-						'An internal address of %s is invalid and will be skipped. Continue …',
-						[$user->getUID()]
-					)
-				);
+				$this->reportInvalidInternalAddress($user, $output);
 
 				continue;
 			}
 
-			$this->internalAddressService->add($user->getUID(), $internalAddress['address'], $internalAddress['type']);
+			try {
+				$this->internalAddressService->add($user->getUID(), $internalAddress['address'], $internalAddress['type']);
+			} catch (InvalidAddressException) {
+				$this->reportInvalidInternalAddress($user, $output);
+			}
 		}
+	}
+
+	private function reportInvalidInternalAddress(IUser $user, OutputInterface $output): void {
+		$output->writeln(
+			$this->l10n->t(
+				'An internal address of %s is invalid and will be skipped. Continue …',
+				[$user->getUID()]
+			)
+		);
 	}
 
 	/**

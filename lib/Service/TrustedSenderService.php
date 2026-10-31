@@ -12,10 +12,13 @@ namespace OCA\Mail\Service;
 use OCA\Mail\Contracts\ITrustedSenderService;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\TrustedSenderMapper;
+use OCA\Mail\Exception\InvalidAddressException;
+use OCP\DB\Exception;
 
 class TrustedSenderService implements ITrustedSenderService {
 	public function __construct(
 		private TrustedSenderMapper $mapper,
+		private AddressOrDomainNormalizer $normalizer,
 	) {
 	}
 
@@ -44,19 +47,31 @@ class TrustedSenderService implements ITrustedSenderService {
 		);
 	}
 
+	/**
+	 * @throws InvalidAddressException
+	 */
 	#[\Override]
 	public function trust(string $uid, string $email, string $type, ?bool $trust = true): void {
-		if ($trust && $this->isTrusted($uid, $email)) {
-			// Nothing to do
-			return;
-		}
-
 		if ($trust) {
-			$this->mapper->create(
-				$uid,
-				$email,
-				$type
-			);
+			$email = $this->normalizer->normalize($email, $type);
+			if ($this->isTrusted($uid, $email)) {
+				// Nothing to do
+				return;
+			}
+
+			try {
+				$this->mapper->create(
+					$uid,
+					$email,
+					$type
+				);
+			} catch (Exception $exception) {
+				if ($exception->getReason() !== Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
+					throw $exception;
+				}
+
+				// isTrusted() doesn't match a domain itself, and requests can race
+			}
 		} else {
 			$this->mapper->remove(
 				$uid,

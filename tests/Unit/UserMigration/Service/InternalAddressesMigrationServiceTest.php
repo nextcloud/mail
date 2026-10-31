@@ -12,6 +12,7 @@ namespace Unit\UserMigration\Service;
 use ChristophWurst\Nextcloud\Testing\ServiceMockObject;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\InternalAddress;
+use OCA\Mail\Exception\InvalidAddressException;
 use OCA\Mail\Tests\Unit\UserMigration\RecordsConsoleOutput;
 use OCA\Mail\UserMigration\Service\InternalAddressesMigrationService;
 use OCP\IUser;
@@ -191,6 +192,32 @@ class InternalAddressesMigrationServiceTest extends TestCase {
 
 		$this->migrationService->importInternalAddresses($this->user, $this->importSource, $this->output);
 
+		$this->assertWritten('An internal address of ' . self::USER_ID . ' is invalid', 0);
+	}
+
+	public function testImportSkipsOnlyTheRejectedInternalAddress(): void {
+		$this->recordConsoleOutput();
+		$this->importSource->method('getFileContents')
+			->with(InternalAddressesMigrationService::INTERNAL_ADDRESSES_FILE)
+			->willReturn(json_encode([
+				['id' => 1, 'address' => 'not valid', 'uid' => self::USER_ID, 'type' => 'domain'],
+				['id' => 2, 'address' => 'alice@example.test', 'uid' => self::USER_ID, 'type' => 'individual'],
+			]));
+		$imported = [];
+		$this->serviceMock->getParameter('internalAddressService')
+			->expects(self::exactly(2))
+			->method('add')
+			->willReturnCallback(static function (string $uid, string $address) use (&$imported): ?InternalAddress {
+				if ($address === 'not valid') {
+					throw new InvalidAddressException('Invalid domain');
+				}
+				$imported[] = $address;
+				return null;
+			});
+
+		$this->migrationService->importInternalAddresses($this->user, $this->importSource, $this->output);
+
+		$this->assertSame(['alice@example.test'], $imported);
 		$this->assertWritten('An internal address of ' . self::USER_ID . ' is invalid', 0);
 	}
 }
