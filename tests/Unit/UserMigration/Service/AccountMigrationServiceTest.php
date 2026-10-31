@@ -245,6 +245,8 @@ class AccountMigrationServiceTest extends TestCase {
 		// sync and runtime state, recomputed after the first sync
 		'lastMailboxSync',
 		'quotaPercentage',
+		// set again by the next token refresh against the migrated tokens
+		'oauthNeedsReauth',
 		// a per-account diagnostic toggle, not user data
 		'debug',
 		// only ever set on JMAP accounts, which export skips
