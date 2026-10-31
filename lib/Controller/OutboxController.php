@@ -144,6 +144,7 @@ class OutboxController extends Controller {
 	#[NoAdminRequired]
 	#[TrapError]
 	public function createFromDraft(DraftsService $draftsService, int $id, int $sendAt): JsonResponse {
+		sleep(8);
 		$effectiveUserId = $this->delegationService->resolveLocalMessageUserId($id, $this->userId);
 		$draftMessage = $draftsService->getMessage($id, $effectiveUserId);
 		// Locate the account to check authorization

@@ -220,6 +220,7 @@ class DraftsController extends Controller {
 	#[NoAdminRequired]
 	#[TrapError]
 	public function move(int $id): JsonResponse {
+		sleep(8);
 		$effectiveUserId = $this->delegationService->resolveLocalMessageUserId($id, $this->userId);
 		$message = $this->service->getMessage($id, $effectiveUserId);
 		$account = $this->accountService->find($effectiveUserId, $message->getAccountId());
