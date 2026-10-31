@@ -304,7 +304,7 @@ class MailboxSyncTest extends TestCase {
 			->method('imapClient')
 			->with($account)
 			->willReturn($client);
-		$client->expects($this->once())
+		$client->expects($this->never())
 			->method('logout');
 
 		$this->sync->sync($account, new NullLogger(), false);
