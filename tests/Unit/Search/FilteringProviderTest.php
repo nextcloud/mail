@@ -90,6 +90,57 @@ class FilteringProviderTest extends TestCase {
 		self::assertNotEmpty($entries);
 	}
 
+	public static function multiWordTermProvider(): array {
+		return [
+			'several words' => ['QA invite'],
+			'colon in the term' => ['Re: invoice'],
+			'plus sign' => ['C++ meetup'],
+		];
+	}
+
+	/**
+	 * @dataProvider multiWordTermProvider
+	 */
+	public function testSearchForFullTerm(string $term): void {
+		$user = $this->createStub(IUser::class);
+		$searchQuery = new SearchQuery(new FilterCollection(...[
+			IFilter::BUILTIN_TERM => new StringFilter($term),
+		]));
+		$this->mailSearch->expects($this->once())
+			->method('findMessagesGlobally')
+			->with($user, $this->callback(function (MailSearchQuery $query) use ($term) {
+				self::assertEquals([$term], $query->getSubjects());
+				return true;
+			}))
+			->willReturn([]);
+
+		$this->provider->search($user, $searchQuery);
+	}
+
+	public function testSearchForUserWithPlusAddress(): void {
+		$user = $this->createStub(IUser::class);
+		$otherUser = $this->createMock(IUser::class);
+		$otherUser->method('getEMailAddress')
+			->willReturn('other+news@domain.tld');
+		$this->userManager->method('get')
+			->with('bob')
+			->willReturn($otherUser);
+		$searchQuery = new SearchQuery(new FilterCollection(...[
+			IFilter::BUILTIN_PERSON => new UserFilter('bob', $this->userManager),
+		]));
+		$this->mailSearch->expects($this->once())
+			->method('findMessagesGlobally')
+			->with($user, $this->callback(function (MailSearchQuery $query) {
+				self::assertEquals(['other+news@domain.tld'], $query->getFrom());
+				self::assertEquals(['other+news@domain.tld'], $query->getTo());
+				self::assertEquals(['other+news@domain.tld'], $query->getCc());
+				return true;
+			}))
+			->willReturn([]);
+
+		$this->provider->search($user, $searchQuery);
+	}
+
 	public function testSearchForUserNoEmail(): void {
 		$user = $this->createStub(IUser::class);
 		$otherUser = $this->createStub(IUser::class);
