@@ -31,6 +31,18 @@
 							:disabled="loading"
 							name="emailTemplate"
 							type="text">
+						<div>
+							<input
+								:id="'mail-provision-save-sent-copy' + setting.id"
+								v-model="saveSentCopy"
+								:disabled="loading"
+								type="checkbox"
+								class="checkbox">
+							<label :for="'mail-provision-save-sent-copy' + setting.id">
+								{{ t('mail', 'Save a copy of sent messages') }}
+							</label>
+							<p>{{ t('mail', 'Turn this off if the mail server already saves sent messages, to avoid duplicates in the Sent folder.') }}</p>
+						</div>
 					</div>
 				</div>
 				<div class="settings-group">
@@ -178,18 +190,6 @@
 								class="button"
 								:for="'mail-provision-smtp-user-tls' + setting.id"
 								:class="{ primary: smtpSslMode === 'tls' }">{{ t('mail', 'STARTTLS') }}</label>
-						</div>
-						<div>
-							<input
-								:id="'mail-provision-save-sent-copy' + setting.id"
-								v-model="saveSentCopy"
-								:disabled="loading"
-								type="checkbox"
-								class="checkbox">
-							<label :for="'mail-provision-save-sent-copy' + setting.id">
-								{{ t('mail', 'Save a copy of sent messages') }}
-							</label>
-							<p>{{ t('mail', 'Turn this off if the mail server already saves sent messages, to avoid duplicates in the Sent folder.') }}</p>
 						</div>
 					</div>
 				</div>
