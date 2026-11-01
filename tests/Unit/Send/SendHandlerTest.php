@@ -228,65 +228,6 @@ class SendHandlerTest extends TestCase {
 		$this->assertEquals(LocalMessage::STATUS_SMPT_SEND_FAIL, $result->getStatus());
 	}
 
-	public function testProcessSendsWithoutSentCopy(): void {
-		$mailAccount = new MailAccount();
-		$mailAccount->setUserId('bob');
-		$mailAccount->setSaveSentCopy(false);
-		$account = new Account($mailAccount);
-		$localMessage = new LocalMessage();
-		$localMessage->setId(100);
-		$localMessage->setStatus(LocalMessage::STATUS_RAW);
-
-		$connector = $this->createMock(ITransmissionConnector::class);
-		$this->mailboxMapper->expects(self::never())
-			->method('findById');
-		$this->protocolFactory->expects(self::once())
-			->method('transmissionConnector')
-			->with($account)
-			->willReturn($connector);
-		$connector->expects(self::once())
-			->method('sendMessage')
-			->with($account, $localMessage, null)
-			->willReturnCallback(static function ($acct, LocalMessage $msg) {
-				$msg->setStatus(LocalMessage::STATUS_PROCESSED);
-			});
-		$this->eventDispatcher->expects(self::once())
-			->method('dispatchTyped')
-			->with(self::isInstanceOf(MessageSentEvent::class));
-		$this->nextHandler->expects(self::once())
-			->method('process')
-			->willReturn($localMessage);
-
-		$this->handler->process($account, $localMessage);
-	}
-
-	public function testProcessJmapIgnoresDisabledSentCopy(): void {
-		$mailAccount = new MailAccount();
-		$mailAccount->setUserId('bob');
-		$mailAccount->setProtocol(MailAccount::PROTOCOL_JMAP);
-		$mailAccount->setSaveSentCopy(false);
-		$mailAccount->setSentMailboxId(1);
-		$account = new Account($mailAccount);
-		$localMessage = new LocalMessage();
-		$localMessage->setId(100);
-		$localMessage->setStatus(LocalMessage::STATUS_RAW);
-		$sentMailbox = new Mailbox();
-		$sentMailbox->setId(1);
-
-		$connector = $this->createMock(ITransmissionConnector::class);
-		$this->mailboxMapper->expects(self::once())
-			->method('findById')
-			->with(1)
-			->willReturn($sentMailbox);
-		$this->protocolFactory->method('transmissionConnector')
-			->willReturn($connector);
-		$connector->expects(self::once())
-			->method('sendMessage')
-			->with($account, $localMessage, $sentMailbox);
-
-		$this->handler->process($account, $localMessage);
-	}
-
 	private function prepareSend(int $status, int $resultStatus): array {
 		$mailAccount = new MailAccount();
 		$mailAccount->setSentMailboxId(1);

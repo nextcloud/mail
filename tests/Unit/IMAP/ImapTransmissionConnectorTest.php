@@ -533,20 +533,22 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->assertStringContainsString(LocalMessage::HEADER_AI_GENERATED . ': 1', $localMessage->getRaw());
 	}
 
-	public function testSendMessageWithoutSentMailbox(): void {
-		[$account, , $localMessage] = $this->prepareAiGeneratedMessage();
+	public function testSendMessageWithoutSentCopy(): void {
+		[$account, $sentMailbox, $localMessage] = $this->prepareAiGeneratedMessage();
+		$account->getMailAccount()->setSaveSentCopy(false);
 		$this->smtpClientFactory->method('create')
 			->willReturn(new Horde_Mail_Transport_Null());
 		$this->messageMapper->expects(self::never())
 			->method('save');
 
-		$this->connector->sendMessage($account, $localMessage, null);
+		$this->connector->sendMessage($account, $localMessage, $sentMailbox);
 
 		$this->assertSame(LocalMessage::STATUS_PROCESSED, $localMessage->getStatus());
 	}
 
-	public function testSentCopyRetryWithoutSentMailbox(): void {
-		[$account, , $localMessage] = $this->prepareAiGeneratedMessage();
+	public function testSentCopyRetryWithoutSentCopy(): void {
+		[$account, $sentMailbox, $localMessage] = $this->prepareAiGeneratedMessage();
+		$account->getMailAccount()->setSaveSentCopy(false);
 		$localMessage->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
 		$localMessage->setRaw('raw');
 		$this->smtpClientFactory->expects(self::never())
@@ -554,7 +556,7 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->messageMapper->expects(self::never())
 			->method('save');
 
-		$this->connector->sendMessage($account, $localMessage, null);
+		$this->connector->sendMessage($account, $localMessage, $sentMailbox);
 
 		$this->assertSame(LocalMessage::STATUS_PROCESSED, $localMessage->getStatus());
 	}
