@@ -223,7 +223,7 @@ class AccountsController extends Controller {
 		$dbAccount = $account->getMailAccount();
 
 		if ($saveSentCopy !== null && $dbAccount->getProvisioningId() !== null) {
-			throw new ClientException('The sent copy setting of a provisioned account is managed by the administrator');
+			throw new ClientException('Cannot change the sent copy setting of a provisioned account');
 		}
 
 		foreach ([$draftsMailboxId, $sentMailboxId, $trashMailboxId, $archiveMailboxId, $snoozeMailboxId, $junkMailboxId] as $mailboxId) {
