@@ -12,6 +12,7 @@
 					:id="attachment.id"
 					ref="attachments"
 					:key="attachment.id"
+					:message-id="envelope.databaseId"
 					:file-name="attachment.fileName"
 					:size="attachment.size"
 					:url="attachment.downloadUrl"

@@ -104,6 +104,11 @@ export default {
 			required: true,
 		},
 
+		messageId: {
+			type: Number,
+			required: true,
+		},
+
 		fileName: {
 			type: String,
 			default: t('mail', 'Unnamed'),
@@ -217,10 +222,8 @@ export default {
 			}
 
 			this.savingToCloud = true
-			const id = this.$route.params.threadId
-
 			try {
-				await saveAttachmentToFiles(id, this.id, path)
+				await saveAttachmentToFiles(this.messageId, this.id, path)
 				Logger.info('saved')
 				showSuccess(t('mail', 'Attachment saved to Files'))
 			} catch (e) {
