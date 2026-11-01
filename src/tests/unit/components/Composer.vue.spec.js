@@ -5,6 +5,7 @@
 
 import { shallowMount } from '@vue/test-utils'
 import { createPinia } from 'pinia'
+import { vi } from 'vitest'
 import Composer from '../../../components/Composer.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 import useMainStore from '../../../store/mainStore.js'
@@ -174,6 +175,64 @@ describe('Composer', () => {
 		const canSend = view.vm.canSend
 
 		expect(canSend).toEqual(true)
+	})
+
+	it('does not send while attachments block sending', async () => {
+		const view = shallowMount(Composer, {
+			props: {
+				to: [
+					{ label: 'test', email: 'test@domain.tld' },
+				],
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
+		})
+
+		await view.findComponent({ name: 'ComposerAttachments' }).vm.$emit('update:blocksSending', true)
+		await view.vm.onSend()
+
+		expect(view.vm.canSend).toEqual(false)
+		expect(view.emitted('send')).toBeUndefined()
+	})
+
+	it('saves the draft when the attachments change', async () => {
+		const view = shallowMount(Composer, {
+			props: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
+		})
+		view.vm.saveDraftDebounced = vi.fn()
+
+		await view.findComponent({ name: 'ComposerAttachments' }).vm.$emit('update:modelValue', [{ id: 1, fileName: 'a.txt', type: 'local' }])
+
+		expect(view.vm.saveDraftDebounced).toHaveBeenCalled()
 	})
 
 	it('should not S/MIME sign messages if there are no certs', () => {

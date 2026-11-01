@@ -152,7 +152,6 @@
 						@update:isAiGenerated="patchComposerData({ isAiGenerated: $event })"
 						@draft="onDraft"
 						@discardDraft="discardDraft"
-						@uploadAttachment="onAttachmentUploading"
 						@send="onSend" />
 				</KeepAlive>
 			</div>
@@ -217,11 +216,9 @@ export default {
 		return {
 			original: undefined,
 			draftsPromise: Promise.resolve(),
-			attachmentsPromise: Promise.resolve(),
 			canSaveDraft: true,
 			savingDraft: false,
 			draftSaved: false,
-			uploadingAttachments: false,
 			sending: false,
 			error: undefined,
 			warning: undefined,
@@ -442,14 +439,6 @@ export default {
 			return dataForServer
 		},
 
-		onAttachmentUploading(done, data) {
-			this.attachmentsPromise = this.attachmentsPromise
-				.then(done)
-				.then(() => this.onDraft(data))
-				.then(() => logger.debug('Attachments uploaded'))
-				.catch((error) => logger.error('Could not upload attachments', { error }))
-		},
-
 		async onSend(data, force = false) {
 			logger.debug('sending message', { data })
 
@@ -481,8 +470,6 @@ export default {
 				this.mainStore.hideMessageComposerMutation()
 				sendingToast = showLoading(t('mail', 'Preparing message…'))
 
-				await this.attachmentsPromise
-				this.uploadingAttachments = false
 				const now = new Date().getTime()
 				for (const attachment of data.attachments) {
 					if (!attachment.type) {
