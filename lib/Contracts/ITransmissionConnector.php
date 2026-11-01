@@ -17,9 +17,9 @@ use OCA\Mail\Db\Message;
 interface ITransmissionConnector {
 
 	/**
-	 * Send a composed message and file a copy in the sent mailbox, if one is given.
+	 * Send a composed message and file a copy in the sent mailbox.
 	 */
-	public function sendMessage(Account $account, LocalMessage $message, ?Mailbox $sentMailbox): void;
+	public function sendMessage(Account $account, LocalMessage $message, Mailbox $sentMailbox): void;
 
 	/**
 	 * Send a Message Disposition Notification (read receipt).

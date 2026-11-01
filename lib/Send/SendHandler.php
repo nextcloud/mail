@@ -41,21 +41,17 @@ class SendHandler extends AHandler {
 			? LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL
 			: LocalMessage::STATUS_NO_SENT_MAILBOX;
 
-		$mailAccount = $account->getMailAccount();
-		$sentMailbox = null;
-		if ($mailAccount->getSaveSentCopy() || !$mailAccount->isImap()) {
-			$sentMailboxId = $mailAccount->getSentMailboxId();
-			if ($sentMailboxId === null) {
-				$localMessage->setStatus($noSentMailboxStatus);
-				return $localMessage;
-			}
-			try {
-				$sentMailbox = $this->mailboxMapper->findById($sentMailboxId);
-			} catch (DoesNotExistException $e) {
-				$this->logger->error('Sent mailbox not found', ['exception' => $e]);
-				$localMessage->setStatus($noSentMailboxStatus);
-				return $localMessage;
-			}
+		$sentMailboxId = $account->getMailAccount()->getSentMailboxId();
+		if ($sentMailboxId === null) {
+			$localMessage->setStatus($noSentMailboxStatus);
+			return $localMessage;
+		}
+		try {
+			$sentMailbox = $this->mailboxMapper->findById($sentMailboxId);
+		} catch (DoesNotExistException $e) {
+			$this->logger->error('Sent mailbox not found', ['exception' => $e]);
+			$localMessage->setStatus($noSentMailboxStatus);
+			return $localMessage;
 		}
 
 		$this->protocolFactory->transmissionConnector($account)->sendMessage($account, $localMessage, $sentMailbox);

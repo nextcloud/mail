@@ -73,10 +73,10 @@ class ImapTransmissionConnector implements ITransmissionConnector {
 	}
 
 	#[\Override]
-	public function sendMessage(Account $account, LocalMessage $message, ?Mailbox $sentMailbox): void {
+	public function sendMessage(Account $account, LocalMessage $message, Mailbox $sentMailbox): void {
 		// If this is a retry of a failed copy-to-sent, skip SMTP and only re-attempt the copy.
 		if ($message->getStatus() === LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL) {
-			if ($sentMailbox === null) {
+			if (!$account->getMailAccount()->getSaveSentCopy()) {
 				$message->setStatus(LocalMessage::STATUS_PROCESSED);
 				return;
 			}
@@ -225,7 +225,7 @@ class ImapTransmissionConnector implements ITransmissionConnector {
 			}
 		}
 
-		if ($sentMailbox === null) {
+		if (!$account->getMailAccount()->getSaveSentCopy()) {
 			$message->setStatus(LocalMessage::STATUS_PROCESSED);
 			return;
 		}
