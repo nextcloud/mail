@@ -47,6 +47,10 @@
 			<br>
 			<em>{{ t('mail', 'Using master password for all users') }}</em>
 		</span>
+		<span v-if="!saveSentCopy">
+			<br>
+			<em>{{ t('mail', 'Sent messages are not saved to the Sent folder') }}</em>
+		</span>
 	</div>
 </template>
 
@@ -128,6 +132,10 @@ export default {
 
 		masterPasswordEnabled() {
 			return this.templates.masterPasswordEnabled
+		},
+
+		saveSentCopy() {
+			return this.templates.saveSentCopy
 		},
 
 		masterUser() {

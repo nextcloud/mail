@@ -498,6 +498,7 @@ export default {
 				sieveHost: this.sieveHost,
 				sievePort: this.sievePort,
 				sieveSslMode: this.sieveSslMode,
+				saveSentCopy: this.saveSentCopy,
 				ldapAliasesProvisioning: this.ldapAliasesProvisioning,
 				ldapAliasesAttribute: this.ldapAliasesAttribute,
 			}
