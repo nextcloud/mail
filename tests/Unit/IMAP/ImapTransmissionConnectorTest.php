@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\IMAP;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Socket;
 use Horde_Mail_Transport_Null;
 use OCA\Mail\Account;
@@ -559,6 +560,47 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->connector->sendMessage($account, $localMessage, $sentMailbox);
 
 		$this->assertSame(LocalMessage::STATUS_PROCESSED, $localMessage->getStatus());
+	}
+
+	public function testSentCopyRetrySavesRawMessage(): void {
+		[$account, $sentMailbox, $localMessage] = $this->prepareAiGeneratedMessage();
+		$localMessage->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
+		$localMessage->setRaw('raw');
+		$this->smtpClientFactory->expects(self::never())
+			->method('create');
+		$this->messageMapper->expects(self::once())
+			->method('save')
+			->with(self::anything(), $sentMailbox, 'raw', []);
+
+		$this->connector->sendMessage($account, $localMessage, $sentMailbox);
+
+		$this->assertSame(LocalMessage::STATUS_PROCESSED, $localMessage->getStatus());
+	}
+
+	public function testSentCopyRetryWithoutRawMessage(): void {
+		[$account, $sentMailbox, $localMessage] = $this->prepareAiGeneratedMessage();
+		$localMessage->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
+		$this->messageMapper->expects(self::never())
+			->method('save');
+
+		$this->connector->sendMessage($account, $localMessage, $sentMailbox);
+
+		$this->assertSame(LocalMessage::STATUS_ERROR, $localMessage->getStatus());
+	}
+
+	public function testSendMessageSentCopyFailure(): void {
+		[$account, $sentMailbox, $localMessage] = $this->prepareAiGeneratedMessage();
+		$this->smtpClientFactory->method('create')
+			->willReturn(new Horde_Mail_Transport_Null());
+		$this->messageMapper->expects(self::once())
+			->method('save')
+			->willThrowException(new Horde_Imap_Client_Exception('append failed'));
+		$this->logger->expects(self::once())
+			->method('error');
+
+		$this->connector->sendMessage($account, $localMessage, $sentMailbox);
+
+		$this->assertSame(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL, $localMessage->getStatus());
 	}
 
 	public function testSaveMessageAddsAiGeneratedHeader(): void {
