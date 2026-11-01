@@ -107,6 +107,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setClassificationEnabled(bool $classificationEnabled)
  * @method bool getImipCreate()
  * @method void setImipCreate(bool $value)
+ * @method bool getSaveSentCopy()
+ * @method void setSaveSentCopy(bool $saveSentCopy)
  * @method string getProtocol()
  * @method void setProtocol(string $protocol)
  * @method string|null getPath()
@@ -201,6 +203,8 @@ class MailAccount extends Entity {
 	protected bool $classificationEnabled = true;
 
 	protected bool $imipCreate = false;
+
+	protected bool $saveSentCopy = true;
 
 	protected string $protocol = 'imap';
 
@@ -304,6 +308,7 @@ class MailAccount extends Entity {
 		$this->addType('debug', 'boolean');
 		$this->addType('classificationEnabled', 'boolean');
 		$this->addType('imipCreate', 'boolean');
+		$this->addType('saveSentCopy', 'boolean');
 		$this->addType('protocol', 'string');
 		$this->addType('path', 'string');
 	}
@@ -365,6 +370,7 @@ class MailAccount extends Entity {
 			'debug' => $this->getDebug(),
 			'classificationEnabled' => $this->getClassificationEnabled(),
 			'imipCreate' => $this->getImipCreate(),
+			'saveSentCopy' => $this->getSaveSentCopy(),
 			'protocol' => $this->getProtocol(),
 			'path' => $this->getPath(),
 		];

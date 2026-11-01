@@ -191,6 +191,16 @@ class JmapTransmissionConnectorTest extends TestCase {
 		$this->assertSame(LocalMessage::STATUS_PROCESSED, $message->getStatus());
 	}
 
+	public function testSendMessageWithoutSentMailbox(): void {
+		[$account, $message] = $this->prepareSend();
+		$this->jmapOperationsService->expects(self::never())
+			->method('entitySend');
+
+		$this->connector->sendMessage($account, $message, null);
+
+		$this->assertSame(LocalMessage::STATUS_NO_SENT_MAILBOX, $message->getStatus());
+	}
+
 	public static function sendFailureProvider(): array {
 		return [
 			'transient server error' => [new JmapException('', ResponseException::SERVER_UNAVAILABLE), LocalMessage::STATUS_SMPT_SEND_FAIL],
