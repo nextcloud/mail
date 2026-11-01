@@ -461,7 +461,7 @@ class AccountMigrationService {
 			);
 		}
 
-		if ($mailAccount->getProtocol() !== MailAccount::PROTOCOL_IMAP) {
+		if (!$mailAccount->isImap()) {
 			return $this->l10n->t(
 				'Skipping account with ID %1$s because migrating %2$s accounts is not supported yet',
 				[$mailAccount->getId(), $mailAccount->getProtocol()]

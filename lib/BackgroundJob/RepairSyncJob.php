@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\BackgroundJob;
 
-use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Events\SynchronizationEvent;
 use OCA\Mail\Protocol\ProtocolFactory;
@@ -58,7 +57,7 @@ class RepairSyncJob extends TimedJob {
 			return;
 		}
 
-		if ($account->getMailAccount()->getProtocol() !== MailAccount::PROTOCOL_IMAP) {
+		if (!$account->getMailAccount()->isImap()) {
 			$this->logger->debug(sprintf(
 				'Account %d uses %s, skipping IMAP repair sync after mailbox refresh',
 				$account->getId(),
