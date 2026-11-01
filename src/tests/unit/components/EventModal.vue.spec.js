@@ -36,4 +36,22 @@ describe('EventModal', () => {
 		expect(view.vm.eventTitle).toBe('Sub?')
 		expect(view.vm.description).toBe('prev')
 	})
+
+	it('does not allow clearing the calendar', () => {
+		const view = shallowMount(EventModal, {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
+				envelope: {
+					subject: 'Sub?',
+					previewText: 'prev',
+				},
+			},
+		})
+
+		const calendarPicker = view.findComponent('.modal-content__calendar-picker')
+
+		expect(calendarPicker.props('clearable')).toBe(false)
+	})
 })
