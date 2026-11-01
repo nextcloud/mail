@@ -564,6 +564,28 @@ class AccountMigrationServiceTest extends TestCase {
 		self::assertSame('INBOX.', $this->savedAccount->getPersonalNamespace());
 	}
 
+	public function testImportRestoresSaveSentCopy(): void {
+		$this->expectAccountFileToBeImported($this->getExportedAccountData());
+		$this->expectAccountToBeSaved();
+		$this->expectMailboxesAndAliasesToBeImported();
+
+		$this->migrationService->importAccounts($this->user, $this->importSource, $this->output, []);
+
+		self::assertFalse($this->savedAccount->getSaveSentCopy());
+	}
+
+	public function testImportWithoutSaveSentCopySavesSentCopies(): void {
+		$accountData = $this->getExportedAccountData();
+		unset($accountData['saveSentCopy']);
+		$this->expectAccountFileToBeImported($accountData);
+		$this->expectAccountToBeSaved();
+		$this->expectMailboxesAndAliasesToBeImported();
+
+		$this->migrationService->importAccounts($this->user, $this->importSource, $this->output, []);
+
+		self::assertTrue($this->savedAccount->getSaveSentCopy());
+	}
+
 	public function testImportAliasWithoutName(): void {
 		$accountData = $this->getExportedAccountData();
 		$accountData['aliases'][0]['name'] = null;
@@ -1046,6 +1068,7 @@ class AccountMigrationServiceTest extends TestCase {
 			'imipCreate' => false,
 			'classificationEnabled' => true,
 			'searchBody' => false,
+			'saveSentCopy' => false,
 			'personalNamespace' => 'INBOX.',
 			'signature' => 'Jane',
 			'signatureAboveQuote' => true,

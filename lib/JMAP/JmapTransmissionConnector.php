@@ -40,7 +40,12 @@ class JmapTransmissionConnector implements ITransmissionConnector {
 	}
 
 	#[\Override]
-	public function sendMessage(Account $account, LocalMessage $message, Mailbox $sentMailbox): void {
+	public function sendMessage(Account $account, LocalMessage $message, ?Mailbox $sentMailbox): void {
+		if ($sentMailbox === null) {
+			$message->setStatus(LocalMessage::STATUS_NO_SENT_MAILBOX);
+			return;
+		}
+
 		$to = $this->transmissionService->getAddressList($message, Recipient::TYPE_TO);
 		$cc = $this->transmissionService->getAddressList($message, Recipient::TYPE_CC);
 		$bcc = $this->transmissionService->getAddressList($message, Recipient::TYPE_BCC);

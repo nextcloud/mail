@@ -10,6 +10,7 @@ namespace OCA\Mail\Send;
 
 use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\Protocol\ProtocolFactory;
@@ -41,17 +42,21 @@ class SendHandler extends AHandler {
 			? LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL
 			: LocalMessage::STATUS_NO_SENT_MAILBOX;
 
-		$sentMailboxId = $account->getMailAccount()->getSentMailboxId();
-		if ($sentMailboxId === null) {
-			$localMessage->setStatus($noSentMailboxStatus);
-			return $localMessage;
-		}
-		try {
-			$sentMailbox = $this->mailboxMapper->findById($sentMailboxId);
-		} catch (DoesNotExistException $e) {
-			$this->logger->error('Sent mailbox not found', ['exception' => $e]);
-			$localMessage->setStatus($noSentMailboxStatus);
-			return $localMessage;
+		$mailAccount = $account->getMailAccount();
+		$sentMailbox = null;
+		if ($mailAccount->getSaveSentCopy() || $mailAccount->getProtocol() !== MailAccount::PROTOCOL_IMAP) {
+			$sentMailboxId = $mailAccount->getSentMailboxId();
+			if ($sentMailboxId === null) {
+				$localMessage->setStatus($noSentMailboxStatus);
+				return $localMessage;
+			}
+			try {
+				$sentMailbox = $this->mailboxMapper->findById($sentMailboxId);
+			} catch (DoesNotExistException $e) {
+				$this->logger->error('Sent mailbox not found', ['exception' => $e]);
+				$localMessage->setStatus($noSentMailboxStatus);
+				return $localMessage;
+			}
 		}
 
 		$this->protocolFactory->transmissionConnector($account)->sendMessage($account, $localMessage, $sentMailbox);
