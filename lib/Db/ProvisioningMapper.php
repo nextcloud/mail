@@ -127,6 +127,7 @@ class ProvisioningMapper extends QBMapper {
 		$provisioning->setSieveUser($data['sieveUser'] ?? '');
 		$provisioning->setSievePort($data['sievePort'] ?? null);
 		$provisioning->setSieveSslMode($data['sieveSslMode'] ?? '');
+		$provisioning->setSaveSentCopy((bool)($data['saveSentCopy'] ?? true));
 
 		$provisioning->setLdapAliasesProvisioning($ldapAliasesProvisioning);
 		$provisioning->setLdapAliasesAttribute($ldapAliasesAttribute);

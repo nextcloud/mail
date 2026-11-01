@@ -222,6 +222,10 @@ class AccountsController extends Controller {
 
 		$dbAccount = $account->getMailAccount();
 
+		if ($saveSentCopy !== null && $dbAccount->getProvisioningId() !== null) {
+			throw new ClientException('The sent copy setting of a provisioned account is managed by the administrator');
+		}
+
 		foreach ([$draftsMailboxId, $sentMailboxId, $trashMailboxId, $archiveMailboxId, $snoozeMailboxId, $junkMailboxId] as $mailboxId) {
 			if ($mailboxId !== null) {
 				$this->delegationService->assertMailboxAccess($mailboxId, $this->userId);

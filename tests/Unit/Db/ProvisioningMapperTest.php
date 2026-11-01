@@ -194,6 +194,34 @@ class ProvisioningMapperTest extends TestCase {
 		$this->assertArrayHasKey('masterPassword', $exception->getFields());
 	}
 
+	public static function provideSaveSentCopy(): array {
+		return [
+			'missing' => [[], true],
+			'disabled' => [['saveSentCopy' => false], false],
+		];
+	}
+
+	/** @dataProvider provideSaveSentCopy */
+	public function testValidateSaveSentCopy(array $extra, bool $expected): void {
+		$data = array_merge([
+			'provisioningDomain' => 'static.test',
+			'emailTemplate' => '%USERID%@static.test',
+			'imapUser' => '%EMAIL%',
+			'imapHost' => 'static.test',
+			'imapPort' => '143',
+			'imapSslMode' => 'none',
+			'smtpUser' => '%EMAIL%',
+			'smtpHost' => 'static.test',
+			'smtpPort' => '25',
+			'smtpSslMode' => 'none',
+			'sieveEnabled' => false,
+		], $extra);
+
+		$provisioning = $this->mapper->validate($data);
+
+		$this->assertSame($expected, $provisioning->getSaveSentCopy());
+	}
+
 	public function testValidateClearsMasterUserWhenDisabled(): void {
 		$data = [
 			'provisioningDomain' => 'static.test',

@@ -64,8 +64,41 @@ class UpdateProvisioningTest extends TestCase {
 					&& $data['smtpHost'] === 'smtp.example.com'
 					&& $data['emailTemplate'] === '%USERID%@example.com'
 					&& $data['masterPasswordEnabled'] === true
-					&& $data['masterPassword'] === Provisioning::MASTER_PASSWORD_PLACEHOLDER;
+					&& $data['masterPassword'] === Provisioning::MASTER_PASSWORD_PLACEHOLDER
+					&& $data['saveSentCopy'] === true;
 			}));
+
+		$status = $this->tester->execute([
+			'id' => '3',
+			'--imap-host' => 'imap.example.net',
+		]);
+
+		self::assertSame(Command::SUCCESS, $status);
+	}
+
+	public function testDisablesSentCopy(): void {
+		$this->provisioningManager->method('getConfigById')
+			->willReturn($this->existingConfig());
+		$this->provisioningManager->expects(self::once())
+			->method('updateProvisioning')
+			->with(self::callback(static fn (array $data): bool => $data['saveSentCopy'] === false));
+
+		$status = $this->tester->execute([
+			'id' => '3',
+			'--no-save-sent-copy' => true,
+		]);
+
+		self::assertSame(Command::SUCCESS, $status);
+	}
+
+	public function testKeepsDisabledSentCopy(): void {
+		$config = $this->existingConfig();
+		$config->setSaveSentCopy(false);
+		$this->provisioningManager->method('getConfigById')
+			->willReturn($config);
+		$this->provisioningManager->expects(self::once())
+			->method('updateProvisioning')
+			->with(self::callback(static fn (array $data): bool => $data['saveSentCopy'] === false));
 
 		$status = $this->tester->execute([
 			'id' => '3',

@@ -116,6 +116,32 @@ class ManagerTest extends TestCase {
 		$this->assertTrue($result);
 	}
 
+	public function testUpdateProvisionSingleUserEnforcesSentCopy(): void {
+		$user = $this->createConfiguredMock(IUser::class, [
+			'getEmailAddress' => 'bruce.wayne@batman.com',
+			'getUID' => 'bruce'
+		]);
+		$config = new Provisioning();
+		$config->setId(1);
+		$config->setProvisioningDomain('batman.com');
+		$config->setEmailTemplate('%USER%@batman.com');
+		$config->setSaveSentCopy(false);
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
+		$this->mock->getParameter('appManager')
+			->method('isEnabledForUser')
+			->willReturn(true);
+		$this->mock->getParameter('mailAccountMapper')
+			->method('findProvisionedAccount')
+			->willReturn($mailAccount);
+		$this->mock->getParameter('mailAccountMapper')
+			->expects($this->once())
+			->method('update')
+			->with(self::callback(static fn (MailAccount $account): bool => $account->getSaveSentCopy() === false));
+
+		$this->manager->provisionSingleUser([$config], $user);
+	}
+
 	public function testProvisionSingleUser() {
 		/** @var IUser|MockObject $user */
 		$user = $this->createConfiguredMock(IUser::class, [

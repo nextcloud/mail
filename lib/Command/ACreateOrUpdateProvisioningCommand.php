@@ -28,6 +28,7 @@ abstract class ACreateOrUpdateProvisioningCommand extends AProvisioningCommand {
 	private const OPTION_NO_MASTER_PASSWORD = 'no-master-password';
 	private const OPTION_NO_SIEVE = 'no-sieve';
 	private const OPTION_NO_LDAP_ALIASES = 'no-ldap-aliases';
+	private const OPTION_SAVE_SENT_COPY = 'save-sent-copy';
 
 	/** Option name => [data key, description] */
 	private const FIELDS = [
@@ -75,6 +76,7 @@ abstract class ACreateOrUpdateProvisioningCommand extends AProvisioningCommand {
 		$this->addOption(self::OPTION_NO_MASTER_PASSWORD, null, InputOption::VALUE_NONE, 'Use the login password of each user');
 		$this->addOption(self::OPTION_NO_SIEVE, null, InputOption::VALUE_NONE, 'Disable Sieve');
 		$this->addOption(self::OPTION_NO_LDAP_ALIASES, null, InputOption::VALUE_NONE, 'Disable alias provisioning from LDAP');
+		$this->addOption(self::OPTION_SAVE_SENT_COPY, null, InputOption::VALUE_NEGATABLE, 'Save a copy of sent messages in the Sent folder');
 	}
 
 	/**
@@ -127,6 +129,7 @@ abstract class ACreateOrUpdateProvisioningCommand extends AProvisioningCommand {
 			$input->getOption('ldap-aliases-attribute'),
 			$defaults['ldapAliasesProvisioning'] ?? false,
 		);
+		$data['saveSentCopy'] = $input->getOption(self::OPTION_SAVE_SENT_COPY) ?? $defaults['saveSentCopy'] ?? true;
 
 		if ($input->getOption(self::OPTION_NO_MASTER_PASSWORD)) {
 			$data['masterPasswordEnabled'] = false;

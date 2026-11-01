@@ -416,6 +416,21 @@ class AccountsControllerTest extends TestCase {
 		$this->controller->patchAccount($this->accountId, saveSentCopy: false);
 	}
 
+	public function testPatchAccountSaveSentCopyOfProvisionedAccount(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId($this->accountId);
+		$mailAccount->setUserId($this->userId);
+		$mailAccount->setProvisioningId(1);
+		$this->accountService->method('find')
+			->willReturn(new Account($mailAccount));
+		$this->accountService->expects(self::never())
+			->method('save');
+
+		$this->expectException(ClientException::class);
+
+		$this->controller->patchAccount($this->accountId, saveSentCopy: false);
+	}
+
 	public function testPatchAccountSpecialMailboxNotDelegated(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId($this->accountId);

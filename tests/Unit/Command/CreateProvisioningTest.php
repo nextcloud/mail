@@ -68,6 +68,7 @@ class CreateProvisioningTest extends TestCase {
 				'sievePort' => null,
 				'sieveEnabled' => false,
 				'ldapAliasesProvisioning' => false,
+				'saveSentCopy' => true,
 			])
 			->willReturn($provisioning);
 
@@ -96,6 +97,19 @@ class CreateProvisioningTest extends TestCase {
 			'--sieve-port' => '4190',
 			'--sieve-ssl-mode' => 'tls',
 			'--ldap-aliases-attribute' => 'proxyAddresses',
+		]));
+
+		self::assertSame(Command::SUCCESS, $status);
+	}
+
+	public function testCreateWithoutSentCopy(): void {
+		$this->provisioningManager->expects(self::once())
+			->method('newProvisioning')
+			->with(self::callback(static fn (array $data): bool => $data['saveSentCopy'] === false))
+			->willReturn(new Provisioning());
+
+		$status = $this->tester->execute(array_merge($this->options, [
+			'--no-save-sent-copy' => true,
 		]));
 
 		self::assertSame(Command::SUCCESS, $status);

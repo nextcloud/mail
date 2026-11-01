@@ -179,6 +179,18 @@
 								:for="'mail-provision-smtp-user-tls' + setting.id"
 								:class="{ primary: smtpSslMode === 'tls' }">{{ t('mail', 'STARTTLS') }}</label>
 						</div>
+						<div>
+							<input
+								:id="'mail-provision-save-sent-copy' + setting.id"
+								v-model="saveSentCopy"
+								:disabled="loading"
+								type="checkbox"
+								class="checkbox">
+							<label :for="'mail-provision-save-sent-copy' + setting.id">
+								{{ t('mail', 'Save a copy of sent messages') }}
+							</label>
+							<p>{{ t('mail', 'Turn this off if the mail server already saves sent messages, to avoid duplicates in the Sent folder.') }}</p>
+						</div>
 					</div>
 				</div>
 				<div class="settings-group">
@@ -448,6 +460,7 @@ export default {
 			sievePort: this.setting.sievePort || '',
 			sieveSslMode: this.setting.sieveSslMode || '',
 			sieveUser: this.setting.sieveUser || '',
+			saveSentCopy: this.setting.saveSentCopy ?? true,
 			previewData1: {
 				uid: 'user123',
 				email: '',
@@ -530,6 +543,7 @@ export default {
 					sieveHost: this.sieveHost,
 					sievePort: this.sievePort,
 					sieveSslMode: this.sieveSslMode,
+					saveSentCopy: this.saveSentCopy,
 					ldapAliasesProvisioning: this.ldapAliasesProvisioning,
 					ldapAliasesAttribute: this.ldapAliasesAttribute,
 				})

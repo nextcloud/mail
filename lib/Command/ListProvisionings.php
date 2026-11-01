@@ -49,7 +49,7 @@ final class ListProvisionings extends Command {
 		}
 
 		$table = new Table($output);
-		$table->setHeaders(['Id', 'Domain', 'Email', 'IMAP', 'SMTP', 'Sieve', 'Master password']);
+		$table->setHeaders(['Id', 'Domain', 'Email', 'IMAP', 'SMTP', 'Sieve', 'Master password', 'Sent copy']);
 		foreach ($provisionings as $provisioning) {
 			$table->addRow([
 				$provisioning->getId(),
@@ -59,6 +59,7 @@ final class ListProvisionings extends Command {
 				$provisioning->getSmtpUser() . '@' . $provisioning->getSmtpHost() . ':' . $provisioning->getSmtpPort() . ' (' . $provisioning->getSmtpSslMode() . ')',
 				$provisioning->getSieveEnabled() === true ? $provisioning->getSieveHost() . ':' . $provisioning->getSievePort() . ' (' . ($provisioning->getSieveSslMode() ?? 'none') . ')' : 'no',
 				$this->formatMasterPassword($provisioning),
+				$provisioning->getSaveSentCopy() ? 'yes' : 'no',
 			]);
 		}
 		$table->render();

@@ -67,6 +67,7 @@ class ListProvisioningsTest extends TestCase {
 		self::assertStringContainsString('%USERID%@imap.example.com:993 (ssl)', $display);
 		self::assertStringContainsString('%USERID%@smtp.example.com:587 (tls)', $display);
 		self::assertStringContainsString('yes (user: *masteruser)', $display);
+		self::assertStringContainsString('Sent copy', $display);
 		self::assertStringNotContainsString('sesame', $display);
 	}
 
