@@ -10,7 +10,6 @@ namespace OCA\Mail\Send;
 
 use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
-use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\Protocol\ProtocolFactory;
@@ -44,7 +43,7 @@ class SendHandler extends AHandler {
 
 		$mailAccount = $account->getMailAccount();
 		$sentMailbox = null;
-		if ($mailAccount->getSaveSentCopy() || $mailAccount->getProtocol() !== MailAccount::PROTOCOL_IMAP) {
+		if ($mailAccount->getSaveSentCopy() || !$mailAccount->isImap()) {
 			$sentMailboxId = $mailAccount->getSentMailboxId();
 			if ($sentMailboxId === null) {
 				$localMessage->setStatus($noSentMailboxStatus);
