@@ -86,7 +86,7 @@
     "@nextcloud/eslint-config": "^9.0.1",
     "@nextcloud/stylelint-config": "^3.2.2",
     "@playwright/test": "^1.63.0",
-    "@vitejs/plugin-vue": "^6.0.9",
+    "@vitejs/plugin-vue": "^6.0.10",
     "@vue/test-utils": "^2.5.1",
     "autoprefixer": "^10.6.1",
     "babel-loader": "^10.1.1",
