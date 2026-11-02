@@ -66,6 +66,9 @@
 					@click="entry.action">
 					{{ entry.text }}
 				</NcActionButton>
+				<NcActionText v-if="calendarMenuEntries.length === 0">
+					{{ t('mail', 'None of your calendars can store the contents of this file') }}
+				</NcActionText>
 			</template>
 		</NcActions>
 	</div>
@@ -78,6 +81,7 @@ import { formatFileSize } from '@nextcloud/files'
 import { t } from '@nextcloud/l10n'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
+import NcActionText from '@nextcloud/vue/components/NcActionText'
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import IconArrow from 'vue-material-design-icons/ArrowLeft.vue'
 import IconSave from 'vue-material-design-icons/FolderOutline.vue'
@@ -85,7 +89,7 @@ import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconDownload from 'vue-material-design-icons/TrayArrowDown.vue'
 import Logger from '../logger.js'
 import { downloadAttachment, saveAttachmentToFiles } from '../service/AttachmentService.js'
-import { getUserCalendars, importCalendarEvent } from '../service/DAVService.js'
+import { getCalendarComponents, getUserCalendars, importCalendarEvent } from '../service/DAVService.js'
 import { pickFolder } from '../util/filePicker.js'
 
 export default {
@@ -93,6 +97,7 @@ export default {
 	components: {
 		NcActions,
 		NcActionButton,
+		NcActionText,
 		IconAdd,
 		IconArrow,
 		NcLoadingIcon,
@@ -239,13 +244,19 @@ export default {
 			window.location = this.url
 		},
 
-		loadCalendars() {
+		async loadCalendars() {
 			this.loadingCalendars = true
-			getUserCalendars().then((calendars) => {
-				this.calendars = calendars
+			try {
+				const data = await downloadAttachment(this.url)
+				// Only offer calendars that accept every component type (event, task, journal) in the file
+				this.calendars = await getUserCalendars(getCalendarComponents(data))
 				this.showCalendarPopover = true
+			} catch (error) {
+				Logger.error('Could not load calendars', { error })
+				showError(t('mail', 'Could not load your calendars'))
+			} finally {
 				this.loadingCalendars = false
-			})
+			}
 		},
 
 		closeCalendarPopover() {
