@@ -56,6 +56,7 @@ class RepliedMessagesExtractor implements IExtractor {
 			return [0];
 		}
 
+		/** @psalm-suppress PossiblyNullArrayOffset */
 		return [($this->repliedMessages[$email] ?? 0) / $total];
 	}
 }

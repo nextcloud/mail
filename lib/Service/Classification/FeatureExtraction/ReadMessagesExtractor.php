@@ -56,6 +56,7 @@ class ReadMessagesExtractor implements IExtractor {
 			return [0];
 		}
 
+		/** @psalm-suppress PossiblyNullArrayOffset */
 		return [($this->readMessages[$email] ?? 0) / $total];
 	}
 }
