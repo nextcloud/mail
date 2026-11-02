@@ -109,6 +109,8 @@ import { isPgpgMessage } from '../crypto/pgp.js'
 import useMainStore from '../store/mainStore.js'
 import { html, plain } from '../util/text.js'
 
+const SUPPORTED_ITINERARY_TYPES = ['EventReservation', 'FlightReservation', 'TrainReservation']
+
 export default {
 	name: 'Message',
 	components: {
@@ -185,7 +187,7 @@ export default {
 		},
 
 		itineraries() {
-			return this.message.itineraries ?? []
+			return (this.message.itineraries ?? []).filter((entry) => SUPPORTED_ITINERARY_TYPES.includes(entry['@type']))
 		},
 
 		hasCurrentUserPrincipalAndCollections() {

@@ -20,9 +20,6 @@
 				:data="entry"
 				:calendars="calendars"
 				:messageId="messageId" />
-			<span v-else>{{
-				t('mail', 'Itinerary for {type} is not supported yet', { type: entry['@type'] })
-			}}</span>
 		</template>
 	</div>
 </template>
