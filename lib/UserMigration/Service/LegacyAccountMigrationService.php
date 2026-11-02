@@ -20,6 +20,7 @@ use OCP\IDBConnection;
 use OCP\IL10N;
 use OCP\IUser;
 use OCP\Security\ICrypto;
+use OCP\Security\IRemoteHostValidator;
 use OCP\UserMigration\IImportSource;
 use OCP\UserMigration\UserMigrationException;
 use Psr\Log\LoggerInterface;
@@ -40,12 +41,15 @@ class LegacyAccountMigrationService {
 
 	public const ACCOUNT_INDEX_FILE = MailAccountMigrator::EXPORT_ROOT . '/accounts/index.json';
 
+	private const HOST_KEYS = ['imapHost', 'smtpHost', 'sieveHost'];
+
 	public function __construct(
 		private readonly AccountService $accountService,
 		private readonly AliasesService $aliasesService,
 		private readonly ICrypto $crypto,
 		private readonly IL10N $l10n,
 		private readonly IDBConnection $connection,
+		private readonly IRemoteHostValidator $hostValidator,
 		private readonly LoggerInterface $logger,
 	) {
 	}
@@ -65,6 +69,17 @@ class LegacyAccountMigrationService {
 		$orderOffset = $this->getNextAccountOrder($user);
 
 		foreach ($this->getAccountFilePaths($importSource, $output) as $accountFilePath) {
+			if (!is_string($accountFilePath)) {
+				$output->writeln(
+					$this->l10n->t(
+						'A mail account of %s is invalid and will be skipped. Continue …',
+						[$user->getUID()]
+					)
+				);
+
+				continue;
+			}
+
 			$accountData = $this->getAccount($importSource, $accountFilePath, $output);
 			if ($accountData === null) {
 				continue;
@@ -76,15 +91,25 @@ class LegacyAccountMigrationService {
 					$this->l10n->t(
 						'Skipping account %1$s because migrating %2$s accounts is not supported yet',
 						[$accountFilePath, $protocol]
-					), OutputInterface::VERBOSITY_VERBOSE
+					)
 				);
 
 				continue;
 			}
 
-			$newAccount = $this->buildAccount($user, $accountData, $orderOffset);
+			if (isset($accountData['accountId'], $accountsMapping[(int)$accountData['accountId']])) {
+				$output->writeln(
+					$this->l10n->t(
+						'Mail account %s has the same ID as another account of the export and will be skipped. Continue …',
+						[$accountFilePath]
+					)
+				);
+
+				continue;
+			}
 
 			try {
+				$newAccount = $this->buildAccount($user, $accountData, $orderOffset);
 				$mailAccount = $this->atomic(function () use ($newAccount, $accountData): MailAccount {
 					$saved = $this->accountService->save($newAccount, false);
 					$this->setAliases($saved, $accountData);
@@ -115,7 +140,7 @@ class LegacyAccountMigrationService {
 	 * Version 1 wrote a map of account id to archive path instead of relying on
 	 * the folder listing, and the paths it stored are already absolute.
 	 *
-	 * @return list<string>
+	 * @return list<mixed>
 	 */
 	private function getAccountFilePaths(IImportSource $importSource, OutputInterface $output): array {
 		try {
@@ -125,19 +150,18 @@ class LegacyAccountMigrationService {
 				flags: JSON_THROW_ON_ERROR
 			);
 		} catch (JsonException|UserMigrationException) {
+			$index = null;
+		}
+
+		if (!is_array($index)) {
 			$output->writeln(
-				$this->l10n->t('No readable account index in the version 1 export. Continue …'),
-				OutputInterface::VERBOSITY_VERBOSE
+				$this->l10n->t('No readable account index in the version 1 export. Continue …')
 			);
 
 			return [];
 		}
 
-		if (!is_array($index)) {
-			return [];
-		}
-
-		return array_values(array_filter($index, static fn (mixed $path): bool => is_string($path)));
+		return array_values($index);
 	}
 
 	private function getAccount(IImportSource $importSource, string $path, OutputInterface $output): ?array {
@@ -145,8 +169,7 @@ class LegacyAccountMigrationService {
 			$accountData = json_decode($importSource->getFileContents($path), true, flags: JSON_THROW_ON_ERROR);
 		} catch (JsonException|UserMigrationException) {
 			$output->writeln(
-				$this->l10n->t('Mail account %s could not be read and will be skipped. Continue …', [$path]),
-				OutputInterface::VERBOSITY_VERBOSE
+				$this->l10n->t('Mail account %s could not be read and will be skipped. Continue …', [$path])
 			);
 
 			return null;
@@ -158,16 +181,34 @@ class LegacyAccountMigrationService {
 			$accountData['imapPort'],
 			$accountData['imapSslMode'],
 		);
-		if (!is_array($accountData) || !$hasInbound) {
+		if (!is_array($accountData)
+			|| !$hasInbound
+			|| !in_array($accountData['authMethod'] ?? MailAccount::DEFAULT_AUTH_METHOD, MailAccount::AUTH_METHODS, true)
+			|| !$this->hasAllowedHosts($accountData)) {
 			$output->writeln(
-				$this->l10n->t('Mail account %s is invalid and will be skipped. Continue …', [$path]),
-				OutputInterface::VERBOSITY_VERBOSE
+				$this->l10n->t('Mail account %s is invalid and will be skipped. Continue …', [$path])
 			);
 
 			return null;
 		}
 
 		return $accountData;
+	}
+
+	private function hasAllowedHosts(array $accountData): bool {
+		foreach (self::HOST_KEYS as $hostKey) {
+			$host = $accountData[$hostKey] ?? null;
+			if ($host === null) {
+				continue;
+			}
+
+			// The remote host validator throws on a host that is empty without its trailing dots
+			if (!is_string($host) || rtrim($host, '.') === '' || !$this->hostValidator->isValid($host)) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	private function buildAccount(IUser $user, array $accountData, int $orderOffset): MailAccount {
@@ -209,7 +250,7 @@ class LegacyAccountMigrationService {
 			$newAccount->setOutboundUser($accountData['smtpUser']);
 		}
 
-		$newAccount->setAuthMethod($accountData['authMethod'] ?? 'password');
+		$newAccount->setAuthMethod($accountData['authMethod'] ?? MailAccount::DEFAULT_AUTH_METHOD);
 		if (isset($accountData['inboundPassword'])) {
 			$newAccount->setInboundPassword($this->crypto->encrypt($accountData['inboundPassword']));
 		}

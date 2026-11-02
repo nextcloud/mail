@@ -7,6 +7,8 @@ import { createTestingPinia } from '@pinia/testing'
 import { shallowMount } from '@vue/test-utils'
 import { setActivePinia } from 'pinia'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { h } from 'vue'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import ListItem from '../../../../components/textBlocks/ListItem.vue'
 import Nextcloud from '../../../../mixins/Nextcloud.js'
 import useMainStore from '../../../../store/mainStore.js'
@@ -36,6 +38,11 @@ describe('ListItem', () => {
 	const mountListItem = () => shallowMount(ListItem, {
 		global: {
 			mixins: [Nextcloud],
+			stubs: {
+				NcListItem: {
+					setup: (props, { slots }) => () => h('div', slots['extra-actions']?.()),
+				},
+			},
 		},
 		props: {
 			textBlock: { id: 1, title: 'Greeting', content: 'Hello', preview: 'Hello' },
@@ -62,5 +69,27 @@ describe('ListItem', () => {
 
 		expect(view.vm.editModalOpen).toBe(true)
 		expect(view.vm.saveLoading).toBe(false)
+	})
+
+	it('asks for confirmation before deleting', async () => {
+		store.deleteTextBlock = vi.fn().mockResolvedValue()
+		const view = mountListItem()
+		const deleteAction = view.findAllComponents(NcActionButton)
+			.find((button) => button.attributes('icon') === 'icon-delete')
+
+		await deleteAction.vm.$emit('click')
+
+		expect(view.vm.deleteDialogOpen).toBe(true)
+		expect(store.deleteTextBlock).not.toHaveBeenCalled()
+	})
+
+	it('deletes the text block once confirmed', async () => {
+		store.deleteTextBlock = vi.fn().mockResolvedValue()
+		const view = mountListItem()
+		const confirm = view.vm.deleteButtons.find((button) => button.variant === 'error')
+
+		await confirm.callback()
+
+		expect(store.deleteTextBlock).toHaveBeenCalledWith({ id: 1 })
 	})
 })

@@ -12,6 +12,9 @@ namespace OCA\Mail\Cache;
 class HordeSyncTokenParser {
 	public function parseSyncToken(string $token): HordeSyncToken {
 		$decodedToken = base64_decode($token, true);
+		if ($decodedToken === false) {
+			$decodedToken = '';
+		}
 		$parts = explode(',', $decodedToken);
 
 		$nextUid = null;

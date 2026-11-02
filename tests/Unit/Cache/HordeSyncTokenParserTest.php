@@ -59,4 +59,12 @@ class HordeSyncTokenParserTest extends TestCase {
 		$this->assertNull($result->getUidValidity());
 		$this->assertNull($result->getHighestModSeq());
 	}
+
+	public function testParseInvalidBase64Token(): void {
+		$result = $this->parser->parseSyncToken('not valid base64!!');
+
+		$this->assertNull($result->getNextUid());
+		$this->assertNull($result->getUidValidity());
+		$this->assertNull($result->getHighestModSeq());
+	}
 }

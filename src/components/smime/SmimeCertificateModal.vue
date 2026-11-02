@@ -33,7 +33,7 @@
 								<NcButton
 									variant="tertiary-no-background"
 									:aria-label="t('mail', 'Delete certificate')"
-									@click="deleteCertificate(certificate.id)">
+									@click="deleteCertificate(certificate)">
 									<template #icon>
 										<DeleteIcon
 											:title="t('mail', 'Delete certificate')"
@@ -142,7 +142,7 @@
 </template>
 
 <script>
-import { showError, showSuccess } from '@nextcloud/dialogs'
+import { DialogBuilder, showError, showSuccess } from '@nextcloud/dialogs'
 import moment from '@nextcloud/moment'
 import { mapState, mapStores } from 'pinia'
 import NcButton from '@nextcloud/vue/components/NcButton'
@@ -201,8 +201,33 @@ export default {
 	},
 
 	methods: {
-		async deleteCertificate(id) {
-			await this.mainStore.deleteSmimeCertificate(id)
+		async deleteCertificate(certificate) {
+			const dialog = new DialogBuilder()
+				.setName(t('mail', 'Delete certificate'))
+				.setText(t('mail', 'The certificate {name} ({email}) will be deleted. Messages that require it can no longer be signed or decrypted.', {
+					name: certificate.info.commonName,
+					email: certificate.info.emailAddress,
+				}))
+				.setButtons([
+					{
+						label: t('mail', 'Cancel'),
+						callback: () => {},
+					},
+					{
+						label: t('mail', 'Delete'),
+						variant: 'error',
+						callback: async () => {
+							try {
+								await this.mainStore.deleteSmimeCertificate(certificate.id)
+							} catch (error) {
+								logger.error('Could not delete S/MIME certificate', { error })
+								showError(t('mail', 'Could not delete certificate'))
+							}
+						},
+					},
+				])
+				.build()
+			await dialog.show()
 		},
 
 		async uploadCertificate() {

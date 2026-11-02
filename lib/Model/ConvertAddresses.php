@@ -35,6 +35,7 @@ trait ConvertAddresses {
 	protected function hordeListToStringArray(Horde_Mail_Rfc822_List $list): array {
 		$addresses = [];
 		foreach ($list as $address) {
+			/** @psalm-suppress PossiblyNullArgument */
 			$addresses[] = $this->hordeToString($address);
 		}
 		return $addresses;

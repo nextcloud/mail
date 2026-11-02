@@ -1287,6 +1287,11 @@ export default function mainStoreActions() {
 		}) {
 			return handleHttpAuthErrors(async () => {
 				const internalAddress = await addInternalAddress(address, type)
+				if (internalAddress === null) {
+					logger.debug('internal address is already internal')
+					return
+				}
+
 				this.addInternalAddressMutation(internalAddress)
 				logger.debug('internal address added')
 			})

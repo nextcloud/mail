@@ -165,8 +165,13 @@ class SetupServiceTest extends TestCase {
 					self::USER_ID,
 					self::AUTH_METHOD_PASSWORD
 				);
+				$account->setId(42);
 				return true;
 			}));
+
+		$this->accountService->expects(self::once())
+			->method('findById')
+			->with(42);
 
 		$this->tagMapper->expects(self::once())
 			->method('createDefaultTags')
@@ -214,7 +219,11 @@ class SetupServiceTest extends TestCase {
 
 		$this->accountService->expects(self::once())
 			->method('save')
-			->with(self::callback(fn (MailAccount $account): bool => $account->getAuthMethod() === self::AUTH_METHOD_OAUTH2));
+			->with(self::callback(function (MailAccount $account): bool {
+				$this->assertSame(self::AUTH_METHOD_OAUTH2, $account->getAuthMethod());
+				$account->setId(42);
+				return true;
+			}));
 
 		$this->tagMapper->expects(self::once())->method('createDefaultTags');
 

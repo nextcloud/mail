@@ -338,15 +338,16 @@ class MessageMapper extends QBMapper {
 				];
 				foreach ($recipientTypes as $type => $recipients) {
 					foreach ($recipients->iterate() as $recipient) {
-						if ($recipient->getEmail() === null) {
+						$recipientEmail = $recipient->getEmail();
+						if ($recipientEmail === null) {
 							// If for some reason the e-mail is not set we should ignore this entry
 							continue;
 						}
 
 						$qb2->setParameter('message_id', $message->getId(), IQueryBuilder::PARAM_INT);
 						$qb2->setParameter('type', $type, IQueryBuilder::PARAM_INT);
-						$qb2->setParameter('label', mb_strcut($recipient->getLabel(), 0, 255), IQueryBuilder::PARAM_STR);
-						$qb2->setParameter('email', mb_strcut($recipient->getEmail(), 0, 255), IQueryBuilder::PARAM_STR);
+						$qb2->setParameter('label', mb_strcut($recipient->getLabel() ?? $recipientEmail, 0, 255), IQueryBuilder::PARAM_STR);
+						$qb2->setParameter('email', mb_strcut($recipientEmail, 0, 255), IQueryBuilder::PARAM_STR);
 
 						$qb2->executeStatement();
 					}
@@ -607,10 +608,14 @@ class MessageMapper extends QBMapper {
 				$query->setParameter('mailbox_id', $message->getMailboxId(), IQueryBuilder::PARAM_INT);
 				$query->setParameter('flag_attachments', $message->getFlagAttachments(), $message->getFlagAttachments() === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_BOOL);
 				$previewText = null;
-				if ($message->getPreviewText() !== null) {
-					$convertedText = mb_convert_encoding($message->getPreviewText(), 'UTF-8', 'UTF-8');
+				$rawPreviewText = $message->getPreviewText();
+				if ($rawPreviewText !== null) {
+					$convertedText = mb_convert_encoding($rawPreviewText, 'UTF-8', 'UTF-8');
+					if ($convertedText === false) {
+						$convertedText = $rawPreviewText;
+					}
 					//converting the spaces is necessary for ltrim to work
-					$previewText = mb_strcut(ltrim(preg_replace('/\s/u', ' ', $convertedText)), 0, 255);
+					$previewText = mb_strcut(ltrim(preg_replace('/\s/u', ' ', $convertedText) ?? $convertedText), 0, 255);
 
 					// Make sure modifications are visible when these objects are used right away
 					$message->setPreviewText($previewText);

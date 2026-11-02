@@ -38,6 +38,10 @@ class Tag extends Entity implements JsonSerializable {
 	public const LABEL_TODO = '$label4';
 	public const LABEL_LATER = '$label5';
 
+	public const IMAP_LABEL_MAX_LENGTH = 64;
+	public const DISPLAY_NAME_MAX_LENGTH = 128;
+	public const COLOR_MAX_LENGTH = 9;
+
 	public function __construct() {
 		$this->addType('isDefaultTag', 'boolean');
 	}

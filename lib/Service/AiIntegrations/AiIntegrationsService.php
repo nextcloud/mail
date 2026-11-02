@@ -292,7 +292,7 @@ class AiIntegrationsService {
 				$this->cache->addFailure($cacheKey);
 				return [];
 			}
-			$cleaned = preg_replace('/^```json\s*|\s*```$/', '', $replies);
+			$cleaned = preg_replace('/^```json\s*|\s*```$/', '', $replies) ?? $replies;
 			try {
 				$decoded = json_decode($cleaned, true, 512, JSON_THROW_ON_ERROR);
 			} catch (JsonException $e) {

@@ -1104,16 +1104,28 @@ export default {
 			}
 		},
 
-		selectTo(val) {
-			this.$emit('update:to', val)
+		selectTo: {
+			handler(val) {
+				this.$emit('update:to', val)
+			},
+
+			deep: 1,
 		},
 
-		selectCc(val) {
-			this.$emit('update:cc', val)
+		selectCc: {
+			handler(val) {
+				this.$emit('update:cc', val)
+			},
+
+			deep: 1,
 		},
 
-		selectBcc(val) {
-			this.$emit('update:bcc', val)
+		selectBcc: {
+			handler(val) {
+				this.$emit('update:bcc', val)
+			},
+
+			deep: 1,
 		},
 
 		subjectVal(val) {

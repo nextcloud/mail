@@ -12,6 +12,7 @@ namespace Unit\UserMigration\Service;
 use ChristophWurst\Nextcloud\Testing\ServiceMockObject;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\TrustedSender;
+use OCA\Mail\Tests\Unit\UserMigration\RecordsConsoleOutput;
 use OCA\Mail\UserMigration\Service\TrustedSendersMigrationService;
 use OCP\IUser;
 use OCP\UserMigration\IExportDestination;
@@ -20,6 +21,8 @@ use OCP\UserMigration\UserMigrationException;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class TrustedSendersMigrationServiceTest extends TestCase {
+	use RecordsConsoleOutput;
+
 	private const USER_ID = '123';
 	private OutputInterface $output;
 	private IUser $user;
@@ -160,5 +163,34 @@ class TrustedSendersMigrationServiceTest extends TestCase {
 		$domainSender->setType('domain');
 
 		return $domainSender;
+	}
+
+	public function testImportReportsInvalidTrustedSendersAsANotice(): void {
+		$this->recordConsoleOutput();
+		$this->importSource->method('getFileContents')
+			->with(TrustedSendersMigrationService::TRUSTED_SENDERS_FILE)
+			->willReturn('this is not valid json {{{');
+
+		$this->migrationService->importTrustedSenders($this->user, $this->importSource, $this->output);
+
+		$this->assertWritten('is invalid and will be skipped', 0);
+	}
+
+	public function testImportSkipsOnlyTheMalformedTrustedSender(): void {
+		$this->recordConsoleOutput();
+		$this->importSource->method('getFileContents')
+			->with(TrustedSendersMigrationService::TRUSTED_SENDERS_FILE)
+			->willReturn(json_encode([
+				['email' => 'malformed@doe.com', 'type' => null],
+				['email' => 'jane@doe.com', 'type' => 'individual'],
+			]));
+		$this->serviceMock->getParameter('trustedSenderService')
+			->expects(self::once())
+			->method('trust')
+			->with(self::USER_ID, 'jane@doe.com', 'individual');
+
+		$this->migrationService->importTrustedSenders($this->user, $this->importSource, $this->output);
+
+		$this->assertWritten('A trusted sender of ' . self::USER_ID . ' is invalid', 0);
 	}
 }
