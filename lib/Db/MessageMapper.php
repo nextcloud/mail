@@ -338,15 +338,16 @@ class MessageMapper extends QBMapper {
 				];
 				foreach ($recipientTypes as $type => $recipients) {
 					foreach ($recipients->iterate() as $recipient) {
-						if ($recipient->getEmail() === null) {
+						$recipientEmail = $recipient->getEmail();
+						if ($recipientEmail === null) {
 							// If for some reason the e-mail is not set we should ignore this entry
 							continue;
 						}
 
 						$qb2->setParameter('message_id', $message->getId(), IQueryBuilder::PARAM_INT);
 						$qb2->setParameter('type', $type, IQueryBuilder::PARAM_INT);
-						$qb2->setParameter('label', mb_strcut($recipient->getLabel(), 0, 255), IQueryBuilder::PARAM_STR);
-						$qb2->setParameter('email', mb_strcut($recipient->getEmail(), 0, 255), IQueryBuilder::PARAM_STR);
+						$qb2->setParameter('label', mb_strcut($recipient->getLabel() ?? $recipientEmail, 0, 255), IQueryBuilder::PARAM_STR);
+						$qb2->setParameter('email', mb_strcut($recipientEmail, 0, 255), IQueryBuilder::PARAM_STR);
 
 						$qb2->executeStatement();
 					}
