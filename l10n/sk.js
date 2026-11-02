@@ -465,6 +465,7 @@ OC.L10N.register(
     "This message has an attached invitation but the invitation dates are in the past" : "K tejto správe je priložená pozvánka, ale dátumy pozvánok sú v minulosti.",
     "This message has an attached invitation but the invitation does not contain a participant that matches any configured mail account address" : "K tejto správe je priložená pozvánka, ale pozvánka neobsahuje účastníka, ktorý by zodpovedal nejakej z nakonfigurovaných e-mailových adries.",
     "Could not remove internal address {sender}" : "Nie je možné odstrániť internú adresu {sender}",
+    "Enter a valid email address or domain" : "Zadajte platnú e-mailovú adresu alebo doménu",
     "Could not add internal address {address}" : "Nie je možné pridať internú adresu {address}",
     "individual" : "individuálne",
     "domain" : "doména",

@@ -465,6 +465,7 @@ OC.L10N.register(
     "This message has an attached invitation but the invitation dates are in the past" : "此訊息包含邀請，但邀請日期已過",
     "This message has an attached invitation but the invitation does not contain a participant that matches any configured mail account address" : "此訊息包含邀請，但邀請中不包含與任何設定的電子郵件地址相符的參與者",
     "Could not remove internal address {sender}" : "無法移除內部地址 {sender}",
+    "Enter a valid email address or domain" : "請輸入有效的電郵地址或網域。",
     "Could not add internal address {address}" : "無法新增內部地址 {address}",
     "individual" : "個人",
     "domain" : "網域名稱",
