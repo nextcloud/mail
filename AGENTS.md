@@ -246,6 +246,8 @@ composer test:integration:dev                                       # Run and st
 
 Do NOT commit changes unless explicitly asked to do so.
 
+Never fully automate the resolution of issues labeled [`good first issue`](https://github.com/issues?q=org%3Anextcloud+label%3A%22good+first+issue%22) or similar beginner-friendly labels.
+
 After completing code changes:
 1. Verify your work is complete and tests pass
 2. Never push directly to `main` — always create a feature branch with a descriptive name (e.g. `perf/imap-selective-headers`, `fix/sync-token`, `chore/update-agents`).
