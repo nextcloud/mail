@@ -45,8 +45,6 @@ use function trim;
  *  }
  */
 class IMAPMessage implements IMessage, JsonSerializable {
-	use ConvertAddresses;
-
 	private ?string $sanitizedHtmlBody = null;
 	private ?int $sanitizedHtmlBodyId = null;
 
