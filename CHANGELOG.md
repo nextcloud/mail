@@ -1,6 +1,18 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 5.13.0 – 2026-11-02
+### Added
+* Occ commands to manage provisioning configs
+* Account migration now exports and imports all account settings
+### Performance
+* Cut redundant work when opening a message
+### Fixed
+* Show TLS modes and the master user in the provisioning occ list output
+* Validate imported account migration data like the settings forms do
+* Use the first value of repeated S/MIME certificate subject fields
+* Refetch the full account configuration after an update
+
 ## 5.12.0 – unreleased
 ### Added
 * Insert images from Files in the composer
