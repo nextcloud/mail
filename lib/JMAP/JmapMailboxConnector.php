@@ -222,7 +222,7 @@ class JmapMailboxConnector implements IMailboxConnector {
 				return $attribute !== '\\subscribed';
 			});
 		}
-		$mailbox->setAttributes(json_encode(array_values(array_unique($attributes))));
+		$mailbox->setAttributes(json_encode(array_values(array_unique($attributes)), JSON_THROW_ON_ERROR));
 		// update remote store
 		$mailbox = $this->jmapOperationsService->collectionModify($remoteId, $mailbox, ['subscribed']);
 		if ($mailbox === null) {
