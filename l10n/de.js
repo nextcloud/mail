@@ -465,6 +465,7 @@ OC.L10N.register(
     "This message has an attached invitation but the invitation dates are in the past" : "Dieser Nachricht ist eine Einladung beigefügt, aber die Einladungsdaten liegen in der Vergangenheit",
     "This message has an attached invitation but the invitation does not contain a participant that matches any configured mail account address" : "Dieser Nachricht ist eine Einladung beigefügt, aber die Einladung enthält keinen Teilnehmer, der mit einer konfigurierten E-Mail-Kontoadresse übereinstimmt",
     "Could not remove internal address {sender}" : "Die interne Adresse {sender} konnte nicht entfernt werden",
+    "Enter a valid email address or domain" : "Eine gültige E-Mail-Adresse oder Domain eingeben",
     "Could not add internal address {address}" : "Die interne Adresse {address} konnte nicht hinzugefügt werden",
     "individual" : "individuell",
     "domain" : "Domain",

@@ -463,6 +463,7 @@
     "This message has an attached invitation but the invitation dates are in the past" : "This message has an attached invitation but the invitation dates are in the past",
     "This message has an attached invitation but the invitation does not contain a participant that matches any configured mail account address" : "This message has an attached invitation but the invitation does not contain a participant that matches any configured mail account address",
     "Could not remove internal address {sender}" : "Could not remove internal address {sender}",
+    "Enter a valid email address or domain" : "Enter a valid email address or domain",
     "Could not add internal address {address}" : "Could not add internal address {address}",
     "individual" : "individual",
     "domain" : "domain",

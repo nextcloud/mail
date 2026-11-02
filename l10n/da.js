@@ -465,6 +465,7 @@ OC.L10N.register(
     "This message has an attached invitation but the invitation dates are in the past" : "Denne besked har en vedhæftet invitation, men invitationens datoer er i fortiden",
     "This message has an attached invitation but the invitation does not contain a participant that matches any configured mail account address" : "Denne besked har en vedhæftet invitation, men invitationen indeholder ikke en deltager, der matcher en konfigureret mailkontoadresse",
     "Could not remove internal address {sender}" : "Kunne ikke fjerne den interne adresse {sender}",
+    "Enter a valid email address or domain" : "Indtast en gyldig e-mailadresse eller et gyldigt domæne",
     "Could not add internal address {address}" : "Kunne ikke tilføje den interne adresse {address}",
     "individual" : "individuel",
     "domain" : "domæne",
