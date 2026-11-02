@@ -108,6 +108,67 @@ export function getCalendarComponents(data) {
 		.filter((name) => vcalendar.getAllSubcomponents(name.toLowerCase()).length > 0)
 }
 
+function escapeXml(value) {
+	return value
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&apos;')
+}
+
+/**
+ * @param {string} data the iCalendar data
+ * @return {{component: string, uid: string}[]} the events, tasks and journals in the data, one entry per UID
+ */
+export function getCalendarObjects(data) {
+	const vcalendar = new ical.Component(ical.parse(data))
+	const objects = new Map()
+	for (const component of ['VEVENT', 'VJOURNAL', 'VTODO']) {
+		for (const subcomponent of vcalendar.getAllSubcomponents(component.toLowerCase())) {
+			const uid = subcomponent.getFirstPropertyValue('uid')
+			if (uid && !objects.has(uid)) {
+				objects.set(uid, { component, uid })
+			}
+		}
+	}
+
+	return [...objects.values()]
+}
+
+/**
+ * @param {string} url the url of the calendar collection
+ * @param {{component: string, uid: string}} object the calendar object to look for
+ * @return {Promise<boolean>} whether the calendar already contains an object with this UID
+ */
+export async function calendarContainsObject(url, { component, uid }) {
+	const response = await Axios.request({
+		method: 'REPORT',
+		url,
+		headers: {
+			Depth: '1',
+			'Content-Type': 'application/xml; charset=utf-8',
+		},
+		data: `<?xml version="1.0" encoding="utf-8"?>
+<c:calendar-query xmlns:d="DAV:" xmlns:c="urn:ietf:params:xml:ns:caldav">
+  <d:prop><d:getetag /></d:prop>
+  <c:filter>
+    <c:comp-filter name="VCALENDAR">
+      <c:comp-filter name="${escapeXml(component)}">
+        <c:prop-filter name="UID">
+          <c:text-match collation="i;octet">${escapeXml(uid)}</c:text-match>
+        </c:prop-filter>
+      </c:comp-filter>
+    </c:comp-filter>
+  </c:filter>
+</c:calendar-query>`,
+	})
+
+	// A multistatus without any <response> element means no match
+	return typeof response.data === 'string'
+		&& /<([a-z0-9]+:)?response[\s>]/i.test(response.data)
+}
+
 function getRandomString() {
 	let str = ''
 	for (let i = 0; i < 7; i++) {
