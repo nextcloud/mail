@@ -40,7 +40,7 @@
 							variant="tertiary">{{ t('mail', 'Change password') }}</NcButton>
 					</span>
 				</div>
-				<template v-else-if="!isDisabled(group.account)">
+				<template v-else-if="!isDisabled(group.account) && !group.account.folded">
 					<template v-for="item in group.mailboxes" :key="item.databaseId">
 						<NavigationMailbox
 							v-show="
@@ -48,10 +48,12 @@
 									|| !group.account.collapsed
 									|| !isCollapsed(group.account, item)
 							"
+							class="navigation-account-mailboxes__item"
 							:account="group.account"
 							:mailbox="item" />
 						<NavigationMailbox
 							v-if="!group.account.isUnified && item.specialRole === 'inbox'"
+							class="navigation-account-mailboxes__item"
 							:account="group.account"
 							:mailbox="item"
 							filter="starred" />
@@ -59,6 +61,7 @@
 					<NavigationAccountExpandCollapse
 						v-if="!group.account.isUnified && group.isCollapsible"
 						:key="'collapse-' + group.account.id"
+						class="navigation-account-mailboxes__item"
 						:account="group.account" />
 				</template>
 			</template>
@@ -266,6 +269,16 @@ export default {
 	width: auto;
 	&__border {
 		border-top: 1px solid var(--color-background-darker);
+	}
+}
+
+.navigation-account-mailboxes {
+	&__item {
+		// The item's root has an explicit width: 100%, so the inset has to come
+		// off that width too — a margin alone would push the right edge outside
+		// the list and misalign it with the account header's trailing icons.
+		width: calc(100% - calc(var(--default-clickable-area) / 2)) !important;
+		margin-inline-start: calc(var(--default-clickable-area) / 2);
 	}
 }
 
