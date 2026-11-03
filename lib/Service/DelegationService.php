@@ -10,6 +10,8 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
+use OCA\Mail\AuditLog\AuditEventFactory;
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Db\AliasMapper;
 use OCA\Mail\Db\Delegation;
 use OCA\Mail\Db\DelegationMapper;
@@ -23,7 +25,6 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IUserManager;
-use OCP\Log\Audit\CriticalActionPerformedEvent;
 use OCP\Notification\IManager;
 use OCP\Notification\IncompleteNotificationException;
 use Psr\Log\LoggerInterface;
@@ -58,6 +59,7 @@ class DelegationService {
 		$delegation->setAccountId($accountId);
 		$delegation->setUserId($userId);
 		$result = $this->delegationMapper->insert($delegation);
+		$this->logDelegationChange($account, $userId, 'is now allowed', Operation::DelegationCreated);
 		$this->notify($userId, $currentUserId, $account, true);
 		return $result;
 	}
@@ -79,6 +81,7 @@ class DelegationService {
 			$accountId = $account->getId();
 			$delegation = $this->delegationMapper->find($accountId, $userId);
 			$this->delegationMapper->delete($delegation);
+			$this->logDelegationChange($account, $userId, 'is no longer allowed', Operation::DelegationDeleted);
 			$this->notify($userId, $currentUserId, $account, false);
 		} catch (DoesNotExistException $e) {
 			// shouldn't end up here
@@ -183,11 +186,34 @@ class DelegationService {
 		return $this->resolveAccountUserId($accountId, $currentUserId);
 	}
 
-	public function logDelegatedAction(string $currentUserId, string $effectiveUserId, string $logMessage): void {
+	/**
+	 * Log an action a delegate performed on behalf of the account owner
+	 *
+	 * @param string $logMessage format string whose first placeholder is the delegate,
+	 *                           followed by one per parameter and the owner as the last one
+	 * @param array<string, mixed> $parameters
+	 */
+	public function logDelegatedAction(string $currentUserId, string $effectiveUserId, Operation $operation, string $logMessage, array $parameters = []): void {
 		if ($currentUserId === $effectiveUserId) {
 			return;
 		}
-		$this->eventDispatcher->dispatchTyped(new CriticalActionPerformedEvent($logMessage));
+		$this->eventDispatcher->dispatchTyped(AuditEventFactory::create(
+			$operation,
+			$logMessage,
+			['delegate' => $currentUserId] + $parameters + ['owner' => $effectiveUserId],
+		));
+	}
+
+	private function logDelegationChange(Account $account, string $delegateUserId, string $change, Operation $operation): void {
+		$this->eventDispatcher->dispatchTyped(AuditEventFactory::create(
+			$operation,
+			'User "%s" ' . $change . ' to act on behalf of "%s" for mail account %s',
+			[
+				'delegateUserId' => $delegateUserId,
+				'owner' => $account->getUserId(),
+				'accountId' => $account->getId(),
+			],
+		));
 	}
 
 	/**

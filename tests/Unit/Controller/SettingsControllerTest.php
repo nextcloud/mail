@@ -13,7 +13,9 @@ use ChristophWurst\Nextcloud\Testing\ServiceMockObject;
 use OCA\Mail\Controller\SettingsController;
 use OCA\Mail\Db\Provisioning;
 use OCA\Mail\Tests\Integration\TestCase;
+use OCA\Mail\Tests\Unit\AuditLog\AuditEvents;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\Log\Audit\CriticalActionPerformedEvent;
 
 class SettingsControllerTest extends TestCase {
 	/** @var ServiceMockObject */
@@ -65,5 +67,67 @@ class SettingsControllerTest extends TestCase {
 		$response = $this->controller->deprovision(1);
 
 		$this->assertInstanceOf(JSONResponse::class, $response);
+	}
+
+	private function expectAuditEvent(string $operation, string $message, array $parameters): void {
+		$this->mock->getParameter('eventDispatcher')
+			->expects(self::once())
+			->method('dispatchTyped')
+			->with(self::callback(fn (CriticalActionPerformedEvent $event): bool => AuditEvents::hasOperation($event, $operation)
+				&& $event->getLogMessage() === $message
+				&& $event->getParameters() === $parameters));
+	}
+
+	public function testSetAntiSpamEmail(): void {
+		$this->mock->getParameter('antiSpamService')
+			->expects(self::once())
+			->method('setSpamEmail')
+			->with('spam@example.com');
+		$this->mock->getParameter('antiSpamService')
+			->expects(self::once())
+			->method('setHamEmail')
+			->with('ham@example.com');
+		$this->expectAuditEvent(
+			'mail.antispam_config.updated',
+			'Anti-spam report addresses were set to "%s" for spam and "%s" for not spam',
+			['spamAddress' => 'spam@example.com', 'hamAddress' => 'ham@example.com'],
+		);
+
+		$this->controller->setAntiSpamEmail('spam@example.com', 'ham@example.com');
+	}
+
+	public function testDeleteAntiSpamEmail(): void {
+		$this->mock->getParameter('antiSpamService')
+			->expects(self::once())
+			->method('deleteConfig');
+		$this->expectAuditEvent('mail.antispam_config.deleted', 'Anti-spam report addresses were removed', []);
+
+		$this->controller->deleteAntiSpamEmail();
+	}
+
+	public function testSetAllowNewMailAccounts(): void {
+		$this->mock->getParameter('appConfig')
+			->expects(self::once())
+			->method('setValueBool');
+		$this->expectAuditEvent(
+			'mail.allow_new_accounts.updated',
+			'Users were no longer allowed to add their own mail accounts',
+			['allowed' => false],
+		);
+
+		$this->controller->setAllowNewMailAccounts(false);
+	}
+
+	public function testSetEnabledLlmProcessing(): void {
+		$this->mock->getParameter('appConfig')
+			->expects(self::once())
+			->method('setValueBool');
+		$this->expectAuditEvent(
+			'mail.llm_processing.updated',
+			'Processing mail content with large language models was enabled',
+			['enabled' => true],
+		);
+
+		$this->controller->setEnabledLlmProcessing(true);
 	}
 }

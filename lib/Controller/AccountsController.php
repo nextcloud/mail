@@ -12,6 +12,7 @@ namespace OCA\Mail\Controller;
 
 use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\CouldNotConnectException;
@@ -160,7 +161,7 @@ class AccountsController extends Controller {
 			$result = MailJsonResponse::success(
 				$this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, $authMethod, $id)
 			);
-			$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated account <$id> on behalf of $effectiveUserId");
+			$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::AccountUpdated, '%s updated account <%s> on behalf of %s', ['accountId' => $id]);
 			return $result;
 		} catch (CouldNotConnectException $e) {
 			$data = [
@@ -279,7 +280,7 @@ class AccountsController extends Controller {
 		$result = new JSONResponse(
 			new Account($this->accountService->save($dbAccount))
 		);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId patched account <$id> on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedAccountSettingsUpdated, '%s patched account <%s> on behalf of %s', ['accountId' => $id]);
 		return $result;
 	}
 
@@ -298,7 +299,7 @@ class AccountsController extends Controller {
 	public function updateSignature(int $id, ?string $signature = null): JSONResponse {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
 		$this->accountService->updateSignature($id, $effectiveUserId, $signature);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated signature for account <$id> on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedAccountSignatureUpdated, '%s updated signature for account <%s> on behalf of %s', ['accountId' => $id]);
 		return new JSONResponse();
 	}
 
@@ -315,7 +316,7 @@ class AccountsController extends Controller {
 	public function destroy(int $id): JSONResponse {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
 		$this->accountService->delete($effectiveUserId, $id);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId deleted account <$id> on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::AccountDeleted, '%s deleted account <%s> on behalf of %s', ['accountId' => $id]);
 		return new JSONResponse();
 	}
 
@@ -438,7 +439,7 @@ class AccountsController extends Controller {
 		$account = $this->accountService->find($effectiveUserId, $id)->getMailAccount();
 		$account->setSmimeCertificateId($smimeCertificateId);
 		$this->accountService->update($account);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated S/MIME certificate for account <$id> on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedAccountSmimeCertificateUpdated, '%s updated S/MIME certificate for account <%s> on behalf of %s', ['accountId' => $id]);
 		return MailJsonResponse::success();
 	}
 

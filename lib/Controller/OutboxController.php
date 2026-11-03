@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Http\JsonResponse;
@@ -133,7 +134,7 @@ class OutboxController extends Controller {
 		}
 
 		$this->service->saveMessage($account, $message, $to, $cc, $bcc, $attachments);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId created an outbox message for account <$accountId> on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedOutboxMessageCreated, '%s created an outbox message for account <%s> on behalf of %s', ['accountId' => $accountId]);
 
 		return JsonResponse::success($message, Http::STATUS_CREATED);
 	}
@@ -150,7 +151,7 @@ class OutboxController extends Controller {
 		$this->accountService->find($effectiveUserId, $draftMessage->getAccountId());
 
 		$outboxMessage = $this->service->convertDraft($draftMessage, $sendAt);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId created an outbox message from draft <$id> on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedOutboxMessageCreated, '%s created an outbox message from draft <%s> on behalf of %s', ['draftId' => $id]);
 
 		return JsonResponse::success(
 			$outboxMessage,
@@ -232,7 +233,7 @@ class OutboxController extends Controller {
 		}
 
 		$message = $this->service->updateMessage($account, $message, $to, $cc, $bcc, $attachments);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated outbox message <$id> for account <$accountId> on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedOutboxMessageUpdated, '%s updated outbox message <%s> for account <%s> on behalf of %s', ['outboxMessageId' => $id, 'accountId' => $accountId]);
 
 		return JsonResponse::success($message, Http::STATUS_ACCEPTED);
 	}
@@ -250,10 +251,16 @@ class OutboxController extends Controller {
 
 		$message = $this->service->sendMessage($message, $account);
 		$status = $message->getStatus();
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, match ($status) {
-			LocalMessage::STATUS_PROCESSED => "$this->userId sent outbox message <$id> on behalf of $effectiveUserId",
-			default => "$this->userId attempted sending outbox message <$id> on behalf of $effectiveUserId but sending failed",
-		});
+		$this->delegationService->logDelegatedAction(
+			$this->userId,
+			$effectiveUserId,
+			$status === LocalMessage::STATUS_PROCESSED ? Operation::DelegatedOutboxMessageSent : Operation::DelegatedOutboxMessageSendFailed,
+			match ($status) {
+				LocalMessage::STATUS_PROCESSED => '%s sent outbox message <%s> on behalf of %s',
+				default => '%s attempted sending outbox message <%s> on behalf of %s but sending failed',
+			},
+			['outboxMessageId' => $id],
+		);
 
 		if ($status !== LocalMessage::STATUS_PROCESSED) {
 			return JsonResponse::error('Could not send message', Http::STATUS_INTERNAL_SERVER_ERROR, [$message]);
@@ -273,7 +280,7 @@ class OutboxController extends Controller {
 		$effectiveUserId = $this->delegationService->resolveLocalMessageUserId($id, $this->userId);
 		$message = $this->service->getMessage($id, $effectiveUserId);
 		$this->service->deleteMessage($effectiveUserId, $message);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId deleted outbox message <$id> on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedOutboxMessageDeleted, '%s deleted outbox message <%s> on behalf of %s', ['outboxMessageId' => $id]);
 		return JsonResponse::success('Message deleted', Http::STATUS_ACCEPTED);
 	}
 }

@@ -14,12 +14,14 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_DateTime;
 use OCA\Mail\Account;
 use OCA\Mail\AddressList;
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Controller\ListController;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\Html;
+use OCA\Mail\Tests\Unit\DelegatedActionLog;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\Http\Client\IClient;
@@ -241,7 +243,8 @@ class ListControllerTest extends TestCase {
 		$this->serviceMock->getParameter('delegationService')
 			->expects(self::once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, 'user123 unsubscribed from mailing list: 123 on behalf of user123');
+			->with($this->userId, $this->userId, Operation::DelegatedMailingListUnsubscribed)
+			->willReturnCallback(DelegatedActionLog::rendersAs('user123 unsubscribed from mailing list: 123 on behalf of user123'));
 
 		$response = $this->controller->unsubscribe(123);
 

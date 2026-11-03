@@ -12,8 +12,11 @@ namespace OCA\Mail\Integration;
 use Exception;
 use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\AuditLog\AuditEventFactory;
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\ConfigLexicon;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Http\Client\IClientService;
 use OCP\IAppConfig;
 use OCP\IURLGenerator;
@@ -36,6 +39,7 @@ class GoogleIntegration {
 		IClientService $clientService,
 		IURLGenerator $urlGenerator,
 		private LoggerInterface $logger,
+		private IEventDispatcher $eventDispatcher,
 	) {
 		$this->timeFactory = $timeFactory;
 		$this->clientService = $clientService;
@@ -55,6 +59,11 @@ class GoogleIntegration {
 			ConfigLexicon::GOOGLE_OAUTH_CLIENT_SECRET,
 			$this->crypto->encrypt($clientSecret),
 		);
+		$this->eventDispatcher->dispatchTyped(AuditEventFactory::create(
+			Operation::GoogleOauthConfigured,
+			'Google OAuth client "%s" was configured for mail accounts',
+			['clientId' => $clientId],
+		));
 	}
 
 	public function unlink(): void {
@@ -66,6 +75,11 @@ class GoogleIntegration {
 			Application::APP_ID,
 			ConfigLexicon::GOOGLE_OAUTH_CLIENT_SECRET,
 		);
+		$this->eventDispatcher->dispatchTyped(AuditEventFactory::create(
+			Operation::GoogleOauthDeleted,
+			'Google OAuth client for mail accounts was removed',
+			[],
+		));
 	}
 
 	public function getClientId(): ?string {

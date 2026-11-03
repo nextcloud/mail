@@ -12,6 +12,7 @@ namespace OCA\Mail\Tests\Unit\Controller;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Controller\AccountsController;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ClientException;
@@ -22,6 +23,7 @@ use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\SetupService;
+use OCA\Mail\Tests\Unit\DelegatedActionLog;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -193,7 +195,8 @@ class AccountsControllerTest extends TestCase {
 			->with(self::equalTo($this->accountId), self::equalTo($this->userId), 'sig');
 		$this->delegationService->expects(self::once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId updated signature for account <$this->accountId> on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::DelegatedAccountSignatureUpdated)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId updated signature for account <$this->accountId> on behalf of $this->userId"));
 
 		$response = $this->controller->updateSignature($this->accountId, 'sig');
 
@@ -218,7 +221,8 @@ class AccountsControllerTest extends TestCase {
 			->with(self::equalTo($this->userId), self::equalTo($this->accountId));
 		$this->delegationService->expects(self::once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId deleted account <$this->accountId> on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::AccountDeleted)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId deleted account <$this->accountId> on behalf of $this->userId"));
 
 		$response = $this->controller->destroy($this->accountId);
 
@@ -338,7 +342,8 @@ class AccountsControllerTest extends TestCase {
 			->willReturn($account);
 		$this->delegationService->expects(self::once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId updated account <$id> on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::AccountUpdated)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId updated account <$id> on behalf of $this->userId"));
 
 		$response = $this->controller->update($id, $accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $imapPassword, $smtpPassword);
 
@@ -393,7 +398,8 @@ class AccountsControllerTest extends TestCase {
 			->willReturn($mailAccount);
 		$this->delegationService->expects(self::once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId patched account <$this->accountId> on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::DelegatedAccountSettingsUpdated)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId patched account <$this->accountId> on behalf of $this->userId"));
 
 		$response = $this->controller->patchAccount($this->accountId, 'plaintext');
 
@@ -434,7 +440,8 @@ class AccountsControllerTest extends TestCase {
 			->with($mailAccount);
 		$this->delegationService->expects(self::once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId updated S/MIME certificate for account <$this->accountId> on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::DelegatedAccountSmimeCertificateUpdated)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId updated S/MIME certificate for account <$this->accountId> on behalf of $this->userId"));
 
 		$response = $this->controller->updateSmimeCertificate($this->accountId, 42);
 

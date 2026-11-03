@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Controller;
 
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\FilterService;
@@ -62,7 +63,7 @@ class FilterController extends Controller {
 		}
 
 		$this->mailFilterService->update($account->getMailAccount(), $filters);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated account: $accountId 's filters  on behalf of $effectiveUserId");
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, Operation::DelegatedFiltersUpdated, "%s updated account: %s 's filters  on behalf of %s", ['accountId' => $accountId]);
 
 		return new JSONResponse([]);
 	}

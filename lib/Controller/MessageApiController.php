@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Contracts\IDkimService;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Exception\ClientException;
@@ -202,13 +203,21 @@ class MessageApiController extends OCSController {
 			return new DataResponse('Fatal SMTP error: could not send message, and no resending is possible. Please check the mail server logs.', Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
 		$status = $localMessage->getStatus();
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, match ($status) {
-			LocalMessage::STATUS_PROCESSED => "$this->userId sent a message on behalf of $effectiveUserId",
-			LocalMessage::STATUS_NO_SENT_MAILBOX => "$this->userId attempted sending a message on behalf of $effectiveUserId but no sent mailbox is configured",
-			LocalMessage::STATUS_SMPT_SEND_FAIL => "$this->userId attempted sending a message on behalf of $effectiveUserId but SMTP sending failed",
-			LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL => "$this->userId sent a message on behalf of $effectiveUserId but copying to sent mailbox failed",
-			default => "$this->userId attempted sending a message on behalf of $effectiveUserId but an unknown error occurred",
-		});
+		$this->delegationService->logDelegatedAction(
+			$this->userId,
+			$effectiveUserId,
+			match ($status) {
+				LocalMessage::STATUS_PROCESSED, LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL => Operation::DelegatedMessageSent,
+				default => Operation::DelegatedMessageSendFailed,
+			},
+			match ($status) {
+				LocalMessage::STATUS_PROCESSED => '%s sent a message on behalf of %s',
+				LocalMessage::STATUS_NO_SENT_MAILBOX => '%s attempted sending a message on behalf of %s but no sent mailbox is configured',
+				LocalMessage::STATUS_SMPT_SEND_FAIL => '%s attempted sending a message on behalf of %s but SMTP sending failed',
+				LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL => '%s sent a message on behalf of %s but copying to sent mailbox failed',
+				default => '%s attempted sending a message on behalf of %s but an unknown error occurred',
+			},
+		);
 
 		return match ($status) {
 			LocalMessage::STATUS_PROCESSED => new DataResponse('', Http::STATUS_OK),

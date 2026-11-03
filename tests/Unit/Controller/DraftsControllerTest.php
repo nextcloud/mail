@@ -12,6 +12,7 @@ namespace OCA\Mail\Tests\Unit\Controller;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OC\AppFramework\Http;
 use OCA\Mail\Account;
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Controller\DraftsController;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\MailAccount;
@@ -23,6 +24,7 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\DraftsService;
 use OCA\Mail\Service\SmimeService;
+use OCA\Mail\Tests\Unit\DelegatedActionLog;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\DB\Exception;
@@ -86,7 +88,8 @@ class DraftsControllerTest extends TestCase {
 			->with($message, $account);
 		$this->delegationService->expects(self::once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId moved draft: {$message->getId()} to the IMAP server on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::DelegatedDraftMoved)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId moved draft: {$message->getId()} to the IMAP server on behalf of $this->userId"));
 
 		$expected = JsonResponse::success('Message moved to IMAP', Http::STATUS_ACCEPTED);
 		$actual = $this->controller->move($message->getId());
@@ -175,7 +178,8 @@ class DraftsControllerTest extends TestCase {
 			->with($this->userId, $message);
 		$this->delegationService->expects(self::once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId deleted draft: {$message->getId()}  on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::DelegatedDraftDeleted)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId deleted draft: {$message->getId()}  on behalf of $this->userId"));
 
 		$expected = JsonResponse::success('Message deleted', Http::STATUS_ACCEPTED);
 		$actual = $this->controller->destroy($message->getId());
@@ -236,7 +240,8 @@ class DraftsControllerTest extends TestCase {
 			->with($account, $message, $to, $cc, [], []);
 		$this->delegationService->expects(self::once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId created draft:   on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::DelegatedDraftCreated)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId created draft:   on behalf of $this->userId"));
 
 		$expected = JsonResponse::success($message, Http::STATUS_CREATED);
 		$actual = $this->controller->create(

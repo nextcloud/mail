@@ -11,6 +11,8 @@ namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
 use OCA\Mail\Attachment;
+use OCA\Mail\AuditLog\AuditEventFactory;
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
@@ -106,6 +108,7 @@ class MailManager {
 		$this->protocolFactory
 			->mailboxConnector($account)
 			->delete($account, $mailbox);
+		$this->logMailboxChange($account, $mailbox, 'deleted', Operation::MailboxDeleted);
 	}
 
 	/**
@@ -130,6 +133,22 @@ class MailManager {
 		// deleteMessages already moves to trash, or expunges if the mailbox is the trash
 		$messages = $this->dbMessageMapper->findByUids($mailbox, $uids);
 		$this->deleteMessages($account, $mailbox, ...$messages);
+		$this->logMailboxChange($account, $mailbox, 'cleared', Operation::MailboxCleared);
+	}
+
+	/**
+	 * The mailbox name is not logged, as it is chosen by the user and may hold personal data
+	 */
+	private function logMailboxChange(Account $account, Mailbox $mailbox, string $change, Operation $operation): void {
+		$this->eventDispatcher->dispatchTyped(AuditEventFactory::create(
+			$operation,
+			'Mailbox %s of mail account %s of "%s" was ' . $change,
+			[
+				'mailboxId' => $mailbox->getId(),
+				'accountId' => $account->getId(),
+				'owner' => $account->getUserId(),
+			],
+		));
 	}
 
 	//** ============================ Message Operations ============================ */

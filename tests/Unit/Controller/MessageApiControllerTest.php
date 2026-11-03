@@ -32,6 +32,7 @@ use OCA\Mail\Service\ItineraryService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Service\TrustedSenderService;
+use OCA\Mail\Tests\Unit\DelegatedActionLog;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
@@ -403,7 +404,8 @@ class MessageApiControllerTest extends TestCase {
 		if ($expectedLogMessage !== null) {
 			$this->delegationService->expects(self::once())
 				->method('logDelegatedAction')
-				->with($this->userId, $this->userId, $expectedLogMessage);
+				->with($this->userId, $this->userId)
+				->willReturnCallback(DelegatedActionLog::rendersAs($expectedLogMessage));
 		}
 
 		$actual = $this->controller->send(

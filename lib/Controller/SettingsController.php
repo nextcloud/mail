@@ -10,6 +10,8 @@ declare(strict_types=1);
 namespace OCA\Mail\Controller;
 
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\AuditLog\AuditEventFactory;
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Exception\ValidationException;
 use OCA\Mail\Http\JsonResponse as HttpJsonResponse;
@@ -19,6 +21,7 @@ use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IAppConfig;
 use OCP\IRequest;
 use Psr\Container\ContainerInterface;
@@ -33,6 +36,7 @@ class SettingsController extends Controller {
 		private IAppConfig $appConfig,
 		private ContainerInterface $container,
 		private ClassificationSettingsService $classificationSettingsService,
+		private IEventDispatcher $eventDispatcher,
 	) {
 		parent::__construct(Application::APP_ID, $request);
 	}
@@ -88,6 +92,11 @@ class SettingsController extends Controller {
 	public function setAntiSpamEmail(string $spam, string $ham): JSONResponse {
 		$this->antiSpamService->setSpamEmail($spam);
 		$this->antiSpamService->setHamEmail($ham);
+		$this->logCriticalAction(
+			'Anti-spam report addresses were set to "%s" for spam and "%s" for not spam',
+			['spamAddress' => $spam, 'hamAddress' => $ham],
+			Operation::AntispamConfigUpdated,
+		);
 		return new JSONResponse([]);
 	}
 
@@ -98,15 +107,26 @@ class SettingsController extends Controller {
 	 */
 	public function deleteAntiSpamEmail(): JSONResponse {
 		$this->antiSpamService->deleteConfig();
+		$this->logCriticalAction('Anti-spam report addresses were removed', [], Operation::AntispamConfigDeleted);
 		return new JSONResponse([]);
 	}
 
 	public function setAllowNewMailAccounts(bool $allowed): void {
 		$this->appConfig->setValueBool(Application::APP_ID, ConfigLexicon::ALLOW_NEW_MAIL_ACCOUNTS, $allowed);
+		$this->logCriticalAction(
+			$allowed ? 'Users were allowed to add their own mail accounts' : 'Users were no longer allowed to add their own mail accounts',
+			['allowed' => $allowed],
+			Operation::AllowNewAccountsUpdated,
+		);
 	}
 
 	public function setEnabledLlmProcessing(bool $enabled): JSONResponse {
 		$this->appConfig->setValueBool(Application::APP_ID, ConfigLexicon::LLM_PROCESSING, $enabled);
+		$this->logCriticalAction(
+			$enabled ? 'Processing mail content with large language models was enabled' : 'Processing mail content with large language models was disabled',
+			['enabled' => $enabled],
+			Operation::LlmProcessingUpdated,
+		);
 		return new JSONResponse([]);
 	}
 	public function setLayoutMessageView(string $value): JSONResponse {
@@ -116,6 +136,14 @@ class SettingsController extends Controller {
 	public function setImportanceClassificationEnabledByDefault(bool $enabledByDefault): JSONResponse {
 		$this->classificationSettingsService->setClassificationEnabledByDefault($enabledByDefault);
 		return new JSONResponse([]);
+	}
+
+	private function logCriticalAction(string $message, array $parameters, Operation $operation): void {
+		$this->eventDispatcher->dispatchTyped(AuditEventFactory::create(
+			$operation,
+			$message,
+			$parameters,
+		));
 	}
 
 }

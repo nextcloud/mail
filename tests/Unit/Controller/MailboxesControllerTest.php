@@ -11,6 +11,7 @@ namespace OCA\Mail\Tests\Unit\Controller;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
+use OCA\Mail\AuditLog\Operation;
 use OCA\Mail\Controller\MailboxesController;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
@@ -21,6 +22,7 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\Sync\SyncService;
+use OCA\Mail\Tests\Unit\DelegatedActionLog;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IConfig;
@@ -137,7 +139,8 @@ class MailboxesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->delegationService->expects($this->once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId created mailbox: {$mailbox->getId()} on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::DelegatedMailboxCreated)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId created mailbox: {$mailbox->getId()} on behalf of $this->userId"));
 
 		$response = $this->controller->create($accountId, 'new');
 
@@ -165,7 +168,8 @@ class MailboxesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->delegationService->expects($this->once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId changed mailbox: {$mailboxId}'s name to renamed on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::DelegatedMailboxRenamed)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId changed mailbox: {$mailboxId}'s name to renamed on behalf of $this->userId"));
 
 		$response = $this->controller->patch($mailboxId, 'renamed');
 
@@ -190,7 +194,8 @@ class MailboxesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->delegationService->expects($this->once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId subscribed to mailbox: $mailboxId on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::DelegatedMailboxSubscribed)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId subscribed to mailbox: $mailboxId on behalf of $this->userId"));
 
 		$this->controller->patch($mailboxId, null, true);
 	}
@@ -213,7 +218,8 @@ class MailboxesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->delegationService->expects($this->once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId unsubscribed to mailbox: $mailboxId on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::DelegatedMailboxUnsubscribed)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId unsubscribed to mailbox: $mailboxId on behalf of $this->userId"));
 
 		$this->controller->patch($mailboxId, null, false);
 	}
@@ -236,7 +242,8 @@ class MailboxesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->delegationService->expects($this->once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId enabled background sync for mailbox: $mailboxId on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::DelegatedMailboxSyncEnabled)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId enabled background sync for mailbox: $mailboxId on behalf of $this->userId"));
 
 		$this->controller->patch($mailboxId, null, null, true);
 	}
@@ -258,7 +265,8 @@ class MailboxesControllerTest extends TestCase {
 			->with($account, $mailbox);
 		$this->delegationService->expects($this->once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId marked all messages as read in mailbox: $mailboxId on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::DelegatedMailboxMarkedRead)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId marked all messages as read in mailbox: $mailboxId on behalf of $this->userId"));
 
 		$this->controller->markAllAsRead($mailboxId);
 	}
@@ -280,7 +288,8 @@ class MailboxesControllerTest extends TestCase {
 			->with($account, $mailbox);
 		$this->delegationService->expects($this->once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId deleted mailbox: $mailboxId on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::MailboxDeleted)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId deleted mailbox: $mailboxId on behalf of $this->userId"));
 
 		$this->controller->destroy($mailboxId);
 	}
@@ -302,7 +311,8 @@ class MailboxesControllerTest extends TestCase {
 			->with($account, $mailbox);
 		$this->delegationService->expects($this->once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId cleared mailbox: $mailboxId on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::MailboxCleared)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId cleared mailbox: $mailboxId on behalf of $this->userId"));
 
 		$this->controller->clearMailbox($mailboxId);
 	}
@@ -324,7 +334,8 @@ class MailboxesControllerTest extends TestCase {
 			->with($account, $mailbox);
 		$this->delegationService->expects($this->once())
 			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId repaired mailbox: $mailboxId on behalf of $this->userId");
+			->with($this->userId, $this->userId, Operation::DelegatedMailboxRepaired)
+			->willReturnCallback(DelegatedActionLog::rendersAs("$this->userId repaired mailbox: $mailboxId on behalf of $this->userId"));
 
 		$this->controller->repair($mailboxId);
 	}
