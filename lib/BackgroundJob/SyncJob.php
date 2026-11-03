@@ -10,7 +10,6 @@ namespace OCA\Mail\BackgroundJob;
 
 use Horde_Imap_Client_Exception;
 use OCA\Mail\AppInfo\Application;
-use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\IncompleteSyncException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Protocol\ProtocolFactory;
@@ -86,7 +85,7 @@ class SyncJob extends TimedJob {
 			return;
 		}
 
-		if ($account->getMailAccount()->getProtocol() === MailAccount::PROTOCOL_IMAP
+		if ($account->getMailAccount()->isImap()
 			&& !$account->getMailAccount()->canAuthenticateImap()) {
 			$this->logger->debug('No authentication on IMAP possible, skipping background sync job');
 			return;

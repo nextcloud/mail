@@ -308,6 +308,14 @@ class MailAccount extends Entity {
 		$this->addType('path', 'string');
 	}
 
+	public function isImap(): bool {
+		return $this->getProtocol() === self::PROTOCOL_IMAP;
+	}
+
+	public function isJmap(): bool {
+		return $this->getProtocol() === self::PROTOCOL_JMAP;
+	}
+
 	public function getOutOfOfficeFollowsSystem(): bool {
 		return $this->getOooFollowsSystem() === true;
 	}
