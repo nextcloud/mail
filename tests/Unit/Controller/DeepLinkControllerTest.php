@@ -103,7 +103,7 @@ class DeepLinkControllerTest extends TestCase {
 
 		$this->messageMapper->expects(self::once())
 			->method('findByMessageId')
-			->with($account, '<test-message-id>')
+			->with($account, '<test-message-id@example.com>')
 			->willReturn([$message]);
 
 		$this->urlGenerator->expects(self::once())
@@ -111,7 +111,7 @@ class DeepLinkControllerTest extends TestCase {
 			->with('mail.page.thread', ['mailboxId' => 5, 'id' => 42])
 			->willReturn('http://localhost/apps/mail/box/5/thread/42');
 
-		$response = $this->controller->open('test-message-id');
+		$response = $this->controller->open('test-message-id@example.com');
 
 		self::assertInstanceOf(RedirectResponse::class, $response);
 		self::assertSame('http://localhost/apps/mail/box/5/thread/42', $response->getRedirectURL());
@@ -141,7 +141,7 @@ class DeepLinkControllerTest extends TestCase {
 
 		$this->messageMapper->expects(self::once())
 			->method('findByMessageId')
-			->with($account, '<test-message-id>')
+			->with($account, '<test-message-id@example.com>')
 			->willReturn([]);
 
 		$this->urlGenerator->expects(self::once())
@@ -149,7 +149,7 @@ class DeepLinkControllerTest extends TestCase {
 			->with('mail.page.index', [])
 			->willReturn('http://localhost/apps/mail/');
 
-		$response = $this->controller->open('test-message-id');
+		$response = $this->controller->open('test-message-id@example.com');
 
 		self::assertInstanceOf(RedirectResponse::class, $response);
 		self::assertSame('http://localhost/apps/mail/', $response->getRedirectURL());
@@ -173,7 +173,7 @@ class DeepLinkControllerTest extends TestCase {
 			->method('error')
 			->with('DeepLinkController: An unexpected error occurred.', [
 				'exception' => $exception,
-				'messageId' => 'test-message-id',
+				'messageId' => 'test-message-id@example.com',
 			]);
 
 		$this->urlGenerator->expects(self::once())
@@ -181,9 +181,117 @@ class DeepLinkControllerTest extends TestCase {
 			->with('mail.page.index', [])
 			->willReturn('http://localhost/apps/mail/');
 
-		$response = $this->controller->open('test-message-id');
+		$response = $this->controller->open('test-message-id@example.com');
 
 		self::assertInstanceOf(RedirectResponse::class, $response);
 		self::assertSame('http://localhost/apps/mail/', $response->getRedirectURL());
+	}
+
+	public function testOpenMessageBase64UrlEncoded(): void {
+		$user = $this->createMock(IUser::class);
+		$user->method('getUID')->willReturn('user123');
+
+		$this->userSession->expects(self::once())
+			->method('getUser')
+			->willReturn($user);
+
+		$lightAccount = new MailAccount();
+		$lightAccount->setId(1);
+
+		$this->mailAccountMapper->expects(self::once())
+			->method('findByUserId')
+			->with('user123')
+			->willReturn([$lightAccount]);
+
+		$account = $this->createStub(Account::class);
+		$this->accountService->expects(self::once())
+			->method('find')
+			->with('user123', 1)
+			->willReturn($account);
+
+		$message = new Message();
+		$message->setId(99);
+		$message->setMailboxId(7);
+
+		$slashMessageId = '<org/repo/issues/123/456@example.invalid>';
+		$base64UrlMessageId = rtrim(strtr(base64_encode($slashMessageId), '+/', '-_'), '=');
+
+		$this->messageMapper->expects(self::once())
+			->method('findByMessageId')
+			->with($account, $slashMessageId)
+			->willReturn([$message]);
+
+		$this->urlGenerator->expects(self::once())
+			->method('linkToRouteAbsolute')
+			->with('mail.page.thread', ['mailboxId' => 7, 'id' => 99])
+			->willReturn('http://localhost/apps/mail/box/7/thread/99');
+
+		$response = $this->controller->open($base64UrlMessageId);
+
+		self::assertInstanceOf(RedirectResponse::class, $response);
+		self::assertSame('http://localhost/apps/mail/box/7/thread/99', $response->getRedirectURL());
+	}
+
+	public function testOpenMessageInvalidBase64(): void {
+		$user = $this->createMock(IUser::class);
+		$user->method('getUID')->willReturn('user123');
+
+		$this->userSession->expects(self::once())
+			->method('getUser')
+			->willReturn($user);
+
+		$this->urlGenerator->expects(self::once())
+			->method('linkToRouteAbsolute')
+			->with('mail.page.index')
+			->willReturn('http://localhost/apps/mail/');
+
+		// Input without '@' and containing invalid base64 characters
+		$response = $this->controller->open('invalid base64!');
+
+		self::assertInstanceOf(RedirectResponse::class, $response);
+		self::assertSame('http://localhost/apps/mail/', $response->getRedirectURL());
+	}
+
+	public function testOpenMessageRawFallbackWithSlashes(): void {
+		$user = $this->createMock(IUser::class);
+		$user->method('getUID')->willReturn('user123');
+
+		$this->userSession->expects(self::once())
+			->method('getUser')
+			->willReturn($user);
+
+		$lightAccount = new MailAccount();
+		$lightAccount->setId(1);
+
+		$this->mailAccountMapper->expects(self::once())
+			->method('findByUserId')
+			->with('user123')
+			->willReturn([$lightAccount]);
+
+		$account = $this->createStub(Account::class);
+		$this->accountService->expects(self::once())
+			->method('find')
+			->with('user123', 1)
+			->willReturn($account);
+
+		$message = new Message();
+		$message->setId(99);
+		$message->setMailboxId(7);
+
+		$slashMessageId = '<org/repo/issues/123/456@example.invalid>';
+		$this->messageMapper->expects(self::once())
+			->method('findByMessageId')
+			->with($account, $slashMessageId)
+			->willReturn([$message]);
+
+		$this->urlGenerator->expects(self::once())
+			->method('linkToRouteAbsolute')
+			->with('mail.page.thread', ['mailboxId' => 7, 'id' => 99])
+			->willReturn('http://localhost/apps/mail/box/7/thread/99');
+
+		$response = $this->controller->open($slashMessageId);
+
+		self::assertInstanceOf(RedirectResponse::class, $response);
+		self::assertSame('http://localhost/apps/mail/box/7/thread/99', $response->getRedirectURL());
 	}
 }
