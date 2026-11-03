@@ -37,6 +37,7 @@ use OCA\Mail\Support\PerformanceLogger;
 use OCA\Mail\Support\PerformanceLoggerTask;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Files\SimpleFS\InMemoryFile;
+use OCP\IAppConfig;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use ReflectionMethod;
@@ -54,6 +55,7 @@ class ImapTransmissionConnectorTest extends TestCase {
 	private AttachmentService|MockObject $attachmentService;
 	private LoggerInterface|MockObject $logger;
 	private ImapTransmissionConnector $connector;
+	private IAppConfig $appConfig;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -68,6 +70,7 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->smimeService = $this->createMock(SmimeService::class);
 		$this->attachmentService = $this->createMock(AttachmentService::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->appConfig = $this->createMock(IAppConfig::class);
 
 		$this->connector = new ImapTransmissionConnector(
 			$this->protocolFactory,
@@ -80,6 +83,7 @@ class ImapTransmissionConnectorTest extends TestCase {
 			$this->smimeService,
 			$this->attachmentService,
 			$this->logger,
+			$this->appConfig,
 		);
 	}
 

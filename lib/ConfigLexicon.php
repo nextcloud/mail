@@ -36,6 +36,7 @@ class ConfigLexicon implements ILexicon {
 	public const MICROSOFT_OAUTH_TENANT_ID = 'microsoft_oauth_tenant_id';
 	public const ANTISPAM_REPORTING_SPAM = 'antispam_reporting_spam';
 	public const ANTISPAM_REPORTING_HAM = 'antispam_reporting_ham';
+	public const MESSAGE_ID_PREFIX = 'message_id_prefix';
 
 	#[\Override]
 	public function getStrictness(): Strictness {
@@ -112,6 +113,12 @@ class ConfigLexicon implements ILexicon {
 				self::ANTISPAM_REPORTING_HAM,
 				ValueType::STRING,
 				definition: 'Email address ham (not spam) reports are forwarded to',
+			),
+			new Entry(
+				self::MESSAGE_ID_PREFIX,
+				ValueType::STRING,
+				defaultRaw: 'nextcloud-mail',
+				definition: 'Default message ID prefix to use for outgoing mail',
 			),
 		];
 	}

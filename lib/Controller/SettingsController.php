@@ -109,6 +109,12 @@ class SettingsController extends Controller {
 		$this->appConfig->setValueBool(Application::APP_ID, ConfigLexicon::LLM_PROCESSING, $enabled);
 		return new JSONResponse([]);
 	}
+
+	public function setMessageIdPrefix(string $prefix): JSONResponse {
+		$this->appConfig->setValueString(Application::APP_ID, ConfigLexicon::MESSAGE_ID_PREFIX, $prefix);
+		return new JSONResponse([]);
+	}
+
 	public function setLayoutMessageView(string $value): JSONResponse {
 		$this->appConfig->setValueString(Application::APP_ID, ConfigLexicon::LAYOUT_MESSAGE_VIEW, $value);
 		return new JSONResponse([]);
