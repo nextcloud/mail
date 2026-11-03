@@ -784,11 +784,16 @@ class MessageMapper extends QBMapper {
 			->from($this->getTableName())
 			->where(
 				$qb->expr()->eq('mailbox_id', $qb->createNamedParameter($mailbox->getId()), IQueryBuilder::PARAM_INT),
-				$qb->expr()->in('remote_id', $qb->createNamedParameter($rids, IQueryBuilder::PARAM_STR_ARRAY))
+				$qb->expr()->in('remote_id', $qb->createParameter('remote_ids'), IQueryBuilder::PARAM_STR_ARRAY)
 			)
 			->orderBy('sent_at', 'desc');
 
-		return $this->findRecipients($this->findEntities($select));
+		$messages = array_flat_map(function (array $chunk) use ($select) {
+			$select->setParameter('remote_ids', $chunk, IQueryBuilder::PARAM_STR_ARRAY);
+			return $this->findEntities($select);
+		}, array_chunk($rids, self::MAX_IN_PARAMETERS));
+
+		return $this->findRecipients($messages);
 	}
 
 	/**
