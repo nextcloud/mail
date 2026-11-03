@@ -15,9 +15,6 @@ use OCP\Migration\IRepairStep;
 use Psr\Log\LoggerInterface;
 use function method_exists;
 
-/**
- * @psalm-api
- */
 class RepairMailTheads implements IRepairStep {
 	public function __construct(
 		private MessageMapper $mapper,

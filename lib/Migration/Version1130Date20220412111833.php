@@ -22,9 +22,6 @@ use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 use Psr\Log\LoggerInterface;
 
-/**
- * @psalm-api
- */
 class Version1130Date20220412111833 extends SimpleMigrationStep {
 	private IDBConnection $connection;
 	private array $recipients = [];

@@ -5,6 +5,7 @@
 -->
 <psalm
     errorLevel="3"
+    findUnusedCode="false"
     resolveFromConfigFile="true"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
@@ -82,5 +83,35 @@
 				<referencedClass name="Symfony\Component\Console\Output\OutputInterface" />
 			</errorLevel>
 		</UndefinedDocblockClass>
+		<MissingPureAnnotation>
+			<errorLevel type="suppress">
+				<directory name="lib" />
+			</errorLevel>
+		</MissingPureAnnotation>
+		<MissingAbstractPureAnnotation>
+			<errorLevel type="suppress">
+				<directory name="lib" />
+			</errorLevel>
+		</MissingAbstractPureAnnotation>
+		<MissingImmutableAnnotation>
+			<errorLevel type="suppress">
+				<directory name="lib" />
+			</errorLevel>
+		</MissingImmutableAnnotation>
+		<MissingInterfaceImmutableAnnotation>
+			<errorLevel type="suppress">
+				<directory name="lib" />
+			</errorLevel>
+		</MissingInterfaceImmutableAnnotation>
+		<ImpureMethodCall>
+			<errorLevel type="suppress">
+				<directory name="lib" />
+			</errorLevel>
+		</ImpureMethodCall>
+		<ImpurePropertyAssignment>
+			<errorLevel type="suppress">
+				<directory name="lib" />
+			</errorLevel>
+		</ImpurePropertyAssignment>
 	</issueHandlers>
 </psalm>

@@ -17,9 +17,6 @@ use OCP\Migration\Attributes\ColumnType;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
-/**
- * @psalm-api
- */
 #[AddColumn(table: 'mail_mailboxes', name: 'remote_parent_id', type: ColumnType::STRING)]
 #[AddColumn(table: 'mail_mailboxes', name: 'remote_id', type: ColumnType::STRING)]
 #[AddColumn(table: 'mail_mailboxes', name: 'state', type: ColumnType::STRING)]
