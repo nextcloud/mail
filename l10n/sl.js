@@ -249,7 +249,6 @@ OC.L10N.register(
     "individual" : "posamično",
     "domain" : "domena",
     "Remove" : "Odstrani",
-    "Itinerary for {type} is not supported yet" : "{type} – vrsta prevoza še ni podprta",
     "Last hour" : "Zadnja ura",
     "Today" : "Danes",
     "Last week" : "Zadnji teden",
@@ -530,6 +529,7 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Ime oznake je skrita sistemska oznaka",
     "Tag already exists" : "Oznaka že obstaja",
     "Error loading message" : "Napaka nalaganja sporočila",
+    "Itinerary for {type} is not supported yet" : "{type} – vrsta prevoza še ni podprta",
     "Set tag" : "Nastavi oznako",
     "Unset tag" : "Odstrani oznako",
     "Add default tags" : "Dodaj privzete oznake"
