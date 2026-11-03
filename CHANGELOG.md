@@ -1,3 +1,17 @@
+## [5.12.7](https://github.com/nextcloud/mail/compare/v5.12.6...v5.12.7) (2026-11-03)
+
+
+### Bug Fixes
+
+* **dns:** Update public suffix list ([95311b6](https://github.com/nextcloud/mail/commit/95311b6de34e61719844a9a0dfa47c8f54e18281))
+* **l10n:** Update translations from Transifex ([956b935](https://github.com/nextcloud/mail/commit/956b93524121ff879f7075c233cfe9efa3d8b89f))
+* **l10n:** Update translations from Transifex ([43f28a3](https://github.com/nextcloud/mail/commit/43f28a381c3efc94846305b00c808a90826cf09a))
+* **l10n:** Update translations from Transifex ([fd65596](https://github.com/nextcloud/mail/commit/fd65596988a6d823371a887c78f06df83fce1d66))
+* **l10n:** Update translations from Transifex ([64a0e7f](https://github.com/nextcloud/mail/commit/64a0e7f659ad417354b2f1d28ae1b05073d6b61a))
+* **l10n:** Update translations from Transifex ([8be47e5](https://github.com/nextcloud/mail/commit/8be47e5412d1621872db21fea820d48c81a92bd8))
+
+
+
 ## [5.12.6](https://github.com/nextcloud/mail/compare/v5.12.5...v5.12.6) (2026-10-27)
 
 
