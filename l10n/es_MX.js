@@ -274,7 +274,6 @@ OC.L10N.register(
     "Remove" : "Eliminar",
     "Add internal address" : "Agregar dirección interna",
     "Add internal email or domain" : "Agregar dirección de correo interna o dominio",
-    "Itinerary for {type} is not supported yet" : "El itinerario para {type} aún no es soportado",
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "No tienes permiso para mover este mensaje al buzón de archivado y/o eliminar este mensaje de la carpeta actual",
     "Last hour" : "Última hora",
     "Today" : "Hoy",
@@ -385,6 +384,7 @@ OC.L10N.register(
     "Could not load the message" : "No fue posible cargar el mensaje",
     "Date:" : "Fecha:",
     "Tag already exists" : "La etiqueta ya existe",
-    "Error loading message" : "Se presentó un error al cargar el mensaje"
+    "Error loading message" : "Se presentó un error al cargar el mensaje",
+    "Itinerary for {type} is not supported yet" : "El itinerario para {type} aún no es soportado"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

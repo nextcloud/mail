@@ -137,7 +137,6 @@ OC.L10N.register(
     "individual" : "יחיד",
     "domain" : "שם תחום",
     "Remove" : "הסרה",
-    "Itinerary for {type} is not supported yet" : "פירוט המסלול {type} אינו נתמך עדיין",
     "Last hour" : "השעה החולפת",
     "Today" : "היום",
     "Yesterday" : "מחר",
@@ -278,6 +277,7 @@ OC.L10N.register(
     "Could not load the message" : "לא ניתן לטעון את ההודעה",
     "Date:" : "בתאריך:",
     "Tag already exists" : "תגית כבר קיימת",
-    "Error loading message" : "שגיאה בהעלאת הודעה"
+    "Error loading message" : "שגיאה בהעלאת הודעה",
+    "Itinerary for {type} is not supported yet" : "פירוט המסלול {type} אינו נתמך עדיין"
 },
 "nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;");

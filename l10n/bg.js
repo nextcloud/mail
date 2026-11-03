@@ -251,7 +251,6 @@ OC.L10N.register(
     "individual" : "Индивидуален",
     "domain" : "домейн",
     "Remove" : "Премахване",
-    "Itinerary for {type} is not supported yet" : "Маршрутът за {type} все още не се поддържа",
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "Нямате право да преместите това съобщение в архивната папка и/или да изтриете това съобщение от текущата папка",
     "Last hour" : "Последния  час",
     "Today" : "Днес",
@@ -554,6 +553,7 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Името на етикета е скрит системен етикет",
     "Tag already exists" : "Етикетът вече съществува",
     "Error loading message" : "Грешка при зареждане съобщението",
+    "Itinerary for {type} is not supported yet" : "Маршрутът за {type} все още не се поддържа",
     "Set tag" : "Задаване на етикет",
     "Unset tag" : "Отмяна на етикет",
     "Add default tags" : "Добавяне на етикети по подразбиране"
