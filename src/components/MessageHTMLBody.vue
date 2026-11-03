@@ -41,6 +41,7 @@ import MdnRequest from './MdnRequest.vue'
 import NeedsTranslationInfo from './NeedsTranslationInfo.vue'
 import logger from '../logger.js'
 import { trustSender } from '../service/TrustedSenderService.js'
+import { keepAttributeAspectRatio } from '../util/imageAspectRatio.ts'
 import { detectForeignLanguage } from '../util/languageDetection.ts'
 import { isPrintShortcut } from '../util/printMessage.ts'
 
@@ -171,6 +172,9 @@ export default {
 				.forEach((node) => {
 					node.innerHTML = node.getAttribute('data-original-content')
 				})
+			iframeDoc
+				.querySelectorAll('img[data-original-src]')
+				.forEach((image) => keepAttributeAspectRatio(image))
 			this.hasBlockedContent = false
 		},
 
