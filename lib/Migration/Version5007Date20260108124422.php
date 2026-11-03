@@ -88,6 +88,7 @@ class Version5007Date20260108124422 extends SimpleMigrationStep {
 	 * @param string $mailboxType
 	 * @return void
 	 */
+	/** @psalm-suppress MissingPureAnnotation only flagged against some OCP versions */
 	private function addMailboxKey(Table|ITable $accountsTable, Table|ITable $mailboxesTable, string $mailboxType): void {
 		/** @var non-empty-lowercase-string $column */
 		$column = $mailboxType . '_mailbox_id';

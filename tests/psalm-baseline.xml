@@ -1,130 +1,1741 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.25.0@01a8eb06b9e9cc6cfb6a320bf9fb14331919d505">
+<files psalm-version="7.0.0-rc10@f39760fd9e3f207446c9a41e066f109baab98714">
+  <file src="lib/Address.php">
+    <ImpureMethodCall>
+      <code><![CDATA[new Horde_Mail_Rfc822_Address($email)]]></code>
+    </ImpureMethodCall>
+    <ImpurePropertyAssignment>
+      <code><![CDATA[$wrapped->personal]]></code>
+    </ImpurePropertyAssignment>
+    <MissingPureAnnotation>
+      <code><![CDATA[fromHorde]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/AddressList.php">
+    <ImpureMethodCall>
+      <code><![CDATA[new Horde_Mail_Rfc822_List($hordeAddresses)]]></code>
+      <code><![CDATA[new Horde_Mail_Rfc822_List($str)]]></code>
+    </ImpureMethodCall>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[parse]]></code>
+    </PossiblyUnusedMethod>
+  </file>
   <file src="lib/AppInfo/Application.php">
-    <InvalidArgument>
-      <code><![CDATA[OptionalIndicesListener::class]]></code>
-    </InvalidArgument>
+    <MissingPureAnnotation>
+      <code><![CDATA[boot]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Attachment.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getSize]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$size]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/BackgroundJob/CleanupJob.php">
+    <UnusedClass>
+      <code><![CDATA[CleanupJob]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/BackgroundJob/ContextChat/ScheduleJob.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/BackgroundJob/ContextChat/SubmitContentJob.php">
+    <UnusedClass>
+      <code><![CDATA[SubmitContentJob]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/BackgroundJob/DeleteDuplicatedUidsJob.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/BackgroundJob/DraftsJob.php">
+    <UnusedClass>
+      <code><![CDATA[DraftsJob]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/BackgroundJob/FollowUpClassifierJob.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/BackgroundJob/IMipMessageJob.php">
+    <UnusedClass>
+      <code><![CDATA[IMipMessageJob]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/BackgroundJob/MigrateImportantJob.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/BackgroundJob/OutboxWorkerJob.php">
+    <UnusedClass>
+      <code><![CDATA[OutboxWorkerJob]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/BackgroundJob/PreviewEnhancementProcessingJob.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/BackgroundJob/QuotaJob.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/BackgroundJob/RepairSyncJob.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/BackgroundJob/SyncJob.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/BackgroundJob/TrainImportanceClassifierJob.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/BackgroundJob/TrashRetentionJob.php">
+    <UnusedClass>
+      <code><![CDATA[TrashRetentionJob]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/BackgroundJob/WakeJob.php">
+    <UnusedClass>
+      <code><![CDATA[WakeJob]]></code>
+    </UnusedClass>
   </file>
   <file src="lib/Cache/Cache.php">
-    <UnsupportedPropertyReferenceUsage>
-      <code><![CDATA[$d = &$this->_data[$mailbox]]]></code>
-      <code><![CDATA[$d = &$this->_data[$mailbox]]]></code>
-      <code><![CDATA[$d = &$this->_data[$mbox]]]></code>
-      <code><![CDATA[$ptr = &$this->_data[$mailbox]]]></code>
-      <code><![CDATA[$ptr = &$this->_slicemap[$mailbox]]]></code>
-      <code><![CDATA[$ptr = &$this->_slicemap[$mailbox]]]></code>
-      <code><![CDATA[$s = &$this->_slicemap[$mailbox]['s']]]></code>
-      <code><![CDATA[$s = &$this->_slicemap[$mbox]]]></code>
-      <code><![CDATA[$slicemap = &$this->_slicemap[$mailbox]]]></code>
-    </UnsupportedPropertyReferenceUsage>
+    <MissingPureAnnotation>
+      <code><![CDATA[clear]]></code>
+      <code><![CDATA[deleteMailbox]]></code>
+      <code><![CDATA[get]]></code>
+      <code><![CDATA[getOrInsertCachedMailbox]]></code>
+      <code><![CDATA[set]]></code>
+      <code><![CDATA[setMetaData]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Cache/CachedMailbox.php">
+    <MissingImmutableAnnotation>
+      <code><![CDATA[CachedMailbox]]></code>
+    </MissingImmutableAnnotation>
+    <MissingPureAnnotation>
+      <code><![CDATA[setHighestModSeq]]></code>
+      <code><![CDATA[setUidValidity]]></code>
+      <code><![CDATA[setUids]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Cache/HordeCacheFactory.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Cache/HordeSyncToken.php">
+    <MissingImmutableAnnotation>
+      <code><![CDATA[HordeSyncToken]]></code>
+    </MissingImmutableAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getNextUid]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$nextUid]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/Cache/HordeSyncTokenParser.php">
+    <MissingImmutableAnnotation>
+      <code><![CDATA[HordeSyncTokenParser]]></code>
+    </MissingImmutableAnnotation>
+    <MissingPureAnnotation>
+      <code><![CDATA[parseSyncToken]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Command/ACreateOrUpdateProvisioningCommand.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$defaults]]></code>
+      <code><![CDATA[$e]]></code>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+    </PossiblyUnusedParam>
+    <UnusedClass>
+      <code><![CDATA[ACreateOrUpdateProvisioningCommand]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Command/AProvisioningCommand.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+    </PossiblyUnusedParam>
+    <UnusedClass>
+      <code><![CDATA[AProvisioningCommand]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Command/AddMissingTags.php">
+    <UnusedClass>
+      <code><![CDATA[AddMissingTags]]></code>
+    </UnusedClass>
+    <UnusedParam>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+    </UnusedParam>
+  </file>
+  <file src="lib/Command/CleanUp.php">
+    <UnusedClass>
+      <code><![CDATA[CleanUp]]></code>
+    </UnusedClass>
+    <UnusedParam>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+    </UnusedParam>
+  </file>
+  <file src="lib/Command/ClearMailboxCache.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+    </PossiblyUnusedParam>
+    <UnusedClass>
+      <code><![CDATA[ClearMailboxCache]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Command/CreateImapAccount.php">
+    <UnusedClass>
+      <code><![CDATA[CreateImapAccount]]></code>
+    </UnusedClass>
+    <UnusedParam>
+      <code><![CDATA[$crypto]]></code>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+      <code><![CDATA[$userManager]]></code>
+    </UnusedParam>
+  </file>
+  <file src="lib/Command/CreateJmapAccount.php">
+    <UnusedClass>
+      <code><![CDATA[CreateJmapAccount]]></code>
+    </UnusedClass>
+    <UnusedParam>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+    </UnusedParam>
+  </file>
+  <file src="lib/Command/CreateProvisioning.php">
+    <UnusedClass>
+      <code><![CDATA[CreateProvisioning]]></code>
+    </UnusedClass>
+    <UnusedParam>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+    </UnusedParam>
+  </file>
+  <file src="lib/Command/CreateTagMigrationJobEntry.php">
+    <UnusedClass>
+      <code><![CDATA[CreateTagMigrationJobEntry]]></code>
+    </UnusedClass>
+    <UnusedParam>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+    </UnusedParam>
+  </file>
+  <file src="lib/Command/DebugAccount.php">
+    <UnusedClass>
+      <code><![CDATA[DebugAccount]]></code>
+    </UnusedClass>
+    <UnusedParam>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+    </UnusedParam>
+  </file>
+  <file src="lib/Command/DeleteAccount.php">
+    <UnusedClass>
+      <code><![CDATA[DeleteAccount]]></code>
+    </UnusedClass>
+    <UnusedParam>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+    </UnusedParam>
+  </file>
+  <file src="lib/Command/DeleteProvisioning.php">
+    <UnusedClass>
+      <code><![CDATA[DeleteProvisioning]]></code>
+    </UnusedClass>
+    <UnusedParam>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+    </UnusedParam>
+  </file>
+  <file src="lib/Command/ExportAccount.php">
+    <UnusedClass>
+      <code><![CDATA[ExportAccount]]></code>
+    </UnusedClass>
+    <UnusedParam>
+      <code><![CDATA[$crypto]]></code>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+    </UnusedParam>
+  </file>
+  <file src="lib/Command/ExportAccountThreads.php">
+    <UnusedClass>
+      <code><![CDATA[ExportAccountThreads]]></code>
+    </UnusedClass>
+    <UnusedParam>
+      <code><![CDATA[$hasher]]></code>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+      <code><![CDATA[$random]]></code>
+    </UnusedParam>
+  </file>
+  <file src="lib/Command/InspectMailbox.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+    </PossiblyUnusedParam>
+    <UnusedClass>
+      <code><![CDATA[InspectMailbox]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Command/ListMailboxes.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+    </PossiblyUnusedParam>
+    <UnusedClass>
+      <code><![CDATA[ListMailboxes]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Command/ListProvisionings.php">
+    <UnusedClass>
+      <code><![CDATA[ListProvisionings]]></code>
+    </UnusedClass>
+    <UnusedParam>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+    </UnusedParam>
+  </file>
+  <file src="lib/Command/PredictImportance.php">
+    <UnusedClass>
+      <code><![CDATA[PredictImportance]]></code>
+    </UnusedClass>
+    <UnusedParam>
+      <code><![CDATA[$config]]></code>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+    </UnusedParam>
+  </file>
+  <file src="lib/Command/ProvisionAccounts.php">
+    <UnusedClass>
+      <code><![CDATA[ProvisionAccounts]]></code>
+    </UnusedClass>
+    <UnusedParam>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+    </UnusedParam>
+  </file>
+  <file src="lib/Command/RunMetaEstimator.php">
+    <UnusedClass>
+      <code><![CDATA[RunMetaEstimator]]></code>
+    </UnusedClass>
+    <UnusedParam>
+      <code><![CDATA[$config]]></code>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+    </UnusedParam>
+  </file>
+  <file src="lib/Command/SyncAccount.php">
+    <UnusedClass>
+      <code><![CDATA[SyncAccount]]></code>
+    </UnusedClass>
+    <UnusedParam>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+    </UnusedParam>
+  </file>
+  <file src="lib/Command/TestAccount.php">
+    <UnusedClass>
+      <code><![CDATA[TestAccount]]></code>
+    </UnusedClass>
+    <UnusedParam>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+    </UnusedParam>
+  </file>
+  <file src="lib/Command/Thread.php">
+    <UnusedClass>
+      <code><![CDATA[Thread]]></code>
+    </UnusedClass>
+    <UnusedParam>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+    </UnusedParam>
+  </file>
+  <file src="lib/Command/TrainAccount.php">
+    <UnusedClass>
+      <code><![CDATA[TrainAccount]]></code>
+    </UnusedClass>
+    <UnusedParam>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+    </UnusedParam>
+  </file>
+  <file src="lib/Command/UnlockMailbox.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+    </PossiblyUnusedParam>
+    <UnusedClass>
+      <code><![CDATA[UnlockMailbox]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Command/UpdateImapAccount.php">
+    <UnusedClass>
+      <code><![CDATA[UpdateImapAccount]]></code>
+    </UnusedClass>
+    <UnusedParam>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+    </UnusedParam>
+  </file>
+  <file src="lib/Command/UpdateJmapAccount.php">
+    <UnusedClass>
+      <code><![CDATA[UpdateJmapAccount]]></code>
+    </UnusedClass>
+    <UnusedParam>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+    </UnusedParam>
+  </file>
+  <file src="lib/Command/UpdateProvisioning.php">
+    <UnusedClass>
+      <code><![CDATA[UpdateProvisioning]]></code>
+    </UnusedClass>
+    <UnusedParam>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+    </UnusedParam>
+  </file>
+  <file src="lib/Command/UpdateSystemAutoresponders.php">
+    <UnusedClass>
+      <code><![CDATA[UpdateSystemAutoresponders]]></code>
+    </UnusedClass>
+    <UnusedParam>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$output]]></code>
+    </UnusedParam>
+  </file>
+  <file src="lib/ConfigLexicon.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[getStrictness]]></code>
+      <code><![CDATA[getUserConfigs]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/ContextChat/ContextChatProvider.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[getAppId]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[triggerInitialImport]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$accountService]]></code>
+      <code><![CDATA[$jobList]]></code>
+      <code><![CDATA[$mailManager]]></code>
+      <code><![CDATA[$messageMapper]]></code>
+      <code><![CDATA[$userManager]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/Contracts/IAttachmentService.php">
+    <MissingAbstractPureAnnotation>
+      <code><![CDATA[addFile]]></code>
+      <code><![CDATA[deleteAttachment]]></code>
+      <code><![CDATA[getAttachment]]></code>
+    </MissingAbstractPureAnnotation>
+    <MissingInterfaceImmutableAnnotation>
+      <code><![CDATA[IAttachmentService]]></code>
+    </MissingInterfaceImmutableAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[addFile]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Contracts/IAvatarService.php">
+    <MissingAbstractPureAnnotation>
+      <code><![CDATA[getAvatar]]></code>
+      <code><![CDATA[getAvatarImage]]></code>
+      <code><![CDATA[getCachedAvatar]]></code>
+    </MissingAbstractPureAnnotation>
+    <MissingInterfaceImmutableAnnotation>
+      <code><![CDATA[IAvatarService]]></code>
+    </MissingInterfaceImmutableAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getAvatar]]></code>
+      <code><![CDATA[getAvatarImage]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Contracts/IDkimService.php">
+    <MissingAbstractPureAnnotation>
+      <code><![CDATA[getCached]]></code>
+      <code><![CDATA[validate]]></code>
+    </MissingAbstractPureAnnotation>
+    <MissingInterfaceImmutableAnnotation>
+      <code><![CDATA[IDkimService]]></code>
+    </MissingInterfaceImmutableAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getCached]]></code>
+      <code><![CDATA[validate]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Contracts/IDkimValidator.php">
+    <MissingAbstractPureAnnotation>
+      <code><![CDATA[validate]]></code>
+    </MissingAbstractPureAnnotation>
+    <MissingInterfaceImmutableAnnotation>
+      <code><![CDATA[IDkimValidator]]></code>
+    </MissingInterfaceImmutableAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[validate]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Contracts/IInternalAddressService.php">
+    <MissingAbstractPureAnnotation>
+      <code><![CDATA[add]]></code>
+      <code><![CDATA[getInternalAddresses]]></code>
+      <code><![CDATA[isInternal]]></code>
+    </MissingAbstractPureAnnotation>
+    <MissingInterfaceImmutableAnnotation>
+      <code><![CDATA[IInternalAddressService]]></code>
+    </MissingInterfaceImmutableAnnotation>
+  </file>
+  <file src="lib/Contracts/IMailSearch.php">
+    <MissingAbstractPureAnnotation>
+      <code><![CDATA[findMessage]]></code>
+      <code><![CDATA[findMessages]]></code>
+      <code><![CDATA[findMessagesGlobally]]></code>
+    </MissingAbstractPureAnnotation>
+    <MissingInterfaceImmutableAnnotation>
+      <code><![CDATA[IMailSearch]]></code>
+    </MissingInterfaceImmutableAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[findMessage]]></code>
+      <code><![CDATA[findMessages]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Contracts/IMailboxConnector.php">
+    <MissingAbstractPureAnnotation>
+      <code><![CDATA[create]]></code>
+      <code><![CDATA[delete]]></code>
+      <code><![CDATA[rename]]></code>
+      <code><![CDATA[subscribe]]></code>
+      <code><![CDATA[syncAll]]></code>
+      <code><![CDATA[syncOne]]></code>
+    </MissingAbstractPureAnnotation>
+    <MissingInterfaceImmutableAnnotation>
+      <code><![CDATA[IMailboxConnector]]></code>
+    </MissingInterfaceImmutableAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[delete]]></code>
+      <code><![CDATA[rename]]></code>
+      <code><![CDATA[subscribe]]></code>
+      <code><![CDATA[syncOne]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Contracts/IMessageConnector.php">
+    <MissingAbstractPureAnnotation>
+      <code><![CDATA[clearCache]]></code>
+      <code><![CDATA[deleteMessages]]></code>
+      <code><![CDATA[fetchAttachment]]></code>
+      <code><![CDATA[fetchAttachments]]></code>
+      <code><![CDATA[fetchMessageRaw]]></code>
+      <code><![CDATA[fetchMessages]]></code>
+      <code><![CDATA[findMessages]]></code>
+      <code><![CDATA[flagMessages]]></code>
+      <code><![CDATA[getQuota]]></code>
+      <code><![CDATA[isPermflagsEnabled]]></code>
+      <code><![CDATA[moveMessages]]></code>
+      <code><![CDATA[repairSync]]></code>
+      <code><![CDATA[syncAll]]></code>
+      <code><![CDATA[syncMailbox]]></code>
+      <code><![CDATA[tagMessages]]></code>
+    </MissingAbstractPureAnnotation>
+    <MissingInterfaceImmutableAnnotation>
+      <code><![CDATA[IMessageConnector]]></code>
+    </MissingInterfaceImmutableAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[fetchAttachments]]></code>
+      <code><![CDATA[findMessages]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedReturnValue>
+      <code><![CDATA[SyncResult]]></code>
+    </PossiblyUnusedReturnValue>
+  </file>
+  <file src="lib/Contracts/ITransmissionConnector.php">
+    <MissingAbstractPureAnnotation>
+      <code><![CDATA[saveMessage]]></code>
+      <code><![CDATA[sendMdn]]></code>
+      <code><![CDATA[sendMessage]]></code>
+    </MissingAbstractPureAnnotation>
+    <MissingInterfaceImmutableAnnotation>
+      <code><![CDATA[ITransmissionConnector]]></code>
+    </MissingInterfaceImmutableAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[sendMdn]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Contracts/ITrustedSenderService.php">
+    <MissingAbstractPureAnnotation>
+      <code><![CDATA[getTrusted]]></code>
+      <code><![CDATA[isTrusted]]></code>
+      <code><![CDATA[trust]]></code>
+    </MissingAbstractPureAnnotation>
+    <MissingInterfaceImmutableAnnotation>
+      <code><![CDATA[ITrustedSenderService]]></code>
+    </MissingInterfaceImmutableAnnotation>
+  </file>
+  <file src="lib/Contracts/IUserPreferences.php">
+    <MissingAbstractPureAnnotation>
+      <code><![CDATA[getPreference]]></code>
+      <code><![CDATA[setPreference]]></code>
+    </MissingAbstractPureAnnotation>
+    <MissingInterfaceImmutableAnnotation>
+      <code><![CDATA[IUserPreferences]]></code>
+    </MissingInterfaceImmutableAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[setPreference]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Controller/AccountApiController.php">
+    <UnusedClass>
+      <code><![CDATA[AccountApiController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/AccountsController.php">
+    <UnusedClass>
+      <code><![CDATA[AccountsController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/ActionStepController.php">
+    <UnusedClass>
+      <code><![CDATA[ActionStepController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/AliasesController.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[show]]></code>
+    </MissingPureAnnotation>
+    <UnusedClass>
+      <code><![CDATA[AliasesController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/AutoCompleteController.php">
+    <UnusedClass>
+      <code><![CDATA[AutoCompleteController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/AutoConfigController.php">
+    <UnusedClass>
+      <code><![CDATA[AutoConfigController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/AvatarsController.php">
+    <UnusedClass>
+      <code><![CDATA[AvatarsController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/ContactIntegrationController.php">
+    <UnusedClass>
+      <code><![CDATA[ContactIntegrationController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/DeepLinkController.php">
+    <UnusedClass>
+      <code><![CDATA[DeepLinkController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/DelegationController.php">
+    <UnusedClass>
+      <code><![CDATA[DelegationController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/DraftsController.php">
+    <UnusedClass>
+      <code><![CDATA[DraftsController]]></code>
+    </UnusedClass>
+    <UnusedDocblockParam>
+      <code><![CDATA[$body]]></code>
+      <code><![CDATA[$body]]></code>
+    </UnusedDocblockParam>
+  </file>
+  <file src="lib/Controller/FilterController.php">
+    <UnusedClass>
+      <code><![CDATA[FilterController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/FollowUpController.php">
+    <UnusedClass>
+      <code><![CDATA[FollowUpController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/GoogleIntegrationController.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$error]]></code>
+    </PossiblyUnusedParam>
+    <UnusedClass>
+      <code><![CDATA[GoogleIntegrationController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/InternalAddressController.php">
+    <UnusedClass>
+      <code><![CDATA[InternalAddressController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/ListController.php">
+    <UnusedClass>
+      <code><![CDATA[ListController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/LocalAttachmentsController.php">
+    <UnusedClass>
+      <code><![CDATA[LocalAttachmentsController]]></code>
+    </UnusedClass>
+    <UnusedDocblockParam>
+      <code><![CDATA[$UserId]]></code>
+    </UnusedDocblockParam>
+  </file>
+  <file src="lib/Controller/MailboxesApiController.php">
+    <UnusedClass>
+      <code><![CDATA[MailboxesApiController]]></code>
+    </UnusedClass>
+    <UnusedDocblockParam>
+      <code><![CDATA[$v]]></code>
+    </UnusedDocblockParam>
+  </file>
+  <file src="lib/Controller/MailboxesController.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[show]]></code>
+      <code><![CDATA[update]]></code>
+    </MissingPureAnnotation>
+    <UnusedClass>
+      <code><![CDATA[MailboxesController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/MessageApiController.php">
+    <UnusedClass>
+      <code><![CDATA[MessageApiController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/MessagesController.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[attachmentIsCalendarEvent]]></code>
+      <code><![CDATA[attachmentIsImage]]></code>
+    </MissingPureAnnotation>
+    <UnusedClass>
+      <code><![CDATA[MessagesController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/MicrosoftIntegrationController.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$error]]></code>
+      <code><![CDATA[$session_state]]></code>
+    </PossiblyUnusedParam>
+    <UnusedClass>
+      <code><![CDATA[MicrosoftIntegrationController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/OauthController.php">
+    <UnusedClass>
+      <code><![CDATA[OauthController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/OutOfOfficeController.php">
+    <UnusedClass>
+      <code><![CDATA[OutOfOfficeController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/OutboxController.php">
+    <UnusedClass>
+      <code><![CDATA[OutboxController]]></code>
+    </UnusedClass>
+    <UnusedDocblockParam>
+      <code><![CDATA[$body]]></code>
+      <code><![CDATA[$body]]></code>
+    </UnusedDocblockParam>
+  </file>
+  <file src="lib/Controller/PageController.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$draftId]]></code>
+      <code><![CDATA[$draftId]]></code>
+      <code><![CDATA[$filter]]></code>
+      <code><![CDATA[$filter]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$mailboxId]]></code>
+      <code><![CDATA[$mailboxId]]></code>
+      <code><![CDATA[$mailboxId]]></code>
+      <code><![CDATA[$mailboxId]]></code>
+      <code><![CDATA[$messageId]]></code>
+    </PossiblyUnusedParam>
+    <UnusedClass>
+      <code><![CDATA[PageController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/PreferencesController.php">
+    <UnusedClass>
+      <code><![CDATA[PreferencesController]]></code>
+    </UnusedClass>
+    <UnusedDocblockParam>
+      <code><![CDATA[$UserId]]></code>
+    </UnusedDocblockParam>
   </file>
   <file src="lib/Controller/ProxyController.php">
     <PossiblyInvalidArgument>
       <code><![CDATA[$content]]></code>
     </PossiblyInvalidArgument>
+    <UnusedClass>
+      <code><![CDATA[ProxyController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/QuickActionsController.php">
+    <UnusedClass>
+      <code><![CDATA[QuickActionsController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/SettingsController.php">
+    <UnusedClass>
+      <code><![CDATA[SettingsController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/SieveController.php">
+    <UnusedClass>
+      <code><![CDATA[SieveController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/SmimeCertificatesController.php">
+    <UnusedClass>
+      <code><![CDATA[SmimeCertificatesController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/TagsController.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[validateColor]]></code>
+      <code><![CDATA[validateDisplayName]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedParam>
+      <code><![CDATA[$accountId]]></code>
+    </PossiblyUnusedParam>
+    <UnusedClass>
+      <code><![CDATA[TagsController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/TextBlockController.php">
+    <UnusedClass>
+      <code><![CDATA[TextBlockController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/TextBlockSharesController.php">
+    <UnusedClass>
+      <code><![CDATA[TextBlockSharesController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/ThreadController.php">
+    <UnusedClass>
+      <code><![CDATA[ThreadController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Controller/TrustedSendersController.php">
+    <UnusedClass>
+      <code><![CDATA[TrustedSendersController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Dashboard/ImportantMailWidget.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[getId]]></code>
+    </MissingPureAnnotation>
   </file>
   <file src="lib/Dashboard/MailWidget.php">
+    <MissingAbstractPureAnnotation>
+      <code><![CDATA[getSearchQuery]]></code>
+    </MissingAbstractPureAnnotation>
+    <MissingPureAnnotation>
+      <code><![CDATA[getIconClass]]></code>
+      <code><![CDATA[getOrder]]></code>
+      <code><![CDATA[getWidgetOptions]]></code>
+      <code><![CDATA[load]]></code>
+    </MissingPureAnnotation>
     <PossiblyNullArgument>
       <code><![CDATA[$firstFrom ? $firstFrom->getLabel() : '']]></code>
     </PossiblyNullArgument>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$initialState]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="lib/Dashboard/UnreadMailWidget.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[getId]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Db/ActionStep.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$actionId]]></code>
+      <code><![CDATA[$mailboxId]]></code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$order]]></code>
+      <code><![CDATA[$tagId]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="lib/Db/ActionStepMapper.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[find]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Db/Actions.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[getActionSteps]]></code>
+      <code><![CDATA[setActionSteps]]></code>
+      <code><![CDATA[setIcon]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$accountId]]></code>
+      <code><![CDATA[$name]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="lib/Db/ActionsMapper.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[find]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Db/Alias.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$accountId]]></code>
+      <code><![CDATA[$alias]]></code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$provisioningId]]></code>
+      <code><![CDATA[$signature]]></code>
+      <code><![CDATA[$signatureMode]]></code>
+      <code><![CDATA[$smimeCertificateId]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="lib/Db/AliasMapper.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[findAccountIdForAlias]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedReturnValue>
+      <code><![CDATA[Alias]]></code>
+    </PossiblyUnusedReturnValue>
+  </file>
+  <file src="lib/Db/CollectedAddress.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$displayName]]></code>
+      <code><![CDATA[$email]]></code>
+      <code><![CDATA[$userId]]></code>
+    </PossiblyUnusedProperty>
   </file>
   <file src="lib/Db/CollectedAddressMapper.php">
     <PossiblyNullArgument>
       <code><![CDATA[$label]]></code>
     </PossiblyNullArgument>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[findMatching]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Db/ContextChat/Task.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$lastMessageId]]></code>
+      <code><![CDATA[$mailboxId]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="lib/Db/ContextChat/TaskMapper.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Db/Delegation.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[setDisplayName]]></code>
+    </MissingPureAnnotation>
+    <UnusedClass>
+      <code><![CDATA[Delegation]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Db/DelegationMapper.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[find]]></code>
+      <code><![CDATA[findAccountOwnerForDelegatedUser]]></code>
+      <code><![CDATA[findDelegatedToUsers]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Db/InternalAddress.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[jsonSerialize]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Db/InternalAddressMapper.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedReturnValue>
+      <code><![CDATA[int]]></code>
+    </PossiblyUnusedReturnValue>
+  </file>
+  <file src="lib/Db/LocalAttachment.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[isDispositionAttachmentOrInline]]></code>
+      <code><![CDATA[jsonSerialize]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$userId]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="lib/Db/LocalAttachmentMapper.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[findByIds]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="lib/Db/LocalMessage.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[setAttachments]]></code>
+      <code><![CDATA[setRecipients]]></code>
+    </MissingPureAnnotation>
     <PossiblyNullArgument>
       <code><![CDATA[$this->getRecipients()]]></code>
       <code><![CDATA[$this->getRecipients()]]></code>
       <code><![CDATA[$this->getRecipients()]]></code>
       <code><![CDATA[$this->getRecipients()]]></code>
     </PossiblyNullArgument>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$accountId]]></code>
+      <code><![CDATA[$aiGenerated]]></code>
+      <code><![CDATA[$aliasId]]></code>
+      <code><![CDATA[$bodyHtml]]></code>
+      <code><![CDATA[$bodyPlain]]></code>
+      <code><![CDATA[$editorBody]]></code>
+      <code><![CDATA[$failed]]></code>
+      <code><![CDATA[$html]]></code>
+      <code><![CDATA[$inReplyToMessageId]]></code>
+      <code><![CDATA[$pgpMime]]></code>
+      <code><![CDATA[$raw]]></code>
+      <code><![CDATA[$requestMdn]]></code>
+      <code><![CDATA[$sendAt]]></code>
+      <code><![CDATA[$smimeCertificateId]]></code>
+      <code><![CDATA[$smimeEncrypt]]></code>
+      <code><![CDATA[$smimeSign]]></code>
+      <code><![CDATA[$status]]></code>
+      <code><![CDATA[$subject]]></code>
+      <code><![CDATA[$type]]></code>
+      <code><![CDATA[$updatedAt]]></code>
+    </PossiblyUnusedProperty>
   </file>
   <file src="lib/Db/LocalMessageMapper.php">
-    <PossiblyNullArgument>
-      <code><![CDATA[$message->getRecipients()]]></code>
-    </PossiblyNullArgument>
-    <PossiblyNullArrayOffset>
-      <code><![CDATA[$attachmentMap]]></code>
-      <code><![CDATA[$attachmentMap]]></code>
-      <code><![CDATA[$attachmentMap]]></code>
-      <code><![CDATA[$recipientMap]]></code>
-      <code><![CDATA[$recipientMap]]></code>
-      <code><![CDATA[$recipientMap]]></code>
-    </PossiblyNullArrayOffset>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[findAccountIdForLocalMessage]]></code>
+      <code><![CDATA[findById]]></code>
+      <code><![CDATA[getAllForUser]]></code>
+      <code><![CDATA[updateWithRecipients]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Db/MailAccount.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[canAuthenticateImap]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$archiveMailboxId]]></code>
+      <code><![CDATA[$authMethod]]></code>
+      <code><![CDATA[$classificationEnabled]]></code>
+      <code><![CDATA[$debug]]></code>
+      <code><![CDATA[$draftsMailboxId]]></code>
+      <code><![CDATA[$editorMode]]></code>
+      <code><![CDATA[$email]]></code>
+      <code><![CDATA[$imipCreate]]></code>
+      <code><![CDATA[$inboundHost]]></code>
+      <code><![CDATA[$inboundPort]]></code>
+      <code><![CDATA[$inboundSslMode]]></code>
+      <code><![CDATA[$inboundUser]]></code>
+      <code><![CDATA[$junkMailboxId]]></code>
+      <code><![CDATA[$lastMailboxSync]]></code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$oauthRefreshToken]]></code>
+      <code><![CDATA[$oauthTokenTtl]]></code>
+      <code><![CDATA[$oooFollowsSystem]]></code>
+      <code><![CDATA[$order]]></code>
+      <code><![CDATA[$outboundHost]]></code>
+      <code><![CDATA[$outboundPassword]]></code>
+      <code><![CDATA[$outboundPort]]></code>
+      <code><![CDATA[$outboundSslMode]]></code>
+      <code><![CDATA[$outboundUser]]></code>
+      <code><![CDATA[$path]]></code>
+      <code><![CDATA[$personalNamespace]]></code>
+      <code><![CDATA[$protocol]]></code>
+      <code><![CDATA[$provisioningId]]></code>
+      <code><![CDATA[$quotaPercentage]]></code>
+      <code><![CDATA[$searchBody]]></code>
+      <code><![CDATA[$sentMailboxId]]></code>
+      <code><![CDATA[$showSubscribedOnly]]></code>
+      <code><![CDATA[$sieveEnabled]]></code>
+      <code><![CDATA[$sieveHost]]></code>
+      <code><![CDATA[$sievePassword]]></code>
+      <code><![CDATA[$sievePort]]></code>
+      <code><![CDATA[$sieveSslMode]]></code>
+      <code><![CDATA[$sieveUser]]></code>
+      <code><![CDATA[$signature]]></code>
+      <code><![CDATA[$signatureAboveQuote]]></code>
+      <code><![CDATA[$signatureMode]]></code>
+      <code><![CDATA[$smimeCertificateId]]></code>
+      <code><![CDATA[$snoozeMailboxId]]></code>
+      <code><![CDATA[$trashMailboxId]]></code>
+      <code><![CDATA[$trashRetentionDays]]></code>
+      <code><![CDATA[$userId]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="lib/Db/MailAccountMapper.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[deleteProvisionedAccounts]]></code>
+      <code><![CDATA[findAllWhereOooFollowsSystem]]></code>
+      <code><![CDATA[findDelegatedByUserId]]></code>
+      <code><![CDATA[getAllUserIdsWithAccounts]]></code>
+      <code><![CDATA[getTotal]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Db/Mailbox.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[isLockActive]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getStats]]></code>
+      <code><![CDATA[hasChangedLock]]></code>
+      <code><![CDATA[hasLocks]]></code>
+      <code><![CDATA[hasNewLock]]></code>
+      <code><![CDATA[hasVanishedLock]]></code>
+      <code><![CDATA[isCached]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$messages]]></code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$nameHash]]></code>
+      <code><![CDATA[$remoteId]]></code>
+      <code><![CDATA[$remoteParentId]]></code>
+      <code><![CDATA[$selectable]]></code>
+      <code><![CDATA[$specialUse]]></code>
+      <code><![CDATA[$state]]></code>
+      <code><![CDATA[$syncChangedLock]]></code>
+      <code><![CDATA[$syncChangedToken]]></code>
+      <code><![CDATA[$syncInBackground]]></code>
+      <code><![CDATA[$syncNewLock]]></code>
+      <code><![CDATA[$syncNewToken]]></code>
+      <code><![CDATA[$syncVanishedLock]]></code>
+      <code><![CDATA[$syncVanishedToken]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="lib/Db/MailboxMapper.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[findAccountIdForMailbox]]></code>
+      <code><![CDATA[findByIds]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="lib/Db/Message.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[setAttachments]]></code>
+      <code><![CDATA[setAvatar]]></code>
+      <code><![CDATA[setBcc]]></code>
+      <code><![CDATA[setCc]]></code>
+      <code><![CDATA[setFetchAvatarFromClient]]></code>
+      <code><![CDATA[setFrom]]></code>
+      <code><![CDATA[setTags]]></code>
+      <code><![CDATA[setTo]]></code>
+    </MissingPureAnnotation>
     <PossiblyNullArgument>
       <code><![CDATA[$this->getReferences()]]></code>
     </PossiblyNullArgument>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$encrypted]]></code>
+      <code><![CDATA[$flagAnswered]]></code>
+      <code><![CDATA[$flagAttachments]]></code>
+      <code><![CDATA[$flagDeleted]]></code>
+      <code><![CDATA[$flagDraft]]></code>
+      <code><![CDATA[$flagFlagged]]></code>
+      <code><![CDATA[$flagForwarded]]></code>
+      <code><![CDATA[$flagImportant]]></code>
+      <code><![CDATA[$flagJunk]]></code>
+      <code><![CDATA[$flagMdnsent]]></code>
+      <code><![CDATA[$flagNotjunk]]></code>
+      <code><![CDATA[$flagSeen]]></code>
+      <code><![CDATA[$imipError]]></code>
+      <code><![CDATA[$imipMessage]]></code>
+      <code><![CDATA[$imipProcessed]]></code>
+      <code><![CDATA[$inReplyTo]]></code>
+      <code><![CDATA[$mailboxId]]></code>
+      <code><![CDATA[$mentionsMe]]></code>
+      <code><![CDATA[$previewText]]></code>
+      <code><![CDATA[$references]]></code>
+      <code><![CDATA[$remoteId]]></code>
+      <code><![CDATA[$sentAt]]></code>
+      <code><![CDATA[$structureAnalyzed]]></code>
+      <code><![CDATA[$subject]]></code>
+      <code><![CDATA[$summary]]></code>
+      <code><![CDATA[$threadRootId]]></code>
+      <code><![CDATA[$uid]]></code>
+      <code><![CDATA[$updatedAt]]></code>
+    </PossiblyUnusedProperty>
   </file>
   <file src="lib/Db/MessageMapper.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[filterMessageIdLength]]></code>
+      <code><![CDATA[flagToColumnName]]></code>
+      <code><![CDATA[needDistinct]]></code>
+    </MissingPureAnnotation>
     <PossiblyNullArgument>
       <code><![CDATA[$message->getMessageId()]]></code>
       <code><![CDATA[$message->getMessageId()]]></code>
       <code><![CDATA[$message->getMessageId()]]></code>
-      <code><![CDATA[$message->getPreviewText()]]></code>
-      <code><![CDATA[$recipient->getLabel()]]></code>
     </PossiblyNullArgument>
-    <PossiblyNullArrayOffset>
-      <code><![CDATA[$tags]]></code>
-      <code><![CDATA[$tags]]></code>
-    </PossiblyNullArrayOffset>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[findAccountIdForMessage]]></code>
+      <code><![CDATA[findAllIds]]></code>
+      <code><![CDATA[findByMailboxAndIds]]></code>
+      <code><![CDATA[findByUids]]></code>
+      <code><![CDATA[findChanged]]></code>
+      <code><![CDATA[findIdsByQuery]]></code>
+      <code><![CDATA[findNewIds]]></code>
+      <code><![CDATA[findThread]]></code>
+      <code><![CDATA[findUidsForIds]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedReturnValue>
+      <code><![CDATA[Message[]]]></code>
+      <code><![CDATA[Message[]]]></code>
+    </PossiblyUnusedReturnValue>
+    <UnusedMethod>
+      <code><![CDATA[recipientsMatch]]></code>
+    </UnusedMethod>
+  </file>
+  <file src="lib/Db/MessageRetention.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$knownSince]]></code>
+      <code><![CDATA[$mailboxId]]></code>
+      <code><![CDATA[$uid]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="lib/Db/MessageRetentionMapper.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedDocblockParam>
+      <code><![CDATA[$messageIds]]></code>
+    </UnusedDocblockParam>
+  </file>
+  <file src="lib/Db/MessageSnooze.php">
+    <UnusedClass>
+      <code><![CDATA[MessageSnooze]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Db/MessageSnoozeMapper.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedDocblockParam>
+      <code><![CDATA[$messageId]]></code>
+    </UnusedDocblockParam>
+  </file>
+  <file src="lib/Db/MessageTags.php">
+    <UnusedClass>
+      <code><![CDATA[MessageTags]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Db/MessageTagsMapper.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[getMessagesByTag]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="lib/Db/Provisioning.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[findMalformedLdapPlaceholders]]></code>
+    </MissingPureAnnotation>
     <PossiblyNullArgument>
       <code><![CDATA[$this->getSieveUser()]]></code>
-      <code><![CDATA[$user->getEMailAddress()]]></code>
     </PossiblyNullArgument>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[disableMasterPassword]]></code>
+      <code><![CDATA[enableMasterPassword]]></code>
+      <code><![CDATA[findMalformedLdapPlaceholders]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$aliases]]></code>
+      <code><![CDATA[$emailTemplate]]></code>
+      <code><![CDATA[$imapHost]]></code>
+      <code><![CDATA[$imapPort]]></code>
+      <code><![CDATA[$imapSslMode]]></code>
+      <code><![CDATA[$imapUser]]></code>
+      <code><![CDATA[$ldapAliasesAttribute]]></code>
+      <code><![CDATA[$ldapAliasesProvisioning]]></code>
+      <code><![CDATA[$masterPassword]]></code>
+      <code><![CDATA[$masterPasswordEnabled]]></code>
+      <code><![CDATA[$masterUser]]></code>
+      <code><![CDATA[$provisioningDomain]]></code>
+      <code><![CDATA[$sieveEnabled]]></code>
+      <code><![CDATA[$sieveHost]]></code>
+      <code><![CDATA[$sievePort]]></code>
+      <code><![CDATA[$sieveSslMode]]></code>
+      <code><![CDATA[$sieveUser]]></code>
+      <code><![CDATA[$smtpHost]]></code>
+      <code><![CDATA[$smtpPort]]></code>
+      <code><![CDATA[$smtpSslMode]]></code>
+      <code><![CDATA[$smtpUser]]></code>
+    </PossiblyUnusedProperty>
   </file>
   <file src="lib/Db/ProvisioningMapper.php">
     <PossiblyNullArgument>
       <code><![CDATA[$data['id'] ?? null]]></code>
     </PossiblyNullArgument>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[get]]></code>
+      <code><![CDATA[validate]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Db/Recipient.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$email]]></code>
+      <code><![CDATA[$label]]></code>
+      <code><![CDATA[$localMessageId]]></code>
+      <code><![CDATA[$messageId]]></code>
+      <code><![CDATA[$type]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="lib/Db/RecipientMapper.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[findByLocalMessageId]]></code>
+      <code><![CDATA[updateRecipients]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Db/SmimeCertificate.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$certificate]]></code>
+      <code><![CDATA[$emailAddress]]></code>
+      <code><![CDATA[$privateKey]]></code>
+      <code><![CDATA[$userId]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="lib/Db/SmimeCertificateMapper.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Db/StatisticsDao.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[emailCountResultToIndexedArray]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Db/Tag.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$color]]></code>
+      <code><![CDATA[$displayName]]></code>
+      <code><![CDATA[$imapLabel]]></code>
+      <code><![CDATA[$isDefaultTag]]></code>
+      <code><![CDATA[$userId]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="lib/Db/TagMapper.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[getTagForUser]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Db/TextBlock.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$content]]></code>
+      <code><![CDATA[$owner]]></code>
+      <code><![CDATA[$preview]]></code>
+      <code><![CDATA[$title]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="lib/Db/TextBlockMapper.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[find]]></code>
+      <code><![CDATA[findSharedWithMe]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Db/TextBlockShare.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$displayName]]></code>
+      <code><![CDATA[$shareWith]]></code>
+      <code><![CDATA[$textBlockId]]></code>
+      <code><![CDATA[$type]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="lib/Db/TextBlockShareMapper.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[deleteByTextBlockId]]></code>
+      <code><![CDATA[find]]></code>
+      <code><![CDATA[findAllShares]]></code>
+      <code><![CDATA[findTextBlockShares]]></code>
+      <code><![CDATA[shareExists]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedDocblockParam>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$owner]]></code>
+    </UnusedDocblockParam>
+  </file>
+  <file src="lib/Db/ThreadMapper.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[findMessageUidsAndMailboxNamesByAccountAndThreadRoot]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Db/TrustedSender.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[jsonSerialize]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Db/TrustedSenderMapper.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Dns/Resolver.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[isSuffix]]></code>
+      <code><![CDATA[resolve]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Events/BeforeImapClientCreated.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Events/BeforeMessageDeletedEvent.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getAccount]]></code>
+      <code><![CDATA[getFolderId]]></code>
+      <code><![CDATA[getMailbox]]></code>
+      <code><![CDATA[getUid]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$account]]></code>
+      <code><![CDATA[$mailbox]]></code>
+      <code><![CDATA[$uid]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/Events/DraftMessageCreatedEvent.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Events/DraftSavedEvent.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getNewMessageData]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$newMessageData]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/Events/MessageDeletedEvent.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getAccount]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Events/MessageFlaggedEvent.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Events/MessageSentEvent.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Events/NewMessageReceivedEvent.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getUri]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Events/NewMessagesSynchronized.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Events/OutboxMessageCreatedEvent.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Events/SynchronizationEvent.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Exception/ClassifierTrainingException.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Exception/ClientException.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Exception/CouldNotConnectException.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[getReason]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getHost]]></code>
+      <code><![CDATA[getPort]]></code>
+      <code><![CDATA[getReason]]></code>
+      <code><![CDATA[getService]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$host]]></code>
+      <code><![CDATA[$port]]></code>
+      <code><![CDATA[$previous]]></code>
+      <code><![CDATA[$service]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/Exception/DelegationExistsException.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+    </MissingPureAnnotation>
+    <UnusedClass>
+      <code><![CDATA[DelegationExistsException]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Exception/DelegationForbiddenException.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[getHttpCode]]></code>
+    </MissingPureAnnotation>
+    <UnusedClass>
+      <code><![CDATA[DelegationForbiddenException]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Exception/DraftsMailboxNotSetException.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+    </MissingPureAnnotation>
+    <UnusedClass>
+      <code><![CDATA[DraftsMailboxNotSetException]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Exception/FilterParserException.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[invalidJson]]></code>
+      <code><![CDATA[invalidState]]></code>
+    </MissingPureAnnotation>
+    <UnusedClass>
+      <code><![CDATA[FilterParserException]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Exception/ImapFlagEncodingException.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[create]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Exception/InvalidDataUriException.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Exception/InvalidOauthStateException.php">
+    <UnusedClass>
+      <code><![CDATA[InvalidOauthStateException]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Exception/MailboxLockedException.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[getHttpCode]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Exception/MailboxNotCachedException.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[from]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Exception/ManyRecipientsException.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+    </MissingPureAnnotation>
+    <UnusedClass>
+      <code><![CDATA[ManyRecipientsException]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Exception/SentMailboxNotSetException.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+    </MissingPureAnnotation>
+    <UnusedClass>
+      <code><![CDATA[SentMailboxNotSetException]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Exception/ServiceException.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Exception/ShareeAlreadyExistsException.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+    </MissingPureAnnotation>
+    <UnusedClass>
+      <code><![CDATA[ShareeAlreadyExistsException]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Exception/TrashMailboxNotSetException.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Exception/UserNotFoundException.php">
+    <UnusedClass>
+      <code><![CDATA[UserNotFoundException]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Exception/ValidationException.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[getHttpCode]]></code>
+      <code><![CDATA[setField]]></code>
+      <code><![CDATA[setFields]]></code>
+    </MissingPureAnnotation>
+    <UnusedClass>
+      <code><![CDATA[ValidationException]]></code>
+    </UnusedClass>
   </file>
   <file src="lib/Folder.php">
-    <PossiblyNullPropertyAssignmentValue>
-      <code><![CDATA[$delimiter]]></code>
-    </PossiblyNullPropertyAssignmentValue>
+    <MissingImmutableAnnotation>
+      <code><![CDATA[Folder]]></code>
+    </MissingImmutableAnnotation>
+    <MissingPureAnnotation>
+      <code><![CDATA[addSpecialUse]]></code>
+      <code><![CDATA[getMailbox]]></code>
+      <code><![CDATA[setMyAcls]]></code>
+      <code><![CDATA[setStatus]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[setStatus]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/HordeTranslationHandler.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[ngettext]]></code>
+      <code><![CDATA[t]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Html/ProxyHmacGenerator.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Http/AttachmentDownloadResponse.php">
+    <UnusedClass>
+      <code><![CDATA[AttachmentDownloadResponse]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Http/AvatarDownloadResponse.php">
+    <UnusedClass>
+      <code><![CDATA[AvatarDownloadResponse]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Http/HtmlResponse.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[render]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[plain]]></code>
+      <code><![CDATA[withResizer]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedConstructor>
+      <code><![CDATA[__construct]]></code>
+    </UnusedConstructor>
   </file>
   <file src="lib/Http/JsonResponse.php">
-    <LessSpecificReturnStatement>
-      <code><![CDATA[new self(
-			[
-				'status' => 'error',
-				'message' => $message,
-				'data' => $data,
-				'code' => $code,
-			],
-			$status
-		)]]></code>
-      <code><![CDATA[new self(
-			[
-				'status' => 'fail',
-				'data' => $data,
-			],
-			$status
-		)]]></code>
-      <code><![CDATA[new self(
-			[
-				'status' => 'success',
-				'data' => $data,
-			],
-			$status
-		)]]></code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[static]]></code>
-      <code><![CDATA[static]]></code>
-      <code><![CDATA[static]]></code>
-    </MoreSpecificReturnType>
+    <MissingPureAnnotation>
+      <code><![CDATA[filterTrace]]></code>
+      <code><![CDATA[serializeException]]></code>
+    </MissingPureAnnotation>
     <PossiblyInvalidArgument>
       <code><![CDATA[$error->getCode()]]></code>
     </PossiblyInvalidArgument>
     <PossiblyNullArgument>
       <code><![CDATA[self::serializeException($error)]]></code>
     </PossiblyNullArgument>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[success]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Http/Middleware/ErrorMiddleware.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[isTemporaryException]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Http/Middleware/ProvisioningMiddleware.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Http/ProxyDownloadResponse.php">
+    <UnusedClass>
+      <code><![CDATA[ProxyDownloadResponse]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Http/TrapError.php">
+    <MissingImmutableAnnotation>
+      <code><![CDATA[TrapError]]></code>
+    </MissingImmutableAnnotation>
+  </file>
+  <file src="lib/IMAP/Charset/Converter.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[normalizeCharset]]></code>
+    </MissingPureAnnotation>
   </file>
   <file src="lib/IMAP/FolderMapper.php">
     <ArgumentTypeCoercion>
@@ -133,16 +1744,100 @@
     <PossiblyNullArgument>
       <code><![CDATA[$folder->getDelimiter()]]></code>
     </PossiblyNullArgument>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[delete]]></code>
+      <code><![CDATA[renameFolder]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedParam>
+      <code><![CDATA[$account]]></code>
+    </PossiblyUnusedParam>
   </file>
   <file src="lib/IMAP/HordeImapClient.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[enableRateLimiter]]></code>
+    </MissingPureAnnotation>
     <PossiblyNullReference>
       <code><![CDATA[getTime]]></code>
     </PossiblyNullReference>
   </file>
   <file src="lib/IMAP/IMAPClientFactory.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[recordLogin]]></code>
+    </MissingPureAnnotation>
     <PossiblyNullArgument>
       <code><![CDATA[$account->getMailAccount()->getInboundPassword()]]></code>
     </PossiblyNullArgument>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[getLoginStats]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/IMAP/ImapFlag.php">
+    <MissingImmutableAnnotation>
+      <code><![CDATA[ImapFlag]]></code>
+    </MissingImmutableAnnotation>
+    <MissingPureAnnotation>
+      <code><![CDATA[create]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/IMAP/ImapMailboxConnector.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[toImapSpecialUse]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/IMAP/ImapMessageConnector.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[filterFlags]]></code>
+      <code><![CDATA[isPermflagsEnabledWithClient]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedMethod>
+      <code><![CDATA[convertMailQueryToHordeQuery]]></code>
+    </UnusedMethod>
+  </file>
+  <file src="lib/IMAP/ImapMessageFetcher.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[decodeSubject]]></code>
+      <code><![CDATA[hasAttachments]]></code>
+      <code><![CDATA[withBody]]></code>
+      <code><![CDATA[withPhishingCheck]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/IMAP/ImapMessageFetcherFactory.php">
+    <MissingImmutableAnnotation>
+      <code><![CDATA[ImapMessageFetcherFactory]]></code>
+    </MissingImmutableAnnotation>
+    <MissingPureAnnotation>
+      <code><![CDATA[build]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/IMAP/ImapTransmissionConnector.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <UnnecessaryVarAnnotation>
+      <code><![CDATA[Horde_Smtp_Exception]]></code>
+    </UnnecessaryVarAnnotation>
+  </file>
+  <file src="lib/IMAP/MailboxStats.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[jsonSerialize]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/IMAP/MailboxSync.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[syncStats]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="lib/IMAP/MessageMapper.php">
     <ArgumentTypeCoercion>
@@ -158,39 +1853,230 @@
     <PossiblyNullReference>
       <code><![CDATA[getBodyPart]]></code>
     </PossiblyNullReference>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[find]]></code>
+      <code><![CDATA[getAttachments]]></code>
+      <code><![CDATA[getHtmlBody]]></code>
+      <code><![CDATA[getRawAttachments]]></code>
+      <code><![CDATA[markAllRead]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedReturnValue>
+      <code><![CDATA[int]]></code>
+    </PossiblyUnusedReturnValue>
+    <UnusedMethod>
+      <code><![CDATA[buildAttachmentsPartsQuery]]></code>
+    </UnusedMethod>
+  </file>
+  <file src="lib/IMAP/MessageStructureData.php">
+    <MissingImmutableAnnotation>
+      <code><![CDATA[MessageStructureData]]></code>
+    </MissingImmutableAnnotation>
+  </file>
+  <file src="lib/IMAP/PreviewEnhancer.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/IMAP/Sync/Request.php">
+    <MissingImmutableAnnotation>
+      <code><![CDATA[Request]]></code>
+    </MissingImmutableAnnotation>
   </file>
   <file src="lib/IMAP/Sync/Response.php">
-    <PossiblyNullPropertyAssignmentValue>
-      <code><![CDATA[$stats]]></code>
-    </PossiblyNullPropertyAssignmentValue>
+    <MissingPureAnnotation>
+      <code><![CDATA[jsonSerialize]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getStats]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/IMAP/Sync/Synchronizer.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/IMAP/Threading/Container.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[empty]]></code>
+      <code><![CDATA[fill]]></code>
+      <code><![CDATA[getParent]]></code>
+      <code><![CDATA[hasAncestor]]></code>
+      <code><![CDATA[hasChildren]]></code>
+      <code><![CDATA[hasMessage]]></code>
+      <code><![CDATA[hasParent]]></code>
+      <code><![CDATA[jsonSerialize]]></code>
+      <code><![CDATA[removeChild]]></code>
+      <code><![CDATA[root]]></code>
+      <code><![CDATA[unlink]]></code>
+      <code><![CDATA[with]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[root]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="lib/IMAP/Threading/DatabaseMessage.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[fromRowData]]></code>
+      <code><![CDATA[setThreadRootId]]></code>
+    </MissingPureAnnotation>
     <PossiblyNullArgument>
       <code><![CDATA[$messageId]]></code>
     </PossiblyNullArgument>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[redact]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/IMAP/Threading/Message.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[getBaseSubject]]></code>
+      <code><![CDATA[hasReSubject]]></code>
+    </MissingPureAnnotation>
   </file>
   <file src="lib/IMAP/Threading/ThreadBuilder.php">
     <PossiblyNullReference>
       <code><![CDATA[hasReSubject]]></code>
       <code><![CDATA[hasReSubject]]></code>
     </PossiblyNullReference>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="lib/Integration/GoogleIntegration.php">
     <PossiblyInvalidArgument>
       <code><![CDATA[$response->getBody()]]></code>
       <code><![CDATA[$response->getBody()]]></code>
     </PossiblyInvalidArgument>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[configure]]></code>
+      <code><![CDATA[finishConnect]]></code>
+      <code><![CDATA[unlink]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Integration/KItinerary/ItineraryExtractor.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[extract]]></code>
+      <code><![CDATA[hasAdapter]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedMethod>
+      <code><![CDATA[findAvailableAdapter]]></code>
+      <code><![CDATA[getAdapter]]></code>
+    </UnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$adapter]]></code>
+      <code><![CDATA[$binAdapter]]></code>
+      <code><![CDATA[$findAdapter]]></code>
+      <code><![CDATA[$flatpakAdapter]]></code>
+      <code><![CDATA[$logger]]></code>
+      <code><![CDATA[$sysAdapter]]></code>
+    </UnusedProperty>
   </file>
   <file src="lib/Integration/MicrosoftIntegration.php">
     <PossiblyInvalidArgument>
       <code><![CDATA[$response->getBody()]]></code>
       <code><![CDATA[$response->getBody()]]></code>
     </PossiblyInvalidArgument>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[configure]]></code>
+      <code><![CDATA[finishConnect]]></code>
+      <code><![CDATA[unlink]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/JMAP/Exception/JmapException.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[isTransient]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/JMAP/JmapClientFactory.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/JMAP/JmapMailboxAdapter.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[convertFromSpecialUse]]></code>
+      <code><![CDATA[normalizeSpecialUse]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/JMAP/JmapMailboxConnector.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/JMAP/JmapMessageAdapter.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[extractCalendarMethod]]></code>
+      <code><![CDATA[firstString]]></code>
+      <code><![CDATA[isReservedKeyword]]></code>
+      <code><![CDATA[normalizeRawMessageIdList]]></code>
+      <code><![CDATA[normalizeReferenceValue]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[countUnreadMessages]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/JMAP/JmapMessageConnector.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[convertSearchQueryToFilters]]></code>
+      <code><![CDATA[getQuota]]></code>
+      <code><![CDATA[isPermflagsEnabled]]></code>
+      <code><![CDATA[normalizeFlagForRemote]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedReturnValue>
+      <code><![CDATA[SyncResult]]></code>
+    </PossiblyUnusedReturnValue>
+    <UnusedMethod>
+      <code><![CDATA[convertSearchQueryToFilters]]></code>
+      <code><![CDATA[findLocalMessageByUid]]></code>
+    </UnusedMethod>
+  </file>
+  <file src="lib/JMAP/JmapTransmissionConnector.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[collectEnvelopeRecipients]]></code>
+      <code><![CDATA[sendMdn]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Listener/AccountSynchronizedThreadUpdaterListener.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Listener/AddressCollectionListener.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Listener/DeleteDraftListener.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Listener/FollowUpClassifierListener.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Listener/HamReportListener.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="lib/Listener/InteractionListener.php">
-    <PossiblyNullIterator>
-      <code><![CDATA[$message->getRecipients()]]></code>
-    </PossiblyNullIterator>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="lib/Listener/MailboxesSynchronizedSpecialMailboxesUpdater.php">
     <PossiblyNullArgument>
@@ -201,55 +2087,697 @@
       <code><![CDATA[$mailAccount->getSnoozeMailboxId()]]></code>
       <code><![CDATA[$mailAccount->getTrashMailboxId()]]></code>
     </PossiblyNullArgument>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Listener/MessageCacheUpdaterListener.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$logger]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/Listener/MessageKnownSinceListener.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Listener/MoveJunkListener.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Listener/NewMessagesNotifier.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Listener/NewMessagesSummarizeListener.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Listener/OauthTokenRefreshListener.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="lib/Listener/OptionalIndicesListener.php">
-    <InvalidTemplateParam>
-      <code><![CDATA[IEventListener]]></code>
-    </InvalidTemplateParam>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$event]]></code>
-    </MoreSpecificImplementedParamType>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Listener/OutOfOfficeListener.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Listener/SpamReportListener.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Listener/TaskProcessingListener.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Listener/UserDeletedListener.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Migration/AddMissingDefaultTags.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[getName]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Migration/AddMissingMessageIds.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[getName]]></code>
+    </MissingPureAnnotation>
+    <UnusedProperty>
+      <code><![CDATA[$logger]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/Migration/DeleteDuplicateUids.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[getName]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Migration/FixBackgroundJobs.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[getName]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Migration/FixCollectedAddresses.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[getName]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Migration/MakeItineraryExtractorExecutable.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[getName]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Migration/MigrateImportantFromImapAndDb.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$account]]></code>
+      <code><![CDATA[$account]]></code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="lib/Migration/ProvisionAccounts.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[getName]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Migration/RepairMailTheads.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[getName]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Migration/Version0110Date20180825201241.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[setEntityClass]]></code>
+      <code><![CDATA[setTableName]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Migration/Version1100Date20210304143008.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[changeSchema]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Migration/Version1100Date20210326103929.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[changeSchema]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Migration/Version1100Date20210419080523.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[changeSchema]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Migration/Version1105Date20210922104324.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Migration/Version1120Date20220223094709.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[changeSchema]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Migration/Version3400Date20230907103114.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[postSchemaChange]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Migration/Version3500Date20231005091430.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[changeSchema]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Migration/Version4200Date20241210000001.php">
+    <UnusedDocblockParam>
+      <code><![CDATA[$connection]]></code>
+    </UnusedDocblockParam>
+  </file>
+  <file src="lib/Migration/Version5006Date20250927130132.php">
+    <UnusedClass>
+      <code><![CDATA[Version5006Date20250927130132]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Migration/Version5007Date20260108124422.php">
+    <UnusedClass>
+      <code><![CDATA[Version5007Date20260108124422]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Migration/Version5009Date20260312152753.php">
+    <UnusedClass>
+      <code><![CDATA[Version5009Date20260312152753]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Migration/Version5011Date20260401000001.php">
+    <InvalidAttribute>
+      <code><![CDATA[AddColumn]]></code>
+    </InvalidAttribute>
+  </file>
+  <file src="lib/Migration/Version5011Date20260401000002.php">
+    <InvalidAttribute>
+      <code><![CDATA[AddColumn]]></code>
+      <code><![CDATA[AddColumn]]></code>
+    </InvalidAttribute>
+  </file>
+  <file src="lib/Migration/Version5012Date20260816120000.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[changeSchema]]></code>
+    </MissingPureAnnotation>
+    <UnusedClass>
+      <code><![CDATA[Version5012Date20260816120000]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Model/Classifier.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[jsonSerialize]]></code>
+      <code><![CDATA[setAccountId]]></code>
+      <code><![CDATA[setCreatedAt]]></code>
+      <code><![CDATA[setDuration]]></code>
+      <code><![CDATA[setEstimator]]></code>
+      <code><![CDATA[setF1ScoreImportant]]></code>
+      <code><![CDATA[setPersistenceVersion]]></code>
+      <code><![CDATA[setPrecisionImportant]]></code>
+      <code><![CDATA[setRecallImportant]]></code>
+      <code><![CDATA[setTrainingSetSize]]></code>
+      <code><![CDATA[setType]]></code>
+      <code><![CDATA[setValidationSetSize]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getAccountId]]></code>
+      <code><![CDATA[getCreatedAt]]></code>
+      <code><![CDATA[getDuration]]></code>
+      <code><![CDATA[getEstimator]]></code>
+      <code><![CDATA[getF1ScoreImportant]]></code>
+      <code><![CDATA[getPersistenceVersion]]></code>
+      <code><![CDATA[getPrecisionImportant]]></code>
+      <code><![CDATA[getRecallImportant]]></code>
+      <code><![CDATA[getTrainingSetSize]]></code>
+      <code><![CDATA[getType]]></code>
+      <code><![CDATA[getValidationSetSize]]></code>
+      <code><![CDATA[setCreatedAt]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Model/ClassifierPipeline.php">
+    <MissingImmutableAnnotation>
+      <code><![CDATA[ClassifierPipeline]]></code>
+    </MissingImmutableAnnotation>
+  </file>
+  <file src="lib/Model/ConvertAddresses.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[hordeToAssoc]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[convertAddressList]]></code>
+      <code><![CDATA[convertAddressList]]></code>
+      <code><![CDATA[hordeListToStringArray]]></code>
+      <code><![CDATA[hordeListToStringArray]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedMethod>
+      <code><![CDATA[hordeToAssoc]]></code>
+      <code><![CDATA[hordeToAssoc]]></code>
+      <code><![CDATA[hordeToString]]></code>
+      <code><![CDATA[hordeToString]]></code>
+    </UnusedMethod>
+  </file>
+  <file src="lib/Model/EnrichedSmimeCertificate.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[setCertificate]]></code>
+      <code><![CDATA[setInfo]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[getCertificate]]></code>
+      <code><![CDATA[getInfo]]></code>
+      <code><![CDATA[setCertificate]]></code>
+      <code><![CDATA[setInfo]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Model/EventData.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[jsonSerialize]]></code>
+    </MissingPureAnnotation>
+    <UnusedClass>
+      <code><![CDATA[EventData]]></code>
+    </UnusedClass>
   </file>
   <file src="lib/Model/IMAPMessage.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[addAttachmentFromFiles]]></code>
+      <code><![CDATA[addEmbeddedMessageAttachment]]></code>
+      <code><![CDATA[addLocalAttachment]]></code>
+      <code><![CDATA[addRawAttachment]]></code>
+      <code><![CDATA[getContent]]></code>
+      <code><![CDATA[getFlags]]></code>
+      <code><![CDATA[getInReplyTo]]></code>
+      <code><![CDATA[setBcc]]></code>
+      <code><![CDATA[setCC]]></code>
+      <code><![CDATA[setContent]]></code>
+      <code><![CDATA[setFlags]]></code>
+      <code><![CDATA[setFrom]]></code>
+      <code><![CDATA[setInReplyTo]]></code>
+      <code><![CDATA[setReplyTo]]></code>
+      <code><![CDATA[setSubject]]></code>
+      <code><![CDATA[setTo]]></code>
+    </MissingPureAnnotation>
     <PossiblyNullArgument>
       <code><![CDATA[$msg->getMessageId()]]></code>
     </PossiblyNullArgument>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[hasDkimSignature]]></code>
+      <code><![CDATA[hasHtmlMessage]]></code>
+      <code><![CDATA[isPgpMimeEncrypted]]></code>
+      <code><![CDATA[isSignatureValid]]></code>
+      <code><![CDATA[isSigned]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$isSigned]]></code>
+      <code><![CDATA[$signatureIsValid]]></code>
+    </UnusedProperty>
   </file>
-  <file src="lib/Net/IpAddressClassifier.php">
-    <PossiblyInvalidCast>
-      <code><![CDATA[$parsedIp->toIPv4() ?? $parsedIp]]></code>
-    </PossiblyInvalidCast>
+  <file src="lib/Model/IMessage.php">
+    <MissingAbstractPureAnnotation>
+      <code><![CDATA[addAttachmentFromFiles]]></code>
+      <code><![CDATA[addEmbeddedMessageAttachment]]></code>
+      <code><![CDATA[addLocalAttachment]]></code>
+      <code><![CDATA[addRawAttachment]]></code>
+      <code><![CDATA[getAttachments]]></code>
+      <code><![CDATA[getBCC]]></code>
+      <code><![CDATA[getCC]]></code>
+      <code><![CDATA[getContent]]></code>
+      <code><![CDATA[getFlags]]></code>
+      <code><![CDATA[getFrom]]></code>
+      <code><![CDATA[getInReplyTo]]></code>
+      <code><![CDATA[getMessageId]]></code>
+      <code><![CDATA[getReplyTo]]></code>
+      <code><![CDATA[getSubject]]></code>
+      <code><![CDATA[getTo]]></code>
+      <code><![CDATA[setBcc]]></code>
+      <code><![CDATA[setCC]]></code>
+      <code><![CDATA[setContent]]></code>
+      <code><![CDATA[setFlags]]></code>
+      <code><![CDATA[setFrom]]></code>
+      <code><![CDATA[setInReplyTo]]></code>
+      <code><![CDATA[setReplyTo]]></code>
+      <code><![CDATA[setSubject]]></code>
+      <code><![CDATA[setTo]]></code>
+    </MissingAbstractPureAnnotation>
+    <MissingInterfaceImmutableAnnotation>
+      <code><![CDATA[IMessage]]></code>
+    </MissingInterfaceImmutableAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[addAttachmentFromFiles]]></code>
+      <code><![CDATA[addLocalAttachment]]></code>
+      <code><![CDATA[addRawAttachment]]></code>
+      <code><![CDATA[setBcc]]></code>
+      <code><![CDATA[setCC]]></code>
+      <code><![CDATA[setFlags]]></code>
+      <code><![CDATA[setInReplyTo]]></code>
+      <code><![CDATA[setReplyTo]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Model/Message.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[getMessageId]]></code>
+      <code><![CDATA[setBcc]]></code>
+      <code><![CDATA[setCC]]></code>
+      <code><![CDATA[setContent]]></code>
+      <code><![CDATA[setFlags]]></code>
+      <code><![CDATA[setFrom]]></code>
+      <code><![CDATA[setInReplyTo]]></code>
+      <code><![CDATA[setReplyTo]]></code>
+      <code><![CDATA[setSubject]]></code>
+      <code><![CDATA[setTo]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Model/NewMessageData.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[fromRequest]]></code>
+      <code><![CDATA[getAccount]]></code>
+      <code><![CDATA[getAttachments]]></code>
+      <code><![CDATA[getBcc]]></code>
+      <code><![CDATA[getBody]]></code>
+      <code><![CDATA[getCc]]></code>
+      <code><![CDATA[getSmimeCertificateId]]></code>
+      <code><![CDATA[getSmimeEncrypt]]></code>
+      <code><![CDATA[getSmimeSign]]></code>
+      <code><![CDATA[getSubject]]></code>
+      <code><![CDATA[getTo]]></code>
+      <code><![CDATA[isHtml]]></code>
+      <code><![CDATA[isMdnRequested]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$account]]></code>
+      <code><![CDATA[$attachments]]></code>
+      <code><![CDATA[$bcc]]></code>
+      <code><![CDATA[$body]]></code>
+      <code><![CDATA[$cc]]></code>
+      <code><![CDATA[$isHtml]]></code>
+      <code><![CDATA[$isMdnRequested]]></code>
+      <code><![CDATA[$smimeCertificateId]]></code>
+      <code><![CDATA[$smimeEncrypt]]></code>
+      <code><![CDATA[$smimeSign]]></code>
+      <code><![CDATA[$subject]]></code>
+      <code><![CDATA[$to]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/Model/RepliedMessageData.php">
+    <UnusedClass>
+      <code><![CDATA[RepliedMessageData]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Model/SmimeCertificateInfo.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[jsonSerialize]]></code>
+      <code><![CDATA[setCommonName]]></code>
+      <code><![CDATA[setEmailAddress]]></code>
+      <code><![CDATA[setIsChainVerified]]></code>
+      <code><![CDATA[setNotAfter]]></code>
+      <code><![CDATA[setPurposes]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getCommonName]]></code>
+      <code><![CDATA[getNotAfter]]></code>
+      <code><![CDATA[getPurposes]]></code>
+      <code><![CDATA[isChainVerified]]></code>
+      <code><![CDATA[setCommonName]]></code>
+      <code><![CDATA[setEmailAddress]]></code>
+      <code><![CDATA[setIsChainVerified]]></code>
+      <code><![CDATA[setNotAfter]]></code>
+      <code><![CDATA[setPurposes]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Model/SmimeCertificatePurposes.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[jsonSerialize]]></code>
+      <code><![CDATA[setEncrypt]]></code>
+      <code><![CDATA[setSign]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[hasEncrypt]]></code>
+      <code><![CDATA[hasSign]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Model/SmimeData.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[jsonSerialize]]></code>
+      <code><![CDATA[setIsEncrypted]]></code>
+      <code><![CDATA[setIsSigned]]></code>
+      <code><![CDATA[setSignatureIsValid]]></code>
+    </MissingPureAnnotation>
+    <UnusedClass>
+      <code><![CDATA[SmimeData]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Model/SmimeDecryptionResult.php">
+    <MissingImmutableAnnotation>
+      <code><![CDATA[SmimeDecryptionResult]]></code>
+    </MissingImmutableAnnotation>
+    <MissingPureAnnotation>
+      <code><![CDATA[fromPlain]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[isEncrypted]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$isEncrypted]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/Notification/Notifier.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[getID]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/PhishingDetectionList.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[addCheck]]></code>
+      <code><![CDATA[isWarning]]></code>
+      <code><![CDATA[jsonSerialize]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Protocol/ProtocolFactory.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[testConnection]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Protocol/SyncResult.php">
+    <MissingImmutableAnnotation>
+      <code><![CDATA[SyncResult]]></code>
+    </MissingImmutableAnnotation>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$deleted]]></code>
+      <code><![CDATA[$modified]]></code>
+      <code><![CDATA[$new]]></code>
+      <code><![CDATA[$state]]></code>
+      <code><![CDATA[$stats]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="lib/Provider/Command/MessageSend.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedParam>
+      <code><![CDATA[$options]]></code>
+    </PossiblyUnusedParam>
+    <PossiblyUnusedReturnValue>
+      <code><![CDATA[LocalMessage]]></code>
+    </PossiblyUnusedReturnValue>
+  </file>
+  <file src="lib/Provider/MailProvider.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$services]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[array<string,IService>]]></code>
+    </InvalidReturnType>
+    <MissingPureAnnotation>
+      <code><![CDATA[id]]></code>
+      <code><![CDATA[initiateService]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Provider/MailService.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[capable]]></code>
+      <code><![CDATA[initiateMessage]]></code>
+      <code><![CDATA[setLabel]]></code>
+      <code><![CDATA[setPrimaryAddress]]></code>
+      <code><![CDATA[setSecondaryAddresses]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/ResponseDefinitions.php">
+    <MissingImmutableAnnotation>
+      <code><![CDATA[ResponseDefinitions]]></code>
+    </MissingImmutableAnnotation>
+    <UnusedClass>
+      <code><![CDATA[ResponseDefinitions]]></code>
+    </UnusedClass>
   </file>
   <file src="lib/SMTP/SmtpClientFactory.php">
     <PossiblyNullArgument>
       <code><![CDATA[$mailAccount->getOutboundPassword()]]></code>
     </PossiblyNullArgument>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Search/FilteringProvider.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[getAlternateIds]]></code>
+      <code><![CDATA[getCustomFilters]]></code>
+      <code><![CDATA[getSupportedFilters]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Search/Provider.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getOrder]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Send/AHandler.php">
+    <MissingAbstractPureAnnotation>
+      <code><![CDATA[process]]></code>
+    </MissingAbstractPureAnnotation>
+    <MissingPureAnnotation>
+      <code><![CDATA[setNext]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Send/AntiAbuseHandler.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Send/Chain.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="lib/Send/FlagRepliedMessageHandler.php">
     <PossiblyNullArgument>
       <code><![CDATA[$localMessage->getInReplyToMessageId()]]></code>
       <code><![CDATA[$mailbox->getMyAcls()]]></code>
     </PossiblyNullArgument>
-    <PossiblyUndefinedVariable>
-      <code><![CDATA[$client]]></code>
-    </PossiblyUndefinedVariable>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Send/SendHandler.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Service/AccountService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[deleteByAccountId]]></code>
+      <code><![CDATA[findDelegatedAccounts]]></code>
+      <code><![CDATA[getAllAcounts]]></code>
+      <code><![CDATA[testAccountConnection]]></code>
+      <code><![CDATA[updateSignature]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedReturnValue>
+      <code><![CDATA[MailAccount]]></code>
+    </PossiblyUnusedReturnValue>
+    <UnusedProperty>
+      <code><![CDATA[$config]]></code>
+      <code><![CDATA[$delegationMapper]]></code>
+      <code><![CDATA[$protocolFactory]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/Service/AiIntegrations/AiIntegrationsService.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[assertNoPromptInjection]]></code>
+      <code><![CDATA[isPersonalEmail]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[generateEventData]]></code>
+      <code><![CDATA[getSmartReply]]></code>
+      <code><![CDATA[isTaskAvailable]]></code>
+      <code><![CDATA[summarizeThread]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$cache]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/Service/AiIntegrations/Cache.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[buildFailureCountKey]]></code>
+      <code><![CDATA[buildUrlKey]]></code>
+      <code><![CDATA[getBackoffTtl]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[addFailure]]></code>
+      <code><![CDATA[addValue]]></code>
+      <code><![CDATA[buildUrlKey]]></code>
+      <code><![CDATA[getBackoffTtl]]></code>
+      <code><![CDATA[getFailureCount]]></code>
+      <code><![CDATA[getValue]]></code>
+      <code><![CDATA[remove]]></code>
+      <code><![CDATA[resetFailures]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedDocblockParam>
+      <code><![CDATA[$ids]]></code>
+    </UnusedDocblockParam>
+    <UnusedMethod>
+      <code><![CDATA[buildFailureCountKey]]></code>
+    </UnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$cache]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/Service/AiIntegrations/DefaultPrompts.php">
+    <MissingImmutableAnnotation>
+      <code><![CDATA[DefaultPrompts]]></code>
+    </MissingImmutableAnnotation>
+  </file>
+  <file src="lib/Service/AliasesService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[delete]]></code>
+      <code><![CDATA[findByAliasAndUserId]]></code>
+      <code><![CDATA[update]]></code>
+      <code><![CDATA[updateSignature]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedReturnValue>
+      <code><![CDATA[Alias]]></code>
+    </PossiblyUnusedReturnValue>
+  </file>
+  <file src="lib/Service/AllowedRecipientsService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="lib/Service/AntiAbuseService.php">
     <PossiblyNullArgument>
       <code><![CDATA[$message->getRecipients()]]></code>
       <code><![CDATA[$message->getRecipients()]]></code>
     </PossiblyNullArgument>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="lib/Service/AntiSpamService.php">
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$mail->getRaw(false)]]></code>
-    </PossiblyInvalidArgument>
+    <MissingPureAnnotation>
+      <code><![CDATA[getHamSubject]]></code>
+      <code><![CDATA[getSpamSubject]]></code>
+    </MissingPureAnnotation>
     <PossiblyNullArgument>
       <code><![CDATA[$fullText]]></code>
     </PossiblyNullArgument>
     <PossiblyNullReference>
       <code><![CDATA[toHorde]]></code>
     </PossiblyNullReference>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[deleteConfig]]></code>
+      <code><![CDATA[setHamEmail]]></code>
+      <code><![CDATA[setSpamEmail]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="lib/Service/Attachment/AttachmentService.php">
     <PossiblyNullArgument>
@@ -258,6 +2786,14 @@
       <code><![CDATA[$fullText]]></code>
       <code><![CDATA[$message->getAttachments()]]></code>
     </PossiblyNullArgument>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[deleteLocalMessageAttachmentsById]]></code>
+      <code><![CDATA[updateLocalMessageAttachments]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedParam>
+      <code><![CDATA[$localMessageId]]></code>
+    </PossiblyUnusedParam>
     <UndefinedClass>
       <code><![CDATA[SharedStorage]]></code>
     </UndefinedClass>
@@ -266,73 +2802,538 @@
       <code><![CDATA[$storage]]></code>
     </UndefinedDocblockClass>
   </file>
+  <file src="lib/Service/Attachment/AttachmentStorage.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[save]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Service/Attachment/UploadedFile.php">
+    <MissingImmutableAnnotation>
+      <code><![CDATA[UploadedFile]]></code>
+    </MissingImmutableAnnotation>
+    <MissingPureAnnotation>
+      <code><![CDATA[getFileName]]></code>
+      <code><![CDATA[getMimeType]]></code>
+      <code><![CDATA[getTempPath]]></code>
+    </MissingPureAnnotation>
+    <UnusedClass>
+      <code><![CDATA[UploadedFile]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Service/AutoCompletion/AddressCollector.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[searchAddress]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Service/AutoCompletion/AutoCompleteService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[findMatches]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$addressCollector]]></code>
+      <code><![CDATA[$contactsIntegration]]></code>
+      <code><![CDATA[$groupsIntegration]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/Service/AutoConfig/Configuration.php">
+    <UnusedClass>
+      <code><![CDATA[Configuration]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Service/AutoConfig/ConnectivityTester.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[canConnect]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$config]]></code>
+      <code><![CDATA[$logger]]></code>
+    </PossiblyUnusedProperty>
+  </file>
   <file src="lib/Service/AutoConfig/IspDb.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[getUrls]]></code>
+      <code><![CDATA[mapSocketTypeToSecurity]]></code>
+    </MissingPureAnnotation>
     <PossiblyInvalidArgument>
-      <code><![CDATA[$url]]></code>
       <code><![CDATA[$xml]]></code>
     </PossiblyInvalidArgument>
-    <PossiblyInvalidCast>
-      <code><![CDATA[$url]]></code>
-    </PossiblyInvalidCast>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$domain]]></code>
+      <code><![CDATA[$serverConfigs['smtp'][0]]]></code>
     </PossiblyUndefinedArrayOffset>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[getUrls]]></code>
+      <code><![CDATA[query]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedMethod>
+      <code><![CDATA[convertServerElement]]></code>
+      <code><![CDATA[mapSocketTypeToSecurity]]></code>
+      <code><![CDATA[queryUrl]]></code>
+    </UnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$client]]></code>
+      <code><![CDATA[$dnsResolver]]></code>
+      <code><![CDATA[$logger]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/Service/AutoConfig/MxRecord.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[stripSubdomain]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[query]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedMethod>
+      <code><![CDATA[sanitizedRecords]]></code>
+      <code><![CDATA[stripSubdomain]]></code>
+    </UnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$logger]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/Service/AutoConfig/ServerConfiguration.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Service/Avatar/AddressbookSource.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[isExternal]]></code>
+    </MissingPureAnnotation>
+    <UnusedClass>
+      <code><![CDATA[AddressbookSource]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Service/Avatar/Avatar.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getMime]]></code>
+      <code><![CDATA[getUrl]]></code>
+      <code><![CDATA[isExternal]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Service/Avatar/AvatarFactory.php">
+    <MissingImmutableAnnotation>
+      <code><![CDATA[AvatarFactory]]></code>
+    </MissingImmutableAnnotation>
+    <MissingPureAnnotation>
+      <code><![CDATA[createExternal]]></code>
+      <code><![CDATA[createInternal]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Service/Avatar/Cache.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[buildImageKey]]></code>
+      <code><![CDATA[buildUrlKey]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[add]]></code>
+      <code><![CDATA[addImage]]></code>
+      <code><![CDATA[getImage]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedMethod>
+      <code><![CDATA[buildImageKey]]></code>
+    </UnusedMethod>
+  </file>
+  <file src="lib/Service/Avatar/CompositeAvatarSource.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[fetch]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$sources]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/Service/Avatar/Downloader.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[download]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$clientService]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/Service/Avatar/FaviconDataAccess.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="lib/Service/Avatar/FaviconSource.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[isExternal]]></code>
+    </MissingPureAnnotation>
     <PossiblyInvalidArgument>
       <code><![CDATA[$body]]></code>
       <code><![CDATA[$body]]></code>
     </PossiblyInvalidArgument>
+    <UnusedClass>
+      <code><![CDATA[FaviconSource]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Service/Avatar/GravatarSource.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[isExternal]]></code>
+    </MissingPureAnnotation>
+    <UnusedClass>
+      <code><![CDATA[GravatarSource]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Service/Avatar/IAvatarSource.php">
+    <MissingAbstractPureAnnotation>
+      <code><![CDATA[fetch]]></code>
+      <code><![CDATA[isExternal]]></code>
+    </MissingAbstractPureAnnotation>
+    <MissingInterfaceImmutableAnnotation>
+      <code><![CDATA[IAvatarSource]]></code>
+    </MissingInterfaceImmutableAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[fetch]]></code>
+      <code><![CDATA[isExternal]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Service/AvatarService.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[hasAllowedMime]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedMethod>
+      <code><![CDATA[externalAvatarsAllowed]]></code>
+      <code><![CDATA[hasAllowedMime]]></code>
+    </UnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$avatarFactory]]></code>
+      <code><![CDATA[$downloader]]></code>
+      <code><![CDATA[$preferences]]></code>
+      <code><![CDATA[$source]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/Service/Classification/ClassificationSettingsService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[setClassificationEnabledByDefault]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$preferences]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/Service/Classification/FeatureExtraction/CompositeExtractor.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Service/Classification/FeatureExtraction/IExtractor.php">
+    <MissingAbstractPureAnnotation>
+      <code><![CDATA[extract]]></code>
+      <code><![CDATA[prepare]]></code>
+    </MissingAbstractPureAnnotation>
+    <MissingInterfaceImmutableAnnotation>
+      <code><![CDATA[IExtractor]]></code>
+    </MissingInterfaceImmutableAnnotation>
   </file>
   <file src="lib/Service/Classification/FeatureExtraction/ImportantMessagesExtractor.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[extract]]></code>
+    </MissingPureAnnotation>
     <PossiblyNullReference>
       <code><![CDATA[getEmail]]></code>
       <code><![CDATA[getEmail]]></code>
     </PossiblyNullReference>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="lib/Service/Classification/FeatureExtraction/ReadMessagesExtractor.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[extract]]></code>
+    </MissingPureAnnotation>
     <PossiblyNullReference>
       <code><![CDATA[getEmail]]></code>
       <code><![CDATA[getEmail]]></code>
     </PossiblyNullReference>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="lib/Service/Classification/FeatureExtraction/RepliedMessagesExtractor.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[extract]]></code>
+    </MissingPureAnnotation>
     <PossiblyNullReference>
       <code><![CDATA[getEmail]]></code>
       <code><![CDATA[getEmail]]></code>
     </PossiblyNullReference>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="lib/Service/Classification/FeatureExtraction/SentMessagesExtractor.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[extract]]></code>
+    </MissingPureAnnotation>
     <PossiblyNullReference>
       <code><![CDATA[getEmail]]></code>
       <code><![CDATA[getEmail]]></code>
     </PossiblyNullReference>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Service/Classification/FeatureExtraction/SubjectExtractor.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[setTfidf]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="lib/Service/Classification/ImportanceClassifier.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$predictedValidationLabel]]></code>
     </ArgumentTypeCoercion>
+    <MissingPureAnnotation>
+      <code><![CDATA[filterMessageHasSenderEmail]]></code>
+    </MissingPureAnnotation>
     <PossiblyNullReference>
       <code><![CDATA[getEmail]]></code>
     </PossiblyNullReference>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Service/Classification/ImportanceRulesClassifier.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Service/Classification/NewMessagesClassifier.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Service/Classification/PersistenceService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Service/Classification/RubixMemoryPersister.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__toString]]></code>
+      <code><![CDATA[load]]></code>
+      <code><![CDATA[save]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Service/CleanupService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Service/ContactIntegration/ContactIntegrationService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[addEMailToContact]]></code>
+      <code><![CDATA[autoComplete]]></code>
+      <code><![CDATA[findMatches]]></code>
+      <code><![CDATA[newContact]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$contactsIntegration]]></code>
+    </UnusedProperty>
   </file>
   <file src="lib/Service/ContactsIntegration.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[getPhotoUri]]></code>
+    </MissingPureAnnotation>
     <PossiblyFalseArgument>
       <code><![CDATA[strpos($raw, 'http')]]></code>
     </PossiblyFalseArgument>
-    <PossiblyUndefinedVariable>
-      <code><![CDATA[$userGroups]]></code>
-    </PossiblyUndefinedVariable>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[addEmailToContact]]></code>
+      <code><![CDATA[getContactsWithMail]]></code>
+      <code><![CDATA[getMatchingRecipient]]></code>
+      <code><![CDATA[getPhoto]]></code>
+      <code><![CDATA[newContact]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedMethod>
+      <code><![CDATA[getPhotoUri]]></code>
+    </UnusedMethod>
+  </file>
+  <file src="lib/Service/ContextChat/ContextChatSettingsService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[isIndexingEnabledByDefault]]></code>
+      <code><![CDATA[setIndexingEnabledByDefault]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Service/ContextChat/TaskService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedReturnValue>
+      <code><![CDATA[Task]]></code>
+      <code><![CDATA[Task]]></code>
+      <code><![CDATA[Task]]></code>
+      <code><![CDATA[Task|null]]></code>
+    </PossiblyUnusedReturnValue>
+  </file>
+  <file src="lib/Service/DataUri/DataUri.php">
+    <MissingImmutableAnnotation>
+      <code><![CDATA[DataUri]]></code>
+    </MissingImmutableAnnotation>
+  </file>
+  <file src="lib/Service/DataUri/DataUriParser.php">
+    <MissingImmutableAnnotation>
+      <code><![CDATA[DataUriParser]]></code>
+    </MissingImmutableAnnotation>
+    <MissingPureAnnotation>
+      <code><![CDATA[parse]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Service/DelegationService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[assertAccountAccess]]></code>
+      <code><![CDATA[assertMailboxAccess]]></code>
+      <code><![CDATA[assertMessageAccess]]></code>
+      <code><![CDATA[delegate]]></code>
+      <code><![CDATA[findDelegatedToUsersForAccount]]></code>
+      <code><![CDATA[logDelegatedAction]]></code>
+      <code><![CDATA[resolveAccountUserId]]></code>
+      <code><![CDATA[resolveAliasUserId]]></code>
+      <code><![CDATA[resolveLocalMessageUserId]]></code>
+      <code><![CDATA[resolveMailboxUserId]]></code>
+      <code><![CDATA[resolveMessageUserId]]></code>
+      <code><![CDATA[unDelegate]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedMethod>
+      <code><![CDATA[notify]]></code>
+    </UnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$accountService]]></code>
+      <code><![CDATA[$aliasMapper]]></code>
+      <code><![CDATA[$eventDispatcher]]></code>
+      <code><![CDATA[$localMessageMapper]]></code>
+      <code><![CDATA[$logger]]></code>
+      <code><![CDATA[$mailboxMapper]]></code>
+      <code><![CDATA[$messageMapper]]></code>
+      <code><![CDATA[$notificationManager]]></code>
+      <code><![CDATA[$time]]></code>
+      <code><![CDATA[$userManager]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/Service/DkimService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedMethod>
+      <code><![CDATA[buildCacheKey]]></code>
+    </UnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$cache]]></code>
+      <code><![CDATA[$dkimValidator]]></code>
+      <code><![CDATA[$protocolFactory]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/Service/DraftsService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[deleteMessage]]></code>
+      <code><![CDATA[getMessage]]></code>
+      <code><![CDATA[handleDraft]]></code>
+      <code><![CDATA[saveMessage]]></code>
+      <code><![CDATA[updateMessage]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedMethod>
+      <code><![CDATA[convertToRecipient]]></code>
+    </UnusedMethod>
+  </file>
+  <file src="lib/Service/FilterService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[parse]]></code>
+      <code><![CDATA[update]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$allowedRecipientsService]]></code>
+      <code><![CDATA[$filterBuilder]]></code>
+      <code><![CDATA[$filterParser]]></code>
+      <code><![CDATA[$logger]]></code>
+      <code><![CDATA[$outOfOfficeParser]]></code>
+      <code><![CDATA[$sieveService]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/Service/Group/ContactsGroupService.php">
+    <UnusedClass>
+      <code><![CDATA[ContactsGroupService]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Service/Group/IGroupService.php">
+    <MissingAbstractPureAnnotation>
+      <code><![CDATA[getNamespace]]></code>
+      <code><![CDATA[getUsers]]></code>
+      <code><![CDATA[search]]></code>
+    </MissingAbstractPureAnnotation>
+    <MissingInterfaceImmutableAnnotation>
+      <code><![CDATA[IGroupService]]></code>
+    </MissingInterfaceImmutableAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[search]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="lib/Service/Group/NextcloudGroupService.php">
     <PossiblyNullReference>
       <code><![CDATA[getUsers]]></code>
     </PossiblyNullReference>
+    <UnusedClass>
+      <code><![CDATA[NextcloudGroupService]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Service/GroupsIntegration.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[getMatchingGroups]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="lib/Service/Html.php">
-    <PossiblyFalseArgument>
-      <code><![CDATA[$parts]]></code>
-    </PossiblyFalseArgument>
+    <MissingPureAnnotation>
+      <code><![CDATA[parseMailBody]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Service/HtmlPurify/CidURIScheme.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[doValidate]]></code>
+      <code><![CDATA[validate]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Service/HtmlPurify/TransformHTMLLinks.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[transform]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Service/HtmlPurify/TransformImageSrc.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[setDisplayNone]]></code>
+    </MissingPureAnnotation>
   </file>
   <file src="lib/Service/HtmlPurify/TransformStyleURLs.php">
     <PossiblyUndefinedArrayOffset>
@@ -340,6 +3341,9 @@
     </PossiblyUndefinedArrayOffset>
   </file>
   <file src="lib/Service/HtmlPurify/TransformURLScheme.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+    </MissingPureAnnotation>
     <NullArgument>
       <code><![CDATA[null]]></code>
       <code><![CDATA[null]]></code>
@@ -347,57 +3351,257 @@
     </NullArgument>
   </file>
   <file src="lib/Service/IMipService.php">
-    <PossiblyNullArgument>
-      <code><![CDATA[$sender]]></code>
-      <code><![CDATA[$sender]]></code>
-    </PossiblyNullArgument>
-    <PossiblyNullReference>
-      <code><![CDATA[getEmail]]></code>
-    </PossiblyNullReference>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Service/InternalAddressService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Service/ItineraryService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[extract]]></code>
+      <code><![CDATA[getCached]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedMethod>
+      <code><![CDATA[buildCacheKey]]></code>
+    </UnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$cache]]></code>
+      <code><![CDATA[$extractor]]></code>
+      <code><![CDATA[$logger]]></code>
+      <code><![CDATA[$mailManager]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/Service/JMAP/JmapOperationsService.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[account]]></code>
+      <code><![CDATA[constructDeltaResult]]></code>
+      <code><![CDATA[static function (array $entries): array {]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[collectionDestroy]]></code>
+      <code><![CDATA[collectionExtant]]></code>
+      <code><![CDATA[collectionFetch]]></code>
+      <code><![CDATA[collectionModify]]></code>
+      <code><![CDATA[entityCreate]]></code>
+      <code><![CDATA[entityExtant]]></code>
+      <code><![CDATA[entityModify]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedReturnValue>
+      <code><![CDATA[bool]]></code>
+      <code><![CDATA[string]]></code>
+    </PossiblyUnusedReturnValue>
+    <UnusedForeachValue>
+      <code><![CDATA[$data]]></code>
+      <code><![CDATA[$data]]></code>
+    </UnusedForeachValue>
+    <UnusedProperty>
+      <code><![CDATA[$supportsBlob]]></code>
+    </UnusedProperty>
+    <UnusedVariable>
+      <code><![CDATA[$account]]></code>
+    </UnusedVariable>
+  </file>
+  <file src="lib/Service/MailFilter/FilterBuilder.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[isSystemFlag]]></code>
+      <code><![CDATA[sanitizeDefinition]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[buildSieveScript]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedMethod>
+      <code><![CDATA[isSystemFlag]]></code>
+      <code><![CDATA[sanitizeDefinition]]></code>
+      <code><![CDATA[sanitizeFlag]]></code>
+    </UnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$imapFlag]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/Service/MailFilter/FilterParser.php">
+    <MissingImmutableAnnotation>
+      <code><![CDATA[FilterParser]]></code>
+    </MissingImmutableAnnotation>
+    <MissingPureAnnotation>
+      <code><![CDATA[parseFilterState]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[parseFilterState]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Service/MailFilter/FilterParserResult.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[jsonSerialize]]></code>
+    </MissingPureAnnotation>
+    <UnusedClass>
+      <code><![CDATA[FilterParserResult]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/Service/MailFilter/FilterState.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[fromJson]]></code>
+    </MissingPureAnnotation>
+    <UnusedClass>
+      <code><![CDATA[FilterState]]></code>
+    </UnusedClass>
   </file>
   <file src="lib/Service/MailManager.php">
-    <PossiblyNullArgument>
-      <code><![CDATA[$message->getMessageId()]]></code>
-      <code><![CDATA[$message->getMessageId()]]></code>
-    </PossiblyNullArgument>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[clearMailbox]]></code>
+      <code><![CDATA[deleteMailbox]]></code>
+      <code><![CDATA[deleteTag]]></code>
+      <code><![CDATA[deleteThread]]></code>
+      <code><![CDATA[fetchThread]]></code>
+      <code><![CDATA[findMessages]]></code>
+      <code><![CDATA[getMailAttachments]]></code>
+      <code><![CDATA[getTagByLabel]]></code>
+      <code><![CDATA[getThread]]></code>
+      <code><![CDATA[markFolderAsRead]]></code>
+      <code><![CDATA[moveThread]]></code>
+      <code><![CDATA[renameMailbox]]></code>
+      <code><![CDATA[updateSubscription]]></code>
+      <code><![CDATA[updateTag]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedReturnValue>
+      <code><![CDATA[?int]]></code>
+    </PossiblyUnusedReturnValue>
+    <UnusedProperty>
+      <code><![CDATA[$messageTagsMapper]]></code>
+      <code><![CDATA[$threadMapper]]></code>
+    </UnusedProperty>
   </file>
-  <file src="lib/Service/MailTransmission.php">
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$mail->getRaw(false)]]></code>
-      <code><![CDATA[$mail->getRaw(false)]]></code>
-      <code><![CDATA[$mail->getRaw(false)]]></code>
-    </PossiblyInvalidArgument>
-    <PossiblyNullArgument>
-      <code><![CDATA[$localMessage->getAliasId()]]></code>
-    </PossiblyNullArgument>
-    <PossiblyNullReference>
-      <code><![CDATA[toHorde]]></code>
-      <code><![CDATA[toHorde]]></code>
-      <code><![CDATA[toHorde]]></code>
-    </PossiblyNullReference>
+  <file src="lib/Service/MimeMessage.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[htmlToTextCallback]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[htmlToTextCallback]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedParam>
+      <code><![CDATA[$doc]]></code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="lib/Service/OauthStateService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[createState]]></code>
+      <code><![CDATA[validateAndConsume]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$crypto]]></code>
+      <code><![CDATA[$time]]></code>
+    </UnusedProperty>
   </file>
   <file src="lib/Service/OutOfOffice/OutOfOfficeParser.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[formatDateForSieve]]></code>
+      <code><![CDATA[parseOutOfOfficeState]]></code>
+    </MissingPureAnnotation>
     <PossiblyNullArgument>
       <code><![CDATA[$state->getEnd()]]></code>
       <code><![CDATA[$state->getStart()]]></code>
     </PossiblyNullArgument>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Service/OutOfOffice/OutOfOfficeState.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[fromJson]]></code>
+      <code><![CDATA[jsonSerialize]]></code>
+      <code><![CDATA[setEnabled]]></code>
+      <code><![CDATA[setEnd]]></code>
+      <code><![CDATA[setMessage]]></code>
+      <code><![CDATA[setStart]]></code>
+      <code><![CDATA[setSubject]]></code>
+      <code><![CDATA[setVersion]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[setEnabled]]></code>
+      <code><![CDATA[setMessage]]></code>
+      <code><![CDATA[setSubject]]></code>
+      <code><![CDATA[setVersion]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Service/OutOfOfficeService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[disable]]></code>
+      <code><![CDATA[parseState]]></code>
+      <code><![CDATA[updateFromSystem]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$availabilityCoordinator]]></code>
+      <code><![CDATA[$timeFactory]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/Service/OutboxService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[convertDraft]]></code>
+      <code><![CDATA[deleteMessage]]></code>
+      <code><![CDATA[getMessage]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[handleDraft]]></code>
+      <code><![CDATA[updateMessage]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$eventDispatcher]]></code>
+      <code><![CDATA[$mailManager]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/Service/PhishingDetection/ContactCheck.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Service/PhishingDetection/CustomEmailCheck.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Service/PhishingDetection/DateCheck.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Service/PhishingDetection/ImapFlagCheck.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="lib/Service/PhishingDetection/LinkCheck.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$htmlMessage]]></code>
-    </ArgumentTypeCoercion>
+    <MissingPureAnnotation>
+      <code><![CDATA[parse]]></code>
+      <code><![CDATA[textLooksLikeALink]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="lib/Service/PhishingDetection/PhishingDetectionService.php">
-    <PossiblyNullArgument>
-      <code><![CDATA[$fromEmail]]></code>
-      <code><![CDATA[$fromFN]]></code>
-    </PossiblyNullArgument>
-    <PossiblyNullReference>
-      <code><![CDATA[getCustomEmail]]></code>
-      <code><![CDATA[getEmail]]></code>
-      <code><![CDATA[getEmail]]></code>
-      <code><![CDATA[getLabel]]></code>
-    </PossiblyNullReference>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Service/PhishingDetection/ReplyToCheck.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Service/PreprocessingService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="lib/Service/Provisioning/Manager.php">
     <PossiblyNullArgument>
@@ -409,43 +3613,173 @@
       <code><![CDATA[$this->userManager->getDisplayName($user->getUID())]]></code>
       <code><![CDATA[$this->userManager->getDisplayName($user->getUID())]]></code>
     </PossiblyNullArgument>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[deprovision]]></code>
+      <code><![CDATA[getConfigById]]></code>
+      <code><![CDATA[newProvisioning]]></code>
+      <code><![CDATA[updateProvisioning]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Service/QuickActionsService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[delete]]></code>
+      <code><![CDATA[deleteActionStep]]></code>
+      <code><![CDATA[find]]></code>
+      <code><![CDATA[findActionStep]]></code>
+      <code><![CDATA[update]]></code>
+      <code><![CDATA[updateActionStep]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedReturnValue>
+      <code><![CDATA[ActionStep]]></code>
+    </PossiblyUnusedReturnValue>
+    <UnusedDocblockParam>
+      <code><![CDATA[$parameter]]></code>
+    </UnusedDocblockParam>
+  </file>
+  <file src="lib/Service/Quota.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[jsonSerialize]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Service/Search/FilterStringParser.php">
+    <UnusedReturnValue>
+      <code><![CDATA[bool]]></code>
+    </UnusedReturnValue>
   </file>
   <file src="lib/Service/Search/Flag.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$this->flag]]></code>
-    </ArgumentTypeCoercion>
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$this->flag]]></code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[Flag::*]]></code>
-    </MoreSpecificReturnType>
+    <MissingPureAnnotation>
+      <code><![CDATA[is]]></code>
+      <code><![CDATA[not]]></code>
+    </MissingPureAnnotation>
   </file>
   <file src="lib/Service/Search/FlagExpression.php">
     <LessSpecificReturnStatement>
       <code><![CDATA[new self('and', $operands)]]></code>
       <code><![CDATA[new self('or', $operands)]]></code>
     </LessSpecificReturnStatement>
+    <MissingImmutableAnnotation>
+      <code><![CDATA[FlagExpression]]></code>
+    </MissingImmutableAnnotation>
+    <MissingPureAnnotation>
+      <code><![CDATA[and]]></code>
+      <code><![CDATA[or]]></code>
+    </MissingPureAnnotation>
     <MoreSpecificReturnType>
       <code><![CDATA[static]]></code>
       <code><![CDATA[static]]></code>
     </MoreSpecificReturnType>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[or]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Service/Search/GlobalSearchQuery.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[setExcludeMailboxIds]]></code>
+    </MissingPureAnnotation>
+  </file>
+  <file src="lib/Service/Search/MailSearch.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedMethod>
+      <code><![CDATA[getIdsLocally]]></code>
+    </UnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$filterStringParser]]></code>
+      <code><![CDATA[$mailManager]]></code>
+      <code><![CDATA[$previewEnhancer]]></code>
+      <code><![CDATA[$timeFactory]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/Service/Search/SearchQuery.php">
+    <MissingImmutableAnnotation>
+      <code><![CDATA[SearchQuery]]></code>
+    </MissingImmutableAnnotation>
+    <MissingPureAnnotation>
+      <code><![CDATA[addBcc]]></code>
+      <code><![CDATA[addBody]]></code>
+      <code><![CDATA[addCc]]></code>
+      <code><![CDATA[addFlag]]></code>
+      <code><![CDATA[addFlagExpression]]></code>
+      <code><![CDATA[addFrom]]></code>
+      <code><![CDATA[addSubject]]></code>
+      <code><![CDATA[addTo]]></code>
+      <code><![CDATA[setCursor]]></code>
+      <code><![CDATA[setEnd]]></code>
+      <code><![CDATA[setHasAttachments]]></code>
+      <code><![CDATA[setMatch]]></code>
+      <code><![CDATA[setMentionsMe]]></code>
+      <code><![CDATA[setStart]]></code>
+      <code><![CDATA[setTags]]></code>
+      <code><![CDATA[setThreaded]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getBodies]]></code>
+      <code><![CDATA[getHasAttachments]]></code>
+      <code><![CDATA[getMatch]]></code>
+      <code><![CDATA[getMentionsMe]]></code>
+      <code><![CDATA[getTags]]></code>
+      <code><![CDATA[getThreaded]]></code>
+      <code><![CDATA[setThreaded]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedDocblockParam>
+      <code><![CDATA[$hasAttachments]]></code>
+    </UnusedDocblockParam>
+    <UnusedProperty>
+      <code><![CDATA[$hasAttachments]]></code>
+      <code><![CDATA[$match]]></code>
+      <code><![CDATA[$mentionsMe]]></code>
+      <code><![CDATA[$tags]]></code>
+      <code><![CDATA[$threaded]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/Service/SetupService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[createNewAccount]]></code>
+      <code><![CDATA[testConnectivity]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$accountService]]></code>
+      <code><![CDATA[$crypto]]></code>
+      <code><![CDATA[$logger]]></code>
+      <code><![CDATA[$protocolFactory]]></code>
+      <code><![CDATA[$smtpClientFactory]]></code>
+      <code><![CDATA[$tagMapper]]></code>
+    </UnusedProperty>
   </file>
   <file src="lib/Service/SieveService.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[enforceTrailingNewline]]></code>
+    </MissingPureAnnotation>
     <PossiblyNullArgument>
       <code><![CDATA[$account->getMailAccount()->getSieveHost()]]></code>
       <code><![CDATA[$account->getMailAccount()->getSievePort()]]></code>
     </PossiblyNullArgument>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="lib/Service/SmimeService.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$decryptedCertificates]]></code>
     </ArgumentTypeCoercion>
+    <MissingPureAnnotation>
+      <code><![CDATA[checkPrivateKey]]></code>
+      <code><![CDATA[getFirstSubjectValue]]></code>
+    </MissingPureAnnotation>
     <PossiblyNullArgument>
       <code><![CDATA[$certificate->getPrivateKey()]]></code>
       <code><![CDATA[$certificate->getPrivateKey()]]></code>
       <code><![CDATA[$emailAddress]]></code>
     </PossiblyNullArgument>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[deleteCertificate]]></code>
+      <code><![CDATA[enrichCertificate]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="lib/Service/SnoozeService.php">
     <PossiblyNullArgument>
@@ -454,36 +3788,137 @@
       <code><![CDATA[$selectedMessage->getThreadRootId()]]></code>
       <code><![CDATA[$selectedMessage->getThreadRootId()]]></code>
     </PossiblyNullArgument>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[snoozeMessage]]></code>
+      <code><![CDATA[snoozeMessageDB]]></code>
+      <code><![CDATA[snoozeThread]]></code>
+      <code><![CDATA[snoozeThreadDB]]></code>
+      <code><![CDATA[unSnoozeMessage]]></code>
+      <code><![CDATA[unSnoozeThread]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$accountService]]></code>
+    </UnusedProperty>
   </file>
   <file src="lib/Service/Sync/ImapToDbSynchronizer.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$client]]></code>
-    </ArgumentTypeCoercion>
     <PossiblyNullArgument>
       <code><![CDATA[$mailbox->getSyncChangedToken()]]></code>
       <code><![CDATA[$mailbox->getSyncNewToken()]]></code>
       <code><![CDATA[$mailbox->getSyncVanishedToken()]]></code>
     </PossiblyNullArgument>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedParam>
+      <code><![CDATA[$messageMapper]]></code>
+    </PossiblyUnusedParam>
   </file>
   <file src="lib/Service/Sync/SyncService.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$sortOrder]]></code>
     </ArgumentTypeCoercion>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[clearCache]]></code>
+      <code><![CDATA[syncMailbox]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedMethod>
+      <code><![CDATA[getDatabaseSyncChanges]]></code>
+    </UnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$filterStringParser]]></code>
+      <code><![CDATA[$logger]]></code>
+      <code><![CDATA[$mailboxSync]]></code>
+      <code><![CDATA[$messageMapper]]></code>
+      <code><![CDATA[$previewEnhancer]]></code>
+      <code><![CDATA[$synchronizer]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="lib/Service/TextBlockService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[delete]]></code>
+      <code><![CDATA[find]]></code>
+      <code><![CDATA[findAllSharedWithMe]]></code>
+      <code><![CDATA[getShares]]></code>
+      <code><![CDATA[share]]></code>
+      <code><![CDATA[shareWithGroup]]></code>
+      <code><![CDATA[unshare]]></code>
+      <code><![CDATA[update]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedParam>
+      <code><![CDATA[$userId]]></code>
+    </PossiblyUnusedParam>
+    <PossiblyUnusedReturnValue>
+      <code><![CDATA[TextBlock]]></code>
+    </PossiblyUnusedReturnValue>
+    <UnusedProperty>
+      <code><![CDATA[$groupManager]]></code>
+      <code><![CDATA[$textBlockShareMapper]]></code>
+      <code><![CDATA[$userManager]]></code>
+    </UnusedProperty>
   </file>
   <file src="lib/Service/TransmissionService.php">
     <PossiblyNullArgument>
-      <code><![CDATA[$localMessage->getSmimeCertificateId()]]></code>
-      <code><![CDATA[$localMessage->getSmimeCertificateId()]]></code>
       <code><![CDATA[$message->getAttachments()]]></code>
       <code><![CDATA[$message->getRecipients()]]></code>
     </PossiblyNullArgument>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Service/TrustedSenderService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[isSenderTrusted]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Service/UserPreferenceService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="lib/Settings/AdminSettings.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[getPriority]]></code>
+      <code><![CDATA[getSection]]></code>
+    </MissingPureAnnotation>
     <PossiblyNullArgument>
       <code><![CDATA[$this->googleIntegration->getClientId()]]></code>
       <code><![CDATA[$this->microsoftIntegration->getClientId()]]></code>
       <code><![CDATA[$this->microsoftIntegration->getTenantId()]]></code>
     </PossiblyNullArgument>
+    <UnusedClass>
+      <code><![CDATA[AdminSettings]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/SetupChecks/MailConnectionPerformance.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[getCategory]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/SetupChecks/MailTransport.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[getCategory]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Sieve/NamedSieveScript.php">
+    <MissingImmutableAnnotation>
+      <code><![CDATA[NamedSieveScript]]></code>
+    </MissingImmutableAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getName]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$name]]></code>
+    </UnusedProperty>
   </file>
   <file src="lib/Sieve/SieveClientFactory.php">
     <PossiblyNullArgument>
@@ -492,5 +3927,125 @@
       <code><![CDATA[$account->getMailAccount()->getSieveSslMode()]]></code>
       <code><![CDATA[$password]]></code>
     </PossiblyNullArgument>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Sieve/SieveLogger.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[debug]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$stream]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="lib/Sieve/SieveUtils.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[escapeString]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[stringList]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Support/ConsoleLoggerDecorator.php">
+    <UnusedClass>
+      <code><![CDATA[ConsoleLoggerDecorator]]></code>
+    </UnusedClass>
+  </file>
+  <file src="lib/UserMigration/MailAccountMigrator.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getVersion]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/UserMigration/Service/AccountMigrationService.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[assertListOfRequiredKeys]]></code>
+      <code><![CDATA[assertRequiredKeys]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <UnnecessaryVarAnnotation>
+      <code><![CDATA[Mailbox]]></code>
+    </UnnecessaryVarAnnotation>
+  </file>
+  <file src="lib/UserMigration/Service/AppConfigMigrationService.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[isWellFormedAppSetting]]></code>
+      <code><![CDATA[remapAccountSettings]]></code>
+      <code><![CDATA[remapStartMailboxId]]></code>
+      <code><![CDATA[validateAppConfig]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/UserMigration/Service/InternalAddressesMigrationService.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[isWellFormedInternalAddress]]></code>
+      <code><![CDATA[validateInternalAddresses]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/UserMigration/Service/LegacyAccountMigrationService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/UserMigration/Service/QuickActionsMigrationService.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[mapActionSteps]]></code>
+      <code><![CDATA[validateQuickActions]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/UserMigration/Service/SmimeMigrationService.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[validateCertificate]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/UserMigration/Service/TagsMigrationService.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[isValidTag]]></code>
+      <code><![CDATA[isWellFormedTag]]></code>
+      <code><![CDATA[validateTags]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/UserMigration/Service/TextBlocksMigrationService.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[isWellFormedTextBlock]]></code>
+      <code><![CDATA[validateTextBlocks]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/UserMigration/Service/TrustedSendersMigrationService.php">
+    <MissingPureAnnotation>
+      <code><![CDATA[isWellFormedTrustedSender]]></code>
+      <code><![CDATA[validateTrustedSenders]]></code>
+    </MissingPureAnnotation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="lib/Util/ServerVersion.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
   </file>
 </files>
