@@ -23,6 +23,10 @@ use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\IUserSession;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
 
 class DeepLinkControllerTest extends TestCase {
 	private string $appName;
@@ -185,5 +189,80 @@ class DeepLinkControllerTest extends TestCase {
 
 		self::assertInstanceOf(RedirectResponse::class, $response);
 		self::assertSame('http://localhost/apps/mail/', $response->getRedirectURL());
+	}
+
+	public function testOpenMessageWithSlashes(): void {
+		$user = $this->createMock(IUser::class);
+		$user->method('getUID')->willReturn('user123');
+
+		$this->userSession->expects(self::once())
+			->method('getUser')
+			->willReturn($user);
+
+		$lightAccount = new MailAccount();
+		$lightAccount->setId(1);
+
+		$this->mailAccountMapper->expects(self::once())
+			->method('findByUserId')
+			->with('user123')
+			->willReturn([$lightAccount]);
+
+		$account = $this->createStub(Account::class);
+		$this->accountService->expects(self::once())
+			->method('find')
+			->with('user123', 1)
+			->willReturn($account);
+
+		$message = new Message();
+		$message->setId(99);
+		$message->setMailboxId(7);
+
+		$slashMessageId = '<org/repo/issues/123/456@example.invalid>';
+		$this->messageMapper->expects(self::once())
+			->method('findByMessageId')
+			->with($account, $slashMessageId)
+			->willReturn([$message]);
+
+		$this->urlGenerator->expects(self::once())
+			->method('linkToRouteAbsolute')
+			->with('mail.page.thread', ['mailboxId' => 7, 'id' => 99])
+			->willReturn('http://localhost/apps/mail/box/7/thread/99');
+
+		$response = $this->controller->open($slashMessageId);
+
+		self::assertInstanceOf(RedirectResponse::class, $response);
+		self::assertSame('http://localhost/apps/mail/box/7/thread/99', $response->getRedirectURL());
+	}
+
+	public function testRouteAllowsSlashesInMessageId(): void {
+		$routes = require __DIR__ . '/../../../appinfo/routes.php';
+		$deepLinkRoute = null;
+		foreach ($routes['routes'] as $route) {
+			if ($route['name'] === 'deep_link#open') {
+				$deepLinkRoute = $route;
+				break;
+			}
+		}
+
+		self::assertNotNull($deepLinkRoute);
+		self::assertArrayHasKey('requirements', $deepLinkRoute);
+		self::assertSame('.+', $deepLinkRoute['requirements']['messageId']);
+
+		$route = new Route(
+			$deepLinkRoute['url'],
+			$deepLinkRoute['defaults'] ?? [],
+			$deepLinkRoute['requirements'] ?? []
+		);
+		$collection = new RouteCollection();
+		$collection->add('mail.deep_link.open', $route);
+		$generator = new UrlGenerator(
+			$collection,
+			new RequestContext('/apps/mail', 'GET', 'example.invalid', 'https')
+		);
+
+		$url = $generator->generate('mail.deep_link.open', [
+			'messageId' => '<org/repo/issues/123/456@example.invalid>',
+		]);
+		self::assertSame('/apps/mail/open/%3Corg/repo/issues/123/456@example.invalid%3E', $url);
 	}
 }
