@@ -240,7 +240,6 @@
     "individual" : "individual",
     "domain" : "dominio",
     "Remove" : "Eliminar",
-    "Itinerary for {type} is not supported yet" : "El itinerario de {type} aún no es compatible",
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "No tienes permiso para mover este mensaje al buzón de archivos y/o eliminar este mensaje de la carpeta actual",
     "Last hour" : "Última hora",
     "Today" : "Hoy",
@@ -568,6 +567,7 @@
     "Tag name is a hidden system tag" : "El nombre de la etiqueta es una etiqueta oculta del sistema",
     "Tag already exists" : "La etiqueta ya existe",
     "Error loading message" : "Se presentó un error al cargar el mensaje",
+    "Itinerary for {type} is not supported yet" : "El itinerario de {type} aún no es compatible",
     "Set tag" : "Establecer etiqueta",
     "Unset tag" : "Quitar etiqueta",
     "Add default tags" : "Agregar etiquetas predeterminadas"

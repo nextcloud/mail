@@ -243,7 +243,6 @@ OC.L10N.register(
     "Remove" : "Отстрани ",
     "Add internal address" : "Додади внатрешна адреса",
     "Add internal email or domain" : "Додади внатрешна е-пошта или домен",
-    "Itinerary for {type} is not supported yet" : "Итинерар за {type} сеуште не е поддржан",
     "Last hour" : "Последниов час",
     "Today" : "Денес",
     "Last week" : "Минатата недела",
@@ -471,6 +470,7 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Името на ознаката е сокриена системска ознака",
     "Tag already exists" : "Тагот веќе постои",
     "Error loading message" : "Грешка при вчитување на пораката",
+    "Itinerary for {type} is not supported yet" : "Итинерар за {type} сеуште не е поддржан",
     "Add default tags" : "Додади стандардни ознаки"
 },
 "nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;");

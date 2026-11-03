@@ -129,7 +129,6 @@ OC.L10N.register(
     "individual" : "Cá nhận",
     "domain" : "Miền",
     "Remove" : "Xóa",
-    "Itinerary for {type} is not supported yet" : "Hành trình cho {type} chưa được hỗ trợ",
     "Today" : "Hôm nay",
     "Yesterday" : "Hôm qua",
     "Last week" : "Tuần trước",
@@ -279,6 +278,7 @@ OC.L10N.register(
     "Could not load the message" : "Không thể tải tin nhắn",
     "Date:" : "Ngày:",
     "Tag already exists" : "Thẻ đã tồn tại",
-    "Error loading message" : "Lỗi khi tải tin nhắn"
+    "Error loading message" : "Lỗi khi tải tin nhắn",
+    "Itinerary for {type} is not supported yet" : "Hành trình cho {type} chưa được hỗ trợ"
 },
 "nplurals=1; plural=0;");
