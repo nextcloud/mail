@@ -87,6 +87,23 @@ describe('MessageHTMLBody', () => {
 			expect(view.findComponent(BlockedContentWarning).exists()).toBe(false)
 		})
 
+		it('keeps the aspect ratio of a revealed image with a style of its own', async () => {
+			const view = mountBody()
+			const doc = view.vm.getIframeDoc()
+			doc.write('<img width="768" height="576" data-original-src="https://example.com/a.png" data-original-style="display:block" style="display: none !important;">')
+			doc.close()
+			vi.spyOn(doc.defaultView, 'getComputedStyle').mockReturnValue({ height: '576px' })
+			view.vm.onMessageFrameLoad()
+			await view.vm.$nextTick()
+
+			view.findComponent(BlockedContentWarning).vm.$emit('show')
+
+			const image = doc.querySelector('img')
+			expect(image.style.display).toBe('block')
+			expect(image.style.aspectRatio).toBe('768 / 576')
+			expect(image.style.height).toBe('auto')
+		})
+
 		it('remembers a sender the reader trusts', async () => {
 			const view = mountBody()
 			loadFrameWithBlockedImage(view)
