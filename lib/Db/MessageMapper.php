@@ -38,7 +38,7 @@ use function array_merge;
 use function array_udiff;
 use function get_class;
 use function ltrim;
-use function mb_convert_encoding;
+use function mb_scrub;
 use function mb_strcut;
 use function OCA\Mail\array_flat_map;
 use function strlen;
@@ -610,10 +610,7 @@ class MessageMapper extends QBMapper {
 				$previewText = null;
 				$rawPreviewText = $message->getPreviewText();
 				if ($rawPreviewText !== null) {
-					$convertedText = mb_convert_encoding($rawPreviewText, 'UTF-8', 'UTF-8');
-					if ($convertedText === false) {
-						$convertedText = $rawPreviewText;
-					}
+					$convertedText = mb_scrub($rawPreviewText, 'UTF-8');
 					//converting the spaces is necessary for ltrim to work
 					$previewText = mb_strcut(ltrim(preg_replace('/\s/u', ' ', $convertedText) ?? $convertedText), 0, 255);
 
