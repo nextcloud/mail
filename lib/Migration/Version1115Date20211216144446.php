@@ -17,9 +17,6 @@ use OCP\Migration\SimpleMigrationStep;
 /**
  * Make the mail_accounts.name column wider
  */
-/**
- * @psalm-api
- */
 class Version1115Date20211216144446 extends SimpleMigrationStep {
 	/**
 	 * @param IOutput $output
