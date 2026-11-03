@@ -101,7 +101,7 @@ class ImapTransmissionConnector implements ITransmissionConnector {
 		$aliasId = $message->getAliasId();
 		if ($aliasId !== null) {
 			try {
-				$alias = $this->aliasesService->find($aliasId, $account->getUserId());
+				$alias = $this->aliasesService->findForAccount($aliasId, $account->getId());
 				$name = ($alias->getName() ?? $name);
 				$emailAddress = $alias->getAlias();
 			} catch (DoesNotExistException) {

@@ -51,7 +51,7 @@ class JmapTransmissionConnector implements ITransmissionConnector {
 		$aliasId = $message->getAliasId();
 		if ($aliasId !== null) {
 			try {
-				$alias = $this->aliasesService->find($aliasId, $account->getUserId());
+				$alias = $this->aliasesService->findForAccount($aliasId, $account->getId());
 				$senderName = ($alias->getName() ?? $senderName);
 				$senderAddress = $alias->getAlias();
 			} catch (DoesNotExistException) {

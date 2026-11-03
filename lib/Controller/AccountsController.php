@@ -313,9 +313,7 @@ class AccountsController extends Controller {
 	#[TrapError]
 	#[UserRateLimit(limit: 30, period: 60)]
 	public function destroy(int $id): JSONResponse {
-		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
-		$this->accountService->delete($effectiveUserId, $id);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId deleted account <$id> on behalf of $effectiveUserId");
+		$this->accountService->delete($this->userId, $id);
 		return new JSONResponse();
 	}
 
