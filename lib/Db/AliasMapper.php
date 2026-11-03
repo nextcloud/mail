@@ -69,6 +69,42 @@ class AliasMapper extends QBMapper {
 	}
 
 	/**
+	 * @throws DoesNotExistException
+	 */
+	public function findForAccount(int $aliasId, int $accountId): Alias {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('aliases.*', 'accounts.provisioning_id')
+			->from($this->getTableName(), 'aliases')
+			->join('aliases', 'mail_accounts', 'accounts', $qb->expr()->eq('aliases.account_id', 'accounts.id'))
+			->where(
+				$qb->expr()->andX(
+					$qb->expr()->eq('aliases.account_id', $qb->createNamedParameter($accountId)),
+					$qb->expr()->eq('aliases.id', $qb->createNamedParameter($aliasId))
+				)
+			);
+
+		return $this->findEntity($qb);
+	}
+
+	/**
+	 * @throws DoesNotExistException
+	 */
+	public function findByAliasForAccount(string $alias, int $accountId): Alias {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('aliases.*', 'accounts.provisioning_id')
+			->from($this->getTableName(), 'aliases')
+			->join('aliases', 'mail_accounts', 'accounts', $qb->expr()->eq('aliases.account_id', 'accounts.id'))
+			->where(
+				$qb->expr()->andX(
+					$qb->expr()->eq('aliases.account_id', $qb->createNamedParameter($accountId)),
+					$qb->expr()->eq('aliases.alias', $qb->createNamedParameter($alias))
+				)
+			);
+
+		return $this->findEntity($qb);
+	}
+
+	/**
 	 * @param int $accountId
 	 * @param string $currentUserId
 	 *
