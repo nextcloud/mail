@@ -142,6 +142,7 @@ export default function initAfterAppCreation() {
 	mainStore.setSnoozeDisabledMutation(disableSnooze)
 	mainStore.setGoogleOauthUrlMutation(googleOauthUrl)
 	mainStore.setMicrosoftOauthUrlMutation(microsoftOauthUrl)
+	mainStore.setMasterPasswordEnabledMutation(loadState('mail', 'master-password-enabled', false))
 	mainStore.setFollowUpFeatureAvailableMutation(followUpFeatureAvailable)
 	mainStore.setContextChatFeatureAvailableMutation(contextChatFeatureAvailable)
 
