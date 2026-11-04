@@ -14,6 +14,7 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\DraftsService;
 use OCA\Mail\Service\OutboxService;
@@ -35,6 +36,7 @@ class OutboxController extends Controller {
 		private AccountService $accountService,
 		private SmimeService $smimeService,
 		private DelegationService $delegationService,
+		private AliasesService $aliasesService,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -105,6 +107,9 @@ class OutboxController extends Controller {
 	): JsonResponse {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->userId);
 		$account = $this->accountService->find($effectiveUserId, $accountId);
+		if ($aliasId !== null) {
+			$this->aliasesService->findForAccount($aliasId, $accountId);
+		}
 
 		if ($draftId !== null) {
 			$this->service->handleDraft($account, $draftId);
@@ -206,6 +211,9 @@ class OutboxController extends Controller {
 
 		$this->delegationService->assertAccountAccess($accountId, $this->userId);
 		$account = $this->accountService->find($effectiveUserId, $accountId);
+		if ($aliasId !== null) {
+			$this->aliasesService->findForAccount($aliasId, $accountId);
+		}
 
 		$message->setAccountId($accountId);
 		$message->setAliasId($aliasId);
