@@ -720,7 +720,6 @@ class AccountMigrationService {
 			$newMailbox->setMyAcls($oldMailbox['myAcls']);
 			$newMailbox->setShared($oldMailbox['shared']);
 
-			/** @var Mailbox $mailbox */
 			$mailbox = $this->mailboxMapper->insert($newMailbox);
 
 			$oldMailboxId = $oldMailbox['databaseId'];

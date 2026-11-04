@@ -886,7 +886,7 @@ class JmapOperationsService {
 		}
 		$results = [];
 		// check for success
-		foreach ($response->updateSuccesses() as $id => $data) {
+		foreach (array_keys($response->updateSuccesses()) as $id) {
 			$results[$id] = true;
 		}
 		// check for failure
@@ -983,7 +983,7 @@ class JmapOperationsService {
 
 		$results = [];
 		// map successful and failed moves to their identifiers
-		foreach ($response->updateSuccesses() as $id => $data) {
+		foreach (array_keys($response->updateSuccesses()) as $id) {
 			$results[$id] = true;
 		}
 		foreach ($response->updateFailures() as $id => $data) {
@@ -1173,7 +1173,7 @@ class JmapOperationsService {
 			$account = $this->account();
 		}
 		// construct set request
-		$r0 = new MailIdentityGet($this->account());
+		$r0 = new MailIdentityGet($account);
 		// transmit request and receive response
 		$bundle = $this->transceive([$r0]);
 		// extract response
