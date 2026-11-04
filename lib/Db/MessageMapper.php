@@ -157,6 +157,29 @@ class MessageMapper extends QBMapper {
 		return $this->findUids($query);
 	}
 
+	/**
+	 * The ones of the given UIDs that are cached for the mailbox
+	 *
+	 * @param int[] $uids
+	 *
+	 * @return int[]
+	 */
+	public function findCachedUids(Mailbox $mailbox, array $uids): array {
+		$cached = [];
+		foreach (array_chunk($uids, 1000) as $chunk) {
+			$query = $this->db->getQueryBuilder();
+			$query->select('uid')
+				->from($this->getTableName())
+				->where(
+					$query->expr()->eq('mailbox_id', $query->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
+					$query->expr()->in('uid', $query->createNamedParameter($chunk, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY),
+				);
+			$cached[] = $this->findUids($query);
+		}
+
+		return array_merge(...$cached);
+	}
+
 	public function findAllIds(Mailbox $mailbox): array {
 		$query = $this->db->getQueryBuilder();
 
