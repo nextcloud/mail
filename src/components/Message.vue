@@ -34,6 +34,7 @@
 			:url="htmlUrl"
 			:message="message"
 			:fullHeight="fullHeight"
+			:alwaysShowExternalImages="alwaysShowExternalImages"
 			@load="$emit('load', $event)"
 			@printShortcut="$emit('printShortcut')"
 			@translate="$emit('translate', $event)" />
@@ -192,6 +193,10 @@ export default {
 
 		hasCurrentUserPrincipalAndCollections() {
 			return this.mainStore.hasCurrentUserPrincipalAndCollections
+		},
+
+		alwaysShowExternalImages() {
+			return this.mainStore.getPreference('always-show-external-images', 'false') === 'true'
 		},
 	},
 
