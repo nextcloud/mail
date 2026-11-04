@@ -17,6 +17,24 @@ function hasPdfViewer() {
 	return (OCA?.Viewer?.availableHandlers ?? []).some((handler) => handler.id === PDF_HANDLER_ID)
 }
 
+/**
+ * Handlers that declare `supportsSource` open a file from its download URL
+ * alone, so they can show attachments that only exist on the IMAP server.
+ *
+ * @param {string} mime the attachment mime type
+ * @return {object|undefined} the first source-capable handler for the mime
+ */
+function findSourceHandler(mime) {
+	return (OCA?.Viewer?.availableHandlers ?? []).find((handler) => handler.supportsSource === true
+		&& [].concat(handler.mimes ?? []).includes(mime))
+}
+
+function isMediaMime(mime) {
+	return mime.startsWith('image/')
+		|| mime.startsWith('video/')
+		|| mime.startsWith('audio/')
+}
+
 export default {
 	computed: {
 		fileInfos() {
@@ -35,11 +53,18 @@ export default {
 				return []
 			}
 
-			return this.fileInfos.filter((fileInfo) => (fileInfo.mime.startsWith('image/')
-				|| fileInfo.mime.startsWith('video/')
-				|| fileInfo.mime.startsWith('audio/')
-				|| (fileInfo.mime === PDF_MIME && hasPdfViewer()))
-			&& OCA.Viewer.mimetypes.includes(fileInfo.mime))
+			return this.fileInfos.filter((fileInfo) => {
+				if (!OCA.Viewer.mimetypes.includes(fileInfo.mime)) {
+					return false
+				}
+				if (isMediaMime(fileInfo.mime)) {
+					return true
+				}
+				if (fileInfo.mime === PDF_MIME && hasPdfViewer()) {
+					return true
+				}
+				return findSourceHandler(fileInfo.mime) !== undefined
+			})
 		},
 	},
 	methods: {
@@ -58,6 +83,12 @@ export default {
 
 			if (fileInfo.mime === PDF_MIME && OCA.Viewer.openWith) {
 				OCA.Viewer.openWith(PDF_HANDLER_ID, options)
+				return
+			}
+
+			const sourceHandler = isMediaMime(fileInfo.mime) ? undefined : findSourceHandler(fileInfo.mime)
+			if (sourceHandler && OCA.Viewer.openWith) {
+				OCA.Viewer.openWith(sourceHandler.id, options)
 				return
 			}
 
