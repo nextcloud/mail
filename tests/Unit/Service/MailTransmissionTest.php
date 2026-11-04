@@ -85,6 +85,7 @@ class MailTransmissionTest extends TestCase {
 		$account->method('getMailAccount')->willReturn($mailAccount);
 		$account->method('getName')->willReturn('Test User');
 		$account->method('getEMailAddress')->willReturn('test@user');
+		$account->method('getUserId')->willReturn('testuser');
 		$localMessage = new LocalMessage();
 		$localMessage->setSubject('Test');
 		$localMessage->setBodyPlain('Test');
@@ -114,6 +115,7 @@ class MailTransmissionTest extends TestCase {
 		$account->method('getMailAccount')->willReturn($mailAccount);
 		$account->method('getName')->willReturn('Test User');
 		$account->method('getEMailAddress')->willReturn('test@user');
+		$account->method('getUserId')->willReturn('testuser');
 		$localMessage = new LocalMessage();
 		$localMessage->setSubject('Test');
 		$localMessage->setBodyPlain('Test');
@@ -312,6 +314,7 @@ class MailTransmissionTest extends TestCase {
 		$account->method('getMailAccount')->willReturn($mailAccount);
 		$account->method('getName')->willReturn('Test User');
 		$account->method('getEMailAddress')->willReturn('test@user');
+		$account->method('getUserId')->willReturn('testuser');
 		$localMessage = new LocalMessage();
 		$localMessage->setSubject('Test');
 		$localMessage->setBodyPlain('Test');

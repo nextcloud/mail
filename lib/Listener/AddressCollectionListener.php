@@ -56,9 +56,9 @@ class AddressCollectionListener implements IEventListener {
 		// Non-essential feature, hence we catch all possible errors
 		try {
 			$message = $event->getLocalMessage();
-			$to = $this->transmissionService->getAddressList($message, Recipient::TYPE_TO);
-			$cc = $this->transmissionService->getAddressList($message, Recipient::TYPE_CC);
-			$bcc = $this->transmissionService->getAddressList($message, Recipient::TYPE_BCC);
+			$to = $this->transmissionService->getAddressList($message, Recipient::TYPE_TO, $event->getAccount()->getUserId());
+			$cc = $this->transmissionService->getAddressList($message, Recipient::TYPE_CC, $event->getAccount()->getUserId());
+			$bcc = $this->transmissionService->getAddressList($message, Recipient::TYPE_BCC, $event->getAccount()->getUserId());
 
 			$addresses = $to->merge($cc)->merge($bcc);
 
