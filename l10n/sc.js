@@ -339,7 +339,6 @@ OC.L10N.register(
     "Could not load the desired message" : "No at fatu a carrigare su messàgiu disigiadu",
     "Could not load the message" : "No at fatu a carrigare su messàgiu",
     "Date:" : "Data:",
-    "Error loading message" : "Errore in su carrigamentu de su messàgiu",
-    "Itinerary for {type} is not supported yet" : "S'itineràriu pro {type} no est ancora suportadu"
+    "Error loading message" : "Errore in su carrigamentu de su messàgiu"
 },
 "nplurals=2; plural=(n != 1);");

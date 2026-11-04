@@ -1038,15 +1038,12 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Mærkets navn er et skjult systemmærke",
     "Tag already exists" : "Mærket findes allerede",
     "Error loading message" : "Fejl under indlæsning af besked",
-    "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Autosvaret bruger Sieve, et scriptsprog, som mange mailudbydere understøtter. Spørg din udbyder, hvis du ikke er sikker på, om din gør. Hvis Sieve er tilgængeligt, så klik på knappen for at gå til indstillingerne og aktivere det.",
     "Move Message" : "Flyt besked",
-    "Itinerary for {type} is not supported yet" : "Rejseplan for {type} understøttes endnu ikke",
     "Edit name or color" : "Rediger navn eller farve",
     "Saving new tag name …" : "Gemmer det nye mærkenavn …",
     "Set tag" : "Sæt mærke på",
     "Unset tag" : "Fjern mærke",
     "Add default tags" : "Tilføj standardmærker",
-    "Saving tag …" : "Gemmer mærke …",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Få styr på kaosset i din indbakke. Filtre hjælper dig med at prioritere det vigtige og fjerne rod."
+    "Saving tag …" : "Gemmer mærke …"
 },
 "nplurals=2; plural=(n != 1);");

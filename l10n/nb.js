@@ -699,7 +699,6 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Tagnavn er en skjult systemtag",
     "Tag already exists" : "Merkelappen finnes allerede",
     "Error loading message" : "Feil ved innlasting av melding",
-    "Itinerary for {type} is not supported yet" : "Reiserute for {type} støttes ikke ennå",
     "Edit name or color" : "Rediger navn eller farge",
     "Set tag" : "Sett merkelapp",
     "Unset tag" : "Opphev merkelapp",

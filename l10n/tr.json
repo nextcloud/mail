@@ -1036,15 +1036,12 @@
     "Tag name is a hidden system tag" : "Etiket adı sistem tarafından kullanılan bir gizli ad",
     "Tag already exists" : "Etiket zaten var",
     "Error loading message" : "İleti yüklenirken sorun çıktı",
-    "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Otomatik yanıtlayıcı, birçok e-posta hizmeti sağlayıcısı tarafından desteklenen bir betik dili olan Sieve kullanır. Kullandığınız hizmette bulunup bulunmadığından emin değilseniz, hizmet sağlayıcınıza sorun. Sieve kullanılabiliyorsa, ayarlara gitmek ve açmak için düğmeye tıklayın.",
     "Move Message" : "İletiyi taşı",
-    "Itinerary for {type} is not supported yet" : "{type} için yolculuk rehberi henüz desteklenmiyor",
     "Edit name or color" : "Adı ya da rengi düzenle",
     "Saving new tag name …" : "Yeni etiket adı kaydediliyor…",
     "Set tag" : "Etiket koy",
     "Unset tag" : "Etiketi kaldır",
     "Add default tags" : "Varsayılan etiketler ekle",
-    "Saving tag …" : "Etiket kaydediliyor…",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "E-posta karmaşanızı düzenleyin. Süzgeçler, önemli şeylere öncelik vermenize ve karmaşayı ortadan kaldırmanıza yardımcı olur."
+    "Saving tag …" : "Etiket kaydediliyor…"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

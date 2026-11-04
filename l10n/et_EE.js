@@ -985,15 +985,12 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Sildi nimi on peidetud süsteemne silt",
     "Tag already exists" : "Silt on juba olemas",
     "Error loading message" : "Viga kirja laadimisel",
-    "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Automaatvastaja on loodud Sieve'i skriptimiskeeles ja tavaliselt on selline võimalus toetatud paljude e-posti teenuste puhul. Kui sa pole enda omas kindel, siis palun küsi neilt üle. Kui Sieve on kasutatav, siis klõpsi järgnevat nuppu ja võta ta seadistustest kasutusele.",
     "Move Message" : "Teisalda kiri",
-    "Itinerary for {type} is not supported yet" : "Reisiplaani tüüp pole veel toetatud: {type}",
     "Edit name or color" : "Muuda nime või värvi",
     "Saving new tag name …" : "Salvestan sildi uut nime…",
     "Set tag" : "Lisa silt kirjale",
     "Unset tag" : "Eemalda silt kirjalt",
     "Add default tags" : "Lisa vaikimisi sildid",
-    "Saving tag …" : "Salvestan silti…",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Halda e-kirjade kaost. Filtrid aitavad sul olulist esile tõsta ja müra eemaldada."
+    "Saving tag …" : "Salvestan silti…"
 },
 "nplurals=2; plural=(n != 1);");

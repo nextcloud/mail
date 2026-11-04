@@ -848,15 +848,12 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Назив ознаке је скривена системска ознака",
     "Tag already exists" : "Ознака већ постоји",
     "Error loading message" : "Грешка при учитавању поруке",
-    "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Аутоматски одговарач користи Sieve, скриптинг језик који подржавају многи пружаоци и-мејл услуге. Ако нисте сигурни да ли га ваш подржава, питајте га. Ако Sieve није доступан, кликните на дугме да одете на подешавања и да га укључите.",
     "Move Message" : "Премести поруку",
-    "Itinerary for {type} is not supported yet" : "Итеринер за {type} још није подржан",
     "Edit name or color" : "Уреди назив или боју",
     "Saving new tag name …" : "Чува се ново име ознаке…",
     "Set tag" : "Постави ознаку",
     "Unset tag" : "Уклони ознаку",
     "Add default tags" : "Додај подразумеване ознаке",
-    "Saving tag …" : "Чува се ознака…",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Преузмите контролу над хаосом ваших и-мејл порука. Филтери вам помажу да задате приоритете ономе што је битно и елиминишете сметње."
+    "Saving tag …" : "Чува се ознака…"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");

@@ -741,11 +741,9 @@
     "Tag name is a hidden system tag" : "タグ名は非表示のシステムタグです",
     "Tag already exists" : "タグはすでに存在します",
     "Error loading message" : "メッセージ読み込みエラー",
-    "Itinerary for {type} is not supported yet" : "{type} タイプの旅程はまだサポートされていません",
     "Edit name or color" : "名前または色を編集する",
     "Set tag" : "タグを設定する",
     "Unset tag" : "タグを削除する",
-    "Add default tags" : "デフォルトのタグを追加する",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "メールの混乱をコントロールしましょう。フィルタを使えば、重要なものに優先順位をつけ、乱雑さを解消できます。"
+    "Add default tags" : "デフォルトのタグを追加する"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

@@ -702,7 +702,6 @@
     "Tag name is a hidden system tag" : "Heiti merkis er falið merki kerfisins",
     "Tag already exists" : "Merki er þegar til",
     "Error loading message" : "Villa við hleðslu á skilaboðum",
-    "Itinerary for {type} is not supported yet" : "Það er ekki ennþá stuðningur við leið af gerðinni {type}",
     "Edit name or color" : "Breyta heiti eða lit",
     "Set tag" : "Setja merki",
     "Unset tag" : "Afsetja merki",

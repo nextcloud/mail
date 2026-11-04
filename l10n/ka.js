@@ -611,7 +611,6 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Tag name is a hidden system tag",
     "Tag already exists" : "Tag already exists",
     "Error loading message" : "Error loading message",
-    "Itinerary for {type} is not supported yet" : "Itinerary for {type} is not supported yet",
     "Edit name or color" : "Edit name or color",
     "Set tag" : "Set tag",
     "Unset tag" : "Unset tag",

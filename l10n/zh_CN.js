@@ -955,15 +955,12 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "标记名称是一个隐藏的系统标记",
     "Tag already exists" : "标签已存在",
     "Error loading message" : "加载邮件时出错",
-    "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "自动回复使用 Sieve，这是许多电子邮件提供者支持的脚本语言。如果您不确定您的邮件是否如此，请咨询您的提供者。如果 Sieve 可用，请点击按钮转到设置并启用它。",
     "Move Message" : "移动邮件",
-    "Itinerary for {type} is not supported yet" : "尚不支持 {type} 类型的行程",
     "Edit name or color" : "编辑名称或颜色",
     "Saving new tag name …" : "正在保存新标签名称 …",
     "Set tag" : "设置标签",
     "Unset tag" : "取消设置标签",
     "Add default tags" : "添加默认标签",
-    "Saving tag …" : "正在保存标签 …",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "控制您的电子邮件混乱。筛选器可以帮助您优先考虑重要的事情并消除混乱。"
+    "Saving tag …" : "正在保存标签 …"
 },
 "nplurals=1; plural=0;");

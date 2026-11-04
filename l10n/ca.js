@@ -721,12 +721,9 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "El nom de l'etiqueta és una etiqueta del sistema oculta",
     "Tag already exists" : "L'etiqueta ja existeix",
     "Error loading message" : "S'ha produït un error mentre es carregava el missatge",
-    "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "La resposta automàtica utilitza Sieve, un llenguatge de script compatible amb molts proveïdors de correu electrònic. Si no esteu segur de si el vostre, consulteu amb el vostre proveïdor. Si Sieve està disponible, feu clic al botó per anar als  paràmetres i activar-lo.",
-    "Itinerary for {type} is not supported yet" : "Encara no s'admet l'itinerari per a {type}",
     "Edit name or color" : "Edició del nom o el color",
     "Set tag" : "Definiu etiqueta",
     "Unset tag" : "Desactiveu etiqueta",
-    "Add default tags" : "Afegeix etiquetes per defecte",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Preneu el control del vostre caos de correu electrònic. Els filtres us ajuden a prioritzar allò que importa i a eliminar el desordre."
+    "Add default tags" : "Afegeix etiquetes per defecte"
 },
 "nplurals=2; plural=(n != 1);");

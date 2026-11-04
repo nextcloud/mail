@@ -569,7 +569,6 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "El nombre de la etiqueta es una etiqueta oculta del sistema",
     "Tag already exists" : "La etiqueta ya existe",
     "Error loading message" : "Se presentó un error al cargar el mensaje",
-    "Itinerary for {type} is not supported yet" : "El itinerario de {type} aún no es compatible",
     "Set tag" : "Establecer etiqueta",
     "Unset tag" : "Quitar etiqueta",
     "Add default tags" : "Agregar etiquetas predeterminadas"

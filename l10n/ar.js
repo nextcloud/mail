@@ -717,12 +717,9 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "اسم الوَسْم هو وَسْمٌ نِظَامِيٌّ مَخْفِيٌّ hidden system tag",
     "Tag already exists" : "الوَسْمُ موجود سلفاً",
     "Error loading message" : "حدث خطأ أثناء تحميل الرسالة",
-    "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "الرد الآلي Autoresponder يستعمل برنامج \"الغِربَال\" Sieve؛ وهي لغة برمجة نصية يدعمها العديد من مزودي البريد الإلكتروني. إذا لم تكن متأكداً مما إذا كان برنامج الرد الآلي الخاص بك يدعم هذه اللغة، فتواصل مع مزود البريد الإلكتروني لديك. إذا كان تطبيق \"الغربال\" Sieve متاحاً، فانقر فوق الزر للانتقال إلى الإعدادات وتمكينه.",
-    "Itinerary for {type} is not supported yet" : "مسار الرحلة لـ {type} غير مدعوم حتى الآن",
     "Edit name or color" : "عدِّل الاسم أو اللون",
     "Set tag" : "تعيين وسم",
     "Unset tag" : "إلغاء تعيين الوَسْم",
-    "Add default tags" : "إضافة الوسوم التلقائية",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "سيطر على فوضى بريدك. تساعدك الفلاتر في تصنيف أسبقية البريد المهم و التخلص من الفوضى."
+    "Add default tags" : "إضافة الوسوم التلقائية"
 },
 "nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;");

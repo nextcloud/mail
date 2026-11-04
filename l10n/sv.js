@@ -1038,15 +1038,12 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Taggnamnet är en dold systemtagg",
     "Tag already exists" : "Taggen finns redan",
     "Error loading message" : "Fel vid inläsning av meddelande",
-    "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Autosvaret använder Sieve, ett skriptspråk som stöds av många e-postleverantörer. Om du är osäker på om din e-postleverantör gör det, kontrollera med din leverantör. Om Sieve är tillgängligt klickar du på knappen för att gå till inställningarna och aktivera det.",
     "Move Message" : "Flytta meddelande",
-    "Itinerary for {type} is not supported yet" : "Resplan för {type} stöds inte än",
     "Edit name or color" : "Redigera namn eller färg",
     "Saving new tag name …" : "Sparar nytt namn på tagg …",
     "Set tag" : "Aktivera tagg",
     "Unset tag" : "Deaktivera tagg",
     "Add default tags" : "Lägg till standardtaggar",
-    "Saving tag …" : "Sparar tagg ...",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Ta kontroll över din e-post. Filter hjälper dig att prioritera det som är viktigt."
+    "Saving tag …" : "Sparar tagg ..."
 },
 "nplurals=2; plural=(n != 1);");
