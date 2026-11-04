@@ -1036,15 +1036,12 @@
     "Tag name is a hidden system tag" : "Tag name is a hidden system tag",
     "Tag already exists" : "Tag already exists",
     "Error loading message" : "Error loading message",
-    "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it.",
     "Move Message" : "Move Message",
-    "Itinerary for {type} is not supported yet" : "Itinerary for {type} is not supported yet",
     "Edit name or color" : "Edit name or colour",
     "Saving new tag name …" : "Saving new tag name …",
     "Set tag" : "Set tag",
     "Unset tag" : "Unset tag",
     "Add default tags" : "Add default tags",
-    "Saving tag …" : "Saving tag …",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter."
+    "Saving tag …" : "Saving tag …"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

@@ -951,15 +951,12 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Nama tag adalah tag sistem tersembunyi",
     "Tag already exists" : "Tag sudah ada",
     "Error loading message" : "Kesalahan saat memuat pesan",
-    "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Balasan otomatis menggunakan Sieve, bahasa skrip yang didukung banyak penyedia email. Jika Anda tidak yakin apakah penyedia Anda mendukungnya, tanyakan kepada penyedia Anda. Jika Sieve tersedia, klik tombol untuk pergi ke pengaturan dan mengaktifkannya.",
     "Move Message" : "Pindahkan pesan",
-    "Itinerary for {type} is not supported yet" : "Rencana perjalanan untuk {type} belum didukung",
     "Edit name or color" : "Edit nama atau warna",
     "Saving new tag name …" : "Menyimpan nama tag baru …",
     "Set tag" : "Tetapkan tag",
     "Unset tag" : "Hapus tag",
     "Add default tags" : "Tambahkan tag default",
-    "Saving tag …" : "Menyimpan tag …",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Kendalikan kekacauan email Anda. Filter membantu Anda memprioritaskan hal yang penting dan menghilangkan kekacauan."
+    "Saving tag …" : "Menyimpan tag …"
 },
 "nplurals=1; plural=0;");

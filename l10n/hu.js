@@ -644,7 +644,6 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "A címkenév egy rejtett rendszercímke",
     "Tag already exists" : "A címke már létezik",
     "Error loading message" : "Hiba történt az üzenet betöltése közben",
-    "Itinerary for {type} is not supported yet" : "A(z) {type} útiterve még nem támogatott",
     "Edit name or color" : "Név vagy szín szerkesztése",
     "Set tag" : "Címke beállítása",
     "Unset tag" : "Címke eltávolítása",

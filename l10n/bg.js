@@ -553,7 +553,6 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Името на етикета е скрит системен етикет",
     "Tag already exists" : "Етикетът вече съществува",
     "Error loading message" : "Грешка при зареждане съобщението",
-    "Itinerary for {type} is not supported yet" : "Маршрутът за {type} все още не се поддържа",
     "Set tag" : "Задаване на етикет",
     "Unset tag" : "Отмяна на етикет",
     "Add default tags" : "Добавяне на етикети по подразбиране"

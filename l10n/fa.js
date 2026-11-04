@@ -907,15 +907,12 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "نام برچسب یک برچسب سیستمی مخفی است",
     "Tag already exists" : "برچسب از قبل وجود دارد",
     "Error loading message" : "خطا در بارگذاری پیام",
-    "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "پاسخ‌دهنده خودکار از Sieve استفاده می‌کند، یک زبان اسکریپت‌نویسی که توسط بسیاری از ارائه‌دهندگان ایمیل پشتیبانی می‌شود. اگر مطمئن نیستید که ارائه‌دهنده شما از آن پشتیبانی می‌کند یا خیر، با ارائه‌دهنده خود بررسی کنید. اگر Sieve در دسترس است، روی دکمه کلیک کنید تا به تنظیمات بروید و آن را فعال کنید.",
     "Move Message" : "انتقال پیام",
-    "Itinerary for {type} is not supported yet" : "برنامه سفر برای {type} هنوز پشتیبانی نمی‌شود",
     "Edit name or color" : "ویرایش نام یا رنگ",
     "Saving new tag name …" : "در حال ذخیره نام جدید برچسب …",
     "Set tag" : "تنظیم برچسب",
     "Unset tag" : "لغو تنظیم برچسب",
     "Add default tags" : "افزودن برچسب‌های پیش‌فرض",
-    "Saving tag …" : "در حال ذخیره برچسب …",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "کنترل هرج‌ومرج ایمیل‌های خود را به دست بگیرید. فیلترها به شما کمک می‌کنند تا اولویت‌بندی کنید و شلوغی را حذف نمایید."
+    "Saving tag …" : "در حال ذخیره برچسب …"
 },
 "nplurals=2; plural=(n > 1);");

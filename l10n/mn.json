@@ -864,13 +864,10 @@
     "Tag name is a hidden system tag" : "Тагийн нэр нуугдсан системийн таг байна",
     "Tag already exists" : "Таг аль хэдийн байна",
     "Error loading message" : "–∞–ª–¥–∞–∞—Ç–∞–π –∞—á–∞–∞–ª–ª–∞—Ö –∑—É—Ä–≤–∞—Å",
-    "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Автомат хариу нь олон имэйл үйлчилгээ үзүүлэгчийн дэмждэг Sieve скрипт хэлийг ашигладаг. Таны үйлчилгээ үзүүлэгч дэмждэг эсэхийг мэдэхгүй бол тэдэнтэй холбогдож лавлана уу. Хэрэв Sieve боломжтой бол товчлуур дээр дарж тохиргоо руу орж идэвхжүүлнэ үү.",
     "Move Message" : "Зурвас зөөх",
-    "Itinerary for {type} is not supported yet" : "{type} аяллын хуваарийг одоогоор дэмжихгүй байна",
     "Edit name or color" : "Нэр эсвэл өнгө засах",
     "Set tag" : "Таг тохируулах",
     "Unset tag" : "Таг арилгах",
-    "Add default tags" : "Өгөгдмөл тагууд нэмэх",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Имэйлийн эмх замбараагүй байдлаа хянана уу. Шүүлтүүрүүд нь чухал зүйлийг эрэмбэлж, шаардлагагүй зүйлийг арилгахад тусална."
+    "Add default tags" : "Өгөгдмөл тагууд нэмэх"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

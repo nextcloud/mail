@@ -1037,15 +1037,12 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Numele aparține unei etichete de sistem ascunse",
     "Tag already exists" : "Eticheta există deja",
     "Error loading message" : "Eroare la încărcarea mesajului",
-    "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Răspunsul automat folosește Sieve, un limbaj de scripting acceptat de mulți furnizori de e-mail. Dacă nu știi sigur dacă furnizorul tău îl acceptă, întreabă-l. Dacă Sieve este disponibil, apasă butonul pentru a merge la setări și a-l activa.",
     "Move Message" : "Mută mesajul",
-    "Itinerary for {type} is not supported yet" : "Itinerariul pentru {type} nu este încă acceptat",
     "Edit name or color" : "Editează numele sau culoarea",
     "Saving new tag name …" : "Se salvează noul nume al etichetei …",
     "Set tag" : "Setează eticheta",
     "Unset tag" : "Elimină eticheta",
     "Add default tags" : "Adaugă etichetele implicite",
-    "Saving tag …" : "Se salvează eticheta …",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Pune ordine în haosul din e-mail. Filtrele te ajută să prioritizezi ce contează și să elimini dezordinea."
+    "Saving tag …" : "Se salvează eticheta …"
 },
 "nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));");

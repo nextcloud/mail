@@ -1036,15 +1036,12 @@
     "Tag name is a hidden system tag" : "標籤名稱為隱藏的系統標籤",
     "Tag already exists" : "標籤已經存在",
     "Error loading message" : "載入信件錯誤",
-    "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "自動回覆使用 Sieve，這是一種許多電子郵件供應商都支援的命令稿語言。如果您不確定您的供應商是否支援，請向供應商查詢。如果 Sieve 可用，請按一下按鈕前往設定並啟用它。",
     "Move Message" : "移動訊息",
-    "Itinerary for {type} is not supported yet" : "目前尚未支援 {type} 的行程",
     "Edit name or color" : "編輯名稱或顏色",
     "Saving new tag name …" : "正在儲存新標籤名稱……",
     "Set tag" : "設定標籤",
     "Unset tag" : "取消設定標籤",
     "Add default tags" : "新增預設標籤",
-    "Saving tag …" : "正在儲存標籤……",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "控制您混亂的電子郵件。篩選器會協助您排定優先順序並消除雜訊。"
+    "Saving tag …" : "正在儲存標籤……"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

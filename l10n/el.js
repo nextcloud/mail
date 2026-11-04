@@ -927,15 +927,12 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Το όνομα ετικέτας είναι κρυφή ετικέτα συστήματος",
     "Tag already exists" : "Υπάρχει ήδη η ετικέτα",
     "Error loading message" : "Σφάλμα φόρτωσης μηνύματος",
-    "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Η αυτόματη απάντηση χρησιμοποιεί το Sieve, μια γλώσσα δέσμης ενεργειών που υποστηρίζεται από πολλούς πάροχους email. Εάν δεν είστε σίγουροι αν ο δικός σας την υποστηρίζει, ελέγξτε με τον πάροχό σας. Εάν το Sieve είναι διαθέσιμο, κάντε κλικ στο κουμπί για να μεταβείτε στις ρυθμίσεις και να το ενεργοποιήσετε.",
     "Move Message" : "Μετακίνηση μηνύματος",
-    "Itinerary for {type} is not supported yet" : "Η διαδρομή για {type} δεν υποστηρίζεται ακόμα",
     "Edit name or color" : "Επεξεργασία ονόματος ή χρώματος",
     "Saving new tag name …" : "Αποθήκευση νέου ονόματος ετικέτας …",
     "Set tag" : "Ορισμός ετικέτας",
     "Unset tag" : "Αφαίρεση ετικέτας",
     "Add default tags" : "Προσθήκη προεπιλεγμένων ετικετών",
-    "Saving tag …" : "Αποθήκευση ετικέτας …",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Αποκτήστε τον έλεγχο του χάους των email σας. Τα φίλτρα σας βοηθούν να προτεραιοποιήσετε όσα έχουν σημασία και να εξαλείψετε την αταξία."
+    "Saving tag …" : "Αποθήκευση ετικέτας …"
 },
 "nplurals=2; plural=(n != 1);");

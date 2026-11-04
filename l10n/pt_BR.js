@@ -1038,15 +1038,12 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "O nome da etiqueta é uma etiqueta de sistema oculta",
     "Tag already exists" : "Etiqueta já existe",
     "Error loading message" : "Erro carregando mensagem",
-    "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "A resposta automática usa o Sieve, uma linguagem de script suportada por muitos provedores de e-mail. Se não tiver certeza de que o seu suporta, verifique com seu provedor. Se o Sieve estiver disponível, clique no botão para acessar as configurações e ativá-lo.",
     "Move Message" : "Mover Mensagem",
-    "Itinerary for {type} is not supported yet" : "O itinerário para {type} ainda não é suportado",
     "Edit name or color" : "Editar nome ou cor",
     "Saving new tag name …" : "Salvando o novo nome da etiqueta …",
     "Set tag" : "Definir etiqueta",
     "Unset tag" : "Redefinir etiqueta",
     "Add default tags" : "Adicionar etiquetas padrão",
-    "Saving tag …" : "Salvando a etiqueta …",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Assuma o controle do caos do seu e-mail. Os filtros ajudam você a priorizar o que importa e eliminar a desordem."
+    "Saving tag …" : "Salvando a etiqueta …"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

@@ -1030,15 +1030,12 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Is clib córais ceilte é an t-ainm clibe",
     "Tag already exists" : "Tá clib ann cheana féin",
     "Error loading message" : "Earráid agus an teachtaireacht á lódáil",
-    "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Úsáideann an t-uathfhreagraí Sieve, teanga scriptithe a fhaigheann tacaíocht ó go leor soláthraithe ríomhphoist. Mura bhfuil tú cinnte cé acu an bhfuil, seiceáil le do sholáthraí. Má tá Sieve ar fáil, cliceáil ar an gcnaipe chun dul go dtí na socruithe agus é a chumasú.",
     "Move Message" : "Bog Teachtaireacht",
-    "Itinerary for {type} is not supported yet" : "Ní thacaítear leis an gclár taistil do {type} fós",
     "Edit name or color" : "Cuir ainm nó dath in eagar",
     "Saving new tag name …" : "Ag sábháil ainm nua an chlib …",
     "Set tag" : "Socraigh clib",
     "Unset tag" : "Clib gan socrú",
     "Add default tags" : "Cuir clibeanna réamhshocraithe leis",
-    "Saving tag …" : "Ag sábháil an chlib …",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Tóg smacht ar do chaos ríomhphoist. Cuidíonn scagairí leat tosaíocht a thabhairt do na rudaí atá tábhachtach agus deireadh a chur le tranglam."
+    "Saving tag …" : "Ag sábháil an chlib …"
 },
 "nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);");

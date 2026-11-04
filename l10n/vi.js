@@ -278,7 +278,6 @@ OC.L10N.register(
     "Could not load the message" : "Không thể tải tin nhắn",
     "Date:" : "Ngày:",
     "Tag already exists" : "Thẻ đã tồn tại",
-    "Error loading message" : "Lỗi khi tải tin nhắn",
-    "Itinerary for {type} is not supported yet" : "Hành trình cho {type} chưa được hỗ trợ"
+    "Error loading message" : "Lỗi khi tải tin nhắn"
 },
 "nplurals=1; plural=0;");

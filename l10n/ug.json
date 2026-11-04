@@ -870,15 +870,12 @@
     "Tag name is a hidden system tag" : "بەلگە ئىسمى يوشۇرۇن سىستېما بەلگىسى",
     "Tag already exists" : "خەتكۈچ مەۋجۇت",
     "Error loading message" : "ئۇچۇر يۈكلەشتە خاتالىق",
-    "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "ئاپتوماتىك جاۋاب قايتۇرغۇچ نۇرغۇن ئېلخەت تەمىنلىگۈچىلىرى قوللايدىغان سىكرىپت تىلى Sieve نى ئىشلىتىدۇ. ئەگەر سىزنىڭكىنىڭ قوللايدىغان-قوللىمايدىغانلىقىغا ئىشەنمىسىڭىز، تەمىنلىگۈچىڭىز بىلەن ئالاقىلىشىڭ. ئەگەر Sieve بار بولسا، تەڭشەكلەرگە كىرىپ ئۇنى قوزغىتىش ئۈچۈن كۇنۇپكىنى چېكىڭ.",
     "Move Message" : "ئۇچۇر يۆتكە",
-    "Itinerary for {type} is not supported yet" : "{type} نىڭ لىنىيىسى تېخىچە قوللىمايدۇ",
     "Edit name or color" : "ئىسىم ياكى رەڭنى تەھرىرلەڭ",
     "Saving new tag name …" : "يېڭى خەتكۈچ نامىنى ساقلاۋاتىدۇ …",
     "Set tag" : "بەلگە بەلگىلەڭ",
     "Unset tag" : "خەتكۈچنى تەڭشەش",
     "Add default tags" : "سۈكۈتتىكى بەلگىلەرنى قوشۇڭ",
-    "Saving tag …" : "خەتكۈچنى ساقلاۋاتىدۇ …",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "ئېلېكترونلۇق خەت قالايمىقانچىلىقىڭىزنى كونترول قىلىڭ. سۈزگۈچلەر مۇھىم ئىشلارنى مۇھىم ئورۇنغا قويۇپ ، قالايمىقانچىلىقنى تۈگىتىشىڭىزگە ياردەم بېرىدۇ."
+    "Saving tag …" : "خەتكۈچنى ساقلاۋاتىدۇ …"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

@@ -707,11 +707,9 @@
     "Tag name is a hidden system tag" : "Etiketaren izena ezkutatutako sistema-etiketa da",
     "Tag already exists" : "Etiketa dagoeneko existitzen da",
     "Error loading message" : "Errorea mezua kargatzerakoan",
-    "Itinerary for {type} is not supported yet" : "{type} motarentzako ibilbidea ez da onartzen oraindik",
     "Edit name or color" : "Editatu izena edo kolorea",
     "Set tag" : "Ezarri etiketa",
     "Unset tag" : "Ezarri gabeko etiketa",
-    "Add default tags" : "Gehitu etiketa lehenetsiak",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Kontrolatu zure posta elektronikoaren kaosa. Iragazkiek garrantzitsuena lehenestu eta zaborra ezabatzen laguntzen dizute."
+    "Add default tags" : "Gehitu etiketa lehenetsiak"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

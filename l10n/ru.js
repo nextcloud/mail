@@ -1038,15 +1038,12 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Это имя скрытой системной метки",
     "Tag already exists" : "Метка уже существует",
     "Error loading message" : "Ошибка загрузки сообщения",
-    "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Автоответчик работает через Sieve — язык сценариев, который поддерживают многие почтовые службы. Если не знаете, поддерживает ли его ваша, уточните у своей почтовой службы. Если Sieve доступен, нажмите кнопку, чтобы перейти к параметрам и включить его.",
     "Move Message" : "Переместить сообщение",
-    "Itinerary for {type} is not supported yet" : "Маршруты типа {type} пока не поддерживаются",
     "Edit name or color" : "Изменить название или цвет",
     "Saving new tag name …" : "Сохранение нового названия метки …",
     "Set tag" : "Установить метку",
     "Unset tag" : "Снять метку",
     "Add default tags" : "Добавить метки по умолчанию",
-    "Saving tag …" : "Сохранение метки …",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Наведите порядок в почте: фильтры помогут выделить важное и убрать лишнее."
+    "Saving tag …" : "Сохранение метки …"
 },
 "nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);");
