@@ -41,9 +41,9 @@ class JmapTransmissionConnector implements ITransmissionConnector {
 
 	#[\Override]
 	public function sendMessage(Account $account, LocalMessage $message, Mailbox $sentMailbox): void {
-		$to = $this->transmissionService->getAddressList($message, Recipient::TYPE_TO);
-		$cc = $this->transmissionService->getAddressList($message, Recipient::TYPE_CC);
-		$bcc = $this->transmissionService->getAddressList($message, Recipient::TYPE_BCC);
+		$to = $this->transmissionService->getAddressList($message, Recipient::TYPE_TO, $account->getUserId());
+		$cc = $this->transmissionService->getAddressList($message, Recipient::TYPE_CC, $account->getUserId());
+		$bcc = $this->transmissionService->getAddressList($message, Recipient::TYPE_BCC, $account->getUserId());
 
 		$senderName = $account->getName();
 		$senderAddress = $account->getEMailAddress();
@@ -120,9 +120,9 @@ class JmapTransmissionConnector implements ITransmissionConnector {
 			throw new ServiceException("Mailbox {$mailbox->getId()} does not have a JMAP remote ID");
 		}
 
-		$to = $this->transmissionService->getAddressList($message, Recipient::TYPE_TO);
-		$cc = $this->transmissionService->getAddressList($message, Recipient::TYPE_CC);
-		$bcc = $this->transmissionService->getAddressList($message, Recipient::TYPE_BCC);
+		$to = $this->transmissionService->getAddressList($message, Recipient::TYPE_TO, $account->getUserId());
+		$cc = $this->transmissionService->getAddressList($message, Recipient::TYPE_CC, $account->getUserId());
+		$bcc = $this->transmissionService->getAddressList($message, Recipient::TYPE_BCC, $account->getUserId());
 		$from = Address::fromRaw($account->getName(), $account->getEMailAddress());
 
 		$attachments = $this->collectAttachments($account, $message);

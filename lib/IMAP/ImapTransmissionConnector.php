@@ -93,7 +93,7 @@ class ImapTransmissionConnector implements ITransmissionConnector {
 			}
 			return;
 		}
-		[$to, $cc, $bcc, $attachments] = $this->getRecipientsAndAttachments($message);
+		[$to, $cc, $bcc, $attachments] = $this->getRecipientsAndAttachments($account, $message);
 
 		$name = $account->getName();
 		$emailAddress = $account->getEMailAddress();
@@ -238,7 +238,7 @@ class ImapTransmissionConnector implements ITransmissionConnector {
 
 	#[\Override]
 	public function saveMessage(Account $account, Mailbox $mailbox, LocalMessage $message, array $flags = []): void {
-		[$to, $cc, $bcc, $attachments] = $this->getRecipientsAndAttachments($message);
+		[$to, $cc, $bcc, $attachments] = $this->getRecipientsAndAttachments($account, $message);
 
 		$perfLogger = $this->performanceLogger->start('save message to IMAP mailbox');
 
@@ -372,11 +372,11 @@ class ImapTransmissionConnector implements ITransmissionConnector {
 	/**
 	 * @return array{0: AddressList, 1: AddressList, 2: AddressList, 3: array}
 	 */
-	private function getRecipientsAndAttachments(LocalMessage $message): array {
+	private function getRecipientsAndAttachments(Account $account, LocalMessage $message): array {
 		return [
-			$this->transmissionService->getAddressList($message, Recipient::TYPE_TO),
-			$this->transmissionService->getAddressList($message, Recipient::TYPE_CC),
-			$this->transmissionService->getAddressList($message, Recipient::TYPE_BCC),
+			$this->transmissionService->getAddressList($message, Recipient::TYPE_TO, $account->getUserId()),
+			$this->transmissionService->getAddressList($message, Recipient::TYPE_CC, $account->getUserId()),
+			$this->transmissionService->getAddressList($message, Recipient::TYPE_BCC, $account->getUserId()),
 			$this->transmissionService->getAttachments($message),
 		];
 	}
