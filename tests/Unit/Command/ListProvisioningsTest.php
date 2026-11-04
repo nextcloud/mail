@@ -63,7 +63,29 @@ class ListProvisioningsTest extends TestCase {
 		$status = $this->tester->execute([]);
 
 		self::assertSame(Command::SUCCESS, $status);
-		self::assertStringContainsString('imap.example.com', $this->tester->getDisplay());
+		$display = $this->tester->getDisplay();
+		self::assertStringContainsString('%USERID%@imap.example.com:993 (ssl)', $display);
+		self::assertStringContainsString('%USERID%@smtp.example.com:587 (tls)', $display);
+		self::assertStringContainsString('yes (user: *masteruser)', $display);
+		self::assertStringNotContainsString('sesame', $display);
+	}
+
+	public function testListSieveAndMasterPasswordWithoutUser(): void {
+		$provisioning = $this->config();
+		$provisioning->setSieveEnabled(true);
+		$provisioning->setSieveHost('sieve.example.com');
+		$provisioning->setSievePort(4190);
+		$provisioning->setSieveSslMode('tls');
+		$provisioning->enableMasterPassword('sesame', '');
+		$this->provisioningManager->method('getConfigs')
+			->willReturn([$provisioning]);
+
+		$status = $this->tester->execute([]);
+
+		self::assertSame(Command::SUCCESS, $status);
+		$display = $this->tester->getDisplay();
+		self::assertStringContainsString('sieve.example.com:4190 (tls)', $display);
+		self::assertStringNotContainsString('(user:', $display);
 	}
 
 	public function testListJsonHidesMasterPassword(): void {

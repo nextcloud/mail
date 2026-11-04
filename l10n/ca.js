@@ -312,7 +312,6 @@ OC.L10N.register(
     "Remove" : "Suprimeix",
     "Add internal address" : "Afegeix una adreça interna",
     "Add internal email or domain" : "Afegeix un correu electrònic intern o un domini",
-    "Itinerary for {type} is not supported yet" : "Encara no s'admet l'itinerari per a {type}",
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "No teniu permís per moure aquest missatge a la carpeta d'arxiu i/o suprimir-lo de la carpeta actual",
     "Last hour" : "Última hora",
     "Today" : "Avui",
@@ -664,6 +663,7 @@ OC.L10N.register(
     "Save Config" : "Desa la configuració",
     "Unprovision & Delete Config" : "Desaprovisionar i suprimir la configuració",
     "With the settings above, the app will create account settings in the following way:" : "Amb la configuració anterior, l'aplicació crearà els paràmetres del compte de la manera següent:",
+    "Delete certificate" : "Suprimeix el certificat",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "El certificat PKCS #12 proporcionat ha de contenir almenys un certificat i exactament una clau privada.",
     "Failed to import the certificate. Please check the password." : "No s'ha pogut importar el certificat. Comproveu la contrasenya.",
     "Certificate imported successfully" : "El certificat s'ha importat correctament",
@@ -674,7 +674,6 @@ OC.L10N.register(
     "Certificate name" : "Nom del certificat",
     "E-mail address" : "Adreça de correu electrònic",
     "Valid until" : "Valid fins",
-    "Delete certificate" : "Suprimeix el certificat",
     "No certificate imported yet" : "Encara no s'ha importat cap certificat",
     "Import certificate" : "Importa el certificat",
     "PKCS #12 Certificate" : "Certificat PKCS #12",
@@ -722,11 +721,9 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "El nom de l'etiqueta és una etiqueta del sistema oculta",
     "Tag already exists" : "L'etiqueta ja existeix",
     "Error loading message" : "S'ha produït un error mentre es carregava el missatge",
-    "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "La resposta automàtica utilitza Sieve, un llenguatge de script compatible amb molts proveïdors de correu electrònic. Si no esteu segur de si el vostre, consulteu amb el vostre proveïdor. Si Sieve està disponible, feu clic al botó per anar als  paràmetres i activar-lo.",
     "Edit name or color" : "Edició del nom o el color",
     "Set tag" : "Definiu etiqueta",
     "Unset tag" : "Desactiveu etiqueta",
-    "Add default tags" : "Afegeix etiquetes per defecte",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Preneu el control del vostre caos de correu electrònic. Els filtres us ajuden a prioritzar allò que importa i a eliminar el desordre."
+    "Add default tags" : "Afegeix etiquetes per defecte"
 },
 "nplurals=2; plural=(n != 1);");

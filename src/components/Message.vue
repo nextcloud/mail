@@ -53,7 +53,7 @@
 		<div id="reply-composer" />
 		<div class="reply-buttons">
 			<div v-if="smartReplies.length > 0" class="reply-buttons__suggested">
-				<NcPopover trigger="hover focus">
+				<NcPopover :triggers="['hover', 'focus']">
 					<template #trigger>
 						<NcButton
 							variant="tertiary-no-background"
@@ -109,6 +109,8 @@ import PhishingWarning from './PhishingWarning.vue'
 import { isPgpgMessage } from '../crypto/pgp.js'
 import useMainStore from '../store/mainStore.js'
 import { html, plain } from '../util/text.js'
+
+const SUPPORTED_ITINERARY_TYPES = ['EventReservation', 'FlightReservation', 'TrainReservation']
 
 export default {
 	name: 'Message',
@@ -186,7 +188,7 @@ export default {
 		},
 
 		itineraries() {
-			return this.message.itineraries ?? []
+			return (this.message.itineraries ?? []).filter((entry) => SUPPORTED_ITINERARY_TYPES.includes(entry['@type']))
 		},
 
 		hasCurrentUserPrincipalAndCollections() {

@@ -708,7 +708,7 @@ export default {
 				return
 			}
 			const openedMessageHasBeenMoved = movedEnvelopes.find((movedEnvelope) => {
-				return movedEnvelope.envelopeId === this.$route.params.threadId
+				return String(movedEnvelope.databaseId) === this.$route.params.threadId
 			})
 			// navigate to the mailbox root
 			// if the currently displayed message has been moved

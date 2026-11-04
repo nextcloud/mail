@@ -326,4 +326,52 @@ describe('NavigationMailbox', () => {
 
 		expect(view.vm.hasDeleteAcl).toBe(true)
 	})
+
+	describe('when envelopes are dropped onto it', () => {
+		const mountWithRoute = (route, push) => shallowMount(NavigationMailbox, {
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route: route,
+					$router: { push },
+				},
+			},
+			props: {
+				account: {},
+				mailbox: {
+					databaseId: 7,
+				},
+			},
+		})
+
+		it('navigates to the folder root when the open message was moved', () => {
+			const push = vi.fn()
+			const view = mountWithRoute({ name: 'message', params: { mailboxId: '3', threadId: '42' } }, push)
+
+			view.vm.onEnvelopesMoved({ mailboxId: 7, movedEnvelopes: [{ databaseId: 41 }, { databaseId: 42 }] })
+
+			expect(push).toHaveBeenCalledWith({
+				name: 'mailbox',
+				params: { mailboxId: '3', filter: undefined },
+			})
+		})
+
+		it('stays on the open message when other messages were moved', () => {
+			const push = vi.fn()
+			const view = mountWithRoute({ name: 'message', params: { mailboxId: '3', threadId: '42' } }, push)
+
+			view.vm.onEnvelopesMoved({ mailboxId: 7, movedEnvelopes: [{ databaseId: 41 }] })
+
+			expect(push).not.toHaveBeenCalled()
+		})
+
+		it('ignores moves into another mailbox', () => {
+			const push = vi.fn()
+			const view = mountWithRoute({ name: 'message', params: { mailboxId: '3', threadId: '42' } }, push)
+
+			view.vm.onEnvelopesMoved({ mailboxId: 8, movedEnvelopes: [{ databaseId: 42 }] })
+
+			expect(push).not.toHaveBeenCalled()
+		})
+	})
 })

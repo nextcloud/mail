@@ -403,7 +403,6 @@
     "Remove" : "Rimuovi",
     "Add internal address" : "Aggiungi indirizzo interno",
     "Add internal email or domain" : "Aggiungi indirizzo email o dominio interno",
-    "Itinerary for {type} is not supported yet" : "L'itinerario per {type} non è ancora supportato",
     "To archive a message please configure an archive folder in account settings" : "Per archiviare un messaggio, configura prima una cartella Archivio nelle impostazioni dell’account",
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "Non ti è consentito spostare questo messaggio nella cartella degli archivi e/o eliminare questo messaggio dalla cartella corrente.",
     "Your IMAP server does not support storing the seen/unseen state." : "Il server IMAP non supporta il salvataggio dello stato letto/non letto.",
@@ -850,6 +849,7 @@
     "Save Config" : "Salva configurazione",
     "Unprovision & Delete Config" : "Annullare il approvvigionamento ed eliminare la configurazione",
     "With the settings above, the app will create account settings in the following way:" : "Con le impostazioni precedenti, l'applicazione creerà le impostazioni dell'account nel modo seguente:",
+    "Delete certificate" : "Elimina certificato",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Il certificato PKCS #12 fornito deve contenere almeno un certificato ed esattamente una chiave privata.",
     "Failed to import the certificate. Please check the password." : "Impossibile importare il certificato. Controlla la password.",
     "Certificate imported successfully" : "Certificato importato correttamente",
@@ -860,7 +860,6 @@
     "Certificate name" : "Nome del certificato",
     "E-mail address" : "Indirizzo di posta",
     "Valid until" : "Valido fino al",
-    "Delete certificate" : "Elimina certificato",
     "No certificate imported yet" : "Ancora nessun certificato importato",
     "Import certificate" : "Importa certificato",
     "PKCS #12 Certificate" : "Certificato PKCS #12",
@@ -936,14 +935,12 @@
     "Tag name is a hidden system tag" : "Questo nome è riservato a un’etichetta di sistema nascosta",
     "Tag already exists" : "L'etichetta esiste già",
     "Error loading message" : "Errore durante il caricamento del messaggio",
-    "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "La risposta automatica utilizza Sieve, un linguaggio di scripting supportato da molti provider di posta elettronica. Se non sei sicuro che il tuo lo supporti, verifica con il tuo provider. Se Sieve è disponibile, fai clic sul pulsante per accedere alle impostazioni e abilitarlo.",
     "Move Message" : "Sposta messaggio",
     "Edit name or color" : "Modifica nome o colore",
     "Saving new tag name …" : "Salvataggio del nuovo nome dell’etichetta in corso …",
     "Set tag" : "Assegna etichetta",
     "Unset tag" : "Rimuovi etichetta",
     "Add default tags" : "Aggiungi etichette predefiniti",
-    "Saving tag …" : "Salvataggio etichetta in corso …",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Metti ordine nella tua posta. I filtri ti aiutano a dare priorità ai messaggi importanti e a ridurre il superfluo."
+    "Saving tag …" : "Salvataggio etichetta in corso …"
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

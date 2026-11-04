@@ -334,7 +334,6 @@ OC.L10N.register(
     "Remove" : "Remover",
     "Add internal address" : "Adicionar endereço interno",
     "Add internal email or domain" : "Adicionar e-mail ou domínio interno",
-    "Itinerary for {type} is not supported yet" : "O itinerário para {type} ainda não é suportado",
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "Você não tem permissão para mover esta mensagem para a pasta de arquivos e/ou excluir esta mensagem da pasta atual",
     "Your IMAP server does not support storing the seen/unseen state." : "Seu servidor IMAP não suporta o armazenamento do estado visto/não visto.",
     "Last hour" : "Ultima hora",
@@ -688,6 +687,7 @@ OC.L10N.register(
     "A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted." : "Um atributo de vários valores para provisionar aliases de e-mail. Para cada valor, um alias é criado. Os aliases existentes no Nextcloud que não estão no diretório LDAP são excluídos.",
     "Unprovision & Delete Config" : "Desprovisionar & Excluir Configuração",
     "With the settings above, the app will create account settings in the following way:" : "Com as configurações acima, o aplicativo criará configurações da conta da seguinte maneira:",
+    "Delete certificate" : "Excluir certificado",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "O certificado PKCS #12 fornecido deve conter pelo menos um certificado e exatamente uma chave privada.",
     "Failed to import the certificate. Please check the password." : "Falha ao importar o certificado. Por favor, verifique a senha.",
     "Certificate imported successfully" : "Certificado importado com sucesso",
@@ -696,7 +696,6 @@ OC.L10N.register(
     "S/MIME certificates" : "Certificados S/MIME",
     "Certificate name" : "Nome do certificado",
     "Valid until" : "Válido até",
-    "Delete certificate" : "Excluir certificado",
     "No certificate imported yet" : "Nenhum certificado importado ainda",
     "PKCS #12 Certificate" : "Certificado PKCS #12",
     "PEM Certificate" : "Certificado PEM",
@@ -753,10 +752,8 @@ OC.L10N.register(
     "Tag name cannot be empty" : "O nome da etiqueta não pode ficar vazio",
     "Tag already exists" : "A etiqueta já existe",
     "Error loading message" : "Erro ao carregar a mensagem",
-    "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "A resposta automática usa o Sieve, uma linguagem de script suportada por muitos provedores de e-mail. Se não tiver certeza de que o seu suporta, verifique com seu provedor. Se o Sieve estiver disponível, clique no botão para acessar as configurações e ativá-lo.",
     "Saving new tag name …" : "Salvando o novo nome da etiqueta …",
     "Unset tag" : "Redefinir etiqueta",
-    "Add default tags" : "Adicionar etiquetas padrão",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Assuma o controle do caos do seu e-mail. Os filtros ajudam você a priorizar o que importa e eliminar a desordem."
+    "Add default tags" : "Adicionar etiquetas padrão"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

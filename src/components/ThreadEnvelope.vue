@@ -148,7 +148,23 @@
 						</NcActionText>
 						<!-- TODO: display information about signer and/or CA certificate -->
 					</NcActions>
-					<NcActions :inline="inlineMenuSize">
+					<MenuEnvelope
+						v-model:moreActionsOpen="moreActionsOpen"
+						:inline="inlineMenuSize"
+						:envelope="envelope"
+						:mailbox="mailbox"
+						:withSelect="false"
+						:withShowSource="true"
+						@reply="onReply('', false, false)"
+						@delete="$emit('delete', envelope.databaseId)"
+						@showSourceModal="onShowSourceModal"
+						@openTagModal="onOpenTagModal"
+						@openMoveModal="onOpenMoveModal"
+						@openEventModal="onOpenEventModal"
+						@openTaskModal="onOpenTaskModal"
+						@openTranslationModal="onOpenTranslationModal"
+						@openMailFilterFromEnvelope="showMailFilterFromEnvelope = true"
+						@print="onPrint">
 						<NcActionButton
 							:closeAfterClick="true"
 							@click="onReply('', false)">
@@ -240,24 +256,7 @@
 							</template>
 							{{ t('mail', 'Delete message') }}
 						</NcActionButton>
-						<MenuEnvelope
-							v-model:moreActionsOpen="moreActionsOpen"
-							class="app-content-list-item-menu"
-							:envelope="envelope"
-							:mailbox="mailbox"
-							:withSelect="false"
-							:withShowSource="true"
-							@reply="onReply('', false, false)"
-							@delete="$emit('delete', envelope.databaseId)"
-							@showSourceModal="onShowSourceModal"
-							@openTagModal="onOpenTagModal"
-							@openMoveModal="onOpenMoveModal"
-							@openEventModal="onOpenEventModal"
-							@openTaskModal="onOpenTaskModal"
-							@openTranslationModal="onOpenTranslationModal"
-							@openMailFilterFromEnvelope="showMailFilterFromEnvelope = true"
-							@print="onPrint" />
-					</NcActions>
+					</MenuEnvelope>
 					<SourceModal
 						v-if="showSourceModal"
 						:rawMessage="rawMessage"
@@ -589,7 +588,18 @@ export default {
 				return 0
 			}
 
-			return Math.floor(spaceToFill / 44)
+			return Math.min(Math.floor(spaceToFill / 44), this.threadActionsCount)
+		},
+
+		threadActionsCount() {
+			return [
+				true,
+				this.hasMultipleRecipients,
+				this.hasWriteAcl,
+				this.hasSeenAcl,
+				this.showArchiveButton && this.hasArchiveAcl,
+				this.hasDeleteAcl,
+			].filter(Boolean).length
 		},
 
 		account() {
@@ -1264,10 +1274,6 @@ export default {
 		justify-content: flex-end;
 		margin-inline-start: calc(var(--default-grid-baseline) * 2);
 		height: 44px;
-
-		.app-content-list-item-menu {
-			margin-inline-start: var(--default-grid-baseline);
-		}
 
 		.timestamp {
 			margin-inline-end: calc(var(--default-grid-baseline) * 2);

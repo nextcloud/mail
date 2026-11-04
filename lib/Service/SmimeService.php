@@ -154,8 +154,8 @@ class SmimeService {
 
 		// Resolve email address from Subject emailAddress, then SAN (RFC 8550 preferred),
 		// then Subject CN only if it looks like an email address.
-		$cn = $certificateData['subject']['CN'] ?? null;
-		$emailAddress = $certificateData['subject']['emailAddress']
+		$cn = $this->getFirstSubjectValue($certificateData, 'CN');
+		$emailAddress = $this->getFirstSubjectValue($certificateData, 'emailAddress')
 			?? $this->extractEmailFromSan($certificateData)
 			?? (($cn !== null && str_contains($cn, '@')) ? $cn : null);
 
@@ -184,6 +184,15 @@ class SmimeService {
 			$purposes,
 			openssl_x509_checkpurpose($certificate, X509_PURPOSE_ANY, $caBundle, $decryptedCertificateFile) === true,
 		);
+	}
+
+	/**
+	 * openssl_x509_parse() returns a list of values for a repeated subject attribute.
+	 */
+	private function getFirstSubjectValue(array $certificateData, string $attribute): ?string {
+		$value = $certificateData['subject'][$attribute] ?? null;
+
+		return is_array($value) ? ($value[0] ?? null) : $value;
 	}
 
 	/**

@@ -410,7 +410,6 @@
     "Remove" : "删除",
     "Add internal address" : "添加内部地址",
     "Add internal email or domain" : "添加内部电子邮件或域",
-    "Itinerary for {type} is not supported yet" : "尚不支持 {type} 类型的行程",
     "To archive a message please configure an archive folder in account settings" : "要归档邮件，请在账号设置中配置归档文件夹",
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "不允许您将此邮件移动到归档文件夹和/或从当前文件夹中删除此邮件",
     "Your IMAP server does not support storing the seen/unseen state." : "您的 IMAP 服务器不支持存储已阅读/未阅读状态。",
@@ -868,6 +867,7 @@
     "Unprovision & Delete Config" : "取消开通 & 删除配置",
     "* %USERID% and %EMAIL% will be replaced with the user's UID and email. {ldapPlaceholder} will be replaced with the value of that LDAP attribute" : "* %USERID% 和 %EMAIL% 将被替换为用户的 UID 和电子邮件地址。{ldapPlaceholder} 将被替换为该 LDAP 属性的值。",
     "With the settings above, the app will create account settings in the following way:" : "使用上述设置，该应用将通过以下方式创建账号设置：",
+    "Delete certificate" : "删除证书",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "提供的 PKCS #12 证书必须包含至少一个证书和唯一私钥。",
     "Failed to import the certificate. Please check the password." : "无法导入证书，请检查密码。",
     "Certificate imported successfully" : "导入证书成功",
@@ -878,7 +878,6 @@
     "Certificate name" : "证书名称",
     "E-mail address" : "电子邮件地址",
     "Valid until" : "有效期至",
-    "Delete certificate" : "删除证书",
     "No certificate imported yet" : "尚未导入证书",
     "Import certificate" : "导入证书",
     "PKCS #12 Certificate" : "PKCS #12 证书",
@@ -954,14 +953,12 @@
     "Tag name is a hidden system tag" : "标记名称是一个隐藏的系统标记",
     "Tag already exists" : "标签已存在",
     "Error loading message" : "加载邮件时出错",
-    "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "自动回复使用 Sieve，这是许多电子邮件提供者支持的脚本语言。如果您不确定您的邮件是否如此，请咨询您的提供者。如果 Sieve 可用，请点击按钮转到设置并启用它。",
     "Move Message" : "移动邮件",
     "Edit name or color" : "编辑名称或颜色",
     "Saving new tag name …" : "正在保存新标签名称 …",
     "Set tag" : "设置标签",
     "Unset tag" : "取消设置标签",
     "Add default tags" : "添加默认标签",
-    "Saving tag …" : "正在保存标签 …",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "控制您的电子邮件混乱。筛选器可以帮助您优先考虑重要的事情并消除混乱。"
+    "Saving tag …" : "正在保存标签 …"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

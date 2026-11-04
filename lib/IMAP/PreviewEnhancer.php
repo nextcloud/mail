@@ -11,7 +11,6 @@ namespace OCA\Mail\IMAP;
 
 use Horde_Imap_Client_Exception;
 use OCA\Mail\Account;
-use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DbMapper;
@@ -78,7 +77,7 @@ class PreviewEnhancer {
 			return $messages;
 		}
 
-		if ($account->getMailAccount()->getProtocol() === MailAccount::PROTOCOL_JMAP) {
+		if ($account->getMailAccount()->isJmap()) {
 			foreach ($messages as $message) {
 				if ($message->getStructureAnalyzed()) {
 					continue;

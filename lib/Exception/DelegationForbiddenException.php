@@ -15,6 +15,7 @@ class DelegationForbiddenException extends ClientException {
 	/**
 	 * @return Http::STATUS_*
 	 */
+	#[\Override]
 	public function getHttpCode(): int {
 		return Http::STATUS_FORBIDDEN;
 	}

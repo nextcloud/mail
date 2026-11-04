@@ -37,7 +37,7 @@
 							<SectionTitle
 								class="section-title"
 								:name="t('mail', 'Favorites')" />
-							<NcPopover trigger="hover focus">
+							<NcPopover :triggers="['hover', 'focus']">
 								<template #trigger>
 									<NcButton
 										variant="tertiary-no-background"
@@ -84,7 +84,7 @@
 							<SectionTitle
 								class="section-title"
 								:name="t('mail', 'Favorites')" />
-							<NcPopover trigger="hover focus">
+							<NcPopover :triggers="['hover', 'focus']">
 								<template #trigger>
 									<NcButton
 										variant="tertiary-no-background"
@@ -118,7 +118,7 @@
 							<SectionTitle
 								class="section-title"
 								:name="t('mail', 'Follow up')" />
-							<NcPopover trigger="hover focus">
+							<NcPopover :triggers="['hover', 'focus']">
 								<template #trigger>
 									<NcButton
 										variant="tertiary-no-background"
@@ -149,7 +149,7 @@
 							<SectionTitle
 								class="section-title important"
 								:name="t('mail', 'Important')" />
-							<NcPopover trigger="hover focus">
+							<NcPopover :triggers="['hover', 'focus']">
 								<template #trigger>
 									<NcButton
 										variant="tertiary-no-background"

@@ -12,6 +12,7 @@ namespace Unit\UserMigration\Service;
 use ChristophWurst\Nextcloud\Testing\ServiceMockObject;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\TextBlock;
+use OCA\Mail\Tests\Unit\UserMigration\RecordsConsoleOutput;
 use OCA\Mail\UserMigration\Service\TextBlocksMigrationService;
 use OCP\IUser;
 use OCP\UserMigration\IExportDestination;
@@ -20,6 +21,8 @@ use OCP\UserMigration\UserMigrationException;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class TextBlocksMigrationServiceTest extends TestCase {
+	use RecordsConsoleOutput;
+
 	private const USER_ID = '123';
 	private OutputInterface $output;
 	private IUser $user;
@@ -184,5 +187,54 @@ class TextBlocksMigrationServiceTest extends TestCase {
 		$textBlock->setContent('<p style="margin:0;">At vero eos et accusam et justo duo dolores et ea rebum.</p>');
 
 		return $textBlock;
+	}
+
+	public function testImportReportsInvalidTextBlocksAsANotice(): void {
+		$this->recordConsoleOutput();
+		$this->importSource->method('getFileContents')
+			->with(TextBlocksMigrationService::TEXT_BLOCKS_FILE)
+			->willReturn('this is not valid json {{{');
+
+		$this->migrationService->importTextBlocks($this->user, $this->importSource, $this->output);
+
+		$this->assertWritten('is invalid and will be skipped', 0);
+	}
+
+	public function testImportSkipsATitleLongerThanTheColumn(): void {
+		$this->recordConsoleOutput();
+		$this->importSource->method('getFileContents')
+			->with(TextBlocksMigrationService::TEXT_BLOCKS_FILE)
+			->willReturn(json_encode([
+				['title' => str_repeat('ä', TextBlock::TITLE_MAX_LENGTH + 1), 'content' => 'Too long'],
+				['title' => str_repeat('ä', TextBlock::TITLE_MAX_LENGTH), 'content' => 'Fits'],
+			]));
+		$this->serviceMock->getParameter('textBlockService')
+			->expects(self::once())
+			->method('create')
+			->with(self::USER_ID, str_repeat('ä', TextBlock::TITLE_MAX_LENGTH), 'Fits')
+			->willReturn(new TextBlock());
+
+		$this->migrationService->importTextBlocks($this->user, $this->importSource, $this->output);
+
+		$this->assertWritten('A text block of ' . self::USER_ID . ' is invalid', 0);
+	}
+
+	public function testImportSkipsOnlyTheMalformedTextBlock(): void {
+		$this->recordConsoleOutput();
+		$this->importSource->method('getFileContents')
+			->with(TextBlocksMigrationService::TEXT_BLOCKS_FILE)
+			->willReturn(json_encode([
+				['title' => 'Malformed', 'content' => null],
+				['title' => 'Lorem', 'content' => 'Ipsum'],
+			]));
+		$this->serviceMock->getParameter('textBlockService')
+			->expects(self::once())
+			->method('create')
+			->with(self::USER_ID, 'Lorem', 'Ipsum')
+			->willReturn(new TextBlock());
+
+		$this->migrationService->importTextBlocks($this->user, $this->importSource, $this->output);
+
+		$this->assertWritten('A text block of ' . self::USER_ID . ' is invalid', 0);
 	}
 }

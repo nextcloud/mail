@@ -821,4 +821,19 @@ class ContactsIntegrationTest extends TestCase {
 
 		$this->assertSame('https://next.cloud/colleague.png', $actual);
 	}
+
+	public function testNewContactWithoutAnyAddressBook(): void {
+		$this->contactsManager->expects($this->once())
+			->method('isEnabled')
+			->willReturn(true);
+		$this->contactsManager->expects($this->once())
+			->method('getUserAddressBooks')
+			->willReturn([]);
+		$this->contactsManager->expects($this->never())
+			->method('createOrUpdate');
+
+		$actual = $this->contactsIntegration->newContact('Jane Doe', 'jane@domain.tld');
+
+		$this->assertNull($actual);
+	}
 }

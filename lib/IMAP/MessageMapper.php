@@ -807,6 +807,7 @@ class MessageMapper {
 		$contentDisposition = $mimeHeaders['content-disposition'];
 		if ($contentDisposition instanceof Horde_Mime_Headers_ContentParam_ContentDisposition) {
 			$mimePart->setDisposition($contentDisposition->value_single);
+			/** @psalm-suppress PossiblyNullArgument */
 			$mimePart->setDispositionParameter('filename', $contentDisposition['filename'] ?? null);
 		}
 
@@ -823,6 +824,7 @@ class MessageMapper {
 				$mimePart->setContentTypeParameter('name', $contentType['name'] ?? 'calendar.ics');
 			} else {
 				$mimePart->setType($contentType->value_single);
+				/** @psalm-suppress PossiblyNullArgument */
 				$mimePart->setContentTypeParameter('name', $contentType['name'] ?? null);
 			}
 		}

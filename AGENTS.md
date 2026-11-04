@@ -244,7 +244,16 @@ composer test:integration:dev                                       # Run and st
 
 ## Git Workflow
 
+### Ticket readiness for AI-assisted PRs
+
+Before starting implementation on an AI-assisted change, confirm a ticket exists and is actually ready to be picked up:
+- A ticket still labeled `0. to triage` is **not** ready — it has not been accepted by a maintainer, and the approach (or whether the change is wanted at all) has not been discussed yet. Do not start coding from it.
+- Only `1. to develop` (or a later pipeline label) signals the ticket has been triaged and discussed. That discussion must happen **before** the PR is opened, not in review after the fact.
+- If no ticket exists, or it is still `0. to triage`, stop and tell the contributor to get it triaged and discussed first rather than starting an agent-driven implementation.
+
 Do NOT commit changes unless explicitly asked to do so.
+
+Never fully automate the resolution of issues labeled [`good first issue`](https://github.com/issues?q=org%3Anextcloud+label%3A%22good+first+issue%22) or similar beginner-friendly labels.
 
 After completing code changes:
 1. Verify your work is complete and tests pass

@@ -4,7 +4,8 @@
 -->
 <!-- Standard Actions menu for Envelopes -->
 <template>
-	<div>
+	<NcActions :inline="inline">
+		<slot />
 		<template v-if="!localMoreActionsOpen && !snoozeActionsOpen">
 			<NcActionButton
 				v-if="hasWriteAcl"
@@ -279,7 +280,7 @@
 				{{ t('spreed', 'Set custom snooze') }}
 			</NcActionButton>
 		</template>
-	</div>
+	</NcActions>
 </template>
 
 <script>
@@ -291,6 +292,7 @@ import { mapState, mapStores } from 'pinia'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActionInput from '@nextcloud/vue/components/NcActionInput'
 import NcActionLink from '@nextcloud/vue/components/NcActionLink'
+import NcActions from '@nextcloud/vue/components/NcActions'
 import NcActionSeparator from '@nextcloud/vue/components/NcActionSeparator'
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import AlarmIcon from 'vue-material-design-icons/Alarm.vue'
@@ -328,6 +330,7 @@ export default {
 		NcActionInput,
 		NcActionLink,
 		NcActionSeparator,
+		NcActions,
 		NcLoadingIcon,
 		CalendarClock,
 		AlertOctagonIcon,
@@ -368,6 +371,11 @@ export default {
 		moreActionsOpen: {
 			type: Boolean,
 			required: false,
+		},
+
+		inline: {
+			type: Number,
+			default: 0,
 		},
 
 		withSelect: {

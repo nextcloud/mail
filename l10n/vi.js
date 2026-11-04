@@ -129,7 +129,6 @@ OC.L10N.register(
     "individual" : "Cá nhận",
     "domain" : "Miền",
     "Remove" : "Xóa",
-    "Itinerary for {type} is not supported yet" : "Hành trình cho {type} chưa được hỗ trợ",
     "Today" : "Hôm nay",
     "Yesterday" : "Hôm qua",
     "Last week" : "Tuần trước",

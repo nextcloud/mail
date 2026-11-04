@@ -308,7 +308,6 @@ OC.L10N.register(
     "Remove" : "Kendu",
     "Add internal address" : "Gehitu barneko helbidea",
     "Add internal email or domain" : "Gehitu barneko helbide elektronikoa edo domeinua",
-    "Itinerary for {type} is not supported yet" : "{type} motarentzako ibilbidea ez da onartzen oraindik",
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "Ez duzu mezu hau artxibo karpetara eramateko eta/edo mezu hau uneko karpetatik ezabatzeko baimenik",
     "Last hour" : "Azken ordua",
     "Today" : "Gaur",
@@ -653,6 +652,7 @@ OC.L10N.register(
     "Save Config" : "Gorde konfigurazioa",
     "Unprovision & Delete Config" : "Ez hornitu eta ezabatu konfigurazioa",
     "With the settings above, the app will create account settings in the following way:" : "Goiko ezarpenekin, aplikazioak honako ezarpenak dituzten kontuak sortuko ditu:",
+    "Delete certificate" : "Ezabatu ziurtagiria",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Emandako PKCS #12 ziurtagiriak gutxienez izan behar ditu ziurtagiri bat eta gako pribatu bat zehazki.",
     "Failed to import the certificate. Please check the password." : "Ezin izan da ziurtagiria inportatu. Mesedez, egiaztatu pasahitza.",
     "Certificate imported successfully" : "Ziurtagiria ongi inportatu da",
@@ -663,7 +663,6 @@ OC.L10N.register(
     "Certificate name" : "Ziurtagiriaren izena",
     "E-mail address" : "E-mail helbidea",
     "Valid until" : "Data hau arte baliogarria",
-    "Delete certificate" : "Ezabatu ziurtagiria",
     "No certificate imported yet" : "Oraindik ez da inportatu ziurtagiririk",
     "Import certificate" : "Inportatu ziurtagiria",
     "PKCS #12 Certificate" : "PKCS #12 Ziurtagiria",
@@ -713,7 +712,6 @@ OC.L10N.register(
     "Edit name or color" : "Editatu izena edo kolorea",
     "Set tag" : "Ezarri etiketa",
     "Unset tag" : "Ezarri gabeko etiketa",
-    "Add default tags" : "Gehitu etiketa lehenetsiak",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Kontrolatu zure posta elektronikoaren kaosa. Iragazkiek garrantzitsuena lehenestu eta zaborra ezabatzen laguntzen dizute."
+    "Add default tags" : "Gehitu etiketa lehenetsiak"
 },
 "nplurals=2; plural=(n != 1);");

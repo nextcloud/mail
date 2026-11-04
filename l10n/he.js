@@ -137,7 +137,6 @@ OC.L10N.register(
     "individual" : "יחיד",
     "domain" : "שם תחום",
     "Remove" : "הסרה",
-    "Itinerary for {type} is not supported yet" : "פירוט המסלול {type} אינו נתמך עדיין",
     "Last hour" : "השעה החולפת",
     "Today" : "היום",
     "Yesterday" : "מחר",

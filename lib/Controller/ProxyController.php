@@ -74,6 +74,9 @@ class ProxyController extends Controller {
 		// If strict cookies are set it means we come from the same domain so no open redirect
 		if (!$this->request->passesStrictCookieCheck()) {
 			$content = file_get_contents(__DIR__ . '/../../img/blocked-image.png');
+			if ($content === false) {
+				return new Response(Http::STATUS_INTERNAL_SERVER_ERROR);
+			}
 			return new ProxyDownloadResponse($content, $src, 'application/octet-stream');
 		}
 

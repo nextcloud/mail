@@ -343,7 +343,6 @@ OC.L10N.register(
     "Remove" : "Вилучити",
     "Add internal address" : "Додати внутрішню адресу",
     "Add internal email or domain" : "Додайте внутрішню електронну пошту або домен",
-    "Itinerary for {type} is not supported yet" : "Маршрут для {type} ще не підтримується",
     "To archive a message please configure an archive folder in account settings" : "Щоб заархівувати повідомлення, будь ласка, налаштуйте каталог для архіву в налаштуваннях обліковогоо запису",
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "У вас відсутній доступ переміщувати це повідомлення до каталогу архіву та/або вилучати з поточного каталогу",
     "Your IMAP server does not support storing the seen/unseen state." : "Ваш IMAP-сервер не підтримує зберігання видимого/невидимого стану.",
@@ -760,6 +759,7 @@ OC.L10N.register(
     "Save Config" : "Зберегти конфігурацію",
     "Unprovision & Delete Config" : "Видалення конфігурації та деконфігурація",
     "With the settings above, the app will create account settings in the following way:" : "Із наведеними вище налаштуваннями застосунок створить налаштування облікового запису таким чином:",
+    "Delete certificate" : "Видалити сертифікат",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Наданий сертифікат PKCS #12 повинен містити принаймні один сертифікат і рівно один приватний ключ.",
     "Failed to import the certificate. Please check the password." : "Не вдалося імпортувати сертифікат. Будь ласка, перевірте пароль.",
     "Certificate imported successfully" : "Сертифікат успішно імпортовано",
@@ -770,7 +770,6 @@ OC.L10N.register(
     "Certificate name" : "Назва сертифікату",
     "E-mail address" : "Електронна адреса",
     "Valid until" : "Дійсно до",
-    "Delete certificate" : "Видалити сертифікат",
     "No certificate imported yet" : "Сертифікат ще не імпортовано",
     "Import certificate" : "Сертифікат на імпорт",
     "PKCS #12 Certificate" : "Сертифікат PKCS #12",
@@ -834,12 +833,10 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Назва мітки - це прихована системна мітка",
     "Tag already exists" : "Мітка вже існує",
     "Error loading message" : "Помилка завантаження повідомлення.",
-    "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Автовідповідач використовує Sieve - скриптову мову, яка підтримується багатьма поштовиками. Якщо ви не впевнені, чи підтримує її ваш провайдер, зверніться до нього. Якщо Sieve доступна, натисніть кнопку, щоб перейти до налаштувань і ввімкнути її.",
     "Move Message" : "Перемістити повідомлення",
     "Edit name or color" : "Редагувати назву або колір",
     "Set tag" : "Встановити мітку",
     "Unset tag" : "Прибрати встановлення мітки",
-    "Add default tags" : "Додати типові мітки",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Візьміть під контроль хаос у вашій електронній пошті. Фільтри допоможуть вам розставити пріоритети та усунути безлад."
+    "Add default tags" : "Додати типові мітки"
 },
 "nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);");

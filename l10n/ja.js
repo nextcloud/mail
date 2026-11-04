@@ -330,7 +330,6 @@ OC.L10N.register(
     "Remove" : "削除",
     "Add internal address" : "内部アドレスを追加する",
     "Add internal email or domain" : "内部のメールアドレスまたはドメインを追加する",
-    "Itinerary for {type} is not supported yet" : "{type} タイプの旅程はまだサポートされていません",
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "このメッセージをアーカイブフォルダに移動したり、現在のフォルダから削除するは許可されていません",
     "Last hour" : "1時間以内",
     "Today" : "今日",
@@ -686,6 +685,7 @@ OC.L10N.register(
     "Save Config" : "設定を保存",
     "Unprovision & Delete Config" : "プロビジョニング解除と設定の削除",
     "With the settings above, the app will create account settings in the following way:" : "上記の設定では、アプリは次の方法でアカウント設定を作成します：",
+    "Delete certificate" : "証明書を削除する",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "指定されたPKCS#12証明書には、少なくとも一つの証明書と一つの秘密鍵が含まれている必要があります。",
     "Failed to import the certificate. Please check the password." : "証明書のインポートが失敗しました。パスワードをチェックしてください",
     "Certificate imported successfully" : "証明書のインポートが成功しました",
@@ -696,7 +696,6 @@ OC.L10N.register(
     "Certificate name" : "証明書名",
     "E-mail address" : "メールアドレス",
     "Valid until" : "有効期限",
-    "Delete certificate" : "証明書を削除する",
     "No certificate imported yet" : "証明書はまだインポートされていません",
     "Import certificate" : "証明書をインポートする",
     "PKCS #12 Certificate" : "PKCS #12 証明書",
@@ -747,7 +746,6 @@ OC.L10N.register(
     "Edit name or color" : "名前または色を編集する",
     "Set tag" : "タグを設定する",
     "Unset tag" : "タグを削除する",
-    "Add default tags" : "デフォルトのタグを追加する",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "メールの混乱をコントロールしましょう。フィルタを使えば、重要なものに優先順位をつけ、乱雑さを解消できます。"
+    "Add default tags" : "デフォルトのタグを追加する"
 },
 "nplurals=1; plural=0;");

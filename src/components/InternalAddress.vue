@@ -62,8 +62,17 @@
 			v-model:open="openDialog"
 			:buttons="buttons"
 			:name="t('mail', 'Add internal address')"
+			:isForm="true"
+			:noClose="saving"
 			@close="openDialog = false">
-			<NcTextField v-model="newAddress" class="input" :label="t('mail', 'Add internal email or domain')" />
+			<NcTextField
+				ref="addressField"
+				v-model="newAddress"
+				class="input"
+				:label="t('mail', 'Add internal email or domain')"
+				:readonly="saving"
+				:error="errorMessage !== ''"
+				:helperText="errorMessage" />
 		</NcDialog>
 	</div>
 </template>
@@ -87,6 +96,7 @@ import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
+import { parseInternalAddress } from '../util/internalAddress.js'
 
 const sortByAddress = sortBy(prop('address'))
 
@@ -108,24 +118,36 @@ export default {
 		return {
 			openDialog: false,
 			newAddress: '',
-			buttons: [
-				{
-					label: 'Cancel',
-					icon: IconCancel,
-					callback: () => { this.openDialog = false },
-				},
-				{
-					label: 'Ok',
-					variant: 'primary',
-					icon: IconCheck,
-					callback: () => { this.addInternalAddress() },
-				},
-			],
+			saving: false,
+			errorMessage: '',
 		}
 	},
 
 	computed: {
 		...mapStores(useMainStore),
+		buttons() {
+			return [
+				{
+					label: t('mail', 'Cancel'),
+					icon: IconCancel,
+					disabled: this.saving,
+					callback: () => { this.openDialog = false },
+				},
+				{
+					label: t('mail', 'Ok'),
+					type: 'submit',
+					variant: 'primary',
+					icon: IconCheck,
+					disabled: this.newEntry.address === '',
+					callback: () => this.addInternalAddress(),
+				},
+			]
+		},
+
+		newEntry() {
+			return parseInternalAddress(this.newAddress)
+		},
+
 		list() {
 			return this.mainStore.getInternalAddresses
 		},
@@ -136,6 +158,19 @@ export default {
 
 		sortedEmails() {
 			return sortByAddress(this.list.filter((a) => a.type === 'individual'))
+		},
+	},
+
+	watch: {
+		newAddress() {
+			this.errorMessage = ''
+		},
+
+		openDialog(open) {
+			if (!open) {
+				this.newAddress = ''
+				this.errorMessage = ''
+			}
 		},
 	},
 
@@ -155,36 +190,33 @@ export default {
 		},
 
 		async addInternalAddress() {
-			const type = this.checkType()
+			const { address, type } = this.newEntry
+			this.errorMessage = ''
+			this.saving = true
 			try {
 				await this.mainStore.addInternalAddress({
-					address: this.newAddress,
+					address,
 					type,
-				}).then(async () => {
-					this.newAddress = ''
-					this.openDialog = false
 				})
+				this.openDialog = false
 			} catch (error) {
-				logger.error(`Could not add internal address ${this.newAddress}`, {
+				if (error.response?.status === 422) {
+					this.errorMessage = t('mail', 'Enter a valid email address or domain')
+					await this.$nextTick()
+					this.$refs.addressField?.focus()
+					return false
+				}
+
+				logger.error(`Could not add internal address ${address}`, {
 					error,
 				})
 				showError(t('mail', 'Could not add internal address {address}', {
-					address: this.newAddress,
+					address,
 				}))
+				return false
+			} finally {
+				this.saving = false
 			}
-		},
-
-		checkType() {
-			const parts = this.newAddress.split('@')
-			if (parts.length !== 2) {
-				return 'domain'
-			}
-			// remove '@'' from domain if added by mistake
-			if (parts[0].length === 0) {
-				this.newAddress = parts[1]
-				return 'domain'
-			}
-			return 'individual'
 		},
 
 		senderType(type) {

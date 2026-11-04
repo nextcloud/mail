@@ -369,7 +369,6 @@ OC.L10N.register(
     "Remove" : "–£—Å—Ç–≥–∞—Ö",
     "Add internal address" : "Дотоод хаяг нэмэх",
     "Add internal email or domain" : "Дотоод и-мэйл эсвэл домэйн нэмэх",
-    "Itinerary for {type} is not supported yet" : "{type} аяллын хуваарийг одоогоор дэмжихгүй байна",
     "To archive a message please configure an archive folder in account settings" : "Мессежийг архивлахын тулд бүртгэлийн тохиргоонд архивын хавтсыг тохируулна уу",
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "Та энэ зурвасыг архивын хавтас руу зөөх ба/эсвэл одоогийн хавтаснаас устгах эрхгүй байна",
     "Your IMAP server does not support storing the seen/unseen state." : "Таны IMAP сервер уншсан/уншаагүй төлөв хадгалахыг дэмждэггүй.",
@@ -793,6 +792,7 @@ OC.L10N.register(
     "Save Config" : "Тохиргоо хадгалах",
     "Unprovision & Delete Config" : "Нийлүүлэлт цуцлах & Тохиргоо устгах",
     "With the settings above, the app will create account settings in the following way:" : "Дээрх тохиргоонуудыг ашиглан апп бүртгэлийн тохиргоог дараах байдлаар үүсгэнэ:",
+    "Delete certificate" : "Сертификат устгах",
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Өгсөн PKCS #12 сертификат нь дор хаяж нэг сертификат болон яг нэг хувийн түлхүүр агуулсан байх ёстой.",
     "Failed to import the certificate. Please check the password." : "Сертификат импортлоход алдаа гарлаа. Нууц үгээ шалгана уу.",
     "Certificate imported successfully" : "Сертификат амжилттай импортлогдлоо",
@@ -803,7 +803,6 @@ OC.L10N.register(
     "Certificate name" : "Сертификатын нэр",
     "E-mail address" : "И-мэйл хаяг",
     "Valid until" : "Хүчинтэй огноо",
-    "Delete certificate" : "Сертификат устгах",
     "No certificate imported yet" : "Сертификат импортлогдоогүй байна",
     "Import certificate" : "Сертификат импортлох",
     "PKCS #12 Certificate" : "PKCS #12 сертификат",
@@ -867,12 +866,10 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Тагийн нэр нуугдсан системийн таг байна",
     "Tag already exists" : "Таг аль хэдийн байна",
     "Error loading message" : "–∞–ª–¥–∞–∞—Ç–∞–π –∞—á–∞–∞–ª–ª–∞—Ö –∑—É—Ä–≤–∞—Å",
-    "The autoresponder uses Sieve, a scripting language supported by many email providers. If you're unsure whether yours does, check with your provider. If Sieve is available, click the button to go to the settings and enable it." : "Автомат хариу нь олон имэйл үйлчилгээ үзүүлэгчийн дэмждэг Sieve скрипт хэлийг ашигладаг. Таны үйлчилгээ үзүүлэгч дэмждэг эсэхийг мэдэхгүй бол тэдэнтэй холбогдож лавлана уу. Хэрэв Sieve боломжтой бол товчлуур дээр дарж тохиргоо руу орж идэвхжүүлнэ үү.",
     "Move Message" : "Зурвас зөөх",
     "Edit name or color" : "Нэр эсвэл өнгө засах",
     "Set tag" : "Таг тохируулах",
     "Unset tag" : "Таг арилгах",
-    "Add default tags" : "Өгөгдмөл тагууд нэмэх",
-    "Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter." : "Имэйлийн эмх замбараагүй байдлаа хянана уу. Шүүлтүүрүүд нь чухал зүйлийг эрэмбэлж, шаардлагагүй зүйлийг арилгахад тусална."
+    "Add default tags" : "Өгөгдмөл тагууд нэмэх"
 },
 "nplurals=2; plural=(n != 1);");
