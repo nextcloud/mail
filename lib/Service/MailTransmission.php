@@ -74,9 +74,9 @@ class MailTransmission implements IMailTransmission {
 
 	#[\Override]
 	public function sendMessage(Account $account, LocalMessage $localMessage): void {
-		$to = $this->transmissionService->getAddressList($localMessage, Recipient::TYPE_TO);
-		$cc = $this->transmissionService->getAddressList($localMessage, Recipient::TYPE_CC);
-		$bcc = $this->transmissionService->getAddressList($localMessage, Recipient::TYPE_BCC);
+		$to = $this->transmissionService->getAddressList($localMessage, Recipient::TYPE_TO, $account->getUserId());
+		$cc = $this->transmissionService->getAddressList($localMessage, Recipient::TYPE_CC, $account->getUserId());
+		$bcc = $this->transmissionService->getAddressList($localMessage, Recipient::TYPE_BCC, $account->getUserId());
 		$attachments = $this->transmissionService->getAttachments($localMessage);
 
 		$name = $account->getName();
@@ -190,9 +190,9 @@ class MailTransmission implements IMailTransmission {
 
 	#[\Override]
 	public function saveLocalDraft(Account $account, LocalMessage $message): void {
-		$to = $this->transmissionService->getAddressList($message, Recipient::TYPE_TO);
-		$cc = $this->transmissionService->getAddressList($message, Recipient::TYPE_CC);
-		$bcc = $this->transmissionService->getAddressList($message, Recipient::TYPE_BCC);
+		$to = $this->transmissionService->getAddressList($message, Recipient::TYPE_TO, $account->getUserId());
+		$cc = $this->transmissionService->getAddressList($message, Recipient::TYPE_CC, $account->getUserId());
+		$bcc = $this->transmissionService->getAddressList($message, Recipient::TYPE_BCC, $account->getUserId());
 		$attachments = $this->transmissionService->getAttachments($message);
 
 		$perfLogger = $this->performanceLogger->start('save local draft');
