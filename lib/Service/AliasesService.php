@@ -51,21 +51,13 @@ class AliasesService {
 	}
 
 	/**
-	 * Find an alias of the given account
-	 *
+	 * @param string $aliasEmail
+	 * @param string $userId
+	 * @return Alias
 	 * @throws DoesNotExistException
 	 */
-	public function findForAccount(int $aliasId, int $accountId): Alias {
-		return $this->aliasMapper->findForAccount($aliasId, $accountId);
-	}
-
-	/**
-	 * Find an alias of the given account by its email address
-	 *
-	 * @throws DoesNotExistException
-	 */
-	public function findByAliasForAccount(string $aliasEmail, int $accountId): Alias {
-		return $this->aliasMapper->findByAliasForAccount($aliasEmail, $accountId);
+	public function findByAliasAndUserId(string $aliasEmail, string $userId): Alias {
+		return $this->aliasMapper->findByAlias($aliasEmail, $userId);
 	}
 
 	/**
