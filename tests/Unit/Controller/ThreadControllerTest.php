@@ -205,7 +205,14 @@ class ThreadControllerTest extends TestCase {
 			->willReturn($message);
 		$this->mailManager
 			->expects(self::once())
-			->method('copyThread');
+			->method('copyThread')
+			->with(
+				$this->isInstanceOf(Account::class),
+				$srcMailbox,
+				$this->isInstanceOf(Account::class),
+				$dstMailbox,
+				'<some-thread-root-id-1>',
+			);
 		$this->delegationService->expects(self::once())
 			->method('logDelegatedAction')
 			->with($this->userId, $this->userId, "$this->userId copied thread <{$message->getId()}> to mailbox <{$dstMailbox->getId()}> on behalf of $this->userId");

@@ -224,6 +224,14 @@ class ImapMessageConnector implements IMessageConnector {
 		return $mutatedMessages;
 	}
 
+	/**
+	 * @param Account $account
+	 * @param Mailbox $targetMailbox
+	 * @param Mailbox $sourceMailbox
+	 * @param Message ...$messages
+	 *
+	 * @return Message[]
+	 */
 	#[\Override]
 	public function copyMessages(Account $account, Mailbox $targetMailbox, Mailbox $sourceMailbox, Message ...$messages): array {
 		if ($messages === []) {
@@ -253,7 +261,7 @@ class ImapMessageConnector implements IMessageConnector {
 					$copiedMessage->setUid($newUid);
 					$copiedMessage->setMailboxId($targetMailbox->getId());
 					$copiedMessages[] = $copiedMessage;
-				} catch (Horde_Imap_Client_Exception $e) {
+				} catch (ServiceException $e) {
 					$this->logger->error('Could not copy message on remote IMAP server', [
 						'exception' => $e,
 						'userId' => $account->getUserId(),

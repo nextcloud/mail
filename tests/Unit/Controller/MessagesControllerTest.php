@@ -1670,9 +1670,17 @@ class MessagesControllerTest extends TestCase {
 			->method('assertMailboxAccess')
 			->with(40, $this->userId);
 		$this->mailManager->expects($this->once())
-			->method('copyMessage');
+			->method('copyMessage')
+			->with(
+				$this->anything(),
+				$this->callback(static fn ($mailbox) => $mailbox->getId() === 20),
+				$this->anything(),
+				$this->anything(),
+				$this->callback(static fn ($mailbox) => $mailbox->getId() === 40),
+			);
 
 		$response = $this->controller->copy(300, 40);
+
 		$this->assertEquals(new JSONResponse(), $response);
 	}
 

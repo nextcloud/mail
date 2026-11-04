@@ -403,6 +403,12 @@ class MessagesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	/**
+	 * @param int $id The message ID
+	 * @param int $destFolderId The destination mailbox ID
+	 *
+	 * @return JSONResponse
+	 */
 	#[NoAdminRequired]
 	#[TrapError]
 	public function copy(int $id, int $destFolderId): JSONResponse {

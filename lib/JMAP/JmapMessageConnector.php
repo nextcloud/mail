@@ -239,6 +239,16 @@ class JmapMessageConnector implements IMessageConnector {
 		return $mutatedMessages;
 	}
 
+	/**
+	 * @param Account $account
+	 * @param Mailbox $targetMailbox
+	 * @param Mailbox $sourceMailbox
+	 * @param Message ...$messages
+	 *
+	 * @return Message[]
+	 *
+	 * @throws ServiceException
+	 */
 	#[\Override]
 	public function copyMessages(Account $account, Mailbox $targetMailbox, Mailbox $sourceMailbox, Message ...$messages): array {
 		$targetRemoteId = $targetMailbox->getRemoteId();
