@@ -83,6 +83,11 @@ class ThreadController extends Controller {
 	}
 
 	/**
+	 * @param int $id
+	 * @param int $destMailboxId
+	 *
+	 * @return JSONResponse
+	 *
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */

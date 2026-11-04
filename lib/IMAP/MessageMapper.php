@@ -366,6 +366,8 @@ class MessageMapper {
 	 * @param int $messageId
 	 * @param string $destFolderId
 	 * @return ?int the new UID (or null if couldn't be determined)
+	 *
+	 * @throws ServiceException
 	 */
 	public function copy(Horde_Imap_Client_Base $client,
 		string $sourceFolderId,

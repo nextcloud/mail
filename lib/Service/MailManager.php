@@ -287,6 +287,13 @@ class MailManager {
 	}
 
 	/**
+	 * @param Account $account
+	 * @param Mailbox $targetMailbox
+	 * @param Mailbox $sourceMailbox
+	 * @param Message ...$messages
+	 *
+	 * @return int[]
+	 *
 	 * @throws ServiceException
 	 */
 	public function copyMessages(Account $account, Mailbox $targetMailbox, Mailbox $sourceMailbox, Message ...$messages): array {
@@ -483,6 +490,14 @@ class MailManager {
 	}
 
 	/**
+	 * @param Account $srcAccount
+	 * @param Mailbox $srcMailbox
+	 * @param Account $dstAccount
+	 * @param Mailbox $dstMailbox
+	 * @param string $threadRootId
+	 *
+	 * @return int[]
+	 *
 	 * @throws DoesNotExistException
 	 * @throws ServiceException
 	 */
@@ -494,7 +509,14 @@ class MailManager {
 		$messagesByMailbox = $this->fetchThread($srcAccount, $srcMailbox, $threadRootId);
 		$copiedUids = [];
 		foreach ($messagesByMailbox as $group) {
+			if ($group['mailbox']->getId() === $dstMailbox->getId()) {
+				continue;
+			}
 			$copiedUids[] = $this->copyMessages($srcAccount, $dstMailbox, $group['mailbox'], ...$group['messages']);
+		}
+
+		if ($copiedUids === []) {
+			return [];
 		}
 
 		return array_merge(...$copiedUids);
