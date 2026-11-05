@@ -20,6 +20,7 @@ use OCA\Mail\Exception\DelegationForbiddenException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Service\SmimeService;
@@ -47,6 +48,8 @@ class OutboxControllerTest extends TestCase {
 
 	private DelegationService&MockObject $delegationService;
 
+	private AliasesService&MockObject $aliasesService;
+
 	private OutboxController $controller;
 	protected function setUp(): void {
 		parent::setUp();
@@ -62,6 +65,7 @@ class OutboxControllerTest extends TestCase {
 			->willReturn($this->userId);
 		$this->delegationService->method('resolveLocalMessageUserId')
 			->willReturn($this->userId);
+		$this->aliasesService = $this->createMock(AliasesService::class);
 
 		$this->controller = new OutboxController(
 			$this->appName,
@@ -71,6 +75,7 @@ class OutboxControllerTest extends TestCase {
 			$this->accountService,
 			$this->smimeService,
 			$this->delegationService,
+			$this->aliasesService,
 		);
 	}
 
@@ -393,6 +398,34 @@ class OutboxControllerTest extends TestCase {
 			null,
 			$message->getAliasId(),
 			$message->getInReplyToMessageId()
+		);
+	}
+
+	public function testCreateWithAliasOfOtherAccount(): void {
+		$account = new Account(new MailAccount());
+		$this->accountService->expects(self::once())
+			->method('find')
+			->with($this->userId, 1)
+			->willReturn($account);
+		$this->aliasesService->expects(self::once())
+			->method('findForAccount')
+			->with(3, 1)
+			->willThrowException(new DoesNotExistException(''));
+		$this->service->expects(self::never())
+			->method('saveMessage');
+
+		$this->expectException(DoesNotExistException::class);
+		$this->controller->create(
+			1,
+			'subject',
+			'message',
+			null,
+			'message',
+			false,
+			false,
+			false,
+			[['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']],
+			aliasId: 3,
 		);
 	}
 

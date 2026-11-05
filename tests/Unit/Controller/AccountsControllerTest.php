@@ -230,9 +230,6 @@ class AccountsControllerTest extends TestCase {
 		$this->accountService->expects(self::once())
 			->method('delete')
 			->with(self::equalTo($this->userId), self::equalTo($this->accountId));
-		$this->delegationService->expects(self::once())
-			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId deleted account <$this->accountId> on behalf of $this->userId");
 
 		$response = $this->controller->destroy($this->accountId);
 
@@ -248,6 +245,38 @@ class AccountsControllerTest extends TestCase {
 		$this->expectException(DoesNotExistException::class);
 
 		$this->controller->destroy($this->accountId);
+	}
+
+	public function testDestroyAsDelegateIsRejected(): void {
+		$delegationService = $this->createMock(DelegationService::class);
+		$delegationService->method('resolveAccountUserId')
+			->willReturn('owner');
+		$controller = new AccountsController(
+			$this->appName,
+			$this->request,
+			$this->accountService,
+			$this->userId,
+			$this->logger,
+			$this->l10n,
+			$this->aliasesService,
+			$this->transmission,
+			$this->setupService,
+			$this->mailManager,
+			$this->syncService,
+			$this->config,
+			$this->hostValidator,
+			$this->mailboxSync,
+			$this->timeFactory,
+			$delegationService,
+			$this->appConfig,
+		);
+		$this->accountService->expects(self::once())
+			->method('delete')
+			->with($this->userId, $this->accountId)
+			->willThrowException(new ClientException("Account $this->accountId does not exist"));
+		$this->expectException(ClientException::class);
+
+		$controller->destroy($this->accountId);
 	}
 
 	public function testCreateManualSuccess(): void {
