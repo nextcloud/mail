@@ -73,12 +73,12 @@ class TrustedSenderServiceTest extends TestCase {
 		$uid = 'greta';
 		$email = 'christoph@next.cloud';
 		$this->normalizer->method('normalize')->willReturnArgument(0);
+		$uniqueViolation = $this->createMock(Exception::class);
+		$uniqueViolation->method('getReason')->willReturn(Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION);
 		$this->mapper->expects($this->once())
-			->method('exists')
-			->with($uid, $email)
-			->willReturn(true);
-		$this->mapper->expects($this->never())
-			->method('create');
+			->method('create')
+			->with($uid, $email, 'individual')
+			->willThrowException($uniqueViolation);
 		$this->mapper->expects($this->never())
 			->method('remove');
 
@@ -93,10 +93,8 @@ class TrustedSenderServiceTest extends TestCase {
 		$uid = 'greta';
 		$email = 'christoph@next.cloud';
 		$this->normalizer->method('normalize')->willReturnArgument(0);
-		$this->mapper->expects($this->once())
-			->method('exists')
-			->with($uid, $email)
-			->willReturn(false);
+		$this->mapper->expects($this->never())
+			->method('exists');
 		$this->mapper->expects($this->once())
 			->method('create')
 			->with($uid, $email);
@@ -108,36 +106,12 @@ class TrustedSenderServiceTest extends TestCase {
 		);
 	}
 
-	public function testTrustAlreadyStoredDomain(): void {
-		$uid = 'alice';
-		$domain = 'example.test';
-		$this->normalizer->method('normalize')->willReturnArgument(0);
-		$uniqueViolation = $this->createMock(Exception::class);
-		$uniqueViolation->method('getReason')->willReturn(Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION);
-		$this->mapper->expects($this->once())
-			->method('exists')
-			->with($uid, $domain)
-			->willReturn(false);
-		$this->mapper->expects($this->once())
-			->method('create')
-			->with($uid, $domain, 'domain')
-			->willThrowException($uniqueViolation);
-
-		$this->service->trust(
-			$uid,
-			$domain,
-			'domain'
-		);
-	}
-
 	public function testTrustRethrowsOtherDatabaseErrors(): void {
 		$uid = 'alice';
 		$domain = 'example.test';
 		$this->normalizer->method('normalize')->willReturnArgument(0);
 		$databaseError = $this->createMock(Exception::class);
 		$databaseError->method('getReason')->willReturn(Exception::REASON_CONNECTION_LOST);
-		$this->mapper->method('exists')
-			->willReturn(false);
 		$this->mapper->method('create')
 			->willThrowException($databaseError);
 
@@ -155,8 +129,6 @@ class TrustedSenderServiceTest extends TestCase {
 			->method('normalize')
 			->with('not valid', AddressEntryType::Domain)
 			->willThrowException(new InvalidAddressException('Invalid domain'));
-		$this->mapper->expects($this->never())
-			->method('exists');
 		$this->mapper->expects($this->never())
 			->method('create');
 
@@ -192,8 +164,6 @@ class TrustedSenderServiceTest extends TestCase {
 			->method('normalize')
 			->with($value, $type)
 			->willReturnArgument(0);
-		$this->mapper->method('exists')
-			->willReturn(true);
 
 		$this->service->trust('alice', $value, $type->value);
 	}
@@ -203,10 +173,6 @@ class TrustedSenderServiceTest extends TestCase {
 			->method('normalize')
 			->with('Example.TEST', AddressEntryType::Domain)
 			->willReturn('example.test');
-		$this->mapper->expects($this->once())
-			->method('exists')
-			->with('alice', 'example.test')
-			->willReturn(false);
 		$this->mapper->expects($this->once())
 			->method('create')
 			->with('alice', 'example.test', 'domain');
@@ -219,8 +185,6 @@ class TrustedSenderServiceTest extends TestCase {
 		$email = 'christoph@next.cloud';
 		$this->normalizer->expects($this->never())
 			->method('normalize');
-		$this->mapper->expects($this->never())
-			->method('exists');
 		$this->mapper->expects($this->never())
 			->method('create');
 		$this->mapper->expects($this->once())

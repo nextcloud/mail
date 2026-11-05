@@ -53,42 +53,24 @@ class TrustedSenderService implements ITrustedSenderService {
 	 */
 	#[\Override]
 	public function trust(string $uid, string $email, string $type, ?bool $trust = true): void {
-		if ($trust) {
-			$entryType = AddressEntryType::tryFrom($type) ?? throw new InvalidAddressException('Invalid type');
-			$email = $this->normalizer->normalize($email, $entryType);
-			if ($this->isTrusted($uid, $email)) {
-				// Nothing to do
-				return;
-			}
-
-			try {
-				$this->mapper->create(
-					$uid,
-					$email,
-					$type
-				);
-			} catch (Exception $exception) {
-				if ($exception->getReason() !== Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
-					throw $exception;
-				}
-
-				// isTrusted() doesn't match a domain itself, and requests can race
-			}
-		} else {
-			$this->mapper->remove(
-				$uid,
-				$email,
-				$type
-			);
+		if (!$trust) {
 			// Valid values are stored normalized, older entries as they were entered
-			$normalized = $this->normalizer->tryNormalize($email, $type);
-			if ($normalized !== null && $normalized !== $email) {
-				$this->mapper->remove(
-					$uid,
-					$normalized,
-					$type
-				);
+			foreach (array_unique([$email, $this->normalizer->tryNormalize($email, $type) ?? $email]) as $storedEmail) {
+				$this->mapper->remove($uid, $storedEmail, $type);
 			}
+			return;
+		}
+
+		$entryType = AddressEntryType::tryFrom($type) ?? throw new InvalidAddressException('Invalid type');
+		$email = $this->normalizer->normalize($email, $entryType);
+		try {
+			$this->mapper->create($uid, $email, $entryType->value);
+		} catch (Exception $exception) {
+			if ($exception->getReason() !== Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
+				throw $exception;
+			}
+
+			// The sender is listed already, e.g. trusted again from an outdated list or by two requests at once
 		}
 	}
 

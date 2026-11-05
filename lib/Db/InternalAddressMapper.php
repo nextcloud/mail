@@ -21,33 +21,6 @@ class InternalAddressMapper extends QBMapper {
 		parent::__construct($db, 'mail_internal_address');
 	}
 
-	public function exists(string $uid, string $address): bool {
-
-		$emailObject = new \Horde_Mail_Rfc822_Address($address);
-		$host = $emailObject->host;
-		$qb = $this->db->getQueryBuilder();
-
-		$select = $qb->select('*')
-			->from($this->getTableName())
-			->where(
-				$qb->expr()->orX(
-					$qb->expr()->andX(
-						$qb->expr()->eq('address', $qb->createNamedParameter($address)),
-						$qb->expr()->eq('type', $qb->createNamedParameter(AddressEntryType::Individual->value))
-					),
-					$qb->expr()->andX(
-						$qb->expr()->eq('address', $qb->createNamedParameter($host)),
-						$qb->expr()->eq('type', $qb->createNamedParameter(AddressEntryType::Domain->value))
-					)
-				),
-				$qb->expr()->eq('user_id', $qb->createNamedParameter($uid))
-			);
-
-		$rows = $this->findEntities($select);
-
-		return $rows !== [];
-	}
-
 	public function create(string $uid, string $address, string $type): int {
 
 		$address = InternalAddress::fromParams([

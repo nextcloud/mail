@@ -38,12 +38,14 @@ class InternalAddressServiceTest extends TestCase {
 
 	public function testAddAlreadyInternal(): void {
 		$this->normalizer->method('normalize')->willReturnArgument(0);
+		$uniqueViolation = $this->createMock(Exception::class);
+		$uniqueViolation->method('getReason')->willReturn(Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION);
 		$this->mapper->expects($this->once())
-			->method('exists')
-			->with('alice', 'bob@example.test')
-			->willReturn(true);
+			->method('create')
+			->with('alice', 'bob@example.test', 'individual')
+			->willThrowException($uniqueViolation);
 		$this->mapper->expects($this->never())
-			->method('create');
+			->method('find');
 		$this->mapper->expects($this->never())
 			->method('remove');
 
@@ -52,56 +54,10 @@ class InternalAddressServiceTest extends TestCase {
 		$this->assertNull($internalAddress);
 	}
 
-	public function testAddNew(): void {
-		$this->normalizer->method('normalize')->willReturnArgument(0);
-		$created = new InternalAddress();
-		$created->setUserId('alice');
-		$created->setAddress('example.test');
-		$created->setType('domain');
-		$this->mapper->expects($this->once())
-			->method('exists')
-			->with('alice', 'example.test')
-			->willReturn(false);
-		$this->mapper->expects($this->once())
-			->method('create')
-			->with('alice', 'example.test', 'domain')
-			->willReturn(1);
-		$this->mapper->expects($this->once())
-			->method('find')
-			->with('alice', 'example.test')
-			->willReturn($created);
-
-		$internalAddress = $this->service->add('alice', 'example.test', 'domain');
-
-		$this->assertSame($created, $internalAddress);
-	}
-
-	public function testAddAlreadyStoredDomain(): void {
-		$this->normalizer->method('normalize')->willReturnArgument(0);
-		$uniqueViolation = $this->createMock(Exception::class);
-		$uniqueViolation->method('getReason')->willReturn(Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION);
-		$this->mapper->expects($this->once())
-			->method('exists')
-			->with('alice', 'example.test')
-			->willReturn(false);
-		$this->mapper->expects($this->once())
-			->method('create')
-			->with('alice', 'example.test', 'domain')
-			->willThrowException($uniqueViolation);
-		$this->mapper->expects($this->never())
-			->method('find');
-
-		$internalAddress = $this->service->add('alice', 'example.test', 'domain');
-
-		$this->assertNull($internalAddress);
-	}
-
 	public function testAddRethrowsOtherDatabaseErrors(): void {
 		$this->normalizer->method('normalize')->willReturnArgument(0);
 		$databaseError = $this->createMock(Exception::class);
 		$databaseError->method('getReason')->willReturn(Exception::REASON_CONNECTION_LOST);
-		$this->mapper->method('exists')
-			->willReturn(false);
 		$this->mapper->method('create')
 			->willThrowException($databaseError);
 
@@ -115,8 +71,6 @@ class InternalAddressServiceTest extends TestCase {
 			->method('normalize')
 			->with('not valid', AddressEntryType::Domain)
 			->willThrowException(new InvalidAddressException('Invalid domain'));
-		$this->mapper->expects($this->never())
-			->method('exists');
 		$this->mapper->expects($this->never())
 			->method('create');
 
@@ -152,8 +106,6 @@ class InternalAddressServiceTest extends TestCase {
 			->method('normalize')
 			->with($value, $type)
 			->willReturnArgument(0);
-		$this->mapper->method('exists')
-			->willReturn(true);
 
 		$this->service->add('alice', $value, $type->value);
 	}
@@ -167,10 +119,6 @@ class InternalAddressServiceTest extends TestCase {
 			->method('normalize')
 			->with('Example.TEST', AddressEntryType::Domain)
 			->willReturn('example.test');
-		$this->mapper->expects($this->once())
-			->method('exists')
-			->with('alice', 'example.test')
-			->willReturn(false);
 		$this->mapper->expects($this->once())
 			->method('create')
 			->with('alice', 'example.test', 'domain')
@@ -188,8 +136,6 @@ class InternalAddressServiceTest extends TestCase {
 	public function testRemove(): void {
 		$this->normalizer->expects($this->never())
 			->method('normalize');
-		$this->mapper->expects($this->never())
-			->method('exists');
 		$this->mapper->expects($this->never())
 			->method('create');
 		$this->mapper->expects($this->once())

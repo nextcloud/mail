@@ -13,8 +13,6 @@ use OCA\Mail\Db\InternalAddress;
 use OCA\Mail\Exception\InvalidAddressException;
 
 interface IInternalAddressService {
-	public function isInternal(string $uid, string $address): bool;
-
 	/**
 	 * @throws InvalidAddressException if the $address to add or its $type is invalid
 	 */

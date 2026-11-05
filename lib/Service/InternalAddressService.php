@@ -23,59 +23,32 @@ class InternalAddressService implements IInternalAddressService {
 	) {
 	}
 
-	#[\Override]
-	public function isInternal(string $uid, string $address): bool {
-		return $this->mapper->exists(
-			$uid,
-			$address
-		);
-	}
-
 	/**
 	 * @throws InvalidAddressException
 	 */
 	#[\Override]
 	public function add(string $uid, string $address, string $type, ?bool $trust = true): ?InternalAddress {
-		if ($trust) {
-			$entryType = AddressEntryType::tryFrom($type) ?? throw new InvalidAddressException('Invalid type');
-			$address = $this->normalizer->normalize($address, $entryType);
-			if ($this->isInternal($uid, $address)) {
-				// Nothing to do
-				return null;
-			}
-
-			try {
-				$this->mapper->create(
-					$uid,
-					$address,
-					$type
-				);
-			} catch (Exception $exception) {
-				if ($exception->getReason() !== Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
-					throw $exception;
-				}
-
-				// isInternal() doesn't match a domain itself, and requests can race
-				return null;
-			}
-			return $this->getInternalAddress($uid, $address);
-		} else {
-			$this->mapper->remove(
-				$uid,
-				$address,
-				$type
-			);
+		if (!$trust) {
 			// Valid values are stored normalized, older entries as they were entered
-			$normalized = $this->normalizer->tryNormalize($address, $type);
-			if ($normalized !== null && $normalized !== $address) {
-				$this->mapper->remove(
-					$uid,
-					$normalized,
-					$type
-				);
+			foreach (array_unique([$address, $this->normalizer->tryNormalize($address, $type) ?? $address]) as $storedAddress) {
+				$this->mapper->remove($uid, $storedAddress, $type);
 			}
+			return null;
 		}
-		return null;
+
+		$entryType = AddressEntryType::tryFrom($type) ?? throw new InvalidAddressException('Invalid type');
+		$address = $this->normalizer->normalize($address, $entryType);
+		try {
+			$this->mapper->create($uid, $address, $entryType->value);
+		} catch (Exception $exception) {
+			if ($exception->getReason() !== Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
+				throw $exception;
+			}
+
+			// The address is listed already, e.g. added again from an outdated list or by two requests at once
+			return null;
+		}
+		return $this->getInternalAddress($uid, $address);
 	}
 
 	#[\Override]

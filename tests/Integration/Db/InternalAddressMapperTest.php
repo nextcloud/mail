@@ -43,44 +43,6 @@ class InternalAddressMapperTest extends TestCase {
 		);
 	}
 
-	public function testDoesntExist(): void {
-		$exists = $this->mapper->exists($this->user->getUID(), 'hamza@next.cloud');
-
-		$this->assertFalse($exists);
-	}
-
-	public function testIndividualExists(): void {
-		$uid = $this->user->getUID();
-		$qb = $this->db->getQueryBuilder();
-		$qb->insert('mail_internal_address')
-			->values([
-				'user_id' => $qb->createNamedParameter($uid),
-				'address' => $qb->createNamedParameter('hamza@next.cloud'),
-				'type' => $qb->createNamedParameter('individual')
-			])
-			->executeStatement();
-
-		$exists = $this->mapper->exists($uid, 'hamza@next.cloud');
-
-		$this->assertTrue($exists);
-	}
-
-	public function testDomainExists(): void {
-		$uid = $this->user->getUID();
-		$qb = $this->db->getQueryBuilder();
-		$qb->insert('mail_internal_address')
-			->values([
-				'user_id' => $qb->createNamedParameter($uid),
-				'address' => $qb->createNamedParameter('next.cloud'),
-				'type' => $qb->createNamedParameter('domain'),
-			])
-			->executeStatement();
-
-		$exists = $this->mapper->exists($uid, 'hamza@next.cloud');
-
-		$this->assertTrue($exists);
-	}
-
 	public function testCreateIndividual(): void {
 		$uid = $this->user->getUID();
 		$this->mapper->create(
