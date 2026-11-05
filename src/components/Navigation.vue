@@ -36,8 +36,8 @@
 					<span @click="showAccountSettings(group.account.id, 'mail-server')">
 						{{ t('mail', 'Connection failed. Please verify your information and try again') }}
 						<NcButton
-							:aria-label="t('mail', 'Change password')"
-							variant="tertiary">{{ t('mail', 'Change password') }}</NcButton>
+							:aria-label="accountFixLabel(group.account)"
+							variant="tertiary">{{ accountFixLabel(group.account) }}</NcButton>
 					</span>
 				</div>
 				<template v-else-if="!isDisabled(group.account)">
@@ -94,6 +94,7 @@
 </template>
 
 <script>
+import { t } from '@nextcloud/l10n'
 import { mapStores } from 'pinia'
 import { defineAsyncComponent } from 'vue'
 import NcAppNavigation from '@nextcloud/vue/components/NcAppNavigation'
@@ -195,6 +196,19 @@ export default {
 	},
 
 	methods: {
+		/**
+		 * A broken OAuth account has no password to change — it has to be reconnected
+		 * at the identity provider instead.
+		 *
+		 * @param {object} account the account the error belongs to
+		 * @return {string}
+		 */
+		accountFixLabel(account) {
+			return account.authMethod === 'xoauth2'
+				? t('mail', 'Reconnect to Mailbox')
+				: t('mail', 'Change password')
+		},
+
 		onCloseAccountSettings() {
 			this.mainStore.showSettingsForAccountMutation(null)
 		},
