@@ -14,7 +14,6 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\DraftsService;
 use OCA\Mail\Service\SmimeService;
@@ -39,7 +38,6 @@ class DraftsController extends Controller {
 		ITimeFactory $timeFactory,
 		private SmimeService $smimeService,
 		private DelegationService $delegationService,
-		private AliasesService $aliasesService,
 	) {
 		parent::__construct($appName, $request);
 		$this->timeFactory = $timeFactory;
@@ -93,9 +91,6 @@ class DraftsController extends Controller {
 		bool $isAiGenerated = false) : JsonResponse {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->userId);
 		$account = $this->accountService->find($effectiveUserId, $accountId);
-		if ($aliasId !== null) {
-			$this->aliasesService->findForAccount($aliasId, $accountId);
-		}
 		$message = new LocalMessage();
 		$message->setType(LocalMessage::TYPE_DRAFT);
 		$message->setAccountId($accountId);
@@ -174,9 +169,6 @@ class DraftsController extends Controller {
 
 		$this->delegationService->assertAccountAccess($accountId, $this->userId);
 		$account = $this->accountService->find($effectiveUserId, $accountId);
-		if ($aliasId !== null) {
-			$this->aliasesService->findForAccount($aliasId, $accountId);
-		}
 
 		$message->setType(LocalMessage::TYPE_DRAFT);
 		$message->setAccountId($accountId);

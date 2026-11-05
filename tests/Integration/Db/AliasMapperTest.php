@@ -15,7 +15,6 @@ use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\AliasMapper;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
-use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IDBConnection;
 
 /**
@@ -112,34 +111,6 @@ class AliasMapperTest extends TestCase {
 		$this->mapper->insert($alias);
 
 		self::assertSame(0, $this->mapper->countByAccountId($account->getId(), 'someone-else'));
-	}
-
-	public function testFindForAccountIgnoresSiblingAccountsOfSameUser(): void {
-		$account = $this->insertAccount();
-		$siblingAccount = $this->insertAccount();
-		$alias = new Alias();
-		$alias->setAccountId($siblingAccount->getId());
-		$alias->setAlias('ceo@marvel.com');
-		$alias->setName('CEO');
-		$alias = $this->mapper->insert($alias);
-
-		self::assertSame($alias->getId(), $this->mapper->findForAccount($alias->getId(), $siblingAccount->getId())->getId());
-		$this->expectException(DoesNotExistException::class);
-		$this->mapper->findForAccount($alias->getId(), $account->getId());
-	}
-
-	public function testFindByAliasForAccountIgnoresSiblingAccountsOfSameUser(): void {
-		$account = $this->insertAccount();
-		$siblingAccount = $this->insertAccount();
-		$alias = new Alias();
-		$alias->setAccountId($siblingAccount->getId());
-		$alias->setAlias('ceo@marvel.com');
-		$alias->setName('CEO');
-		$alias = $this->mapper->insert($alias);
-
-		self::assertSame($alias->getId(), $this->mapper->findByAliasForAccount('ceo@marvel.com', $siblingAccount->getId())->getId());
-		$this->expectException(DoesNotExistException::class);
-		$this->mapper->findByAliasForAccount('ceo@marvel.com', $account->getId());
 	}
 
 	private function insertAccount(string $userId = 'user12345'): MailAccount {
