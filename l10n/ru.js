@@ -107,6 +107,7 @@ OC.L10N.register(
     "Sign in with Microsoft" : "Войти через Microsoft",
     "Save" : "Сохранить",
     "Connect" : "Подключиться",
+    "Leave blank to not change password" : "Оставьте пустым, чтобы не изменять пароль",
     "Looking up configuration" : "Поиск конфигурации",
     "Checking mail host connectivity" : "Проверка подключения к почтовому серверу",
     "Configuration discovery failed. Please use the manual settings" : "Не удалось автоматически настроить конфигурацию, введите параметры вручную.",

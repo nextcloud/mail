@@ -107,6 +107,7 @@ OC.L10N.register(
     "Sign in with Microsoft" : "Prihlásiť sa cez Microsoft",
     "Save" : "Uložiť",
     "Connect" : "Pripojiť",
+    "Leave blank to not change password" : "Ak nechcete zmeniť heslo, nechajte pole prázdne",
     "Looking up configuration" : "Vyhľadávam konfiguráciu",
     "Checking mail host connectivity" : "Kontrola pripojenia k hostiteľovi elektronickej pošty",
     "Configuration discovery failed. Please use the manual settings" : "Zisťovanie konfigurácie zlyhalo. Použite manuálne nastavenia",

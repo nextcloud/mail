@@ -107,6 +107,7 @@ OC.L10N.register(
     "Sign in with Microsoft" : "Log ind med Microsoft",
     "Save" : "Gem",
     "Connect" : "Opret forbindelse",
+    "Leave blank to not change password" : "Lad feltet stå tomt, hvis adgangskoden ikke skal ændres",
     "Looking up configuration" : "Søger konfiguration",
     "Checking mail host connectivity" : "Kontrollerer forbindelsen til mailserveren",
     "Configuration discovery failed. Please use the manual settings" : "Automatisk registrering af konfigurationen mislykkedes. Brug de manuelle indstillinger",

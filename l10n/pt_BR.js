@@ -107,6 +107,7 @@ OC.L10N.register(
     "Sign in with Microsoft" : "Fazer login com a Microsoft",
     "Save" : "Salvar",
     "Connect" : "Conectar",
+    "Leave blank to not change password" : "Deixe em branco para não alterar a senha",
     "Looking up configuration" : "Procurando configuração",
     "Checking mail host connectivity" : "Verificando a conectividade do hospedeiro de e-mail",
     "Configuration discovery failed. Please use the manual settings" : "Falha na descoberta da configuração. Por favor, use as configurações manuais",
