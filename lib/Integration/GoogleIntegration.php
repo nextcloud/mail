@@ -68,12 +68,8 @@ class GoogleIntegration {
 		);
 	}
 
-	public function getClientId(): ?string {
-		$value = $this->appConfig->getValueString(Application::APP_ID, ConfigLexicon::GOOGLE_OAUTH_CLIENT_ID);
-		if ($value === '') {
-			return null;
-		}
-		return $value;
+	public function getClientId(): string {
+		return $this->appConfig->getValueString(Application::APP_ID, ConfigLexicon::GOOGLE_OAUTH_CLIENT_ID);
 	}
 
 	public function isGoogleOauthAccount(Account $account): bool {

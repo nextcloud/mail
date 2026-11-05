@@ -82,12 +82,8 @@ class MicrosoftIntegration {
 		return $this->appConfig->getValueString(Application::APP_ID, ConfigLexicon::MICROSOFT_OAUTH_TENANT_ID, 'common');
 	}
 
-	public function getClientId(): ?string {
-		$value = $this->appConfig->getValueString(Application::APP_ID, ConfigLexicon::MICROSOFT_OAUTH_CLIENT_ID);
-		if ($value === '') {
-			return null;
-		}
-		return $value;
+	public function getClientId(): string {
+		return $this->appConfig->getValueString(Application::APP_ID, ConfigLexicon::MICROSOFT_OAUTH_CLIENT_ID);
 	}
 
 	public function isMicrosoftOauthAccount(Account $account): bool {
