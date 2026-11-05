@@ -107,6 +107,7 @@ OC.L10N.register(
     "Sign in with Microsoft" : "Microsoft oturumu aç",
     "Save" : "Kaydet",
     "Connect" : "Bağlan",
+    "Leave blank to not change password" : "Parolanın değiştirilmemesi için boş bırakın",
     "Looking up configuration" : "Yapılandırma taranıyor",
     "Checking mail host connectivity" : "E-posta sunucusu bağlantısı denetleniyor",
     "Configuration discovery failed. Please use the manual settings" : "Yapılandırma keşfedilemedi. Lütfen ayarları el ile yapın.",

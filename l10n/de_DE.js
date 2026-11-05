@@ -107,6 +107,7 @@ OC.L10N.register(
     "Sign in with Microsoft" : "Mit Microsoft anmelden",
     "Save" : "Speichern",
     "Connect" : "Verbinden",
+    "Leave blank to not change password" : "Leer lassen, um das Passwort nicht zu ändern",
     "Looking up configuration" : "Konfiguration ansehen",
     "Checking mail host connectivity" : "Konnektivität des Mail-Hosts wird geprüft",
     "Configuration discovery failed. Please use the manual settings" : "Konfigurationserkennung fehlgeschlagen. Bitte verwenden Sie die manuellen Einstellungen",
