@@ -14,7 +14,10 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OC\BackgroundJob\JobList;
 use OCA\Mail\Account;
 use OCA\Mail\BackgroundJob\SyncJob;
+use OCA\Mail\Contracts\IMailboxConnector;
+use OCA\Mail\Contracts\IMessageConnector;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Exception\ServiceException;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IConfig;
 use OCP\IUser;
@@ -127,6 +130,56 @@ class SyncJobTest extends TestCase {
 		$this->job->setArgument([
 			'accountId' => 123,
 		]);
+		$this->job->start($this->createMock(JobList::class));
+	}
+
+	private function mockSyncableAccount(): Account {
+		$mailAccount = new MailAccount();
+		$mailAccount->setProtocol(MailAccount::PROTOCOL_JMAP);
+		$account = $this->createMock(Account::class);
+		$account->method('getId')->willReturn(123);
+		$account->method('getUserId')->willReturn('user123');
+		$account->method('getMailAccount')->willReturn($mailAccount);
+		$this->serviceMock->getParameter('accountService')
+			->method('findById')
+			->with(123)
+			->willReturn($account);
+		$user = $this->createConfiguredMock(IUser::class, [
+			'isEnabled' => true,
+		]);
+		$this->serviceMock->getParameter('userManager')
+			->method('get')
+			->with('user123')
+			->willReturn($user);
+		return $account;
+	}
+
+	public function testReleasesClientsAfterSync(): void {
+		$account = $this->mockSyncableAccount();
+		$protocolFactory = $this->serviceMock->getParameter('protocolFactory');
+		$protocolFactory->method('mailboxConnector')
+			->willReturn($this->createMock(IMailboxConnector::class));
+		$protocolFactory->method('messageConnector')
+			->willReturn($this->createMock(IMessageConnector::class));
+		$protocolFactory->expects(self::once())
+			->method('releaseClients')
+			->with($account);
+
+		$this->job->start($this->createMock(JobList::class));
+	}
+
+	public function testReleasesClientsWhenSyncFails(): void {
+		$account = $this->mockSyncableAccount();
+		$mailboxConnector = $this->createMock(IMailboxConnector::class);
+		$mailboxConnector->method('syncAll')
+			->willThrowException(new ServiceException('Could not connect to JMAP server'));
+		$protocolFactory = $this->serviceMock->getParameter('protocolFactory');
+		$protocolFactory->method('mailboxConnector')
+			->willReturn($mailboxConnector);
+		$protocolFactory->expects(self::once())
+			->method('releaseClients')
+			->with($account);
+
 		$this->job->start($this->createMock(JobList::class));
 	}
 

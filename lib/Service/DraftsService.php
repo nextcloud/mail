@@ -213,6 +213,12 @@ class DraftsService {
 				]);
 			}
 		}
+
+		foreach ($accounts as $account) {
+			if ($account !== null) {
+				$this->protocolFactory->releaseClients($account);
+			}
+		}
 	}
 
 	/**
