@@ -16,7 +16,7 @@ interface ITrustedSenderService {
 	public function isTrusted(string $uid, string $email): bool;
 
 	/**
-	 * @throws InvalidAddressException if the $email to trust or its $type is invalid
+	 * @throws InvalidAddressException
 	 */
 	public function trust(string $uid, string $email, string $type, ?bool $trust = true);
 

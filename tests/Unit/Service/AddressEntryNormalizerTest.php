@@ -187,7 +187,6 @@ class AddressEntryNormalizerTest extends TestCase {
 
 	public static function provideValuesOver254Octets(): array {
 		return [
-			// RFC 5321 limits a path to 256 octets including the angle brackets, which leaves 254
 			'address of 255 octets' => [str_repeat('a', 242) . '@example.test', AddressEntryType::Individual],
 			'domain of 255 octets' => [self::internationalizedDomain(255), AddressEntryType::Domain],
 			// Each "．" (U+FF0E, 3 octets) becomes ".", so only the value as given is too long

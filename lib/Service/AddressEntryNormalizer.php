@@ -85,7 +85,7 @@ class AddressEntryNormalizer {
 		}
 
 		$addresses = $this->parseAddressList($value)
-			// The stored form of a sender drops the quotes around its local part, e.g. of "alice smith"@example.test
+			// A sender's stored form drops the quotes around its local part
 			?? $this->parseAddressList('"' . addcslashes($localPart, '"\\') . '"@' . $domain);
 		$address = $addresses !== null && count($addresses) === 1 ? $addresses->first() : null;
 		if (!($address instanceof Horde_Mail_Rfc822_Address)) {
@@ -98,7 +98,6 @@ class AddressEntryNormalizer {
 
 	private function parseAddressList(string $value): ?Horde_Mail_Rfc822_List {
 		try {
-			// RFC 5322, with the UTF-8 addresses of RFC 6532
 			return (new Horde_Mail_Rfc822())->parseAddressList($value, ['validate' => 'eai']);
 		} catch (Horde_Mail_Exception) {
 			return null;

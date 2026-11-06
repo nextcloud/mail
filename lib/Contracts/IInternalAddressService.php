@@ -14,7 +14,7 @@ use OCA\Mail\Exception\InvalidAddressException;
 
 interface IInternalAddressService {
 	/**
-	 * @throws InvalidAddressException if the $address to add or its $type is invalid
+	 * @throws InvalidAddressException
 	 */
 	public function add(string $uid, string $address, string $type, ?bool $trust = true);
 
