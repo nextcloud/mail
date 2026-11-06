@@ -22,6 +22,7 @@
 				<NcSelect
 					id="from"
 					labelOutside
+					:clearable="false"
 					:modelValue="selectedAlias"
 					:options="aliases"
 					label="name"
@@ -79,14 +80,6 @@
 							class="vs__search"
 							v-bind="attributes"
 							v-on="events">
-						<NcButton
-							size="small"
-							variant="tertiary-no-background"
-							class="copy-toggle"
-							@mousedown.stop
-							@click.prevent="toggleViewMode">
-							{{ t('mail', 'Cc/Bcc') }}
-						</NcButton>
 					</template>
 					<template #selected-option-container="{ option }">
 						<RecipientListItem
@@ -116,12 +109,21 @@
 					</template>
 				</NcSelect>
 			</div>
-			<p
-				v-if="displayMissingToWarning"
-				role="alert"
-				class="composer-fields__helper-text">
-				{{ t('mail', 'Messages with no \'To\' recipients may be rejected by some mail providers.') }}
-			</p>
+			<div class="composer-fields__to-footer">
+				<p
+					v-if="displayMissingToWarning"
+					role="alert"
+					class="composer-fields__helper-text">
+					{{ t('mail', 'Messages with no \'To\' recipients may be rejected by some mail providers.') }}
+				</p>
+				<NcButton
+					size="small"
+					variant="tertiary-no-background"
+					class="copy-toggle"
+					@click="toggleViewMode">
+					{{ t('mail', 'Cc/Bcc') }}
+				</NcButton>
+			</div>
 		</div>
 		<div v-if="showCC" class="composer-fields">
 			<label for="cc" class="cc-label">
@@ -1959,7 +1961,7 @@ $composer-text-inset: calc(var(--default-grid-baseline) * 2);
 		justify-content: space-between;
 		padding: calc(var(--default-grid-baseline) * 1.5) 0;
 
-		button:not(.copy-toggle) {
+		button {
 			margin-top: 0;
 			margin-bottom: 0;
 			background-color: transparent;
@@ -2010,8 +2012,15 @@ $composer-text-inset: calc(var(--default-grid-baseline) * 2);
 		user-select: text;
 	}
 
-	&__helper-text {
+	&__to-footer {
 		flex-basis: 100%;
+		display: flex;
+		align-items: center;
+		gap: calc(var(--default-grid-baseline) * 2);
+	}
+
+	&__helper-text {
+		flex: 1;
 		padding-inline-start: calc(var(--default-grid-baseline) * 12);
 		margin-top: calc(var(--default-grid-baseline) * 0.5);
 		margin-bottom: calc(var(--default-grid-baseline) * 0.5);
@@ -2057,6 +2066,21 @@ $composer-text-inset: calc(var(--default-grid-baseline) * 2);
 	border-radius: var(--border-radius-large);
 }
 
+// Keep the recipient pickers as tall as the single-select From picker
+:deep(.nc-select.v-select.select.vs--multiple) {
+	.vs__dropdown-toggle {
+		padding-block: 0;
+	}
+
+	.vs__search {
+		min-height: calc(var(--default-clickable-area) - 2 * var(--border-width-input-focused, 2px));
+	}
+
+	.vs__selected {
+		margin-block: calc(var(--default-grid-baseline) / 4);
+	}
+}
+
 // NcSelect adds a rectangular outline on focus/active/open — override with none
 // so the rounded border-radius is not broken by a sharp outline.
 :deep(.v-select.select:not(.vs--disabled, .vs--open) .vs__dropdown-toggle:active),
@@ -2085,19 +2109,8 @@ $composer-text-inset: calc(var(--default-grid-baseline) * 2);
 	}
 }
 
-// Reserve space for the toggle only in the search row — chips on other rows fill full width
-.to-select :deep(.vs__search) {
-	padding-inline-end: calc(var(--default-grid-baseline) * 10);
-}
-
 .copy-toggle {
-	// Absolute so it overlays the trailing edge of the To field without affecting chip layout
-	position: absolute;
-	inset-inline-end: 0;
-	bottom: 0;
-	z-index: 1;
-	opacity: 1;
-	cursor: pointer;
+	margin-inline-start: auto;
 
 	:deep(.button-vue__text) {
 		font-weight: normal;
