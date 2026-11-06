@@ -66,6 +66,9 @@
 					@click="entry.action">
 					{{ entry.text }}
 				</NcActionButton>
+				<NcActionText v-if="calendarMenuEntries.length === 0">
+					{{ t('mail', 'None of your calendars can store the contents of this file') }}
+				</NcActionText>
 			</template>
 		</NcActions>
 	</div>
@@ -78,6 +81,7 @@ import { formatFileSize } from '@nextcloud/files'
 import { t } from '@nextcloud/l10n'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
+import NcActionText from '@nextcloud/vue/components/NcActionText'
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import IconArrow from 'vue-material-design-icons/ArrowLeft.vue'
 import IconSave from 'vue-material-design-icons/FolderOutline.vue'
@@ -85,7 +89,7 @@ import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconDownload from 'vue-material-design-icons/TrayArrowDown.vue'
 import Logger from '../logger.js'
 import { downloadAttachment, saveAttachmentToFiles } from '../service/AttachmentService.js'
-import { getUserCalendars, importCalendarEvent } from '../service/DAVService.js'
+import { calendarContainsObject, getCalendarComponents, getCalendarObjects, getUserCalendars, importCalendarEvent } from '../service/DAVService.js'
 import { pickFolder } from '../util/filePicker.js'
 
 export default {
@@ -93,6 +97,7 @@ export default {
 	components: {
 		NcActions,
 		NcActionButton,
+		NcActionText,
 		IconAdd,
 		IconArrow,
 		NcLoadingIcon,
@@ -178,7 +183,7 @@ export default {
 			return this.calendars.map((cal) => {
 				return {
 					text: cal.displayname,
-					action: this.importCalendar(cal.url),
+					action: this.importCalendar(cal),
 				}
 			})
 		},
@@ -239,32 +244,64 @@ export default {
 			window.location = this.url
 		},
 
-		loadCalendars() {
+		async loadCalendars() {
 			this.loadingCalendars = true
-			getUserCalendars().then((calendars) => {
-				this.calendars = calendars
+			try {
+				const data = await downloadAttachment(this.url)
+				// Only offer calendars that accept every component type (event, task, journal) in the file
+				this.calendars = await getUserCalendars(getCalendarComponents(data))
 				this.showCalendarPopover = true
+			} catch (error) {
+				Logger.error('Could not load calendars', { error })
+				showError(t('mail', 'Could not load your calendars'))
+			} finally {
 				this.loadingCalendars = false
-			})
+			}
 		},
 
 		closeCalendarPopover() {
 			this.showCalendarPopover = false
 		},
 
-		importCalendar(url) {
-			return () => {
-				downloadAttachment(this.url)
-					.then(importCalendarEvent(url))
-					.then(() => {
-						showSuccess(t('mail', 'calendar imported'))
-					})
-					.catch((error) => {
-						Logger.error('Could not import event', { error })
-						showError(t('mail', 'Could not create event'))
-					})
-					.then(() => (this.showCalendarPopover = false))
+		importCalendar(calendar) {
+			return async () => {
+				let data
+				try {
+					data = await downloadAttachment(this.url)
+					await importCalendarEvent(calendar.url, data)
+					showSuccess(t('mail', 'calendar imported'))
+				} catch (error) {
+					Logger.error('Could not import event', { error })
+					showError(await this.getImportErrorMessage(calendar, data))
+				} finally {
+					this.showCalendarPopover = false
+				}
 			}
+		},
+
+		/**
+		 * The server's error message is neither translated nor a stable API, so
+		 * check whether the import failed because the event is already in the
+		 * calendar, e.g. after the invitation was accepted.
+		 *
+		 * @param {object} calendar the calendar the import was attempted into
+		 * @param {string|undefined} data the iCalendar data of the attachment
+		 * @return {Promise<string>}
+		 */
+		async getImportErrorMessage(calendar, data) {
+			if (data) {
+				try {
+					const existing = await Promise.all(getCalendarObjects(data)
+						.map((object) => calendarContainsObject(calendar.url, object)))
+					if (existing.some(Boolean)) {
+						return t('mail', 'This event is already in the calendar {calendar}', { calendar: calendar.displayname })
+					}
+				} catch (error) {
+					Logger.warn('Could not check for existing calendar objects', { error })
+				}
+			}
+
+			return t('mail', 'Could not create event')
 		},
 	},
 }

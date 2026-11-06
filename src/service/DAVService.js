@@ -31,13 +31,34 @@ function canWrite(properties) {
 	return false
 }
 
+const CALENDAR_COMPONENTS = ['VEVENT', 'VJOURNAL', 'VTODO']
+
+/**
+ * @param {object} properties the DAV properties of a calendar collection
+ * @return {string[]} the upper-case component names the calendar accepts
+ */
+function getSupportedComponents(properties) {
+	let comps = properties?.['supported-calendar-component-set']?.comp
+
+	// RFC 4791 section 5.2.3: if the property is absent, all components are supported
+	if (!comps) {
+		return CALENDAR_COMPONENTS
+	}
+	// There might only be one component, not a list
+	if (!Array.isArray(comps)) {
+		comps = [comps]
+	}
+
+	return comps
+		.map((comp) => comp?.['@name']?.toUpperCase())
+		.filter(Boolean)
+}
+
 function getCalendarData(calendar) {
 	return {
 		displayname: calendar.props.displayname,
 		order: calendar.props['calendar-order'],
-		components: {
-			vevent: true, // check if VEVENT exists in props['supported-calendar-component-set'].comps
-		},
+		components: getSupportedComponents(calendar.props),
 		writable: canWrite(calendar.props),
 		url: generateRemoteUrl(`dav/calendars/${getCurrentUser().uid}${calendar.filename}/`),
 		color: calendar.props['calendar-color'] ?? uidToHexColor(calendar.props.displayname ?? ''),
@@ -46,9 +67,10 @@ function getCalendarData(calendar) {
 }
 
 /**
+ * @param {string[]} requiredComponents only return calendars that accept all of these components
  * @return {Promise}
  */
-export async function getUserCalendars() {
+export async function getUserCalendars(requiredComponents = ['VEVENT']) {
 	const response = await getClient('calendars')
 		.getDirectoryContents('/', {
 			data: `<?xml version="1.0"?>
@@ -71,7 +93,80 @@ export async function getUserCalendars() {
 
 	return response.data
 		.map(getCalendarData)
-		.filter((props) => props.components.vevent && props.writable === true)
+		.filter((props) => props.writable === true
+			&& requiredComponents.every((component) => props.components.includes(component)))
+}
+
+/**
+ * @param {string} data the iCalendar data
+ * @return {string[]} the upper-case names of the calendar components contained in the data
+ */
+export function getCalendarComponents(data) {
+	const vcalendar = new ical.Component(ical.parse(data))
+
+	return CALENDAR_COMPONENTS
+		.filter((name) => vcalendar.getAllSubcomponents(name.toLowerCase()).length > 0)
+}
+
+function escapeXml(value) {
+	return value
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&apos;')
+}
+
+/**
+ * @param {string} data the iCalendar data
+ * @return {{component: string, uid: string}[]} the events, tasks and journals in the data, one entry per UID
+ */
+export function getCalendarObjects(data) {
+	const vcalendar = new ical.Component(ical.parse(data))
+	const objects = new Map()
+	for (const component of ['VEVENT', 'VJOURNAL', 'VTODO']) {
+		for (const subcomponent of vcalendar.getAllSubcomponents(component.toLowerCase())) {
+			const uid = subcomponent.getFirstPropertyValue('uid')
+			if (uid && !objects.has(uid)) {
+				objects.set(uid, { component, uid })
+			}
+		}
+	}
+
+	return [...objects.values()]
+}
+
+/**
+ * @param {string} url the url of the calendar collection
+ * @param {{component: string, uid: string}} object the calendar object to look for
+ * @return {Promise<boolean>} whether the calendar already contains an object with this UID
+ */
+export async function calendarContainsObject(url, { component, uid }) {
+	const response = await Axios.request({
+		method: 'REPORT',
+		url,
+		headers: {
+			Depth: '1',
+			'Content-Type': 'application/xml; charset=utf-8',
+		},
+		data: `<?xml version="1.0" encoding="utf-8"?>
+<c:calendar-query xmlns:d="DAV:" xmlns:c="urn:ietf:params:xml:ns:caldav">
+  <d:prop><d:getetag /></d:prop>
+  <c:filter>
+    <c:comp-filter name="VCALENDAR">
+      <c:comp-filter name="${escapeXml(component)}">
+        <c:prop-filter name="UID">
+          <c:text-match collation="i;octet">${escapeXml(uid)}</c:text-match>
+        </c:prop-filter>
+      </c:comp-filter>
+    </c:comp-filter>
+  </c:filter>
+</c:calendar-query>`,
+	})
+
+	// A multistatus without any <response> element means no match
+	return typeof response.data === 'string'
+		&& /<([a-z0-9]+:)?response[\s>]/i.test(response.data)
 }
 
 function getRandomString() {
