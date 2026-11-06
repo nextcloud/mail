@@ -16,6 +16,7 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\IMAPMessage;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Util\ServerVersion;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Calendar\IManager;
@@ -34,6 +35,7 @@ class IMipService {
 		private MailManager $mailManager,
 		private MessageMapper $messageMapper,
 		private ServerVersion $serverVersion,
+		private ProtocolFactory $protocolFactory,
 	) {
 		$this->calendarManager = $manager;
 	}
@@ -193,6 +195,12 @@ class IMipService {
 				}
 			}
 			$this->messageMapper->updateImipData(...$filteredMessages);
+		}
+
+		foreach ($accounts as $account) {
+			if ($account !== null) {
+				$this->protocolFactory->releaseClients($account);
+			}
 		}
 	}
 }
