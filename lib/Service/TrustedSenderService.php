@@ -70,7 +70,7 @@ class TrustedSenderService implements ITrustedSenderService {
 				throw $exception;
 			}
 
-			// The sender is listed already, e.g. trusted again from an outdated list or by two requests at once
+			// Already listed, e.g. by a concurrent request
 		}
 	}
 

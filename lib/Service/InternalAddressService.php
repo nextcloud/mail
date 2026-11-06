@@ -45,7 +45,7 @@ class InternalAddressService implements IInternalAddressService {
 				throw $exception;
 			}
 
-			// The address is listed already, e.g. added again from an outdated list or by two requests at once
+			// Already listed, e.g. by a concurrent request
 			return null;
 		}
 		return $this->getInternalAddress($uid, $address);
