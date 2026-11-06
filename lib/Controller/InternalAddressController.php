@@ -11,6 +11,7 @@ namespace OCA\Mail\Controller;
 
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Http\JsonResponse;
+use OCA\Mail\Http\ListETag;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\InternalAddressService;
 use OCP\AppFramework\Controller;
@@ -86,6 +87,8 @@ class InternalAddressController extends Controller {
 			$this->userId
 		);
 
-		return JsonResponse::success($list);
+		$response = JsonResponse::success($list);
+		$response->setETag(ListETag::of($list));
+		return $response;
 	}
 }

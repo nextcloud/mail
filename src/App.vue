@@ -15,6 +15,7 @@ import MailboxLockedError from './errors/MailboxLockedError.js'
 import { matchError } from './errors/match.js'
 import initAfterAppCreation from './init.js'
 import logger from './logger.js'
+import { SYNC_INTERVAL } from './store/constants.js'
 import useMainStore from './store/mainStore.js'
 
 export default {
@@ -22,6 +23,8 @@ export default {
 	data() {
 		return {
 			syncing: false,
+			addressListsRefreshedAt: Date.now(),
+			catchingUp: false,
 		}
 	},
 
@@ -33,6 +36,10 @@ export default {
 
 		hasMailAccounts() {
 			return !!this.mainStore.getAccounts.find((account) => !account.isUnified)
+		},
+
+		alwaysShowExternalImages() {
+			return this.mainStore.getPreference('always-show-external-images', 'false') === 'true'
 		},
 	},
 
@@ -46,6 +53,19 @@ export default {
 				})
 			}
 		},
+
+		async alwaysShowExternalImages(alwaysShow) {
+			if (alwaysShow) {
+				return
+			}
+
+			// The trusted senders weren't refreshed while they had no effect
+			try {
+				await this.mainStore.fetchTrustedSenders({ stale: true })
+			} catch (error) {
+				logger.warn('Could not refresh the trusted senders', { error })
+			}
+		},
 	},
 
 	async mounted() {
@@ -57,10 +77,16 @@ export default {
 			})
 		}
 
+		document.addEventListener('visibilitychange', this.onVisibilityChange)
 		this.sync()
+		this.pollAddressLists()
 		await this.mainStore.fetchCurrentUserPrincipal()
 		await this.mainStore.loadCollections()
 		this.mainStore.hasCurrentUserPrincipalAndCollectionsMutation(true)
+	},
+
+	beforeUnmount() {
+		document.removeEventListener('visibilitychange', this.onVisibilityChange)
 	},
 
 	methods: {
@@ -95,7 +121,56 @@ export default {
 					// Start over
 					this.sync()
 				}
-			}, 30 * 1000)
+			}, SYNC_INTERVAL)
+		},
+
+		pollAddressLists() {
+			const scheduledAt = Date.now()
+			setTimeout(async () => {
+				try {
+					// Hidden tabs catch up in onVisibilityChange
+					if (document.visibilityState === 'visible' && this.addressListsRefreshedAt <= scheduledAt) {
+						await this.refreshAddressLists()
+					}
+				} catch (error) {
+					logger.error('Could not refresh the trusted senders or internal addresses', { error })
+				} finally {
+					// Rescheduled after the refresh, so a slow server can't stack requests
+					this.pollAddressLists()
+				}
+			}, SYNC_INTERVAL)
+		},
+
+		async onVisibilityChange() {
+			// A catch-up that is still loading brings the lists up to date already
+			if (document.visibilityState !== 'visible' || !this.addressListsAreDue() || this.catchingUp) {
+				return
+			}
+
+			this.catchingUp = true
+			// A message opened right away waits for the current list before it loads images
+			await this.refreshAddressLists({ stale: true })
+			this.catchingUp = false
+		},
+
+		addressListsAreDue() {
+			return Date.now() - this.addressListsRefreshedAt >= SYNC_INTERVAL
+		},
+
+		async refreshAddressLists({ stale = false } = {}) {
+			this.addressListsRefreshedAt = Date.now()
+			const refreshes = []
+			if (!this.alwaysShowExternalImages) {
+				refreshes.push(this.mainStore.fetchTrustedSenders({ stale }))
+			}
+			if (this.mainStore.getPreference('internal-addresses', 'false') === 'true') {
+				refreshes.push(this.mainStore.fetchInternalAddresses())
+			}
+
+			const results = await Promise.allSettled(refreshes)
+			results
+				.filter((result) => result.status === 'rejected')
+				.forEach((result) => logger.warn('Could not refresh the trusted senders or internal addresses', { error: result.reason }))
 		},
 	},
 }

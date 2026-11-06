@@ -12,6 +12,7 @@ namespace OCA\Mail\Controller;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\ITrustedSenderService;
 use OCA\Mail\Http\JsonResponse;
+use OCA\Mail\Http\ListETag;
 use OCA\Mail\Http\TrapError;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -85,6 +86,8 @@ class TrustedSendersController extends Controller {
 			$this->userId
 		);
 
-		return JsonResponse::success($list);
+		$response = JsonResponse::success($list);
+		$response->setETag(ListETag::of($list));
+		return $response;
 	}
 }

@@ -208,4 +208,18 @@ class InternalAddressMapperTest extends TestCase {
 		sort($addresses);
 		$this->assertEquals(['christoph@next.cloud', 'hamza@next.cloud'], $addresses);
 	}
+
+	public function testFindAllListsTheEntriesInTheOrderTheyWereAdded(): void {
+		$uid = $this->user->getUID();
+		$this->mapper->create($uid, 'alice@example.test', 'individual');
+		$this->mapper->create($uid, 'bob@example.test', 'individual');
+		$this->mapper->create($uid, 'carol@example.test', 'individual');
+		$this->mapper->remove($uid, 'alice@example.test', 'individual');
+		$this->mapper->create($uid, 'dave@example.test', 'individual');
+
+		$internalAddresses = $this->mapper->findAll($uid);
+
+		$addresses = array_map(static fn (InternalAddress $internalAddress) => $internalAddress->getAddress(), $internalAddresses);
+		$this->assertSame(['bob@example.test', 'carol@example.test', 'dave@example.test'], $addresses);
+	}
 }
