@@ -54,7 +54,7 @@ jobs:
 
       - name: Conventional Changelog Action
         id: changelog
-        uses: TriPSs/conventional-changelog-action@469f0e5e35831fbd1962706f29f65daf0a5723f2 # v6
+        uses: TriPSs/conventional-changelog-action@ee43def3241429afddab215ba89090cbf64fb45c # v6
         with:
           github-token: ${{ secrets.RELEASE_PAT }}
           git-user-email: nextcloud-command@users.noreply.github.com
