@@ -128,14 +128,14 @@ export default {
 			const scheduledAt = Date.now()
 			setTimeout(async () => {
 				try {
-					// Hidden tabs catch up once they are visible again, which makes this refresh redundant
+					// Hidden tabs catch up in onVisibilityChange
 					if (document.visibilityState === 'visible' && this.addressListsRefreshedAt <= scheduledAt) {
 						await this.refreshAddressLists()
 					}
 				} catch (error) {
 					logger.error('Could not refresh the trusted senders or internal addresses', { error })
 				} finally {
-					// Only now, so a slow server answers a refresh before the next one replaces it
+					// Rescheduled after the refresh, so a slow server can't stack requests
 					this.pollAddressLists()
 				}
 			}, SYNC_INTERVAL)

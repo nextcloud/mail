@@ -11,9 +11,6 @@ namespace OCA\Mail\Http;
 
 use JsonException;
 
-/**
- * The ETag of a list that the browser keeps and asks for changes of with If-None-Match
- */
 final class ListETag {
 	/**
 	 * @throws JsonException
@@ -23,7 +20,7 @@ final class ListETag {
 	}
 
 	/**
-	 * @return string the ETag of $list as the browser sends it back in If-None-Match
+	 * @return string the quoted ETag, as the browser sends it in If-None-Match
 	 * @throws JsonException
 	 */
 	public static function header(array $list): string {

@@ -1356,7 +1356,7 @@ export default function mainStoreActions() {
 					if (changed) {
 						this.setTrustedSendersMutation(changed.data, changed.etag)
 					}
-					// Only a list the store could use settles a stale one, a failed reload leaves the changes from other devices unknown
+					// Only a usable response settles a stale list
 					this.confirmTrustedSendersMutation()
 				} else if (revision === this.trustedSendersNewestRequest && this.trustedSendersStale) {
 					// Only the newest request reloads again, so overlapping reloads don't restart each other

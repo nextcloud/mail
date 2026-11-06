@@ -31,9 +31,7 @@ export function emailDomain(email) {
 }
 
 /**
- * Trust or stop trusting a sender in a list of trusted senders.
- *
- * @param {Array<{ email: string, type: 'individual'|'domain' }>} trustedSenders The list to change, which is not modified
+ * @param {Array<{ email: string, type: 'individual'|'domain' }>} trustedSenders The current list, which stays unmodified
  * @param {{ trustedSender: { email: string, type: 'individual'|'domain' }, trust: boolean }} change The sender and whether to trust it
  * @return {Array<{ email: string, type: 'individual'|'domain' }>} The changed list, or the given list if the change does not alter it
  */
