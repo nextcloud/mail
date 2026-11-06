@@ -33,6 +33,7 @@ use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\ItineraryService;
 use OCA\Mail\Service\SmimeService;
 use OCA\Mail\Service\SnoozeService;
+use OCP\App\IAppManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -90,6 +91,7 @@ class MessagesController extends Controller {
 		private AiIntegrationsService $aiIntegrationService,
 		private ICacheFactory $cacheFactory,
 		private DelegationService $delegationService,
+		private IAppManager $appManager,
 	) {
 		parent::__construct($appName, $request);
 		$this->l10n = $l10n;
@@ -713,7 +715,9 @@ class MessagesController extends Controller {
 					$html,
 					$this->nonceManager->getNonce(),
 					$this->urlGenerator->getAbsoluteURL(
-						$this->urlGenerator->linkTo('mail', 'js/htmlresponse.js')
+						$this->urlGenerator->linkTo('mail', 'js/htmlresponse.js', [
+							'v' => $this->appManager->getAppVersion('mail'),
+						])
 					)
 				);
 
