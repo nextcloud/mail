@@ -7,7 +7,7 @@ import { generateUrl } from '@nextcloud/router'
 import pLimit from 'p-limit'
 import { fetchIfChanged } from './RevalidationService.js'
 
-// The server handles parallel requests in any order, so a later change of a sender could be overwritten by an earlier one
+// Serialized per sender, as the server may apply parallel requests out of order
 const queuesByEmail = new Map()
 
 export async function trustSender(email, type, trustFlag) {
