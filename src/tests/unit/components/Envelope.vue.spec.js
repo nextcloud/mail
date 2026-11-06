@@ -383,4 +383,76 @@ describe('Envelope', () => {
 
 		expect(view.vm.hasWriteAcl).toBe(true)
 	})
+
+	it('emits close when clicking the open message', () => {
+		const view = shallowMount(Envelope, {
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route: {
+						name: 'message',
+						params: {
+							threadId: '42',
+						},
+					},
+				},
+			},
+			props: {
+				mailbox: {
+					specialRole: '',
+					databaseId: '3',
+					myAcls: undefined,
+				},
+				data: {
+					databaseId: 42,
+					accountId: 123,
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
+				},
+			},
+		})
+		const event = {
+			ctrlKey: false,
+			defaultPrevented: false,
+			preventDefault: vi.fn(),
+		}
+
+		view.vm.onClick(event)
+
+		expect(event.preventDefault).toHaveBeenCalled()
+		expect(view.emitted('close')).toHaveLength(1)
+	})
+
+	it('does not close another message', () => {
+		const view = shallowMount(Envelope, {
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route: {
+						name: 'message',
+						params: {
+							threadId: '43',
+						},
+					},
+				},
+			},
+			props: {
+				mailbox: {
+					specialRole: '',
+					databaseId: '3',
+					myAcls: undefined,
+				},
+				data: {
+					databaseId: 42,
+					accountId: 123,
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
+				},
+			},
+		})
+
+		view.vm.onClick({ ctrlKey: false, defaultPrevented: false, preventDefault: vi.fn() })
+
+		expect(view.emitted('close')).toBeUndefined()
+	})
 })

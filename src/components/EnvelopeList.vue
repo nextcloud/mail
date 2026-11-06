@@ -129,6 +129,7 @@
 				:compactMode="compactMode"
 				:dateGrouped="dateGrouped"
 				@delete="$emit('delete', env.databaseId)"
+				@close="$emit('close')"
 				@update:selected="onEnvelopeSelectToggle(env, index, $event)"
 				@selectMultiple="onEnvelopeSelectMultiple(env, index)"
 				@open:quickActionsSettings="showQuickActionsSettings = true" />
@@ -277,7 +278,7 @@ export default {
 		},
 	},
 
-	emits: ['delete', 'loadMore'],
+	emits: ['delete', 'loadMore', 'close'],
 
 	data() {
 		return {
