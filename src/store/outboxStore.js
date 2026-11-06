@@ -88,7 +88,9 @@ export default defineStore('outbox', {
 			this.deleteMessageMutation({ id })
 		},
 
-		async enqueueMessage({ message }) {
+		async enqueueMessage({ message: data }) {
+			const message = await OutboxService.enqueueMessage(data)
+
 			this.addMessageMutation({ message })
 
 			// Future drafts/sends after an error should go through outbox logic
