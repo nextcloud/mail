@@ -75,8 +75,18 @@ class SmtpClientFactory {
 			}
 
 			$params['password'] = $decryptedAccessToken; // Not used, but Horde wants this
+			// The SASL XOAUTH2 user is the identity we authenticate as. It usually
+			// matches the account's email address, but some providers require a
+			// different one. Microsoft 365, for example, rejects shared mailboxes as
+			// SMTP AUTH identity while accepting them for IMAP. Respecting the
+			// configured SMTP user allows authenticating as the personal mailbox and
+			// sending on behalf of the shared one.
+			$xoauth2User = $mailAccount->getOutboundUser();
+			if (empty($xoauth2User)) {
+				$xoauth2User = $account->getEmail();
+			}
 			$params['xoauth2_token'] = new Horde_Smtp_Password_Xoauth2(
-				$account->getEmail(),
+				$xoauth2User,
 				$decryptedAccessToken,
 			);
 		}
