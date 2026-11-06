@@ -22,8 +22,6 @@ use Override;
  * string 'yes'/'no' written by `occ config:app:set` before the lexicon existed
  * (its --type defaults to string). Reading such a value via getValueBool()
  * raises an AppConfigTypeConflictException and takes down the whole app.
- *
- * @psalm-api
  */
 class Version5120Date20260820000000 extends SimpleMigrationStep {
 	private const BOOL_KEYS = [

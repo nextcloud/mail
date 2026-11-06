@@ -15,9 +15,6 @@ use OCP\Migration\Attributes\ModifyColumn;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
-/**
- * @psalm-api
- */
 #[ModifyColumn(
 	table: 'mail_attachments',
 	description: 'Remove default value for created_at')
