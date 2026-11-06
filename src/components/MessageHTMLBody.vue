@@ -41,6 +41,7 @@ import MdnRequest from './MdnRequest.vue'
 import NeedsTranslationInfo from './NeedsTranslationInfo.vue'
 import logger from '../logger.js'
 import { trustSender } from '../service/TrustedSenderService.js'
+import { limitToContainerWidth } from '../util/fitWidth.ts'
 import { keepAttributeAspectRatio } from '../util/imageAspectRatio.ts'
 import { detectForeignLanguage } from '../util/languageDetection.ts'
 import { isPrintShortcut } from '../util/printMessage.ts'
@@ -166,7 +167,10 @@ export default {
 			})
 			iframeDoc
 				.querySelectorAll('[data-original-style]')
-				.forEach((node) => node.setAttribute('style', node.getAttribute('data-original-style')))
+				.forEach((node) => {
+					node.setAttribute('style', node.getAttribute('data-original-style'))
+					limitToContainerWidth(node)
+				})
 			iframeDoc
 				.querySelectorAll('style[data-original-content]')
 				.forEach((node) => {
