@@ -10,45 +10,45 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Contracts\IInternalAddressService;
+use OCA\Mail\Db\AddressEntryType;
 use OCA\Mail\Db\InternalAddress;
 use OCA\Mail\Db\InternalAddressMapper;
+use OCA\Mail\Exception\InvalidAddressException;
+use OCP\DB\Exception;
 
 class InternalAddressService implements IInternalAddressService {
 	public function __construct(
 		private InternalAddressMapper $mapper,
+		private AddressEntryNormalizer $normalizer,
 	) {
 	}
 
-	#[\Override]
-	public function isInternal(string $uid, string $address): bool {
-		return $this->mapper->exists(
-			$uid,
-			$address
-		);
-	}
-
+	/**
+	 * @throws InvalidAddressException
+	 */
 	#[\Override]
 	public function add(string $uid, string $address, string $type, ?bool $trust = true): ?InternalAddress {
-		if ($trust && $this->isInternal($uid, $address)) {
-			// Nothing to do
+		if (!$trust) {
+			// Valid values are stored normalized, older entries as they were entered
+			foreach (array_unique([$address, $this->normalizer->tryNormalize($address, $type) ?? $address]) as $storedAddress) {
+				$this->mapper->remove($uid, $storedAddress, $type);
+			}
 			return null;
 		}
 
-		if ($trust) {
-			$this->mapper->create(
-				$uid,
-				$address,
-				$type
-			);
-			return $this->getInternalAddress($uid, $address);
-		} else {
-			$this->mapper->remove(
-				$uid,
-				$address,
-				$type
-			);
+		$entryType = AddressEntryType::tryFrom($type) ?? throw new InvalidAddressException('Invalid type');
+		$address = $this->normalizer->normalize($address, $entryType);
+		try {
+			$this->mapper->create($uid, $address, $entryType->value);
+		} catch (Exception $exception) {
+			if ($exception->getReason() !== Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
+				throw $exception;
+			}
+
+			// Already listed, e.g. by a concurrent request
+			return null;
 		}
-		return null;
+		return $this->getInternalAddress($uid, $address);
 	}
 
 	#[\Override]

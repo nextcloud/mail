@@ -10,10 +10,12 @@ declare(strict_types=1);
 namespace OCA\Mail\Contracts;
 
 use OCA\Mail\Db\InternalAddress;
+use OCA\Mail\Exception\InvalidAddressException;
 
 interface IInternalAddressService {
-	public function isInternal(string $uid, string $address): bool;
-
+	/**
+	 * @throws InvalidAddressException
+	 */
 	public function add(string $uid, string $address, string $type, ?bool $trust = true);
 
 	/**

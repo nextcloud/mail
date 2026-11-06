@@ -12,6 +12,7 @@ namespace Unit\UserMigration\Service;
 use ChristophWurst\Nextcloud\Testing\ServiceMockObject;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\TrustedSender;
+use OCA\Mail\Exception\InvalidAddressException;
 use OCA\Mail\Tests\Unit\UserMigration\RecordsConsoleOutput;
 use OCA\Mail\UserMigration\Service\TrustedSendersMigrationService;
 use OCP\IUser;
@@ -191,6 +192,31 @@ class TrustedSendersMigrationServiceTest extends TestCase {
 
 		$this->migrationService->importTrustedSenders($this->user, $this->importSource, $this->output);
 
+		$this->assertWritten('A trusted sender of ' . self::USER_ID . ' is invalid', 0);
+	}
+
+	public function testImportSkipsOnlyTheRejectedTrustedSender(): void {
+		$this->recordConsoleOutput();
+		$this->importSource->method('getFileContents')
+			->with(TrustedSendersMigrationService::TRUSTED_SENDERS_FILE)
+			->willReturn(json_encode([
+				['email' => 'not valid', 'type' => 'domain'],
+				['email' => 'alice@example.test', 'type' => 'individual'],
+			]));
+		$imported = [];
+		$this->serviceMock->getParameter('trustedSenderService')
+			->expects(self::exactly(2))
+			->method('trust')
+			->willReturnCallback(static function (string $uid, string $email) use (&$imported): void {
+				if ($email === 'not valid') {
+					throw new InvalidAddressException('Invalid domain');
+				}
+				$imported[] = $email;
+			});
+
+		$this->migrationService->importTrustedSenders($this->user, $this->importSource, $this->output);
+
+		$this->assertSame(['alice@example.test'], $imported);
 		$this->assertWritten('A trusted sender of ' . self::USER_ID . ' is invalid', 0);
 	}
 }
