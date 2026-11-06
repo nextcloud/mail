@@ -4,39 +4,22 @@
 -->
 
 <template>
-	<NcModal class="confirm-modal" :name="title" @close="cancel">
-		<div class="confirm-modal">
-			<h2>{{ title }}</h2>
-			<slot />
-			<div class="confirm-modal__buttons">
-				<NcButton variant="tertiary" :disabled="disabled" @click="cancel">
-					{{ t('mail', 'Cancel') }}
-				</NcButton>
-				<NcButton
-					:href="confirmUrl"
-					:rel="confirmUrl ? 'noopener noreferrer' : undefined"
-					:target="confirmUrl ? '_blank' : undefined"
-					:disabled="disabled"
-					variant="primary"
-					@click="confirm">
-					{{ confirmText }}
-				</NcButton>
-			</div>
-		</div>
-	</NcModal>
+	<NcDialog
+		:name="title"
+		:buttons="buttons">
+		<slot />
+	</NcDialog>
 </template>
 
 <script>
 
 import { t } from '@nextcloud/l10n'
-import NcButton from '@nextcloud/vue/components/NcButton'
-import NcModal from '@nextcloud/vue/components/NcModal'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
 
 export default {
 	name: 'ConfirmationModal',
 	components: {
-		NcButton,
-		NcModal,
+		NcDialog,
 	},
 
 	props: {
@@ -55,33 +38,41 @@ export default {
 			default: undefined,
 		},
 
+		confirm: {
+			type: Function,
+			required: true,
+		},
+
 		disabled: {
 			type: Boolean,
 			default: false,
 		},
 	},
 
-	emits: ['confirm', 'cancel'],
+	computed: {
+		buttons() {
+			return [
+				{
+					label: t('mail', 'Cancel'),
+					variant: 'tertiary',
+					disabled: this.disabled,
+				},
+				{
+					label: this.confirmText,
+					variant: 'primary',
+					disabled: this.disabled,
 
-	methods: {
-		confirm() {
-			this.$emit('confirm')
-		},
+					callback: async () => {
+						await this.confirm()
+						return false
+					},
 
-		cancel() {
-			this.$emit('cancel')
+					href: this.confirmUrl,
+					rel: this.confirmUrl ? 'noopener noreferrer' : undefined,
+					target: this.confirmUrl ? '_blank' : undefined,
+				},
+			]
 		},
 	},
 }
 </script>
-
-<style lang="scss" scoped>
-.confirm-modal {
-	padding: 20px;
-
-	&__buttons {
-		display: flex;
-		justify-content: space-between;
-	}
-}
-</style>
