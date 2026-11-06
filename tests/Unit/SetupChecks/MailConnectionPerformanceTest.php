@@ -117,10 +117,12 @@ class MailConnectionPerformanceTest extends TestCase {
 			->willReturn([]);
 
 		$this->protocolFactory->expects($this->once())
-			->method('imapClient')
+			->method('newImapClient')
 			->with(new Account($account))
 			->willReturn($client);
 
+		$client->expects($this->once())
+			->method('logout');
 		$this->microtime->method('getNumeric')
 			->willReturnOnConsecutiveCalls(0, .2, .2);
 
@@ -167,7 +169,7 @@ class MailConnectionPerformanceTest extends TestCase {
 			->willReturn([]);
 
 		$this->protocolFactory->expects($this->once())
-			->method('imapClient')
+			->method('newImapClient')
 			->with(new Account($account))
 			->willReturn($client);
 
@@ -208,7 +210,7 @@ class MailConnectionPerformanceTest extends TestCase {
 			->willReturn($account);
 
 		$this->protocolFactory->expects($this->once())
-			->method('imapClient')
+			->method('newImapClient')
 			->with(new Account($account))
 			->willReturn($client);
 
@@ -245,7 +247,7 @@ class MailConnectionPerformanceTest extends TestCase {
 			->with(42)
 			->willReturn($account);
 		$this->protocolFactory->expects($this->once())
-			->method('imapClient')
+			->method('newImapClient')
 			->with(new Account($account))
 			->willThrowException(new ServiceException('Something about decryption'));
 

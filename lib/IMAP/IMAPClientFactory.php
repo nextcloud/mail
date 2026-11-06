@@ -11,7 +11,6 @@ namespace OCA\Mail\IMAP;
 
 use Exception;
 use Horde_Imap_Client_Password_Xoauth2;
-use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Cache\HordeCacheFactory;
 use OCA\Mail\Events\BeforeImapClientCreated;
@@ -69,10 +68,9 @@ class IMAPClientFactory {
 	 * @param Account $account
 	 * @param bool $useCache
 	 *
-	 * @return Horde_Imap_Client_Socket
 	 * @throws ServiceException
 	 */
-	public function getClient(Account $account, bool $useCache = true): Horde_Imap_Client_Socket {
+	public function getClient(Account $account, bool $useCache = true): HordeImapClient {
 		$this->eventDispatcher->dispatchTyped(
 			new BeforeImapClientCreated($account)
 		);

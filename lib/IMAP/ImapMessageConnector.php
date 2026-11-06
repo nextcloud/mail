@@ -56,19 +56,15 @@ class ImapMessageConnector implements IMessageConnector {
 	#[\Override]
 	public function syncMailbox(Account $account, Mailbox $mailbox, LoggerInterface $logger, int $criteria, ?array $knownUids = null, bool $force = false): SyncResult {
 		$client = $this->protocolFactory->imapClient($account);
-		try {
-			$rebuildThreads = $this->synchronizer->sync(
-				$account,
-				$client,
-				$mailbox,
-				$logger,
-				$criteria,
-				$knownUids,
-				$force,
-			);
-		} finally {
-			$client->logout();
-		}
+		$rebuildThreads = $this->synchronizer->sync(
+			$account,
+			$client,
+			$mailbox,
+			$logger,
+			$criteria,
+			$knownUids,
+			$force,
+		);
 
 		return new SyncResult(
 			state: $mailbox->getSyncChangedToken(),
@@ -97,8 +93,6 @@ class ImapMessageConnector implements IMessageConnector {
 			);
 		} catch (DoesNotExistException|Horde_Mime_Exception|Horde_Imap_Client_Exception $e) {
 			throw new ServiceException('Could not load messages: ' . $e->getMessage(), $e->getCode(), $e);
-		} finally {
-			$client->logout();
 		}
 	}
 
@@ -112,8 +106,6 @@ class ImapMessageConnector implements IMessageConnector {
 			);
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException('Could not get message IDs: ' . $e->getMessage(), 0, $e);
-		} finally {
-			$client->logout();
 		}
 
 		return $fetchResult['match']->ids;
@@ -122,17 +114,13 @@ class ImapMessageConnector implements IMessageConnector {
 	#[\Override]
 	public function fetchMessageRaw(Account $account, Mailbox $mailbox, Message $message, bool $decrypt = false): ?string {
 		$client = $this->protocolFactory->imapClient($account);
-		try {
-			return $this->imapMessageMapper->getFullText(
-				$client,
-				$mailbox->getName(),
-				$message->getUid(),
-				$account->getUserId(),
-				$decrypt,
-			);
-		} finally {
-			$client->logout();
-		}
+		return $this->imapMessageMapper->getFullText(
+			$client,
+			$mailbox->getName(),
+			$message->getUid(),
+			$account->getUserId(),
+			$decrypt,
+		);
 	}
 
 	/**
@@ -152,8 +140,6 @@ class ImapMessageConnector implements IMessageConnector {
 			);
 		} catch (Horde_Imap_Client_Exception_NoSupportExtension|Horde_Imap_Client_Exception|Horde_Mime_Exception $e) {
 			throw new ServiceException('Could not load attachments from IMAP: ' . $e->getMessage(), $e->getCode(), $e);
-		} finally {
-			$client->logout();
 		}
 	}
 
@@ -174,8 +160,6 @@ class ImapMessageConnector implements IMessageConnector {
 			);
 		} catch (Horde_Imap_Client_Exception|Horde_Mime_Exception $e) {
 			throw new ServiceException('Could not load attachment from IMAP: ' . $e->getMessage(), $e->getCode(), $e);
-		} finally {
-			$client->logout();
 		}
 	}
 
@@ -187,38 +171,34 @@ class ImapMessageConnector implements IMessageConnector {
 		$client = $this->protocolFactory->imapClient($account);
 
 		$mutatedMessages = [];
-		try {
-			foreach ($messages as $message) {
-				try {
-					$newUid = $this->imapMessageMapper->move($client, $sourceMailbox->getName(), $message->getUid(), $targetMailbox->getName());
-					if ($newUid === null) {
-						// The IMAP server does not support UIDPLUS and the message has no Message-ID
-						// header, so the new UID is unknown. It will be reconciled on the next sync.
-						$this->logger->debug('Moved message but could not determine its new UID', [
-							'userId' => $account->getUserId(),
-							'accountId' => $account->getId(),
-							'sourceMailboxId' => $sourceMailbox->getId(),
-							'targetMailboxId' => $targetMailbox->getId(),
-							'messageUid' => $message->getUid(),
-						]);
-						continue;
-					}
-					$message->setUid($newUid);
-					$message->setMailboxId($targetMailbox->getId());
-					$mutatedMessages[] = $message;
-				} catch (Horde_Imap_Client_Exception $e) {
-					$this->logger->error('Could not move message on remote IMAP server', [
-						'exception' => $e,
+		foreach ($messages as $message) {
+			try {
+				$newUid = $this->imapMessageMapper->move($client, $sourceMailbox->getName(), $message->getUid(), $targetMailbox->getName());
+				if ($newUid === null) {
+					// The IMAP server does not support UIDPLUS and the message has no Message-ID
+					// header, so the new UID is unknown. It will be reconciled on the next sync.
+					$this->logger->debug('Moved message but could not determine its new UID', [
 						'userId' => $account->getUserId(),
 						'accountId' => $account->getId(),
 						'sourceMailboxId' => $sourceMailbox->getId(),
 						'targetMailboxId' => $targetMailbox->getId(),
 						'messageUid' => $message->getUid(),
 					]);
+					continue;
 				}
+				$message->setUid($newUid);
+				$message->setMailboxId($targetMailbox->getId());
+				$mutatedMessages[] = $message;
+			} catch (Horde_Imap_Client_Exception $e) {
+				$this->logger->error('Could not move message on remote IMAP server', [
+					'exception' => $e,
+					'userId' => $account->getUserId(),
+					'accountId' => $account->getId(),
+					'sourceMailboxId' => $sourceMailbox->getId(),
+					'targetMailboxId' => $targetMailbox->getId(),
+					'messageUid' => $message->getUid(),
+				]);
 			}
-		} finally {
-			$client->logout();
 		}
 
 		return $mutatedMessages;
@@ -232,23 +212,19 @@ class ImapMessageConnector implements IMessageConnector {
 		$client = $this->protocolFactory->imapClient($account);
 
 		$mutatedMessages = [];
-		try {
-			foreach ($messages as $message) {
-				try {
-					$this->imapMessageMapper->expunge($client, $mailbox->getName(), $message->getUid());
-					$mutatedMessages[] = $message;
-				} catch (Horde_Imap_Client_Exception $e) {
-					$this->logger->error('Could not delete message on remote IMAP server', [
-						'exception' => $e,
-						'userId' => $account->getUserId(),
-						'accountId' => $account->getId(),
-						'mailboxId' => $mailbox->getId(),
-						'messageUid' => $message->getUid(),
-					]);
-				}
+		foreach ($messages as $message) {
+			try {
+				$this->imapMessageMapper->expunge($client, $mailbox->getName(), $message->getUid());
+				$mutatedMessages[] = $message;
+			} catch (Horde_Imap_Client_Exception $e) {
+				$this->logger->error('Could not delete message on remote IMAP server', [
+					'exception' => $e,
+					'userId' => $account->getUserId(),
+					'accountId' => $account->getId(),
+					'mailboxId' => $mailbox->getId(),
+					'messageUid' => $message->getUid(),
+				]);
 			}
-		} finally {
-			$client->logout();
 		}
 
 		return $mutatedMessages;
@@ -281,8 +257,6 @@ class ImapMessageConnector implements IMessageConnector {
 			}
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException('Could not set message flag on remote IMAP server: ' . $e->getMessage(), $e->getCode(), $e);
-		} finally {
-			$client->logout();
 		}
 
 		return $messages;
@@ -295,24 +269,20 @@ class ImapMessageConnector implements IMessageConnector {
 		}
 		$client = $this->protocolFactory->imapClient($account);
 
-		try {
-			if ($this->isPermflagsEnabledWithClient($client, $mailbox->getName()) === false) {
-				$this->logger->error('Cannot set message keyword, server does not support permanent flags', ['tag' => $tag->getDisplayName()]);
-				return [];
-			}
+		if ($this->isPermflagsEnabledWithClient($client, $mailbox->getName()) === false) {
+			$this->logger->error('Cannot set message keyword, server does not support permanent flags', ['tag' => $tag->getDisplayName()]);
+			return [];
+		}
 
-			$uids = array_map(static fn (Message $message) => $message->getUid(), $messages);
-			try {
-				if ($value) {
-					$this->imapMessageMapper->addFlag($client, $mailbox, $uids, $tag->getImapLabel());
-				} else {
-					$this->imapMessageMapper->removeFlag($client, $mailbox, $uids, $tag->getImapLabel());
-				}
-			} catch (Horde_Imap_Client_Exception $e) {
-				throw new ServiceException('Could not set message keyword on remote IMAP server: ' . $e->getMessage(), $e->getCode(), $e);
+		$uids = array_map(static fn (Message $message) => $message->getUid(), $messages);
+		try {
+			if ($value) {
+				$this->imapMessageMapper->addFlag($client, $mailbox, $uids, $tag->getImapLabel());
+			} else {
+				$this->imapMessageMapper->removeFlag($client, $mailbox, $uids, $tag->getImapLabel());
 			}
-		} finally {
-			$client->logout();
+		} catch (Horde_Imap_Client_Exception $e) {
+			throw new ServiceException('Could not set message keyword on remote IMAP server: ' . $e->getMessage(), $e->getCode(), $e);
 		}
 
 		foreach ($messages as $message) {
@@ -334,8 +304,6 @@ class ImapMessageConnector implements IMessageConnector {
 			return null;
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException('Could not get quota from IMAP: ' . $e->getMessage(), $e->getCode(), $e);
-		} finally {
-			$client->logout();
 		}
 
 		$storageQuotas = array_map(static fn (array $root) => $root['storage'] ?? [
@@ -368,11 +336,7 @@ class ImapMessageConnector implements IMessageConnector {
 	#[\Override]
 	public function isPermflagsEnabled(Account $account, Mailbox $mailbox): bool {
 		$client = $this->protocolFactory->imapClient($account);
-		try {
-			return $this->isPermflagsEnabledWithClient($client, $mailbox->getName());
-		} finally {
-			$client->logout();
-		}
+		return $this->isPermflagsEnabledWithClient($client, $mailbox->getName());
 	}
 
 	private function isPermflagsEnabledWithClient($client, string $mailbox): bool {
