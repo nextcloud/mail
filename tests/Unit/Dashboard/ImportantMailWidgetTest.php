@@ -11,10 +11,13 @@ namespace Unit\Dashboard;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
+use OCA\Mail\AddressList;
+use OCA\Mail\Contracts\IAvatarService;
 use OCA\Mail\Dashboard\ImportantMailWidget;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\Avatar\Avatar;
 use OCA\Mail\Service\Search\GlobalSearchQuery;
 use OCA\Mail\Service\Search\MailSearch;
 use OCA\Mail\Service\Search\SearchQuery as MailSearchQuery;
@@ -30,6 +33,7 @@ class ImportantMailWidgetTest extends TestCase {
 	private IL10N&MockObject $l10n;
 	private IURLGenerator&MockObject $urlGenerator;
 	private IUserManager&MockObject $userManager;
+	private IAvatarService&MockObject $avatarService;
 	private AccountService&MockObject $accountService;
 	private MailSearch&MockObject $mailSearch;
 	private IInitialState&MockObject $initialState;
@@ -41,6 +45,7 @@ class ImportantMailWidgetTest extends TestCase {
 		$this->l10n = $this->createMock(IL10N::class);
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
 		$this->userManager = $this->createMock(IUserManager::class);
+		$this->avatarService = $this->createMock(IAvatarService::class);
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->mailSearch = $this->createMock(MailSearch::class);
 		$this->initialState = $this->createMock(IInitialState::class);
@@ -49,6 +54,7 @@ class ImportantMailWidgetTest extends TestCase {
 			$this->l10n,
 			$this->urlGenerator,
 			$this->userManager,
+			$this->avatarService,
 			$this->accountService,
 			$this->mailSearch,
 			$this->initialState,
@@ -84,6 +90,46 @@ class ImportantMailWidgetTest extends TestCase {
 		$items = $this->widget->getItems('bob', null, 7);
 
 		$this->assertCount(2, $items);
+	}
+
+	public function testGetItemsWithAvatars(): void {
+		$user = $this->createStub(IUser::class);
+		$this->userManager->expects($this->once())
+			->method('get')
+			->willReturn($user);
+
+		$message1 = new Message();
+		$message1->setSubject('Important');
+		$message1->setMailboxId(1);
+		$message1->setFrom(AddressList::fromRow([
+			'label' => 'John Doe',
+			'email' => 'john@doe.com',
+		]));
+
+		$this->mailSearch->expects($this->once())
+			->method('findMessagesGlobally')
+			->with($user, $this->callback(function (GlobalSearchQuery $query) {
+				self::assertCount(1, $query->getFlags());
+				self::assertNull($query->getStart());
+				return true;
+			}))
+			->willReturn([$message1]);
+
+		$mailAccount = new MailAccount();
+		$account = new Account($mailAccount);
+		$this->accountService->expects($this->once())
+			->method('findByUserId')
+			->willReturn([$account]);
+
+		$avatar = new Avatar('https://example.com/avatar.png', 'image/png', false);
+		$this->avatarService->expects($this->once())
+			->method('getAvatar')
+			->with('john@doe.com', 'bob')
+			->willReturn($avatar);
+
+		$items = $this->widget->getItems('bob', null, 7);
+
+		$this->assertCount(1, $items);
 	}
 
 	public function testGetItemsWithSince(): void {
