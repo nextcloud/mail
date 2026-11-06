@@ -499,12 +499,14 @@ export default function mainStoreActions() {
 					},
 				))
 				if (!discard) {
-					this.showMessageComposer()
+					this.showMessageComposer = 'open'
 					return
 				}
 			}
 
 			return handleHttpAuthErrors(async () => {
+				this.showMessageComposer = 'waiting'
+
 				if (reply) {
 					const original = await this.fetchMessage(reply.data.databaseId)
 					if (reply?.smartReply) {
@@ -2036,7 +2038,7 @@ export default function mainStoreActions() {
 				indicatorDisabled: false,
 			}
 			this.composerMessageIsSaved = false
-			this.showMessageComposer = true
+			this.showMessageComposer = 'open'
 		},
 		/**
 		 * Stop current composer session and close the modal.
@@ -2046,7 +2048,7 @@ export default function mainStoreActions() {
 		stopComposerSessionMutation() {
 			this.composerSessionId = undefined
 			this.newMessage = undefined
-			this.showMessageComposer = false
+			this.showMessageComposer = 'disable'
 		},
 		/**
 		 * Show composer modal if there is an ongoing session.
@@ -2054,7 +2056,7 @@ export default function mainStoreActions() {
 		 */
 		showMessageComposerMutation() {
 			if (this.composerSessionId) {
-				this.showMessageComposer = true
+				this.showMessageComposer = 'open'
 			}
 		},
 		/**
@@ -2062,7 +2064,7 @@ export default function mainStoreActions() {
 		 *
 		 */
 		hideMessageComposerMutation() {
-			this.showMessageComposer = false
+			this.showMessageComposer = 'close'
 		},
 		setComposerMessageSavedMutation(saved) {
 			this.composerMessageIsSaved = saved
