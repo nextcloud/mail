@@ -37,7 +37,7 @@ use Throwable;
  *     accountId: int, name: string, emailAddress: string, order: int,
  *     showSubscribedOnly: bool, smimeCertificateId: int|null, editorMode: string|null,
  *     trashRetentionDays: int|null, outOfOfficeFollowsSystem: bool, imipCreate: bool|null,
- *     classificationEnabled: bool, searchBody: bool, personalNamespace: string|null,
+ *     classificationEnabled: bool, searchBody: bool, saveSentCopy?: bool, personalNamespace: string|null,
  *     signature: string|null, signatureAboveQuote: bool, signatureMode: int,
  *     protocol: string, authMethod: string,
  *     imapHost: string|null, imapPort: int|null, imapSslMode: string|null,
@@ -339,6 +339,7 @@ class AccountMigrationService {
 		$newAccount->setImipCreate($accountData['imipCreate']);
 		$newAccount->setClassificationEnabled($accountData['classificationEnabled']);
 		$newAccount->setSearchBody($accountData['searchBody']);
+		$newAccount->setSaveSentCopy($accountData['saveSentCopy'] ?? true);
 
 		$newAccount->setOrder($orderOffset + max(0, $accountData['order']));
 		$newAccount->setSignature($accountData['signature']);
@@ -498,6 +499,7 @@ class AccountMigrationService {
 			'imipCreate' => $mailAccount->getImipCreate(),
 			'classificationEnabled' => $mailAccount->getClassificationEnabled(),
 			'searchBody' => $mailAccount->getSearchBody(),
+			'saveSentCopy' => $mailAccount->getSaveSentCopy(),
 			'personalNamespace' => $mailAccount->getPersonalNamespace(),
 			'signature' => $mailAccount->getSignature(),
 			'signatureAboveQuote' => $mailAccount->isSignatureAboveQuote() === true,

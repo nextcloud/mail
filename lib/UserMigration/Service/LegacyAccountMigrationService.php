@@ -225,6 +225,7 @@ class LegacyAccountMigrationService {
 		$newAccount->setImipCreate((bool)($accountData['imipCreate'] ?? false));
 		$newAccount->setClassificationEnabled((bool)($accountData['classificationEnabled'] ?? false));
 		$newAccount->setSearchBody((bool)($accountData['searchBody'] ?? false));
+		$newAccount->setSaveSentCopy((bool)($accountData['saveSentCopy'] ?? true));
 		$newAccount->setPersonalNamespace($accountData['personalNamespace'] ?? null);
 		$newAccount->setSignature($accountData['signature'] ?? null);
 		$newAccount->setSignatureAboveQuote((bool)($accountData['signatureAboveQuote'] ?? false));

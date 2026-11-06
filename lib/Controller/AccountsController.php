@@ -215,6 +215,7 @@ class AccountsController extends Controller {
 		?bool $searchBody = null,
 		?bool $classificationEnabled = null,
 		?bool $imipCreate = null,
+		?bool $saveSentCopy = null,
 	): JSONResponse {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
 		$account = $this->accountService->find($effectiveUserId, $id);
@@ -275,6 +276,9 @@ class AccountsController extends Controller {
 		}
 		if ($imipCreate !== null) {
 			$dbAccount->setImipCreate($imipCreate);
+		}
+		if ($saveSentCopy !== null) {
+			$dbAccount->setSaveSentCopy($saveSentCopy);
 		}
 		$result = new JSONResponse(
 			new Account($this->accountService->save($dbAccount))

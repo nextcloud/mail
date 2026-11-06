@@ -427,6 +427,22 @@ class AccountsControllerTest extends TestCase {
 		self::assertEquals(new JSONResponse(new Account($mailAccount)), $response);
 	}
 
+	public function testPatchAccountSaveSentCopy(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId($this->accountId);
+		$mailAccount->setUserId($this->userId);
+		$this->accountService->expects(self::once())
+			->method('find')
+			->with($this->userId, $this->accountId)
+			->willReturn(new Account($mailAccount));
+		$this->accountService->expects(self::once())
+			->method('save')
+			->with(self::callback(static fn (MailAccount $account): bool => $account->getSaveSentCopy() === false))
+			->willReturnArgument(0);
+
+		$this->controller->patchAccount($this->accountId, saveSentCopy: false);
+	}
+
 	public function testPatchAccountSpecialMailboxNotDelegated(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId($this->accountId);
