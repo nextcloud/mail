@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\BackgroundJob\ContextChat;
 
+use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\ContextChat\ContextChatSettingsService;
@@ -69,13 +70,21 @@ class ScheduleJob extends TimedJob {
 			return;
 		}
 
-		foreach ($mailboxes as $mailbox) {
+		// Messages fetched by the initial sync don't emit NewMessagesSynchronized, so wait until it ran
+		$cachedMailboxes = array_filter($mailboxes, static fn (Mailbox $mailbox): bool => $mailbox->isCached());
+		if ($cachedMailboxes === []) {
+			$this->logger->debug("No synchronized mailboxes for account <{$accountId}> yet, postponing context chat import");
+			return;
+		}
+
+		foreach ($cachedMailboxes as $mailbox) {
 			try {
-				$this->taskService->findByMailboxId($mailbox->getId());
 				$this->taskService->updateOrCreate($mailbox->getId(), 0);
-			} catch (DoesNotExistException|MultipleObjectsReturnedException|Exception $e) {
-				$this->logger->warning("Could not schedule context chat indexing tasks for mailbox <{$mailbox->getId()}>");
+			} catch (MultipleObjectsReturnedException|Exception $e) {
+				$this->logger->warning("Could not schedule context chat indexing task for mailbox <{$mailbox->getId()}>", ['exception' => $e]);
 			}
 		}
+
+		$this->jobList->remove(self::class, $argument);
 	}
 }

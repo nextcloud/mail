@@ -11,6 +11,7 @@ namespace OCA\Mail\Tests\Unit\ContextChat;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
+use OCA\Mail\BackgroundJob\ContextChat\ScheduleJob;
 use OCA\Mail\ContextChat\ContextChatProvider;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
@@ -146,6 +147,32 @@ class ContextChatProviderTest extends TestCase {
 		}
 
 		$this->contextChatProvider->handle($event);
+	}
+
+	public function testTriggerInitialImportSchedulesEveryAccount(): void {
+		$first = new MailAccount();
+		$first->setId(1);
+		$second = new MailAccount();
+		$second->setId(2);
+		$this->accountService->method('getAllAcounts')->willReturn([$first, $second]);
+		$scheduled = [];
+		$this->jobList->expects($this->exactly(2))
+			->method('add')
+			->willReturnCallback(function (string $job, array $argument) use (&$scheduled): void {
+				$this->assertSame(ScheduleJob::class, $job);
+				$scheduled[] = $argument;
+			});
+
+		$this->contextChatProvider->triggerInitialImport();
+
+		$this->assertSame([['accountId' => 1], ['accountId' => 2]], $scheduled);
+	}
+
+	public function testTriggerInitialImportWithoutAccounts(): void {
+		$this->accountService->method('getAllAcounts')->willReturn([]);
+		$this->jobList->expects($this->never())->method('add');
+
+		$this->contextChatProvider->triggerInitialImport();
 	}
 
 	public function testGetId(): void {
