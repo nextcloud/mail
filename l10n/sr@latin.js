@@ -72,6 +72,7 @@ OC.L10N.register(
     "Tag" : "Oznaka",
     "delete" : "obriši",
     "Reset" : "Resetuj",
+    "Display name" : "Ime za prikaz",
     "User" : "Korisnik",
     "Shared" : "Deljeno",
     "All" : "Sve"
