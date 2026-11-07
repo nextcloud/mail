@@ -11,12 +11,14 @@ namespace OCA\Mail\Tests\Unit\IMAP;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Exception;
+use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\ImapMessageConnector;
 use OCA\Mail\IMAP\MessageMapper;
@@ -211,5 +213,25 @@ class ImapMessageConnectorTest extends TestCase {
 		$result = $this->connector->isPermflagsEnabled($this->account, $mailbox);
 
 		self::assertTrue($result);
+	}
+
+	public function testGetQuotaSkipsNoSelectFolders(): void {
+		$this->imapMailboxMapper->method('getFolders')
+			->with($this->account, $this->client)
+			->willReturn([
+				new Folder(new Horde_Imap_Client_Mailbox('INBOX'), [], '/', null),
+				new Folder(new Horde_Imap_Client_Mailbox('Shared Folders'), ['\\Noselect'], '/', null),
+			]);
+		$this->client->expects(self::once())
+			->method('getQuotaRoot')
+			->with('INBOX')
+			->willReturn(['' => ['storage' => ['usage' => 1, 'limit' => 2]]]);
+		$this->client->expects(self::once())
+			->method('logout');
+
+		$quota = $this->connector->getQuota($this->account);
+
+		self::assertSame(1024, $quota->getUsage());
+		self::assertSame(2048, $quota->getLimit());
 	}
 }
