@@ -11,6 +11,11 @@ const attachments = [
 	{ downloadUrl: '/cat.png', fileName: 'cat.png', mime: 'image/png' },
 	{ downloadUrl: '/notes.txt', fileName: 'notes.txt', mime: 'text/plain' },
 	{ downloadUrl: '/invoice.pdf', fileName: 'invoice.pdf', mime: 'application/pdf' },
+	{ downloadUrl: '/lower.pdf', fileName: 'lower.pdf', mime: 'application/octet-stream' },
+	{ downloadUrl: '/upper.PDF', fileName: 'upper.PDF', mime: 'application/octet-stream' },
+	{ downloadUrl: '/ordinary.xml', fileName: 'ordinary.xml', mime: 'application/octet-stream' },
+	{ downloadUrl: '/other.pdf', fileName: 'other.pdf', mime: 'application/x-msdownload' },
+	{ downloadUrl: '/unnamed', fileName: null, mime: 'application/octet-stream' },
 ]
 
 function mountMixin() {
@@ -34,6 +39,23 @@ describe('AttachmentMixin', () => {
 		expect(view.vm.previewableFileInfos).toHaveLength(1)
 		expect(view.vm.canPreview(view.vm.fileInfos[0])).toBe(true)
 		expect(view.vm.canPreview(view.vm.fileInfos[1])).toBe(false)
+	})
+
+	it('maps generic PDF MIME by filename without modifying downloads or other MIME types', () => {
+		const view = mountMixin()
+		const fileInfos = view.vm.fileInfos
+
+		expect(fileInfos.slice(3).map((fileInfo) => fileInfo.mime)).toEqual([
+			'application/pdf',
+			'application/pdf',
+			'application/octet-stream',
+			'application/x-msdownload',
+			'application/octet-stream',
+		])
+		expect(fileInfos[3].filename).toBe('/lower.pdf')
+		expect(fileInfos[3].source).toBe('/lower.pdf')
+		expect(fileInfos[4].source).toBe('/upper.PDF')
+		expect(view.vm.attachments[3].mime).toBe('application/octet-stream')
 	})
 
 	it('previews nothing when the viewer app is disabled', () => {
