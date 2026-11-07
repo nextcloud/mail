@@ -584,4 +584,21 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->assertMatchesRegularExpression('/^Message-ID: /mi', $capturedRaw);
 		$this->assertMatchesRegularExpression('/^MIME-Version: 1\.0$/mi', $capturedRaw);
 	}
+
+	public function testSaveMessageAddsReplyHeaders(): void {
+		[$account, $mailbox, $localMessage] = $this->prepareAiGeneratedMessage();
+		$localMessage->setInReplyToMessageId('<original@example.com>');
+		$capturedRaw = null;
+		$this->messageMapper->expects(self::once())
+			->method('save')
+			->willReturnCallback(function ($client, $mailboxArg, $raw) use (&$capturedRaw) {
+				$capturedRaw = $raw;
+				return 1;
+			});
+
+		$this->connector->saveMessage($account, $mailbox, $localMessage, ['$draft']);
+
+		$this->assertMatchesRegularExpression('/^In-Reply-To: <original@example\.com>$/mi', $capturedRaw);
+		$this->assertMatchesRegularExpression('/^References: <original@example\.com>$/mi', $capturedRaw);
+	}
 }
