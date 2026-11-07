@@ -27,7 +27,9 @@ class FaviconDataAccess extends DataAccess {
 	public function retrieveUrl($url) {
 		$client = $this->clientService->newClient();
 		try {
-			$response = $client->get($url);
+			$response = $client->get($url, [
+				'timeout' => 5,
+			]);
 		} catch (Exception $e) {
 			// Ignore any error, like the parent method
 			return false;
@@ -45,6 +47,7 @@ class FaviconDataAccess extends DataAccess {
 		$client = $this->clientService->newClient();
 		try {
 			$response = $client->get($url, [
+				'timeout' => 5,
 				'allow_redirects' => [
 					'max' => 1,
 				],

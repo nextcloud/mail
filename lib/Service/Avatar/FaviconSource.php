@@ -70,7 +70,9 @@ class FaviconSource implements IAvatarSource {
 		/** @var string $iconUrl */
 		$client = $this->clientService->newClient();
 		try {
-			$response = $client->get($iconUrl);
+			$response = $client->get($iconUrl, [
+				'timeout' => 5,
+			]);
 		} catch (Exception $exception) {
 			return null;
 		}
