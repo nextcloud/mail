@@ -47,7 +47,9 @@ class GravatarSource implements IAvatarSource {
 		$client = $this->clientService->newClient();
 
 		try {
-			$response = $client->get($avatarUrl);
+			$response = $client->get($avatarUrl, [
+				'timeout' => FaviconSource::REQUEST_TIMEOUT,
+			]);
 		} catch (Exception $exception) {
 			return null;
 		}

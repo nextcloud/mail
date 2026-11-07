@@ -11,6 +11,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use Exception;
 use OCA\Mail\Service\Avatar\Avatar;
 use OCA\Mail\Service\Avatar\AvatarFactory;
+use OCA\Mail\Service\Avatar\FaviconSource;
 use OCA\Mail\Service\Avatar\GravatarSource;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
@@ -42,7 +43,9 @@ class GravatarSourceTest extends TestCase {
 		$response = $this->createMock(IResponse::class);
 		$client->expects($this->once())
 			->method('get')
-			->with('https://secure.gravatar.com/avatar/2fd3f4d5d762955e5b603794a888fa97?size=128&d=404')
+			->with('https://secure.gravatar.com/avatar/2fd3f4d5d762955e5b603794a888fa97?size=128&d=404', [
+				'timeout' => FaviconSource::REQUEST_TIMEOUT,
+			])
 			->willReturn($response);
 		$response->expects($this->once())
 			->method('getBody')
@@ -67,7 +70,9 @@ class GravatarSourceTest extends TestCase {
 			->willReturn($client);
 		$client->expects($this->once())
 			->method('get')
-			->with('https://secure.gravatar.com/avatar/2fd3f4d5d762955e5b603794a888fa97?size=128&d=404')
+			->with('https://secure.gravatar.com/avatar/2fd3f4d5d762955e5b603794a888fa97?size=128&d=404', [
+				'timeout' => FaviconSource::REQUEST_TIMEOUT,
+			])
 			->willThrowException(new Exception());
 
 		$actualAvatar = $this->source->fetch('currentUser', $email, $avatarFactory);

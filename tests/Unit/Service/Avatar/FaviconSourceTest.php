@@ -104,7 +104,9 @@ class FaviconSourceTest extends TestCase {
 		$response = $this->createMock(IResponse::class);
 		$client->expects($this->once())
 			->method('get')
-			->with($iconUrl)
+			->with($iconUrl, [
+				'timeout' => FaviconSource::REQUEST_TIMEOUT,
+			])
 			->willReturn($response);
 		$response->expects($this->once())
 			->method('getBody')
@@ -142,7 +144,9 @@ class FaviconSourceTest extends TestCase {
 		$response = $this->createMock(IResponse::class);
 		$client->expects($this->once())
 			->method('get')
-			->with($iconUrl)
+			->with($iconUrl, [
+				'timeout' => FaviconSource::REQUEST_TIMEOUT,
+			])
 			->willReturn($response);
 		$response->expects($this->once())
 			->method('getBody')

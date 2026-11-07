@@ -38,7 +38,9 @@ class FaviconDataAccessTest extends TestCase {
 		$response = $this->createMock(IResponse::class);
 		$client->expects(self::once())
 			->method('get')
-			->with('https://localhost/favicon.ico', self::anything())
+			->with('https://localhost/favicon.ico', [
+				'timeout' => FaviconSource::REQUEST_TIMEOUT,
+			])
 			->willReturn($response);
 		$response->method('getBody')
 			->willReturn('html');
@@ -57,7 +59,12 @@ class FaviconDataAccessTest extends TestCase {
 		$response = $this->createMock(IResponse::class);
 		$client->expects(self::once())
 			->method('get')
-			->with('https://localhost/favicon.ico', self::anything())
+			->with('https://localhost/favicon.ico', [
+				'timeout' => FaviconSource::REQUEST_TIMEOUT,
+				'allow_redirects' => [
+					'max' => 1,
+				],
+			])
 			->willReturn($response);
 		$response->method('getStatusCode')
 			->willReturn(200);
