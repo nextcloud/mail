@@ -42,13 +42,14 @@
 
 <script>
 import { getRequestToken } from '@nextcloud/auth'
-import { getFilePickerBuilder, showWarning } from '@nextcloud/dialogs'
+import { getFilePickerBuilder, showError, showWarning } from '@nextcloud/dialogs'
 import { formatFileSize } from '@nextcloud/files'
 import { n, t } from '@nextcloud/l10n'
 import map from 'lodash/fp/map.js'
 import prop from 'lodash/fp/prop.js'
 import sumBy from 'lodash/fp/sumBy.js'
 import trimStart from 'lodash/fp/trimCharsStart.js'
+import { reactive } from 'vue'
 import ChevronDown from 'vue-material-design-icons/ChevronDown.vue'
 import ChevronUp from 'vue-material-design-icons/ChevronUp.vue'
 import ComposerAttachment from './ComposerAttachment.vue'
@@ -95,7 +96,7 @@ export default {
 		},
 	},
 
-	emits: ['update:modelValue', 'upload', 'onDeleteAttachment'],
+	emits: ['update:modelValue', 'update:blocksSending', 'onDeleteAttachment'],
 
 	data() {
 		return {
@@ -111,6 +112,10 @@ export default {
 	computed: {
 		hasAttachmentErrors() {
 			return this.attachments.some((attachment) => attachment.error)
+		},
+
+		blocksSending() {
+			return this.attachments.some((attachment) => attachment.uploading || attachment.error)
 		},
 
 		uploadProgress() {
@@ -158,6 +163,10 @@ export default {
 					})
 				})
 			},
+		},
+
+		blocksSending(value) {
+			this.$emit('update:blocksSending', value)
 		},
 	},
 
@@ -234,7 +243,7 @@ export default {
 			return this.addLocalFiles(Array.from(e.target.files))
 		},
 
-		addLocalFiles(files) {
+		async addLocalFiles(files) {
 			this.uploading = true
 			// BUG - if choose again - progress lost/ move to complete()
 			this.uploads = {}
@@ -264,9 +273,9 @@ export default {
 				})
 			}
 			// TODO bug: cancel axios on close or delete attachment
-			const promises = map((file) => {
+			const promises = map(async (file) => {
 				const controller = new AbortController()
-				const attachment = {
+				const attachment = reactive({
 					fileName: file.name,
 					fileType: file.type,
 					imageBlobURL: this.generatePreview(file),
@@ -276,10 +285,11 @@ export default {
 					total: file.size,
 					finished: false,
 					error: false,
+					uploading: true,
 					hasPreview: false,
 					type: 'local',
 					controller,
-				}
+				})
 				this.attachments.push(attachment)
 
 				this.uploads[file.name] = {
@@ -287,41 +297,32 @@ export default {
 					uploaded: 0,
 				}
 				try {
-					return uploadLocalAttachment(file, this.accountId, progress(file.name), controller)
-						.catch(() => {
-							this.attachments.some((attachment) => {
-								if (attachment.displayName === file.name && !attachment.error) {
-									attachment.error = true
-									return true
-								}
-								return false
-							})
-						})
-						.then(({ file, id }) => {
-							logger.info('local attachment uploaded', { file, id })
+					const { id } = await uploadLocalAttachment(file, this.accountId, progress(file.name), controller)
+					logger.info('local attachment uploaded', { file, id })
 
-							attachment.id = id
+					attachment.id = id
 
-							this.emitNewAttachments([{
-								fileName: file.name,
-								displayName: trimStart('/', file.name),
-								id,
-								size: file.size,
-								type: 'local',
-							}])
-						})
+					this.emitNewAttachments([{
+						fileName: file.name,
+						displayName: trimStart('/', file.name),
+						id,
+						size: file.size,
+						type: 'local',
+					}])
 				} catch (error) {
+					if (controller.signal.aborted) {
+						return
+					}
 					logger.error('Could not upload file', { file, error })
+					attachment.error = true
+					showError(t('mail', 'Could not upload {fileName}', { fileName: file.name }))
+				} finally {
+					attachment.uploading = false
 				}
 			}, files)
 
-			const done = Promise.all(promises)
-				.catch((error) => logger.error('could not upload all attachments', { error }))
-				.then(() => (this.uploading = false))
-
-			this.$emit('upload', done)
-
-			return done
+			await Promise.all(promises)
+			this.uploading = false
 		},
 
 		async onAddCloudAttachment(nodes) {
