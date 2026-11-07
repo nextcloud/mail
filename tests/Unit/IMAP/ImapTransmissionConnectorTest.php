@@ -491,7 +491,7 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->assertStringContainsString('Attachment contents', $capturedRaw);
 	}
 
-	private function prepareAiGeneratedMessage(): array {
+	private function prepareMessage(): array {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('bob');
 		$mailAccount->setName('Bob');
@@ -503,7 +503,6 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$localMessage->setSubject('Hello');
 		$localMessage->setBodyPlain('Body');
 		$localMessage->setHtml(false);
-		$localMessage->setAiGenerated(true);
 		$localMessage->setStatus(LocalMessage::STATUS_RAW);
 
 		$this->transmissionService->method('getAddressList')
@@ -521,7 +520,8 @@ class ImapTransmissionConnectorTest extends TestCase {
 	}
 
 	public function testSendMessageAddsAiGeneratedHeader(): void {
-		[$account, $sentMailbox, $localMessage] = $this->prepareAiGeneratedMessage();
+		[$account, $sentMailbox, $localMessage] = $this->prepareMessage();
+		$localMessage->setAiGenerated(true);
 		$this->smtpClientFactory->method('create')
 			->willReturn(new Horde_Mail_Transport_Null());
 		$this->messageMapper->expects(self::once())
@@ -534,7 +534,8 @@ class ImapTransmissionConnectorTest extends TestCase {
 	}
 
 	public function testSaveMessageAddsAiGeneratedHeader(): void {
-		[$account, $mailbox, $localMessage] = $this->prepareAiGeneratedMessage();
+		[$account, $mailbox, $localMessage] = $this->prepareMessage();
+		$localMessage->setAiGenerated(true);
 		$capturedRaw = null;
 		$this->messageMapper->expects(self::once())
 			->method('save')
@@ -586,7 +587,7 @@ class ImapTransmissionConnectorTest extends TestCase {
 	}
 
 	public function testSaveMessageAddsReplyHeaders(): void {
-		[$account, $mailbox, $localMessage] = $this->prepareAiGeneratedMessage();
+		[$account, $mailbox, $localMessage] = $this->prepareMessage();
 		$localMessage->setInReplyToMessageId('<original@example.com>');
 		$capturedRaw = null;
 		$this->messageMapper->expects(self::once())
