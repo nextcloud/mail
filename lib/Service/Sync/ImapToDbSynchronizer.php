@@ -305,6 +305,15 @@ class ImapToDbSynchronizer {
 		// mailboxes (commit e50c214ff). Do NOT logout $client — the caller owns
 		// it and we need it below for getSyncToken.
 		$noCacheClient = $this->protocolFactory->imapClient($account, false);
+
+		// Use the cache-enabled $client passed in for the sync token. The no-cache
+		// client does not activate CONDSTORE/QRESYNC (commit 7980d9e40), so its
+		// token lacks HIGHESTMODSEQ — causing the first partial sync to resolve ALL
+		// UIDs and run OOM on large mailboxes. Do NOT logout $client here; the
+		// caller (syncAccount) owns and closes it.
+		// Take it before fetching: a message that arrives while the messages are
+		// fetched is then found by the next sync instead of being skipped for good.
+		$syncToken = $client->getSyncToken($mailbox->getName());
 		try {
 			$highestKnownUid = $this->dbMapper->findHighestUid($mailbox);
 			try {
@@ -344,12 +353,6 @@ class ImapToDbSynchronizer {
 			$noCacheClient->logout();
 		}
 
-		// Use the cache-enabled $client passed in for the sync token. The no-cache
-		// client does not activate CONDSTORE/QRESYNC (commit 7980d9e40), so its
-		// token lacks HIGHESTMODSEQ — causing the first partial sync to resolve ALL
-		// UIDs and run OOM on large mailboxes. Do NOT logout $client here; the
-		// caller (syncAccount) owns and closes it.
-		$syncToken = $client->getSyncToken($mailbox->getName());
 		$mailbox->setSyncNewToken($syncToken);
 		$mailbox->setSyncChangedToken($syncToken);
 		$mailbox->setSyncVanishedToken($syncToken);
@@ -384,6 +387,12 @@ class ImapToDbSynchronizer {
 
 		$requestId = base64_encode(random_bytes(16));
 
+		// Take the new token before looking for changes. Whatever happens on the
+		// server after this point is then found by the next sync. A token taken
+		// afterwards skips a message that arrives in between for good, because the
+		// next sync only looks above its UIDNEXT.
+		$syncToken = $client->getSyncToken($mailbox->getName());
+
 		if ($criteria & Horde_Imap_Client::SYNC_NEWMSGSUIDS) {
 			$response = $this->synchronizer->sync(
 				$client,
@@ -400,16 +409,17 @@ class ImapToDbSynchronizer {
 			);
 			$perf->step('get new messages via Horde');
 
-			$highestKnownUid = $this->dbMapper->findHighestUid($mailbox);
-			if ($highestKnownUid === null) {
-				// Everything is relevant
-				$newMessages = $response->getNewMessages();
-			} else {
-				// Filter out anything that is already in the DB. Ideally this never happens, but if there is an error
-				// during a consecutive chunk INSERT, the sync token won't be updated. In that case the same message(s)
-				// will be seen as *new* and therefore cause conflicts.
-				$newMessages = array_filter($response->getNewMessages(), static fn (IMAPMessage $imapMessage) => $imapMessage->getUid() > $highestKnownUid);
-			}
+			// Filter out anything that is already in the DB: the messages the previous sync
+			// found after it took its token, and those of a chunk INSERT that succeeded
+			// before a later one failed (the token is not updated then). Filtering on the
+			// UIDs themselves rather than on the highest cached UID keeps a message below
+			// it that is missing from the cache.
+			$newMessages = $response->getNewMessages();
+			$cachedUids = array_flip($this->dbMapper->findCachedUids(
+				$mailbox,
+				array_map(static fn (IMAPMessage $imapMessage) => $imapMessage->getUid(), $newMessages),
+			));
+			$newMessages = array_values(array_filter($newMessages, static fn (IMAPMessage $imapMessage) => !isset($cachedUids[$imapMessage->getUid()])));
 
 			$importantTag = null;
 			try {
@@ -447,7 +457,7 @@ class ImapToDbSynchronizer {
 			}
 			$perf->step('persist new messages');
 
-			$mailbox->setSyncNewToken($client->getSyncToken($mailbox->getName()));
+			$mailbox->setSyncNewToken($syncToken);
 			$newOrVanished = $newMessages !== [];
 		}
 		if ($criteria & Horde_Imap_Client::SYNC_FLAGSUIDS) {
@@ -478,7 +488,7 @@ class ImapToDbSynchronizer {
 			// a silent sync and we don't update the change token until the next full
 			// mailbox sync
 			if ($knownUids === null) {
-				$mailbox->setSyncChangedToken($client->getSyncToken($mailbox->getName()));
+				$mailbox->setSyncChangedToken($syncToken);
 			}
 		}
 		if ($criteria & Horde_Imap_Client::SYNC_VANISHEDUIDS) {
@@ -507,7 +517,7 @@ class ImapToDbSynchronizer {
 			// a silent sync and we don't update the vanish token until the next full
 			// mailbox sync
 			if ($knownUids === null) {
-				$mailbox->setSyncVanishedToken($client->getSyncToken($mailbox->getName()));
+				$mailbox->setSyncVanishedToken($syncToken);
 			}
 			$newOrVanished = $newOrVanished || !empty($response->getVanishedMessageUids());
 		}
