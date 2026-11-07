@@ -118,6 +118,31 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->assertEquals('test.txt', $part->getContentTypeParameter('name'));
 	}
 
+	public function testBuildAttachmentMimePartKeepsNonAsciiFileName(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('bob');
+		$account = new Account($mailAccount);
+
+		$attachment = new LocalAttachment();
+		$attachment->setFileName('Договор.txt');
+		$attachment->setMimeType('text/plain');
+		$attachment->setDisposition(LocalAttachment::DISPOSITION_ATTACHMENT);
+
+		$file = new InMemoryFile(
+			'Договор.txt',
+			"Hello, I'm a test file."
+		);
+
+		$this->attachmentService->expects(self::once())
+			->method('getAttachment')
+			->willReturn([$attachment, $file]);
+
+		$part = $this->callPrivate('buildAttachmentMimePart', [$account, ['id' => 1, 'type' => 'local']]);
+		$headers = $part->addMimeHeaders()->toString(['charset' => $part->getHeaderCharset()]);
+
+		$this->assertStringContainsString("filename*=utf-8''%D0%94%D0%BE%D0%B3%D0%BE%D0%B2%D0%BE%D1%80.txt", $headers);
+	}
+
 	public function testBuildAttachmentMimePartInlineWithContentId(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('bob');
