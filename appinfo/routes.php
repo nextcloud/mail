@@ -14,6 +14,9 @@ return [
 			'name' => 'deep_link#open',
 			'url' => '/open/{messageId}',
 			'verb' => 'GET',
+			'requirements' => [
+				'messageId' => '.+',
+			],
 		],
 		[
 			'name' => 'page#index',
