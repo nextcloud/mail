@@ -38,15 +38,24 @@ class OptionalIndicesListener implements IEventListener {
 		}
 
 		if (version_compare($this->config->getSystemValue('version', '0.0.0'), '28.0.0', '>=')) {
-			$event->addMissingIndex(
+			$event->replaceIndex(
 				'mail_messages',
-				'mail_messages_msgid_idx',
+				['mail_messages_msgid_idx'],
+				'mail_messages_msgid2_idx',
 				['message_id'],
-				[
-					'lengths' => [64],
-				],
+				false,
+				['lengths' => [64]],
 			);
 		}
+
+		$event->replaceIndex(
+			'mail_message_tags',
+			['mail_msg_imap_id_idx'],
+			'mail_msg_imap_id2_idx',
+			['imap_message_id'],
+			false,
+			['lengths' => [64]],
+		);
 
 		$event->addMissingIndex(
 			'mail_messages',
