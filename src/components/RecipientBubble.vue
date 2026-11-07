@@ -112,7 +112,6 @@
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import { generateUrl } from '@nextcloud/router'
 import debouncePromise from 'debounce-promise'
 import uniqBy from 'lodash/fp/uniqBy.js'
 import NcButton from '@nextcloud/vue/components/NcButton'
@@ -191,7 +190,7 @@ export default {
 			}
 
 			// Make it an absolute URL because the user bubble component doesn't work with relative URLs
-			return window.location.protocol + '//' + window.location.host + generateUrl(this.avatarUrl)
+			return new URL(this.avatarUrl, window.location.origin).href
 		},
 
 		selectableContacts() {
