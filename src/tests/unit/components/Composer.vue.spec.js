@@ -7,7 +7,10 @@ import { shallowMount } from '@vue/test-utils'
 import { createPinia } from 'pinia'
 import Composer from '../../../components/Composer.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
+import { findRecipient } from '../../../service/AutocompleteService.js'
 import useMainStore from '../../../store/mainStore.js'
+
+vi.mock('../../../service/AutocompleteService.js')
 
 const pinia = createPinia()
 
@@ -453,6 +456,43 @@ describe('Composer', () => {
 			open: true,
 			search: 'alice',
 		})).toEqual(true)
+	})
+
+	it('finds a reply recipient by the contact name after removing it', async () => {
+		vi.useFakeTimers()
+		findRecipient.mockResolvedValue([
+			{ id: 1, email: 'yankovsky_ol@example.com', label: 'Янковский Олег Леонидович' },
+		])
+		const view = shallowMount(Composer, {
+			props: {
+				isFirstOpen: true,
+				to: [{ email: 'yankovsky_ol@example.com', label: 'yankovsky_ol@example.com' }],
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+						emailAddress: 'test@example.com',
+						name: 'Test Account',
+					},
+				],
+			},
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
+		})
+
+		view.vm.removeRecipientTo({ email: 'yankovsky_ol@example.com' })
+		view.vm.onAutocomplete('янковский', 'cc')
+		await vi.runAllTimersAsync()
+		vi.useRealTimers()
+
+		const option = view.vm.selectableRecipients.find((recipient) => recipient.email === 'yankovsky_ol@example.com')
+		expect(view.vm.filterOption(option, option.label, 'янковский', 'cc')).toEqual(true)
 	})
 
 	it('inserts the signature when composing a new message', () => {

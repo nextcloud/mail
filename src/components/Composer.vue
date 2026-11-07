@@ -1563,7 +1563,7 @@ export default {
 					}
 				}
 
-				this.autocompleteRecipients = uniqBy('email')(this.autocompleteRecipients.concat(results))
+				this.autocompleteRecipients = uniqBy('email')(results.concat(this.autocompleteRecipients))
 			})
 		},
 
