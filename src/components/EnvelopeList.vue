@@ -106,6 +106,12 @@
 						</template>
 						{{ n('mail', 'Move {number} thread', 'Move {number} threads', selection.length, { number: selection.length }) }}
 					</NcActionButton>
+					<NcActionButton v-if="!account.isUnified" :closeAfterClick="true" @click.prevent="onOpenCopyModal">
+						<template #icon>
+							<ContentCopyIcon :size="20" />
+						</template>
+						{{ n('mail', 'Copy {number} thread', 'Copy {number} threads', selection.length, { number: selection.length }) }}
+					</NcActionButton>
 					<NcActionButton :closeAfterClick="true" @click.prevent="forwardSelectedAsAttachment">
 						<template #icon>
 							<ShareIcon :size="20" />
@@ -155,6 +161,13 @@
 			:envelopes="selectedEnvelopes"
 			:moveThread="true"
 			@close="onCloseMoveModal" />
+		<MoveModal
+			v-if="showCopyModal"
+			:account="account"
+			:envelopes="selectedEnvelopes"
+			:moveThread="true"
+			mode="copy"
+			@close="onCloseCopyModal" />
 
 		<NcDialog
 			v-if="showQuickActionsSettings"
@@ -175,6 +188,7 @@ import NcButton from '@nextcloud/vue/components/NcButton'
 import NcDialog from '@nextcloud/vue/components/NcDialog'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
 import IconSelect from 'vue-material-design-icons/CloseThick.vue'
+import ContentCopyIcon from 'vue-material-design-icons/ContentCopy.vue'
 import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
 import EmailUnread from 'vue-material-design-icons/EmailOutline.vue'
 import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'
@@ -216,6 +230,7 @@ export default {
 		IconSelect,
 		MoveModal,
 		OpenInNewIcon,
+		ContentCopyIcon,
 		ShareIcon,
 		AlertOctagonIcon,
 		TagIcon,
@@ -283,6 +298,7 @@ export default {
 		return {
 			selection: [],
 			showMoveModal: false,
+			showCopyModal: false,
 			showTagModal: false,
 			lastToggledIndex: undefined,
 			defaultView: false,
@@ -589,6 +605,10 @@ export default {
 			this.showMoveModal = true
 		},
 
+		onOpenCopyModal() {
+			this.showCopyModal = true
+		},
+
 		onOpenTagModal() {
 			this.showTagModal = true
 		},
@@ -606,6 +626,11 @@ export default {
 
 		onCloseMoveModal() {
 			this.showMoveModal = false
+			this.unselectAll()
+		},
+
+		onCloseCopyModal() {
+			this.showCopyModal = false
 			this.unselectAll()
 		},
 
