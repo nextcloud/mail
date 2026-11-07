@@ -24,7 +24,9 @@ export default {
 				filename: attachment.downloadUrl,
 				source: attachment.downloadUrl,
 				basename: attachment.fileName,
-				mime: attachment.mime,
+				mime: attachment.mime === 'application/octet-stream' && /\.pdf$/i.test(attachment.fileName ?? '')
+					? PDF_MIME
+					: attachment.mime,
 				etag: 'fixme',
 				hasPreview: false,
 			}))
