@@ -328,7 +328,10 @@ class ImapMessageConnector implements IMessageConnector {
 		try {
 			$quotas = array_map(
 				static fn (Folder $mailbox) => $client->getQuotaRoot($mailbox->getMailbox()),
-				$this->imapMailboxMapper->getFolders($account, $client),
+				array_filter(
+					$this->imapMailboxMapper->getFolders($account, $client),
+					static fn (Folder $mailbox) => !in_array('\\noselect', array_map('strtolower', $mailbox->getAttributes()), true),
+				),
 			);
 		} catch (Horde_Imap_Client_Exception_NoSupportExtension) {
 			return null;
