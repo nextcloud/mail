@@ -27,6 +27,15 @@ describe('RecipientBubble', () => {
 		vi.useRealTimers()
 	})
 
+	it('resolves avatar URLs without duplicating the Nextcloud front controller', () => {
+		const avatarUrlAbsolute = RecipientBubble.computed.avatarUrlAbsolute
+		const url = '/index.php/apps/mail/api/avatars/image/someone%40example.com'
+
+		expect(avatarUrlAbsolute.call({ avatarUrl: url })).toBe(window.location.origin + url)
+		expect(avatarUrlAbsolute.call({ avatarUrl: 'https://example.com/photo.png' })).toBe('https://example.com/photo.png')
+		expect(avatarUrlAbsolute.call({ avatarUrl: undefined })).toBeUndefined()
+	})
+
 	it('only offers contacts with an id and a name to add the address to', async () => {
 		autoCompleteByName.mockResolvedValue([
 			{ id: 'jane', label: 'Jane Doe', email: 'jane@doe.com' },
