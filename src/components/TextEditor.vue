@@ -28,7 +28,6 @@ import { getLanguage, t } from '@nextcloud/l10n'
 import { emojiAddRecent, emojiSearch } from '@nextcloud/vue/functions/emoji'
 import {
 	Alignment,
-	AutoLink,
 	Base64UploadAdapter,
 	BlockQuote,
 	Bold,
@@ -45,8 +44,7 @@ import {
 	ImageToolbar,
 	ImageUpload,
 	Italic,
-	LinkEditing,
-	LinkUI,
+	Link,
 	List,
 	Mention,
 	Paragraph,
@@ -208,8 +206,6 @@ export default {
 			QuotePlugin,
 			PickerPlugin,
 			Mention,
-			LinkEditing,
-			AutoLink,
 			FindAndReplace,
 		]
 		const toolbar = ['undo', 'redo']
@@ -227,7 +223,7 @@ export default {
 				Superscript,
 				BlockQuote,
 				List,
-				LinkUI,
+				Link,
 				Image,
 				ImageUpload,
 				ImageResize,
