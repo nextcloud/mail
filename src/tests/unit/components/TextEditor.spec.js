@@ -4,7 +4,7 @@
  */
 
 import { shallowMount } from '@vue/test-utils'
-import { GeneralHtmlSupport, Paragraph } from 'ckeditor5'
+import { GeneralHtmlSupport, Link, LinkEditing, LinkUI, Paragraph } from 'ckeditor5'
 import mitt from 'mitt'
 import { vi } from 'vitest'
 import TextEditor from '../../../components/TextEditor.vue'
@@ -38,6 +38,40 @@ describe('TextEditor', () => {
 		})
 
 		expect(wrapper.vm.config.plugins).not.toContain(GeneralHtmlSupport)
+	})
+
+	it('does not allow editing links in plain text mode', async () => {
+		const wrapper = shallowMount(TextEditor, {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
+				modelValue: 'bonjour',
+				bus: mitt(),
+			},
+		})
+
+		expect(wrapper.vm.config.plugins).toContain(LinkEditing)
+		expect(wrapper.vm.config.plugins).not.toContain(Link)
+		expect(wrapper.vm.config.plugins).not.toContain(LinkUI)
+	})
+
+	it('allows editing links in html mode', async () => {
+		const wrapper = shallowMount(TextEditor, {
+			global: {
+				mixins: [Nextcloud],
+				provide: {
+					addToFocusTrap: vi.fn(),
+				},
+			},
+			props: {
+				modelValue: 'bonjour',
+				html: true,
+				bus: mitt(),
+			},
+		})
+
+		expect(wrapper.vm.config.plugins).toContain(LinkUI)
 	})
 
 	it('supports additional html elements in html mode', async () => {
