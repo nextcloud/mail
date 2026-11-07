@@ -11,6 +11,7 @@ namespace OCA\Mail\Sieve;
 
 use Horde\ManageSieve;
 use OCA\Mail\Account;
+use OCA\Mail\Support\DebugLogPathFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
 
@@ -19,7 +20,11 @@ class SieveClientFactory {
 	private IConfig $config;
 	private array $cache = [];
 
-	public function __construct(ICrypto $crypto, IConfig $config) {
+	public function __construct(
+		ICrypto $crypto,
+		IConfig $config,
+		private DebugLogPathFactory $debugLogPathFactory,
+	) {
 		$this->crypto = $crypto;
 		$this->config = $config;
 	}
@@ -38,11 +43,7 @@ class SieveClientFactory {
 				$password = $account->getMailAccount()->getInboundPassword();
 			}
 
-			if ($account->getMailAccount()->getDebug() || $this->config->getSystemValueBool('app.mail.debug')) {
-				$logFile = $this->config->getSystemValue('datadirectory') . "/mail-{$account->getUserId()}-{$account->getId()}-sieve.log";
-			} else {
-				$logFile = null;
-			}
+			$logFile = $this->debugLogPathFactory->getPath($account, 'sieve');
 
 			$this->cache[$account->getId()] = $this->createClient(
 				$account->getMailAccount()->getSieveHost(),

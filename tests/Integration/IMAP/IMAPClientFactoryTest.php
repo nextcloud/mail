@@ -19,6 +19,7 @@ use OCA\Mail\Cache\HordeCacheFactory;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\IMAP\HordeImapClient;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Support\DebugLogPathFactory;
 use OCA\Mail\Tests\Integration\Framework\Caching;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
@@ -62,6 +63,7 @@ class IMAPClientFactoryTest extends TestCase {
 			$this->eventDispatcher,
 			$this->timeFactory,
 			$this->hordeCacheFactory,
+			new DebugLogPathFactory($this->config),
 		);
 	}
 
