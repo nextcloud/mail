@@ -100,6 +100,7 @@ OC.L10N.register(
     "Saving" : "Stoor tans",
     "New message" : "Nuwe boodskap",
     "Retry" : "Herprobeer",
+    "Reconnect" : "Herverbind",
     "Add" : "Voeg by",
     "Collapse" : "Vou In",
     "Close" : "Close",
