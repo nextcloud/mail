@@ -152,8 +152,10 @@ final class SharingRestrictionServiceTest extends TestCase {
 		$service = new SharingRestrictionService($this->shareManager, $this->groupManager, $this->userManager);
 		$allowed = $this->createStub(IUser::class);
 		$allowed->method('getUID')->willReturn('allowed');
+		$allowed->method('isEnabled')->willReturn(true);
 		$blocked = $this->createStub(IUser::class);
 		$blocked->method('getUID')->willReturn('blocked');
+		$blocked->method('isEnabled')->willReturn(true);
 
 		$this->assertTrue($service->canShareWithUser('bob', $allowed));
 		$this->assertFalse($service->canShareWithUser('bob', $blocked));
