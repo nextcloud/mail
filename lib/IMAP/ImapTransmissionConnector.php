@@ -76,21 +76,7 @@ class ImapTransmissionConnector implements ITransmissionConnector {
 	public function sendMessage(Account $account, LocalMessage $message, Mailbox $sentMailbox): void {
 		// If this is a retry of a failed copy-to-sent, skip SMTP and only re-attempt the copy.
 		if ($message->getStatus() === LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL) {
-			$raw = $message->getRaw();
-			if ($raw !== null) {
-				$client = $this->protocolFactory->imapClient($account);
-				try {
-					$this->messageMapper->save($client, $sentMailbox, $raw, []);
-					$message->setStatus(LocalMessage::STATUS_PROCESSED);
-				} catch (Horde_Imap_Client_Exception $e) {
-					$this->logger->error('Retry copy-to-sent failed: ' . $e->getMessage(), ['exception' => $e]);
-					$message->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
-				} finally {
-					$client->logout();
-				}
-			} else {
-				$message->setStatus(LocalMessage::STATUS_ERROR);
-			}
+			$this->saveToSentMailbox($account, $message, $sentMailbox);
 			return;
 		}
 		[$to, $cc, $bcc, $attachments] = $this->getRecipientsAndAttachments($account, $message);
@@ -221,18 +207,30 @@ class ImapTransmissionConnector implements ITransmissionConnector {
 			}
 		}
 
+		$this->saveToSentMailbox($account, $message, $sentMailbox);
+	}
+
+	private function saveToSentMailbox(Account $account, LocalMessage $message, Mailbox $sentMailbox): void {
+		if (!$account->getMailAccount()->getSaveSentCopy()) {
+			$message->setStatus(LocalMessage::STATUS_PROCESSED);
+			return;
+		}
+
 		$raw = $message->getRaw();
-		if ($raw !== null) {
-			$client = $this->protocolFactory->imapClient($account);
-			try {
-				$this->messageMapper->save($client, $sentMailbox, $raw, []);
-				$message->setStatus(LocalMessage::STATUS_PROCESSED);
-			} catch (Horde_Imap_Client_Exception $e) {
-				$this->logger->error('Copy to sent mailbox failed: ' . $e->getMessage(), ['exception' => $e]);
-				$message->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
-			} finally {
-				$client->logout();
-			}
+		if ($raw === null) {
+			$message->setStatus(LocalMessage::STATUS_ERROR);
+			return;
+		}
+
+		$client = $this->protocolFactory->imapClient($account);
+		try {
+			$this->messageMapper->save($client, $sentMailbox, $raw, []);
+			$message->setStatus(LocalMessage::STATUS_PROCESSED);
+		} catch (Horde_Imap_Client_Exception $e) {
+			$this->logger->error('Copy to sent mailbox failed: ' . $e->getMessage(), ['exception' => $e]);
+			$message->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
+		} finally {
+			$client->logout();
 		}
 	}
 
