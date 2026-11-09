@@ -4,7 +4,7 @@
  */
 
 import { shallowMount } from '@vue/test-utils'
-import { GeneralHtmlSupport, Paragraph } from 'ckeditor5'
+import { GeneralHtmlSupport, Link, Paragraph } from 'ckeditor5'
 import mitt from 'mitt'
 import { vi } from 'vitest'
 import TextEditor from '../../../components/TextEditor.vue'
@@ -57,6 +57,38 @@ describe('TextEditor', () => {
 
 		expect(wrapper.vm.config.plugins).toContain(GeneralHtmlSupport)
 		expect(wrapper.vm.config.htmlSupport.allow.some((rule) => rule.name === 'img')).toBe(true)
+	})
+
+	it('does not support links in plain text mode', async () => {
+		const wrapper = shallowMount(TextEditor, {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
+				modelValue: 'bonjour',
+				bus: mitt(),
+			},
+		})
+
+		expect(wrapper.vm.config.plugins).not.toContain(Link)
+	})
+
+	it('supports links in html mode', async () => {
+		const wrapper = shallowMount(TextEditor, {
+			global: {
+				mixins: [Nextcloud],
+				provide: {
+					addToFocusTrap: vi.fn(),
+				},
+			},
+			props: {
+				modelValue: 'bonjour',
+				html: true,
+				bus: mitt(),
+			},
+		})
+
+		expect(wrapper.vm.config.plugins).toContain(Link)
 	})
 
 	it('aligns and resizes images in html mode', async () => {
