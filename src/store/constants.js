@@ -10,6 +10,9 @@ export const UNIFIED_INBOX_ID = 'unified'
 export const PRIORITY_INBOX_ID = 'priority'
 export const FOLLOW_UP_MAILBOX_ID = 'follow-up'
 export const PAGE_SIZE = 20
+export const SYNC_INTERVAL = 30 * 1000
+// One missed refresh, e.g. while the device slept, makes a list stale
+export const TRUSTED_SENDERS_MAX_AGE = 2 * SYNC_INTERVAL
 export const UNDO_DELAY = TOAST_UNDO_TIMEOUT
 export const EDITOR_MODE_HTML = 'richtext'
 export const EDITOR_MODE_TEXT = 'plaintext'

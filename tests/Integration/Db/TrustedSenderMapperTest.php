@@ -12,6 +12,7 @@ namespace OCA\Mail\Tests\Integration\Db;
 use ChristophWurst\Nextcloud\Testing\DatabaseTransaction;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use ChristophWurst\Nextcloud\Testing\TestUser;
+use OCA\Mail\Db\TrustedSender;
 use OCA\Mail\Db\TrustedSenderMapper;
 use OCP\IDBConnection;
 use OCP\IUser;
@@ -173,5 +174,19 @@ class TrustedSenderMapperTest extends TestCase {
 		$rows = $result->fetchAll();
 		$result->closeCursor();
 		$this->assertEmpty($rows);
+	}
+
+	public function testFindAllListsTheEntriesInTheOrderTheyWereAdded(): void {
+		$uid = $this->user->getUID();
+		$this->mapper->create($uid, 'alice@example.test', 'individual');
+		$this->mapper->create($uid, 'bob@example.test', 'individual');
+		$this->mapper->create($uid, 'carol@example.test', 'individual');
+		$this->mapper->remove($uid, 'alice@example.test', 'individual');
+		$this->mapper->create($uid, 'dave@example.test', 'individual');
+
+		$trustedSenders = $this->mapper->findAll($uid);
+
+		$emails = array_map(static fn (TrustedSender $trustedSender) => $trustedSender->getEmail(), $trustedSenders);
+		$this->assertSame(['bob@example.test', 'carol@example.test', 'dave@example.test'], $emails);
 	}
 }

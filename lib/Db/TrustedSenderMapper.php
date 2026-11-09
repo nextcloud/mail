@@ -80,7 +80,8 @@ class TrustedSenderMapper extends QBMapper {
 		$qb = $this->db->getQueryBuilder();
 		$select = $qb->select('*')
 			->from($this->getTableName())
-			->where($qb->expr()->eq('user_id', $qb->createNamedParameter($uid)));
+			->where($qb->expr()->eq('user_id', $qb->createNamedParameter($uid)))
+			->orderBy('id');
 		return $this->findEntities($select);
 	}
 }

@@ -5,6 +5,7 @@
 
 import { getCalendarHome } from '../../service/caldavService.js'
 import toCalendar from '../../util/calendar.js'
+import { applyTrustedSenderChange } from '../../util/trustedSender.js'
 import { FOLLOW_UP_TAG_LABEL } from '../constants.js'
 
 export default function mainStore() {
@@ -59,6 +60,7 @@ export default function mainStore() {
 
 		isOneLineLayout: (state) => state.list,
 		getInternalAddresses: (state) => state.internalAddress?.filter((internalAddress) => internalAddress !== undefined),
+		trustedSenders: (state) => state.trustedSendersPendingChanges.reduce(applyTrustedSenderChange, state.savedTrustedSenders),
 		getMailboxesAndSubmailboxesByAccountId: (state) => (accountId) => Object.values(state.mailboxes).filter((mailbox) => mailbox.accountId === accountId),
 	}
 }
