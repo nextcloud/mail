@@ -208,7 +208,7 @@ class IMipServiceTest extends TestCase {
 		$this->calendarManager->expects(self::never())
 			->method('handleIMipCancel');
 		$this->logger->expects(self::once())
-			->method('warning')
+			->method('info')
 			->with(
 				'iMIP message could not be processed because it does not contain a supported scheduling method',
 				['messageId' => $message->getId(), 'mailboxId' => $mailbox->getId()]
@@ -799,16 +799,6 @@ class IMipServiceTest extends TestCase {
 		$this->calendarManager->expects(self::once())
 			->method('handleIMip')
 			->willReturn(false);
-		$this->logger->expects(self::once())
-			->method('warning')
-			->with(
-				'iMIP message could not be processed by the calendar app, see the preceding log entry for the reason',
-				[
-					'messageId' => $message->getId(),
-					'mailboxId' => $mailbox->getId(),
-					'method' => 'REQUEST',
-				]
-			);
 		$this->messageMapper->expects(self::once())
 			->method('updateImipData')
 			->with(self::callback(fn (Message $msg) => $msg->isImipProcessed() === false && $msg->isImipError() === true));
@@ -870,8 +860,6 @@ class IMipServiceTest extends TestCase {
 		$this->calendarManager->expects(self::exactly(2))
 			->method('handleIMip')
 			->willReturnOnConsecutiveCalls(false, true);
-		$this->logger->expects(self::once())
-			->method('warning');
 		$this->messageMapper->expects(self::once())
 			->method('updateImipData')
 			->with(self::callback(fn (Message $msg) => $msg->isImipProcessed() === false && $msg->isImipError() === true));

@@ -128,7 +128,7 @@ class IMipService {
 
 				if (empty($imapMessage->scheduling)) {
 					// the message advertises a scheduling method we do not support, see ImapMessageFetcher
-					$this->logger->warning('iMIP message could not be processed because it does not contain a supported scheduling method', $logContext);
+					$this->logger->info('iMIP message could not be processed because it does not contain a supported scheduling method', $logContext);
 					$message->setImipProcessed(true);
 					$message->setImipError(true);
 					continue;
@@ -136,7 +136,7 @@ class IMipService {
 
 				$sender = $imapMessage->getFrom()->first()?->getEmail();
 				if ($sender === null) {
-					$this->logger->warning('iMIP message could not be processed because it does not contain a sender', $logContext);
+					$this->logger->info('iMIP message could not be processed because it does not contain a sender', $logContext);
 					$message->setImipProcessed(true);
 					$message->setImipError(true);
 					continue;
@@ -174,10 +174,6 @@ class IMipService {
 									'mailMessageId' => $message->getId(),
 								],
 							);
-						}
-
-						if (!$processed) {
-							$this->logger->warning('iMIP message could not be processed by the calendar app, see the preceding log entry for the reason', $logContext);
 						}
 
 						$allProcessed = $allProcessed && $processed;
