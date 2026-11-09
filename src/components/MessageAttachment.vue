@@ -92,6 +92,20 @@ import { importCalendarEvent } from '../service/DAVService.js'
 import useMainStore from '../store/mainStore.js'
 import { pickFolder } from '../util/filePicker.js'
 
+/**
+ * RFC 4791 section 5.3.2.1, answered by Nextcloud 33.0.7, 34.0.2 and later.
+ * Older servers fail without it and keep the generic error.
+ *
+ * @param {Error} error the error of the failed PUT
+ * @return {boolean}
+ */
+function isUidConflict(error) {
+	const response = error?.response
+	return response?.status === 409
+		&& typeof response.data === 'string'
+		&& response.data.includes('no-uid-conflict')
+}
+
 export default {
 	name: 'MessageAttachment',
 	components: {
@@ -183,7 +197,7 @@ export default {
 			return this.mainStore.getEventCalendarsForCurrentUser.map((cal) => {
 				return {
 					text: cal.displayname,
-					action: this.importCalendar(cal.url),
+					action: this.importCalendar(cal),
 				}
 			})
 		},
@@ -252,18 +266,22 @@ export default {
 			this.showCalendarPopover = false
 		},
 
-		importCalendar(url) {
-			return () => {
-				downloadAttachment(this.url)
-					.then(importCalendarEvent(url))
-					.then(() => {
-						showSuccess(t('mail', 'calendar imported'))
-					})
-					.catch((error) => {
-						Logger.error('Could not import event', { error })
+		importCalendar(calendar) {
+			return async () => {
+				try {
+					const data = await downloadAttachment(this.url)
+					await importCalendarEvent(calendar.url, data)
+					showSuccess(t('mail', 'calendar imported'))
+				} catch (error) {
+					Logger.error('Could not import event', { error })
+					if (isUidConflict(error)) {
+						showError(t('mail', 'This event is already in the calendar {calendar}', { calendar: calendar.displayname }))
+					} else {
 						showError(t('mail', 'Could not create event'))
-					})
-					.then(() => (this.showCalendarPopover = false))
+					}
+				} finally {
+					this.showCalendarPopover = false
+				}
 			}
 		},
 	},
