@@ -58,7 +58,7 @@ export default {
 
 	computed: {
 		flag() {
-			return this.action.flag ?? ''
+			return this.action.flag ?? null
 		},
 	},
 
