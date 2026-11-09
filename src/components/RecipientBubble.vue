@@ -9,7 +9,7 @@
 			<NcUserBubble
 				v-bind="attrs"
 				:displayName="label"
-				:avatarImage="avatarUrlAbsolute"
+				:avatarImage="avatarUrl"
 				:size="size"
 				@click="onClickOpenContactDialog" />
 		</template>
@@ -181,18 +181,6 @@ export default {
 	},
 
 	computed: {
-		avatarUrlAbsolute() {
-			if (!this.avatarUrl) {
-				return
-			}
-			if (this.avatarUrl.startsWith('http')) {
-				return this.avatarUrl
-			}
-
-			// Make it an absolute URL because the user bubble component doesn't work with relative URLs
-			return new URL(this.avatarUrl, window.location.origin).href
-		},
-
 		selectableContacts() {
 			return this.autoCompleteContacts
 				.map((contact) => ({ ...contact, label: contact.label }))
