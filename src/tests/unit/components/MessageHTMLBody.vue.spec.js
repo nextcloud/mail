@@ -103,6 +103,34 @@ describe('MessageHTMLBody', () => {
 			expect(image.style.height).toBe('auto')
 		})
 
+		it('keeps a revealed element with a style of its own within the frame width', async () => {
+			const view = mountBody()
+			const doc = view.vm.getIframeDoc()
+			doc.write('<div data-original-style="background: url(https://example.com/a.png)" style="max-width: 100%;"></div>')
+			doc.close()
+			view.vm.onMessageFrameLoad()
+			await view.vm.$nextTick()
+
+			view.findComponent(BlockedContentWarning).vm.$emit('show')
+
+			const element = doc.querySelector('div')
+			expect(element.style.background).toContain('https://example.com/a.png')
+			expect(element.style.maxWidth).toBe('100%')
+		})
+
+		it('keeps the max-width a revealed element sets for itself', async () => {
+			const view = mountBody()
+			const doc = view.vm.getIframeDoc()
+			doc.write('<div data-original-style="background: url(https://example.com/a.png); max-width: 600px" style="max-width: 100%;"></div>')
+			doc.close()
+			view.vm.onMessageFrameLoad()
+			await view.vm.$nextTick()
+
+			view.findComponent(BlockedContentWarning).vm.$emit('show')
+
+			expect(doc.querySelector('div').style.maxWidth).toBe('600px')
+		})
+
 		it('remembers a sender the reader trusts', async () => {
 			const view = mountBody()
 			loadFrameWithBlockedImage(view)
