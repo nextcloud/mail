@@ -266,6 +266,11 @@ return [
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'messages#copy',
+			'url' => '/api/messages/{id}/copy',
+			'verb' => 'POST'
+		],
+		[
 			'name' => 'messages#snooze',
 			'url' => '/api/messages/{id}/snooze',
 			'verb' => 'POST'
@@ -408,6 +413,11 @@ return [
 		[
 			'name' => 'thread#move',
 			'url' => '/api/thread/{id}',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'thread#copy',
+			'url' => '/api/thread/{id}/copy',
 			'verb' => 'POST'
 		],
 		[

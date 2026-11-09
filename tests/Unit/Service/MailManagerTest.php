@@ -1037,4 +1037,179 @@ class MailManagerTest extends TestCase {
 		self::assertEquals([$messageInInbox], $tagCalls[1]);
 		self::assertEquals([$messageInArchive], $tagCalls[2]);
 	}
+
+	public function testCopyMessageAcrossDifferentAccountsThrows(): void {
+		$mailAccount1 = new MailAccount();
+		$mailAccount1->setId(1);
+		$srcAccount = new Account($mailAccount1);
+
+		$mailAccount2 = new MailAccount();
+		$mailAccount2->setId(2);
+		$dstAccount = new Account($mailAccount2);
+
+		$this->expectException(ServiceException::class);
+		$this->expectExceptionMessage('It is not possible to copy across accounts yet');
+
+		$this->manager->copyMessage($srcAccount, new Mailbox(), new Message(), $dstAccount, new Mailbox());
+	}
+
+	public function testCopyMessagesReturnsCopiedUids(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1);
+		$account = new Account($mailAccount);
+
+		$srcMailbox = new Mailbox();
+		$srcMailbox->setId(1);
+		$dstMailbox = new Mailbox();
+		$dstMailbox->setId(2);
+
+		$msg1 = new Message();
+		$msg1->setId(10);
+		$msg1->setUid(100);
+
+		$copiedMsg1 = new Message();
+		$copiedMsg1->setId(0);
+		$copiedMsg1->setUid(200);
+		$copiedMsg1->setMailboxId(2);
+
+		$connector = $this->createMock(IMessageConnector::class);
+		$this->protocolFactory->expects(self::once())
+			->method('messageConnector')
+			->with($account)
+			->willReturn($connector);
+
+		$connector->expects(self::once())
+			->method('copyMessages')
+			->with($account, $dstMailbox, $srcMailbox, $msg1)
+			->willReturn([$copiedMsg1]);
+
+		$result = $this->manager->copyMessages($account, $dstMailbox, $srcMailbox, $msg1);
+
+		self::assertSame([200], $result);
+	}
+
+	public function testCopyMessagesEmptyArrayReturnsEarly(): void {
+		$mailAccount = new MailAccount();
+		$account = new Account($mailAccount);
+
+		$this->protocolFactory->expects(self::never())
+			->method('messageConnector');
+
+		$result = $this->manager->copyMessages($account, new Mailbox(), new Mailbox());
+
+		self::assertSame([], $result);
+	}
+
+	public function testCopyMessageCallsCopyMessagesAndReturnsNewUid(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1);
+		$account = new Account($mailAccount);
+
+		$srcMailbox = new Mailbox();
+		$srcMailbox->setId(1);
+		$dstMailbox = new Mailbox();
+		$dstMailbox->setId(2);
+
+		$message = new Message();
+		$message->setUid(100);
+
+		$copiedMessage = new Message();
+		$copiedMessage->setUid(200);
+
+		$connector = $this->createMock(IMessageConnector::class);
+		$this->protocolFactory->expects(self::once())
+			->method('messageConnector')
+			->with($account)
+			->willReturn($connector);
+
+		$connector->expects(self::once())
+			->method('copyMessages')
+			->with($account, $dstMailbox, $srcMailbox, $message)
+			->willReturn([$copiedMessage]);
+
+		$newUid = $this->manager->copyMessage($account, $srcMailbox, $message, $account, $dstMailbox);
+
+		self::assertSame(200, $newUid);
+	}
+
+	public function testCopyThreadAcrossDifferentAccountsThrows(): void {
+		$mailAccount1 = new MailAccount();
+		$mailAccount1->setId(1);
+		$srcAccount = new Account($mailAccount1);
+
+		$mailAccount2 = new MailAccount();
+		$mailAccount2->setId(2);
+		$dstAccount = new Account($mailAccount2);
+
+		$this->expectException(ServiceException::class);
+		$this->expectExceptionMessage('It is not possible to copy across accounts yet');
+
+		$this->manager->copyThread($srcAccount, new Mailbox(), $dstAccount, new Mailbox(), 'thread-root');
+	}
+
+	public function testCopyThreadSkipsMessagesInDestinationMailbox(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1);
+		$account = new Account($mailAccount);
+
+		$inbox = new Mailbox();
+		$inbox->setId(1);
+		$inbox->setName('INBOX');
+
+		$archive = new Mailbox();
+		$archive->setId(2);
+		$archive->setName('Archive');
+
+		$target = new Mailbox();
+		$target->setId(2);
+		$target->setName('Archive');
+
+		$inboxMessage = new Message();
+		$inboxMessage->setMailboxId(1);
+		$inboxMessage->setUid(101);
+
+		$archiveMessage = new Message();
+		$archiveMessage->setMailboxId(2);
+		$archiveMessage->setUid(201);
+
+		$this->threadMapper->expects(self::once())
+			->method('findMessageUidsAndMailboxNamesByAccountAndThreadRoot')
+			->with($mailAccount, 'thread-root', false)
+			->willReturn([
+				['messageUid' => 101, 'mailboxName' => 'INBOX'],
+				['messageUid' => 201, 'mailboxName' => 'Archive'],
+			]);
+
+		$this->mailboxMapper->expects(self::exactly(2))
+			->method('find')
+			->willReturnMap([
+				[$account, 'INBOX', $inbox],
+				[$account, 'Archive', $archive],
+			]);
+
+		$this->dbMessageMapper->expects(self::exactly(2))
+			->method('findByUids')
+			->willReturnMap([
+				[$inbox, [101], [$inboxMessage]],
+				[$archive, [201], [$archiveMessage]],
+			]);
+
+		$copiedInboxMessage = new Message();
+		$copiedInboxMessage->setUid(301);
+
+		$connector = $this->createMock(IMessageConnector::class);
+		$this->protocolFactory->expects(self::once())
+			->method('messageConnector')
+			->with($account)
+			->willReturn($connector);
+
+		$connector->expects(self::once())
+			->method('copyMessages')
+			->with($account, $target, $inbox, $inboxMessage)
+			->willReturn([$copiedInboxMessage]);
+
+		$result = $this->manager->copyThread($account, $inbox, $account, $target, 'thread-root');
+
+		self::assertSame([301], $result);
+	}
 }

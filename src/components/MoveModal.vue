@@ -7,9 +7,9 @@
 		v-model:selected="destMailboxId"
 		:account="account"
 		:loading="moving"
-		:labelSelect="moveThread ? t('mail', 'Move thread') : t('mail', 'Move message')"
-		:labelSelectLoading="moveThread ? t('mail', 'Moving thread') : t('mail', 'Moving message')"
-		:select="onMove"
+		:labelSelect="labelSelect"
+		:labelSelectLoading="labelSelectLoading"
+		:select="onTransfer"
 		@close="onClose" />
 </template>
 
@@ -40,9 +40,15 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+
+		mode: {
+			type: String,
+			default: 'move',
+			validator: (value) => ['move', 'copy'].includes(value),
+		},
 	},
 
-	emits: ['close', 'move'],
+	emits: ['close', 'move', 'copy'],
 
 	data() {
 		return {
@@ -53,6 +59,24 @@ export default {
 
 	computed: {
 		...mapStores(useMainStore),
+
+		isCopy() {
+			return this.mode === 'copy'
+		},
+
+		labelSelect() {
+			if (this.isCopy) {
+				return this.moveThread ? t('mail', 'Copy thread') : t('mail', 'Copy message')
+			}
+			return this.moveThread ? t('mail', 'Move thread') : t('mail', 'Move message')
+		},
+
+		labelSelectLoading() {
+			if (this.isCopy) {
+				return this.moveThread ? t('mail', 'Copying thread') : t('mail', 'Copying message')
+			}
+			return this.moveThread ? t('mail', 'Moving thread') : t('mail', 'Moving message')
+		},
 	},
 
 	methods: {
@@ -61,6 +85,10 @@ export default {
 		},
 
 		async onMove() {
+			return await this.onTransfer()
+		},
+
+		async onTransfer() {
 			this.moving = true
 
 			try {
@@ -72,17 +100,25 @@ export default {
 				}
 
 				for (const envelope of envelopes) {
-					if (this.moveThread) {
-						await this.mainStore.moveThread({ envelope, destMailboxId: this.destMailboxId })
+					if (this.isCopy) {
+						if (this.moveThread) {
+							await this.mainStore.copyThread({ envelope, destMailboxId: this.destMailboxId })
+						} else {
+							await this.mainStore.copyMessage({ id: envelope.databaseId, destMailboxId: this.destMailboxId })
+						}
 					} else {
-						await this.mainStore.moveMessage({ id: envelope.databaseId, destMailboxId: this.destMailboxId })
+						if (this.moveThread) {
+							await this.mainStore.moveThread({ envelope, destMailboxId: this.destMailboxId })
+						} else {
+							await this.mainStore.moveMessage({ id: envelope.databaseId, destMailboxId: this.destMailboxId })
+						}
 					}
 				}
 
 				await this.mainStore.syncEnvelopes({ mailboxId: this.destMailboxId })
-				this.$emit('move')
+				this.$emit(this.isCopy ? 'copy' : 'move')
 			} catch (error) {
-				logger.error('could not move messages', {
+				logger.error(`could not ${this.mode} messages`, {
 					error,
 				})
 			} finally {

@@ -117,6 +117,61 @@ class ImapMessageConnectorTest extends TestCase {
 		$this->connector->moveMessages($this->account, $targetMailbox, $sourceMailbox, $message);
 	}
 
+	public function testCopyMessagesReturnsCopiedMessagesAndLogsOutClient(): void {
+		$sourceMailbox = new Mailbox();
+		$sourceMailbox->setId(10);
+		$sourceMailbox->setName('INBOX');
+		$targetMailbox = new Mailbox();
+		$targetMailbox->setId(20);
+		$targetMailbox->setName('Archive');
+
+		$message = new Message();
+		$message->setUid(100);
+		$message->setMailboxId(10);
+
+		$this->imapMessageMapper->expects(self::once())
+			->method('copy')
+			->with($this->client, 'INBOX', 100, 'Archive')
+			->willReturn(500);
+
+		$this->client->expects(self::once())
+			->method('logout');
+
+		$result = $this->connector->copyMessages($this->account, $targetMailbox, $sourceMailbox, $message);
+
+		self::assertCount(1, $result);
+		self::assertSame(500, $result[0]->getUid());
+		self::assertSame(20, $result[0]->getMailboxId());
+		self::assertSame(0, $result[0]->getId());
+	}
+
+	public function testCopyMessagesCatchesServiceExceptionAndLogsError(): void {
+		$sourceMailbox = new Mailbox();
+		$sourceMailbox->setId(10);
+		$sourceMailbox->setName('INBOX');
+		$targetMailbox = new Mailbox();
+		$targetMailbox->setId(20);
+		$targetMailbox->setName('Archive');
+
+		$message = new Message();
+		$message->setUid(100);
+
+		$this->imapMessageMapper->expects(self::once())
+			->method('copy')
+			->willThrowException(new ServiceException('IMAP copy failed'));
+
+		$this->logger->expects(self::once())
+			->method('error')
+			->with('Could not copy message on remote IMAP server');
+
+		$this->client->expects(self::once())
+			->method('logout');
+
+		$result = $this->connector->copyMessages($this->account, $targetMailbox, $sourceMailbox, $message);
+
+		self::assertSame([], $result);
+	}
+
 	public function testDeleteMessagesLogsOutClientWhenMapperThrows(): void {
 		$mailbox = new Mailbox();
 		$mailbox->setName('INBOX');

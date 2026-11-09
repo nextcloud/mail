@@ -337,6 +337,14 @@
 					{{ layoutMessageViewThreaded ? t('mail', 'Move thread') : t('mail', 'Move message') }}
 				</NcActionButton>
 				<NcActionButton
+					:closeAfterClick="true"
+					@click.prevent="onOpenCopyModal">
+					<template #icon>
+						<ContentCopyIcon :size="20" />
+					</template>
+					{{ layoutMessageViewThreaded ? t('mail', 'Copy thread') : t('mail', 'Copy message') }}
+				</NcActionButton>
+				<NcActionButton
 					v-if="showArchiveButton && hasArchiveAcl"
 					:closeAfterClick="true"
 					:disabled="disableArchiveButton"
@@ -519,6 +527,13 @@
 				:moveThread="layoutMessageViewThreaded"
 				@move="onMove"
 				@close="onCloseMoveModal" />
+			<MoveModal
+				v-if="showCopyModal"
+				:account="account"
+				:envelopes="[data]"
+				:moveThread="layoutMessageViewThreaded"
+				mode="copy"
+				@close="onCloseCopyModal" />
 			<EventModal
 				v-if="showEventModal"
 				:envelope="data"
@@ -562,6 +577,7 @@ import TaskIcon from 'vue-material-design-icons/CheckboxMarkedCirclePlusOutline.
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
 import ClockOutlineIcon from 'vue-material-design-icons/ClockOutline.vue'
 import CogIcon from 'vue-material-design-icons/CogOutline.vue'
+import ContentCopyIcon from 'vue-material-design-icons/ContentCopy.vue'
 import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal.vue'
 import IconEmailFast from 'vue-material-design-icons/EmailFastOutline.vue'
 import EmailRead from 'vue-material-design-icons/EmailOpenOutline.vue'
@@ -619,6 +635,7 @@ export default {
 		ArchiveIcon,
 		TaskIcon,
 		DotsHorizontalIcon,
+		ContentCopyIcon,
 		EnvelopePrimaryActions,
 		EventModal,
 		IconSave,
@@ -713,6 +730,7 @@ export default {
 		return {
 			isDarkTheme: useIsDarkTheme(),
 			showMoveModal: false,
+			showCopyModal: false,
 			showEventModal: false,
 			showTaskModal: false,
 			showTagModal: false,
@@ -1446,6 +1464,10 @@ export default {
 			this.showMoveModal = true
 		},
 
+		onOpenCopyModal() {
+			this.showCopyModal = true
+		},
+
 		onOpenEventModal() {
 			this.showEventModal = true
 		},
@@ -1471,6 +1493,10 @@ export default {
 
 		onCloseMoveModal() {
 			this.showMoveModal = false
+		},
+
+		onCloseCopyModal() {
+			this.showCopyModal = false
 		},
 
 		onOpenTagModal() {
