@@ -92,6 +92,61 @@ describe('Composer', () => {
 		])
 	})
 
+	it('does not allow clearing the sender', () => {
+		const view = shallowMount(Composer, {
+			props: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
+		})
+
+		const from = view.findAllComponents({ name: 'NcSelect' }).find((select) => select.attributes('id') === 'from')
+
+		expect(from.props('clearable')).toBe(false)
+	})
+
+	it('shows the Cc/Bcc toggle below the recipient picker', async () => {
+		const view = shallowMount(Composer, {
+			props: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
+		})
+
+		const toggle = view.findComponent('.composer-fields__to-footer .copy-toggle')
+		toggle.vm.$emit('click')
+		await view.vm.$nextTick()
+
+		expect(toggle.exists()).toBe(true)
+		expect(view.find('#cc').exists()).toBe(true)
+	})
+
 	it('does not drop the reply message ID', () => {
 		const view = shallowMount(Composer, {
 			props: {

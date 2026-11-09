@@ -54,6 +54,7 @@
 						:id="targetCalendarPickerId"
 						v-model="targetCalendar"
 						labelOutside
+						:clearable="false"
 						:aria-label-combobox="t('mail', 'Select')"
 						label="displayname"
 						:options="calendarsForPicker">
