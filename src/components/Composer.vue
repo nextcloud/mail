@@ -326,7 +326,7 @@
 			:bus="bus"
 			:accountId="selectedAlias.id"
 			:uploadSizeLimit="attachmentSizeLimit"
-			@upload="$emit('uploadAttachment', $event, getMessageData())" />
+			@update:blocksSending="attachmentsPending = $event" />
 		<div class="composer-actions-right composer-actions">
 			<div class="composer-actions--primary-actions">
 				<p class="composer-actions-draft-status">
@@ -723,11 +723,6 @@ export default {
 			default: false,
 		},
 
-		uploadingAttachments: {
-			type: Boolean,
-			default: false,
-		},
-
 		savingDraft: {
 			type: Boolean,
 			default: false,
@@ -776,7 +771,6 @@ export default {
 	},
 
 	emits: [
-		'uploadAttachment',
 		'discardDraft',
 		'update:to',
 		'update:cc',
@@ -802,6 +796,7 @@ export default {
 
 		return {
 			sending: false,
+			attachmentsPending: false,
 			textBlockSvg,
 			showCC: this.cc.length > 0,
 			showBCC: this.bcc.length > 0,
@@ -934,6 +929,10 @@ export default {
 			}
 
 			if (this.encrypt && this.mailvelope.keysMissing.length) {
+				return false
+			}
+
+			if (this.attachmentsPending) {
 				return false
 			}
 
@@ -1140,6 +1139,7 @@ export default {
 
 		attachments(val) {
 			this.$emit('update:attachmentsData', val)
+			this.saveDraftDebounced()
 		},
 
 		sendAtVal(val) {
@@ -1667,6 +1667,10 @@ export default {
 		},
 
 		async onSend() {
+			if (!this.canSend) {
+				return
+			}
+
 			if (this.encrypt) {
 				logger.debug('get encrypted message from mailvelope')
 				await this.$refs.mailvelopeEditor.pull()
