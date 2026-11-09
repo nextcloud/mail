@@ -24,11 +24,9 @@
 				<NcActionButton
 					v-if="isCalendarEvent"
 					class="attachment-import calendar"
-					:disabled="loadingCalendars"
-					@click.stop="loadCalendars">
+					@click.stop="openCalendarPopover">
 					<template #icon>
-						<IconAdd v-if="!loadingCalendars" :size="20" />
-						<NcLoadingIcon v-else-if="loadingCalendars" :size="20" />
+						<IconAdd :size="20" />
 					</template>
 					{{ t('mail', 'Import into calendar') }}
 				</NcActionButton>
@@ -67,7 +65,7 @@
 					{{ entry.text }}
 				</NcActionButton>
 				<NcActionText v-if="calendarMenuEntries.length === 0">
-					{{ t('mail', 'None of your calendars can store the contents of this file') }}
+					{{ t('mail', 'None of your calendars can store events') }}
 				</NcActionText>
 			</template>
 		</NcActions>
@@ -79,6 +77,7 @@
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { formatFileSize } from '@nextcloud/files'
 import { t } from '@nextcloud/l10n'
+import { mapStores } from 'pinia'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
 import NcActionText from '@nextcloud/vue/components/NcActionText'
@@ -89,7 +88,8 @@ import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconDownload from 'vue-material-design-icons/TrayArrowDown.vue'
 import Logger from '../logger.js'
 import { downloadAttachment, saveAttachmentToFiles } from '../service/AttachmentService.js'
-import { getCalendarComponents, getUserCalendars, importCalendarEvent } from '../service/DAVService.js'
+import { importCalendarEvent } from '../service/DAVService.js'
+import useMainStore from '../store/mainStore.js'
 import { pickFolder } from '../util/filePicker.js'
 
 export default {
@@ -158,13 +158,13 @@ export default {
 	data() {
 		return {
 			savingToCloud: false,
-			loadingCalendars: false,
-			calendars: [],
 			showCalendarPopover: false,
 		}
 	},
 
 	computed: {
+		...mapStores(useMainStore),
+
 		name() {
 			if (this.mime === 'message/rfc822') {
 				return t('mail', 'Embedded message')
@@ -180,7 +180,7 @@ export default {
 		},
 
 		calendarMenuEntries() {
-			return this.calendars.map((cal) => {
+			return this.mainStore.getEventCalendarsForCurrentUser.map((cal) => {
 				return {
 					text: cal.displayname,
 					action: this.importCalendar(cal.url),
@@ -244,19 +244,8 @@ export default {
 			window.location = this.url
 		},
 
-		async loadCalendars() {
-			this.loadingCalendars = true
-			try {
-				const data = await downloadAttachment(this.url)
-				// Only offer calendars that accept every component type (event, task, journal) in the file
-				this.calendars = await getUserCalendars(getCalendarComponents(data))
-				this.showCalendarPopover = true
-			} catch (error) {
-				Logger.error('Could not load calendars', { error })
-				showError(t('mail', 'Could not load your calendars'))
-			} finally {
-				this.loadingCalendars = false
-			}
+		openCalendarPopover() {
+			this.showCalendarPopover = true
 		},
 
 		closeCalendarPopover() {

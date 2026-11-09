@@ -31,34 +31,13 @@ function canWrite(properties) {
 	return false
 }
 
-const CALENDAR_COMPONENTS = ['VEVENT', 'VJOURNAL', 'VTODO']
-
-/**
- * @param {object} properties the DAV properties of a calendar collection
- * @return {string[]} the upper-case component names the calendar accepts
- */
-function getSupportedComponents(properties) {
-	let comps = properties?.['supported-calendar-component-set']?.comp
-
-	// RFC 4791 section 5.2.3: if the property is absent, all components are supported
-	if (!comps) {
-		return CALENDAR_COMPONENTS
-	}
-	// There might only be one component, not a list
-	if (!Array.isArray(comps)) {
-		comps = [comps]
-	}
-
-	return comps
-		.map((comp) => comp?.['@name']?.toUpperCase())
-		.filter(Boolean)
-}
-
 function getCalendarData(calendar) {
 	return {
 		displayname: calendar.props.displayname,
 		order: calendar.props['calendar-order'],
-		components: getSupportedComponents(calendar.props),
+		components: {
+			vevent: true, // check if VEVENT exists in props['supported-calendar-component-set'].comps
+		},
 		writable: canWrite(calendar.props),
 		url: generateRemoteUrl(`dav/calendars/${getCurrentUser().uid}${calendar.filename}/`),
 		color: calendar.props['calendar-color'] ?? uidToHexColor(calendar.props.displayname ?? ''),
@@ -67,10 +46,9 @@ function getCalendarData(calendar) {
 }
 
 /**
- * @param {string[]} requiredComponents only return calendars that accept all of these components
  * @return {Promise}
  */
-export async function getUserCalendars(requiredComponents = ['VEVENT']) {
+export async function getUserCalendars() {
 	const response = await getClient('calendars')
 		.getDirectoryContents('/', {
 			data: `<?xml version="1.0"?>
@@ -93,19 +71,7 @@ export async function getUserCalendars(requiredComponents = ['VEVENT']) {
 
 	return response.data
 		.map(getCalendarData)
-		.filter((props) => props.writable === true
-			&& requiredComponents.every((component) => props.components.includes(component)))
-}
-
-/**
- * @param {string} data the iCalendar data
- * @return {string[]} the upper-case names of the calendar components contained in the data
- */
-export function getCalendarComponents(data) {
-	const vcalendar = new ical.Component(ical.parse(data))
-
-	return CALENDAR_COMPONENTS
-		.filter((name) => vcalendar.getAllSubcomponents(name.toLowerCase()).length > 0)
+		.filter((props) => props.components.vevent && props.writable === true)
 }
 
 function getRandomString() {
