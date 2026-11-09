@@ -1,6 +1,6 @@
 {
   "name": "nextcloud-mail",
-  "version": "6.0.0-alpha.1",
+  "version": "6.0.0-alpha.2",
   "private": true,
   "description": "Nextcloud Mail",
   "license": "AGPL-3.0-only",
