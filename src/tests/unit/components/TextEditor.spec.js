@@ -4,7 +4,7 @@
  */
 
 import { shallowMount } from '@vue/test-utils'
-import { GeneralHtmlSupport, Paragraph } from 'ckeditor5'
+import { FocusTracker, GeneralHtmlSupport, Paragraph } from 'ckeditor5'
 import mitt from 'mitt'
 import { vi } from 'vitest'
 import TextEditor from '../../../components/TextEditor.vue'
@@ -57,6 +57,50 @@ describe('TextEditor', () => {
 
 		expect(wrapper.vm.config.plugins).toContain(GeneralHtmlSupport)
 		expect(wrapper.vm.config.htmlSupport.allow.some((rule) => rule.name === 'img')).toBe(true)
+	})
+
+	it('keeps the layout attributes and styles of tables in html mode', async () => {
+		const wrapper = shallowMount(TextEditor, {
+			global: {
+				mixins: [Nextcloud],
+				provide: {
+					addToFocusTrap: vi.fn(),
+				},
+			},
+			props: {
+				modelValue: '',
+				html: true,
+				bus: mitt(),
+			},
+		})
+
+		// GeneralHtmlSupport loads widget plugins that expect an editor UI.
+		class UiVirtualTestEditor extends VirtualTestEditor {
+			constructor(config) {
+				super(config)
+				this.ui = { focusTracker: new FocusTracker() }
+			}
+		}
+		const editor = await UiVirtualTestEditor.create({
+			licenseKey: 'GPL',
+			plugins: [Paragraph, GeneralHtmlSupport],
+			htmlSupport: wrapper.vm.config.htmlSupport,
+		})
+		editor.setData('<table cellspacing="0" cellpadding="0" width="500" onclick="alert(1)"><tbody><tr>'
+			+ '<td valign="top" width="350" style="border-left:2px solid #004c97;padding-left:10px;">Jane Doe</td>'
+			+ '</tr></tbody></table>')
+		const data = editor.getData()
+
+		expect(data).toContain('cellspacing="0"')
+		expect(data).toContain('cellpadding="0"')
+		expect(data).toContain('width="500"')
+		expect(data).toContain('valign="top"')
+		expect(data).toContain('width="350"')
+		expect(data).toContain('border-left:2px solid #004c97')
+		expect(data).toContain('padding-left:10px')
+		expect(data).not.toContain('onclick')
+
+		await editor.destroy()
 	})
 
 	it('aligns and resizes images in html mode', async () => {
