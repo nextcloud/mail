@@ -935,7 +935,7 @@ OC.L10N.register(
     "Could not save OIDC provider" : "OIDC-Anbieter konnte nicht gespeichert werden",
     "Deleted OIDC provider for \"{domain}\"" : "OIDC-Anbieter für \"{domain}\" gelöscht",
     "Could not delete OIDC provider" : "OIDC-Anbieter konnte nicht gelöscht werden",
-    "Configure OpenID Connect providers so users whose email domain matches can sign in to their mail account with your identity provider (XOAUTH2), instead of storing a password." : "OpenID Connect-Anbieter so konfigurieren, dass sich Benutzer, deren E-Mail-Domäne übereinstimmt, über Ihren Identitätsanbieter (XOAUTH2) bei ihrem E-Mail-Konto anmelden können, anstatt ein Passwort zu speichern.",
+    "Configure OpenID Connect providers so users whose email domain matches can sign in to their mail account with your identity provider (XOAUTH2), instead of storing a password." : "OpenID Connect-Anbieter so konfigurieren, dass sich Benutzer, deren E-Mail-Domäne übereinstimmt, über ihren Identitätsanbieter (XOAUTH2) bei ihrem E-Mail-Konto anmelden können, anstatt ein Passwort zu speichern.",
     "Add OIDC provider" : "OIDC-Anbieter hinzufügen",
     "Provider for \"{emailDomain}\"" : "Anbieter für \"{emailDomain}\"",
     "New OIDC provider" : "Neuer OIDC-Anbieter",
