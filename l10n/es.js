@@ -454,6 +454,7 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Está intentando enviar a muchos destinatarios en Para y/o CC. Considera usar CCO para ocultar las direcciones de los destinatarios.",
     "Your message has no subject. Do you want to send it anyway?" : "Su mensaje no tiene asunto. ¿Quiere enviarlo de todas formas?",
     "You mentioned an attachment. Did you forget to add it?" : "Ud. mencionó un adjunto. ¿Olvidó añadirlo?",
+    "Could not send message" : "No se pudo enviar el mensaje",
     "Message discarded" : "Mensaje descartado",
     "Could not discard message" : "No se pudo descartar el mensaje",
     "Exit full screen" : "Salir de pantalla completa",
@@ -818,9 +819,7 @@ OC.L10N.register(
     "Discard unsaved changes" : "Descartar cambios no guardados",
     "Keep editing message" : "Seguir editando el mensaje",
     "Could not create snooze mailbox" : "No se pudo crear buzón de diferidos",
-    "Sending message…" : "Enviando mensaje…",
     "Message sent" : "Mensaje enviado",
-    "Could not send message" : "No se pudo enviar el mensaje",
     "Message copied to \"Sent\" folder" : "Mensaje copiado a la carpeta \"Enviados\"",
     "Could not copy message to \"Sent\" folder" : "No se pudo copiar el mensaje a la carpeta \"Enviados\"",
     "Could not load {tag}{name}{endtag}" : "No se ha podido cargar {tag}{name}{endtag}",
@@ -837,6 +836,7 @@ OC.L10N.register(
     "Edit name or color" : "Editar nombre o color",
     "Set tag" : "Establecer etiqueta",
     "Unset tag" : "Quitar etiqueta",
-    "Add default tags" : "Añadir etiquetas predeterminadas"
+    "Add default tags" : "Añadir etiquetas predeterminadas",
+    "Sending message…" : "Enviando mensaje…"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

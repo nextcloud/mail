@@ -479,6 +479,7 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses.",
     "Your message has no subject. Do you want to send it anyway?" : "Your message has no subject. Do you want to send it anyway?",
     "You mentioned an attachment. Did you forget to add it?" : "You mentioned an attachment. Did you forget to add it?",
+    "Could not send message" : "Could not send message",
     "Message discarded" : "Message discarded",
     "Could not discard message" : "Could not discard message",
     "Minimize composer" : "Minimize composer",
@@ -840,9 +841,7 @@ OC.L10N.register(
     "Discard unsaved changes" : "Discard unsaved changes",
     "Keep editing message" : "Keep editing message",
     "Could not create snooze mailbox" : "Could not create snooze mailbox",
-    "Sending message…" : "Sending message…",
     "Message sent" : "Message sent",
-    "Could not send message" : "Could not send message",
     "Message copied to \"Sent\" folder" : "Message copied to \"Sent\" folder",
     "Could not copy message to \"Sent\" folder" : "Could not copy message to \"Sent\" folder",
     "Could not load {tag}{name}{endtag}" : "Could not load {tag}{name}{endtag}",
@@ -861,6 +860,7 @@ OC.L10N.register(
     "Set tag" : "Set tag",
     "Unset tag" : "Unset tag",
     "Add default tags" : "Add default tags",
-    "Saving tag …" : "Saving tag …"
+    "Saving tag …" : "Saving tag …",
+    "Sending message…" : "Sending message…"
 },
 "nplurals=1; plural=0;");

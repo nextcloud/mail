@@ -472,6 +472,7 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Покушавате да пошаљете поруку на превише примаоца у To и/или Cc. Размотрите употребу Bcc поља да сакријете примаоце.",
     "Your message has no subject. Do you want to send it anyway?" : "Ваша порука нема тему. Да ли ипак желите да је пошаљете?",
     "You mentioned an attachment. Did you forget to add it?" : "Поменули сте прилог. Да ли сте заборавили да га додате?",
+    "Could not send message" : "Порука није могла да се пошаље",
     "Message discarded" : "Порука је одбачена",
     "Could not discard message" : "Порука није могла да се одбаци",
     "Exit full screen" : "Напусти пун екран",
@@ -837,9 +838,7 @@ OC.L10N.register(
     "Discard unsaved changes" : "Одбацује измене које нису сачуване",
     "Keep editing message" : "Настави уређивање поруке",
     "Could not create snooze mailbox" : "Није могло да се креира сандуче за одлагање",
-    "Sending message…" : "Порука се шаље",
     "Message sent" : "Порука послата",
-    "Could not send message" : "Порука није могла да се пошаље",
     "Message copied to \"Sent\" folder" : "Порука је копирана у фолдер „Послато”",
     "Could not copy message to \"Sent\" folder" : "Није успело копирање поруке у фолдер „Послато”",
     "Could not load {tag}{name}{endtag}" : "Не могу да учитам {tag}{name}{endtag}",
@@ -858,6 +857,7 @@ OC.L10N.register(
     "Set tag" : "Постави ознаку",
     "Unset tag" : "Уклони ознаку",
     "Add default tags" : "Додај подразумеване ознаке",
-    "Saving tag …" : "Чува се ознака…"
+    "Saving tag …" : "Чува се ознака…",
+    "Sending message…" : "Порука се шаље"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");

@@ -100,6 +100,7 @@ OC.L10N.register(
     "Oldest first" : "Старите прво",
     "Ok" : "Во ред",
     "Manually" : "Рачно",
+    "Shared with me" : "Споделени со мене",
     "Privacy" : "Приватност",
     "Security" : "Безбедност",
     "Compose new message" : "Состави нова порака",
@@ -318,6 +319,7 @@ OC.L10N.register(
     "Draft" : "Шаблон",
     "Message saved" : "Пораката е зачувана",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Се обидувате да испратите до многу примачи во До и/или Cc. Можете да користите Bcc за да ги скриете адресите на примачите.",
+    "Could not send message" : "Неможе да се испрати порака",
     "Message discarded" : "Пораката е отфрлена",
     "Could not discard message" : "Неможе да се отфрли порака",
     "Exit full screen" : "Излез од цел екран",
@@ -460,9 +462,7 @@ OC.L10N.register(
     "Discard changes" : "Орфрли промени",
     "Discard unsaved changes" : "Отфрли ги назачуваните промени",
     "Keep editing message" : "Продолжи со уредување на порака",
-    "Sending message…" : "Испраќање на порака ...",
     "Message sent" : "Пораката е испратена",
-    "Could not send message" : "Неможе да се испрати порака",
     "Could not load {tag}{name}{endtag}" : "Неможе да се вчита {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Има проблем со вчитување на {tag}{name}{endtag}",
     "Could not load your message" : "Неможе да се вчита пораката",
@@ -472,6 +472,7 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Името на ознаката е сокриена системска ознака",
     "Tag already exists" : "Тагот веќе постои",
     "Error loading message" : "Грешка при вчитување на пораката",
-    "Add default tags" : "Додади стандардни ознаки"
+    "Add default tags" : "Додади стандардни ознаки",
+    "Sending message…" : "Испраќање на порака ..."
 },
 "nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;");

@@ -501,6 +501,7 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Está tentando enviar a moitos destinatarios en Para e/ou Cc. Considere usar Cca para agochar os enderezos dos destinatarios.",
     "Your message has no subject. Do you want to send it anyway?" : "A súa mensaxe non ten asunto. Quere envialo aínda así?",
     "You mentioned an attachment. Did you forget to add it?" : "Mencionou un anexo. Esqueceu engadilo?",
+    "Could not send message" : "Non foi posíbel enviar a mensaxe",
     "Message discarded" : "Mensaxe desbotada",
     "Could not discard message" : "Non foi posíbel desbotar a mensaxe",
     "Exit full screen" : "Saír da pantalla completa",
@@ -873,9 +874,7 @@ OC.L10N.register(
     "Keep editing message" : "Seguir editando a mensaxe",
     "Could not create snooze mailbox" : "Non foi posíbel crear a caixa de correo de adiar",
     "Sorry, the message could not be loaded. The draft may no longer exist. Please refresh the page and try again." : "Desculpe, non foi posíbel cargar a mensaxe. É posíbel que xa non exista o borrador. Actualice a páxina e ténteo de novo.",
-    "Sending message…" : "Enviando a mensaxe…",
     "Message sent" : "Mensaxe enviada",
-    "Could not send message" : "Non foi posíbel enviar a mensaxe",
     "Message copied to \"Sent\" folder" : "A mensaxe foi copiada no cartafol de correo «Enviado».",
     "Could not copy message to \"Sent\" folder" : "Non foi posíbel copiar a mensaxe no cartafol de correo «Enviado».",
     "Could not load {tag}{name}{endtag}" : "Non foi posíbel cargar {tag}{name}{endtag}",
@@ -894,6 +893,7 @@ OC.L10N.register(
     "Set tag" : "Poñer etiquetas",
     "Unset tag" : "Desactivar a etiqueta",
     "Add default tags" : "Engadir etiquetas predeterminadas",
-    "Saving tag …" : "Gardando a etiqueta…"
+    "Saving tag …" : "Gardando a etiqueta…",
+    "Sending message…" : "Enviando a mensaxe…"
 },
 "nplurals=2; plural=(n != 1);");
