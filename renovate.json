@@ -106,7 +106,7 @@
 		},
 		{
 			"description": "Disable minimum release age checks for internal dependencies",
-			"matchPackageNames": ["@nextcloud/*"],
+			"matchPackageNames": ["@nextcloud/*", "nextcloud/*"],
 			"minimumReleaseAge": null
 		},
 		{
