@@ -29,7 +29,8 @@ interface IGroupService {
 	 * Get the group's users.
 	 *
 	 * @param string $groupId
+	 * @param string $userId the user who wants to address the group
 	 * @return array with group's users as associative arrays
 	 */
-	public function getUsers(string $groupId): array;
+	public function getUsers(string $groupId, string $userId): array;
 }
