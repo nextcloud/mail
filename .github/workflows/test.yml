@@ -89,7 +89,7 @@ jobs:
       name: ${{ matrix.nextcloud-versions }} w/ php${{ matrix.php-versions }}-${{ matrix.db }}-${{ matrix.cache }} integration tests
       services:
           mail-service:
-              image: ghcr.io/christophwurst/docker-imap-devel:latest
+              image: ghcr.io/christophwurst/docker-imap-devel:latest@sha256:b76a062268d7342ccec549f5323a0b6dc1b6ac55b03367f474934927653f5cb5
               env:
                   MAILNAME: mail.domain.tld
                   MAIL_ADDRESS: user@domain.tld
@@ -100,7 +100,7 @@ jobs:
                   - 993:993
                   - 4190:4190
           mariadb-service:
-              image: ghcr.io/nextcloud/continuous-integration-mariadb-11.4:latest
+              image: ghcr.io/nextcloud/continuous-integration-mariadb-11.4:latest@sha256:c01c4283b30b2a2ae9f8f8583c6a509d4ab63be967d59278b88689ff8605043a
               env:
                   MARIADB_ROOT_PASSWORD: my-secret-pw
                   MARIADB_DATABASE: nextcloud
@@ -114,7 +114,7 @@ jobs:
                   --health-timeout=2s
                   --health-retries=5
           postgres-service:
-              image: ghcr.io/nextcloud/continuous-integration-postgres-15:latest
+              image: ghcr.io/nextcloud/continuous-integration-postgres-15:latest@sha256:1939108b31fd841cf01906c431c1802cd984fcfb0e57fb0d714b9e6895c340b0
               env:
                   POSTGRES_USER: nextcloud
                   POSTGRES_DB: nextcloud
@@ -127,7 +127,7 @@ jobs:
                   --health-timeout 5s
                   --health-retries 5
           redis:
-              image: ghcr.io/nextcloud/continuous-integration-redis:latest
+              image: ghcr.io/nextcloud/continuous-integration-redis:latest@sha256:4ae220629fc544cd1396b35723137628a4cf7e5355b1d86649073f30249d7cbe
               options: >-
                 --health-cmd "redis-cli ping"
                 --health-interval 10s
