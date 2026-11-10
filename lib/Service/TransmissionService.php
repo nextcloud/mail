@@ -35,9 +35,10 @@ class TransmissionService {
 	/**
 	 * @param LocalMessage $message
 	 * @param int $type
+	 * @param string $userId the user who sends the message
 	 * @return AddressList
 	 */
-	public function getAddressList(LocalMessage $message, int $type): AddressList {
+	public function getAddressList(LocalMessage $message, int $type, string $userId): AddressList {
 		return new AddressList(
 			array_map(
 				static function ($recipient) use ($type) {
@@ -46,7 +47,8 @@ class TransmissionService {
 				$this->groupsIntegration->expand(
 					array_filter($message->getRecipients(), static function (Recipient $recipient) use ($type) {
 						return $recipient->getType() === $type;
-					})
+					}),
+					$userId,
 				)
 			)
 		);

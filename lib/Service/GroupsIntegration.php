@@ -76,18 +76,19 @@ class GroupsIntegration {
 	 * Expands group names to its members
 	 *
 	 * @param Recipient[] $recipients
+	 * @param string $userId the user who sends to the recipients
 	 *
 	 * @return Recipient[]
 	 */
-	public function expand(array $recipients): array {
-		return array_flat_map(function (Recipient $recipient) {
+	public function expand(array $recipients, string $userId): array {
+		return array_flat_map(function (Recipient $recipient) use ($userId) {
 			foreach ($this->groupServices as $service) {
 				if (mb_strpos($recipient->getEmail(), $this->servicePrefix($service)) !== false) {
 					$groupId = mb_substr(
 						$recipient->getEmail(),
 						mb_strlen($this->servicePrefix($service))
 					);
-					$members = array_filter($service->getUsers($groupId), static function (array $member) {
+					$members = array_filter($service->getUsers($groupId, $userId), static function (array $member) {
 						return !empty($member['email']);
 					});
 					if ($members === []) {

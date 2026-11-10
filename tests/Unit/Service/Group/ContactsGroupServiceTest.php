@@ -156,7 +156,7 @@ class ContactsGroupServiceTest extends TestCase {
 			],
 		];
 
-		$actual = $this->groupService->getUsers($groupId);
+		$actual = $this->groupService->getUsers($groupId, 'sender');
 
 		$this->assertEquals($expected, $actual);
 	}
