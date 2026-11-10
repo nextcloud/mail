@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\ContextChat;
 
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\BackgroundJob\ContextChat\ScheduleJob;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Events\MessageDeletedEvent;
@@ -124,5 +125,8 @@ class ContextChatProvider implements IContentProvider, IEventListener {
 	 */
 	#[\Override]
 	public function triggerInitialImport(): void {
+		foreach ($this->accountService->getAllAcounts() as $account) {
+			$this->jobList->add(ScheduleJob::class, ['accountId' => $account->getId()]);
+		}
 	}
 }
