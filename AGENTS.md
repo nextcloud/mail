@@ -192,11 +192,31 @@ the same things — but the author should not need the bot to learn them.
   dropped by mistake.
 
 ### Internationalization
-- Wrap every user-facing string, **including aria-labels**, in `t('mail', …)`. Use one
-  string with placeholders — never concatenate translated fragments (translators reorder
-  words). Use `n('mail', …)` with a `%n` placeholder for counts. Never compare against a
-  hard-coded English string or use a translated string as a key. No HTML inside a
-  translation string — translate the plain parts and HTML-encode the inserts.
+The [translation guidelines](https://docs.nextcloud.com/server/latest/developer_manual/basics/translations.html#guidelines)
+are the source of truth. These are the rules that are most often missed:
+
+- Wrap every user-facing string, **including aria-labels**, in `t('mail', …)`. Never compare
+  against a hard-coded English string or use a translated string as a key.
+- **One string per sentence.** Never concatenate translated fragments or pad a string with
+  leading/trailing spaces. Use positioned placeholders (`%1$s`) in PHP and named ones in
+  JS/Vue: `t('mail', 'Moved to {mailbox}', { mailbox })`. No HTML inside a string;
+  HTML-encode the inserts instead.
+- **Plurals:** `n('mail', …)` with `%n`, always with a singular and a plural form. If the
+  count is not shown, use `t()` with a number-free string (`Delete messages`).
+- **Context hints:** put a `// TRANSLATORS …` comment (`<!-- TRANSLATORS … -->` in templates)
+  directly above ambiguous strings, e.g. `Share` as verb or noun. It only applies to the
+  next call, so give each call its own line and comment.
+- **Language of other users** (emails, background jobs): `IFactory::getUserLanguage($user)`.
+
+| Bad | Good |
+|---|---|
+| `Loading...`, `Loading …` (`U+0020`) | `Loading …` (`…` character; a non-breaking space `U+00A0` before it when trimming a sentence) |
+| `´`, `’` | `'` |
+| `Don't`, `Won't`, `Can not` | `Do not`, `Will not`, `Cannot` |
+| `id` | `ID` |
+| `Users` | `Accounts` (profiles, entities), `People` (humans) |
+| `Admin`, `Administrator` | `Administration` |
+| `Headline` | `Headline:` (colon inside the string) |
 
 ### Accessibility
 - Real anchor (`<a href … target="_blank">`) for links, not a JS click handler, so screen
