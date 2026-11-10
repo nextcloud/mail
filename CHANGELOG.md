@@ -1,3 +1,30 @@
+## [5.13.2](https://github.com/nextcloud/mail/compare/v5.13.1...v5.13.2) (2026-11-10)
+
+
+### Bug Fixes
+
+* bust browser cache of htmlresponse.js on app update ([fb2b472](https://github.com/nextcloud/mail/commit/fb2b472010be6ba743d05a4d2edee074ce479445))
+* **delegation:** restrict account deletion to owner and scope sender alias to account ([bc3dfb9](https://github.com/nextcloud/mail/commit/bc3dfb98eeb1014ffdbe5c22cbbc02cf0db783a3))
+* **imip:** lower log level of unprocessable iMIP messages ([eeda484](https://github.com/nextcloud/mail/commit/eeda48417dd30f67a790a6e423e4b461a0ac019f))
+* keep aspect ratio of sized images in the message viewer ([8a6ef41](https://github.com/nextcloud/mail/commit/8a6ef41454095d089228ebb9db24772d551a0e3b))
+* **l10n:** Update translations from Transifex ([848b06e](https://github.com/nextcloud/mail/commit/848b06e197dba0d2960bf549700c1076e8fc112b))
+* **l10n:** Update translations from Transifex ([36e6a7f](https://github.com/nextcloud/mail/commit/36e6a7fe79f1a302ced912d56293b33e7983025c))
+* **l10n:** Update translations from Transifex ([b2a1c43](https://github.com/nextcloud/mail/commit/b2a1c4329048bff3713dc498f874eabc118427a3))
+* **l10n:** Update translations from Transifex ([9ef4f36](https://github.com/nextcloud/mail/commit/9ef4f36bcbddc7bc0455b4907fd60ab67bf4a708))
+* **l10n:** Update translations from Transifex ([972c9c6](https://github.com/nextcloud/mail/commit/972c9c65e52c77fc9908b47ac66cd0b1fd8180a3))
+* **l10n:** Update translations from Transifex ([dadb802](https://github.com/nextcloud/mail/commit/dadb802b814fdc7bafce122ace0462cebffcd6ea))
+* **l10n:** Update translations from Transifex ([bd35230](https://github.com/nextcloud/mail/commit/bd352300e589efb0ce751992acfabd948dab29fa))
+* **sharing:** enforce sharing restrictions for text block shares and group recipients ([27c8cf0](https://github.com/nextcloud/mail/commit/27c8cf0fec8398bb8dd15300411d508ee386c075))
+* **ui:** hide itinerary entries of unsupported types ([729de27](https://github.com/nextcloud/mail/commit/729de273a86d2c6dbbbd9d00cfeee6c559c53671))
+* **ui:** save the attachment of its own message in a thread ([d9e470f](https://github.com/nextcloud/mail/commit/d9e470f744b75fab810b660f0b87359b75ecd69d))
+
+
+### Reverts
+
+* Revert "refactor: convert @nextcloud/vue barrel imports to subpath imports" ([4ab5686](https://github.com/nextcloud/mail/commit/4ab5686e31a57ae79ed1d558aa5232a485ad8152))
+
+
+
 ## [5.13.1](https://github.com/nextcloud/mail/compare/v5.13.0...v5.13.1) (2026-11-03)
 
 
