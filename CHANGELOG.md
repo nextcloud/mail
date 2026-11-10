@@ -1,3 +1,15 @@
+## [5.5.18](https://github.com/nextcloud/mail/compare/v5.5.17...v5.5.18) (2026-11-10)
+
+
+### Bug Fixes
+
+* **psalm:** avoid redundant array_values() flagged on newer OCP stubs ([c414e19](https://github.com/nextcloud/mail/commit/c414e19d1b554af6b2954c1f9f44bef34e56749f))
+* **psalm:** normalize findEntities() results to a list ([5cd55b4](https://github.com/nextcloud/mail/commit/5cd55b4e550ed4d960bc3b1800638494aa9790e9))
+* shareapi config key name ([d189dbd](https://github.com/nextcloud/mail/commit/d189dbde6859bdaa771818e481c7228852475d22))
+* **sharing:** enforce sharing restrictions for text block shares and group recipients ([5154b37](https://github.com/nextcloud/mail/commit/5154b37d42aa3106c9ef2d34ce72db836c23e81d))
+
+
+
 ## [5.5.17](https://github.com/nextcloud/mail/compare/v5.5.16...v5.5.17) (2026-07-01)
 
 
