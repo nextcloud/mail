@@ -491,6 +491,7 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "سىز To ۋە / ياكى Cc دىكى نۇرغۇن تاپشۇرۇۋالغۇچىلارغا ئەۋەتمەكچى بولۇۋاتىسىز. تاپشۇرۇۋالغۇچىنىڭ ئادرېسىنى يوشۇرۇش ئۈچۈن Bcc نى ئىشلىتىشنى ئويلاڭ.",
     "Your message has no subject. Do you want to send it anyway?" : "ئۇچۇرىڭىزنىڭ تېمىسى يوق. ئۇنى قانداقلا بولمىسۇن ئەۋەتەمسىز؟",
     "You mentioned an attachment. Did you forget to add it?" : "قوشۇمچە ھۆججەتنى تىلغا ئالدىڭىز. ئۇنى قوشۇشنى ئۇنتۇپ قالدىڭىزمۇ؟",
+    "Could not send message" : "ئۇچۇر ئەۋەتەلمىدى",
     "Message discarded" : "ئۇچۇر تاشلىۋېتىلدى",
     "Could not discard message" : "ئۇچۇرنى تاشلىۋېتەلمىدى",
     "Exit full screen" : "تولۇق ئېكراندىن چىقىڭ",
@@ -860,9 +861,7 @@ OC.L10N.register(
     "Discard unsaved changes" : "ساقلانمىغان ئۆزگەرتىشلەرنى تاشلاڭ",
     "Keep editing message" : "ئۇچۇرنى تەھرىرلەشنى داۋاملاشتۇرۇڭ",
     "Could not create snooze mailbox" : "ئۇخلاش خەت ساندۇقى قۇرالمىدى",
-    "Sending message…" : "ئۇچۇرنى يوللاۋاتىدۇ...",
     "Message sent" : "ئۇچۇر ئەۋەتىلدى",
-    "Could not send message" : "ئۇچۇر ئەۋەتەلمىدى",
     "Message copied to \"Sent\" folder" : "ئۇچۇر «ئەۋەتىلگەن» خەت ساندۇقىغا كۆچۈرۈلدى",
     "Could not copy message to \"Sent\" folder" : "ئۇچۇرنى «ئەۋەتىلگەن» خەت ساندۇقىغا كۆچۈرەلمىدى",
     "Could not load {tag}{name}{endtag}" : "يۈكلىيەلمىدى {tag} {name} {endtag}",
@@ -881,6 +880,7 @@ OC.L10N.register(
     "Set tag" : "بەلگە بەلگىلەڭ",
     "Unset tag" : "خەتكۈچنى تەڭشەش",
     "Add default tags" : "سۈكۈتتىكى بەلگىلەرنى قوشۇڭ",
-    "Saving tag …" : "خەتكۈچنى ساقلاۋاتىدۇ …"
+    "Saving tag …" : "خەتكۈچنى ساقلاۋاتىدۇ …",
+    "Sending message…" : "ئۇچۇرنى يوللاۋاتىدۇ..."
 },
 "nplurals=2; plural=(n != 1);");

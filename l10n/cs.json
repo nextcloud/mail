@@ -517,6 +517,7 @@
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "V kolonkách Pro a Skrytá kopie se snažíte poslat opravdu mnoha příjemcům. Zvažte použití Skryté kopie a nesdělování tak adres příjemců všem.",
     "Your message has no subject. Do you want to send it anyway?" : "Vaše zpráva nemá žádný předmět. Chcete ji i tak odeslat?",
     "You mentioned an attachment. Did you forget to add it?" : "Zmínili jste přílohu. Nezapomněli jste ji přidat?",
+    "Could not send message" : "Zprávu se nepodařilo odeslat",
     "Message discarded" : "Zpráva zahozena",
     "Could not discard message" : "Zprávu se nepodařilo zahodit",
     "Exit full screen" : "Opustit celou obrazovku",
@@ -907,9 +908,7 @@
     "Keep editing message" : "Pokračovat v upravování zprávy",
     "Could not create snooze mailbox" : "Nepodařilo se vytvořit schránku pro odložené",
     "Sorry, the message could not be loaded. The draft may no longer exist. Please refresh the page and try again." : "Je nám líto, ale zprávu nebylo možné načíst. Její koncept už neexistuje. Načtěte stránku znovu a zkuste to znovu prosím.",
-    "Sending message…" : "Odesílání zprávy …",
     "Message sent" : "Zpráva odeslána",
-    "Could not send message" : "Zprávu se nepodařilo odeslat",
     "Message copied to \"Sent\" folder" : "Zpráva zkopírována do složky „Odeslané“",
     "Could not copy message to \"Sent\" folder" : "Nebylo možné zkopírovat do složky „Odeslané“",
     "Could not load {tag}{name}{endtag}" : "Nedaří se načíst {tag}{name}{endtag}",
@@ -929,6 +928,7 @@
     "Set tag" : "Nastavit štítek",
     "Unset tag" : "Zrušit nastavení štítku",
     "Add default tags" : "Přidat výchozí štítky",
-    "Saving tag …" : "Ukládání štítku …"
+    "Saving tag …" : "Ukládání štítku …",
+    "Sending message…" : "Odesílání zprávy …"
 },"pluralForm" :"nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;"
 }

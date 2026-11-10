@@ -459,6 +459,7 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Ви намагаєтесь надіслати лист занадто багатьом отримувачам, яких зазначили у полі \"Кому\" та/або \"Копія\". Розгляньте можливість використання полі \"Прихована копія\" для приховування адрес отримувачів.",
     "Your message has no subject. Do you want to send it anyway?" : "Ваше повідомлення не має теми. Ви все одно хочете його надіслати?",
     "You mentioned an attachment. Did you forget to add it?" : "Ви згадали про вкладення. Чи ви часом не забули його долучити?",
+    "Could not send message" : "Не вдалося надіслати повідомлення",
     "Message discarded" : "Відхилено повідомлення",
     "Could not discard message" : "Не вдалося відхилити повідомлення",
     "Exit full screen" : "Вийти з повноекранного режиму",
@@ -821,9 +822,7 @@ OC.L10N.register(
     "Discard unsaved changes" : "Відкинути незбережені зміни",
     "Keep editing message" : "Продовжуйте редагувати повідомлення",
     "Could not create snooze mailbox" : "Не вдалося створити поштову скриньку з функцією відкладення",
-    "Sending message…" : "Надсилаю повідомлення...",
     "Message sent" : "Повідомлення відправлено",
-    "Could not send message" : "Не вдалося надіслати повідомлення",
     "Message copied to \"Sent\" folder" : "Повідомлення скопійовано до каталогу \"Надіслані\"",
     "Could not copy message to \"Sent\" folder" : "Не вдалося скопіювати повідомлення до каталогу \"Надіслані\"",
     "Could not load {tag}{name}{endtag}" : "Не вдалося завантажити {tag}{name}{endtag}",
@@ -840,6 +839,7 @@ OC.L10N.register(
     "Edit name or color" : "Редагувати назву або колір",
     "Set tag" : "Встановити мітку",
     "Unset tag" : "Прибрати встановлення мітки",
-    "Add default tags" : "Додати типові мітки"
+    "Add default tags" : "Додати типові мітки",
+    "Sending message…" : "Надсилаю повідомлення..."
 },
 "nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);");

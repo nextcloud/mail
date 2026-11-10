@@ -376,6 +376,7 @@ OC.L10N.register(
     "Message saved" : "Viesti tallennettu",
     "Failed to save message" : "Viestin tallentaminen epäonnistui",
     "Failed to save draft" : "Luonnoksen tallentaminen epäonnistui",
+    "Could not send message" : "Viestiä ei voitu lähettää",
     "Message discarded" : "Viesti hylätty",
     "Could not discard message" : "Viestiä ei voitu hylätä",
     "Exit full screen" : "Poistu koko näytön tilasta",
@@ -610,9 +611,7 @@ OC.L10N.register(
     "Discard changes" : "Hylkää muutokset",
     "Discard unsaved changes" : "Hylkää tallentamattomat muutokset",
     "Keep editing message" : "Jatka viestin muokkausta",
-    "Sending message…" : "Lähetetään viestiä…",
     "Message sent" : "Viesti lähetetty",
-    "Could not send message" : "Viestiä ei voitu lähettää",
     "Could not load {tag}{name}{endtag}" : "{tag}{name}{endtag} ei voitu ladata",
     "There was a problem loading {tag}{name}{endtag}" : "Ladattaessa {tag}{name}{endtag} ilmeni ongelma",
     "Could not load your message" : "Viestiä ei voitu ladata",
@@ -624,6 +623,7 @@ OC.L10N.register(
     "Error loading message" : "Virhe viestiä ladatessa",
     "Move Message" : "Siirrä viesti",
     "Edit name or color" : "Muokkaa nimeä tai väriä",
-    "Add default tags" : "Lisää oletustunnisteet"
+    "Add default tags" : "Lisää oletustunnisteet",
+    "Sending message…" : "Lähetetään viestiä…"
 },
 "nplurals=2; plural=(n != 1);");
