@@ -472,7 +472,6 @@ export default {
 	},
 
 	created() {
-		this.bus.on('close', this.hideMessage)
 		this.handleMailto()
 	},
 
@@ -487,7 +486,6 @@ export default {
 	},
 
 	beforeUnmount() {
-		this.bus.off('close', this.hideMessage)
 		clearTimeout(this.startMailboxTimer)
 	},
 
