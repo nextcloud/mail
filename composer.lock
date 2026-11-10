@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "940c4469defa2acf2b9bc7042deb3ed9",
+    "content-hash": "d1a6ee03954f7d3f4a4007787b73291c",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2341,16 +2341,16 @@
         },
         {
             "name": "nextcloud/kitinerary-flatpak",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextcloud-libraries/kitinerary-flatpak.git",
-                "reference": "9f5ea95be1e1f3b8f3a8637119c34f304766a877"
+                "reference": "5790f783d2a2b656c4ea410a6c5a0f2bd10bc159"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud-libraries/kitinerary-flatpak/zipball/9f5ea95be1e1f3b8f3a8637119c34f304766a877",
-                "reference": "9f5ea95be1e1f3b8f3a8637119c34f304766a877",
+                "url": "https://api.github.com/repos/nextcloud-libraries/kitinerary-flatpak/zipball/5790f783d2a2b656c4ea410a6c5a0f2bd10bc159",
+                "reference": "5790f783d2a2b656c4ea410a6c5a0f2bd10bc159",
                 "shasum": ""
             },
             "require": {
@@ -2376,9 +2376,10 @@
             ],
             "description": "KItinerary Flatpak binding",
             "support": {
-                "source": "https://github.com/nextcloud-libraries/kitinerary-flatpak/tree/v1.0.0"
+                "source": "https://github.com/nextcloud-libraries/kitinerary-flatpak/tree/v1.0.1"
             },
-            "time": "2024-01-19T13:36:53+00:00"
+            "time": "2026-11-04T13:03:15+00:00",
+            "published-time": "2026-11-04T13:09:21+00:00"
         },
         {
             "name": "nextcloud/kitinerary-sys",
