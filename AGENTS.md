@@ -192,11 +192,105 @@ the same things — but the author should not need the bot to learn them.
   dropped by mistake.
 
 ### Internationalization
-- Wrap every user-facing string, **including aria-labels**, in `t('mail', …)`. Use one
-  string with placeholders — never concatenate translated fragments (translators reorder
-  words). Use `n('mail', …)` with a `%n` placeholder for counts. Never compare against a
-  hard-coded English string or use a translated string as a key. No HTML inside a
-  translation string — translate the plain parts and HTML-encode the inserts.
+- Wrap every user-facing string, **including aria-labels**, in `t('mail', …)`. Never compare
+  against a hard-coded English string or use a translated string as a key.
+- Follow the [translation guidelines](https://docs.nextcloud.com/server/latest/developer_manual/basics/translations.html#guidelines)
+  for every translatable string.
+
+#### Dos and Don'ts
+
+| Bad | Good | Description |
+|---|---|---|
+| `´` or `’` | `'` | Use the ASCII single quote. |
+| `Loading...` | `Loading …` | Use the Unicode triple-dot character. Add a non-breaking space before the triple-dot when trimming a sentence instead of a word. |
+| `Loading …` (a general space `U+0020`) | `Loading …` (a non-breaking space `U+00A0`) | Only use a non-breaking space before the triple-dot (`U+00A0`). |
+| Don't | Do not | The spelled-out version is easier to understand and to translate. |
+| Won't | Will not | The spelled-out version is easier to understand and to translate. |
+| Can not | Cannot | The combined version is easier to understand and to translate. |
+| id | ID | Full uppercase for the abbreviation of "identifier". |
+| Users | Accounts / People | Use "accounts" for a profile or entity. Use "people" for humans. |
+| Admin / Administrator | Administration | Refer to administration as a non-human organizational entity instead of one or more persons. |
+| Headline | Headline: | Include colons in the translation, as some languages add a space before the colon. |
+| `" Leading space"`, `"Trailing space "` | `"No leading space"`, `"No trailing space"` | Leading or trailing spaces mostly indicate concatenated strings. Keep the content in a single translation, as order and references between words and sentences might get lost otherwise. |
+
+#### Plurals
+- Use `n('mail', …)` with a `%n` placeholder for counts. If you do not know the number, use
+  an undefined plural with `t()`:
+
+  ```php
+  // BAD: Plural without count
+  $l->n('Import calendar', 'Import calendars', $selectionLength);
+  // BETTER: Plural has count, but disrupting to read and unnecessary information
+  $l->n('Import %n calendar', 'Import %n calendars', $selectionLength);
+  // BEST: Simple string with undefined plural not using any number in the string
+  $l->t('Import calendars');
+  ```
+
+- Provide a singular and a plural string even if the number is always greater than 1, as
+  some languages have several plural forms: `"Vault will be locked in %1$d second"` and
+  `"Vault will be locked in %1$d seconds"`.
+
+#### Sentences, markup and placeholders
+- Use one string with placeholders — never concatenate translated fragments (translators
+  reorder words). Use positioned placeholders such as `%1$s`, so translators can reorder
+  them (e.g. for right-to-left languages).
+- No HTML inside a translation string — translate the plain parts and HTML-encode the
+  inserts.
+- In JavaScript, TypeScript and Vue, placeholders (apart from the plural count) use single
+  curly brackets with meaningful descriptors, and the parameters are an object with the
+  descriptors as keys:
+
+  ```js
+  n('myapp', 'Import %n calendar into {collection}', 'Import %n calendars into {collection}', selectionLength, { collection: 'Nextcloud' })
+  ```
+
+#### Context hints for translators
+Strings with multiple meanings can be translated wrongly, especially single words: `Share`
+can be the verb "to share something" or the noun "a share". Add a context hint, which
+translators see in Transifex. The comment must start with `TRANSLATORS` and be on the line
+before the translation call:
+
+```php
+// TRANSLATORS The placeholder refers to the software product name, e.g. "Add to your Nextcloud"
+$l->t('Add to your %s', [$productName]);
+
+// TRANSLATORS
+// Indicates when a calendar event will happen, shown on invitation emails.
+// Output example: "In 1 hour on July 1, 2024 for the entire day"
+$l->t('In %1$s on %2$s for the entire day', [$relativeTime, $date]);
+```
+
+```js
+// TRANSLATORS: {relativeDueDate} will be replaced with a relative time, e.g. "2 hours ago" or "in 3 days"
+t('files_reminders', 'We will remind you of this file {relativeDueDate}', { relativeDueDate })
+```
+
+```html
+<!-- TRANSLATORS: Making this question necessary to be answered when submitting to a form -->
+<span>{{ t('forms', 'Required') }}</span>
+```
+
+In a Vue `<script>` block, use the same `//` style as in JavaScript.
+
+A `TRANSLATORS` comment only applies to the first translation string on the following
+line. Put each translation call on its own line, with its own comment above it:
+
+```php
+// TRANSLATORS Confirm the current changes
+$save = $l->t('Save');
+// TRANSLATORS Discard the current changes
+$cancel = $l->t('Cancel');
+```
+
+#### Language of other users
+To get the language of another user, e.g. to send them an email or inside a background
+job, use `OCP\L10N\IFactory::getUserLanguage()`. It takes the `force_language` and
+`default_language` configuration options into account:
+
+```php
+$lang = $this->l10nFactory->getUserLanguage($user);
+$l = $this->l10nFactory->get('myapp', $lang);
+```
 
 ### Accessibility
 - Real anchor (`<a href … target="_blank">`) for links, not a JS click handler, so screen
