@@ -36,11 +36,12 @@ class TransmissionService {
 	/**
 	 * @param LocalMessage $message
 	 * @param int $type
+	 * @param string $userId the user who sends the message
 	 * @return AddressList
 	 */
-	public function getAddressList(LocalMessage $message, int $type): AddressList {
+	public function getAddressList(LocalMessage $message, int $type, string $userId): AddressList {
 		$recipientsForType = array_filter($message->getRecipients(), static fn (Recipient $recipient) => $recipient->getType() === $type);
-		$expandedRecipients = array_values($this->groupsIntegration->expand($recipientsForType));
+		$expandedRecipients = array_values($this->groupsIntegration->expand($recipientsForType, $userId));
 		$addresses = array_map(static fn (Recipient $recipient) => Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail()), $expandedRecipients);
 		return new AddressList($addresses);
 	}

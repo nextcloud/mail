@@ -63,9 +63,10 @@ class TransmissionServiceTest extends TestCase {
 
 		$this->groupsIntegration->expects(self::once())
 			->method('expand')
+			->with([$recipient], 'sender')
 			->willReturn([$recipient]);
 
-		$actual = $this->transmissionService->getAddressList($localMessage, Recipient::TYPE_TO);
+		$actual = $this->transmissionService->getAddressList($localMessage, Recipient::TYPE_TO, 'sender');
 		$this->assertEquals($expected, $actual);
 	}
 

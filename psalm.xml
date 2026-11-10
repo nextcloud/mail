@@ -68,8 +68,18 @@
 				<referencedClass name="OCP\TextProcessing\Task" />
 				<referencedClass name="OCP\TextProcessing\SummaryTaskType" />
 				<referencedClass name="OCP\TextProcessing\FreePromptTaskType" />
+				<referencedClass name="OCP\Interaction\InteractionReceiver" />
+				<referencedClass name="OCP\Interaction\Receivers\GroupReceiver" />
+				<referencedClass name="OCP\Interaction\Receivers\UserReceiver" />
+				<referencedClass name="OCP\Interaction\RestrictInteractionEvent" />
+				<referencedClass name="OCP\Interaction\Actions\ShareAction" />
 			</errorLevel>
 		</UndefinedClass>
+		<InvalidArgument>
+			<errorLevel type="suppress">
+				<referencedFunction name="OCA\Mail\Service\SharingRestrictionService::isInteractionAllowed" />
+			</errorLevel>
+		</InvalidArgument>
 		<UndefinedDocblockClass>
 			<errorLevel type="suppress">
 				<referencedClass name="Doctrine\DBAL\Driver\Statement" />

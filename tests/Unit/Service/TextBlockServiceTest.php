@@ -13,8 +13,11 @@ use OCA\Mail\Db\TextBlock;
 use OCA\Mail\Db\TextBlockMapper;
 use OCA\Mail\Db\TextBlockShare;
 use OCA\Mail\Db\TextBlockShareMapper;
+use OCA\Mail\Exception\UserNotFoundException;
+use OCA\Mail\Service\SharingRestrictionService;
 use OCA\Mail\Service\TextBlockService;
 use OCP\IGroupManager;
+use OCP\IUser;
 use OCP\IUserManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -32,6 +35,8 @@ final class TextBlockServiceTest extends TestCase {
 	/** @var IGroupManager|MockObject */
 	private $groupManager;
 
+	private SharingRestrictionService&MockObject $sharingRestrictionService;
+
 	/** @var TextBlockService */
 	private $textBlockService;
 
@@ -40,13 +45,20 @@ final class TextBlockServiceTest extends TestCase {
 		$this->textBlockShareMapper = $this->createMock(TextBlockShareMapper::class);
 		$this->userManager = $this->createMock(IUserManager::class);
 		$this->groupManager = $this->createMock(IGroupManager::class);
+		$this->sharingRestrictionService = $this->createMock(SharingRestrictionService::class);
 
 		$this->textBlockService = new TextBlockService(
 			$this->textBlockMapper,
 			$this->textBlockShareMapper,
 			$this->groupManager,
-			$this->userManager
+			$this->userManager,
+			$this->sharingRestrictionService,
 		);
+	}
+
+	private function allowSharing(): void {
+		$this->sharingRestrictionService->method('canShareWithUser')->willReturn(true);
+		$this->sharingRestrictionService->method('canShareWithGroup')->willReturn(true);
 	}
 
 	public function testFindAll(): void {
@@ -144,6 +156,7 @@ final class TextBlockServiceTest extends TestCase {
 	public function testShare(): void {
 		$textBlockId = 1;
 		$shareWith = 'alice';
+		$this->allowSharing();
 
 		$this->userManager->expects($this->once())
 			->method('get')
@@ -164,12 +177,13 @@ final class TextBlockServiceTest extends TestCase {
 				return true;
 			}));
 
-		$this->textBlockService->share($textBlockId, $shareWith);
+		$this->textBlockService->share($textBlockId, 'bob', $shareWith);
 	}
 
 	public function testShareExits(): void {
 		$textBlockId = 1;
 		$shareWith = 'alice';
+		$this->allowSharing();
 
 		$this->userManager->expects($this->once())
 			->method('get')
@@ -183,7 +197,7 @@ final class TextBlockServiceTest extends TestCase {
 
 		$this->expectException(\OCA\Mail\Exception\ShareeAlreadyExistsException::class);
 
-		$this->textBlockService->share($textBlockId, $shareWith);
+		$this->textBlockService->share($textBlockId, 'bob', $shareWith);
 	}
 
 	public function testShareShareeDoesntExits(): void {
@@ -198,7 +212,7 @@ final class TextBlockServiceTest extends TestCase {
 		$this->expectException(\OCA\Mail\Exception\UserNotFoundException::class);
 		$this->expectExceptionMessage('Sharee does not exist');
 
-		$this->textBlockService->share($textBlockId, $shareWith);
+		$this->textBlockService->share($textBlockId, 'bob', $shareWith);
 	}
 
 	public function testShareWithGroupGroupDoesNotExist(): void {
@@ -213,12 +227,13 @@ final class TextBlockServiceTest extends TestCase {
 		$this->expectException(\OCA\Mail\Exception\UserNotFoundException::class);
 		$this->expectExceptionMessage('Group does not exist');
 
-		$this->textBlockService->shareWithGroup($textBlockId, $groupId);
+		$this->textBlockService->shareWithGroup($textBlockId, 'bob', $groupId);
 	}
 
 	public function testShareWithGroupAlreadyExists(): void {
 		$textBlockId = 1;
 		$groupId = 'existing-group';
+		$this->allowSharing();
 
 		$this->groupManager->expects($this->once())
 			->method('groupExists')
@@ -232,12 +247,13 @@ final class TextBlockServiceTest extends TestCase {
 
 		$this->expectException(\OCA\Mail\Exception\ShareeAlreadyExistsException::class);
 
-		$this->textBlockService->shareWithGroup($textBlockId, $groupId);
+		$this->textBlockService->shareWithGroup($textBlockId, 'bob', $groupId);
 	}
 
 	public function testShareWithGroup(): void {
 		$textBlockId = 1;
 		$groupId = 'valid-group';
+		$this->allowSharing();
 
 		$this->groupManager->expects($this->once())
 			->method('groupExists')
@@ -258,7 +274,36 @@ final class TextBlockServiceTest extends TestCase {
 				return true;
 			}));
 
-		$this->textBlockService->shareWithGroup($textBlockId, $groupId);
+		$this->textBlockService->shareWithGroup($textBlockId, 'bob', $groupId);
+	}
+
+	public function testShareRestricted(): void {
+		$sharee = $this->createStub(IUser::class);
+		$this->userManager->method('get')->with('alice')->willReturn($sharee);
+		$this->sharingRestrictionService->expects($this->once())
+			->method('canShareWithUser')
+			->with('bob', $sharee)
+			->willReturn(false);
+		$this->textBlockShareMapper->expects($this->never())->method('insert');
+
+		$this->expectException(UserNotFoundException::class);
+		$this->expectExceptionMessage('Sharee does not exist');
+
+		$this->textBlockService->share(1, 'bob', 'alice');
+	}
+
+	public function testShareWithGroupRestricted(): void {
+		$this->groupManager->method('groupExists')->with('group-a')->willReturn(true);
+		$this->sharingRestrictionService->expects($this->once())
+			->method('canShareWithGroup')
+			->with('bob', 'group-a')
+			->willReturn(false);
+		$this->textBlockShareMapper->expects($this->never())->method('insert');
+
+		$this->expectException(UserNotFoundException::class);
+		$this->expectExceptionMessage('Group does not exist');
+
+		$this->textBlockService->shareWithGroup(1, 'bob', 'group-a');
 	}
 
 	public function testUnshare(): void {
