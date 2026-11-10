@@ -85,7 +85,9 @@ class AliasMapper extends QBMapper {
 				)
 			);
 
-		return array_values($this->findEntities($qb));
+		/** @var list<Alias> $aliases */
+		$aliases = $this->findEntities($qb);
+		return $aliases;
 	}
 
 	/**

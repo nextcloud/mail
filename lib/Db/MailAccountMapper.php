@@ -80,7 +80,9 @@ class MailAccountMapper extends QBMapper {
 			->from($this->getTableName())
 			->where($qb->expr()->eq('user_id', $qb->createNamedParameter($userId)));
 
-		return array_values($this->findEntities($query));
+		/** @var list<MailAccount> $accounts */
+		$accounts = $this->findEntities($query);
+		return $accounts;
 	}
 
 	/**
