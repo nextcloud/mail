@@ -18,9 +18,6 @@ use OCP\IDBConnection;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
-/**
- * @psalm-api
- */
 class Version3700Date20240430115406 extends SimpleMigrationStep {
 
 	public function __construct(

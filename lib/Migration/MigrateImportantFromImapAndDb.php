@@ -19,9 +19,6 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\MessageMapper;
 use Psr\Log\LoggerInterface;
 
-/**
- * @psalm-api
- */
 class MigrateImportantFromImapAndDb {
 
 	public function __construct(

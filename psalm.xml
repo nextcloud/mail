@@ -5,6 +5,7 @@
 -->
 <psalm
     errorLevel="3"
+    findUnusedCode="false"
     resolveFromConfigFile="true"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
@@ -75,11 +76,6 @@
 				<referencedClass name="OCP\Interaction\Actions\ShareAction" />
 			</errorLevel>
 		</UndefinedClass>
-		<InvalidArgument>
-			<errorLevel type="suppress">
-				<referencedFunction name="OCA\Mail\Service\SharingRestrictionService::isInteractionAllowed" />
-			</errorLevel>
-		</InvalidArgument>
 		<UndefinedDocblockClass>
 			<errorLevel type="suppress">
 				<referencedClass name="Doctrine\DBAL\Driver\Statement" />
@@ -92,5 +88,15 @@
 				<referencedClass name="Symfony\Component\Console\Output\OutputInterface" />
 			</errorLevel>
 		</UndefinedDocblockClass>
+		<ImpureMethodCall>
+			<errorLevel type="suppress">
+				<directory name="lib" />
+			</errorLevel>
+		</ImpureMethodCall>
+		<ImpurePropertyAssignment>
+			<errorLevel type="suppress">
+				<directory name="lib" />
+			</errorLevel>
+		</ImpurePropertyAssignment>
 	</issueHandlers>
 </psalm>

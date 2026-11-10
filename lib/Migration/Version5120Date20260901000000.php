@@ -15,9 +15,6 @@ use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 use Override;
 
-/**
- * @psalm-api
- */
 class Version5120Date20260901000000 extends SimpleMigrationStep {
 	private const OLD_INDEX = 'mail_internal_address_uniq';
 	private const NEW_INDEX = 'mail_int_addr_uid_addr_uidx';

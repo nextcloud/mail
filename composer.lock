@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "973714d4c26e8841532fb1a59955aca9",
+    "content-hash": "940c4469defa2acf2b9bc7042deb3ed9",
     "packages": [
         {
             "name": "amphp/amp",
@@ -3613,20 +3613,20 @@
     "packages-dev": [
         {
             "name": "psalm/phar",
-            "version": "5.26.1",
+            "version": "7.0.0-rc28",
             "source": {
                 "type": "git",
                 "url": "https://github.com/psalm/phar.git",
-                "reference": "8a38e7ad04499a0ccd2c506fd1da6fc01fff4547"
+                "reference": "ba4777cc9b6e57142a80c4b5c5c8cd1125935366"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/psalm/phar/zipball/8a38e7ad04499a0ccd2c506fd1da6fc01fff4547",
-                "reference": "8a38e7ad04499a0ccd2c506fd1da6fc01fff4547",
+                "url": "https://api.github.com/repos/psalm/phar/zipball/ba4777cc9b6e57142a80c4b5c5c8cd1125935366",
+                "reference": "ba4777cc9b6e57142a80c4b5c5c8cd1125935366",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1 || ^8.0"
+                "php": "^8.2"
             },
             "conflict": {
                 "vimeo/psalm": "*"
@@ -3642,9 +3642,10 @@
             "description": "Composer-based Psalm Phar",
             "support": {
                 "issues": "https://github.com/psalm/phar/issues",
-                "source": "https://github.com/psalm/phar/tree/5.26.1"
+                "source": "https://github.com/psalm/phar/tree/7.0.0-rc28"
             },
-            "time": "2024-09-09T16:22:43+00:00"
+            "time": "2026-11-02T13:39:16+00:00",
+            "published-time": "2026-11-02T13:39:25+00:00"
         },
         {
             "name": "roave/security-advisories",
@@ -4222,6 +4223,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "gravatarphp/gravatar": 20,
+        "psalm/phar": 5,
         "roave/security-advisories": 20
     },
     "prefer-stable": false,

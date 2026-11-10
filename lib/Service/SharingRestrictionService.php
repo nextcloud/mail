@@ -34,6 +34,7 @@ class SharingRestrictionService {
 	public function canShareWithUser(string $sharerId, IUser $sharee): bool {
 		// TODO: drop the legacy checks when the least compatible server version is 34
 		if ($this->hasInteractionApi()) {
+			/** @psalm-suppress InvalidArgument UserReceiver only satisfies InteractionReceiver on newer OCP versions */
 			return $this->isInteractionAllowed($sharerId, new UserReceiver($sharee->getUID(), $sharee));
 		}
 
@@ -56,6 +57,7 @@ class SharingRestrictionService {
 	public function canShareWithGroup(string $sharerId, string $groupId): bool {
 		// TODO: drop the legacy checks when the least compatible server version is 34
 		if ($this->hasInteractionApi()) {
+			/** @psalm-suppress InvalidArgument GroupReceiver only satisfies InteractionReceiver on newer OCP versions */
 			return $this->isInteractionAllowed($sharerId, new GroupReceiver($groupId));
 		}
 
