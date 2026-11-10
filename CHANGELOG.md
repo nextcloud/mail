@@ -1,3 +1,13 @@
+## [5.6.22](https://github.com/nextcloud/mail/compare/v5.6.21...v5.6.22) (2026-11-10)
+
+
+### Bug Fixes
+
+* shareapi config key name ([bce1c9e](https://github.com/nextcloud/mail/commit/bce1c9e795841fed93c139ac6a0eaf237bd347f6))
+* **sharing:** enforce sharing restrictions for text block shares and group recipients ([ae9598d](https://github.com/nextcloud/mail/commit/ae9598df4ccbe390d9776fc6880a71cdc7ff51d9))
+
+
+
 ## [5.6.21](https://github.com/nextcloud/mail/compare/v5.6.20...v5.6.21) (2026-07-01)
 
 
