@@ -35,6 +35,14 @@
 					{{ t('mail', 'Account settings') }}
 				</NcActionButton>
 				<NcActionButton
+					:closeAfterClick="true"
+					@click="copyEmailAddress">
+					<template #icon>
+						<IconClipboard :size="20" />
+					</template>
+					{{ t('mail', 'Copy') }}
+				</NcActionButton>
+				<NcActionButton
 					v-if="canDelegate"
 					:closeAfterClick="true"
 					@click="showDelegationModal = true">
@@ -98,7 +106,7 @@
 </template>
 
 <script>
-import { DialogBuilder, showError } from '@nextcloud/dialogs'
+import { DialogBuilder, showError, showSuccess } from '@nextcloud/dialogs'
 import { formatFileSize } from '@nextcloud/files'
 import { generateUrl } from '@nextcloud/router'
 import { mapStores } from 'pinia'
@@ -112,6 +120,7 @@ import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import MenuDown from 'vue-material-design-icons/ChevronDown.vue'
 import MenuUp from 'vue-material-design-icons/ChevronUp.vue'
+import IconClipboard from 'vue-material-design-icons/ClipboardTextOutline.vue'
 import IconSettings from 'vue-material-design-icons/CogOutline.vue'
 import IconFolderAdd from 'vue-material-design-icons/FolderOutline.vue'
 import IconInfo from 'vue-material-design-icons/InformationOutline.vue'
@@ -132,6 +141,7 @@ export default {
 		DelegationModal: defineAsyncComponent(() => import(/* webpackChunkName: "delegation-modal" */ './DelegationModal.vue')),
 		IconInfo,
 		IconSettings,
+		IconClipboard,
 		NcIconSvgWrapper,
 		IconFolderAdd,
 		MenuDown,
@@ -240,6 +250,16 @@ export default {
 				this.createMailboxName = ''
 			}
 			logger.info(`mailbox ${name} created`)
+		},
+
+		async copyEmailAddress() {
+			try {
+				await navigator.clipboard.writeText(this.account.emailAddress)
+				showSuccess(t('mail', 'Copied email address to clipboard'))
+			} catch (error) {
+				logger.error('could not copy email address to clipboard', { error })
+				showError(t('mail', 'Could not copy email address to clipboard'))
+			}
 		},
 
 		openCreateMailbox() {
