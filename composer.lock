@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9fb4e05e36a836541853671eb4bc63de",
+    "content-hash": "137af10ed29cd7ce61eddc590526210c",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2383,16 +2383,16 @@
         },
         {
             "name": "nextcloud/kitinerary-sys",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextcloud-libraries/kitinerary-sys.git",
-                "reference": "f54aae1a22c407befa41127fe92c57292e1db8bf"
+                "reference": "73cee8b210c9e4c95b59f007021619c2e61351f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud-libraries/kitinerary-sys/zipball/f54aae1a22c407befa41127fe92c57292e1db8bf",
-                "reference": "f54aae1a22c407befa41127fe92c57292e1db8bf",
+                "url": "https://api.github.com/repos/nextcloud-libraries/kitinerary-sys/zipball/73cee8b210c9e4c95b59f007021619c2e61351f4",
+                "reference": "73cee8b210c9e4c95b59f007021619c2e61351f4",
                 "shasum": ""
             },
             "require": {
@@ -2421,9 +2421,10 @@
             ],
             "description": "KItinerary binding for the system package",
             "support": {
-                "source": "https://github.com/nextcloud-libraries/kitinerary-sys/tree/v2.0.0"
+                "source": "https://github.com/nextcloud-libraries/kitinerary-sys/tree/v2.0.1"
             },
-            "time": "2025-01-08T14:40:01+00:00"
+            "time": "2026-11-04T13:03:18+00:00",
+            "published-time": "2026-11-04T13:09:12+00:00"
         },
         {
             "name": "php-http/discovery",
