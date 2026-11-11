@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d1a6ee03954f7d3f4a4007787b73291c",
+    "content-hash": "a5beccc43f509ab885febdb5da33be7e",
     "packages": [
         {
             "name": "amphp/amp",
@@ -3614,16 +3614,16 @@
     "packages-dev": [
         {
             "name": "psalm/phar",
-            "version": "7.0.0-rc28",
+            "version": "7.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/psalm/phar.git",
-                "reference": "ba4777cc9b6e57142a80c4b5c5c8cd1125935366"
+                "reference": "528270b433269898b53e5b35285e2a86fd9ade41"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/psalm/phar/zipball/ba4777cc9b6e57142a80c4b5c5c8cd1125935366",
-                "reference": "ba4777cc9b6e57142a80c4b5c5c8cd1125935366",
+                "url": "https://api.github.com/repos/psalm/phar/zipball/528270b433269898b53e5b35285e2a86fd9ade41",
+                "reference": "528270b433269898b53e5b35285e2a86fd9ade41",
                 "shasum": ""
             },
             "require": {
@@ -3643,10 +3643,10 @@
             "description": "Composer-based Psalm Phar",
             "support": {
                 "issues": "https://github.com/psalm/phar/issues",
-                "source": "https://github.com/psalm/phar/tree/7.0.0-rc28"
+                "source": "https://github.com/psalm/phar/tree/7.0.1"
             },
-            "time": "2026-11-02T13:39:16+00:00",
-            "published-time": "2026-11-02T13:39:25+00:00"
+            "time": "2026-11-03T11:30:13+00:00",
+            "published-time": "2026-11-03T11:30:22+00:00"
         },
         {
             "name": "roave/security-advisories",
@@ -4224,7 +4224,6 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "gravatarphp/gravatar": 20,
-        "psalm/phar": 5,
         "roave/security-advisories": 20
     },
     "prefer-stable": false,
