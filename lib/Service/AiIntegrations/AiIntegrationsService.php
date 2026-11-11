@@ -400,6 +400,11 @@ class AiIntegrationsService {
 		if (!$this->isLlmProcessingEnabled() || !$this->isTaskAvailable(TextToTextTranslate::ID)) {
 			throw new ServiceException('No translation provider available');
 		}
+		$languages = $this->getTranslationLanguages();
+		if (!in_array($fromLanguage, array_column($languages['input'], 'value'), true)
+			|| !in_array($toLanguage, array_column($languages['output'], 'value'), true)) {
+			throw new ServiceException('Unsupported translation language');
+		}
 		$cacheKey = 'translation_' . $this->cache->buildUrlKey([$message->getId(), $fromLanguage, $toLanguage]);
 		$cachedTranslation = $this->cache->getValue($cacheKey);
 		if ($cachedTranslation === Cache::FAILURE_MARKER) {
@@ -415,12 +420,15 @@ class AiIntegrationsService {
 			$message,
 			true,
 		);
-		if ($imapMessage->isEncrypted()) {
+		if ($imapMessage->isEncrypted() || $imapMessage->isPgpMimeEncrypted()) {
 			throw new ServiceException('Encrypted messages can not be translated');
 		}
 		$text = trim($imapMessage->getPlainBody());
 		if ($text === '' && $imapMessage->hasHtmlMessage()) {
 			$text = trim((new Html2Text($imapMessage->htmlMessage, ['do_links' => 'none', 'alt_image' => 'hide']))->getText());
+		}
+		if (str_starts_with($text, '-----BEGIN PGP MESSAGE-----')) {
+			throw new ServiceException('Encrypted messages can not be translated');
 		}
 		if ($text === '') {
 			throw new ServiceException('Message has no text to translate');
