@@ -706,7 +706,7 @@ OC.L10N.register(
     "Certificate" : "証明",
     "Private key (optional)" : "秘密鍵（オプション）",
     "The private key is only required if you intend to send signed and encrypted emails using this certificate." : "秘密鍵は、この証明書を使用して署名および暗号化された電子メールを送信する場合にのみ必要です。",
-    "Submit" : "提出する",
+    "Submit" : "送信",
     "No text blocks available" : "利用可能なテキストブロックはありません",
     "Group" : "グループ",
     "Shared" : "共有中",
