@@ -89,11 +89,11 @@ class OutOfOfficeController extends Controller {
 	public function update(
 		int $accountId,
 		bool $enabled,
-		bool $messageHtml,
 		?string $start,
 		?string $end,
 		string $subject,
 		string $message,
+		bool $messageHtml = false,
 	): JsonResponse {
 		$user = $this->userSession->getUser();
 		if ($user === null) {
@@ -117,11 +117,12 @@ class OutOfOfficeController extends Controller {
 
 		$state = new OutOfOfficeState(
 			$enabled,
-			$messageHtml,
 			$start ? new DateTimeImmutable($start) : null,
 			$end ? new DateTimeImmutable($end) : null,
 			$subject,
 			$message,
+			OutOfOfficeState::DEFAULT_VERSION,
+			$messageHtml,
 		);
 		$this->outOfOfficeService->update($mailAccount, $state);
 

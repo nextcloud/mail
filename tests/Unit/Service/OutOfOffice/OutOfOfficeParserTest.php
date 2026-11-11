@@ -36,6 +36,7 @@ class OutOfOfficeParserTest extends TestCase {
 		self::assertEquals(new DateTimeImmutable('2022-09-08T23:59:00+0100'), $actual->getState()->getEnd());
 		self::assertEquals('On vacation', $actual->getState()->getSubject());
 		self::assertEquals("I'm on vacation.", $actual->getState()->getMessage());
+		self::assertEquals(false, $actual->getState()->isMessageHtml());
 	}
 
 	public function testParseDisabledResponder(): void {
@@ -183,5 +184,25 @@ class OutOfOfficeParserTest extends TestCase {
 			['Test Test <test@test.org>', 'Test Alias <alias@test.org>'],
 		);
 		self::assertEquals($expected, $actual);
+	}
+
+	public function testBuildEnabledResponderHtml(): void {
+		$script = file_get_contents(__DIR__ . '/../../../data/sieve-vacation-cleaned.sieve');
+
+		$actual = $this->outOfOfficeParser->buildSieveScript(
+			new OutOfOfficeState(
+				true,
+				new DateTimeImmutable('2022-09-02T00:00:00+0100'),
+				new DateTimeImmutable('2022-09-08T23:59:00+0100'),
+				'On vacation',
+				"<p style=\"margin:0;\">I'm on vacation.</p>",
+				OutOfOfficeState::DEFAULT_VERSION,
+				true
+			),
+			$script,
+			['Test Test <test@test.org>', 'Test Alias <alias@test.org>'],
+		);
+
+		throw new \Exception( "$actual" );
 	}
 }

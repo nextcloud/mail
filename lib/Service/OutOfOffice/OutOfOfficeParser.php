@@ -11,9 +11,12 @@ namespace OCA\Mail\Service\OutOfOffice;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use Horde_Mime_Part;
 use JsonException;
 use OCA\Mail\Exception\OutOfOfficeParserException;
 use OCA\Mail\Sieve\SieveUtils;
+use OCA\Mail\Service\DataUri\DataUriParser;
+use OCA\Mail\Service\MimeMessage;
 
 /**
  * Parses and builds out-of-office states from/to sieve scripts.
@@ -141,24 +144,22 @@ class OutOfOfficeParser {
 			$vacation[] = ":addresses [$joinedRecipients]";
 		}
 
-		$escapedMessage = SieveUtils::escapeString($state->getMessage());
 
-		// whether the incoming message is plaintext or html
-		if ($state->isMessageHtml() === false) {
-			// ORIGINAL HANDLING FOR PLAIN-TEXT
-			$vacation[] = "\"$escapedMessage\"";
+		if ($state->isMessageHtml() === true) {
+			$mimeMessage = new MimeMessage(new DataUriParser);
+			$mimeString = $mimeMessage->build(null, $state->getMessage(), false, []);
+			$mimeString = $mimeString->toString(
+				['headers' => true, 'encode' => Horde_Mime_Part::ENCODE_7BIT]
+			);
+			$mimeString = SieveUtils::escapeString($mimeString);
+
+			$vacationMessage = ":mime \"$mimeString\"";
 		} else {
-			// NEW HANDLING FOR HTML
-			$htmlMessage = "<!DOCTYPE html><html><head></head><body>$escapedMessage</body></html>";
-
-			$mimeLines[] = ":mime \"MIME-Version: 1.0";
-			$mimeLines[] = "Content-Type: text/html; charset=UTF-8";
-			$mimeLines[] = "Content-Transfer-Encoding: 7bit";
-			$mimeLines[] = "$htmlMessage\"";
-
-			$vacation[] = implode("\r\n", $mimeLines);
+			$escapedMessage = SieveUtils::escapeString($state->getMessage());
+			$vacationMessage = "\"$escapedMessage\"";
 		}
 
+		$vacation[] = $vacationMessage;
 		$vacationCommand = implode(' ', $vacation);
 
 		$subjectSection = [
