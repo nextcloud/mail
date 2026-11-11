@@ -144,13 +144,14 @@ class OutOfOfficeParser {
 			$vacation[] = ":addresses [$joinedRecipients]";
 		}
 
-
 		if ($state->isMessageHtml() === true) {
 			$mimeMessage = new MimeMessage(new DataUriParser);
-			$mimeString = $mimeMessage->build(null, $state->getMessage(), false, []);
-			$mimeString = $mimeString->toString(
+			$mimeParts = $mimeMessage->build(null, $state->getMessage(), false, []);
+
+			$mimeString = $mimeParts->toString(
 				['headers' => true, 'encode' => Horde_Mime_Part::ENCODE_7BIT]
 			);
+			$mimeString = str_replace("\n", "\r\n", $mimeString);
 			$mimeString = SieveUtils::escapeString($mimeString);
 
 			$vacationMessage = ":mime \"$mimeString\"";
