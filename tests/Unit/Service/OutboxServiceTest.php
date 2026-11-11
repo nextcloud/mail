@@ -17,6 +17,7 @@ use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\SendInProgressException;
 use OCA\Mail\Send\Chain;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Attachment\AttachmentService;
@@ -479,6 +480,101 @@ class OutboxServiceTest extends TestCase {
 
 		$this->outboxService->sendMessage($message, $account);
 		$this->assertEquals(LocalMessage::STATUS_NO_SENT_MAILBOX, $message->getStatus());
+	}
+
+	public function testSendMessageSentByConcurrentProcess(): void {
+		$message = new LocalMessage();
+		$message->setId(1);
+		$message->setStatus(LocalMessage::STATUS_RAW);
+		$account = $this->createConfiguredMock(Account::class, [
+			'getUserId' => $this->userId
+		]);
+
+		$this->chain->expects(self::once())
+			->method('process')
+			->with($account, $message)
+			->willThrowException(new SendInProgressException('busy'));
+		$this->timeFactory->method('getTime')
+			->willReturn(1000);
+		$this->chain->expects(self::once())
+			->method('isSending')
+			->with($message)
+			->willReturn(false);
+		$this->mapper->expects(self::once())
+			->method('findById')
+			->with(1, $this->userId, LocalMessage::TYPE_OUTGOING)
+			->willThrowException(new DoesNotExistException(''));
+
+		$result = $this->outboxService->sendMessage($message, $account);
+
+		$this->assertEquals(LocalMessage::STATUS_PROCESSED, $result->getStatus());
+	}
+
+	public function testSendMessageConcurrentProcessGaveUp(): void {
+		$message = new LocalMessage();
+		$message->setId(1);
+		$message->setStatus(LocalMessage::STATUS_RAW);
+		$current = new LocalMessage();
+		$current->setId(1);
+		$current->setStatus(LocalMessage::STATUS_SMPT_SEND_FAIL);
+		$account = $this->createConfiguredMock(Account::class, [
+			'getUserId' => $this->userId
+		]);
+
+		$this->chain->expects(self::exactly(2))
+			->method('process')
+			->willReturnCallback(function (Account $a, LocalMessage $m) use ($message, $current) {
+				if ($m === $message) {
+					throw new SendInProgressException('busy');
+				}
+				self::assertSame($current, $m);
+				return $current;
+			});
+		$this->timeFactory->method('getTime')
+			->willReturn(1000);
+		$this->chain->expects(self::once())
+			->method('isSending')
+			->with($message)
+			->willReturn(false);
+		$this->mapper->expects(self::once())
+			->method('findById')
+			->with(1, $this->userId, LocalMessage::TYPE_OUTGOING)
+			->willReturn($current);
+
+		$result = $this->outboxService->sendMessage($message, $account);
+
+		$this->assertSame($current, $result);
+	}
+
+	public function testFlushSkipsMessageBeingSent(): void {
+		$message = new LocalMessage();
+		$message->setId(1);
+		$message->setAccountId(1);
+		$message->setStatus(LocalMessage::STATUS_RAW);
+		$account = $this->createConfiguredMock(Account::class, [
+			'getUserId' => $this->userId
+		]);
+
+		$this->timeFactory->method('getTime')
+			->willReturn(1000);
+		$this->mapper->expects(self::once())
+			->method('findDue')
+			->with(1000)
+			->willReturn([$message]);
+		$this->accountService->expects(self::once())
+			->method('findById')
+			->with(1)
+			->willReturn($account);
+		$this->chain->expects(self::once())
+			->method('process')
+			->with($account, $message)
+			->willThrowException(new SendInProgressException('busy'));
+		$this->logger->expects(self::never())
+			->method('warning');
+		$this->logger->expects(self::once())
+			->method('debug');
+
+		$this->outboxService->flush();
 	}
 
 	public function testConvertToOutboxMessageNoRecipients(): void {

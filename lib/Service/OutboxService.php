@@ -15,6 +15,7 @@ use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\OutboxMessageCreatedEvent;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\SendInProgressException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Send\Chain;
 use OCA\Mail\Service\Attachment\AttachmentService;
@@ -26,6 +27,12 @@ use Psr\Log\LoggerInterface;
 use Throwable;
 
 class OutboxService {
+	/**
+	 * How long (seconds) a send request waits for a concurrent send of the same
+	 * message (normally the OutboxWorkerJob) before giving up.
+	 */
+	public const CONCURRENT_SEND_WAIT = 60;
+
 
 	/** @var IEventDispatcher */
 	private $eventDispatcher;
@@ -92,7 +99,48 @@ class OutboxService {
 	 * @throws ServiceException
 	 */
 	public function sendMessage(LocalMessage $message, Account $account): LocalMessage {
-		return $this->sendChain->process($account, $message);
+		try {
+			return $this->sendChain->process($account, $message);
+		} catch (SendInProgressException $e) {
+			// Another process (normally the OutboxWorkerJob) picked this message up a
+			// moment ago. Wait for it and report its outcome instead of producing a
+			// second copy of the message.
+			return $this->awaitConcurrentSend($message, $account, $e);
+		}
+	}
+
+	/**
+	 * Wait for a concurrent send of the same message to finish.
+	 *
+	 * Returns the message flagged as processed when the other process sent and
+	 * removed it, sends it when the other process gave up and left it in the
+	 * outbox, and rethrows when the other process is still busy after the
+	 * waiting period (the OutboxWorkerJob will take care of the message).
+	 *
+	 * @throws SendInProgressException
+	 * @throws Throwable
+	 */
+	private function awaitConcurrentSend(LocalMessage $message, Account $account, SendInProgressException $e): LocalMessage {
+		$deadline = $this->timeFactory->getTime() + self::CONCURRENT_SEND_WAIT;
+		while ($this->timeFactory->getTime() < $deadline) {
+			sleep(1);
+			if ($this->sendChain->isSending($message)) {
+				continue;
+			}
+			try {
+				$current = $this->mapper->findById($message->getId(), $account->getUserId(), LocalMessage::TYPE_OUTGOING);
+			} catch (DoesNotExistException $notFound) {
+				// Sent and removed from the outbox by the other process
+				$this->logger->debug('Outbox message {id} was sent by a concurrent process', [
+					'id' => $message->getId(),
+				]);
+				$message->setStatus(LocalMessage::STATUS_PROCESSED);
+				return $message;
+			}
+			// The other process did not finish the job (e.g. SMTP error): try again with the fresh state
+			return $this->sendChain->process($account, $current);
+		}
+		throw $e;
 	}
 
 	/**
@@ -199,6 +247,11 @@ class OutboxService {
 			try {
 				$this->sendChain->process($account, $message);
 				$this->logger->debug('Outbox message {id} sent', [
+					'id' => $message->getId(),
+				]);
+			} catch (SendInProgressException $e) {
+				// The web client is sending this message right now, nothing to do
+				$this->logger->debug('Outbox message {id} is being sent by another process, skipping', [
 					'id' => $message->getId(),
 				]);
 			} catch (Throwable $e) {
