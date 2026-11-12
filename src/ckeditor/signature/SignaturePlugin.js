@@ -23,6 +23,7 @@ export default class Signature extends Plugin {
 		schema.register('signature', {
 			inheritAllFrom: '$container',
 		})
+		schema.extend('$text', { allowIn: 'signature' })
 	}
 
 	_defineConverters() {
