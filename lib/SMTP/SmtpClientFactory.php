@@ -82,7 +82,7 @@ class SmtpClientFactory {
 				$decryptedAccessToken,
 			);
 		}
-		$debugLogPath = $this->debugLogPathFactory->getPath($account, 'smtp');
+		$debugLogPath = $this->debugLogPathFactory->getPath($account, DebugLogPathFactory::PROTOCOL_SMTP);
 		if ($debugLogPath !== null) {
 			$params['debug'] = $debugLogPath;
 		}

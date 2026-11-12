@@ -134,7 +134,7 @@ class IMAPClientFactory {
 				'backend' => $this->hordeCacheFactory->newCache($account),
 			];
 		}
-		$debugLogPath = $this->debugLogPathFactory->getPath($account, 'imap');
+		$debugLogPath = $this->debugLogPathFactory->getPath($account, DebugLogPathFactory::PROTOCOL_IMAP);
 		if ($debugLogPath !== null) {
 			$params['debug'] = $debugLogPath;
 		}

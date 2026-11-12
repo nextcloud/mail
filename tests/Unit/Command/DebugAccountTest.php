@@ -30,7 +30,7 @@ class DebugAccountTest extends TestCase {
 
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->config = $this->createMock(IConfig::class);
-		$this->config->method('getSystemValue')
+		$this->config->method('getSystemValueString')
 			->with('datadirectory')
 			->willReturn('/data');
 		$this->config->method('getSystemValueBool')
@@ -94,7 +94,7 @@ class DebugAccountTest extends TestCase {
 
 	public function testWarnsWhenDisablingButSystemWideDebugIsStillOn(): void {
 		$this->config = $this->createMock(IConfig::class);
-		$this->config->method('getSystemValue')
+		$this->config->method('getSystemValueString')
 			->with('datadirectory')
 			->willReturn('/data');
 		$this->config->method('getSystemValueBool')

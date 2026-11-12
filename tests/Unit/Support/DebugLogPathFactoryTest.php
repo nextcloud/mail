@@ -23,7 +23,7 @@ class DebugLogPathFactoryTest extends TestCase {
 		parent::setUp();
 
 		$this->config = $this->createMock(IConfig::class);
-		$this->config->method('getSystemValue')
+		$this->config->method('getSystemValueString')
 			->with('datadirectory')
 			->willReturn('/data');
 
@@ -70,7 +70,7 @@ class DebugLogPathFactoryTest extends TestCase {
 			->with('app.mail.debug')
 			->willReturn(false);
 
-		$this->assertNull($this->factory->getPath($this->account(false), 'imap'));
+		$this->assertNull($this->factory->getPath($this->account(false), DebugLogPathFactory::PROTOCOL_IMAP));
 	}
 
 	public function testGetPathReturnsPathWhenActive(): void {
@@ -78,14 +78,14 @@ class DebugLogPathFactoryTest extends TestCase {
 			->with('app.mail.debug')
 			->willReturn(false);
 
-		$this->assertSame('/data/mail-bob-5-imap.log', $this->factory->getPath($this->account(true), 'imap'));
+		$this->assertSame('/data/mail-bob-5-imap.log', $this->factory->getPath($this->account(true), DebugLogPathFactory::PROTOCOL_IMAP));
 	}
 
 	public function testBuildPathUsesPlaceholderWhenAccountHasNoIdYet(): void {
-		$this->assertSame('/data/mail-bob-new-smtp.log', $this->factory->buildPath($this->account(false, null), 'smtp'));
+		$this->assertSame('/data/mail-bob-new-smtp.log', $this->factory->buildPath($this->account(false, null), DebugLogPathFactory::PROTOCOL_SMTP));
 	}
 
 	public function testBuildPathUsesTheAccountId(): void {
-		$this->assertSame('/data/mail-bob-5-sieve.log', $this->factory->buildPath($this->account(false), 'sieve'));
+		$this->assertSame('/data/mail-bob-5-sieve.log', $this->factory->buildPath($this->account(false), DebugLogPathFactory::PROTOCOL_SIEVE));
 	}
 }
