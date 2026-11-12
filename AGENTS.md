@@ -286,6 +286,28 @@ Agents may post GitHub text directly (PR and issue comments, review comments, PR
 - Fill out the repo's PR/issue template completely when opening a PR or issue.
 - Additional info meant only for agents can go into a description or comment, but must be wrapped in a collapsed `<details>` block so human readers can skip it or dive in.
 
+### Official documentation (user_manual / admin_manual)
+
+Admin- and user-facing documentation for this app lives in the separate
+[`nextcloud/documentation`](https://github.com/nextcloud/documentation) repository
+(`admin_manual/groupware/mail.rst`, `user_manual/groupware/mail.rst`) — not in this
+app's `doc/` directory. `doc/admin.md` and `doc/user.md` were deliberately removed for
+this reason (commit `491f4888`, 2026-01-16). `doc/` here is reserved for
+contributor/developer-facing content only (local setup guides, architecture notes),
+mirroring `doc/developer.md`.
+
+Not every change needs a doc update — a lot of small fixes and internal changes don't
+touch anything a user or admin would need explained. But a change substantial enough to
+need one (a new integration, a new settings area, a new concept the user has to learn)
+should get it written right away, alongside the feature PR, not deferred to "later":
+open a draft pull request in `nextcloud/documentation` with the
+`admin_manual`/`user_manual` change. Keep it in draft and don't merge it until the
+feature PR itself has merged — the feature can still change shape during review, and
+docs merged early drift out of sync with what actually ships.
+
+This applies equally to human contributors — see the matching note in
+[CONTRIBUTING.md](./.github/CONTRIBUTING.md).
+
 ### Commit Message Format
 
 Commit messages are the project's durable record — read years later through `git log` and `git blame`. The diff already shows *what* changed and *how*; the message exists to capture **intent**: the *why*.
