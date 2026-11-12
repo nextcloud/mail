@@ -14,9 +14,10 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Support\DebugLogPathFactory;
 use OCP\IConfig;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class DebugLogPathFactoryTest extends TestCase {
-	private IConfig|\PHPUnit\Framework\MockObject\MockObject $config;
+	private IConfig&MockObject $config;
 	private DebugLogPathFactory $factory;
 
 	protected function setUp(): void {
