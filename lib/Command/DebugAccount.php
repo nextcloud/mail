@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Command;
 
-use OCA\Mail\Account;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Support\DebugLogPathFactory;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -46,12 +45,11 @@ final class DebugAccount extends Command {
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$accountId = (int)$input->getArgument(self::ARGUMENT_ACCOUNT_ID);
-		$debugOn = $input->getOption(self::OPTION_DEBUG_ON);
-		$debugOff = $input->getOption(self::OPTION_DEBUG_OFF);
-		$debug = false;
+		$debugOn = (bool)$input->getOption(self::OPTION_DEBUG_ON);
+		$debugOff = (bool)$input->getOption(self::OPTION_DEBUG_OFF);
 
 		try {
-			$mailAccount = $this->accountService->findById($accountId)->getMailAccount();
+			$account = $this->accountService->findById($accountId);
 		} catch (DoesNotExistException $e) {
 			$output->writeln("<error>Account $accountId does not exist</error>");
 			return 1;
@@ -62,27 +60,41 @@ final class DebugAccount extends Command {
 			return 1;
 		}
 
-		if ($debugOn) {
-			$debug = true;
+		$mailAccount = $account->getMailAccount();
+		if ($debugOn || $debugOff) {
+			$mailAccount->setDebug($debugOn);
+			$this->accountService->save($mailAccount);
 		}
 
-		$mailAccount->setDebug($debug);
-		$this->accountService->save($mailAccount);
-
-		$account = new Account($mailAccount);
-
-		if ($debug) {
+		$active = $this->debugLogPathFactory->isActive($account);
+		if ($mailAccount->getDebug()) {
 			$output->writeln("<info>Debug mode enabled for account $accountId</info>");
 		} else {
 			$output->writeln("<info>Debug mode disabled for account $accountId</info>");
-			if ($this->debugLogPathFactory->isActive($account)) {
+			if ($active) {
 				$output->writeln('<comment>Note: the system-wide "app.mail.debug" config value is enabled, so debug logging for this account is still active.</comment>');
 			}
-			$output->writeln('Existing log files are not deleted automatically:');
 		}
-		$output->writeln('IMAP log: ' . $this->debugLogPathFactory->buildPath($account, DebugLogPathFactory::PROTOCOL_IMAP));
-		$output->writeln('SMTP log: ' . $this->debugLogPathFactory->buildPath($account, DebugLogPathFactory::PROTOCOL_SMTP));
-		$output->writeln('Sieve log: ' . $this->debugLogPathFactory->buildPath($account, DebugLogPathFactory::PROTOCOL_SIEVE));
+
+		$logFiles = [
+			'IMAP' => $this->debugLogPathFactory->buildPath($account, DebugLogPathFactory::PROTOCOL_IMAP),
+			'SMTP' => $this->debugLogPathFactory->buildPath($account, DebugLogPathFactory::PROTOCOL_SMTP),
+			'Sieve' => $this->debugLogPathFactory->buildPath($account, DebugLogPathFactory::PROTOCOL_SIEVE),
+		];
+		if (!$active) {
+			$logFiles = array_filter($logFiles, 'file_exists');
+		}
+		if ($logFiles === []) {
+			return 0;
+		}
+
+		$output->writeln('Log files:');
+		foreach ($logFiles as $protocol => $path) {
+			$output->writeln("$protocol: $path");
+		}
+		if (!$active) {
+			$output->writeln('Existing log files are not deleted automatically.');
+		}
 
 		return 0;
 	}
