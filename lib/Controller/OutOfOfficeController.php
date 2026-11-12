@@ -19,6 +19,8 @@ use OCA\Mail\Service\OutOfOffice\OutOfOfficeState;
 use OCA\Mail\Service\OutOfOfficeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\IRequest;
 use OCP\IUserSession;
@@ -37,10 +39,8 @@ class OutOfOfficeController extends Controller {
 		parent::__construct(Application::APP_ID, $request);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	#[TrapError]
 	public function getState(int $accountId): JsonResponse {
 		$user = $this->userSession->getUser();
@@ -57,9 +57,7 @@ class OutOfOfficeController extends Controller {
 		return JsonResponse::success($state);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function followSystem(int $accountId): JsonResponse {
 		if (!$this->container->has(IAvailabilityCoordinator::class)) {
@@ -86,9 +84,7 @@ class OutOfOfficeController extends Controller {
 		return JsonResponse::success($state);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function update(
 		int $accountId,

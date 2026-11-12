@@ -12,22 +12,27 @@ namespace OCA\Mail\Controller;
 
 use OCA\Contacts\Event\LoadContactsOcaApiEvent;
 use OCA\Mail\AppInfo\Application;
-use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Contracts\IUserPreferences;
+use OCA\Mail\Db\OidcProvider;
 use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Db\TagMapper;
+use OCA\Mail\Integration\OidcIntegration;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCA\Mail\Service\ContextChat\ContextChatSettingsService;
 use OCA\Mail\Service\InternalAddressService;
+use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Service\QuickActionsService;
 use OCA\Mail\Service\SmimeService;
 use OCA\Viewer\Event\LoadViewer;
 use OCP\App\IAppManager;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\RedirectResponse;
@@ -38,6 +43,7 @@ use OCP\Authentication\Exceptions\PasswordUnavailableException;
 use OCP\Authentication\LoginCredentials\IStore as ICredentialStore;
 use OCP\Collaboration\Reference\RenderReferenceEvent;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\IAppConfig;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IURLGenerator;
@@ -73,7 +79,7 @@ class PageController extends Controller {
 		private ?string $userId,
 		IUserSession $userSession,
 		private IUserPreferences $preferences,
-		private IMailManager $mailManager,
+		private MailManager $mailManager,
 		private TagMapper $tagMapper,
 		IInitialState $initialStateService,
 		private LoggerInterface $logger,
@@ -89,6 +95,8 @@ class PageController extends Controller {
 		private IAppManager $appManager,
 		private ContextChatSettingsService $contextChatSettingsService,
 		private ClassificationSettingsService $classificationSettingsService,
+		private IAppConfig $appConfig,
+		private OidcIntegration $oidcIntegration,
 	) {
 		parent::__construct($appName, $request);
 
@@ -103,11 +111,10 @@ class PageController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
 	 * @return TemplateResponse renders the index page
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function index(): TemplateResponse {
 		if ($this->userId === null) {
 			// This should not happen as the route requires authentication,
@@ -228,7 +235,7 @@ class PageController extends Controller {
 			'app-version' => $this->config->getAppValue('mail', 'installed_version'),
 			'external-avatars' => $this->preferences->getPreference($this->userId, 'external-avatars', 'true'),
 			'layout-mode' => $this->preferences->getPreference($this->userId, 'layout-mode', 'vertical-split'),
-			'layout-message-view' => $this->preferences->getPreference($this->userId, 'layout-message-view', $this->config->getAppValue('mail', 'layout_message_view', 'threaded')),
+			'layout-message-view' => $this->preferences->getPreference($this->userId, 'layout-message-view', $this->appConfig->getValueString(Application::APP_ID, ConfigLexicon::LAYOUT_MESSAGE_VIEW, 'threaded')),
 			'reply-mode' => $this->preferences->getPreference($this->userId, 'reply-mode', 'top'),
 			'collect-data' => $this->preferences->getPreference($this->userId, 'collect-data', 'true'),
 			'search-priority-body' => $this->preferences->getPreference($this->userId, 'search-priority-body', 'false'),
@@ -237,6 +244,8 @@ class PageController extends Controller {
 			'sort-favorites' => $this->preferences->getPreference($this->userId, 'sort-favorites', 'false'),
 			'index-context-chat' => $this->contextChatSettingsService->isIndexingEnabled($this->userId) ? 'true' : 'false',
 			'compact-mode' => $this->preferences->getPreference($this->userId, 'compact-mode', 'false'),
+			'auto-mark-as-read' => $this->preferences->getPreference($this->userId, 'auto-mark-as-read', '3000'),
+			'always-show-external-images' => $this->preferences->getPreference($this->userId, 'always-show-external-images', 'false'),
 		]);
 		$this->initialStateService->provideInitialState(
 			'prefill_displayName',
@@ -259,7 +268,7 @@ class PageController extends Controller {
 			'quick-actions',
 			$this->quickActionsService->findAll($this->userId),
 		);
-		$googleOauthclientId = $this->config->getAppValue(Application::APP_ID, 'google_oauth_client_id');
+		$googleOauthclientId = $this->appConfig->getValueString(Application::APP_ID, ConfigLexicon::GOOGLE_OAUTH_CLIENT_ID);
 		if (!empty($googleOauthclientId)) {
 			$this->initialStateService->provideInitialState(
 				'google-oauth-url',
@@ -275,8 +284,8 @@ class PageController extends Controller {
 				]),
 			);
 		}
-		$microsoftOauthClientId = $this->config->getAppValue(Application::APP_ID, 'microsoft_oauth_client_id');
-		$microsoftOauthTenantId = $this->config->getAppValue(Application::APP_ID, 'microsoft_oauth_tenant_id', 'common');
+		$microsoftOauthClientId = $this->appConfig->getValueString(Application::APP_ID, ConfigLexicon::MICROSOFT_OAUTH_CLIENT_ID);
+		$microsoftOauthTenantId = $this->appConfig->getValueString(Application::APP_ID, ConfigLexicon::MICROSOFT_OAUTH_TENANT_ID, 'common');
 		if (!empty($microsoftOauthClientId) && !empty($microsoftOauthTenantId)) {
 			$this->initialStateService->provideInitialState(
 				'microsoft-oauth-url',
@@ -293,6 +302,24 @@ class PageController extends Controller {
 			);
 		}
 
+		$oidcAuthorizeUrl = $this->urlGenerator->linkToRouteAbsolute('mail.oidcIntegration.authorize');
+		$this->initialStateService->provideInitialState(
+			'oidc_providers',
+			array_map(static function (OidcProvider $provider) use ($oidcAuthorizeUrl): array {
+				return [
+					'name' => $provider->getName(),
+					'emailDomain' => $provider->getEmailDomain(),
+					'imapHost' => $provider->getImapHost(),
+					'imapPort' => $provider->getImapPort(),
+					'imapSslMode' => $provider->getImapSslMode(),
+					'smtpHost' => $provider->getSmtpHost(),
+					'smtpPort' => $provider->getSmtpPort(),
+					'smtpSslMode' => $provider->getSmtpSslMode(),
+					'authorizeUrl' => $oidcAuthorizeUrl . '?providerId=' . $provider->getId() . '&state=_state_',
+				];
+			}, $this->oidcIntegration->getProviders()),
+		);
+
 		// Disable snooze and scheduled send in frontend if ajax cron is used because it is unreliable
 		$cronMode = $this->config->getAppValue('core', 'backgroundjobs_mode', 'ajax');
 		$this->initialStateService->provideInitialState(
@@ -306,7 +333,7 @@ class PageController extends Controller {
 
 		$this->initialStateService->provideInitialState(
 			'allow-new-accounts',
-			$this->config->getAppValue('mail', 'allow_new_mail_accounts', 'yes') === 'yes'
+			$this->appConfig->getValueBool(Application::APP_ID, ConfigLexicon::ALLOW_NEW_MAIL_ACCOUNTS, true)
 		);
 
 		$this->initialStateService->provideInitialState(
@@ -361,103 +388,93 @@ class PageController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
 	 * @return TemplateResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function setup(): TemplateResponse {
 		return $this->index();
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
 	 * @return TemplateResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function mailbox(int $id): TemplateResponse {
 		return $this->index();
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
 	 * @return TemplateResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function mailboxStarred(int $id): TemplateResponse {
 		return $this->index();
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
 	 * @return TemplateResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function thread(int $mailboxId, int $id): TemplateResponse {
 		return $this->index();
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
 	 * @return TemplateResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function filteredThread(string $filter, int $mailboxId, int $id): TemplateResponse {
 		return $this->index();
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
 	 * @return TemplateResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function outbox(): TemplateResponse {
 		return $this->index();
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
 	 * @return TemplateResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function outboxMessage(int $messageId): TemplateResponse {
 		return $this->index();
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
 	 * @return TemplateResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function draft(int $mailboxId, int $draftId): TemplateResponse {
 		return $this->index();
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
 	 * @return TemplateResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function filteredDraft(string $filter, int $mailboxId, int $draftId): TemplateResponse {
 		return $this->index();
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
 	 * @param string $uri
 	 *
 	 * @return RedirectResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function compose(string $uri): RedirectResponse {
 		$parts = parse_url($uri);
 		$params = [];
@@ -481,11 +498,10 @@ class PageController extends Controller {
 		return new RedirectResponse($baseUrl . $name);
 	}
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
 	 * @return TemplateResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function mailto(): TemplateResponse {
 		return $this->index();
 	}

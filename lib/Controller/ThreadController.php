@@ -9,17 +9,18 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\DelegationService;
+use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\SnoozeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
@@ -32,7 +33,7 @@ class ThreadController extends Controller {
 		IRequest $request,
 		private string $userId,
 		private AccountService $accountService,
-		private IMailManager $mailManager,
+		private MailManager $mailManager,
 		private SnoozeService $snoozeService,
 		private AiIntegrationsService $aiIntergrationsService,
 		private LoggerInterface $logger,
@@ -42,8 +43,6 @@ class ThreadController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @param int $destMailboxId
 	 *
@@ -51,6 +50,7 @@ class ThreadController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function move(int $id, int $destMailboxId): JSONResponse {
 		try {
@@ -63,6 +63,8 @@ class ThreadController extends Controller {
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
+
+		$this->delegationService->assertMailboxAccess($destMailboxId, $this->userId);
 
 		$threadRootId = $message->getThreadRootId();
 		if ($threadRootId === null) {
@@ -81,8 +83,6 @@ class ThreadController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @param int $unixTimestamp
 	 * @param int $destMailboxId
@@ -91,6 +91,7 @@ class ThreadController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function snooze(int $id, int $unixTimestamp, int $destMailboxId): JSONResponse {
 		try {
@@ -104,6 +105,8 @@ class ThreadController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
+		$this->delegationService->assertMailboxAccess($destMailboxId, $this->userId);
+
 		$this->snoozeService->snoozeThread($selectedMessage, $unixTimestamp, $srcAccount, $srcMailbox, $dstAccount, $dstMailbox);
 		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId snoozed thread <$id> until <$unixTimestamp> in mailbox <$destMailboxId> on behalf of $effectiveUserId");
 
@@ -111,14 +114,13 @@ class ThreadController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 *
 	 * @return JSONResponse
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function unSnooze(int $id): JSONResponse {
 		try {
@@ -135,12 +137,11 @@ class ThreadController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 *
 	 * @return JSONResponse
 	 */
+	#[NoAdminRequired]
 	public function summarize(int $id): JSONResponse {
 		try {
 			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
@@ -172,9 +173,7 @@ class ThreadController extends Controller {
 		return new JSONResponse(['data' => $summary]);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 */
+	#[NoAdminRequired]
 	public function generateEventData(int $id): JSONResponse {
 		try {
 			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
@@ -207,14 +206,13 @@ class ThreadController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 *
 	 * @return JSONResponse
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function delete(int $id): JSONResponse {
 		try {

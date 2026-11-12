@@ -8,7 +8,7 @@
 			v-for="textBlock in textBlocks"
 			:key="textBlock.id"
 			class="text-block__list-item"
-			:text-block="textBlock"
+			:textBlock="textBlock"
 			:shared="shared" />
 		<span v-if="!textBlocks.length"> {{ t('mail', 'No text blocks available') }} </span>
 	</div>

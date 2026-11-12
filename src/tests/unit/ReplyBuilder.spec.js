@@ -82,6 +82,20 @@ describe('ReplyBuilder', () => {
 		assertSameAddressList(reply.cc, [])
 	})
 
+	it('uses From when Reply-To is empty', () => {
+		const a = createAddress('a@domain.tld')
+		const b = createAddress('b@domain.tld')
+		envelope.from = [b]
+		envelope.to = [a]
+		envelope.cc = []
+
+		const reply = buildRecipients(envelope, a, [])
+
+		assertSameAddressList(reply.from, [a])
+		assertSameAddressList(reply.to, [b])
+		assertSameAddressList(reply.cc, [])
+	})
+
 	it('handles simple group reply', () => {
 		const a = createAddress('a@domain.tld')
 		const b = createAddress('b@domain.tld')
@@ -163,7 +177,7 @@ describe('ReplyBuilder', () => {
 		assertSameAddressList(reply.cc, [dani])
 	})
 
-	it("handles jan's reply to nina's mesage to a mailing list", () => {
+	it("handles jan's reply to nina's message to a mailing list", () => {
 		const nina = createAddress('nina@nc.com')
 		const list = createAddress('list@nc.com')
 		const jan = createAddress('jan@nc.com')

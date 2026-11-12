@@ -19,9 +19,6 @@ use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 use Override;
 
-/**
- * @psalm-api
- */
 #[ModifyColumn(
 	table: 'mail_attachments',
 	description: 'Add column to store content-id and content-disposition', )

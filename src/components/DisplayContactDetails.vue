@@ -35,7 +35,7 @@ export default {
 		}
 	},
 
-	async beforeDestroy() {
+	async beforeUnmount() {
 		if (this.vm) {
 			this.vm.$destroy()
 		}

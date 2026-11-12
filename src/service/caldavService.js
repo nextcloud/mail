@@ -4,7 +4,7 @@
  */
 
 import { getRequestToken } from '@nextcloud/auth'
-import DavClient, { CalendarHome, Collection, Principal } from '@nextcloud/cdav-library'
+import DavClient from '@nextcloud/cdav-library'
 import { generateRemoteUrl } from '@nextcloud/router'
 
 let client = null

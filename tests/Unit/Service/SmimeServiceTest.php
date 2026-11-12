@@ -456,6 +456,31 @@ class SmimeServiceTest extends TestCase {
 		);
 	}
 
+	public static function provideCertificatesWithRepeatedSubjectFields(): array {
+		return [
+			'repeated common name' => ['repeated-common-name@imap.localhost', 'Alice', 'alice@imap.localhost'],
+			'repeated email address' => ['repeated-email-address@imap.localhost', 'Alice', 'alice@imap.localhost'],
+		];
+	}
+
+	/**
+	 * @dataProvider provideCertificatesWithRepeatedSubjectFields
+	 */
+	public function testParseCertificateUsesTheFirstOfRepeatedSubjectFields(string $name,
+		string $expectedCommonName,
+		string $expectedEmailAddress): void {
+		$certificate = file_get_contents(__DIR__ . "/../../data/smime-certs/{$name}.crt");
+		$this->certificateManager->method('getAbsoluteBundlePath')
+			->willReturn(__DIR__ . '/../../data/smime-certs/imap.localhost.ca.crt');
+		$this->tempManager->method('getTemporaryFile')
+			->willReturnCallback(fn () => $this->createTempFile());
+
+		$info = $this->smimeService->parseCertificate($certificate);
+
+		self::assertSame($expectedCommonName, $info->getCommonName());
+		self::assertSame($expectedEmailAddress, $info->getEmailAddress());
+	}
+
 	public function testSignMimePart(): void {
 		$plainPart = Horde_Mime_Part::parseMessage(file_get_contents(__DIR__ . '/../../data/html-with-signature.txt'));
 		$certificate = $this->getTestCertificate('debug@imap.localhost');

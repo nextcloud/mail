@@ -10,29 +10,28 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
-use Horde_Imap_Client;
 use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
-use OCA\Mail\Contracts\IMailManager;
-use OCA\Mail\Contracts\IMailTransmission;
-use OCA\Mail\Db\Mailbox;
+use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\CouldNotConnectException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JsonResponse as MailJsonResponse;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\IMAP\MailboxSync;
-use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\DelegationService;
+use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\SetupService;
-use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
+use OCP\AppFramework\Http\Attribute\UserRateLimit;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\IAppConfig;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
@@ -53,15 +52,14 @@ class AccountsController extends Controller {
 		private LoggerInterface $logger,
 		IL10N $l10n,
 		private AliasesService $aliasesService,
-		private IMailTransmission $mailTransmission,
 		private SetupService $setup,
-		private IMailManager $mailManager,
-		private SyncService $syncService,
+		private MailManager $mailManager,
 		IConfig $config,
 		IRemoteHostValidator $hostValidator,
 		private MailboxSync $mailboxSync,
 		private ITimeFactory $timeFactory,
 		private DelegationService $delegationService,
+		private IAppConfig $appConfig,
 	) {
 		parent::__construct($appName, $request);
 		$this->l10n = $l10n;
@@ -70,11 +68,11 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @return JSONResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
+	#[UserRateLimit(limit: 30, period: 60)]
 	public function index(): JSONResponse {
 		$mailAccounts = $this->accountService->findByUserId($this->userId);
 
@@ -97,13 +95,12 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 *
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function show(int $id): JSONResponse {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
@@ -112,11 +109,11 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
+	#[UserRateLimit(limit: 5, period: 60)]
 	public function update(int $id,
 		string $accountName,
 		string $emailAddress,
@@ -184,8 +181,6 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @param string|null $editorMode
 	 * @param int|null $order
@@ -202,7 +197,9 @@ class AccountsController extends Controller {
 	 *
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
+	#[UserRateLimit(limit: 30, period: 60)]
 	public function patchAccount(int $id,
 		?string $editorMode = null,
 		?int $order = null,
@@ -218,11 +215,18 @@ class AccountsController extends Controller {
 		?bool $searchBody = null,
 		?bool $classificationEnabled = null,
 		?bool $imipCreate = null,
+		?bool $saveSentCopy = null,
 	): JSONResponse {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
 		$account = $this->accountService->find($effectiveUserId, $id);
 
 		$dbAccount = $account->getMailAccount();
+
+		foreach ([$draftsMailboxId, $sentMailboxId, $trashMailboxId, $archiveMailboxId, $snoozeMailboxId, $junkMailboxId] as $mailboxId) {
+			if ($mailboxId !== null) {
+				$this->delegationService->assertMailboxAccess($mailboxId, $this->userId);
+			}
+		}
 
 		if ($draftsMailboxId !== null) {
 			$this->mailManager->getMailbox($effectiveUserId, $draftsMailboxId);
@@ -273,6 +277,9 @@ class AccountsController extends Controller {
 		if ($imipCreate !== null) {
 			$dbAccount->setImipCreate($imipCreate);
 		}
+		if ($saveSentCopy !== null) {
+			$dbAccount->setSaveSentCopy($saveSentCopy);
+		}
 		$result = new JSONResponse(
 			new Account($this->accountService->save($dbAccount))
 		);
@@ -281,8 +288,6 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @param string|null $signature
 	 *
@@ -291,7 +296,9 @@ class AccountsController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
+	#[UserRateLimit(limit: 30, period: 60)]
 	public function updateSignature(int $id, ?string $signature = null): JSONResponse {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
 		$this->accountService->updateSignature($id, $effectiveUserId, $signature);
@@ -300,26 +307,23 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 *
 	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
+	#[UserRateLimit(limit: 30, period: 60)]
 	public function destroy(int $id): JSONResponse {
-		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
-		$this->accountService->delete($effectiveUserId, $id);
-		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId deleted account <$id> on behalf of $effectiveUserId");
+		$this->accountService->delete($this->userId, $id);
 		return new JSONResponse();
 	}
 
-	/**
-	 * @NoAdminRequired
-	 */
+	#[NoAdminRequired]
 	#[TrapError]
+	#[UserRateLimit(limit: 5, period: 60)]
 	public function create(string $accountName,
 		string $emailAddress,
 		string $imapHost,
@@ -334,7 +338,7 @@ class AccountsController extends Controller {
 		?string $smtpPassword = null,
 		string $authMethod = 'password',
 		?bool $classificationEnabled = null): JSONResponse {
-		if ($this->config->getAppValue(Application::APP_ID, 'allow_new_mail_accounts', 'yes') === 'no') {
+		if (!$this->appConfig->getValueBool(Application::APP_ID, ConfigLexicon::ALLOW_NEW_MAIL_ACCOUNTS, true)) {
 			$this->logger->info('Creating account disabled by admin.');
 			return MailJsonResponse::error('Could not create account');
 		}
@@ -404,68 +408,13 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
-	 * @return JSONResponse
-	 *
-	 * @throws ClientException
-	 */
-	#[TrapError]
-	public function draft(int $id,
-		string $subject,
-		string $body,
-		string $to,
-		string $cc,
-		string $bcc,
-		bool $isHtml = true,
-		?int $draftId = null): JSONResponse {
-		if ($draftId === null) {
-			$this->logger->info("Saving a new draft in account <$id>");
-		} else {
-			$this->logger->info("Updating draft <$draftId> in account <$id>");
-		}
-
-		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
-		$account = $this->accountService->find($effectiveUserId, $id);
-		$previousDraft = null;
-		if ($draftId !== null) {
-			try {
-				$previousDraft = $this->mailManager->getMessage($effectiveUserId, $draftId);
-			} catch (ClientException $e) {
-				$this->logger->info("Draft {$draftId} could not be loaded: {$e->getMessage()}");
-			}
-		}
-		$messageData = NewMessageData::fromRequest($account, $subject, $body, $to, $cc, $bcc, [], $isHtml);
-
-		try {
-			/** @var Mailbox $draftsMailbox */
-			[, $draftsMailbox, $newUID] = $this->mailTransmission->saveDraft($messageData, $previousDraft);
-			$this->syncService->syncMailbox(
-				$account,
-				$draftsMailbox,
-				Horde_Imap_Client::SYNC_NEWMSGSUIDS,
-				false,
-				null,
-				[]
-			);
-			$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId saved draft in account <$id> on behalf of $effectiveUserId");
-			return new JSONResponse([
-				'id' => $this->mailManager->getMessageIdForUid($draftsMailbox, $newUID)
-			]);
-		} catch (ClientException|ServiceException $ex) {
-			$this->logger->error('Saving draft failed: ' . $ex->getMessage());
-			throw $ex;
-		}
-	}
-
-	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 *
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
+	#[UserRateLimit(limit: 30, period: 60)]
 	public function getQuota(int $id): JSONResponse {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
 		$account = $this->accountService->find($effectiveUserId, $id);
@@ -478,14 +427,14 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id Account id
 	 * @param ?int $smimeCertificateId
 	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
+	#[UserRateLimit(limit: 30, period: 60)]
 	public function updateSmimeCertificate(int $id, ?int $smimeCertificateId = null) {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
 		$account = $this->accountService->find($effectiveUserId, $id)->getMailAccount();
@@ -496,13 +445,13 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id Account id
 	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
+	#[UserRateLimit(limit: 30, period: 60)]
 	public function testAccountConnection(int $id) {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
 		return new JSONResponse([

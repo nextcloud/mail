@@ -22,6 +22,7 @@ use Horde_Mime_Exception;
 use Horde_Mime_Headers;
 use Horde_Mime_Part;
 use OCA\Mail\AddressList;
+use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\IMAP\Charset\Converter;
@@ -55,6 +56,7 @@ class ImapMessageFetcher {
 	private string $rawReferences = '';
 	private string $dispositionNotificationTo = '';
 	private bool $hasDkimSignature = false;
+	private bool $hasAiGeneratedHeader = false;
 	private array $phishingDetails = [];
 	private ?string $unsubscribeUrl = null;
 	private bool $isOneClickUnsubscribe = false;
@@ -149,8 +151,6 @@ class ImapMessageFetcher {
 				}
 			}
 
-			$this->hasAnyAttachment = $this->hasAttachments($structure);
-
 			$isEncrypted = $this->smimeService->isEncrypted($fetch);
 			$isOpaqueSigned = $structure->getContentTypeParameter('smime-type') === 'signed-data'
 				&& ($structure->getType() === 'application/pkcs7-mime'
@@ -204,7 +204,8 @@ class ImapMessageFetcher {
 				]);
 			}
 
-			// debugging below
+			$this->hasAnyAttachment = $this->hasAttachments($structure);
+
 			$structure_type = $structure->getPrimaryType();
 			if ($structure_type === 'multipart') {
 				$i = 1;
@@ -215,6 +216,11 @@ class ImapMessageFetcher {
 				$bodyPartId = $structure->findBody();
 				if (!is_null($bodyPartId)) {
 					$this->getPart($structure[$bodyPartId], $bodyPartId, $isEncrypted || $isSigned);
+				} else {
+					// This handles the special case of a mail which only
+					// content is an attached file
+					$this->getPart($structure, '1', $isEncrypted || $isSigned);
+					$this->hasAnyAttachment = true;
 				}
 			}
 		} elseif (is_null($fetch)) {
@@ -262,6 +268,7 @@ class ImapMessageFetcher {
 			$this->rawReferences,
 			$this->dispositionNotificationTo,
 			$this->hasDkimSignature,
+			$this->hasAiGeneratedHeader,
 			$this->phishingDetails,
 			$this->unsubscribeUrl,
 			$this->isOneClickUnsubscribe,
@@ -544,6 +551,9 @@ class ImapMessageFetcher {
 
 		$dkimSignatureHeader = $parsedHeaders->getHeader('dkim-signature');
 		$this->hasDkimSignature = $dkimSignatureHeader !== null;
+
+		$aiGeneratedHeader = $parsedHeaders->getHeader(LocalMessage::HEADER_AI_GENERATED);
+		$this->hasAiGeneratedHeader = $aiGeneratedHeader !== null && trim($aiGeneratedHeader->value_single) === '1';
 
 		if ($this->runPhishingCheck) {
 			$this->phishingDetails = $this->phishingDetectionService->checkHeadersForPhishing($this->userId, $parsedHeaders, $fetch->getFlags(), $this->hasHtmlMessage, $this->htmlMessage);

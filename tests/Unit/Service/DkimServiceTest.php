@@ -13,18 +13,19 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OC\Memcache\ArrayCache;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IDkimValidator;
+use OCA\Mail\Contracts\IMessageConnector;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\IMAP\MessageMapper;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\DkimService;
 use OCP\ICache;
 use OCP\ICacheFactory;
 
 class DkimServiceTest extends TestCase {
-	private IMAPClientFactory $imapClientFactory;
-	private MessageMapper $messageMapper;
+	private ProtocolFactory $protocolFactory;
+	private IMessageConnector $messageConnector;
 	private ICache $cache;
 	private IDkimValidator $dkimValidator;
 	private DkimService $dkimService;
@@ -32,18 +33,19 @@ class DkimServiceTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
-		$this->messageMapper = $this->createMock(MessageMapper::class);
+		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
+		$this->messageConnector = $this->createMock(IMessageConnector::class);
 		$cacheFactory = $this->createMock(ICacheFactory::class);
 		$this->cache = new ArrayCache('dkim_test');
 		$this->dkimValidator = $this->createMock(IDkimValidator::class);
 
 		$cacheFactory->method('createLocal')
 			->willReturn($this->cache);
+		$this->protocolFactory->method('messageConnector')
+			->willReturn($this->messageConnector);
 
 		$this->dkimService = new DkimService(
-			$this->imapClientFactory,
-			$this->messageMapper,
+			$this->protocolFactory,
 			$cacheFactory,
 			$this->dkimValidator,
 		);
@@ -99,10 +101,14 @@ class DkimServiceTest extends TestCase {
 		$mailbox = new Mailbox();
 		$mailbox->setName('FooBar');
 
+		$message = new Message();
+		$message->setId(3);
+		$message->setUid(3);
+
 		$this->dkimService->validate(
 			$account,
 			$mailbox,
-			3
+			$message
 		);
 	}
 
@@ -115,8 +121,12 @@ class DkimServiceTest extends TestCase {
 		$mailbox = new Mailbox();
 		$mailbox->setName('FooBar');
 
-		$this->messageMapper
-			->method('getFullText')
+		$message = new Message();
+		$message->setId(4);
+		$message->setUid(4);
+
+		$this->messageConnector
+			->method('fetchMessageRaw')
 			->willReturn('FooBar');
 
 		$this->dkimValidator
@@ -126,7 +136,7 @@ class DkimServiceTest extends TestCase {
 		$result = $this->dkimService->validate(
 			$account,
 			$mailbox,
-			4
+			$message
 		);
 
 		$this->assertTrue($result);

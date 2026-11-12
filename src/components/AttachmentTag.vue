@@ -36,6 +36,8 @@ export default {
 			default: '',
 		},
 	},
+
+	emits: ['open'],
 }
 </script>
 

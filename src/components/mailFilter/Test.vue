@@ -7,14 +7,14 @@
 		<div class="condition__value">
 			<div class="condition__value__field_operator">
 				<NcSelect
-					input-label="field"
+					inputLabel="field"
 					class="condition__value__field_operator__column"
-					:model-value="test.field"
+					:modelValue="test.field"
 					:required="true"
-					:label-outside="true"
+					:labelOutside="true"
 					:options="fields"
 					:clearable="false"
-					@input="updateTest({ field: $event })">
+					@update:modelValue="updateTest({ field: $event })">
 					<template #selected-option="{ label }">
 						{{ getLabelForField(label) }}
 					</template>
@@ -23,14 +23,14 @@
 					</template>
 				</NcSelect>
 				<NcSelect
-					input-label="operator"
+					inputLabel="operator"
 					class="condition__value__field_operator__column"
-					:model-value="test.operator"
+					:modelValue="test.operator"
 					:required="true"
-					:label-outside="true"
+					:labelOutside="true"
 					:options="operators"
 					:clearable="false"
-					@input="updateTest({ operator: $event })">
+					@update:modelValue="updateTest({ operator: $event })">
 					<template #selected-option="{ label }">
 						{{ getLabelForOperator(label) }}
 					</template>
@@ -42,13 +42,13 @@
 			<NcSelect
 				v-model="localValues"
 				class="condition__value__values"
-				input-label="value"
+				inputLabel="value"
 				:multiple="true"
 				:wrap="true"
-				:keep-open="true"
+				:keepOpen="true"
 				:taggable="true"
 				:required="true"
-				:label-outside="true"
+				:labelOutside="true"
 				:placeholder="placeholderText"
 				@option:selected="updateTest({ values: localValues })"
 				@option:deselected="updateTest({ values: localValues })" />
@@ -67,7 +67,8 @@
 </template>
 
 <script>
-import { NcButton, NcSelect } from '@nextcloud/vue'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import { MailFilterConditionField, MailFilterConditionOperator } from '../../models/mailFilter.ts'
 
@@ -85,6 +86,8 @@ export default {
 			required: true,
 		},
 	},
+
+	emits: ['updateTest', 'deleteTest'],
 
 	data() {
 		return {
@@ -124,11 +127,11 @@ export default {
 
 	methods: {
 		updateTest(properties) {
-			this.$emit('update-test', { ...this.test, ...properties })
+			this.$emit('updateTest', { ...this.test, ...properties })
 		},
 
 		deleteTest() {
-			this.$emit('delete-test', this.test)
+			this.$emit('deleteTest', this.test)
 		},
 
 		getLabelForField(field) {

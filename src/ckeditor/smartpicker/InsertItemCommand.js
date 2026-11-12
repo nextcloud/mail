@@ -10,7 +10,7 @@ export default class InsertItemCommand extends Command {
 	 * @param {module:engine/model/writer~Writer} writer instance
 	 * @param {string} item smart picker or emoji picker
 	 * @param {string} trigger the character to replace
-	 * @param {int} loopBack the offset to set the corrrect range of the text to replace
+	 * @param {int} loopBack the offset to set the correct range of the text to replace
 	 */
 	insertItem(editor, writer, item, trigger, loopBack) {
 		const currentPosition = editor.model.document.selection.getLastPosition()
@@ -68,7 +68,7 @@ export default class InsertItemCommand extends Command {
 	/**
 	 * @param {string}  item link from smart picker or emoji from emoji picker
 	 * @param {string} trigger the character to replace
-	 * @param {int} loopBack the offset to set the corrrect range of the text to replace defaults to 5
+	 * @param {int} loopBack the offset to set the correct range of the text to replace defaults to 5
 	 */
 	execute(item, trigger, loopBack = 5) {
 		this.editor.model.change((writer) => {

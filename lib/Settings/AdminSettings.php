@@ -10,8 +10,10 @@ declare(strict_types=1);
 namespace OCA\Mail\Settings;
 
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Integration\GoogleIntegration;
 use OCA\Mail\Integration\MicrosoftIntegration;
+use OCA\Mail\Integration\OidcIntegration;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AntiSpamService;
 use OCA\Mail\Service\Classification\ClassificationSettingsService;
@@ -19,7 +21,7 @@ use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\Defaults;
-use OCP\IConfig;
+use OCP\IAppConfig;
 use OCP\Settings\ISettings;
 use OCP\TaskProcessing\TaskTypes\TextToText;
 use OCP\TaskProcessing\TaskTypes\TextToTextSummary;
@@ -31,7 +33,8 @@ class AdminSettings implements ISettings {
 		private AntiSpamService $antiSpamService,
 		private GoogleIntegration $googleIntegration,
 		private MicrosoftIntegration $microsoftIntegration,
-		private IConfig $config,
+		private OidcIntegration $oidcIntegration,
+		private IAppConfig $appConfig,
 		private AiIntegrationsService $aiIntegrationsService,
 		private Defaults $themingDefaults,
 		private ClassificationSettingsService $classificationSettingsService,
@@ -55,12 +58,12 @@ class AdminSettings implements ISettings {
 
 		$this->initialStateService->provideInitialState(
 			'allow_new_mail_accounts',
-			$this->config->getAppValue('mail', 'allow_new_mail_accounts', 'yes') === 'yes'
+			$this->appConfig->getValueBool(Application::APP_ID, ConfigLexicon::ALLOW_NEW_MAIL_ACCOUNTS, true)
 		);
 
 		$this->initialStateService->provideInitialState(
 			'layout_message_view',
-			$this->config->getAppValue('mail', 'layout_message_view', 'threaded')
+			$this->appConfig->getValueString(Application::APP_ID, ConfigLexicon::LAYOUT_MESSAGE_VIEW, 'threaded')
 		);
 
 		$this->initialStateService->provideInitialState(
@@ -89,6 +92,14 @@ class AdminSettings implements ISettings {
 		$this->initialStateService->provideInitialState(
 			'importance_classification_default',
 			$this->classificationSettingsService->isClassificationEnabledByDefault(),
+		);
+		$this->initialStateService->provideInitialState(
+			'oidc_providers',
+			$this->oidcIntegration->getProviders(),
+		);
+		$this->initialStateService->provideInitialState(
+			'oidc_redirect_url',
+			$this->oidcIntegration->getRedirectUrl(),
 		);
 		$this->initialStateService->provideInitialState(
 			'microsoft_oauth_tenant_id',

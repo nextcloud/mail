@@ -76,11 +76,6 @@ return [
 			'verb' => 'GET'
 		],
 		[
-			'name' => 'accounts#draft',
-			'url' => '/api/accounts/{id}/draft',
-			'verb' => 'POST'
-		],
-		[
 			'name' => 'accounts#patchAccount',
 			'url' => '/api/accounts/{id}',
 			'verb' => 'PATCH'
@@ -291,11 +286,6 @@ return [
 			'verb' => 'GET'
 		],
 		[
-			'name' => 'messages#needsTranslation',
-			'url' => '/api/messages/{messageId}/needsTranslation',
-			'verb' => 'GET'
-		],
-		[
 			'name' => 'avatars#url',
 			'url' => '/api/avatars/url/{email}',
 			'verb' => 'GET'
@@ -466,6 +456,16 @@ return [
 			'verb' => 'GET',
 		],
 		[
+			'name' => 'oidcIntegration#authorize',
+			'url' => '/integration/oidc-auth/start',
+			'verb' => 'GET',
+		],
+		[
+			'name' => 'oidcIntegration#oauthRedirect',
+			'url' => '/integration/oidc-auth',
+			'verb' => 'GET',
+		],
+		[
 			'name' => 'microsoftIntegration#configure',
 			'url' => '/api/integration/microsoft',
 			'verb' => 'POST',
@@ -544,6 +544,7 @@ return [
 		'localAttachments' => ['url' => '/api/attachments'],
 		'mailboxes' => ['url' => '/api/mailboxes'],
 		'messages' => ['url' => '/api/messages'],
+		'oidcIntegration' => ['url' => '/api/integration/oidc/providers'],
 		'outbox' => ['url' => '/api/outbox'],
 		'preferences' => ['url' => '/api/preferences'],
 		'smimeCertificates' => ['url' => '/api/smime/certificates'],

@@ -12,6 +12,7 @@ namespace OCA\Mail\Tests\Unit\Controller;
 use OCA\Mail\Controller\TextBlockSharesController;
 use OCA\Mail\Db\TextBlock;
 use OCA\Mail\Db\TextBlockShare;
+use OCA\Mail\Exception\UserNotFoundException;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Service\TextBlockService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -112,7 +113,7 @@ final class TextBlockSharesControllerTest extends TestCase {
 			->willReturn(new TextBlock());
 		$this->textBlockService->expects($this->once())
 			->method('share')
-			->with(1, 'alice');
+			->with(1, $this->userId, 'alice');
 		$response = $controller->create(1, 'alice', TextBlockShare::TYPE_USER);
 		$expectedResponse = JsonResponse::success();
 		$this->assertEquals($expectedResponse, $response);
@@ -128,9 +129,21 @@ final class TextBlockSharesControllerTest extends TestCase {
 			->willReturn(new TextBlock());
 		$this->textBlockService->expects($this->once())
 			->method('shareWithGroup')
-			->with(1, 'Narnia');
+			->with(1, $this->userId, 'Narnia');
 		$response = $controller->create(1, 'Narnia', TextBlockShare::TYPE_GROUP);
 		$expectedResponse = JsonResponse::success();
+		$this->assertEquals($expectedResponse, $response);
+	}
+
+	public function testShareTextBlockShareeNotFound(): void {
+		$controller = new TextBlockSharesController($this->createStub(\OCP\IRequest::class), $this->userId, $this->textBlockService);
+
+		$this->textBlockService->method('find')->willReturn(new TextBlock());
+		$this->textBlockService->expects($this->once())
+			->method('share')
+			->willThrowException(new UserNotFoundException('Sharee does not exist'));
+		$response = $controller->create(1, 'alice', TextBlockShare::TYPE_USER);
+		$expectedResponse = JsonResponse::error('User not found', Http::STATUS_NOT_FOUND);
 		$this->assertEquals($expectedResponse, $response);
 	}
 

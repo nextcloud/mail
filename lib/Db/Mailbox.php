@@ -92,6 +92,8 @@ class Mailbox extends Entity implements JsonSerializable {
 	 */
 	public const LOCK_TIMEOUT = 300;
 
+	public const SPECIAL_USE_DRAFTS = 'drafts';
+
 	public function __construct() {
 		$this->addType('accountId', 'integer');
 		$this->addType('messages', 'integer');
@@ -125,22 +127,40 @@ class Mailbox extends Entity implements JsonSerializable {
 	}
 
 	public function isCached(): bool {
-		return $this->getSyncNewToken() !== null
+		if ($this->getSyncNewToken() !== null
 			&& $this->getSyncChangedToken() !== null
-			&& $this->getSyncVanishedToken() !== null;
+			&& $this->getSyncVanishedToken() !== null
+		) {
+			return true;
+		}
+
+		if ($this->getState() !== null) {
+			return true;
+		}
+
+		return false;
+	}
+
+	private function isLockActive(?int $lock, int $now): bool {
+		return $lock !== null && $lock > ($now - self::LOCK_TIMEOUT);
+	}
+
+	public function hasNewLock(int $now): bool {
+		return $this->isLockActive($this->getSyncNewLock(), $now);
+	}
+
+	public function hasChangedLock(int $now): bool {
+		return $this->isLockActive($this->getSyncChangedLock(), $now);
+	}
+
+	public function hasVanishedLock(int $now): bool {
+		return $this->isLockActive($this->getSyncVanishedLock(), $now);
 	}
 
 	public function hasLocks(int $now): bool {
-		if ($this->getSyncNewLock() !== null || $this->getSyncNewLock() > ($now - self::LOCK_TIMEOUT)) {
-			return true;
-		}
-		if ($this->getSyncChangedLock() !== null || $this->getSyncChangedLock() > ($now - self::LOCK_TIMEOUT)) {
-			return true;
-		}
-		if ($this->getSyncVanishedLock() !== null || $this->getSyncVanishedLock() > ($now - self::LOCK_TIMEOUT)) {
-			return true;
-		}
-		return false;
+		return $this->hasNewLock($now)
+			|| $this->hasChangedLock($now)
+			|| $this->hasVanishedLock($now);
 	}
 
 	/**
@@ -151,6 +171,14 @@ class Mailbox extends Entity implements JsonSerializable {
 	}
 
 	public function getCacheBuster(): string {
+		$state = $this->getState();
+		if ($state !== null) {
+			return hash('md5', implode('|', [
+				(string)$this->getId(),
+				$state,
+			]));
+		}
+
 		return hash('md5', implode('|', [
 			(string)$this->getId(),
 			$this->getSyncNewToken() ?? 'null',

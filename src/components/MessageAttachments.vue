@@ -12,14 +12,15 @@
 					:id="attachment.id"
 					ref="attachments"
 					:key="attachment.id"
-					:file-name="attachment.fileName"
+					:messageId="envelope.databaseId"
+					:fileName="attachment.fileName"
 					:size="attachment.size"
 					:url="attachment.downloadUrl"
-					:is-image="attachment.isImage"
-					:is-calendar-event="attachment.isCalendarEvent"
+					:isImage="attachment.isImage"
+					:isCalendarEvent="attachment.isCalendarEvent"
 					:mime="attachment.mime"
-					:mime-url="attachment.mimeUrl"
-					:can-preview="canPreview(fileInfos[idx])"
+					:mimeUrl="attachment.mimeUrl"
+					:canPreview="canPreview(fileInfos[idx])"
 					@open="showViewer(fileInfos[idx])" />
 			</div>
 		</div>
@@ -44,24 +45,15 @@
 		</NcButton>
 
 		<p v-if="moreThanOne" class="attachments-button-wrapper">
-			<FilePicker
-				v-if="isFilePickerOpen"
-				:name="t('mail', 'Choose a folder to store the attachments in')"
-				:buttons="saveAttachementButtons"
-				:allow-pick-directory="true"
-				:multiselect="false"
-				:mimetype-filter="['httpd/unix-directory']"
-				@close="() => isFilePickerOpen = false" />
-
 			<NcButton
 				variant="tertiary"
 				size="small"
 				:disabled="savingToCloud"
 				class="attachment-button"
-				@click="() => isFilePickerOpen = true">
+				@click="saveAll">
 				<template #icon>
 					<CloudDownload v-if="!savingToCloud" />
-					<IconLoading v-else class="spin" />
+					<NcLoadingIcon v-else class="spin" />
 				</template>
 				{{ t('mail', 'Save all to Files') }}
 			</NcButton>
@@ -82,9 +74,9 @@
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
 import { generateUrl } from '@nextcloud/router'
-import { NcLoadingIcon as IconLoading, NcButton } from '@nextcloud/vue'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import ChevronDown from 'vue-material-design-icons/ChevronDown.vue'
 import ChevronUp from 'vue-material-design-icons/ChevronUp.vue'
 import CloudDownload from 'vue-material-design-icons/CloudDownloadOutline.vue'
@@ -93,18 +85,18 @@ import MessageAttachment from './MessageAttachment.vue'
 import Logger from '../logger.js'
 import AttachmentMixin from '../mixins/AttachmentMixin.js'
 import { saveAttachmentsToFiles } from '../service/AttachmentService.js'
+import { pickFolder } from '../util/filePicker.js'
 
 export default {
 	name: 'MessageAttachments',
 	components: {
 		NcButton,
 		MessageAttachment,
-		IconLoading,
+		NcLoadingIcon,
 		Download,
 		CloudDownload,
 		ChevronDown,
 		ChevronUp,
-		FilePicker,
 	},
 
 	mixins: [AttachmentMixin],
@@ -128,15 +120,6 @@ export default {
 			attachmentImageURL: '',
 			hasNextLine: false,
 			isToggled: false,
-			saveAttachementButtons: [
-				{
-					label: t('mail', 'Choose'),
-					callback: this.saveAll,
-					type: 'primary',
-				},
-			],
-
-			isFilePickerOpen: false,
 		}
 	},
 
@@ -176,20 +159,28 @@ export default {
 
 	methods: {
 
-		saveAll(dest) {
-			const path = dest[0].path
-			this.savingToCloud = true
-			const id = this.$route.params.threadId
+		async saveAll() {
+			let path
+			try {
+				path = await pickFolder(t('mail', 'Choose a folder to store the attachments in'))
+			} catch (error) {
+				Logger.debug('file picker closed without picking a folder', { error })
+				return
+			}
 
-			saveAttachmentsToFiles(id, path).then(() => {
+			this.savingToCloud = true
+			const id = this.envelope.databaseId
+
+			try {
+				await saveAttachmentsToFiles(id, path)
 				Logger.info('saved')
 				showSuccess(t('mail', 'Attachments saved to Files'))
-			}).catch((error) => {
+			} catch (error) {
 				Logger.error('not saved', error)
 				showError(t('mail', 'Error while saving attachments'))
-			}).finally(() => {
+			} finally {
 				this.savingToCloud = false
-			})
+			}
 		},
 
 		downloadZip() {
@@ -220,7 +211,7 @@ export default {
 }
 
 .attachment-button {
-	color: var(--color-text-lighter);
+	color: var(--color-text-maxcontrast);
 }
 
 @keyframes spin {
@@ -237,10 +228,6 @@ export default {
 
 .spin {
   animation: spin 1s linear infinite;
-}
-
-.oc-dialog {
-	z-index: 10000000;
 }
 
 .mail-message-attachments {

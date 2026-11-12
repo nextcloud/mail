@@ -19,8 +19,8 @@ use Nextcloud\KItinerary\Sys\SysAdapter;
 use Psr\Log\LoggerInterface;
 
 class ItineraryExtractor {
-	/** @var Adapter */
-	private $adapter;
+	private ?Adapter $adapter = null;
+	private bool $findAdapter = true;
 
 	public function __construct(
 		private BinaryAdapter $binAdapter,
@@ -45,18 +45,28 @@ class ItineraryExtractor {
 		return null;
 	}
 
-	public function extract(string $content): Itinerary {
-		if ($this->adapter === null) {
-			$this->adapter = $this->findAvailableAdapter() ?? false;
+	private function getAdapter(): ?Adapter {
+		if ($this->findAdapter) {
+			$this->adapter = $this->findAvailableAdapter();
+			$this->findAdapter = false;
 		}
-		if ($this->adapter === false) {
+		return $this->adapter;
+	}
+
+	public function hasAdapter(): bool {
+		return $this->getAdapter() !== null;
+	}
+
+	public function extract(string $content): Itinerary {
+		$adapter = $this->getAdapter();
+		if ($adapter === null) {
 			$this->logger->info('KItinerary binary adapter is not available, can\'t extract information');
 
 			return new Itinerary();
 		}
 
 		try {
-			return (new Extractor($this->adapter))->extractFromString($content);
+			return (new Extractor($adapter))->extractFromString($content);
 		} catch (KItineraryRuntimeException $e) {
 			$this->logger->error('Could not extract itinerary function from KItinerary integration: ' . $e->getMessage(), [
 				'exception' => $e,

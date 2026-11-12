@@ -14,9 +14,6 @@ use OCP\DB\ISchemaWrapper;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
-/**
- * @psalm-api
- */
 class Version2300Date20230120085320 extends SimpleMigrationStep {
 	/**
 	 * @param IOutput $output
@@ -30,7 +27,7 @@ class Version2300Date20230120085320 extends SimpleMigrationStep {
 		$schema = $schemaClosure();
 
 		$table = $schema->getTable('mail_smime_certificates');
-		if (!$table->hasPrimaryKey()) {
+		if ($table->getPrimaryKey() === null) {
 			$table->setPrimaryKey(['id'], 'mail_smime_certs_id_idx');
 		}
 

@@ -16,9 +16,11 @@ use OCA\Mail\Controller\DraftsController;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\DelegationForbiddenException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\DraftsService;
 use OCA\Mail\Service\SmimeService;
@@ -63,6 +65,7 @@ class DraftsControllerTest extends TestCase {
 			$this->timeFactory,
 			$this->smimeService,
 			$this->delegationService,
+			$this->createMock(AliasesService::class),
 		);
 	}
 
@@ -218,6 +221,7 @@ class DraftsControllerTest extends TestCase {
 		$message->setUpdatedAt(123456);
 		$message->setRequestMdn(false);
 		$message->setPgpMime(false);
+		$message->setAiGenerated(false);
 		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
 		$cc = [['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']];
 
@@ -272,6 +276,7 @@ class DraftsControllerTest extends TestCase {
 		$message->setUpdatedAt(123456);
 		$message->setRequestMdn(false);
 		$message->setPgpMime(false);
+		$message->setAiGenerated(false);
 		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
 		$cc = [['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']];
 
@@ -280,14 +285,23 @@ class DraftsControllerTest extends TestCase {
 			->method('find')
 			->with($this->userId, $message->getAccountId())
 			->willReturn($account);
+		$calls = [];
 		$this->service->expects(self::once())
-			->method('handleDraft');
+			->method('handleDraft')
+			->with($account, 1)
+			->willReturnCallback(static function () use (&$calls): void {
+				$calls[] = 'handleDraft';
+			});
 		$this->timeFactory->expects(self::once())
 			->method('getTime')
 			->willReturn(123456);
 		$this->service->expects(self::once())
 			->method('saveMessage')
-			->with($account, $message, $to, $cc, [], []);
+			->with($account, $message, $to, $cc, [], [])
+			->willReturnCallback(static function () use (&$calls, $message): LocalMessage {
+				$calls[] = 'saveMessage';
+				return $message;
+			});
 
 		$expected = JsonResponse::success($message, Http::STATUS_CREATED);
 		$actual = $this->controller->create(
@@ -312,6 +326,7 @@ class DraftsControllerTest extends TestCase {
 		);
 
 		$this->assertEquals($expected, $actual);
+		$this->assertSame(['saveMessage', 'handleDraft'], $calls);
 	}
 
 	public function testCreateWithEmptyRecipients(): void {
@@ -329,6 +344,7 @@ class DraftsControllerTest extends TestCase {
 		$message->setUpdatedAt(123456);
 		$message->setRequestMdn(false);
 		$message->setPgpMime(false);
+		$message->setAiGenerated(false);
 
 		$account = new Account(new MailAccount());
 		$this->accountService->expects(self::once())
@@ -495,6 +511,36 @@ class DraftsControllerTest extends TestCase {
 		);
 
 		$this->assertEquals($expected, $actual);
+	}
+
+	public function testUpdateAccountNotDelegated(): void {
+		$message = new LocalMessage();
+		$message->setId(1);
+		$message->setAccountId(1);
+		$this->service->expects(self::once())
+			->method('getMessage')
+			->with($message->getId(), $this->userId)
+			->willReturn($message);
+		$this->delegationService->expects(self::once())
+			->method('assertAccountAccess')
+			->with(99, $this->userId)
+			->willThrowException(new DelegationForbiddenException('no access'));
+		$this->service->expects(self::never())
+			->method('updateMessage');
+
+		$this->expectException(DelegationForbiddenException::class);
+
+		$this->controller->update(
+			$message->getId(),
+			99,
+			'subject',
+			null,
+			'<p>message</p>',
+			'<p>message</p>',
+			true,
+			null,
+			null,
+		);
 	}
 
 	public function testUpdateMoveToOutbox(): void {

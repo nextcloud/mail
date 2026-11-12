@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<NcModal size="full" @close="onClose">
+	<NcModal closeOnClickOutside size="full" @close="onClose">
 		<div class="message-source">
 			<h2>{{ t('mail', 'Message source') }}</h2>
 			<pre>{{ rawMessage }}</pre>
@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { NcModal } from '@nextcloud/vue'
+import NcModal from '@nextcloud/vue/components/NcModal'
 
 export default {
 	name: 'SourceModal',
@@ -26,6 +26,8 @@ export default {
 			required: true,
 		},
 	},
+
+	emits: ['close'],
 
 	methods: {
 		onClose() {

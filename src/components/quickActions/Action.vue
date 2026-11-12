@@ -12,10 +12,10 @@
 			</p>
 			<NcSelect
 				v-else
-				:input-label="actionTitle"
+				:inputLabel="actionTitle"
 				:options="options"
 				label="value"
-				:model-value="selectedOption"
+				:modelValue="selectedOption"
 				@update:modelValue="update" />
 		</div>
 		<NcButton
@@ -31,11 +31,13 @@
 </template>
 
 <script>
-import { NcButton, NcSelect } from '@nextcloud/vue'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 import DragIcon from 'vue-material-design-icons/Drag.vue'
 import Icon from './Icon.vue'
 import useMainStore from '../../store/mainStore.js'
+import { mailboxHasRights } from '../../util/acl.js'
 import { hiddenTags } from '../tags.js'
 
 export default {
@@ -65,6 +67,8 @@ export default {
 		},
 	},
 
+	emits: ['delete', 'update'],
+
 	computed: {
 		mainStore() {
 			return useMainStore()
@@ -93,10 +97,12 @@ export default {
 			if (this.action.name === 'moveThread') {
 				const ret = []
 				for (const mailbox of this.mainStore.getRecursiveMailboxIterator(this.account.accountId)) {
-					ret.push({
-						value: mailbox.name,
-						id: mailbox.databaseId,
-					})
+					if (mailboxHasRights(mailbox, 'i')) {
+						ret.push({
+							value: mailbox.name,
+							id: mailbox.databaseId,
+						})
+					}
 				}
 				return ret
 			}

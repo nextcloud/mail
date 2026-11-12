@@ -43,6 +43,9 @@ async function translateText(text, fromLanguage, toLanguage) {
 		if (task.output) {
 			return task.output.output
 		}
+		if (task.status === 'STATUS_FAILED' || task.status === 'STATUS_CANCELLED') {
+			throw new Error('Translation task failed')
+		}
 		await new Promise((resolve) => setTimeout(resolve, 2000))
 		const taskResponse = await axios.get(generateOcsUrl(`taskprocessing/task/${task.id}`))
 		return getTaskOutput(taskResponse.data.ocs.data.task)

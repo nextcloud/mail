@@ -4,7 +4,7 @@
 -->
 
 <template>
-	<NcModal :name="showImportScreen ? t('mail', 'Import S/MIME certificate') : t('mail', 'S/MIME certificates')" @close="$emit('close')">
+	<NcModal closeOnClickOutside :name="showImportScreen ? t('mail', 'Import S/MIME certificate') : t('mail', 'S/MIME certificates')" @close="$emit('close')">
 		<div class="certificate-modal">
 			<div v-if="!showImportScreen" class="certificate-modal__list">
 				<h2>{{ t('mail', 'S/MIME certificates') }}</h2>
@@ -33,7 +33,7 @@
 								<NcButton
 									variant="tertiary-no-background"
 									:aria-label="t('mail', 'Delete certificate')"
-									@click="deleteCertificate(certificate.id)">
+									@click="deleteCertificate(certificate)">
 									<template #icon>
 										<DeleteIcon
 											:title="t('mail', 'Delete certificate')"
@@ -142,10 +142,13 @@
 </template>
 
 <script>
-import { showError, showSuccess } from '@nextcloud/dialogs'
+import { DialogBuilder, showError, showSuccess } from '@nextcloud/dialogs'
 import moment from '@nextcloud/moment'
-import { NcButton, NcEmptyContent, NcModal, NcPasswordField } from '@nextcloud/vue'
 import { mapState, mapStores } from 'pinia'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
+import NcModal from '@nextcloud/vue/components/NcModal'
+import NcPasswordField from '@nextcloud/vue/components/NcPasswordField'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import logger from '../../logger.js'
 import useMainStore from '../../store/mainStore.js'
@@ -163,6 +166,8 @@ export default {
 		NcEmptyContent,
 		DeleteIcon,
 	},
+
+	emits: ['close'],
 
 	data() {
 		return {
@@ -196,8 +201,33 @@ export default {
 	},
 
 	methods: {
-		async deleteCertificate(id) {
-			await this.mainStore.deleteSmimeCertificate(id)
+		async deleteCertificate(certificate) {
+			const dialog = new DialogBuilder()
+				.setName(t('mail', 'Delete certificate'))
+				.setText(t('mail', 'The certificate {name} ({email}) will be deleted. Messages that require it can no longer be signed or decrypted.', {
+					name: certificate.info.commonName,
+					email: certificate.info.emailAddress,
+				}))
+				.setButtons([
+					{
+						label: t('mail', 'Cancel'),
+						callback: () => {},
+					},
+					{
+						label: t('mail', 'Delete'),
+						variant: 'error',
+						callback: async () => {
+							try {
+								await this.mainStore.deleteSmimeCertificate(certificate.id)
+							} catch (error) {
+								logger.error('Could not delete S/MIME certificate', { error })
+								showError(t('mail', 'Could not delete certificate'))
+							}
+						},
+					},
+				])
+				.build()
+			await dialog.show()
 		},
 
 		async uploadCertificate() {

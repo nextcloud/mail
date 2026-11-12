@@ -4,20 +4,13 @@
 -->
 <!-- Standard Actions menu for Envelopes -->
 <template>
-	<div>
-		<FilePicker
-			v-if="isFilePickerOpen"
-			:name="t('mail', 'Choose a folder to store the message in')"
-			:buttons="saveMessageButtons"
-			:allow-pick-directory="true"
-			:multiselect="false"
-			:mimetype-filter="['httpd/unix-directory']"
-			@close="() => isFilePickerOpen = false" />
+	<NcActions :inline="inline">
+		<slot />
 		<template v-if="!localMoreActionsOpen && !snoozeActionsOpen">
-			<ActionButton
+			<NcActionButton
 				v-if="hasWriteAcl"
 				class="action--primary"
-				:close-after-click="true"
+				:closeAfterClick="true"
 				@click.prevent="onToggleImportant">
 				<template #icon>
 					<ImportantIcon v-if="isImportant" :size="20" />
@@ -26,9 +19,9 @@
 				{{
 					isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')
 				}}
-			</ActionButton>
-			<ActionButton
-				:close-after-click="true"
+			</NcActionButton>
+			<NcActionButton
+				:closeAfterClick="true"
 				@click="onForward">
 				<template #icon>
 					<ShareIcon
@@ -36,9 +29,9 @@
 						:size="20" />
 				</template>
 				{{ t('mail', 'Forward') }}
-			</ActionButton>
-			<ActionButton
-				:close-after-click="false"
+			</NcActionButton>
+			<NcActionButton
+				:closeAfterClick="false"
 				:description="t('mail', 'Only for message recipients')"
 				@click.prevent="onCopyMessageLink">
 				<template #icon>
@@ -51,10 +44,10 @@
 						:size="20" />
 				</template>
 				{{ copied ? t('mail', 'Link copied') : t('mail', 'Copy direct link') }}
-			</ActionButton>
-			<ActionButton
+			</NcActionButton>
+			<NcActionButton
 				v-if="hasWriteAcl"
-				:close-after-click="true"
+				:closeAfterClick="true"
 				@click.prevent="onToggleJunk">
 				<template #icon>
 					<AlertOctagonIcon
@@ -64,32 +57,32 @@
 				{{
 					envelope.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
 				}}
-			</ActionButton>
-			<ActionButton
+			</NcActionButton>
+			<NcActionButton
 				v-if="hasWriteAcl"
-				:close-after-click="true"
-				@click.prevent="$emit('open-tag-modal')">
+				:closeAfterClick="true"
+				@click.prevent="$emit('openTagModal')">
 				<template #icon>
 					<TagIcon
 						:title="t('mail', 'Edit tags')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Edit tags') }}
-			</ActionButton>
-			<ActionButton
+			</NcActionButton>
+			<NcActionButton
 				v-if="hasDeleteAcl"
-				:close-after-click="true"
-				@click.prevent="$emit('open-move-modal')">
+				:closeAfterClick="true"
+				@click.prevent="$emit('openMoveModal')">
 				<template #icon>
 					<OpenInNewIcon
 						:title="t('mail', 'Move message')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Move message') }}
-			</ActionButton>
-			<ActionButton
+			</NcActionButton>
+			<NcActionButton
 				v-if="!isSnoozeDisabled && !isSnoozedMailbox"
-				:close-after-click="false"
+				:closeAfterClick="false"
 				@click="snoozeActionsOpen = true">
 				<template #icon>
 					<AlarmIcon
@@ -97,10 +90,10 @@
 						:size="20" />
 				</template>
 				{{ t('mail', 'Snooze') }}
-			</ActionButton>
-			<ActionButton
+			</NcActionButton>
+			<NcActionButton
 				v-if="!isSnoozeDisabled && isSnoozedMailbox"
-				:close-after-click="true"
+				:closeAfterClick="true"
 				@click="onUnSnooze">
 				<template #icon>
 					<AlarmIcon
@@ -108,20 +101,20 @@
 						:size="20" />
 				</template>
 				{{ t('mail', 'Unsnooze') }}
-			</ActionButton>
-			<ActionButton
+			</NcActionButton>
+			<NcActionButton
 				v-if="isTranslationEnabled ?? false"
-				:close-after-click="true"
-				@click.prevent="$emit('open-translation-modal')">
+				:closeAfterClick="true"
+				@click.prevent="$emit('openTranslationModal')">
 				<template #icon>
 					<TranslationIcon
 						:title="t('mail', 'Translate')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Translate') }}
-			</ActionButton>
-			<ActionButton
-				:close-after-click="false"
+			</NcActionButton>
+			<NcActionButton
+				:closeAfterClick="false"
 				@click="localMoreActionsOpen = true">
 				<template #icon>
 					<DotsHorizontalIcon
@@ -129,21 +122,19 @@
 						:size="20" />
 				</template>
 				{{ t('mail', 'More actions') }}
-			</ActionButton>
+			</NcActionButton>
 		</template>
 		<template v-if="localMoreActionsOpen">
-			<ActionButton
-				:close-after-click="false"
+			<NcActionButton
+				:closeAfterClick="false"
 				@click="localMoreActionsOpen = false">
 				<template #icon>
-					<ChevronLeft
-						:title="t('mail', 'More actions')"
-						:size="20" />
-					{{ t('mail', 'More actions') }}
+					<ChevronLeft :size="20" />
 				</template>
-			</ActionButton>
-			<ActionButton
-				:close-after-click="true"
+				{{ t('mail', 'More actions') }}
+			</NcActionButton>
+			<NcActionButton
+				:closeAfterClick="true"
 				@click.prevent="forwardSelectedAsAttachment">
 				<template #icon>
 					<ShareIcon
@@ -151,9 +142,9 @@
 						:size="20" />
 				</template>
 				{{ t('mail', 'Forward message as attachment') }}
-			</ActionButton>
-			<ActionButton
-				:close-after-click="true"
+			</NcActionButton>
+			<NcActionButton
+				:closeAfterClick="true"
 				@click="onOpenEditAsNew">
 				<template #icon>
 					<PlusIcon
@@ -161,93 +152,93 @@
 						:size="20" />
 				</template>
 				{{ t('mail', 'Edit as new message') }}
-			</ActionButton>
-			<ActionButton
-				:close-after-click="true"
-				@click.prevent="$emit('open-event-modal')">
+			</NcActionButton>
+			<NcActionButton
+				:closeAfterClick="true"
+				@click.prevent="$emit('openEventModal')">
 				<template #icon>
 					<CalendarBlankIcon
 						:title="t('mail', 'Reply with meeting')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Reply with meeting') }}
-			</ActionButton>
-			<ActionButton
+			</NcActionButton>
+			<NcActionButton
 				v-if="tasksEnabled"
-				:close-after-click="true"
-				@click.prevent="$emit('open-task-modal')">
+				:closeAfterClick="true"
+				@click.prevent="$emit('openTaskModal')">
 				<template #icon>
 					<TaskIcon
 						:title="t('mail', 'Create task')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Create task') }}
-			</ActionButton>
-			<ActionButton
+			</NcActionButton>
+			<NcActionButton
 				v-if="withShowSource"
-				:close-after-click="true"
-				@click.prevent="$emit('show-source-modal')">
+				:closeAfterClick="true"
+				@click.prevent="$emit('showSourceModal')">
 				<template #icon>
 					<InformationIcon
 						:title="t('mail', 'View source')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'View source') }}
-			</ActionButton>
-			<ActionButton
-				:close-after-click="true"
+			</NcActionButton>
+			<NcActionButton
+				:closeAfterClick="true"
 				@click="onPrint">
 				<template #icon>
 					<PrinterIcon :size="20" />
 				</template>
 				{{ t('mail', 'Print message') }}
-			</ActionButton>
-			<ActionLink
-				:close-after-click="true"
+			</NcActionButton>
+			<NcActionLink
+				:closeAfterClick="true"
 				:href="exportMessageLink">
 				<template #icon>
 					<DownloadIcon :size="20" />
 				</template>
 				{{ t('mail', 'Download message') }}
-			</ActionLink>
-			<ActionButton
+			</NcActionLink>
+			<NcActionButton
 				class="message-save-to-cloud"
 				:disabled="savingToCloud"
-				:close-after-click="true"
-				@click="() => isFilePickerOpen = true">
+				:closeAfterClick="true"
+				@click="saveToCloud">
 				<template #icon>
 					<IconSave v-if="!savingToCloud" :size="20" />
-					<IconLoading v-else-if="savingToCloud" :size="20" />
+					<NcLoadingIcon v-else-if="savingToCloud" :size="20" />
 				</template>
 				{{ t('mail', 'Save message to Files') }}
-			</ActionButton>
-			<ActionButton
+			</NcActionButton>
+			<NcActionButton
 				v-if="isSieveEnabled"
-				:close-after-click="true"
-				@click.prevent="$emit('open-mail-filter-from-envelope')">
+				:closeAfterClick="true"
+				@click.prevent="$emit('openMailFilterFromEnvelope')">
 				<template #icon>
 					<FilterIcon
 						:title="t('mail', 'Create mail filter')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Create mail filter') }}
-			</ActionButton>
-			<ActionLink
+			</NcActionButton>
+			<NcActionLink
 				v-if="debug"
 				:download="threadingFileName"
 				:href="threadingFile"
-				:close-after-click="true">
+				:closeAfterClick="true">
 				<template #icon>
 					<DownloadIcon
 						:title="t('mail', 'Download thread data for debugging')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Download thread data for debugging') }}
-			</ActionLink>
+			</NcActionLink>
 		</template>
 		<template v-if="snoozeActionsOpen">
-			<ActionButton
-				:close-after-click="false"
+			<NcActionButton
+				:closeAfterClick="false"
 				@click="snoozeActionsOpen = false">
 				<template #icon>
 					<ChevronLeft :size="20" />
@@ -255,23 +246,23 @@
 				{{
 					t('mail', 'Back')
 				}}
-			</ActionButton>
+			</NcActionButton>
 
-			<ActionButton
+			<NcActionButton
 				v-for="option in reminderOptions"
 				:key="option.key"
 				:aria-label="option.ariaLabel"
-				close-after-click
+				closeAfterClick
 				@click.stop="onSnooze(option.timestamp)">
 				{{ option.label }}
-			</ActionButton>
+			</NcActionButton>
 
 			<NcActionSeparator />
 
 			<NcActionInput
 				type="datetime-local"
-				is-native-picker
-				:model-value="customSnoozeDateTime"
+				isNativePicker
+				:modelValue="customSnoozeDateTime"
 				:min="new Date()"
 				@change="setCustomSnoozeDateTime">
 				<template #icon>
@@ -281,7 +272,7 @@
 
 			<NcActionButton
 				:aria-label="t('spreed', 'Set custom snooze')"
-				close-after-click
+				closeAfterClick
 				@click.stop="setCustomSnooze(customSnoozeDateTime)">
 				<template #icon>
 					<CheckIcon :size="20" />
@@ -289,24 +280,21 @@
 				{{ t('spreed', 'Set custom snooze') }}
 			</NcActionButton>
 		</template>
-	</div>
+	</NcActions>
 </template>
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
 import moment from '@nextcloud/moment'
 import { generateUrl } from '@nextcloud/router'
-import {
-	NcActionButton as ActionButton,
-	NcActionLink as ActionLink,
-	NcLoadingIcon as IconLoading,
-	NcActionButton,
-} from '@nextcloud/vue'
 import { Base64 } from 'js-base64'
 import { mapState, mapStores } from 'pinia'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActionInput from '@nextcloud/vue/components/NcActionInput'
+import NcActionLink from '@nextcloud/vue/components/NcActionLink'
+import NcActions from '@nextcloud/vue/components/NcActions'
 import NcActionSeparator from '@nextcloud/vue/components/NcActionSeparator'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import AlarmIcon from 'vue-material-design-icons/Alarm.vue'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagonOutline.vue'
 import CalendarBlankIcon from 'vue-material-design-icons/CalendarBlankOutline.vue'
@@ -333,16 +321,18 @@ import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder.js'
 import { saveMessage } from '../service/MessageService.js'
 import useMainStore from '../store/mainStore.js'
 import { mailboxHasRights } from '../util/acl.js'
+import { pickFolder } from '../util/filePicker.js'
 
 export default {
 	name: 'MenuEnvelope',
 	components: {
 		NcActionButton,
 		NcActionInput,
+		NcActionLink,
 		NcActionSeparator,
+		NcActions,
+		NcLoadingIcon,
 		CalendarClock,
-		ActionButton,
-		ActionLink,
 		AlertOctagonIcon,
 		CalendarBlankIcon,
 		ChevronLeft,
@@ -350,9 +340,7 @@ export default {
 		DotsHorizontalIcon,
 		TranslationIcon,
 		DownloadIcon,
-		IconLoading,
 		IconSave,
-		FilePicker,
 		InformationIcon,
 		OpenInNewIcon,
 		PlusIcon,
@@ -385,6 +373,11 @@ export default {
 			required: false,
 		},
 
+		inline: {
+			type: Number,
+			default: 0,
+		},
+
 		withSelect: {
 			// "Select" action should only appear in envelopes from the envelope list
 			type: Boolean,
@@ -404,6 +397,21 @@ export default {
 		},
 	},
 
+	emits: [
+		'openTagModal',
+		'openMoveModal',
+		'openTranslationModal',
+		'openEventModal',
+		'openTaskModal',
+		'showSourceModal',
+		'openMailFilterFromEnvelope',
+		'update:moreActionsOpen',
+		'unselect',
+		'delete',
+		'update:selected',
+		'print',
+	],
+
 	data() {
 		return {
 			debug: window?.OC?.debug || false,
@@ -414,14 +422,6 @@ export default {
 			copied: false,
 			copyResetTimer: null,
 			savingToCloud: false,
-			isFilePickerOpen: false,
-			saveMessageButtons: [
-				{
-					label: t('mail', 'Choose'),
-					callback: this.saveToCloud,
-					type: 'primary',
-				},
-			],
 		}
 	},
 
@@ -722,8 +722,15 @@ export default {
 			}
 		},
 
-		async saveToCloud(dest) {
-			const path = dest[0].path
+		async saveToCloud() {
+			let path
+			try {
+				path = await pickFolder(t('mail', 'Choose a folder to store the message in'))
+			} catch (error) {
+				logger.debug('file picker closed without picking a folder', { error })
+				return
+			}
+
 			this.savingToCloud = true
 			const id = this.envelope.databaseId
 
@@ -745,18 +752,3 @@ export default {
 	},
 }
 </script>
-
-<style lang="scss" scoped>
-	.source-modal {
-		:deep(.modal-container) {
-			height: 800px;
-		}
-
-		.source-modal-content {
-			width: 100%;
-			height: 100%;
-			overflow-y: scroll !important;
-		}
-	}
-
-</style>

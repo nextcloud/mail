@@ -62,8 +62,7 @@ export default {
 		flex-grow: 1;
 		display: flex;
 		flex-direction: column;
-		h3,
-		.message.message-preview {
+		h3 {
 			white-space: nowrap;
 			background-color: var(--color-background-hover);
 		}

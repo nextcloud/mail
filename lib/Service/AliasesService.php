@@ -15,6 +15,7 @@ use OCA\Mail\Db\AliasMapper;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ClientException;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\DB\Exception;
 
 class AliasesService {
 	public function __construct(
@@ -33,6 +34,13 @@ class AliasesService {
 	}
 
 	/**
+	 * @throws Exception
+	 */
+	public function countByAccountId(int $accountId, string $currentUserId): int {
+		return $this->aliasMapper->countByAccountId($accountId, $currentUserId);
+	}
+
+	/**
 	 * @param int $aliasId
 	 * @param string $currentUserId
 	 * @return Alias
@@ -43,31 +51,40 @@ class AliasesService {
 	}
 
 	/**
-	 * @param string $aliasEmail
-	 * @param string $userId
-	 * @return Alias
+	 * Find an alias of the given account
+	 *
 	 * @throws DoesNotExistException
 	 */
-	public function findByAliasAndUserId(string $aliasEmail, string $userId): Alias {
-		return $this->aliasMapper->findByAlias($aliasEmail, $userId);
+	public function findForAccount(int $aliasId, int $accountId): Alias {
+		return $this->aliasMapper->findForAccount($aliasId, $accountId);
 	}
 
 	/**
-	 * @param string $userId
-	 * @param int $accountId
-	 * @param string $alias
-	 * @param string $aliasName
+	 * Find an alias of the given account by its email address
 	 *
-	 * @return Alias
 	 * @throws DoesNotExistException
 	 */
-	public function create(string $userId, int $accountId, string $alias, string $aliasName): Alias {
+	public function findByAliasForAccount(string $aliasEmail, int $accountId): Alias {
+		return $this->aliasMapper->findByAliasForAccount($aliasEmail, $accountId);
+	}
+
+	/**
+	 * @throws DoesNotExistException
+	 */
+	public function create(string $userId,
+		int $accountId,
+		string $alias,
+		?string $aliasName,
+		?string $signature = null,
+		?int $smimeCertificateId = null): Alias {
 		$this->mailAccountMapper->find($userId, $accountId);
 
 		$aliasEntity = new Alias();
 		$aliasEntity->setAccountId($accountId);
 		$aliasEntity->setAlias($alias);
 		$aliasEntity->setName($aliasName);
+		$aliasEntity->setSignature($signature);
+		$aliasEntity->setSmimeCertificateId($smimeCertificateId);
 
 		return $this->aliasMapper->insert($aliasEntity);
 	}

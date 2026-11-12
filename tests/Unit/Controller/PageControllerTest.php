@@ -12,10 +12,14 @@ namespace OCA\Mail\Tests\Unit\Controller;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
+use OCA\Mail\AppInfo\Application;
+use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Controller\PageController;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\OidcProvider;
 use OCA\Mail\Db\TagMapper;
+use OCA\Mail\Integration\OidcIntegration;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
@@ -34,6 +38,7 @@ use OCP\AppFramework\Services\IInitialState;
 use OCP\Authentication\LoginCredentials\ICredentials;
 use OCP\Authentication\LoginCredentials\IStore as ICredentialStore;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\IAppConfig;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IURLGenerator;
@@ -60,6 +65,9 @@ class PageControllerTest extends TestCase {
 
 	/** @var IConfig|MockObject */
 	private $config;
+
+	/** @var IAppConfig|MockObject */
+	private $appConfig;
 
 	/** @var AccountService|MockObject */
 	private $accountService;
@@ -116,6 +124,8 @@ class PageControllerTest extends TestCase {
 	private ContextChatSettingsService $contextChatSettingsService;
 
 	private ClassificationSettingsService|MockObject $classificationSettingsService;
+
+	private OidcIntegration&MockObject $oidcIntegration;
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -124,6 +134,7 @@ class PageControllerTest extends TestCase {
 		$this->request = $this->createMock(IRequest::class);
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
 		$this->config = $this->createMock(IConfig::class);
+		$this->appConfig = $this->createMock(IAppConfig::class);
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->aiIntegrationsService = $this->createMock(AiIntegrationsService::class);
 		$this->aliasesService = $this->createMock(AliasesService::class);
@@ -144,6 +155,7 @@ class PageControllerTest extends TestCase {
 		$this->appManager = $this->createMock(IAppManager::class);
 		$this->appManager->method('getAppVersion')->willReturn('0.0.1-dev.0');
 		$this->contextChatSettingsService = $this->createMock(ContextChatSettingsService::class);
+		$this->oidcIntegration = $this->createMock(OidcIntegration::class);
 		$this->contextChatSettingsService->method('isIndexingEnabled')->willReturn(true);
 
 		$this->classificationSettingsService = $this->createMock(ClassificationSettingsService::class);
@@ -172,7 +184,9 @@ class PageControllerTest extends TestCase {
 			$this->quickActionsService,
 			$this->appManager,
 			$this->contextChatSettingsService,
-			$this->classificationSettingsService
+			$this->classificationSettingsService,
+			$this->appConfig,
+			$this->oidcIntegration,
 		);
 	}
 
@@ -180,7 +194,23 @@ class PageControllerTest extends TestCase {
 		$account1 = $this->createMock(Account::class);
 		$account2 = $this->createMock(Account::class);
 		$mailbox = $this->createStub(Mailbox::class);
-		$this->preferences->expects($this->exactly(14))
+		$oidcProvider = new OidcProvider();
+		$oidcProvider->setId(7);
+		$oidcProvider->setName('IdP');
+		$oidcProvider->setEmailDomain('example.com');
+		$oidcProvider->setImapHost('imap.example.com');
+		$oidcProvider->setImapPort(993);
+		$oidcProvider->setImapSslMode('ssl');
+		$oidcProvider->setSmtpHost('smtp.example.com');
+		$oidcProvider->setSmtpPort(587);
+		$oidcProvider->setSmtpSslMode('tls');
+		$this->oidcIntegration->method('getProviders')->willReturn([$oidcProvider]);
+		$this->urlGenerator->method('linkToRouteAbsolute')
+			->willReturnCallback(static fn (string $route): string => match ($route) {
+				'mail.oidcIntegration.authorize' => 'https://cloud.example.com/apps/mail/integration/oidc-authorize',
+				default => '',
+			});
+		$this->preferences->expects($this->exactly(16))
 			->method('getPreference')
 			->willReturnMap([
 				[$this->userId, 'account-settings', '[]', json_encode([])],
@@ -197,6 +227,8 @@ class PageControllerTest extends TestCase {
 				[$this->userId, 'smime-sign-aliases', '[]', '[]'],
 				[$this->userId, 'sort-favorites', 'false', 'false'],
 				[$this->userId, 'compact-mode', 'false', 'false'],
+				[$this->userId, 'auto-mark-as-read', '3000', '3000'],
+				[$this->userId, 'always-show-external-images', 'false', 'false'],
 			]);
 		$this->accountService->expects($this->once())
 			->method('findByUserId')
@@ -275,26 +307,32 @@ class PageControllerTest extends TestCase {
 				['version', '0.0.0', '26.0.0'],
 				['app.mail.attachment-size-limit', 0, 123],
 			]);
-		$this->config->expects($this->exactly(7))
+		$this->config->expects($this->exactly(2))
 			->method('getAppValue')
 			->withConsecutive(
-				[ 'mail', 'installed_version' ],
-				['mail', 'layout_message_view' ],
-				['mail', 'google_oauth_client_id' ],
-				['mail', 'microsoft_oauth_client_id' ],
-				['mail', 'microsoft_oauth_tenant_id' ],
-				['core', 'backgroundjobs_mode', 'ajax' ],
-				['mail', 'allow_new_mail_accounts', 'yes'],
+				['mail', 'installed_version'],
+				['core', 'backgroundjobs_mode', 'ajax'],
 			)->willReturnOnConsecutiveCalls(
-				$this->returnValue('1.2.3'),
-				$this->returnValue('threaded'),
-				$this->returnValue(''),
-				$this->returnValue(''),
-				$this->returnValue(''),
-				$this->returnValue('cron'),
-				$this->returnValue('yes'),
-				$this->returnValue('no')
+				'1.2.3',
+				'cron',
 			);
+		$this->appConfig->expects($this->exactly(4))
+			->method('getValueString')
+			->withConsecutive(
+				[Application::APP_ID, ConfigLexicon::LAYOUT_MESSAGE_VIEW, 'threaded'],
+				[Application::APP_ID, ConfigLexicon::GOOGLE_OAUTH_CLIENT_ID],
+				[Application::APP_ID, ConfigLexicon::MICROSOFT_OAUTH_CLIENT_ID],
+				[Application::APP_ID, ConfigLexicon::MICROSOFT_OAUTH_TENANT_ID, 'common'],
+			)->willReturnOnConsecutiveCalls(
+				'threaded',
+				'',
+				'',
+				'',
+			);
+		$this->appConfig->expects($this->once())
+			->method('getValueBool')
+			->with(Application::APP_ID, ConfigLexicon::ALLOW_NEW_MAIL_ACCOUNTS, true)
+			->willReturn(true);
 		$this->aiIntegrationsService->expects(self::exactly(4))
 			->method('isLlmProcessingEnabled')
 			->willReturn(false);
@@ -332,7 +370,7 @@ class PageControllerTest extends TestCase {
 		$this->classificationSettingsService->expects(($this->once()))
 			->method(('isClassificationEnabledByDefault'))
 			->willReturn(true);
-		$this->initialState->expects($this->exactly(27))
+		$this->initialState->expects($this->exactly(28))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
@@ -359,13 +397,26 @@ class PageControllerTest extends TestCase {
 					'follow-up-reminders' => 'true',
 					'sort-favorites' => 'false',
 					'index-context-chat' => 'true',
-					'compact-mode' => 'false'
+					'compact-mode' => 'false',
+					'auto-mark-as-read' => '3000',
+					'always-show-external-images' => 'false',
 				]],
 				['prefill_displayName', 'Jane Doe'],
 				['importance_classification_default', true],
 				['prefill_email', 'jane@doe.cz'],
 				['outbox-messages', []],
 				['quick-actions', []],
+				['oidc_providers', [[
+					'name' => 'IdP',
+					'emailDomain' => 'example.com',
+					'imapHost' => 'imap.example.com',
+					'imapPort' => 993,
+					'imapSslMode' => 'ssl',
+					'smtpHost' => 'smtp.example.com',
+					'smtpPort' => 587,
+					'smtpSslMode' => 'tls',
+					'authorizeUrl' => 'https://cloud.example.com/apps/mail/integration/oidc-authorize?providerId=7&state=_state_',
+				]]],
 				['disable-scheduled-send', false],
 				['disable-snooze', false],
 				['allow-new-accounts', true],

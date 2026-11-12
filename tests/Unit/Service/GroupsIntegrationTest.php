@@ -76,7 +76,7 @@ class GroupsIntegrationTest extends TestCase {
 		$this->groupService1->expects($this->never())
 			->method('getUsers');
 
-		$expanded = $this->groupsIntegration->expand($recipients);
+		$expanded = $this->groupsIntegration->expand($recipients, 'sender');
 
 		$this->assertEquals($recipients, $expanded);
 	}
@@ -103,7 +103,7 @@ class GroupsIntegrationTest extends TestCase {
 			->method('getUsers')
 			->willReturn($members);
 
-		$expanded = $this->groupsIntegration->expand($recipients);
+		$expanded = $this->groupsIntegration->expand($recipients, 'sender');
 
 		$this->assertEquals(
 			[
@@ -138,7 +138,7 @@ class GroupsIntegrationTest extends TestCase {
 			->method('getUsers')
 			->willReturn($members);
 
-		$expanded = $this->groupsIntegration->expand($recipients);
+		$expanded = $this->groupsIntegration->expand($recipients, 'sender');
 
 		$this->assertEquals(
 			[
@@ -170,10 +170,10 @@ class GroupsIntegrationTest extends TestCase {
 		];
 		$this->groupService1->expects($this->once())
 			->method('getUsers')
-			->with('test group')
+			->with('test group', 'sender')
 			->willReturn($members);
 
-		$expanded = $this->groupsIntegration->expand($recipients);
+		$expanded = $this->groupsIntegration->expand($recipients, 'sender');
 
 		$this->assertEquals(
 			[
@@ -195,7 +195,7 @@ class GroupsIntegrationTest extends TestCase {
 			->willReturn($members);
 		$this->expectException(ServiceException::class);
 
-		$this->groupsIntegration->expand($recipients);
+		$this->groupsIntegration->expand($recipients, 'sender');
 	}
 
 	public function testExpandWrong(): void {
@@ -204,7 +204,7 @@ class GroupsIntegrationTest extends TestCase {
 			Recipient::fromParams(['label' => 'testgroup (nons)', 'email' => 'nons:testgroup']),
 		];
 
-		$actual = $this->groupsIntegration->expand($recipients);
+		$actual = $this->groupsIntegration->expand($recipients, 'sender');
 
 		$this->assertEquals(
 			[
@@ -222,6 +222,6 @@ class GroupsIntegrationTest extends TestCase {
 		];
 		$this->expectException(ServiceException::class);
 
-		$this->groupsIntegration->expand($recipients);
+		$this->groupsIntegration->expand($recipients, 'sender');
 	}
 }

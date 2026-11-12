@@ -4,14 +4,15 @@
  */
 
 import { createTestingPinia } from '@pinia/testing'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { PiniaVuePlugin, setActivePinia } from 'pinia'
+import { shallowMount } from '@vue/test-utils'
+import { setActivePinia } from 'pinia'
 import EventModal from '../../../components/EventModal.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 
-const localVue = createLocalVue()
-localVue.use(PiniaVuePlugin)
-localVue.mixin(Nextcloud)
+vi.mock('../../../service/DAVService.js', () => ({
+	getUserCalendars: vi.fn().mockResolvedValue([]),
+	importCalendarEvent: vi.fn(),
+}))
 
 describe('EventModal', () => {
 	beforeEach(() => {
@@ -20,8 +21,10 @@ describe('EventModal', () => {
 
 	it('renders default values', () => {
 		const view = shallowMount(EventModal, {
-			localVue,
-			propsData: {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
 				envelope: {
 					subject: 'Sub?',
 					previewText: 'prev',
@@ -32,5 +35,23 @@ describe('EventModal', () => {
 		expect(view.vm.llmProcessingEnabled).toBe(false)
 		expect(view.vm.eventTitle).toBe('Sub?')
 		expect(view.vm.description).toBe('prev')
+	})
+
+	it('does not allow clearing the calendar', () => {
+		const view = shallowMount(EventModal, {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
+				envelope: {
+					subject: 'Sub?',
+					previewText: 'prev',
+				},
+			},
+		})
+
+		const calendarPicker = view.findComponent('.modal-content__calendar-picker')
+
+		expect(calendarPicker.props('clearable')).toBe(false)
 	})
 })

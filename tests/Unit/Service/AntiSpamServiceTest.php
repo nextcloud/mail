@@ -9,16 +9,17 @@ namespace OCA\Mail\Tests\Unit\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailTransmission;
+use OCA\Mail\AppInfo\Application;
+use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message as DbMessage;
 use OCA\Mail\Db\MessageMapper as DbMessageMapper;
 use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 use OCA\Mail\Model\NewMessageData;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AntiSpamService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\SMTP\SmtpClientFactory;
@@ -30,11 +31,10 @@ class AntiSpamServiceTest extends TestCase {
 	private AntiSpamService $service;
 	private IAppConfig|MockObject $appConfig;
 	private DbMessageMapper|MockObject $dbMessageMapper;
-	private IMAPClientFactory|MockObject $imapClientFactory;
+	private ProtocolFactory|MockObject $protocolFactory;
 	private SmtpClientFactory|MockObject $smtpClientFactory;
 	private MockObject|ImapMessageMapper $imapMessageMapper;
 	private LoggerInterface|MockObject $logger;
-	private MockObject|IMailTransmission $transmission;
 	private MailManager|MockObject $mailManager;
 
 	protected function setUp(): void {
@@ -42,9 +42,8 @@ class AntiSpamServiceTest extends TestCase {
 
 		$this->appConfig = $this->createMock(IAppConfig::class);
 		$this->dbMessageMapper = $this->createMock(DbMessageMapper::class);
-		$this->transmission = $this->createMock(IMailTransmission::class);
 		$this->mailManager = $this->createMock(MailManager::class);
-		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
+		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
 		$this->smtpClientFactory = $this->createMock(SmtpClientFactory::class);
 		$this->imapMessageMapper = $this->createMock(ImapMessageMapper::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
@@ -52,7 +51,7 @@ class AntiSpamServiceTest extends TestCase {
 		$this->service = new AntiSpamService(
 			$this->dbMessageMapper,
 			$this->mailManager,
-			$this->imapClientFactory,
+			$this->protocolFactory,
 			$this->smtpClientFactory,
 			$this->imapMessageMapper,
 			$this->logger,
@@ -69,7 +68,7 @@ class AntiSpamServiceTest extends TestCase {
 
 		$this->appConfig->expects(self::once())
 			->method('getValueString')
-			->with('mail', 'antispam_reporting_spam')
+			->with(Application::APP_ID, ConfigLexicon::ANTISPAM_REPORTING_SPAM)
 			->willReturn('');
 		$this->dbMessageMapper->expects(self::never())
 			->method('getIdForUid');
@@ -86,7 +85,7 @@ class AntiSpamServiceTest extends TestCase {
 
 		$this->appConfig->expects(self::once())
 			->method('getValueString')
-			->with('mail', 'antispam_reporting_spam')
+			->with(Application::APP_ID, ConfigLexicon::ANTISPAM_REPORTING_SPAM)
 			->willReturn('test@test.com');
 		$this->dbMessageMapper->expects(self::once())
 			->method('getIdForUid')
@@ -106,7 +105,7 @@ class AntiSpamServiceTest extends TestCase {
 
 		$this->appConfig->expects(self::once())
 			->method('getValueString')
-			->with('mail', 'antispam_reporting_spam')
+			->with(Application::APP_ID, ConfigLexicon::ANTISPAM_REPORTING_SPAM)
 			->willReturn('test@test.com');
 		$messageData = NewMessageData::fromRequest(
 			$event->getAccount(),
@@ -149,7 +148,7 @@ class AntiSpamServiceTest extends TestCase {
 
 		$this->appConfig->expects(self::once())
 			->method('getValueString')
-			->with('mail', 'antispam_reporting_spam')
+			->with(Application::APP_ID, ConfigLexicon::ANTISPAM_REPORTING_SPAM)
 			->willReturn('test@test.com');
 		$messageData = NewMessageData::fromRequest(
 			$event->getAccount(),
@@ -172,8 +171,8 @@ class AntiSpamServiceTest extends TestCase {
 		$this->mailManager->expects(self::exactly(2))
 			->method('getMailbox')
 			->willReturn($mailbox);
-		$this->imapClientFactory->expects(self::exactly(2))
-			->method('getClient')
+		$this->protocolFactory->expects(self::exactly(2))
+			->method('imapClient')
 			->willReturn($client);
 		$client->expects(self::exactly(2))
 			->method('logout');
@@ -215,7 +214,7 @@ class AntiSpamServiceTest extends TestCase {
 
 		$this->appConfig->expects(self::once())
 			->method('getValueString')
-			->with('mail', 'antispam_reporting_spam')
+			->with(Application::APP_ID, ConfigLexicon::ANTISPAM_REPORTING_SPAM)
 			->willReturn('test@test.com');
 		$messageData = NewMessageData::fromRequest(
 			$event->getAccount(),
@@ -238,8 +237,8 @@ class AntiSpamServiceTest extends TestCase {
 		$this->mailManager->expects(self::exactly(2))
 			->method('getMailbox')
 			->willReturn($mailbox);
-		$this->imapClientFactory->expects(self::exactly(2))
-			->method('getClient')
+		$this->protocolFactory->expects(self::exactly(2))
+			->method('imapClient')
 			->willReturn($client);
 		$client->expects(self::exactly(2))
 			->method('logout');

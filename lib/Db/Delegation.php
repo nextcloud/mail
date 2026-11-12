@@ -38,6 +38,7 @@ class Delegation extends Entity implements JsonSerializable {
 		$this->displayName = $displayName;
 	}
 
+	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [

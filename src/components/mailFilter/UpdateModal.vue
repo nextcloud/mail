@@ -5,7 +5,7 @@
 <template>
 	<NcModal
 		size="normal"
-		:close-on-click-outside="false"
+		:closeOnClickOutside="false"
 		:name="t('mail', 'New filter')"
 		@close="closeModal">
 		<form class="modal__content" @submit.prevent="updateFilter">
@@ -23,20 +23,26 @@
 
 				<Operator class="filter-operator" :filter="clone" @update:operator="updateOperator" />
 
-				<Test
-					v-for="test in clone.tests"
-					:key="test.id"
-					:test="test"
-					@update-test="updateTest"
-					@delete-test="deleteTest" />
+				<template v-if="!appliesToAll">
+					<Test
+						v-for="test in clone.tests"
+						:key="test.id"
+						:test="test"
+						@updateTest="updateTest"
+						@deleteTest="deleteTest" />
 
-				<NcButton
-					class="add-condition"
-					variant="secondary"
-					:aria-label="t('mail', 'Add condition')"
-					@click="createTest">
-					{{ t('mail', 'Add condition') }}
-				</NcButton>
+					<NcButton
+						class="add-condition"
+						variant="secondary"
+						:aria-label="t('mail', 'Add condition')"
+						@click="createTest">
+						{{ t('mail', 'Add condition') }}
+					</NcButton>
+
+					<NcNoteCard v-if="submitted && !hasTests" class="filter-note" type="error">
+						<p>{{ t('mail', 'Add at least one condition.') }}</p>
+					</NcNoteCard>
+				</template>
 			</div>
 
 			<div class="filter-actions">
@@ -47,8 +53,8 @@
 					:key="action.id"
 					:action="action"
 					:account="account"
-					@update-action="updateAction"
-					@delete-action="deleteAction" />
+					@updateAction="updateAction"
+					@deleteAction="deleteAction" />
 
 				<NcButton
 					class="add-action"
@@ -57,6 +63,18 @@
 					@click="createAction">
 					{{ t('mail', 'Add action') }}
 				</NcButton>
+
+				<NcNoteCard v-if="hasRedirectAction" class="filter-note" type="warning">
+					<p>{{ t('mail', 'Redirected messages might be rejected by the receiving server, and cannot be read by the recipient if encrypted.') }}</p>
+				</NcNoteCard>
+
+				<NcNoteCard v-if="appliesToAll && hasFileIntoAction" class="filter-note" type="warning">
+					<p>{{ t('mail', 'All incoming messages will be moved out of your inbox.') }}</p>
+				</NcNoteCard>
+
+				<NcNoteCard v-if="appliesToAll && hasStopAction" class="filter-note" type="warning">
+					<p>{{ t('mail', 'Filters after this one and the autoresponder will not run for any incoming message.') }}</p>
+				</NcNoteCard>
 			</div>
 
 			<div class="filter-settings">
@@ -85,13 +103,27 @@
 </template>
 
 <script>
-import { NcButton, NcCheckboxRadioSwitch, NcLoadingIcon, NcModal, NcTextField } from '@nextcloud/vue'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
+import NcModal from '@nextcloud/vue/components/NcModal'
+import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
+import NcTextField from '@nextcloud/vue/components/NcTextField'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import Action from './Action.vue'
 import Operator from './Operator.vue'
 import Test from './Test.vue'
-import { MailFilterConditionField, MailFilterConditionOperator } from '../../models/mailFilter.ts'
+import { MailFilterActions, MailFilterConditionField, MailFilterConditionOperator, MailFilterOperator } from '../../models/mailFilter.ts'
 import { randomId } from '../../util/randomId.js'
+
+// TODO: replace with cloneDeep from es-toolkit once it is a direct dependency
+function cloneFilter(filter) {
+	return {
+		...filter,
+		tests: filter.tests.map((test) => ({ ...test, values: [...test.values] })),
+		actions: filter.actions.map((action) => ({ ...action })),
+	}
+}
 
 export default {
 	name: 'UpdateModal',
@@ -104,6 +136,7 @@ export default {
 		NcCheckboxRadioSwitch,
 		NcLoadingIcon,
 		NcModal,
+		NcNoteCard,
 		NcTextField,
 	},
 
@@ -124,11 +157,44 @@ export default {
 		},
 	},
 
+	emits: ['updateFilter', 'close'],
+
 	data() {
 		return {
-			clone: structuredClone(this.filter),
+			clone: cloneFilter(this.filter),
 			boundaryElement: null,
+			submitted: false,
 		}
+	},
+
+	computed: {
+		appliesToAll() {
+			return this.clone.operator === MailFilterOperator.Always
+		},
+
+		hasTests() {
+			return this.clone.tests.length > 0
+		},
+
+		hasTestWithoutValues() {
+			return this.clone.tests.some((test) => test.values.length === 0)
+		},
+
+		isValid() {
+			return this.appliesToAll || (this.hasTests && !this.hasTestWithoutValues)
+		},
+
+		hasFileIntoAction() {
+			return this.clone.actions.some((action) => action.type === MailFilterActions.FileInto)
+		},
+
+		hasStopAction() {
+			return this.clone.actions.some((action) => action.type === MailFilterActions.Stop)
+		},
+
+		hasRedirectAction() {
+			return this.clone.actions.some((action) => action.type === MailFilterActions.Redirect)
+		},
 	},
 
 	methods: {
@@ -138,7 +204,7 @@ export default {
 
 		updateTest(test) {
 			const index = this.clone.tests.findIndex((items) => items.id === test.id)
-			this.$set(this.clone.tests, index, test)
+			this.clone.tests[index] = test
 		},
 
 		deleteTest(test) {
@@ -146,7 +212,7 @@ export default {
 		},
 
 		createAction() {
-			this.clone.actions.push({ id: randomId(), type: 'fileinto' })
+			this.clone.actions.push({ id: randomId(), type: MailFilterActions.FileInto })
 			this.clone.actions.sort((a, b) => {
 				// ensure the stop action is always last
 				if (a.type === 'stop') {
@@ -161,7 +227,7 @@ export default {
 
 		updateAction(action) {
 			const index = this.clone.actions.findIndex((item) => item.id === action.id)
-			this.$set(this.clone.actions, index, action)
+			this.clone.actions[index] = action
 		},
 
 		updateOperator(operator) {
@@ -173,7 +239,16 @@ export default {
 		},
 
 		updateFilter() {
-			this.$emit('update-filter', structuredClone(this.clone))
+			this.submitted = true
+			if (!this.isValid) {
+				return
+			}
+
+			const filter = cloneFilter(this.clone)
+			if (this.appliesToAll) {
+				filter.tests = []
+			}
+			this.$emit('updateFilter', filter)
 		},
 
 		closeModal() {
@@ -193,26 +268,11 @@ export default {
 	margin-bottom: calc(var(--default-grid-baseline) * 4)
 }
 
-.form-group {
-	margin: calc(var(--default-grid-baseline) * 4) 0;
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-}
-
-.external-label {
-	display: flex;
-	width: 100%;
-	margin-top: 1rem;
-}
-
-.external-label label {
-	padding-top: 7px;
-	padding-inline-end: 14px;
-	white-space: nowrap;
-}
-
-.add-condition, .add-action, .filter-name, .filter-settings {
+.add-condition, .add-action, .filter-name, .filter-settings, .filter-note {
 	width: calc(100% - (30px + var(--default-grid-baseline)));
+}
+
+.filter-note {
+	box-sizing: border-box;
 }
 </style>

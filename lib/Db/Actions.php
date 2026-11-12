@@ -20,6 +20,8 @@ use ReturnTypeWillChange;
  * @method void setAccountId(int $accountId)
  */
 class Actions extends Entity implements JsonSerializable {
+	public const NAME_MAX_LENGTH = 64;
+
 	protected $name;
 	protected $accountId;
 	protected $actionSteps = [];
@@ -28,6 +30,13 @@ class Actions extends Entity implements JsonSerializable {
 	public function __construct() {
 		$this->addType('name', 'string');
 		$this->addType('accountId', 'integer');
+	}
+
+	/**
+	 * @return list<ActionStep>
+	 */
+	public function getActionSteps(): array {
+		return $this->actionSteps;
 	}
 
 	public function setActionSteps(array $actionSteps): void {

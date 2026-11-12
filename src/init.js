@@ -57,10 +57,13 @@ export default function initAfterAppCreation() {
 		key: 'sort-favorites',
 		value: preferences['sort-favorites'],
 	})
-	const startMailboxId = preferences['start-mailbox-id']
+	let startMailboxId = preferences['start-mailbox-id']
+	if (startMailboxId && !['unified', 'priority'].includes(startMailboxId)) {
+		startMailboxId = parseInt(startMailboxId, 10)
+	}
 	mainStore.savePreferenceMutation({
 		key: 'start-mailbox-id',
-		value: startMailboxId ? parseInt(startMailboxId, 10) : null,
+		value: startMailboxId,
 	})
 	mainStore.savePreferenceMutation({
 		key: 'index-context-chat',
@@ -97,6 +100,14 @@ export default function initAfterAppCreation() {
 	mainStore.savePreferenceMutation({
 		key: 'compact-mode',
 		value: preferences['compact-mode'],
+	})
+	mainStore.savePreferenceMutation({
+		key: 'auto-mark-as-read',
+		value: preferences['auto-mark-as-read'],
+	})
+	mainStore.savePreferenceMutation({
+		key: 'always-show-external-images',
+		value: preferences['always-show-external-images'],
 	})
 
 	mainStore.setQuickActions(loadState('mail', 'quick-actions', []))

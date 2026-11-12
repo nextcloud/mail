@@ -31,10 +31,9 @@ class TextBlockSharesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function index(): JsonResponse {
 		if ($this->userId === null) {
@@ -50,10 +49,9 @@ class TextBlockSharesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function create(int $textBlockId, string $shareWith, string $type): JsonResponse {
 		if ($this->userId === null) {
@@ -65,24 +63,27 @@ class TextBlockSharesController extends Controller {
 			return JsonResponse::error('Text block not found', Http::STATUS_NOT_FOUND);
 		}
 
-		switch ($type) {
-			case TextBlockShare::TYPE_USER:
-				$this->textBlockService->share($textBlockId, $shareWith);
-				return JsonResponse::success();
-			case TextBlockShare::TYPE_GROUP:
-				$this->textBlockService->shareWithGroup($textBlockId, $shareWith);
-				return JsonResponse::success();
-			default:
-				return JsonResponse::fail('Invalid share type', Http::STATUS_BAD_REQUEST);
+		try {
+			switch ($type) {
+				case TextBlockShare::TYPE_USER:
+					$this->textBlockService->share($textBlockId, $this->userId, $shareWith);
+					return JsonResponse::success();
+				case TextBlockShare::TYPE_GROUP:
+					$this->textBlockService->shareWithGroup($textBlockId, $this->userId, $shareWith);
+					return JsonResponse::success();
+				default:
+					return JsonResponse::fail('Invalid share type', Http::STATUS_BAD_REQUEST);
+			}
+		} catch (UserNotFoundException $e) {
+			return JsonResponse::error('User not found', Http::STATUS_NOT_FOUND);
 		}
 
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function destroy(int $id, string $shareWith): JsonResponse {
 		if ($this->userId === null) {
@@ -100,10 +101,9 @@ class TextBlockSharesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	public function getTextBlockShares(int $id): JsonResponse {
 		if ($this->userId === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);

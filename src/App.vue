@@ -9,7 +9,7 @@
 
 <script>
 import { showError } from '@nextcloud/dialogs'
-import { translate as t } from '@nextcloud/l10n'
+import { t } from '@nextcloud/l10n'
 import { mapState, mapStores } from 'pinia'
 import MailboxLockedError from './errors/MailboxLockedError.js'
 import { matchError } from './errors/match.js'

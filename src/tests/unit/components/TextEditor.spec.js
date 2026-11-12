@@ -3,35 +3,89 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { Paragraph } from 'ckeditor5'
+import { shallowMount } from '@vue/test-utils'
+import { GeneralHtmlSupport, Paragraph } from 'ckeditor5'
 import mitt from 'mitt'
 import { vi } from 'vitest'
 import TextEditor from '../../../components/TextEditor.vue'
+import ImageDowncastPlugin from '../../../ckeditor/image/ImageDowncastPlugin.ts'
 import MailPlugin from '../../../ckeditor/mail/MailPlugin.js'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 import VirtualTestEditor from '../../virtualtesteditor.js'
 
-const localVue = createLocalVue()
-
-localVue.mixin(Nextcloud)
-
 describe('TextEditor', () => {
 	it('shallow mounts', async () => {
 		const wrapper = shallowMount(TextEditor, {
-			localVue,
-			propsData: {
-				value: 'bonjour',
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
+				modelValue: 'bonjour',
 				bus: mitt(),
 			},
 		})
 	})
 
+	it('does not support additional html elements in plain text mode', async () => {
+		const wrapper = shallowMount(TextEditor, {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
+				modelValue: 'bonjour',
+				bus: mitt(),
+			},
+		})
+
+		expect(wrapper.vm.config.plugins).not.toContain(GeneralHtmlSupport)
+	})
+
+	it('supports additional html elements in html mode', async () => {
+		const wrapper = shallowMount(TextEditor, {
+			global: {
+				mixins: [Nextcloud],
+				provide: {
+					addToFocusTrap: vi.fn(),
+				},
+			},
+			props: {
+				modelValue: 'bonjour',
+				html: true,
+				bus: mitt(),
+			},
+		})
+
+		expect(wrapper.vm.config.plugins).toContain(GeneralHtmlSupport)
+		expect(wrapper.vm.config.htmlSupport.allow.some((rule) => rule.name === 'img')).toBe(true)
+	})
+
+	it('aligns and resizes images in html mode', async () => {
+		const wrapper = shallowMount(TextEditor, {
+			global: {
+				mixins: [Nextcloud],
+				provide: {
+					addToFocusTrap: vi.fn(),
+				},
+			},
+			props: {
+				modelValue: 'bonjour',
+				html: true,
+				bus: mitt(),
+			},
+		})
+
+		expect(wrapper.vm.config.plugins).toContain(ImageDowncastPlugin)
+		expect(wrapper.vm.config.image.resizeUnit).toBe('px')
+		expect(wrapper.vm.config.image.toolbar).toContain('imageStyle:alignCenter')
+	})
+
 	it('throw when editor not ready', async () => {
 		const wrapper = shallowMount(TextEditor, {
-			localVue,
-			propsData: {
-				value: 'bonjour',
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
+				modelValue: 'bonjour',
 				bus: mitt(),
 			},
 		})
@@ -43,24 +97,27 @@ describe('TextEditor', () => {
 
 	it('emit event on input', async () => {
 		const wrapper = shallowMount(TextEditor, {
-			localVue,
-			propsData: {
-				value: 'bonjour',
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
+				modelValue: 'bonjour',
 				bus: mitt(),
 			},
 		})
 
 		wrapper.vm.onEditorInput('bonjour bonjour')
 
-		expect(wrapper.emitted().input[0]).toBeTruthy()
-		expect(wrapper.emitted().input[0]).toEqual(['bonjour bonjour'])
+		expect(wrapper.emitted('update:modelValue')[0]).toEqual(['bonjour bonjour'])
 	})
 
 	it('emit event on ready', async () => {
 		const wrapper = shallowMount(TextEditor, {
-			localVue,
-			propsData: {
-				value: 'bonjour',
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
+				modelValue: 'bonjour',
 				bus: mitt(),
 			},
 		})
@@ -92,9 +149,11 @@ describe('TextEditor', () => {
 	})
 	it('register conversion to add margin: 0px to every <p> element', async () => {
 		const wrapper = shallowMount(TextEditor, {
-			localVue,
-			propsData: {
-				value: '',
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
+				modelValue: '',
 				bus: mitt(),
 			},
 		})
@@ -130,12 +189,14 @@ describe('TextEditor', () => {
 		vi.useFakeTimers()
 
 		const wrapper = shallowMount(TextEditor, {
-			localVue,
-			provide: {
-				addToFocusTrap: vi.fn(),
+			global: {
+				mixins: [Nextcloud],
+				provide: {
+					addToFocusTrap: vi.fn(),
+				},
 			},
-			propsData: {
-				value: '<p>bonjour</p>',
+			props: {
+				modelValue: '<p>bonjour</p>',
 				html: true,
 				bus: mitt(),
 			},
@@ -193,7 +254,7 @@ describe('TextEditor', () => {
 
 		// updateEditorData() calls editor.data.set() → model change:data → Vue wrapper emits @input.
 		// We assert the handoff to CKEditor's pipeline here; the Vue wrapper propagation is tested
-		// by @ckeditor/ckeditor5-vue2's own suite.
+		// by @ckeditor/ckeditor5-vue's own suite.
 		expect(updateEditorData).toHaveBeenCalledTimes(1)
 
 		vi.useRealTimers()

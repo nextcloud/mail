@@ -17,9 +17,6 @@ use OCP\IDBConnection;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
-/**
- * @psalm-api
- */
 class Version1140Date20220628174152 extends SimpleMigrationStep {
 	private IDBConnection $connection;
 
@@ -61,24 +58,20 @@ class Version1140Date20220628174152 extends SimpleMigrationStep {
 			$alterQuery = 'ALTER TABLE `%s` MODIFY `%s` longtext null;';
 
 			$accountsTable = $schema->getTable('mail_accounts');
-			$accountsSignatureColumn = $accountsTable->getColumn('signature');
 
 			$this->connection->executeStatement(
-				sprintf($alterQuery, $accountsTable->getName(), $accountsSignatureColumn->getName())
+				sprintf($alterQuery, $accountsTable->getName(), 'signature')
 			);
 
 			$aliasesTable = $schema->getTable('mail_aliases');
-			$aliasesSignatureColumn = $accountsTable->getColumn('signature');
 
 			$this->connection->executeStatement(
-				sprintf($alterQuery, $aliasesTable->getName(), $aliasesSignatureColumn->getName())
+				sprintf($alterQuery, $aliasesTable->getName(), 'signature')
 			);
 
 			unset(
 				$accountsTable,
-				$accountsSignatureColumn,
-				$aliasesTable,
-				$aliasesSignatureColumn
+				$aliasesTable
 			);
 		}
 	}

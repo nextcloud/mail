@@ -11,6 +11,7 @@ namespace OCA\Mail\Tests\Unit\Service\Classification;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCP\IAppConfig;
@@ -35,9 +36,9 @@ class ClassificationSettingsServiceTest extends TestCase {
 
 	public function testIsClassificationEnabledByDefault(): void {
 		$this->appConfig->expects(self::once())
-			->method('getValueString')
-			->with(Application::APP_ID, 'importance_classification_default', 'yes')
-			->willReturn('yes');
+			->method('getValueBool')
+			->with(Application::APP_ID, ConfigLexicon::IMPORTANCE_CLASSIFICATION_DEFAULT, true)
+			->willReturn(true);
 
 		$result = $this->service->isClassificationEnabledByDefault();
 
@@ -46,8 +47,8 @@ class ClassificationSettingsServiceTest extends TestCase {
 
 	public function testSetClassificationEnabledByDefaultTrue(): void {
 		$this->appConfig->expects(self::once())
-			->method('setValueString')
-			->with(Application::APP_ID, 'importance_classification_default', 'yes');
+			->method('setValueBool')
+			->with(Application::APP_ID, ConfigLexicon::IMPORTANCE_CLASSIFICATION_DEFAULT, true);
 
 		$this->service->setClassificationEnabledByDefault(true);
 	}

@@ -82,7 +82,7 @@ class AvatarService implements IAvatarService {
 			return null;
 		}
 
-		$avatar = $this->source->fetch($email, $this->avatarFactory, $this->externalAvatarsAllowed($uid));
+		$avatar = $this->source->fetch($uid, $email, $this->avatarFactory, $this->externalAvatarsAllowed($uid));
 		if (is_null($avatar) || !$this->hasAllowedMime($avatar)) {
 			// Cannot locate any avatar -> nothing to do here
 

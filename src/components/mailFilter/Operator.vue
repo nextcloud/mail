@@ -5,15 +5,15 @@
 <template>
 	<div class="operator">
 		<NcSelect
-			:model-value="filter.operator"
+			:modelValue="filter.operator"
 			class="operator__select"
 			:required="true"
-			:label-outside="true"
+			:labelOutside="true"
 			:options="availableOperators"
 			:reduce="operator => operator.value"
 			:clearable="false"
-			@input="updateOperator($event)" />
-		<NcPopover class="operator__popover" :no-focus-trap="true" popup-role="dialog">
+			@update:modelValue="updateOperator($event)" />
+		<NcPopover class="operator__popover" :noFocusTrap="true" popupRole="dialog">
 			<template #trigger>
 				<NcButton variant="tertiary-no-background" :aria-label="t('mail', 'Help')">
 					<template #icon>
@@ -36,7 +36,9 @@
 </template>
 
 <script>
-import { NcButton, NcPopover, NcSelect } from '@nextcloud/vue'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcPopover from '@nextcloud/vue/components/NcPopover'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import IconInformationOutline from 'vue-material-design-icons/InformationOutline.vue'
 import { MailFilterOperator } from '../../models/mailFilter.ts'
 
@@ -56,11 +58,14 @@ export default {
 		},
 	},
 
+	emits: ['update:operator'],
+
 	data() {
 		return {
 			availableOperators: [
 				{ value: MailFilterOperator.All, label: t('mail', 'If all the conditions are met, the actions will be performed') },
 				{ value: MailFilterOperator.Any, label: t('mail', 'If any of the conditions are met, the actions will be performed') },
+				{ value: MailFilterOperator.Always, label: t('mail', 'Perform the actions on all incoming messages') },
 			],
 		}
 	},
@@ -80,6 +85,10 @@ export default {
 	&__select {
 		margin-inline-end: var(--default-grid-baseline);
 		width: 100%;
+		// Match NcSelect's own `.nc-select.v-select.select` so the reset still wins
+		&.nc-select {
+			margin-block: 0;
+		}
 	}
 	&__popover {
 		width: 30px;

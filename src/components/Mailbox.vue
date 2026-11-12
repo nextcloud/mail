@@ -4,46 +4,48 @@
 -->
 
 <template>
-	<div class="mailbox"
+	<div
+		class="mailbox"
 		:class="{ 'empty-content': (!hasMessages && !loadingEnvelopes) || error }">
 		<Error
 			v-if="error"
 			:error="t('mail', 'Could not open folder')"
 			message=""
 			role="alert" />
-		<LoadingSkeleton v-else-if="loadingEnvelopes" :number-of-lines="20" />
+		<LoadingSkeleton v-else-if="loadingEnvelopes" :numberOfLines="20" />
 		<Loading
 			v-else-if="loadingCacheInitialization"
 			:hint="t('mail', 'Loading messages …')"
-			:slow-hint="t('mail', 'Indexing your messages. This can take a bit longer for larger folders.')" />
-		<EmptyMailboxSection v-else-if="isPriorityInbox && !hasMessages" key="empty" />
-		<EmptyMailbox v-else-if="!hasMessages" key="empty" />
+			:slowHint="t('mail', 'Indexing your messages. This can take a bit longer for larger folders.')" />
+		<EmptyMailboxSection v-else-if="isPriorityInbox && !hasMessages" key="empty-priority-inbox" />
+		<EmptyMailbox v-else-if="!hasMessages" key="empty-mailbox" />
 		<template v-else-if="hasGroupedEnvelopes && !isPriorityInbox">
 			<div v-for="[label, group] in groupEnvelopes" :key="label">
 				<SectionTitle class="section-title" :name="getLabelForGroup(label)" />
 				<EnvelopeList
 					:account="account"
 					:mailbox="mailbox"
-					:search-query="searchQuery"
+					:searchQuery="searchQuery"
 					:envelopes="group"
-					:loading-more="false"
-					:load-more-button="false"
-					:skip-transition="skipListTransition"
+					:loadingMore="false"
+					:loadMoreButton="false"
+					:skipTransition="skipListTransition"
+					:dateGrouped="true"
 					@delete="onDelete" />
 			</div>
 		</template>
 		<EnvelopeList
 			v-else
 			:account="account"
-			:load-more-label="loadMoreLabel"
+			:loadMoreLabel="loadMoreLabel"
 			:mailbox="mailbox"
-			:search-query="searchQuery"
+			:searchQuery="searchQuery"
 			:envelopes="envelopesToShow"
-			:loading-more="loadingMore"
-			:load-more-button="showLoadMore"
-			:skip-transition="skipListTransition"
+			:loadingMore="loadingMore"
+			:loadMoreButton="showLoadMore"
+			:skipTransition="skipListTransition"
 			@delete="onDelete"
-			@load-more="loadMore" />
+			@loadMore="loadMore" />
 	</div>
 </template>
 
@@ -197,7 +199,7 @@ export default {
 	},
 
 	created() {
-		this.bus.on('load-more', this.onScroll)
+		this.bus.on('loadMore', this.onScroll)
 		this.bus.on('delete', this.onDelete)
 		this.bus.on('archive', this.onArchive)
 		this.bus.on('shortcut', this.handleShortcut)
@@ -218,7 +220,7 @@ export default {
 		this.mainStore.setHasFetchedInitialEnvelopesMutation(true)
 	},
 
-	destroyed() {
+	unmounted() {
 		this.bus.off('load-more', this.onScroll)
 		this.bus.off('delete', this.onDelete)
 		this.bus.off('archive', this.onArchive)
@@ -231,10 +233,11 @@ export default {
 			this.loadingCacheInitialization = true
 			this.error = false
 
-			logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.query}) during cache initalization`)
+			logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.query}) during cache initialization`)
 			this.sync(true)
 				.then(() => {
 					this.loadingCacheInitialization = false
+					this.syncedMailboxes.add(this.mailbox.databaseId + (this.searchQuery ?? ''))
 
 					return this.loadEnvelopes()
 				})
@@ -242,6 +245,7 @@ export default {
 
 		async loadEnvelopes() {
 			logger.debug(`Fetching envelopes for folder ${this.mailbox.databaseId} (${this.searchQuery})`, this.mailbox)
+			this.endReached = false
 			if (!this.syncedMailboxes.has(this.mailbox.databaseId + (this.searchQuery ?? ''))) {
 				// Only trigger skeleton if we didn't sync envelopes yet
 				this.loadingEnvelopes = true
@@ -295,6 +299,10 @@ export default {
 		},
 
 		async loadMore() {
+			if (!this.hasMessages || this.loadingEnvelopes || this.loadingMore || this.endReached || this.error) {
+				return
+			}
+
 			if (!this.expanded && this.envelopesToShow.length < this.envelopes.length) {
 				logger.debug('expanding envelope list')
 				this.expanded = true
@@ -371,7 +379,7 @@ export default {
 			const idx = envelopes.indexOf(env)
 			let next
 
-			if (e.srcKey !== 'refresh' && !env) {
+			if (!env) {
 				logger.debug('envelope is not in the list, ignoring shortcut', {
 					srcKey: e.srcKey,
 				})
@@ -480,11 +488,6 @@ export default {
 						error,
 					}))
 					break
-				case 'refresh':
-					logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.searchQuery}) per shortcut`)
-					this.sync(false)
-
-					break
 				case 'unseen':
 					logger.debug('marking as seen/unseen via shortcut')
 
@@ -560,7 +563,7 @@ export default {
 				logger.debug('envelope to delete does not exist in envelope list')
 				return
 			}
-			if (id !== this.$route.params.threadId) {
+			if (id !== parseInt(this.$route.params.threadId, 10)) {
 				logger.debug('other message open, not jumping to the next/previous message')
 				return
 			}
@@ -581,6 +584,10 @@ export default {
 					threadId: next.databaseId,
 				},
 			})
+		},
+
+		onArchive(id) {
+			this.onDelete(id)
 		},
 
 		onScroll() {

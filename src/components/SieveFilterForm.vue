@@ -14,31 +14,32 @@
 			{{ t('mail', 'Oh Snap!') }}
 			{{ errorMessage }}
 		</p>
-		<ButtonVue
-			type="primary"
+		<NcButton
+			variant="primary"
 			:disabled="loading"
 			:aria-label="t('mail', 'Save sieve script')"
 			@click="saveActiveScript">
 			<template #icon>
-				<IconLoading v-if="loading" :size="20" />
+				<NcLoadingIcon v-if="loading" :size="20" />
 				<IconCheck v-else :size="20" />
 			</template>
 			{{ t('mail', 'Save sieve script') }}
-		</ButtonVue>
+		</NcButton>
 	</div>
 </template>
 
 <script>
-import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import { mapStores } from 'pinia'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'SieveFilterForm',
 	components: {
-		ButtonVue,
-		IconLoading,
+		NcButton,
+		NcLoadingIcon,
 		IconCheck,
 	},
 
@@ -115,15 +116,5 @@ export default {
 textarea {
 	width: 100%;
 	resize: vertical;
-}
-
-.primary {
-	padding-inline-start: 26px;
-	background-position: 6px;
-	color: var(--color-main-background);
-
-	&:after {
-		 inset-inline-start: 14px;
-	 }
 }
 </style>

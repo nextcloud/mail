@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { detect, html, plain, toPlain } from '../../../util/text.js'
+import { containsImage, detect, html, plain, toPlain } from '../../../util/text.js'
 
 describe('text', () => {
 	describe('toPlain', () => {
@@ -169,6 +169,24 @@ describe('text', () => {
 > >`)
 
 			const actual = toPlain(source)
+
+			expect(actual).toEqual(expected)
+		})
+	})
+
+	describe('containsImage', () => {
+		it.each([
+			['<p>hello <img src="cid:1" alt="logo"> world</p>', true],
+			['<IMG SRC="cid:1"/>', true],
+			['<img\n\tsrc="cid:1">', true],
+			['<p>hello world</p>', false],
+			['<p>&lt;img src="cid:1"&gt;</p>', false],
+			['<p><image-of-the-day /></p>', false],
+			['<!-- <img src="cid:1"> -->', false],
+			['<p title="<img >">hello</p>', false],
+			['', false],
+		])('detects images in %j', (value, expected) => {
+			const actual = containsImage(value)
 
 			expect(actual).toEqual(expected)
 		})

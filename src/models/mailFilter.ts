@@ -6,6 +6,7 @@ import { randomId } from '../util/randomId.js'
 
 export enum MailFilterOperator {
 	All = 'allof',
+	Always = 'true',
 	Any = 'anyof',
 }
 
@@ -23,6 +24,8 @@ export enum MailFilterConditionOperator {
 
 export enum MailFilterActions {
 	AddSystemFlag = 'addsystemflag',
+	FileInto = 'fileinto',
+	Redirect = 'redirect',
 	Stop = 'stop',
 }
 
@@ -72,7 +75,7 @@ export class MailFilterActionMailbox implements MailFilterAction {
 
 	constructor() {
 		this.id = randomId()
-		this.type = 'fileinto'
+		this.type = MailFilterActions.FileInto
 	}
 }
 
@@ -82,6 +85,17 @@ export class MailFilterActionStop implements MailFilterAction {
 	constructor() {
 		this.id = randomId()
 		this.type = 'stop'
+	}
+}
+
+export class MailFilterActionRedirect implements MailFilterAction {
+	public id: number
+	public type: string
+	public recipient: string
+
+	constructor() {
+		this.id = randomId()
+		this.type = 'redirect'
 	}
 }
 

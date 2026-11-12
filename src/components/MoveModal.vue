@@ -4,12 +4,12 @@
 -->
 <template>
 	<MailboxPicker
+		v-model:selected="destMailboxId"
 		:account="account"
-		:selected.sync="destMailboxId"
 		:loading="moving"
-		:label-select="moveThread ? t('mail', 'Move thread') : t('mail', 'Move message')"
-		:label-select-loading="moveThread ? t('mail', 'Moving thread') : t('mail', 'Moving message')"
-		@select="onMove"
+		:labelSelect="moveThread ? t('mail', 'Move thread') : t('mail', 'Move message')"
+		:labelSelectLoading="moveThread ? t('mail', 'Moving thread') : t('mail', 'Moving message')"
+		:select="onMove"
 		@close="onClose" />
 </template>
 
@@ -41,6 +41,8 @@ export default {
 			default: false,
 		},
 	},
+
+	emits: ['close', 'move'],
 
 	data() {
 		return {

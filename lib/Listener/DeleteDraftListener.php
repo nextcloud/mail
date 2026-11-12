@@ -9,8 +9,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Listener;
 
-use Horde_Imap_Client;
-use Horde_Imap_Client_Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
@@ -19,8 +17,8 @@ use OCA\Mail\Events\DraftMessageCreatedEvent;
 use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\OutboxMessageCreatedEvent;
-use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\IMAP\MessageMapper;
+use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventDispatcher;
@@ -35,9 +33,8 @@ class DeleteDraftListener implements IEventListener {
 	private $eventDispatcher;
 
 	public function __construct(
-		private IMAPClientFactory $imapClientFactory,
+		private ProtocolFactory $protocolFactory,
 		private MailboxMapper $mailboxMapper,
-		private MessageMapper $messageMapper,
 		private LoggerInterface $logger,
 		IEventDispatcher $eventDispatcher,
 	) {
@@ -56,35 +53,22 @@ class DeleteDraftListener implements IEventListener {
 	 * @param Message $draft
 	 */
 	private function deleteDraft(Account $account, Message $draft): void {
-		$client = $this->imapClientFactory->getClient($account);
 		try {
 			$draftsMailbox = $this->getDraftsMailbox($account);
 		} catch (DoesNotExistException $e) {
 			$this->logger->warning("Account has no draft mailbox set, can't delete the draft");
 			return;
-		} finally {
-			$client->logout();
 		}
 
 		try {
-			$this->messageMapper->addFlag(
-				$client,
-				$draftsMailbox,
-				[$draft->getUid()], // TODO: the UID could be from another mailbox
-				Horde_Imap_Client::FLAG_DELETED
-			);
-		} catch (Horde_Imap_Client_Exception $e) {
-			$this->logger->error('Could not flag draft as deleted', [
-				'exception' => $e,
-			]);
+			// TODO: the UID could be from another mailbox
+			$deleted = $this->protocolFactory->messageConnector($account)->deleteMessages($account, $draftsMailbox, $draft);
+		} catch (ServiceException $e) {
+			$this->logger->error('Could not delete draft', ['exception' => $e]);
+			return;
 		}
-
-		try {
-			$client->expunge($draftsMailbox->getName());
-		} catch (Horde_Imap_Client_Exception $e) {
-			$this->logger->error('Could not expunge drafts folder', [
-				'exception' => $e,
-			]);
+		if ($deleted === []) {
+			return;
 		}
 
 		$this->eventDispatcher->dispatchTyped(

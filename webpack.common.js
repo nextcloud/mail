@@ -35,6 +35,9 @@ const plugins = [
 	new webpack.DefinePlugin({
 		appName: JSON.stringify(appName),
 		appVersion: JSON.stringify(appVersion),
+		__VUE_OPTIONS_API__: true,
+		__VUE_PROD_DEVTOOLS__: false,
+		__VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false,
 	}),
 ]
 
@@ -83,6 +86,13 @@ module.exports = async () => ({
 				test: /\.[cm]?js$/,
 				loader: 'babel-loader',
 				include: /node_modules[/\\](@?selderee|parseley)/,
+			},
+			// Allow ESM packages in node_modules to import without file extensions
+			{
+				test: /\.m?js$/,
+				resolve: {
+					fullySpecified: false,
+				},
 			},
 			{
 				test: /\.(png|jpg|gif)$/,

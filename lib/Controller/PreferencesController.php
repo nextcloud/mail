@@ -13,6 +13,7 @@ use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Http\TrapError;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
@@ -33,11 +34,10 @@ class PreferencesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param string $id
 	 * @return JSONResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function show(string $id): JSONResponse {
 		return new JSONResponse([
@@ -46,13 +46,12 @@ class PreferencesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param string $key
 	 * @param string $value
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function update($key, $value): JSONResponse {
 		if (is_null($key) || is_null($value)) {

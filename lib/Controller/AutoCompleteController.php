@@ -13,6 +13,7 @@ namespace OCA\Mail\Controller;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AutoCompletion\AutoCompleteService;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
@@ -29,12 +30,11 @@ class AutoCompleteController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param string $term
 	 *
 	 * @return JSONResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function index(string $term): JSONResponse {
 		if ($this->userId === null) {

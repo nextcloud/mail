@@ -11,15 +11,17 @@ namespace OCA\Mail\Tests\Unit\Listener;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
+use OCA\Mail\Contracts\IMessageConnector;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Events\DraftSavedEvent;
-use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\IMAP\MessageMapper;
+use OCA\Mail\Events\MessageDeletedEvent;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Listener\DeleteDraftListener;
 use OCA\Mail\Model\NewMessageData;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventDispatcher;
@@ -28,14 +30,11 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class DeleteDraftListenerTest extends TestCase {
-	/** @var IMAPClientFactory|MockObject */
-	private $imapClientFactory;
+	/** @var ProtocolFactory|MockObject */
+	private $protocolFactory;
 
 	/** @var MailboxMapper|MockObject */
 	private $mailboxMapper;
-
-	/** @var MessageMapper|MockObject */
-	private $messageMapper;
 
 	/** @var LoggerInterface|MockObject */
 	private $logger;
@@ -49,16 +48,14 @@ class DeleteDraftListenerTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
+		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
 		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
-		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 
 		$this->listener = new DeleteDraftListener(
-			$this->imapClientFactory,
+			$this->protocolFactory,
 			$this->mailboxMapper,
-			$this->messageMapper,
 			$this->logger,
 			$this->eventDispatcher
 		);
@@ -82,8 +79,8 @@ class DeleteDraftListenerTest extends TestCase {
 			$newMessageData,
 			null
 		);
-		$this->messageMapper->expects($this->never())
-			->method('addFlag');
+		$this->protocolFactory->expects($this->never())
+			->method('messageConnector');
 		$this->logger->expects($this->never())
 			->method('error');
 		$this->eventDispatcher->expects($this->never())
@@ -107,16 +104,10 @@ class DeleteDraftListenerTest extends TestCase {
 			$newMessageData,
 			$draft
 		);
-		/** @var \Horde_Imap_Client_Socket|MockObject $client */
-		$client = $this->createStub(\Horde_Imap_Client_Socket::class);
-		$this->imapClientFactory
-			->method('getClient')
-			->with($account)
-			->willReturn($client);
-		$mailbox = new Mailbox();
-		$mailbox->setName('Drafts');
 		$this->mailboxMapper->expects($this->never())
 			->method('findById');
+		$this->protocolFactory->expects($this->never())
+			->method('messageConnector');
 		$this->logger->expects($this->once())->method('warning');
 
 		$this->listener->handle($event);
@@ -138,19 +129,98 @@ class DeleteDraftListenerTest extends TestCase {
 			$newMessageData,
 			$draft
 		);
-		/** @var \Horde_Imap_Client_Socket|MockObject $client */
-		$client = $this->createStub(\Horde_Imap_Client_Socket::class);
-		$this->imapClientFactory
-			->method('getClient')
-			->with($account)
-			->willReturn($client);
+		$this->mailboxMapper->expects($this->once())
+			->method('findById')
+			->with(123)
+			->willThrowException(new DoesNotExistException(''));
+		$this->protocolFactory->expects($this->never())
+			->method('messageConnector');
+		$this->logger->expects($this->once())->method('warning');
+
+		$this->listener->handle($event);
+	}
+
+	public function testHandleDraftSavedEventDeletesDraftViaMessageConnector(): void {
+		/** @var Account|MockObject $account */
+		$account = $this->createMock(Account::class);
+		$mailAccount = new MailAccount();
+		$mailAccount->setDraftsMailboxId(123);
+		$account->method('getMailAccount')->willReturn($mailAccount);
+		/** @var NewMessageData|MockObject $newMessageData */
+		$newMessageData = $this->createStub(NewMessageData::class);
+		$draft = new Message();
+		$uid = 123;
+		$draft->setUid($uid);
+		$event = new DraftSavedEvent(
+			$account,
+			$newMessageData,
+			$draft
+		);
 		$mailbox = new Mailbox();
 		$mailbox->setName('Drafts');
 		$this->mailboxMapper->expects($this->once())
 			->method('findById')
 			->with(123)
-			->willThrowException(new DoesNotExistException(''));
-		$this->logger->expects($this->once())->method('warning');
+			->willReturn($mailbox);
+
+		/** @var IMessageConnector|MockObject $messageConnector */
+		$messageConnector = $this->createMock(IMessageConnector::class);
+		$this->protocolFactory->expects($this->once())
+			->method('messageConnector')
+			->with($account)
+			->willReturn($messageConnector);
+		$messageConnector->expects($this->once())
+			->method('deleteMessages')
+			->with($account, $mailbox, $draft)
+			->willReturn([$draft]);
+
+		$this->eventDispatcher->expects($this->once())
+			->method('dispatchTyped')
+			->with($this->callback(static function (MessageDeletedEvent $deletedEvent) use ($account, $mailbox, $uid): bool {
+				return $deletedEvent->getAccount() === $account
+					&& $deletedEvent->getMailbox() === $mailbox
+					&& $deletedEvent->getUid() === $uid;
+			}));
+
+		$this->listener->handle($event);
+	}
+
+	private function prepareDraftDeletion(): array {
+		$mailAccount = new MailAccount();
+		$mailAccount->setDraftsMailboxId(123);
+		$account = new Account($mailAccount);
+		$draft = new Message();
+		$draft->setUid(123);
+		$event = new DraftSavedEvent($account, $this->createStub(NewMessageData::class), $draft);
+		$this->mailboxMapper->method('findById')
+			->willReturn(new Mailbox());
+		$messageConnector = $this->createMock(IMessageConnector::class);
+		$this->protocolFactory->method('messageConnector')
+			->willReturn($messageConnector);
+
+		return [$event, $messageConnector];
+	}
+
+	public function testHandleDraftSavedEventDeleteFails(): void {
+		[$event, $messageConnector] = $this->prepareDraftDeletion();
+		$messageConnector->expects($this->once())
+			->method('deleteMessages')
+			->willThrowException(new ServiceException('Could not expunge'));
+		$this->logger->expects($this->once())
+			->method('error');
+		$this->eventDispatcher->expects($this->never())
+			->method('dispatchTyped');
+
+		$this->listener->handle($event);
+	}
+
+	public function testHandleDraftSavedEventDraftNotDeleted(): void {
+		[$event, $messageConnector] = $this->prepareDraftDeletion();
+		$messageConnector->expects($this->once())
+			->method('deleteMessages')
+			->willReturn([]);
+		$this->eventDispatcher->expects($this->never())
+			->method('dispatchTyped');
 
 		$this->listener->handle($event);
 	}
@@ -165,8 +235,8 @@ class DeleteDraftListenerTest extends TestCase {
 			$newMessageData,
 			null
 		);
-		$this->messageMapper->expects($this->never())
-			->method('addFlag');
+		$this->protocolFactory->expects($this->never())
+			->method('messageConnector');
 		$this->logger->expects($this->never())
 			->method('error');
 		$this->eventDispatcher->expects($this->never())

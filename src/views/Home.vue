@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<NcContent app-name="mail" class="mail-content">
+	<NcContent appName="mail" class="mail-content">
 		<Navigation />
 		<Outbox v-if="$route.name === 'outbox'" />
 		<MailboxThread
@@ -12,18 +12,22 @@
 			:mailbox="activeMailbox" />
 
 		<template v-if="hasComposerSession && accounts !== null">
-			<ComposerSessionIndicator @close="onCloseMessageModal" />
+			<ComposerSessionIndicator v-if="!showMessageComposer && !composerMessage?.indicatorDisabled" @close="onCloseMessageModal" />
 			<NewMessageModal ref="newMessageModal" :accounts="accounts" />
 		</template>
+
+		<OidcReauthDialog />
 	</NcContent>
 </template>
 
 <script>
-import { NcContent } from '@nextcloud/vue'
 import { mapState, mapStores } from 'pinia'
+import { defineAsyncComponent } from 'vue'
+import NcContent from '@nextcloud/vue/components/NcContent'
 import ComposerSessionIndicator from '../components/ComposerSessionIndicator.vue'
 import MailboxThread from '../components/MailboxThread.vue'
 import Navigation from '../components/Navigation.vue'
+import OidcReauthDialog from '../components/OidcReauthDialog.vue'
 import Outbox from '../components/Outbox.vue'
 import logger from '../logger.js'
 import { testAccountConnection } from '../service/AccountService.js'
@@ -37,7 +41,8 @@ export default {
 		NcContent,
 		MailboxThread,
 		Navigation,
-		NewMessageModal: () => import(/* webpackChunkName: "new-message-modal" */ '../components/NewMessageModal.vue'),
+		NewMessageModal: defineAsyncComponent(() => import(/* webpackChunkName: "new-message-modal" */ '../components/NewMessageModal.vue')),
+		OidcReauthDialog,
 		Outbox,
 		ComposerSessionIndicator,
 	},
@@ -50,7 +55,7 @@ export default {
 
 	computed: {
 		...mapStores(useMainStore),
-		...mapState(useMainStore, ['composerSessionId']),
+		...mapState(useMainStore, ['composerSessionId', 'showMessageComposer', 'composerMessage']),
 		accounts() {
 			return this.mainStore.getAccounts.filter((a) => !a.isUnified)
 		},
@@ -90,6 +95,11 @@ export default {
 				account,
 				data: { connectionStatus: await testAccountConnection(account.accountId) },
 			})
+			// Testing the connection creates an IMAP client, which runs the token refresh
+			// on the server; that may flag the account for re-authentication (even when the
+			// still-valid access token means the test itself passed). Re-read the flag so
+			// the reconnect dialog can show. checkOidcReauth ignores non-OIDC accounts.
+			await this.mainStore.checkOidcReauth(account)
 		}
 	},
 
@@ -177,28 +187,7 @@ export default {
 
 </script>
 
-<style lang="scss">
-@media print {
-	body {
-		/*
-		 * Nextcloud uses an inner scrolling but we need the
-		 * full page to scroll for print
-		 */
-		position: relative;
-		height: initial;
-	}
-}
-</style>
-
 <style lang="scss" scoped>
-@media print {
-	.mail-content {
-		height: initial;
-		/* needs important because of a more specific selector */
-		position: relative !important;
-	}
-}
-
 :deep(.app-content-details) {
 	margin: 0 auto;
 	display: flex;

@@ -80,6 +80,7 @@ class TagMapper extends QBMapper {
 		try {
 			$tag = $this->getTagByImapLabel($tag->getImapLabel(), $userId);
 		} catch (DoesNotExistException $e) {
+			$tag->setUserId($userId);
 			$tag = $this->insert($tag);
 		}
 
@@ -181,7 +182,7 @@ class TagMapper extends QBMapper {
 	 * This is designed to be similar to Thunderbird's email tags
 	 * $label1 to $label5 with the according states and colours
 	 *
-	 * <i>The array_udiff can be removed and the insert warpped in
+	 * <i>The array_udiff can be removed and the insert wrapped in
 	 * an exception as soon as NC20 is not supported any more</i>
 	 *
 	 * @link https://github.com/nextcloud/mail/issues/25

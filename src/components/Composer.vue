@@ -21,15 +21,17 @@
 			<div class="composer-fields--custom">
 				<NcSelect
 					id="from"
-					:model-value="selectedAlias"
+					labelOutside
+					:clearable="false"
+					:modelValue="selectedAlias"
 					:options="aliases"
 					label="name"
-					:get-option-key="(option) => option.selectId"
+					:getOptionKey="(option) => option.selectId"
 					:searchable="false"
 					:placeholder="t('mail', 'Select account')"
 					:aria-label-combobox="t('mail', 'Select account')"
-					:clear-on-select="false"
-					:append-to-body="false"
+					:clearOnSelect="false"
+					:appendToBody="false"
 					:selectable="(option) => option.selectable"
 					@option:selected="onAliasChange">
 					<template #option="option">
@@ -43,38 +45,33 @@
 			</div>
 		</div>
 		<div class="composer-fields">
-			<div class="composer-fields__label">
-				<label class="to-label" for="to">
-					{{ t('mail', 'To') }}
-				</label>
-				<ButtonVue size="small" type="tertiary-no-background" @click.prevent="toggleViewMode">
-					{{ t('mail', 'Cc/Bcc') }}
-				</ButtonVue>
-			</div>
+			<label class="to-label" for="to">
+				{{ t('mail', 'To') }}
+			</label>
 			<div class="composer-fields--custom">
 				<NcSelect
 					id="to"
 					ref="toLabel"
-					:model-value="selectTo"
-					class="select"
+					:modelValue="selectTo"
+					class="select to-select"
 					:options="selectableRecipients.filter(recipient => !selectTo.some(to => to.email === recipient.email))"
-					:get-option-key="(option) => option.email"
+					:getOptionKey="(option) => option.email"
 					:taggable="true"
 					:aria-label-combobox="t('mail', 'Select recipient')"
-					:filter-by="(option, label, search) => filterOption(option, label, search, 'to')"
-					:dropdown-should-open="shouldOpenRecipientDropdown"
+					:filterBy="(option, label, search) => filterOption(option, label, search, 'to')"
+					:dropdownShouldOpen="shouldOpenRecipientDropdown"
 					:multiple="true"
-					:clear-search-on-select="true"
+					:clearSearchOnSelect="true"
 					:loading="loadingIndicatorTo"
 					:reducible="true"
 					:clearable="true"
-					:no-wrap="false"
-					:append-to-body="false"
-					:create-option="createRecipientOption"
-					:clear-search-on-blur="() => clearOnBlur('to')"
-					@input="saveDraftDebounced"
+					:noWrap="!toExpanded"
+					:appendToBody="false"
+					:createOption="createRecipientOption"
+					:clearSearchOnBlur="() => clearOnBlur('to')"
+					@update:modelValue="saveDraftDebounced"
 					@option:selecting="onNewToAddr"
-					@search:blur="onNewToAddr"
+					@search:blur="onToFieldBlur"
 					@search="onAutocomplete($event, 'to')">
 					<template #search="{ events, attributes }">
 						<input
@@ -86,21 +83,46 @@
 					</template>
 					<template #selected-option-container="{ option }">
 						<RecipientListItem
+							v-if="toExpanded || getRecipientIndex(selectTo, option) === 0"
 							:option="option"
 							class="vs__selected selected"
-							@remove-recipient="onRemoveRecipient(option, 'to')" />
+							@removeRecipient="onRemoveRecipient(option, 'to')" />
+						<NcButton
+							v-else-if="getRecipientIndex(selectTo, option) === 1"
+							:key="option.email"
+							variant="tertiary"
+							class="vs__selected recipient-overflow"
+							@click.prevent.stop="toExpanded = true">
+							+{{ selectTo.length - 1 }}
+						</NcButton>
+						<span v-else />
 					</template>
 					<template #option="option">
 						<div>
-							<ListItemIcon
-								:no-margin="true"
+							<NcListItemIcon
+								:noMargin="true"
 								:name="option.label"
 								:subname="getSubnameForRecipient(option)"
-								:icon-class="!option.id ? 'icon-user' : null"
+								:iconClass="!option.id ? 'icon-user' : null"
 								:url="option.photo" />
 						</div>
 					</template>
 				</NcSelect>
+			</div>
+			<div class="composer-fields__to-footer">
+				<p
+					v-if="displayMissingToWarning"
+					role="alert"
+					class="composer-fields__helper-text">
+					{{ t('mail', 'Messages with no \'To\' recipients may be rejected by some mail providers.') }}
+				</p>
+				<NcButton
+					size="small"
+					variant="tertiary-no-background"
+					class="copy-toggle"
+					@click="toggleViewMode">
+					{{ t('mail', 'Cc/Bcc') }}
+				</NcButton>
 			</div>
 		</div>
 		<div v-if="showCC" class="composer-fields">
@@ -111,26 +133,26 @@
 				<NcSelect
 					id="cc"
 					ref="toLabel"
-					:model-value="selectCc"
+					:modelValue="selectCc"
 					class="select"
 					:class="{ opened: !autoLimit }"
 					:options="selectableRecipients.filter(recipient => !selectCc.some(cc => cc.email === recipient.email))"
-					:get-option-key="(option) => option.email"
-					:no-wrap="false"
-					:filter-by="(option, label, search) => filterOption(option, label, search, 'cc')"
-					:dropdown-should-open="shouldOpenRecipientDropdown"
+					:getOptionKey="(option) => option.email"
+					:noWrap="!ccExpanded"
+					:filterBy="(option, label, search) => filterOption(option, label, search, 'cc')"
+					:dropdownShouldOpen="shouldOpenRecipientDropdown"
 					:taggable="true"
-					:clear-search-on-blur="() => clearOnBlur('cc')"
-					:append-to-body="false"
+					:clearSearchOnBlur="() => clearOnBlur('cc')"
+					:appendToBody="false"
 					:multiple="true"
 					:placeholder="t('mail', 'Contact or email address …')"
 					:aria-label-combobox="t('mail', 'Contact or email address …')"
-					:clear-search-on-select="true"
+					:clearSearchOnSelect="true"
 					:loading="loadingIndicatorCc"
 					:reducible="true"
 					:clearable="true"
-					:create-option="createRecipientOption"
-					@input="saveDraftDebounced"
+					:createOption="createRecipientOption"
+					@update:modelValue="saveDraftDebounced"
 					@option:selecting="onNewCcAddr"
 					@search:blur="onNewCcAddr"
 					@search="onAutocomplete($event, 'cc')">
@@ -144,18 +166,28 @@
 					</template>
 					<template #selected-option-container="{ option }">
 						<RecipientListItem
+							v-if="ccExpanded || getRecipientIndex(selectCc, option) === 0"
 							:option="option"
 							class="vs__selected"
-							@remove-recipient="onRemoveRecipient(option, 'cc')" />
+							@removeRecipient="onRemoveRecipient(option, 'cc')" />
+						<NcButton
+							v-else-if="getRecipientIndex(selectCc, option) === 1"
+							:key="option.email"
+							variant="tertiary"
+							class="vs__selected recipient-overflow"
+							@click.prevent.stop="ccExpanded = true">
+							+{{ selectCc.length - 1 }}
+						</NcButton>
+						<span v-else />
 					</template>
 					<template #option="option">
 						<div>
-							<ListItemIcon
-								:no-margin="true"
+							<NcListItemIcon
+								:noMargin="true"
 								:name="option.label"
 								:subname="getSubnameForRecipient(option)"
 								:url="option.photo"
-								:icon-class="!option.id ? 'icon-user' : null" />
+								:iconClass="!option.id ? 'icon-user' : null" />
 						</div>
 					</template>
 				</NcSelect>
@@ -169,26 +201,26 @@
 				<NcSelect
 					id="bcc"
 					ref="toLabel"
-					:model-value="selectBcc"
+					:modelValue="selectBcc"
 					class="select"
 					:class="{ opened: !autoLimit }"
-					:no-wrap="false"
-					:filter-by="(option, label, search) => filterOption(option, label, search, 'bcc')"
+					:noWrap="!bccExpanded"
+					:filterBy="(option, label, search) => filterOption(option, label, search, 'bcc')"
 					:options="selectableRecipients.filter(recipient => !selectBcc.some(bcc => bcc.email === recipient.email))"
-					:get-option-key="(option) => option.email"
-					:dropdown-should-open="shouldOpenRecipientDropdown"
+					:getOptionKey="(option) => option.email"
+					:dropdownShouldOpen="shouldOpenRecipientDropdown"
 					:taggable="true"
-					:clear-search-on-blur="() => clearOnBlur('bcc')"
-					:append-to-body="false"
+					:clearSearchOnBlur="() => clearOnBlur('bcc')"
+					:appendToBody="false"
 					:multiple="true"
 					:placeholder="t('mail', 'Contact or email address …')"
 					:aria-label-combobox="t('mail', 'Contact or email address …')"
-					:clear-search-on-select="true"
-					:reset-on-options-change="true"
+					:clearSearchOnSelect="true"
+					:resetOnOptionsChange="true"
 					:loading="loadingIndicatorBcc"
 					:clearable="true"
-					:create-option="createRecipientOption"
-					@input="saveDraftDebounced"
+					:createOption="createRecipientOption"
+					@update:modelValue="saveDraftDebounced"
 					@option:selecting="onNewBccAddr"
 					@search:blur="onNewBccAddr"
 					@search="onAutocomplete($event, 'bcc')">
@@ -203,18 +235,28 @@
 					</template>
 					<template #selected-option-container="{ option }">
 						<RecipientListItem
+							v-if="bccExpanded || getRecipientIndex(selectBcc, option) === 0"
 							:option="option"
 							class="vs__selected"
-							@remove-recipient="onRemoveRecipient(option, 'bcc')" />
+							@removeRecipient="onRemoveRecipient(option, 'bcc')" />
+						<NcButton
+							v-else-if="getRecipientIndex(selectBcc, option) === 1"
+							:key="option.email"
+							variant="tertiary"
+							class="vs__selected recipient-overflow"
+							@click.prevent.stop="bccExpanded = true">
+							+{{ selectBcc.length - 1 }}
+						</NcButton>
+						<span v-else />
 					</template>
 					<template #option="option">
 						<div>
-							<ListItemIcon
-								:no-margin="true"
+							<NcListItemIcon
+								:noMargin="true"
 								:name="option.label"
 								:subname="getSubnameForRecipient(option)"
 								:url="option.photo"
-								:icon-class="!option.id ? 'icon-user' : null" />
+								:iconClass="!option.id ? 'icon-user' : null" />
 						</div>
 					</template>
 				</NcSelect>
@@ -257,15 +299,15 @@
 				v-if="!encrypt"
 				ref="editor"
 				:key="editorMode"
-				:value="bodyVal"
+				:modelValue="bodyVal"
 				:html="!editorPlainText"
 				name="body"
 				class="message-body"
 				:placeholder="t('mail', 'Write message …')"
 				:focus="isReply || !isFirstOpen"
 				:bus="bus"
-				:text-blocks="textBlocks"
-				@input="onEditorInput"
+				:textBlocks="textBlocks"
+				@update:modelValue="onEditorInput"
 				@ready="onEditorReady"
 				@mention="handleMention"
 				@save="onEditorSave"
@@ -275,16 +317,16 @@
 				ref="mailvelopeEditor"
 				:value="bodyVal"
 				:recipients="allRecipients"
-				:quoted-text="body"
-				:is-reply-or-forward="isReply || isForward"
+				:quotedText="body"
+				:isReplyOrForward="isReply || isForward"
 				@input="onEditorInput" />
 		</div>
 		<ComposerAttachments
 			v-model="attachments"
 			:bus="bus"
-			:account-id="selectedAlias.id"
-			:upload-size-limit="attachmentSizeLimit"
-			@upload="$emit('upload-attachment', $event, getMessageData())" />
+			:accountId="selectedAlias.id"
+			:uploadSizeLimit="attachmentSizeLimit"
+			@update:blocksSending="attachmentsPending = $event" />
 		<div class="composer-actions-right composer-actions">
 			<div class="composer-actions--primary-actions">
 				<p class="composer-actions-draft-status">
@@ -292,83 +334,83 @@
 					<span v-else-if="!canSaveDraft" class="draft-status">{{ t('mail', 'Error saving draft') }}</span>
 					<span v-else-if="draftSaved" class="draft-status">{{ t('mail', 'Draft saved') }}</span>
 				</p>
-				<ButtonVue
+				<NcButton
 					v-if="!savingDraft && !canSaveDraft"
 					class="button"
-					type="tertiary"
+					variant="tertiary"
 					:aria-label="t('mail', 'Save draft')"
 					@click="saveDraft">
 					<template #icon>
 						<Download :size="20" :title="t('mail', 'Save draft')" />
 					</template>
-				</ButtonVue>
-				<ButtonVue
+				</NcButton>
+				<NcButton
 					v-if="!savingDraft && draftSaved"
 					class="button"
-					type="tertiary"
+					variant="tertiary"
 					:aria-label="t('mail', 'Discard & close draft')"
-					@click="$emit('discard-draft')">
+					@click="$emit('discardDraft')">
 					<template #icon>
 						<Delete :size="20" :title="t('mail', 'Discard & close draft')" />
 					</template>
-				</ButtonVue>
+				</NcButton>
 			</div>
 			<div class="composer-actions--secondary-actions">
-				<ButtonVue
+				<NcButton
 					v-if="!encrypt && editorPlainText"
-					type="tertiary"
+					variant="tertiary"
 					:aria-label="t('mail', 'Enable formatting')"
 					@click="setEditorModeHtml()">
 					<template #icon>
 						<IconFormat :size="20" :title="t('mail', 'Enable formatting')" />
 					</template>
-				</ButtonVue>
-				<ButtonVue
+				</NcButton>
+				<NcButton
 					v-if="!encrypt && !editorPlainText"
-					type="tertiary"
+					variant="tertiary"
 					:pressed="true"
 					:aria-label="t('mail', 'Disable formatting')"
 					@click="setEditorModeText()">
 					<template #icon>
 						<IconFormat :size="20" :title="t('mail', 'Disable formatting')" />
 					</template>
-				</ButtonVue>
+				</NcButton>
 
-				<Actions :open.sync="isAddAttachmentsOpen">
+				<NcActions v-model:open="isAddAttachmentsOpen">
 					<template #icon>
 						<Paperclip :size="20" />
 					</template>
-					<ActionButton :close-after-click="true" @click="onAddLocalAttachment">
+					<NcActionButton :closeAfterClick="true" @click="onAddLocalAttachment">
 						<template #icon>
 							<IconUpload :size="20" />
 						</template>
 						{{
 							t('mail', 'Upload attachment')
 						}}
-					</ActionButton>
-					<ActionButton :close-after-click="true" @click="onAddCloudAttachment">
+					</NcActionButton>
+					<NcActionButton :closeAfterClick="true" @click="onAddCloudAttachment">
 						<template #icon>
 							<IconFolder :size="20" />
 						</template>
 						{{
 							t('mail', 'Add attachment from Files')
 						}}
-					</ActionButton>
-				</Actions>
+					</NcActionButton>
+				</NcActions>
 
-				<Actions
-					:open.sync="isActionsOpen"
+				<NcActions
+					v-model:open="isActionsOpen"
 					@close="isMoreActionsOpen = false">
 					<template v-if="!isMoreActionsOpen">
-						<ActionButton v-if="isPickerAvailable" :close-after-click="true" @click="openPicker">
+						<NcActionButton v-if="isPickerAvailable" :closeAfterClick="true" @click="openPicker">
 							<template #icon>
 								<IconLinkPicker :size="20" />
 							</template>
 							{{
 								t('mail', 'Smart picker')
 							}}
-						</ActionButton>
-						<ActionButton :close-after-click="true" @click="openTextBlockPicker">
+						</NcActionButton>
+						<NcActionButton :closeAfterClick="true" @click="openTextBlockPicker">
 							<template #icon>
 								<NcIconSvgWrapper
 									:size="20"
@@ -378,10 +420,10 @@
 							{{
 								t('mail', 'Text blocks')
 							}}
-						</ActionButton>
-						<ActionButton
+						</NcActionButton>
+						<NcActionButton
 							v-if="!isScheduledSendingDisabled"
-							:close-after-click="false"
+							:closeAfterClick="false"
 							@click="isMoreActionsOpen = true">
 							<template #icon>
 								<SendClock :size="20" :title="t('mail', 'Send later')" />
@@ -389,41 +431,47 @@
 							{{
 								t('mail', 'Send later')
 							}}
-						</ActionButton>
-						<ActionCheckbox
-							:checked="requestMdnVal"
+						</NcActionButton>
+						<NcActionCheckbox
+							:modelValue="requestMdnVal"
 							@check="requestMdnVal = true"
 							@uncheck="requestMdnVal = false">
 							{{ t('mail', 'Request a read receipt') }}
-						</ActionCheckbox>
-						<ActionCheckbox
+						</NcActionCheckbox>
+						<NcActionCheckbox
+							:modelValue="isAiGeneratedVal"
+							@check="isAiGeneratedVal = true"
+							@uncheck="isAiGeneratedVal = false">
+							{{ t('mail', 'Mark as AI generated') }}
+						</NcActionCheckbox>
+						<NcActionCheckbox
 							v-if="smimeCertificateForCurrentAlias"
-							:checked="wantsSmimeSign"
+							:modelValue="wantsSmimeSign"
 							@check="smimeSignCheck(true)"
 							@uncheck="smimeSignCheck(false)">
 							{{ t('mail', 'Sign message with S/MIME') }}
-						</ActionCheckbox>
-						<ActionCheckbox
+						</NcActionCheckbox>
+						<NcActionCheckbox
 							v-if="smimeCertificateForCurrentAlias"
-							:checked="wantsSmimeEncrypt"
+							:modelValue="wantsSmimeEncrypt"
 							:disabled="encrypt"
 							@check="wantsSmimeEncrypt = true"
 							@uncheck="wantsSmimeEncrypt = false">
 							{{ t('mail', 'Encrypt message with S/MIME') }}
-						</ActionCheckbox>
-						<ActionCheckbox
+						</NcActionCheckbox>
+						<NcActionCheckbox
 							v-if="mailvelope.available"
-							:checked="encrypt"
+							:modelValue="encrypt"
 							:disabled="wantsSmimeEncrypt"
 							@change="isActionsOpen = false"
 							@check="encrypt = true"
 							@uncheck="encrypt = false">
 							{{ t('mail', 'Encrypt message with Mailvelope') }}
-						</ActionCheckbox>
+						</NcActionCheckbox>
 					</template>
 					<template v-if="isMoreActionsOpen">
-						<ActionButton
-							:close-after-click="false"
+						<NcActionButton
+							:closeAfterClick="false"
 							@click="isMoreActionsOpen = false">
 							<template #icon>
 								<ChevronLeft
@@ -431,63 +479,63 @@
 									:size="20" />
 								{{ t('mail', 'Send later') }}
 							</template>
-						</ActionButton>
-						<ActionRadio
+						</NcActionButton>
+						<NcActionRadio
 							v-model="sendAtVal"
 							:value="0"
 							:name="sendAtVal.toString()"
 							class="send-action-radio">
 							{{ t('mail', 'Send now') }}
-						</ActionRadio>
-						<ActionRadio
+						</NcActionRadio>
+						<NcActionRadio
 							v-model="sendAtVal"
 							:value="dateTomorrowMorning"
 							:name="sendAtVal.toString()"
 							class="send-action-radio send-action-radio--multiline">
 							{{ t('mail', 'Tomorrow morning') }} - {{ convertToLocalDate(dateTomorrowMorning) }}
-						</ActionRadio>
-						<ActionRadio
+						</NcActionRadio>
+						<NcActionRadio
 							v-model="sendAtVal"
 							:value="dateTomorrowAfternoon"
 							:name="sendAtVal.toString()"
 							class="send-action-radio send-action-radio--multiline">
 							{{ t('mail', 'Tomorrow afternoon') }} - {{ convertToLocalDate(dateTomorrowAfternoon) }}
-						</ActionRadio>
-						<ActionRadio
+						</NcActionRadio>
+						<NcActionRadio
 							v-model="sendAtVal"
 							:value="dateMondayMorning"
 							:name="sendAtVal.toString()"
 							class="send-action-radio send-action-radio--multiline">
 							{{ t('mail', 'Monday morning') }} - {{ convertToLocalDate(dateMondayMorning) }}
-						</ActionRadio>
-						<ActionRadio
+						</NcActionRadio>
+						<NcActionRadio
 							v-model="sendAtVal"
 							:name="sendAtVal.toString()"
 							class="send-action-radio"
 							:value="customSendTime">
 							{{ t('mail', 'Custom date and time') }}
-						</ActionRadio>
-						<ActionInput
+						</NcActionRadio>
+						<NcActionInput
 							v-model="selectedDate"
-							:is-native-picker="true"
+							:isNativePicker="true"
 							:min="dateToday"
 							type="datetime-local"
-							:first-day-of-week="firstDayDatetimePicker"
+							:firstDayOfWeek="firstDayDatetimePicker"
 							:use12h="showAmPm"
 							:formatter="formatter"
 							format="YYYY-MM-DD HH:mm"
 							icon=""
-							:minute-step="5"
+							:minuteStep="5"
 							@change="onChangeSendLater(customSendTime)">
 							{{ t('mail', 'Enter a date') }}
-						</ActionInput>
+						</NcActionInput>
 					</template>
-				</Actions>
+				</NcActions>
 
-				<ButtonVue
+				<NcButton
 					:disabled="!canSend || sending"
-					native-type="submit"
-					type="primary"
+					type="submit"
+					variant="primary"
 					:aria-label="submitButtonTitle"
 					@click="onSend">
 					<template #icon>
@@ -496,7 +544,7 @@
 							:size="20" />
 					</template>
 					{{ submitButtonTitle }}
-				</ButtonVue>
+				</NcButton>
 			</div>
 		</div>
 	</div>
@@ -504,18 +552,24 @@
 
 <script>
 import { showError, showWarning } from '@nextcloud/dialogs'
-import { getCanonicalLocale, getFirstDay, getLocale, translate as t } from '@nextcloud/l10n'
+import { getCanonicalLocale, getFirstDay, getLocale, t } from '@nextcloud/l10n'
 import moment from '@nextcloud/moment'
-import { NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionRadio as ActionRadio, NcActions as Actions, NcButton as ButtonVue, NcListItemIcon as ListItemIcon, NcIconSvgWrapper, NcSelect } from '@nextcloud/vue'
 import debouncePromise from 'debounce-promise'
 import debounce from 'lodash/fp/debounce.js'
 import trimStart from 'lodash/fp/trimCharsStart.js'
 import uniqBy from 'lodash/fp/uniqBy.js'
 import mitt from 'mitt'
 import { mapState, mapStores } from 'pinia'
-import Vue from 'vue'
-import Autosize from 'vue-autosize'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcActionCheckbox from '@nextcloud/vue/components/NcActionCheckbox'
+import NcActionInput from '@nextcloud/vue/components/NcActionInput'
+import NcActionRadio from '@nextcloud/vue/components/NcActionRadio'
+import NcActions from '@nextcloud/vue/components/NcActions'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
+import NcListItemIcon from '@nextcloud/vue/components/NcListItemIcon'
 import { NcReferencePickerModal } from '@nextcloud/vue/components/NcRichText'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
 import IconFolder from 'vue-material-design-icons/FolderOutline.vue'
 import IconFormat from 'vue-material-design-icons/FormatSize.vue'
@@ -542,25 +596,23 @@ import { EDITOR_MODE_HTML, EDITOR_MODE_TEXT } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
 import { parseEmailList } from '../util/emailAddress.js'
 import { formatDateTime } from '../util/formatDateTime.js'
-import { detect, html, toHtml, toPlain } from '../util/text.js'
+import { containsImage, detect, html, toHtml, toPlain } from '../util/text.js'
 import textBlockSvg from './../../img/text_snippet.svg'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
 const NO_ALIAS_SET = -1
 
-Vue.use(Autosize)
-
 export default {
 	name: 'Composer',
 	components: {
 		MailvelopeEditor,
-		Actions,
-		ActionButton,
-		ActionCheckbox,
-		ActionInput,
-		ActionRadio,
-		ButtonVue,
+		NcActions,
+		NcActionButton,
+		NcActionCheckbox,
+		NcActionInput,
+		NcActionRadio,
+		NcButton,
 		ComposerAttachments,
 		TextBlockModal,
 		ChevronLeft,
@@ -573,7 +625,7 @@ export default {
 		NcIconSvgWrapper,
 		Paperclip,
 		TextEditor,
-		ListItemIcon,
+		NcListItemIcon,
 		RecipientListItem,
 		Send,
 		SendClock,
@@ -671,11 +723,6 @@ export default {
 			default: false,
 		},
 
-		uploadingAttachments: {
-			type: Boolean,
-			default: false,
-		},
-
 		savingDraft: {
 			type: Boolean,
 			default: false,
@@ -711,12 +758,36 @@ export default {
 			default: false,
 		},
 
+		isAiGenerated: {
+			type: Boolean,
+			default: false,
+		},
+
 		accounts: {
 			type: Array,
 			required: true,
 		},
 
 	},
+
+	emits: [
+		'discardDraft',
+		'update:to',
+		'update:cc',
+		'update:bcc',
+		'update:subject',
+		'update:editorBody',
+		'update:attachmentsData',
+		'update:sendAt',
+		'update:smimeSign',
+		'update:smimeEncrypt',
+		'update:requestMdn',
+		'update:isAiGenerated',
+		'draft',
+		'update:fromAccount',
+		'update:fromAlias',
+		'send',
+	],
 
 	data() {
 		// Set default custom date time picker value to now + 1 hour
@@ -725,6 +796,7 @@ export default {
 
 		return {
 			sending: false,
+			attachmentsPending: false,
 			textBlockSvg,
 			showCC: this.cc.length > 0,
 			showBCC: this.bcc.length > 0,
@@ -749,6 +821,7 @@ export default {
 
 			editorMode: (this.body?.format !== 'html') ? EDITOR_MODE_TEXT : EDITOR_MODE_HTML,
 			requestMdnVal: this.requestMdn,
+			isAiGeneratedVal: this.isAiGenerated,
 			changeSignature: false,
 			loadingIndicatorTo: false,
 			loadingIndicatorCc: false,
@@ -770,12 +843,16 @@ export default {
 			},
 
 			autoLimit: true,
+			toExpanded: false,
+			ccExpanded: false,
+			bccExpanded: false,
 			wantsSmimeSign: this.smimeSign,
 			wantsSmimeEncrypt: this.smimeEncrypt,
 			isPickerOpen: false,
 			isTextBlockPickerOpen: false,
 			recipientSearchTerms: {},
 			smimeSignAliases: [],
+			toFieldTouched: false,
 		}
 	},
 
@@ -852,6 +929,10 @@ export default {
 			}
 
 			if (this.encrypt && this.mailvelope.keysMissing.length) {
+				return false
+			}
+
+			if (this.attachmentsPending) {
 				return false
 			}
 
@@ -997,13 +1078,13 @@ export default {
 			return this.mainStore.getSharedTextBlocks()?.map((textBlock) => ({ title: textBlock.title, content: textBlock.content }))
 				.concat(this.mainStore.getMyTextBlocks().map((textBlock) => ({ title: textBlock.title, content: textBlock.content })))
 		},
+
+		displayMissingToWarning() {
+			return this.toFieldTouched && this.selectTo.length === 0
+		},
 	},
 
 	watch: {
-		'$route.params.threadId': function() {
-			this.reset()
-		},
-
 		allRecipients() {
 			this.checkRecipientsKeys()
 		},
@@ -1024,16 +1105,28 @@ export default {
 			}
 		},
 
-		selectTo(val) {
-			this.$emit('update:to', val)
+		selectTo: {
+			handler(val) {
+				this.$emit('update:to', val)
+			},
+
+			deep: 1,
 		},
 
-		selectCc(val) {
-			this.$emit('update:cc', val)
+		selectCc: {
+			handler(val) {
+				this.$emit('update:cc', val)
+			},
+
+			deep: 1,
 		},
 
-		selectBcc(val) {
-			this.$emit('update:bcc', val)
+		selectBcc: {
+			handler(val) {
+				this.$emit('update:bcc', val)
+			},
+
+			deep: 1,
 		},
 
 		subjectVal(val) {
@@ -1041,27 +1134,32 @@ export default {
 		},
 
 		bodyVal(val) {
-			this.$emit('update:editor-body', val)
+			this.$emit('update:editorBody', val)
 		},
 
 		attachments(val) {
-			this.$emit('update:attachments-data', val)
+			this.$emit('update:attachmentsData', val)
+			this.saveDraftDebounced()
 		},
 
 		sendAtVal(val) {
-			this.$emit('update:send-at', val)
+			this.$emit('update:sendAt', val)
 		},
 
 		wantsSmimeSign(val) {
-			this.$emit('update:smime-sign', val)
+			this.$emit('update:smimeSign', val)
 		},
 
 		wantsSmimeEncrypt(val) {
-			this.$emit('update:smime-encrypt', val)
+			this.$emit('update:smimeEncrypt', val)
 		},
 
 		requestMdnVal(val) {
-			this.$emit('update:request-mdn', val)
+			this.$emit('update:requestMdn', val)
+		},
+
+		isAiGeneratedVal(val) {
+			this.$emit('update:isAiGenerated', val)
 		},
 
 		selectedAlias: {
@@ -1123,7 +1221,7 @@ export default {
 		}
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		window.removeEventListener('mailvelope', this.onMailvelopeLoaded)
 	},
 
@@ -1206,7 +1304,10 @@ export default {
 			}
 			// Only overwrite editormode if body is empty
 			if (previous === NO_ALIAS_SET && (!this.body || this.body.value === '')) {
-				this.editorMode = this.selectedAlias.editorMode
+				// Pick the mode before the editor exists so insertSignature doesn't have to re-create it
+				this.editorMode = containsImage(toHtml(detect(this.selectedAlias.signature)).value)
+					? EDITOR_MODE_HTML
+					: this.selectedAlias.editorMode
 			}
 		},
 
@@ -1258,6 +1359,7 @@ export default {
 				inReplyToMessageId: this.inReplyToMessageId ?? (this.replyTo ? this.replyTo.messageId : undefined),
 				isHtml: !this.encrypt && !this.editorPlainText,
 				requestMdn: this.requestMdnVal,
+				isAiGenerated: this.isAiGeneratedVal,
 				sendAt: this.sendAtVal !== 0 ? Math.floor(this.sendAtVal / 1000) : undefined,
 				smimeSign: this.shouldSmimeSign,
 				smimeEncrypt: this.shouldSmimeEncrypt,
@@ -1295,6 +1397,22 @@ export default {
 		},
 
 		insertSignature() {
+			const signature = toHtml(detect(this.selectedAlias.signature)).value
+
+			/**
+			 * Plain text can't carry the images of a signature, they would be
+			 * dropped when the body is converted on submit. Switch to rich text
+			 * instead of losing them.
+			 *
+			 * As editorMode is the key for the TextEditor component the change
+			 * destroys the current instance and the signature is inserted via
+			 * the onEditorReady event of the new instance.
+			 */
+			if (this.editorPlainText && containsImage(signature)) {
+				this.editorMode = EDITOR_MODE_HTML
+				return
+			}
+
 			let trigger
 
 			if (this.changeSignature) {
@@ -1306,8 +1424,9 @@ export default {
 			this.$refs.editor.editorExecute(
 				'insertSignature',
 				trigger,
-				toHtml(detect(this.selectedAlias.signature)).value,
+				signature,
 				this.selectedAlias.signatureAboveQuote,
+				this.editorPlainText,
 			)
 
 			this.changeSignature = false
@@ -1336,8 +1455,11 @@ export default {
 			if (!this.isDraft || this.changeSignature) {
 				this.insertSignature()
 			}
+			// TODO: the editor is recreated on editorMode change, so this re-appends the
+			// smart reply and re-arms isAiGeneratedVal even after the user unchecked it.
 			if (this.smartReply) {
 				this.bus.emit('append-to-body-at-cursor', this.smartReply)
+				this.isAiGeneratedVal = true
 			}
 		},
 
@@ -1369,9 +1491,9 @@ export default {
 			this.selectedAlias = alias
 			this.changeSignature = true
 
-			this.$emit('update:from-account', alias.id)
+			this.$emit('update:fromAccount', alias.id)
 			if (alias.aliasId) {
-				this.$emit('update:from-alias', alias.aliasId)
+				this.$emit('update:fromAlias', alias.aliasId)
 			}
 
 			if (this.wantsSmimeSign || this.wantsSmimeEncrypt) {
@@ -1545,6 +1667,10 @@ export default {
 		},
 
 		async onSend() {
+			if (!this.canSend) {
+				return
+			}
+
 			if (this.encrypt) {
 				logger.debug('get encrypted message from mailvelope')
 				await this.$refs.mailvelopeEditor.pull()
@@ -1568,7 +1694,8 @@ export default {
 			this.requestMdnVal = false
 			this.changeSignature = false
 			this.sendAtVal = 0
-
+			this.isAiGeneratedVal = false
+			this.toFieldTouched = false
 			this.setAlias()
 			this.initBody()
 		},
@@ -1654,6 +1781,10 @@ export default {
 			this.autoLimit = !this.autoLimit
 			this.showCC = !(this.showCC && this.selectCc.length === 0 && this.autoLimit)
 			this.showBCC = !(this.showBCC && this.selectBcc.length === 0 && this.autoLimit)
+		},
+
+		getRecipientIndex(recipients, option) {
+			return recipients.findIndex((r) => r.email === option.email)
 		},
 
 		setEditorModeHtml() {
@@ -1781,17 +1912,24 @@ export default {
 			this.saveDraftDebounced()
 		},
 
+		onToFieldBlur(option) {
+			this.toFieldTouched = true
+			this.onNewToAddr(option)
+		},
+
 	},
 }
 </script>
 
 <style lang="scss" scoped>
+// Subject and editor body must share one text inset so their first characters line up
+$composer-text-inset: calc(var(--default-grid-baseline) * 2);
+
 .message-composer {
 	z-index: 100;
 	display: flex;
 	flex-direction: column;
-	height: 100%;
-	max-height: 100%;
+	min-height: 100%;
 }
 
 .composer-actions {
@@ -1800,27 +1938,19 @@ export default {
 }
 
 .composer-fields {
-	padding: var(--default-grid-baseline) calc(var(--default-grid-baseline) * 2) 0 calc(var(--default-grid-baseline) * 2);
-
-	&__label {
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		align-items: flex-end;
-
-		/** NcButton does not allow font weight styling */
-		:deep(.button-vue__text) {
-			font-weight: normal;
-		}
-	}
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	padding: 0 calc(var(--default-grid-baseline) * 2);
+	min-height: calc(var(--default-clickable-area) + calc(var(--default-grid-baseline) * 2));
 
 	&.mail-account {
 		border-top: none;
-		padding-top: calc(var(--default-grid-baseline) * 2);
+		padding-top: var(--default-grid-baseline);
 	}
 
-	input,
-	TextEditor {
+	input {
 		flex-grow: 1;
 		max-width: none;
 		border: none;
@@ -1828,17 +1958,18 @@ export default {
 	}
 
 	.composer-fields--custom {
+		flex: 1;
+		min-width: 0;
 		display: flex;
 		align-items: flex-start;
 		justify-content: space-between;
-		padding-top: calc(var(--default-grid-baseline) * 0.5);
+		padding: calc(var(--default-grid-baseline) * 1.5) 0;
 
 		button {
 			margin-top: 0;
 			margin-bottom: 0;
 			background-color: transparent;
 			border: none;
-			opacity: 0.5;
 			padding: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 4);
 		}
 
@@ -1857,7 +1988,8 @@ export default {
 		font-size: 15px;
 		font-weight: bold;
 		margin: var(--default-grid-baseline) 0 !important;
-		padding: 0 !important;
+		padding-block: 0 !important;
+		padding-inline: $composer-text-inset !important;
 		width: 100%;
 
 		&:focus-visible {
@@ -1873,17 +2005,38 @@ export default {
 		outline: none !important;
 		box-shadow: none !important;
 
+		// CKEditor's own inset is font-relative; pin it to the subject's instead
+		:deep(.ck-editor__editable) {
+			padding-inline: $composer-text-inset;
+		}
+
 		// Fix contenteditable not becoming focused upon clichint within it's
 		// boundaries in safari
 		-webkit-user-select: text;
 		user-select: text;
 	}
+
+	&__to-footer {
+		flex-basis: 100%;
+		display: flex;
+		align-items: center;
+		gap: calc(var(--default-grid-baseline) * 2);
+	}
+
+	&__helper-text {
+		flex: 1;
+		padding-inline-start: calc(var(--default-grid-baseline) * 12);
+		margin-top: calc(var(--default-grid-baseline) * 0.5);
+		margin-bottom: calc(var(--default-grid-baseline) * 0.5);
+		color: var(--color-text-maxcontrast);
+		font-size: var(--font-size-small);
+	}
 }
 
 // Make composer editor expand
 .message-editor {
-	flex: 1 1 100%;
-	min-height: 0;
+	flex: 1 1 auto;
+	min-height: 200px;
 	border-top: 1px solid var(--color-border);
 }
 
@@ -1896,40 +2049,86 @@ export default {
 
 .from-label,
 .to-label,
-.copy-toggle,
 .cc-label,
 .bcc-label {
+	width: calc(var(--default-grid-baseline) * 12);
+	flex-shrink: 0;
+	padding-top: calc(var(--default-grid-baseline) * 4 + 1px);
 	color: var(--color-text-maxcontrast);
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
 
-.bcc-label {
-	top: initial;
-	bottom: 0;
+// NcSelect caps the toggle at 100px with overflow-y:auto, preventing expanded
+// chips from pushing CC/BCC down. The no-wrap/select--no-wrap CSS already
+// controls whether chips wrap (flex-wrap:nowrap on vs__selected-options), so
+// removing the height cap here is safe for both collapsed and expanded states.
+:deep(.v-select.select .vs__dropdown-toggle) {
+	max-height: none;
+	overflow-y: visible;
+	border-radius: var(--border-radius-large);
+}
+
+// Keep the recipient pickers as tall as the single-select From picker
+:deep(.nc-select.v-select.select.vs--multiple) {
+	.vs__dropdown-toggle {
+		padding-block: 0;
+	}
+
+	.vs__search {
+		min-height: calc(var(--default-clickable-area) - 2 * var(--border-width-input-focused, 2px));
+	}
+
+	.vs__selected {
+		margin-block: calc(var(--default-grid-baseline) / 4);
+	}
+}
+
+// NcSelect adds a rectangular outline on focus/active/open — override with none
+// so the rounded border-radius is not broken by a sharp outline.
+:deep(.v-select.select:not(.vs--disabled, .vs--open) .vs__dropdown-toggle:active),
+:deep(.v-select.select:not(.vs--disabled, .vs--open) .vs__dropdown-toggle:focus-within),
+:deep(.v-select.select.vs--open .vs__dropdown-toggle) {
+	outline: none;
+}
+
+.recipient-overflow {
+	display: inline-flex;
+	align-items: center;
+	align-self: center;
+	padding: 0 calc(var(--default-grid-baseline) * 2);
+	height: calc(var(--default-clickable-area-small, 28px));
+	border-radius: var(--border-radius-pill);
+	background-color: var(--color-background-dark);
+	white-space: nowrap;
+	font-size: var(--default-font-size);
+	flex-shrink: 0;
+	border: none;
+	cursor: pointer;
+	color: var(--color-main-text);
+
+	&:hover {
+		background-color: var(--color-background-darker);
+	}
 }
 
 .copy-toggle {
-	cursor: pointer;
-	width: initial;
+	margin-inline-start: auto;
 
-	&:hover,
-	&:focus {
+	:deep(.button-vue__text) {
+		font-weight: normal;
+		color: var(--color-text-maxcontrast);
+	}
+
+	&:hover :deep(.button-vue__text),
+	&:focus :deep(.button-vue__text) {
 		color: var(--color-main-text);
 	}
 }
 
-.reply {
-	min-height: 100px;
-}
-
 .subject {
 	border: none !important;
-}
-
-:deep([data-select="create"] .avatardiv--unknown) {
-	background: var(--color-text-maxcontrast) !important;
 }
 
 #from{
@@ -1953,28 +2152,9 @@ export default {
 	border-radius: 0  !important;
 }
 
-.submit-message.send.primary.icon-confirm-white {
-	color: var(--color-main-background);
-}
-
 .button {
 	background-color: transparent;
 	border: none;
-}
-
-.send-button {
-	display: flex;
-	align-items: center;
-	padding: calc(var(--default-grid-baseline) * 2) calc(var(--default-grid-baseline) * 4);
-	margin-inline-start: var(--default-grid-baseline);
-}
-
-.send-button .send-icon {
-	padding-inline-end: var(--default-grid-baseline);
-}
-
-.centered-content {
-	margin-top: 0 !important;
 }
 
 .composer-actions-right {
@@ -1995,7 +2175,7 @@ export default {
 .composer-actions--secondary-actions {
 	display: flex;
 	flex-direction: row;
-	padding: 12px;
+	padding: calc(var(--default-grid-baseline) * 2);
 	gap: 5px;
 }
 
@@ -2003,16 +2183,8 @@ export default {
 	padding: 2px;
 }
 
-.composer-actions--secondary-actions .button{
-	flex-shrink: 0;
-}
-
 .composer-actions-draft-status {
-	padding-inline-start: 10px;
-}
-
-:deep(.vs__selected-options .vs__dropdown-toggle .vs--multiple ){
-	width: 100%;
+	padding-inline-start: 0;
 }
 
 @media only screen and (max-width: 580px) {

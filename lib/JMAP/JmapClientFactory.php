@@ -41,7 +41,7 @@ class JmapClientFactory {
 
 		$host = $mailAccount->getInboundHost();
 		if ($host === null || $host === '') {
-			throw new ServiceException('JMAP host is not configured for account ' . $account->getId());
+			throw new ServiceException('JMAP host is not configured for account ' . (string)$account->getId());
 		}
 
 		$port = $mailAccount->getInboundPort();
@@ -51,14 +51,14 @@ class JmapClientFactory {
 		$encryptedPassword = $mailAccount->getInboundPassword();
 
 		if ($encryptedPassword === null) {
-			throw new ServiceException('No password set for JMAP account ' . $account->getId());
+			throw new ServiceException('No password set for JMAP account ' . (string)$account->getId());
 		}
 
 		try {
 			$password = $this->crypto->decrypt($encryptedPassword);
 		} catch (\Exception $e) {
 			throw new ServiceException(
-				'Could not decrypt password for JMAP account ' . $account->getId() . ': ' . $e->getMessage(),
+				'Could not decrypt password for JMAP account ' . (string)$account->getId() . ': ' . $e->getMessage(),
 				0,
 				$e,
 			);
@@ -79,7 +79,7 @@ class JmapClientFactory {
 		);
 
 		$client = new JmapClient('', null, $adapter, $requestFactory, $streamFactory);
-		$client->configureTransportMode($secure ? 'https' : 'http');
+		$client->configureTransportMode($secure ? JmapClient::TRANSPORT_MODE_SECURE : JmapClient::TRANSPORT_MODE_STANDARD);
 		$client->setHost($host . ':' . $port);
 		if ($path !== '/.well-known/jmap') {
 			$client->setDiscoveryPath($path);

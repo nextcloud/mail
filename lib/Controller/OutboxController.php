@@ -14,6 +14,7 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\DraftsService;
 use OCA\Mail\Service\OutboxService;
@@ -21,6 +22,7 @@ use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\IRequest;
 
@@ -34,26 +36,25 @@ class OutboxController extends Controller {
 		private AccountService $accountService,
 		private SmimeService $smimeService,
 		private DelegationService $delegationService,
+		private AliasesService $aliasesService,
 	) {
 		parent::__construct($appName, $request);
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function index(): JsonResponse {
 		return JsonResponse::success(['messages' => $this->service->getMessages($this->userId)]);
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function show(int $id): JsonResponse {
 		$effectiveUserId = $this->delegationService->resolveLocalMessageUserId($id, $this->userId);
@@ -62,8 +63,6 @@ class OutboxController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $accountId
 	 * @param string $subject
 	 * @param string $body
@@ -82,6 +81,7 @@ class OutboxController extends Controller {
 	 * @throws DoesNotExistException
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function create(
 		int $accountId,
@@ -103,9 +103,13 @@ class OutboxController extends Controller {
 		?int $sendAt = null,
 		bool $requestMdn = false,
 		bool $isPgpMime = false,
+		bool $isAiGenerated = false,
 	): JsonResponse {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->userId);
 		$account = $this->accountService->find($effectiveUserId, $accountId);
+		if ($aliasId !== null) {
+			$this->aliasesService->findForAccount($aliasId, $accountId);
+		}
 
 		if ($draftId !== null) {
 			$this->service->handleDraft($account, $draftId);
@@ -126,6 +130,7 @@ class OutboxController extends Controller {
 		$message->setSmimeSign($smimeSign);
 		$message->setSmimeEncrypt($smimeEncrypt);
 		$message->setRequestMdn($requestMdn);
+		$message->setAiGenerated($isAiGenerated);
 
 		if (!empty($smimeCertificateId)) {
 			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $effectiveUserId);
@@ -139,10 +144,9 @@ class OutboxController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function createFromDraft(DraftsService $draftsService, int $id, int $sendAt): JsonResponse {
 		$effectiveUserId = $this->delegationService->resolveLocalMessageUserId($id, $this->userId);
@@ -160,8 +164,6 @@ class OutboxController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @param int $accountId
 	 * @param string $subject
@@ -177,6 +179,7 @@ class OutboxController extends Controller {
 	 * @param int|null $sendAt
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function update(
 		int $id,
@@ -198,13 +201,19 @@ class OutboxController extends Controller {
 		?int $sendAt = null,
 		bool $requestMdn = false,
 		bool $isPgpMime = false,
+		bool $isAiGenerated = false,
 	): JsonResponse {
 		$effectiveUserId = $this->delegationService->resolveLocalMessageUserId($id, $this->userId);
 		$message = $this->service->getMessage($id, $effectiveUserId);
 		if ($message->getStatus() === LocalMessage::STATUS_PROCESSED) {
 			return JsonResponse::error('Cannot modify already sent message', Http::STATUS_FORBIDDEN, [$message]);
 		}
+
+		$this->delegationService->assertAccountAccess($accountId, $this->userId);
 		$account = $this->accountService->find($effectiveUserId, $accountId);
+		if ($aliasId !== null) {
+			$this->aliasesService->findForAccount($aliasId, $accountId);
+		}
 
 		$message->setAccountId($accountId);
 		$message->setAliasId($aliasId);
@@ -219,6 +228,7 @@ class OutboxController extends Controller {
 		$message->setSmimeSign($smimeSign);
 		$message->setSmimeEncrypt($smimeEncrypt);
 		$message->setRequestMdn($requestMdn);
+		$message->setAiGenerated($isAiGenerated);
 
 		// Reset the status to make it retryable.
 		$message->setFailed(false);
@@ -236,11 +246,10 @@ class OutboxController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function send(int $id): JsonResponse {
 		$effectiveUserId = $this->delegationService->resolveLocalMessageUserId($id, $this->userId);
@@ -263,11 +272,10 @@ class OutboxController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @return JsonResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function destroy(int $id): JsonResponse {
 		$effectiveUserId = $this->delegationService->resolveLocalMessageUserId($id, $this->userId);

@@ -50,7 +50,7 @@ class ContactsIntegration {
 		$result = $this->search($userId, $term, ['UID', 'FN', 'EMAIL']);
 		$receivers = [];
 		foreach ($result as $r) {
-			$id = $r['UID'];
+			$id = $r['UID'] ?? null;
 			$fn = $r['FN'] ?? null;
 			if (!isset($r['EMAIL'])) {
 				continue;
@@ -87,12 +87,13 @@ class ContactsIntegration {
 	}
 
 	/**
+	 * @param string $userId
 	 * @param string $email
 	 *
 	 * @return false|null|string
 	 */
-	public function getPhoto(string $email) {
-		$result = $this->contactsManager->search($email, ['EMAIL']);
+	public function getPhoto(string $userId, string $email) {
+		$result = $this->search($userId, $email, ['EMAIL'], true);
 		foreach ($result as $contact) {
 			if (!isset($contact['PHOTO']) || empty($contact['PHOTO'])) {
 				continue;
@@ -163,6 +164,9 @@ class ContactsIntegration {
 		if (!isset($addressbook)) {
 			$addressbook = key($this->contactsManager->getUserAddressBooks());
 		}
+		if ($addressbook === null) {
+			return null;
+		}
 
 		$contact = [
 			'FN' => $name,
@@ -188,7 +192,7 @@ class ContactsIntegration {
 		$shareeEnumerationInGroupOnly = $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_to_group', 'no') === 'yes';
 		$shareeEnumerationFullMatch = $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_full_match', 'yes') === 'yes';
 		$shareeEnumerationFullMatchDisplayName = $shareeEnumerationFullMatch && $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_full_match_displayname', 'yes') === 'yes';
-		$shareeEnumerationFullMatchUserId = $shareeEnumerationFullMatch && $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_full_match_userid', 'yes') === 'yes';
+		$shareeEnumerationFullMatchUserId = $shareeEnumerationFullMatch && $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_full_match_user_id', 'yes') === 'yes';
 		$shareeEnumerationFullMatchEmail = $shareeEnumerationFullMatch && $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_full_match_email', 'yes') === 'yes';
 
 		$options = [
@@ -269,8 +273,8 @@ class ContactsIntegration {
 		$result = $this->search($userId, $term, $fields, $strictSearch);
 		$matches = [];
 		foreach ($result as $r) {
-			$id = $r['UID'];
-			$fn = $r['FN'];
+			$id = $r['UID'] ?? null;
+			$fn = $r['FN'] ?? null;
 			$email = $r['EMAIL'] ?? null;
 			$matches[] = [
 				'id' => $id,

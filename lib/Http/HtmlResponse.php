@@ -14,6 +14,7 @@ use OCP\AppFramework\Http\Response;
 
 /**
  * @psalm-suppress MissingTemplateParam
+ * @psalm-suppress UnusedConstructor the private constructor is called via new self(...) from the static factory methods below
  * @todo spec template with 28+
  */
 class HtmlResponse extends Response {
@@ -58,6 +59,6 @@ class HtmlResponse extends Response {
 			return $this->content;
 		}
 
-		return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><script nonce="' . $this->nonce . '" src="' . $this->scriptUrl . '"></script></head><body>' . $this->content . '<div data-iframe-size></div></body></html>';
+		return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><script nonce="' . $this->nonce . '" src="' . $this->scriptUrl . '"></script></head><body>' . $this->content . '</body></html>';
 	}
 }

@@ -12,6 +12,7 @@ namespace OCA\Mail\Tests\Integration\Db;
 use ChristophWurst\Nextcloud\Testing\DatabaseTransaction;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use ChristophWurst\Nextcloud\Testing\TestUser;
+use OCA\Mail\Db\InternalAddress;
 use OCA\Mail\Db\InternalAddressMapper;
 use OCP\IDBConnection;
 use OCP\IUser;
@@ -203,8 +204,8 @@ class InternalAddressMapperTest extends TestCase {
 
 		$results = $this->mapper->findAll($uid);
 
-		$this->assertCount(2, $results);
-		$this->assertEquals($results[0]->getAddress(), 'hamza@next.cloud');
-		$this->assertEquals($results[1]->getAddress(), 'christoph@next.cloud');
+		$addresses = array_map(static fn (InternalAddress $a) => $a->getAddress(), $results);
+		sort($addresses);
+		$this->assertEquals(['christoph@next.cloud', 'hamza@next.cloud'], $addresses);
 	}
 }

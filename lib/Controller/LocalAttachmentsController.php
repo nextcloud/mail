@@ -16,6 +16,7 @@ use OCA\Mail\Service\Attachment\UploadedFile;
 use OCA\Mail\Service\DelegationService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
@@ -40,10 +41,9 @@ class LocalAttachmentsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @return JSONResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function create(?int $accountId = null): JSONResponse {
 		$file = $this->request->getUploadedFile('attachment');

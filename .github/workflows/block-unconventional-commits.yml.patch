@@ -1,0 +1,9 @@
+diff --git a/.github/workflows/block-unconventional-commits.yml b/.github/workflows/block-unconventional-commits.yml
+index 4972f8bb3..18efa39a4 100644
+--- a/.github/workflows/block-unconventional-commits.yml
++++ b/.github/workflows/block-unconventional-commits.yml
+@@ -35,2 +35,4 @@ jobs:
+         with:
++          # Default list from the action, "feat" only on main: https://github.com/webiny/action-conventional-commits/blob/8bc41ff4e7d423d56fa4905f6ff79209a78776c7/action.yml#L9C15-L9C85
++          allowed-commit-types: "${{ github.base_ref == 'main' && 'feat,' || '' }}fix,docs,style,refactor,test,build,perf,ci,chore,revert,merge"
+           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -21,6 +21,7 @@ use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Events\MailboxesSynchronizedEvent;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCP\AppFramework\Db\TTransactional;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
@@ -39,6 +40,11 @@ use function str_starts_with;
 class MailboxSync {
 	use TTransactional;
 
+	private const NON_PERSONAL_NAMESPACE_TYPES = [
+		Horde_Imap_Client_Data_Namespace::NS_OTHER,
+		Horde_Imap_Client_Data_Namespace::NS_SHARED,
+	];
+
 	/** @var ITimeFactory */
 	private $timeFactory;
 
@@ -50,7 +56,7 @@ class MailboxSync {
 		private MailboxMapper $mailboxMapper,
 		private FolderMapper $folderMapper,
 		private MailAccountMapper $mailAccountMapper,
-		private IMAPClientFactory $imapClientFactory,
+		private readonly ProtocolFactory $protocolFactory,
 		ITimeFactory $timeFactory,
 		IEventDispatcher $dispatcher,
 		IDBConnection $dbConnection,
@@ -67,13 +73,13 @@ class MailboxSync {
 		LoggerInterface $logger,
 		bool $force = false,
 		?Horde_Imap_Client_Socket $client = null): void {
-		if (!$force && $account->getMailAccount()->getLastMailboxSync() >= ($this->timeFactory->getTime() - 7200)) {
+		if (!$force && $account->getMailAccount()->getLastMailboxSync() >= ($this->timeFactory->getTime() - 900)) {
 			$logger->debug('account is up to date, skipping mailbox sync');
 			return;
 		}
 
 		if ($client === null) {
-			$client = $this->imapClientFactory->getClient($account);
+			$client = $this->protocolFactory->imapClient($account);
 			$ownClient = true;
 		} else {
 			$ownClient = false;
@@ -239,7 +245,11 @@ class MailboxSync {
 	private function isMailboxShared(?Horde_Imap_Client_Namespace_List $namespaces, Mailbox $mailbox): bool {
 		foreach (($namespaces ?? []) as $namespace) {
 			/** @var Horde_Imap_Client_Data_Namespace $namespace */
-			if ($namespace->type === Horde_Imap_Client_Data_Namespace::NS_OTHER && str_starts_with($mailbox->getName(), $namespace->name)) {
+			// An empty prefix would match every mailbox
+			if ($namespace->name === '') {
+				continue;
+			}
+			if (in_array($namespace->type, self::NON_PERSONAL_NAMESPACE_TYPES, true) && str_starts_with($mailbox->getName(), $namespace->name)) {
 				return true;
 			}
 		}

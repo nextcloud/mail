@@ -28,10 +28,10 @@
 				<Avatar
 					v-if="envelope.from && envelope.from[0]"
 					:email="envelope.from[0].email"
-					:display-name="envelope.from[0].label"
-					:disable-tooltip="true"
+					:displayName="envelope.from[0].label"
+					:disableTooltip="true"
 					:size="40"
-					:fetch-avatar="envelope.fetchAvatarFromClient"
+					:fetchAvatar="envelope.fetchAvatarFromClient"
 					:avatar="envelope.avatar"
 					class="envelope__header__avatar-avatar" />
 				<div
@@ -42,7 +42,7 @@
 					v-html="importantSvg" />
 				<IconFavorite
 					v-if="envelope.flags.flagged"
-					fill-color="#f9cf3d"
+					fillColor="#f9cf3d"
 					:size="18"
 					class="app-content-list-item-star favorite-icon-style"
 					:data-starred="envelope.flags.flagged ? 'true' : 'false'"
@@ -60,12 +60,16 @@
 				:class="{ seen: envelope.flags.seen }"
 				role="button"
 				tabindex="0"
-				@click="$emit('toggle-expand', $event)"
-				@keydown.enter="$emit('toggle-expand', $event)"
-				@keydown.space.prevent="$emit('toggle-expand', $event)">
+				@click="$emit('toggleExpand', $event)"
+				@keydown.enter="$emit('toggleExpand', $event)"
+				@keydown.space.prevent="$emit('toggleExpand', $event)">
 				<div class="envelope__header__left__sender-subject-tags">
 					<div class="sender" :class="{ 'sender--expanded': expanded }">
 						{{ envelope.from && envelope.from[0] ? envelope.from[0].label : '' }}
+						<span v-if="hasAiGeneratedContent" class="ai-generated-label">
+							<AiIcon :size="14" />
+							{{ t('mail', 'Contains AI content') }}
+						</span>
 					</div>
 					<NcButton
 						v-if="expanded && hasRecipients"
@@ -105,7 +109,7 @@
 								:style="{ 'background-color': tag.color }" />
 							<span
 								class="tag-group__label"
-								:style="{ color: tag.color }">
+								:style="{ color: tagTextColor(tag.color, isDarkTheme) }">
 								{{ translateTagDisplayName(tag) }}
 							</span>
 						</div>
@@ -129,24 +133,40 @@
 							<LockPlusIcon
 								v-if="smimeData.isEncrypted"
 								:size="20"
-								fill-color="#008000" />
+								fillColor="#008000" />
 							<LockIcon
 								v-else-if="smimeData.signatureIsValid"
 								:size="20"
-								fill-color="#008000" />
+								fillColor="#008000" />
 							<LockOffIcon
 								v-else
 								:size="20"
-								fill-color="red" />
+								fillColor="red" />
 						</template>
 						<NcActionText class="smime-text" :name="smimeHeading">
 							{{ smimeMessage }}
 						</NcActionText>
 						<!-- TODO: display information about signer and/or CA certificate -->
 					</NcActions>
-					<NcActions :inline="inlineMenuSize">
+					<MenuEnvelope
+						v-model:moreActionsOpen="moreActionsOpen"
+						:inline="inlineMenuSize"
+						:envelope="envelope"
+						:mailbox="mailbox"
+						:withSelect="false"
+						:withShowSource="true"
+						@reply="onReply('', false, false)"
+						@delete="$emit('delete', envelope.databaseId)"
+						@showSourceModal="onShowSourceModal"
+						@openTagModal="onOpenTagModal"
+						@openMoveModal="onOpenMoveModal"
+						@openEventModal="onOpenEventModal"
+						@openTaskModal="onOpenTaskModal"
+						@openTranslationModal="onOpenTranslationModal"
+						@openMailFilterFromEnvelope="showMailFilterFromEnvelope = true"
+						@print="onPrint">
 						<NcActionButton
-							:close-after-click="true"
+							:closeAfterClick="true"
 							@click="onReply('', false)">
 							<template #icon>
 								<ReplyAllIcon
@@ -162,7 +182,7 @@
 						</NcActionButton>
 						<NcActionButton
 							v-if="hasMultipleRecipients"
-							:close-after-click="true"
+							:closeAfterClick="true"
 							@click="onReply('', false, true)">
 							<template #icon>
 								<ReplyIcon
@@ -176,7 +196,7 @@
 							type="tertiary-no-background"
 							class="action--primary"
 							:aria-label="envelope.flags.flagged ? t('mail', 'Mark as unfavorite') : t('mail', 'Mark as favorite')"
-							:close-after-click="true"
+							:closeAfterClick="true"
 							@click.prevent="onToggleFlagged">
 							<template #icon>
 								<IconFavorite
@@ -195,7 +215,7 @@
 							type="tertiary-no-background"
 							class="action--primary"
 							:aria-label="envelope.flags.seen ? t('mail', 'Mark as unread') : t('mail', 'Mark as read')"
-							:close-after-click="true"
+							:closeAfterClick="true"
 							@click.prevent="onToggleSeen">
 							<template #icon>
 								<EmailRead
@@ -211,7 +231,7 @@
 						</NcActionButton>
 						<NcActionButton
 							v-if="showArchiveButton && hasArchiveAcl && (inlineMenuSize >= 4 || !moreActionsOpen)"
-							:close-after-click="true"
+							:closeAfterClick="true"
 							:disabled="disableArchiveButton"
 							:aria-label="t('mail', 'Archive message')"
 							type="tertiary-no-background"
@@ -225,7 +245,7 @@
 						</NcActionButton>
 						<NcActionButton
 							v-if="hasDeleteAcl && (inlineMenuSize >= 5 || !moreActionsOpen)"
-							:close-after-click="true"
+							:closeAfterClick="true"
 							:aria-label="t('mail', 'Delete message')"
 							type="tertiary-no-background"
 							@click.prevent="onDelete">
@@ -236,27 +256,10 @@
 							</template>
 							{{ t('mail', 'Delete message') }}
 						</NcActionButton>
-						<MenuEnvelope
-							class="app-content-list-item-menu"
-							:envelope="envelope"
-							:mailbox="mailbox"
-							:with-select="false"
-							:with-show-source="true"
-							:more-actions-open.sync="moreActionsOpen"
-							@reply="onReply('', false, false)"
-							@delete="$emit('delete', envelope.databaseId)"
-							@show-source-modal="onShowSourceModal"
-							@open-tag-modal="onOpenTagModal"
-							@open-move-modal="onOpenMoveModal"
-							@open-event-modal="onOpenEventModal"
-							@open-task-modal="onOpenTaskModal"
-							@open-translation-modal="onOpenTranslationModal"
-							@open-mail-filter-from-envelope="showMailFilterFromEnvelope = true"
-							@print="onPrint" />
-					</NcActions>
+					</MenuEnvelope>
 					<SourceModal
 						v-if="showSourceModal"
-						:raw-message="rawMessage"
+						:rawMessage="rawMessage"
 						@close="onCloseSourceModal" />
 					<MoveModal
 						v-if="showMoveModal"
@@ -279,8 +282,9 @@
 						@close="onCloseTagModal" />
 					<TranslationModal
 						v-if="showTranslationModal"
-						:rich-parameters="{}"
+						:richParameters="{}"
 						:message="plainTextBody"
+						:detectedForeignLanguage="detectedForeignLanguage"
 						@close="onCloseTranslationModal" />
 					<MailFilterFromEnvelope
 						v-if="showMailFilterFromEnvelope"
@@ -340,10 +344,11 @@
 			v-show="loading === Loading.Done"
 			:envelope="envelope"
 			:message="message"
-			:full-height="fullHeight"
-			:smart-replies="showFollowUpHeader ? [] : smartReplies"
-			:reply-button-label="replyButtonLabel"
+			:fullHeight="fullHeight"
+			:smartReplies="showFollowUpHeader ? [] : smartReplies"
+			:replyButtonLabel="replyButtonLabel"
 			@load="onMessageLoaded"
+			@printShortcut="$emit('printShortcut')"
 			@translate="onOpenTranslationModal"
 			@reply="(body) => onReply(body, showFollowUpHeader)" />
 		<Error
@@ -351,11 +356,11 @@
 			:error="error.message || t('mail', 'Not found')"
 			message=""
 			:data="error"
-			:auto-margin="true"
+			:autoMargin="true"
 			role="alert" />
 		<ConfirmModal
 			v-if="message && message.unsubscribeUrl && message.isOneClickUnsubscribe && showListUnsubscribeConfirmation"
-			:confirm-text="t('mail', 'Unsubscribe')"
+			:confirmText="t('mail', 'Unsubscribe')"
 			:title="t('mail', 'Unsubscribe via link')"
 			@cancel="showListUnsubscribeConfirmation = false"
 			@confirm="unsubscribeViaOneClick">
@@ -363,8 +368,8 @@
 		</ConfirmModal>
 		<ConfirmModal
 			v-else-if="message && message.unsubscribeUrl && showListUnsubscribeConfirmation"
-			:confirm-text="t('mail', 'Unsubscribe')"
-			:confirm-url="message.unsubscribeUrl"
+			:confirmText="t('mail', 'Unsubscribe')"
+			:confirmUrl="message.unsubscribeUrl"
 			:title="t('mail', 'Unsubscribe via link')"
 			@cancel="showListUnsubscribeConfirmation = false"
 			@confirm="showListUnsubscribeConfirmation = false">
@@ -372,7 +377,7 @@
 		</ConfirmModal>
 		<ConfirmModal
 			v-else-if="message && message.unsubscribeMailto && showListUnsubscribeConfirmation"
-			:confirm-text="t('mail', 'Send unsubscribe email')"
+			:confirmText="t('mail', 'Send unsubscribe email')"
 			:title="t('mail', 'Unsubscribe via email')"
 			:disabled="unsubscribing"
 			@cancel="showListUnsubscribeConfirmation = false"
@@ -388,10 +393,13 @@ import { showError, showSuccess } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
 import moment from '@nextcloud/moment'
 import { generateUrl } from '@nextcloud/router'
-import { NcActionButton, NcButton } from '@nextcloud/vue'
+import { useIsDarkTheme } from '@nextcloud/vue/composables/useIsDarkTheme'
 import { mapStores } from 'pinia'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
 import NcActionText from '@nextcloud/vue/components/NcActionText'
+import AiIcon from '@nextcloud/vue/components/NcAssistantIcon'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import ArchiveIcon from 'vue-material-design-icons/ArchiveArrowDownOutline.vue'
 import ChevronDownIcon from 'vue-material-design-icons/ChevronDown.vue'
 import ChevronUpIcon from 'vue-material-design-icons/ChevronUp.vue'
@@ -433,7 +441,7 @@ import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
 import useOutboxStore from '../store/outboxStore.js'
 import { mailboxHasRights } from '../util/acl.js'
-import { translateTagDisplayName } from '../util/tag.js'
+import { tagTextColor, translateTagDisplayName } from '../util/tag.js'
 import { Text, toPlain } from '../util/text.js'
 import { hiddenTags } from './tags.js'
 
@@ -447,6 +455,7 @@ const Loading = Object.seal({
 export default {
 	name: 'ThreadEnvelope',
 	components: {
+		AiIcon,
 		MailFilterFromEnvelope,
 		EventModal,
 		TaskModal,
@@ -527,8 +536,11 @@ export default {
 		},
 	},
 
+	emits: ['toggleExpand', 'delete', 'printShortcut', 'loaded', 'unselect', 'archive', 'move', 'print'],
+
 	data() {
 		return {
+			isDarkTheme: useIsDarkTheme(),
 			loading: Loading.Done,
 			showRecipients: false,
 			showListUnsubscribeConfirmation: false,
@@ -547,6 +559,7 @@ export default {
 			showTaskModal: false,
 			showTagModal: false,
 			showTranslationModal: false,
+			detectedForeignLanguage: null,
 			plainTextBody: '',
 			rawMessage: '', // Will hold the raw source of the message when requested
 			isInternal: true,
@@ -575,11 +588,33 @@ export default {
 				return 0
 			}
 
-			return Math.floor(spaceToFill / 44)
+			return Math.min(Math.floor(spaceToFill / 44), this.threadActionsCount)
+		},
+
+		threadActionsCount() {
+			return [
+				true,
+				this.hasMultipleRecipients,
+				this.hasWriteAcl,
+				this.hasSeenAcl,
+				this.showArchiveButton && this.hasArchiveAcl,
+				this.hasDeleteAcl,
+			].filter(Boolean).length
 		},
 
 		account() {
 			return this.mainStore.getAccount(this.envelope.accountId)
+		},
+
+		/**
+		 * Whether this message is rendered and can therefore be printed. The
+		 * message body is only in the DOM once the message itself has been
+		 * fetched and its loading state has settled.
+		 *
+		 * @return {boolean}
+		 */
+		printable() {
+			return this.loading === Loading.Done && this.message !== undefined
 		},
 
 		senderEmailColor() {
@@ -616,6 +651,10 @@ export default {
 		isEncrypted() {
 			return this.envelope.previewText
 				&& isPgpText(this.envelope.previewText)
+		},
+
+		hasAiGeneratedContent() {
+			return this.message?.hasAiGeneratedHeader === true
 		},
 
 		isImportant() {
@@ -803,7 +842,7 @@ export default {
 		}, 100)
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		if (this.seenTimer !== undefined) {
 			logger.info('Navigating away before seenTimer delay, will not mark message as seen/read')
 			clearTimeout(this.seenTimer)
@@ -812,6 +851,7 @@ export default {
 	},
 
 	methods: {
+		tagTextColor,
 		translateTagDisplayName,
 		redrawMenuBar() {
 			this.$nextTick(() => {
@@ -853,12 +893,17 @@ export default {
 					clearTimeout(loadingTimeout)
 				}
 
-				if (!this.envelope.flags.seen && this.hasSeenAcl) {
-					logger.info('Starting timer to mark message as seen/read')
+				const autoMarkReadSetting = this.mainStore.getPreference('auto-mark-as-read', '3000')
+				const delay = parseInt(autoMarkReadSetting, 10)
+
+				if (!this.envelope.flags.seen && this.hasSeenAcl && delay >= 0) {
+					logger.info(`Starting timer (${delay}ms) to mark message as seen/read`)
 					this.seenTimer = setTimeout(() => {
-						this.mainStore.toggleEnvelopeSeen({ envelope: this.envelope })
+						if (!this.envelope.flags.seen) {
+							this.mainStore.toggleEnvelopeSeen({ envelope: this.envelope })
+						}
 						this.seenTimer = undefined
-					}, 2000)
+					}, delay)
 				}
 
 				if (this.message.hasHtmlBody) {
@@ -1153,7 +1198,8 @@ export default {
 			this.showTagModal = false
 		},
 
-		onOpenTranslationModal() {
+		onOpenTranslationModal(detectedForeignLanguage = null) {
+			this.detectedForeignLanguage = typeof detectedForeignLanguage === 'string' ? detectedForeignLanguage : null
 			try {
 				if (this.message.hasHtmlBody) {
 					let text = new Text('html', this.message.body)
@@ -1197,6 +1243,10 @@ export default {
 <style lang="scss" scoped>
 	.sender {
 		margin-inline-start: calc(var(--default-grid-baseline) * 3);
+		display: flex;
+		align-items: center;
+		gap: calc(var(--default-grid-baseline) * 1.5);
+		min-width: 0;
 
 		&--expanded {
 			color: var(--color-text-maxcontrast);
@@ -1225,29 +1275,11 @@ export default {
 		margin-inline-start: calc(var(--default-grid-baseline) * 2);
 		height: 44px;
 
-		.app-content-list-item-menu {
-			margin-inline-start: var(--default-grid-baseline);
-		}
-
 		.timestamp {
 			margin-inline-end: calc(var(--default-grid-baseline) * 2);
 			color: var(--color-text-maxcontrast);
 			white-space: nowrap;
 			margin-bottom: 0;
-		}
-	}
-
-	.button {
-		color: var(--color-main-background);
-		&:not(.active):not(.primary) {
-			display: none;
-
-			&.primary {
-				background-color: var(--color-primary-element);
-				opacity: 1;
-				margin-bottom: 0;
-
-			}
 		}
 	}
 
@@ -1325,7 +1357,7 @@ export default {
 				margin-inline-start: auto;
 				display: flex;
 				align-items: center;
-				gap: 4px;
+				gap: var(--default-grid-baseline);
 			}
 
 			&__avatar {
@@ -1421,6 +1453,7 @@ export default {
 
 	.tag-group__label {
 		margin: 0 calc(var(--default-grid-baseline) * 2);
+		position: relative;
 		z-index: 2;
 		font-size: calc(var(--default-font-size) * 0.8);
 		font-weight: bold;
@@ -1492,5 +1525,12 @@ export default {
 		font-weight: normal;
 		display: inline;
 		align-items: center;
+	}
+
+	.ai-generated-label {
+		display: flex;
+		align-items: center;
+		gap: var(--default-grid-baseline);
+		opacity: 0.8;
 	}
 </style>

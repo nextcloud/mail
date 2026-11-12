@@ -35,28 +35,28 @@
 							name="ham"
 							type="email">
 						<br>
-						<ButtonVue
-							type="secondary"
+						<NcButton
+							variant="secondary"
 							:aria-label="t('mail', 'Save')"
 							:disabled="loading"
-							native-type="submit"
+							type="submit"
 							class="config-button">
 							<template #icon>
 								<IconUpload :size="20" />
 							</template>
 							{{ t('mail', 'Save') }}
-						</ButtonVue>
-						<ButtonVue
+						</NcButton>
+						<NcButton
 							:disabled="loading"
 							:aria-label="t('mail', 'Reset')"
 							class="config-button"
-							type="secondary"
+							variant="secondary"
 							@click="resetForm()">
 							<template #icon>
 								<IconDelete :size="20" />
 							</template>
 							{{ t('mail', 'Reset') }}
-						</ButtonVue>
+						</NcButton>
 					</div>
 				</div>
 			</form>
@@ -67,7 +67,7 @@
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
-import ButtonVue from '@nextcloud/vue/components/NcButton'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 import IconUpload from 'vue-material-design-icons/TrayArrowUp.vue'
 import logger from '../../logger.js'
@@ -78,7 +78,7 @@ const email = loadState('mail', 'antispam_setting', '[]')
 export default {
 	name: 'AntiSpamSettings',
 	components: {
-		ButtonVue,
+		NcButton,
 		IconUpload,
 		IconDelete,
 	},
@@ -95,7 +95,7 @@ export default {
 			this.loading = true
 
 			try {
-				await setAntiSpamEmail(email)
+				await setAntiSpamEmail(this.email)
 				logger.info('anti spam email updated')
 				showSuccess(t('mail', 'Successfully set up anti spam email addresses'))
 			} catch (error) {
@@ -111,13 +111,13 @@ export default {
 			try {
 				await deleteAntiSpamEmail()
 				logger.info('anti spam email deleted')
+				this.email = { spam: '', ham: '' }
 				showSuccess(t('mail', 'Successfully deleted anti spam reporting email'))
 			} catch (error) {
 				logger.error('Could not delete email setting', { error })
 				showError(t('mail', 'Error deleting anti spam reporting email'))
 			} finally {
 				this.loading = false
-				this.email = []
 			}
 		},
 	},
@@ -138,12 +138,6 @@ export default {
 	flex-direction: row;
 	flex-wrap: nowrap;
 
-	.group-title {
-		min-width: 100px;
-		text-align: end;
-		margin: 10px;
-		font-weight: bold;
-	}
 	.group-inputs {
 		margin: 10px;
 		flex-grow: 1;
@@ -157,27 +151,6 @@ export default {
 
 h4 {
 	font-weight: bold;
-}
-
-.previews {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	margin: 0 -10px;
-
-	.preview-item {
-		flex-grow: 1;
-		margin: 10px;
-		padding: 25px;
-	}
-}
-
-input[type='radio'] {
-	display: none;
-}
-
-.flex-row {
-	display: flex;
 }
 
 form {

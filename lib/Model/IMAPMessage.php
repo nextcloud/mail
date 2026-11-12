@@ -45,7 +45,8 @@ use function trim;
  *  }
  */
 class IMAPMessage implements IMessage, JsonSerializable {
-	use ConvertAddresses;
+	private ?string $sanitizedHtmlBody = null;
+	private ?int $sanitizedHtmlBodyId = null;
 
 	/**
 	 * @param list<IMAPAttachment> $inlineAttachments
@@ -72,6 +73,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		private string $rawReferences,
 		private string $dispositionNotificationTo,
 		private bool $hasDkimSignature,
+		private bool $hasAiGeneratedHeader,
 		private array $phishingDetails,
 		private ?string $unsubscribeUrl,
 		private bool $isOneClickUnsubscribe,
@@ -293,6 +295,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			'unsubscribeMailto' => $this->unsubscribeMailto,
 			'scheduling' => $this->scheduling,
 			'isPgpMimeEncrypted' => $this->isPgpMimeEncrypted,
+			'hasAiGeneratedHeader' => $this->hasAiGeneratedHeader,
 		];
 	}
 
@@ -302,11 +305,18 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 * @return string
 	 */
 	public function getHtmlBody(int $id): string {
-		return $this->htmlService->sanitizeHtmlMailBody(
+		if ($this->sanitizedHtmlBody !== null && $this->sanitizedHtmlBodyId === $id) {
+			return $this->sanitizedHtmlBody;
+		}
+
+		$this->sanitizedHtmlBody = $this->htmlService->sanitizeHtmlMailBody(
 			$id,
 			$this->htmlMessage,
 			$this->inlineAttachments,
 		);
+		$this->sanitizedHtmlBodyId = $id;
+
+		return $this->sanitizedHtmlBody;
 	}
 
 	/**
@@ -429,6 +439,10 @@ class IMAPMessage implements IMessage, JsonSerializable {
 
 	public function isSignatureValid(): bool {
 		return $this->signatureIsValid;
+	}
+
+	public function hasDkimSignature(): bool {
+		return $this->hasDkimSignature;
 	}
 
 	public function getUnsubscribeUrl(): ?string {
@@ -556,7 +570,8 @@ class IMAPMessage implements IMessage, JsonSerializable {
 
 			$displayName = str_replace(['_', '$'], [' ', ''], $keyword);
 			$displayName = strtoupper($displayName);
-			$displayName = mb_convert_encoding($displayName, 'UTF-8', 'UTF7-IMAP');
+			$convertedDisplayName = mb_convert_encoding($displayName, 'UTF-8', 'UTF7-IMAP');
+			$displayName = $convertedDisplayName === false ? $displayName : $convertedDisplayName;
 			$displayName = strtolower($displayName);
 			$displayName = ucwords($displayName);
 

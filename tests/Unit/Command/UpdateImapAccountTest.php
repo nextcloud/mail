@@ -96,7 +96,7 @@ class UpdateImapAccountTest extends TestCase {
 			->method('writeln')
 			->withConsecutive(
 				['<info>Found account with email: old@example.com</info>'],
-				['<info>Account updated@example.com with ID  42  succesfully updated </info>'],
+				['<info>Account updated@example.com with ID  42  successfully updated </info>'],
 			);
 
 		$this->crypto->expects($this->exactly(2))

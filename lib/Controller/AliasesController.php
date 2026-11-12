@@ -17,6 +17,7 @@ use OCA\Mail\Service\DelegationService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
@@ -34,12 +35,11 @@ class AliasesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $accountId
 	 *
 	 * @return JSONResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function index(int $accountId): JSONResponse {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->userId);
@@ -47,19 +47,15 @@ class AliasesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
-	 *
 	 * @return never
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function show() {
 		throw new NotImplemented();
 	}
 
-	/**
-	 * @NoAdminRequired
-	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function update(int $id,
 		string $alias,
@@ -78,11 +74,10 @@ class AliasesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @return JSONResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function destroy(int $id): JSONResponse {
 		$effectiveUserId = $this->delegationService->resolveAliasUserId($id, $this->userId);
@@ -92,8 +87,6 @@ class AliasesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $accountId
 	 * @param string $alias
 	 * @param string $aliasName
@@ -102,6 +95,7 @@ class AliasesController extends Controller {
 	 * @throws DoesNotExistException
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function create(int $accountId, string $alias, string $aliasName): JSONResponse {
 		$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->userId);
@@ -115,8 +109,6 @@ class AliasesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param int $id
 	 * @param string|null $signature
 	 *
@@ -124,6 +116,7 @@ class AliasesController extends Controller {
 	 * @throws DoesNotExistException
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function updateSignature(int $id, ?string $signature = null): JSONResponse {
 		$effectiveUserId = $this->delegationService->resolveAliasUserId($id, $this->userId);

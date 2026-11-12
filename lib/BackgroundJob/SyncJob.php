@@ -12,9 +12,8 @@ use Horde_Imap_Client_Exception;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Exception\IncompleteSyncException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\MailboxSync;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
@@ -32,13 +31,13 @@ class SyncJob extends TimedJob {
 	private IUserManager $userManager;
 	private IJobList $jobList;
 	private readonly bool $forcedSyncInterval;
+	private readonly bool $forcedSkip;
 
 	public function __construct(
 		ITimeFactory $time,
 		IUserManager $userManager,
 		private AccountService $accountService,
-		private MailboxSync $mailboxSync,
-		private ImapToDbSynchronizer $syncService,
+		private ProtocolFactory $protocolFactory,
 		private LoggerInterface $logger,
 		IJobList $jobList,
 		private readonly IConfig $config,
@@ -51,7 +50,14 @@ class SyncJob extends TimedJob {
 		$configuredSyncInterval = $config->getSystemValueInt('app.mail.background-sync-interval');
 		if ($configuredSyncInterval > 0) {
 			$this->forcedSyncInterval = true;
+			$this->forcedSkip = false;
 		} else {
+			if ($configuredSyncInterval === -1) {
+				$this->forcedSkip = true;
+			} else {
+				$this->forcedSkip = false;
+			}
+
 			$this->forcedSyncInterval = false;
 			$configuredSyncInterval = self::DEFAULT_SYNC_INTERVAL;
 		}
@@ -65,6 +71,10 @@ class SyncJob extends TimedJob {
 	 */
 	#[\Override]
 	protected function run($argument) {
+		if ($this->forcedSkip) {
+			return;
+		}
+
 		$accountId = (int)$argument['accountId'];
 
 		try {
@@ -75,7 +85,8 @@ class SyncJob extends TimedJob {
 			return;
 		}
 
-		if (!$account->getMailAccount()->canAuthenticateImap()) {
+		if ($account->getMailAccount()->isImap()
+			&& !$account->getMailAccount()->canAuthenticateImap()) {
 			$this->logger->debug('No authentication on IMAP possible, skipping background sync job');
 			return;
 		}
@@ -116,8 +127,12 @@ class SyncJob extends TimedJob {
 		}
 
 		try {
-			$this->mailboxSync->sync($account, $this->logger, true);
-			$this->syncService->syncAccount($account, $this->logger);
+			$this->protocolFactory
+				->mailboxConnector($account)
+				->syncAll($account, true);
+			$this->protocolFactory
+				->messageConnector($account)
+				->syncAll($account, false);
 		} catch (IncompleteSyncException $e) {
 			$this->logger->warning($e->getMessage(), [
 				'exception' => $e,

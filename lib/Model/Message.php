@@ -18,8 +18,6 @@ use OCP\Files\File;
 use OCP\Files\SimpleFS\ISimpleFile;
 
 final class Message implements IMessage {
-	use ConvertAddresses;
-
 	/** @var string */
 	private $subject = '';
 

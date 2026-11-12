@@ -15,10 +15,12 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\CouldNotConnectException;
 use OCA\Mail\Exception\FilterParserException;
+use OCA\Mail\Exception\InvalidFilterException;
 use OCA\Mail\Exception\OutOfOfficeParserException;
 use OCA\Mail\Service\MailFilter\FilterBuilder;
 use OCA\Mail\Service\MailFilter\FilterParser;
 use OCA\Mail\Service\MailFilter\FilterParserResult;
+use OCA\Mail\Service\MailFilter\FilterValidator;
 use OCA\Mail\Service\OutOfOffice\OutOfOfficeParser;
 use OCA\Mail\Service\OutOfOffice\OutOfOfficeState;
 use Psr\Log\LoggerInterface;
@@ -30,6 +32,7 @@ class FilterService {
 		private OutOfOfficeParser $outOfOfficeParser,
 		private FilterParser $filterParser,
 		private FilterBuilder $filterBuilder,
+		private FilterValidator $filterValidator,
 		private SieveService $sieveService,
 		private LoggerInterface $logger,
 	) {
@@ -53,8 +56,11 @@ class FilterService {
 	 * @throws OutOfOfficeParserException
 	 * @throws ManageSieveException
 	 * @throws FilterParserException
+	 * @throws InvalidFilterException
 	 */
 	public function update(MailAccount $account, array $filters): void {
+		$this->filterValidator->validate($filters);
+
 		$script = $this->sieveService->getActiveScript($account->getUserId(), $account->getId());
 
 		$oooResult = $this->outOfOfficeParser->parseOutOfOfficeState($script->getScript());

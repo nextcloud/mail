@@ -6,15 +6,15 @@
 <template>
 	<NcAvatar
 		v-if="loading || !hasAvatar"
-		:display-name="displayName"
+		:displayName="displayName"
 		:size="size"
-		:disable-tooltip="disableTooltip" />
+		:disableTooltip="disableTooltip" />
 	<NcAvatar
 		v-else
-		:display-name="displayName"
+		:displayName="displayName"
 		:url="avatarUrl"
 		:size="size"
-		:disable-tooltip="disableTooltip" />
+		:disableTooltip="disableTooltip" />
 </template>
 
 <script>

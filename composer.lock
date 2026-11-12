@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e8c6b7d4f4a52f473d50141c85ed0e6c",
+    "content-hash": "137af10ed29cd7ce61eddc590526210c",
     "packages": [
         {
             "name": "amphp/amp",
@@ -824,16 +824,16 @@
         },
         {
             "name": "bytestream/horde-imap-client",
-            "version": "v2.34.1",
+            "version": "v2.34.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Imap_Client.git",
-                "reference": "0171a72c144fa050250e4b40dc0160507c265300"
+                "reference": "f01ae2032800430b033a4b36624124fdba46216f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Imap_Client/zipball/0171a72c144fa050250e4b40dc0160507c265300",
-                "reference": "0171a72c144fa050250e4b40dc0160507c265300",
+                "url": "https://api.github.com/repos/bytestream/Imap_Client/zipball/f01ae2032800430b033a4b36624124fdba46216f",
+                "reference": "f01ae2032800430b033a4b36624124fdba46216f",
                 "shasum": ""
             },
             "require": {
@@ -875,9 +875,9 @@
             "description": "Horde IMAP client library",
             "homepage": "https://www.horde.org/libraries/Horde_Imap_Client",
             "support": {
-                "source": "https://github.com/bytestream/Imap_Client/tree/v2.34.1"
+                "source": "https://github.com/bytestream/Imap_Client/tree/v2.34.2"
             },
-            "time": "2026-04-23T09:47:18+00:00"
+            "time": "2026-09-21T09:19:14+00:00"
         },
         {
             "name": "bytestream/horde-listheaders",
@@ -933,16 +933,16 @@
         },
         {
             "name": "bytestream/horde-mail",
-            "version": "v2.7.2",
+            "version": "v2.7.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Mail.git",
-                "reference": "5054666fe1a43f86a85e911111c115a133d80334"
+                "reference": "1dce1f9e84ce747e9075fdfa1a4c9391c7ba9244"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Mail/zipball/5054666fe1a43f86a85e911111c115a133d80334",
-                "reference": "5054666fe1a43f86a85e911111c115a133d80334",
+                "url": "https://api.github.com/repos/bytestream/Mail/zipball/1dce1f9e84ce747e9075fdfa1a4c9391c7ba9244",
+                "reference": "1dce1f9e84ce747e9075fdfa1a4c9391c7ba9244",
                 "shasum": ""
             },
             "require": {
@@ -982,9 +982,10 @@
             "description": "Horde mail library",
             "homepage": "https://www.horde.org/libraries/Horde_Mail",
             "support": {
-                "source": "https://github.com/bytestream/Mail/tree/v2.7.2"
+                "source": "https://github.com/bytestream/Mail/tree/v2.7.3"
             },
-            "time": "2026-02-12T11:00:50+00:00"
+            "time": "2026-10-19T07:51:05+00:00",
+            "published-time": "2026-10-19T07:51:30+00:00"
         },
         {
             "name": "bytestream/horde-mime",
@@ -1774,16 +1775,16 @@
         },
         {
             "name": "ezyang/htmlpurifier",
-            "version": "v4.19.0",
+            "version": "v4.19.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ezyang/htmlpurifier.git",
-                "reference": "b287d2a16aceffbf6e0295559b39662612b77fcf"
+                "reference": "5e0539132d934f936fbae2c88b55d58f9438623f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/b287d2a16aceffbf6e0295559b39662612b77fcf",
-                "reference": "b287d2a16aceffbf6e0295559b39662612b77fcf",
+                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/5e0539132d934f936fbae2c88b55d58f9438623f",
+                "reference": "5e0539132d934f936fbae2c88b55d58f9438623f",
                 "shasum": ""
             },
             "require": {
@@ -1829,9 +1830,9 @@
             ],
             "support": {
                 "issues": "https://github.com/ezyang/htmlpurifier/issues",
-                "source": "https://github.com/ezyang/htmlpurifier/tree/v4.19.0"
+                "source": "https://github.com/ezyang/htmlpurifier/tree/v4.19.1"
             },
-            "time": "2025-10-17T16:34:55+00:00"
+            "time": "2026-09-15T15:42:51+00:00"
         },
         {
             "name": "glenscott/url-normalizer",
@@ -2298,16 +2299,16 @@
         },
         {
             "name": "nextcloud/kitinerary-bin",
-            "version": "v1.0.4",
+            "version": "v1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextcloud-libraries/kitinerary-bin.git",
-                "reference": "58ae0fc814e7b78f29555261e88742396bbd4345"
+                "reference": "4681caed5c3d0ce37fa0e99a23f265cef8bd5293"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud-libraries/kitinerary-bin/zipball/58ae0fc814e7b78f29555261e88742396bbd4345",
-                "reference": "58ae0fc814e7b78f29555261e88742396bbd4345",
+                "url": "https://api.github.com/repos/nextcloud-libraries/kitinerary-bin/zipball/4681caed5c3d0ce37fa0e99a23f265cef8bd5293",
+                "reference": "4681caed5c3d0ce37fa0e99a23f265cef8bd5293",
                 "shasum": ""
             },
             "require": {
@@ -2333,22 +2334,23 @@
             ],
             "description": "KItinerary binary executable",
             "support": {
-                "source": "https://github.com/nextcloud-libraries/kitinerary-bin/tree/v1.0.4"
+                "source": "https://github.com/nextcloud-libraries/kitinerary-bin/tree/v1.0.6"
             },
-            "time": "2025-05-15T19:18:43+00:00"
+            "time": "2026-11-05T07:44:59+00:00",
+            "published-time": "2026-11-05T16:47:12+00:00"
         },
         {
             "name": "nextcloud/kitinerary-flatpak",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextcloud-libraries/kitinerary-flatpak.git",
-                "reference": "9f5ea95be1e1f3b8f3a8637119c34f304766a877"
+                "reference": "5790f783d2a2b656c4ea410a6c5a0f2bd10bc159"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud-libraries/kitinerary-flatpak/zipball/9f5ea95be1e1f3b8f3a8637119c34f304766a877",
-                "reference": "9f5ea95be1e1f3b8f3a8637119c34f304766a877",
+                "url": "https://api.github.com/repos/nextcloud-libraries/kitinerary-flatpak/zipball/5790f783d2a2b656c4ea410a6c5a0f2bd10bc159",
+                "reference": "5790f783d2a2b656c4ea410a6c5a0f2bd10bc159",
                 "shasum": ""
             },
             "require": {
@@ -2374,22 +2376,23 @@
             ],
             "description": "KItinerary Flatpak binding",
             "support": {
-                "source": "https://github.com/nextcloud-libraries/kitinerary-flatpak/tree/v1.0.0"
+                "source": "https://github.com/nextcloud-libraries/kitinerary-flatpak/tree/v1.0.1"
             },
-            "time": "2024-01-19T13:36:53+00:00"
+            "time": "2026-11-04T13:03:15+00:00",
+            "published-time": "2026-11-04T13:09:21+00:00"
         },
         {
             "name": "nextcloud/kitinerary-sys",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextcloud-libraries/kitinerary-sys.git",
-                "reference": "f54aae1a22c407befa41127fe92c57292e1db8bf"
+                "reference": "73cee8b210c9e4c95b59f007021619c2e61351f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud-libraries/kitinerary-sys/zipball/f54aae1a22c407befa41127fe92c57292e1db8bf",
-                "reference": "f54aae1a22c407befa41127fe92c57292e1db8bf",
+                "url": "https://api.github.com/repos/nextcloud-libraries/kitinerary-sys/zipball/73cee8b210c9e4c95b59f007021619c2e61351f4",
+                "reference": "73cee8b210c9e4c95b59f007021619c2e61351f4",
                 "shasum": ""
             },
             "require": {
@@ -2418,9 +2421,10 @@
             ],
             "description": "KItinerary binding for the system package",
             "support": {
-                "source": "https://github.com/nextcloud-libraries/kitinerary-sys/tree/v2.0.0"
+                "source": "https://github.com/nextcloud-libraries/kitinerary-sys/tree/v2.0.1"
             },
-            "time": "2025-01-08T14:40:01+00:00"
+            "time": "2026-11-04T13:03:18+00:00",
+            "published-time": "2026-11-04T13:09:12+00:00"
         },
         {
             "name": "php-http/discovery",
@@ -2720,16 +2724,16 @@
         },
         {
             "name": "rubix/ml",
-            "version": "2.5.3",
+            "version": "2.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RubixML/ML.git",
-                "reference": "e0960dcb19c9722ccbc4826f5b9417a75fa01613"
+                "reference": "8fdea4a0607ec44dadf91d83e706b4e393fa2db5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RubixML/ML/zipball/e0960dcb19c9722ccbc4826f5b9417a75fa01613",
-                "reference": "e0960dcb19c9722ccbc4826f5b9417a75fa01613",
+                "url": "https://api.github.com/repos/RubixML/ML/zipball/8fdea4a0607ec44dadf91d83e706b4e393fa2db5",
+                "reference": "8fdea4a0607ec44dadf91d83e706b4e393fa2db5",
                 "shasum": ""
             },
             "require": {
@@ -2738,7 +2742,7 @@
                 "ext-json": "*",
                 "php": ">=7.4",
                 "psr/log": "^1.1|^2.0|^3.0",
-                "rubix/tensor": "^3.0",
+                "rubix/tensor": "^3.1",
                 "symfony/polyfill-mbstring": "^1.0",
                 "symfony/polyfill-php80": "^1.17",
                 "symfony/polyfill-php82": "^1.27",
@@ -2877,20 +2881,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-10-01T17:52:15+00:00"
+            "time": "2026-09-18T22:28:55+00:00"
         },
         {
             "name": "rubix/tensor",
-            "version": "3.0.5",
+            "version": "3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RubixML/Tensor.git",
-                "reference": "9f0ee170319280dcf081984adccefa8b0e6f06b8"
+                "reference": "94cd025562b4edcd968e1c26b67a8751cb42f39a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RubixML/Tensor/zipball/9f0ee170319280dcf081984adccefa8b0e6f06b8",
-                "reference": "9f0ee170319280dcf081984adccefa8b0e6f06b8",
+                "url": "https://api.github.com/repos/RubixML/Tensor/zipball/94cd025562b4edcd968e1c26b67a8751cb42f39a",
+                "reference": "94cd025562b4edcd968e1c26b67a8751cb42f39a",
                 "shasum": ""
             },
             "require": {
@@ -2898,7 +2902,7 @@
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.0",
-                "phalcon/zephir": "^0.17",
+                "phalcon/zephir": "^1.0",
                 "phpbench/phpbench": "^1.0",
                 "phpstan/extension-installer": "^1.0",
                 "phpstan/phpstan": "^1.0",
@@ -2922,9 +2926,7 @@
             "authors": [
                 {
                     "name": "Andrew DalPino",
-                    "email": "support@andrewdalpino.com",
-                    "homepage": "https://github.com/andrewdalpino",
-                    "role": "Project Lead"
+                    "homepage": "https://github.com/andrewdalpino"
                 },
                 {
                     "name": "Contributors",
@@ -2970,7 +2972,6 @@
             ],
             "support": {
                 "chat": "https://t.me/RubixML",
-                "email": "support@andrewdalpino.com",
                 "issues": "https://github.com/RubixML/Tensor/issues",
                 "source": "https://github.com/RubixML/Tensor"
             },
@@ -2980,39 +2981,37 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-03-15T19:43:50+00:00"
+            "time": "2026-09-18T22:03:04+00:00"
         },
         {
             "name": "sabberworm/php-css-parser",
-            "version": "v9.4.0",
+            "version": "v9.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MyIntervals/PHP-CSS-Parser.git",
-                "reference": "fd3bf9fb173e0df649bc4e3e0d088a1b2417c08f"
+                "reference": "f284e63b6e891e0c28631e54ba06c3ed102a9ef3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MyIntervals/PHP-CSS-Parser/zipball/fd3bf9fb173e0df649bc4e3e0d088a1b2417c08f",
-                "reference": "fd3bf9fb173e0df649bc4e3e0d088a1b2417c08f",
+                "url": "https://api.github.com/repos/MyIntervals/PHP-CSS-Parser/zipball/f284e63b6e891e0c28631e54ba06c3ed102a9ef3",
+                "reference": "f284e63b6e891e0c28631e54ba06c3ed102a9ef3",
                 "shasum": ""
             },
             "require": {
                 "ext-iconv": "*",
-                "php": "^7.2.0 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
-                "thecodingmachine/safe": "^1.3 || ^2.5 || ^3.4"
+                "php": "^7.2.0 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0 || ~8.6.0"
             },
             "require-dev": {
                 "php-parallel-lint/php-parallel-lint": "1.4.0",
                 "phpstan/extension-installer": "1.4.3",
-                "phpstan/phpstan": "1.12.33 || 2.2.2",
-                "phpstan/phpstan-phpunit": "1.4.2 || 2.0.16",
-                "phpstan/phpstan-strict-rules": "1.6.2 || 2.0.11",
-                "phpunit/phpunit": "8.5.52",
+                "phpstan/phpstan": "1.12.33 || 2.2.9",
+                "phpstan/phpstan-phpunit": "1.4.2 || 2.0.18",
+                "phpstan/phpstan-strict-rules": "1.6.2 || 2.0.12",
+                "phpunit/phpunit": "8.5.54",
                 "rawr/phpunit-data-provider": "3.3.1",
-                "rector/rector": "1.2.10 || 2.4.6",
-                "rector/type-perfect": "1.0.0 || 2.1.3",
-                "squizlabs/php_codesniffer": "4.0.1",
-                "thecodingmachine/phpstan-safe-rule": "1.2.0 || 1.4.3"
+                "rector/rector": "1.2.10 || 2.6.2",
+                "rector/type-perfect": "1.0.0 || 2.1.4",
+                "squizlabs/php_codesniffer": "4.0.4"
             },
             "suggest": {
                 "ext-mbstring": "for parsing UTF-8 CSS"
@@ -3020,7 +3019,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "9.5.x-dev"
+                    "dev-main": "9.6.x-dev"
                 }
             },
             "autoload": {
@@ -3058,22 +3057,22 @@
             ],
             "support": {
                 "issues": "https://github.com/MyIntervals/PHP-CSS-Parser/issues",
-                "source": "https://github.com/MyIntervals/PHP-CSS-Parser/tree/v9.4.0"
+                "source": "https://github.com/MyIntervals/PHP-CSS-Parser/tree/v9.5.0"
             },
-            "time": "2026-03-03T17:31:43+00:00"
+            "time": "2026-09-20T15:02:00+00:00"
         },
         {
             "name": "sebastiankrupinski/jmap-client-php",
-            "version": "v2.0.0",
+            "version": "v2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SebastianKrupinski/jmap-client-php.git",
-                "reference": "720ba6ee0579202e5fedab39847680cc5c7ebf58"
+                "reference": "97a32df5e4e9ad9cdfda905cc45a28048bed47d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SebastianKrupinski/jmap-client-php/zipball/720ba6ee0579202e5fedab39847680cc5c7ebf58",
-                "reference": "720ba6ee0579202e5fedab39847680cc5c7ebf58",
+                "url": "https://api.github.com/repos/SebastianKrupinski/jmap-client-php/zipball/97a32df5e4e9ad9cdfda905cc45a28048bed47d0",
+                "reference": "97a32df5e4e9ad9cdfda905cc45a28048bed47d0",
                 "shasum": ""
             },
             "require": {
@@ -3123,7 +3122,7 @@
                 "issues": "https://github.com/SebastianKrupinski/jmap-client-php/issues",
                 "source": "https://github.com/SebastianKrupinski/jmap-client-php"
             },
-            "time": "2026-06-27T23:55:59+00:00"
+            "time": "2026-10-04T18:27:37+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -3505,149 +3504,6 @@
             "time": "2024-09-09T11:45:10+00:00"
         },
         {
-            "name": "thecodingmachine/safe",
-            "version": "v3.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/thecodingmachine/safe.git",
-                "reference": "705683a25bacf0d4860c7dea4d7947bfd09eea19"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/thecodingmachine/safe/zipball/705683a25bacf0d4860c7dea4d7947bfd09eea19",
-                "reference": "705683a25bacf0d4860c7dea4d7947bfd09eea19",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^8.1"
-            },
-            "require-dev": {
-                "php-parallel-lint/php-parallel-lint": "^1.4",
-                "phpstan/phpstan": "^2",
-                "phpunit/phpunit": "^10",
-                "squizlabs/php_codesniffer": "^3.2"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "lib/special_cases.php",
-                    "generated/apache.php",
-                    "generated/apcu.php",
-                    "generated/array.php",
-                    "generated/bzip2.php",
-                    "generated/calendar.php",
-                    "generated/classobj.php",
-                    "generated/com.php",
-                    "generated/cubrid.php",
-                    "generated/curl.php",
-                    "generated/datetime.php",
-                    "generated/dir.php",
-                    "generated/eio.php",
-                    "generated/errorfunc.php",
-                    "generated/exec.php",
-                    "generated/fileinfo.php",
-                    "generated/filesystem.php",
-                    "generated/filter.php",
-                    "generated/fpm.php",
-                    "generated/ftp.php",
-                    "generated/funchand.php",
-                    "generated/gettext.php",
-                    "generated/gmp.php",
-                    "generated/gnupg.php",
-                    "generated/hash.php",
-                    "generated/ibase.php",
-                    "generated/ibmDb2.php",
-                    "generated/iconv.php",
-                    "generated/image.php",
-                    "generated/imap.php",
-                    "generated/info.php",
-                    "generated/inotify.php",
-                    "generated/json.php",
-                    "generated/ldap.php",
-                    "generated/libxml.php",
-                    "generated/lzf.php",
-                    "generated/mailparse.php",
-                    "generated/mbstring.php",
-                    "generated/misc.php",
-                    "generated/mysql.php",
-                    "generated/mysqli.php",
-                    "generated/network.php",
-                    "generated/oci8.php",
-                    "generated/opcache.php",
-                    "generated/openssl.php",
-                    "generated/outcontrol.php",
-                    "generated/pcntl.php",
-                    "generated/pcre.php",
-                    "generated/pgsql.php",
-                    "generated/posix.php",
-                    "generated/ps.php",
-                    "generated/pspell.php",
-                    "generated/readline.php",
-                    "generated/rnp.php",
-                    "generated/rpminfo.php",
-                    "generated/rrd.php",
-                    "generated/sem.php",
-                    "generated/session.php",
-                    "generated/shmop.php",
-                    "generated/sockets.php",
-                    "generated/sodium.php",
-                    "generated/solr.php",
-                    "generated/spl.php",
-                    "generated/sqlsrv.php",
-                    "generated/ssdeep.php",
-                    "generated/ssh2.php",
-                    "generated/stream.php",
-                    "generated/strings.php",
-                    "generated/swoole.php",
-                    "generated/uodbc.php",
-                    "generated/uopz.php",
-                    "generated/url.php",
-                    "generated/var.php",
-                    "generated/xdiff.php",
-                    "generated/xml.php",
-                    "generated/xmlrpc.php",
-                    "generated/yaml.php",
-                    "generated/yaz.php",
-                    "generated/zip.php",
-                    "generated/zlib.php"
-                ],
-                "classmap": [
-                    "lib/DateTime.php",
-                    "lib/DateTimeImmutable.php",
-                    "lib/Exceptions/",
-                    "generated/Exceptions/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "PHP core functions that throw exceptions instead of returning FALSE on error",
-            "support": {
-                "issues": "https://github.com/thecodingmachine/safe/issues",
-                "source": "https://github.com/thecodingmachine/safe/tree/v3.4.0"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/OskarStark",
-                    "type": "github"
-                },
-                {
-                    "url": "https://github.com/shish",
-                    "type": "github"
-                },
-                {
-                    "url": "https://github.com/silasjoisten",
-                    "type": "github"
-                },
-                {
-                    "url": "https://github.com/staabm",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-02-04T18:08:13+00:00"
-        },
-        {
             "name": "wamania/php-stemmer",
             "version": "v4.0.0",
             "source": {
@@ -3698,31 +3554,38 @@
         },
         {
             "name": "youthweb/urllinker",
-            "version": "2.1.0",
+            "version": "2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Art4/urllinker.git",
-                "reference": "d72c28bd68698ebb912783bc0e5caf6a8f0904b5"
+                "reference": "1e9345cb2f85fecb87514c2ce4578660b81c44fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Art4/urllinker/zipball/d72c28bd68698ebb912783bc0e5caf6a8f0904b5",
-                "reference": "d72c28bd68698ebb912783bc0e5caf6a8f0904b5",
+                "url": "https://api.github.com/repos/Art4/urllinker/zipball/1e9345cb2f85fecb87514c2ce4578660b81c44fb",
+                "reference": "1e9345cb2f85fecb87514c2ce4578660b81c44fb",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.1"
+                "php": "^8.2"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.84",
+                "friendsofphp/php-cs-fixer": "^3.95",
+                "phpstan/extension-installer": "^1.4",
                 "phpstan/phpstan": "^2.0",
-                "phpunit/phpunit": "^9.6 || ^11.0 || ^12.0",
+                "phpstan/phpstan-deprecation-rules": "^2.0",
+                "phpstan/phpstan-phpunit": "^2.0",
+                "phpstan/phpstan-strict-rules": "^2.0",
+                "phpunit/phpunit": "^11.0 || ^12.0",
                 "rector/rector": "^2.1"
             },
             "type": "library",
             "autoload": {
+                "files": [
+                    "src/compat.php"
+                ],
                 "psr-4": {
-                    "Youthweb\\UrlLinker\\": "src"
+                    "Art4\\UrlLinker\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3744,28 +3607,28 @@
             "homepage": "https://github.com/Art4/urllinker",
             "support": {
                 "issues": "https://github.com/Art4/urllinker/issues",
-                "source": "https://github.com/Art4/urllinker/tree/2.1.0"
+                "source": "https://github.com/Art4/urllinker/tree/2.2.1"
             },
-            "time": "2025-07-22T10:44:28+00:00"
+            "time": "2026-08-19T19:39:51+00:00"
         }
     ],
     "packages-dev": [
         {
             "name": "psalm/phar",
-            "version": "5.26.1",
+            "version": "7.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/psalm/phar.git",
-                "reference": "8a38e7ad04499a0ccd2c506fd1da6fc01fff4547"
+                "reference": "e3b9637595eff7beb5ac5eb055b8bfc99a5b7d6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/psalm/phar/zipball/8a38e7ad04499a0ccd2c506fd1da6fc01fff4547",
-                "reference": "8a38e7ad04499a0ccd2c506fd1da6fc01fff4547",
+                "url": "https://api.github.com/repos/psalm/phar/zipball/e3b9637595eff7beb5ac5eb055b8bfc99a5b7d6a",
+                "reference": "e3b9637595eff7beb5ac5eb055b8bfc99a5b7d6a",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1 || ^8.0"
+                "php": "^8.2"
             },
             "conflict": {
                 "vimeo/psalm": "*"
@@ -3781,9 +3644,10 @@
             "description": "Composer-based Psalm Phar",
             "support": {
                 "issues": "https://github.com/psalm/phar/issues",
-                "source": "https://github.com/psalm/phar/tree/5.26.1"
+                "source": "https://github.com/psalm/phar/tree/7.0.2"
             },
-            "time": "2024-09-09T16:22:43+00:00"
+            "time": "2026-11-04T00:44:16+00:00",
+            "published-time": "2026-11-04T00:44:25+00:00"
         },
         {
             "name": "roave/security-advisories",
@@ -4366,12 +4230,12 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=8.1 <=8.4",
+        "php": ">=8.2 <=8.4",
         "ext-openssl": "*"
     },
     "platform-dev": {},
     "platform-overrides": {
-        "php": "8.1"
+        "php": "8.2"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.11.0"
 }

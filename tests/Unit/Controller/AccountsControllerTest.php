@@ -12,23 +12,21 @@ namespace OCA\Mail\Tests\Unit\Controller;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
-use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Controller\AccountsController;
 use OCA\Mail\Db\MailAccount;
-use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\DelegationForbiddenException;
 use OCA\Mail\IMAP\MailboxSync;
-use OCA\Mail\IMAP\Sync\Response;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\DelegationService;
+use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\SetupService;
-use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\IAppConfig;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
@@ -67,17 +65,11 @@ class AccountsControllerTest extends TestCase {
 	/** @var AliasesService|MockObject */
 	private $aliasesService;
 
-	/** @var IMailTransmission|MockObject */
-	private $transmission;
-
 	/** @var SetupService|MockObject */
 	private $setupService;
 
-	/** @var IMailManager|MockObject */
+	/** @var MailManager|MockObject */
 	private $mailManager;
-
-	/** @var SyncService|MockObject */
-	private $syncService;
 
 	/** @var MailboxSync|MockObject */
 	private $mailboxSync;
@@ -87,6 +79,9 @@ class AccountsControllerTest extends TestCase {
 
 	/** @var IConfig|(IConfig&MockObject)|MockObject */
 	private IConfig|MockObject $config;
+
+	/** @var IAppConfig|MockObject */
+	private IAppConfig|MockObject $appConfig;
 
 	/** @var DelegationService|MockObject */
 	private $delegationService;
@@ -103,12 +98,11 @@ class AccountsControllerTest extends TestCase {
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->l10n = $this->createMock(IL10N::class);
 		$this->aliasesService = $this->createMock(AliasesService::class);
-		$this->transmission = $this->createMock(IMailTransmission::class);
 		$this->setupService = $this->createMock(SetupService::class);
-		$this->mailManager = $this->createMock(IMailManager::class);
-		$this->syncService = $this->createMock(SyncService::class);
+		$this->mailManager = $this->createMock(MailManager::class);
 		$this->mailboxSync = $this->createMock(mailboxSync::class);
 		$this->config = $this->createMock(IConfig::class);
+		$this->appConfig = $this->createMock(IAppConfig::class);
 		$this->hostValidator = $this->createMock(IRemoteHostValidator::class);
 		$this->hostValidator->method('isValid')->willReturn(true);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
@@ -124,15 +118,14 @@ class AccountsControllerTest extends TestCase {
 			$this->logger,
 			$this->l10n,
 			$this->aliasesService,
-			$this->transmission,
 			$this->setupService,
 			$this->mailManager,
-			$this->syncService,
 			$this->config,
 			$this->hostValidator,
 			$this->mailboxSync,
 			$this->timeFactory,
 			$this->delegationService,
+			$this->appConfig,
 		);
 		$this->account = $this->createMock(Account::class);
 		$this->accountId = 123;
@@ -223,9 +216,6 @@ class AccountsControllerTest extends TestCase {
 		$this->accountService->expects(self::once())
 			->method('delete')
 			->with(self::equalTo($this->userId), self::equalTo($this->accountId));
-		$this->delegationService->expects(self::once())
-			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId deleted account <$this->accountId> on behalf of $this->userId");
 
 		$response = $this->controller->destroy($this->accountId);
 
@@ -243,10 +233,40 @@ class AccountsControllerTest extends TestCase {
 		$this->controller->destroy($this->accountId);
 	}
 
+	public function testDestroyAsDelegateIsRejected(): void {
+		$delegationService = $this->createMock(DelegationService::class);
+		$delegationService->method('resolveAccountUserId')
+			->willReturn('owner');
+		$controller = new AccountsController(
+			$this->appName,
+			$this->request,
+			$this->accountService,
+			$this->userId,
+			$this->logger,
+			$this->l10n,
+			$this->aliasesService,
+			$this->setupService,
+			$this->mailManager,
+			$this->config,
+			$this->hostValidator,
+			$this->mailboxSync,
+			$this->timeFactory,
+			$delegationService,
+			$this->appConfig,
+		);
+		$this->accountService->expects(self::once())
+			->method('delete')
+			->with($this->userId, $this->accountId)
+			->willThrowException(new ClientException("Account $this->accountId does not exist"));
+		$this->expectException(ClientException::class);
+
+		$controller->destroy($this->accountId);
+	}
+
 	public function testCreateManualSuccess(): void {
-		$this->config->expects(self::once())
-			->method('getAppValue')
-			->willReturn('yes');
+		$this->appConfig->expects(self::once())
+			->method('getValueBool')
+			->willReturn(true);
 		$email = 'user@domain.tld';
 		$accountName = 'Mail';
 		$imapHost = 'localhost';
@@ -285,9 +305,9 @@ class AccountsControllerTest extends TestCase {
 		$smtpSslMode = 'none';
 		$smtpUser = 'user@domain.tld';
 		$smtpPassword = 'mypassword';
-		$this->config->expects(self::once())
-			->method('getAppValue')
-			->willReturn('no');
+		$this->appConfig->expects(self::once())
+			->method('getValueBool')
+			->willReturn(false);
 		$this->logger->expects(self::once())
 			->method('info');
 		$this->setupService->expects(self::never())
@@ -300,6 +320,9 @@ class AccountsControllerTest extends TestCase {
 	}
 
 	public function testCreateManualFailure(): void {
+		$this->appConfig->expects(self::once())
+			->method('getValueBool')
+			->willReturn(true);
 		$email = 'user@domain.tld';
 		$accountName = 'Mail';
 		$imapHost = 'localhost';
@@ -383,42 +406,6 @@ class AccountsControllerTest extends TestCase {
 		];
 	}
 
-	public function testDraft(): void {
-		$subject = 'Hello';
-		$body = 'Hi!';
-		$to = 'user1@example.com';
-		$cc = '"user2" <user2@example.com>, user3@example.com';
-		$bcc = 'user4@example.com';
-		$id = 123;
-		$newId = 1245;
-		$newUid = 124;
-		$account = $this->createStub(Account::class);
-		$mailbox = new Mailbox();
-		$this->accountService->expects(self::once())
-			->method('find')
-			->with($this->userId, $this->accountId)
-			->will(self::returnValue($this->account));
-		$this->transmission->expects(self::once())
-			->method('saveDraft')
-			->willReturn([$account, $mailbox, $newUid]);
-		$this->mailManager->expects(self::once())
-			->method('getMessageIdForUid')
-			->willReturn($newId);
-		$this->syncService->expects(self::once())
-			->method('syncMailbox')
-			->willReturn(new Response([], [], []));
-		$this->delegationService->expects(self::once())
-			->method('logDelegatedAction')
-			->with($this->userId, $this->userId, "$this->userId saved draft in account <$this->accountId> on behalf of $this->userId");
-
-		$actual = $this->controller->draft($this->accountId, $subject, $body, $to, $cc, $bcc, true, $id);
-
-		$expected = new JSONResponse([
-			'id' => $newId,
-		]);
-		self::assertEquals($expected, $actual);
-	}
-
 	public function testPatchAccountLogsDelegatedAction(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId($this->accountId);
@@ -438,6 +425,42 @@ class AccountsControllerTest extends TestCase {
 		$response = $this->controller->patchAccount($this->accountId, 'plaintext');
 
 		self::assertEquals(new JSONResponse(new Account($mailAccount)), $response);
+	}
+
+	public function testPatchAccountSaveSentCopy(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId($this->accountId);
+		$mailAccount->setUserId($this->userId);
+		$this->accountService->expects(self::once())
+			->method('find')
+			->with($this->userId, $this->accountId)
+			->willReturn(new Account($mailAccount));
+		$this->accountService->expects(self::once())
+			->method('save')
+			->with(self::callback(static fn (MailAccount $account): bool => $account->getSaveSentCopy() === false))
+			->willReturnArgument(0);
+
+		$this->controller->patchAccount($this->accountId, saveSentCopy: false);
+	}
+
+	public function testPatchAccountSpecialMailboxNotDelegated(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId($this->accountId);
+		$mailAccount->setUserId($this->userId);
+		$this->accountService->expects(self::once())
+			->method('find')
+			->with($this->userId, $this->accountId)
+			->willReturn(new Account($mailAccount));
+		$this->delegationService->expects(self::once())
+			->method('assertMailboxAccess')
+			->with(40, $this->userId)
+			->willThrowException(new DelegationForbiddenException('no access'));
+		$this->accountService->expects(self::never())
+			->method('save');
+
+		$this->expectException(DelegationForbiddenException::class);
+
+		$this->controller->patchAccount($this->accountId, null, null, null, 40);
 	}
 
 	public function testUpdateSmimeCertificateLogsDelegatedAction(): void {

@@ -74,8 +74,10 @@ class MailAccountTest extends TestCase {
 			'classificationEnabled' => true,
 			'authMethod' => 'password',
 			'imipCreate' => false,
+			'saveSentCopy' => true,
 			'protocol' => 'imap',
 			'path' => null,
+			'oauthNeedsReauth' => false,
 		], $a->toJson());
 	}
 
@@ -117,8 +119,10 @@ class MailAccountTest extends TestCase {
 			'classificationEnabled' => true,
 			'authMethod' => 'password',
 			'imipCreate' => false,
+			'saveSentCopy' => true,
 			'protocol' => 'imap',
 			'path' => null,
+			'oauthNeedsReauth' => false,
 		];
 		$a = new MailAccount($expected);
 		// TODO: fix inconsistency

@@ -6,17 +6,22 @@
 import { createPinia, setActivePinia } from 'pinia'
 import { curry, range, reverse } from 'ramda'
 import * as AccountService from '../../../service/AccountService.js'
+import * as InternalAddressService from '../../../service/InternalAddressService.js'
 import * as MailboxService from '../../../service/MailboxService.js'
 import * as MessageService from '../../../service/MessageService.js'
 import * as NotificationService from '../../../service/NotificationService.js'
+import * as OutboxService from '../../../service/OutboxService.js'
 import { PAGE_SIZE, UNIFIED_INBOX_ID } from '../../../store/constants.js'
 import useMainStore from '../../../store/mainStore.js'
+import useOutboxStore from '../../../store/outboxStore.js'
 import { normalizedEnvelopeListId } from '../../../util/normalization.js'
 
 vi.mock('../../../service/AccountService.js')
+vi.mock('../../../service/InternalAddressService.js')
 vi.mock('../../../service/MailboxService.js')
 vi.mock('../../../service/MessageService.js')
 vi.mock('../../../service/NotificationService.js')
+vi.mock('../../../service/OutboxService.js')
 vi.mock('../../../util/normalization.js', () => ({
 	__esModule: true,
 	// Supply a default list id ('') to prevent annoying errors
@@ -719,6 +724,62 @@ describe('Vuex store actions', () => {
 		})
 	})
 
+	describe('startComposerSession from a template message', () => {
+		beforeEach(() => {
+			vi.spyOn(store, 'startComposerSessionMutation')
+		})
+
+		it('copies the attachments of the template message', async () => {
+			MessageService.fetchMessage.mockResolvedValue({
+				databaseId: 42,
+				mailboxId: 1,
+				hasHtmlBody: false,
+				body: 'Draft body',
+				attachments: [{ id: 'att1', messageId: 7, fileName: 'doc.pdf' }],
+				inlineAttachments: [],
+			})
+
+			await store.startComposerSession({
+				data: {
+					draftId: 42,
+					attachments: [{ id: 'att1', fileName: 'doc.pdf' }],
+				},
+				templateMessageId: 42,
+			})
+
+			expect(store.startComposerSessionMutation).toHaveBeenCalledWith(expect.objectContaining({
+				data: expect.objectContaining({
+					attachments: [expect.objectContaining({
+						id: 'att1',
+						type: 'message-attachment',
+						mailboxId: 1,
+						uid: 7,
+					})],
+				}),
+			}))
+		})
+
+		it('starts without attachments when the template message has none', async () => {
+			MessageService.fetchMessage.mockResolvedValue({
+				databaseId: 43,
+				mailboxId: 1,
+				hasHtmlBody: false,
+				body: 'Draft body',
+				attachments: [],
+				inlineAttachments: [],
+			})
+
+			await store.startComposerSession({
+				data: { draftId: 43 },
+				templateMessageId: 43,
+			})
+
+			expect(store.startComposerSessionMutation).toHaveBeenCalledWith(expect.objectContaining({
+				data: expect.objectContaining({ attachments: [] }),
+			}))
+		})
+	})
+
 	describe('updateAccount', () => {
 		it('clears the error flag and syncs mailboxes after a successful settings update', async () => {
 			const account = {
@@ -737,6 +798,28 @@ describe('Vuex store actions', () => {
 
 			expect(store.accountsUnmapped[7].error).toBe(false)
 			expect(MailboxService.fetchAll).toHaveBeenCalledWith(7, true)
+		})
+	})
+
+	describe('addInternalAddress', () => {
+		it('adds the created internal address', async () => {
+			const internalAddress = { id: 3, address: 'example.test', type: 'domain' }
+			InternalAddressService.addInternalAddress.mockResolvedValue(internalAddress)
+
+			await store.addInternalAddress({ address: 'example.test', type: 'domain' })
+
+			expect(InternalAddressService.addInternalAddress).toHaveBeenCalledWith('example.test', 'domain')
+			expect(store.getInternalAddresses).toEqual([internalAddress])
+		})
+
+		it('keeps the internal addresses unchanged if the address already exists', async () => {
+			const internalAddress = { id: 3, address: 'example.test', type: 'domain' }
+			store.addInternalAddressMutation(internalAddress)
+			InternalAddressService.addInternalAddress.mockResolvedValue(null)
+
+			await store.addInternalAddress({ address: 'example.test', type: 'domain' })
+
+			expect(store.getInternalAddresses).toEqual([internalAddress])
 		})
 	})
 
@@ -810,6 +893,21 @@ describe('Vuex store actions', () => {
 			}))
 		})
 
+		it('uses From when Reply-To is empty', async () => {
+			MessageService.fetchMessage.mockResolvedValue(makeOriginal({ replyTo: [] }))
+
+			await store.startComposerSession({
+				reply: {
+					mode: 'reply',
+					data: makeEnvelope(),
+				},
+			})
+
+			expect(store.startComposerSessionMutation).toHaveBeenCalledWith(expect.objectContaining({
+				data: expect.objectContaining({ to: from }),
+			}))
+		})
+
 		it('uses To for own sent messages (isOwnMessage follow-up)', async () => {
 			const ownFrom = [{ email: 'me@example.com', label: 'Me' }]
 			MessageService.fetchMessage.mockResolvedValue(makeOriginal())
@@ -839,6 +937,37 @@ describe('Vuex store actions', () => {
 
 			expect(store.startComposerSessionMutation).toHaveBeenCalledWith(expect.objectContaining({
 				data: expect.objectContaining({ to }),
+			}))
+		})
+	})
+
+	describe('startComposerSession outbox editing', () => {
+		it('uses the server-updated message when stopping a scheduled outbox message', async () => {
+			vi.spyOn(store, 'startComposerSessionMutation')
+
+			const outboxStore = useOutboxStore()
+			const pastSendAt = Math.floor(Date.now() / 1000) - 3600
+			const message = {
+				id: 42,
+				accountId: 1,
+				sendAt: pastSendAt,
+				to: [],
+				subject: 'Past due',
+			}
+			outboxStore.addMessageMutation({ message })
+			OutboxService.updateMessage.mockResolvedValue({
+				...message,
+				sendAt: undefined,
+			})
+
+			await store.startComposerSession({
+				type: 'outbox',
+				data: { ...message },
+			})
+
+			expect(store.startComposerSessionMutation).toHaveBeenCalledWith(expect.objectContaining({
+				data: expect.objectContaining({ sendAt: undefined }),
+				originalSendAt: pastSendAt,
 			}))
 		})
 	})

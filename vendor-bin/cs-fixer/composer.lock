@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "778e12578327e3388cee7eefc87ead44",
+    "content-hash": "d0cfe92e0aea392136fa318ace0781d1",
     "packages": [],
     "packages-dev": [
         {
@@ -106,16 +106,16 @@
         },
         {
             "name": "php-cs-fixer/shim",
-            "version": "v3.95.12",
+            "version": "v3.95.29",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/shim.git",
-                "reference": "b1b00fc14aa446d6ef0c7a4007a7c52bdad51000"
+                "reference": "fec935ae1ccb3df4c7e66dae9a62a52e4c0b9a92"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/shim/zipball/b1b00fc14aa446d6ef0c7a4007a7c52bdad51000",
-                "reference": "b1b00fc14aa446d6ef0c7a4007a7c52bdad51000",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/shim/zipball/fec935ae1ccb3df4c7e66dae9a62a52e4c0b9a92",
+                "reference": "fec935ae1ccb3df4c7e66dae9a62a52e4c0b9a92",
                 "shasum": ""
             },
             "require": {
@@ -152,9 +152,16 @@
             "description": "A tool to automatically fix PHP code style",
             "support": {
                 "issues": "https://github.com/PHP-CS-Fixer/shim/issues",
-                "source": "https://github.com/PHP-CS-Fixer/shim/tree/v3.95.12"
+                "source": "https://github.com/PHP-CS-Fixer/shim/tree/v3.95.29"
             },
-            "time": "2026-07-07T13:30:09+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/keradus",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-11-06T16:26:08+00:00",
+            "published-time": "2026-11-06T16:26:16+00:00"
         }
     ],
     "aliases": [],
@@ -165,7 +172,7 @@
     "platform": {},
     "platform-dev": {},
     "platform-overrides": {
-        "php": "8.1"
+        "php": "8.2"
     },
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.11.0"
 }

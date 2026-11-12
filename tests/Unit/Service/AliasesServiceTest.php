@@ -103,6 +103,52 @@ class AliasesServiceTest extends TestCase {
 		$this->assertEquals($entity->getName(), $result->getName());
 	}
 
+	public function testCreateWithSignatureAndCertificate(): void {
+		$this->mailAccountMapper->expects(self::once())
+			->method('find');
+
+		$this->aliasMapper->expects(self::once())
+			->method('insert')
+			->willReturnCallback(static function (Alias $alias) {
+				$alias->setId(100);
+				return $alias;
+			});
+
+		$result = $this->service->create(
+			$this->user,
+			200,
+			'jane@doe.com',
+			'Jane Doe',
+			'Kind regards',
+			42
+		);
+
+		$this->assertEquals('Kind regards', $result->getSignature());
+		$this->assertEquals(42, $result->getSmimeCertificateId());
+	}
+
+	public function testCreateWithoutSignatureAndCertificate(): void {
+		$this->mailAccountMapper->expects(self::once())
+			->method('find');
+
+		$this->aliasMapper->expects(self::once())
+			->method('insert')
+			->willReturnCallback(static function (Alias $alias) {
+				$alias->setId(100);
+				return $alias;
+			});
+
+		$result = $this->service->create(
+			$this->user,
+			200,
+			'jane@doe.com',
+			'Jane Doe'
+		);
+
+		$this->assertNull($result->getSignature());
+		$this->assertNull($result->getSmimeCertificateId());
+	}
+
 	public function testCreateForbiddenAccountId(): void {
 		$this->expectException(DoesNotExistException::class);
 
