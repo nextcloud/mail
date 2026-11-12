@@ -23,7 +23,7 @@
     "extends @nextcloud/browserslist-config"
   ],
   "overrides": {
-    "floating-vue": "~5.2.2"
+    "floating-vue": "~5.4.0"
   },
   "dependencies": {
     "24": "^0.0.0",
