@@ -303,8 +303,6 @@
   </file>
   <file src="lib/Settings/AdminSettings.php">
     <PossiblyNullArgument>
-      <code><![CDATA[$this->googleIntegration->getClientId()]]></code>
-      <code><![CDATA[$this->microsoftIntegration->getClientId()]]></code>
       <code><![CDATA[$this->microsoftIntegration->getTenantId()]]></code>
     </PossiblyNullArgument>
   </file>
