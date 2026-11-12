@@ -1053,6 +1053,10 @@ export default {
 		window.addEventListener('resize', this.onWindowResize)
 	},
 
+	beforeUnmount() {
+		window.removeEventListener('resize', this.onWindowResize)
+	},
+
 	methods: {
 		tagTextColor,
 		translateTagDisplayName,
