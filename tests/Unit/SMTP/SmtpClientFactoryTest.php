@@ -14,6 +14,7 @@ use Horde_Mail_Transport_Smtphorde;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\SMTP\SmtpClientFactory;
+use OCA\Mail\Support\DebugLogPathFactory;
 use OCA\Mail\Support\HostNameFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
@@ -29,6 +30,8 @@ class SmtpClientFactoryTest extends TestCase {
 	/** @var HostNameFactory|MockObject */
 	private $hostNameFactory;
 
+	private DebugLogPathFactory&MockObject $debugLogPathFactory;
+
 	/** @var SmtpClientFactory */
 	private $factory;
 
@@ -38,11 +41,22 @@ class SmtpClientFactoryTest extends TestCase {
 		$this->config = $this->createMock(IConfig::class);
 		$this->crypto = $this->createMock(ICrypto::class);
 		$this->hostNameFactory = $this->createMock(HostNameFactory::class);
+		$this->debugLogPathFactory = $this->createMock(DebugLogPathFactory::class);
 
-		$this->factory = new SmtpClientFactory($this->config, $this->crypto, $this->hostNameFactory);
+		$this->factory = new SmtpClientFactory($this->config, $this->crypto, $this->hostNameFactory, $this->debugLogPathFactory);
 	}
 
-	public function testSmtpTransport() {
+	public static function debugLogPathProvider(): array {
+		return [
+			'debug off' => [null],
+			'debug on' => ['/data/mail-bob-1-smtp.log'],
+		];
+	}
+
+	/**
+	 * @dataProvider debugLogPathProvider
+	 */
+	public function testSmtpTransport(?string $debugLogPath): void {
 		$mailAccount = new MailAccount([
 			'smtpHost' => 'smtp.domain.tld',
 			'smtpPort' => 25,
@@ -70,7 +84,11 @@ class SmtpClientFactoryTest extends TestCase {
 		$this->hostNameFactory->expects($this->once())
 			->method('getHostName')
 			->willReturn('cloud.example.com');
-		$expected = new Horde_Mail_Transport_Smtphorde([
+		$this->debugLogPathFactory->expects($this->once())
+			->method('getPath')
+			->with($account, DebugLogPathFactory::PROTOCOL_SMTP)
+			->willReturn($debugLogPath);
+		$expectedParams = [
 			'host' => 'smtp.domain.tld',
 			'password' => 'pass123',
 			'port' => 25,
@@ -84,7 +102,11 @@ class SmtpClientFactoryTest extends TestCase {
 					'verify_peer_name' => true,
 				],
 			],
-		]);
+		];
+		if ($debugLogPath !== null) {
+			$expectedParams['debug'] = $debugLogPath;
+		}
+		$expected = new Horde_Mail_Transport_Smtphorde($expectedParams);
 
 		$transport = $this->factory->create($account);
 
