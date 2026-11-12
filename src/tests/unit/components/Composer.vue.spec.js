@@ -495,6 +495,44 @@ describe('Composer', () => {
 		expect(view.vm.filterOption(option, option.label, 'янковский', 'cc')).toEqual(true)
 	})
 
+	it('keeps the reply recipient name when the search result has no name', async () => {
+		vi.useFakeTimers()
+		findRecipient.mockResolvedValue([
+			{ id: 1, email: 'yankovsky_ol@example.com', label: 'yankovsky_ol@example.com' },
+		])
+		const view = shallowMount(Composer, {
+			props: {
+				isFirstOpen: true,
+				to: [{ email: 'yankovsky_ol@example.com', label: 'Янковский Олег Леонидович' }],
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+						emailAddress: 'test@example.com',
+						name: 'Test Account',
+					},
+				],
+			},
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
+		})
+
+		view.vm.removeRecipientTo({ email: 'yankovsky_ol@example.com' })
+		view.vm.onAutocomplete('yankovsky', 'cc')
+		await vi.runAllTimersAsync()
+		vi.useRealTimers()
+
+		const option = view.vm.selectableRecipients.find((recipient) => recipient.email === 'yankovsky_ol@example.com')
+		expect(option.label).toEqual('Янковский Олег Леонидович')
+		expect(view.vm.filterOption(option, option.label, 'янковский', 'cc')).toEqual(true)
+	})
+
 	it('inserts the signature when composing a new message', () => {
 		const view = shallowMount(Composer, {
 			props: {

@@ -1563,7 +1563,12 @@ export default {
 					}
 				}
 
-				this.autocompleteRecipients = uniqBy('email')(results.concat(this.autocompleteRecipients))
+				const hasName = (recipient) => recipient.label !== recipient.email
+				this.autocompleteRecipients = uniqBy('email')([
+					...results.filter(hasName),
+					...this.autocompleteRecipients,
+					...results,
+				])
 			})
 		},
 
