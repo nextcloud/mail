@@ -60,7 +60,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use '../../css/fluid.scss';
+@use '../styles/fluid.scss';
 
 .no-message-selected {
 	display: flex;

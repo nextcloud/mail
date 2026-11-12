@@ -35,7 +35,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use '../../css/variables.scss';
+@use '../styles/variables.scss';
 
 /* skeleton */
 .message-loading-skeleton {

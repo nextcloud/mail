@@ -191,7 +191,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use '../../css/variables.scss';
+@use '../styles/variables.scss';
 
 .attachments {
 	width: 100%;
