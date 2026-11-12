@@ -81,6 +81,23 @@ class SieveClientFactoryTest extends TestCase {
 		$this->assertInstanceOf(ManageSieve::class, $client);
 	}
 
+	public function testClientWithDebug(): void {
+		$logFile = sys_get_temp_dir() . '/mail-bob-123-sieve.log';
+		@unlink($logFile);
+		$account = $this->getTestAccount();
+		$account->getMailAccount()->setUserId('bob');
+		$account->getMailAccount()->setDebug(true);
+		$this->config->method('getSystemValueString')
+			->willReturnCallback(fn (string $key) => $key === 'datadirectory' ? sys_get_temp_dir() : '');
+		$this->crypto->method('decrypt')
+			->willReturn('');
+
+		$this->factory->getClient($account);
+
+		$this->assertFileExists($logFile);
+		unlink($logFile);
+	}
+
 	public function testClientInstallScript() {
 		$account = $this->getTestAccount();
 		$this->crypto->expects($this->once())
