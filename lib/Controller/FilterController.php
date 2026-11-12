@@ -10,7 +10,9 @@ declare(strict_types=1);
 namespace OCA\Mail\Controller;
 
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\FilterService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -20,43 +22,49 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 class FilterController extends Controller {
-	private string $currentUserId;
-
 	public function __construct(
 		IRequest $request,
-		string $userId,
+		private string $userId,
 		private FilterService $mailFilterService,
 		private AccountService $accountService,
+		private DelegationService $delegationService,
 	) {
 		parent::__construct(Application::APP_ID, $request);
-		$this->currentUserId = $userId;
 	}
 
-
+	/**
+	 * @psalm-return JSONResponse<200|404, array, array<never, never>>
+	 */
 	#[Route(Route::TYPE_FRONTPAGE, verb: 'GET', url: '/api/filter/{accountId}', requirements: ['accountId' => '[\d]+'])]
 	#[NoAdminRequired]
-	public function getFilters(int $accountId) {
+	public function getFilters(int $accountId): JSONResponse {
+		$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->userId);
 		$account = $this->accountService->findById($accountId);
 
-		if ($account->getUserId() !== $this->currentUserId) {
+		if ($account->getUserId() !== $effectiveUserId) {
 			return new JSONResponse([], Http::STATUS_NOT_FOUND);
 		}
-
 		$result = $this->mailFilterService->parse($account->getMailAccount());
 
 		return new JSONResponse($result->getFilters());
 	}
 
+	/**
+	 * @psalm-return JSONResponse<200|404, array<never, never>, array<never, never>>
+	 */
 	#[Route(Route::TYPE_FRONTPAGE, verb: 'PUT', url: '/api/filter/{accountId}', requirements: ['accountId' => '[\d]+'])]
 	#[NoAdminRequired]
-	public function updateFilters(int $accountId, array $filters) {
+	#[TrapError]
+	public function updateFilters(int $accountId, array $filters): JSONResponse {
+		$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->userId);
 		$account = $this->accountService->findById($accountId);
 
-		if ($account->getUserId() !== $this->currentUserId) {
+		if ($account->getUserId() !== $effectiveUserId) {
 			return new JSONResponse([], Http::STATUS_NOT_FOUND);
 		}
 
 		$this->mailFilterService->update($account->getMailAccount(), $filters);
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated account: $accountId 's filters  on behalf of $effectiveUserId");
 
 		return new JSONResponse([]);
 	}

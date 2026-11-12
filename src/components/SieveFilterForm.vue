@@ -4,7 +4,8 @@
 -->
 <template>
 	<div class="section">
-		<textarea id="sieve-text-area"
+		<textarea
+			id="sieve-text-area"
 			v-model="script"
 			v-shortkey.avoid
 			rows="20"
@@ -13,38 +14,42 @@
 			{{ t('mail', 'Oh Snap!') }}
 			{{ errorMessage }}
 		</p>
-		<ButtonVue type="primary"
+		<NcButton
+			variant="primary"
 			:disabled="loading"
 			:aria-label="t('mail', 'Save sieve script')"
 			@click="saveActiveScript">
 			<template #icon>
-				<IconLoading v-if="loading" :size="16" />
-				<IconCheck v-else :size="16" />
+				<NcLoadingIcon v-if="loading" :size="20" />
+				<IconCheck v-else :size="20" />
 			</template>
 			{{ t('mail', 'Save sieve script') }}
-		</ButtonVue>
+		</NcButton>
 	</div>
 </template>
 
 <script>
-import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
-import IconCheck from 'vue-material-design-icons/Check.vue'
 import { mapStores } from 'pinia'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
+import IconCheck from 'vue-material-design-icons/Check.vue'
 import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'SieveFilterForm',
 	components: {
-		ButtonVue,
-		IconLoading,
+		NcButton,
+		NcLoadingIcon,
 		IconCheck,
 	},
+
 	props: {
 		account: {
 			type: Object,
 			required: true,
 		},
 	},
+
 	data() {
 		return {
 			script: '',
@@ -52,12 +57,14 @@ export default {
 			errorMessage: '',
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		scriptData() {
 			return this.mainStore.getActiveSieveScript(this.account.id)
 		},
 	},
+
 	watch: {
 		scriptData: {
 			immediate: true,
@@ -71,6 +78,7 @@ export default {
 			},
 		},
 	},
+
 	methods: {
 		async saveActiveScript() {
 			this.loading = true
@@ -108,15 +116,5 @@ export default {
 textarea {
 	width: 100%;
 	resize: vertical;
-}
-
-.primary {
-	padding-inline-start: 26px;
-	background-position: 6px;
-	color: var(--color-main-background);
-
-	&:after {
-		 inset-inline-start: 14px;
-	 }
 }
 </style>

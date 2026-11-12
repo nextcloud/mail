@@ -11,13 +11,13 @@ namespace OCA\Mail\Service\Classification;
 
 use Horde_Imap_Client;
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Service\MailManager;
 use Psr\Log\LoggerInterface;
 
 class NewMessagesClassifier {
@@ -33,8 +33,7 @@ class NewMessagesClassifier {
 		private ImportanceClassifier $classifier,
 		private TagMapper $tagMapper,
 		private LoggerInterface $logger,
-		private IMailManager $mailManager,
-		private ClassificationSettingsService $classificationSettingsService,
+		private MailManager $mailManager,
 	) {
 	}
 
@@ -50,22 +49,22 @@ class NewMessagesClassifier {
 	 * @param Mailbox $mailbox
 	 * @param Account $account
 	 * @param Tag $importantTag
-	 * @return void
+	 * @return bool true if classification was done
 	 */
 	public function classifyNewMessages(
 		array $messages,
 		Mailbox $mailbox,
 		Account $account,
 		Tag $importantTag,
-	): void {
-		if (!$this->classificationSettingsService->isClassificationEnabled($account->getUserId())) {
-			return;
+	): bool {
+		if (!$account->getMailAccount()->getClassificationEnabled()) {
+			return false;
 		}
 
 		foreach (self::EXEMPT_FROM_CLASSIFICATION as $specialUse) {
 			if ($mailbox->isSpecialUse($specialUse)) {
 				// Nothing to do then
-				return;
+				return false;
 			}
 		}
 
@@ -75,9 +74,7 @@ class NewMessagesClassifier {
 			$account->getUserId(),
 			Tag::LABEL_IMPORTANT
 		);
-		$messages = array_filter($messages, static function ($message) use ($doNotReclassify) {
-			return ($message->getFlagImportant() === false || in_array($message->getMessageId(), $doNotReclassify, true));
-		});
+		$messages = array_filter($messages, static fn ($message) => $message->getFlagImportant() === false || in_array($message->getMessageId(), $doNotReclassify, true));
 
 		try {
 			$predictions = $this->classifier->classifyImportance(
@@ -91,8 +88,8 @@ class NewMessagesClassifier {
 				$this->logger->info("Message {$message->getUid()} ({$message->getPreviewText()}) is " . ($prediction ? 'important' : 'not important'));
 				if ($prediction) {
 					$message->setFlagImportant(true);
-					$this->mailManager->flagMessage($account, $mailbox->getName(), $message->getUid(), Tag::LABEL_IMPORTANT, true);
-					$this->mailManager->tagMessage($account, $mailbox->getName(), $message, $importantTag, true);
+					$this->mailManager->flagMessages($account, $mailbox, Tag::LABEL_IMPORTANT, true, $message);
+					$this->mailManager->tagMessages($account, $mailbox, $importantTag, true, $message);
 				}
 			}
 		} catch (ServiceException $e) {
@@ -104,5 +101,6 @@ class NewMessagesClassifier {
 				'exception' => $e,
 			]);
 		}
+		return true;
 	}
 }

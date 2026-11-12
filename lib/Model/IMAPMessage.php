@@ -33,108 +33,66 @@ use function trim;
 
 /**
  * @psalm-import-type MailIMAPFullMessage from ResponseDefinitions
+ *
+ * @psalm-type IMAPAttachment = array{
+ *      id: string|null,
+ *      messageId: int,
+ *      fileName: string|null,
+ *      mime: string,
+ *      size: int,
+ *      cid: string|null,
+ *      disposition: string,
+ *  }
  */
 class IMAPMessage implements IMessage, JsonSerializable {
-	use ConvertAddresses;
+	private ?string $sanitizedHtmlBody = null;
+	private ?int $sanitizedHtmlBodyId = null;
 
-	private Html $htmlService;
-
-	/** @var string[] */
-	private array $flags;
-
-	private int $messageId;
-	private string $realMessageId;
-	private AddressList $from;
-	private AddressList $to;
-	private AddressList $cc;
-	private AddressList $bcc;
-	private AddressList $replyTo;
-	private string $subject;
-	public string $plainMessage;
-	public string $htmlMessage;
-	public array $attachments;
-	public array $inlineAttachments;
-	private bool $hasAttachments;
-	public array $scheduling;
-	private bool $hasHtmlMessage;
-	private Horde_Imap_Client_DateTime $imapDate;
-	private string $rawReferences;
-	private string $dispositionNotificationTo;
-	private bool $hasDkimSignature;
-	private array $phishingDetails;
-	private ?string $unsubscribeUrl;
-	private bool $isOneClickUnsubscribe;
-	private ?string $unsubscribeMailto;
-	private string $rawInReplyTo;
-	private bool $isEncrypted;
-	private bool $isSigned;
-	private bool $signatureIsValid;
-	private bool $isPgpMimeEncrypted;
-
-	public function __construct(int $uid,
-		string $messageId,
-		array $flags,
-		AddressList $from,
-		AddressList $to,
-		AddressList $cc,
-		AddressList $bcc,
-		AddressList $replyTo,
-		string $subject,
-		string $plainMessage,
-		string $htmlMessage,
-		bool $hasHtmlMessage,
-		array $attachments,
-		array $inlineAttachments,
-		bool $hasAttachments,
-		array $scheduling,
-		Horde_Imap_Client_DateTime $imapDate,
-		string $rawReferences,
-		string $dispositionNotificationTo,
-		bool $hasDkimSignature,
-		array $phishingDetails,
-		?string $unsubscribeUrl,
-		bool $isOneClickUnsubscribe,
-		?string $unsubscribeMailto,
-		string $rawInReplyTo,
-		bool $isEncrypted,
-		bool $isSigned,
-		bool $signatureIsValid,
-		Html $htmlService,
-		bool $isPgpMimeEncrypted) {
-		$this->messageId = $uid;
-		$this->realMessageId = $messageId;
-		$this->flags = $flags;
-		$this->from = $from;
-		$this->to = $to;
-		$this->cc = $cc;
-		$this->bcc = $bcc;
-		$this->replyTo = $replyTo;
-		$this->subject = $subject;
-		$this->plainMessage = $plainMessage;
-		$this->htmlMessage = $htmlMessage;
-		$this->hasHtmlMessage = $hasHtmlMessage;
-		$this->attachments = $attachments;
-		$this->inlineAttachments = $inlineAttachments;
-		$this->hasAttachments = $hasAttachments;
-		$this->scheduling = $scheduling;
-		$this->imapDate = $imapDate;
-		$this->rawReferences = $rawReferences;
-		$this->dispositionNotificationTo = $dispositionNotificationTo;
-		$this->hasDkimSignature = $hasDkimSignature;
-		$this->phishingDetails = $phishingDetails;
-		$this->unsubscribeUrl = $unsubscribeUrl;
-		$this->isOneClickUnsubscribe = $isOneClickUnsubscribe;
-		$this->unsubscribeMailto = $unsubscribeMailto;
-		$this->rawInReplyTo = $rawInReplyTo;
-		$this->isEncrypted = $isEncrypted;
-		$this->isSigned = $isSigned;
-		$this->signatureIsValid = $signatureIsValid;
-		$this->htmlService = $htmlService;
-		$this->isPgpMimeEncrypted = $isPgpMimeEncrypted;
+	/**
+	 * @param list<IMAPAttachment> $inlineAttachments
+	 */
+	public function __construct(
+		private int $messageId,
+		private string $realMessageId,
+		/** @var string[] */
+		private array $flags,
+		private AddressList $from,
+		private AddressList $to,
+		private AddressList $cc,
+		private AddressList $bcc,
+		private AddressList $replyTo,
+		private string $subject,
+		public string $plainMessage,
+		public string $htmlMessage,
+		private bool $hasHtmlMessage,
+		public array $attachments,
+		public array $inlineAttachments,
+		private bool $hasAttachments,
+		public array $scheduling,
+		private Horde_Imap_Client_DateTime $imapDate,
+		private string $rawReferences,
+		private string $dispositionNotificationTo,
+		private bool $hasDkimSignature,
+		private bool $hasAiGeneratedHeader,
+		private array $phishingDetails,
+		private ?string $unsubscribeUrl,
+		private bool $isOneClickUnsubscribe,
+		private ?string $unsubscribeMailto,
+		private string $rawInReplyTo,
+		private bool $isEncrypted,
+		private bool $isSigned,
+		private bool $signatureIsValid,
+		private Html $htmlService,
+		private bool $isPgpMimeEncrypted,
+	) {
 	}
 
 	public static function generateMessageId(): string {
 		return Horde_Mime_Headers_MessageId::create('nextcloud-mail-generated')->value;
+	}
+
+	public function hasHtmlMessage(): bool {
+		return $this->hasHtmlMessage;
 	}
 
 	/**
@@ -158,7 +116,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			'draft' => in_array(Horde_Imap_Client::FLAG_DRAFT, $this->flags),
 			'forwarded' => in_array(Horde_Imap_Client::FLAG_FORWARDED, $this->flags),
 			'hasAttachments' => $this->hasAttachments,
-			'mdnsent' => in_array(Horde_Imap_Client::FLAG_MDNSENT, $this->flags, true),
+			'$mdnsent' => in_array(Horde_Imap_Client::FLAG_MDNSENT, $this->flags, true),
 			'important' => in_array(Tag::LABEL_IMPORTANT, $this->flags, true)
 		];
 	}
@@ -299,6 +257,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		if ($this->hasHtmlMessage) {
 			$data['hasHtmlBody'] = true;
 			$data['attachments'] = $this->attachments;
+			$data['inlineAttachments'] = $this->inlineAttachments;
 			return $data;
 		}
 
@@ -306,6 +265,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		[$mailBody, $signature] = $this->htmlService->parseMailBody($mailBody);
 		$data['signature'] = $signature;
 		$data['attachments'] = array_merge($this->attachments, $this->inlineAttachments);
+		$data['inlineAttachments'] = [];
 		if ($loadBody) {
 			$data['body'] = $mailBody;
 		}
@@ -335,6 +295,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			'unsubscribeMailto' => $this->unsubscribeMailto,
 			'scheduling' => $this->scheduling,
 			'isPgpMimeEncrypted' => $this->isPgpMimeEncrypted,
+			'hasAiGeneratedHeader' => $this->hasAiGeneratedHeader,
 		];
 	}
 
@@ -344,19 +305,18 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 * @return string
 	 */
 	public function getHtmlBody(int $id): string {
-		return $this->htmlService->sanitizeHtmlMailBody($this->htmlMessage, [
-			'id' => $id,
-		], function ($cid) {
-			$match = array_filter($this->inlineAttachments,
-				static function ($a) use ($cid) {
-					return $a['cid'] === $cid;
-				});
-			$match = array_shift($match);
-			if ($match === null) {
-				return null;
-			}
-			return $match['id'];
-		});
+		if ($this->sanitizedHtmlBody !== null && $this->sanitizedHtmlBodyId === $id) {
+			return $this->sanitizedHtmlBody;
+		}
+
+		$this->sanitizedHtmlBody = $this->htmlService->sanitizeHtmlMailBody(
+			$id,
+			$this->htmlMessage,
+			$this->inlineAttachments,
+		);
+		$this->sanitizedHtmlBodyId = $id;
+
+		return $this->sanitizedHtmlBody;
 	}
 
 	/**
@@ -381,10 +341,11 @@ class IMAPMessage implements IMessage, JsonSerializable {
 
 	/**
 	 * @return Horde_Mime_Part[]
+	 * @todo Actually returns list<array{id: string, messageId: int, fileName: string|null, mime: string, size: int, cid: string|null, disposition: string|null}>, violating the IMessage contract.
 	 */
 	#[\Override]
 	public function getAttachments(): array {
-		throw new Exception('not implemented');
+		return $this->attachments;
 	}
 
 	/**
@@ -480,6 +441,10 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		return $this->signatureIsValid;
 	}
 
+	public function hasDkimSignature(): bool {
+		return $this->hasDkimSignature;
+	}
+
 	public function getUnsubscribeUrl(): ?string {
 		return $this->unsubscribeUrl;
 	}
@@ -533,9 +498,11 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$msg->setFlagJunk(
 			in_array(Horde_Imap_Client::FLAG_JUNK, $flags, true)
 			|| in_array('junk', $flags, true)
-		);
-		$msg->setFlagNotjunk(in_array(Horde_Imap_Client::FLAG_NOTJUNK, $flags, true) || in_array('nonjunk', $flags, true));// While this is not a standard IMAP Flag, Thunderbird uses it to mark "not junk"
-		// @todo remove this as soon as possible @link https://github.com/nextcloud/mail/issues/25
+		); // While this is not a standard IMAP Flag, Thunderbird uses it to mark "junk"
+		$msg->setFlagNotjunk(
+			in_array(Horde_Imap_Client::FLAG_NOTJUNK, $flags, true)
+			|| in_array('nonjunk', $flags, true)
+		); // While this is not a standard IMAP Flag, Thunderbird uses it to mark "not junk"
 		$msg->setFlagImportant(in_array('$important', $flags, true) || in_array('$labelimportant', $flags, true) || in_array(Tag::LABEL_IMPORTANT, $flags, true));
 		$msg->setFlagAttachments(false);
 		$msg->setFlagMdnsent(in_array(Horde_Imap_Client::FLAG_MDNSENT, $flags, true));
@@ -550,17 +517,17 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			Horde_Imap_Client::FLAG_DELETED,
 			Horde_Imap_Client::FLAG_DRAFT,
 			Horde_Imap_Client::FLAG_JUNK,
+			'junk', // While this is not a standard IMAP Flag, Thunderbird uses it to mark "junk"
 			Horde_Imap_Client::FLAG_NOTJUNK,
 			'nonjunk', // While this is not a standard IMAP Flag, Thunderbird uses it to mark "not junk"
+			'$phishing', // Horde has no const for this flag yet
 			Horde_Imap_Client::FLAG_MDNSENT,
 			Horde_Imap_Client::FLAG_RECENT,
 			Horde_Imap_Client::FLAG_SEEN,
 		];
 
 		// remove all standard IMAP flags from $filters
-		$tags = array_filter($flags, static function ($flag) use ($allowed) {
-			return in_array($flag, $allowed, true) === false;
-		});
+		$tags = array_filter($flags, static fn ($flag) => in_array($flag, $allowed, true) === false);
 
 		if (($tags === []) === true) {
 			return $msg;
@@ -603,7 +570,8 @@ class IMAPMessage implements IMessage, JsonSerializable {
 
 			$displayName = str_replace(['_', '$'], [' ', ''], $keyword);
 			$displayName = strtoupper($displayName);
-			$displayName = mb_convert_encoding($displayName, 'UTF-8', 'UTF7-IMAP');
+			$convertedDisplayName = mb_convert_encoding($displayName, 'UTF-8', 'UTF7-IMAP');
+			$displayName = $convertedDisplayName === false ? $displayName : $convertedDisplayName;
 			$displayName = strtolower($displayName);
 			$displayName = ucwords($displayName);
 

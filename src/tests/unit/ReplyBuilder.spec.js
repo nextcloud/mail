@@ -30,7 +30,7 @@ describe('ReplyBuilder', () => {
 				label: 'Test User',
 				email: 'test@user.ru',
 			},
-			1541426237
+			1541426237,
 		)
 		const replyBodyBottom = buildReplyBody(
 			body,
@@ -39,7 +39,7 @@ describe('ReplyBuilder', () => {
 				email: 'test@user.ru',
 			},
 			1541426237,
-			false
+			false,
 		)
 
 		expect(replyBodyTop.value.startsWith(html('<p></p><p></p><div class="quote">"Test User" test@user.ru – November 5, 2018 ').value)).toEqual(true)
@@ -76,6 +76,20 @@ describe('ReplyBuilder', () => {
 		envelope.cc = []
 
 		const reply = buildRecipients(envelope, a)
+
+		assertSameAddressList(reply.from, [a])
+		assertSameAddressList(reply.to, [b])
+		assertSameAddressList(reply.cc, [])
+	})
+
+	it('uses From when Reply-To is empty', () => {
+		const a = createAddress('a@domain.tld')
+		const b = createAddress('b@domain.tld')
+		envelope.from = [b]
+		envelope.to = [a]
+		envelope.cc = []
+
+		const reply = buildRecipients(envelope, a, [])
 
 		assertSameAddressList(reply.from, [a])
 		assertSameAddressList(reply.to, [b])
@@ -163,7 +177,7 @@ describe('ReplyBuilder', () => {
 		assertSameAddressList(reply.cc, [dani])
 	})
 
-	it("handles jan's reply to nina's mesage to a mailing list", () => {
+	it("handles jan's reply to nina's message to a mailing list", () => {
 		const nina = createAddress('nina@nc.com')
 		const list = createAddress('list@nc.com')
 		const jan = createAddress('jan@nc.com')

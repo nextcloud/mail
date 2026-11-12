@@ -27,6 +27,9 @@ use function implode;
 use function json_encode;
 
 class IMAPClientFactory {
+	/** @var array<string, int> */
+	private array $loginCounts = [];
+
 	/** @var ICrypto */
 	private $crypto;
 
@@ -40,20 +43,20 @@ class IMAPClientFactory {
 	private $eventDispatcher;
 
 	private ITimeFactory $timeFactory;
-	private HordeCacheFactory $hordeCacheFactory;
 
-	public function __construct(ICrypto $crypto,
+	public function __construct(
+		ICrypto $crypto,
 		IConfig $config,
 		ICacheFactory $cacheFactory,
 		IEventDispatcher $eventDispatcher,
 		ITimeFactory $timeFactory,
-		HordeCacheFactory $hordeCacheFactory) {
+		private HordeCacheFactory $hordeCacheFactory,
+	) {
 		$this->crypto = $crypto;
 		$this->config = $config;
 		$this->cacheFactory = $cacheFactory;
 		$this->eventDispatcher = $eventDispatcher;
 		$this->timeFactory = $timeFactory;
-		$this->hordeCacheFactory = $hordeCacheFactory;
 	}
 
 	/**
@@ -101,9 +104,13 @@ class IMAPClientFactory {
 		];
 		if ($account->getMailAccount()->getAuthMethod() === 'xoauth2') {
 			try {
-				$decryptedAccessToken = $this->crypto->decrypt($account->getMailAccount()->getOauthAccessToken());
+				$oauthAccessToken = $account->getMailAccount()->getOauthAccessToken();
+				if ($oauthAccessToken === null) {
+					throw new ServiceException('Missing access token for xoauth2 account');
+				}
+				$decryptedAccessToken = $this->crypto->decrypt($oauthAccessToken);
 			} catch (Exception $e) {
-				throw new ServiceException('Could not decrypt account password: ' . $e->getMessage(), 0, $e);
+				throw new ServiceException('Could not decrypt account access token: ' . $e->getMessage(), 0, $e);
 			}
 
 			$params['password'] = $decryptedAccessToken; // Not used, but Horde wants this
@@ -125,12 +132,12 @@ class IMAPClientFactory {
 				'backend' => $this->hordeCacheFactory->newCache($account),
 			];
 		}
-		if ($account->getDebug() || $this->config->getSystemValueBool('app.mail.debug')) {
-			$fn = 'mail-' . $account->getUserId() . '-' . $account->getId() . '-imap.log';
+		if ($account->getMailAccount()->getDebug() || $this->config->getSystemValueBool('app.mail.debug')) {
+			$fn = "mail-{$account->getUserId()}-{$account->getId()}-imap.log";
 			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/' . $fn;
 		}
 
-		$client = new HordeImapClient($params);
+		$client = new HordeImapClient($params, $this);
 
 		$rateLimitingCache = $this->cacheFactory->createDistributed('mail_imap_ratelimit');
 		if ($rateLimitingCache instanceof IMemcache) {
@@ -138,5 +145,14 @@ class IMAPClientFactory {
 		}
 
 		return $client;
+	}
+
+	public function recordLogin(string $host): void {
+		$this->loginCounts[$host] = ($this->loginCounts[$host] ?? 0) + 1;
+	}
+
+	/** @return array<string, int> */
+	public function getLoginStats(): array {
+		return $this->loginCounts;
 	}
 }

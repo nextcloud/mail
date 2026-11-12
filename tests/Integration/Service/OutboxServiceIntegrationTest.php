@@ -11,21 +11,19 @@ namespace OCA\Mail\Tests\Integration\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestUser;
 use Horde_Imap_Client;
-use OC;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IAttachmentService;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\LocalAttachmentMapper;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Send\Chain;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\Attachment\AttachmentStorage;
+use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Service\Sync\SyncService;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
@@ -35,10 +33,13 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\Folder;
-use OCP\IServerContainer;
+use OCP\Files\IMimeTypeDetector;
+use OCP\Files\IRootFolder;
+use OCP\ICacheFactory;
+use OCP\IDBConnection;
+use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\Server;
-use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -62,9 +63,6 @@ class OutboxServiceIntegrationTest extends TestCase {
 	/** @var IEventDispatcher */
 	private $eventDispatcher;
 
-	/** @var IMAPClientFactory */
-	private $clientFactory;
-
 	/** @var LocalMessageMapper */
 	private $mapper;
 
@@ -87,36 +85,36 @@ class OutboxServiceIntegrationTest extends TestCase {
 
 		$this->user = $this->createTestUser();
 		$this->account = $this->createTestAccount($this->user->getUID());
-		$c = Server::get(ContainerInterface::class);
-		$userContainer = $c->get(IServerContainer::class);
-		$this->userFolder = $userContainer->getUserFolder($this->account->getUserId());
-		$mailManager = Server::get(IMailManager::class);
+		$rootFolder = Server::get(IRootFolder::class);
+		$this->userFolder = $rootFolder->getUserFolder($this->account->getUserId());
+		$mailManager = Server::get(MailManager::class);
 		$this->attachmentService = new AttachmentService(
 			$this->userFolder,
 			Server::get(LocalAttachmentMapper::class),
 			Server::get(AttachmentStorage::class),
 			$mailManager,
-			Server::get(\OCA\Mail\IMAP\MessageMapper::class),
-			new NullLogger()
+			Server::get(ICacheFactory::class),
+			Server::get(IURLGenerator::class),
+			Server::get(IMimeTypeDetector::class),
+			new NullLogger(),
+			Server::get(ITimeFactory::class)
 		);
 		$this->client = $this->getClient($this->account);
 		$this->mapper = Server::get(LocalMessageMapper::class);
 		$this->eventDispatcher = Server::get(IEventDispatcher::class);
-		$this->clientFactory = Server::get(IMAPClientFactory::class);
 		$this->accountService = Server::get(AccountService::class);
 		$this->timeFactory = Server::get(ITimeFactory::class);
 		$this->chain = Server::get(Chain::class);
 
-		$this->db = OC::$server->getDatabaseConnection();
+		$this->db = Server::get(IDBConnection::class);
 		$qb = $this->db->getQueryBuilder();
 		$delete = $qb->delete($this->mapper->getTableName());
-		$delete->execute();
+		$delete->executeStatement();
 
 		$this->outbox = new OutboxService(
 			$this->mapper,
 			$this->attachmentService,
 			$this->eventDispatcher,
-			$this->clientFactory,
 			$mailManager,
 			$this->accountService,
 			$this->timeFactory,

@@ -12,10 +12,10 @@ use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Controller\PreferencesController;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class PreferencesControllerTest extends TestCase {
-	/** @var IUserPreferences|PHPUnit_Framework_MockObject_MockObject */
+	/** @var IUserPreferences|MockObject */
 	private $preferences;
 
 	/** @var PreferencesController */

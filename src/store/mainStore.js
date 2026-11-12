@@ -4,18 +4,19 @@
  */
 
 import { defineStore } from 'pinia'
-import mapStoreGetters from './mainStore/getters.js'
-import mapStoreActions from './mainStore/actions.js'
 import {
 	FOLLOW_UP_MAILBOX_ID,
 	PRIORITY_INBOX_ID,
 	UNIFIED_ACCOUNT_ID,
 	UNIFIED_INBOX_ID,
 } from './constants.js'
+import mapStoreActions from './mainStore/actions.js'
+import mapStoreGetters from './mainStore/getters.js'
 
 export default defineStore('main', {
 	state: () => {
 		return {
+			syncTimestamp: Date.now(),
 			isExpiredSession: false,
 			preferences: {},
 			accountsUnmapped: {
@@ -98,6 +99,7 @@ export default defineStore('main', {
 			smimeCertificates: [],
 			hasFetchedInitialEnvelopes: false,
 			followUpFeatureAvailable: false,
+			contextChatFeatureAvailable: false,
 			internalAddress: [],
 			hasCurrentUserPrincipalAndCollections: false,
 			showAccountSettings: null,
@@ -107,6 +109,7 @@ export default defineStore('main', {
 			textBlocksFetched: false,
 			myTextBlocks: [],
 			sharedTextBlocks: [],
+			quickActions: [],
 		}
 	},
 	getters: {

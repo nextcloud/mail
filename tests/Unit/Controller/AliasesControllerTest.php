@@ -15,6 +15,7 @@ use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Service\AliasesService;
+use OCA\Mail\Service\DelegationService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -35,6 +36,9 @@ class AliasesControllerTest extends TestCase {
 	/** @var AliasesService */
 	private $aliasService;
 
+	/** @var DelegationService */
+	private $delegationService;
+
 	public function setUp(): void {
 		parent::setUp();
 		$this->request = $this->getMockBuilder('OCP\IRequest')
@@ -48,7 +52,12 @@ class AliasesControllerTest extends TestCase {
 		$this->mailAccountMapper = $this->createMock(MailAccountMapper::class);
 
 		$this->aliasService = new AliasesService($this->aliasMapper, $this->mailAccountMapper);
-		$this->controller = new AliasesController($this->appName, $this->request, $this->aliasService, $this->userId);
+		$this->delegationService = $this->createMock(DelegationService::class);
+		$this->delegationService->method('resolveAccountUserId')
+			->willReturn($this->userId);
+		$this->delegationService->method('resolveAliasUserId')
+			->willReturn($this->userId);
+		$this->controller = new AliasesController($this->appName, $this->request, $this->aliasService, $this->userId, $this->delegationService);
 	}
 
 	public function testIndex(): void {
@@ -89,6 +98,9 @@ class AliasesControllerTest extends TestCase {
 		$this->aliasMapper->expects($this->once())
 			->method('update')
 			->willReturnArgument(0);
+		$this->delegationService->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId updated alias: {$alias->getId()} on behalf of $this->userId");
 
 		$response = $this->controller->update($alias->getId(), 'john@doe.com', 'John Doe');
 		/** @var Alias $data */
@@ -140,6 +152,9 @@ class AliasesControllerTest extends TestCase {
 		$this->aliasMapper->expects($this->once())
 			->method('delete')
 			->willReturnArgument(0);
+		$this->delegationService->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId deleted alias: {$alias->getId()} on behalf of $this->userId");
 
 		$expectedResponse = new JSONResponse($alias);
 		$response = $this->controller->destroy($alias->getId());
@@ -179,6 +194,9 @@ class AliasesControllerTest extends TestCase {
 		$this->aliasMapper->expects($this->once())
 			->method('insert')
 			->willReturn($alias);
+		$this->delegationService->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId created alias: {$alias->getId()}  on behalf of $this->userId");
 
 		$expectedResponse = new JSONResponse(
 			$alias,
@@ -226,6 +244,9 @@ class AliasesControllerTest extends TestCase {
 		$this->aliasMapper->expects($this->once())
 			->method('update')
 			->willReturnArgument(0);
+		$this->delegationService->expects($this->once())
+			->method('logDelegatedAction')
+			->with($this->userId, $this->userId, "$this->userId updated alias: {$alias->getId()} 's signature on behalf of $this->userId");
 
 		$expectedResponse = new JSONResponse(
 			$alias,

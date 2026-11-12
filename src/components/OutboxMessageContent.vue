@@ -5,14 +5,14 @@
 <template>
 	<NcEmptyContent :name="t('mail', 'Pending or not sent messages will show up here')" class="empty-content">
 		<template #icon>
-			<IconMail :size="65" />
+			<IconMail />
 		</template>
 	</NcEmptyContent>
 </template>
 
 <script>
-import IconMail from 'vue-material-design-icons/EmailOutline.vue'
 import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
+import IconMail from 'vue-material-design-icons/EmailOutline.vue'
 
 export default {
 	name: 'OutboxMessageContent',

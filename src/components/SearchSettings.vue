@@ -5,7 +5,8 @@
 
 <template>
 	<div>
-		<input id="searchBody"
+		<input
+			id="searchBody"
 			v-model="searchBody"
 			type="checkbox">
 		<label for="searchBody">
@@ -15,9 +16,9 @@
 </template>
 
 <script>
+import { mapStores } from 'pinia'
 import Logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
-import { mapStores } from 'pinia'
 
 export default {
 	name: 'SearchSettings',
@@ -27,14 +28,17 @@ export default {
 			required: true,
 		},
 	},
+
 	data() {
 		return {
 			searchBody: this.account.searchBody,
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 	},
+
 	watch: {
 		searchBody(val, oldVal) {
 			this.mainStore.patchAccount({

@@ -59,13 +59,11 @@ class AntiAbuseServiceTest extends TestCase {
 		$user = $this->createMock(IUser::class);
 		$user->method('getUID')->willReturn('user123');
 		$messageData = new LocalMessage();
-		$recipients = array_map(static function (int $i) {
-			return Recipient::fromParams([
-				'label' => 'rec ' . $i,
-				'email' => $i . '@domain.tld',
-				'type' => Recipient::TYPE_TO,
-			]);
-		}, range(0, 70));
+		$recipients = array_map(static fn (int $i) => Recipient::fromParams([
+			'label' => 'rec ' . $i,
+			'email' => $i . '@domain.tld',
+			'type' => Recipient::TYPE_TO,
+		]), range(0, 70));
 		$messageData->setRecipients($recipients);
 
 		$this->serviceMock->getParameter('config')

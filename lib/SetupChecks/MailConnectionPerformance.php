@@ -13,7 +13,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\ProvisioningMapper;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCP\IL10N;
 use OCP\SetupCheck\ISetupCheck;
 use OCP\SetupCheck\SetupResult;
@@ -26,7 +26,7 @@ class MailConnectionPerformance implements ISetupCheck {
 		private LoggerInterface $logger,
 		private ProvisioningMapper $provisioningMapper,
 		private MailAccountMapper $accountMapper,
-		private IMAPClientFactory $clientFactory,
+		private ProtocolFactory $protocolFactory,
 		private MicroTime $microtime,
 	) {
 	}
@@ -59,7 +59,7 @@ class MailConnectionPerformance implements ISetupCheck {
 			foreach ($collection as $accountId) {
 				$account = new Account($this->accountMapper->findById((int)$accountId));
 				try {
-					$client = $this->clientFactory->getClient($account);
+					$client = $this->protocolFactory->imapClient($account);
 				} catch (ServiceException $e) {
 					$this->logger->warning('Error occurred while getting IMAP client for setup check: ' . $e->getMessage(), [
 						'exception' => $e,
@@ -79,7 +79,7 @@ class MailConnectionPerformance implements ISetupCheck {
 
 					$tests[$host][$accountId] = ['start' => $tStart, 'login' => $tLogin, 'operation' => $tOperation];
 				} catch (Throwable $e) {
-					$this->logger->warning('Error occurred while performing system check on mail account: ' . $account->getId());
+					$this->logger->warning("Error occurred while performing system check on mail account: {$account->getId()}");
 				} finally {
 					$client->close();
 				}
@@ -88,15 +88,15 @@ class MailConnectionPerformance implements ISetupCheck {
 		// calculate performance
 		$performance = [];
 		foreach ($tests as $host => $test) {
-			$tLogin = 0;
-			$tOperation = 0;
+			$tLogin = 0.0;
+			$tOperation = 0.0;
 			foreach ($test as $entry) {
 				[$start, $login, $operation] = array_values($entry);
 				$tLogin += ($login - $start);
 				$tOperation += ($operation - $login);
 			}
-			$performance[$host]['login'] = $tLogin / count($tests[$host]);
-			$performance[$host]['operation'] = $tOperation / count($tests[$host]);
+			$performance[$host]['login'] = $tLogin / (float)count($tests[$host]);
+			$performance[$host]['operation'] = $tOperation / (float)count($tests[$host]);
 		}
 		// display performance test outcome
 		foreach ($performance as $host => $entry) {

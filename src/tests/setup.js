@@ -3,12 +3,16 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+/* global readTestDataRaw */
+
+import { config } from '@vue/test-utils'
 import { readFileSync } from 'fs'
 import { join } from 'path'
-import JestFetchMock from 'jest-fetch-mock'
+import { vi } from 'vitest'
 
-// Required for @nextcloud/files
-JestFetchMock.enableMocks()
+// Stubs should render their default slot — this matches Vue Test Utils v1 behaviour
+// and is required for tests that assert on text inside stubbed component slots.
+config.global.renderStubDefaultSlot = true
 
 global.appName = 'mail'
 
@@ -31,6 +35,9 @@ global.OC = {
 		version: '9999.0.0',
 	},
 }
+
+global.t = vi.fn().mockImplementation((msg) => msg)
+global.n = vi.fn().mockImplementation((msg) => msg)
 
 /**
  * @param {string} path Path to file relative to src/tests/data/

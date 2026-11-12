@@ -20,24 +20,20 @@ use function sprintf;
 
 class PreviewEnhancementProcessingJob extends TimedJob {
 	private IUserManager $userManager;
-	private AccountService $accountService;
-	private LoggerInterface $logger;
 	private IJobList $jobList;
-	private PreprocessingService $preprocessingService;
 
-	public function __construct(ITimeFactory $time,
+	public function __construct(
+		ITimeFactory $time,
 		IUserManager $userManager,
-		AccountService $accountService,
-		PreprocessingService $preprocessingService,
-		LoggerInterface $logger,
-		IJobList $jobList) {
+		private AccountService $accountService,
+		private PreprocessingService $preprocessingService,
+		private LoggerInterface $logger,
+		IJobList $jobList,
+	) {
 		parent::__construct($time);
 
 		$this->userManager = $userManager;
-		$this->accountService = $accountService;
-		$this->logger = $logger;
 		$this->jobList = $jobList;
-		$this->preprocessingService = $preprocessingService;
 
 		$this->setInterval(3600);
 		$this->setTimeSensitivity(self::TIME_SENSITIVE);
@@ -53,13 +49,13 @@ class PreviewEnhancementProcessingJob extends TimedJob {
 		try {
 			$account = $this->accountService->findById($accountId);
 		} catch (DoesNotExistException $e) {
-			$this->logger->debug('Could not find account <' . $accountId . '> removing from jobs');
+			$this->logger->debug("Could not find account <{$accountId}> removing from jobs");
 			$this->jobList->remove(self::class, $argument);
 			return;
 		}
 
 		if (!$account->getMailAccount()->canAuthenticateImap()) {
-			$this->logger->info('Ignoring preprocessing job for provisioned account as athentication on IMAP not possible');
+			$this->logger->info('Ignoring preprocessing job for provisioned account as authentication on IMAP not possible');
 			return;
 		}
 

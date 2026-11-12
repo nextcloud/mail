@@ -11,10 +11,15 @@ Connect to your database and run the following commands (`oc_` is the default ta
 DELETE FROM oc_appconfig WHERE appid = 'mail';
 DELETE FROM oc_migrations WHERE app = 'mail';
 DROP TABLE oc_mail_accounts;
+DROP TABLE oc_mail_action_step;
+DROP TABLE oc_mail_actions;
 DROP TABLE oc_mail_aliases;
 DROP TABLE oc_mail_attachments;
+DROP TABLE oc_mail_blocks_shares;
+DROP TABLE oc_mail_cc_tasks;
 DROP TABLE oc_mail_classifiers;
 DROP TABLE oc_mail_coll_addresses;
+DROP TABLE oc_mail_internal_address;
 DROP TABLE oc_mail_local_messages;
 DROP TABLE oc_mail_mailboxes;
 DROP TABLE oc_mail_message_tags;
@@ -25,6 +30,7 @@ DROP TABLE oc_mail_provisionings;
 DROP TABLE oc_mail_recipients;
 DROP TABLE oc_mail_smime_certificates;
 DROP TABLE oc_mail_tags;
+DROP TABLE oc_mail_text_blocks;
 DROP TABLE oc_mail_trusted_senders;
 ```
 

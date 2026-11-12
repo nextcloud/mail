@@ -4,53 +4,81 @@
 -->
 
 <template>
-	<div :class="[message.hasHtmlBody ? 'mail-message-body mail-message-body-html' : 'mail-message-body']"
+	<div
+		:class="[message.hasHtmlBody ? 'mail-message-body mail-message-body-html' : 'mail-message-body']"
 		role="region"
-		:aria-label="t('mail','Message body')">
-		<PhishingWarning v-if="message.phishingDetails.warning" :phishing-data="message.phishingDetails.checks" />
-		<div v-if="message.smime.isSigned && !message.smime.signatureIsValid"
+		:aria-label="t('mail', 'Message body')">
+		<PhishingWarning v-if="message.phishingDetails.warning" :phishingData="message.phishingDetails.checks" />
+		<div
+			v-if="message.smime.isSigned && !message.smime.signatureIsValid"
 			class="invalid-signature-warning">
-			<LockOffIcon :size="16"
-				fill-color="red"
+			<LockOffIcon
+				:size="20"
+				fillColor="red"
 				class="invalid-signature-warning__icon" />
 			<p>
 				{{ t('mail', 'Warning: The S/MIME signature of this message is  unverified. The sender might be impersonating someone!') }}
 			</p>
 		</div>
 		<div v-if="itineraries.length > 0" class="message-itinerary">
-			<Itinerary :entries="itineraries" :message-id="message.messageId" />
+			<Itinerary :entries="itineraries" :messageId="message.messageId" />
 		</div>
 		<div v-if="hasCurrentUserPrincipalAndCollections && message.scheduling.length > 0" class="message-imip">
-			<Imip v-for="scheduling in message.scheduling"
+			<Imip
+				v-for="scheduling in message.scheduling"
 				:key="scheduling.id"
 				:scheduling="scheduling" />
 		</div>
-		<MessageHTMLBody v-if="message.hasHtmlBody"
+		<MessageHTMLBody
+			v-if="message.hasHtmlBody"
 			:url="htmlUrl"
 			:message="message"
-			:full-height="fullHeight"
-			@load="$emit('load', $event)" />
-		<MessageEncryptedBody v-else-if="isEncrypted || isPgpMimeEncrypted"
+			:fullHeight="fullHeight"
+			:alwaysShowExternalImages="alwaysShowExternalImages"
+			@load="$emit('load', $event)"
+			@printShortcut="$emit('printShortcut')"
+			@translate="$emit('translate', $event)" />
+		<MessageEncryptedBody
+			v-else-if="isEncrypted || isPgpMimeEncrypted"
 			:body="message.body"
 			:from="from"
 			:message="message" />
-		<MessagePlainTextBody v-else
+		<MessagePlainTextBody
+			v-else
 			:body="message.body"
 			:signature="message.signature"
-			:message="message" />
+			:message="message"
+			@translate="$emit('translate', $event)" />
 		<MessageAttachments :attachments="message.attachments" :envelope="envelope" />
 		<div id="reply-composer" />
 		<div class="reply-buttons">
 			<div v-if="smartReplies.length > 0" class="reply-buttons__suggested">
-				<NcButton v-for="(reply,index) in smartReplies"
+				<NcPopover :triggers="['hover', 'focus']">
+					<template #trigger>
+						<NcButton
+							variant="tertiary-no-background"
+							:aria-label="t('mail', 'AI info')"
+							class="ai-button">
+							<template #icon>
+								<IconInfo :size="20" />
+							</template>
+						</NcButton>
+					</template>
+					<p class="smart-replies-info">
+						{{ aiInfo }}
+					</p>
+				</NcPopover>
+				<NcAssistantButton
+					v-for="(reply, index) in smartReplies"
 					:key="index"
 					class="reply-buttons__suggested__button"
-					type="secondary"
+					variant="secondary"
 					@click="onReply(reply)">
 					{{ reply }}
-				</NcButton>
+				</NcAssistantButton>
 			</div>
-			<NcButton type="primary"
+			<NcButton
+				variant="primary"
 				class="reply-buttons__notsuggested"
 				@click="onReply('')">
 				<template #icon>
@@ -64,26 +92,31 @@
 
 <script>
 import { generateUrl } from '@nextcloud/router'
-import { NcButton } from '@nextcloud/vue'
-
-import { html, plain } from '../util/text.js'
-import { isPgpgMessage } from '../crypto/pgp.js'
+import { mapStores } from 'pinia'
+import NcAssistantButton from '@nextcloud/vue/components/NcAssistantButton'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcPopover from '@nextcloud/vue/components/NcPopover'
+import IconInfo from 'vue-material-design-icons/InformationOutline.vue'
+import LockOffIcon from 'vue-material-design-icons/LockOffOutline.vue'
+import ReplyIcon from 'vue-material-design-icons/ReplyOutline.vue'
+import Imip from './Imip.vue'
 import Itinerary from './Itinerary.vue'
 import MessageAttachments from './MessageAttachments.vue'
-import PhishingWarning from './PhishingWarning.vue'
 import MessageEncryptedBody from './MessageEncryptedBody.vue'
 import MessageHTMLBody from './MessageHTMLBody.vue'
 import MessagePlainTextBody from './MessagePlainTextBody.vue'
-import Imip from './Imip.vue'
-import LockOffIcon from 'vue-material-design-icons/LockOffOutline.vue'
-import ReplyIcon from 'vue-material-design-icons/ReplyOutline.vue'
-import { mapStores } from 'pinia'
+import PhishingWarning from './PhishingWarning.vue'
+import { isPgpgMessage } from '../crypto/pgp.js'
 import useMainStore from '../store/mainStore.js'
+import { html, plain } from '../util/text.js'
+
+const SUPPORTED_ITINERARY_TYPES = ['EventReservation', 'FlightReservation', 'TrainReservation']
 
 export default {
 	name: 'Message',
 	components: {
 		Itinerary,
+		IconInfo,
 		MessageAttachments,
 		MessageEncryptedBody,
 		MessageHTMLBody,
@@ -93,54 +126,80 @@ export default {
 		LockOffIcon,
 		ReplyIcon,
 		NcButton,
+		NcAssistantButton,
+		NcPopover,
 	},
+
 	props: {
 		envelope: {
 			required: true,
 			type: Object,
 		},
+
 		message: {
 			required: true,
 			type: Object,
 		},
+
 		fullHeight: {
 			required: false,
 			type: Boolean,
 			default: false,
 		},
+
 		smartReplies: {
 			required: false,
 			type: Array,
 			default: () => [],
 		},
+
 		replyButtonLabel: {
 			required: true,
 			type: String,
 		},
 	},
+
+	emits: ['load', 'printShortcut', 'translate', 'reply'],
+
+	data() {
+		return {
+			aiInfo: t('mail', 'Suggested replies are using AI'),
+		}
+	},
+
 	computed: {
 		...mapStores(useMainStore),
 		from() {
 			return this.message.from.length === 0 ? '?' : this.message.from[0].label || this.message.from[0].email
 		},
+
 		htmlUrl() {
 			return generateUrl('/apps/mail/api/messages/{id}/html', {
 				id: this.envelope.databaseId,
 			})
 		},
+
 		isEncrypted() {
 			return isPgpgMessage(this.message.hasHtmlBody ? html(this.message.body) : plain(this.message.body))
 		},
+
 		isPgpMimeEncrypted() {
 			return this.message.isPgpMimeEncrypted
 		},
+
 		itineraries() {
-			return this.message.itineraries ?? []
+			return (this.message.itineraries ?? []).filter((entry) => SUPPORTED_ITINERARY_TYPES.includes(entry['@type']))
 		},
+
 		hasCurrentUserPrincipalAndCollections() {
 			return this.mainStore.hasCurrentUserPrincipalAndCollections
 		},
+
+		alwaysShowExternalImages() {
+			return this.mainStore.getPreference('always-show-external-images', 'false') === 'true'
+		},
 	},
+
 	methods: {
 		onReply(replyBody) {
 			this.$emit('reply', replyBody)
@@ -150,13 +209,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.v-popover > .trigger > .action-item {
-	border-radius: 22px;
-	background-color: var(--color-background-darker);
-}
+@use '../../css/variables.scss';
 
 .message-imip {
 	padding: 5px 10px;
+	margin-inline-start: calc(var(--default-grid-baseline) * 11);
+}
+
+@media (max-width: 600px) {
+	.message-imip {
+		margin-inline-start: 0;
+	}
 }
 
 .invalid-signature-warning {
@@ -178,22 +241,20 @@ export default {
 }
 
 .reply-buttons {
-	margin: 0 30px 0 50px;
+	margin: 5px calc(var(--default-grid-baseline) * 3) calc(var(--default-grid-baseline) * 3) calc(var(--default-grid-baseline) * 14);
 	display: flex;
 	flex-wrap: wrap;
-	gap: 5px;
+	gap: 8px;
 	justify-content: space-between;
 	align-items: center;
 
 	&__suggested {
-		justify-content: flex-start;
 		display: flex;
 		flex-wrap: wrap;
-		gap: 5px;
+		gap: 8px;
 
 		&__button {
-			margin-inline-end: 5px;
-			border-radius: 12px;
+			box-sizing: border-box;
 
 			:deep(.button-vue__text) {
 				font-weight: normal;
@@ -204,8 +265,13 @@ export default {
 	&__notsuggested {
 		margin-inline-start: auto;
 	}
+
+	@media (max-width: #{variables.$breakpoint-mobile}) {
+        margin-inline: calc(var(--default-grid-baseline) * 3);
+    }
 }
-@media screen and (max-width: 600px) {
+
+@media screen and (max-width: #{variables.$breakpoint-mobile}) {
 	.reply-buttons {
 		display: flex;
 		flex-wrap: wrap;
@@ -221,5 +287,9 @@ export default {
 			margin-inline-start: 0;
 		}
 	}
+}
+
+.smart-replies-info {
+	padding: 15px;
 }
 </style>

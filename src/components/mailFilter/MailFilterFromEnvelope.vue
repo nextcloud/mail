@@ -4,38 +4,40 @@
 -->
 <template>
 	<div class="section">
-		<CreateModal v-if="currentFilter === null"
+		<CreateModal
+			v-if="currentFilter === null"
 			:account="account"
 			:envelope="envelope"
 			:loading="loading"
-			@create-filter="createFilter"
+			@createFilter="createFilter"
 			@close="closeModal" />
-		<UpdateModal v-else
+		<UpdateModal
+			v-else
 			:filter="currentFilter"
 			:account="account"
 			:loading="loading"
-			@update-filter="updateFilter"
+			@updateFilter="updateFilter"
 			@close="closeModal" />
 	</div>
 </template>
 
 <script>
+import { showError, showSuccess } from '@nextcloud/dialogs'
+import { mapStores } from 'pinia'
+import CreateModal from './CreateModal.vue'
 import UpdateModal from './UpdateModal.vue'
 import logger from '../../logger.js'
-import { mapStores } from 'pinia'
-import useMailFilterStore from '../../store/mailFilterStore.ts'
-import useMainStore from '../../store/mainStore.js'
-import { showError, showSuccess } from '@nextcloud/dialogs'
 import {
 	MailFilter,
 	MailFilterActionMailbox,
 	MailFilterActionStop,
-	MailFilterOperator,
 	MailFilterCondition,
 	MailFilterConditionField,
 	MailFilterConditionOperator,
+	MailFilterOperator,
 } from '../../models/mailFilter.ts'
-import CreateModal from './CreateModal.vue'
+import useMailFilterStore from '../../store/mailFilterStore.ts'
+import useMainStore from '../../store/mainStore.js'
 
 export default {
 	name: 'MailFilterFromEnvelope',
@@ -44,31 +46,39 @@ export default {
 		UpdateModal,
 
 	},
+
 	props: {
 		account: {
 			type: Object,
 			required: true,
 		},
+
 		envelope: {
 			type: Object,
 			required: true,
 		},
 	},
+
+	emits: ['close'],
+
 	data() {
 		return {
 			currentFilter: null,
 			loading: false,
 		}
 	},
+
 	computed: {
 		...mapStores(useMailFilterStore, useMainStore),
 		filters() {
 			return this.mailFilterStore.filters
 		},
 	},
+
 	async mounted() {
 		await this.mailFilterStore.fetch(this.account.id)
 	},
+
 	methods: {
 		createFilter(headers) {
 			this.loading = true
@@ -135,6 +145,7 @@ export default {
 			this.currentFilter = filter
 			this.loading = false
 		},
+
 		async updateFilter(filter) {
 			this.loading = true
 
@@ -152,6 +163,7 @@ export default {
 				this.loading = false
 			}
 		},
+
 		closeModal() {
 			this.$emit('close')
 			this.currentFilter = null

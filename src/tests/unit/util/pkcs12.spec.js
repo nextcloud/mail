@@ -3,7 +3,11 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { convertPkcs12ToPem } from "../../../util/pkcs12";
+/* global readTestData */
+/* global readTestDataRaw */
+/* global toArrayBuffer */
+
+import { convertPkcs12ToPem } from '../../../util/pkcs12.js'
 
 describe('pkcs12', () => {
 	describe('convertPkcs12ToPem', () => {

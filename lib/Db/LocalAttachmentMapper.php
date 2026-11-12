@@ -48,10 +48,11 @@ class LocalAttachmentMapper extends QBMapper {
 			return [];
 		}
 		$qb = $this->db->getQueryBuilder();
-		$qb->select('*')
-			->from($this->getTableName())
+		$qb->select('a.*')
+			->from($this->getTableName(), 'a')
+			->innerJoin('a', 'mail_local_messages', 'lm', $qb->expr()->eq('lm.id', 'a.local_message_id'))
 			->where(
-				$qb->expr()->in('local_message_id', $qb->createNamedParameter($localMessageIds, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY)
+				$qb->expr()->in('lm.id', $qb->createNamedParameter($localMessageIds, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY)
 			);
 		return $this->findEntities($qb);
 	}

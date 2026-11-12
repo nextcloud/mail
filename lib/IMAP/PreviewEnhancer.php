@@ -15,6 +15,8 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DbMapper;
 use OCA\Mail\IMAP\MessageMapper as ImapMapper;
+use OCA\Mail\Protocol\ProtocolFactory;
+use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\Avatar\Avatar;
 use OCA\Mail\Service\AvatarService;
 use Psr\Log\LoggerInterface;
@@ -24,31 +26,14 @@ use function array_merge;
 use function array_reduce;
 
 class PreviewEnhancer {
-	/** @var IMAPClientFactory */
-	private $clientFactory;
-
-	/** @var ImapMapper */
-	private $imapMapper;
-
-	/** @var DbMapper */
-	private $mapper;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var AvatarService */
-	private $avatarService;
-
-	public function __construct(IMAPClientFactory $clientFactory,
-		ImapMapper $imapMapper,
-		DbMapper $dbMapper,
-		LoggerInterface $logger,
-		AvatarService $avatarService) {
-		$this->clientFactory = $clientFactory;
-		$this->imapMapper = $imapMapper;
-		$this->mapper = $dbMapper;
-		$this->logger = $logger;
-		$this->avatarService = $avatarService;
+	public function __construct(
+		private readonly ProtocolFactory $protocolFactory,
+		private ImapMapper $imapMapper,
+		private DbMapper $mapper,
+		private LoggerInterface $logger,
+		private AvatarService $avatarService,
+		private AttachmentService $attachmentService,
+	) {
 	}
 
 	/**
@@ -65,6 +50,11 @@ class PreviewEnhancer {
 
 			return array_merge($carry, [$message->getUid()]);
 		}, []);
+
+		foreach ($messages as $message) {
+			$attachments = $this->attachmentService->getAttachmentNames($account, $mailbox, $message);
+			$message->setAttachments($attachments);
+		}
 
 		if ($preLoadAvatars) {
 			foreach ($messages as $message) {
@@ -87,7 +77,19 @@ class PreviewEnhancer {
 			return $messages;
 		}
 
-		$client = $this->clientFactory->getClient($account);
+		if ($account->getMailAccount()->isJmap()) {
+			foreach ($messages as $message) {
+				if ($message->getStructureAnalyzed()) {
+					continue;
+				}
+
+				$message->setStructureAnalyzed(true);
+			}
+
+			return $this->mapper->updatePreviewDataBulk(...$messages);
+		}
+
+		$client = $this->protocolFactory->imapClient($account);
 		try {
 			$data = $this->imapMapper->getBodyStructureData(
 				$client,

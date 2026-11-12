@@ -14,6 +14,7 @@ use OCA\Mail\Db\Alias;
 use OCA\Mail\ResponseDefinitions;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
+use OCA\Mail\Service\DelegationService;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\ApiRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
@@ -32,6 +33,7 @@ class AccountApiController extends OCSController {
 		private readonly ?string $userId,
 		private readonly AccountService $accountService,
 		private readonly AliasesService $aliasesService,
+		private readonly DelegationService $delegationService,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -39,7 +41,7 @@ class AccountApiController extends OCSController {
 	/**
 	 * List all email accounts and their aliases of the user which is currently logged-in
 	 *
-	 * @return DataResponse<Http::STATUS_OK, MailAccountListResponse[], array{}>|DataResponse<Http::STATUS_NOT_FOUND, array{}, array{}>
+	 * @return DataResponse<Http::STATUS_OK, list<MailAccountListResponse>, array{}>|DataResponse<Http::STATUS_NOT_FOUND, array{}, array{}>
 	 *
 	 * 200: Account list
 	 * 404: User was not logged in
@@ -54,17 +56,26 @@ class AccountApiController extends OCSController {
 		}
 
 		$accounts = $this->accountService->findByUserId($userId);
-		return new DataResponse(array_map(function (Account $account) use ($userId) {
-			$aliases = $this->aliasesService->findAll($account->getId(), $userId);
-			return [
-				'id' => $account->getId(),
-				'email' => $account->getEmail(),
-				'aliases' => array_map(static fn (Alias $alias) => [
-					'id' => $alias->getId(),
-					'email' => $alias->getAlias(),
-					'name' => $alias->getName(),
-				], $aliases),
-			];
-		}, $accounts));
+		$result = array_map(fn (Account $account) => $this->transformAccountList($account, false), $accounts);
+
+		$delegatedAccounts = $this->accountService->findDelegatedAccounts($userId);
+		$delegatedList = array_map(fn (Account $account) => $this->transformAccountList($account, true), $delegatedAccounts);
+		array_push($result, ... $delegatedList);
+
+		return new DataResponse($result);
+	}
+
+	private function transformAccountList(Account $account, bool $isDelegated): array {
+		$aliases = $this->aliasesService->findAll($account->getId(), $account->getUserId());
+		return [
+			'id' => $account->getId(),
+			'email' => $account->getEmail(),
+			'isDelegated' => $isDelegated,
+			'aliases' => array_map(static fn (Alias $alias) => [
+				'id' => $alias->getId(),
+				'email' => $alias->getAlias(),
+				'name' => $alias->getName(),
+			], $aliases),
+		];
 	}
 }

@@ -11,6 +11,11 @@ declare(strict_types=1);
 return [
 	'routes' => [
 		[
+			'name' => 'deep_link#open',
+			'url' => '/open/{messageId}',
+			'verb' => 'GET',
+		],
+		[
 			'name' => 'page#index',
 			'url' => '/',
 			'verb' => 'GET'
@@ -23,6 +28,11 @@ return [
 		[
 			'name' => 'page#mailbox',
 			'url' => '/box/{id}',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'page#mailboxStarred',
+			'url' => '/box/starred/{id}',
 			'verb' => 'GET'
 		],
 		[
@@ -64,11 +74,6 @@ return [
 			'name' => 'page#mailto',
 			'url' => '/mailto',
 			'verb' => 'GET'
-		],
-		[
-			'name' => 'accounts#draft',
-			'url' => '/api/accounts/{id}/draft',
-			'verb' => 'POST'
 		],
 		[
 			'name' => 'accounts#patchAccount',
@@ -201,6 +206,11 @@ return [
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'messages#saveFile',
+			'url' => '/api/messages/{id}/file',
+			'verb' => 'POST'
+		],
+		[
 			'name' => 'messages#getBody',
 			'url' => '/api/messages/{id}/body',
 			'verb' => 'GET'
@@ -283,11 +293,6 @@ return [
 		[
 			'name' => 'avatars#image',
 			'url' => '/api/avatars/image/{email}',
-			'verb' => 'GET'
-		],
-		[
-			'name' => 'proxy#redirect',
-			'url' => '/redirect',
 			'verb' => 'GET'
 		],
 		[
@@ -451,6 +456,16 @@ return [
 			'verb' => 'GET',
 		],
 		[
+			'name' => 'oidcIntegration#authorize',
+			'url' => '/integration/oidc-auth/start',
+			'verb' => 'GET',
+		],
+		[
+			'name' => 'oidcIntegration#oauthRedirect',
+			'url' => '/integration/oidc-auth',
+			'verb' => 'GET',
+		],
+		[
 			'name' => 'microsoftIntegration#configure',
 			'url' => '/api/integration/microsoft',
 			'verb' => 'POST',
@@ -464,6 +479,11 @@ return [
 			'name' => 'microsoftIntegration#oauthRedirect',
 			'url' => '/integration/microsoft-auth',
 			'verb' => 'GET',
+		],
+		[
+			'name' => 'oauth#generateState',
+			'url' => '/api/oauth/state',
+			'verb' => 'POST',
 		],
 		[
 			'name' => 'list#unsubscribe',
@@ -496,6 +516,21 @@ return [
 			'verb' => 'POST',
 		],
 		[
+			'name' => 'delegation#getDelegatedUsers',
+			'url' => '/api/delegations/{accountId}',
+			'verb' => 'GET',
+		],
+		[
+			'name' => 'delegation#delegate',
+			'url' => '/api/delegations/{accountId}',
+			'verb' => 'POST',
+		],
+		[
+			'name' => 'delegation#unDelegate',
+			'url' => '/api/delegations/{accountId}/{userId}',
+			'verb' => 'DELETE',
+		],
+		[
 			'name' => 'textBlockShares#getTextBlockShares',
 			'url' => '/api/textBlocks/{id}/shares',
 			'verb' => 'GET',
@@ -509,11 +544,14 @@ return [
 		'localAttachments' => ['url' => '/api/attachments'],
 		'mailboxes' => ['url' => '/api/mailboxes'],
 		'messages' => ['url' => '/api/messages'],
+		'oidcIntegration' => ['url' => '/api/integration/oidc/providers'],
 		'outbox' => ['url' => '/api/outbox'],
 		'preferences' => ['url' => '/api/preferences'],
 		'smimeCertificates' => ['url' => '/api/smime/certificates'],
 		'textBlock' => ['url' => '/api/textBlocks'],
 		'textBlockShares' => ['url' => '/api/textBlockshares'],
+		'quickActions' => ['url' => '/api/quick-actions'],
+		'actionStep' => ['url' => '/api/action-step'],
 	],
 	'ocs' => [
 		[

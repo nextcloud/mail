@@ -14,15 +14,19 @@ use OCA\Mail\IMAP\ImapFlag;
 use OCA\Mail\Sieve\SieveUtils;
 
 class FilterBuilder {
+	public const OPERATOR_ALL = 'allof';
+	public const OPERATOR_ANY = 'anyof';
+	public const OPERATOR_TRUE = 'true';
+
 	private const SEPARATOR = '### Nextcloud Mail: Filters ### DON\'T EDIT ###';
 	private const DATA_MARKER = '# FILTER: ';
+	/** @deprecated use SieveUtils::NEWLINE */
 	private const SIEVE_NEWLINE = "\r\n";
 
 	public function __construct(
 		private ImapFlag $imapFlag,
 	) {
 	}
-
 
 	public function buildSieveScript(array $filters, string $untouchedScript): string {
 		$commands = [];
@@ -37,6 +41,9 @@ class FilterBuilder {
 
 			$tests = [];
 			foreach ($filter['tests'] as $test) {
+				if ($test['values'] === []) {
+					continue;
+				}
 				if ($test['field'] === 'subject') {
 					$tests[] = sprintf(
 						'header :%s "Subject" %s',
@@ -60,6 +67,10 @@ class FilterBuilder {
 				}
 			}
 
+			if ($filter['operator'] === self::OPERATOR_TRUE) {
+				$tests[] = 'true';
+			}
+
 			if (count($tests) === 0) {
 				// skip filter without tests
 				$commands[] = '# No valid tests found';
@@ -75,18 +86,28 @@ class FilterBuilder {
 						SieveUtils::escapeString($action['mailbox'])
 					);
 				}
-				if ($action['type'] === 'addflag') {
+				if ($action['type'] === 'addflag' || $action['type'] === 'addsystemflag') {
 					$extensions[] = 'imap4flags';
-					$actions[] = sprintf(
-						'addflag "%s";',
-						SieveUtils::escapeString($this->sanitizeFlag($action['flag']))
-					);
+					if ($this->isSystemFlag($action['flag'])) {
+						$flag = SieveUtils::escapeString($action['flag']);
+					} else {
+						$flag = SieveUtils::escapeString($this->sanitizeFlag($action['flag']));
+					}
+					$actions[] = sprintf('addflag "%s";', $flag);
 				}
 				if ($action['type'] === 'keep') {
 					$actions[] = 'keep;';
 				}
 				if ($action['type'] === 'stop') {
 					$actions[] = 'stop;';
+				}
+				if ($action['type'] === 'redirect' && !empty($action['recipient'])) {
+					$extensions[] = 'copy';
+					// :copy leaves the implicit keep in place, which a plain redirect would cancel
+					$actions[] = sprintf(
+						'redirect :copy "%s";',
+						SieveUtils::escapeString($action['recipient'])
+					);
 				}
 			}
 
@@ -161,5 +182,19 @@ class FilterBuilder {
 			$filter['priority'] = (int)$filter['priority'];
 			return $filter;
 		}, $filters);
+	}
+
+	private function isSystemFlag(string $flag): bool {
+		$flags = [
+			\Horde_Imap_Client::FLAG_ANSWERED,
+			\Horde_Imap_Client::FLAG_DELETED,
+			\Horde_Imap_Client::FLAG_DRAFT,
+			\Horde_Imap_Client::FLAG_FLAGGED,
+			\Horde_Imap_Client::FLAG_RECENT,
+			\Horde_Imap_Client::FLAG_SEEN,
+		];
+
+		// Check is done in lowercase to keep the notation from the RFC (e.g. \Seen)
+		return in_array(strtolower($flag), $flags, true);
 	}
 }

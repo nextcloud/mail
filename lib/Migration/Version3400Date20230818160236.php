@@ -31,7 +31,6 @@ class Version3400Date20230818160236 extends SimpleMigrationStep {
 		if (!$snoozeTable->hasColumn('src_mailbox_id')) {
 			$snoozeTable->addColumn('src_mailbox_id', Types::INTEGER, [
 				'notnull' => false,
-				'length' => 20,
 			]);
 		}
 

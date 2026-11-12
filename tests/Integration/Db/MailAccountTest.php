@@ -71,6 +71,13 @@ class MailAccountTest extends TestCase {
 			'searchBody' => false,
 			'outOfOfficeFollowsSystem' => true,
 			'debug' => false,
+			'classificationEnabled' => true,
+			'authMethod' => 'password',
+			'imipCreate' => false,
+			'saveSentCopy' => true,
+			'protocol' => 'imap',
+			'path' => null,
+			'oauthNeedsReauth' => false,
 		], $a->toJson());
 	}
 
@@ -109,6 +116,13 @@ class MailAccountTest extends TestCase {
 			'searchBody' => false,
 			'outOfOfficeFollowsSystem' => false,
 			'debug' => false,
+			'classificationEnabled' => true,
+			'authMethod' => 'password',
+			'imipCreate' => false,
+			'saveSentCopy' => true,
+			'protocol' => 'imap',
+			'path' => null,
+			'oauthNeedsReauth' => false,
 		];
 		$a = new MailAccount($expected);
 		// TODO: fix inconsistency

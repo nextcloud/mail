@@ -12,14 +12,15 @@ namespace Unit\Job;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\BackgroundJob\FollowUpClassifierJob;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\ThreadMapper;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
+use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Utility\ITimeFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
@@ -37,7 +38,7 @@ class FollowUpClassifierJobTest extends TestCase {
 	/** @var AccountService|MockObject */
 	private $accountService;
 
-	/** @var IMailManager|MockObject */
+	/** @var MailManager|MockObject */
 	private $mailManager;
 
 	/** @var AiIntegrationsService|MockObject */
@@ -52,7 +53,7 @@ class FollowUpClassifierJobTest extends TestCase {
 		$this->time = $this->createMock(ITimeFactory::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->accountService = $this->createMock(AccountService::class);
-		$this->mailManager = $this->createMock(IMailManager::class);
+		$this->mailManager = $this->createMock(MailManager::class);
 		$this->aiService = $this->createMock(AiIntegrationsService::class);
 		$this->threadMapper = $this->createMock(ThreadMapper::class);
 
@@ -114,8 +115,8 @@ class FollowUpClassifierJobTest extends TestCase {
 			->with('Follow up', '#d77000', 'user')
 			->willReturn($tag);
 		$this->mailManager->expects(self::once())
-			->method('tagMessage')
-			->with($account, 'sent', $message, $tag, true);
+			->method('tagMessages')
+			->with($account, $mailbox, $tag, true, $message);
 
 		$this->job->run($argument);
 	}
@@ -149,7 +150,7 @@ class FollowUpClassifierJobTest extends TestCase {
 		$this->mailManager->expects(self::never())
 			->method('createTag');
 		$this->mailManager->expects(self::never())
-			->method('tagMessage');
+			->method('tagMessages');
 
 		$this->job->run($argument);
 	}
@@ -191,7 +192,7 @@ class FollowUpClassifierJobTest extends TestCase {
 		$this->mailManager->expects(self::never())
 			->method('createTag');
 		$this->mailManager->expects(self::never())
-			->method('tagMessage');
+			->method('tagMessages');
 
 		$this->job->run($argument);
 	}
@@ -247,8 +248,8 @@ class FollowUpClassifierJobTest extends TestCase {
 			->with('Follow up', '#d77000', 'user')
 			->willReturn($tag);
 		$this->mailManager->expects(self::once())
-			->method('tagMessage')
-			->with($account, 'sent', $message, $tag, true);
+			->method('tagMessages')
+			->with($account, $mailbox, $tag, true, $message);
 
 		$this->job->run($argument);
 	}
@@ -301,8 +302,8 @@ class FollowUpClassifierJobTest extends TestCase {
 			->with('Follow up', '#d77000', 'user')
 			->willReturn($tag);
 		$this->mailManager->expects(self::once())
-			->method('tagMessage')
-			->with($account, 'sent', $message, $tag, true);
+			->method('tagMessages')
+			->with($account, $mailbox, $tag, true, $message);
 
 		$this->job->run($argument);
 	}
@@ -353,7 +354,7 @@ class FollowUpClassifierJobTest extends TestCase {
 		$this->mailManager->expects(self::never())
 			->method('createTag');
 		$this->mailManager->expects(self::never())
-			->method('tagMessage');
+			->method('tagMessages');
 
 		$this->job->run($argument);
 	}
@@ -402,7 +403,114 @@ class FollowUpClassifierJobTest extends TestCase {
 		$this->mailManager->expects(self::never())
 			->method('createTag');
 		$this->mailManager->expects(self::never())
-			->method('tagMessage');
+			->method('tagMessages');
+
+		$this->job->run($argument);
+	}
+
+	public function testRunServiceFailure(): void {
+		$argument = [
+			'messageId' => '<message1@foo.bar>',
+			'mailboxId' => 200,
+			'userId' => 'user',
+		];
+		$mailbox = new Mailbox();
+		$mailbox->setId(200);
+		$mailbox->setAccountId(100);
+		$mailbox->setName('sent');
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(100);
+		$account = new Account($mailAccount);
+		$message = new Message();
+		$message->setMailboxId(200);
+		$message->setMessageId('<message1@foo.bar>');
+		$exception = new ServiceException('AI task processing failed');
+
+		$this->aiService->method('isLlmProcessingEnabled')->willReturn(true);
+		$this->mailManager
+			->method('getMailbox')
+			->with('user', 200)
+			->willReturn($mailbox);
+		$this->accountService
+			->method('find')
+			->with('user', 100)
+			->willReturn($account);
+		$this->mailManager
+			->method('getByMessageId')
+			->with($account, '<message1@foo.bar>')
+			->willReturn([$message]);
+		$this->threadMapper
+			->method('findNewerMessageIdsInThread')
+			->with(100, $message)
+			->willReturn([]);
+		$this->aiService
+			->expects(self::once())
+			->method('requiresFollowUp')
+			->with($account, $mailbox, $message, 'user')
+			->willThrowException($exception);
+		$this->logger
+			->expects(self::once())
+			->method('error')
+			->with('Failed to classify message for follow-up: AI task processing failed', ['exception' => $exception]);
+		$this->mailManager->expects(self::never())->method('createTag');
+		$this->mailManager->expects(self::never())->method('tagMessages');
+
+		$this->job->run($argument);
+	}
+
+	public function testRunHandleDifferentMailboxes(): void {
+		$argument = [
+			'messageId' => '<message1@foo.bar>',
+			'mailboxId' => 200,
+			'userId' => 'user',
+		];
+		$mailbox = new Mailbox();
+		$mailbox->setId(200);
+		$mailbox->setAccountId(100);
+		$mailbox->setName('Sent');
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(100);
+		$account = new Account($mailAccount);
+		$messageA = new Message();
+		$messageA->setMailboxId(100);
+		$messageA->setMessageId('<messageA@foo.bar>');
+		$messageB = new Message();
+		$messageB->setMailboxId(200);
+		$messageB->setMessageId('<messageB@foo.bar>');
+		$messages = [$messageA, $messageB];
+		$tag = new Tag();
+		$tag->setImapLabel('$follow_up');
+
+		$this->aiService->expects(self::once())
+			->method('isLlmProcessingEnabled')
+			->willReturn(true);
+		$this->mailManager->expects(self::once())
+			->method('getMailbox')
+			->with('user', 200)
+			->willReturn($mailbox);
+		$this->accountService->expects(self::once())
+			->method('find')
+			->with('user', 100)
+			->willReturn($account);
+		$this->mailManager->expects(self::once())
+			->method('getByMessageId')
+			->with($account, '<message1@foo.bar>')
+			->willReturn($messages);
+		$this->threadMapper->expects(self::once())
+			->method('findNewerMessageIdsInThread')
+			->with(100, $messageB)
+			->willReturn([]);
+		$this->aiService->expects(self::once())
+			->method('requiresFollowUp')
+			->with($account, $mailbox, $messageB, 'user')
+			->willReturn(true);
+		$this->mailManager->expects(self::once())
+			->method('createTag')
+			->with('Follow up', '#d77000', 'user')
+			->willReturn($tag);
+		$this->mailManager->expects(self::once())
+			->method('tagMessages')
+			->with($account, $mailbox, $tag, true, $messageB);
 
 		$this->job->run($argument);
 	}

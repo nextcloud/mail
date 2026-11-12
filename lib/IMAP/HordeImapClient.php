@@ -10,9 +10,11 @@ declare(strict_types=1);
 namespace OCA\Mail\IMAP;
 
 use Horde_Imap_Client_Exception;
+use Horde_Imap_Client_Exception_NoSupportExtension;
 use Horde_Imap_Client_Socket;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IMemcache;
+use OCP\IMemcacheTTL;
 use function floor;
 
 /**
@@ -27,6 +29,13 @@ class HordeImapClient extends Horde_Imap_Client_Socket {
 	private ?ITimeFactory $timeFactory = null;
 	private ?string $hash = null;
 
+	public function __construct(
+		array $params,
+		private IMAPClientFactory $factory,
+	) {
+		parent::__construct($params);
+	}
+
 	public function enableRateLimiter(
 		IMemcache $cache,
 		string $hash,
@@ -38,14 +47,38 @@ class HordeImapClient extends Horde_Imap_Client_Socket {
 	}
 
 	#[\Override]
+	public function login() {
+		$initiallyAutheticated = $this->_isAuthenticated;
+		parent::login();
+
+		if ($initiallyAutheticated === false && $this->capability->query('ID')) {
+			try {
+				$this->sendID();
+				/* ID is queued - force sending the queued command. */
+				$this->_sendCmd($this->_pipeline());
+			} catch (Horde_Imap_Client_Exception_NoSupportExtension) {
+				// Ignore if server doesn't support ID extension.
+			}
+		}
+	}
+
+	private const RATE_LIMIT_WINDOW = 3 * 60 * 60;
+
+	protected function imapLogin() {
+		$result = parent::_login();
+		$this->factory->recordLogin($this->_params['hostspec']);
+		return $result;
+	}
+
+	#[\Override]
 	protected function _login() {
 		if ($this->rateLimiterCache === null) {
-			return parent::_login();
+			return $this->imapLogin();
 		}
 
 		$now = $this->timeFactory->getTime();
-		$window = floor($now / (3 * 60 * 60));
-		$cacheKey = $this->hash . $window;
+		$window = floor($now / self::RATE_LIMIT_WINDOW);
+		$cacheKey = $this->hash . (string)$window;
 
 		$counter = $this->rateLimiterCache->get($cacheKey);
 		if ($counter !== null && $counter >= 3) {
@@ -57,11 +90,14 @@ class HordeImapClient extends Horde_Imap_Client_Socket {
 		}
 
 		try {
-			return parent::_login();
+			return $this->imapLogin();
 		} catch (Horde_Imap_Client_Exception $e) {
 			if ($e->getCode() === Horde_Imap_Client_Exception::LOGIN_AUTHENTICATIONFAILED
-				&& $e->getMessage() === 'Authentication failed.') {
+				&& in_array($e->getMessage(), ['Authentication failed.', 'Mail server denied authentication.'], true)) {
 				$this->rateLimiterCache->inc($cacheKey);
+				if ($this->rateLimiterCache instanceof IMemcacheTTL) {
+					$this->rateLimiterCache->setTTL($cacheKey, self::RATE_LIMIT_WINDOW);
+				}
 			}
 			throw $e;
 		}

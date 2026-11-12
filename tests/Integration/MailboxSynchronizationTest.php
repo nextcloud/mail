@@ -12,14 +12,18 @@ namespace OCA\Mail\Tests\Integration;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Controller\MailboxesController;
+use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper as DbMessageMapper;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\DelegationService;
+use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
 use OCA\Mail\Service\Sync\SyncService;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use OCA\Mail\Tests\Integration\Framework\ImapTestAccount;
+use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\IConfig;
 use OCP\IRequest;
 use OCP\Server;
 use Psr\Log\LoggerInterface;
@@ -45,8 +49,12 @@ class MailboxSynchronizationTest extends TestCase {
 			Server::get(IRequest::class),
 			Server::get(AccountService::class),
 			$this->getTestAccountUserId(),
-			Server::get(IMailManager::class),
-			Server::get(SyncService::class)
+			Server::get(MailManager::class),
+			Server::get(SyncService::class),
+			Server::get(IConfig::class),
+			Server::get(ITimeFactory::class),
+			Server::get(DelegationService::class),
+			Server::get(MailboxMapper::class),
 		);
 
 		$this->account = $this->createTestAccount('user12345');
@@ -59,8 +67,8 @@ class MailboxSynchronizationTest extends TestCase {
 	}
 
 	public function testSyncEmptyMailbox() {
-		/** @var IMailManager $mailManager */
-		$mailManager = Server::get(IMailManager::class);
+		/** @var MailManager $mailManager */
+		$mailManager = Server::get(MailManager::class);
 		$mailBoxes = $mailManager->getMailboxes(new Account($this->account));
 		$inbox = null;
 		foreach ($mailBoxes as $mailBox) {
@@ -99,8 +107,8 @@ class MailboxSynchronizationTest extends TestCase {
 	public function testSyncNewMessage() {
 		/** @var SyncService $syncService */
 		$syncService = Server::get(SyncService::class);
-		/** @var IMailManager $mailManager */
-		$mailManager = Server::get(IMailManager::class);
+		/** @var MailManager $mailManager */
+		$mailManager = Server::get(MailManager::class);
 		$mailBoxes = $mailManager->getMailboxes(new Account($this->account));
 		$inbox = null;
 		foreach ($mailBoxes as $mailBox) {
@@ -147,8 +155,8 @@ class MailboxSynchronizationTest extends TestCase {
 			->to('user@domain.tld')
 			->finish();
 		$uid = $this->saveMessage($mailbox, $message, $this->account);
-		/** @var IMailManager $mailManager */
-		$mailManager = Server::get(IMailManager::class);
+		/** @var MailManager $mailManager */
+		$mailManager = Server::get(MailManager::class);
 		$mailBoxes = $mailManager->getMailboxes(new Account($this->account));
 		$inbox = null;
 		foreach ($mailBoxes as $mailBox) {
@@ -188,8 +196,8 @@ class MailboxSynchronizationTest extends TestCase {
 			->to('user@domain.tld')
 			->finish();
 		$uid = $this->saveMessage($mailbox, $message, $this->account);
-		/** @var IMailManager $mailManager */
-		$mailManager = Server::get(IMailManager::class);
+		/** @var MailManager $mailManager */
+		$mailManager = Server::get(MailManager::class);
 		$mailBoxes = $mailManager->getMailboxes(new Account($this->account));
 		$inbox = null;
 		foreach ($mailBoxes as $mailBox) {
@@ -238,8 +246,8 @@ class MailboxSynchronizationTest extends TestCase {
 			->subject('Msg 2')
 			->finish();
 		$uid2 = $this->saveMessage($mailbox, $message, $this->account);
-		/** @var IMailManager $mailManager */
-		$mailManager = Server::get(IMailManager::class);
+		/** @var MailManager $mailManager */
+		$mailManager = Server::get(MailManager::class);
 		$mailBoxes = $mailManager->getMailboxes(new Account($this->account));
 		$inbox = null;
 		foreach ($mailBoxes as $mailBox) {
@@ -273,14 +281,12 @@ class MailboxSynchronizationTest extends TestCase {
 		self::assertCount(2, $dbMessageMapper->findAllUids($inbox));
 
 		// Receive unsolicited vanished uid
-		$client = $this->getClient($this->account);
+		$message = $dbMessageMapper->findByUids($inbox, [$uid2])[0];
 		$mailManager->getSource(
-			$client,
 			new Account($this->account),
-			$mailbox,
-			$uid2,
+			$inbox,
+			$message,
 		);
-		$client->logout();
 
 		// Assert that the unsolicited change was synced to the db
 		self::assertCount(1, $dbMessageMapper->findAllUids($inbox));

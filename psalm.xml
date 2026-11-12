@@ -5,11 +5,13 @@
 -->
 <psalm
     errorLevel="3"
+    findUnusedCode="false"
     resolveFromConfigFile="true"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config"
     errorBaseline="tests/psalm-baseline.xml"
+    phpVersion="8.2"
 >
     <projectFiles>
         <directory name="lib" />
@@ -23,17 +25,32 @@
 		<directory name="lib/Vendor" />
 		<directory name="vendor-bin/psalm-stubs" />
     </extraFiles>
+	<stubs>
+		<file name="tests/stubs/php-polyfill.php" />
+		<file name="tests/stubs/oc_hooks_emitter.php" />
+	</stubs>
 	<issueHandlers>
 		<UndefinedAttributeClass>
 			<errorLevel type="info">
 				<referencedClass name="OCP\AppFramework\Http\Attribute\UserRateLimit" />
 			</errorLevel>
 		</UndefinedAttributeClass>
+		<MissingDependency>
+			<errorLevel type="suppress">
+				<file name="lib/Command/ACreateOrUpdateProvisioningCommand.php" />
+				<file name="lib/Command/CreateProvisioning.php" />
+				<file name="lib/Command/UpdateProvisioning.php" />
+				<file name="lib/Command/DeleteProvisioning.php" />
+			</errorLevel>
+		</MissingDependency>
 		<UndefinedClass>
 			<errorLevel type="suppress">
 				<referencedClass name="Doctrine\DBAL\Platforms\MySQLPlatform" />
+				<referencedClass name="Doctrine\DBAL\Platforms\PostgreSQLPlatform" />
 				<referencedClass name="Doctrine\DBAL\Platforms\PostgreSQL94Platform" />
 				<referencedClass name="Doctrine\DBAL\Platforms\SqlitePlatform" />
+				<referencedClass name="Doctrine\DBAL\Schema\Table" />
+				<referencedClass name="OCP\DB\Schema\ITable" />
 				<referencedClass name="Doctrine\DBAL\Types\Type" />
 				<referencedClass name="Doctrine\DBAL\Types\Types" />
 				<referencedClass name="IPLib\Factory" />
@@ -52,6 +69,11 @@
 				<referencedClass name="OCP\TextProcessing\Task" />
 				<referencedClass name="OCP\TextProcessing\SummaryTaskType" />
 				<referencedClass name="OCP\TextProcessing\FreePromptTaskType" />
+				<referencedClass name="OCP\Interaction\InteractionReceiver" />
+				<referencedClass name="OCP\Interaction\Receivers\GroupReceiver" />
+				<referencedClass name="OCP\Interaction\Receivers\UserReceiver" />
+				<referencedClass name="OCP\Interaction\RestrictInteractionEvent" />
+				<referencedClass name="OCP\Interaction\Actions\ShareAction" />
 			</errorLevel>
 		</UndefinedClass>
 		<UndefinedDocblockClass>
@@ -61,14 +83,20 @@
 				<referencedClass name="Doctrine\DBAL\Schema\Schema" />
 				<referencedClass name="Doctrine\DBAL\Schema\SchemaException" />
 				<referencedClass name="Doctrine\DBAL\Schema\Table" />
+				<referencedClass name="OCP\DB\Schema\ITable" />
 				<referencedClass name="OC\Security\CSP\ContentSecurityPolicyNonceManager" />
 				<referencedClass name="Symfony\Component\Console\Output\OutputInterface" />
 			</errorLevel>
 		</UndefinedDocblockClass>
-		<UndefinedFunction>
+		<ImpureMethodCall>
 			<errorLevel type="suppress">
-				<referencedFunction name="str_contains" />
+				<directory name="lib" />
 			</errorLevel>
-		</UndefinedFunction>
+		</ImpureMethodCall>
+		<ImpurePropertyAssignment>
+			<errorLevel type="suppress">
+				<directory name="lib" />
+			</errorLevel>
+		</ImpurePropertyAssignment>
 	</issueHandlers>
 </psalm>

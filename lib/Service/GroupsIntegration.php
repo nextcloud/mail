@@ -16,7 +16,6 @@ use OCA\Mail\Service\Group\IGroupService;
 use OCA\Mail\Service\Group\NextcloudGroupService;
 use function array_map;
 use function mb_strlen;
-use function mb_strpos;
 use function mb_substr;
 use function OCA\Mail\array_flat_map;
 
@@ -76,31 +75,28 @@ class GroupsIntegration {
 	 * Expands group names to its members
 	 *
 	 * @param Recipient[] $recipients
+	 * @param string $userId the user who sends to the recipients
 	 *
 	 * @return Recipient[]
 	 */
-	public function expand(array $recipients): array {
-		return array_flat_map(function (Recipient $recipient) {
+	public function expand(array $recipients, string $userId): array {
+		return array_flat_map(function (Recipient $recipient) use ($userId) {
 			foreach ($this->groupServices as $service) {
-				if (mb_strpos($recipient->getEmail(), $this->servicePrefix($service)) !== false) {
+				if (str_contains($recipient->getEmail(), $this->servicePrefix($service))) {
 					$groupId = mb_substr(
 						$recipient->getEmail(),
 						mb_strlen($this->servicePrefix($service))
 					);
-					$members = array_filter($service->getUsers($groupId), static function (array $member) {
-						return !empty($member['email']);
-					});
+					$members = array_filter($service->getUsers($groupId, $userId), static fn (array $member) => !empty($member['email']));
 					if ($members === []) {
 						throw new ServiceException($groupId . " ({$service->getNamespace()}) has no members with email addresses");
 					}
-					return array_map(static function (array $member) use ($recipient) {
-						return Recipient::fromParams([
-							'messageId' => $recipient->getMessageId(),
-							'type' => $recipient->getType(),
-							'label' => $member['name'] ?? $member['email'],
-							'email' => $member['email'],
-						]);
-					}, $members);
+					return array_map(static fn (array $member) => Recipient::fromParams([
+						'messageId' => $recipient->getMessageId(),
+						'type' => $recipient->getType(),
+						'label' => $member['name'] ?? $member['email'],
+						'email' => $member['email'],
+					]), $members);
 				}
 			}
 

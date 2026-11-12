@@ -27,7 +27,7 @@ class Version1110Date20210908114229 extends SimpleMigrationStep {
 		$schema = $schemaClosure();
 
 		$mailboxTable = $schema->getTable('mail_mailboxes');
-		$mailboxTable->changeColumn('delimiter', [
+		$mailboxTable->modifyColumn('delimiter', [
 			'notnull' => false,
 			'length' => 1,
 		]);

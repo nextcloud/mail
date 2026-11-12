@@ -33,7 +33,7 @@ class Version0190Date20191118160843 extends SimpleMigrationStep {
 			'notnull' => false,
 			'default' => false,
 		]);
-		$accountsTable->changeColumn('inbound_password', [
+		$accountsTable->modifyColumn('inbound_password', [
 			'notnull' => false,
 			'default' => null,
 		]);

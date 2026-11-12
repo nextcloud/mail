@@ -31,24 +31,19 @@ class Version1120Date20220223094709 extends SimpleMigrationStep {
 		$localMessageTable->addColumn('id', Types::INTEGER, [
 			'autoincrement' => true,
 			'notnull' => true,
-			'length' => 4,
 		]);
 		$localMessageTable->addColumn('type', Types::INTEGER, [
 			'notnull' => true,
 			'unsigned' => true,
-			'length' => 1,
 		]);
 		$localMessageTable->addColumn('account_id', Types::INTEGER, [
 			'notnull' => true,
-			'length' => 4,
 		]);
 		$localMessageTable->addColumn('alias_id', Types::INTEGER, [
 			'notnull' => false,
-			'length' => 4,
 		]);
 		$localMessageTable->addColumn('send_at', Types::INTEGER, [
 			'notnull' => false,
-			'length' => 4
 		]);
 		$localMessageTable->addColumn('subject', Types::TEXT, [
 			'notnull' => true,
@@ -71,9 +66,8 @@ class Version1120Date20220223094709 extends SimpleMigrationStep {
 		$recipientsTable = $schema->getTable('mail_recipients');
 		$recipientsTable->addColumn('local_message_id', Types::INTEGER, [
 			'notnull' => false,
-			'length' => 4,
 		]);
-		$recipientsTable->changeColumn('message_id', [
+		$recipientsTable->modifyColumn('message_id', [
 			'notnull' => false
 		]);
 		$recipientsTable->addForeignKeyConstraint($localMessageTable, ['local_message_id'], ['id'], ['onDelete' => 'CASCADE']);
@@ -81,7 +75,6 @@ class Version1120Date20220223094709 extends SimpleMigrationStep {
 		$attachmentsTable = $schema->getTable('mail_attachments');
 		$attachmentsTable->addColumn('local_message_id', Types::INTEGER, [
 			'notnull' => false,
-			'length' => 4,
 		]);
 		$attachmentsTable->addForeignKeyConstraint($localMessageTable, ['local_message_id'], ['id'], ['onDelete' => 'CASCADE']);
 

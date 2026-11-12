@@ -10,28 +10,13 @@ declare(strict_types=1);
 namespace OCA\Mail\IMAP;
 
 final class MessageStructureData {
-	/** @var bool */
-	private $hasAttachments;
-
-	/** @var string */
-	private $previewText;
-
-	/** @var bool */
-	private $isImipMessage;
-
-	private bool $isEncrypted;
-	private bool $mentionsMe;
-
-	public function __construct(bool $hasAttachments,
-		string $previewText,
-		bool $isImipMessage,
-		bool $isEncrypted,
-		bool $mentionsMe) {
-		$this->hasAttachments = $hasAttachments;
-		$this->previewText = $previewText;
-		$this->isImipMessage = $isImipMessage;
-		$this->isEncrypted = $isEncrypted;
-		$this->mentionsMe = $mentionsMe;
+	public function __construct(
+		private bool $hasAttachments,
+		private string $previewText,
+		private bool $isImipMessage,
+		private bool $isEncrypted,
+		private bool $mentionsMe,
+	) {
 	}
 
 	public function hasAttachments(): bool {

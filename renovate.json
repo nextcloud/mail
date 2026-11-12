@@ -17,13 +17,14 @@
 	],
 	"commitMessageAction": "Bump",
 	"commitMessageTopic": "{{depName}}",
-	"commitMessageExtra": "from {{currentVersion}} to {{#if isPinDigest}}{{{newDigestShort}}}{{else}}{{#if isMajor}}{{prettyNewMajor}}{{else}}{{#if isSingleVersion}}{{prettyNewVersion}}{{else}}{{#if newValue}}{{{newValue}}}{{else}}{{{newDigestShort}}}{{/if}}{{/if}}{{/if}}{{/if}}",
+	"commitMessageExtra": "from {{currentValue}} to {{#if isPinDigest}}{{{newDigestShort}}}{{else}}{{#if isMajor}}{{prettyNewMajor}}{{else}}{{#if isSingleVersion}}{{prettyNewVersion}}{{else}}{{#if newValue}}{{{newValue}}}{{else}}{{{newDigestShort}}}{{/if}}{{/if}}{{/if}}{{/if}}",
 	"rangeStrategy": "bump",
+	"minimumReleaseAge": "7 days",
 	"rebaseWhen": "conflicted",
 	"ignoreUnstable": false,
-	"baseBranches": [
+	"baseBranchPatterns": [
 		"main",
-		"stable5.1"
+		"stable5.13"
 	],
 	"enabledManagers": [
 		"composer",
@@ -36,6 +37,24 @@
 		"php",
 		"postcss-loader"
 	],
+	"ignorePaths": [
+		".github/workflows/appstore-build-publish.yml",
+		".github/workflows/fixup.yml",
+		".github/workflows/block-unconventional-commits.yml",
+		".github/workflows/fixup.yml",
+		".github/workflows/lint-eslint.yml",
+		".github/workflows/lint-eslint-when-unrelated.yml",
+		".github/workflows/lint-info-xml.yml",
+		".github/workflows/lint-php.yml",
+		".github/workflows/lint-php-cs.yml",
+		".github/workflows/lint-stylelint.yml",
+		".github/workflows/npm-audit-fix.yml",
+		".github/workflows/npm-audit-fix-selective.yml",
+		".github/workflows/openapi.yml",
+		".github/workflows/pr-feedback.yml",
+		".github/workflows/psalm-matrix.yml",
+		".github/workflows/reuse.yml"
+	],
 	"packageRules": [
 		{
 			"description": "Request JavaScript reviews",
@@ -46,56 +65,6 @@
 				"@ChristophWurst",
 				"@GretaD"
 			]
-		},
-		{
-			"description": "Ignore Vue 3 packages",
-			"matchManagers": [
-				"npm"
-			],
-			"matchPackageNames": [
-				"vue"
-			],
-			"allowedVersions": "<3.0"
-		},
-		{
-			"description": "Ignore Vue 3 packages",
-			"matchManagers": [
-				"npm"
-			],
-			"matchPackageNames": [
-				"vue-router"
-			],
-			"allowedVersions": "<4.0"
-		},
-		{
-			"description": "Ignore Vue 3 packages",
-			"matchManagers": [
-				"npm"
-			],
-			"matchPackageNames": [
-				"@vue/test-utils"
-			],
-			"allowedVersions": "<2.0"
-		},
-		{
-			"description": "Ignore Vue 3 packages",
-			"matchManagers": [
-				"npm"
-			],
-			"matchPackageNames": [
-				"vuex"
-			],
-			"allowedVersions": "<4.1.0"
-		},
-		{
-			"description": "Ignore Vue 3 packages",
-			"matchManagers": [
-				"npm"
-			],
-			"matchPackageNames": [
-				"vue-loader"
-			],
-			"allowedVersions": "<16.0.0"
 		},
 		{
 			"description": "Request PHP reviews",
@@ -136,6 +105,11 @@
 			"reviewers": []
 		},
 		{
+			"description": "Disable minimum release age checks for internal dependencies",
+			"matchPackageNames": ["@nextcloud/*", "nextcloud/*"],
+			"minimumReleaseAge": null
+		},
+		{
 			"description": "Only automerge packages that follow semver",
 			"matchPackageNames": [
 				"@nextcloud/vue",
@@ -174,43 +148,6 @@
 				"@nextcloud/timezones"
 			],
 			"automerge": false
-		},
-		{
-			"groupName": "CKEditor family",
-			"matchPackageNames": [
-				"@ckeditor/ckeditor5-alignment",
-				"@ckeditor/ckeditor5-basic-styles",
-				"@ckeditor/ckeditor5-block-quote",
-				"@ckeditor/ckeditor5-build-balloon",
-				"@ckeditor/ckeditor5-editor-decoupled",
-				"@ckeditor/ckeditor5-core",
-				"@ckeditor/ckeditor5-dev-utils",
-				"@ckeditor/ckeditor5-editor-balloon",
-				"@ckeditor/ckeditor5-essentials",
-				"@ckeditor/ckeditor5-font",
-				"@ckeditor/ckeditor5-heading",
-				"@ckeditor/ckeditor5-image",
-				"@ckeditor/ckeditor5-link",
-				"@ckeditor/ckeditor5-list",
-				"@ckeditor/ckeditor5-mention",
-				"@ckeditor/ckeditor5-paragraph",
-				"@ckeditor/ckeditor5-remove-format",
-				"@ckeditor/ckeditor5-theme-lark",
-				"@ckeditor/ckeditor5-upload"
-			],
-			"rangeStrategy": "pin",
-			"automerge": false
-		},
-		{
-			"groupName": "Jest family",
-			"matchPackageNames": [
-				"jest",
-				"jest-environment-jsdom",
-				"babel-jest",
-				"@vue/vue2-jest",
-				"@types/jest"
-			],
-			"automerge": true
 		}
 	],
 	"vulnerabilityAlerts": {

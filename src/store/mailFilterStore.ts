@@ -3,11 +3,12 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import type { MailFilter } from '../models/mailFilter.ts'
+
 import { defineStore } from 'pinia'
+import logger from '../logger.js'
 import * as MailFilterService from '../service/MailFilterService.js'
 import { randomId } from '../util/randomId.js'
-import logger from '../logger'
-import { MailFilter } from '../models/mailFilter'
 
 export default defineStore('mailFilter', {
 	state: () => {
@@ -34,21 +35,7 @@ export default defineStore('mailFilter', {
 			})
 		},
 		async store(accountId) {
-			let filters = structuredClone(this.filters)
-			filters = filters.map((filter) => {
-				delete filter.id
-				filter.tests.map((test) => {
-					delete test.id
-					return test
-				})
-				filter.actions.map((action) => {
-					delete action.id
-					return action
-				})
-				return filter
-			})
-
-			await MailFilterService.updateFilters(accountId, filters)
+			await MailFilterService.updateFilters(accountId, this.filters)
 		},
 		async update(filter: MailFilter) {
 			await this.$patch((state) => {

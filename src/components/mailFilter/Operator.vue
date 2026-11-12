@@ -3,52 +3,102 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div>
-		<div>
-			<h6>{{ t('mail', 'Operator') }}</h6>
-		</div>
-		<div>
-			<NcCheckboxRadioSwitch :checked="filter.operator"
-				:value="MailFilterOperator.All"
-				name="sharing_permission_radio"
-				type="radio"
-				@update:checked="updateFilter(MailFilterOperator.All)">
-				{{ t('mail', 'If all the conditions are met, the actions will be performed') }}
-			</NcCheckboxRadioSwitch>
-			<NcCheckboxRadioSwitch :checked="filter.operator"
-				:value="MailFilterOperator.Any"
-				name="sharing_permission_radio"
-				type="radio"
-				@update:checked="updateFilter(MailFilterOperator.Any)">
-				{{ t('mail', 'If any of the conditions are met, the actions will be performed') }}
-			</NcCheckboxRadioSwitch>
-		</div>
+	<div class="operator">
+		<NcSelect
+			:modelValue="filter.operator"
+			class="operator__select"
+			:required="true"
+			:labelOutside="true"
+			:options="availableOperators"
+			:reduce="operator => operator.value"
+			:clearable="false"
+			@update:modelValue="updateOperator($event)" />
+		<NcPopover class="operator__popover" :noFocusTrap="true" popupRole="dialog">
+			<template #trigger>
+				<NcButton variant="tertiary-no-background" :aria-label="t('mail', 'Help')">
+					<template #icon>
+						<IconInformationOutline :size="20" />
+					</template>
+				</NcButton>
+			</template>
+			<template #default>
+				<div class="operator__popover__help">
+					<p>
+						<strong>{{ t('mail', 'contains') }}</strong>: {{ t('mail', 'A substring match. The field matches if the provided value is contained within it. For example, "report" would match "port".') }}
+					</p>
+					<p>
+						<strong>{{ t('mail', 'matches') }}</strong>: {{ t('mail', 'A pattern match using wildcards. The "*" symbol represents any number of characters (including none), while "?" represents exactly one character. For example, "*report*" would match "Business report 2024".') }}
+					</p>
+				</div>
+			</template>
+		</NcPopover>
 	</div>
 </template>
+
 <script>
-import { NcCheckboxRadioSwitch } from '@nextcloud/vue'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcPopover from '@nextcloud/vue/components/NcPopover'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
+import IconInformationOutline from 'vue-material-design-icons/InformationOutline.vue'
 import { MailFilterOperator } from '../../models/mailFilter.ts'
 
 export default {
 	name: 'Operator',
 	components: {
-		NcCheckboxRadioSwitch,
+		IconInformationOutline,
+		NcPopover,
+		NcButton,
+		NcSelect,
 	},
+
 	props: {
 		filter: {
 			type: Object,
 			required: true,
 		},
 	},
+
+	emits: ['update:operator'],
+
 	data() {
 		return {
-			MailFilterOperator,
+			availableOperators: [
+				{ value: MailFilterOperator.All, label: t('mail', 'If all the conditions are met, the actions will be performed') },
+				{ value: MailFilterOperator.Any, label: t('mail', 'If any of the conditions are met, the actions will be performed') },
+				{ value: MailFilterOperator.Always, label: t('mail', 'Perform the actions on all incoming messages') },
+			],
 		}
 	},
+
 	methods: {
-		updateFilter(operator) {
+		updateOperator(operator) {
 			this.$emit('update:operator', operator)
 		},
 	},
 }
 </script>
+
+<style lang="scss" scoped>
+.operator {
+	display: flex;
+	margin-bottom: calc(var(--default-grid-baseline) * 2);
+	&__select {
+		margin-inline-end: var(--default-grid-baseline);
+		width: 100%;
+		// Match NcSelect's own `.nc-select.v-select.select` so the reset still wins
+		&.nc-select {
+			margin-block: 0;
+		}
+	}
+	&__popover {
+		width: 30px;
+		&__help {
+			margin: calc(var(--default-grid-baseline) * 2);
+			max-width: 600px;
+			& p {
+				margin-bottom: 0.2em;
+			}
+		}
+	}
+}
+</style>

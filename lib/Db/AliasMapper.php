@@ -12,6 +12,7 @@ namespace OCA\Mail\Db;
 
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\QBMapper;
+use OCP\DB\Exception;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 use function array_map;
@@ -68,10 +69,46 @@ class AliasMapper extends QBMapper {
 	}
 
 	/**
+	 * @throws DoesNotExistException
+	 */
+	public function findForAccount(int $aliasId, int $accountId): Alias {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('aliases.*', 'accounts.provisioning_id')
+			->from($this->getTableName(), 'aliases')
+			->join('aliases', 'mail_accounts', 'accounts', $qb->expr()->eq('aliases.account_id', 'accounts.id'))
+			->where(
+				$qb->expr()->andX(
+					$qb->expr()->eq('aliases.account_id', $qb->createNamedParameter($accountId)),
+					$qb->expr()->eq('aliases.id', $qb->createNamedParameter($aliasId))
+				)
+			);
+
+		return $this->findEntity($qb);
+	}
+
+	/**
+	 * @throws DoesNotExistException
+	 */
+	public function findByAliasForAccount(string $alias, int $accountId): Alias {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('aliases.*', 'accounts.provisioning_id')
+			->from($this->getTableName(), 'aliases')
+			->join('aliases', 'mail_accounts', 'accounts', $qb->expr()->eq('aliases.account_id', 'accounts.id'))
+			->where(
+				$qb->expr()->andX(
+					$qb->expr()->eq('aliases.account_id', $qb->createNamedParameter($accountId)),
+					$qb->expr()->eq('aliases.alias', $qb->createNamedParameter($alias))
+				)
+			);
+
+		return $this->findEntity($qb);
+	}
+
+	/**
 	 * @param int $accountId
 	 * @param string $currentUserId
 	 *
-	 * @return Alias[]
+	 * @return list<Alias>
 	 */
 	public function findAll(int $accountId, string $currentUserId): array {
 		$qb = $this->db->getQueryBuilder();
@@ -86,6 +123,28 @@ class AliasMapper extends QBMapper {
 			);
 
 		return $this->findEntities($qb);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public function countByAccountId(int $accountId, string $currentUserId): int {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select($qb->func()->count('*', 'count'))
+			->from($this->getTableName(), 'aliases')
+			->join('aliases', 'mail_accounts', 'accounts', $qb->expr()->eq('aliases.account_id', 'accounts.id'))
+			->where(
+				$qb->expr()->andX(
+					$qb->expr()->eq('accounts.user_id', $qb->createNamedParameter($currentUserId)),
+					$qb->expr()->eq('aliases.account_id', $qb->createNamedParameter($accountId))
+				)
+			);
+
+		$result = $qb->executeQuery();
+		$count = (int)$result->fetchOne();
+		$result->closeCursor();
+
+		return $count;
 	}
 
 	/**
@@ -106,24 +165,51 @@ class AliasMapper extends QBMapper {
 	/**
 	 * Delete all provisioned aliases for the given uid
 	 *
-	 * Exception for Nextcloud 20: \Doctrine\DBAL\DBALException
-	 * Exception for Nextcloud 21 and newer: \OCP\DB\Exception
-	 *
-	 * @TODO: Change throws to \OCP\DB\Exception once Mail does not support Nextcloud 20.
-	 *
-	 * @throws \Exception
+	 * @throws \OCP\DB\Exception
 	 */
 	public function deleteProvisionedAliasesByUid(string $uid): void {
-		$qb = $this->db->getQueryBuilder();
-
-		$qb->delete($this->getTableName(), 'aliases')
-			->join('aliases', 'mail_accounts', 'accounts', 'accounts.id = aliases.account_id')
+		// Step 1: Query to find all provisioned alias IDs for the given user
+		$qb1 = $this->db->getQueryBuilder();
+		$idsQuery = $qb1->select('aliases.id')
+			->from($this->getTableName(), 'aliases')
+			->join('aliases', 'mail_accounts', 'accounts', $qb1->expr()->eq('aliases.account_id', 'accounts.id'))
 			->where(
-				$qb->expr()->eq('accounts.user_id', $qb->createNamedParameter($uid)),
-				$qb->expr()->isNotNull('provisioning_id')
+				$qb1->expr()->eq('accounts.user_id', $qb1->createNamedParameter($uid)),
+				$qb1->expr()->isNotNull('provisioning_id')
 			);
 
-		$qb->executeStatement();
+		$result = $idsQuery->executeQuery();
+		$ids = array_map(static fn (array $row) => (int)$row['id'], $result->fetchAll());
+		$result->closeCursor();
+
+		// If no provisioned aliases found, nothing to delete
+		if (empty($ids)) {
+			return;
+		}
+
+		// Step 2: Delete the aliases by their IDs
+		$qb2 = $this->db->getQueryBuilder();
+		$qb2->delete($this->getTableName())
+			->where(
+				$qb2->expr()->in('id', $qb2->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY)
+			);
+
+		foreach (array_chunk($ids, 1000) as $chunk) {
+			$qb2->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
+			$qb2->executeStatement();
+		}
+	}
+
+	/**
+	 * @throws DoesNotExistException
+	 */
+	public function findAccountIdForAlias(int $aliasId): int {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('account_id')
+			->from($this->getTableName())
+			->where($qb->expr()->eq('id', $qb->createNamedParameter($aliasId)));
+		$row = $this->findOneQuery($qb);
+		return (int)$row['account_id'];
 	}
 
 	public function deleteOrphans(): void {
@@ -133,9 +219,7 @@ class AliasMapper extends QBMapper {
 			->leftJoin('a', 'mail_accounts', 'ac', $qb1->expr()->eq('a.account_id', 'ac.id'))
 			->where($qb1->expr()->isNull('ac.id'));
 		$result = $idsQuery->executeQuery();
-		$ids = array_map(static function (array $row) {
-			return (int)$row['id'];
-		}, $result->fetchAll());
+		$ids = array_map(static fn (array $row) => (int)$row['id'], $result->fetchAll());
 		$result->closeCursor();
 
 		$qb2 = $this->db->getQueryBuilder();

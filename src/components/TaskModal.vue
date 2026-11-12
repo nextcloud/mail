@@ -3,34 +3,38 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<Modal @close="onClose">
+	<NcModal closeOnClickOutside @close="onClose">
 		<div class="modal-content">
 			<h2>{{ t('mail', 'Create task') }}</h2>
 			<div class="taskTitle">
-				<input v-model="taskTitle" type="text">
+				<label for="taskTitle">{{ t('mail', 'Title') }}</label>
+				<input id="taskTitle" v-model="taskTitle" type="text">
 			</div>
 			<div class="all-day">
-				<DatetimePicker v-model="startDate"
+				<NcDateTimePicker
+					v-model="startDate"
 					:format="dateFormat"
 					:clearable="false"
-					:minute-step="5"
-					:show-second="false"
+					:minuteStep="5"
+					:showSecond="false"
 					:type="datePickerType"
-					:show-timezone-select="true"
-					:timezone-id="startTimezoneId" />
-				<DatetimePicker v-model="endDate"
+					:showTimezoneSelect="true"
+					:timezoneId="startTimezoneId" />
+				<NcDateTimePicker
+					v-model="endDate"
 					:format="dateFormat"
 					:clearable="false"
-					:minute-step="5"
-					:show-second="false"
+					:minuteStep="5"
+					:showSecond="false"
 					:type="datePickerType"
-					:show-timezone-select="true"
-					:timezone-id="endTimezoneId" />
+					:showTimezoneSelect="true"
+					:timezoneId="endTimezoneId" />
 			</div>
 			<label for="note">{{ t('mail', 'Description') }}</label>
 			<textarea id="note" v-model="note" rows="7" />
 			<div class="all-day">
-				<input id="allDay"
+				<input
+					id="allDay"
 					v-model="isAllDay"
 					type="checkbox"
 					class="checkbox">
@@ -39,21 +43,24 @@
 				</label>
 			</div>
 			<!-- FIXME: is broken due to upstream select component serializing options to JSON -->
-			<NcSelect v-model="selectedCalendarChoice"
+			<NcSelect
+				v-model="selectedCalendarChoice"
 				label="displayname"
-				input-id="url"
+				inputId="url"
 				:placeholder="t('mail', 'Select calendar')"
 				:aria-label-combobox="t('mail', 'Select calendar')"
-				:allow-empty="false"
+				:clearable="false"
 				:options="calendarChoices">
 				<template #option="{ id }">
-					<CalendarPickerOption :color="getCalendarById(id).color"
+					<CalendarPickerOption
+						:color="getCalendarById(id).color"
 						:displayname="getCalendarById(id).displayname" />
 				</template>
 				<template #selected-option="{ id }">
-					<CalendarPickerOption :color="getCalendarById(id).color"
+					<CalendarPickerOption
+						:color="getCalendarById(id).color"
 						:displayname="getCalendarById(id).displayname"
-						:display-icon="getCalendarById(id).displayIcon" />
+						:displayIcon="getCalendarById(id).displayIcon" />
 				</template>
 				<template #no-options>
 					<span>{{ t('mail', 'No calendars with task list support') }}</span>
@@ -64,36 +71,41 @@
 				{{ t('mail', 'Create') }}
 			</button>
 		</div>
-	</Modal>
+	</NcModal>
 </template>
 
 <script>
-import { NcDateTimePicker as DatetimePicker, NcModal as Modal, NcSelect } from '@nextcloud/vue'
-import jstz from 'jstz'
-
-import logger from '../logger.js'
-import ICAL from 'ical.js'
-import Task from '../task.js'
-import CalendarPickerOption from './CalendarPickerOption.vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import moment from '@nextcloud/moment'
+import ICAL from 'ical.js'
+import jstz from 'jstz'
 import { mapStores } from 'pinia'
+import NcDateTimePicker from '@nextcloud/vue/components/NcDateTimePicker'
+import NcModal from '@nextcloud/vue/components/NcModal'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
+import CalendarPickerOption from './CalendarPickerOption.vue'
+import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
+import Task from '../task.js'
 
 export default {
 	name: 'TaskModal',
 	components: {
 		CalendarPickerOption,
-		DatetimePicker,
-		Modal,
+		NcDateTimePicker,
+		NcModal,
 		NcSelect,
 	},
+
 	props: {
 		envelope: {
 			type: Object,
 			required: true,
 		},
 	},
+
+	emits: ['close'],
+
 	data() {
 		// Try to determine the current timezone, and fall back to UTC otherwise
 		const defaultTimezone = jstz.determine()
@@ -112,30 +124,37 @@ export default {
 			note: this.envelope.previewText,
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		disabled() {
 			return this.saving || this.calendars.length === 0
 		},
+
 		dateFormat() {
-			return this.isAllDay ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm'
+			return this.isAllDay ? 'yyyy-MM-dd' : 'yyyy-MM-dd HH:mm'
 		},
+
 		datePickerType() {
 			return this.isAllDay ? 'date' : 'datetime'
 		},
+
 		tags() {
 			return this.mainStore.getAllTags
 		},
+
 		calendars() {
 			return this.mainStore.getTaskCalendarsForCurrentUser
 		},
+
 		calendarChoices() {
-			return this.calendars.map(calendar => ({
+			return this.calendars.map((calendar) => ({
 				id: calendar.id,
 				color: calendar.color,
 				displayname: calendar.displayname,
 			}))
 		},
+
 		selectedCalendar() {
 			if (!this.selectedCalendarChoice) {
 				return undefined
@@ -144,16 +163,19 @@ export default {
 			return this.calendars.find((cal) => cal.id === this.selectedCalendarChoice.id)
 		},
 	},
+
 	created() {
 		logger.debug('creating task from envelope', {
 			envelope: this.envelope,
 		})
 	},
+
 	async mounted() {
 		if (this.calendars.length) {
 			this.selectedCalendarChoice = this.calendarChoices[0]
 		}
 	},
+
 	methods: {
 		/**
 		 * @param {string} id The calendar id
@@ -166,6 +188,7 @@ export default {
 		onClose() {
 			this.$emit('close')
 		},
+
 		async createTask(taskData) {
 			const task = new Task('BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Nextcloud Mail v' + this.mainStore.getAppVersion + '\nEND:VCALENDAR', taskData.calendar)
 			task.created = ICAL.Time.now()
@@ -194,8 +217,8 @@ export default {
 			await task.calendar.dav.createVObject(vData)
 
 			return task
-
 		},
+
 		async onSave() {
 			this.saving = true
 
@@ -247,10 +270,6 @@ input , textarea {
 	width: 100%;
 }
 
-:deep(input[type='text']) {
-	padding: 0 !important;
-}
-
 .all-day {
 	margin-inline-start: -1px;
 	margin-top: 5px;
@@ -266,7 +285,4 @@ input , textarea {
 	float: inline-end;
 }
 
-:deep(.mx-datepicker) {
-	width: 213px;
-}
 </style>

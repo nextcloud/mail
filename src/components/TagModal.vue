@@ -4,60 +4,70 @@
 -->
 
 <template>
-	<DeleteTagModal v-if="deleteTagModal"
+	<DeleteTagModal
+		v-if="deleteTagModal"
 		:tag="tagToDelete"
 		:envelopes="envelopes"
-		:account-id="envelopes[0].accountId"
+		:accountId="envelopes[0].accountId"
 		@close="closeDeleteModal" />
-	<Modal v-else size="large" @close="onClose">
+	<NcModal
+		v-else
+		closeOnClickOutside
+		class="tag-modal"
+		size="large"
+		labelId="tag-modal-heading"
+		@close="onClose">
 		<div class="modal-content">
-			<h2 class="tag-title">
-				{{ t('mail', 'Add default tags') }}
-			</h2>
-			<TagItem v-for="tag in tags"
-				:key="tag.id"
-				:tag="tag"
-				:envelopes="envelopes"
-				@delete-tag="deleteTag" />
+			<div class="tag-list">
+				<h2 id="tag-modal-heading" class="tag-title">
+					{{ heading }}
+				</h2>
+				<TagItem
+					v-for="tag in tags"
+					:key="tag.id"
+					:tag="tag"
+					:envelopes="envelopes"
+					@deleteTag="deleteTag" />
+			</div>
 
-			<h2 class="tag-title">
-				{{ t('mail', 'Add tag') }}
-			</h2>
 			<div class="create-tag">
-				<NcButton v-if="!editing"
-					class="tagButton"
-					@click="addTagInput">
-					<template #icon>
-						<IconAdd :size="16" />
-					</template>
-					{{ t('mail', 'Add tag') }}
-				</NcButton>
-				<ActionInput v-if="editing" :disabled="showSaving" @submit="createTag">
-					<template #icon>
-						<IconTag :size="16" />
-					</template>
-				</ActionInput>
-				<ActionText v-if="showSaving">
-					<template #icon>
-						<IconLoading :size="16" />
-					</template>
-					{{ t('mail', 'Saving tag …') }}
-				</ActionText>
+				<NcColorPicker v-model="color">
+					<NcButton variant="tertiary" :aria-label="t('mail', 'Change tag color')">
+						<template #icon>
+							<div class="create-tag__color" :style="{ backgroundColor: color }" />
+						</template>
+					</NcButton>
+				</NcColorPicker>
+				<NcTextField
+					v-model="newTagName"
+					class="create-tag__name"
+					:label="t('mail', 'Add tag')"
+					:disabled="saving"
+					:error="errorMessage !== ''"
+					:helperText="errorMessage"
+					showTrailingButton
+					trailingButtonIcon="arrowEnd"
+					:trailingButtonLabel="t('mail', 'Add tag')"
+					@keyup.enter="createTag"
+					@trailingButtonClick="createTag" />
 			</div>
 		</div>
-	</Modal>
+	</NcModal>
 </template>
 
 <script>
-import { NcModal as Modal, NcActionText as ActionText, NcActionInput as ActionInput, NcLoadingIcon as IconLoading, NcButton } from '@nextcloud/vue'
+import { showError } from '@nextcloud/dialogs'
+import { mapStores } from 'pinia'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcColorPicker from '@nextcloud/vue/components/NcColorPicker'
+import NcModal from '@nextcloud/vue/components/NcModal'
+import NcTextField from '@nextcloud/vue/components/NcTextField'
 import DeleteTagModal from './DeleteTagModal.vue'
 import TagItem from './TagItem.vue'
-import IconTag from 'vue-material-design-icons/TagOutline.vue'
-import IconAdd from 'vue-material-design-icons/Plus.vue'
-import { showError, showInfo } from '@nextcloud/dialogs'
-import { hiddenTags } from './tags.js'
-import { mapStores } from 'pinia'
+import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
+import { validateTag } from '../util/tag.js'
+import { hiddenTags } from './tags.js'
 
 function randomColor() {
 	let randomHexColor = ((1 << 24) * Math.random() | 0).toString(16)
@@ -69,16 +79,14 @@ function randomColor() {
 export default {
 	name: 'TagModal',
 	components: {
-		Modal,
-		ActionText,
-		ActionInput,
+		NcModal,
+		NcColorPicker,
+		NcTextField,
 		DeleteTagModal,
-		IconTag,
-		IconLoading,
 		TagItem,
 		NcButton,
-		IconAdd,
 	},
+
 	props: {
 		envelopes: {
 			// The envelopes on which this menu will act
@@ -86,23 +94,31 @@ export default {
 			type: Array,
 		},
 	},
+
+	emits: ['close'],
+
 	data() {
 		return {
-			isAdded: false,
-			editing: false,
-			tagLabel: true,
-			tagInput: false,
-			showSaving: false,
-			renameTagLabel: true,
-			renameTagInput: false,
 			deleteTagModal: false,
 			tagToDelete: null,
 			color: randomColor(),
-			editColor: '',
+			newTagName: '',
+			saving: false,
+			errorMessage: '',
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
+		heading() {
+			if (this.envelopes.length === 1) {
+				const subject = this.envelopes[0].subject || this.t('mail', 'No subject')
+				// TRANSLATORS: {subject} is the subject of the selected email
+				return this.t('mail', 'Assign tags to "{subject}"', { subject }, undefined, { escape: false })
+			}
+			return this.n('mail', 'Assign tags to %n message', 'Assign tags to %n messages', this.envelopes.length)
+		},
+
 		tags() {
 			return this.mainStore.getTags.filter((tag) => tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags)).sort((a, b) => {
 				if (a.isDefaultTag && !b.isDefaultTag) {
@@ -117,109 +133,54 @@ export default {
 					}
 					return -1
 				}
-				if (this.isSet(a.imapLabel) && !this.isSet(b.imapLabel)) {
-					return -1
-				}
-				if (!this.isSet(a.imapLabel) && this.isSet(b.imapLabel)) {
-					return 1
-				}
 				return a.displayName.localeCompare(b.displayName)
 			})
 		},
 	},
+
+	watch: {
+		newTagName() {
+			this.errorMessage = ''
+		},
+	},
+
 	methods: {
 		onClose() {
 			this.$emit('close')
 		},
+
 		closeDeleteModal() {
 			this.deleteTagModal = false
 		},
-		isSet(imapLabel) {
-			return this.envelopes.some(
-				(envelope) => (
-					this.mainStore.getEnvelopeTags(envelope.databaseId).some(
-						tag => tag.imapLabel === imapLabel,
-					)
-				),
-			)
-		},
-		addTagInput() {
-			this.editing = true
-			this.showSaving = false
-		},
-		async createTag(event) {
-			this.editing = true
-			if (this.showSaving) {
+
+		async createTag() {
+			if (this.saving) {
 				return
 			}
 
-			const displayName = event.target.querySelector('input[type=text]').value
-			if (displayName.toLowerCase() in hiddenTags) {
-				showError(this.t('mail', 'Tag name is a hidden system tag'))
+			const displayName = this.newTagName.trim()
+			const valid = validateTag(null, displayName, this.mainStore.getTags)
+			if (valid !== true) {
+				this.errorMessage = valid
 				return
 			}
-			if (this.mainStore.getTags.some(tag => tag.displayName === displayName)) {
-				showError(this.t('mail', 'Tag already exists'))
-				return
-			}
-			if (displayName.trim() === '') {
-				showError(this.t('mail', 'Tag name cannot be empty'))
-				return
-			}
+
+			this.saving = true
 			try {
 				await this.mainStore.createTag({
 					displayName,
-					color: randomColor(displayName),
+					color: this.color,
 				})
+				this.newTagName = ''
+				this.color = randomColor()
 			} catch (error) {
-				console.debug(error)
+				logger.error('could not create tag', { error })
 				showError(this.t('mail', 'An error occurred, unable to create the tag.'))
 			} finally {
-				this.showSaving = false
-				this.tagLabel = true
+				this.saving = false
 			}
 		},
-		convertHex(color, opacity) {
-			if (color.length === 4) {
-				const r = parseInt(color.substring(1, 2), 16)
-				const g = parseInt(color.substring(2, 3), 16)
-				const b = parseInt(color.substring(3, 4), 16)
-				return `rgba(${r}, ${g}, ${b}, ${opacity})`
-			} else {
-				const r = parseInt(color.substring(1, 3), 16)
-				const g = parseInt(color.substring(3, 5), 16)
-				const b = parseInt(color.substring(5, 7), 16)
-				return `rgba(${r}, ${g}, ${b}, ${opacity})`
-			}
-		},
-		openEditTag() {
-			this.renameTagLabel = false
-			this.renameTagInput = true
-			this.showSaving = false
 
-		},
-		async renameTag(tag, event) {
-			this.renameTagInput = false
-			this.showSaving = false
-			const displayName = event.target.querySelector('input[type=text]').value
-
-			try {
-				await this.mainStore.updateTag({
-					tag,
-					displayName,
-					color: tag.color,
-				})
-				this.renameTagLabel = true
-				this.renameTagInput = false
-				this.showSaving = false
-			} catch (error) {
-				showInfo(t('mail', 'An error occurred, unable to rename the tag.'))
-				console.error(error)
-				this.renameTagLabel = false
-				this.renameTagInput = false
-				this.showSaving = true
-			}
-		},
 		deleteTag(tag) {
 			this.tagToDelete = tag
 			this.deleteTagModal = true
@@ -232,37 +193,57 @@ export default {
 
 <style lang="scss" scoped>
 :deep(.modal-content) {
-	padding: 20px 20px 20px 20px;
-	max-height: calc(100vh - 210px);
-	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
+	height: calc(100vh - 210px);
+	min-width: min(480px, 90vw);
+	padding: 0;
 }
 
 :deep(.modal-container) {
-	width: auto !important;
+	min-width: min(480px, 90vw);
 }
 
-.icon-colorpicker {
-	background-image: var(--icon-add-fff);
-}
-
-.tagButton {
-	display: inline-block;
-	margin-inline-start: 10px;
-}
-
-.tag-title {
-	margin-top: 20px;
-	margin-inline-start: 10px;
+.tag-list {
+	flex: 1;
+	min-height: 0;
+	overflow-y: auto;
+	padding: calc(var(--default-grid-baseline) * 5);
+	padding-bottom: calc(var(--default-grid-baseline) * 3);
 }
 
 .create-tag {
-	list-style: none;
-	margin-bottom:12px;
+	display: flex;
+	align-items: center;
+	gap: var(--default-grid-baseline);
+	flex-shrink: 0;
+	border-top: 1px solid var(--color-border);
+	padding: calc(var(--default-grid-baseline) * 3) calc(var(--default-grid-baseline) * 5);
 }
+
+.create-tag__color {
+	width: calc(var(--default-grid-baseline) * 5);
+	height: calc(var(--default-grid-baseline) * 5);
+	border-radius: 50%;
+}
+
+.create-tag__name {
+	flex: 1;
+}
+
+.tag-title {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	margin-top: 0;
+	margin-bottom: calc(var(--default-grid-baseline) * 2);
+	margin-inline-start: var(--default-grid-baseline);
+}
+
 @media only screen and (max-width: 512px) {
 	:deep(.modal-container) {
-	top: 100px !important;
-	max-height: calc(100vh - 170px) !important
+		top: 100px !important;
+		max-height: calc(100vh - 170px) !important;
 	}
 }
 </style>

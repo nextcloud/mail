@@ -27,8 +27,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-
-      - uses: webiny/action-conventional-commits@8bc41ff4e7d423d56fa4905f6ff79209a78776c7 # v1.3.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
+
+      - uses: webiny/action-conventional-commits@7f91b1595ca1951cdb671ddc9f07a49081ec5b69 # v1.4.2
+        with:
+          # Default list from the action, "feat" only on main: https://github.com/webiny/action-conventional-commits/blob/8bc41ff4e7d423d56fa4905f6ff79209a78776c7/action.yml#L9C15-L9C85
+          allowed-commit-types: "${{ github.base_ref == 'main' && 'feat,' || '' }}fix,docs,style,refactor,test,build,perf,ci,chore,revert,merge"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

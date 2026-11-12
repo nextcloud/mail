@@ -1,0 +1,20 @@
+From: debug@imap.localhost
+To: user@imap.localhost
+Subject: HTML body carrying a Content-ID
+Message-ID: <html-body-with-cid@imap.localhost>
+Date: Wed, 25 Jun 2026 08:54:28 +0000
+MIME-Version: 1.0
+Content-Type: multipart/related; boundary="=_related body_="; start="<root@imap.localhost>"
+
+--=_related body_=
+Content-Type: text/html; charset="UTF-8"
+Content-ID: <root@imap.localhost>
+
+<p>Hello <img src=cid:_1_0FAD84280FACDD0C0038DE9FC1258E02></p>
+--=_related body_=
+Content-Type: image/gif
+Content-ID: <_1_0FAD84280FACDD0C0038DE9FC1258E02>
+Content-Transfer-Encoding: base64
+
+R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+--=_related body_=--

@@ -20,26 +20,12 @@ use function array_combine;
 use function array_map;
 
 class ImportanceRulesClassifier {
-	/** @var ImportantMessagesExtractor */
-	private $importantMessagesExtractor;
-
-	/** @var ReadMessagesExtractor */
-	private $readMessagesExtractor;
-
-	/** @var RepliedMessagesExtractor */
-	private $repliedMessagesExtractor;
-
-	/** @var SentMessagesExtractor */
-	private $sentMessagesExtractor;
-
-	public function __construct(ImportantMessagesExtractor $importantMessagesExtractor,
-		ReadMessagesExtractor $readMessagesExtractor,
-		RepliedMessagesExtractor $repliedMessagesExtractor,
-		SentMessagesExtractor $sentMessagesExtractor) {
-		$this->importantMessagesExtractor = $importantMessagesExtractor;
-		$this->readMessagesExtractor = $readMessagesExtractor;
-		$this->repliedMessagesExtractor = $repliedMessagesExtractor;
-		$this->sentMessagesExtractor = $sentMessagesExtractor;
+	public function __construct(
+		private ImportantMessagesExtractor $importantMessagesExtractor,
+		private ReadMessagesExtractor $readMessagesExtractor,
+		private RepliedMessagesExtractor $repliedMessagesExtractor,
+		private SentMessagesExtractor $sentMessagesExtractor,
+	) {
 	}
 
 	/**
@@ -60,9 +46,7 @@ class ImportanceRulesClassifier {
 		$this->sentMessagesExtractor->prepare($account, $incomingMailboxes, $outgoingMailboxes, $messages);
 
 		return array_combine(
-			array_map(static function (Message $m) {
-				return $m->getUid();
-			}, $messages),
+			array_map(static fn (Message $m) => $m->getUid(), $messages),
 			array_map(function (Message $m) {
 				$from = $m->getFrom()->first();
 				if ($from === null || $from->getEmail() === null) {

@@ -93,9 +93,7 @@ trait ImapTest {
 	 * @return array<string>
 	 */
 	private function listMailboxes(Horde_Imap_Client_Socket $client) {
-		return array_map(function ($mailbox) {
-			return $mailbox['mailbox'];
-		}, $client->listMailboxes('*'));
+		return array_map(fn ($mailbox) => $mailbox['mailbox'], $client->listMailboxes('*'));
 	}
 
 	/**

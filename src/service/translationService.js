@@ -5,9 +5,10 @@
 
 import axios from '@nextcloud/axios'
 import { generateOcsUrl } from '@nextcloud/router'
+import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 
-const fetchAvailableLanguages = async function() {
+async function fetchAvailableLanguages() {
 	const mainStore = useMainStore()
 	try {
 		const response = await axios.get(generateOcsUrl('taskprocessing/tasktypes'))
@@ -23,11 +24,11 @@ const fetchAvailableLanguages = async function() {
 		mainStore.translationInputLanguages = inputLanguages
 		mainStore.translationOutputLanguages = outputLanguages
 	} catch (e) {
-		console.error('Failed to fetch available languages', e)
+		logger.error('Failed to fetch available languages', { error: e })
 	}
 }
 
-const translateText = async function(text, fromLanguage, toLanguage) {
+async function translateText(text, fromLanguage, toLanguage) {
 	const scheduleResponse = await axios.post(generateOcsUrl('taskprocessing/schedule'), {
 		input: {
 			origin_language: fromLanguage ?? null,
@@ -42,7 +43,10 @@ const translateText = async function(text, fromLanguage, toLanguage) {
 		if (task.output) {
 			return task.output.output
 		}
-		await new Promise(resolve => setTimeout(resolve, 2000))
+		if (task.status === 'STATUS_FAILED' || task.status === 'STATUS_CANCELLED') {
+			throw new Error('Translation task failed')
+		}
+		await new Promise((resolve) => setTimeout(resolve, 2000))
 		const taskResponse = await axios.get(generateOcsUrl(`taskprocessing/task/${task.id}`))
 		return getTaskOutput(taskResponse.data.ocs.data.task)
 	}

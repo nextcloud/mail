@@ -13,12 +13,10 @@ use JsonSerializable;
 use ReturnTypeWillChange;
 
 final class SmimeCertificatePurposes implements JsonSerializable {
-	private bool $sign;
-	private bool $encrypt;
-
-	public function __construct(bool $sign, bool $encrypt) {
-		$this->sign = $sign;
-		$this->encrypt = $encrypt;
+	public function __construct(
+		private bool $sign,
+		private bool $encrypt,
+	) {
 	}
 
 	/**

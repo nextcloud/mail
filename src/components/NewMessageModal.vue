@@ -3,49 +3,96 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<Modal v-if="showMessageComposer"
-		:size="modalSize"
-		:name="modalTitle"
-		:additional-trap-elements="additionalTrapElements"
-		@close="$event.type === 'click' ? onClose() : onMinimize()">
-		<div class="modal-content">
-			<div class="left-pane">
-				<NcButton class="maximize-button"
-					type="tertiary-no-background"
-					:aria-label="t('mail', 'Maximize composer')"
-					:title="largerModal ? t('mail', 'Show recipient details') : t('mail', 'Hide recipient details')"
+	<div
+		v-if="showMessageComposer"
+		ref="floatingPanel"
+		class="floating-composer"
+		:class="{
+			'floating-composer--maximized': largerModal,
+			'floating-composer--with-recipient': showRecipientPane && !error && !warning && recipientPaneOpen,
+		}"
+		@mousedown.stop>
+		<div class="floating-composer__header">
+			<h2 class="floating-composer__title">
+				{{ modalTitle }}
+			</h2>
+			<div class="floating-composer__actions">
+				<NcButton
+					v-if="showRecipientPane"
+					class="floating-composer__action--desktop-only"
+					variant="tertiary-no-background"
+					:aria-label="recipientPaneOpen ? t('mail', 'Hide contact info') : t('mail', 'Show contact info')"
+					:title="recipientPaneOpen ? t('mail', 'Hide contact info') : t('mail', 'Show contact info')"
+					@click="recipientPaneOpen = !recipientPaneOpen">
+					<template #icon>
+						<AccountIcon :size="20" />
+					</template>
+				</NcButton>
+				<NcButton
+					class="floating-composer__action--fullscreen-toggle"
+					variant="tertiary-no-background"
+					:aria-label="largerModal ? t('mail', 'Exit full screen') : t('mail', 'Full screen')"
+					:title="largerModal ? t('mail', 'Exit full screen') : t('mail', 'Full screen')"
 					@click="onMaximize">
 					<template #icon>
 						<MaximizeIcon v-if="!largerModal" :size="20" />
 						<DefaultComposerIcon v-else :size="20" />
 					</template>
 				</NcButton>
-				<NcButton class="minimize-button"
-					type="tertiary-no-background"
+				<NcButton
+					variant="tertiary-no-background"
 					:aria-label="t('mail', 'Minimize composer')"
 					:title="t('mail', 'Minimize composer')"
-					@click="onMinimize">
+					@click="onMinimize()">
 					<template #icon>
 						<MinimizeIcon :size="20" />
 					</template>
 				</NcButton>
-
+				<NcButton
+					variant="tertiary-no-background"
+					:aria-label="t('mail', 'Close composer')"
+					:title="t('mail', 'Close composer')"
+					@click="onClose">
+					<template #icon>
+						<CloseIcon :size="20" />
+					</template>
+				</NcButton>
+			</div>
+		</div>
+		<div class="floating-composer__content">
+			<div v-if="showRecipientPane && !error && !warning && recipientPaneOpen" class="recipient-pane">
+				<NcButton
+					class="recipient-pane__close"
+					variant="tertiary-no-background"
+					:aria-label="t('mail', 'Close contact info')"
+					@click="recipientPaneOpen = false">
+					<template #icon>
+						<CloseIcon :size="20" />
+					</template>
+				</NcButton>
+				<RecipientInfo />
+			</div>
+			<div class="floating-composer__body">
 				<KeepAlive>
-					<EmptyContent v-if="error"
+					<NcEmptyContent
+						v-if="error"
 						:name="t('mail', 'Error sending your message')"
 						class="empty-content"
 						role="alert">
-						<p>{{ error }}</p>
+						<template #description>
+							{{ error }}
+						</template>
 						<template #action>
-							<NcButton type="tertiary" :aria-label="t('mail', 'Go back')" @click="error = undefined">
+							<NcButton variant="tertiary" :aria-label="t('mail', 'Go back')" @click="error = undefined">
 								{{ t('mail', 'Go back') }}
 							</NcButton>
-							<NcButton type="tertiary" :aria-label="t('mail', 'Retry')" @click="onSend">
+							<NcButton variant="tertiary" :aria-label="t('mail', 'Retry')" @click="onSend">
 								{{ t('mail', 'Retry') }}
 							</NcButton>
 						</template>
-					</EmptyContent>
-					<EmptyContent v-else-if="warning"
+					</NcEmptyContent>
+					<NcEmptyContent
+						v-else-if="warning"
 						:name="t('mail', 'Warning sending your message')"
 						class="empty-content"
 						role="alert">
@@ -53,90 +100,88 @@
 							{{ warning }}
 						</template>
 						<template #action>
-							<NcButton type="tertiary" :aria-label="t('mail', 'Go back')" @click="warning = undefined">
+							<NcButton variant="tertiary" :aria-label="t('mail', 'Go back')" @click="warning = undefined">
 								{{ t('mail', 'Go back') }}
 							</NcButton>
-							<NcButton type="tertiary" :aria-label="t('mail', 'Send anyway')" @click="onForceSend">
+							<NcButton variant="tertiary" :aria-label="t('mail', 'Send anyway')" @click="onForceSend">
 								{{ t('mail', 'Send anyway') }}
 							</NcButton>
 						</template>
-					</EmptyContent>
+					</NcEmptyContent>
 
-					<Composer ref="composer"
-						:from-account="composerData.accountId"
-						:from-alias="composerData.aliasId"
+					<Composer
+						v-else
+						ref="composer"
+						:fromAccount="composerData.accountId"
+						:fromAlias="composerData.aliasId"
 						:to="composerData.to"
 						:cc="composerData.cc"
 						:bcc="composerData.bcc"
 						:subject="composerData.subject"
-						:attachments-data="composerData.attachments"
+						:attachmentsData="composerData.attachments"
 						:body="composerDataBodyAsTextInstance"
-						:editor-body="convertEditorBody(composerData)"
-						:in-reply-to-message-id="composerData.inReplyToMessageId"
-						:reply-to="composerData.replyTo"
-						:forward-from="composerData.forwardFrom"
-						:send-at="composerData.sendAt * 1000"
-						:forwarded-messages="forwardedMessages"
-						:smart-reply="smartReply"
-						:can-save-draft="canSaveDraft"
-						:saving-draft="savingDraft"
-						:draft-saved="draftSaved"
-						:smime-sign="composerData.smimeSign"
-						:smime-encrypt="composerData.smimeEncrypt"
-						:is-first-open="modalFirstOpen"
-						:request-mdn="composerData.requestMdn"
+						:editorBody="convertEditorBody(composerData)"
+						:inReplyToMessageId="composerData.inReplyToMessageId"
+						:replyTo="composerData.replyTo"
+						:forwardFrom="composerData.forwardFrom"
+						:sendAt="composerData.sendAt * 1000"
+						:forwardedMessages="forwardedMessages"
+						:smartReply="smartReply"
+						:canSaveDraft="canSaveDraft"
+						:savingDraft="savingDraft"
+						:draftSaved="draftSaved"
+						:smimeSign="composerData.smimeSign"
+						:smimeEncrypt="composerData.smimeEncrypt"
+						:isFirstOpen="modalFirstOpen"
+						:isDraft="composerData.draftId !== undefined"
+						:requestMdn="composerData.requestMdn"
+						:isAiGenerated="composerData.isAiGenerated"
 						:accounts="accounts"
-						@update:from-account="patchComposerData({ accountId: $event })"
-						@update:from-alias="patchComposerData({ aliasId: $event })"
+						@update:fromAccount="patchComposerData({ accountId: $event })"
+						@update:fromAlias="patchComposerData({ aliasId: $event })"
 						@update:to="patchComposerData({ to: $event })"
 						@update:cc="patchComposerData({ cc: $event })"
 						@update:bcc="patchComposerData({ bcc: $event })"
 						@update:subject="patchComposerData({ subject: $event })"
-						@update:attachments-data="patchComposerData({ attachments: $event })"
-						@update:editor-body="patchEditorBody"
-						@update:send-at="patchComposerData({ sendAt: $event / 1000 })"
-						@update:smime-sign="patchComposerData({ smimeSign: $event })"
-						@update:smime-encrypt="patchComposerData({ smimeSign: $event })"
-						@update:request-mdn="patchComposerData({ requestMdn: $event })"
+						@update:attachmentsData="patchComposerData({ attachments: $event })"
+						@update:editorBody="patchEditorBody"
+						@update:sendAt="patchComposerData({ sendAt: $event / 1000 })"
+						@update:smimeSign="patchComposerData({ smimeSign: $event })"
+						@update:smimeEncrypt="patchComposerData({ smimeSign: $event })"
+						@update:requestMdn="patchComposerData({ requestMdn: $event })"
+						@update:isAiGenerated="patchComposerData({ isAiGenerated: $event })"
 						@draft="onDraft"
-						@discard-draft="discardDraft"
-						@upload-attachment="onAttachmentUploading"
-						@send="onSend"
-						@show-toolbar="handleShow" />
+						@discardDraft="discardDraft"
+						@send="onSend" />
 				</KeepAlive>
 			</div>
-
-			<div v-show="showRecipientPane && !warning && !error" class="right-pane">
-				<RecipientInfo />
-			</div>
 		</div>
-	</Modal>
+	</div>
 </template>
-<script>
-import {
-	NcButton,
-	NcEmptyContent as EmptyContent,
-	NcModal as Modal,
-} from '@nextcloud/vue'
-import { showError, showSuccess } from '@nextcloud/dialogs'
-import { translate as t } from '@nextcloud/l10n'
 
-import logger from '../logger.js'
+<script>
+import { showError, showLoading, showSuccess, TOAST_DEFAULT_TIMEOUT } from '@nextcloud/dialogs'
+import { t } from '@nextcloud/l10n'
+import { mapActions, mapState, mapStores } from 'pinia'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
+import AccountIcon from 'vue-material-design-icons/Account.vue'
+import DefaultComposerIcon from 'vue-material-design-icons/ArrowCollapse.vue'
+import MaximizeIcon from 'vue-material-design-icons/ArrowExpand.vue'
+import CloseIcon from 'vue-material-design-icons/Close.vue'
+import MinimizeIcon from 'vue-material-design-icons/Minus.vue'
 import Composer from './Composer.vue'
-import { UNDO_DELAY } from '../store/constants.js'
+import RecipientInfo from './RecipientInfo.vue'
+import AttachmentMissingError from '../errors/AttachmentMissingError.js'
+import ManyRecipientsError from '../errors/ManyRecipientsError.js'
 import { matchError } from '../errors/match.js'
 import NoSentMailboxConfiguredError from '../errors/NoSentMailboxConfiguredError.js'
-import ManyRecipientsError from '../errors/ManyRecipientsError.js'
-import AttachmentMissingError from '../errors/AttachmentMissingError.js'
 import SubjectMissingError from '../errors/SubjectMissingError.js'
-import MinimizeIcon from 'vue-material-design-icons/Minus.vue'
-import MaximizeIcon from 'vue-material-design-icons/ArrowExpand.vue'
-import DefaultComposerIcon from 'vue-material-design-icons/ArrowCollapse.vue'
+import logger from '../logger.js'
 import { deleteDraft, saveDraft, updateDraft } from '../service/DraftService.js'
-import useOutboxStore from '../store/outboxStore.js'
-import { mapStores, mapState, mapActions } from 'pinia'
-import RecipientInfo from './RecipientInfo.vue'
+import { UNDO_DELAY } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
+import useOutboxStore from '../store/outboxStore.js'
 import { messageBodyToTextInstance } from '../util/message.js'
 import { toPlain } from '../util/text.js'
 
@@ -145,29 +190,35 @@ export default {
 	components: {
 		NcButton,
 		Composer,
-		EmptyContent,
-		Modal,
+		NcEmptyContent,
+		AccountIcon,
 		MinimizeIcon,
+		RecipientInfo,
 		MaximizeIcon,
 		DefaultComposerIcon,
-		RecipientInfo,
+		CloseIcon,
 	},
+
+	provide() {
+		return {
+			addToFocusTrap: (trapElement) => this.additionalTrapElements.push(trapElement),
+		}
+	},
+
 	props: {
 		accounts: {
 			type: Array,
 			required: true,
 		},
 	},
+
 	data() {
 		return {
-			additionalTrapElements: ['#reference-picker', '#text-block-picker'],
 			original: undefined,
 			draftsPromise: Promise.resolve(),
-			attachmentsPromise: Promise.resolve(),
 			canSaveDraft: true,
 			savingDraft: false,
 			draftSaved: false,
-			uploadingAttachments: false,
 			sending: false,
 			error: undefined,
 			warning: undefined,
@@ -175,14 +226,16 @@ export default {
 			cookedComposerData: undefined,
 			changed: false,
 			largerModal: false,
-			isLargeScreen: window.innerWidth >= 1024,
-			isMaximized: false,
+			additionalTrapElements: [],
 			recipient: {
 				name: '',
 				email: '',
 			},
+
+			recipientPaneOpen: true,
 		}
 	},
+
 	computed: {
 		...mapStores(useOutboxStore, useMainStore),
 		...mapState(useMainStore, ['showMessageComposer']),
@@ -190,6 +243,7 @@ export default {
 		composerDataBodyAsTextInstance() {
 			return messageBodyToTextInstance(this.composerData)
 		},
+
 		modalTitle() {
 			if (this.composerMessage.type === 'outbox') {
 				return t('mail', 'Edit message')
@@ -203,35 +257,43 @@ export default {
 			if (this.composerData.forwardFrom) {
 				return t('mail', 'Forward')
 			}
+			if (this.composerData.subject) {
+				return this.composerData.subject
+			}
 			return t('mail', 'New message')
 		},
-		hasContactDetailsApi() {
-			return !!window.OCA?.Contacts?.mountContactDetails
-		},
-		showRecipientPane() {
-			return this.hasContactDetailsApi
-				&& this.composerData.to
-				&& this.composerData.to.length > 0
-				&& !this.largerModal
-		},
+
 		composerMessage() {
 			return this.mainStore.composerMessage
 		},
+
 		composerData() {
 			return this.mainStore.composerMessage?.data ?? {}
 		},
+
 		forwardedMessages() {
 			return this.composerMessage?.options?.forwardedMessages ?? []
 		},
+
 		smartReply() {
 			return this.composerData?.smartReply ?? null
 		},
-		modalSize() {
-			return this.isLargeScreen && this.hasContactDetailsApi && this.composerData.to && this.composerData.to.length > 0
-				? 'large'
-				: (this.largerModal ? 'large' : 'normal')
+
+		showRecipientPane() {
+			return this.composerData.to
+				&& this.composerData.to.length > 0
+				&& !this.largerModal
 		},
 	},
+
+	watch: {
+		'composerData.to': function(newTo, oldTo) {
+			if (newTo?.length > 0 && !oldTo?.length) {
+				this.recipientPaneOpen = true
+			}
+		},
+	},
+
 	created() {
 		const id = this.composerData?.id
 		if (id) {
@@ -239,30 +301,28 @@ export default {
 		}
 		window.addEventListener('beforeunload', this.onBeforeUnload)
 	},
+
 	async mounted() {
 		await this.$nextTick()
 		this.updateCookedComposerData()
 		await this.openModalSize()
-		window.addEventListener('resize', this.checkScreenSize)
 	},
-	beforeDestroy() {
+
+	beforeUnmount() {
 		window.removeEventListener('beforeunload', this.onBeforeUnload)
-		window.removeEventListener('resize', this.checkScreenSize)
 	},
+
 	methods: {
-		checkScreenSize() {
-			this.isLargeScreen = window.innerWidth >= 1024
-		},
 		async openModalSize() {
 			try {
 				const sizePreference = this.mainStore.getPreference('modalSize')
 				this.largerModal = sizePreference === 'large'
 			} catch (error) {
-				console.error('Error getting modal size preference', error)
+				logger.error('Error getting modal size preference', { error })
 			}
 		},
+
 		async onMaximize() {
-			this.isMaximized = !this.isMaximized
 			this.largerModal = !this.largerModal
 			try {
 				await this.mainStore.savePreference({
@@ -270,29 +330,26 @@ export default {
 					value: this.largerModal ? 'large' : 'normal',
 				})
 			} catch (error) {
-				console.error('Failed to save preference', error)
+				logger.error('Failed to save preference', { error })
 			}
 		},
-		async onMinimize() {
-			this.isMaximized = false
+
+		async onMinimize({ showToast = true } = {}) {
 			this.modalFirstOpen = false
 
 			await this.mainStore.hideMessageComposerMutation()
 			if (!this.mainStore.composerMessageIsSaved && this.changed) {
-				await this.onDraft(this.cookedComposerData, { showToast: true })
+				await this.onDraft(this.cookedComposerData, { showToast })
 			}
+		},
 
-		},
-		handleShow(element) {
-			this.additionalTrapElements.push(element)
-		},
 		/**
 		 * @param {object} data Message data
 		 * @param {object=} opts Options
 		 * @param {boolean=} opts.showToast Show a toast after saving
 		 * @return {Promise<number>} Draft id promise
 		 */
-		// TODO: when there's no draft is saved, Cloing wont move ie case 2 doesn't work
+		// TODO: when there's no draft is saved, Cloning won't move ie case 2 doesn't work
 		onDraft(data, { showToast = false } = {}) {
 			if (!this.composerMessage) {
 				logger.info('Ignoring draft because there is no message anymore', { data })
@@ -307,6 +364,9 @@ export default {
 					let idToReturn
 					const dataForServer = this.getDataForServer(data, true)
 					if (!id) {
+						if (dataForServer.draftId) {
+							this.mainStore.removeEnvelopeMutation({ id: dataForServer.draftId })
+						}
 						const { id } = await saveDraft(dataForServer)
 						dataForServer.id = id
 						await this.mainStore.patchComposerData({ id, draftId: dataForServer.draftId })
@@ -354,6 +414,7 @@ export default {
 
 			return this.draftsPromise
 		},
+
 		getDataForServer(data) {
 			const dataForServer = {
 				...data,
@@ -377,39 +438,16 @@ export default {
 
 			return dataForServer
 		},
-		onAttachmentUploading(done, data) {
-			this.attachmentsPromise = this.attachmentsPromise
-				.then(done)
-				.then(() => this.onDraft(data))
-				.then(() => logger.debug('attachments uploaded'))
-				.catch((error) => logger.error('could not upload attachments', { error }))
-		},
+
 		async onSend(data, force = false) {
 			logger.debug('sending message', { data })
 
 			if (this.sending) {
 				return
 			}
-			await this.attachmentsPromise
-			this.uploadingAttachments = false
 			this.sending = true
-			this.$emit('close')
+			let sendingToast
 			try {
-				const now = new Date().getTime()
-				for (const attachment of data.attachments) {
-					if (!attachment.type) {
-						// todo move to backend: https://github.com/nextcloud/mail/issues/6227
-						attachment.type = 'local'
-					}
-				}
-				const dataForServer = this.getDataForServer({
-					...data,
-					id: await this.draftsPromise,
-					sendAt: data.sendAt ? data.sendAt : Math.floor((now + UNDO_DELAY) / 1000),
-				})
-				if (dataForServer.sendAt < Math.floor((now + UNDO_DELAY) / 1000)) {
-					dataForServer.sendAt = Math.floor((now + UNDO_DELAY) / 1000)
-				}
 				if (!force && !data.subject?.trim()) {
 					throw new SubjectMissingError()
 				}
@@ -426,6 +464,26 @@ export default {
 							throw new AttachmentMissingError()
 						}
 					}
+				}
+
+				this.mainStore.setComposerIndicatorDisabledMutation(true)
+				this.mainStore.hideMessageComposerMutation()
+				sendingToast = showLoading(t('mail', 'Preparing message…'))
+
+				const now = new Date().getTime()
+				for (const attachment of data.attachments) {
+					if (!attachment.type) {
+						// todo move to backend: https://github.com/nextcloud/mail/issues/6227
+						attachment.type = 'local'
+					}
+				}
+				const dataForServer = this.getDataForServer({
+					...data,
+					id: await this.draftsPromise,
+					sendAt: data.sendAt ? data.sendAt : Math.floor((now + UNDO_DELAY) / 1000),
+				})
+				if (dataForServer.sendAt < Math.floor((now + UNDO_DELAY) / 1000)) {
+					dataForServer.sendAt = Math.floor((now + UNDO_DELAY) / 1000)
 				}
 
 				if (!this.composerData.id) {
@@ -465,16 +523,19 @@ export default {
 				}
 				await this.mainStore.stopComposerSession()
 			} catch (error) {
+				if (sendingToast) {
+					this.mainStore.setComposerIndicatorDisabledMutation(false)
+					this.mainStore.showMessageComposerMutation()
+				}
 				this.error = await matchError(error, {
 					[NoSentMailboxConfiguredError.getName()]() {
 						logger.error('could not send message', { error })
-						return t('mail', 'No sent folder configured. Please pick one in the account settings.')
+						return t('mail', 'No "sent" folder configured. Please pick one in the account settings.')
 					},
 					[ManyRecipientsError.getName()]() {
 						logger.error('could not send message', { error })
 						return t('mail', 'You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses.')
 					},
-					// eslint-disable-next-line n/handle-callback-err
 					default(error) {
 						logger.error('could not send message', { error })
 					},
@@ -488,12 +549,15 @@ export default {
 						logger.info('showing the did you forgot an attachment warning', { error })
 						return t('mail', 'You mentioned an attachment. Did you forget to add it?')
 					},
-					// eslint-disable-next-line n/handle-callback-err
 					default(error) {
-						logger.warn('could not send message', { error })
+						logger.warn('Could not send message', { error })
 					},
 				})
+				if (!this.error && !this.warning) {
+					showError(t('mail', 'Could not send message'), { timeout: TOAST_DEFAULT_TIMEOUT * 4 })
+				}
 			} finally {
+				sendingToast?.hideToast()
 				this.sending = false
 			}
 
@@ -513,6 +577,7 @@ export default {
 		async onForceSend() {
 			await this.onSend(this.cookedComposerData, true)
 		},
+
 		recipientToRfc822(recipient) {
 			if (recipient.email === recipient.label) {
 				// From mailto or sender without proper label
@@ -528,6 +593,7 @@ export default {
 				return `"${recipient.label}" <${recipient.email}>`
 			}
 		},
+
 		async discardDraft() {
 			let id = await this.draftsPromise
 			const isOutbox = this.composerMessage.type === 'outbox'
@@ -551,6 +617,7 @@ export default {
 				showError(t('mail', 'Could not discard message'))
 			}
 		},
+
 		convertEditorBody(composerData) {
 			if (composerData.isHtml) {
 				return composerData.bodyHtml
@@ -558,6 +625,7 @@ export default {
 
 			return composerData.bodyPlain
 		},
+
 		patchEditorBody(editorBody) {
 			if (this.composerData.isHtml) {
 				this.patchComposerData({ bodyHtml: editorBody })
@@ -565,6 +633,7 @@ export default {
 				this.patchComposerData({ bodyPlain: editorBody })
 			}
 		},
+
 		updateCookedComposerData() {
 			if (!this.$refs.composer) {
 				// Composer is not rendered yet
@@ -575,34 +644,59 @@ export default {
 			// This is hacky but there is no other way for now.
 			this.cookedComposerData = this.$refs.composer.getMessageData()
 		},
+
 		async patchComposerData(data) {
 			this.changed = true
 			this.updateCookedComposerData()
-			await this.mainStore.patchComposerData(data)
+			// The composer emits a last update while it is being torn down, when its
+			// ref is already gone and no cooked data can be extracted any more.
+			const isHtml = this.cookedComposerData?.isHtml ?? this.composerData.isHtml
+			await this.mainStore.patchComposerData({ ...data, isHtml })
 		},
+
 		onBeforeUnload(e) {
 			if (this.canSaveDraft && this.changed) {
 				e.preventDefault()
 				e.returnValue = true
-				this.mainStore.showMessageComposerMutation()
+				if (!this.composerMessage.indicatorDisabled) {
+					this.mainStore.showMessageComposerMutation()
+				}
 			} else {
-				console.info('No unsaved changes. See you!')
+				logger.debug('no unsaved changes, closing')
 			}
 		},
+
 		async onClose() {
+			const isOutbox = this.composerMessage.type === 'outbox'
+			const savingToast = this.changed
+				? showLoading(isOutbox ? t('mail', 'Saving message…') : t('mail', 'Saving draft…'))
+				: undefined
 			this.mainStore.setComposerIndicatorDisabledMutation(true)
-			await this.onMinimize()
+			try {
+				await this.onMinimize({ showToast: false })
 
-			// End the session only if all unsaved changes have been saved
-			if (this.canSaveDraft && ((this.changed && this.draftSaved) || !this.changed)) {
-				logger.debug('Closing composer session due to close button click')
-				await this.mainStore.stopComposerSession({
-					restoreOriginalSendAt: true,
-					moveToImap: this.changed,
-					id: this.composerData.id,
-				})
-
+				// End the session only if all unsaved changes have been saved
+				if (this.canSaveDraft && (!this.changed || this.draftSaved)) {
+					logger.debug('Closing composer session due to close button click')
+					await this.mainStore.stopComposerSession({
+						restoreOriginalSendAt: true,
+						moveToImap: this.changed,
+						id: this.composerData.id,
+					})
+					if (this.changed) {
+						showSuccess(isOutbox ? t('mail', 'Message saved') : t('mail', 'Draft saved'))
+					}
+					return
+				}
+			} catch (error) {
+				logger.error('Could not close composer session', { error })
+			} finally {
+				savingToast?.hideToast()
 			}
+
+			this.mainStore.setComposerIndicatorDisabledMutation(false)
+			this.mainStore.showMessageComposerMutation()
+			showError(isOutbox ? t('mail', 'Failed to save message') : t('mail', 'Failed to save draft'), { timeout: TOAST_DEFAULT_TIMEOUT * 4 })
 		},
 	},
 }
@@ -610,68 +704,135 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@media only screen and (max-width: 600px) {
-	:deep(.modal-container) {
-		max-width: 80%;
+$composer-width: 600px;
+$recipient-pane-width: 400px;
+$composer-height: 500px;
+$header-height: calc(var(--default-clickable-area) + calc(var(--default-grid-baseline) * 2));
+$bottom-offset: calc(var(--body-container-margin, 0px) + var(--default-grid-baseline));
+$panel-max-height: calc(100vh - (var(--body-container-margin, 0px) + var(--default-grid-baseline) * 3) - 40px);
+
+.floating-composer {
+	position: fixed;
+	bottom: $bottom-offset;
+	inset-inline-end: calc(var(--body-container-margin, 0px) + var(--default-grid-baseline));
+	z-index: 9001;
+
+	width: $composer-width;
+	max-width: calc(100vw - 2 * var(--default-grid-baseline));
+	height: auto;
+	min-height: $composer-height;
+	max-height: $panel-max-height;
+	overflow: hidden;
+
+	display: flex;
+	flex-direction: column;
+
+	background-color: var(--color-main-background);
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius-large);
+	box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+
+	&--maximized {
+		inset-inline-end: 10vw;
+		bottom: 10vh;
+		width: 80vw;
+		max-width: 80vw;
+		height: 80vh;
+		max-height: 80vh;
+	}
+
+	&--with-recipient {
+		width: calc(#{$composer-width} + #{$recipient-pane-width});
+	}
+
+	@media (max-width: #{$composer-width}) {
+		inset-inline-end: 0;
+		inset-inline-start: 0;
+		top: var(--header-height, 44px);
+		bottom: 0;
+		width: 100%;
+		max-width: 100%;
+		min-height: 0;
+		height: calc(100% - var(--header-height, 44px));
+		max-height: calc(100% - var(--header-height, 44px));
+		border-radius: 0;
+
+		.floating-composer__action--desktop-only,
+		.floating-composer__action--fullscreen-toggle {
+			display: none;
+		}
 	}
 }
 
-:deep(.modal-wrapper .modal-container) {
-	overflow-y: auto !important;
-	overflow-x: auto !important;
-	// from original Modal max-height
-	height: 90%;
-	// Max editor + modal height
-	max-height: 700px !important;
-}
-
-.minimize-button {
-	float: inline-end;
-	position: absolute;
-	top: 4px;
-	inset-inline-end: 63px;
-}
-
-.maximize-button {
-	float: inline-end;
-	position: absolute;
-	top: 4px;
-	inset-inline-end: 33px;
-
-}
-
-.empty-content{
-	height: 100%;
-	display: flex;
-}
-
-.modal-content {
-	display: flex;
-	height: 100%;
-	flex-direction: row;
-	width: 100%;
-}
-
-.left-pane {
-	flex: 1;
+.recipient-pane {
+	flex: 0 0 $recipient-pane-width;
 	overflow-y: auto;
-}
+	position: relative;
+	border-inline-end: 1px solid var(--color-border);
+	padding: calc(var(--default-grid-baseline) * 2);
+	padding-top: calc(var(--default-grid-baseline) * 6);
 
-.right-pane {
-	flex: 0 0 400px;
-	overflow-y: auto;
-	padding-inline-start: 5px;
-	border-inline-start: 1px solid #ccc;
-	@media (max-width: 1024px) {
+	@media (max-width: #{$composer-width}) {
 		display: none;
 	}
 }
 
-.modal-content.with-recipient .left-pane {
-	flex: 1;
+.recipient-pane__close {
+	position: absolute;
+	top: var(--default-grid-baseline);
+	inset-inline-end: 8px;
 }
 
-.modal-content .left-pane {
-	width: 100%;
+.floating-composer__header {
+	position: relative;
+	z-index: 101;
+	display: flex;
+	align-items: center;
+	height: $header-height;
+	flex-shrink: 0;
+	padding: 0 calc(var(--default-grid-baseline) * 2);
+	border-bottom: 1px solid var(--color-border);
+	border-radius: var(--border-radius-large) var(--border-radius-large) 0 0;
+	background-color: var(--color-main-background);
+	cursor: default;
+	user-select: none;
+}
+
+.floating-composer__title {
+	flex: 1;
+	margin: 0;
+	font-size: var(--default-font-size);
+	font-weight: bold;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.floating-composer__actions {
+	display: flex;
+	flex-shrink: 0;
+	gap: 0;
+}
+
+.floating-composer__content {
+	display: flex;
+	flex-direction: row;
+	flex: 1;
+	min-height: 0;
+	overflow: hidden;
+}
+
+.floating-composer__body {
+	flex: 1;
+	overflow-y: auto;
+	min-height: 0;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+.empty-content {
+	height: 100%;
+	display: flex;
 }
 </style>

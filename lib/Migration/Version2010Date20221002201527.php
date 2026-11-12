@@ -39,7 +39,6 @@ class Version2010Date20221002201527 extends SimpleMigrationStep {
 		$accountsTable->addColumn('archive_mailbox_id', Types::INTEGER, [
 			'notnull' => false,
 			'default' => null,
-			'length' => 20,
 		]);
 
 		return $schema;

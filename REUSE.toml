@@ -6,6 +6,12 @@ SPDX-PackageSupplier = "Nextcloud <info@nextcloud.com>"
 SPDX-PackageDownloadLocation = "https://github.com/nextcloud/mail"
 
 [[annotations]]
+path = "CLAUDE.md"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
 path = ["l10n/**.js", "l10n/**.json", "js/**.js.map", "js/**.js"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2013-2016 ownCloud, Inc., 2016-2024 Nextcloud GmbH and Nextcloud contributors"
@@ -90,7 +96,7 @@ SPDX-FileCopyrightText = "2022 Nextcloud GmbH and Nextcloud contributors"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
 
 [[annotations]]
-path = ["src/tests/data/user@imap.localhost.chain.p12", "src/tests/data/user@imap.localhost.crt", "src/tests/data/user@imap.localhost.key", "src/tests/data/user@imap.localhost.p12", "tests/data/smime-certs/cn-only@imap.localhost.crt", "tests/data/smime-certs/cn-only@imap.localhost.key", "tests/data/smime-certs/imap.localhost.ca.crt", "tests/data/smime-certs/domain.tld.ca.crt", "tests/data/smime-certs/user@domain.tld.crt", "tests/data/smime-certs/user@domain.tld.key", "tests/data/smime-certs/user@imap.localhost.crt", "tests/data/smime-certs/user@imap.localhost.key", "tests/data/decrypted-message-body.txt", "tests/data/decrypted-signed-opaque-message-body.txt", "tests/data/encrypted-message.txt", "tests/data/encrypted-signed-opaque-message.txt", "tests/data/sieve-vacation-cleaned.sieve", "tests/data/sieve-vacation-off.sieve", "tests/data/sieve-vacation-on-no-end-date.sieve", "tests/data/sieve-vacation-on-no-tz.sieve", "tests/data/sieve-vacation-on-special-chars-message.sieve", "tests/data/sieve-vacation-on-special-chars-subject.sieve", "tests/data/sieve-vacation-on-subject-placeholder.sieve", "tests/data/sieve-vacation-on.sieve", "tests/data/signed-message.txt", "tests/data/signed-opaque-message.txt"]
+path = ["src/tests/data/user@imap.localhost.chain.p12", "src/tests/data/user@imap.localhost.crt", "src/tests/data/user@imap.localhost.key", "src/tests/data/user@imap.localhost.p12", "tests/data/smime-certs/cn-only@imap.localhost.crt", "tests/data/smime-certs/cn-only@imap.localhost.key", "tests/data/smime-certs/imap.localhost.ca.crt", "tests/data/smime-certs/domain.tld.ca.crt", "tests/data/smime-certs/user@domain.tld.crt", "tests/data/smime-certs/user@domain.tld.key", "tests/data/smime-certs/user@imap.localhost.crt", "tests/data/smime-certs/user@imap.localhost.key", "tests/data/decrypted-message-body.txt", "tests/data/decrypted-signed-opaque-message-body.txt", "tests/data/encrypted-message.txt", "tests/data/encrypted-signed-opaque-message.txt", "tests/data/nobody-message.txt", "tests/data/sieve-vacation-cleaned.sieve", "tests/data/sieve-vacation-off.sieve", "tests/data/sieve-vacation-on-no-end-date.sieve", "tests/data/sieve-vacation-on-no-tz.sieve", "tests/data/sieve-vacation-on-special-chars-message.sieve", "tests/data/sieve-vacation-on-special-chars-subject.sieve", "tests/data/sieve-vacation-on-subject-placeholder.sieve", "tests/data/sieve-vacation-on.sieve", "tests/data/signed-message.txt", "tests/data/signed-opaque-message.txt", "tests/data/smime-certs/repeated-common-name@imap.localhost.crt", "tests/data/smime-certs/repeated-email-address@imap.localhost.crt"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2023 Nextcloud GmbH and Nextcloud contributors"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
@@ -99,6 +105,12 @@ SPDX-License-Identifier = "AGPL-3.0-or-later"
 path = ["src/tests/data/user@imap.localhost.chain.crt", "tests/data/smime-certs/chain-leaf-only@imap.localhost.crt", "tests/data/smime-certs/chain-partial@imap.localhost.crt", "tests/data/smime-certs/chain@imap.localhost.crt", "tests/data/smime-certs/debug@imap.localhost.crt", "tests/data/smime-certs/debug@imap.localhost.key"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2024 Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
+path = "tests/data/decrypted-message-body-with-attachment.txt"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Nextcloud GmbH and Nextcloud contributors"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
 
 [[annotations]]
@@ -138,9 +150,9 @@ SPDX-FileCopyrightText = "2018-2024 Google LLC, 2016-2024 Nextcloud GmbH and Nex
 SPDX-License-Identifier = "Apache-2.0"
 
 [[annotations]]
-path = ["img/mail.png", "img/mail.svg", "img/mail-dark.svg", "img/important.svg", "img/star.png", "img/star.svg", "img/mail-notification.png", "img/mail-notification.svg", "img/text_snippet.svg"]
+path = ["img/mail.png", "img/mail.svg", "img/mail-dark.svg", "img/important.svg", "img/star.png", "img/star.svg", "img/mail-notification.png", "img/mail-notification.svg", "img/text_snippet.svg", "img/format-pilcrow-arrow-right.svg", "img/format-pilcrow-arrow-left.svg", "img/delegation.svg"]
 precedence = "aggregate"
-SPDX-FileCopyrightText = "2018-2025 Google LLC"
+SPDX-FileCopyrightText = "2018-2026 Google LLC"
 SPDX-License-Identifier = "Apache-2.0"
 
 [[annotations]]
@@ -156,7 +168,37 @@ SPDX-FileCopyrightText = "Nils Adermann, Jordi Boggiano"
 SPDX-License-Identifier = "MIT"
 
 [[annotations]]
-path = [".tx/backport"]
+path = [".tx/backport", ".github/workflows/*.patch"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "none"
 SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = ["patches.json", "patches.lock.json"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
+path = [".patches/dkimvalidator-fix-broken-canonical-handling.patch"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "angrychimp, Teon d.o.o. - Bostjan Skufca, Marcus Bointon"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = [".patches/horde-mail-rfc822-isAtext-empty-zero.patch"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
+path = [".patches/url-normalizer-fix-deprecation-warning-on-PHP-8.5.patch"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2013 Glen Scott"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = ["tests/data/smime-certs/san-only@imap.localhost.crt", "tests/data/smime-certs/san-only@imap.localhost.key"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 CyberMyte, LLC"
+SPDX-License-Identifier = "AGPL-3.0-or-later"

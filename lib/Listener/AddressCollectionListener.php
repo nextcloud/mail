@@ -23,24 +23,12 @@ use Throwable;
  * @template-implements IEventListener<Event|MessageSentEvent>
  */
 class AddressCollectionListener implements IEventListener {
-	/** @var IUserPreferences */
-	private $preferences;
-
-	/** @var AddressCollector */
-	private $collector;
-
-	/** @var LoggerInterface */
-	private $logger;
-
 	public function __construct(
-		IUserPreferences $preferences,
-		AddressCollector $collector,
-		LoggerInterface $logger,
+		private IUserPreferences $preferences,
+		private AddressCollector $collector,
+		private LoggerInterface $logger,
 		private TransmissionService $transmissionService,
 	) {
-		$this->collector = $collector;
-		$this->logger = $logger;
-		$this->preferences = $preferences;
 	}
 
 	#[\Override]
@@ -56,15 +44,15 @@ class AddressCollectionListener implements IEventListener {
 		// Non-essential feature, hence we catch all possible errors
 		try {
 			$message = $event->getLocalMessage();
-			$to = $this->transmissionService->getAddressList($message, Recipient::TYPE_TO);
-			$cc = $this->transmissionService->getAddressList($message, Recipient::TYPE_CC);
-			$bcc = $this->transmissionService->getAddressList($message, Recipient::TYPE_BCC);
+			$to = $this->transmissionService->getAddressList($message, Recipient::TYPE_TO, $event->getAccount()->getUserId());
+			$cc = $this->transmissionService->getAddressList($message, Recipient::TYPE_CC, $event->getAccount()->getUserId());
+			$bcc = $this->transmissionService->getAddressList($message, Recipient::TYPE_BCC, $event->getAccount()->getUserId());
 
 			$addresses = $to->merge($cc)->merge($bcc);
 
 			$this->collector->addAddresses($event->getAccount()->getUserId(), $addresses);
 		} catch (Throwable $e) {
-			$this->logger->warning('Error while collecting mail addresses: ' . $e, [
+			$this->logger->warning('Error while collecting mail addresses: ' . $e->getMessage(), [
 				'exception' => $e,
 			]);
 		}

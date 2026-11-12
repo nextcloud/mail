@@ -5,6 +5,7 @@
  * SPDX-FileCopyrightText: 2015-2016 ownCloud, Inc.
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+
 namespace OCA\Mail\Tests\Unit\AppInfo;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;

@@ -10,6 +10,8 @@ declare(strict_types=1);
 namespace OCA\Mail\Sieve;
 
 class SieveUtils {
+	public const NEWLINE = "\r\n";
+
 	/**
 	 * Escape a string for use in a Sieve script
 	 *

@@ -32,7 +32,6 @@ class Version3400Date20230807300513 extends SimpleMigrationStep {
 			$accountsTable->addColumn('snooze_mailbox_id', Types::INTEGER, [
 				'notnull' => false,
 				'default' => null,
-				'length' => 20,
 			]);
 		}
 
@@ -41,7 +40,6 @@ class Version3400Date20230807300513 extends SimpleMigrationStep {
 			$messagesSnoozedTable->addColumn('id', Types::INTEGER, [
 				'autoincrement' => true,
 				'notnull' => true,
-				'length' => 4,
 			]);
 			$messagesSnoozedTable->addColumn('message_id', Types::STRING, [
 				'notnull' => true,
@@ -49,7 +47,6 @@ class Version3400Date20230807300513 extends SimpleMigrationStep {
 			]);
 			$messagesSnoozedTable->addColumn('snoozed_until', Types::INTEGER, [
 				'notnull' => true,
-				'length' => 4,
 			]);
 			$messagesSnoozedTable->setPrimaryKey(['id'], 'mail_msg_snoozed_id_idx');
 		}

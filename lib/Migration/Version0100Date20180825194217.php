@@ -36,7 +36,6 @@ class Version0100Date20180825194217 extends SimpleMigrationStep {
 			$table->addColumn('id', Types::INTEGER, [
 				'autoincrement' => true,
 				'notnull' => true,
-				'length' => 4,
 			]);
 			$table->addColumn('user_id', Types::STRING, [
 				'notnull' => true,
@@ -130,11 +129,9 @@ class Version0100Date20180825194217 extends SimpleMigrationStep {
 			$table->addColumn('id', Types::INTEGER, [
 				'autoincrement' => true,
 				'notnull' => true,
-				'length' => 4,
 			]);
 			$table->addColumn('account_id', Types::INTEGER, [
 				'notnull' => true,
-				'length' => 4,
 				'default' => 0,
 			]);
 			$table->addColumn('name', Types::STRING, [
@@ -153,7 +150,6 @@ class Version0100Date20180825194217 extends SimpleMigrationStep {
 			$table->addColumn('id', Types::INTEGER, [
 				'autoincrement' => true,
 				'notnull' => true,
-				'length' => 4,
 			]);
 			$table->addColumn('user_id', Types::STRING, [
 				'notnull' => true,
@@ -167,7 +163,6 @@ class Version0100Date20180825194217 extends SimpleMigrationStep {
 			]);
 			$table->addColumn('created_at', Types::INTEGER, [
 				'notnull' => true,
-				'length' => 4,
 				'default' => 0,
 			]);
 			$table->setPrimaryKey(['id']);

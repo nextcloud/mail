@@ -8,27 +8,6 @@
 namespace OCA\Mail\Tests\Integration\Framework;
 
 class SimpleMessage {
-	/** @var string */
-	private $from;
-
-	/** @var string */
-	private $to;
-
-	/** @var string|null */
-	private $cc;
-
-	/** @var string|null */
-	private $bcc;
-
-	/** @var string|null */
-	private $date;
-
-	/** @var string|null */
-	private $subject;
-
-	/** @var string|null */
-	private $body;
-
 	/**
 	 * @param string $from
 	 * @param string $to
@@ -38,20 +17,15 @@ class SimpleMessage {
 	 * @param string $subject
 	 * @param string $body
 	 */
-	public function __construct(string $from,
-		string $to,
-		?string $cc,
-		?string $bcc,
-		?string $date,
-		?string $subject,
-		?string $body) {
-		$this->from = $from;
-		$this->to = $to;
-		$this->cc = $cc;
-		$this->bcc = $bcc;
-		$this->date = $date;
-		$this->subject = $subject;
-		$this->body = $body;
+	public function __construct(
+		private string $from,
+		private string $to,
+		private ?string $cc,
+		private ?string $bcc,
+		private ?string $date,
+		private ?string $subject,
+		private ?string $body,
+	) {
 	}
 
 	public function getFrom(): string {

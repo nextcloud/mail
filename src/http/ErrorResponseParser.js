@@ -3,11 +3,11 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-const isErrorResponse = (resp) => {
+function isErrorResponse(resp) {
 	return 'x-mail-response' in resp.headers && resp.data.status === 'error'
 }
 
-export const parseErrorResponse = (resp) => {
+export function parseErrorResponse(resp) {
 	if (!isErrorResponse(resp)) {
 		return resp
 	}

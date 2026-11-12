@@ -15,40 +15,41 @@ use Horde_Mime_Mail;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
+use OCA\Mail\AppInfo\Application;
+use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 use OCA\Mail\Model\Message;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\DataUri\DataUriParser;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\IConfig;
+use OCP\IAppConfig;
 use Psr\Log\LoggerInterface;
 
 class AntiSpamService {
-	private const NAME = 'antispam_reporting';
 	private const MESSAGE_TYPE = 'message/rfc822';
 
 	public function __construct(
-		private IConfig $config,
 		private MessageMapper $dbMessageMapper,
 		private MailManager $mailManager,
-		private IMAPClientFactory $imapClientFactory,
+		private ProtocolFactory $protocolFactory,
 		private SmtpClientFactory $smtpClientFactory,
 		private ImapMessageMapper $messageMapper,
 		private LoggerInterface $logger,
+		private IAppConfig $appConfig,
 	) {
 	}
 
 	public function getSpamEmail(): string {
-		return $this->config->getAppValue('mail', self::NAME . '_spam');
+		return $this->appConfig->getValueString(Application::APP_ID, ConfigLexicon::ANTISPAM_REPORTING_SPAM);
 	}
 
 	public function getHamEmail(): string {
-		return $this->config->getAppValue('mail', self::NAME . '_ham');
+		return $this->appConfig->getValueString(Application::APP_ID, ConfigLexicon::ANTISPAM_REPORTING_HAM);
 	}
 
 	public function getSpamSubject(): string {
@@ -60,16 +61,16 @@ class AntiSpamService {
 	}
 
 	public function setSpamEmail(string $email): void {
-		$this->config->setAppValue('mail', self::NAME . '_spam', $email);
+		$this->appConfig->setValueString(Application::APP_ID, ConfigLexicon::ANTISPAM_REPORTING_SPAM, $email);
 	}
 
 	public function setHamEmail(string $email): void {
-		$this->config->setAppValue('mail', self::NAME . '_ham', $email);
+		$this->appConfig->setValueString(Application::APP_ID, ConfigLexicon::ANTISPAM_REPORTING_HAM, $email);
 	}
 
 	public function deleteConfig(): void {
-		$this->config->deleteAppValue('mail', self::NAME . '_spam');
-		$this->config->deleteAppValue('mail', self::NAME . '_ham');
+		$this->appConfig->deleteKey(Application::APP_ID, ConfigLexicon::ANTISPAM_REPORTING_SPAM);
+		$this->appConfig->deleteKey(Application::APP_ID, ConfigLexicon::ANTISPAM_REPORTING_HAM);
 	}
 
 	/**
@@ -113,13 +114,13 @@ class AntiSpamService {
 		try {
 			$attachmentMessage = $this->mailManager->getMessage($userId, $messageId);
 		} catch (DoesNotExistException $e) {
-			$this->logger->error('Could not find reported email with message ID #' . $messageId, ['exception' => $e]);
+			$this->logger->error("Could not find reported email with message ID #$messageId", ['exception' => $e]);
 			return;
 		}
 
 		$mailbox = $this->mailManager->getMailbox($userId, $attachmentMessage->getMailboxId());
 
-		$client = $this->imapClientFactory->getClient($account);
+		$client = $this->protocolFactory->imapClient($account);
 		try {
 			$fullText = $this->messageMapper->getFullText(
 				$client,
@@ -157,10 +158,12 @@ class AntiSpamService {
 		$mimeMessage = new MimeMessage(
 			new DataUriParser()
 		);
+
 		$mimePart = $mimeMessage->build(
 			null,
 			$message->getContent(),
-			$message->getAttachments()
+			false,
+			array_values($message->getAttachments()),
 		);
 
 		$mail->setBasePart($mimePart);
@@ -195,7 +198,7 @@ class AntiSpamService {
 			return;
 		}
 
-		$client = $this->imapClientFactory->getClient($account);
+		$client = $this->protocolFactory->imapClient($account);
 		try {
 			$this->messageMapper->save(
 				$client,
@@ -203,7 +206,7 @@ class AntiSpamService {
 				$mail->getRaw(false)
 			);
 		} catch (Horde_Imap_Client_Exception $e) {
-			$this->logger->error('Could not move report email to sent mailbox, but the report email was sent. Reported email was id: #' . $messageId, ['exception' => $e]);
+			$this->logger->error("Could not move report email to sent mailbox, but the report email was sent. Reported email was id: #$messageId", ['exception' => $e]);
 		} finally {
 			$client->logout();
 		}

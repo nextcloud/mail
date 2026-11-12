@@ -54,6 +54,9 @@ class Version2300Date20221215143450 extends SimpleMigrationStep {
 		return $schema;
 	}
 
+	/**
+	 * @return void
+	 */
 	#[\Override]
 	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {
 		$this->atomic(function () {

@@ -5,18 +5,23 @@
 
 <template>
 	<div class="alias-form">
-		<form v-if="showForm"
+		<form
+			v-if="showForm"
 			:id="formId"
 			class="alias-form__form"
 			@submit.prevent="updateAlias">
-			<input v-model="changeName"
+			<input
+				v-model="changeName"
 				type="text"
 				class="alias-form__form__input"
+				:aria-label="t('mail', 'Alias name')"
 				required>
-			<input v-model="changeAlias"
+			<input
+				v-model="changeAlias"
 				:disabled="alias.provisioned"
 				type="email"
 				class="alias-form__form__input"
+				:aria-label="t('mail', 'Email address')"
 				required>
 		</form>
 		<div v-else>
@@ -25,14 +30,15 @@
 
 		<div class="alias-form__actions">
 			<template v-if="showForm">
-				<NcButton type="tertiary-no-background"
+				<NcButton
+					variant="tertiary-no-background"
 					:aria-label="t('mail', 'Update alias')"
-					native-type="submit"
+					type="submit"
 					:form="formId"
 					:name="t('mail', 'Update alias')">
 					<template #icon>
-						<IconLoading v-if="loading" :size="16" />
-						<IconCheck v-else :size="16" />
+						<NcLoadingIcon v-if="loading" :size="20" />
+						<IconCheck v-else :size="20" />
 					</template>
 				</NcButton>
 			</template>
@@ -40,23 +46,25 @@
 				<!-- Extra buttons -->
 				<slot />
 
-				<NcButton v-if="enableUpdate"
-					type="tertiary-no-background"
+				<NcButton
+					v-if="enableUpdate"
+					variant="tertiary-no-background"
 					:aria-label="t('mail', 'Rename alias')"
 					:name="t('mail', 'Show update alias form')"
 					@click.prevent="showForm = true">
 					<template #icon>
-						<IconRename :size="16" />
+						<IconRename :size="20" />
 					</template>
 				</NcButton>
-				<NcButton v-if="enableDelete && !alias.provisioned"
-					type="tertiary-no-background"
+				<NcButton
+					v-if="enableDelete && !alias.provisioned"
+					variant="tertiary-no-background"
 					:aria-label="t('mail', 'Delete alias')"
 					:name="t('mail', 'Delete alias')"
 					@click.prevent="deleteAlias">
 					<template #icon>
-						<IconLoading v-if="loading" :size="16" />
-						<IconDelete v-else :size="16" />
+						<NcLoadingIcon v-if="loading" :size="20" />
+						<IconDelete v-else :size="20" />
 					</template>
 				</NcButton>
 			</template>
@@ -65,46 +73,54 @@
 </template>
 
 <script>
-import { NcButton, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
-import IconDelete from 'vue-material-design-icons/DeleteOutline.vue'
-import IconRename from 'vue-material-design-icons/PencilOutline.vue'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import IconCheck from 'vue-material-design-icons/Check.vue'
+import IconRename from 'vue-material-design-icons/PencilOutline.vue'
+import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 
 export default {
 	name: 'AliasForm',
 	components: {
 		NcButton,
 		IconRename,
-		IconLoading,
+		NcLoadingIcon,
 		IconDelete,
 		IconCheck,
 	},
+
 	props: {
 		account: {
 			type: Object,
 			required: true,
 		},
+
 		alias: {
 			type: Object,
 			required: true,
 		},
+
 		enableUpdate: {
 			type: Boolean,
 			default: true,
 		},
+
 		enableDelete: {
 			type: Boolean,
 			default: true,
 		},
+
 		onUpdateAlias: {
 			type: Function,
 			default: async (aliasId, { alias, name }) => {},
 		},
+
 		onDelete: {
 			type: Function,
 			default: async (aliasId) => {},
 		},
 	},
+
 	data() {
 		return {
 			changeAlias: this.alias.alias,
@@ -113,11 +129,13 @@ export default {
 			loading: false,
 		}
 	},
+
 	computed: {
 		formId() {
 			return `alias-form-${this.alias.id}`
 		},
 	},
+
 	methods: {
 		/**
 		 * Call alias update event handler of parent.
@@ -133,6 +151,7 @@ export default {
 			this.showForm = false
 			this.loading = false
 		},
+
 		/**
 		 * Call alias deletion event handler of parent.
 		 *
@@ -162,11 +181,6 @@ $form-gap: 10px;
 		display: flex;
 		flex: 1 auto;
 		gap: 10px; // Gap between inputs
-
-		&--expand {
-			// Prevent the submit button from being wrapped to the next line on normal sized screens
-			flex-basis: calc(100% - 44px - $form-gap);
-		}
 
 		&__input {
 			flex: 1 auto;

@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Model;
 
 use OCA\Mail\Model\EventData;
-use Test\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class EventDataTest extends TestCase {
 

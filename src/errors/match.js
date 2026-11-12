@@ -7,7 +7,7 @@
  * @param {Error} error error
  * @param {object} matches matches
  */
-export const matchError = async (error, matches) => {
+export async function matchError(error, matches) {
 	if (error.name in matches) {
 		return await Promise.resolve(matches[error.name](error))
 	}

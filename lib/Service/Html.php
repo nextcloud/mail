@@ -10,13 +10,15 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service;
 
-use Closure;
 use HTMLPurifier;
 use HTMLPurifier_Config;
 use HTMLPurifier_HTMLDefinition;
 use HTMLPurifier_URIDefinition;
 use HTMLPurifier_URISchemeRegistry;
+use OCA\Mail\Html\ProxyHmacGenerator;
+use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\HtmlPurify\CidURIScheme;
+use OCA\Mail\Service\HtmlPurify\TransformCidDataAttr;
 use OCA\Mail\Service\HtmlPurify\TransformHTMLLinks;
 use OCA\Mail\Service\HtmlPurify\TransformImageSrc;
 use OCA\Mail\Service\HtmlPurify\TransformNoReferrer;
@@ -33,6 +35,9 @@ use Youthweb\UrlLinker\UrlLinker;
 
 require_once __DIR__ . '/../../vendor/cerdic/css-tidy/class.csstidy.php';
 
+/**
+ * @psalm-import-type IMAPAttachment from IMAPMessage
+ */
 class Html {
 	/** @var IURLGenerator */
 	private $urlGenerator;
@@ -40,7 +45,11 @@ class Html {
 	/** @var IRequest */
 	private $request;
 
-	public function __construct(IURLGenerator $urlGenerator, IRequest $request) {
+	public function __construct(
+		IURLGenerator $urlGenerator,
+		IRequest $request,
+		private ProxyHmacGenerator $hmacGenerator,
+	) {
 		$this->urlGenerator = $urlGenerator;
 		$this->request = $request;
 	}
@@ -50,14 +59,22 @@ class Html {
 	 * @return string
 	 */
 	public function convertLinks(string $data): string {
+		if (!mb_check_encoding($data, 'UTF-8')) {
+			// Some senders (e.g. Lotus Notes/Domino) declare a message as UTF-8 while
+			// actually sending a different charset. UrlLinker's escapeHtml() calls
+			// htmlspecialchars() without ENT_SUBSTITUTE/ENT_IGNORE, which returns an
+			// empty string for the whole input on the first invalid byte it hits.
+			$data = mb_scrub($data, 'UTF-8');
+		}
+
 		$linker = new UrlLinker([
 			'allowFtpAddresses' => true,
 			'allowUpperCaseUrlSchemes' => false,
-			'htmlLinkCreator' => static function ($url) {
+			'skipAmbiguousTlds' => true,
+			'htmlLinkCreator' => static fn ($url)
 				// Render full url for the link description. Otherwise, potentially malicious query
 				// params might be hidden.
-				return sprintf('<a href="%1$s">%1$s</a>', htmlspecialchars($url));
-			},
+				=> sprintf('<a href="%1$s">%1$s</a>', htmlspecialchars($url)),
 		]);
 		$data = $linker->linkUrlsAndEscapeHtml($data);
 
@@ -74,9 +91,9 @@ class Html {
 		// TODO: Fix this - requires https://github.com/owncloud/core/issues/10767 to be fixed
 		$config->set('Cache.DefinitionImpl', null);
 
-		/** @var HTMLPurifier_HTMLDefinition $uri */
-		$uri = $config->getDefinition('HTML');
-		$uri->info_attr_transform_post['noreferrer'] = new TransformNoReferrer();
+		/** @var HTMLPurifier_HTMLDefinition $def */
+		$def = $config->getHTMLDefinition(true);
+		$def->info_attr_transform_post['noreferrer'] = new TransformNoReferrer();
 
 		$purifier = new HTMLPurifier($config);
 
@@ -92,6 +109,9 @@ class Html {
 	public function parseMailBody(string $body): array {
 		$signature = null;
 		$parts = preg_split("/-- (\n|(\r\n))/", $body);
+		if ($parts === false) {
+			$parts = [$body];
+		}
 		if (count($parts) > 1) {
 			$signature = array_pop($parts);
 			$body = implode("-- \r\n", $parts);
@@ -103,7 +123,28 @@ class Html {
 		];
 	}
 
-	public function sanitizeHtmlMailBody(string $mailBody, array $messageParameters, Closure $mapCidToAttachmentId): string {
+	/**
+	 * @param list<IMAPAttachment> $inlineAttachments
+	 * @return list<array{id: string|null, messageId: int, fileName: string|null, mime: string, size: int, cid: string|null, disposition: string, url: string}>
+	 */
+	private function addAttachmentUrl(int $messageId, array $inlineAttachments): array {
+		return array_map(function (array $inlineAttachment) use ($messageId) {
+			$inlineAttachment['url'] = $this->urlGenerator->linkToRouteAbsolute(
+				'mail.messages.downloadAttachment', [
+					'id' => $messageId,
+					'attachmentId' => $inlineAttachment['id']
+				]
+			);
+			return $inlineAttachment;
+		}, $inlineAttachments);
+	}
+
+	/**
+	 * @param list<IMAPAttachment> $inlineAttachments
+	 */
+	public function sanitizeHtmlMailBody(int $messageId, string $mailBody, array $inlineAttachments): string {
+		$inlineAttachments = $this->addAttachmentUrl($messageId, $inlineAttachments);
+
 		$config = HTMLPurifier_Config::createDefault();
 
 		// Append target="_blank" to all link (a) elements
@@ -117,21 +158,39 @@ class Html {
 		$config->set('Filter.ExtractStyleBlocks.TidyImpl', false);
 		$config->set('CSS.AllowTricky', true);
 		$config->set('CSS.Proprietary', true);
+		$config->set('Attr.EnableID', true);
 
 		// Disable the cache since ownCloud has no really appcache
 		// TODO: Fix this - requires https://github.com/owncloud/core/issues/10767 to be fixed
 		$config->set('Cache.DefinitionImpl', null);
 
 		// Rewrite URL for redirection and proxying of content
-		/** @var HTMLPurifier_HTMLDefinition $html */
-		$html = $config->getDefinition('HTML');
-		$html->info_attr_transform_post['imagesrc'] = new TransformImageSrc($this->urlGenerator);
-		$html->info_attr_transform_post['cssbackground'] = new TransformStyleURLs($this->urlGenerator);
-		$html->info_attr_transform_post['htmllinks'] = new TransformHTMLLinks($this->urlGenerator);
+		/** @var HTMLPurifier_HTMLDefinition $def */
+		$def = $config->getHTMLDefinition(true);
+
+		// HTMLPurifier only knows XHTML 1.0, which predates these
+		$def->addElement('figure', 'Block', 'Flow', 'Common');
+		$def->addElement('figcaption', 'Block', 'Flow', 'Common');
+
+		$def->info_attr_transform_post['imagesrc'] = new TransformImageSrc($this->urlGenerator);
+		$def->info_attr_transform_post['cssbackground'] = new TransformStyleURLs($this->urlGenerator);
+		$def->info_attr_transform_post['htmllinks'] = new TransformHTMLLinks();
+		if (count($inlineAttachments) > 0) {
+			$def->info_attr_transform_post['datacid'] = new TransformCidDataAttr($inlineAttachments);
+		}
 
 		/** @var HTMLPurifier_URIDefinition $uri */
-		$uri = $config->getDefinition('URI');
-		$uri->addFilter(new TransformURLScheme($messageParameters, $mapCidToAttachmentId, $this->urlGenerator, $this->request), $config);
+		$uri = $config->getURIDefinition(true);
+		$uri->addFilter(
+			new TransformURLScheme(
+				$messageId,
+				$inlineAttachments,
+				$this->urlGenerator,
+				$this->request,
+				$this->hmacGenerator,
+			),
+			$config
+		);
 
 		$uriSchemeRegistry = HTMLPurifier_URISchemeRegistry::instance();
 		$uriSchemeRegistry->register('cid', new CidURIScheme());
@@ -143,6 +202,11 @@ class Html {
 		$uriSchemeRegistry->register('data', $uriSchemaData);
 
 		$purifier = new HTMLPurifier($config);
+
+		// Downlevel-revealed conditionals are not comments, so no HTMLPurifier comment
+		// setting covers them and some libxml versions leave them as visible text.
+		// Keep the original on a PCRE error; purify(null) would silently return an empty body.
+		$mailBody = preg_replace('/<!\[\s*(?:end)?if\b[^\]]*\]\s*>/i', '', $mailBody) ?? $mailBody;
 
 		$result = $purifier->purify($mailBody);
 		// eat xml parse errors within HTMLPurifier

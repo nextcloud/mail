@@ -2,12 +2,11 @@
  * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-import dragEventBus from '../util/dragEventBus.js'
 import defer from 'lodash/defer.js'
+import dragEventBus from '../util/dragEventBus.js'
 
 export class DraggableEnvelope {
-
-	constructor(el, componentInstance, options) {
+	constructor(el, options) {
 		this.el = el
 		this.options = options
 		this.registerListeners.bind(this)(el)
@@ -45,7 +44,7 @@ export class DraggableEnvelope {
 		const envelopes = []
 		if (selectedEnvelopes.length) {
 			// handle dragged selection mode items
-			selectedEnvelopes.forEach((envelope, index) => {
+			selectedEnvelopes.forEach((envelope) => {
 				envelopes.push({
 					accountId,
 					mailboxId,
@@ -69,7 +68,7 @@ export class DraggableEnvelope {
 		})
 	}
 
-	onDragEnd(event) {
+	onDragEnd() {
 		dragEventBus.emit('drag-end', { accountId: this.options.accountId })
 	}
 
@@ -87,7 +86,7 @@ export class DraggableEnvelope {
 		const labelWrapperNode = document.createElement('div')
 		labelWrapperNode.classList.add(`${baseClass}--label-wrapper`)
 
-		envelopes.forEach(envelope => {
+		envelopes.forEach((envelope) => {
 			const labelNode = document.createElement('div')
 			labelNode.classList.add(`${baseClass}--label-wrapper--label`)
 			const textLabelNode = document.createTextNode(envelope.draggableLabel)
@@ -107,5 +106,4 @@ export class DraggableEnvelope {
 			document.body.removeChild(dragNode)
 		})
 	}
-
 }

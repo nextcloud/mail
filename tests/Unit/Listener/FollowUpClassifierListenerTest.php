@@ -22,7 +22,7 @@ use OCA\Mail\Events\NewMessagesSynchronized;
 use OCA\Mail\Listener\FollowUpClassifierListener;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCP\BackgroundJob\IJobList;
-use OCP\TextProcessing\FreePromptTaskType;
+use OCP\TaskProcessing\TaskTypes\TextToText;
 
 class FollowUpClassifierListenerTest extends TestCase {
 	private FollowUpClassifierListener $listener;
@@ -69,28 +69,17 @@ class FollowUpClassifierListenerTest extends TestCase {
 			->willReturn(true);
 		$this->aiService->expects(self::once())
 			->method('isLlmAvailable')
-			->with(FreePromptTaskType::class)
+			->with(TextToText::ID)
 			->willReturn(true);
-		// TODO: only assert scheduleAfter() once we support >= 28.0.0
-		if (method_exists(IJobList::class, 'scheduleAfter')) {
-			$this->jobList->expects(self::once())
-				->method('scheduleAfter')
-				->with(FollowUpClassifierJob::class, $scheduleAfterTimestamp, [
-					FollowUpClassifierJob::PARAM_MESSAGE_ID => '<message1@foo.bar>',
-					FollowUpClassifierJob::PARAM_MAILBOX_ID => 200,
-					FollowUpClassifierJob::PARAM_USER_ID => 'user',
-				]);
-			$this->jobList->expects(self::never())
-				->method('add');
-		} else {
-			$this->jobList->expects(self::once())
-				->method('add')
-				->with(FollowUpClassifierJob::class, [
-					FollowUpClassifierJob::PARAM_MESSAGE_ID => '<message1@foo.bar>',
-					FollowUpClassifierJob::PARAM_MAILBOX_ID => 200,
-					FollowUpClassifierJob::PARAM_USER_ID => 'user',
-				]);
-		}
+		$this->jobList->expects(self::once())
+			->method('scheduleAfter')
+			->with(FollowUpClassifierJob::class, $scheduleAfterTimestamp, [
+				FollowUpClassifierJob::PARAM_MESSAGE_ID => '<message1@foo.bar>',
+				FollowUpClassifierJob::PARAM_MAILBOX_ID => 200,
+				FollowUpClassifierJob::PARAM_USER_ID => 'user',
+			]);
+		$this->jobList->expects(self::never())
+			->method('add');
 
 		$this->listener->handle($event);
 	}
@@ -118,13 +107,8 @@ class FollowUpClassifierListenerTest extends TestCase {
 			->willReturn(false);
 		$this->aiService->expects(self::never())
 			->method('isLlmAvailable');
-		// TODO: only assert scheduleAfter() once we support >= 28.0.0
-		if (method_exists(IJobList::class, 'scheduleAfter')) {
-			$this->jobList->expects(self::never())
-				->method('scheduleAfter');
-		}
 		$this->jobList->expects(self::never())
-			->method('add');
+			->method('scheduleAfter');
 
 		$this->listener->handle($event);
 	}
@@ -152,15 +136,10 @@ class FollowUpClassifierListenerTest extends TestCase {
 			->willReturn(true);
 		$this->aiService->expects(self::once())
 			->method('isLlmAvailable')
-			->with(FreePromptTaskType::class)
+			->with(TextToText::ID)
 			->willReturn(false);
-		// TODO: only assert scheduleAfter() once we support >= 28.0.0
-		if (method_exists(IJobList::class, 'scheduleAfter')) {
-			$this->jobList->expects(self::never())
-				->method('scheduleAfter');
-		}
 		$this->jobList->expects(self::never())
-			->method('add');
+			->method('scheduleAfter');
 
 		$this->listener->handle($event);
 	}
@@ -190,15 +169,10 @@ class FollowUpClassifierListenerTest extends TestCase {
 			->willReturn(true);
 		$this->aiService->expects(self::once())
 			->method('isLlmAvailable')
-			->with(FreePromptTaskType::class)
+			->with(TextToText::ID)
 			->willReturn(true);
-		// TODO: only assert scheduleAfter() once we support >= 28.0.0
-		if (method_exists(IJobList::class, 'scheduleAfter')) {
-			$this->jobList->expects(self::never())
-				->method('scheduleAfter');
-		}
 		$this->jobList->expects(self::never())
-			->method('add');
+			->method('scheduleAfter');
 
 		$this->listener->handle($event);
 	}
@@ -227,15 +201,10 @@ class FollowUpClassifierListenerTest extends TestCase {
 			->willReturn(true);
 		$this->aiService->expects(self::once())
 			->method('isLlmAvailable')
-			->with(FreePromptTaskType::class)
+			->with(TextToText::ID)
 			->willReturn(true);
-		// TODO: only assert scheduleAfter() once we support >= 28.0.0
-		if (method_exists(IJobList::class, 'scheduleAfter')) {
-			$this->jobList->expects(self::never())
-				->method('scheduleAfter');
-		}
 		$this->jobList->expects(self::never())
-			->method('add');
+			->method('scheduleAfter');
 
 		$this->listener->handle($event);
 	}

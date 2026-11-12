@@ -11,13 +11,18 @@ namespace OCA\Mail\Tests\Unit\Service;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
+use OCA\Mail\BackgroundJob\QuotaJob;
+use OCA\Mail\BackgroundJob\SyncJob;
+use OCA\Mail\Db\DelegationMapper;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ClientException;
-use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
+use OCP\IConfig;
 use OCP\IL10N;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -49,11 +54,15 @@ class AccountServiceTest extends TestCase {
 	/** @var IJobList|MockObject */
 	private $jobList;
 
-	/** @var IMAPClientFactory|MockObject */
-	private $imapClientFactory;
+	/** @var ProtocolFactory|MockObject */
+	private $protocolFactory;
 
 	/** @var Horde_Imap_Client_Socket|MockObject */
 	private $client;
+
+	private IConfig&MockObject $config;
+	private ITimeFactory&MockObject $time;
+	private DelegationMapper&MockObject $delegationMapper;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -62,12 +71,18 @@ class AccountServiceTest extends TestCase {
 		$this->l10n = $this->createMock(IL10N::class);
 		$this->aliasesService = $this->createMock(AliasesService::class);
 		$this->jobList = $this->createMock(IJobList::class);
-		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
+		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
+		$this->config = $this->createMock(IConfig::class);
+		$this->time = $this->createMock(ITimeFactory::class);
+		$this->delegationMapper = $this->createMock(DelegationMapper::class);
 		$this->accountService = new AccountService(
 			$this->mapper,
 			$this->aliasesService,
 			$this->jobList,
-			$this->imapClientFactory
+			$this->protocolFactory,
+			$this->config,
+			$this->time,
+			$this->delegationMapper,
 		);
 
 		$this->account1 = new MailAccount();
@@ -124,7 +139,6 @@ class AccountServiceTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-
 	public function testDelete() {
 		$accountId = 33;
 
@@ -154,16 +168,27 @@ class AccountServiceTest extends TestCase {
 	}
 
 	public function testSave() {
-		$account = new MailAccount();
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
+		$mailAccount->setUserId('user1');
 
 		$this->mapper->expects($this->once())
 			->method('save')
-			->with($account)
+			->with($mailAccount)
 			->will($this->returnArgument(0));
 
-		$actual = $this->accountService->save($account);
+		$this->time->expects(self::once())
+			->method('getTime')
+			->willReturn(1755850409);
 
-		$this->assertEquals($account, $actual);
+		$this->jobList->method('has')
+			->willReturn(false);
+		$this->jobList->expects($this->exactly(6))
+			->method('scheduleAfter');
+
+		$actual = $this->accountService->save($mailAccount);
+
+		$this->assertEquals($mailAccount, $actual);
 	}
 
 	public function testUpdateSignature() {
@@ -186,8 +211,8 @@ class AccountServiceTest extends TestCase {
 	}
 	public function testAccountsFailedConnection() {
 		$accountId = 1;
-		$this->imapClientFactory->expects($this->once())
-			->method('getClient')
+		$this->protocolFactory->expects($this->once())
+			->method('testConnection')
 			->willThrowException(new ClientException());
 		$this->mapper->expects($this->once())
 			->method('find')
@@ -198,17 +223,120 @@ class AccountServiceTest extends TestCase {
 	}
 	public function testAccountsSuccesfulConnection() {
 		$accountId = 1;
-		$this->imapClientFactory->expects($this->once())
-			->method('getClient')
-			->willReturn($this->client);
-		$this->client->expects($this->once())
-			->method('close')
-			->willReturn(null);
+		$this->protocolFactory->expects($this->once())
+			->method('testConnection');
 		$this->mapper->expects($this->once())
 			->method('find')
 			->with($this->user, $accountId)
 			->willReturn($this->account1);
 		$connected = $this->accountService->testAccountConnection($this->user, $accountId);
 		$this->assertTrue($connected);
+	}
+
+	public function testDeleteInvalidatesCache(): void {
+		$accountId = 33;
+		$this->account1->setUserId($this->user);
+
+		$this->mapper->expects(self::exactly(2))
+			->method('findByUserId')
+			->with($this->user)
+			->willReturn([$this->account1]);
+		$this->mapper->method('find')
+			->with($this->user, $accountId)
+			->willReturn($this->account1);
+
+		$this->accountService->findByUserId($this->user);
+		$this->accountService->delete($this->user, $accountId);
+		$this->accountService->findByUserId($this->user);
+	}
+
+	public function testDeleteByAccountIdInvalidatesCache(): void {
+		$accountId = 33;
+		$this->account1->setUserId($this->user);
+		$this->account1->setId($accountId);
+
+		$this->mapper->expects(self::exactly(2))
+			->method('findByUserId')
+			->with($this->user)
+			->willReturn([$this->account1]);
+		$this->mapper->method('findById')
+			->with($accountId)
+			->willReturn($this->account1);
+
+		$this->accountService->findByUserId($this->user);
+		$this->accountService->deleteByAccountId($accountId);
+		$this->accountService->findByUserId($this->user);
+	}
+
+	public function testSaveInvalidatesCache(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
+		$mailAccount->setUserId($this->user);
+
+		$this->mapper->expects(self::exactly(2))
+			->method('findByUserId')
+			->with($this->user)
+			->willReturn([$mailAccount]);
+		$this->mapper->method('save')
+			->willReturnArgument(0);
+		$this->time->method('getTime')
+			->willReturn(1755850409);
+		$this->jobList->method('has')
+			->willReturn(true);
+
+		$this->accountService->findByUserId($this->user);
+		$this->accountService->save($mailAccount);
+		$this->accountService->findByUserId($this->user);
+	}
+
+	public function testUpdateInvalidatesCache(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
+		$mailAccount->setUserId($this->user);
+
+		$this->mapper->expects(self::exactly(2))
+			->method('findByUserId')
+			->with($this->user)
+			->willReturn([$mailAccount]);
+		$this->mapper->method('update')
+			->willReturnArgument(0);
+
+		$this->accountService->findByUserId($this->user);
+		$this->accountService->update($mailAccount);
+		$this->accountService->findByUserId($this->user);
+	}
+
+	public function testUpdateSignatureInvalidatesCache(): void {
+		$id = 3;
+		$uid = $this->user;
+		$mailAccount = new MailAccount();
+		$mailAccount->setId($id);
+		$mailAccount->setUserId($uid);
+
+		$this->mapper->expects(self::exactly(2))
+			->method('findByUserId')
+			->with($uid)
+			->willReturn([$mailAccount]);
+		$this->mapper->method('find')
+			->with($uid, $id)
+			->willReturn($mailAccount);
+		$this->mapper->method('save');
+
+		$this->accountService->findByUserId($uid);
+		$this->accountService->updateSignature($id, $uid, 'sig');
+		$this->accountService->findByUserId($uid);
+	}
+
+	public function testScheduleBackgroundJobs(): void {
+		$mailAccountId = 1000;
+		$this->time->expects(self::once())
+			->method('getTime')
+			->willReturn(1755850409);
+		$this->jobList->method('has')
+			->willReturnCallback(fn ($job) => $job === SyncJob::class || $job === QuotaJob::class);
+		$this->jobList->expects($this->exactly(4))
+			->method('scheduleAfter');
+
+		$this->accountService->scheduleBackgroundJobs($mailAccountId);
 	}
 }

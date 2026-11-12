@@ -21,12 +21,12 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\Exception\UploadException;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Model\SmimeData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\Attachment\AttachmentService;
+use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\DkimService;
 use OCA\Mail\Service\ItineraryService;
 use OCA\Mail\Service\MailManager;
@@ -51,13 +51,13 @@ class MessageApiControllerTest extends TestCase {
 	private AttachmentService|MockObject $attachmentService;
 	private OutboxService|MockObject $outboxService;
 	private MailManager|MockObject $mailManager;
-	private IMAPClientFactory|MockObject $imapClientFactory;
 	private LoggerInterface|MockObject $logger;
 	private MockObject|ITimeFactory $time;
 	private MockObject|IURLGenerator $urlGenerator;
 	private DkimService|MockObject $dkimService;
 	private MockObject|ItineraryService $itineraryService;
 	private TrustedSenderService|MockObject $trustedSenderService;
+	private DelegationService|MockObject $delegationService;
 	private MessageApiController $controller;
 	private string $fromEmail = 'john@test.com';
 	private int $accountId = 1;
@@ -65,8 +65,6 @@ class MessageApiControllerTest extends TestCase {
 	private LocalMessage $message;
 	private int $messageId = 100;
 	private int $mailboxId = 42;
-
-
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -77,13 +75,15 @@ class MessageApiControllerTest extends TestCase {
 		$this->attachmentService = $this->createMock(AttachmentService::class);
 		$this->outboxService = $this->createMock(OutboxService::class);
 		$this->mailManager = $this->createMock(MailManager::class);
-		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->time = $this->createMock(ITimeFactory::class);
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
 		$this->dkimService = $this->createMock(DkimService::class);
 		$this->itineraryService = $this->createMock(ItineraryService::class);
 		$this->trustedSenderService = $this->createMock(TrustedSenderService::class);
+		$this->delegationService = $this->createMock(DelegationService::class);
+		$this->delegationService->method('resolveAccountUserId')->willReturn($this->userId);
+		$this->delegationService->method('resolveMessageUserId')->willReturn($this->userId);
 
 		$this->controller = new MessageApiController($this->appName,
 			$this->userId,
@@ -93,13 +93,13 @@ class MessageApiControllerTest extends TestCase {
 			$this->attachmentService,
 			$this->outboxService,
 			$this->mailManager,
-			$this->imapClientFactory,
 			$this->logger,
 			$this->time,
 			$this->urlGenerator,
 			$this->dkimService,
 			$this->itineraryService,
 			$this->trustedSenderService,
+			$this->delegationService,
 		);
 
 		$mailAccount = new MailAccount();
@@ -124,7 +124,6 @@ class MessageApiControllerTest extends TestCase {
 		$message->setUid(1);
 		$mailbox = new Mailbox();
 		$mailbox->setAccountId($this->accountId);
-		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
 		$imapMessage = $this->createMock(IMAPMessage::class);
 
 		$this->logger->expects(self::never())
@@ -143,14 +142,9 @@ class MessageApiControllerTest extends TestCase {
 			->method('find')
 			->with($this->userId, $this->accountId)
 			->willReturn($this->account);
-		$this->imapClientFactory->expects(self::once())
-			->method('getClient')
-			->willReturn($client);
 		$this->mailManager->expects(self::once())
 			->method('getImapMessage')
 			->willReturn($imapMessage);
-		$client->expects(self::once())
-			->method('logout');
 		$imapMessage->expects(self::once())
 			->method('getFullMessage')
 			->with($this->messageId, true)
@@ -238,7 +232,6 @@ class MessageApiControllerTest extends TestCase {
 		$message->setUid(1);
 		$mailbox = new Mailbox();
 		$mailbox->setAccountId($this->accountId);
-		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
 		$imapMessage = $this->createMock(IMAPMessage::class);
 		$smime = new SmimeData();
 		$smime->setIsEncrypted(true);
@@ -266,19 +259,14 @@ class MessageApiControllerTest extends TestCase {
 			->method('find')
 			->with($this->userId, $this->accountId)
 			->willReturn($this->account);
-		$this->imapClientFactory->expects(self::once())
-			->method('getClient')
-			->willReturn($client);
 		$this->mailManager->expects(self::exactly(2))
 			->method('getImapMessage')
-			->willReturnCallback(function ($client, $account, $mailbox, $uid, $loadBody) use ($imapMessage) {
+			->willReturnCallback(function ($account, $mailbox, $message, $loadBody) use ($imapMessage) {
 				if ($loadBody) {
 					throw new SmimeDecryptException();
 				}
 				return $imapMessage;
 			});
-		$client->expects(self::once())
-			->method('logout');
 		$imapMessage->expects(self::once())
 			->method('getFullMessage')
 			->with($this->messageId, false)
@@ -315,7 +303,6 @@ class MessageApiControllerTest extends TestCase {
 		$message->setUid(1);
 		$mailbox = new Mailbox();
 		$mailbox->setAccountId($this->accountId);
-		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
 
 		$this->logger->expects(self::never())
 			->method('warning');
@@ -333,14 +320,9 @@ class MessageApiControllerTest extends TestCase {
 			->method('find')
 			->with($this->userId, $this->accountId)
 			->willReturn($this->account);
-		$this->imapClientFactory->expects(self::once())
-			->method('getClient')
-			->willReturn($client);
 		$this->mailManager->expects(self::once())
 			->method('getImapMessage')
 			->willThrowException(new ServiceException());
-		$client->expects(self::once())
-			->method('logout');
 		$this->itineraryService->expects(self::never())
 			->method('getCached');
 		$this->trustedSenderService->expects(self::never())
@@ -377,8 +359,6 @@ class MessageApiControllerTest extends TestCase {
 			->willThrowException(new ClientException(''));
 		$this->accountService->expects(self::never())
 			->method('find');
-		$this->imapClientFactory->expects(self::never())
-			->method('getClient');
 		$this->mailManager->expects(self::never())
 			->method('getImapMessage');
 		$this->itineraryService->expects(self::never())
@@ -399,7 +379,7 @@ class MessageApiControllerTest extends TestCase {
 	/**
 	 * @dataProvider mailData
 	 */
-	public function testSend($messageStatus, $expected): void {
+	public function testSend($messageStatus, $expected, ?string $expectedLogMessage = null): void {
 		$this->message->setStatus($messageStatus);
 
 		$this->accountService->expects(self::once())
@@ -407,7 +387,7 @@ class MessageApiControllerTest extends TestCase {
 			->with($this->userId, $this->account->getId())
 			->willReturn($this->account);
 		$this->aliasesService->expects(self::never())
-			->method('findByAliasAndUserId');
+			->method('findByAliasForAccount');
 		$this->request->expects(self::once())
 			->method('getUploadedFile')
 			->willReturn(null);
@@ -420,6 +400,11 @@ class MessageApiControllerTest extends TestCase {
 		$this->outboxService->expects(self::once())
 			->method('sendMessage')
 			->willReturn($this->message);
+		if ($expectedLogMessage !== null) {
+			$this->delegationService->expects(self::once())
+				->method('logDelegatedAction')
+				->with($this->userId, $this->userId, $expectedLogMessage);
+		}
 
 		$actual = $this->controller->send(
 			$this->accountId,
@@ -441,7 +426,7 @@ class MessageApiControllerTest extends TestCase {
 			->with($this->userId, $this->account->getId())
 			->willReturn($this->account);
 		$this->aliasesService->expects(self::never())
-			->method('findByAliasAndUserId');
+			->method('findByAliasForAccount');
 		$this->request->expects(self::never())
 			->method('getUploadedFile');
 		$this->attachmentService->expects(self::never())
@@ -469,11 +454,11 @@ class MessageApiControllerTest extends TestCase {
 
 	public function mailData() {
 		return [
-			[LocalMessage::STATUS_PROCESSED, new DataResponse('', Http::STATUS_OK)],
-			[LocalMessage::STATUS_NO_SENT_MAILBOX, new DataResponse('Configuration error: Cannot send message without sent mailbox.', Http::STATUS_FORBIDDEN)],
-			[LocalMessage::STATUS_SMPT_SEND_FAIL, new DataResponse('SMTP error: could not send message. Message sending will be retried. Please check the logs.', Http::STATUS_INTERNAL_SERVER_ERROR)],
-			[LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL, new DataResponse('Email was sent but could not be copied to sent mailbox. Copying will be retried. Please check the logs.', Http::STATUS_ACCEPTED)],
-			[LocalMessage::STATUS_TOO_MANY_RECIPIENTS, new DataResponse('An error occured. Please check the logs.', Http::STATUS_INTERNAL_SERVER_ERROR)],
+			[LocalMessage::STATUS_PROCESSED, new DataResponse('', Http::STATUS_OK), 'john sent a message on behalf of john'],
+			[LocalMessage::STATUS_NO_SENT_MAILBOX, new DataResponse('Configuration error: Cannot send message without sent mailbox.', Http::STATUS_FORBIDDEN), 'john attempted sending a message on behalf of john but no sent mailbox is configured'],
+			[LocalMessage::STATUS_SMPT_SEND_FAIL, new DataResponse('SMTP error: could not send message. Message sending will be retried. Please check the logs.', Http::STATUS_INTERNAL_SERVER_ERROR), 'john attempted sending a message on behalf of john but SMTP sending failed'],
+			[LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL, new DataResponse('Email was sent but could not be copied to sent mailbox. Copying will be retried. Please check the logs.', Http::STATUS_ACCEPTED), 'john sent a message on behalf of john but copying to sent mailbox failed'],
+			[LocalMessage::STATUS_TOO_MANY_RECIPIENTS, new DataResponse('An error occurred. Please check the logs.', Http::STATUS_INTERNAL_SERVER_ERROR), 'john attempted sending a message on behalf of john but an unknown error occurred'],
 		];
 	}
 
@@ -486,7 +471,7 @@ class MessageApiControllerTest extends TestCase {
 			->with($this->userId, $this->account->getId())
 			->willReturn($this->account);
 		$this->aliasesService->expects(self::never())
-			->method('findByAliasAndUserId');
+			->method('findByAliasForAccount');
 		$this->request->expects(self::once())
 			->method('getUploadedFile')
 			->willReturn(null);
@@ -551,7 +536,7 @@ class MessageApiControllerTest extends TestCase {
 			->with($this->userId, $this->account->getId())
 			->willReturn($this->account);
 		$this->aliasesService->expects(self::never())
-			->method('findByAliasAndUserId');
+			->method('findByAliasForAccount');
 		$this->request->expects(self::once())
 			->method('getUploadedFile')
 			->willReturn($attachments);
@@ -608,7 +593,7 @@ class MessageApiControllerTest extends TestCase {
 			->with($this->userId, $this->account->getId())
 			->willReturn($this->account);
 		$this->aliasesService->expects(self::never())
-			->method('findByAliasAndUserId');
+			->method('findByAliasForAccount');
 		$this->request->expects(self::once())
 			->method('getUploadedFile')
 			->willReturn($attachments);
@@ -656,7 +641,7 @@ class MessageApiControllerTest extends TestCase {
 			->with($this->userId, $account->getId())
 			->willReturn($account);
 		$this->aliasesService->expects(self::once())
-			->method('findByAliasAndUserId')
+			->method('findByAliasForAccount')
 			->willReturn($alias);
 		$this->request->expects(self::once())
 			->method('getUploadedFile')
@@ -691,7 +676,7 @@ class MessageApiControllerTest extends TestCase {
 			->with($this->userId, $this->account->getId())
 			->willReturn($this->account);
 		$this->aliasesService->expects(self::once())
-			->method('findByAliasAndUserId')
+			->method('findByAliasForAccount')
 			->willThrowException(new DoesNotExistException(''));
 		$this->logger->expects(self::once())
 			->method('error');
@@ -727,7 +712,7 @@ class MessageApiControllerTest extends TestCase {
 		$this->logger->expects(self::once())
 			->method('error');
 		$this->aliasesService->expects(self::never())
-			->method('findByAliasAndUserId');
+			->method('findByAliasForAccount');
 		$this->request->expects(self::never())
 			->method('getUploadedFile');
 		$this->attachmentService->expects(self::never())

@@ -7,40 +7,34 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-
 namespace OCA\Mail\Tests\Unit\Controller;
 
 use OCA\Mail\Controller\TextBlockSharesController;
 use OCA\Mail\Db\TextBlock;
 use OCA\Mail\Db\TextBlockShare;
+use OCA\Mail\Exception\UserNotFoundException;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Service\TextBlockService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
-use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class TextBlockSharesControllerTest extends TestCase {
+final class TextBlockSharesControllerTest extends TestCase {
 
 	/** @var TextBlockService|MockObject */
 	private $textBlockService;
 
-	/** @var IRequest|MockObject */
-	private $request;
-
 	/** @var string */
 	private $userId;
 
-
 	protected function setUp(): void {
 		$this->textBlockService = $this->createMock(TextBlockService::class);
-		$this->request = $this->createMock(IRequest::class);
 		$this->userId = 'bob';
 	}
 
 	public function testGetSharedTextBlocksNoUser(): void {
-		$controller = new TextBlockSharesController($this->request, null, $this->textBlockService);
+		$controller = new TextBlockSharesController($this->createStub(\OCP\IRequest::class), null, $this->textBlockService);
 
 		$response = $controller->index();
 		$expectedResponse = JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
@@ -53,7 +47,7 @@ class TextBlockSharesControllerTest extends TestCase {
 			->with($this->userId)
 			->willThrowException(new DoesNotExistException('Sharee does not exist'));
 
-		$controller = new TextBlockSharesController($this->request, $this->userId, $this->textBlockService);
+		$controller = new TextBlockSharesController($this->createStub(\OCP\IRequest::class), $this->userId, $this->textBlockService);
 
 		$response = $controller->index();
 		$expectedResponse = JsonResponse::error('sharee not found', Http::STATUS_UNAUTHORIZED);
@@ -70,16 +64,15 @@ class TextBlockSharesControllerTest extends TestCase {
 			->with($this->userId)
 			->willReturn($sharedTextBlocks);
 
-		$controller = new TextBlockSharesController($this->request, $this->userId, $this->textBlockService);
+		$controller = new TextBlockSharesController($this->createStub(\OCP\IRequest::class), $this->userId, $this->textBlockService);
 
 		$response = $controller->index();
 		$expectedResponse = JsonResponse::success($sharedTextBlocks);
 		$this->assertEquals($expectedResponse, $response);
 	}
 
-
 	public function testShareNoUser(): void {
-		$controller = new TextBlockSharesController($this->request, null, $this->textBlockService);
+		$controller = new TextBlockSharesController($this->createStub(\OCP\IRequest::class), null, $this->textBlockService);
 
 		$response = $controller->create(1, 'alice', 'user');
 		$expectedResponse = JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
@@ -92,10 +85,10 @@ class TextBlockSharesControllerTest extends TestCase {
 			->with(1, $this->userId)
 			->willThrowException(new DoesNotExistException('not found'));
 
-		$controller = new TextBlockSharesController($this->request, $this->userId, $this->textBlockService);
+		$controller = new TextBlockSharesController($this->createStub(\OCP\IRequest::class), $this->userId, $this->textBlockService);
 
 		$response = $controller->create(1, 'alice', 'user');
-		$expectedResponse = JsonResponse::error('TextBlock not found', Http::STATUS_NOT_FOUND);
+		$expectedResponse = JsonResponse::error('Text block not found', Http::STATUS_NOT_FOUND);
 		$this->assertEquals($expectedResponse, $response);
 	}
 
@@ -105,14 +98,14 @@ class TextBlockSharesControllerTest extends TestCase {
 			->with(1, $this->userId)
 			->willReturn(new TextBlock());
 
-		$controller = new TextBlockSharesController($this->request, $this->userId, $this->textBlockService);
+		$controller = new TextBlockSharesController($this->createStub(\OCP\IRequest::class), $this->userId, $this->textBlockService);
 		$response = $controller->create(1, 'alice', 'country');
 		$expectedResponse = JsonResponse::fail('Invalid share type', Http::STATUS_BAD_REQUEST);
 		$this->assertEquals($expectedResponse, $response);
 	}
 
 	public function testShareTextBlockUser(): void {
-		$controller = new TextBlockSharesController($this->request, $this->userId, $this->textBlockService);
+		$controller = new TextBlockSharesController($this->createStub(\OCP\IRequest::class), $this->userId, $this->textBlockService);
 
 		$this->textBlockService->expects($this->once())
 			->method('find')
@@ -120,7 +113,7 @@ class TextBlockSharesControllerTest extends TestCase {
 			->willReturn(new TextBlock());
 		$this->textBlockService->expects($this->once())
 			->method('share')
-			->with(1, 'alice');
+			->with(1, $this->userId, 'alice');
 		$response = $controller->create(1, 'alice', TextBlockShare::TYPE_USER);
 		$expectedResponse = JsonResponse::success();
 		$this->assertEquals($expectedResponse, $response);
@@ -128,7 +121,7 @@ class TextBlockSharesControllerTest extends TestCase {
 
 	public function testShareTextBlockGroup(): void {
 
-		$controller = new TextBlockSharesController($this->request, $this->userId, $this->textBlockService);
+		$controller = new TextBlockSharesController($this->createStub(\OCP\IRequest::class), $this->userId, $this->textBlockService);
 
 		$this->textBlockService->expects($this->once())
 			->method('find')
@@ -136,14 +129,26 @@ class TextBlockSharesControllerTest extends TestCase {
 			->willReturn(new TextBlock());
 		$this->textBlockService->expects($this->once())
 			->method('shareWithGroup')
-			->with(1, 'Narnia');
+			->with(1, $this->userId, 'Narnia');
 		$response = $controller->create(1, 'Narnia', TextBlockShare::TYPE_GROUP);
 		$expectedResponse = JsonResponse::success();
 		$this->assertEquals($expectedResponse, $response);
 	}
 
+	public function testShareTextBlockShareeNotFound(): void {
+		$controller = new TextBlockSharesController($this->createStub(\OCP\IRequest::class), $this->userId, $this->textBlockService);
+
+		$this->textBlockService->method('find')->willReturn(new TextBlock());
+		$this->textBlockService->expects($this->once())
+			->method('share')
+			->willThrowException(new UserNotFoundException('Sharee does not exist'));
+		$response = $controller->create(1, 'alice', TextBlockShare::TYPE_USER);
+		$expectedResponse = JsonResponse::error('User not found', Http::STATUS_NOT_FOUND);
+		$this->assertEquals($expectedResponse, $response);
+	}
+
 	public function testDeleteShareNoUser(): void {
-		$controller = new TextBlockSharesController($this->request, null, $this->textBlockService);
+		$controller = new TextBlockSharesController($this->createStub(\OCP\IRequest::class), null, $this->textBlockService);
 
 		$response = $controller->destroy(1, 'alice');
 		$expectedResponse = JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
@@ -154,12 +159,12 @@ class TextBlockSharesControllerTest extends TestCase {
 		$this->textBlockService->expects($this->once())
 			->method('find')
 			->with(1, $this->userId)
-			->willThrowException(new DoesNotExistException('TextBlock not found'));
+			->willThrowException(new DoesNotExistException('Text block not found'));
 
-		$controller = new TextBlockSharesController($this->request, $this->userId, $this->textBlockService);
+		$controller = new TextBlockSharesController($this->createStub(\OCP\IRequest::class), $this->userId, $this->textBlockService);
 
 		$response = $controller->destroy(1, 'alice');
-		$expectedResponse = JsonResponse::error('TextBlock not found', Http::STATUS_NOT_FOUND);
+		$expectedResponse = JsonResponse::error('Text block not found', Http::STATUS_NOT_FOUND);
 		$this->assertEquals($expectedResponse, $response);
 	}
 
@@ -173,7 +178,7 @@ class TextBlockSharesControllerTest extends TestCase {
 			->method('unshare')
 			->with(1, 'alice');
 
-		$controller = new TextBlockSharesController($this->request, $this->userId, $this->textBlockService);
+		$controller = new TextBlockSharesController($this->createStub(\OCP\IRequest::class), $this->userId, $this->textBlockService);
 
 		$response = $controller->destroy(1, 'alice');
 		$expectedResponse = JsonResponse::success();
@@ -183,12 +188,12 @@ class TextBlockSharesControllerTest extends TestCase {
 		$this->textBlockService->expects($this->once())
 			->method('find')
 			->with(1, $this->userId)
-			->willThrowException(new DoesNotExistException('TextBlock not found'));
+			->willThrowException(new DoesNotExistException('Text block not found'));
 
-		$controller = new TextBlockSharesController($this->request, $this->userId, $this->textBlockService);
+		$controller = new TextBlockSharesController($this->createStub(\OCP\IRequest::class), $this->userId, $this->textBlockService);
 
 		$response = $controller->getTextBlockShares(1);
-		$expectedResponse = JsonResponse::error('TextBlock not found', Http::STATUS_NOT_FOUND);
+		$expectedResponse = JsonResponse::error('Text block not found', Http::STATUS_NOT_FOUND);
 		$this->assertEquals($expectedResponse, $response);
 	}
 
@@ -208,21 +213,19 @@ class TextBlockSharesControllerTest extends TestCase {
 			->with(1)
 			->willReturn($shares);
 
-		$controller = new TextBlockSharesController($this->request, $this->userId, $this->textBlockService);
+		$controller = new TextBlockSharesController($this->createStub(\OCP\IRequest::class), $this->userId, $this->textBlockService);
 
 		$response = $controller->getTextBlockShares(1);
 		$expectedResponse = JsonResponse::success($shares);
 		$this->assertEquals($expectedResponse, $response);
 	}
 
-
 	public function testGetSharesNoUser(): void {
-		$controller = new TextBlockSharesController($this->request, null, $this->textBlockService);
+		$controller = new TextBlockSharesController($this->createStub(\OCP\IRequest::class), null, $this->textBlockService);
 
 		$response = $controller->getTextBlockShares(1);
 		$expectedResponse = JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		$this->assertEquals($expectedResponse, $response);
 	}
-
 
 }

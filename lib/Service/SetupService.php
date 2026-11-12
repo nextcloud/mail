@@ -18,43 +18,25 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\CouldNotConnectException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCP\Security\ICrypto;
 use Psr\Log\LoggerInterface;
 use function in_array;
 
 class SetupService {
-	/** @var AccountService */
-	private $accountService;
-
 	/** @var ICrypto */
 	private $crypto;
 
-	/** @var SmtpClientFactory */
-	private $smtpClientFactory;
-
-	/** @var IMAPClientFactory */
-	private $imapClientFactory;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var TagMapper */
-	private $tagMapper;
-
-	public function __construct(AccountService $accountService,
+	public function __construct(
+		private AccountService $accountService,
 		ICrypto $crypto,
-		SmtpClientFactory $smtpClientFactory,
-		IMAPClientFactory $imapClientFactory,
-		LoggerInterface $logger,
-		TagMapper $tagMapper) {
-		$this->accountService = $accountService;
+		private SmtpClientFactory $smtpClientFactory,
+		private ProtocolFactory $protocolFactory,
+		private LoggerInterface $logger,
+		private TagMapper $tagMapper,
+	) {
 		$this->crypto = $crypto;
-		$this->smtpClientFactory = $smtpClientFactory;
-		$this->imapClientFactory = $imapClientFactory;
-		$this->logger = $logger;
-		$this->tagMapper = $tagMapper;
 	}
 
 	/**
@@ -77,7 +59,8 @@ class SetupService {
 		?string $smtpPassword,
 		string $uid,
 		string $authMethod,
-		?int $accountId = null): Account {
+		?int $accountId = null,
+		?bool $classificationEnabled = null): Account {
 		$this->logger->info('Setting up manually configured account');
 		$newAccount = new MailAccount([
 			'accountId' => $accountId,
@@ -91,31 +74,36 @@ class SetupService {
 			'smtpPort' => $smtpPort,
 			'smtpSslMode' => $smtpSslMode,
 			'smtpUser' => $smtpUser,
+			'classificationEnabled' => $classificationEnabled,
 		]);
 		$newAccount->setUserId($uid);
-		if ($authMethod === 'password' && $imapPassword !== null) {
-			$newAccount->setInboundPassword($this->crypto->encrypt($imapPassword));
-		}
-		if ($authMethod === 'password' && $smtpPassword !== null) {
-			$newAccount->setOutboundPassword($this->crypto->encrypt($smtpPassword));
-		}
+
 		if (!in_array($authMethod, ['password', 'xoauth2'], true)) {
 			throw new InvalidArgumentException('Invalid auth method ' . $authMethod);
 		}
 		$newAccount->setAuthMethod($authMethod);
 
-		$account = new Account($newAccount);
-		if ($authMethod === 'password' && $imapPassword !== null) {
-			$this->logger->debug('Connecting to account {account}', ['account' => $newAccount->getEmail()]);
-			$this->testConnectivity($account);
+		if ($authMethod === 'password') {
+			if ($imapPassword !== null) {
+				$newAccount->setInboundPassword($this->crypto->encrypt($imapPassword));
+			}
+			if ($smtpPassword !== null) {
+				$newAccount->setOutboundPassword($this->crypto->encrypt($smtpPassword));
+			}
+
+			if ($imapPassword !== null && $smtpPassword !== null) {
+				$account = new Account($newAccount);
+				$this->logger->debug('Connecting to account {account}', ['account' => $newAccount->getEmail()]);
+				$this->testConnectivity($account);
+			}
 		}
 
 		$this->accountService->save($newAccount);
-		$this->logger->debug('account created ' . $newAccount->getId());
+		$this->logger->debug("account created {$newAccount->getId()}");
 
 		$this->tagMapper->createDefaultTags($newAccount);
 
-		return $account;
+		return $this->accountService->findById($newAccount->getId());
 	}
 
 	/**
@@ -125,7 +113,7 @@ class SetupService {
 	protected function testConnectivity(Account $account): void {
 		$mailAccount = $account->getMailAccount();
 
-		$imapClient = $this->imapClientFactory->getClient($account);
+		$imapClient = $this->protocolFactory->imapClient($account);
 		try {
 			$imapClient->login();
 		} catch (Horde_Imap_Client_Exception $e) {

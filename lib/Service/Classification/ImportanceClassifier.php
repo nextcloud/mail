@@ -92,35 +92,14 @@ class ImportanceClassifier {
 	 */
 	private const MAX_TRAINING_SET_SIZE = 300;
 
-	/** @var MailboxMapper */
-	private $mailboxMapper;
-
-	/** @var MessageMapper */
-	private $messageMapper;
-
-	/** @var PersistenceService */
-	private $persistenceService;
-
-	/** @var PerformanceLogger */
-	private $performanceLogger;
-
-	/** @var ImportanceRulesClassifier */
-	private $rulesClassifier;
-
-	private ContainerInterface $container;
-
-	public function __construct(MailboxMapper $mailboxMapper,
-		MessageMapper $messageMapper,
-		PersistenceService $persistenceService,
-		PerformanceLogger $performanceLogger,
-		ImportanceRulesClassifier $rulesClassifier,
-		ContainerInterface $container) {
-		$this->mailboxMapper = $mailboxMapper;
-		$this->messageMapper = $messageMapper;
-		$this->persistenceService = $persistenceService;
-		$this->performanceLogger = $performanceLogger;
-		$this->rulesClassifier = $rulesClassifier;
-		$this->container = $container;
+	public function __construct(
+		private MailboxMapper $mailboxMapper,
+		private MessageMapper $messageMapper,
+		private PersistenceService $persistenceService,
+		private PerformanceLogger $performanceLogger,
+		private ImportanceRulesClassifier $rulesClassifier,
+		private ContainerInterface $container,
+	) {
 	}
 
 	private static function createDefaultEstimator(): KNearestNeighbors {
@@ -167,23 +146,23 @@ class ImportanceClassifier {
 		$perf ??= $this->performanceLogger->start('build data set for importance classifier training');
 
 		$incomingMailboxes = $this->getIncomingMailboxes($account);
-		$logger->debug('found ' . count($incomingMailboxes) . ' incoming mailbox(es)');
+		$nIncoming = count($incomingMailboxes);
+		$logger->debug("found $nIncoming incoming mailbox(es)");
 		$perf->step('find incoming mailboxes');
 		$outgoingMailboxes = $this->getOutgoingMailboxes($account);
-		$logger->debug('found ' . count($outgoingMailboxes) . ' outgoing mailbox(es)');
+		$nOutgoing = count($outgoingMailboxes);
+		$logger->debug("found $nOutgoing outgoing mailbox(es)");
 		$perf->step('find outgoing mailboxes');
 
-		$mailboxIds = array_map(static function (Mailbox $mailbox) {
-			return $mailbox->getId();
-		}, $incomingMailboxes);
+		$mailboxIds = array_map(static fn (Mailbox $mailbox) => $mailbox->getId(), $incomingMailboxes);
 		$messages = array_filter(
 			$this->messageMapper->findLatestMessages($account->getUserId(), $mailboxIds, self::MAX_TRAINING_SET_SIZE),
 			[$this, 'filterMessageHasSenderEmail']
 		);
-		$importantMessages = array_filter($messages, static function (Message $message) {
-			return ($message->getFlagImportant() === true);
-		});
-		$logger->debug('found ' . count($messages) . ' messages of which ' . count($importantMessages) . ' are important');
+		$importantMessages = array_filter($messages, static fn (Message $message) => $message->getFlagImportant() === true);
+		$nMessages = count($messages);
+		$nImportant = count($importantMessages);
+		$logger->debug("found $nMessages messages of which $nImportant are important");
 		if (count($importantMessages) < self::COLD_START_THRESHOLD) {
 			$logger->info('not enough messages to train a classifier');
 			return null;
@@ -279,7 +258,7 @@ class ImportanceClassifier {
 		 */
 		$validationThreshold = max(
 			5,
-			(int)(count($dataSet) * 0.2)
+			(int)((float)count($dataSet) * 0.2)
 		);
 		$validationSet = array_slice($dataSet, 0, $validationThreshold);
 		$trainingSet = array_slice($dataSet, $validationThreshold);
@@ -297,7 +276,11 @@ class ImportanceClassifier {
 			}
 		}
 
-		$logger->debug('data set split into ' . count($trainingSet) . ' (' . self::LABEL_IMPORTANT . ': ' . $trainingSetImportantCount . ') training and ' . count($validationSet) . ' (' . self::LABEL_IMPORTANT . ': ' . $validationSetImportantCount . ') validation sets with ' . count($trainingSet[0]['features'] ?? []) . ' dimensions');
+		$nTraining = count($trainingSet);
+		$nValidation = count($validationSet);
+		$nFeatures = count($trainingSet[0]['features'] ?? []);
+		$labelImportant = self::LABEL_IMPORTANT;
+		$logger->debug("data set split into $nTraining ($labelImportant: $trainingSetImportantCount) training and $nValidation ($labelImportant: $validationSetImportantCount) validation sets with $nFeatures dimensions");
 
 		if ($validationSet === [] || $trainingSet === []) {
 			$logger->info('not enough messages to train a classifier');
@@ -343,7 +326,6 @@ class ImportanceClassifier {
 		]);
 		return new ClassifierPipeline($persistedEstimator, $extractor);
 	}
-
 
 	/**
 	 * @param Account $account
@@ -457,12 +439,8 @@ class ImportanceClassifier {
 				$messages
 			);
 			return array_combine(
-				array_map(static function (Message $m) {
-					return $m->getUid();
-				}, $messages),
-				array_map(static function (Message $m) use ($predictions) {
-					return ($predictions[$m->getUid()] ?? false) === true;
-				}, $messages)
+				array_map(static fn (Message $m) => $m->getUid(), $messages),
+				array_map(static fn (Message $m) => ($predictions[$m->getUid()] ?? false) === true, $messages)
 			);
 		}
 
@@ -478,12 +456,8 @@ class ImportanceClassifier {
 			Unlabeled::build(array_column($features, 'features'))
 		);
 		return array_combine(
-			array_map(static function (Message $m) {
-				return $m->getUid();
-			}, $messagesWithSender),
-			array_map(static function ($p) {
-				return $p === self::LABEL_IMPORTANT;
-			}, $predictions)
+			array_map(static fn (Message $m) => $m->getUid(), $messagesWithSender),
+			array_map(static fn ($p) => $p === self::LABEL_IMPORTANT, $predictions)
 		);
 	}
 
@@ -534,7 +508,7 @@ class ImportanceClassifier {
 			'recall' => $recallImportant,
 			'precision' => $precisionImportant,
 			'f1Score' => $f1ScoreImportant,
-		]));
+		], JSON_THROW_ON_ERROR));
 		$logger->debug("classifier validated: recall(important)=$recallImportant, precision(important)=$precisionImportant f1(important)=$f1ScoreImportant");
 
 		$classifier = new Classifier();

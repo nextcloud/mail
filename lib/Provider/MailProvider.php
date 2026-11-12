@@ -6,6 +6,7 @@ declare(strict_types=1);
  * SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
+
 namespace OCA\Mail\Provider;
 
 use OCA\Mail\Account;
@@ -74,6 +75,8 @@ class MailProvider implements IProvider {
 	 * @param string $userId system user id
 	 *
 	 * @return array<string,IService> collection of service id and object ['1' => IServiceObject]
+	 *
+	 * @psalm-suppress InvalidReturnType, InvalidReturnStatement PHP coerces numeric string keys to int, so this can never actually satisfy the interface's string-keyed contract
 	 */
 	#[\Override]
 	public function listServices(string $userId): array {

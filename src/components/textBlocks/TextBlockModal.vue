@@ -3,65 +3,87 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<NcDialog id="text-block-picker" :name="t('mail','Text blocks')" @closing="handleClose">
-		<p>{{ t('mail','Choose a text block to insert at the cursor') }}</p>
-		<ListItem v-for="textBlock in textBlocks"
+	<NcDialog
+		v-if="hasTextBlockes"
+		id="text-block-picker"
+		:name="t('mail', 'Text blocks')"
+		:buttons="saveButtons"
+		@closing="handleClose">
+		<p>{{ t('mail', 'Choose a text block to insert at the cursor') }}</p>
+		<ListItem
+			v-for="textBlock in getMyTextBlocks()"
 			:key="textBlock.id"
-			:text-block="textBlock"
-			:is-view-mode="true"
+			:textBlock="textBlock"
+			:isViewMode="true"
 			:picked="textBlock.id === picked?.id"
 			@click="handleClick" />
-		<NcButton class="insert-button"
-			:disabled="!picked"
-			@click="$emit('insert', picked)">
-			{{ t('mail', 'Insert') }}
-			<template #icon>
-				<IconCheck :size="16" :name="t('mail','Inset text block')" />
-			</template>
-		</NcButton>
+		<ListItem
+			v-for="textBlock in getSharedTextBlocks()"
+			:key="textBlock.id"
+			:textBlock="textBlock"
+			:shared="true"
+			:isViewMode="true"
+			:picked="textBlock.id === picked?.id"
+			@click="handleClick" />
 	</NcDialog>
+	<NcDialog
+		v-else
+		id="text-block-picker"
+		:name="t('mail', 'Text blocks')"
+		:message="t('mail', 'Text blocks are reusable pieces of text that can be inserted in messages. Visit the Settings panel to create your own.')"
+		@closing="handleClose" />
 </template>
 
 <script>
-import ListItem from './ListItem.vue'
-import { NcDialog, NcButton } from '@nextcloud/vue'
+import IconCheck from '@mdi/svg/svg/check.svg'
 import { mapState } from 'pinia'
-import IconCheck from 'vue-material-design-icons/Check.vue'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
+import ListItem from './ListItem.vue'
 import useMainStore from '../../store/mainStore.js'
+
 export default {
 	name: 'TextBlockModal',
 	components: {
 		ListItem,
 		NcDialog,
-		NcButton,
-		IconCheck,
 	},
+
+	emits: ['insert', 'close'],
+
 	data() {
 		return {
 			picked: null,
 		}
 	},
+
 	computed: {
 		...mapState(useMainStore, ['getMyTextBlocks', 'getSharedTextBlocks']),
-		textBlocks() {
-			return this.getMyTextBlocks().concat(this.getSharedTextBlocks())
+
+		hasTextBlockes() {
+			return this.getMyTextBlocks().length > 0 || this.getSharedTextBlocks().length > 0
+		},
+
+		saveButtons() {
+			return [
+				{
+					variant: 'primary',
+					disabled: !this.picked,
+					callback: () => this.$emit('insert', this.picked),
+					label: t('mail', 'Insert'),
+					icon: IconCheck,
+				},
+			]
 		},
 	},
+
 	methods: {
 		handleClick(textBlock) {
 			this.picked = textBlock
-
 		},
+
 		handleClose() {
 			this.$emit('close')
 		},
 	},
 }
 </script>
-
-<style lang="scss" scoped>
-.insert-button {
-	justify-self: end;
-	margin-bottom: calc( var(--default-grid-baseline) * 2) ;
-}
-</style>

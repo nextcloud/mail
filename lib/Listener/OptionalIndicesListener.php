@@ -9,21 +9,26 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Listener;
 
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use OCP\DB\Events\AddMissingIndicesEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\IConfig;
+use OCP\IDBConnection;
 
 /**
- * @template-implements IEventListener<Event|OptionalIndicesListener>
+ * @template-implements IEventListener<AddMissingIndicesEvent>
  */
 class OptionalIndicesListener implements IEventListener {
 
 	/** @var IConfig */
 	private $config;
+	private IDBConnection $connection;
 
-	public function __construct(IConfig $config) {
+	public function __construct(IConfig $config,
+		IDBConnection $connection) {
 		$this->config = $config;
+		$this->connection = $connection;
 	}
 
 	#[\Override]
@@ -50,6 +55,18 @@ class OptionalIndicesListener implements IEventListener {
 		);
 
 		$event->addMissingIndex(
+			'mail_messages',
+			'mail_msg_mb_del_snt_idx',
+			['mailbox_id', 'flag_deleted', 'sent_at'],
+		);
+
+		$event->addMissingIndex(
+			'mail_messages',
+			'mail_msg_imip_idx',
+			['imip_message', 'sent_at'],
+		);
+
+		$event->addMissingIndex(
 			'mail_classifiers',
 			'mail_class_creat_idx',
 			['created_at']
@@ -67,39 +84,64 @@ class OptionalIndicesListener implements IEventListener {
 			['account_id']
 		);
 
-		if (method_exists($event, 'replaceIndex')) {
-			$event->replaceIndex(
+		$event->replaceIndex(
+			'mail_messages',
+			['mail_messages_mb_id_uid'],
+			'mail_messages_mb_id_uid_uidx',
+			['mailbox_id', 'uid'],
+			true
+		);
+
+		$event->replaceIndex(
+			'mail_smime_certificates',
+			['mail_smime_certs_uid_idx'],
+			'mail_smime_certs_uid_email_idx',
+			['user_id', 'email_address'],
+			false
+		);
+
+		$event->replaceIndex(
+			'mail_trusted_senders',
+			['mail_trusted_senders_type'],
+			'mail_trusted_senders_idx',
+			['user_id', 'email', 'type'],
+			false
+		);
+
+		$event->replaceIndex(
+			'mail_coll_addresses',
+			['mail_coll_addr_userid_index', 'mail_coll_addr_email_index'],
+			'mail_coll_idx',
+			['user_id', 'email', 'display_name'],
+			false
+		);
+
+		/**
+		 * This index may be missing on Postgres - we add it back on all DBs nevertheless
+		 * @see \OCA\Mail\Migration\Version1130Date20220412111833::changeSchema for the different lengths
+		 */
+		if ($this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform) {
+			$event->addMissingIndex(
 				'mail_messages',
-				['mail_messages_mb_id_uid'],
-				'mail_messages_mb_id_uid_uidx',
-				['mailbox_id', 'uid'],
-				true
+				'mail_msg_thrd_root_snt_idx',
+				['mailbox_id', 'thread_root_id', 'sent_at'],
 			);
-
-			$event->replaceIndex(
-				'mail_smime_certificates',
-				['mail_smime_certs_uid_idx'],
-				'mail_smime_certs_uid_email_idx',
-				['user_id', 'email_address'],
-				false
-			);
-
-			$event->replaceIndex(
-				'mail_trusted_senders',
-				['mail_trusted_senders_type'],
-				'mail_trusted_senders_idx',
-				['user_id', 'email', 'type'],
-				false
-			);
-
-			$event->replaceIndex(
-				'mail_coll_addresses',
-				['mail_coll_addr_userid_index', 'mail_coll_addr_email_index'],
-				'mail_coll_idx',
-				['user_id', 'email', 'display_name'],
-				false
+		} else {
+			$event->addMissingIndex(
+				'mail_messages',
+				'mail_msg_thrd_root_snt_idx',
+				['mailbox_id', 'thread_root_id', 'sent_at'],
+				['lengths' => [null, 64, null]],
 			);
 		}
+
+		$event->replaceIndex(
+			'mail_recipients',
+			['mail_recipient_email_idx'],
+			'mail_recip_eml_type_mid_idx',
+			['email', 'type', 'message_id'],
+			false,
+		);
 	}
 
 }

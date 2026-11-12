@@ -29,7 +29,7 @@ class TagsControllerTest extends TestCase {
 		parent::setUp();
 		$this->serviceMock = $this->createServiceMock(
 			TagsController::class,
-			['UserId' => '1']
+			['userId' => '1']
 		);
 		$this->mailManager = $this->serviceMock->getParameter('mailManager');
 		$this->tagsController = $this->serviceMock->getService();

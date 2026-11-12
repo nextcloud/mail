@@ -42,21 +42,25 @@ use function array_filter;
  * @method bool|null isPgpMime()
  * @method setPgpMime(bool $pgpMime)
  * @method bool|null getSmimeSign()
- * @method setSmimeSign(bool $smimeSign)
+ * @method setSmimeSign(?bool $smimeSign)
  * @method int|null getSmimeCertificateId()
  * @method setSmimeCertificateId(?int $smimeCertificateId)
  * @method bool|null getSmimeEncrypt()
- * @method setSmimeEncrypt(bool $smimeEncryt)
+ * @method setSmimeEncrypt(?bool $smimeEncrypt)
  * @method int|null getStatus();
  * @method setStatus(?int $status);
  * @method string|null getRaw()
  * @method setRaw(string|null $raw)
  * @method bool getRequestMdn()
  * @method setRequestMdn(bool $mdn)
+ * @method bool isAiGenerated()
+ * @method void setAiGenerated(bool $aiGenerated)
  */
 class LocalMessage extends Entity implements JsonSerializable {
 	public const TYPE_OUTGOING = 0;
 	public const TYPE_DRAFT = 1;
+
+	public const HEADER_AI_GENERATED = 'X-AI-Generated';
 
 	public const STATUS_RAW = 0;
 	public const STATUS_NO_SENT_MAILBOX = 1;
@@ -141,6 +145,9 @@ class LocalMessage extends Entity implements JsonSerializable {
 	/** @var bool */
 	protected $requestMdn;
 
+	/** @var bool */
+	protected $aiGenerated;
+
 	public function __construct() {
 		$this->addType('type', 'integer');
 		$this->addType('accountId', 'integer');
@@ -155,7 +162,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 		$this->addType('smimeEncrypt', 'boolean');
 		$this->addType('status', 'integer');
 		$this->addType('requestMdn', 'boolean');
-
+		$this->addType('aiGenerated', 'boolean');
 	}
 
 	#[\Override]
@@ -177,24 +184,16 @@ class LocalMessage extends Entity implements JsonSerializable {
 			'inReplyToMessageId' => $this->getInReplyToMessageId(),
 			'attachments' => $this->getAttachments(),
 			'from' => array_values(
-				array_filter($this->getRecipients(), static function (Recipient $recipient) {
-					return $recipient->getType() === Recipient::TYPE_FROM;
-				})
+				array_filter($this->getRecipients(), static fn (Recipient $recipient) => $recipient->getType() === Recipient::TYPE_FROM)
 			),
 			'to' => array_values(
-				array_filter($this->getRecipients(), static function (Recipient $recipient) {
-					return $recipient->getType() === Recipient::TYPE_TO;
-				})
+				array_filter($this->getRecipients(), static fn (Recipient $recipient) => $recipient->getType() === Recipient::TYPE_TO)
 			),
 			'cc' => array_values(
-				array_filter($this->getRecipients(), static function (Recipient $recipient) {
-					return $recipient->getType() === Recipient::TYPE_CC;
-				})
+				array_filter($this->getRecipients(), static fn (Recipient $recipient) => $recipient->getType() === Recipient::TYPE_CC)
 			),
 			'bcc' => array_values(
-				array_filter($this->getRecipients(), static function (Recipient $recipient) {
-					return $recipient->getType() === Recipient::TYPE_BCC;
-				})
+				array_filter($this->getRecipients(), static fn (Recipient $recipient) => $recipient->getType() === Recipient::TYPE_BCC)
 			),
 			'failed' => $this->isFailed() === true,
 			'smimeCertificateId' => $this->getSmimeCertificateId(),
@@ -203,6 +202,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 			'status' => $this->getStatus(),
 			'raw' => $this->getRaw(),
 			'requestMdn' => $this->getRequestMdn(),
+			'isAiGenerated' => $this->isAiGenerated(),
 		];
 	}
 

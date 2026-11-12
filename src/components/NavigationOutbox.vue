@@ -4,42 +4,45 @@
 -->
 
 <template>
-	<AppNavigationItem id="navigation-outbox"
+	<NcAppNavigationItem
+		id="navigation-outbox"
 		key="navigation-outbox"
 		:name="t('mail', 'Outbox')"
 		:to="to">
 		<template #icon>
-			<IconOutbox class="outbox-opacity-icon"
-				:size="16" />
+			<IconOutbox
+				:size="20" />
 		</template>
 		<template #counter>
-			<CounterBubble v-if="count"
-				class="navigation-outbox__unread-counter">
-				{{ count }}
-			</CounterBubble>
+			<NcCounterBubble
+				v-if="count"
+				:count="count"
+				class="navigation-outbox__unread-counter" />
 		</template>
-	</AppNavigationItem>
+	</NcAppNavigationItem>
 </template>
 
 <script>
-import { NcAppNavigationItem as AppNavigationItem, NcCounterBubble as CounterBubble } from '@nextcloud/vue'
-import IconOutbox from 'vue-material-design-icons/InboxArrowUp.vue'
-
-import useOutboxStore from '../store/outboxStore.js'
 import { mapStores } from 'pinia'
+import NcAppNavigationItem from '@nextcloud/vue/components/NcAppNavigationItem'
+import NcCounterBubble from '@nextcloud/vue/components/NcCounterBubble'
+import IconOutbox from 'vue-material-design-icons/InboxArrowUp.vue'
+import useOutboxStore from '../store/outboxStore.js'
 
 export default {
 	name: 'NavigationOutbox',
 	components: {
-		AppNavigationItem,
-		CounterBubble,
+		NcAppNavigationItem,
+		NcCounterBubble,
 		IconOutbox,
 	},
+
 	computed: {
 		...mapStores(useOutboxStore),
 		count() {
 			return this.outboxStore.getAllMessages.length
 		},
+
 		to() {
 			return {
 				name: 'outbox',
@@ -56,10 +59,4 @@ export default {
 	}
 }
 
-.outbox-opacity-icon {
-	opacity: .7;
-	&:hover {
-		opacity: 1;
-	}
-}
 </style>

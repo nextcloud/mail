@@ -4,59 +4,73 @@
 -->
 <template>
 	<div class="section">
-		<p>{{ t('mail', 'Take control of your email chaos. Filters help you to prioritize what matters and eliminate clutter.') }}</p>
-		<ul>
-			<NcListItem v-for="filter in filters"
-				:key="filter.id"
-				:name="filter.name"
-				:compact="true"
-				@click="openUpdateModal(filter)">
-				<template #subname>
-					<span v-if="filter.enable">{{ t('mail', 'Filter is active') }}</span>
-					<span v-else>{{ t('mail', 'Filter is not active') }}</span>
-				</template>
-				<template #actions>
-					<NcActionButton @click="openDeleteModal(filter)">
-						<template #icon>
-							<DeleteIcon :size="20" />
-						</template>
-						{{ t('mail', 'Delete filter') }}
-					</NcActionButton>
-				</template>
-			</NcListItem>
-		</ul>
-		<NcButton class="app-settings-button"
-			type="primary"
-			:aria-label="t('mail', 'New filter')"
-			@click.prevent.stop="createFilter">
-			{{ t('mail', 'New filter') }}
-		</NcButton>
-		<UpdateModal v-if="showUpdateModal && currentFilter"
+		<div v-if="loading" class="filter-list__loading">
+			<NcLoadingIcon />
+			<p>{{ t('mail', 'Hang tight while the filters load') }}</p>
+		</div>
+		<div v-else class="filter-list">
+			<ul>
+				<NcListItem
+					v-for="filter in filters"
+					:key="filter.id"
+					:name="filter.name"
+					:compact="true"
+					@click="openUpdateModal(filter)">
+					<template #subname>
+						<span v-if="filter.enable">{{ t('mail', 'Filter is active') }}</span>
+						<span v-else>{{ t('mail', 'Filter is not active') }}</span>
+					</template>
+					<template #actions>
+						<NcActionButton @click="openDeleteModal(filter)">
+							<template #icon>
+								<DeleteIcon :size="20" />
+							</template>
+							{{ t('mail', 'Delete filter') }}
+						</NcActionButton>
+					</template>
+				</NcListItem>
+			</ul>
+			<NcButton
+				class="app-settings-button"
+				variant="primary"
+				:aria-label="t('mail', 'New filter')"
+				@click.prevent.stop="createFilter">
+				{{ t('mail', 'New filter') }}
+			</NcButton>
+		</div>
+
+		<UpdateModal
+			v-if="showUpdateModal && currentFilter"
 			:filter="currentFilter"
 			:account="account"
 			:loading="loading"
-			@update-filter="updateFilter"
+			@updateFilter="updateFilter"
 			@close="closeModal" />
-		<DeleteModal v-if="showDeleteModal && currentFilter"
+		<DeleteModal
+			v-if="showDeleteModal && currentFilter"
 			:filter="currentFilter"
 			:open="showDeleteModal"
 			:loading="loading"
-			@delete-filter="deleteFilter"
+			@deleteFilter="deleteFilter"
 			@close="closeModal" />
 	</div>
 </template>
 
 <script>
-import { NcActionButton, NcListItem, NcButton } from '@nextcloud/vue'
-import UpdateModal from './UpdateModal.vue'
-import { randomId } from '../../util/randomId.js'
-import logger from '../../logger.js'
+import { showError, showSuccess } from '@nextcloud/dialogs'
 import { mapStores } from 'pinia'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcListItem from '@nextcloud/vue/components/NcListItem'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
+import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
+import DeleteModal from './DeleteModal.vue'
+import UpdateModal from './UpdateModal.vue'
+import logger from '../../logger.js'
+import { MailFilterActions, MailFilterConditionField, MailFilterConditionOperator } from '../../models/mailFilter.ts'
 import useMailFilterStore from '../../store/mailFilterStore.ts'
 import useMainStore from '../../store/mainStore.js'
-import DeleteIcon from 'vue-material-design-icons/DeleteOutline.vue'
-import DeleteModal from './DeleteModal.vue'
-import { showError, showSuccess } from '@nextcloud/dialogs'
+import { randomId } from '../../util/randomId.js'
 
 export default {
 	name: 'MailFilters',
@@ -67,14 +81,17 @@ export default {
 		UpdateModal,
 		DeleteIcon,
 		DeleteModal,
+		NcLoadingIcon,
 
 	},
+
 	props: {
 		account: {
 			type: Object,
 			required: true,
 		},
 	},
+
 	data() {
 		return {
 			showUpdateModal: false,
@@ -85,15 +102,18 @@ export default {
 			currentFilter: null,
 		}
 	},
+
 	computed: {
 		...mapStores(useMailFilterStore, useMainStore),
 		filters() {
 			return this.mailFilterStore.filters
 		},
+
 		scriptData() {
 			return this.mainStore.getActiveSieveScript(this.account.id)
 		},
 	},
+
 	watch: {
 		scriptData: {
 			immediate: true,
@@ -107,9 +127,12 @@ export default {
 			},
 		},
 	},
+
 	async mounted() {
 		await this.mailFilterStore.fetch(this.account.id)
+		// this.loading = false
 	},
+
 	methods: {
 		createFilter() {
 			const priority = Math.max(0, ...this.filters.map((item) => item.priority ?? 0)) + 10
@@ -119,22 +142,34 @@ export default {
 				name: t('mail', 'New filter'),
 				enable: true,
 				operator: 'allof',
-				tests: [],
-				actions: [],
+				tests: [{
+					id: randomId(),
+					field: MailFilterConditionField.Subject,
+					operator: MailFilterConditionOperator.Is,
+					values: [],
+				}],
+
+				actions: [{
+					id: randomId(),
+					type: MailFilterActions.FileInto,
+				}],
+
 				priority,
 			}
 			this.showUpdateModal = true
 			this.loading = false
 		},
+
 		openUpdateModal(filter) {
 			this.currentFilter = filter
 			this.showUpdateModal = true
 		},
+
 		openDeleteModal(filter) {
 			this.currentFilter = filter
 			this.showDeleteModal = true
-
 		},
+
 		async updateFilter(filter) {
 			this.loading = true
 
@@ -152,6 +187,7 @@ export default {
 				this.loading = false
 			}
 		},
+
 		async deleteFilter(filter) {
 			this.loading = true
 
@@ -170,6 +206,7 @@ export default {
 
 			await this.mainStore.fetchActiveSieveScript({ accountId: this.account.id })
 		},
+
 		closeModal() {
 			this.currentFilter = null
 			this.showUpdateModal = false
@@ -186,17 +223,7 @@ export default {
 	margin-bottom: 23px;
 }
 
-textarea {
-	width: 100%;
-}
-
-.primary {
-	padding-inline-start: 26px;
-	background-position: 6px;
-	color: var(--color-main-background);
-
-	&:after {
-		 inset-inline-start: 14px;
-	 }
+.filter-list__loading {
+	text-align: center;
 }
 </style>

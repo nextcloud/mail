@@ -5,12 +5,11 @@
  * Nextcloud - Tasks
  */
 import moment from '@nextcloud/moment'
-
-import { v4 as uuid } from 'uuid'
 import ICAL from 'ical.js'
+import { v4 as uuid } from 'uuid'
+import logger from './logger.js'
 
 export default class Task {
-
 	/**
 	 * Creates an instance of Task
 	 *
@@ -56,7 +55,7 @@ export default class Task {
 		}
 
 		if (!this.vtodo.hasProperty('uid')) {
-			console.debug('This task did not have a proper uid. Setting a new one for ', this)
+			logger.debug('task did not have a proper uid, setting a new one')
 			this.vtodo.addPropertyWithValue('uid', uuid())
 		}
 
@@ -366,7 +365,7 @@ export default class Task {
 	getParent() {
 		const related = this.vtodo.getAllProperties('related-to')
 		// Return only the first parent for now
-		return related.find(related => {
+		return related.find((related) => {
 			return related.getFirstParameter('reltype') === 'PARENT' || related.getFirstParameter('reltype') === undefined
 		})
 	}
@@ -515,23 +514,23 @@ export default class Task {
 	 */
 	set tags(newTags) {
 		if (newTags.length > 0) {
-			let tags = this.vtodo.getAllProperties('categories')
+			const tags = this.vtodo.getAllProperties('categories')
 			// If there are no tags set yet, just set them
 			if (tags.length < 1) {
 				const prop = new ICAL.Property('categories')
 				prop.setValues(newTags)
-				tags = this.vtodo.addProperty(prop)
+				this.vtodo.addProperty(prop)
 			// If there is only one tags property, overwrite it
 			} else if (tags.length < 2) {
 				tags[0].setValues(newTags)
 			// If there are multiple tags properties, we have to iterate over all
 			// and remove unwanted tags and add new ones
 			} else {
-				const toRemove = this._tags.filter(c => !newTags.includes(c))
-				const toAdd = newTags.filter(c => !this._tags.includes(c))
+				const toRemove = this._tags.filter((c) => !newTags.includes(c))
+				const toAdd = newTags.filter((c) => !this._tags.includes(c))
 				// Remove all unwanted tags
 				for (const ts of tags) {
-					const t = ts.getValues().filter(c => !toRemove.includes(c))
+					const t = ts.getValues().filter((c) => !toRemove.includes(c))
 					if (t.length) {
 						ts.setValues(t)
 					} else {
@@ -626,17 +625,15 @@ export default class Task {
 		if (this._created === null) {
 			return 0
 		}
-		return this._created.subtractDate(
-			new ICAL.Time({
-				year: 2001,
-				month: 1,
-				day: 1,
-				hour: 0,
-				minute: 0,
-				second: 0,
-				isDate: false,
-			}),
-		).toSeconds()
+		return this._created.subtractDate(new ICAL.Time({
+			year: 2001,
+			month: 1,
+			day: 1,
+			hour: 0,
+			minute: 0,
+			second: 0,
+			isDate: false,
+		})).toSeconds()
 	}
 
 	/**
@@ -646,7 +643,7 @@ export default class Task {
 	 * @return {boolean} If the task matches
 	 */
 	matches(searchQuery) {
-		// If the search query maches the previous search, we don't have to search again.
+		// If the search query matches the previous search, we don't have to search again.
 		if (this._searchQuery === searchQuery) {
 			return this._matchesSearchQuery
 		}
@@ -680,5 +677,4 @@ export default class Task {
 		this._matchesSearchQuery = false
 		return this._matchesSearchQuery
 	}
-
 }

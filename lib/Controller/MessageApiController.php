@@ -5,6 +5,7 @@ declare(strict_types=1);
  * SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
+
 namespace OCA\Mail\Controller;
 
 use OCA\Mail\Contracts\IDkimService;
@@ -14,13 +15,13 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\Exception\UploadException;
 use OCA\Mail\Http\TrapError;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\SmimeData;
 use OCA\Mail\ResponseDefinitions;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\Attachment\UploadedFile;
+use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\ItineraryService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\OutboxService;
@@ -48,27 +49,24 @@ use function array_merge;
  */
 class MessageApiController extends OCSController {
 
-	private ?string $userId;
-
 	public function __construct(
 		string $appName,
-		?string $userId,
+		private ?string $userId,
 		IRequest $request,
 		private AccountService $accountService,
 		private AliasesService $aliasesService,
 		private AttachmentService $attachmentService,
 		private OutboxService $outboxService,
 		private MailManager $mailManager,
-		private IMAPClientFactory $clientFactory,
 		private LoggerInterface $logger,
 		private ITimeFactory $time,
 		private IURLGenerator $urlGenerator,
 		private IDkimService $dkimService,
 		private ItineraryService $itineraryService,
 		private TrustedSenderService $trustedSenderService,
+		private DelegationService $delegationService,
 	) {
 		parent::__construct($appName, $request);
-		$this->userId = $userId;
 	}
 
 	/**
@@ -80,8 +78,8 @@ class MessageApiController extends OCSController {
 	 * @param string $body The message body
 	 * @param bool $isHtml If the message body contains HTML
 	 * @param list<array{ label?: string, email: string}> $to An array of "To" recipients in the format ['label' => 'Name', 'email' => 'Email Address'] or ['email' => 'Email Address']
-	 * @param array<empty>|list<array{ label?: string, email: string}> $cc An optional array of 'CC' recipients in the format ['label' => 'Name', 'email' => 'Email Address'] or ['email' => 'Email Address']
-	 * @param array<empty>|list<array{ label?: string, email: string}> $bcc An optional array of 'BCC' recipients in the format ['label' => 'Name', 'email' => 'Email Address'] or ['email' => 'Email Address']
+	 * @param list<array{ label?: string, email: string}> $cc An optional array of 'CC' recipients in the format ['label' => 'Name', 'email' => 'Email Address'] or ['email' => 'Email Address']
+	 * @param list<array{ label?: string, email: string}> $bcc An optional array of 'BCC' recipients in the format ['label' => 'Name', 'email' => 'Email Address'] or ['email' => 'Email Address']
 	 * @param ?string $references An optional string of an RFC2392 "message-id" to set the "Reply-To" and "References" header on sending
 	 * @return DataResponse<Http::STATUS_OK|Http::STATUS_ACCEPTED|Http::STATUS_BAD_REQUEST|Http::STATUS_FORBIDDEN|Http::STATUS_NOT_FOUND|Http::STATUS_INTERNAL_SERVER_ERROR, string, array{}>
 	 *
@@ -89,8 +87,8 @@ class MessageApiController extends OCSController {
 	 * 202: The email was sent but could not be copied to the 'Sent' mailbox
 	 * 202: The email was accepted but not sent by the SMTP server and will be automatically retried
 	 * 400: No recipients
-	 * 400: Recipient fromat invalid
-	 * 400: A recipient array contained no email addresse
+	 * 400: Recipient format invalid
+	 * 400: A recipient array contained no email address
 	 * 400: Recipient email address malformed
 	 * 400: Message could not be processed
 	 * 403: No "Sent" mailbox set for account
@@ -120,7 +118,8 @@ class MessageApiController extends OCSController {
 		}
 
 		try {
-			$mailAccount = $this->accountService->find($this->userId, $accountId);
+			$effectiveUserId = $this->delegationService->resolveAccountUserId($accountId, $this->userId);
+			$mailAccount = $this->accountService->find($effectiveUserId, $accountId);
 		} catch (ClientException $e) {
 			$this->logger->error("Mail account #$accountId not found", ['exception' => $e]);
 			return new DataResponse('Account not found.', Http::STATUS_NOT_FOUND);
@@ -128,7 +127,7 @@ class MessageApiController extends OCSController {
 
 		if ($fromEmail !== $mailAccount->getEmail()) {
 			try {
-				$alias = $this->aliasesService->findByAliasAndUserId($fromEmail, $this->userId);
+				$alias = $this->aliasesService->findByAliasForAccount($fromEmail, $accountId);
 			} catch (DoesNotExistException $e) {
 				$this->logger->error("Alias $fromEmail for mail account $accountId not found", ['exception' => $e]);
 				// Cannot send from this email as it is not configured as an alias
@@ -139,7 +138,6 @@ class MessageApiController extends OCSController {
 		if (empty($to)) {
 			return new DataResponse('Recipients cannot be empty.', Http::STATUS_BAD_REQUEST);
 		}
-
 
 		try {
 			$messageAttachments = $this->handleAttachments();
@@ -191,9 +189,7 @@ class MessageApiController extends OCSController {
 			}
 		}
 
-		$localAttachments = array_map(static function ($messageAttachment) {
-			return ['type' => 'local', 'id' => $messageAttachment->getId()];
-		}, $messageAttachments);
+		$localAttachments = array_map(static fn ($messageAttachment) => ['type' => 'local', 'id' => $messageAttachment->getId()], $messageAttachments);
 		$localMessage = $this->outboxService->saveMessage($mailAccount, $message, $to, $cc, $bcc, $localAttachments);
 
 		try {
@@ -205,13 +201,21 @@ class MessageApiController extends OCSController {
 			$this->logger->error('SMTP error: could not send message', ['exception' => $e]);
 			return new DataResponse('Fatal SMTP error: could not send message, and no resending is possible. Please check the mail server logs.', Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
+		$status = $localMessage->getStatus();
+		$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, match ($status) {
+			LocalMessage::STATUS_PROCESSED => "$this->userId sent a message on behalf of $effectiveUserId",
+			LocalMessage::STATUS_NO_SENT_MAILBOX => "$this->userId attempted sending a message on behalf of $effectiveUserId but no sent mailbox is configured",
+			LocalMessage::STATUS_SMPT_SEND_FAIL => "$this->userId attempted sending a message on behalf of $effectiveUserId but SMTP sending failed",
+			LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL => "$this->userId sent a message on behalf of $effectiveUserId but copying to sent mailbox failed",
+			default => "$this->userId attempted sending a message on behalf of $effectiveUserId but an unknown error occurred",
+		});
 
-		return match ($localMessage->getStatus()) {
+		return match ($status) {
 			LocalMessage::STATUS_PROCESSED => new DataResponse('', Http::STATUS_OK),
 			LocalMessage::STATUS_NO_SENT_MAILBOX => new DataResponse('Configuration error: Cannot send message without sent mailbox.', Http::STATUS_FORBIDDEN),
 			LocalMessage::STATUS_SMPT_SEND_FAIL => new DataResponse('SMTP error: could not send message. Message sending will be retried. Please check the logs.', Http::STATUS_INTERNAL_SERVER_ERROR),
 			LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL => new DataResponse('Email was sent but could not be copied to sent mailbox. Copying will be retried. Please check the logs.', Http::STATUS_ACCEPTED),
-			default => new DataResponse('An error occured. Please check the logs.', Http::STATUS_INTERNAL_SERVER_ERROR),
+			default => new DataResponse('An error occurred. Please check the logs.', Http::STATUS_INTERNAL_SERVER_ERROR),
 		};
 	}
 
@@ -236,22 +240,21 @@ class MessageApiController extends OCSController {
 		}
 
 		try {
-			$message = $this->mailManager->getMessage($this->userId, $id);
-			$mailbox = $this->mailManager->getMailbox($this->userId, $message->getMailboxId());
-			$account = $this->accountService->find($this->userId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (ClientException|DoesNotExistException $e) {
 			$this->logger->error('Message, Account or Mailbox not found', ['exception' => $e->getMessage()]);
 			return new DataResponse('Account not found.', Http::STATUS_NOT_FOUND);
 		}
 
 		$loadBody = true;
-		$client = $this->clientFactory->getClient($account);
 		try {
 			$imapMessage = $this->mailManager->getImapMessage(
-				$client,
 				$account,
 				$mailbox,
-				$message->getUid(),
+				$message,
 				true
 			);
 		} catch (ServiceException $e) {
@@ -261,13 +264,10 @@ class MessageApiController extends OCSController {
 			$this->logger->warning('Message could not be decrypted', ['exception' => $e->getMessage()]);
 			$loadBody = false;
 			$imapMessage = $this->mailManager->getImapMessage(
-				$client,
 				$account,
 				$mailbox,
-				$message->getUid()
+				$message
 			);
-		} finally {
-			$client->logout();
 		}
 
 		$json = $imapMessage->getFullMessage($id, $loadBody);
@@ -275,12 +275,10 @@ class MessageApiController extends OCSController {
 		if ($itineraries) {
 			$json['itineraries'] = $itineraries->jsonSerialize();
 		}
-		$json['attachments'] = array_map(function ($a) use ($id) {
-			return $this->enrichDownloadUrl(
-				$id,
-				$a
-			);
-		}, $json['attachments']);
+		$json['attachments'] = array_map(fn ($a) => $this->enrichDownloadUrl(
+			$id,
+			$a
+		), $json['attachments']);
 		$json['id'] = $message->getId();
 		$json['isSenderTrusted'] = $this->trustedSenderService->isSenderTrusted($this->userId, $message);
 
@@ -300,10 +298,14 @@ class MessageApiController extends OCSController {
 		$json['rawUrl'] = $this->urlGenerator->linkToOCSRouteAbsolute('mail.messageApi.getRaw', ['id' => $id]);
 
 		if (!$loadBody) {
-			return new DataResponse($json, Http::STATUS_PARTIAL_CONTENT);
+			/** @var DataResponse<Http::STATUS_PARTIAL_CONTENT, MailMessageApiResponse, array{}> $response */
+			$response = new DataResponse($json, Http::STATUS_PARTIAL_CONTENT);
+			return $response;
 		}
 
-		return new DataResponse($json, Http::STATUS_OK);
+		/** @var DataResponse<Http::STATUS_OK, MailMessageApiResponse, array{}> $response */
+		$response = new DataResponse($json, Http::STATUS_OK);
+		return $response;
 	}
 
 	/**
@@ -326,27 +328,24 @@ class MessageApiController extends OCSController {
 		}
 
 		try {
-			$message = $this->mailManager->getMessage($this->userId, $id);
-			$mailbox = $this->mailManager->getMailbox($this->userId, $message->getMailboxId());
-			$account = $this->accountService->find($this->userId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (ClientException|DoesNotExistException $e) {
 			$this->logger->error('Message, Account or Mailbox not found', ['exception' => $e->getMessage()]);
 			return new DataResponse('Message, Account or Mailbox not found', Http::STATUS_NOT_FOUND);
 		}
 
-		$client = $this->clientFactory->getClient($account);
 		try {
 			$source = $this->mailManager->getSource(
-				$client,
 				$account,
-				$mailbox->getName(),
-				$message->getUid()
+				$mailbox,
+				$message
 			);
 		} catch (ServiceException $e) {
 			$this->logger->error('Message not found on IMAP, or mail server went away', ['exception' => $e->getMessage()]);
 			return new DataResponse('Message not found', Http::STATUS_NOT_FOUND);
-		} finally {
-			$client->logout();
 		}
 
 		return new DataResponse($source, Http::STATUS_OK);
@@ -386,10 +385,15 @@ class MessageApiController extends OCSController {
 	#[NoAdminRequired]
 	#[TrapError]
 	public function getAttachment(int $id, string $attachmentId): DataResponse {
+		if ($this->userId === null) {
+			return new DataResponse('Account not found.', Http::STATUS_NOT_FOUND);
+		}
+
 		try {
-			$message = $this->mailManager->getMessage($this->userId, $id);
-			$mailbox = $this->mailManager->getMailbox($this->userId, $message->getMailboxId());
-			$account = $this->accountService->find($this->userId, $mailbox->getAccountId());
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException|ClientException $e) {
 			return new DataResponse('Message, Account or Mailbox not found', Http::STATUS_NOT_FOUND);
 		}
@@ -411,20 +415,24 @@ class MessageApiController extends OCSController {
 
 		// Body party and embedded messages do not have a name
 		if ($attachment->getName() === null) {
-			return new DataResponse([
+			/** @var DataResponse<Http::STATUS_OK, MailMessageApiAttachment, array{}> $response */
+			$response = new DataResponse([
 				'name' => $attachmentId . '.eml',
 				'mime' => $attachment->getType(),
 				'size' => $attachment->getSize(),
 				'content' => $attachment->getContent()
 			]);
+			return $response;
 		}
 
-		return new DataResponse([
+		/** @var DataResponse<Http::STATUS_OK, MailMessageApiAttachment, array{}> $response */
+		$response = new DataResponse([
 			'name' => $attachment->getName(),
 			'mime' => $attachment->getType(),
 			'size' => $attachment->getSize(),
 			'content' => $attachment->getContent()
 		]);
+		return $response;
 	}
 
 	/**
@@ -433,9 +441,12 @@ class MessageApiController extends OCSController {
 	 */
 	private function handleAttachments(): array {
 		$fileAttachments = $this->request->getUploadedFile('attachments');
-		$hasAttachments = isset($fileAttachments['name']);
-		if (!$hasAttachments) {
+		if (!isset($fileAttachments['name'])) {
 			return [];
+		}
+
+		if ($this->userId === null) {
+			throw new UploadException('No user ID available');
 		}
 
 		$messageAttachments = [];

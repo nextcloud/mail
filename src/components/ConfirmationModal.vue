@@ -4,19 +4,20 @@
 -->
 
 <template>
-	<NcModal class="confirm-modal" @close="cancel">
+	<NcModal class="confirm-modal" :name="title" @close="cancel">
 		<div class="confirm-modal">
 			<h2>{{ title }}</h2>
 			<slot />
 			<div class="confirm-modal__buttons">
-				<NcButton type="tertiary" :disabled="disabled" @click="cancel">
+				<NcButton variant="tertiary" :disabled="disabled" @click="cancel">
 					{{ t('mail', 'Cancel') }}
 				</NcButton>
-				<NcButton :href="confirmUrl"
-					:rel="confirmUrl ? 'noopener noreferrer' : false"
-					:target="confirmUrl ? '_blank' : false"
+				<NcButton
+					:href="confirmUrl"
+					:rel="confirmUrl ? 'noopener noreferrer' : undefined"
+					:target="confirmUrl ? '_blank' : undefined"
 					:disabled="disabled"
-					type="primary"
+					variant="primary"
 					@click="confirm">
 					{{ confirmText }}
 				</NcButton>
@@ -27,8 +28,9 @@
 
 <script>
 
-import { NcButton, NcModal } from '@nextcloud/vue'
-import { translate as t } from '@nextcloud/l10n'
+import { t } from '@nextcloud/l10n'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcModal from '@nextcloud/vue/components/NcModal'
 
 export default {
 	name: 'ConfirmationModal',
@@ -36,28 +38,36 @@ export default {
 		NcButton,
 		NcModal,
 	},
+
 	props: {
 		title: {
 			type: String,
 			required: true,
 		},
+
 		confirmText: {
 			type: String,
 			default: t('mail', 'Confirm'),
 		},
+
 		confirmUrl: {
 			type: String,
 			default: undefined,
 		},
+
 		disabled: {
 			type: Boolean,
 			default: false,
 		},
 	},
+
+	emits: ['confirm', 'cancel'],
+
 	methods: {
 		confirm() {
 			this.$emit('confirm')
 		},
+
 		cancel() {
 			this.$emit('cancel')
 		},

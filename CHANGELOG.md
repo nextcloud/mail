@@ -1,6 +1,126 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 5.12.0 – unreleased
+### Added
+* Insert images from Files in the composer
+* Floating composer editor
+* Warn when sending an email with an empty recipient
+* Do not auto-reply to noreply@ and no-reply@ senders
+* Hint when message content is AI generated
+* Nextcloud 36 support
+* Disable the background sync job via configuration
+* Use LDAP attributes in provisioning templates
+### Changed
+* Translations
+### Performance
+* Prefix the internal-address index with the user id
+### Fixed
+* Quick actions for special folders
+* Show the unified inbox icon
+* Detect message language in the browser for translation
+* Skip IMAP fetch results without a UID during sync
+* Allow HTML ids inside the email body for CSS targeting
+* Button alignment and graphics in the signature editor
+* Moving messages, threads and folders
+* Mount the account settings dialog at the app root
+* Check permissions when selecting a folder for a quick action
+* Remove the duplicate Cc/Bcc button in the composer
+* Keep the draft when clicking outside the composer
+* Termination condition when translating text
+
+## 5.11.0 – unreleased
+### Added
+* Initial JMAP protocol support
+* Attach files from Files as an attachment or as a link
+* Drag, drop and paste attachments into the composer
+* Save an email as an .eml file in Files
+* "Copy direct link" action in the message menu
+* Heading shortcuts in the editor
+* Save draft with Ctrl+S in the composer
+* Preserve custom font sizes and families in the editor
+* Configurable auto mark-as-read delay
+* Sync IMAP and SMTP credentials while filling in the new account form
+* Filter folders in the mailbox picker
+* Empty state for text blocks
+* Webhook-compatible events
+### Changed
+* Translations
+### Fixed
+* Reply to sender only
+* Replying to your own message now addresses the original recipient
+* Rate limit all IMAP server authentication rejections
+* Favorites list no longer mounted when sorting is off
+* Search shortcut buttons no longer taking up their own space
+* Open messages from search via deep link
+* Handle empty reply-to address list properly
+
+## 5.10.0 – 2026-06-18
+### Added
+* Shortcut to change the password in account server settings
+* AI hint when replying with a meeting
+### Changed
+* Translations
+### Fixed
+* Printing messages
+* Drag and drop into sub-mailboxes blocked by a disabled parent mailbox
+* Prefer sans-serif font over Noto Color Emoji for text rendering
+
+## 5.9.0 – unreleased
+### Added
+* Nextcloud 35 support
+* Account delegation with notifications
+* HTML and source editing support in composer/signature editor
+* Per-message To/Cc/Bcc recipients in thread view
+* Paste or copy several email addresses into address fields at once
+* Keep inline images when forwarding messages
+### Changed
+* Translations
+### Performance
+* Reuse IMAP client connections during initial sync
+### Fixed
+* Attachment actions menu closes after Download or Save to Files
+* Correct favorite/unfavorite bulk action behavior
+* Detect and warn about Microsoft accounts without OAuth configured
+* Important message icon not displayed in message list
+* Load translations via filesystem path
+
+## 5.8.0 – unreleased
+### Added
+* Deep link support for opening messages by Message-ID
+* AI hint displayed alongside smart replies
+* RTL/LTR text direction buttons in the composer toolbar
+* Improved follow-up reminder and priority inbox ML indicators
+### Changed
+* Translations
+### Fixed
+* Compact view alignment issues
+* S/MIME: parse email addresses from Subject Alternative Names
+* Composer: no dropdown shown when recipient field focused without input
+* Provisioning: missing @ character in user display
+* Drag and drop: track droppable mailbox instances independently
+* Incorrect creation timestamp for local attachments
+* Translation modal now indicates AI usage
+* List rendering on mobile
+* Out of office datepicker overlapping with sidebar
+* Null safety in HTTP controllers
+* PHP 8.5 deprecation warnings
+
+## 5.6.0 – 2025-11-20
+### Added
+* Keyboard shortcut CTRL+Enter to send an email
+* Settings signature editor border
+### Changed
+* Translations
+
+## 5.5.0 – unreleased
+### Added
+* Nextcloud 33 support
+* Quick actions
+### Changed
+* Thread summaries styling
+* Background sync intervals based on user activity
+
 ## 4.0.0 - unreleased
 
 ## 3.6.0 – unreleased

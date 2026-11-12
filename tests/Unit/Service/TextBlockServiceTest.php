@@ -13,13 +13,16 @@ use OCA\Mail\Db\TextBlock;
 use OCA\Mail\Db\TextBlockMapper;
 use OCA\Mail\Db\TextBlockShare;
 use OCA\Mail\Db\TextBlockShareMapper;
+use OCA\Mail\Exception\UserNotFoundException;
+use OCA\Mail\Service\SharingRestrictionService;
 use OCA\Mail\Service\TextBlockService;
 use OCP\IGroupManager;
+use OCP\IUser;
 use OCP\IUserManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class TextBlockServiceTest extends TestCase {
+final class TextBlockServiceTest extends TestCase {
 	/** @var TextBlockMapper|MockObject */
 	private $textBlockMapper;
 
@@ -32,6 +35,8 @@ class TextBlockServiceTest extends TestCase {
 	/** @var IGroupManager|MockObject */
 	private $groupManager;
 
+	private SharingRestrictionService&MockObject $sharingRestrictionService;
+
 	/** @var TextBlockService */
 	private $textBlockService;
 
@@ -40,13 +45,20 @@ class TextBlockServiceTest extends TestCase {
 		$this->textBlockShareMapper = $this->createMock(TextBlockShareMapper::class);
 		$this->userManager = $this->createMock(IUserManager::class);
 		$this->groupManager = $this->createMock(IGroupManager::class);
+		$this->sharingRestrictionService = $this->createMock(SharingRestrictionService::class);
 
 		$this->textBlockService = new TextBlockService(
 			$this->textBlockMapper,
 			$this->textBlockShareMapper,
 			$this->groupManager,
-			$this->userManager
+			$this->userManager,
+			$this->sharingRestrictionService,
 		);
+	}
+
+	private function allowSharing(): void {
+		$this->sharingRestrictionService->method('canShareWithUser')->willReturn(true);
+		$this->sharingRestrictionService->method('canShareWithGroup')->willReturn(true);
 	}
 
 	public function testFindAll(): void {
@@ -65,19 +77,19 @@ class TextBlockServiceTest extends TestCase {
 
 	public function testCreate(): void {
 		$userId = 'bob';
-		$title = 'Test TextBlock';
+		$title = 'Test Text Block';
 		$content = '<p>This is content</p>';
 		$textBlock = new TextBlock();
 
 		$this->textBlockMapper->expects($this->once())
 			->method('insert')
-			->with($this->callback(function (TextBlock $s) use ($userId, $title, $content) {
-				return $s->getOwner() === $userId
-					   && $s->getTitle() === $title
-					   && $s->getContent() === $content
-					   && $s->getPreview() === 'This is content';
-			}))
-			->willReturn($textBlock);
+			->willReturnCallback(function (TextBlock $s) use ($userId, $title, $content, $textBlock): TextBlock {
+				$this->assertSame($userId, $s->getOwner());
+				$this->assertSame($title, $s->getTitle());
+				$this->assertSame($content, $s->getContent());
+				$this->assertSame('This is content', $s->getPreview());
+				return $textBlock;
+			});
 
 		$result = $this->textBlockService->create($userId, $title, $content);
 
@@ -94,16 +106,16 @@ class TextBlockServiceTest extends TestCase {
 		$textBlock->setOwner($userId);
 		$this->textBlockMapper->expects($this->once())
 			->method('update')
-			->with($this->callback(function (TextBlock $s) use ($title, $content) {
-				return $s->getTitle() === $title && $s->getContent() === $content;
-			}))
-			->willReturn($textBlock);
+			->willReturnCallback(function (TextBlock $s) use ($title, $content, $textBlock): TextBlock {
+				$this->assertSame($title, $s->getTitle());
+				$this->assertSame($content, $s->getContent());
+				return $textBlock;
+			});
 
 		$result = $this->textBlockService->update($textBlock, $userId, $title, $content);
 
 		$this->assertSame($textBlock, $result);
 	}
-
 
 	public function testDelete(): void {
 		$textBlockId = 1;
@@ -133,10 +145,10 @@ class TextBlockServiceTest extends TestCase {
 		$this->textBlockMapper->expects($this->once())
 			->method('find')
 			->with($textBlockId, $userId)
-			->willThrowException(new \OCP\AppFramework\Db\DoesNotExistException('TextBlock does not exist'));
+			->willThrowException(new \OCP\AppFramework\Db\DoesNotExistException('Text block does not exist'));
 
 		$this->expectException(\OCP\AppFramework\Db\DoesNotExistException::class);
-		$this->expectExceptionMessage('TextBlock does not exist');
+		$this->expectExceptionMessage('Text block does not exist');
 
 		$this->textBlockService->delete($textBlockId, $userId);
 	}
@@ -144,11 +156,12 @@ class TextBlockServiceTest extends TestCase {
 	public function testShare(): void {
 		$textBlockId = 1;
 		$shareWith = 'alice';
+		$this->allowSharing();
 
 		$this->userManager->expects($this->once())
 			->method('get')
 			->with($shareWith)
-			->willReturn($this->createMock(\OCP\IUser::class));
+			->willReturn($this->createStub(\OCP\IUser::class));
 
 		$this->textBlockShareMapper->expects($this->once())
 			->method(constraint: 'shareExists')
@@ -157,23 +170,25 @@ class TextBlockServiceTest extends TestCase {
 
 		$this->textBlockShareMapper->expects($this->once())
 			->method('insert')
-			->with($this->callback(function (TextBlockShare $s) use ($textBlockId, $shareWith) {
-				return $s->getTextBlockId() === $textBlockId
-					   && $s->getShareWith() === $shareWith
-					   && $s->getType() === TextBlockShare::TYPE_USER;
+			->with($this->callback(function (TextBlockShare $s) use ($textBlockId, $shareWith): bool {
+				$this->assertSame($textBlockId, $s->getTextBlockId());
+				$this->assertSame($shareWith, $s->getShareWith());
+				$this->assertSame(TextBlockShare::TYPE_USER, $s->getType());
+				return true;
 			}));
 
-		$this->textBlockService->share($textBlockId, $shareWith);
+		$this->textBlockService->share($textBlockId, 'bob', $shareWith);
 	}
 
 	public function testShareExits(): void {
 		$textBlockId = 1;
 		$shareWith = 'alice';
+		$this->allowSharing();
 
 		$this->userManager->expects($this->once())
 			->method('get')
 			->with($shareWith)
-			->willReturn($this->createMock(\OCP\IUser::class));
+			->willReturn($this->createStub(\OCP\IUser::class));
 
 		$this->textBlockShareMapper->expects($this->once())
 			->method('shareExists')
@@ -182,7 +197,7 @@ class TextBlockServiceTest extends TestCase {
 
 		$this->expectException(\OCA\Mail\Exception\ShareeAlreadyExistsException::class);
 
-		$this->textBlockService->share($textBlockId, $shareWith);
+		$this->textBlockService->share($textBlockId, 'bob', $shareWith);
 	}
 
 	public function testShareShareeDoesntExits(): void {
@@ -197,7 +212,7 @@ class TextBlockServiceTest extends TestCase {
 		$this->expectException(\OCA\Mail\Exception\UserNotFoundException::class);
 		$this->expectExceptionMessage('Sharee does not exist');
 
-		$this->textBlockService->share($textBlockId, $shareWith);
+		$this->textBlockService->share($textBlockId, 'bob', $shareWith);
 	}
 
 	public function testShareWithGroupGroupDoesNotExist(): void {
@@ -212,12 +227,13 @@ class TextBlockServiceTest extends TestCase {
 		$this->expectException(\OCA\Mail\Exception\UserNotFoundException::class);
 		$this->expectExceptionMessage('Group does not exist');
 
-		$this->textBlockService->shareWithGroup($textBlockId, $groupId);
+		$this->textBlockService->shareWithGroup($textBlockId, 'bob', $groupId);
 	}
 
 	public function testShareWithGroupAlreadyExists(): void {
 		$textBlockId = 1;
 		$groupId = 'existing-group';
+		$this->allowSharing();
 
 		$this->groupManager->expects($this->once())
 			->method('groupExists')
@@ -231,12 +247,13 @@ class TextBlockServiceTest extends TestCase {
 
 		$this->expectException(\OCA\Mail\Exception\ShareeAlreadyExistsException::class);
 
-		$this->textBlockService->shareWithGroup($textBlockId, $groupId);
+		$this->textBlockService->shareWithGroup($textBlockId, 'bob', $groupId);
 	}
 
 	public function testShareWithGroup(): void {
 		$textBlockId = 1;
 		$groupId = 'valid-group';
+		$this->allowSharing();
 
 		$this->groupManager->expects($this->once())
 			->method('groupExists')
@@ -250,13 +267,43 @@ class TextBlockServiceTest extends TestCase {
 
 		$this->textBlockShareMapper->expects($this->once())
 			->method('insert')
-			->with($this->callback(function (TextBlockShare $share) use ($textBlockId, $groupId) {
-				return $share->getTextBlockId() === $textBlockId
-					   && $share->getShareWith() === $groupId
-					   && $share->getType() === TextBlockShare::TYPE_GROUP;
+			->with($this->callback(function (TextBlockShare $share) use ($textBlockId, $groupId): bool {
+				$this->assertSame($textBlockId, $share->getTextBlockId());
+				$this->assertSame($groupId, $share->getShareWith());
+				$this->assertSame(TextBlockShare::TYPE_GROUP, $share->getType());
+				return true;
 			}));
 
-		$this->textBlockService->shareWithGroup($textBlockId, $groupId);
+		$this->textBlockService->shareWithGroup($textBlockId, 'bob', $groupId);
+	}
+
+	public function testShareRestricted(): void {
+		$sharee = $this->createStub(IUser::class);
+		$this->userManager->method('get')->with('alice')->willReturn($sharee);
+		$this->sharingRestrictionService->expects($this->once())
+			->method('canShareWithUser')
+			->with('bob', $sharee)
+			->willReturn(false);
+		$this->textBlockShareMapper->expects($this->never())->method('insert');
+
+		$this->expectException(UserNotFoundException::class);
+		$this->expectExceptionMessage('Sharee does not exist');
+
+		$this->textBlockService->share(1, 'bob', 'alice');
+	}
+
+	public function testShareWithGroupRestricted(): void {
+		$this->groupManager->method('groupExists')->with('group-a')->willReturn(true);
+		$this->sharingRestrictionService->expects($this->once())
+			->method('canShareWithGroup')
+			->with('bob', 'group-a')
+			->willReturn(false);
+		$this->textBlockShareMapper->expects($this->never())->method('insert');
+
+		$this->expectException(UserNotFoundException::class);
+		$this->expectExceptionMessage('Group does not exist');
+
+		$this->textBlockService->shareWithGroup(1, 'bob', 'group-a');
 	}
 
 	public function testUnshare(): void {
@@ -278,7 +325,7 @@ class TextBlockServiceTest extends TestCase {
 
 	public function testFindAllSharedWithMe(): void {
 		$userId = 'alice';
-		$user = $this->createMock(\OCP\IUser::class);
+		$user = $this->createStub(\OCP\IUser::class);
 		$shares = [new TextBlockShare(), new TextBlockShare()];
 
 		$this->userManager->expects($this->once())
@@ -346,5 +393,12 @@ class TextBlockServiceTest extends TestCase {
 		$this->assertSame($shares, $result);
 	}
 
+	public function testDeleteByUserId(): void {
+		$userId = 'toBeDeleted';
+		$this->textBlockMapper->expects($this->once())
+			->method('deleteByUserId')
+			->with($userId);
+		$this->textBlockService->deleteByUserId($userId);
+	}
 
 }

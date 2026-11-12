@@ -3,35 +3,37 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<NcContent app-name="mail" class="mail-content">
+	<NcContent appName="mail" class="mail-content">
 		<Navigation />
 		<Outbox v-if="$route.name === 'outbox'" />
-		<MailboxThread v-else-if="activeAccount"
+		<MailboxThread
+			v-else-if="activeAccount"
 			:account="activeAccount"
 			:mailbox="activeMailbox" />
 
 		<template v-if="hasComposerSession && accounts !== null">
-			<ComposerSessionIndicator @close="onCloseMessageModal" />
+			<ComposerSessionIndicator v-if="!showMessageComposer && !composerMessage?.indicatorDisabled" @close="onCloseMessageModal" />
 			<NewMessageModal ref="newMessageModal" :accounts="accounts" />
 		</template>
+
+		<OidcReauthDialog />
 	</NcContent>
 </template>
 
 <script>
-import { NcContent } from '@nextcloud/vue'
-import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
-
-import '../../css/mail.scss'
-import '../../css/mobile.scss'
-
-import { testAccountConnection } from '../service/AccountService.js'
-import logger from '../logger.js'
+import { mapState, mapStores } from 'pinia'
+import { defineAsyncComponent } from 'vue'
+import NcContent from '@nextcloud/vue/components/NcContent'
+import ComposerSessionIndicator from '../components/ComposerSessionIndicator.vue'
 import MailboxThread from '../components/MailboxThread.vue'
 import Navigation from '../components/Navigation.vue'
+import OidcReauthDialog from '../components/OidcReauthDialog.vue'
 import Outbox from '../components/Outbox.vue'
-import ComposerSessionIndicator from '../components/ComposerSessionIndicator.vue'
-import { mapState, mapStores } from 'pinia'
+import logger from '../logger.js'
+import { testAccountConnection } from '../service/AccountService.js'
 import useMainStore from '../store/mainStore.js'
+
+import '../../css/mail.scss'
 
 export default {
 	name: 'Home',
@@ -39,29 +41,34 @@ export default {
 		NcContent,
 		MailboxThread,
 		Navigation,
-		NewMessageModal: () => import(/* webpackChunkName: "new-message-modal" */ '../components/NewMessageModal.vue'),
+		NewMessageModal: defineAsyncComponent(() => import(/* webpackChunkName: "new-message-modal" */ '../components/NewMessageModal.vue')),
+		OidcReauthDialog,
 		Outbox,
 		ComposerSessionIndicator,
 	},
-	mixins: [isMobile],
+
 	data() {
 		return {
 			hasComposerSession: false,
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
-		...mapState(useMainStore, ['composerSessionId']),
+		...mapState(useMainStore, ['composerSessionId', 'showMessageComposer', 'composerMessage']),
 		accounts() {
 			return this.mainStore.getAccounts.filter((a) => !a.isUnified)
 		},
+
 		activeAccount() {
 			return this.mainStore.getAccount(this.activeMailbox?.accountId)
 		},
+
 		activeMailbox() {
 			return this.mainStore.getMailbox(this.$route.params.mailboxId)
 		},
 	},
+
 	watch: {
 		async composerSessionId(id) {
 			// Session was closed or discarded
@@ -81,14 +88,21 @@ export default {
 			this.hasComposerSession = true
 		},
 	},
+
 	async beforeMount() {
 		for (const account of this.accounts) {
 			await this.mainStore.patchAccountMutation({
 				account,
 				data: { connectionStatus: await testAccountConnection(account.accountId) },
 			})
+			// Testing the connection creates an IMAP client, which runs the token refresh
+			// on the server; that may flag the account for re-authentication (even when the
+			// still-valid access token means the test itself passed). Re-read the flag so
+			// the reconnect dialog can show. checkOidcReauth ignores non-OIDC accounts.
+			await this.mainStore.checkOidcReauth(account)
 		}
 	},
+
 	created() {
 		const accounts = this.mainStore.getAccounts
 		let startMailboxId = this.mainStore.getPreference('start-mailbox-id')
@@ -111,7 +125,7 @@ export default {
 			// FIXME: this assumes that there's at least one mailbox
 			const firstMailbox = this.mainStore.getMailboxes(firstAccount.id)[0]
 
-			console.debug('loading first mailbox of first account', firstAccount.id, firstMailbox.databaseId)
+			logger.debug('loading first mailbox of first account', { accountId: firstAccount.id, mailboxId: firstMailbox.databaseId })
 
 			this.$router.replace({
 				name: 'mailbox',
@@ -126,7 +140,7 @@ export default {
 			})
 		} else if (this.$route.name === 'mailto') {
 			if (accounts.length === 0) {
-				console.error('cannot handle mailto:, no accounts configured')
+				logger.error('cannot handle mailto:, no accounts configured')
 				return
 			}
 
@@ -135,7 +149,7 @@ export default {
 			// FIXME: this assumes that there's at least one mailbox
 			const firstMailbox = this.mainStore.getMailboxes(firstAccount.id)[0]
 
-			console.debug('loading composer with first account and folder', firstAccount.id, firstMailbox.id)
+			logger.debug('loading composer with first account and folder', { accountId: firstAccount.id, mailboxId: firstMailbox.id })
 
 			this.$router.replace({
 				name: 'message',
@@ -153,6 +167,7 @@ export default {
 			})
 		}
 	},
+
 	methods: {
 		hideMessage() {
 			this.$router.replace({
@@ -163,6 +178,7 @@ export default {
 				},
 			})
 		},
+
 		async onCloseMessageModal() {
 			await this.$refs.newMessageModal.onClose()
 		},
@@ -171,31 +187,9 @@ export default {
 
 </script>
 
-<style lang="scss">
-@media print {
-	body {
-		/*
-		 * Nextcloud uses an inner scrolling but we need the
-		 * full page to scroll for print
-		 */
-		position: relative;
-		height: initial;
-	}
-}
-</style>
-
 <style lang="scss" scoped>
-@media print {
-	.mail-content {
-		height: initial;
-		/* needs important because of a more specific selector */
-		position: relative !important;
-	}
-}
-
 :deep(.app-content-details) {
 	margin: 0 auto;
-	max-width: 900px;
 	display: flex;
 	flex-direction: column;
 	flex: 1 1 100%;

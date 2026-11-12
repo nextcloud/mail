@@ -4,6 +4,10 @@
 -->
 <template>
 	<div id="mail-content">
+		<NeedsTranslationInfo
+			v-if="detectedForeignLanguage"
+			:isHtml="false"
+			@translate="$emit('translate', detectedForeignLanguage)" />
 		<MdnRequest :message="message" />
 		<div id="message-container" v-html="nl2br(enhancedBody)" />
 		<details v-if="signature" class="mail-signature">
@@ -15,31 +19,46 @@
 
 <script>
 import MdnRequest from './MdnRequest.vue'
+import NeedsTranslationInfo from './NeedsTranslationInfo.vue'
+import { detectForeignLanguage } from '../util/languageDetection.ts'
+
 const regFirstParagraph = /(.+\n\r?)+(\n\r?)+/
 
 export default {
 	name: 'MessagePlainTextBody',
-	components: { MdnRequest },
+	components: { MdnRequest, NeedsTranslationInfo },
 	props: {
 		body: {
 			type: String,
 			required: true,
 		},
+
 		signature: {
 			type: String,
 			default: () => undefined,
 		},
+
 		message: {
 			required: true,
 			type: Object,
 		},
 	},
+
+	emits: ['translate'],
+
+	data() {
+		return {
+			detectedForeignLanguage: null,
+		}
+	},
+
 	computed: {
 		enhancedBody() {
 			return this.body.replace(/(^&gt;.*\n)+/gm, (match) => {
 				return `<details class="quoted-text"><summary>${t('mail', 'Quoted text')}</summary>${match}</details>`
 			})
 		},
+
 		signatureSummaryAndBody() {
 			const matches = this.signature.trim().match(regFirstParagraph)
 
@@ -56,12 +75,16 @@ export default {
 				body: lines.slice(1).join('\n'),
 			}
 		},
-		signatureSummary() {
-			console.info(this.signature.match(regFirstParagraph))
 
+		signatureSummary() {
 			return this.signatureSummaryAndBody.summary
 		},
 	},
+
+	async mounted() {
+		this.detectedForeignLanguage = await detectForeignLanguage(this.body ?? '')
+	},
+
 	methods: {
 		nl2br(str) {
 			return str.replace(/(\r\n|\n\r|\n|\r)/g, '<br />')
@@ -70,26 +93,25 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.quoted-text {
-	color: var(--color-text-maxcontrast)
-
-	summary {
-		cursor: pointer
-	}
-}
-</style>
 <style lang="scss" scoped>
-.message-container,
+#message-container,
 .mail-signature {
 	white-space: pre-wrap;
 }
 
-.mail-signature, .quoted {
-	color: var(--color-text-maxcontrast)
+.mail-signature {
+	color: var(--color-text-maxcontrast);
 
 	summary {
-		cursor: pointer
+		cursor: pointer;
+	}
+}
+
+#message-container :deep(.quoted-text) {
+	color: var(--color-text-maxcontrast);
+
+	summary {
+		cursor: pointer;
 	}
 }
 </style>

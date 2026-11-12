@@ -17,11 +17,9 @@ use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
 
 class FixCollectedAddresses implements IRepairStep {
-	/** @var CollectedAddressMapper */
-	private $mapper;
-
-	public function __construct(CollectedAddressMapper $mapper) {
-		$this->mapper = $mapper;
+	public function __construct(
+		private CollectedAddressMapper $mapper,
+	) {
 	}
 
 	#[\Override]

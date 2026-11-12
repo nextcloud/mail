@@ -28,19 +28,20 @@ class CompositeAvatarSource {
 	}
 
 	/**
+	 * @param string $userId uid of the user the lookup is performed for
 	 * @param string $email sender email address
 	 * @param AvatarFactory $factory
 	 * @param bool $queryExternal
 	 * @return Avatar|null avatar URL if one can be found
 	 */
-	public function fetch(string $email, AvatarFactory $factory, bool $queryExternal) {
+	public function fetch(string $userId, string $email, AvatarFactory $factory, bool $queryExternal) {
 		foreach ($this->sources as $source) {
 			if (!$queryExternal && $source->isExternal()) {
 				// Skip this one
 				continue;
 			}
 
-			$avatar = $source->fetch($email, $factory);
+			$avatar = $source->fetch($userId, $email, $factory);
 
 			if (is_null($avatar)) {
 				continue;

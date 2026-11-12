@@ -5,7 +5,6 @@
 
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
-
 import { convertAxiosError } from '../errors/convert.js'
 
 export async function saveDraft(data) {

@@ -3,15 +3,18 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div class="mail-filter-rows">
-		<div class="mail-filter-rows__row">
-			<div class="mail-filter-rows__row__column">
-				<NcSelect input-label="field"
-					:value="test.field"
+	<div class="condition">
+		<div class="condition__value">
+			<div class="condition__value__field_operator">
+				<NcSelect
+					inputLabel="field"
+					class="condition__value__field_operator__column"
+					:modelValue="test.field"
 					:required="true"
-					:label-outside="true"
+					:labelOutside="true"
 					:options="fields"
-					@input="updateTest({ field: $event })">
+					:clearable="false"
+					@update:modelValue="updateTest({ field: $event })">
 					<template #selected-option="{ label }">
 						{{ getLabelForField(label) }}
 					</template>
@@ -19,14 +22,15 @@
 						{{ getLabelForField(label) }}
 					</template>
 				</NcSelect>
-			</div>
-			<div class="mail-filter-rows__row__column">
-				<NcSelect input-label="operator"
-					:value="test.operator"
+				<NcSelect
+					inputLabel="operator"
+					class="condition__value__field_operator__column"
+					:modelValue="test.operator"
 					:required="true"
-					:label-outside="true"
+					:labelOutside="true"
 					:options="operators"
-					@input="updateTest({ operator: $event })">
+					:clearable="false"
+					@update:modelValue="updateTest({ operator: $event })">
 					<template #selected-option="{ label }">
 						{{ getLabelForOperator(label) }}
 					</template>
@@ -35,35 +39,37 @@
 					</template>
 				</NcSelect>
 			</div>
-			<div class="mail-filter-rows__row__column">
-				<NcButton aria-label="Delete action"
-					type="tertiary-no-background"
-					@click="deleteTest">
-					<template #icon>
-						<DeleteIcon :size="20" />
-					</template>
-					{{ t('mail', 'Delete test') }}
-				</NcButton>
-			</div>
-		</div>
-		<div class="mail-filter-rows__row">
-			<NcSelect v-model="localValues"
-				input-label="value"
-				class="mail-filter-rows__row__select"
+			<NcSelect
+				v-model="localValues"
+				class="condition__value__values"
+				inputLabel="value"
 				:multiple="true"
 				:wrap="true"
-				:close-on-select="false"
+				:keepOpen="true"
 				:taggable="true"
 				:required="true"
+				:labelOutside="true"
+				:placeholder="placeholderText"
 				@option:selected="updateTest({ values: localValues })"
 				@option:deselected="updateTest({ values: localValues })" />
 		</div>
-		<hr class="solid">
+		<div class="condition__delete">
+			<NcButton
+				aria-label="Delete action"
+				variant="tertiary-no-background"
+				@click="deleteTest">
+				<template #icon>
+					<DeleteIcon :size="20" />
+				</template>
+			</NcButton>
+		</div>
 	</div>
 </template>
+
 <script>
-import { NcButton, NcSelect } from '@nextcloud/vue'
-import DeleteIcon from 'vue-material-design-icons/DeleteOutline.vue'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
+import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import { MailFilterConditionField, MailFilterConditionOperator } from '../../models/mailFilter.ts'
 
 export default {
@@ -73,12 +79,16 @@ export default {
 		NcSelect,
 		DeleteIcon,
 	},
+
 	props: {
 		test: {
 			type: Object,
 			required: true,
 		},
 	},
+
+	emits: ['updateTest', 'deleteTest'],
+
 	data() {
 		return {
 			inputValue: '',
@@ -88,6 +98,7 @@ export default {
 				MailFilterConditionField.From,
 				MailFilterConditionField.To,
 			],
+
 			operators: [
 				MailFilterConditionOperator.Is,
 				MailFilterConditionOperator.Contains,
@@ -95,74 +106,81 @@ export default {
 			],
 		}
 	},
+
+	computed: {
+		placeholderText() {
+			switch (this.test.field) {
+				case MailFilterConditionField.Subject:
+					return t('mail', 'Enter subject')
+				case MailFilterConditionField.From:
+					return t('mail', 'Enter sender')
+				case MailFilterConditionField.To:
+					return t('mail', 'Enter recipient')
+			}
+			return ''
+		},
+	},
+
 	mounted() {
 		this.localValues = [...this.test.values]
 	},
+
 	methods: {
 		updateTest(properties) {
-			this.$emit('update-test', { ...this.test, ...properties })
+			this.$emit('updateTest', { ...this.test, ...properties })
 		},
+
 		deleteTest() {
-			this.$emit('delete-test', this.test)
+			this.$emit('deleteTest', this.test)
 		},
+
 		getLabelForField(field) {
 			switch (field) {
-			case MailFilterConditionField.Subject:
-				return t('mail', 'Subject')
-			case MailFilterConditionField.From:
-				return t('mail', 'Sender')
-			case MailFilterConditionField.To:
-				return t('mail', 'Recipient')
+				case MailFilterConditionField.Subject:
+					return t('mail', 'Subject')
+				case MailFilterConditionField.From:
+					return t('mail', 'Sender')
+				case MailFilterConditionField.To:
+					return t('mail', 'Recipient')
 			}
 			return field
 		},
+
 		getLabelForOperator(field) {
 			switch (field) {
-			case MailFilterConditionOperator.Is:
-				return t('mail', 'is exactly')
-			case MailFilterConditionOperator.Contains:
-				return t('mail', 'contains')
-			case MailFilterConditionOperator.Matches:
-				return t('mail', 'matches')
+				case MailFilterConditionOperator.Is:
+					return t('mail', 'is exactly')
+				case MailFilterConditionOperator.Contains:
+					return t('mail', 'contains')
+				case MailFilterConditionOperator.Matches:
+					return t('mail', 'matches')
 			}
 			return field
 		},
 	},
 }
 </script>
+
 <style lang="scss" scoped>
-.solid {
-	margin: calc(var(--default-grid-baseline) * 4) 0 0 0;
-}
-
-.mail-filter-rows {
-	margin-bottom: calc(var(--default-grid-baseline) * 4);
-	&__row {
-		display: flex;
-		gap: var(--default-grid-baseline);
-		align-items: baseline;
-		&__column {
-			display: block;
-			flex-grow: 1;
-		}
-		&__column *{
-			width: 100%;
-		}
-		&__select {
-			max-width: 100% !important;
-			width: 100%;
-		}
-
-	}
-}
-
-.values-list {
+.condition {
 	display: flex;
-	gap: var(--default-grid-baseline);
-	flex-wrap: wrap;
-	&__item {
-		display: flex;
-		gap: var(--default-grid-baseline);
+	margin-bottom: calc(var(--default-grid-baseline) * 2);
+	&__value {
+		width: 100%;
+		margin-inline-end: var(--default-grid-baseline);
+		&__field_operator {
+			display: flex;
+			gap: var(--default-grid-baseline);
+			&__column {
+				flex: 1;
+			}
+		}
+		&__values {
+			width: 100%;
+		}
+	}
+	&__delete {
+		width: 30px;
 	}
 }
 </style>

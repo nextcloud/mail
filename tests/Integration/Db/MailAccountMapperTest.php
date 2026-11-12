@@ -12,7 +12,6 @@ namespace OCA\Mail\Tests\Integration\Db;
 
 use ChristophWurst\Nextcloud\Testing\DatabaseTransaction;
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use OC;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -40,7 +39,7 @@ class MailAccountMapperTest extends TestCase {
 	 */
 	public function setup(): void {
 		parent::setUp();
-		$this->db = OC::$server->getDatabaseConnection();
+		$this->db = \OCP\Server::get(\OCP\IDBConnection::class);
 		$this->mapper = new MailAccountMapper($this->db);
 
 		$this->account = new MailAccount();

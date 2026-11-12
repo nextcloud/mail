@@ -3,66 +3,121 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import {createLocalVue, shallowMount} from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
+import { GeneralHtmlSupport, Paragraph } from 'ckeditor5'
 import mitt from 'mitt'
-
-import Nextcloud from '../../../mixins/Nextcloud.js'
+import { vi } from 'vitest'
 import TextEditor from '../../../components/TextEditor.vue'
-import VirtualTestEditor from '../../virtualtesteditor.js'
-import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
+import ImageDowncastPlugin from '../../../ckeditor/image/ImageDowncastPlugin.ts'
 import MailPlugin from '../../../ckeditor/mail/MailPlugin.js'
-
-const localVue = createLocalVue()
-
-localVue.mixin(Nextcloud)
+import Nextcloud from '../../../mixins/Nextcloud.js'
+import VirtualTestEditor from '../../virtualtesteditor.js'
 
 describe('TextEditor', () => {
-
-	it('shallow mounts', async() => {
+	it('shallow mounts', async () => {
 		const wrapper = shallowMount(TextEditor, {
-			localVue,
-			propsData: {
-				value: 'bonjour',
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
+				modelValue: 'bonjour',
 				bus: mitt(),
 			},
 		})
 	})
 
-	it('throw when editor not ready', async() => {
+	it('does not support additional html elements in plain text mode', async () => {
 		const wrapper = shallowMount(TextEditor, {
-			localVue,
-			propsData: {
-				value: 'bonjour',
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
+				modelValue: 'bonjour',
 				bus: mitt(),
 			},
 		})
 
-		const error = new Error(
-			'Impossible to execute a command before editor is ready.')
-		expect(() => wrapper.vm.editorExecute('insertSignature', {})).
-			toThrowError(error)
+		expect(wrapper.vm.config.plugins).not.toContain(GeneralHtmlSupport)
 	})
 
-	it('emit event on input', async() => {
+	it('supports additional html elements in html mode', async () => {
 		const wrapper = shallowMount(TextEditor, {
-			localVue,
-			propsData: {
-				value: 'bonjour',
+			global: {
+				mixins: [Nextcloud],
+				provide: {
+					addToFocusTrap: vi.fn(),
+				},
+			},
+			props: {
+				modelValue: 'bonjour',
+				html: true,
+				bus: mitt(),
+			},
+		})
+
+		expect(wrapper.vm.config.plugins).toContain(GeneralHtmlSupport)
+		expect(wrapper.vm.config.htmlSupport.allow.some((rule) => rule.name === 'img')).toBe(true)
+	})
+
+	it('aligns and resizes images in html mode', async () => {
+		const wrapper = shallowMount(TextEditor, {
+			global: {
+				mixins: [Nextcloud],
+				provide: {
+					addToFocusTrap: vi.fn(),
+				},
+			},
+			props: {
+				modelValue: 'bonjour',
+				html: true,
+				bus: mitt(),
+			},
+		})
+
+		expect(wrapper.vm.config.plugins).toContain(ImageDowncastPlugin)
+		expect(wrapper.vm.config.image.resizeUnit).toBe('px')
+		expect(wrapper.vm.config.image.toolbar).toContain('imageStyle:alignCenter')
+	})
+
+	it('throw when editor not ready', async () => {
+		const wrapper = shallowMount(TextEditor, {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
+				modelValue: 'bonjour',
+				bus: mitt(),
+			},
+		})
+
+		const error = new Error('Impossible to execute a command before editor is ready.')
+		expect(() => wrapper.vm.editorExecute('insertSignature', {}))
+			.toThrowError(error)
+	})
+
+	it('emit event on input', async () => {
+		const wrapper = shallowMount(TextEditor, {
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
+				modelValue: 'bonjour',
 				bus: mitt(),
 			},
 		})
 
 		wrapper.vm.onEditorInput('bonjour bonjour')
 
-		expect(wrapper.emitted().input[0]).toBeTruthy()
-		expect(wrapper.emitted().input[0]).toEqual(['bonjour bonjour'])
+		expect(wrapper.emitted('update:modelValue')[0]).toEqual(['bonjour bonjour'])
 	})
 
 	it('emit event on ready', async () => {
 		const wrapper = shallowMount(TextEditor, {
-			localVue,
-			propsData: {
-				value: 'bonjour',
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
+				modelValue: 'bonjour',
 				bus: mitt(),
 			},
 		})
@@ -74,14 +129,14 @@ describe('TextEditor', () => {
 		const editor = await VirtualTestEditor.create({
 			licenseKey: 'GPL',
 			initialData: '<p>bonjour bonjour</p>',
-			plugins: [ParagraphPlugin],
+			plugins: [Paragraph],
 		})
 
 		editor.ui = {
 			view: {
 				toolbar: {
-					// eslint-disable-next-line no-mixed-spaces-and-tabs
- 					element: document.createElement('div'),
+
+					element: document.createElement('div'),
 					items: [],
 				},
 				editable: { element: document.createElement('div') },
@@ -94,9 +149,11 @@ describe('TextEditor', () => {
 	})
 	it('register conversion to add margin: 0px to every <p> element', async () => {
 		const wrapper = shallowMount(TextEditor, {
-			localVue,
-			propsData: {
-				value: '',
+			global: {
+				mixins: [Nextcloud],
+			},
+			props: {
+				modelValue: '',
 				bus: mitt(),
 			},
 		})
@@ -108,12 +165,13 @@ describe('TextEditor', () => {
 		const editor = await VirtualTestEditor.create({
 			licenseKey: 'GPL',
 			initialData: '<p>bonjour bonjour</p>',
-			plugins: [ParagraphPlugin, MailPlugin],
+			plugins: [Paragraph, MailPlugin],
 		})
 
 		editor.ui = {
 			view: {
-				toolbar: { element: document.createElement('div'),
+				toolbar: {
+					element: document.createElement('div'),
 					items: [],
 				},
 				editable: { element: document.createElement('div') },
@@ -127,4 +185,78 @@ describe('TextEditor', () => {
 			.toEqual('<p style="margin:0;">bonjour bonjour</p>')
 	})
 
+	it('emits updated data while editing source', async () => {
+		vi.useFakeTimers()
+
+		const wrapper = shallowMount(TextEditor, {
+			global: {
+				mixins: [Nextcloud],
+				provide: {
+					addToFocusTrap: vi.fn(),
+				},
+			},
+			props: {
+				modelValue: '<p>bonjour</p>',
+				html: true,
+				bus: mitt(),
+			},
+		})
+
+		const textarea = document.createElement('textarea')
+		const updateEditorData = vi.fn()
+		const sourceEditingPlugin = {
+			updateEditorData,
+			on: vi.fn(),
+			off: vi.fn(),
+		}
+		const editor = {
+			locale: {
+				uiLanguageDirection: 'ltr',
+			},
+			ui: {
+				view: {
+					toolbar: {
+						element: document.createElement('div'),
+						items: [],
+					},
+					editable: { element: document.createElement('div') },
+				},
+				getEditableElement: vi.fn((name) => name === 'sourceEditing:main' ? textarea : null),
+			},
+			commands: {
+				get: vi.fn(() => null),
+			},
+			plugins: {
+				has: vi.fn((pluginName) => pluginName === 'SourceEditing'),
+				get: vi.fn(() => sourceEditingPlugin),
+			},
+			keystrokes: {
+				set: vi.fn(),
+			},
+			editing: {
+				view: {
+					focus: vi.fn(),
+				},
+			},
+		}
+
+		wrapper.vm.$refs.toolbarContainer = document.createElement('div')
+		wrapper.vm.$refs.editableContainer = { appendChild: vi.fn() }
+
+		wrapper.vm.onEditorReady(editor)
+
+		const sourceEditingModeHandler = sourceEditingPlugin.on.mock.calls.find(([evt]) => evt === 'change:isSourceEditingMode')[1]
+
+		sourceEditingModeHandler(null, 'isSourceEditingMode', true)
+		textarea.dispatchEvent(new Event('input'))
+
+		await vi.runAllTimersAsync()
+
+		// updateEditorData() calls editor.data.set() → model change:data → Vue wrapper emits @input.
+		// We assert the handoff to CKEditor's pipeline here; the Vue wrapper propagation is tested
+		// by @ckeditor/ckeditor5-vue's own suite.
+		expect(updateEditorData).toHaveBeenCalledTimes(1)
+
+		vi.useRealTimers()
+	})
 })

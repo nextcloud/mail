@@ -6,19 +6,19 @@
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 
-export const getProvisioningSettings = (config) => {
+export function getProvisioningSettings(config) {
 	const url = generateUrl('/apps/mail/api/settings/provisioning')
 
 	return axios.get(url, config).then((resp) => resp.data)
 }
 
-export const provisionAll = () => {
+export function provisionAll() {
 	const url = generateUrl('/apps/mail/api/settings/provisioning/all')
 
 	return axios.put(url).then((resp) => resp.data)
 }
 
-export const createProvisioningSettings = (config) => {
+export function createProvisioningSettings(config) {
 	const url = generateUrl('/apps/mail/api/settings/provisioning')
 	const data = {
 		data: config,
@@ -26,7 +26,7 @@ export const createProvisioningSettings = (config) => {
 	return axios.post(url, data).then((resp) => resp.data)
 }
 
-export const updateProvisioningSettings = (config) => {
+export function updateProvisioningSettings(config) {
 	const url = generateUrl('/apps/mail/api/settings/provisioning/{id}', {
 		id: config.id,
 	})
@@ -36,24 +36,24 @@ export const updateProvisioningSettings = (config) => {
 	return axios.post(url, data).then((resp) => resp.data)
 }
 
-export const disableProvisioning = (id) => {
+export function disableProvisioning(id) {
 	const url = generateUrl('/apps/mail/api/settings/provisioning/{id}', {
 		id,
 	})
 	return axios.delete(url).then((resp) => resp.data)
 }
 
-export const setAntiSpamEmail = (email) => {
+export function setAntiSpamEmail(email) {
 	return axios.post(generateUrl('/apps/mail/api/settings/antispam'), { spam: email.spam, ham: email.ham })
 		.then((resp) => resp.data)
 }
 
-export const deleteAntiSpamEmail = () => {
+export function deleteAntiSpamEmail() {
 	return axios.delete(generateUrl('/apps/mail/api/settings/antispam'))
 		.then((resp) => resp.data)
 }
 
-export const updateAllowNewMailAccounts = (allowed) => {
+export function updateAllowNewMailAccounts(allowed) {
 	const url = generateUrl('/apps/mail/api/settings/allownewaccounts')
 	const data = {
 		allowed,
@@ -61,7 +61,7 @@ export const updateAllowNewMailAccounts = (allowed) => {
 	return axios.post(url, data).then((resp) => resp.data)
 }
 
-export const updateLlmEnabled = async (enabled) => {
+export async function updateLlmEnabled(enabled) {
 	const url = generateUrl('/apps/mail/api/settings/llm')
 	const data = {
 		enabled,
@@ -70,10 +70,22 @@ export const updateLlmEnabled = async (enabled) => {
 	return resp.data
 }
 
-export const updateEnabledSmartReply = async (enabled) => {
+export async function updateEnabledSmartReply(enabled) {
 	const url = generateUrl('/apps/mail/api/settings/smartreply')
 	const data = {
 		enabled,
+	}
+	const resp = await axios.put(url, data)
+	return resp.data
+}
+/**
+ * @param {boolean} value
+ * @return {Promise<void>}
+ */
+export async function setLayoutMessageView(value) {
+	const url = generateUrl('/apps/mail/api/settings/layout-message-view')
+	const data = {
+		value,
 	}
 	const resp = await axios.put(url, data)
 	return resp.data
@@ -83,22 +95,9 @@ export const updateEnabledSmartReply = async (enabled) => {
  * @param {boolean} enabledByDefault
  * @return {Promise<void>}
  */
-export const setImportanceClassificationEnabledByDefault = async (enabledByDefault) => {
+export async function setImportanceClassificationEnabledByDefault(enabledByDefault) {
 	const url = generateUrl('/apps/mail/api/settings/importance-classification-default')
 	await axios.put(url, {
 		enabledByDefault,
 	})
-}
-
-/**
- * @param {boolean} value
- * @return {Promise<void>}
- */
-export const setLayoutMessageView = async (value) => {
-	const url = generateUrl('/apps/mail/api/settings/layout-message-view')
-	const data = {
-		value,
-	}
-	const resp = await axios.put(url, data)
-	return resp.data
 }

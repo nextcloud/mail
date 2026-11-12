@@ -36,16 +36,15 @@
 </template>
 
 <script>
-import ArrowIcon from 'vue-material-design-icons/ArrowRight.vue'
+import { showError, showSuccess } from '@nextcloud/dialogs'
+import moment from '@nextcloud/moment'
 import ical from 'ical.js'
 import md5 from 'md5'
-import moment from '@nextcloud/moment'
-import { showError, showSuccess } from '@nextcloud/dialogs'
+import ArrowIcon from 'vue-material-design-icons/ArrowRight.vue'
 import TrainIcon from 'vue-material-design-icons/Train.vue'
-
 import CalendarImport from './CalendarImport.vue'
-import { importCalendarEvent } from '../../service/DAVService.js'
 import logger from '../../logger.js'
+import { importCalendarEvent } from '../../service/DAVService.js'
 
 export default {
 	name: 'TrainReservation',
@@ -54,20 +53,24 @@ export default {
 		CalendarImport,
 		TrainIcon,
 	},
+
 	props: {
 		data: {
 			type: Object,
 			required: true,
 		},
+
 		calendars: {
 			type: Array,
 			required: true,
 		},
+
 		messageId: {
 			type: String,
 			required: true,
 		},
 	},
+
 	computed: {
 		departureTime() {
 			if (!('departureTime' in this.data.reservationFor)) {
@@ -75,6 +78,7 @@ export default {
 			}
 			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.departureTime)).format('LT')
 		},
+
 		departureDate() {
 			if ('departureTime' in this.data.reservationFor) {
 				return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.departureTime)).format('L')
@@ -84,21 +88,25 @@ export default {
 			}
 			return undefined
 		},
+
 		arrivalTime() {
 			if (!('arrivalTime' in this.data.reservationFor)) {
 				return
 			}
 			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.arrivalTime)).format('LT')
 		},
+
 		arrivalDate() {
 			if (!('arrivalTime' in this.data.reservationFor)) {
 				return
 			}
 			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.arrivalTime)).format('L')
 		},
+
 		trainNumber() {
 			return this.data.reservationFor.trainNumber
 		},
+
 		canImport() {
 			return (
 				('departureTime' in this.data.reservationFor && 'arrivalTime' in this.data.reservationFor)
@@ -106,6 +114,7 @@ export default {
 			)
 		},
 	},
+
 	methods: {
 		handleImport(calendar) {
 			const event = new ical.Component('VEVENT')

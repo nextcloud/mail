@@ -54,14 +54,12 @@ class SubjectExtractor implements IExtractor {
 	#[\Override]
 	public function prepare(Account $account, array $incomingMailboxes, array $outgoingMailboxes, array $messages): void {
 		/** @var array<array-key, array<string, string>> $data */
-		$data = array_map(static function (Message $message) {
-			return [
-				'text' => $message->getSubject() ?? '',
-				'label' => $message->getFlagImportant()
-					? ImportanceClassifier::LABEL_IMPORTANT
-					: ImportanceClassifier::LABEL_NOT_IMPORTANT,
-			];
-		}, $messages);
+		$data = array_map(static fn (Message $message) => [
+			'text' => $message->getSubject() ?? '',
+			'label' => $message->getFlagImportant()
+				? ImportanceClassifier::LABEL_IMPORTANT
+				: ImportanceClassifier::LABEL_NOT_IMPORTANT,
+		], $messages);
 
 		// Fit transformers
 		Labeled::build(array_column($data, 'text'), array_column($data, 'label'))

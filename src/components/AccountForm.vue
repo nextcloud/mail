@@ -4,232 +4,272 @@
 -->
 <template>
 	<form id="account-form" @submit.prevent="onSubmit">
-		<Tabs :options="{useUrlFragment: false, defaultTabHash: settingsPage ? 'manual' : 'auto'}"
-			cache-lifetime="0"
-			@changed="onModeChanged">
-			<Tab id="auto" key="auto" :name="t('mail', 'Auto')">
-				<NcInputField id="auto-name"
-					:value.sync="accountName"
-					:label="t('mail', 'Name')"
-					type="text"
-					:placeholder="t('mail', 'Name')"
-					:disabled="loading"
-					autofocus />
-				<NcInputField id="auto-address"
-					:value.sync="emailAddress"
-					:label="t('mail', 'Mail address')"
-					:disabled="loading"
-					:placeholder="t('mail', 'name@example.org')"
-					required
-					type="email"
-					@change="clearFeedback" />
-				<p v-if="!isValidEmail(emailAddress)" class="account-form--error">
-					{{ t('mail', 'Please enter an email of the format name@example.com') }}
-				</p>
-				<NcPasswordField id="auto-password"
-					:value.sync="autoConfig.password"
-					:disabled="loading"
-					type="password"
-					:label="t('mail', 'Password')"
-					:required="!hasPasswordAlternatives"
-					@change="clearFeedback" />
-			</Tab>
-			<Tab id="manual" key="manual" :name="t('mail', 'Manual')">
-				<NcInputField id="man-name"
-					:value.sync="accountName"
-					:label="t('mail', 'Name')"
-					type="text"
-					:placeholder="t('mail', 'Name')"
-					:disabled="loading" />
-				<NcInputField id="man-address"
-					:value.sync="emailAddress"
-					:label="t('mail', 'Mail address')"
-					type="email"
-					:placeholder="t('mail', 'name@example.org')"
-					:disabled="loading"
-					required
-					@change="clearFeedback" />
-				<p v-if="!isValidEmail(emailAddress)" class="account-form--error">
-					{{ t('mail', 'Please enter an email of the format name@example.com') }}
-				</p>
+		<NcRadioGroup
+			v-model="mode"
+			:label="t('mail', 'Mail server configuration mode')"
+			hideLabel>
+			<NcRadioGroupButton :label="t('mail', 'Auto')" value="auto" :disabled="loading" />
+			<NcRadioGroupButton :label="t('mail', 'Manual')" value="manual" :disabled="loading" />
+		</NcRadioGroup>
+		<div v-show="mode === 'auto'" class="account-form__panel">
+			<NcInputField
+				id="auto-name"
+				v-model="accountName"
+				:label="t('mail', 'Name')"
+				type="text"
+				:placeholder="t('mail', 'Name')"
+				:disabled="loading"
+				autofocus />
+			<NcInputField
+				id="auto-address"
+				v-model="emailAddress"
+				:label="t('mail', 'Mail address')"
+				:disabled="loading"
+				:placeholder="t('mail', 'name@example.org')"
+				required
+				type="email"
+				@change="clearFeedback" />
+			<p v-if="!isValidEmail(emailAddress)" class="account-form--error">
+				{{ t('mail', 'Please enter an email of the format name@example.com') }}
+			</p>
+			<NcPasswordField
+				v-if="!isOidcAccount"
+				id="auto-password"
+				v-model="autoConfig.password"
+				:disabled="loading"
+				:label="optionalPasswordPlaceholder(t('mail', 'Password'))"
+				:required="!hasPasswordAlternatives"
+				@change="clearFeedback" />
+			<NcCheckboxRadioSwitch
+				id="auto-classification-enabled"
+				v-model="classificationEnabled"
+				:disabled="loading">
+				{{ t('mail', 'Enable mark as important classification') }}
+			</NcCheckboxRadioSwitch>
+		</div>
+		<div v-show="mode === 'manual'" class="account-form__panel">
+			<NcInputField
+				id="man-name"
+				v-model="accountName"
+				:label="t('mail', 'Name')"
+				type="text"
+				:placeholder="t('mail', 'Name')"
+				:disabled="loading" />
+			<NcInputField
+				id="man-address"
+				v-model="emailAddress"
+				:label="t('mail', 'Mail address')"
+				type="email"
+				:placeholder="t('mail', 'name@example.org')"
+				:disabled="loading"
+				required
+				@change="clearFeedback" />
+			<p v-if="!isValidEmail(emailAddress)" class="account-form--error">
+				{{ t('mail', 'Please enter an email of the format name@example.com') }}
+			</p>
 
-				<h3>{{ t('mail', 'IMAP Settings') }}</h3>
-				<NcInputField id="man-imap-host"
-					:value.sync="manualConfig.imapHost"
-					:label="t('mail', 'IMAP Host')"
-					type="text"
-					:placeholder="t('mail', 'IMAP Host')"
+			<h4>{{ t('mail', 'IMAP Settings') }}</h4>
+			<NcInputField
+				id="man-imap-host"
+				v-model="manualConfig.imapHost"
+				:label="t('mail', 'IMAP Host')"
+				type="text"
+				:placeholder="t('mail', 'IMAP Host')"
+				:disabled="loading"
+				required
+				@change="syncCredentials" />
+			<h4 class="account-form__heading--required">
+				{{ t('mail', 'IMAP Security') }}
+			</h4>
+			<div class="flex-row">
+				<NcCheckboxRadioSwitch
+					id="man-imap-sec-none"
+					:buttonVariant="true"
+					:modelValue="manualConfig.imapSslMode"
+					type="radio"
+					name="man-imap-sec"
 					:disabled="loading"
-					required
-					@change="clearFeedback" />
-				<h4 class="account-form__heading--required">
-					{{ t('mail', 'IMAP Security') }}
-				</h4>
-				<div class="flex-row">
-					<NcCheckboxRadioSwitch id="man-imap-sec-none"
-						:button-variant="true"
-						:checked="manualConfig.imapSslMode"
-						type="radio"
-						name="man-imap-sec"
-						:disabled="loading"
-						value="none"
-						button-variant-grouped="horizontal"
-						@update:checked="onImapSslModeChange">
-						{{ t('mail', 'None') }}
-					</NcCheckboxRadioSwitch>
-					<NcCheckboxRadioSwitch id="man-imap-sec-ssl"
-						:button-variant="true"
-						:checked="manualConfig.imapSslMode"
-						type="radio"
-						name="man-imap-sec"
-						:disabled="loading"
-						value="ssl"
-						button-variant-grouped="horizontal"
-						@update:checked="onImapSslModeChange">
-						{{ t('mail', 'SSL/TLS') }}
-					</NcCheckboxRadioSwitch>
-					<NcCheckboxRadioSwitch id="man-imap-sec-tls"
-						:button-variant="true"
-						:checked="manualConfig.imapSslMode"
-						type="radio"
-						name="man-imap-sec"
-						:disabled="loading"
-						value="tls"
-						button-variant-grouped="horizontal"
-						@update:checked="onImapSslModeChange">
-						{{ t('mail', 'STARTTLS') }}
-					</NcCheckboxRadioSwitch>
-				</div>
-				<NcInputField id="man-imap-port"
-					:value.sync="manualConfig.imapPort"
-					:label="t('mail', 'IMAP Port')"
-					type="number"
-					:placeholder="t('mail', 'IMAP Port')"
+					value="none"
+					buttonVariantGrouped="horizontal"
+					@update:modelValue="onImapSslModeChange">
+					{{ t('mail', 'None') }}
+				</NcCheckboxRadioSwitch>
+				<NcCheckboxRadioSwitch
+					id="man-imap-sec-ssl"
+					:buttonVariant="true"
+					:modelValue="manualConfig.imapSslMode"
+					type="radio"
+					name="man-imap-sec"
 					:disabled="loading"
-					required
-					@change="clearFeedback" />
-				<NcInputField id="man-imap-user"
-					:value.sync="manualConfig.imapUser"
-					:label="t('mail', 'IMAP User')"
-					type="text"
-					:placeholder="t('mail', 'IMAP User')"
+					value="ssl"
+					buttonVariantGrouped="horizontal"
+					@update:modelValue="onImapSslModeChange">
+					{{ t('mail', 'SSL/TLS') }}
+				</NcCheckboxRadioSwitch>
+				<NcCheckboxRadioSwitch
+					id="man-imap-sec-tls"
+					:buttonVariant="true"
+					:modelValue="manualConfig.imapSslMode"
+					type="radio"
+					name="man-imap-sec"
 					:disabled="loading"
-					required
-					@change="clearFeedback" />
-				<NcPasswordField v-if="!useOauth"
-					id="man-imap-password"
-					type="password"
-					:value.sync="manualConfig.imapPassword"
-					:label="t('mail', 'IMAP Password')"
-					:disabled="loading"
-					required
-					@change="clearFeedback" />
+					value="tls"
+					buttonVariantGrouped="horizontal"
+					@update:modelValue="onImapSslModeChange">
+					{{ t('mail', 'STARTTLS') }}
+				</NcCheckboxRadioSwitch>
+			</div>
+			<NcInputField
+				id="man-imap-port"
+				v-model="manualConfig.imapPort"
+				:label="t('mail', 'IMAP Port')"
+				type="number"
+				:placeholder="t('mail', 'IMAP Port')"
+				:disabled="loading"
+				required
+				@change="clearFeedback" />
+			<NcInputField
+				id="man-imap-user"
+				v-model="manualConfig.imapUser"
+				:label="t('mail', 'IMAP User')"
+				type="text"
+				:placeholder="t('mail', 'IMAP User')"
+				:disabled="loading"
+				required
+				@change="syncCredentials" />
+			<NcPasswordField
+				v-if="!useOauth"
+				id="man-imap-password"
+				v-model="manualConfig.imapPassword"
+				:label="optionalPasswordPlaceholder(t('mail', 'IMAP Password'))"
+				:disabled="loading"
+				required
+				@change="syncCredentials" />
 
-				<h3>{{ t('mail', 'SMTP Settings') }}</h3>
-				<NcInputField id="man-smtp-host"
-					ref="smtpHost"
-					:value.sync="manualConfig.smtpHost"
-					:label="t('mail', 'SMTP Host')"
-					type="text"
-					name="smtp-host"
-					:placeholder="t('mail', 'SMTP Host')"
+			<h4>{{ t('mail', 'SMTP Settings') }}</h4>
+			<NcInputField
+				id="man-smtp-host"
+				v-model="manualConfig.smtpHost"
+				:label="t('mail', 'SMTP Host')"
+				type="text"
+				name="smtp-host"
+				:placeholder="t('mail', 'SMTP Host')"
+				:disabled="loading"
+				required
+				@change="unsyncCredentials" />
+			<h4 class="account-form__heading--required">
+				{{ t('mail', 'SMTP Security') }}
+			</h4>
+			<div class="flex-row">
+				<NcCheckboxRadioSwitch
+					id="man-imap-sec-none"
+					:buttonVariant="true"
+					:modelValue="manualConfig.smtpSslMode"
+					type="radio"
+					name="man-smtp-sec"
 					:disabled="loading"
-					required
-					@change="clearFeedback" />
-				<h4 class="account-form__heading--required">
-					{{ t('mail', 'SMTP Security') }}
-				</h4>
-				<div class="flex-row">
-					<NcCheckboxRadioSwitch id="man-imap-sec-none"
-						:button-variant="true"
-						:checked="manualConfig.smtpSslMode"
-						type="radio"
-						name="man-smtp-sec"
-						:disabled="loading"
-						value="none"
-						button-variant-grouped="horizontal"
-						@update:checked="onSmtpSslModeChange">
-						{{ t('mail', 'None') }}
-					</NcCheckboxRadioSwitch>
-					<NcCheckboxRadioSwitch id="man-imap-sec-ssl"
-						:button-variant="true"
-						:checked="manualConfig.smtpSslMode"
-						type="radio"
-						name="man-smtp-sec"
-						:disabled="loading"
-						value="ssl"
-						button-variant-grouped="horizontal"
-						@update:checked="onSmtpSslModeChange">
-						{{ t('mail', 'SSL/TLS') }}
-					</NcCheckboxRadioSwitch>
-					<NcCheckboxRadioSwitch id="man-imap-sec-tls"
-						:button-variant="true"
-						:checked="manualConfig.smtpSslMode"
-						type="radio"
-						name="man-smtp-sec"
-						:disabled="loading"
-						value="tls"
-						button-variant-grouped="horizontal"
-						@update:checked="onSmtpSslModeChange">
-						{{ t('mail', 'STARTTLS') }}
-					</NcCheckboxRadioSwitch>
-				</div>
-				<NcInputField id="man-smtp-port"
-					:label="t('mail', 'SMTP Port')"
-					:value.sync="manualConfig.smtpPort"
-					type="number"
-					:placeholder="t('mail', 'SMTP Port')"
+					value="none"
+					buttonVariantGrouped="horizontal"
+					@update:modelValue="onSmtpSslModeChange">
+					{{ t('mail', 'None') }}
+				</NcCheckboxRadioSwitch>
+				<NcCheckboxRadioSwitch
+					id="man-imap-sec-ssl"
+					:buttonVariant="true"
+					:modelValue="manualConfig.smtpSslMode"
+					type="radio"
+					name="man-smtp-sec"
 					:disabled="loading"
-					required
-					@change="clearFeedback" />
-				<NcInputField id="man-smtp-user"
-					:value.sync="manualConfig.smtpUser"
-					:label="t('mail', 'SMTP User')"
-					type="text"
-					:placeholder="t('mail', 'SMTP User')"
+					value="ssl"
+					buttonVariantGrouped="horizontal"
+					@update:modelValue="onSmtpSslModeChange">
+					{{ t('mail', 'SSL/TLS') }}
+				</NcCheckboxRadioSwitch>
+				<NcCheckboxRadioSwitch
+					id="man-imap-sec-tls"
+					:buttonVariant="true"
+					:modelValue="manualConfig.smtpSslMode"
+					type="radio"
+					name="man-smtp-sec"
 					:disabled="loading"
-					required
-					@change="clearFeedback" />
-				<NcPasswordField v-if="!useOauth"
-					id="man-smtp-password"
-					:label="t('mail', 'SMTP Password')"
-					type="password"
-					:value.sync="manualConfig.smtpPassword"
-					:disabled="loading"
-					required
-					@change="clearFeedback" />
-			</Tab>
-		</Tabs>
+					value="tls"
+					buttonVariantGrouped="horizontal"
+					@update:modelValue="onSmtpSslModeChange">
+					{{ t('mail', 'STARTTLS') }}
+				</NcCheckboxRadioSwitch>
+			</div>
+			<NcInputField
+				id="man-smtp-port"
+				v-model="manualConfig.smtpPort"
+				:label="t('mail', 'SMTP Port')"
+				type="number"
+				:placeholder="t('mail', 'SMTP Port')"
+				:disabled="loading"
+				required
+				@change="clearFeedback" />
+			<NcInputField
+				id="man-smtp-user"
+				v-model="manualConfig.smtpUser"
+				:label="t('mail', 'SMTP User')"
+				type="text"
+				:placeholder="t('mail', 'SMTP User')"
+				:disabled="loading"
+				required
+				@change="unsyncCredentials" />
+			<NcPasswordField
+				v-if="!useOauth"
+				id="man-smtp-password"
+				v-model="manualConfig.smtpPassword"
+				:label="optionalPasswordPlaceholder(t('mail', 'SMTP Password'))"
+				:disabled="loading"
+				required
+				@change="unsyncCredentials" />
+			<NcCheckboxRadioSwitch
+				v-if="isSetup"
+				id="auto-classification-enabled"
+				v-model="classificationEnabled"
+				:disabled="loading">
+				{{ t('mail', 'Enable mark as important classification') }}
+			</NcCheckboxRadioSwitch>
+		</div>
 		<div v-if="isGoogleAccount && !googleOauthUrl" class="account-form__google-sso">
-			{{ t('mail', 'For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password.') }}
+			{{ t('mail', 'Google requires OAuth authentication. If your Nextcloud admin has not configured Google OAuth, you can use a Google App Password instead.') }}
+		</div>
+		<div v-if="isMicrosoftAccount && !microsoftOauthUrl" class="account-form__microsoft-sso">
+			{{ t('mail', 'Microsoft requires OAuth authentication. Ask your Nextcloud admin to configure Microsoft OAuth in the admin settings.') }}
+		</div>
+		<div v-if="isOidcAccount" class="account-form__oidc-sso">
+			{{ t('mail', 'This email domain uses single sign-on. You will be redirected to your identity provider to grant access to your mail account.') }}
 		</div>
 		<div class="account-form__submit-buttons">
-			<ButtonVue v-if="mode === 'auto'"
+			<NcButton
+				v-if="mode === 'auto'"
 				:aria-label="submitButtonText"
 				class="account-form__submit-button"
-				type="primary"
-				native-type="submit"
+				variant="primary"
+				type="submit"
 				:disabled="isDisabledAuto || loading"
 				@click.prevent="onSubmit">
 				<template #icon>
-					<IconLoading v-if="loading" :size="16" />
-					<IconCheck v-else :size="16" />
+					<NcLoadingIcon v-if="loading" :size="20" />
+					<IconCheck v-else :size="20" />
 				</template>
 				{{ submitButtonText }}
-			</ButtonVue>
-			<ButtonVue v-else-if="mode === 'manual'"
+			</NcButton>
+			<NcButton
+				v-else-if="mode === 'manual'"
 				:aria-label="submitButtonText"
 				class="account-form__submit-button"
-				type="primary"
-				native-type="submit"
+				variant="primary"
+				type="submit"
 				:disabled="isDisabledManual || loading"
 				@click.prevent="onSubmit">
 				<template #icon>
-					<IconLoading v-if="loading" :size="16" />
-					<IconCheck v-else :size="16" />
+					<NcLoadingIcon v-if="loading" :size="20" />
+					<IconCheck v-else :size="20" />
 				</template>
 				{{ submitButtonText }}
-			</ButtonVue>
+			</NcButton>
 		</div>
 		<div v-if="feedback" class="account-form--feedback">
 			{{ feedback }}
@@ -238,20 +278,27 @@
 </template>
 
 <script>
-import { Tab, Tabs } from 'vue-tabs-component'
-import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcPasswordField, NcInputField, NcCheckboxRadioSwitch } from '@nextcloud/vue'
+import { loadState } from '@nextcloud/initial-state'
+import { t } from '@nextcloud/l10n'
+import { mapState, mapStores } from 'pinia'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
+import NcInputField from '@nextcloud/vue/components/NcInputField'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
+import NcPasswordField from '@nextcloud/vue/components/NcPasswordField'
+import NcRadioGroup from '@nextcloud/vue/components/NcRadioGroup'
+import NcRadioGroupButton from '@nextcloud/vue/components/NcRadioGroupButton'
 import IconCheck from 'vue-material-design-icons/Check.vue'
-import { translate as t } from '@nextcloud/l10n'
-
+import { CONSENT_ABORTED, getUserConsent } from '../integration/oauth.js'
 import logger from '../logger.js'
 import {
 	queryIspdb,
 	queryMx,
 	testConnectivity,
 } from '../service/AutoConfigService.js'
-import { CONSENT_ABORTED, getUserConsent } from '../integration/oauth.js'
+import { generateOauthState } from '../service/OauthStateService.js'
 import useMainStore from '../store/mainStore.js'
-import { mapStores, mapState } from 'pinia'
+import { findProviderForEmail, loadOidcProviders, openOidcConsent } from '../util/oidc.js'
 
 export default {
 	name: 'AccountForm',
@@ -259,27 +306,33 @@ export default {
 		NcPasswordField,
 		NcInputField,
 		NcCheckboxRadioSwitch,
-		Tab,
-		Tabs,
-		ButtonVue,
-		IconLoading,
+		NcRadioGroup,
+		NcRadioGroupButton,
+		NcButton,
+		NcLoadingIcon,
 		IconCheck,
 	},
+
 	props: {
 		displayName: {
 			type: String,
 			default: '',
 		},
+
 		email: {
 			type: String,
 			default: '',
 		},
+
 		account: {
 			type: Object,
 			required: false,
 			default: () => undefined,
 		},
 	},
+
+	emits: ['accountCreated'],
+
 	data() {
 		const fromAccountOr = (prop, def) => {
 			if (this.account !== undefined) {
@@ -292,12 +345,14 @@ export default {
 		return {
 			loading: false,
 			loadingMessage: undefined,
-			mode: 'auto',
+			mode: this.account !== undefined ? 'manual' : 'auto',
 			accountName: this.displayName,
 			emailAddress: this.email,
+			classificationEnabled: fromAccountOr('classificationEnabled', loadState('mail', 'importance_classification_default', true)),
 			autoConfig: {
 				password: '',
 			},
+
 			manualConfig: {
 				imapHost: fromAccountOr('imapHost', ''),
 				imapPort: fromAccountOr('imapPort', 993),
@@ -309,11 +364,15 @@ export default {
 				smtpSslMode: fromAccountOr('smtpSslMode', 'tls'),
 				smtpUser: fromAccountOr('smtpUser', ''),
 				smtpPassword: '',
+				syncSmtpCredentials: true,
 			},
+
 			feedback: null,
 			password: '',
+			oidcProviders: loadOidcProviders(),
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		...mapState(useMainStore, [
@@ -321,8 +380,8 @@ export default {
 			'microsoftOauthUrl',
 		]),
 
-		settingsPage() {
-			return this.account !== undefined
+		isSetup() {
+			return this.account === undefined
 		},
 
 		isDisabledAuto() {
@@ -334,8 +393,21 @@ export default {
 				return this.loading
 			}
 
-			return !this.emailAddress || !this.isValidEmail(this.emailAddress)
-				|| (!this.googleOauthUrl && !this.autoConfig.password)
+			let requiresPassword = false
+			if (this.isSetup) {
+				requiresPassword = !this.autoConfig.password && !this.googleOauthUrl && !this.microsoftOauthUrl
+			}
+
+			if (!this.emailAddress || !this.isValidEmail(this.emailAddress) || requiresPassword) {
+				return true
+			}
+
+			if (this.isOidcAccount) {
+				return false
+			}
+
+			return (!this.googleOauthUrl && !this.autoConfig.password)
+				|| (!this.microsoftOauthUrl && !this.autoConfig.password)
 		},
 
 		isDisabledManual() {
@@ -347,11 +419,15 @@ export default {
 				return this.loading
 			}
 
+			let requiresPassword = false
+			if (this.isSetup) {
+				requiresPassword = !this.useOauth && (!this.manualConfig.imapPassword || !this.manualConfig.smtpPassword)
+			}
+
 			return !this.emailAddress || !this.isValidEmail(this.emailAddress)
-				|| !this.manualConfig.imapHost || !this.manualConfig.imapPort
-				|| !this.manualConfig.imapUser || (!this.useOauth && !this.manualConfig.imapPassword)
-				|| !this.manualConfig.smtpHost || !this.manualConfig.smtpPort
-				|| !this.manualConfig.smtpUser || (!this.useOauth && !this.manualConfig.smtpPassword)
+				|| !this.manualConfig.imapHost || !this.manualConfig.imapPort || !this.manualConfig.imapUser
+				|| !this.manualConfig.smtpHost || !this.manualConfig.smtpPort || !this.manualConfig.smtpUser
+				|| requiresPassword
 		},
 
 		isGoogleAccount() {
@@ -364,6 +440,19 @@ export default {
 				|| this.manualConfig.smtpHost === 'outlook.office365.com'
 		},
 
+		/**
+		 * The admin-configured OIDC provider matching the entered email's domain, if any.
+		 *
+		 * @return {?object}
+		 */
+		oidcProvider() {
+			return findProviderForEmail(this.emailAddress, this.oidcProviders)
+		},
+
+		isOidcAccount() {
+			return !this.isGoogleAccount && !this.isMicrosoftAccount && !!this.oidcProvider
+		},
+
 		hasPasswordAlternatives() {
 			return !!this.googleOauthUrl
 				|| !!this.microsoftOauthUrl
@@ -372,27 +461,47 @@ export default {
 		useOauth() {
 			return (this.isGoogleAccount && this.googleOauthUrl)
 				|| (this.isMicrosoftAccount && this.microsoftOauthUrl)
+				|| this.isOidcAccount
 		},
 
 		submitButtonText() {
 			if (this.loading) {
 				return this.loadingMessage ?? t('mail', 'Connecting')
 			}
+			if (this.isOidcAccount) {
+				const provider = this.oidcProvider.name || this.oidcProvider.emailDomain
+				return this.account
+					? t('mail', 'Reconnect to {provider}', { provider })
+					: t('mail', 'Connect to {provider}', { provider })
+			}
 			if (this.mode === 'manual' && this.useOauth) {
 				if (this.isGoogleAccount) {
-				    return this.account ? t('mail', 'Reconnect Google account') : t('mail', 'Sign in with Google')
+					return this.account ? t('mail', 'Reconnect Google account') : t('mail', 'Sign in with Google')
 				} else {
-				    return this.account ? t('mail', 'Reconnect Microsoft account') : t('mail', 'Sign in with Microsoft')
+					return this.account ? t('mail', 'Reconnect Microsoft account') : t('mail', 'Sign in with Microsoft')
 				}
 			}
 			return this.account ? t('mail', 'Save') : t('mail', 'Connect')
 		},
 	},
-	methods: {
-		onModeChanged(e) {
-			this.mode = e.tab.id
 
-			if (this.mode === 'manual') {
+	watch: {
+		oidcProvider: {
+			immediate: true,
+			handler(provider) {
+				if (provider && this.isSetup) {
+					this.applyOidcProvider(provider)
+				}
+			},
+		},
+
+		mode: {
+			immediate: true,
+			handler(mode) {
+				if (mode !== 'manual') {
+					return
+				}
+
 				// IMAP
 				if (this.manualConfig.imapUser === '') {
 					this.manualConfig.imapUser = this.emailAddress
@@ -408,37 +517,102 @@ export default {
 				if (this.manualConfig.smtpPassword === '') {
 					this.manualConfig.smtpPassword = this.autoConfig.password
 				}
+			},
+		},
+	},
+
+	methods: {
+		applyOidcProvider(provider) {
+			this.manualConfig.imapHost = provider.imapHost
+			this.manualConfig.imapPort = provider.imapPort
+			this.manualConfig.imapSslMode = provider.imapSslMode
+			this.manualConfig.imapUser = this.emailAddress
+			this.manualConfig.smtpHost = provider.smtpHost
+			this.manualConfig.smtpPort = provider.smtpPort
+			this.manualConfig.smtpSslMode = provider.smtpSslMode
+			this.manualConfig.smtpUser = this.emailAddress
+		},
+
+		async requestOauthConsent(account, isUpdate) {
+			this.loadingMessage = t('mail', 'Awaiting user consent')
+			if (this.isGoogleAccount) {
+				this.feedback = isUpdate
+					? t('mail', 'Account updated. Please follow the pop-up instructions to reconnect your Google account')
+					: t('mail', 'Account created. Please follow the pop-up instructions to link your Google account')
+				await getUserConsent(this.googleOauthUrl
+					.replace('_state_', await generateOauthState(account.id))
+					.replace('_email_', encodeURIComponent(account.emailAddress)))
+			} else if (this.isMicrosoftAccount) {
+				this.feedback = isUpdate
+					? t('mail', 'Account updated. Please follow the pop-up instructions to reconnect your Microsoft account')
+					: t('mail', 'Account created. Please follow the pop-up instructions to link your Microsoft account')
+				await getUserConsent(this.microsoftOauthUrl
+					.replace('_state_', await generateOauthState(account.id))
+					.replace('_email_', encodeURIComponent(account.emailAddress)))
+			} else {
+				const provider = this.oidcProvider.name || this.oidcProvider.emailDomain
+				this.feedback = isUpdate
+					? t('mail', 'Account updated. Please follow the pop-up instructions to reconnect your {provider} account', { provider })
+					: t('mail', 'Account created. Please follow the pop-up instructions to link your {provider} account', { provider })
+				await openOidcConsent(this.oidcProvider, account.id)
 			}
 		},
+
 		onImapSslModeChange(value) {
 			this.clearFeedback()
 			this.manualConfig.imapSslMode = value
 			switch (this.manualConfig.imapSslMode) {
-			case 'none':
-			case 'tls':
-				this.manualConfig.imapPort = 143
-				break
-			case 'ssl':
-				this.manualConfig.imapPort = 993
-				break
+				case 'none':
+				case 'tls':
+					this.manualConfig.imapPort = 143
+					break
+				case 'ssl':
+					this.manualConfig.imapPort = 993
+					break
 			}
 		},
+
 		onSmtpSslModeChange(value) {
 			this.clearFeedback()
 			this.manualConfig.smtpSslMode = value
 			switch (this.manualConfig.smtpSslMode) {
-			case 'none':
-			case 'tls':
-				this.manualConfig.smtpPort = 587
-				break
-			case 'ssl':
-				this.manualConfig.smtpPort = 465
-				break
+				case 'none':
+				case 'tls':
+					this.manualConfig.smtpPort = 587
+					break
+				case 'ssl':
+					this.manualConfig.smtpPort = 465
+					break
 			}
 		},
+
 		clearFeedback() {
 			this.feedback = null
 		},
+
+		optionalPasswordPlaceholder(fallback) {
+			if (this.isSetup) {
+				return fallback
+			} else {
+				return t('mail', 'Leave blank to not change password')
+			}
+		},
+
+		syncCredentials() {
+			if (this.manualConfig.syncSmtpCredentials) {
+				this.manualConfig.smtpHost = this.manualConfig.imapHost
+				this.manualConfig.smtpUser = this.manualConfig.imapUser
+				this.manualConfig.smtpPassword = this.manualConfig.imapPassword
+			}
+
+			this.clearFeedback()
+		},
+
+		unsyncCredentials() {
+			this.manualConfig.syncSmtpCredentials = false
+			this.clearFeedback()
+		},
+
 		applyAutoConfig(config) {
 			if (!config) {
 				return false
@@ -459,6 +633,7 @@ export default {
 			}
 			return true
 		},
+
 		async detectConfig() {
 			this.loadingMessage = t('mail', 'Looking up configuration')
 			const config = await queryIspdb(this.emailAddress.split('@').pop(), this.emailAddress)
@@ -488,8 +663,8 @@ export default {
 
 				// Test the highest priority MX for open IMAP/SMTP ports
 				this.loadingMessage = t('mail', 'Checking mail host connectivity')
-				const imapAndSmtpHosts = mxHosts.slice(0, 1).flatMap(host => {
-					return [993, 143, 465, 587].map(port => ({
+				const imapAndSmtpHosts = mxHosts.slice(0, 1).flatMap((host) => {
+					return [993, 143, 465, 587].map((port) => ({
 						host,
 						port,
 					}))
@@ -526,6 +701,7 @@ export default {
 				return false
 			}
 		},
+
 		async onSubmit(event) {
 			logger.debug('account form submitted', { event })
 			if (this.isDisabledManual || this.isDisabledAuto) {
@@ -536,12 +712,14 @@ export default {
 			this.loading = true
 			try {
 				if (this.mode === 'auto') {
-					if (!await this.detectConfig()) {
+					if (this.isOidcAccount) {
+						this.applyOidcProvider(this.oidcProvider)
+					} else if (!await this.detectConfig()) {
 						logger.warn('Auto mode failed')
 						return
 					}
 				}
-				if (!this.useOauth) {
+				if (!this.useOauth && this.isSetup) {
 					if (this.mode === 'auto' && this.autoConfig.password === '') {
 						this.feedback = t('mail', 'Password required')
 						return
@@ -559,31 +737,24 @@ export default {
 					imapHost: this.manualConfig.imapHost.trim(),
 					smtpHost: this.manualConfig.smtpHost.trim(),
 					authMethod: this.useOauth ? 'xoauth2' : 'password',
+					classificationEnabled: this.classificationEnabled,
 				}
 				if (this.useOauth) {
 					delete data.imapPassword
 					delete data.smtpPassword
+				} else if (!this.isSetup) {
+					if (data.imapPassword === '') {
+						delete data.imapPassword
+					}
+					if (data.smtpPassword === '') {
+						delete data.smtpPassword
+					}
 				}
 				if (!this.account) {
 					const account = await this.mainStore.startAccountSetup(data)
 					if (this.useOauth) {
-						this.loadingMessage = t('mail', 'Awaiting user consent')
 						try {
-							if (this.isGoogleAccount) {
-								this.feedback = t('mail', 'Account created. Please follow the pop-up instructions to link your Google account')
-								await getUserConsent(
-									this.googleOauthUrl
-										.replace('_accountId_', account.id)
-										.replace('_email_', encodeURIComponent(account.emailAddress)),
-								)
-							} else {
-								this.feedback = t('mail', 'Account created. Please follow the pop-up instructions to link your Microsoft account')
-								await getUserConsent(
-									this.microsoftOauthUrl
-										.replace('_accountId_', account.id)
-										.replace('_email_', encodeURIComponent(account.emailAddress)),
-								)
-							}
+							await this.requestOauthConsent(account, false)
 						} catch (e) {
 							// Clean up the temporary account before we continue
 							this.mainStore.deleteAccount(account)
@@ -594,7 +765,7 @@ export default {
 					}
 					this.loadingMessage = t('mail', 'Loading account')
 					await this.mainStore.finishAccountSetup({ account })
-					this.$emit('account-created', account)
+					this.$emit('accountCreated', account)
 				} else {
 					const oldAccountData = this.account
 					const account = await this.mainStore.updateAccount({
@@ -602,23 +773,8 @@ export default {
 						accountId: this.account.id,
 					})
 					if (this.useOauth) {
-						this.loadingMessage = t('mail', 'Awaiting user consent')
 						try {
-							if (this.isGoogleAccount) {
-								this.feedback = t('mail', 'Account updated. Please follow the pop-up instructions to reconnect your Google account')
-								await getUserConsent(
-									this.googleOauthUrl
-										.replace('_accountId_', account.id)
-										.replace('_email_', encodeURIComponent(account.emailAddress)),
-								)
-							} else {
-								this.feedback = t('mail', 'Account updated. Please follow the pop-up instructions to reconnect your Microsoft account')
-								await getUserConsent(
-									this.microsoftOauthUrl
-										.replace('_accountId_', account.id)
-										.replace('_email_', encodeURIComponent(account.emailAddress)),
-								)
-							}
+							await this.requestOauthConsent(account, true)
 						} catch (e) {
 							// Undo changes
 							await this.mainStore.updateAccount({
@@ -641,11 +797,23 @@ export default {
 					} else if (error.data.service === 'SMTP') {
 						this.feedback = t('mail', 'SMTP server is not reachable')
 					}
-				} else if (error.data?.error === 'AUTHENTICATION') {
+				} else if (error.data?.error === 'AUTHENTICATION_WRONG_PASSWORD') {
 					if (error.data.service === 'IMAP') {
 						this.feedback = t('mail', 'IMAP username or password is wrong')
 					} else if (error.data.service === 'SMTP') {
 						this.feedback = t('mail', 'SMTP username or password is wrong')
+					}
+				} else if (error.data?.error === 'AUTHENTICATION_DENIED') {
+					if (error.data.service === 'IMAP') {
+						this.feedback = t('mail', 'IMAP server denied authentication')
+					} else if (error.data.service === 'SMTP') {
+						this.feedback = t('mail', 'SMTP server denied authentication')
+					}
+				} else if (error.data?.error === 'AUTHENTICATION') {
+					if (error.data.service === 'IMAP') {
+						this.feedback = t('mail', 'IMAP authentication error')
+					} else if (error.data.service === 'SMTP') {
+						this.feedback = t('mail', 'SMTP authentication error')
 					}
 				} else {
 					if (error.data?.service === 'IMAP') {
@@ -665,8 +833,9 @@ export default {
 				this.loadingMessage = undefined
 			}
 		},
+
 		isValidEmail(email) {
-			const regExpEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+			const regExpEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(localhost|((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})))$/
 			return regExpEmail.test(email)
 		},
 	},
@@ -674,66 +843,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-:deep(.tabs-component-tabs) {
-	display: flex;
-}
-
-:deep(.tabs-component-tab) {
-	flex-grow: 1;
-	text-align: center;
-	color: var(--color-text-lighter);
-	margin-bottom: calc(var(--default-grid-baseline) * 2 + var(--default-grid-baseline) / 2);
-}
-
-:deep(.tabs-component-tab.is-active) {
-	border-bottom: var(--border-width-input) solid black;
-	font-weight: bold;
-}
-
 :deep(.input-field) {
 	margin: calc(var(--default-grid-baseline) * 3) 0;
-}
-
-.tabs-component-panels {
-	padding-top: calc(var(--default-grid-baseline) * 5);
-}
-
-.tabs-component-panels label {
-	text-align: start;
-	width: 100%;
-	display: inline-block;
-}
-
-.tabs-component-panels input,
-.tabs-component-panels select {
-	margin-bottom: calc(var(--default-grid-baseline) * 2);
 }
 </style>
 
 <style scoped>
 h4 {
+	font-size: 17px;
 	text-align: start;
 }
 
 .flex-row {
 	display: flex;
-}
-
-input.primary {
-	color: var(--color-main-background);
-}
-
-input[type='radio'] {
-	display: none;
-}
-
-input[type='radio'][disabled] + label {
-	cursor: default;
-	opacity: 0.5;
-}
-
-.account-form__label--required:after {
-	content:" *";
 }
 
 .account-form__heading--required:after {
@@ -769,10 +891,5 @@ input[type='radio'][disabled] + label {
 	padding-bottom: calc(var(--default-grid-baseline) * 12);
 	margin: 0 auto;
 	padding-top: calc(var(--default-grid-baseline) * 7);
-}
-
-#account-form input {
-	width: 100%;
-	box-sizing: border-box;
 }
 </style>

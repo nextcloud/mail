@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import logger from '../logger.js'
 import { isPgpgMessage } from '../crypto/pgp.js'
+import logger from '../logger.js'
 
 export default {
 	name: 'MailvelopeEditor',
@@ -18,25 +18,32 @@ export default {
 			type: String,
 			required: true,
 		},
+
 		recipients: {
 			type: Array,
 			required: true,
 		},
+
 		quotedText: {
 			type: Object,
 			required: false,
 			default: () => undefined,
 		},
+
 		isReplyOrForward: {
 			type: Boolean,
 			default: false,
 		},
 	},
+
+	emits: ['input'],
+
 	data() {
 		return {
 			editor: undefined,
 		}
 	},
+
 	async mounted() {
 		const isEncrypted = this.quotedText ? isPgpgMessage(this.quotedText) : false
 		const quotedMail = this.isReplyOrForward ? this.quotedText?.value : undefined
@@ -45,6 +52,7 @@ export default {
 			quotedMail: isEncrypted ? quotedMail : undefined,
 		})
 	},
+
 	methods: {
 		async pull() {
 			const recipients = this.recipients.map((r) => r.email)

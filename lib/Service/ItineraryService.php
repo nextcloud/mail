@@ -11,9 +11,9 @@ namespace OCA\Mail\Service;
 
 use Nextcloud\KItinerary\Itinerary;
 use OCA\Mail\Account;
+use OCA\Mail\Attachment;
 use OCA\Mail\Db\Mailbox;
-use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\IMAP\MessageMapper;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Integration\KItinerary\ItineraryExtractor;
 use OCP\ICache;
 use OCP\ICacheFactory;
@@ -26,31 +26,16 @@ class ItineraryService {
 	private const CACHE_PREFIX = 'mail_itinerary';
 	private const CACHE_TTL = 7 * 24 * 3600;
 
-	/** @var IMAPClientFactory */
-	private $clientFactory;
-
-	/** @var MessageMapper */
-	private $messageMapper;
-
-	/** @var ItineraryExtractor */
-	private $extractor;
-
 	/** @var ICache */
 	private $cache;
 
-	/** @var LoggerInterface */
-	private $logger;
-
-	public function __construct(IMAPClientFactory $clientFactory,
-		MessageMapper $messageMapper,
-		ItineraryExtractor $extractor,
+	public function __construct(
+		private readonly MailManager $mailManager,
+		private ItineraryExtractor $extractor,
 		ICacheFactory $cacheFactory,
-		LoggerInterface $logger) {
-		$this->clientFactory = $clientFactory;
-		$this->messageMapper = $messageMapper;
-		$this->extractor = $extractor;
+		private LoggerInterface $logger,
+	) {
 		$this->cache = $cacheFactory->createLocal(self::CACHE_PREFIX);
-		$this->logger = $logger;
 	}
 
 	private function buildCacheKey(Account $account, Mailbox $mailbox, int $id): string {
@@ -65,40 +50,49 @@ class ItineraryService {
 		return null;
 	}
 
-	public function extract(Account $account, Mailbox $mailbox, int $id): Itinerary {
-		if ($cached = ($this->getCached($account, $mailbox, $id))) {
+	public function extract(Account $account, Mailbox $mailbox, Message $message): Itinerary {
+		if ($cached = ($this->getCached($account, $mailbox, $message->getId()))) {
 			return $cached;
 		}
 
-		$client = $this->clientFactory->getClient($account);
-		try {
-			$itinerary = new Itinerary();
-			$htmlBody = $this->messageMapper->getHtmlBody($client, $mailbox->getName(), $id, $account->getUserId());
-			if ($htmlBody !== null) {
-				$itinerary = $itinerary->merge(
-					$this->extractor->extract($htmlBody)
-				);
-				$this->logger->debug('Extracted ' . count($itinerary) . ' itinerary entries from the message HTML body');
-			} else {
-				$this->logger->debug('Message does not have an HTML body, can\'t extract itinerary info');
-			}
-			$attachments = $this->messageMapper->getRawAttachments($client, $mailbox->getName(), $id, $account->getUserId());
-		} finally {
-			$client->logout();
+		$cacheKey = $this->buildCacheKey($account, $mailbox, $message->getId());
+		$itinerary = new Itinerary();
+
+		if (!$this->extractor->hasAdapter()) {
+			$this->logger->debug('No KItinerary adapter is available, skipping itinerary extraction');
+			$this->cache->set($cacheKey, json_encode($itinerary), self::CACHE_TTL);
+			return $itinerary;
 		}
-		$itinerary = array_reduce($attachments, function (Itinerary $combined, string $attachment) {
-			$extracted = $this->extractor->extract($attachment);
-			$this->logger->debug('Extracted ' . count($extracted) . ' itinerary entries from an attachment');
+
+		$imapMessage = $this->mailManager->getImapMessage($account, $mailbox, $message, true);
+
+		$htmlBody = $imapMessage->htmlMessage;
+		if ($htmlBody !== '') {
+			$itinerary = $itinerary->merge(
+				$this->extractor->extract($htmlBody)
+			);
+			$nItinerary = count($itinerary);
+			$this->logger->debug("Extracted $nItinerary itinerary entries from the message HTML body");
+		} else {
+			$this->logger->debug('Message does not have an HTML body, can\'t extract itinerary info');
+		}
+
+		$attachments = $this->mailManager->getMailAttachments($account, $mailbox, $message);
+		$itinerary = array_reduce($attachments, function (Itinerary $combined, Attachment $attachment) {
+			$extracted = $this->extractor->extract($attachment->getContent());
+			$nExtracted = count($extracted);
+			$this->logger->debug("Extracted $nExtracted itinerary entries from an attachment");
 			return $combined->merge($extracted);
 		}, $itinerary);
 
 		// Lastly, we put the extracted data through the tool again, so it can combine
 		// and pick the most relevant information
-		$final = $this->extractor->extract(json_encode($itinerary));
-		$this->logger->debug('Reduced ' . count($itinerary) . ' itinerary entries to ' . count($final) . ' entries');
+		$final = $this->extractor->extract(json_encode($itinerary, JSON_THROW_ON_ERROR));
+		$nItinerary = count($itinerary);
+		$nFinal = count($final);
+		$this->logger->debug("Reduced $nItinerary itinerary entries to $nFinal entries");
 
-		$cache_key = $this->buildCacheKey($account, $mailbox, $id);
-		$this->cache->set($cache_key, json_encode($final), self::CACHE_TTL);
+		$this->cache->set($cacheKey, json_encode($final, JSON_THROW_ON_ERROR), self::CACHE_TTL);
 
 		return $final;
 	}

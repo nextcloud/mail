@@ -11,6 +11,7 @@ namespace OCA\Mail\BackgroundJob;
 
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Events\SynchronizationEvent;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -25,6 +26,7 @@ class RepairSyncJob extends TimedJob {
 	public function __construct(
 		ITimeFactory $time,
 		private SyncService $syncService,
+		private ProtocolFactory $protocolFactory,
 		private AccountService $accountService,
 		private IUserManager $userManager,
 		private MailboxMapper $mailboxMapper,
@@ -45,13 +47,22 @@ class RepairSyncJob extends TimedJob {
 		try {
 			$account = $this->accountService->findById($accountId);
 		} catch (DoesNotExistException $e) {
-			$this->logger->debug('Could not find account <' . $accountId . '> removing from jobs');
+			$this->logger->debug("Could not find account <{$accountId}> removing from jobs");
 			$this->jobList->remove(self::class, $argument);
 			return;
 		}
 
 		if (!$account->getMailAccount()->canAuthenticateImap()) {
 			$this->logger->debug('No authentication on IMAP possible, skipping background sync job');
+			return;
+		}
+
+		if (!$account->getMailAccount()->isImap()) {
+			$this->logger->debug(sprintf(
+				'Account %d uses %s, skipping IMAP repair sync after mailbox refresh',
+				$account->getId(),
+				$account->getMailAccount()->getProtocol(),
+			));
 			return;
 		}
 
@@ -64,6 +75,10 @@ class RepairSyncJob extends TimedJob {
 			));
 			return;
 		}
+
+		$this->protocolFactory
+			->mailboxConnector($account)
+			->syncAll($account, true);
 
 		$rebuildThreads = false;
 		$trashMailboxId = $account->getMailAccount()->getTrashMailboxId();

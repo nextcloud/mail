@@ -56,6 +56,8 @@ class Version3700Date20240430115406 extends SimpleMigrationStep {
 	 * @param IOutput $output
 	 * @param Closure(): ISchemaWrapper $schemaClosure
 	 * @param array $options
+	 *
+	 * @return void
 	 */
 	#[\Override]
 	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {

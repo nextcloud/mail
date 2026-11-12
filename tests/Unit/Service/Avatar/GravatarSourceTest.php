@@ -15,10 +15,10 @@ use OCA\Mail\Service\Avatar\GravatarSource;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
 use OCP\Http\Client\IResponse;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class GravatarSourceTest extends TestCase {
-	/** @var IClientService|PHPUnit_Framework_MockObject_MockObject */
+	/** @var IClientService|MockObject */
 	private $clientService;
 
 	/** @var GravatarSource */
@@ -53,7 +53,7 @@ class GravatarSourceTest extends TestCase {
 			->with('https://secure.gravatar.com/avatar/2fd3f4d5d762955e5b603794a888fa97?size=128&d=404')
 			->willReturn($avatar);
 
-		$actualAvatar = $this->source->fetch($email, $avatarFactory);
+		$actualAvatar = $this->source->fetch('currentUser', $email, $avatarFactory);
 
 		$this->assertEquals($avatar, $actualAvatar);
 	}
@@ -61,7 +61,7 @@ class GravatarSourceTest extends TestCase {
 	public function testFetchHttpError() {
 		$email = 'hey@jancborchardt.net';
 		$client = $this->createMock(IClient::class);
-		$avatarFactory = $this->createMock(AvatarFactory::class);
+		$avatarFactory = $this->createStub(AvatarFactory::class);
 		$this->clientService->expects($this->once())
 			->method('newClient')
 			->willReturn($client);
@@ -70,7 +70,7 @@ class GravatarSourceTest extends TestCase {
 			->with('https://secure.gravatar.com/avatar/2fd3f4d5d762955e5b603794a888fa97?size=128&d=404')
 			->willThrowException(new Exception());
 
-		$actualAvatar = $this->source->fetch($email, $avatarFactory);
+		$actualAvatar = $this->source->fetch('currentUser', $email, $avatarFactory);
 
 		$this->assertNull($actualAvatar);
 	}

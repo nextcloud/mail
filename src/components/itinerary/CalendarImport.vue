@@ -4,62 +4,69 @@
 -->
 
 <template>
-	<Actions v-if="calendars.length">
+	<NcActions v-if="calendars.length">
 		<template #icon>
-			<IconAdd :size="16" />
+			<IconAdd :size="20" />
 		</template>
-		<ActionButton v-for="(calendar, idx) in cals"
+		<NcActionButton
+			v-for="(calendar, idx) in cals"
 			:key="idx"
 			@click="onImport(calendar)">
 			<template #icon>
-				<IconLoading v-if="calendar.loading" :size="16" />
-				<IconAdd v-else :size="16" />
+				<NcLoadingIcon v-if="calendar.loading" :size="20" />
+				<IconAdd v-else :size="20" />
 			</template>
-			{{ t('mail', 'Import into {calendar}', {calendar: calendar.displayname}) }}
-		</ActionButton>
-	</Actions>
+			{{ t('mail', 'Import into {calendar}', { calendar: calendar.displayname }) }}
+		</NcActionButton>
+	</NcActions>
 </template>
 
 <script>
 
-import { NcActions as Actions, NcActionButton as ActionButton, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
-
-import IconAdd from 'vue-material-design-icons/Plus.vue'
-import ical from 'ical.js'
 import moment from '@nextcloud/moment'
+import ical from 'ical.js'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcActions from '@nextcloud/vue/components/NcActions'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
+import IconAdd from 'vue-material-design-icons/Plus.vue'
+import logger from '../../logger.js'
 
 export default {
 	name: 'CalendarImport',
 	components: {
-		Actions,
-		ActionButton,
+		NcActions,
+		NcActionButton,
 		IconAdd,
-		IconLoading,
+		NcLoadingIcon,
 	},
+
 	props: {
 		calendars: {
 			type: Array,
 			required: true,
 		},
+
 		handler: {
 			type: Function,
 			required: true,
 		},
 	},
+
 	computed: {
 		cals() {
 			return this.calendars.map((original) => {
-				this.$set(original, 'loading', false)
+				original.loading = false
 				return original
 			})
 		},
 	},
+
 	methods: {
 		onImport(calendar) {
 			calendar.loading = true
 
 			this.handler(calendar)
-				.catch(console.error.bind(this))
+				.catch((error) => logger.error('could not import calendar event', { error }))
 				.then(() => {
 					calendar.loading = false
 				})

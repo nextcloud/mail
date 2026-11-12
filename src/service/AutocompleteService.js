@@ -6,7 +6,7 @@
 import Axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 
-export const findRecipient = (term) => {
+export function findRecipient(term) {
 	const url = generateUrl('/apps/mail/api/autoComplete?term={term}', {
 		term,
 	})

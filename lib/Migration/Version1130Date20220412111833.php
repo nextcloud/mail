@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Migration;
 
 use Closure;
-use Doctrine\DBAL\Platforms\PostgreSQL94Platform;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\DBAL\Platforms\SqlitePlatform;
 use Doctrine\DBAL\Types\Type;
 use OCP\DB\ISchemaWrapper;
@@ -24,16 +24,18 @@ use Psr\Log\LoggerInterface;
 
 class Version1130Date20220412111833 extends SimpleMigrationStep {
 	private IDBConnection $connection;
-	private LoggerInterface $logger;
 	private array $recipients = [];
 	private string $backupPath;
 
-	public function __construct(IDBConnection $connection, LoggerInterface $logger, ITempManager $tempManager) {
+	public function __construct(
+		IDBConnection $connection,
+		private LoggerInterface $logger,
+		ITempManager $tempManager,
+	) {
 		$this->connection = $connection;
-		$this->logger = $logger;
 
 		$tempBaseDir = $tempManager->getTempBaseDir();
-		$this->backupPath = tempnam($tempBaseDir, 'mail_recipients_backup');
+		$this->backupPath = (string)tempnam($tempBaseDir, 'mail_recipients_backup');
 	}
 
 	/**
@@ -121,9 +123,8 @@ class Version1130Date20220412111833 extends SimpleMigrationStep {
 
 		if (!$isSqlite) {
 			// Change primary column to bigint
-			$recipientsTable->changeColumn('id', [
+			$recipientsTable->modifyColumn('id', [
 				'type' => Type::getType(Types::BIGINT),
-				'length' => 20,
 			]);
 		}
 
@@ -135,9 +136,8 @@ class Version1130Date20220412111833 extends SimpleMigrationStep {
 
 		if (!$isSqlite) {
 			// Change primary column to bigint
-			$messagesTable->changeColumn('id', [
+			$messagesTable->modifyColumn('id', [
 				'type' => Type::getType(Types::BIGINT),
-				'length' => 20,
 			]);
 		}
 
@@ -163,12 +163,15 @@ class Version1130Date20220412111833 extends SimpleMigrationStep {
 			['lengths' => [128]],
 		);
 
-		// Postgres doesn't allow for shortened indices, so let's skip the last index.
-		if ($this->connection->getDatabasePlatform() instanceof PostgreSQL94Platform) {
-			return $schema;
+		// Postgres doesn't need shortened indices
+		if ($this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform) {
+			$messagesTable->addIndex(['mailbox_id', 'thread_root_id', 'sent_at'], 'mail_msg_thrd_root_snt_idx');
+		} else {
+			$messagesTable->addIndex(['mailbox_id', 'thread_root_id', 'sent_at'], 'mail_msg_thrd_root_snt_idx', [], ['lengths' => [null, 64, null]]);
 		}
 
-		$messagesTable->addIndex(['mailbox_id', 'thread_root_id', 'sent_at'], 'mail_msg_thrd_root_snt_idx', [], ['lengths' => [null, 64, null]]);
+		// mail_msg_mb_del_snt_idx was added later and may not exist until optional indices are created
+		$messagesTable->addIndex(['mailbox_id', 'flag_deleted', 'sent_at'], 'mail_msg_mb_del_snt_idx');
 
 		return $schema;
 	}
@@ -177,6 +180,8 @@ class Version1130Date20220412111833 extends SimpleMigrationStep {
 	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
 	 * @param array $options
+	 *
+	 * @return void
 	 */
 	#[\Override]
 	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {

@@ -4,46 +4,54 @@
 -->
 <template>
 	<div class="wrapper">
-		<EmptyContent v-if="hint"
+		<NcEmptyContent
+			v-if="hint"
 			class="empty-content"
 			:name="hint">
 			<template #icon>
-				<IconLoading :size="16" />
+				<NcLoadingIcon />
 			</template>
-			<transition name="fade">
-				<em v-if="slowHint && slow">{{ slowHint }}</em>
-			</transition>
-		</EmptyContent>
-		<IconLoading v-else class="container" />
+			<template #description>
+				<transition name="fade">
+					<em v-if="slowHint && slow">{{ slowHint }}</em>
+				</transition>
+			</template>
+		</NcEmptyContent>
+		<NcLoadingIcon v-else class="container" />
 	</div>
 </template>
 
 <script>
-import { NcLoadingIcon as IconLoading, NcEmptyContent as EmptyContent } from '@nextcloud/vue'
+import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 export default {
 	name: 'Loading',
 	components: {
-		IconLoading,
-		EmptyContent,
+		NcLoadingIcon,
+		NcEmptyContent,
 	},
+
 	props: {
 		hint: {
 			type: String,
 			default: '',
 			required: false,
 		},
+
 		slowHint: {
 			type: String,
 			default: '',
 			required: false,
 		},
 	},
+
 	data() {
 		return {
 			slow: false,
 			slowTimer: undefined,
 		}
 	},
+
 	mounted() {
 		clearTimeout(this.slowTimer)
 
@@ -51,7 +59,8 @@ export default {
 			this.slow = true
 		}, 3500)
 	},
-	beforeDestroy() {
+
+	beforeUnmount() {
 		clearTimeout(this.slowTimer)
 	},
 }
@@ -63,7 +72,7 @@ export default {
 	transition: opacity 0.5s;
 }
 
-.fade-enter,
+.fade-enter-from,
 .fade-leave-to {
 	opacity: 0;
 }
@@ -79,6 +88,6 @@ export default {
 	flex-direction: column;
 	flex: 1 auto;
 	align-items: center;
-	height: 100vh;
+	height: 100%;
 }
 </style>

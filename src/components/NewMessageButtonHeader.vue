@@ -4,54 +4,70 @@
 -->
 <template>
 	<div class="header">
-		<ButtonVue :aria-label="t('mail', 'New message')"
-			type="secondary"
-			button-id="mail_new_message"
+		<NcButton
+			v-shortkey.once="['c']"
+			:aria-label="t('mail', 'New message')"
+			variant="secondary"
+			buttonId="mail_new_message"
 			:wide="true"
-			@click="onNewMessage">
+			@click="onNewMessage"
+			@shortkey="onNewMessage">
 			<template #icon>
-				<IconAdd :size="16" />
+				<IconAdd :size="20" />
 			</template>
 			{{ t('mail', 'New message') }}
-		</ButtonVue>
-		<ButtonVue v-if="currentMailbox"
+		</NcButton>
+		<NcButton
+			v-if="showRefresh && currentMailbox"
+			v-shortkey.once="['r']"
 			:aria-label="t('mail', 'Refresh')"
-			type="tertiary-no-background"
+			variant="tertiary-no-background"
 			class="refresh__button"
 			:disabled="refreshing"
-			@click="refreshMailbox">
+			@click="refreshMailbox"
+			@shortkey="refreshMailbox">
 			<template #icon>
-				<IconRefresh v-if="!refreshing"
-					:size="16" />
-				<IconLoading v-if="refreshing"
-					:size="16" />
+				<IconRefresh
+					v-if="!refreshing"
+					:size="20" />
+				<NcLoadingIcon
+					v-if="refreshing"
+					:size="20" />
 			</template>
-		</ButtonVue>
+		</NcButton>
 	</div>
 </template>
 
 <script>
-import { NcButton as ButtonVue } from '@nextcloud/vue'
+import { mapStores } from 'pinia'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconRefresh from 'vue-material-design-icons/Refresh.vue'
-import IconLoading from '@nextcloud/vue/components/NcLoadingIcon'
 import logger from '../logger.js'
-import { mapStores } from 'pinia'
 import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'NewMessageButtonHeader',
 	components: {
-		ButtonVue,
+		NcButton,
 		IconAdd,
 		IconRefresh,
-		IconLoading,
+		NcLoadingIcon,
 	},
+
+	props: {
+		showRefresh: {
+			default: true,
+		},
+	},
+
 	data() {
 		return {
 			refreshing: false,
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		currentMailbox() {
@@ -60,7 +76,12 @@ export default {
 			}
 			return undefined
 		},
+
+		account() {
+			return this.mainStore.getAccount(this.currentMailbox.accountId)
+		},
 	},
+
 	methods: {
 		async refreshMailbox() {
 			if (this.refreshing === true) {
@@ -70,6 +91,7 @@ export default {
 			this.refreshing = true
 			try {
 				await this.mainStore.syncEnvelopes({ mailboxId: this.currentMailbox.databaseId })
+				await this.mainStore.syncMailboxesForAccount(this.account)
 				logger.debug('Current folder is sync\'ing ')
 			} catch (error) {
 				logger.error('could not sync current folder', { error })
@@ -77,6 +99,7 @@ export default {
 				this.refreshing = false
 			}
 		},
+
 		async onNewMessage() {
 			await this.mainStore.startComposerSession({
 				isBlankMessage: true,
@@ -91,7 +114,6 @@ export default {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: calc(var(--default-grid-baseline, 4px) * 2);
 	gap: var(--default-grid-baseline);
 }
 

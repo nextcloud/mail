@@ -4,50 +4,71 @@
 -->
 
 <template>
-	<div :class="{'empty-content': (!hasMessages && !loadingEnvelopes) || error}">
-		<Error v-if="error"
+	<div
+		class="mailbox"
+		:class="{ 'empty-content': (!hasMessages && !loadingEnvelopes) || error }">
+		<Error
+			v-if="error"
 			:error="t('mail', 'Could not open folder')"
 			message=""
 			role="alert" />
-		<LoadingSkeleton v-else-if="loadingEnvelopes" :number-of-lines="20" />
-		<Loading v-else-if="loadingCacheInitialization"
-			:hint="t('mail', 'Loading messages …')"
-			:slow-hint="t('mail', 'Indexing your messages. This can take a bit longer for larger folders.')" />
-		<EmptyMailboxSection v-else-if="isPriorityInbox && !hasMessages" key="empty" />
-		<EmptyMailbox v-else-if="!hasMessages" key="empty" />
-		<EnvelopeList v-else
+		<LoadingSkeleton v-else-if="loadingEnvelopes" :numberOfLines="20" />
+		<Loading
+			v-else-if="loadingCacheInitialization"
+			:hint="t('mail', 'Loading messages …')"
+			:slowHint="t('mail', 'Indexing your messages. This can take a bit longer for larger folders.')" />
+		<EmptyMailboxSection v-else-if="isPriorityInbox && !hasMessages" key="empty-priority-inbox" />
+		<EmptyMailbox v-else-if="!hasMessages" key="empty-mailbox" />
+		<template v-else-if="hasGroupedEnvelopes && !isPriorityInbox">
+			<div v-for="[label, group] in groupEnvelopes" :key="label">
+				<SectionTitle class="section-title" :name="getLabelForGroup(label)" />
+				<EnvelopeList
+					:account="account"
+					:mailbox="mailbox"
+					:searchQuery="searchQuery"
+					:envelopes="group"
+					:loadingMore="false"
+					:loadMoreButton="false"
+					:skipTransition="skipListTransition"
+					:dateGrouped="true"
+					@delete="onDelete" />
+			</div>
+		</template>
+		<EnvelopeList
+			v-else
 			:account="account"
+			:loadMoreLabel="loadMoreLabel"
 			:mailbox="mailbox"
-			:search-query="searchQuery"
+			:searchQuery="searchQuery"
 			:envelopes="envelopesToShow"
-			:loading-more="loadingMore"
-			:load-more-button="showLoadMore"
-			:skip-transition="skipListTransition"
+			:loadingMore="loadingMore"
+			:loadMoreButton="showLoadMore"
+			:skipTransition="skipListTransition"
 			@delete="onDelete"
-			@load-more="loadMore" />
+			@loadMore="loadMore" />
 	</div>
 </template>
 
 <script>
-import EmptyMailbox from './EmptyMailbox.vue'
-import EnvelopeList from './EnvelopeList.vue'
-import LoadingSkeleton from './LoadingSkeleton.vue'
-import Error from './Error.vue'
+import { showError, showWarning } from '@nextcloud/dialogs'
+import { mapStores } from 'pinia'
 import { findIndex, propEq } from 'ramda'
-import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
+import EmptyMailbox from './EmptyMailbox.vue'
+import EmptyMailboxSection from './EmptyMailboxSection.vue'
+import EnvelopeList from './EnvelopeList.vue'
+import Error from './Error.vue'
 import Loading from './Loading.vue'
-import logger from '../logger.js'
+import LoadingSkeleton from './LoadingSkeleton.vue'
+import SectionTitle from './SectionTitle.vue'
 import MailboxLockedError from '../errors/MailboxLockedError.js'
 import MailboxNotCachedError from '../errors/MailboxNotCachedError.js'
 import { matchError } from '../errors/match.js'
-import { wait } from '../util/wait.js'
-import { mailboxHasRights } from '../util/acl.js'
-import EmptyMailboxSection from './EmptyMailboxSection.vue'
-import { showError, showWarning } from '@nextcloud/dialogs'
 import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError.js'
-import { mapStores } from 'pinia'
+import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
+import { mailboxHasRights } from '../util/acl.js'
+import { wait } from '../util/wait.js'
 
 export default {
 	name: 'Mailbox',
@@ -58,40 +79,59 @@ export default {
 		Error,
 		Loading,
 		LoadingSkeleton,
+		SectionTitle,
 	},
-	mixins: [isMobile],
+
 	props: {
+		groupEnvelopes: {
+			type: Array,
+			required: false,
+			default: () => [],
+		},
+
+		loadMoreLabel: {
+			type: String,
+			default: undefined,
+		},
+
 		account: {
 			type: Object,
 			required: true,
 		},
+
 		mailbox: {
 			type: Object,
 			required: true,
 		},
+
 		bus: {
 			type: Object,
 			required: true,
 		},
+
 		paginate: {
 			type: String,
 			default: 'scroll',
 		},
+
 		initialPageSize: {
 			type: Number,
 			default: 20,
 		},
+
 		searchQuery: {
 			type: String,
 			required: false,
 			default: undefined,
 		},
+
 		isPriorityInbox: {
 			type: Boolean,
 			required: false,
 			default: false,
 		},
 	},
+
 	data() {
 		return {
 			error: false,
@@ -106,27 +146,40 @@ export default {
 			skipListTransition: false,
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		sortOrder() {
-			return this.mainStore.getPreference('sort-order', 'DESC')
+			return this.mainStore.getPreference('sort-order', 'newest')
 		},
+
 		envelopes() {
 			return this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery)
 		},
+
 		envelopesToShow() {
 			if (this.paginate === 'manual' && !this.expanded) {
 				return this.envelopes.slice(0, this.initialPageSize)
 			}
 			return this.envelopes
 		},
-		hasMessages() {
-			return this.envelopes.length > 0
+
+		hasGroupedEnvelopes() {
+			return this.groupEnvelopes && this.groupEnvelopes.length > 0
 		},
+
+		hasMessages() {
+			if (this.hasGroupedEnvelopes) {
+				return this.groupEnvelopes.some(([, group]) => group.length > 0)
+			}
+			return this.envelopesToShow?.length > 0
+		},
+
 		showLoadMore() {
 			return !this.endReached && this.paginate === 'manual'
 		},
 	},
+
 	watch: {
 		mailbox() {
 			this.loadEnvelopes()
@@ -135,20 +188,24 @@ export default {
 					this.sync(false)
 				})
 		},
+
 		searchQuery() {
 			this.loadEnvelopes()
 		},
+
 		sortOrder() {
 			this.loadEnvelopes()
 		},
 	},
+
 	created() {
-		this.bus.on('load-more', this.onScroll)
+		this.bus.on('loadMore', this.onScroll)
 		this.bus.on('delete', this.onDelete)
 		this.bus.on('archive', this.onArchive)
 		this.bus.on('shortcut', this.handleShortcut)
 		this.loadMailboxInterval = setInterval(this.loadMailbox, 60000)
 	},
+
 	async mounted() {
 		if (this.mainStore.hasFetchedInitialEnvelopes) {
 			return
@@ -162,29 +219,34 @@ export default {
 
 		this.mainStore.setHasFetchedInitialEnvelopesMutation(true)
 	},
-	destroyed() {
+
+	unmounted() {
 		this.bus.off('load-more', this.onScroll)
 		this.bus.off('delete', this.onDelete)
 		this.bus.off('archive', this.onArchive)
 		this.bus.off('shortcut', this.handleShortcut)
 		this.stopInterval()
 	},
+
 	methods: {
 		initializeCache() {
 			this.loadingCacheInitialization = true
 			this.error = false
 
-			logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.query}) during cache initalization`)
+			logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.query}) during cache initialization`)
 			this.sync(true)
 				.then(() => {
 					this.loadingCacheInitialization = false
+					this.syncedMailboxes.add(this.mailbox.databaseId + (this.searchQuery ?? ''))
 
 					return this.loadEnvelopes()
 				})
 		},
+
 		async loadEnvelopes() {
 			logger.debug(`Fetching envelopes for folder ${this.mailbox.databaseId} (${this.searchQuery})`, this.mailbox)
-			if (!this.syncedMailboxes.has(this.mailbox.databaseId)) {
+			this.endReached = false
+			if (!this.syncedMailboxes.has(this.mailbox.databaseId + (this.searchQuery ?? ''))) {
 				// Only trigger skeleton if we didn't sync envelopes yet
 				this.loadingEnvelopes = true
 			} else {
@@ -206,7 +268,7 @@ export default {
 
 				logger.debug(envelopes.length + ' envelopes fetched', { envelopes })
 
-				this.syncedMailboxes.add(this.mailbox.databaseId)
+				this.syncedMailboxes.add(this.mailbox.databaseId + (this.searchQuery ?? ''))
 				this.loadingEnvelopes = false
 			} catch (error) {
 				await matchError(error, {
@@ -235,7 +297,12 @@ export default {
 				})
 			}
 		},
+
 		async loadMore() {
+			if (!this.hasMessages || this.loadingEnvelopes || this.loadingMore || this.endReached || this.error) {
+				return
+			}
+
 			if (!this.expanded && this.envelopesToShow.length < this.envelopes.length) {
 				logger.debug('expanding envelope list')
 				this.expanded = true
@@ -260,6 +327,7 @@ export default {
 				this.loadingMore = false
 			}
 		},
+
 		async prefetchOtherMailboxes() {
 			for (const mailbox of this.mainStore.getRecursiveMailboxIterator(this.account.id)) {
 				if (mailbox.databaseId === this.mailbox.databaseId) {
@@ -276,7 +344,7 @@ export default {
 						limit: this.initialPageSize,
 						includeCacheBuster: true,
 					})
-					this.syncedMailboxes.add(mailbox.databaseId)
+					this.syncedMailboxes.add(mailbox.databaseId + (this.searchQuery ?? ''))
 					logger.debug(`Prefetched ${envelopes.length} envelopes for folder ${mailbox.displayName} (${mailbox.databaseId})`)
 				} catch (error) {
 					if (error instanceof MailboxNotCachedError) {
@@ -290,15 +358,19 @@ export default {
 				}
 			}
 		},
+
 		hasDeleteAcl() {
 			return mailboxHasRights(this.mailbox, 'x')
 		},
+
 		hasSeenAcl() {
 			return mailboxHasRights(this.mailbox, 's')
 		},
+
 		hasArchiveAcl() {
 			return mailboxHasRights(this.mailbox, 'te')
 		},
+
 		async handleShortcut(e) {
 			const envelopes = this.envelopes
 			const currentId = parseInt(this.$route.params.threadId, 10)
@@ -307,139 +379,139 @@ export default {
 			const idx = envelopes.indexOf(env)
 			let next
 
-			if (e.srcKey !== 'refresh' && !env) {
+			if (!env) {
 				logger.debug('envelope is not in the list, ignoring shortcut', {
 					srcKey: e.srcKey,
 				})
+				return
 			}
 
 			switch (e.srcKey) {
-			case 'next':
-			case 'prev':
-				if (e.srcKey === 'next') {
-					next = envelopes[idx + 1]
-				} else {
-					next = envelopes[idx - 1]
-				}
+				case 'next':
+				case 'prev':
+					if (e.srcKey === 'next') {
+						next = envelopes[idx + 1]
+					} else {
+						next = envelopes[idx - 1]
+					}
 
-				if (!next) {
-					logger.debug('ignoring shortcut: head or tail of envelope list reached', {
-						envelopes,
-						idx,
-						srcKey: e.srcKey,
-					})
-					return
-				}
+					if (!next) {
+						logger.debug('ignoring shortcut: head or tail of envelope list reached', {
+							envelopes,
+							idx,
+							srcKey: e.srcKey,
+						})
+						return
+					}
 
-				// Keep the selected account-mailbox combination, but navigate to a different message
-				// (it's not a bug that we don't use next.accountId and next.mailboxId here)
-				this.$router.push({
-					name: 'message',
-					params: {
-						mailboxId: this.$route.params.mailboxId,
-						filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-						threadId: next.databaseId,
-					},
-				})
-				break
-			case 'del':
-				if (!this.hasDeleteAcl()) {
-					return
-				}
-				logger.debug('deleting', { env })
-				this.onDelete(env.databaseId)
-				try {
-					await this.mainStore.deleteThread({
-						envelope: env,
+					// Keep the selected account-mailbox combination, but navigate to a different message
+					// (it's not a bug that we don't use next.accountId and next.mailboxId here)
+					this.$router.push({
+						name: 'message',
+						params: {
+							mailboxId: this.$route.params.mailboxId,
+							filter: this.$route.params.filter ? this.$route.params.filter : undefined,
+							threadId: next.databaseId,
+						},
 					})
-				} catch (error) {
-					logger.error('could not delete envelope', {
+					break
+				case 'del':
+					if (!this.hasDeleteAcl()) {
+						return
+					}
+					logger.debug('deleting', { env })
+					this.onDelete(env.databaseId)
+					try {
+						await this.mainStore.deleteThread({
+							envelope: env,
+						})
+					} catch (error) {
+						logger.error('could not delete envelope', {
+							env,
+							error,
+						})
+
+						showError(await matchError(error, {
+							[NoTrashMailboxConfiguredError.getName()]() {
+								return t('mail', 'No trash folder configured')
+							},
+							default() {
+								return t('mail', 'Could not delete message')
+							},
+						}))
+					}
+
+					break
+				case 'arch': {
+					logger.debug('archiving via shortcut')
+
+					// In unified mailboxes this.account is the unified account which
+					// has no archive mailbox, so resolve the envelope's actual account
+					const account = this.mainStore.getAccount(env.accountId)
+
+					if (account.archiveMailboxId === null) {
+						showWarning(t('mail', 'To archive a message please configure an archive folder in account settings'))
+						return
+					}
+
+					if (!this.hasArchiveAcl()) {
+						showWarning(t('mail', 'You are not allowed to move this message to the archive folder and/or delete this message from the current folder'))
+						return
+					}
+
+					if (env.mailboxId === account.archiveMailboxId) {
+						logger.debug('message is already in archive folder')
+						return
+					}
+
+					logger.debug('archiving', { env })
+					this.onDelete(env.databaseId)
+					try {
+						await this.mainStore.moveThread({
+							envelope: env,
+							destMailboxId: account.archiveMailboxId,
+						})
+					} catch (error) {
+						logger.error('could not archive envelope', {
+							env,
+							error,
+						})
+
+						showError(t('mail', 'Could not archive message'))
+					}
+					break
+				}
+				case 'flag':
+					logger.debug('flagging envelope via shortkey', { env })
+					this.mainStore.toggleEnvelopeFlagged(env).catch((error) => logger.error('could not flag envelope via shortkey', {
 						env,
 						error,
-					})
-
-					showError(await matchError(error, {
-						[NoTrashMailboxConfiguredError.getName()]() {
-							return t('mail', 'No trash folder configured')
-						},
-						default() {
-							return t('mail', 'Could not delete message')
-						},
 					}))
-				}
+					break
+				case 'unseen':
+					logger.debug('marking as seen/unseen via shortcut')
 
-				break
-			case 'arch':
-				logger.debug('archiving via shortcut')
+					if (!this.hasSeenAcl()) {
+						showWarning(t('mail', 'Your IMAP server does not support storing the seen/unseen state.'))
+						return
+					}
 
-				if (this.account.archiveMailboxId === null) {
-					showWarning(t('mail', 'To archive a message please configure an archive folder in account settings'))
-					return
-				}
-
-				if (!this.hasArchiveAcl()) {
-					showWarning(t('mail', 'You are not allowed to move this message to the archive folder and/or delete this message from the current folder'))
-					return
-				}
-
-				if (env.mailboxId === this.account.archiveMailboxId) {
-					logger.debug('message is already in archive folder')
-					return
-				}
-
-				logger.debug('archiving', { env })
-				this.onDelete(env.databaseId)
-				try {
-					await this.mainStore.moveThread({
-						envelope: env,
-						destMailboxId: this.account.archiveMailboxId,
-					})
-				} catch (error) {
-					logger.error('could not archive envelope', {
-						env,
-						error,
-					})
-
-					showError(t('mail', 'Could not archive message'))
-				}
-				break
-			case 'flag':
-				logger.debug('flagging envelope via shortkey', { env })
-				this.mainStore.toggleEnvelopeFlagged(env).catch((error) =>
-					logger.error('could not flag envelope via shortkey', {
-						env,
-						error,
-					}),
-				)
-				break
-			case 'refresh':
-				logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.searchQuery}) per shortcut`)
-				this.sync(false)
-
-				break
-			case 'unseen':
-				logger.debug('marking as seen/unseen via shortcut')
-
-				if (!this.hasSeenAcl()) {
-					showWarning(t('mail', 'Your IMAP server does not support storing the seen/unseen state.'))
-					return
-				}
-
-				logger.debug('marking as seen/unseen', { env })
-				try {
-					await this.mainStore.toggleEnvelopeSeen({ envelope: env })
-				} catch (error) {
-					logger.error('could not mark envelope as seen/unseen via shortkey', {
-						env,
-						error,
-					})
-					showError(t('mail', 'Could not mark message as seen/unseen'))
-				}
-				break
-			default:
-				logger.warn('shortcut ' + e.srcKey + ' is unknown. ignoring.')
+					logger.debug('marking as seen/unseen', { env })
+					try {
+						await this.mainStore.toggleEnvelopeSeen({ envelope: env })
+					} catch (error) {
+						logger.error('could not mark envelope as seen/unseen via shortkey', {
+							env,
+							error,
+						})
+						showError(t('mail', 'Could not mark message as seen/unseen'))
+					}
+					break
+				default:
+					logger.warn('shortcut ' + e.srcKey + ' is unknown. ignoring.')
 			}
 		},
+
 		async sync(init = false) {
 			if (this.refreshing) {
 				logger.debug(`already sync'ing folder ${this.mailbox.databaseId} (${this.searchQuery}), aborting`, { init })
@@ -456,18 +528,27 @@ export default {
 			} catch (error) {
 				matchError(error, {
 					[MailboxLockedError.getName()](error) {
-						logger.info('Background sync failed because the folder is locked', { error, init })
+						logger.info('Background sync failed because the folder is locked', {
+							error,
+							init,
+						})
 					},
 					default(error) {
-						logger.error('Could not sync envelopes: ' + error.message, { error, init })
+						logger.error('Could not sync envelopes: ' + error.message, {
+							error,
+							init,
+						})
 					},
 				})
 				throw error
 			} finally {
 				this.refreshing = false
 				logger.debug(`finished sync'ing folder ${this.mailbox.databaseId} (${this.searchQuery})`, { init })
+
+				this.mainStore.updateSyncTimestamp()
 			}
 		},
+
 		// onDelete(id): Load more message and navigate to other message if needed
 		// id: The id of the message being delete
 		onDelete(id) {
@@ -482,12 +563,12 @@ export default {
 				logger.debug('envelope to delete does not exist in envelope list')
 				return
 			}
-			if (id !== this.$route.params.threadId) {
+			if (id !== parseInt(this.$route.params.threadId, 10)) {
 				logger.debug('other message open, not jumping to the next/previous message')
 				return
 			}
 
-			const next = this.envelopes[idx === 0 ? 1 : idx - 1]
+			const next = this.envelopes[idx + 1] ?? this.envelopes[idx - 1]
 			if (!next) {
 				logger.debug('no next/previous envelope, not navigating')
 				return
@@ -504,6 +585,11 @@ export default {
 				},
 			})
 		},
+
+		onArchive(id) {
+			this.onDelete(id)
+		},
+
 		onScroll() {
 			if (this.paginate !== 'scroll') {
 				logger.debug('ignoring scroll pagination')
@@ -512,6 +598,7 @@ export default {
 
 			this.loadMore()
 		},
+
 		async loadMailbox() {
 			// When the account is unified or inbox, return nothing, else sync the mailbox
 			if (this.account.isUnified || this.mailbox.specialRole === 'inbox') {
@@ -524,20 +611,41 @@ export default {
 				logger.error('Background sync failed: ' + error.message, { error })
 			}
 		},
+
 		stopInterval() {
 			clearInterval(this.loadMailboxInterval)
 			this.loadMailboxInterval = undefined
+		},
+
+		getLabelForGroup(group) {
+			switch (group) {
+				case 'lastHour':
+					return t('mail', 'Last hour')
+				case 'today':
+					return t('mail', 'Today')
+				case 'yesterday':
+					return t('mail', 'Yesterday')
+				case 'lastWeek':
+					return t('mail', 'Last week')
+				case 'lastMonth':
+					return t('mail', 'Last month')
+				default:
+					return group
+			}
 		},
 	},
 }
 </script>
 
 <style lang="scss" scoped>
+.mailbox {
+	height: 100%;
+}
+
 // Fix vertical space between sections in priority inbox
 .nameimportant {
 	:deep(#load-more-mail-messages) {
 		margin-top: 0;
-		margin-bottom: 8px;
 	}
 }
 

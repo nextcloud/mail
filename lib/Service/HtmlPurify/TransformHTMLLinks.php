@@ -13,19 +13,11 @@ namespace OCA\Mail\Service\HtmlPurify;
 use HTMLPurifier_AttrTransform;
 use HTMLPurifier_Config;
 use HTMLPurifier_Context;
-use OCP\IURLGenerator;
 
 /**
  * Adds target="_blank" to all outbound links.
  */
 class TransformHTMLLinks extends HTMLPurifier_AttrTransform {
-	/** @var IURLGenerator */
-	private $urlGenerator;
-
-	public function __construct(IURLGenerator $urlGenerator) {
-		$this->urlGenerator = $urlGenerator;
-	}
-
 	/**
 	 * @param array $attr
 	 * @param HTMLPurifier_Config $config
@@ -40,11 +32,6 @@ class TransformHTMLLinks extends HTMLPurifier_AttrTransform {
 
 		$attr['target'] = '_blank';
 		$attr['rel'] = 'external noopener noreferrer';
-
-		// Open mailto: links in Mail
-		if (stripos($attr['href'], 'mailto:') === 0) {
-			$attr['href'] = $this->urlGenerator->linkToRoute('mail.page.mailto') . '?to=' . substr($attr['href'], 7);
-		}
 
 		return $attr;
 	}

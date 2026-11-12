@@ -9,10 +9,12 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Listener;
 
-use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Service\MailManager;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use Psr\Log\LoggerInterface;
@@ -22,7 +24,8 @@ use Psr\Log\LoggerInterface;
  */
 class MoveJunkListener implements IEventListener {
 	public function __construct(
-		private IMailManager $mailManager,
+		private MailManager $mailManager,
+		private MailboxMapper $mailboxMapper,
 		private LoggerInterface $logger,
 	) {
 	}
@@ -42,6 +45,16 @@ class MoveJunkListener implements IEventListener {
 		}
 
 		$mailbox = $event->getMailbox();
+		$messageId = $this->mailManager->getMessageIdForUid($mailbox, $event->getUid());
+		if ($messageId === null) {
+			return;
+		}
+
+		try {
+			$message = $this->mailManager->getMessage($account->getUserId(), $messageId);
+		} catch (DoesNotExistException) {
+			return;
+		}
 
 		if ($event->isSet() && $junkMailboxId !== $mailbox->getId()) {
 			try {
@@ -57,10 +70,10 @@ class MoveJunkListener implements IEventListener {
 			try {
 				$this->mailManager->moveMessage(
 					$account,
-					$mailbox->getName(),
-					$event->getUid(),
+					$mailbox,
+					$message,
 					$account,
-					$junkMailbox->getName(),
+					$junkMailbox,
 				);
 			} catch (ServiceException $e) {
 				$this->logger->error('move message to junk mailbox failed. account_id: {account_id}', [
@@ -68,14 +81,19 @@ class MoveJunkListener implements IEventListener {
 					'account_id' => $account->getId(),
 				]);
 			}
-		} elseif (!$event->isSet() && $mailbox->getName() !== 'INBOX') {
+		} elseif (!$event->isSet() && !$mailbox->isInbox()) {
+			$inboxMailbox = $this->mailboxMapper->findSpecialUseMailbox($account, 'inbox');
+			if ($inboxMailbox === null) {
+				return;
+			}
+
 			try {
 				$this->mailManager->moveMessage(
 					$account,
-					$mailbox->getName(),
-					$event->getUid(),
+					$mailbox,
+					$message,
 					$account,
-					'INBOX',
+					$inboxMailbox,
 				);
 			} catch (ServiceException $e) {
 				$this->logger->error('move message to inbox failed. account_id: {account_id}', [

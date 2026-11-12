@@ -3,28 +3,45 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import { showError, TOAST_DEFAULT_TIMEOUT } from '@nextcloud/dialogs'
+import { t } from '@nextcloud/l10n'
+import DOMPurify from 'dompurify'
+import escapeRegExp from 'lodash/fp/escapeRegExp.js'
 import flatMapDeep from 'lodash/fp/flatMapDeep.js'
 import orderBy from 'lodash/fp/orderBy.js'
+import uniq from 'lodash/fp/uniq.js'
 import {
 	andThen,
 	complement,
 	curry,
+	defaultTo,
 	filter,
 	flatten,
 	gt,
-	lt,
+	head,
 	identity,
 	last,
+	lt,
 	map,
 	pipe,
 	prop,
 	propEq,
 	slice,
+	sortBy,
 	tap,
-	where, defaultTo, head, sortBy,
+	where,
 } from 'ramda'
-
-import { savePreference } from '../../service/PreferenceService.js'
+import MailboxLockedError from '../../errors/MailboxLockedError.js'
+import { matchError } from '../../errors/match.js'
+import SyncIncompleteError from '../../errors/SyncIncompleteError.js'
+import { handleHttpAuthErrors } from '../../http/sessionExpiryHandler.js'
+import { sortMailboxes } from '../../imap/MailboxSorter.js'
+import logger from '../../logger.js'
+import {
+	buildForwardSubject,
+	buildRecipients as buildReplyRecipients,
+	buildReplySubject,
+} from '../../ReplyBuilder.js'
 import {
 	create as createAccount,
 	deleteAccount,
@@ -32,12 +49,24 @@ import {
 	fetchAll as fetchAllAccounts,
 	patch as patchAccount,
 	update as updateAccount,
-	updateSignature,
 	updateSmimeCertificate as updateAccountSmimeCertificate,
+	updateSignature,
 } from '../../service/AccountService.js'
+import * as AliasService from '../../service/AliasService.js'
 import {
-	create as createMailbox,
+	findAll,
+	getCurrentUserPrincipal,
+	initializeClientForUserView,
+} from '../../service/caldavService.js'
+import { moveDraft, updateDraft } from '../../service/DraftService.js'
+import * as FollowUpService from '../../service/FollowUpService.js'
+import {
+	addInternalAddress,
+	removeInternalAddress,
+} from '../../service/InternalAddressService.js'
+import {
 	clearMailbox,
+	create as createMailbox,
 	deleteMailbox,
 	fetchAll as fetchAllMailboxes,
 	markMailboxRead,
@@ -46,10 +75,12 @@ import {
 import {
 	createEnvelopeTag,
 	deleteMessage,
+	deleteTag,
 	fetchEnvelope,
 	fetchEnvelopes,
 	fetchMessage,
 	fetchMessageDkim,
+	fetchMessageHtmlBody,
 	fetchMessageItineraries,
 	fetchThread,
 	moveMessage,
@@ -60,76 +91,66 @@ import {
 	syncEnvelopes as syncEnvelopesExternal,
 	unSnoozeMessage,
 	updateEnvelopeTag,
-	deleteTag,
 } from '../../service/MessageService.js'
-import { moveDraft, updateDraft } from '../../service/DraftService.js'
-import * as AliasService from '../../service/AliasService.js'
-import logger from '../../logger.js'
-import { normalizedEnvelopeListId } from '../../util/normalization.js'
 import { showNewMessagesNotification } from '../../service/NotificationService.js'
-import { matchError } from '../../errors/match.js'
-import SyncIncompleteError from '../../errors/SyncIncompleteError.js'
-import MailboxLockedError from '../../errors/MailboxLockedError.js'
-import { wait } from '../../util/wait.js'
+import { savePreference } from '../../service/PreferenceService.js'
+import {
+	createQuickAction,
+	deleteQuickAction,
+	updateQuickAction,
+} from '../../service/QuickActionsService.js'
 import {
 	getActiveScript,
-	updateAccount as updateSieveAccount,
 	updateActiveScript,
+	updateAccount as updateSieveAccount,
 } from '../../service/SieveService.js'
+import * as SmimeCertificateService
+	from '../../service/SmimeCertificateService.js'
 import {
-	FOLLOW_UP_TAG_LABEL,
-	PAGE_SIZE,
-	UNIFIED_INBOX_ID,
-	FOLLOW_UP_MAILBOX_ID,
-	UNIFIED_ACCOUNT_ID,
-} from '../constants.js'
+	createTextBlock,
+	deleteTextBlock,
+	fetchMyTextBlocks,
+	fetchSharedTextBlocks,
+	updateTextBlock,
+} from '../../service/TextBlockService.js'
 import * as ThreadService from '../../service/ThreadService.js'
+import { sortAliases } from '../../util/emailAddress.js'
+import { normalizedEnvelopeListId } from '../../util/normalization.js'
 import {
 	getPrioritySearchQueries,
 	priorityImportantQuery,
 	priorityOtherQuery,
 } from '../../util/priorityInbox.js'
-import Axios from '@nextcloud/axios'
-import { generateUrl } from '@nextcloud/router'
-import { handleHttpAuthErrors } from '../../http/sessionExpiryHandler.js'
-import { showError, showWarning } from '@nextcloud/dialogs'
-import { translate as t } from '@nextcloud/l10n'
+import { wait } from '../../util/wait.js'
 import {
-	buildForwardSubject,
-	buildRecipients as buildReplyRecipients,
-	buildReplySubject,
-} from '../../ReplyBuilder.js'
-import DOMPurify from 'dompurify'
-import {
-	getCurrentUserPrincipal,
-	initializeClientForUserView,
-	findAll,
-} from '../../service/caldavService.js'
-import * as SmimeCertificateService from '../../service/SmimeCertificateService.js'
+	FOLLOW_UP_MAILBOX_ID,
+	FOLLOW_UP_TAG_LABEL,
+	PAGE_SIZE,
+	UNIFIED_ACCOUNT_ID,
+	UNIFIED_INBOX_ID,
+} from '../constants.js'
 import useOutboxStore from '../outboxStore.js'
-import * as FollowUpService from '../../service/FollowUpService.js'
-import { addInternalAddress, removeInternalAddress } from '../../service/InternalAddressService.js'
-import { createTextBlock, fetchMyTextBlocks, fetchSharedTextBlocks, deleteTextBlock, updateTextBlock } from '../../service/TextBlockService.js'
 
-import escapeRegExp from 'lodash/fp/escapeRegExp.js'
-import uniq from 'lodash/fp/uniq.js'
-import Vue from 'vue'
-
-import { sortMailboxes } from '../../imap/MailboxSorter.js'
+/**
+ * @todo Type definition for ComposerSessionData is incomplete
+ *
+ * @typedef {object} ComposerSessionData
+ * @property {boolean} isHtml whether this is a html message
+ * @property {string} bodyHtml the body as html
+ * @property {string} bodyPlain the body as plain text
+ */
 
 const sliceToPage = slice(0, PAGE_SIZE)
 
-const findIndividualMailboxes = curry((getMailboxes, specialRole) =>
-	pipe(
-		filter(complement(prop('isUnified'))),
-		map(prop('id')),
-		map(getMailboxes),
-		flatten,
-		filter(propEq(specialRole, 'specialRole')),
-	),
-)
+const findIndividualMailboxes = curry((getMailboxes, specialRole) => pipe(
+	filter(complement(prop('isUnified'))),
+	map(prop('id')),
+	map(getMailboxes),
+	flatten,
+	filter(propEq(specialRole, 'specialRole')),
+))
 
-const combineEnvelopeLists = (sortOrder) => {
+function combineEnvelopeLists(sortOrder) {
 	if (sortOrder === 'oldest') {
 		return pipe(flatten, orderBy(prop('dateInt'), 'asc'))
 	}
@@ -140,14 +161,14 @@ const combineEnvelopeLists = (sortOrder) => {
 const addMailboxToState = curry((mailboxes, account, mailbox) => {
 	mailbox.accountId = account.id
 	mailbox.mailboxes = []
-	Vue.set(mailbox, 'envelopeLists', {})
+	mailbox.envelopeLists = {}
 
 	transformMailboxName(account, mailbox)
 
-	Vue.set(mailboxes, mailbox.databaseId, mailbox)
+	mailboxes[mailbox.databaseId] = mailbox
 	const parent = Object.values(mailboxes)
-		.filter(mb => mb.accountId === account.id)
-		.find(mb => mb.name === mailbox.path)
+		.filter((mb) => mb.accountId === account.id)
+		.find((mb) => mb.name === mailbox.path)
 	if (mailbox.path === '' || !parent) {
 		account.mailboxes.push(mailbox.databaseId)
 	} else {
@@ -189,6 +210,9 @@ function transformMailboxName(account, mailbox) {
 
 export default function mainStoreActions() {
 	return {
+		updateSyncTimestamp() {
+			this.syncTimestamp = Date.now()
+		},
 		savePreference({
 			key,
 			value,
@@ -215,10 +239,30 @@ export default function mainStoreActions() {
 				return account
 			})
 		},
+		async checkOidcReauth(account) {
+			if (!account || account.authMethod !== 'xoauth2' || account.oauthNeedsReauth) {
+				return
+			}
+			try {
+				const fresh = await fetchAccount(account.id)
+				if (fresh.oauthNeedsReauth) {
+					this.patchAccountMutation({ account, data: { oauthNeedsReauth: true } })
+				}
+			} catch (error) {
+				logger.error('Could not check OIDC re-authentication state', { error })
+			}
+		},
 		async startAccountSetup(config) {
 			const account = await createAccount(config)
 			logger.debug(`account ${account.id} created`, { account })
 			return account
+		},
+		async syncMailboxesForAccount(account) {
+			logger.debug(`Fetching mailboxes for account ${account.id},  …`, { account })
+			account.mailboxes = await fetchAllMailboxes(account.id, true)
+			const mailboxes = sortMailboxes(account.mailboxes || [], account)
+			account.mailboxes = []
+			mailboxes.map(addMailboxToState(this.mailboxes, account))
 		},
 		async finishAccountSetup({ account }) {
 			logger.debug(`Fetching mailboxes for account ${account.id},  …`, { account })
@@ -234,7 +278,8 @@ export default function mainStoreActions() {
 			return handleHttpAuthErrors(async () => {
 				const account = await updateAccount(config)
 				logger.debug('account updated', { account })
-				this.editAccountMutation(account)
+				this.editAccountMutation({ ...account, error: false })
+				await this.syncMailboxesForAccount(this.accountsUnmapped[account.id])
 				return account
 			})
 		},
@@ -265,7 +310,7 @@ export default function mainStoreActions() {
 					account,
 					signature,
 				})
-				const updated = Object.assign({}, account, { signature })
+				const updated = { ...account, signature }
 				this.editAccountMutation(updated)
 				return account
 			})
@@ -316,7 +361,7 @@ export default function mainStoreActions() {
 					? account.personalNamespace + name
 					: name
 				const mailbox = await createMailbox(account.id, prefixed)
-				console.debug(`mailbox ${prefixed} created for account ${account.id}`, { mailbox })
+				logger.debug(`mailbox ${prefixed} created for account ${account.id}`, { mailbox })
 				this.addMailboxMutation({
 					account,
 					mailbox,
@@ -346,18 +391,16 @@ export default function mainStoreActions() {
 					accounts[index + 1] = account
 					accounts[index] = next
 				}
-				return await Promise.all(
-					accounts.map((account, idx) => {
-						if (account.id === 0) {
-							return Promise.resolve()
-						}
-						this.saveAccountsOrderMutation({
-							account,
-							order: idx,
-						})
-						return patchAccount(account, { order: idx })
-					}),
-				)
+				return await Promise.all(accounts.map((account, idx) => {
+					if (account.id === 0) {
+						return Promise.resolve()
+					}
+					this.saveAccountsOrderMutation({
+						account,
+						order: idx,
+					})
+					return patchAccount(account, { order: idx })
+				}))
 			})
 		},
 		async markMailboxRead({
@@ -370,17 +413,13 @@ export default function mainStoreActions() {
 				if (mailbox.isUnified) {
 					const findIndividual = findIndividualMailboxes(this.getMailboxes, mailbox.specialRole)
 					const individualMailboxes = findIndividual(this.getAccounts)
-					return Promise.all(
-						individualMailboxes.map((mb) =>
-							this.markMailboxReadMutation({
-								accountId: mb.accountId,
-								mailboxId: mb.databaseId,
-							}),
-						),
-					)
+					return Promise.all(individualMailboxes.map((mb) => this.markMailboxReadMutation({
+						accountId: mb.accountId,
+						mailboxId: mb.databaseId,
+					})))
 				}
 
-				const updated = Object.assign({}, mailbox)
+				const updated = { ...mailbox }
 				updated.unread = 0
 
 				await markMailboxRead(mailboxId)
@@ -468,23 +507,23 @@ export default function mainStoreActions() {
 			return handleHttpAuthErrors(async () => {
 				if (reply) {
 					const original = await this.fetchMessage(reply.data.databaseId)
+					if (reply?.smartReply) {
+						const aiDisclaimerText = t('mail', '(All or part of this reply was generated by AI)')
 
+						if (original.hasHtmlBody) {
+							reply.smartReply = `${reply.smartReply}
+								<p></p>
+					<em>${aiDisclaimerText}</em>`
+						} else {
+							reply.smartReply = `${reply.smartReply}\n\n<p></p> ${aiDisclaimerText}`
+						}
+					}
 					// Fetch and transform the body into a rich text object
 					if (original.hasHtmlBody) {
-						const resp = await Axios.get(
-							generateUrl('/apps/mail/api/messages/{id}/html?plain=true', {
-								id: original.databaseId,
-							}),
-						)
-
-						resp.data = DOMPurify.sanitize(resp.data, {
-							FORBID_TAGS: ['style'],
-						})
-
 						data.isHtml = true
-						data.bodyHtml = resp.data
+						data.bodyHtml = await this.processHtmlBody(original.databaseId)
 						if (reply.suggestedReply) {
-							data.bodyHtml = `<p>${reply.suggestedReply}<\\p>` + data.bodyHtml
+							data.bodyHtml = `<p>${reply.suggestedReply}</p>` + data.bodyHtml
 						}
 					} else {
 						data.isHtml = false
@@ -496,8 +535,19 @@ export default function mainStoreActions() {
 
 					if (reply.mode === 'reply') {
 						logger.debug('Show simple reply composer', { reply })
-						let to = original.replyTo !== undefined ? original.replyTo : reply.data.from
-						if (reply.followUp) {
+						const account = this.getAccount(reply.data.accountId)
+						// For mailing list emails, "Reply to sender" must use From because
+						// Reply-To points to the list address, not the original sender.
+						// For regular emails, honor Reply-To if the sender set one.
+						const isMailingList = !!(original.unsubscribeUrl || original.unsubscribeMailto)
+						let to = (!isMailingList && original.replyTo?.length > 0)
+							? original.replyTo
+							: reply.data.from
+						// Replying to a message we sent ourselves: follow up with the
+						// original recipient(s) instead of addressing ourselves.
+						const isOwnMessage = to.length > 0
+							&& to.every((addr) => addr.email === account.emailAddress)
+						if (reply.followUp || isOwnMessage) {
 							to = reply.data.to
 						}
 						this.startComposerSessionMutation({
@@ -511,6 +561,7 @@ export default function mainStoreActions() {
 								bodyPlain: data.bodyPlain,
 								replyTo: reply.data,
 								smartReply: reply.smartReply,
+								attachments: this.prepareAttachments(original),
 							},
 						})
 						return
@@ -531,6 +582,8 @@ export default function mainStoreActions() {
 								bodyHtml: data.bodyHtml,
 								bodyPlain: data.bodyPlain,
 								replyTo: reply.data,
+								smartReply: reply.smartReply,
+								attachments: this.prepareAttachments(original),
 							},
 						})
 						return
@@ -546,13 +599,7 @@ export default function mainStoreActions() {
 								bodyHtml: data.bodyHtml,
 								bodyPlain: data.bodyPlain,
 								forwardFrom: reply.data,
-								attachments: original.attachments.map(attachment => ({
-									...attachment,
-									mailboxId: original.mailboxId,
-									// messageId for attachments is actually the uid
-									uid: attachment.messageId,
-									type: 'message-attachment',
-								})),
+								attachments: this.prepareAttachments(original, true),
 							},
 						})
 						return
@@ -563,30 +610,17 @@ export default function mainStoreActions() {
 					data = {
 						...data,
 						message,
+						isAiGenerated: data.isAiGenerated ?? message.hasAiGeneratedHeader ?? false,
+						attachments: this.prepareAttachments(message, true),
 					}
 
 					// Fetch and transform the body into a rich text object
 					if (message.hasHtmlBody) {
-						const resp = await Axios.get(
-							generateUrl('/apps/mail/api/messages/{id}/html?plain=true', {
-								id: templateMessageId,
-							}),
-						)
-
-						resp.data = DOMPurify.sanitize(resp.data, {
-							FORBID_TAGS: ['style'],
-						})
-
 						data.isHtml = true
-						data.bodyHtml = resp.data
+						data.bodyHtml = await this.processHtmlBody(templateMessageId)
 					} else {
 						data.isHtml = false
 						data.bodyPlain = message.body
-					}
-
-					// TODO: implement attachments
-					if (message.attachments.length) {
-						showWarning(t('mail', 'Attachments were not copied. Please add them manually.'))
 					}
 				}
 
@@ -595,7 +629,7 @@ export default function mainStoreActions() {
 				if (type === 'outbox' && data.id && data.sendAt) {
 					originalSendAt = data.sendAt
 					const outboxStore = useOutboxStore()
-					await outboxStore.stopMessage({ message: { ...data } })
+					data = await outboxStore.stopMessage({ message: { ...data } })
 				}
 
 				this.startComposerSessionMutation({
@@ -611,6 +645,35 @@ export default function mainStoreActions() {
 					this.setComposerMessageSavedMutation(true)
 				}
 			})
+		},
+		prepareAttachments(original, forward = false) {
+			const attachments = []
+
+			if (forward && original.attachments) {
+				for (const attachment of original.attachments) {
+					attachments.push({
+						...attachment,
+						mailboxId: original.mailboxId,
+						// messageId for attachments is actually the uid
+						uid: attachment.messageId,
+						type: 'message-attachment',
+					})
+				}
+			}
+
+			if (original.inlineAttachments) {
+				for (const inlineAttachment of original.inlineAttachments) {
+					attachments.push({
+						...inlineAttachment,
+						mailboxId: original.mailboxId,
+						// messageId for attachments is actually the uid
+						uid: inlineAttachment.messageId,
+						type: 'message-attachment-inline',
+					})
+				}
+			}
+
+			return attachments
 		},
 		async stopComposerSession({
 			restoreOriginalSendAt = false,
@@ -670,15 +733,13 @@ export default function mainStoreActions() {
 
 				if (mailbox.isUnified) {
 					const fetchIndividualLists = pipe(
-						map((mb) =>
-							this.fetchEnvelopes({
-								mailboxId: mb.databaseId,
-								query,
-								addToUnifiedMailboxes: false,
-								sort: this.getPreference('sort-order'),
-								view: this.getPreference('layout-message-view'),
-							}),
-						),
+						map((mb) => this.fetchEnvelopes({
+							mailboxId: mb.databaseId,
+							query,
+							addToUnifiedMailboxes: false,
+							sort: this.getPreference('sort-order'),
+							view: this.getPreference('layout-message-view'),
+						})),
 						Promise.all.bind(Promise),
 						andThen(map(sliceToPage)),
 					)
@@ -687,14 +748,10 @@ export default function mainStoreActions() {
 						fetchIndividualLists,
 						andThen(combineEnvelopeLists(this.getPreference('sort-order'))),
 						andThen(sliceToPage),
-						andThen(
-							tap((envelopes) =>
-								this.addEnvelopesMutation({
-									envelopes,
-									query,
-								}),
-							),
-						),
+						andThen(tap((envelopes) => this.addEnvelopesMutation({
+							envelopes,
+							query,
+						}))),
 					)
 
 					return fetchUnifiedEnvelopes(this.getAccounts)
@@ -702,15 +759,11 @@ export default function mainStoreActions() {
 
 				return pipe(
 					fetchEnvelopes,
-					andThen(
-						tap((envelopes) =>
-							this.addEnvelopesMutation({
-								query,
-								envelopes,
-								addToUnifiedMailboxes,
-							}),
-						),
-					),
+					andThen(tap((envelopes) => this.addEnvelopesMutation({
+						query,
+						envelopes,
+						addToUnifiedMailboxes,
+					}))),
 				)(mailbox.accountId, mailboxId, query, undefined, PAGE_SIZE, this.getPreference('sort-order'), this.getPreference('layout-message-view'), includeCacheBuster ? mailbox.cacheBuster : undefined)
 			})
 		},
@@ -739,9 +792,7 @@ export default function mainStoreActions() {
 
 				if (mailbox.isUnified) {
 					const getIndivisualLists = curry((query, m) => this.getEnvelopes(m.databaseId, query))
-					const individualCursor = curry((query, m) =>
-						prop('dateInt', last(this.getEnvelopes(m.databaseId, query))),
-					)
+					const individualCursor = curry((query, m) => prop('dateInt', last(this.getEnvelopes(m.databaseId, query))))
 					const cursor = individualCursor(query, mailbox)
 
 					if (cursor === undefined) {
@@ -752,11 +803,9 @@ export default function mainStoreActions() {
 						findIndividualMailboxes(this.getMailboxes, mailbox.specialRole),
 						map(getIndivisualLists(query)),
 						combineEnvelopeLists(this.getPreference('sort-order')),
-						filter(
-							where({
-								dateInt: newestFirst ? gt(cursor) : lt(cursor),
-							}),
-						),
+						filter(where({
+							dateInt: newestFirst ? gt(cursor) : lt(cursor),
+						})),
 						slice(0, quantity),
 					)
 					// We know the next envelopes based on local data
@@ -775,37 +824,32 @@ export default function mainStoreActions() {
 						}
 					})
 
-					const mailboxesToFetch = (accounts) =>
-						pipe(
-							findIndividualMailboxes(this.getMailboxes, mailbox.specialRole),
-							tap(mbs => console.info('individual mailboxes', mbs)),
-							filter(needsFetch(query, nextLocalUnifiedEnvelopes(accounts))),
-						)(accounts)
+					const mailboxesToFetch = (accounts) => pipe(
+						findIndividualMailboxes(this.getMailboxes, mailbox.specialRole),
+						tap((mbs) => logger.info('individual mailboxes', { mbs })),
+						filter(needsFetch(query, nextLocalUnifiedEnvelopes(accounts))),
+					)(accounts)
 					const mbs = mailboxesToFetch(this.getAccounts)
 
 					if (rec && mbs.length) {
 						logger.debug('not enough local envelopes for the next unified page. ' + mbs.length + ' fetches required', {
-							mailboxes: mbs.map(mb => mb.databaseId),
+							mailboxes: mbs.map((mb) => mb.databaseId),
 						})
 						return pipe(
-							map((mb) =>
-								this.fetchNextEnvelopes({
-									mailboxId: mb.databaseId,
-									query,
-									quantity,
-									addToUnifiedMailboxes: false,
-								}),
-							),
+							map((mb) => this.fetchNextEnvelopes({
+								mailboxId: mb.databaseId,
+								query,
+								quantity,
+								addToUnifiedMailboxes: false,
+							})),
 							Promise.all.bind(Promise),
-							andThen(() =>
-								this.fetchNextEnvelopes({
-									mailboxId,
-									query,
-									quantity,
-									rec: false,
-									addToUnifiedMailboxes: true,
-								}),
-							),
+							andThen(() => this.fetchNextEnvelopes({
+								mailboxId,
+								query,
+								quantity,
+								rec: false,
+								addToUnifiedMailboxes: true,
+							})),
 						)(mbs)
 					}
 
@@ -821,12 +865,12 @@ export default function mainStoreActions() {
 
 				const list = mailbox.envelopeLists[normalizedEnvelopeListId(query)]
 				if (list === undefined) {
-					console.warn("envelope list is not defined, can't fetch next envelopes", mailboxId, query)
+					logger.warn("envelope list is not defined, can't fetch next envelopes", { mailboxId, query })
 					return Promise.resolve([])
 				}
 				const lastEnvelopeId = last(list)
 				if (typeof lastEnvelopeId === 'undefined') {
-					console.error('mailbox is empty', list)
+					logger.error('mailbox is empty', { list })
 					return Promise.reject(new Error('Local mailbox has no envelopes, cannot determine cursor'))
 				}
 				const lastEnvelope = this.getEnvelope(lastEnvelopeId)
@@ -834,7 +878,15 @@ export default function mainStoreActions() {
 					return Promise.reject(new Error('Cannot find last envelope. Required for the mailbox cursor'))
 				}
 
-				return fetchEnvelopes(mailbox.accountId, mailboxId, query, lastEnvelope.dateInt, quantity, this.getPreference('sort-order')).then((envelopes) => {
+				return fetchEnvelopes(
+					mailbox.accountId,
+					mailboxId,
+					query,
+					lastEnvelope.dateInt,
+					quantity,
+					this.getPreference('sort-order'),
+					this.getPreference('layout-message-view'),
+				).then((envelopes) => {
 					logger.debug(`fetched ${envelopes.length} messages for mailbox ${mailboxId}`, {
 						envelopes,
 						addToUnifiedMailboxes,
@@ -863,47 +915,29 @@ export default function mainStoreActions() {
 				const isDisabled = (account) => passwordIsUnavailable && !!account.provisioningId
 
 				if (mailbox.isUnified) {
-					return Promise.all(
-						this.getAccounts
-							.filter((account) => !account.isUnified && !isDisabled(account))
-							.map((account) =>
-								Promise.all(
-									this
-										.getMailboxes(account.id)
-										.filter((mb) => mb.specialRole === mailbox.specialRole)
-										.map((mailbox) =>
-											this.syncEnvelopes({
-												mailboxId: mailbox.databaseId,
-												query,
-												init,
-											}),
-										),
-								),
-							),
-					)
+					return Promise.all(this.getAccounts
+						.filter((account) => !account.isUnified && !isDisabled(account))
+						.map((account) => Promise.all(this
+							.getMailboxes(account.id)
+							.filter((mb) => mb.specialRole === mailbox.specialRole)
+							.map((mailbox) => this.syncEnvelopes({
+								mailboxId: mailbox.databaseId,
+								query,
+								init,
+							})))))
 				} else if (mailbox.isPriorityInbox && query === undefined) {
-					return Promise.all(
-						getPrioritySearchQueries().map((query) => {
-							return Promise.all(
-								this.getAccounts
-									.filter((account) => !account.isUnified && !isDisabled(account))
-									.map((account) =>
-										Promise.all(
-											this
-												.getMailboxes(account.id)
-												.filter((mb) => mb.specialRole === mailbox.specialRole)
-												.map((mailbox) =>
-													this.syncEnvelopes({
-														mailboxId: mailbox.databaseId,
-														query,
-														init,
-													}),
-												),
-										),
-									),
-							)
-						}),
-					)
+					return Promise.all(getPrioritySearchQueries().map((query) => {
+						return Promise.all(this.getAccounts
+							.filter((account) => !account.isUnified && !isDisabled(account))
+							.map((account) => Promise.all(this
+								.getMailboxes(account.id)
+								.filter((mb) => mb.specialRole === mailbox.specialRole)
+								.map((mailbox) => this.syncEnvelopes({
+									mailboxId: mailbox.databaseId,
+									query,
+									init,
+								})))))
+					}))
 				}
 
 				const ids = this.getEnvelopes(mailboxId, query).map((env) => env.databaseId)
@@ -949,7 +983,7 @@ export default function mainStoreActions() {
 					.catch((error) => {
 						return matchError(error, {
 							[SyncIncompleteError.getName()]: () => {
-								console.warn(`(initial) sync of mailbox ${mailboxId} (${query}) is incomplete, retriggering`)
+								logger.warn(`(initial) sync of mailbox ${mailboxId} (${query}) is incomplete, retriggering`)
 								return this.syncEnvelopes({
 									mailboxId,
 									query,
@@ -970,7 +1004,7 @@ export default function mainStoreActions() {
 								}))
 							},
 							default(error) {
-								console.error('Could not sync envelopes: ' + error.message, error)
+								logger.error('Could not sync envelopes: ' + error.message, { error })
 								throw error
 							},
 						})
@@ -983,30 +1017,26 @@ export default function mainStoreActions() {
 			const isDisabled = (account) => passwordIsUnavailable && !!account.provisioningId
 
 			return handleHttpAuthErrors(async () => {
-				const results = await Promise.all(
-					this.getAccounts
-						.filter((a) => !a.isUnified && !isDisabled(a))
-						.map((account) => {
-							return Promise.all(
-								this.getMailboxes(account.id).map(async (mailbox) => {
-									if (mailbox.specialRole !== 'inbox') {
-										return
-									}
+				const results = await Promise.all(this.getAccounts
+					.filter((a) => !a.isUnified && !isDisabled(a))
+					.map((account) => {
+						return Promise.all(this.getMailboxes(account.id).map(async (mailbox) => {
+							if (mailbox.specialRole !== 'inbox') {
+								return
+							}
 
-									const list = mailbox.envelopeLists[normalizedEnvelopeListId(undefined)]
-									if (list === undefined) {
-										await this.fetchEnvelopes({
-											mailboxId: mailbox.databaseId,
-										})
-									}
+							const list = mailbox.envelopeLists[normalizedEnvelopeListId(undefined)]
+							if (list === undefined) {
+								await this.fetchEnvelopes({
+									mailboxId: mailbox.databaseId,
+								})
+							}
 
-									return await this.syncEnvelopes({
-										mailboxId: mailbox.databaseId,
-									})
-								}),
-							)
-						}),
-				)
+							return await this.syncEnvelopes({
+								mailboxId: mailbox.databaseId,
+							})
+						}))
+					}))
 				const newMessages = flatMapDeep(identity, results).filter((m) => m !== undefined)
 				if (newMessages.length === 0) {
 					return
@@ -1102,7 +1132,7 @@ export default function mainStoreActions() {
 						seen: newState,
 					})
 				} catch (error) {
-					console.error('could not toggle message seen state', error)
+					logger.error('could not toggle message seen state', { error })
 
 					// Revert change
 					this.flagEnvelopeMutation({
@@ -1143,7 +1173,7 @@ export default function mainStoreActions() {
 						$notjunk: oldState,
 					})
 				} catch (error) {
-					console.error('could not toggle message junk state', error)
+					logger.error('could not toggle message junk state', { error })
 
 					if (removeEnvelope) {
 						this.addEnvelopesMutation([envelope])
@@ -1183,7 +1213,7 @@ export default function mainStoreActions() {
 						flagged: favFlag,
 					})
 				} catch (error) {
-					console.error('could not favorite/unfavorite message ' + envelope.uid, error)
+					logger.error('could not favorite/unfavorite message ' + envelope.uid, { error })
 
 					// Revert change
 					this.flagEnvelopeMutation({
@@ -1270,8 +1300,13 @@ export default function mainStoreActions() {
 		}) {
 			return handleHttpAuthErrors(async () => {
 				const internalAddress = await addInternalAddress(address, type)
+				if (internalAddress === null) {
+					logger.debug('internal address is already internal')
+					return
+				}
+
 				this.addInternalAddressMutation(internalAddress)
-				console.debug('internal address added')
+				logger.debug('internal address added')
 			})
 		},
 		async removeInternalAddress({
@@ -1283,9 +1318,9 @@ export default function mainStoreActions() {
 				try {
 					await removeInternalAddress(address, type)
 					this.removeInternalAddressMutation({ addressId: id })
-					console.debug('internal address removed')
+					logger.debug('internal address removed')
 				} catch (error) {
-					console.error('could not delete internal address', error)
+					logger.error('could not delete internal address', { error })
 					throw error
 				}
 			})
@@ -1297,9 +1332,9 @@ export default function mainStoreActions() {
 				try {
 					await deleteMessage(id)
 					this.removeMessageMutation({ id })
-					console.debug('message removed')
+					logger.debug('message removed')
 				} catch (err) {
-					console.error('could not delete message', err)
+					logger.error('could not delete message', { error: err })
 					const envelope = this.getEnvelope(id)
 					if (envelope) {
 						this.addEnvelopesMutation({ envelopes: [envelope] })
@@ -1387,7 +1422,7 @@ export default function mainStoreActions() {
 					name: newName,
 				})
 
-				console.debug(`mailbox ${mailbox.databaseId} renamed to ${newName}`, { mailbox })
+				logger.debug(`mailbox ${mailbox.databaseId} renamed to ${newName}`, { mailbox })
 				this.removeMailboxMutation({ id: mailbox.databaseId })
 				this.addMailboxMutation({
 					account,
@@ -1470,14 +1505,13 @@ export default function mainStoreActions() {
 				const tag = await createEnvelopeTag(displayName, color)
 				this.addTagMutation({ tag })
 			})
-
 		},
 		async addEnvelopeTag({
 			envelope,
 			imapLabel,
 		}) {
 			return handleHttpAuthErrors(async () => {
-				// TODO: fetch tags indepently of envelopes and only send tag id here
+				// TODO: fetch tags independently of envelopes and only send tag id here
 				const tag = await setEnvelopeTag(envelope.databaseId, imapLabel)
 				if (!this.getTag(tag.id)) {
 					this.addTagMutation({ tag })
@@ -1536,10 +1570,10 @@ export default function mainStoreActions() {
 
 				try {
 					await ThreadService.deleteThread(envelope.databaseId)
-					console.debug('thread removed')
+					logger.debug('thread removed')
 				} catch (e) {
 					this.addEnvelopesMutation({ envelopes: [envelope] })
-					console.error('could not delete thread', e)
+					logger.error('could not delete thread', { error: e })
 					throw e
 				}
 			})
@@ -1549,14 +1583,12 @@ export default function mainStoreActions() {
 			destMailboxId,
 		}) {
 			return handleHttpAuthErrors(async () => {
-				this.removeEnvelopeMutation({ id: envelope.databaseId })
-
 				try {
 					await ThreadService.moveThread(envelope.databaseId, destMailboxId)
-					console.debug('thread removed')
+					this.removeEnvelopeMutation({ id: envelope.databaseId })
+					logger.debug('thread moved')
 				} catch (e) {
-					this.addEnvelopesMutation({ envelopes: [envelope] })
-					console.error('could not move thread', e)
+					logger.error('could not move thread', { error: e })
 					throw e
 				}
 			})
@@ -1569,10 +1601,10 @@ export default function mainStoreActions() {
 			return handleHttpAuthErrors(async () => {
 				try {
 					await ThreadService.snoozeThread(envelope.databaseId, unixTimestamp, destMailboxId)
-					console.debug('thread snoozed')
+					logger.debug('thread snoozed')
 				} catch (e) {
 					this.addEnvelopesMutation({ envelopes: [envelope] })
-					console.error('could not snooze thread', e)
+					logger.error('could not snooze thread', { error: e })
 					throw e
 				}
 				this.removeEnvelopeMutation({ id: envelope.databaseId })
@@ -1582,9 +1614,9 @@ export default function mainStoreActions() {
 			return handleHttpAuthErrors(async () => {
 				try {
 					await ThreadService.unSnoozeThread(envelope.databaseId)
-					console.debug('thread unSnoozed')
+					logger.debug('thread unSnoozed')
 				} catch (e) {
-					console.error('could not unsnooze thread', e)
+					logger.error('could not unsnooze thread', { error: e })
 					throw e
 				}
 				this.removeEnvelopeMutation({ id: envelope.databaseId })
@@ -1808,6 +1840,20 @@ export default function mainStoreActions() {
 			const result = await updateTextBlock(textBlock)
 			this.patchTextBlockLocally(result)
 		},
+		async createQuickAction(name, accountId) {
+			const quickAction = await createQuickAction(name, accountId)
+			this.addQuickActionLocally(quickAction)
+			return quickAction
+		},
+		async deleteQuickAction(id) {
+			await deleteQuickAction(id)
+			this.deleteQuickActionLocally(id)
+		},
+		async patchQuickAction(id, name) {
+			const quickAction = await updateQuickAction(id, name)
+			this.patchQuickActionLocally(quickAction)
+			return quickAction
+		},
 		sortAccounts(accounts) {
 			accounts.sort((a1, a2) => a1.order - a2.order)
 			return accounts
@@ -1827,7 +1873,7 @@ export default function mainStoreActions() {
 				.entries(envelope.tags ?? {})
 				.map(([imapLabel, tag]) => {
 					if (!this.tags[tag.id]) {
-						Vue.set(this.tags, tag.id, tag)
+						this.tags[tag.id] = tag
 					}
 					if (!this.tagList.includes(tag.id)) {
 						this.tagList.push(tag.id)
@@ -1835,7 +1881,7 @@ export default function mainStoreActions() {
 					return tag.id
 				})
 
-			Vue.set(envelope, 'tags', tags)
+			envelope.tags = tags
 		},
 
 		/**
@@ -1849,7 +1895,6 @@ export default function mainStoreActions() {
 		 * @return {Array} list of envelope ids
 		 */
 		appendOrReplaceEnvelopeId(existing, envelope) {
-
 			if (this.getPreference('layout-message-view') === 'singleton') {
 				existing.push(envelope.databaseId)
 			} else {
@@ -1867,7 +1912,7 @@ export default function mainStoreActions() {
 			key,
 			value,
 		}) {
-			Vue.set(this.preferences, key, value)
+			this.preferences[key] = value
 		},
 		setSessionExpiredMutation() {
 			this.isExpiredSession = true
@@ -1875,7 +1920,7 @@ export default function mainStoreActions() {
 		addAccountMutation(account) {
 			account.collapsed = account.collapsed ?? true
 
-			Vue.set(this.accountsUnmapped, account.id, account)
+			this.accountsUnmapped[account.id] = account
 
 			this.accountList.push(account.id)
 
@@ -1884,25 +1929,25 @@ export default function mainStoreActions() {
 
 			// Save the mailboxes to the store, but only keep IDs in the account's mailboxes list
 			const mailboxes = sortMailboxes(account.mailboxes || [], account)
-			Vue.set(account, 'mailboxes', [])
-			Vue.set(account, 'aliases', account.aliases ?? [])
+			account.mailboxes = []
+			account.aliases = sortAliases(account.aliases ?? [])
 
 			mailboxes.map(addMailboxToState(this.mailboxes, account))
 		},
 		editAccountMutation(account) {
-			Vue.set(this.accountsUnmapped, account.id, Object.assign({}, this.accountsUnmapped[account.id], account))
+			this.accountsUnmapped[account.id] = { ...this.accountsUnmapped[account.id], ...account }
 		},
 		patchAccountMutation({
 			account,
 			data,
 		}) {
-			Vue.set(this.accountsUnmapped, account.id, Object.assign({}, this.accountsUnmapped[account.id], data))
+			this.accountsUnmapped[account.id] = { ...this.accountsUnmapped[account.id], ...data }
 		},
 		saveAccountsOrderMutation({
 			account,
 			order,
 		}) {
-			Vue.set(account, 'order', order)
+			account.order = order
 			this.accountList = this
 				.sortAccounts(this.accountList.map((id) => this.accountsUnmapped[id]))
 				.map((a) => a.id)
@@ -1918,7 +1963,7 @@ export default function mainStoreActions() {
 			key,
 			value,
 		}) {
-			const accountSettings = this.allAccountSettings.find(settings => settings.accountId === accountId)
+			const accountSettings = this.allAccountSettings.find((settings) => settings.accountId === accountId)
 			if (accountSettings) {
 				accountSettings[key] = value
 			} else {
@@ -1936,7 +1981,12 @@ export default function mainStoreActions() {
 		updateMailboxMutation({ mailbox }) {
 			const account = this.accountsUnmapped[mailbox.accountId]
 			transformMailboxName(account, mailbox)
-			Vue.set(this.mailboxes, mailbox.databaseId, mailbox)
+			Object.defineProperty(mailbox, 'isSubscribed', {
+				get() {
+					return this.attributes?.includes('\\subscribed') ?? false
+				},
+			})
+			this.mailboxes[mailbox.databaseId] = mailbox
 		},
 		removeMailboxMutation({ id }) {
 			const mailbox = this.mailboxes[id]
@@ -1947,12 +1997,12 @@ export default function mainStoreActions() {
 			if (account === undefined) {
 				throw new Error(`Account ${mailbox.accountId} of mailbox ${id} is unknown`)
 			}
-			Vue.delete(this.mailboxes, id)
+			delete this.mailboxes[id]
 
 			// Travers through the account and the full mailbox tree to find any dangling pointers
 			const removeRec = (parent) => {
 				parent.mailboxes = parent.mailboxes.filter((mbId) => mbId !== id)
-				parent.mailboxes.map(mbid => removeRec(this.mailboxes[mbid]))
+				parent.mailboxes.map((mbid) => removeRec(this.mailboxes[mbid]))
 			}
 			removeRec(account)
 		},
@@ -1961,7 +2011,7 @@ export default function mainStoreActions() {
 		 *
 		 * @param {object} payload Data for the new message
 		 * @param payload.type
-		 * @param payload.data
+		 * @param {ComposerSessionData} payload.data
 		 * @param payload.forwardedMessages
 		 * @param payload.originalSendAt
 		 * @param payload.smartReply
@@ -2031,8 +2081,8 @@ export default function mainStoreActions() {
 				// If the message is dispatched in the background there is no newMessage data in state
 				return
 			}
-			Vue.set(this.newMessage, 'type', 'outbox')
-			Vue.set(this.newMessage.data, 'id', message.id)
+			this.newMessage.type = 'outbox'
+			this.newMessage.data.id = message.id
 		},
 		addEnvelopesMutation({
 			query,
@@ -2052,9 +2102,9 @@ export default function mainStoreActions() {
 				const mailbox = this.mailboxes[envelope.mailboxId]
 				const existing = mailbox.envelopeLists[listId] || []
 				this.normalizeTags(envelope)
-				Vue.set(this.envelopes, envelope.databaseId, Object.assign({}, this.envelopes[envelope.databaseId] || {}, envelope))
-				Vue.set(envelope, 'accountId', mailbox.accountId)
-				Vue.set(mailbox.envelopeLists, listId, uniq(orderByDateInt(this.appendOrReplaceEnvelopeId(existing, envelope))))
+				this.envelopes[envelope.databaseId] = { ...this.envelopes[envelope.databaseId] || {}, ...envelope }
+				envelope.accountId = mailbox.accountId
+				mailbox.envelopeLists[listId] = uniq(orderByDateInt(this.appendOrReplaceEnvelopeId(existing, envelope)))
 				if (!addToUnifiedMailboxes) {
 					return
 				}
@@ -2064,11 +2114,7 @@ export default function mainStoreActions() {
 					.filter((mb) => mb.specialRole && mb.specialRole === mailbox.specialRole)
 					.forEach((mailbox) => {
 						const existing = mailbox.envelopeLists[listId] || []
-						Vue.set(
-							mailbox.envelopeLists,
-							listId,
-							uniq(orderByDateInt(existing.concat([envelope.databaseId]))),
-						)
+						mailbox.envelopeLists[listId] = uniq(orderByDateInt(existing.concat([envelope.databaseId])))
 					})
 			})
 		},
@@ -2078,8 +2124,8 @@ export default function mainStoreActions() {
 				return
 			}
 			this.normalizeTags(envelope)
-			Vue.set(existing, 'flags', envelope.flags)
-			Vue.set(existing, 'tags', envelope.tags)
+			existing.flags = envelope.flags
+			existing.tags = envelope.tags
 		},
 		flagEnvelopeMutation({
 			envelope,
@@ -2090,32 +2136,32 @@ export default function mainStoreActions() {
 			if (mailbox && flag === 'seen') {
 				const unread = mailbox.unread ?? 0
 				if (envelope.flags[flag] && !value) {
-					Vue.set(mailbox, 'unread', unread + 1)
+					mailbox.unread = unread + 1
 				} else if (!envelope.flags[flag] && value) {
-					Vue.set(mailbox, 'unread', Math.max(unread - 1, 0))
+					mailbox.unread = Math.max(unread - 1, 0)
 				}
 			}
-			Vue.set(envelope.flags, flag, value)
+			envelope.flags[flag] = value
 		},
 		addTagMutation({ tag }) {
-			Vue.set(this.tags, tag.id, tag)
+			this.tags[tag.id] = tag
 			this.tagList.push(tag.id)
 		},
 		addInternalAddressMutation(address) {
-			Vue.set(this.internalAddress, address.id, address)
+			this.internalAddress[address.id] = address
 		},
 		removeInternalAddressMutation({ addressId }) {
 			this.internalAddress = this.internalAddress.filter((address) => address.id !== addressId)
 		},
 		deleteTagMutation({ tagId }) {
 			this.tagList = this.tagList.filter((id) => id !== tagId)
-			Vue.delete(this.tags, tagId)
+			delete this.tags[tagId]
 		},
 		addEnvelopeTagMutation({
 			envelope,
 			tagId,
 		}) {
-			Vue.set(envelope, 'tags', uniq([...envelope.tags, tagId]))
+			envelope.tags = uniq([...envelope.tags, tagId])
 		},
 		updateTagMutation({
 			tag,
@@ -2129,17 +2175,17 @@ export default function mainStoreActions() {
 			envelope,
 			tagId,
 		}) {
-			Vue.set(envelope, 'tags', envelope.tags.filter((id) => id !== tagId))
+			envelope.tags = envelope.tags.filter((id) => id !== tagId)
 		},
 		removeEnvelopeMutation({ id }) {
 			const envelope = this.envelopes[id]
 			if (!envelope) {
-				console.warn('envelope ' + id + ' is unknown, can\'t remove it')
+				logger.warn('envelope ' + id + ' is unknown, can\'t remove it')
 				return
 			}
 			const mailbox = this.mailboxes[envelope.mailboxId]
 			for (const listId in mailbox.envelopeLists) {
-				if (!Object.hasOwnProperty.call(mailbox.envelopeLists, listId)) {
+				if (!Object.hasOwn(mailbox.envelopeLists, listId)) {
 					continue
 				}
 				const list = mailbox.envelopeLists[listId]
@@ -2147,12 +2193,12 @@ export default function mainStoreActions() {
 				if (idx < 0) {
 					continue
 				}
-				console.debug('envelope ' + id + ' removed from mailbox list ' + listId)
+				logger.debug('envelope ' + id + ' removed from mailbox list ' + listId)
 				list.splice(idx, 1)
 			}
 
 			if (!envelope.seen && mailbox.unread) {
-				Vue.set(mailbox, 'unread', mailbox.unread - 1)
+				mailbox.unread = mailbox.unread - 1
 			}
 
 			this.accountsUnmapped[UNIFIED_ACCOUNT_ID].mailboxes
@@ -2160,22 +2206,16 @@ export default function mainStoreActions() {
 				.filter((mb) => mb.specialRole && mb.specialRole === mailbox.specialRole)
 				.forEach((mailbox) => {
 					for (const listId in mailbox.envelopeLists) {
-						if (!Object.hasOwnProperty.call(mailbox.envelopeLists, listId)) {
+						if (!Object.hasOwn(mailbox.envelopeLists, listId)) {
 							continue
 						}
 						const list = mailbox.envelopeLists[listId]
 						const idx = list.indexOf(id)
 						if (idx < 0) {
-							console.warn(
-								'envelope does not exist in unified mailbox',
-								mailbox.databaseId,
-								id,
-								listId,
-								list,
-							)
+							logger.warn('envelope does not exist in unified mailbox', { mailboxId: mailbox.databaseId, id, listId, list })
 							continue
 						}
-						console.debug('envelope removed from unified mailbox', mailbox.databaseId, id)
+						logger.debug('envelope removed from unified mailbox', { mailboxId: mailbox.databaseId, id })
 						list.splice(idx, 1)
 					}
 				})
@@ -2186,18 +2226,18 @@ export default function mainStoreActions() {
 					continue
 				}
 
-				const thread = env.thread.filter(threadId => threadId !== id)
-				Vue.set(this.envelopes[key], 'thread', thread)
+				const thread = env.thread.filter((threadId) => threadId !== id)
+				this.envelopes[key].thread = thread
 			}
 
-			Vue.delete(this.envelopes, id)
+			delete this.envelopes[id]
 		},
 		removeEnvelopesMutation({ id }) {
-			Vue.set(this.mailboxes[id], 'envelopeLists', [])
+			this.mailboxes[id].envelopeLists = {}
 		},
 		removeAllEnvelopesMutation() {
-			Object.keys(this.mailboxes).forEach(id => {
-				Vue.set(this.mailboxes[id], 'envelopeLists', [])
+			Object.keys(this.mailboxes).forEach((id) => {
+				this.mailboxes[id].envelopeLists = {}
 			})
 		},
 		removeEnvelopeFromFollowUpMailboxMutation({ id }) {
@@ -2207,10 +2247,10 @@ export default function mainStoreActions() {
 				filteredLists[listId] = mailbox.envelopeLists[listId]
 					.filter((idInList) => id !== idInList)
 			}
-			Vue.set(this.mailboxes[FOLLOW_UP_MAILBOX_ID], 'envelopeLists', filteredLists)
+			this.mailboxes[FOLLOW_UP_MAILBOX_ID].envelopeLists = filteredLists
 		},
 		addMessageMutation({ message }) {
-			Vue.set(this.messages, message.databaseId, message)
+			this.messages[message.databaseId] = message
 		},
 		addMessageItinerariesMutation({
 			id,
@@ -2220,7 +2260,7 @@ export default function mainStoreActions() {
 			if (!message) {
 				return
 			}
-			Vue.set(message, 'itineraries', itineraries)
+			message.itineraries = itineraries
 		},
 		addMessageDkimMutation({
 			id,
@@ -2230,37 +2270,43 @@ export default function mainStoreActions() {
 			if (!message) {
 				return
 			}
-			Vue.set(message, 'dkimValid', result.valid)
+			message.dkimValid = result.valid
 		},
 		addEnvelopeThreadMutation({
 			id,
 			thread,
 		}) {
 			// Store the envelopes, merge into any existing object if one exists
-			thread.forEach(e => {
+			thread.forEach((e) => {
 				this.normalizeTags(e)
 				const mailbox = this.mailboxes[e.mailboxId]
-				Vue.set(e, 'accountId', mailbox.accountId)
-				Vue.set(this.envelopes, e.databaseId, Object.assign({}, this.envelopes[e.databaseId] || {}, e))
+				e.accountId = mailbox.accountId
+				const existing = this.envelopes[e.databaseId] || {}
+				const merged = { ...existing, ...e }
+				// preserve attachments
+				if (existing.attachments && existing.attachments.length > 0) {
+					merged.attachments = existing.attachments
+				}
+				this.envelopes[e.databaseId] = merged
 			})
 
 			// Store the references
-			Vue.set(this.envelopes[id], 'thread', thread.map(e => e.databaseId))
+			this.envelopes[id].thread = thread.map((e) => e.databaseId)
 		},
 		removeMessageMutation({ id }) {
-			Vue.delete(this.messages, id)
+			delete this.messages[id]
 		},
 		createAliasMutation({
 			account,
 			alias,
 		}) {
-			account.aliases.push(alias)
+			account.aliases = sortAliases([...(account.aliases || []), alias])
 		},
 		deleteAliasMutation({
 			account,
 			aliasId,
 		}) {
-			const index = account.aliases.findIndex(temp => aliasId === temp.id)
+			const index = account.aliases.findIndex((temp) => aliasId === temp.id)
 			if (index !== -1) {
 				account.aliases.splice(index, 1)
 			}
@@ -2270,16 +2316,17 @@ export default function mainStoreActions() {
 			aliasId,
 			data,
 		}) {
-			const index = account.aliases.findIndex(temp => aliasId === temp.id)
+			const index = account.aliases.findIndex((temp) => aliasId === temp.id)
 			if (index !== -1) {
-				account.aliases[index] = Object.assign({}, account.aliases[index], data)
+				account.aliases[index] = { ...account.aliases[index], ...data }
+				account.aliases = sortAliases(account.aliases)
 			}
 		},
 		setMailboxUnreadCountMutation({
 			id,
 			unread,
 		}) {
-			Vue.set(this.mailboxes[id], 'unread', unread ?? 0)
+			this.mailboxes[id].unread = unread ?? 0
 		},
 		setScheduledSendingDisabledMutation(value) {
 			this.isScheduledSendingDisabled = value
@@ -2291,7 +2338,7 @@ export default function mainStoreActions() {
 			accountId,
 			scriptData,
 		}) {
-			Vue.set(this.sieveScript, accountId, scriptData)
+			this.sieveScript[accountId] = scriptData
 		},
 		setCurrentUserPrincipalMutation({ currentUserPrincipal }) {
 			this.currentUserPrincipal = currentUserPrincipal
@@ -2312,13 +2359,13 @@ export default function mainStoreActions() {
 			this.smimeCertificates = certificates
 		},
 		deleteSmimeCertificateMutation({ id }) {
-			this.smimeCertificates = this.smimeCertificates.filter(cert => cert.id !== id)
+			this.smimeCertificates = this.smimeCertificates.filter((cert) => cert.id !== id)
 		},
 		addSmimeCertificateMutation({ certificate }) {
 			this.smimeCertificates = [...this.smimeCertificates, certificate]
 		},
 		setOneLineLayoutMutation({ list }) {
-			Vue.set(this, 'list', list)
+			this.list = list
 		},
 		setHasFetchedInitialEnvelopesMutation(hasFetchedInitialEnvelopes) {
 			this.hasFetchedInitialEnvelopes = hasFetchedInitialEnvelopes
@@ -2326,11 +2373,17 @@ export default function mainStoreActions() {
 		setFollowUpFeatureAvailableMutation(followUpFeatureAvailable) {
 			this.followUpFeatureAvailable = followUpFeatureAvailable
 		},
+		setContextChatFeatureAvailableMutation(contextChatFeatureAvailable) {
+			this.contextChatFeatureAvailable = contextChatFeatureAvailable
+		},
 		hasCurrentUserPrincipalAndCollectionsMutation(hasCurrentUserPrincipalAndCollections) {
 			this.hasCurrentUserPrincipalAndCollections = hasCurrentUserPrincipalAndCollections
 		},
-		showSettingsForAccountMutation(accountId) {
-			this.showAccountSettings = accountId
+		showSettingsForAccountMutation(accountId, section) {
+			this.showAccountSettings = {
+				accountId,
+				section,
+			}
 		},
 		setMyTextBlocks(textBlocks) {
 			this.myTextBlocks = textBlocks
@@ -2344,14 +2397,43 @@ export default function mainStoreActions() {
 			this.myTextBlocks.push(textBlock)
 		},
 		deleteTextBlockLocally(id) {
-			const index = this.myTextBlocks.findIndex(textBlock => textBlock.id === id)
+			const index = this.myTextBlocks.findIndex((textBlock) => textBlock.id === id)
+			if (index === -1) {
+				return
+			}
 			this.myTextBlocks.splice(index, 1)
 		},
 		patchTextBlockLocally(textBlock) {
-			const index = this.myTextBlocks.findIndex(s => s.id === textBlock.id)
+			const index = this.myTextBlocks.findIndex((s) => s.id === textBlock.id)
 			if (index !== -1) {
-				Vue.set(this.myTextBlocks, index, textBlock)
+				this.myTextBlocks[index] = textBlock
 			}
+		},
+		setQuickActions(quickActions) {
+			this.quickActions = quickActions
+		},
+		patchQuickActionLocally(quickAction) {
+			const index = this.quickActions.findIndex((s) => s.id === quickAction.id)
+			if (index !== -1) {
+				this.quickActions[index] = quickAction
+			}
+		},
+		patchActionStepsLocally(id, steps) {
+			const index = this.quickActions.findIndex((s) => s.id === id)
+			if (index !== -1) {
+				const updatedQuickAction = this.quickActions[index]
+				updatedQuickAction.actionSteps = steps
+				this.quickActions[index] = updatedQuickAction
+			}
+		},
+		deleteQuickActionLocally(id) {
+			const index = this.quickActions.findIndex((s) => s.id === id)
+			if (index !== -1) {
+				this.quickActions.splice(index, 1)
+			}
+		},
+		addQuickActionLocally(quickAction) {
+			this.quickActions.push(quickAction)
 		},
 		getPreference(key, def) {
 			return defaultTo(def, this.preferences[key])
@@ -2387,11 +2469,9 @@ export default function mainStoreActions() {
 			return undefined
 		},
 		getUnifiedMailbox(specialRole) {
-			return head(
-				this.accountsUnmapped[UNIFIED_ACCOUNT_ID].mailboxes
-					.map((id) => this.mailboxes[id])
-					.filter((mailbox) => mailbox.specialRole === specialRole),
-			)
+			return head(this.accountsUnmapped[UNIFIED_ACCOUNT_ID].mailboxes
+				.map((id) => this.mailboxes[id])
+				.filter((mailbox) => mailbox.specialRole === specialRole))
 		},
 		getEnvelope(id) {
 			return this.envelopes[id]
@@ -2403,15 +2483,16 @@ export default function mainStoreActions() {
 		getEnvelopesByThreadRootId(accountId, threadRootId) {
 			return sortBy(
 				prop('dateInt'),
-				Object.values(this.envelopes).filter(envelope => envelope.accountId === accountId && envelope.threadRootId === threadRootId),
+				Object.values(this.envelopes).filter((envelope) => envelope.accountId === accountId && envelope.threadRootId === threadRootId),
 			)
 		},
 		getMessage(id) {
 			return this.messages[id]
 		},
 		getEnvelopeThread(id) {
+			logger.debug('get thread for envelope', { id, envelope: this.envelopes[id] })
 			const thread = this.envelopes[id]?.thread ?? []
-			const envelopes = thread.map(id => this.envelopes[id])
+			const envelopes = thread.map((id) => this.envelopes[id])
 			return sortBy(prop('dateInt'), envelopes)
 		},
 		getEnvelopeTags(id) {
@@ -2435,16 +2516,13 @@ export default function mainStoreActions() {
 			return this.smimeCertificates.find((cert) => cert.emailAddress === email)
 		},
 		findMailboxBySpecialRole(accountId, specialRole) {
-			return this.getMailboxes(accountId).find(mailbox => mailbox.specialRole === specialRole)
+			return this.getMailboxes(accountId).find((mailbox) => mailbox.specialRole === specialRole)
 		},
 		findMailboxByName(accountId, name) {
-			return this.getMailboxes(accountId).find(mailbox => mailbox.name === name)
+			return this.getMailboxes(accountId).find((mailbox) => mailbox.name === name)
 		},
 		getInbox(accountId) {
 			return this.findMailboxBySpecialRole(accountId, 'inbox')
-		},
-		showSettingsForAccount(accountId) {
-			return this.showAccountSettings === accountId
 		},
 		getMyTextBlocks() {
 			return this.myTextBlocks
@@ -2454,6 +2532,24 @@ export default function mainStoreActions() {
 		},
 		areTextBlocksFetched() {
 			return this.textBlocksFetched
+		},
+		getQuickActions() {
+			return this.quickActions
+		},
+		async processHtmlBody(id) {
+			try {
+				const body = await handleHttpAuthErrors(async () => {
+					return await fetchMessageHtmlBody(id)
+				})
+				return DOMPurify.sanitize(body, {
+					FORBID_TAGS: ['style'],
+				})
+			} catch (error) {
+				if (error.response?.status === 404) {
+					showError(t('mail', 'Sorry, the message could not be loaded. The draft may no longer exist. Please refresh the page and try again.'), { timeout: TOAST_DEFAULT_TIMEOUT * 2 })
+				}
+				throw error
+			}
 		},
 	}
 }

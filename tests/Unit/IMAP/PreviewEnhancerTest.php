@@ -14,9 +14,10 @@ use OCA\Mail\Address;
 use OCA\Mail\AddressList;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DbMapper;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper as ImapMapper;
 use OCA\Mail\IMAP\PreviewEnhancer;
+use OCA\Mail\Protocol\ProtocolFactory;
+use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\Avatar\Avatar;
 use OCA\Mail\Service\AvatarService;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -24,9 +25,8 @@ use Psr\Log\LoggerInterface;
 
 class PreviewEnhancerTest extends TestCase {
 
-
-	/** @var IMAPClientFactory|MockObject */
-	private $imapClientFactory;
+	/** @var ProtocolFactory|MockObject */
+	private $protocolFactory;
 	/** @var ImapMapper|MockObject */
 	private $imapMapper;
 	/** @var DbMapper|MockObject */
@@ -37,25 +37,32 @@ class PreviewEnhancerTest extends TestCase {
 	private $avatarService;
 	/** @var PreviewEnhancer */
 	private $previewEnhancer;
+	/** @var AttachmentService|MockObject */
+	private $attachmentService;
 
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
+		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
 		$this->imapMapper = $this->createMock(ImapMapper::class);
 		$this->dbMapper = $this->createMock(DbMapper::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->avatarService = $this->createMock(AvatarService::class);
+		$this->attachmentService = $this->createMock(AttachmentService::class);
 
-		$this->previewEnhancer = new previewEnhancer($this->imapClientFactory,
+		$this->previewEnhancer = new PreviewEnhancer(
+			$this->protocolFactory,
 			$this->imapMapper,
 			$this->dbMapper,
 			$this->logger,
-			$this->avatarService);
+			$this->avatarService,
+			$this->attachmentService
+		);
 	}
 
 	public function testAvatars(): void {
-
+		$account = $this->createStub(\OCA\Mail\Account::class);
+		$mailbox = $this->createStub(\OCA\Mail\Db\Mailbox::class);
 		$message1 = new Message();
 		$message1->setId(1);
 		$message1->setStructureAnalyzed(true);
@@ -66,6 +73,15 @@ class PreviewEnhancerTest extends TestCase {
 		$message2->setFrom(new AddressList([Address::fromRaw('Bob', 'bob@example.com')]));
 		$messages = [$message1, $message2];
 		$message2Avatar = new Avatar('example.com', 'image/png', true);
+		$this->attachmentService->expects($this->exactly(2))
+			->method('getAttachmentNames')
+			->withConsecutive(
+				[$account, $mailbox, $message1],
+				[$account, $mailbox, $message2],
+			)
+			->willReturnOnConsecutiveCalls(
+				[], []
+			);
 		$this->avatarService->expects($this->exactly(2))
 			->method('getCachedAvatar')
 			->withConsecutive(
@@ -77,8 +93,8 @@ class PreviewEnhancerTest extends TestCase {
 				$message2Avatar
 			);
 		$this->previewEnhancer->process(
-			$this->createMock(\OCA\Mail\Account::class),
-			$this->createMock(\OCA\Mail\Db\Mailbox::class),
+			$account,
+			$mailbox,
 			$messages,
 			true,
 			'testuser'
@@ -88,6 +104,5 @@ class PreviewEnhancerTest extends TestCase {
 		$this->assertNull($message1->getAvatar());
 		$this->assertSame($message2Avatar, $message2->getAvatar());
 	}
-
 
 }

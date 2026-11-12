@@ -9,16 +9,15 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Migration;
 
+use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
 
 class ProvisionAccounts implements IRepairStep {
-	/** @var ProvisioningManager */
-	private $provisioningManager;
-
-	public function __construct(ProvisioningManager $provisioningManager) {
-		$this->provisioningManager = $provisioningManager;
+	public function __construct(
+		private ProvisioningManager $provisioningManager,
+	) {
 	}
 
 	#[\Override]
@@ -31,6 +30,11 @@ class ProvisionAccounts implements IRepairStep {
 	 */
 	#[\Override]
 	public function run(IOutput $output) {
+		// Skip if method does not exist yet during upgrade
+		if (!method_exists(AccountService::class, 'scheduleBackgroundJobs')) {
+			return;
+		}
+
 		$cnt = $this->provisioningManager->provision();
 		$output->info("$cnt accounts provisioned");
 	}

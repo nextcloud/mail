@@ -28,7 +28,7 @@ function chunk_uid_sequence(array $uids, int $bytes): array {
 	while ($uids !== []) {
 		$take = count($uids);
 		while (strlen((new Horde_Imap_Client_Ids(array_slice($uids, 0, $take)))->tostring) >= $bytes) {
-			$take = (int)($take * 0.75);
+			$take = (int)((float)$take * 0.75);
 		}
 		$chunks[] = new Horde_Imap_Client_Ids(
 			array_splice($uids, 0, max($take, 1))

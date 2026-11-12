@@ -32,11 +32,9 @@ class Version1040Date20200422142920 extends SimpleMigrationStep {
 		$messagesTable->addColumn('id', Types::INTEGER, [
 			'autoincrement' => true,
 			'notnull' => true,
-			'length' => 20,
 		]);
 		$messagesTable->addColumn('uid', Types::INTEGER, [
 			'notnull' => true,
-			'length' => 4,
 		]);
 		$messagesTable->addColumn('message_id', Types::STRING, [
 			'notnull' => false,
@@ -44,7 +42,6 @@ class Version1040Date20200422142920 extends SimpleMigrationStep {
 		]);
 		$messagesTable->addColumn('mailbox_id', Types::INTEGER, [
 			'notnull' => true,
-			'length' => 20,
 		]);
 		$messagesTable->addColumn('subject', Types::STRING, [
 			'notnull' => true,
@@ -53,7 +50,6 @@ class Version1040Date20200422142920 extends SimpleMigrationStep {
 		]);
 		$messagesTable->addColumn('sent_at', Types::INTEGER, [
 			'notnull' => true,
-			'length' => 4,
 		]);
 		$messagesTable->addColumn('flag_answered', Types::BOOLEAN, [
 			'notnull' => false,
@@ -105,7 +101,6 @@ class Version1040Date20200422142920 extends SimpleMigrationStep {
 		]);
 		$messagesTable->addColumn('updated_at', Types::INTEGER, [
 			'notnull' => false,
-			'length' => 4,
 		]);
 		$messagesTable->setPrimaryKey(['id']);
 		// We allow each UID just once

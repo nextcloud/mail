@@ -40,7 +40,6 @@ class Version3300Date20230801124717 extends SimpleMigrationStep {
 			$messagesRetentionTable->addColumn('id', Types::INTEGER, [
 				'autoincrement' => true,
 				'notnull' => true,
-				'length' => 4,
 			]);
 			$messagesRetentionTable->addColumn('message_id', Types::STRING, [
 				'notnull' => true,
@@ -48,7 +47,6 @@ class Version3300Date20230801124717 extends SimpleMigrationStep {
 			]);
 			$messagesRetentionTable->addColumn('known_since', Types::INTEGER, [
 				'notnull' => true,
-				'length' => 4,
 			]);
 			$messagesRetentionTable->setPrimaryKey(['id'], 'mail_msg_retention_id_idx');
 		}

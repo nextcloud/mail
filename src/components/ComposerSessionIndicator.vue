@@ -3,11 +3,12 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div class="composer-session"
-		:class="{'composer-session--disabled': disabled}"
+	<div
+		class="composer-session"
+		:class="{ 'composer-session--disabled': disabled }"
 		@click="onShowComposer">
 		<div class="composer-session__icon">
-			<PencilIcon :size="16" />
+			<PencilIcon :size="20" />
 		</div>
 
 		<div class="composer-session__text">
@@ -16,20 +17,22 @@
 
 		<div class="composer-session__actions">
 			<NcActions>
-				<NcActionButton :aria-label="t('mail', 'Expand composer')"
+				<NcActionButton
+					:aria-label="t('mail', 'Expand composer')"
 					:disabled="disabled"
 					@click.stop="onShowComposer">
 					<template #icon>
-						<ArrowExpandIcon :size="16" />
+						<ArrowExpandIcon :size="20" />
 					</template>
 				</NcActionButton>
 			</NcActions>
 			<NcActions>
-				<NcActionButton :aria-label="t('mail', 'Close composer')"
+				<NcActionButton
+					:aria-label="t('mail', 'Close composer')"
 					:disabled="disabled"
 					@click.stop="onClose">
 					<template #icon>
-						<CloseIcon :size="16" />
+						<CloseIcon :size="20" />
 					</template>
 				</NcActionButton>
 			</NcActions>
@@ -38,12 +41,13 @@
 </template>
 
 <script>
-import { NcActions, NcActionButton } from '@nextcloud/vue'
-import PencilIcon from 'vue-material-design-icons/PencilOutline.vue'
+import { mapState, mapStores } from 'pinia'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcActions from '@nextcloud/vue/components/NcActions'
 import ArrowExpandIcon from 'vue-material-design-icons/ArrowExpand.vue'
-import CloseIcon from 'vue-material-design-icons/CloseOutline.vue'
+import CloseIcon from 'vue-material-design-icons/Close.vue'
+import PencilIcon from 'vue-material-design-icons/PencilOutline.vue'
 import useMainStore from '../store/mainStore.js'
-import { mapStores, mapState } from 'pinia'
 
 export default {
 	name: 'ComposerSessionIndicator',
@@ -54,21 +58,27 @@ export default {
 		ArrowExpandIcon,
 		CloseIcon,
 	},
+
+	emits: ['close'],
+
 	data() {
 		return {
 
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		...mapState(useMainStore, ['composerMessage']),
 		title() {
 			return this.composerMessage?.data.subject || t('mail', 'Untitled message')
 		},
+
 		disabled() {
 			return this.composerMessage?.indicatorDisabled ?? false
 		},
 	},
+
 	methods: {
 		async onShowComposer() {
 			if (this.disabled) {
@@ -77,6 +87,7 @@ export default {
 
 			await this.mainStore.showMessageComposerMutation()
 		},
+
 		onClose() {
 			if (this.disabled) {
 				return
@@ -89,6 +100,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../../css/variables.scss';
+
 .composer-session {
 	position: fixed;
 	bottom: calc(var(--body-container-margin) + var(--default-grid-baseline));
@@ -106,7 +119,7 @@ export default {
 	border-radius: var(--body-container-radius);
 
 	// Mobile
-	@media (max-width: 1024px) {
+	@media (max-width: #{variables.$breakpoint-mobile}) {
 		width: calc(100% - 2 * var(--default-grid-baseline));
 		height: 44px;
 		border-radius: var(--border-radius-pill);

@@ -3,14 +3,13 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import { createTestingPinia } from '@pinia/testing'
+import { setActivePinia } from 'pinia'
 import {
 	PRIORITY_INBOX_ID,
 	UNIFIED_ACCOUNT_ID,
 	UNIFIED_INBOX_ID,
 } from '../../../store/constants.js'
-
-import { setActivePinia } from 'pinia'
-import { createTestingPinia } from '@pinia/testing'
 import useMainStore from '../../../store/mainStore.js'
 
 describe('Pinia store mutations', () => {
@@ -53,6 +52,59 @@ describe('Pinia store mutations', () => {
 			tagList: [],
 			tags: {},
 		})
+	})
+
+	it('adds an account with sorted aliases', () => {
+		store.addAccountMutation({
+			accountId: 13,
+			id: 13,
+			mailboxes: [],
+			aliases: [
+				{ id: 1, alias: 'user@zebra.com' },
+				{ id: 2, alias: 'user@alpha.com' },
+			],
+		})
+
+		expect(store.accountsUnmapped[13].aliases).toEqual([
+			{ id: 2, alias: 'user@alpha.com' },
+			{ id: 1, alias: 'user@zebra.com' },
+		])
+	})
+
+	it('sorts aliases on createAliasMutation', () => {
+		const account = {
+			id: 1,
+			aliases: [
+				{ id: 1, alias: 'user@zebra.com' },
+			],
+		}
+		store.createAliasMutation({
+			account,
+			alias: { id: 2, alias: 'user@alpha.com' },
+		})
+		expect(account.aliases).toEqual([
+			{ id: 2, alias: 'user@alpha.com' },
+			{ id: 1, alias: 'user@zebra.com' },
+		])
+	})
+
+	it('sorts aliases on patchAliasMutation', () => {
+		const account = {
+			id: 1,
+			aliases: [
+				{ id: 1, alias: 'user@beta.com' },
+				{ id: 2, alias: 'user@gamma.com' },
+			],
+		}
+		store.patchAliasMutation({
+			account,
+			aliasId: 2,
+			data: { alias: 'user@alpha.com' },
+		})
+		expect(account.aliases).toEqual([
+			{ id: 2, alias: 'user@alpha.com' },
+			{ id: 1, alias: 'user@beta.com' },
+		])
 	})
 
 	it('adds an account with one level of mailboxes', () => {
@@ -365,17 +417,16 @@ describe('Pinia store mutations', () => {
 			tags: {},
 		})
 
-		store.addMailboxMutation(
-			{
-				account,
-				mailbox: {
-					databaseId: 346,
-					name: 'Brchive',
-					delimiter: '.',
-					specialUse: ['archive'],
-					specialRole: 'archive',
-				},
-			})
+		store.addMailboxMutation({
+			account,
+			mailbox: {
+				databaseId: 346,
+				name: 'Brchive',
+				delimiter: '.',
+				specialUse: ['archive'],
+				specialRole: 'archive',
+			},
+		})
 
 		expect(store).toMatchObject({
 			accountList: [13],
@@ -941,6 +992,7 @@ describe('Pinia store mutations', () => {
 			databaseId: 123,
 			mailboxId: 27,
 			uid: 12345,
+			attachments: [{ id: 1, fileName: 'example' }],
 		}
 		store.$patch({
 			mailboxes: {
@@ -968,6 +1020,7 @@ describe('Pinia store mutations', () => {
 					databaseId: 123,
 					mailboxId: 27,
 					uid: 12345,
+					attachments: [],
 				},
 				{
 					databaseId: 124,
@@ -1003,6 +1056,7 @@ describe('Pinia store mutations', () => {
 						124,
 					],
 					tags: [],
+					attachments: [{ id: 1, fileName: 'example' }],
 				},
 				124: {
 					databaseId: 124,
@@ -1044,6 +1098,7 @@ describe('Pinia store mutations', () => {
 			envelopes: [{
 				mailboxId: 27,
 				databaseId: 12345,
+				attachments: [],
 				id: 123,
 				subject: 'henlo',
 				uid: 321,
@@ -1072,6 +1127,7 @@ describe('Pinia store mutations', () => {
 				12345: {
 					mailboxId: 27,
 					databaseId: 12345,
+					attachments: [],
 					uid: 321,
 					id: 123,
 					subject: 'henlo',

@@ -28,7 +28,6 @@ class MessageTagsMapper extends QBMapper {
 			->from($this->getTableName())
 			->where(
 				$qb->expr()->eq('tag_id', $qb->createNamedParameter($id, IQueryBuilder::PARAM_INT)),
-
 			);
 		return $this->findEntities($qb);
 	}

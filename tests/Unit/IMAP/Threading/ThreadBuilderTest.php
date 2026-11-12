@@ -45,12 +45,10 @@ class ThreadBuilderTest extends TestCase {
 	 * @return array
 	 */
 	private function abstract(array $set): array {
-		return array_map(function (Container $container) {
-			return [
-				'id' => (($message = $container->getMessage()) !== null ? $message->getId() : null),
-				'children' => $this->abstract($container->getChildren()),
-			];
-		}, array_values($set));
+		return array_map(fn (Container $container) => [
+			'id' => (($message = $container->getMessage()) !== null ? $message->getId() : null),
+			'children' => $this->abstract($container->getChildren()),
+		], array_values($set));
 	}
 
 	public function testBuildEmpty(): void {

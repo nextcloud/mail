@@ -17,17 +17,15 @@ use function array_map;
 use function array_unique;
 
 class RepliedMessagesExtractor implements IExtractor {
-	/** @var StatisticsDao */
-	private $statisticsDao;
-
 	/** @var int[] */
 	private $totalMessages;
 
 	/** @var int[] */
 	private $repliedMessages;
 
-	public function __construct(StatisticsDao $statisticsDao) {
-		$this->statisticsDao = $statisticsDao;
+	public function __construct(
+		private StatisticsDao $statisticsDao,
+	) {
 	}
 
 	#[\Override]
@@ -36,11 +34,7 @@ class RepliedMessagesExtractor implements IExtractor {
 		array $outgoingMailboxes,
 		array $messages): void {
 		/** @var string[] $senders */
-		$senders = array_unique(array_map(static function (Message $message) {
-			return $message->getFrom()->first()->getEmail();
-		}, array_filter($messages, static function (Message $message) {
-			return $message->getFrom()->first() !== null && $message->getFrom()->first()->getEmail() !== null;
-		})));
+		$senders = array_unique(array_map(static fn (Message $message) => $message->getFrom()->first()->getEmail(), array_filter($messages, static fn (Message $message) => $message->getFrom()->first() !== null && $message->getFrom()->first()->getEmail() !== null)));
 
 		$this->totalMessages = $this->statisticsDao->getNumberOfMessagesGrouped($incomingMailboxes, $senders);
 		$this->repliedMessages = $this->statisticsDao->getNumberOfMessagesWithFlagGrouped($incomingMailboxes, 'answered', $senders);
@@ -54,6 +48,7 @@ class RepliedMessagesExtractor implements IExtractor {
 		}
 
 		$email = $sender->getEmail();
+		/** @psalm-suppress PossiblyNullArrayOffset */
 		$total = $this->totalMessages[$email] ?? 0;
 
 		// Prevent division by zero and just say no emails are read
@@ -61,6 +56,7 @@ class RepliedMessagesExtractor implements IExtractor {
 			return [0];
 		}
 
+		/** @psalm-suppress PossiblyNullArrayOffset */
 		return [($this->repliedMessages[$email] ?? 0) / $total];
 	}
 }

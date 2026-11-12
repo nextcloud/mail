@@ -4,308 +4,308 @@
 -->
 
 <template>
-	<AppNavigationItem v-if="visible"
+	<NcAppNavigationItem
+		v-if="visible"
 		:id="genId(mailbox)"
 		:key="genId(mailbox)"
+		v-model:menuOpen="menuOpen"
+		v-model:open="showSubMailboxes"
 		v-droppable-mailbox="{
 			mainStore: mainStore,
 			mailboxId: mailbox.databaseId,
 			accountId: mailbox.accountId,
 			isValidDropTarget,
 		}"
-		:allow-collapse="hasSubMailboxes"
-		:menu-open.sync="menuOpen"
-		:force-menu="true"
+		:allowCollapse="hasSubMailboxes"
+		:forceMenu="true"
 		:name="title"
 		:to="to"
-		:open.sync="showSubMailboxes"
+		:active="isActive"
 		@update:menuOpen="onMenuToggle">
-		<template #icon>
+		<template #icon="{ active }">
 			<div>
-				<ImportantIcon v-if="mailbox.isPriorityInbox"
-					:size="16" />
-				<IconAllInboxes v-else-if="mailbox.id === UNIFIED_INBOX_ID"
-					:size="16" />
-				<IconInbox v-else-if="mailbox.specialRole === 'inbox' && !mailbox.isPriorityInbox && filter !=='starred'"
-					:size="16" />
-				<IconFavorite v-else-if="filter === 'starred'"
-					:size="16" />
-				<IconDraft v-else-if="mailbox.databaseId === account.draftsMailboxId"
-					:size="16" />
-				<IconSend v-else-if="mailbox.databaseId === account.sentMailboxId"
-					:size="16" />
-				<IconArchive v-else-if="mailbox.databaseId === account.archiveMailboxId"
-					:size="16" />
-				<IconDelete v-else-if="mailbox.databaseId === account.trashMailboxId"
-					:size="16" />
-				<IconJunk v-else-if="mailbox.databaseId === account.junkMailboxId"
-					:size="16" />
-				<AlarmIcon v-else-if="mailbox.databaseId === account.snoozeMailboxId"
-					:size="16" />
-				<IconFolderShared v-else-if="mailbox.shared"
-					:size="16" />
-				<IconFolder v-else
-					:size="16" />
+				<MailboxIcon
+					:mailbox="mailbox"
+					:account="account"
+					:filter="filter"
+					:active="active" />
 			</div>
 		</template>
 		<!-- actions -->
 		<template #actions>
-			<ActionText v-if="!account.isUnified && mailbox.specialRole !== 'flagged'"
+			<NcActionText
+				v-if="!account.isUnified && mailbox.specialRole !== 'flagged'"
 				:name="mailbox.name">
 				<template #icon>
-					<IconInfo :title="statsText"
-						:size="16" />
+					<IconInfo
+						:title="statsText"
+						:size="20" />
 				</template>
 				{{ statsText }}
-			</ActionText>
+			</NcActionText>
 
-			<ActionButton v-if="mailbox.specialRole !== 'flagged' && !account.isUnified && hasSeenAcl"
+			<NcActionButton
+				v-if="notVirtual && hasSeenAcl"
 				:name="t('mail', 'Mark all as read')"
 				:disabled="loadingMarkAsRead"
 				@click="markAsRead">
 				<template #icon>
-					<IconEmailCheck :size="16" />
+					<IconEmailCheck :size="20" />
 				</template>
-				{{ t('mail', 'Mark all messages of this folder as read') }}
-			</ActionButton>
-			<ActionButton v-if="!editing && !account.isUnified && hasDelimiter && mailbox.specialRole !== 'flagged' && hasSubmailboxActionAcl"
+			</NcActionButton>
+			<NcActionButton
+				v-if="subfolderLabel && notVirtual && hasDelimiter && hasSubmailboxActionAcl"
 				@click="openCreateMailbox">
 				<template #icon>
-					<IconFolderAdd :size="16" />
+					<IconAdd :size="20" />
 				</template>
 				{{ t('mail', 'Add subfolder') }}
-			</ActionButton>
-			<ActionInput v-if="editing"
-				:value.sync="createMailboxName"
+			</NcActionButton>
+			<NcActionInput
+				v-if="subfolderInput"
+				v-model="createMailboxName"
 				@submit.prevent.stop="createMailbox">
 				<template #icon>
-					<IconFolderAdd :size="16" />
+					<IconAdd :size="20" />
 				</template>
-			</ActionInput>
-			<ActionButton v-if="renameLabel && !hasSubMailboxes && !account.isUnified && hasRenameAcl"
-				@click.prevent.stop="openRenameInput">
+			</NcActionInput>
+			<NcActionText v-if="subfolderSaving">
 				<template #icon>
-					<IconFolderRename :size="16" />
-				</template>
-				{{ t('mail', 'Rename') }}
-			</ActionButton>
-			<ActionInput v-if="renameInput"
-				:value.sync="mailboxName"
-				@submit.prevent.stop="renameMailbox">
-				<template #icon>
-					<IconFolderRename :title="t('mail', 'Rename')"
-						:size="16" />
-				</template>
-			</ActionInput>
-			<ActionText v-if="showSaving">
-				<template #icon>
-					<IconLoading :size="16" />
+					<NcLoadingIcon :size="20" />
 				</template>
 				{{ t('mail', 'Saving') }}
-			</ActionText>
-			<ActionButton v-if="!account.isUnified && hasDelimiter && !mailbox.specialRole && !hasSubMailboxes && hasDeleteAcl"
+			</NcActionText>
+			<NcActionButton
+				v-if="renameLabel && notVirtual && !hasSubMailboxes && hasRenameAcl"
+				@click.prevent.stop="openRenameInput">
+				<template #icon>
+					<IconEdit :size="20" />
+				</template>
+				{{ t('mail', 'Rename') }}
+			</NcActionButton>
+			<NcActionInput
+				v-if="renameInput"
+				v-model="mailboxName"
+				@submit.prevent.stop="renameMailbox">
+				<template #icon>
+					<IconEdit
+						:title="t('mail', 'Rename')"
+						:size="20" />
+				</template>
+			</NcActionInput>
+			<NcActionText v-if="renameSaving">
+				<template #icon>
+					<NcLoadingIcon :size="20" />
+				</template>
+				{{ t('mail', 'Saving') }}
+			</NcActionText>
+			<NcActionButton
+				v-if="notVirtualOrSpecial && hasDelimiter && !hasSubMailboxes && hasDeleteAcl"
 				:id="genId(mailbox)"
-				:close-after-click="true"
+				:closeAfterClick="true"
 				@click.prevent="onOpenMoveModal">
 				<template #icon>
-					<IconExternal :size="16" />
+					<IconExternal :size="20" />
 				</template>
 				{{ t('mail', 'Move folder') }}
-			</ActionButton>
-			<ActionButton v-if="!account.isUnified && mailbox.specialRole !== 'flagged'"
+			</NcActionButton>
+			<NcActionButton
+				v-if="notVirtual"
 				:disabled="repairing"
 				@click="repair">
 				<template #icon>
-					<IconWrench :size="16" />
+					<IconWrench :size="20" />
 				</template>
 				{{ t('mail', 'Repair folder') }}
-			</ActionButton>
-			<ActionButton v-if="debug && !account.isUnified && mailbox.specialRole !== 'flagged'"
+			</NcActionButton>
+			<NcActionButton
+				v-if="debug && notVirtual"
 				:name="t('mail', 'Clear cache')"
 				:disabled="clearingCache"
 				@click="clearCache">
 				<template #icon>
-					<IconFolderSync :size="16" />
+					<IconFolderSync :size="20" />
 				</template>
 				{{ t('mail', 'Clear locally cached data, in case there are issues with synchronization.') }}
-			</ActionButton>
+			</NcActionButton>
 
-			<ActionCheckbox v-if="notVirtual"
-				:checked="mailbox.isSubscribed"
+			<NcActionCheckbox
+				v-if="notVirtual"
+				:modelValue="mailbox.isSubscribed"
 				:disabled="changeSubscription"
-				@update:checked="changeFolderSubscription">
+				@update:modelValue="changeFolderSubscription">
 				{{ t('mail', 'Subscribed') }}
-			</ActionCheckbox>
+			</NcActionCheckbox>
 
-			<ActionCheckbox v-if="notVirtual && notInbox"
-				:checked="mailbox.syncInBackground"
+			<NcActionCheckbox
+				v-if="notVirtual && notInbox"
+				:modelValue="mailbox.syncInBackground"
 				:disabled="changingSyncInBackground"
-				@update:checked="changeSyncInBackground">
+				@update:modelValue="changeSyncInBackground">
 				{{ t('mail', 'Sync in background') }}
-			</ActionCheckbox>
+			</NcActionCheckbox>
 
-			<ActionButton v-if="mailbox.specialRole !== 'flagged' && !account.isUnified && hasClearMailboxAcl"
-				:close-after-click="true"
+			<NcActionButton
+				v-if="notVirtual && hasClearMailboxAcl"
+				:closeAfterClick="true"
 				@click="clearMailbox">
 				<template #icon>
-					<EraserIcon :size="16" />
+					<IconDeleteOutline :size="20" />
 				</template>
-				{{ t('mail', 'Clear folder') }}
-			</ActionButton>
+				{{ t('mail', 'Delete all messages') }}
+			</NcActionButton>
 
-			<ActionButton v-if="!account.isUnified && !mailbox.specialRole && !hasSubMailboxes && hasDeleteAcl"
+			<NcActionButton
+				v-if="notVirtualOrSpecial && !hasSubMailboxes && hasDeleteAcl"
 				@click="deleteMailbox">
 				<template #icon>
-					<IconDelete :size="16" />
+					<IconDeleteOutline :size="20" />
 				</template>
 				{{ t('mail', 'Delete folder') }}
-			</ActionButton>
+			</NcActionButton>
 		</template>
 		<template #counter>
-			<CounterBubble v-if="showUnreadCounter && subCounter">
-				{{ mailbox.unread }}&nbsp;({{ subCounter }})
-			</CounterBubble>
-			<CounterBubble v-else-if="showUnreadCounter">
-				{{ mailbox.unread }}
-			</CounterBubble>
+			<NcCounterBubble v-if="showUnreadCounter && subCounter" raw :count="unreadWithSubCounter" />
+			<NcCounterBubble v-else-if="showUnreadCounter" :count="mailbox.unread" />
 		</template>
 		<template #extra>
-			<MoveMailboxModal v-if="showMoveModal"
+			<MoveMailboxModal
+				v-if="showMoveModal"
 				:account="account"
 				:mailbox="mailbox"
 				@close="onCloseMoveModal" />
 		</template>
 		<!-- submailboxes -->
-		<NavigationMailbox v-for="subMailbox in subMailboxes"
+		<NavigationMailbox
+			v-for="subMailbox in subMailboxes"
 			:key="genId(subMailbox)"
 			:account="account"
 			:mailbox="subMailbox" />
-	</AppNavigationItem>
+	</NcAppNavigationItem>
 </template>
 
 <script>
 
-import { NcAppNavigationItem as AppNavigationItem, NcCounterBubble as CounterBubble, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionText as ActionText, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import { showError, showInfo } from '@nextcloud/dialogs'
+import { n } from '@nextcloud/l10n'
+import { mapStores } from 'pinia'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcActionCheckbox from '@nextcloud/vue/components/NcActionCheckbox'
+import NcActionInput from '@nextcloud/vue/components/NcActionInput'
+import NcActionText from '@nextcloud/vue/components/NcActionText'
+import NcAppNavigationItem from '@nextcloud/vue/components/NcAppNavigationItem'
+import NcCounterBubble from '@nextcloud/vue/components/NcCounterBubble'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import IconEmailCheck from 'vue-material-design-icons/EmailCheckOutline.vue'
-import IconExternal from 'vue-material-design-icons/OpenInNew.vue'
-import IconFolder from 'vue-material-design-icons/FolderOutline.vue'
-import IconFolderShared from 'vue-material-design-icons/FolderAccountOutline.vue'
-import IconFolderAdd from 'vue-material-design-icons/FolderMultipleOutline.vue'
-import IconFavorite from 'vue-material-design-icons/StarOutline.vue'
-import IconFolderRename from 'vue-material-design-icons/FolderEditOutline.vue'
 import IconFolderSync from 'vue-material-design-icons/FolderSyncOutline.vue'
-import IconDelete from 'vue-material-design-icons/DeleteOutline.vue'
 import IconInfo from 'vue-material-design-icons/InformationOutline.vue'
-import IconDraft from 'vue-material-design-icons/PencilOutline.vue'
-import IconArchive from 'vue-material-design-icons/ArchiveArrowDownOutline.vue'
-import IconInbox from 'vue-material-design-icons/HomeOutline.vue'
-import IconJunk from 'vue-material-design-icons/Fire.vue'
-import IconAllInboxes from 'vue-material-design-icons/InboxMultipleOutline.vue'
-import EraserIcon from 'vue-material-design-icons/Eraser.vue'
-import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'
-import IconSend from 'vue-material-design-icons/SendOutline.vue'
+import IconExternal from 'vue-material-design-icons/OpenInNew.vue'
+import IconEdit from 'vue-material-design-icons/PencilOutline.vue'
+import IconAdd from 'vue-material-design-icons/Plus.vue'
+import IconDeleteOutline from 'vue-material-design-icons/TrashCanOutline.vue'
 import IconWrench from 'vue-material-design-icons/Wrench.vue'
+import MailboxIcon from './icons/MailboxIcon.vue'
 import MoveMailboxModal from './MoveMailboxModal.vue'
-import { PRIORITY_INBOX_ID, UNIFIED_INBOX_ID } from '../store/constants.js'
-import { mailboxHasRights } from '../util/acl.js'
-import { clearCache } from '../service/MessageService.js'
-import { getMailboxStatus, repairMailbox } from '../service/MailboxService.js'
-import logger from '../logger.js'
-import { translatePlural as n } from '@nextcloud/l10n'
-import { translate as translateMailboxName } from '../i18n/MailboxTranslator.js'
-import { showInfo, showError } from '@nextcloud/dialogs'
 import { DroppableMailboxDirective as droppableMailbox } from '../directives/drag-and-drop/droppable-mailbox/index.js'
 import dragEventBus from '../directives/drag-and-drop/util/dragEventBus.js'
-import AlarmIcon from 'vue-material-design-icons/Alarm.vue'
-import { mapStores } from 'pinia'
+import { translate as translateMailboxName } from '../i18n/MailboxTranslator.js'
+import logger from '../logger.js'
+import { getMailboxStatus, repairMailbox } from '../service/MailboxService.js'
+import { clearCache } from '../service/MessageService.js'
+import { PRIORITY_INBOX_ID } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
+import { mailboxHasRights } from '../util/acl.js'
 
 export default {
 	name: 'NavigationMailbox',
 	components: {
-		AppNavigationItem,
-		CounterBubble,
-		ActionText,
-		ActionButton,
-		ActionCheckbox,
-		ActionInput,
-		IconSend,
-		IconDelete,
+		NcAppNavigationItem,
+		NcCounterBubble,
+		NcLoadingIcon,
+		NcActionText,
+		NcActionButton,
+		NcActionCheckbox,
+		NcActionInput,
+		IconDeleteOutline,
 		IconEmailCheck,
 		IconExternal,
-		IconFolderAdd,
-		IconFolderRename,
+		IconAdd,
+		IconEdit,
 		IconFolderSync,
 		IconInfo,
-		IconAllInboxes,
-		IconFavorite,
-		IconFolder,
-		IconFolderShared,
-		IconDraft,
-		IconArchive,
-		IconJunk,
-		IconInbox,
 		IconWrench,
-		EraserIcon,
-		ImportantIcon,
-		IconLoading,
+		MailboxIcon,
 		MoveMailboxModal,
-		AlarmIcon,
 	},
+
 	directives: {
 		droppableMailbox,
 	},
+
 	props: {
 		account: {
 			type: Object,
 			required: true,
 		},
+
 		mailbox: {
 			type: Object,
 			required: true,
 		},
+
 		filter: {
 			type: String,
 			default: '',
 			required: false,
 		},
 	},
+
 	data() {
 		return {
 			debug: window?.OC?.debug || false,
 			mailboxStats: undefined,
 			loadingMarkAsRead: false,
 			clearingCache: false,
-			showSaving: false,
 			changeSubscription: false,
 			changingSyncInBackground: false,
-			editing: false,
+			subfolderLabel: true,
+			subfolderInput: false,
+			subfolderSaving: false,
 			showSubMailboxes: false,
+			wasExpandedBeforeDrag: false,
 			menuOpen: false,
 			renameLabel: true,
 			renameInput: false,
+			renameSaving: false,
 			mailboxName: this.mailbox.displayName,
 			showMoveModal: false,
 			hasDelimiter: !!this.mailbox.delimiter,
-			UNIFIED_INBOX_ID,
 			createMailboxName: '',
 			repairing: false,
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		visible() {
 			return (
 				(this.account.showSubscribedOnly === false
-				|| (this.mailbox.attributes && this.mailbox.attributes.includes('\\subscribed'))) && this.isUnifiedButOnlyInbox
+					|| (this.mailbox.attributes && this.mailbox.attributes.includes('\\subscribed'))) && this.isUnifiedButOnlyInbox
 			)
 		},
+
 		notInbox() {
-			return this.mailbox.name.toLowerCase() !== 'inbox'
+			return this.mailbox.specialRole !== 'inbox'
 		},
+
 		notVirtual() {
 			return !this.account.isUnified && this.mailbox.specialRole !== 'flagged' && !this.filter
 		},
+
+		notVirtualOrSpecial() {
+			return this.notVirtual && !this.mailbox.specialRole
+		},
+
 		title() {
 			if (this.filter === 'starred') {
 				// Little hack to trick the translation logic into a different path
@@ -316,6 +316,7 @@ export default {
 			}
 			return translateMailboxName(this.mailbox)
 		},
+
 		to() {
 			return {
 				name: 'mailbox',
@@ -325,12 +326,15 @@ export default {
 				},
 			}
 		},
+
 		hasSubMailboxes() {
 			return this.subMailboxes.length > 0
 		},
+
 		subMailboxes() {
 			return this.mainStore.getSubMailboxes(this.mailbox.databaseId)
 		},
+
 		statsText() {
 			if (this.mailboxStats && 'total' in this.mailboxStats && 'unread' in this.mailboxStats) {
 				if (this.mailboxStats.unread === 0) {
@@ -350,8 +354,9 @@ export default {
 					)
 				}
 			}
-			return t('mail', 'Loading …')
+			return t('mail', 'Loading …')
 		},
+
 		isDroppableSpecialMailbox() {
 			if (this.filter === 'starred') {
 				return false
@@ -361,30 +366,41 @@ export default {
 				this.account.sentMailboxId,
 			].includes(this.mailbox.databaseId)
 		},
+
 		isActive() {
-			return this.$route.params.mailboxId === this.mailbox.databaseId
+			return this.$route.params.mailboxId === String(this.mailbox.databaseId)
+				&& (this.$route.params.filter || '') === this.filter
 		},
+
 		isValidDropTarget() {
 			if (this.isActive || !this.hasInsertAcl) {
 				return false
 			}
 			return this.isDroppableSpecialMailbox || (!this.mailbox.specialRole && !this.account.isUnified)
 		},
+
 		isUnifiedButOnlyInbox() {
 			if (!this.mailbox.isUnified) {
 				return true
 			}
 			return this.mailbox.specialUse.includes('inbox') && this.mainStore.getAccounts.length > 2
 		},
+
 		showUnreadCounter() {
 			if (this.filter === 'starred' || this.mailbox.specialRole === 'trash') {
 				return false
 			}
 			return this.mailbox.unread > 0 || this.subCounter > 0
 		},
+
 		subCounter() {
 			return this.subMailboxes.reduce((carry, mb) => carry + mb.unread, 0)
 		},
+
+		unreadWithSubCounter() {
+			return `${this.mailbox.unread}\u00a0(${this.subCounter})`
+		},
+
 		hasRenameAcl() {
 			if (!this.mailbox.myAcls) {
 				return true
@@ -397,32 +413,40 @@ export default {
 			return mailboxHasRights(this.mailbox, 'x')
 				&& mailboxHasRights(parent, 'k')
 		},
+
 		hasInsertAcl() {
 			return mailboxHasRights(this.mailbox, 'i')
 		},
+
 		hasSeenAcl() {
 			return mailboxHasRights(this.mailbox, 's')
 		},
+
 		hasSubmailboxActionAcl() {
 			return mailboxHasRights(this.mailbox, 'k')
 		},
+
 		hasDeleteAcl() {
 			return mailboxHasRights(this.mailbox, 'x')
 		},
+
 		hasClearMailboxAcl() {
 			return mailboxHasRights(this.mailbox, 'te')
 		},
 	},
+
 	mounted() {
 		dragEventBus.on('drag-start', this.onDragStart)
 		dragEventBus.on('drag-end', this.onDragEnd)
 		dragEventBus.on('envelopes-moved', this.onEnvelopesMoved)
 	},
-	beforeDestroy() {
+
+	beforeUnmount() {
 		dragEventBus.off('drag-start', this.onDragStart)
 		dragEventBus.off('drag-end', this.onDragEnd)
 		dragEventBus.off('envelopes-moved', this.onEnvelopesMoved)
 	},
+
 	methods: {
 		/**
 		 * Generate unique key id for a specific mailbox
@@ -442,6 +466,16 @@ export default {
 		onMenuToggle(open) {
 			if (open) {
 				this.fetchMailboxStats()
+			} else {
+				if (!this.renameSaving) {
+					this.renameLabel = true
+					this.renameInput = false
+				}
+
+				if (!this.subfolderSaving) {
+					this.subfolderLabel = true
+					this.subfolderInput = false
+				}
 			}
 		},
 
@@ -465,11 +499,12 @@ export default {
 		},
 
 		async createMailbox(e) {
-			this.editing = true
+			this.subfolderInput = false
+			this.subfolderSaving = true
 			const name = this.createMailboxName
 			const withPrefix = this.mailbox.name + this.mailbox.delimiter + name
 			logger.info(`creating mailbox ${withPrefix} as submailbox of ${this.mailbox.databaseId}`)
-			this.menuOpen = false
+
 			try {
 				await this.mainStore.createMailbox({
 					account: this.account,
@@ -479,16 +514,22 @@ export default {
 				logger.error(`could not create mailbox ${withPrefix}`, { error })
 				throw error
 			} finally {
-				this.editing = false
-				this.showSaving = false
+				this.menuOpen = false
+				this.subfolderLabel = true
+				this.subfolderSaving = false
 			}
+
 			logger.info(`mailbox ${withPrefix} created`)
 			this.showSubMailboxes = true
 		},
+
 		openCreateMailbox() {
-			this.editing = true
-			this.showSaving = false
+			this.subfolderLabel = false
+			this.createMailboxName = ''
+			this.subfolderInput = true
+			this.subfolderSaving = false
 		},
+
 		markAsRead() {
 			this.loadingMarkAsRead = true
 
@@ -500,6 +541,7 @@ export default {
 				.catch((error) => logger.error(`could not mark mailbox ${this.mailbox.databaseId} as read`, { error }))
 				.then(() => (this.loadingMarkAsRead = false))
 		},
+
 		async changeFolderSubscription(subscribed) {
 			try {
 				this.changeSubscription = true
@@ -515,6 +557,7 @@ export default {
 				this.changeSubscription = false
 			}
 		},
+
 		async changeSyncInBackground(syncInBackground) {
 			try {
 				this.changingSyncInBackground = true
@@ -532,6 +575,7 @@ export default {
 				this.changingSyncInBackground = false
 			}
 		},
+
 		async clearCache() {
 			try {
 				this.clearingCache = true
@@ -548,6 +592,7 @@ export default {
 				this.clearCache = false
 			}
 		},
+
 		clearMailbox() {
 			const id = this.mailbox.databaseId
 			OC.dialogs.confirmDestructive(
@@ -570,6 +615,7 @@ export default {
 				},
 			)
 		},
+
 		deleteMailbox() {
 			const id = this.mailbox.databaseId
 			logger.info('delete folder', { mailbox: this.mailbox })
@@ -601,9 +647,10 @@ export default {
 				},
 			)
 		},
+
 		async renameMailbox() {
 			this.renameInput = false
-			this.showSaving = true
+			this.renameSaving = true
 
 			try {
 				let newName = this.mailboxName
@@ -615,46 +662,53 @@ export default {
 					mailbox: this.mailbox,
 					newName,
 				})
-				this.renameLabel = true
-				this.renameInput = false
 			} catch (error) {
 				showInfo(t('mail', 'An error occurred, unable to rename the mailbox.'))
-				console.error(error)
+				logger.error('could not rename mailbox', { error })
 			} finally {
-				this.showSaving = false
+				this.renameSaving = false
+				this.renameLabel = true
 			}
 		},
+
 		openRenameInput() {
 			// Hide label and show input
 			this.renameLabel = false
+			this.mailboxName = this.mailbox.displayName
 			this.renameInput = true
-			this.showSaving = false
+			this.renameSaving = false
 		},
+
 		onOpenMoveModal() {
 			this.showMoveModal = true
 		},
+
 		onCloseMoveModal() {
 			this.showMoveModal = false
 		},
+
 		onDragStart({ accountId }) {
 			if (accountId !== this.mailbox.accountId) {
 				return
 			}
+			this.wasExpandedBeforeDrag = this.showSubMailboxes
 			this.mainStore.expandAccountMutation(accountId)
 			this.showSubMailboxes = true
 		},
+
 		onDragEnd({ accountId }) {
 			if (accountId !== this.mailbox.accountId) {
 				return
 			}
-			this.showSubMailboxes = false
+			this.showSubMailboxes = this.wasExpandedBeforeDrag
 		},
+
 		onEnvelopesMoved({ mailboxId, movedEnvelopes }) {
 			if (this.mailbox.databaseId !== mailboxId) {
 				return
 			}
 			const openedMessageHasBeenMoved = movedEnvelopes.find((movedEnvelope) => {
-				return movedEnvelope.envelopeId === this.$route.params.threadId
+				return String(movedEnvelope.databaseId) === this.$route.params.threadId
 			})
 			// navigate to the mailbox root
 			// if the currently displayed message has been moved
@@ -668,6 +722,7 @@ export default {
 				})
 			}
 		},
+
 		/**
 		 * Delete all vanished emails that are still cached.
 		 *
@@ -695,6 +750,7 @@ export default {
 				// Handle rate limit: 429 Too Many Requests
 				// Ref https://axios-http.com/docs/handling_errors
 				if (error.response?.status === 429) {
+					logger.error('mailbox repair rate-limited', { error })
 					showError(t('mail', 'Please wait 10 minutes before repairing again'))
 				} else {
 					throw error
@@ -704,8 +760,9 @@ export default {
 	},
 }
 </script>
+
 <style lang="scss" scoped>
-.counter-bubble__counter {
-	max-width: initial;
+:deep(.action-item__menutoggle) {
+	background-color: transparent !important;
 }
 </style>

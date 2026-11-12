@@ -3,11 +3,11 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
+import { generateUrl } from '@nextcloud/router'
 
 /**
- * Check wheter the given message database ids have been replied to.
+ * Check whether the given message database ids have been replied to.
  *
  * @param {number[]} messageIds The message database ids to check.
  * @return {Promise<{wasFollowedUp: number[]}>} The ids that have been replied to and no longer need to be tracked as a follow-up reminder.

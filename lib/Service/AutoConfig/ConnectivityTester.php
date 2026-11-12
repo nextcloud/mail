@@ -10,26 +10,26 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\AutoConfig;
 
+use OCP\IConfig;
 use Psr\Log\LoggerInterface;
 
 class ConnectivityTester {
-	public const CONNECTION_TIMEOUT = 5;
-
-	/** @var LoggerInterface */
-	protected $logger;
-
-	public function __construct(LoggerInterface $logger) {
-		$this->logger = $logger;
+	public function __construct(
+		protected IConfig $config,
+		protected LoggerInterface $logger,
+	) {
 	}
 
 	/**
 	 * @param string $url
 	 * @param integer $port
 	 * @return bool
+	 * @codeCoverageIgnore
 	 */
 	public function canConnect(string $url, int $port): bool {
 		$this->logger->debug("attempting to connect to <$url> on port <$port>");
-		$fp = @fsockopen($url, $port, $error, $errorstr, self::CONNECTION_TIMEOUT);
+		$timeout = (float)$this->config->getSystemValue('app.mail.imap.timeout', 5);
+		$fp = @fsockopen($url, $port, $error, $errorstr, $timeout);
 		if (is_resource($fp)) {
 			fclose($fp);
 			$this->logger->debug("connection to <$url> on port <$port> established");

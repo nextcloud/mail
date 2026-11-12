@@ -22,18 +22,12 @@ use function array_merge;
  * @template-extends QBMapper<LocalMessage>
  */
 class LocalMessageMapper extends QBMapper {
-	/** @var LocalAttachmentMapper */
-	private $attachmentMapper;
-
-	/** @var RecipientMapper */
-	private $recipientMapper;
-
-	public function __construct(IDBConnection $db,
-		LocalAttachmentMapper $attachmentMapper,
-		RecipientMapper $recipientMapper) {
+	public function __construct(
+		IDBConnection $db,
+		private LocalAttachmentMapper $attachmentMapper,
+		private RecipientMapper $recipientMapper,
+	) {
 		parent::__construct($db, 'mail_local_messages');
-		$this->recipientMapper = $recipientMapper;
-		$this->attachmentMapper = $attachmentMapper;
 	}
 
 	/**
@@ -70,11 +64,19 @@ class LocalMessageMapper extends QBMapper {
 
 		$recipientMap = [];
 		foreach ($recipients as $r) {
-			$recipientMap[$r->getLocalMessageId()][] = $r;
+			$localMessageId = $r->getLocalMessageId();
+			if ($localMessageId === null) {
+				continue;
+			}
+			$recipientMap[$localMessageId][] = $r;
 		}
 		$attachmentMap = [];
 		foreach ($attachments as $a) {
-			$attachmentMap[$a->getLocalMessageId()][] = $a;
+			$localMessageId = $a->getLocalMessageId();
+			if ($localMessageId === null) {
+				continue;
+			}
+			$attachmentMap[$localMessageId][] = $a;
 		}
 
 		return array_map(static function ($localMessage) use ($attachmentMap, $recipientMap) {
@@ -105,6 +107,19 @@ class LocalMessageMapper extends QBMapper {
 	}
 
 	/**
+	 * @throws DoesNotExistException
+	 */
+	public function findAccountIdForLocalMessage(int $localMessageId): int {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('account_id')
+			->from($this->getTableName())
+			->where($qb->expr()->eq('id', $qb->createNamedParameter($localMessageId, IQueryBuilder::PARAM_INT)));
+
+		$row = $this->findOneQuery($qb);
+		return (int)$row['account_id'];
+	}
+
+	/**
 	 * Find all messages that should be sent
 	 *
 	 * @param int $time upper bound send time stamp
@@ -127,20 +142,26 @@ class LocalMessageMapper extends QBMapper {
 			return [];
 		}
 
-		$ids = array_map(static function (LocalMessage $message) {
-			return $message->getId();
-		}, $messages);
+		$ids = array_map(static fn (LocalMessage $message) => $message->getId(), $messages);
 
 		$attachments = $this->attachmentMapper->findByLocalMessageIds($ids);
 		$recipients = $this->recipientMapper->findByLocalMessageIds($ids);
 
 		$recipientMap = [];
 		foreach ($recipients as $r) {
-			$recipientMap[$r->getLocalMessageId()][] = $r;
+			$localMessageId = $r->getLocalMessageId();
+			if ($localMessageId === null) {
+				continue;
+			}
+			$recipientMap[$localMessageId][] = $r;
 		}
 		$attachmentMap = [];
 		foreach ($attachments as $a) {
-			$attachmentMap[$a->getLocalMessageId()][] = $a;
+			$localMessageId = $a->getLocalMessageId();
+			if ($localMessageId === null) {
+				continue;
+			}
+			$attachmentMap[$localMessageId][] = $a;
 		}
 
 		return array_map(static function ($localMessage) use ($attachmentMap, $recipientMap) {
@@ -178,20 +199,26 @@ class LocalMessageMapper extends QBMapper {
 			return [];
 		}
 
-		$ids = array_map(static function (LocalMessage $message) {
-			return $message->getId();
-		}, $messages);
+		$ids = array_map(static fn (LocalMessage $message) => $message->getId(), $messages);
 
 		$attachments = $this->attachmentMapper->findByLocalMessageIds($ids);
 		$recipients = $this->recipientMapper->findByLocalMessageIds($ids);
 
 		$recipientMap = [];
 		foreach ($recipients as $r) {
-			$recipientMap[$r->getLocalMessageId()][] = $r;
+			$localMessageId = $r->getLocalMessageId();
+			if ($localMessageId === null) {
+				continue;
+			}
+			$recipientMap[$localMessageId][] = $r;
 		}
 		$attachmentMap = [];
 		foreach ($attachments as $a) {
-			$attachmentMap[$a->getLocalMessageId()][] = $a;
+			$localMessageId = $a->getLocalMessageId();
+			if ($localMessageId === null) {
+				continue;
+			}
+			$attachmentMap[$localMessageId][] = $a;
 		}
 
 		return array_map(static function ($localMessage) use ($attachmentMap, $recipientMap) {
@@ -236,7 +263,7 @@ class LocalMessageMapper extends QBMapper {
 		try {
 			$message = $this->update($message);
 
-			$this->recipientMapper->updateRecipients($message->getId(), $message->getRecipients(), $to, $cc, $bcc);
+			$this->recipientMapper->updateRecipients($message->getId(), $message->getRecipients() ?? [], $to, $cc, $bcc);
 			$recipients = $this->recipientMapper->findByLocalMessageId($message->getId());
 			$message->setRecipients($recipients);
 			$this->db->commit();

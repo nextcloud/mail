@@ -13,6 +13,7 @@ use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\ContactIntegration\ContactIntegrationService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\ICache;
@@ -21,43 +22,37 @@ use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class ContactIntegrationController extends Controller {
-	private ContactIntegrationService $service;
 	private ICache $cache;
-	private string $uid;
 
-
-	public function __construct(string $appName,
+	public function __construct(
+		string $appName,
 		IRequest $request,
-		ContactIntegrationService $service,
+		private ContactIntegrationService $service,
 		ICacheFactory $cacheFactory,
-		string $UserId) {
+		private string $userId,
+	) {
 		parent::__construct($appName, $request);
-
-		$this->service = $service;
 		$this->cache = $cacheFactory->createLocal('mail.contacts');
-		$this->uid = $UserId;
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param string $mail
 	 * @return JSONResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function match(string $mail): JSONResponse {
-		return (new JSONResponse($this->service->findMatches($mail)))->cacheFor(60 * 60, false, true);
+		return (new JSONResponse($this->service->findMatches($this->userId, $mail)))->cacheFor(60 * 60, false, true);
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param string $uid
 	 * @param string $mail
 	 * @return JSONResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
-	public function addMail(?string $uid = null, ?string $mail = null): JSONResponse {
+	public function addMail(string $uid, string $mail): JSONResponse {
 		$res = $this->service->addEMailToContact($uid, $mail);
 		if ($res === null) {
 			return new JSONResponse([], Http::STATUS_NOT_FOUND);
@@ -65,11 +60,9 @@ class ContactIntegrationController extends Controller {
 		return new JSONResponse($res);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 */
+	#[NoAdminRequired]
 	#[TrapError]
-	public function newContact(?string $contactName = null, ?string $mail = null): JSONResponse {
+	public function newContact(string $contactName, string $mail): JSONResponse {
 		$res = $this->service->newContact($contactName, $mail);
 		if ($res === null) {
 			return new JSONResponse([], Http::STATUS_NOT_ACCEPTABLE);
@@ -78,22 +71,21 @@ class ContactIntegrationController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param string $term
 	 * @return JSONResponse
 	 */
+	#[NoAdminRequired]
 	#[TrapError]
 	public function autoComplete(string $term): JSONResponse {
-		$cached = $this->cache->get($this->uid . $term);
+		$cached = $this->cache->get("{$this->userId}:$term");
 		if ($cached !== null) {
 			$decoded = json_decode($cached, true);
 			if ($decoded !== null) {
 				return new JSONResponse($decoded);
 			}
 		}
-		$res = $this->service->autoComplete($term);
-		$this->cache->set($this->uid . $term, json_encode($res), 24 * 3600);
+		$res = $this->service->autoComplete($this->userId, $term);
+		$this->cache->set("{$this->userId}:$term", json_encode($res), 24 * 3600);
 		return new JSONResponse($res);
 	}
 }

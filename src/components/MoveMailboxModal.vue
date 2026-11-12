@@ -3,21 +3,22 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<MailboxPicker :account="account"
-		:selected.sync="destMailboxId"
+	<MailboxPicker
+		v-model:selected="destMailboxId"
+		:account="account"
 		:loading="moving"
-		:picked-mailbox="mailbox"
-		:allow-root="true"
-		:label-select="t('mail', 'Move')"
-		:label-select-loading="t('mail', 'Moving')"
-		@select="onMove"
+		:pickedMailbox="mailbox"
+		:allowRoot="true"
+		:labelSelect="t('mail', 'Move')"
+		:labelSelectLoading="t('mail', 'Moving')"
+		:select="onMove"
 		@close="onClose" />
 </template>
 
 <script>
-import logger from '../logger.js'
-import MailboxPicker from './MailboxPicker.vue'
 import { mapStores } from 'pinia'
+import MailboxPicker from './MailboxPicker.vue'
+import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 
 export default {
@@ -25,29 +26,37 @@ export default {
 	components: {
 		MailboxPicker,
 	},
+
 	props: {
 		account: {
 			type: Object,
 			required: true,
 		},
+
 		mailbox: {
 			type: Object,
 			required: true,
 		},
 	},
+
+	emits: ['close'],
+
 	data() {
 		return {
 			moving: false,
 			destMailboxId: undefined,
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 	},
+
 	methods: {
 		onClose() {
 			this.$emit('close')
 		},
+
 		async onMove() {
 			this.moving = true
 			if (this.mailbox.id !== this.destMailboxId) {
@@ -59,7 +68,6 @@ export default {
 							mailbox: this.mailbox,
 							newName,
 						})
-
 					} else {
 						const destMailbox = this.mainStore.getMailbox(this.destMailboxId)
 						const newName = destMailbox.name + this.mailbox.delimiter + this.mailbox.displayName
@@ -79,9 +87,10 @@ export default {
 				}
 			}
 		},
+
 		genId(mailbox) {
 			return 'mailbox-' + mailbox.databaseId
-		 },
+		},
 	},
 }
 </script>

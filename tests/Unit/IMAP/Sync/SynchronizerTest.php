@@ -20,11 +20,15 @@ use OCA\Mail\IMAP\Sync\Request;
 use OCA\Mail\IMAP\Sync\Response;
 use OCA\Mail\IMAP\Sync\Synchronizer;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 use function range;
 
 class SynchronizerTest extends TestCase {
 	/** @var MessageMapper|MockObject */
 	private $mapper;
+
+	/** @var LoggerInterface|MockObject */
+	private $logger;
 
 	/** @var Synchronizer */
 	private $synchronizer;
@@ -33,6 +37,7 @@ class SynchronizerTest extends TestCase {
 		parent::setUp();
 
 		$this->mapper = $this->createMock(MessageMapper::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->synchronizer = new Synchronizer($this->mapper);
 	}
@@ -62,6 +67,7 @@ class SynchronizerTest extends TestCase {
 			$request,
 			'user',
 			true,
+			$this->logger,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS,
 		);
 		$changedResponse = $this->synchronizer->sync(
@@ -69,6 +75,7 @@ class SynchronizerTest extends TestCase {
 			$request,
 			'user',
 			true,
+			$this->logger,
 			Horde_Imap_Client::SYNC_FLAGSUIDS,
 		);
 		$vanishedResponse = $this->synchronizer->sync(
@@ -76,6 +83,7 @@ class SynchronizerTest extends TestCase {
 			$request,
 			'user',
 			true,
+			$this->logger,
 			Horde_Imap_Client::SYNC_VANISHEDUIDS
 		);
 
@@ -108,6 +116,7 @@ class SynchronizerTest extends TestCase {
 			$request,
 			'user',
 			false,
+			$this->logger,
 			Horde_Imap_Client::SYNC_VANISHEDUIDS
 		);
 

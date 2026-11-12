@@ -6,33 +6,46 @@ declare(strict_types=1);
  * SPDX-FileCopyrightText: 2023 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
+
 namespace Unit\Listener;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Listener\MoveJunkListener;
+use OCA\Mail\Service\MailManager;
 use Psr\Log\LoggerInterface;
 use Psr\Log\Test\TestLogger;
 
 class MoveJunkListenerTest extends TestCase {
-	private IMailManager $mailManager;
+	private MailManager $mailManager;
+	private MailboxMapper $mailboxMapper;
 	private LoggerInterface $logger;
 	private MoveJunkListener $listener;
 
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->mailManager = $this->createMock(IMailManager::class);
+		$this->mailManager = $this->createMock(MailManager::class);
+		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
 		$this->logger = new TestLogger();
+
+		$this->mailManager->method('getMessageIdForUid')
+			->willReturn(1);
+		$this->mailManager->method('getMessage')
+			->willReturn(new Message());
+		$this->mailboxMapper->method('findSpecialUseMailbox')
+			->willReturn(new Mailbox());
 
 		$this->listener = new MoveJunkListener(
 			$this->mailManager,
+			$this->mailboxMapper,
 			$this->logger
 		);
 	}
@@ -76,10 +89,12 @@ class MoveJunkListenerTest extends TestCase {
 		$this->mailManager->method('getMailbox')
 			->willThrowException(new ClientException('Computer says no'));
 
+		$message = new Message();
+		$message->setUid(100);
 		$event = new MessageFlaggedEvent(
 			$account,
 			$mailbox,
-			100,
+			$message,
 			'$junk',
 			true
 		);
@@ -101,10 +116,12 @@ class MoveJunkListenerTest extends TestCase {
 		$this->mailManager->expects($this->never())
 			->method('moveMessage');
 
+		$message = new Message();
+		$message->setUid(100);
 		$event = new MessageFlaggedEvent(
 			$account,
 			$mailbox,
-			100,
+			$message,
 			'$junk',
 			true
 		);
@@ -132,10 +149,12 @@ class MoveJunkListenerTest extends TestCase {
 		$this->mailManager->method('moveMessage')
 			->willThrowException(new ServiceException('Computer says no'));
 
+		$message = new Message();
+		$message->setUid(100);
 		$event = new MessageFlaggedEvent(
 			$account,
 			$mailbox,
-			100,
+			$message,
 			'$junk',
 			true
 		);
@@ -158,10 +177,12 @@ class MoveJunkListenerTest extends TestCase {
 		$this->mailManager->expects($this->never())
 			->method('moveMessage');
 
+		$message = new Message();
+		$message->setUid(100);
 		$event = new MessageFlaggedEvent(
 			$account,
 			$mailbox,
-			100,
+			$message,
 			'$junk',
 			false
 		);
@@ -189,10 +210,12 @@ class MoveJunkListenerTest extends TestCase {
 		$this->mailManager->method('moveMessage')
 			->willThrowException(new ServiceException('Computer says no'));
 
+		$message = new Message();
+		$message->setUid(100);
 		$event = new MessageFlaggedEvent(
 			$account,
 			$mailbox,
-			100,
+			$message,
 			'$junk',
 			false
 		);

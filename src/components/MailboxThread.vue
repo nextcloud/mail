@@ -3,139 +3,232 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<AppContent pane-config-key="mail"
+	<NcAppContent
+		:paneConfigKey="'mail-' + layoutMode"
 		:layout="layoutMode"
-		:show-details="isThreadShown"
-		:list-min-width="horizontalListMinWidth"
-		:list-max-width="horizontalListMaxWidth"
+		:showDetails="isThreadShown"
+		:listMinWidth="horizontalListMinWidth"
+		:listMaxWidth="horizontalListMaxWidth"
 		@update:showDetails="hideMessage">
 		<template #list>
 			<div :class="{ list__wrapper: !showThread || !isMobile }">
 				<div v-if="!showThread || !isMobile" class="sticky-header">
-					<SearchMessages :mailbox="mailbox"
-						:account-id="account.accountId"
-						@search-changed="onUpdateSearchQuery" />
+					<SearchMessages
+						:mailbox="mailbox"
+						:accountId="account.accountId"
+						@searchChanged="onUpdateSearchQuery" />
 				</div>
-				<AppContentList v-infinite-scroll="onScroll"
+				<NcAppContentList
+					v-infinite-scroll="onScroll"
 					v-shortkey.once="shortkeys"
 					class="envelope-list"
-					infinite-scroll-immediate-check="false"
-					:show-details="showThread"
-					:infinite-scroll-disabled="false"
-					:infinite-scroll-distance="300"
+					infiniteScrollImmediateCheck="false"
+					:showDetails="showThread"
+					:infiniteScrollDisabled="false"
+					:infiniteScrollDistance="300"
 					role="heading"
 					:aria-level="2"
-					@shortkey.native="onShortcut">
-					<Mailbox v-if="!mailbox.isPriorityInbox"
-						:account="account"
-						:mailbox="mailbox"
-						:search-query="query"
-						:bus="bus"
-						:open-first="mailbox.specialRole !== 'drafts'" />
-					<template v-else>
-						<div v-show="hasFollowUpEnvelopes"
+					@shortkey="onShortcut">
+					<template v-if="!mailbox.isPriorityInbox">
+						<div
+							v-if="sortFavorites"
+							v-show="hasFavoriteEnvelopes"
 							class="app-content-list-item">
-							<SectionTitle class="section-title"
-								:name="t('mail', 'Follow up')" />
-							<Popover trigger="hover focus">
+							<SectionTitle
+								class="section-title"
+								:name="t('mail', 'Favorites')" />
+							<NcPopover :triggers="['hover', 'focus']">
 								<template #trigger>
-									<ButtonVue type="tertiary-no-background"
+									<NcButton
+										variant="tertiary-no-background"
+										:aria-label="t('mail', 'Favorites info')"
+										class="button">
+										<template #icon>
+											<IconInfo :size="20" />
+										</template>
+									</NcButton>
+								</template>
+								<p class="section-header-info">
+									{{ favoritesInfo }}
+								</p>
+							</NcPopover>
+						</div>
+						<Mailbox
+							v-if="sortFavorites"
+							v-show="hasFavoriteEnvelopes"
+							:loadMoreLabel="t('mail', 'Load more favorites')"
+							:account="account"
+							:mailbox="mailbox"
+							:searchQuery="appendToSearch(favoriteQuery)"
+							paginate="manual"
+							:isPriorityInbox="true"
+							:initialPageSize="favoriteInitialPageSize"
+							:collapsible="true"
+							:bus="bus" />
+						<Mailbox
+							:account="account"
+							:mailbox="mailbox"
+							:searchQuery="query"
+							:bus="bus"
+							:openFirst="mailbox.specialRole !== 'drafts'"
+							:groupEnvelopes="groupEnvelopes"
+							:initialPageSize="messagesOrderBydate"
+							:collapsible="true" />
+					</template>
+
+					<template v-else>
+						<div
+							v-if="sortFavorites"
+							v-show="hasFavoriteEnvelopes"
+							class="app-content-list-item">
+							<SectionTitle
+								class="section-title"
+								:name="t('mail', 'Favorites')" />
+							<NcPopover :triggers="['hover', 'focus']">
+								<template #trigger>
+									<NcButton
+										variant="tertiary-no-background"
+										:aria-label="t('mail', 'Favorites info')"
+										class="button">
+										<template #icon>
+											<IconInfo :size="20" />
+										</template>
+									</NcButton>
+								</template>
+								<p class="section-header-info">
+									{{ favoritesInfo }}
+								</p>
+							</NcPopover>
+						</div>
+						<Mailbox
+							v-if="sortFavorites"
+							v-show="hasFavoriteEnvelopes"
+							:loadMoreLabel="t('mail', 'Load more favorites')"
+							:account="unifiedAccount"
+							:mailbox="unifiedInbox"
+							:searchQuery="appendToSearch(favoriteQuery)"
+							paginate="manual"
+							:isPriorityInbox="true"
+							:initialPageSize="favoriteInitialPageSize"
+							:collapsible="true"
+							:bus="bus" />
+						<div
+							v-show="hasFollowUpEnvelopes"
+							class="app-content-list-item">
+							<SectionTitle
+								class="section-title"
+								:name="t('mail', 'Follow up')" />
+							<NcPopover :triggers="['hover', 'focus']">
+								<template #trigger>
+									<NcButton
+										variant="tertiary-no-background"
 										:aria-label="t('mail', 'Follow up info')"
 										class="button">
 										<template #icon>
-											<IconInfo :size="16" />
+											<IconInfo :size="20" />
 										</template>
-									</ButtonVue>
+									</NcButton>
 								</template>
 								<p class="section-header-info">
 									{{ followupInfo }}
 								</p>
-							</Popover>
+							</NcPopover>
 						</div>
-						<Mailbox v-show="hasFollowUpEnvelopes"
+						<Mailbox
+							v-show="hasFollowUpEnvelopes"
+							:loadMoreLabel="t('mail', 'Load more follow ups')"
 							:account="unifiedAccount"
 							:mailbox="followUpMailbox"
-							:search-query="appendToSearch(followUpQuery)"
-							:paginate="'manual'"
-							:is-priority-inbox="true"
-							:initial-page-size="followUpMessagesInitialPageSize"
+							:searchQuery="appendToSearch(followUpQuery)"
+							paginate="manual"
+							:isPriorityInbox="true"
+							:initialPageSize="followUpMessagesInitialPageSize"
 							:collapsible="true"
 							:bus="bus" />
 						<div v-show="hasImportantEnvelopes" class="app-content-list-item">
-							<SectionTitle class="section-title important"
+							<SectionTitle
+								class="section-title important"
 								:name="t('mail', 'Important')" />
-							<Popover trigger="hover focus">
+							<NcPopover :triggers="['hover', 'focus']">
 								<template #trigger>
-									<ButtonVue type="tertiary-no-background"
+									<NcButton
+										variant="tertiary-no-background"
 										:aria-label="t('mail', 'Important info')"
 										class="button">
 										<template #icon>
-											<IconInfo :size="16" />
+											<IconInfo :size="20" />
 										</template>
-									</ButtonVue>
+									</NcButton>
 								</template>
 								<p class="section-header-info">
 									{{ importantInfo }}
 								</p>
-							</Popover>
+							</NcPopover>
 						</div>
-						<Mailbox v-show="hasImportantEnvelopes"
+						<Mailbox
+							v-show="hasImportantEnvelopes"
 							class="nameimportant"
+							:loadMoreLabel="t('mail', 'Load more important messages')"
 							:account="unifiedAccount"
 							:mailbox="unifiedInbox"
-							:search-query="appendToSearch(priorityImportantQuery)"
-							:paginate="'manual'"
-							:is-priority-inbox="true"
-							:initial-page-size="importantMessagesInitialPageSize"
+							:searchQuery="appendToSearch(priorityImportantQuery)"
+							paginate="manual"
+							:isPriorityInbox="true"
+							:initialPageSize="importantMessagesInitialPageSize"
 							:collapsible="true"
 							:bus="bus" />
-						<SectionTitle v-show="hasImportantEnvelopes"
+						<SectionTitle
+							v-show="hasImportantEnvelopes"
 							class="app-content-list-item section-title other"
 							:name="t('mail', 'Other')" />
-						<Mailbox class="nameother"
+						<Mailbox
+							class="nameother"
+							:loadMoreLabel="t('mail', 'Load more other messages')"
 							:account="unifiedAccount"
 							:mailbox="unifiedInbox"
-							:search-query="appendToSearch(priorityOtherQuery)"
-							:is-priority-inbox="true"
+							:searchQuery="appendToSearch(priorityOtherQuery)"
+							:isPriorityInbox="true"
 							:bus="bus" />
 					</template>
-				</AppContentList>
+				</NcAppContentList>
 			</div>
 		</template>
 
-		<Thread v-if="showThread" @delete="deleteMessage" />
+		<Thread v-if="showThread" @delete="deleteMessage" @archive="archiveMessage" />
 		<NoMessageSelected v-else-if="hasEnvelopes" />
-	</AppContent>
+	</NcAppContent>
 </template>
 
 <script>
-import { NcAppContent as AppContent, NcAppContentList as AppContentList, NcButton as ButtonVue, NcPopover as Popover } from '@nextcloud/vue'
-
-import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
-import SectionTitle from './SectionTitle.vue'
-import mitt from 'mitt'
+import { useIsMobile } from '@nextcloud/vue/composables/useIsMobile'
 import addressParser from 'address-rfc2822'
-
-import infiniteScroll from '../directives/infinite-scroll.js'
+import mitt from 'mitt'
+import { mapStores } from 'pinia'
+import NcAppContent from '@nextcloud/vue/components/NcAppContent'
+import NcAppContentList from '@nextcloud/vue/components/NcAppContentList'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcPopover from '@nextcloud/vue/components/NcPopover'
 import IconInfo from 'vue-material-design-icons/InformationOutline.vue'
-import logger from '../logger.js'
 import Mailbox from './Mailbox.vue'
-import SearchMessages from './SearchMessages.vue'
 import NoMessageSelected from './NoMessageSelected.vue'
+import SearchMessages from './SearchMessages.vue'
+import SectionTitle from './SectionTitle.vue'
 import Thread from './Thread.vue'
+import infiniteScroll from '../directives/infinite-scroll.js'
+import logger from '../logger.js'
 import {
 	FOLLOW_UP_MAILBOX_ID,
 	PRIORITY_INBOX_ID,
 	UNIFIED_ACCOUNT_ID,
 	UNIFIED_INBOX_ID,
 } from '../store/constants.js'
+import useMainStore from '../store/mainStore.js'
+import { groupEnvelopesByDate } from '../util/groupedEnvelopes.js'
 import {
 	priorityImportantQuery,
 	priorityOtherQuery,
 } from '../util/priorityInbox.js'
-import { detect, html } from '../util/text.js'
-import useMainStore from '../store/mainStore.js'
-import { mapStores } from 'pinia'
+import { detect, toHtml, toPlain } from '../util/text.js'
 
 const START_MAILBOX_DEBOUNCE = 5 * 1000
 
@@ -144,34 +237,44 @@ export default {
 	directives: {
 		infiniteScroll,
 	},
+
 	components: {
-		AppContent,
-		AppContentList,
-		ButtonVue,
+		NcAppContent,
+		NcAppContentList,
+		NcButton,
 		IconInfo,
 		Mailbox,
 		NoMessageSelected,
-		Popover,
+		NcPopover,
 		SectionTitle,
 		SearchMessages,
 		Thread,
 	},
-	mixins: [isMobile],
+
 	props: {
 		account: {
 			type: Object,
 			required: true,
 		},
+
 		mailbox: {
 			type: Object,
 			required: true,
 		},
 	},
+
+	setup() {
+		return {
+			isMobile: useIsMobile(),
+		}
+	},
+
 	data() {
 		return {
-			// eslint-disable-next-line
-			importantInfo: t('mail', 'Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time.'),
-			followupInfo: t('mail', 'Messages sent by you that require a reply but did not receive one after a couple of days will be shown here.'),
+
+			importantInfo: t('mail', 'Messages will automatically be marked as important using AI. The system learns from which messages you interact with or mark as important. In the beginning you might have to manually change the importance to teach it, but it will improve over time'),
+			favoritesInfo: t('mail', 'Messages that you marked as favorite will be shown at the top of folders. You can disable this behavior in the app settings'),
+			followupInfo: t('mail', 'AI identifies messages sent by you that likely require a reply but did not receive one after a couple of days and shows them here'),
 			bus: mitt(),
 			searchQuery: undefined,
 			shortkeys: {
@@ -180,35 +283,45 @@ export default {
 				flag: ['s'],
 				next: ['arrowright'],
 				prev: ['arrowleft'],
-				refresh: ['r'],
 				unseen: ['u'],
 			},
+
 			priorityImportantQuery,
 			priorityOtherQuery,
+			favoriteQuery: 'is:starred',
+			favoriteInitialPageSize: 5,
 			startMailboxTimer: undefined,
 			hasContent: false,
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
+
 		layoutMode() {
 			return this.mainStore.getPreference('layout-mode', 'vertical-split')
 		},
+
 		horizontalListMinWidth() {
 			return this.layoutMode === 'horizontal-split' ? 40 : 30
 		},
+
 		horizontalListMaxWidth() {
 			return this.layoutMode === 'horizontal-split' ? 60 : 50
 		},
+
 		unifiedAccount() {
 			return this.mainStore.getAccount(UNIFIED_ACCOUNT_ID)
 		},
+
 		unifiedInbox() {
 			return this.mainStore.getMailbox(UNIFIED_INBOX_ID)
 		},
+
 		followUpMailbox() {
 			return this.mainStore.getMailbox(FOLLOW_UP_MAILBOX_ID)
 		},
+
 		/**
 		 * @return {string|undefined}
 		 */
@@ -224,16 +337,40 @@ export default {
 			const dateToTimestamp = (date) => Math.round(date.getTime() / 1000)
 			return `tags:${tag.id} end:${dateToTimestamp(notAfter)}`
 		},
+
 		hasEnvelopes() {
 			if (this.mailbox.isPriorityInbox) {
 				return this.mainStore.getEnvelopes(this.mailbox.databaseId, this.appendToSearch(priorityImportantQuery)).length > 0
 					|| this.mainStore.getEnvelopes(this.mailbox.databaseId, this.appendToSearch(priorityOtherQuery)).length > 0
 			}
-			return this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery).length > 0
+			return this.mainStore.getEnvelopes(this.mailbox.databaseId, this.query).length > 0
 		},
+
 		hasImportantEnvelopes() {
-			return this.mainStore.getEnvelopes(this.unifiedInbox.databaseId, this.appendToSearch(priorityImportantQuery)).length > 0
+			const map = this.mainStore.getEnvelopes(
+				this.unifiedInbox.databaseId,
+				this.appendToSearch(this.priorityImportantQuery),
+			)
+			const envelopes = Array.isArray(map) ? map : Array.from(map?.values() || [])
+			return envelopes.length > 0
 		},
+
+		sortFavorites() {
+			return this.mainStore.getPreference('sort-favorites', 'false') === 'true' && this.$route.params.filter !== 'starred'
+		},
+
+		hasFavoriteEnvelopes() {
+			if (!this.sortFavorites) {
+				return false
+			}
+			const mailbox = this.mailbox.isPriorityInbox ? this.unifiedInbox : this.mailbox
+			const envelopes = this.mainStore.getEnvelopes(
+				mailbox.databaseId,
+				this.appendToSearch(this.favoriteQuery),
+			)
+			return envelopes.length > 0
+		},
+
 		/**
 		 * @return {boolean}
 		 */
@@ -242,10 +379,11 @@ export default {
 				return false
 			}
 
-			return this.mainStore
-				.getEnvelopes(FOLLOW_UP_MAILBOX_ID, this.followUpQuery)
-				.length > 0
+			const map = this.mainStore.getEnvelopes(FOLLOW_UP_MAILBOX_ID, this.followUpQuery)
+			const envelopes = Array.isArray(map) ? map : Array.from(map?.values() || [])
+			return envelopes.length > 0
 		},
+
 		importantMessagesInitialPageSize() {
 			if (window.innerHeight > 1024) {
 				return 7
@@ -255,29 +393,47 @@ export default {
 			}
 			return 3
 		},
+
+		/**
+		 * @return {number}
+		 */
+		messagesOrderBydate() {
+			return 10
+		},
+
 		/**
 		 * @return {number}
 		 */
 		followUpMessagesInitialPageSize() {
 			return 5
 		},
+
 		showThread() {
 			return this.$route.name === 'message'
 				&& this.$route.params.threadId !== 'mailto'
 		},
+
 		query() {
 			if (this.$route.params.filter === 'starred') {
-				if (this.searchQuery) {
-					return this.appendToSearch('is:starred')
-				}
-				return 'is:starred'
+				return this.appendToSearch('is:starred')
 			}
 			return this.searchQuery
 		},
+
 		isThreadShown() {
 			return !!this.$route.params.threadId
 		},
+
+		groupEnvelopes() {
+			const allEnvelopes = this.mainStore.getEnvelopes(this.mailbox.databaseId, this.query)
+			return this.getGroupedEnvelopes(allEnvelopes, this.mainStore.syncTimestamp, this.sortOrder)
+		},
+
+		sortOrder() {
+			return this.mainStore.getPreference('sort-order', 'newest')
+		},
 	},
+
 	watch: {
 		async $route(to) {
 			this.handleMailto()
@@ -287,6 +443,15 @@ export default {
 				await this.fetchEnvelopes()
 			}
 		},
+
+		sortFavorites(enabled) {
+			if (enabled) {
+				this.searchQuery = this.searchQuery ? this.searchQuery + ' not:starred' : 'not:starred'
+			} else if (this.searchQuery?.includes('not:starred')) {
+				this.searchQuery = this.searchQuery.replace('not:starred', '').trim() || undefined
+			}
+		},
+
 		async hasFollowUpEnvelopes(value) {
 			if (!value) {
 				return
@@ -294,56 +459,81 @@ export default {
 
 			await this.onPriorityMailboxOpened()
 		},
+
 		mailbox() {
 			clearTimeout(this.startMailboxTimer)
 			setTimeout(this.saveStartMailbox, START_MAILBOX_DEBOUNCE)
-			this.fetchEnvelopes()
 		},
 	},
+
 	created() {
 		this.handleMailto()
 	},
+
 	async mounted() {
+		if (this.sortFavorites) {
+			this.searchQuery = 'not:starred'
+		}
 		setTimeout(this.saveStartMailbox, START_MAILBOX_DEBOUNCE)
 		if (this.isThreadShown) {
 			await this.fetchEnvelopes()
 		}
 	},
+
 	beforeUnmount() {
 		clearTimeout(this.startMailboxTimer)
 	},
+
 	methods: {
+		getGroupedEnvelopes(envelopes, syncTimestamp) {
+			return groupEnvelopesByDate(envelopes, syncTimestamp, this.sortOrder)
+		},
+
 		async fetchEnvelopes() {
-			const existingEnvelopes = this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery || '')
+			const existingEnvelopes = this.mainStore.getEnvelopes(this.mailbox.databaseId, this.query)
 			if (!existingEnvelopes.length) {
 				await this.mainStore.fetchEnvelopes({
 					mailboxId: this.mailbox.databaseId,
-					query: this.searchQuery || '',
+					query: this.query,
 				})
 			}
 		},
+
 		async onPriorityMailboxOpened() {
 			logger.debug('Priority inbox was opened')
 
 			await this.mainStore.checkFollowUpReminders({ query: this.followUpQuery })
 		},
+
 		deleteMessage(id) {
 			this.bus.emit('delete', id)
 		},
+
+		archiveMessage(id) {
+			this.bus.emit('archive', id)
+		},
+
 		onScroll(event) {
 			logger.debug('scroll', { event })
 
-			this.bus.emit('load-more')
+			this.bus.emit('loadMore')
 		},
+
 		onShortcut(e) {
 			this.bus.emit('shortcut', e)
 		},
+
 		appendToSearch(str) {
-			if (this.searchQuery === undefined) {
+			if (!this.searchQuery) {
 				return str
+			}
+
+			if (this.sortFavorites && str === this.favoriteQuery && this.searchQuery.includes('not:starred')) {
+				return this.searchQuery.replace('not:starred', str)
 			}
 			return this.searchQuery + ' ' + str
 		},
+
 		hideMessage() {
 			this.$router.replace({
 				name: 'mailbox',
@@ -353,6 +543,7 @@ export default {
 				},
 			})
 		},
+
 		handleMailto() {
 			if (this.$route.name === 'message' && this.$route.params.threadId === 'mailto') {
 				let accountId
@@ -360,6 +551,9 @@ export default {
 				if (this.$route.params.accountId !== 0 && this.$route.params.accountId !== '0') {
 					accountId = parseInt(this.$route.params.accountId, 10)
 				}
+
+				const body = detect(this.$route.query.body ?? '')
+
 				this.mainStore.startComposerSession({
 					data: {
 						accountId,
@@ -367,11 +561,14 @@ export default {
 						cc: this.stringToRecipients(this.$route.query.cc),
 						bcc: this.stringToRecipients(this.$route.query.bcc),
 						subject: this.$route.query.subject || '',
-						body: this.$route.query.body ? detect(this.$route.query.body) : html(''),
+						isHtml: body.format === 'html',
+						bodyHtml: toHtml(body).value,
+						bodyPlain: toPlain(body).value,
 					},
 				})
 			}
 		},
+
 		async saveStartMailbox() {
 			const currentStartMailboxId = this.mainStore.getPreference('start-mailbox-id')
 			if (currentStartMailboxId === this.mailbox.databaseId) {
@@ -391,6 +588,7 @@ export default {
 				})
 			}
 		},
+
 		stringToRecipients(str) {
 			if (str === undefined) {
 				return []
@@ -403,7 +601,7 @@ export default {
 				logger.debug('could not parse string into email addresses', { str, error })
 			}
 
-			return addresses.map(address => {
+			return addresses.map((address) => {
 				const result = {
 					label: address.name(),
 					email: address.address,
@@ -416,6 +614,7 @@ export default {
 				return result
 			})
 		},
+
 		onUpdateSearchQuery(query) {
 			this.searchQuery = query
 		},
@@ -432,12 +631,9 @@ export default {
 
 :deep(.app-content-list) {
 	flex: 1 1 auto;
-	height: 100% !important;
 	min-height: 0;
-	position: absolute;
 	overflow: scroll;
-	width: 100% !important;
-	top: 52px;
+	width: 100%;
 }
 
 :deep(.app-content-wrapper) {
@@ -445,10 +641,6 @@ export default {
 	flex-direction: column;
 	height: 100%;
 	overflow: hidden;
-}
-
-.v-popover > .trigger > * {
-	z-index: 1;
 }
 
 .section-header-info {
@@ -484,15 +676,6 @@ export default {
 	flex: 1 1 auto;
 	overflow-y: auto;
 	min-height: 0;
-}
-
-.information-icon {
-	opacity: .7;
-}
-@media only screen and (max-width: 1024px) {
-	.information-icon {
-		margin-bottom: 20px;
-	}
 }
 
 .list__wrapper {

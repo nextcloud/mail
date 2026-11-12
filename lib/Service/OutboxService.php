@@ -10,14 +10,12 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\OutboxMessageCreatedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Send\Chain;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -29,50 +27,24 @@ use Throwable;
 
 class OutboxService {
 
-
-	/** @var LocalMessageMapper */
-	private $mapper;
-
-	/** @var AttachmentService */
-	private $attachmentService;
-
 	/** @var IEventDispatcher */
 	private $eventDispatcher;
-
-	/** @var IMAPClientFactory */
-	private $clientFactory;
-
-	/** @var IMailManager */
-	private $mailManager;
-
-	/** @var AccountService */
-	private $accountService;
 
 	/** @var ITimeFactory */
 	private $timeFactory;
 
-	/** @var LoggerInterface */
-	private $logger;
-
 	public function __construct(
-		LocalMessageMapper $mapper,
-		AttachmentService $attachmentService,
+		private LocalMessageMapper $mapper,
+		private AttachmentService $attachmentService,
 		IEventDispatcher $eventDispatcher,
-		IMAPClientFactory $clientFactory,
-		IMailManager $mailManager,
-		AccountService $accountService,
+		private MailManager $mailManager,
+		private AccountService $accountService,
 		ITimeFactory $timeFactory,
-		LoggerInterface $logger,
+		private LoggerInterface $logger,
 		private Chain $sendChain,
 	) {
-		$this->mapper = $mapper;
-		$this->attachmentService = $attachmentService;
 		$this->eventDispatcher = $eventDispatcher;
-		$this->clientFactory = $clientFactory;
-		$this->mailManager = $mailManager;
 		$this->timeFactory = $timeFactory;
-		$this->logger = $logger;
-		$this->accountService = $accountService;
 	}
 
 	/**
@@ -143,12 +115,7 @@ class OutboxService {
 			return $message;
 		}
 
-		$client = $this->clientFactory->getClient($account);
-		try {
-			$attachmentIds = $this->attachmentService->handleAttachments($account, $attachments, $client);
-		} finally {
-			$client->logout();
-		}
+		$attachmentIds = $this->attachmentService->handleAttachments($account, $attachments);
 
 		$message->setAttachments($this->attachmentService->saveLocalMessageAttachments($account->getUserId(), $message->getId(), $attachmentIds));
 		return $message;
@@ -175,12 +142,7 @@ class OutboxService {
 			return $message;
 		}
 
-		$client = $this->clientFactory->getClient($account);
-		try {
-			$attachmentIds = $this->attachmentService->handleAttachments($account, $attachments, $client);
-		} finally {
-			$client->logout();
-		}
+		$attachmentIds = $this->attachmentService->handleAttachments($account, $attachments);
 		$message->setAttachments($this->attachmentService->updateLocalMessageAttachments($account->getUserId(), $message, $attachmentIds));
 		return $message;
 	}
@@ -210,9 +172,7 @@ class OutboxService {
 			return;
 		}
 
-		$accountIds = array_unique(array_map(static function ($message) {
-			return $message->getAccountId();
-		}, $messages));
+		$accountIds = array_unique(array_map(static fn ($message) => $message->getAccountId(), $messages));
 
 		$accounts = array_combine($accountIds, array_map(function ($accountId) {
 			try {
@@ -230,6 +190,12 @@ class OutboxService {
 				// Ignore message of non-existent account
 				continue;
 			}
+
+			if ($message->getStatus() === LocalMessage::STATUS_ERROR) {
+				// Skip messages with status error
+				continue;
+			}
+
 			try {
 				$this->sendChain->process($account, $message);
 				$this->logger->debug('Outbox message {id} sent', [

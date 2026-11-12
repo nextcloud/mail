@@ -5,7 +5,7 @@
 
 <template>
 	<div class="section">
-		<h4>{{ t('mail','Configuration for "{provisioningDomain}"', {provisioningDomain}) }}</h4>
+		<h4>{{ t('mail', 'Configuration for "{provisioningDomain}"', { provisioningDomain }) }}</h4>
 		<div class="form-preview-row">
 			<form :id="'prov-form-' + setting.id" @submit.prevent="submitForm">
 				<div class="settings-group">
@@ -14,9 +14,10 @@
 					</div>
 					<div class="group-inputs">
 						<br>
-						<label :for="'mail-provision-domain' + setting.id"> {{ t('mail', 'Provisioning domain') }}* </label>
+						<label :for="'mail-provision-domain' + setting.id"> {{ t('mail', 'Provisioning domain') }} </label>
 						<br>
-						<input :id="'mail-provision-domain' + setting.id"
+						<input
+							:id="'mail-provision-domain' + setting.id"
 							v-model="provisioningDomain"
 							:disabled="loading"
 							name="provisioningDomain"
@@ -24,7 +25,8 @@
 						<br>
 						<label :for="'mail-provision-email' + setting.id"> {{ t('mail', 'Email address template') }}* </label>
 						<br>
-						<input :id="'mail-provision-email' + setting.id"
+						<input
+							:id="'mail-provision-email' + setting.id"
 							v-model="emailTemplate"
 							:disabled="loading"
 							name="emailTemplate"
@@ -39,7 +41,8 @@
 						<label :for="'mail-provision-imap-user' + setting.id">
 							{{ t('mail', 'User') }}*
 							<br>
-							<input :id="'mail-provision-imap-user' + setting.id"
+							<input
+								:id="'mail-provision-imap-user' + setting.id"
 								v-model="imapUser"
 								:disabled="loading"
 								name="email"
@@ -49,7 +52,8 @@
 							<label :for="'mail-provision-imap-host' + setting.id">
 								{{ t('mail', 'Host') }}
 								<br>
-								<input :id="'mail-provision-imap-host' + setting.id"
+								<input
+									:id="'mail-provision-imap-host' + setting.id"
 									v-model="imapHost"
 									:disabled="loading"
 									name="email"
@@ -58,7 +62,8 @@
 							<label :for="'mail-provision-imap-port' + setting.id">
 								{{ t('mail', 'Port') }}
 								<br>
-								<input :id="'mail-provision-imap-port' + setting.id"
+								<input
+									:id="'mail-provision-imap-port' + setting.id"
 									v-model="imapPort"
 									:disabled="loading"
 									name="email"
@@ -66,33 +71,39 @@
 							</label>
 						</div>
 						<div class="flex-row">
-							<input :id="'mail-provision-imap-user-none' + setting.id"
+							<input
+								:id="'mail-provision-imap-user-none' + setting.id"
 								v-model="imapSslMode"
 								type="radio"
 								name="man-imap-sec"
 								:disabled="loading"
 								value="none">
-							<label class="button"
+							<label
+								class="button"
 								:for="'mail-provision-imap-user-none' + setting.id"
-								:class="{primary: imapSslMode === 'none'}">{{ t('mail', 'None') }}</label>
-							<input :id="'mail-provision-imap-user-ssl' + setting.id"
+								:class="{ primary: imapSslMode === 'none' }">{{ t('mail', 'None') }}</label>
+							<input
+								:id="'mail-provision-imap-user-ssl' + setting.id"
 								v-model="imapSslMode"
 								type="radio"
 								name="man-imap-sec"
 								:disabled="loading"
 								value="ssl">
-							<label class="button"
+							<label
+								class="button"
 								:for="'mail-provision-imap-user-ssl' + setting.id"
-								:class="{primary: imapSslMode === 'ssl'}">{{ t('mail', 'SSL/TLS') }}</label>
-							<input :id="'mail-provision-imap-user-tls' + setting.id"
+								:class="{ primary: imapSslMode === 'ssl' }">{{ t('mail', 'SSL/TLS') }}</label>
+							<input
+								:id="'mail-provision-imap-user-tls' + setting.id"
 								v-model="imapSslMode"
 								type="radio"
 								name="man-imap-sec"
 								:disabled="loading"
 								value="tls">
-							<label class="button"
+							<label
+								class="button"
 								:for="'mail-provision-imap-user-tls' + setting.id"
-								:class="{primary: imapSslMode === 'tls'}">{{ t('mail', 'STARTTLS') }}</label>
+								:class="{ primary: imapSslMode === 'tls' }">{{ t('mail', 'STARTTLS') }}</label>
 						</div>
 					</div>
 				</div>
@@ -104,7 +115,8 @@
 						<label :for="'mail-provision-smtp-user' + setting.id">
 							{{ t('mail', 'User') }}*
 							<br>
-							<input :id="'mail-provision-smtp-user' + setting.id"
+							<input
+								:id="'mail-provision-smtp-user' + setting.id"
 								v-model="smtpUser"
 								:disabled="loading"
 								name="email"
@@ -114,7 +126,8 @@
 							<label :for="'mail-provision-smtp-host' + setting.id">
 								{{ t('mail', 'Host') }}
 								<br>
-								<input :id="'mail-provision-smtp-host' + setting.id"
+								<input
+									:id="'mail-provision-smtp-host' + setting.id"
 									v-model="smtpHost"
 									:disabled="loading"
 									name="email"
@@ -123,7 +136,8 @@
 							<label :for="'mail-provision-smtp-port' + setting.id">
 								{{ t('mail', 'Port') }}
 								<br>
-								<input :id="'mail-provision-smtp-port' + setting.id"
+								<input
+									:id="'mail-provision-smtp-port' + setting.id"
 									v-model="smtpPort"
 									:disabled="loading"
 									name="email"
@@ -131,33 +145,39 @@
 							</label>
 						</div>
 						<div class="flex-row">
-							<input :id="'mail-provision-smtp-user-none' + setting.id"
+							<input
+								:id="'mail-provision-smtp-user-none' + setting.id"
 								v-model="smtpSslMode"
 								type="radio"
 								name="man-smtp-sec"
 								:disabled="loading"
 								value="none">
-							<label class="button"
+							<label
+								class="button"
 								:for="'mail-provision-smtp-user-none' + setting.id"
-								:class="{primary: smtpSslMode === 'none'}">{{ t('mail', 'None') }}</label>
-							<input :id="'mail-provision-smtp-user-ssl' + setting.id"
+								:class="{ primary: smtpSslMode === 'none' }">{{ t('mail', 'None') }}</label>
+							<input
+								:id="'mail-provision-smtp-user-ssl' + setting.id"
 								v-model="smtpSslMode"
 								type="radio"
 								name="man-smtp-sec"
 								:disabled="loading"
 								value="ssl">
-							<label class="button"
+							<label
+								class="button"
 								:for="'mail-provision-smtp-user-ssl' + setting.id"
-								:class="{primary: smtpSslMode === 'ssl'}">{{ t('mail', 'SSL/TLS') }}</label>
-							<input :id="'mail-provision-smtp-user-tls' + setting.id"
+								:class="{ primary: smtpSslMode === 'ssl' }">{{ t('mail', 'SSL/TLS') }}</label>
+							<input
+								:id="'mail-provision-smtp-user-tls' + setting.id"
 								v-model="smtpSslMode"
 								type="radio"
 								name="man-smtp-sec"
 								:disabled="loading"
 								value="tls">
-							<label class="button"
+							<label
+								class="button"
 								:for="'mail-provision-smtp-user-tls' + setting.id"
-								:class="{primary: smtpSslMode === 'tls'}">{{ t('mail', 'STARTTLS') }}</label>
+								:class="{ primary: smtpSslMode === 'tls' }">{{ t('mail', 'STARTTLS') }}</label>
 						</div>
 					</div>
 				</div>
@@ -167,7 +187,8 @@
 					</div>
 					<div class="group-inputs">
 						<div>
-							<input :id="'mail-master-password-enabled' + setting.id"
+							<input
+								:id="'mail-master-password-enabled' + setting.id"
 								v-model="masterPasswordEnabled"
 								type="checkbox"
 								class="checkbox">
@@ -176,12 +197,29 @@
 							</label>
 						</div>
 						<div>
-							<input id="mail-master-password"
-								v-model="masterPassword"
-								:disabled="loading"
-								type="password"
-								:required="masterPasswordEnabled">
-							<label for="mail-master-password"> {{ t('mail', 'Master password') }} </label>
+							<label>
+								{{ t('mail', 'Master password') }}
+								<br>
+								<input
+									v-model="masterPassword"
+									:disabled="loading || !masterPasswordEnabled"
+									type="password"
+									:required="masterPasswordEnabled">
+							</label>
+							<p>{{ t('mail', 'Without a master user, all users authenticate with their normal username and this master password.') }}</p>
+						</div>
+						<div>
+							<label>
+								<!-- TRANSLATORS: Dovecot master user, an account that can log in on behalf of any other user -->
+								{{ t('mail', 'Master user') }}
+								<br>
+								<input
+									v-model="masterUser"
+									:disabled="loading || !masterPasswordEnabled"
+									type="text"
+									:placeholder="t('mail', 'e.g. {example}', { example: '*masteruser' })">
+							</label>
+							<p>{{ t('mail', 'Appended to the username. Must start with the same separator as {setting} in Dovecot.', { setting: 'auth_master_user_separator' }) }}</p>
 						</div>
 					</div>
 				</div>
@@ -191,7 +229,8 @@
 					</div>
 					<div class="group-inputs">
 						<div>
-							<input :id="'mail-provision-sieve-enabled' + setting.id"
+							<input
+								:id="'mail-provision-sieve-enabled' + setting.id"
 								v-model="sieveEnabled"
 								type="checkbox"
 								class="checkbox">
@@ -202,7 +241,8 @@
 						<label :for="'mail-provision-sieve-user' + setting.id">
 							{{ t('mail', 'User') }}*
 							<br>
-							<input :id="'mail-provision-sieve-user' + setting.id"
+							<input
+								:id="'mail-provision-sieve-user' + setting.id"
 								v-model="sieveUser"
 								:disabled="loading"
 								name="email"
@@ -212,7 +252,8 @@
 							<label :for="'mail-provision-sieve-host' + setting.id">
 								{{ t('mail', 'Host') }}
 								<br>
-								<input :id="'mail-provision-sieve-host' + setting.id"
+								<input
+									:id="'mail-provision-sieve-host' + setting.id"
 									v-model="sieveHost"
 									:disabled="loading"
 									name="email"
@@ -221,7 +262,8 @@
 							<label :for="'mail-provision-sieve-port' + setting.id">
 								{{ t('mail', 'Port') }}
 								<br>
-								<input :id="'mail-provision-sieve-port' + setting.id"
+								<input
+									:id="'mail-provision-sieve-port' + setting.id"
 									v-model="sievePort"
 									:disabled="loading"
 									name="email"
@@ -229,43 +271,50 @@
 							</label>
 						</div>
 						<div class="flex-row">
-							<input :id="'mail-provision-sieve-user-none' + setting.id"
+							<input
+								:id="'mail-provision-sieve-user-none' + setting.id"
 								v-model="sieveSslMode"
 								type="radio"
 								name="man-sieve-sec"
 								:disabled="loading"
 								value="none">
-							<label class="button"
+							<label
+								class="button"
 								:for="'mail-provision-sieve-user-none' + setting.id"
-								:class="{primary: sieveSslMode === 'none'}">{{ t('mail', 'None') }}</label>
-							<input :id="'mail-provision-sieve-user-ssl' + setting.id"
+								:class="{ primary: sieveSslMode === 'none' }">{{ t('mail', 'None') }}</label>
+							<input
+								:id="'mail-provision-sieve-user-ssl' + setting.id"
 								v-model="sieveSslMode"
 								type="radio"
 								name="man-sieve-sec"
 								:disabled="loading"
 								value="ssl">
-							<label class="button"
+							<label
+								class="button"
 								:for="'mail-provision-sieve-user-ssl' + setting.id"
-								:class="{primary: sieveSslMode === 'ssl'}">{{ t('mail', 'SSL/TLS') }}</label>
-							<input :id="'mail-provision-sieve-user-tls' + setting.id"
+								:class="{ primary: sieveSslMode === 'ssl' }">{{ t('mail', 'SSL/TLS') }}</label>
+							<input
+								:id="'mail-provision-sieve-user-tls' + setting.id"
 								v-model="sieveSslMode"
 								type="radio"
 								name="man-sieve-sec"
 								:disabled="loading"
 								value="tls">
-							<label class="button"
+							<label
+								class="button"
 								:for="'mail-provision-sieve-user-tls' + setting.id"
-								:class="{primary: sieveSslMode === 'tls'}">{{ t('mail', 'STARTTLS') }}</label>
+								:class="{ primary: sieveSslMode === 'tls' }">{{ t('mail', 'STARTTLS') }}</label>
 						</div>
 					</div>
 				</div>
-				<div v-if="ldapAliasesIntegration" class="settings-group">
+				<div class="settings-group">
 					<div class="group-title">
 						{{ t('mail', 'LDAP aliases integration') }}
 					</div>
 					<div class="group-inputs">
 						<div>
-							<input :id="'mail-provision-ldap-aliases-provisioning' + setting.id"
+							<input
+								:id="'mail-provision-ldap-aliases-provisioning' + setting.id"
 								v-model="ldapAliasesProvisioning"
 								type="checkbox"
 								class="checkbox">
@@ -276,9 +325,10 @@
 						</div>
 						<div>
 							<label :for="'mail-provision-ldap-aliases-attribute' + setting.id">
-								{{ t('mail', 'LDAP attribute for aliases') }}*
+								{{ t('mail', 'LDAP attribute for aliases') }}
 								<br>
-								<input :id="'mail-provision-ldap-aliases-attribute' + setting.id"
+								<input
+									:id="'mail-provision-ldap-aliases-attribute' + setting.id"
 									v-model="ldapAliasesAttribute"
 									:disabled="loading"
 									:required="ldapAliasesProvisioning"
@@ -291,30 +341,32 @@
 				<div class="settings-group">
 					<div class="group-title" />
 					<div class="group-inputs">
-						<ButtonVue class="config-button save-config"
+						<ButtonVue
+							class="config-button save-config"
 							:aria-label="t('mail', 'Save Config')"
-							type="secondary"
-							native-type="submit"
+							variant="secondary"
+							type="submit"
 							:disabled="loading">
 							<template #icon>
-								<IconUpload :size="16" />
+								<IconUpload :size="20" />
 							</template>
 							{{ t('mail', 'Save Config') }}
 						</ButtonVue>
-						<ButtonVue v-if="deleteButton"
-							type="secondary"
+						<ButtonVue
+							v-if="deleteButton"
+							variant="secondary"
 							class="config-button"
 							:aria-label="t('mail', 'Unprovision & Delete Config')"
 							:disabled="loading"
 							@click="disableConfig()">
 							<template #icon>
-								<IconDelete :size="16" />
+								<IconDelete :size="20" />
 							</template>
 							{{ t('mail', 'Unprovision & Delete Config') }}
 						</ButtonVue>
 						<br>
 						<small>{{
-							t('mail', '* %USERID% and %EMAIL% will be replaced with the user\'s UID and email')
+							t('mail', '* %USERID% and %EMAIL% will be replaced with the user\'s UID and email. {ldapPlaceholder} will be replaced with the value of that LDAP attribute', { ldapPlaceholder: '%LDAP:sAMAccountName%' })
 						}}</small>
 					</div>
 				</div>
@@ -334,16 +386,13 @@
 		</div>
 	</div>
 </template>
+
 <script>
-import logger from '../../logger.js'
-import ProvisionPreview from './ProvisionPreview.vue'
-import { loadState } from '@nextcloud/initial-state'
 import ButtonVue from '@nextcloud/vue/components/NcButton'
-
-import IconUpload from 'vue-material-design-icons/UploadOutline.vue'
-import IconDelete from 'vue-material-design-icons/DeleteOutline.vue'
-
-const ldapAliasesIntegration = loadState('mail', 'ldap_aliases_integration', false)
+import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
+import IconUpload from 'vue-material-design-icons/TrayArrowUp.vue'
+import ProvisionPreview from './ProvisionPreview.vue'
+import logger from '../../logger.js'
 
 export default {
 	name: 'ProvisioningSettings',
@@ -353,26 +402,31 @@ export default {
 		IconUpload,
 		IconDelete,
 	},
+
 	props: {
 		setting: {
 			type: Object,
 			required: true,
 		},
+
 		submit: {
 			type: Function,
 			required: true,
 		},
+
 		disable: {
 			type: Function,
 			required: false,
 			default: undefined,
 		},
+
 		deleteButton: {
 			type: Boolean,
 			required: false,
 			default: true,
 		},
 	},
+
 	data() {
 		return {
 			active: !!this.setting.active,
@@ -388,6 +442,7 @@ export default {
 			smtpSslMode: this.setting.smtpSslMode || 'tls',
 			masterPasswordEnabled: this.setting.masterPasswordEnabled === true,
 			masterPassword: this.setting.masterPassword || '',
+			masterUser: this.setting.masterUser || '',
 			sieveEnabled: this.setting.sieveEnabled || '',
 			sieveHost: this.setting.sieveHost || '',
 			sievePort: this.setting.sievePort || '',
@@ -397,16 +452,18 @@ export default {
 				uid: 'user123',
 				email: '',
 			},
+
 			previewData2: {
 				uid: 'user321',
 				email: 'user@domain.com',
 			},
-			ldapAliasesIntegration,
+
 			ldapAliasesProvisioning: this.setting.ldapAliasesProvisioning || false,
 			ldapAliasesAttribute: this.setting.ldapAliasesAttribute || '',
 			loading: false,
 		}
 	},
+
 	computed: {
 		previewTemplates() {
 			return {
@@ -422,6 +479,7 @@ export default {
 				smtpSslMode: this.smtpSslMode,
 				masterPasswordEnabled: this.masterPasswordEnabled,
 				masterPassword: this.masterPassword,
+				masterUser: this.masterUser,
 				sieveEnabled: this.sieveEnabled,
 				sieveUser: this.sieveUser,
 				sieveHost: this.sieveHost,
@@ -432,9 +490,20 @@ export default {
 			}
 		},
 	},
+
+	watch: {
+		masterPasswordEnabled(enabled) {
+			if (!enabled) {
+				this.masterPassword = ''
+				this.masterUser = ''
+			}
+		},
+	},
+
 	beforeMount() {
 		logger.debug('provisioning setting loaded', { setting: this.setting })
 	},
+
 	methods: {
 		async submitForm() {
 			this.loading = true
@@ -455,6 +524,7 @@ export default {
 					smtpSslMode: this.smtpSslMode,
 					masterPasswordEnabled: this.masterPasswordEnabled,
 					masterPassword: this.masterPassword,
+					masterUser: this.masterUser,
 					sieveEnabled: this.sieveEnabled,
 					sieveUser: this.sieveUser,
 					sieveHost: this.sieveHost,
@@ -471,6 +541,7 @@ export default {
 				this.loading = false
 			}
 		},
+
 		async disableConfig() {
 			this.loading = true
 			try {
@@ -510,7 +581,8 @@ export default {
 		margin: 10px;
 		flex-grow: 1;
 
-		input[type='text'] {
+		input[type='text'],
+		input[type='password'] {
 			min-width: 200px;
 		}
 		.config-button {

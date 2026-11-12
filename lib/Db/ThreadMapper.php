@@ -28,7 +28,7 @@ class ThreadMapper extends QBMapper {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('messages.uid', 'mailboxes.name')
 			->from($this->tableName, 'messages')
-			->join('messages', 'mail_mailboxes', 'mailboxes', 'messages.mailbox_id = mailboxes.id')
+			->join('messages', 'mail_mailboxes', 'mailboxes', $qb->expr()->eq('messages.mailbox_id', 'mailboxes.id', IQueryBuilder::PARAM_INT))
 			->where(
 				$qb->expr()->eq('messages.thread_root_id', $qb->createNamedParameter($threadRootId, IQueryBuilder::PARAM_STR)),
 				$qb->expr()->eq('mailboxes.account_id', $qb->createNamedParameter($mailAccount->getId(), IQueryBuilder::PARAM_INT))
@@ -44,12 +44,10 @@ class ThreadMapper extends QBMapper {
 		}
 
 		$result = $qb->executeQuery();
-		$rows = array_map(static function (array $row) {
-			return [
-				'messageUid' => (int)$row[0],
-				'mailboxName' => (string)$row[1]
-			];
-		}, $result->fetchAll(\PDO::FETCH_NUM));
+		$rows = array_map(static fn (array $row) => [
+			'messageUid' => (int)$row[0],
+			'mailboxName' => (string)$row[1]
+		], $result->fetchAll(\PDO::FETCH_NUM));
 		$result->closeCursor();
 
 		return $rows;
@@ -67,7 +65,7 @@ class ThreadMapper extends QBMapper {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('messages.id')
 			->from($this->tableName, 'messages')
-			->join('messages', 'mail_mailboxes', 'mailboxes', 'messages.mailbox_id = mailboxes.id')
+			->join('messages', 'mail_mailboxes', 'mailboxes', $qb->expr()->eq('messages.mailbox_id', 'mailboxes.id', IQueryBuilder::PARAM_INT))
 			->where(
 				// Not the message itself
 				$qb->expr()->neq(
@@ -96,11 +94,9 @@ class ThreadMapper extends QBMapper {
 			);
 
 		$result = $qb->executeQuery();
-		$rows = array_map(static function (array $row) {
-			return [
-				'id' => (int)$row[0],
-			];
-		}, $result->fetchAll(\PDO::FETCH_NUM));
+		$rows = array_map(static fn (array $row) => [
+			'id' => (int)$row[0],
+		], $result->fetchAll(\PDO::FETCH_NUM));
 		$result->closeCursor();
 
 		return $rows;

@@ -8,7 +8,7 @@
 			t('mail', 'The sender of this message has asked to be notified when you read this message.')
 		}}
 		<div class="notify-button">
-			<NcButton type="secondary" :disabled="loading" @click="sendMdn">
+			<NcButton variant="secondary" :disabled="loading" @click="sendMdn">
 				{{ t('mail', 'Notify the sender') }}
 			</NcButton>
 		</div>
@@ -21,37 +21,40 @@
 </template>
 
 <script>
+import { showError } from '@nextcloud/dialogs'
+import { mapStores } from 'pinia'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import logger from '../logger.js'
 import { sendMdn } from '../service/MessageService.js'
-import { showError } from '@nextcloud/dialogs'
-import { NcButton } from '@nextcloud/vue'
-
 import useMainStore from '../store/mainStore.js'
-import { mapStores } from 'pinia'
 
 export default {
 	name: 'MdnRequest',
 	components: {
 		NcButton,
 	},
+
 	props: {
 		message: {
 			required: true,
 			type: Object,
 		},
 	},
+
 	data() {
 		return {
 			hasMdnRequest: this.message.dispositionNotificationTo && this.message.dispositionNotificationTo.length > 0,
 			loading: false,
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		mdnSent() {
-			return this.message.flags.mdnsent
+			return this.message.flags.$mdnsent
 		},
 	},
+
 	methods: {
 		async sendMdn() {
 			this.loading = true
@@ -59,7 +62,7 @@ export default {
 
 			try {
 				await sendMdn(this.message.databaseId)
-				this.mainStore.flagEnvelopeMutation({ envelope: this.message, flag: 'mdnsent', value: true })
+				this.mainStore.flagEnvelopeMutation({ envelope: this.message, flag: '$mdnsent', value: true })
 			} catch (error) {
 				logger.error('could not send mdn', error)
 				showError(t('mail', 'Could not send mdn'))

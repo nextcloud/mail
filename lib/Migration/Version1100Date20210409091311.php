@@ -28,7 +28,7 @@ class Version1100Date20210409091311 extends SimpleMigrationStep {
 
 		if ($schema->hasTable('mail_tags')) {
 			$table = $schema->getTable('mail_tags');
-			$table->changeColumn('is_default_tag', [
+			$table->modifyColumn('is_default_tag', [
 				'notnull' => false,
 				'default' => false
 			]);

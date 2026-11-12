@@ -9,36 +9,36 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Tests\Unit\Service\Sync;
 
-use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
+use OCA\Mail\Contracts\IMailboxConnector;
+use OCA\Mail\Contracts\IMessageConnector;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\MailboxNotCachedException;
-use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MailboxStats;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\PreviewEnhancer;
 use OCA\Mail\IMAP\Sync\Response;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\Search\FilterStringParser;
 use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
 use OCA\Mail\Service\Sync\SyncService;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\LoggerInterface;
 
-class SyncServiceTest extends TestCase {
+final class SyncServiceTest extends TestCase {
 
-	private IMAPClientFactory&MockObject $clientFactory;
-	private Horde_Imap_Client_Socket&MockObject $client;
+	private ProtocolFactory&MockObject $protocolFactory;
+
+	private IMailboxConnector&MockObject $mailboxConnector;
+
+	private IMessageConnector&MockObject $messageConnector;
 
 	/** @var ImapToDbSynchronizer */
 	private $synchronizer;
 
 	/** @var MessageMapper */
 	private $messageMapper;
-
-	/** @var LoggerInterface */
-	private $loggerInterface;
 
 	/** @var MailboxSync */
 	private $mailboxSync;
@@ -49,28 +49,31 @@ class SyncServiceTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
-		$this->client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
+		$this->mailboxConnector = $this->createMock(IMailboxConnector::class);
+		$this->messageConnector = $this->createMock(IMessageConnector::class);
 		$this->synchronizer = $this->createMock(ImapToDbSynchronizer::class);
-		$filterStringParser = $this->createMock(FilterStringParser::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
-		$previewEnhancer = $this->createMock(PreviewEnhancer::class);
-		$this->loggerInterface = $this->createMock(LoggerInterface::class);
 		$this->mailboxSync = $this->createMock(MailboxSync::class);
 
+		$this->protocolFactory->method('mailboxConnector')
+			->willReturn($this->mailboxConnector);
+		$this->protocolFactory->method('messageConnector')
+			->willReturn($this->messageConnector);
+
 		$this->syncService = new SyncService(
-			$this->clientFactory,
+			$this->protocolFactory,
 			$this->synchronizer,
-			$filterStringParser,
+			$this->createStub(FilterStringParser::class),
 			$this->messageMapper,
-			$previewEnhancer,
-			$this->loggerInterface,
+			$this->createStub(PreviewEnhancer::class),
+			$this->createStub(\Psr\Log\LoggerInterface::class),
 			$this->mailboxSync
 		);
 	}
 
 	public function testPartialSyncOnUncachedMailbox(): void {
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
 		$mailbox->expects($this->once())
 			->method('isCached')
@@ -100,28 +103,24 @@ class SyncServiceTest extends TestCase {
 			[],
 			new MailboxStats(42, 10, null)
 		);
-		$this->clientFactory
-			->method('getClient')
-			->with($account)
-			->willReturn($this->client);
 		$this->messageMapper
 			->method('findUidsForIds')
 			->with($mailbox, [])
 			->willReturn([]);
-		$this->synchronizer->expects($this->once())
-			->method('sync')
+		$this->mailboxConnector->expects($this->once())
+			->method('syncOne')
+			->with($account, $mailbox);
+		$this->messageConnector->expects($this->once())
+			->method('syncMailbox')
 			->with(
 				$account,
-				$this->client,
 				$mailbox,
-				$this->loggerInterface,
+				$this->isInstanceOf(\Psr\Log\LoggerInterface::class),
 				0,
 				[],
 				true
-			);
-		$this->mailboxSync->expects($this->once())
-			->method('syncStats')
-			->with($this->client, $mailbox);
+			)
+			->willReturn(new \OCA\Mail\Protocol\SyncResult());
 
 		$response = $this->syncService->syncMailbox(
 			$account,

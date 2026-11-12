@@ -11,61 +11,66 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
+use OCA\Mail\BackgroundJob\ContextChat\ScheduleJob;
 use OCA\Mail\BackgroundJob\PreviewEnhancementProcessingJob;
 use OCA\Mail\BackgroundJob\QuotaJob;
+use OCA\Mail\BackgroundJob\RepairSyncJob;
 use OCA\Mail\BackgroundJob\SyncJob;
 use OCA\Mail\BackgroundJob\TrainImportanceClassifierJob;
+use OCA\Mail\Db\DelegationMapper;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\BackgroundJob\IJob;
 use OCP\BackgroundJob\IJobList;
+use OCP\IConfig;
 use function array_map;
 
 class AccountService {
-	/** @var MailAccountMapper */
-	private $mapper;
-
 	/**
 	 * Cache accounts for multiple calls to 'findByUserId'
 	 *
-	 * @var array<string, Account[]>
+	 * @var array<string, list<Account>>
 	 */
 	private array $accounts = [];
-
-	/** @var AliasesService */
-	private $aliasesService;
 
 	/** @var IJobList */
 	private $jobList;
 
-	/** @var IMAPClientFactory */
-	private $imapClientFactory;
-
-	public function __construct(MailAccountMapper $mapper,
-		AliasesService $aliasesService,
+	public function __construct(
+		private MailAccountMapper $mapper,
+		private AliasesService $aliasesService,
 		IJobList $jobList,
-		IMAPClientFactory $imapClientFactory) {
-		$this->mapper = $mapper;
-		$this->aliasesService = $aliasesService;
+		private ProtocolFactory $protocolFactory,
+		private readonly IConfig $config,
+		private readonly ITimeFactory $timeFactory,
+		private DelegationMapper $delegationMapper,
+	) {
 		$this->jobList = $jobList;
-		$this->imapClientFactory = $imapClientFactory;
 	}
 
 	/**
 	 * @param string $currentUserId
-	 * @return Account[]
+	 * @return list<Account>
 	 */
 	public function findByUserId(string $currentUserId): array {
 		if (!isset($this->accounts[$currentUserId])) {
-			$this->accounts[$currentUserId] = array_map(static function ($a) {
-				return new Account($a);
-			}, $this->mapper->findByUserId($currentUserId));
+			$this->accounts[$currentUserId] = array_map(static fn ($a) => new Account($a), $this->mapper->findByUserId($currentUserId));
 		}
 
 		return $this->accounts[$currentUserId];
+	}
+
+	/**
+	 * @param string $userId
+	 * @return list<Account>
+	 */
+	public function findDelegatedAccounts(string $userId): array {
+		return array_map(static fn ($a) => new Account($a), $this->mapper->findDelegatedByUserId($userId));
 	}
 
 	/**
@@ -102,9 +107,7 @@ class AccountService {
 			return $list;
 		}
 		// if cached accounts collection did not exist retrieve account details directly from the data store
-		return array_map(static function ($a) {
-			return new Account($a);
-		}, $this->mapper->findByUserIdAndAddress($userId, $address));
+		return array_map(static fn ($a) => new Account($a), $this->mapper->findByUserIdAndAddress($userId, $address));
 	}
 
 	/**
@@ -144,6 +147,10 @@ class AccountService {
 		}
 		$this->aliasesService->deleteAll($accountId);
 		$this->mapper->delete($mailAccount);
+
+		// Invalidate cache to ensure deleted account is not included
+		// in subsequent `findByUserId` and `findByUserIdAndAddress` calls
+		unset($this->accounts[$currentUserId]);
 	}
 
 	/**
@@ -159,26 +166,43 @@ class AccountService {
 		}
 		$this->aliasesService->deleteAll($accountId);
 		$this->mapper->delete($mailAccount);
+
+		// Invalidate cache to ensure deleted account is not included
+		// in subsequent `findByUserId` and `findByUserIdAndAddress` calls
+		unset($this->accounts[$mailAccount->getUserId()]);
 	}
 
 	/**
 	 * @param MailAccount $newAccount
+	 * @param bool $scheduleBackgroundJobs Optional parameter to save the mail account
+	 *                                     without scheduling the corresponding background jobs. This can be useful if
+	 *                                     further database modifications must be done before running any background
+	 *                                     jobs. Defaults to `true`.
 	 * @return MailAccount
 	 */
-	public function save(MailAccount $newAccount): MailAccount {
+	public function save(MailAccount $newAccount, bool $scheduleBackgroundJobs = true): MailAccount {
 		$newAccount = $this->mapper->save($newAccount);
 
 		// Insert background jobs for this account
-		$this->jobList->add(SyncJob::class, ['accountId' => $newAccount->getId()]);
-		$this->jobList->add(TrainImportanceClassifierJob::class, ['accountId' => $newAccount->getId()]);
-		$this->jobList->add(PreviewEnhancementProcessingJob::class, ['accountId' => $newAccount->getId()]);
-		$this->jobList->add(QuotaJob::class, ['accountId' => $newAccount->getId()]);
+		if ($scheduleBackgroundJobs) {
+			$this->scheduleBackgroundJobs($newAccount->getId());
+		}
+
+		// Invalidate cache to ensure created account is being included
+		// in subsequent `findByUserId` and `findByUserIdAndAddress` calls
+		unset($this->accounts[$newAccount->getUserId()]);
 
 		return $newAccount;
 	}
 
 	public function update(MailAccount $account): MailAccount {
-		return $this->mapper->update($account);
+		$updatedAccount = $this->mapper->update($account);
+
+		// Invalidate cache to ensure changes to account are being included
+		// in subsequent `findByUserId` and `findByUserIdAndAddress` calls
+		unset($this->accounts[$updatedAccount->getUserId()]);
+
+		return $updatedAccount;
 	}
 
 	/**
@@ -194,6 +218,10 @@ class AccountService {
 		$mailAccount = $account->getMailAccount();
 		$mailAccount->setSignature($signature);
 		$this->mapper->save($mailAccount);
+
+		// Invalidate cache to ensure changed signature is being included
+		// in subsequent `findByUserId` and `findByUserIdAndAddress` calls
+		unset($this->accounts[$uid]);
 	}
 
 	/**
@@ -202,7 +230,6 @@ class AccountService {
 	public function getAllAcounts(): array {
 		return $this->mapper->getAllAccounts();
 	}
-
 
 	/**
 	 * @param string $currentUserId
@@ -213,11 +240,37 @@ class AccountService {
 	public function testAccountConnection(string $currentUserId, int $accountId) :bool {
 		$account = $this->find($currentUserId, $accountId);
 		try {
-			$client = $this->imapClientFactory->getClient($account);
-			$client->close();
+			$this->protocolFactory->testConnection($account);
 			return true;
 		} catch (\Throwable $e) {
 			return false;
+		}
+	}
+
+	public function scheduleBackgroundJobs(int $accountId): void {
+		$arguments = ['accountId' => $accountId];
+
+		$now = $this->timeFactory->getTime();
+		$this->scheduleBackgroundJob(SyncJob::class, $now, $arguments);
+		$this->scheduleBackgroundJob(TrainImportanceClassifierJob::class, $now, $arguments);
+		$this->scheduleBackgroundJob(PreviewEnhancementProcessingJob::class, $now, $arguments);
+		$this->scheduleBackgroundJob(QuotaJob::class, $now, $arguments);
+		$this->scheduleBackgroundJob(ScheduleJob::class, $now, $arguments);
+
+		$inThreeDays = $now + (3 * 86400);
+		$this->scheduleBackgroundJob(RepairSyncJob::class, $inThreeDays, $arguments);
+	}
+
+	/**
+	 * IJobList::add() / IJobList::scheduleAfter() resets last_run, last_check, and reserved_at if the job exists.
+	 * To avoid unwanted resets (e.g. when enabling debug mode), we check first if the job is already present.
+	 *
+	 * @param class-string<IJob> $job
+	 * @param mixed $argument The serializable argument to be passed to $job->run() when the job is executed
+	 */
+	private function scheduleBackgroundJob(string $job, int $runAfter, mixed $argument = null): void {
+		if (!$this->jobList->has($job, $argument)) {
+			$this->jobList->scheduleAfter($job, $runAfter, $argument);
 		}
 	}
 }

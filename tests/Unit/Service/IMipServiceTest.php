@@ -23,7 +23,9 @@ use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\IMipService;
 use OCA\Mail\Service\MailManager;
+use OCA\Mail\Util\ServerVersion;
 use OCP\Calendar\IManager;
+use OCP\ServerVersion as OCPServerVersion;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
@@ -36,6 +38,7 @@ class IMipServiceTest extends TestCase {
 
 	/** @var AccountService|MockObject */
 	private $accountService;
+
 	private IManager $calendarManager;
 
 	/** @var MailManager|MockObject */
@@ -46,6 +49,12 @@ class IMipServiceTest extends TestCase {
 
 	private IMipService $service;
 
+	/** mocked to pick the code path under test */
+	private ServerVersion|MockObject $serverVersion;
+
+	/** the version of the server the tests run against, to skip what it does not support */
+	private OCPServerVersion $installedServerVersion;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -55,6 +64,8 @@ class IMipServiceTest extends TestCase {
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->mailManager = $this->createMock(MailManager::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
+		$this->serverVersion = $this->createMock(ServerVersion::class);
+		$this->installedServerVersion = new OCPServerVersion();
 
 		$this->service = new IMipService(
 			$this->accountService,
@@ -62,7 +73,8 @@ class IMipServiceTest extends TestCase {
 			$this->logger,
 			$this->mailboxMapper,
 			$this->mailManager,
-			$this->messageMapper
+			$this->messageMapper,
+			$this->serverVersion
 		);
 	}
 
@@ -76,6 +88,8 @@ class IMipServiceTest extends TestCase {
 			->method('findById');
 		$this->accountService->expects(self::never())
 			->method('findById');
+		$this->calendarManager->expects(self::never())
+			->method('handleIMipRequest');
 		$this->calendarManager->expects(self::never())
 			->method('handleIMipReply');
 		$this->calendarManager->expects(self::never())
@@ -113,6 +127,8 @@ class IMipServiceTest extends TestCase {
 		$this->messageMapper->expects(self::once())
 			->method('updateImipData');
 		$this->calendarManager->expects(self::never())
+			->method('handleIMipRequest');
+		$this->calendarManager->expects(self::never())
 			->method('handleIMipReply');
 		$this->calendarManager->expects(self::never())
 			->method('handleIMipCancel');
@@ -145,6 +161,8 @@ class IMipServiceTest extends TestCase {
 			->willReturn($account);
 		$this->messageMapper->expects(self::once())
 			->method('updateImipData');
+		$this->calendarManager->expects(self::never())
+			->method('handleIMipRequest');
 		$this->calendarManager->expects(self::never())
 			->method('handleIMipReply');
 		$this->calendarManager->expects(self::never())
@@ -180,16 +198,65 @@ class IMipServiceTest extends TestCase {
 			->method('findById')
 			->willReturn($account);
 		$this->mailManager->expects(self::once())
-			->method('getImapMessagesForScheduleProcessing')
-			->with($account, $mailbox, [$message->getUid()])
+			->method('getImapMessages')
+			->with($account, $mailbox, true, $message)
 			->willReturn([$imapMessage]);
+		$this->calendarManager->expects(self::never())
+			->method('handleIMipRequest');
 		$this->calendarManager->expects(self::never())
 			->method('handleIMipReply');
 		$this->calendarManager->expects(self::never())
 			->method('handleIMipCancel');
+		$this->logger->expects(self::once())
+			->method('info')
+			->with(
+				'iMIP message could not be processed because it does not contain a supported scheduling method',
+				['messageId' => $message->getId(), 'mailboxId' => $mailbox->getId()]
+			);
 		$this->messageMapper->expects(self::once())
 			->method('updateImipData')
-			->with($message);
+			->with(self::callback(fn (Message $msg) => $msg->isImipProcessed() === true && $msg->isImipError() === true));
+
+		$this->service->process();
+	}
+
+	public function testMessageNotAvailableOnImapServer(): void {
+		$message = new Message();
+		$message->setImipMessage(true);
+		$message->setUid(1);
+		$message->setMailboxId(100);
+		$mailbox = new Mailbox();
+		$mailbox->setId(100);
+		$mailbox->setAccountId(200);
+		$account = $this->createConfiguredMock(Account::class, [
+			'getId' => 200,
+			'getEmail' => 'dimitrius@stardew-science.com'
+		]);
+
+		$this->messageMapper->expects(self::once())
+			->method('findIMipMessagesAscending')
+			->willReturn([$message]);
+		$this->mailboxMapper->expects(self::once())
+			->method('findById')
+			->willReturn($mailbox);
+		$this->accountService->expects(self::once())
+			->method('findById')
+			->willReturn($account);
+		$this->mailManager->expects(self::once())
+			->method('getImapMessages')
+			->with($account, $mailbox, true, $message)
+			->willReturn([]);
+		$this->logger->expects(self::never())
+			->method('warning');
+		$this->logger->expects(self::once())
+			->method('debug')
+			->with(
+				'iMIP message could not be processed because it is no longer available on the IMAP server',
+				['messageId' => $message->getId(), 'mailboxId' => $mailbox->getId()]
+			);
+		$this->messageMapper->expects(self::once())
+			->method('updateImipData')
+			->with(self::callback(fn (Message $msg) => $msg->isImipProcessed() === true && $msg->isImipError() === true));
 
 		$this->service->process();
 	}
@@ -221,10 +288,12 @@ class IMipServiceTest extends TestCase {
 			->method('findById')
 			->willReturn($account);
 		$this->mailManager->expects(self::once())
-			->method('getImapMessagesForScheduleProcessing')
+			->method('getImapMessages')
 			->willThrowException(new ServiceException());
 		$this->logger->expects(self::once())
 			->method('error');
+		$this->calendarManager->expects(self::never())
+			->method('handleIMipRequest');
 		$this->calendarManager->expects(self::never())
 			->method('handleIMipReply');
 		$this->calendarManager->expects(self::never())
@@ -236,12 +305,6 @@ class IMipServiceTest extends TestCase {
 	}
 
 	public function testIsRequest(): void {
-
-		// iMip Request is NC31+
-		if (!method_exists(IManager::class, 'handleImipRequest')) {
-			self::markTestIncomplete();
-		}
-
 		$message = new Message();
 		$message->setImipMessage(true);
 		$message->setUid(1);
@@ -269,9 +332,12 @@ class IMipServiceTest extends TestCase {
 			->method('findById')
 			->willReturn($account);
 		$this->mailManager->expects(self::once())
-			->method('getImapMessagesForScheduleProcessing')
-			->with($account, $mailbox, [$message->getUid()])
+			->method('getImapMessages')
+			->with($account, $mailbox, true, $message)
 			->willReturn([$imapMessage]);
+		$this->serverVersion->expects(self::once())
+			->method('getMajorVersion')
+			->willReturn(32);
 		$imapMessage->expects(self::once())
 			->method('getUid')
 			->willReturn(1);
@@ -326,14 +392,15 @@ class IMipServiceTest extends TestCase {
 			->method('findById')
 			->willReturn($account);
 		$this->mailManager->expects(self::once())
-			->method('getImapMessagesForScheduleProcessing')
-			->with($account, $mailbox, [$message->getUid()])
+			->method('getImapMessages')
+			->with($account, $mailbox, true, $message)
 			->willReturn([$imapMessage]);
+		$this->serverVersion->expects(self::once())
+			->method('getMajorVersion')
+			->willReturn(32);
 		$imapMessage->expects(self::once())
 			->method('getUid')
 			->willReturn(1);
-		$this->logger->expects(self::never())
-			->method('info');
 		$imapMessage->expects(self::once())
 			->method('getFrom')
 			->willReturn($addressList);
@@ -343,9 +410,6 @@ class IMipServiceTest extends TestCase {
 		$address->expects(self::once())
 			->method('getEmail')
 			->willReturn('pam@stardew-bus-service.com');
-		$imapMessage->expects(self::never())
-			->method('getInReplyTo')
-			->willReturn($addressList);
 		$this->calendarManager->expects(self::once())
 			->method('handleIMipReply')
 			->with('principals/users/vincent',
@@ -386,9 +450,12 @@ class IMipServiceTest extends TestCase {
 			->method('findById')
 			->willReturn($account);
 		$this->mailManager->expects(self::once())
-			->method('getImapMessagesForScheduleProcessing')
-			->with($account, $mailbox, [$message->getUid()])
+			->method('getImapMessages')
+			->with($account, $mailbox, true, $message)
 			->willReturn([$imapMessage]);
+		$this->serverVersion->expects(self::once())
+			->method('getMajorVersion')
+			->willReturn(32);
 		$imapMessage->expects(self::once())
 			->method('getUid')
 			->willReturn(1);
@@ -403,9 +470,6 @@ class IMipServiceTest extends TestCase {
 		$address->expects(self::once())
 			->method('getEmail')
 			->willReturn('pam@stardew-bus-service.com');
-		$imapMessage->expects(self::once())
-			->method('getReplyTo')
-			->willReturn(new AddressList([]));
 		$this->calendarManager->expects(self::once())
 			->method('handleIMipCancel')
 			->with('principals/users/vincent',
@@ -416,6 +480,389 @@ class IMipServiceTest extends TestCase {
 			);
 		$this->messageMapper->expects(self::once())
 			->method('updateImipData');
+
+		$this->service->process();
+	}
+
+	public function testIsRequestServerVersion33(): void {
+		if ($this->installedServerVersion->getMajorVersion() < 33) {
+			$this->markTestSkipped('Requires Nextcloud 33 or higher');
+		}
+
+		$message = new Message();
+		$message->setImipMessage(true);
+		$message->setUid(1);
+		$message->setMailboxId(100);
+		$mailbox = new Mailbox();
+		$mailbox->setId(100);
+		$mailbox->setAccountId(200);
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(200);
+		$mailAccount->setEmail('vincent@stardew-valley.edu');
+		$mailAccount->setUserId('vincent');
+		$account = new Account($mailAccount);
+		$imapMessage = $this->createMock(IMAPMessage::class);
+		$imapMessage->scheduling[] = ['method' => 'REQUEST', 'contents' => 'VCALENDAR'];
+		$addressList = $this->createMock(AddressList::class);
+		$address = $this->createMock(Address::class);
+
+		$this->messageMapper->expects(self::once())
+			->method('findIMipMessagesAscending')
+			->willReturn([$message]);
+		$this->mailboxMapper->expects(self::once())
+			->method('findById')
+			->willReturn($mailbox);
+		$this->accountService->expects(self::once())
+			->method('findById')
+			->willReturn($account);
+		$this->mailManager->expects(self::once())
+			->method('getImapMessages')
+			->with($account, $mailbox, true, $message)
+			->willReturn([$imapMessage]);
+		$this->serverVersion->expects(self::once())
+			->method('getMajorVersion')
+			->willReturn(33);
+		$imapMessage->expects(self::once())
+			->method('getUid')
+			->willReturn(1);
+		$imapMessage->expects(self::once())
+			->method('getFrom')
+			->willReturn($addressList);
+		$addressList->expects(self::once())
+			->method('first')
+			->willReturn($address);
+		$address->expects(self::once())
+			->method('getEmail')
+			->willReturn('pam@stardew-bus-service.com');
+		$this->logger->expects(self::never())
+			->method('info');
+		$this->calendarManager->expects(self::once())
+			->method('handleIMip')
+			->with('vincent', 'VCALENDAR', [
+				'recipient' => 'vincent@stardew-valley.edu',
+				'absent' => 'ignore',
+				'absentCreateStatus' => 'tentative',
+				'mailMessageId' => $message->getId(),
+			])
+			->willReturn(true);
+		$this->messageMapper->expects(self::once())
+			->method('updateImipData');
+
+		$this->service->process();
+	}
+
+	public function testIsReplyServerVersion33(): void {
+		if ($this->installedServerVersion->getMajorVersion() < 33) {
+			$this->markTestSkipped('Requires Nextcloud 33 or higher');
+		}
+
+		$message = new Message();
+		$message->setImipMessage(true);
+		$message->setUid(1);
+		$message->setMailboxId(100);
+		$mailbox = new Mailbox();
+		$mailbox->setId(100);
+		$mailbox->setAccountId(200);
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(200);
+		$mailAccount->setEmail('vincent@stardew-valley.edu');
+		$mailAccount->setUserId('vincent');
+		$account = new Account($mailAccount);
+		$imapMessage = $this->createMock(IMAPMessage::class);
+		$imapMessage->scheduling[] = ['method' => 'REPLY', 'contents' => 'VCARD'];
+		$addressList = $this->createMock(AddressList::class);
+		$address = $this->createMock(Address::class);
+
+		$this->messageMapper->expects(self::once())
+			->method('findIMipMessagesAscending')
+			->willReturn([$message]);
+		$this->mailboxMapper->expects(self::once())
+			->method('findById')
+			->willReturn($mailbox);
+		$this->accountService->expects(self::once())
+			->method('findById')
+			->willReturn($account);
+		$this->mailManager->expects(self::once())
+			->method('getImapMessages')
+			->with($account, $mailbox, true, $message)
+			->willReturn([$imapMessage]);
+		$this->serverVersion->expects(self::once())
+			->method('getMajorVersion')
+			->willReturn(33);
+		$imapMessage->expects(self::once())
+			->method('getUid')
+			->willReturn(1);
+		$this->logger->expects(self::never())
+			->method('info');
+		$imapMessage->expects(self::once())
+			->method('getFrom')
+			->willReturn($addressList);
+		$addressList->expects(self::once())
+			->method('first')
+			->willReturn($address);
+		$address->expects(self::once())
+			->method('getEmail')
+			->willReturn('pam@stardew-bus-service.com');
+		$this->calendarManager->expects(self::once())
+			->method('handleIMip')
+			->with('vincent', 'VCARD', [
+				'recipient' => 'vincent@stardew-valley.edu',
+				'absent' => 'ignore',
+				'absentCreateStatus' => 'tentative',
+				'mailMessageId' => $message->getId(),
+			])
+			->willReturn(true);
+		$this->messageMapper->expects(self::once())
+			->method('updateImipData');
+
+		$this->service->process();
+	}
+
+	public function testIsCancelServerVersion33(): void {
+		if ($this->installedServerVersion->getMajorVersion() < 33) {
+			$this->markTestSkipped('Requires Nextcloud 33 or higher');
+		}
+
+		$message = new Message();
+		$message->setImipMessage(true);
+		$message->setUid(1);
+		$message->setMailboxId(100);
+		$mailbox = new Mailbox();
+		$mailbox->setId(100);
+		$mailbox->setAccountId(200);
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(200);
+		$mailAccount->setEmail('vincent@stardew-valley.edu');
+		$mailAccount->setUserId('vincent');
+		$account = new Account($mailAccount);
+		$imapMessage = $this->createMock(IMAPMessage::class);
+		$imapMessage->scheduling[] = ['method' => 'CANCEL', 'contents' => 'VCARD'];
+		$addressList = $this->createMock(AddressList::class);
+		$address = $this->createMock(Address::class);
+
+		$this->messageMapper->expects(self::once())
+			->method('findIMipMessagesAscending')
+			->willReturn([$message]);
+		$this->mailboxMapper->expects(self::once())
+			->method('findById')
+			->willReturn($mailbox);
+		$this->accountService->expects(self::once())
+			->method('findById')
+			->willReturn($account);
+		$this->mailManager->expects(self::once())
+			->method('getImapMessages')
+			->with($account, $mailbox, true, $message)
+			->willReturn([$imapMessage]);
+		$this->serverVersion->expects(self::once())
+			->method('getMajorVersion')
+			->willReturn(33);
+		$imapMessage->expects(self::once())
+			->method('getUid')
+			->willReturn(1);
+		$this->logger->expects(self::never())
+			->method('info');
+		$imapMessage->expects(self::once())
+			->method('getFrom')
+			->willReturn($addressList);
+		$addressList->expects(self::once())
+			->method('first')
+			->willReturn($address);
+		$address->expects(self::once())
+			->method('getEmail')
+			->willReturn('pam@stardew-bus-service.com');
+		$this->calendarManager->expects(self::once())
+			->method('handleIMip')
+			->with('vincent', 'VCARD', [
+				'recipient' => 'vincent@stardew-valley.edu',
+				'absent' => 'ignore',
+				'absentCreateStatus' => 'tentative',
+				'mailMessageId' => $message->getId(),
+			])
+			->willReturn(true);
+		$this->messageMapper->expects(self::once())
+			->method('updateImipData');
+
+		$this->service->process();
+	}
+
+	public function testHandleImipRequestThrowsException(): void {
+		$message = new Message();
+		$message->setImipMessage(true);
+		$message->setUid(1);
+		$message->setMailboxId(100);
+		$mailbox = new Mailbox();
+		$mailbox->setId(100);
+		$mailbox->setAccountId(200);
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(200);
+		$mailAccount->setEmail('vincent@stardew-valley.edu');
+		$mailAccount->setUserId('vincent');
+		$account = new Account($mailAccount);
+		$imapMessage = $this->createMock(IMAPMessage::class);
+		$imapMessage->scheduling[] = ['method' => 'REQUEST', 'contents' => 'VCALENDAR'];
+		$addressList = $this->createMock(AddressList::class);
+		$address = $this->createMock(Address::class);
+
+		$this->messageMapper->expects(self::once())
+			->method('findIMipMessagesAscending')
+			->willReturn([$message]);
+		$this->mailboxMapper->expects(self::once())
+			->method('findById')
+			->willReturn($mailbox);
+		$this->accountService->expects(self::once())
+			->method('findById')
+			->willReturn($account);
+		$this->mailManager->expects(self::once())
+			->method('getImapMessages')
+			->with($account, $mailbox, true, $message)
+			->willReturn([$imapMessage]);
+		$imapMessage->expects(self::once())
+			->method('getUid')
+			->willReturn(1);
+		$imapMessage->expects(self::once())
+			->method('getFrom')
+			->willReturn($addressList);
+		$addressList->expects(self::once())
+			->method('first')
+			->willReturn($address);
+		$address->expects(self::once())
+			->method('getEmail')
+			->willReturn('pam@stardew-bus-service.com');
+		$this->calendarManager->expects(self::once())
+			->method('handleIMipRequest')
+			->willThrowException(new \Exception('Calendar error'));
+		$this->logger->expects(self::once())
+			->method('error')
+			->with(
+				'iMIP message processing failed',
+				self::callback(fn ($context) => isset($context['exception'])
+						&& $context['messageId'] === $message->getId()
+						&& $context['mailboxId'] === $mailbox->getId())
+			);
+		$this->messageMapper->expects(self::once())
+			->method('updateImipData')
+			->with(self::callback(fn (Message $msg) => $msg->isImipProcessed() === true && $msg->isImipError() === true));
+
+		$this->service->process();
+	}
+
+	public function testHandleImipReturnsFalse(): void {
+		if ($this->installedServerVersion->getMajorVersion() < 33) {
+			$this->markTestSkipped('Requires Nextcloud 33 or higher');
+		}
+
+		$message = new Message();
+		$message->setImipMessage(true);
+		$message->setUid(1);
+		$message->setMailboxId(100);
+		$mailbox = new Mailbox();
+		$mailbox->setId(100);
+		$mailbox->setAccountId(200);
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(200);
+		$mailAccount->setEmail('vincent@stardew-valley.edu');
+		$mailAccount->setUserId('vincent');
+		$account = new Account($mailAccount);
+		$imapMessage = $this->createMock(IMAPMessage::class);
+		$imapMessage->scheduling[] = ['method' => 'REQUEST', 'contents' => 'VCALENDAR'];
+		$addressList = $this->createMock(AddressList::class);
+		$address = $this->createMock(Address::class);
+
+		$this->messageMapper->expects(self::once())
+			->method('findIMipMessagesAscending')
+			->willReturn([$message]);
+		$this->mailboxMapper->expects(self::once())
+			->method('findById')
+			->willReturn($mailbox);
+		$this->accountService->expects(self::once())
+			->method('findById')
+			->willReturn($account);
+		$this->mailManager->expects(self::once())
+			->method('getImapMessages')
+			->with($account, $mailbox, true, $message)
+			->willReturn([$imapMessage]);
+		$this->serverVersion->expects(self::once())
+			->method('getMajorVersion')
+			->willReturn(33);
+		$imapMessage->expects(self::once())
+			->method('getUid')
+			->willReturn(1);
+		$imapMessage->expects(self::once())
+			->method('getFrom')
+			->willReturn($addressList);
+		$addressList->expects(self::once())
+			->method('first')
+			->willReturn($address);
+		$address->expects(self::once())
+			->method('getEmail')
+			->willReturn('pam@stardew-bus-service.com');
+		$this->calendarManager->expects(self::once())
+			->method('handleIMip')
+			->willReturn(false);
+		$this->messageMapper->expects(self::once())
+			->method('updateImipData')
+			->with(self::callback(fn (Message $msg) => $msg->isImipProcessed() === false && $msg->isImipError() === true));
+
+		$this->service->process();
+	}
+
+	public function testOneOfSeveralSchedulingObjectsIsNotProcessed(): void {
+		if ($this->installedServerVersion->getMajorVersion() < 33) {
+			$this->markTestSkipped('Requires Nextcloud 33 or higher');
+		}
+
+		$message = new Message();
+		$message->setImipMessage(true);
+		$message->setUid(1);
+		$message->setMailboxId(100);
+		$mailbox = new Mailbox();
+		$mailbox->setId(100);
+		$mailbox->setAccountId(200);
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(200);
+		$mailAccount->setEmail('vincent@stardew-valley.edu');
+		$mailAccount->setUserId('vincent');
+		$account = new Account($mailAccount);
+		$imapMessage = $this->createMock(IMAPMessage::class);
+		$imapMessage->scheduling[] = ['method' => 'REQUEST', 'contents' => 'VCALENDAR1'];
+		$imapMessage->scheduling[] = ['method' => 'CANCEL', 'contents' => 'VCALENDAR2'];
+		$addressList = $this->createMock(AddressList::class);
+		$address = $this->createMock(Address::class);
+
+		$this->messageMapper->expects(self::once())
+			->method('findIMipMessagesAscending')
+			->willReturn([$message]);
+		$this->mailboxMapper->expects(self::once())
+			->method('findById')
+			->willReturn($mailbox);
+		$this->accountService->expects(self::once())
+			->method('findById')
+			->willReturn($account);
+		$this->mailManager->expects(self::once())
+			->method('getImapMessages')
+			->with($account, $mailbox, true, $message)
+			->willReturn([$imapMessage]);
+		$this->serverVersion->expects(self::once())
+			->method('getMajorVersion')
+			->willReturn(33);
+		$imapMessage->expects(self::once())
+			->method('getUid')
+			->willReturn(1);
+		$imapMessage->expects(self::once())
+			->method('getFrom')
+			->willReturn($addressList);
+		$addressList->expects(self::once())
+			->method('first')
+			->willReturn($address);
+		$address->expects(self::once())
+			->method('getEmail')
+			->willReturn('pam@stardew-bus-service.com');
+		$this->calendarManager->expects(self::exactly(2))
+			->method('handleIMip')
+			->willReturnOnConsecutiveCalls(false, true);
+		$this->messageMapper->expects(self::once())
+			->method('updateImipData')
+			->with(self::callback(fn (Message $msg) => $msg->isImipProcessed() === false && $msg->isImipError() === true));
 
 		$this->service->process();
 	}

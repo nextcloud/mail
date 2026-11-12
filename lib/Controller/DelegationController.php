@@ -1,0 +1,114 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * SPDX-FileCopyrightText: 2026 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
+namespace OCA\Mail\Controller;
+
+use OCA\Mail\Exception\DelegationExistsException;
+use OCA\Mail\Http\TrapError;
+use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\DelegationService;
+use OCP\AppFramework\Controller;
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\OpenAPI;
+use OCP\AppFramework\Http\JSONResponse;
+use OCP\IRequest;
+use OCP\IUserManager;
+
+#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
+class DelegationController extends Controller {
+	public function __construct(
+		string $appName,
+		IRequest $request,
+		private DelegationService $delegationService,
+		private AccountService $accountService,
+		private IUserManager $userManager,
+		private ?string $userId,
+	) {
+		parent::__construct($appName, $request);
+	}
+
+	#[NoAdminRequired]
+	#[TrapError]
+	public function getDelegatedUsers(int $accountId): JSONResponse {
+		try {
+			$account = $this->accountService->findById($accountId);
+		} catch (DoesNotExistException) {
+			return new JSONResponse([], Http::STATUS_NOT_FOUND);
+		}
+
+		if ($account->getUserId() !== $this->userId) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
+		return new JSONResponse(
+			$this->delegationService->findDelegatedToUsersForAccount($accountId)
+		);
+	}
+
+	#[NoAdminRequired]
+	#[TrapError]
+	public function delegate(int $accountId, string $userId): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
+		if ($userId === $this->userId) {
+			return new JSONResponse(['message' => 'Cannot delegate to yourself'], Http::STATUS_BAD_REQUEST);
+		}
+
+		try {
+			$account = $this->accountService->findById($accountId);
+		} catch (DoesNotExistException) {
+			return new JSONResponse([], Http::STATUS_NOT_FOUND);
+		}
+
+		if ($account->getUserId() !== $this->userId) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
+		if ($account->getMailAccount()->getProvisioningId() !== null) {
+			return new JSONResponse(['message' => 'Cannot delegate provisioned accounts'], Http::STATUS_FORBIDDEN);
+		}
+
+		if (!$this->userManager->userExists($userId)) {
+			return new JSONResponse([], Http::STATUS_NOT_FOUND);
+		}
+
+		try {
+			$delegation = $this->delegationService->delegate($account, $userId, $this->userId);
+		} catch (DelegationExistsException) {
+			return new JSONResponse(['message' => 'Delegation already exists'], Http::STATUS_CONFLICT);
+		}
+
+		return new JSONResponse($delegation, Http::STATUS_CREATED);
+	}
+
+	#[NoAdminRequired]
+	#[TrapError]
+	public function unDelegate(int $accountId, string $userId): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
+		try {
+			$account = $this->accountService->findById($accountId);
+		} catch (DoesNotExistException) {
+			return new JSONResponse([], Http::STATUS_NOT_FOUND);
+		}
+
+		if ($account->getUserId() !== $this->userId) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
+		$this->delegationService->unDelegate($account, $userId, $this->userId);
+		return new JSONResponse([], Http::STATUS_OK);
+	}
+}

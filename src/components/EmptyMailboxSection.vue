@@ -5,14 +5,14 @@
 <template>
 	<NcEmptyContent class="empty-content" :name="t('mail', 'No messages')">
 		<template #icon>
-			<IconMail :size="65" />
+			<IconMail />
 		</template>
 	</NcEmptyContent>
 </template>
 
 <script>
-import IconMail from 'vue-material-design-icons/EmailOutline.vue'
 import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
+import IconMail from 'vue-material-design-icons/EmailOutline.vue'
 export default {
 	name: 'EmptyMailboxSection',
 	components: {
@@ -21,6 +21,7 @@ export default {
 	},
 }
 </script>
+
 <style lang="scss" scoped>
 .empty-content {
 	height: 100%;

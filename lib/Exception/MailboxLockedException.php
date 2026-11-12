@@ -14,7 +14,8 @@ use OCP\AppFramework\Http;
 
 class MailboxLockedException extends ClientException {
 	public static function from(Mailbox $mailbox): self {
-		return new self($mailbox->getId() . ' is already being synced');
+		$id = $mailbox->getId();
+		return new self("$id is already being synced");
 	}
 
 	#[\Override]

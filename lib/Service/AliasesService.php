@@ -15,26 +15,29 @@ use OCA\Mail\Db\AliasMapper;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ClientException;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\DB\Exception;
 
 class AliasesService {
-	/** @var AliasMapper */
-	private $aliasMapper;
-
-	/** @var MailAccountMapper */
-	private $mailAccountMapper;
-
-	public function __construct(AliasMapper $aliasMapper, MailAccountMapper $mailAccountMapper) {
-		$this->aliasMapper = $aliasMapper;
-		$this->mailAccountMapper = $mailAccountMapper;
+	public function __construct(
+		private AliasMapper $aliasMapper,
+		private MailAccountMapper $mailAccountMapper,
+	) {
 	}
 
 	/**
 	 * @param int $accountId
 	 * @param String $currentUserId
-	 * @return Alias[]
+	 * @return list<Alias>
 	 */
 	public function findAll(int $accountId, string $currentUserId): array {
 		return $this->aliasMapper->findAll($accountId, $currentUserId);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public function countByAccountId(int $accountId, string $currentUserId): int {
+		return $this->aliasMapper->countByAccountId($accountId, $currentUserId);
 	}
 
 	/**
@@ -48,31 +51,40 @@ class AliasesService {
 	}
 
 	/**
-	 * @param string $aliasEmail
-	 * @param string $userId
-	 * @return Alias
+	 * Find an alias of the given account
+	 *
 	 * @throws DoesNotExistException
 	 */
-	public function findByAliasAndUserId(string $aliasEmail, string $userId): Alias {
-		return $this->aliasMapper->findByAlias($aliasEmail, $userId);
+	public function findForAccount(int $aliasId, int $accountId): Alias {
+		return $this->aliasMapper->findForAccount($aliasId, $accountId);
 	}
 
 	/**
-	 * @param string $userId
-	 * @param int $accountId
-	 * @param string $alias
-	 * @param string $aliasName
+	 * Find an alias of the given account by its email address
 	 *
-	 * @return Alias
 	 * @throws DoesNotExistException
 	 */
-	public function create(string $userId, int $accountId, string $alias, string $aliasName): Alias {
+	public function findByAliasForAccount(string $aliasEmail, int $accountId): Alias {
+		return $this->aliasMapper->findByAliasForAccount($aliasEmail, $accountId);
+	}
+
+	/**
+	 * @throws DoesNotExistException
+	 */
+	public function create(string $userId,
+		int $accountId,
+		string $alias,
+		?string $aliasName,
+		?string $signature = null,
+		?int $smimeCertificateId = null): Alias {
 		$this->mailAccountMapper->find($userId, $accountId);
 
 		$aliasEntity = new Alias();
 		$aliasEntity->setAccountId($accountId);
 		$aliasEntity->setAlias($alias);
 		$aliasEntity->setName($aliasName);
+		$aliasEntity->setSignature($signature);
+		$aliasEntity->setSmimeCertificateId($smimeCertificateId);
 
 		return $this->aliasMapper->insert($aliasEntity);
 	}

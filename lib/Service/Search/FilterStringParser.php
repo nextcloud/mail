@@ -25,9 +25,9 @@ class FilterStringParser {
 		return $query;
 	}
 
-	private function parseFilterToken(SearchQuery $query, string $token): bool {
+	private function parseFilterToken(SearchQuery $query, string $token): void {
 		if (!str_contains($token, ':')) {
-			return false;
+			return;
 		}
 
 		[$type, $encodedParam] = explode(':', $token);
@@ -51,7 +51,7 @@ class FilterStringParser {
 					/** @var Flag $flag */
 					$flag = $flagMap[$param];
 					$query->addFlag($type === 'is' ? $flag : $flag->invert());
-					return true;
+					return;
 				}
 				if ($param === 'pi-important') {
 					$query->addFlagExpression(
@@ -60,57 +60,57 @@ class FilterStringParser {
 						)
 					);
 
-					return true;
+					return;
 				}
 				if ($param === 'pi-other') {
 					$query->addFlag(
 						Flag::not(Flag::IMPORTANT),
 					);
 
-					return true;
+					return;
 				}
 
 				break;
 			case 'from':
 				$query->addFrom($param);
-				return true;
+				return;
 			case 'to':
 				$query->addTo($param);
-				return true;
+				return;
 			case 'cc':
 				$query->addCc($param);
-				return true;
+				return;
 			case 'bcc':
 				$query->addBcc($param);
-				return true;
+				return;
 			case 'subject':
 				$query->addSubject($param);
-				return true;
+				return;
 			case 'body':
 				$query->addBody($param);
-				return true;
+				return;
 			case 'tags':
 				$tags = explode(',', $param);
 				$query->setTags($tags);
-				return true;
+				return;
 			case 'start':
 				if (!empty($param)) {
 					$query->setStart($param);
 				}
-				return true;
+				return;
 			case 'end':
 				if (!empty($param)) {
 					$query->setEnd($param);
 				}
-				return true;
+				return;
 			case 'match':
 				$query->setMatch($param);
-				return true;
+				return;
 			case 'mentions':
 				if ($param === 'true') {
 					$query->setMentionsMe(true);
 				}
-				return true;
+				return;
 			case 'flags':
 				$flagArray = explode(',', $param);
 				foreach ($flagArray as $flagItem) {
@@ -127,10 +127,7 @@ class FilterStringParser {
 					}
 				}
 
-
-				return true;
+				return;
 		}
-
-		return false;
 	}
 }

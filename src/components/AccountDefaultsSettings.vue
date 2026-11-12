@@ -15,6 +15,12 @@
 		</p>
 
 		<MailboxInlinePicker v-model="sentMailbox" :account="account" :disabled="saving" />
+		<NcCheckboxRadioSwitch
+			v-if="account.protocol !== 'jmap'"
+			v-model="saveSentCopy"
+			:disabled="saving">
+			{{ t('mail', 'Save a copy of sent messages') }}
+		</NcCheckboxRadioSwitch>
 		<p>
 			{{ t('mail', 'Deleted messages are moved in:') }}
 		</p>
@@ -39,27 +45,32 @@
 </template>
 
 <script>
-import logger from '../logger.js'
-import MailboxInlinePicker from './MailboxInlinePicker.vue'
 import { mapStores } from 'pinia'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
+import MailboxInlinePicker from './MailboxInlinePicker.vue'
+import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'AccountDefaultsSettings',
 	components: {
 		MailboxInlinePicker,
+		NcCheckboxRadioSwitch,
 	},
+
 	props: {
 		account: {
 			type: Object,
 			required: true,
 		},
 	},
+
 	data() {
 		return {
 			saving: false,
 		}
 	},
+
 	computed: {
 		...mapStores(useMainStore),
 		draftsMailbox: {
@@ -70,6 +81,7 @@ export default {
 				}
 				return mb.databaseId
 			},
+
 			async set(draftsMailboxId) {
 				logger.debug('setting drafts folder to ' + draftsMailboxId)
 				this.saving = true
@@ -89,6 +101,7 @@ export default {
 				}
 			},
 		},
+
 		sentMailbox: {
 			get() {
 				const mb = this.mainStore.getMailbox(this.account.sentMailboxId)
@@ -97,6 +110,7 @@ export default {
 				}
 				return mb.databaseId
 			},
+
 			async set(sentMailboxId) {
 				logger.debug('setting sent folder to ' + sentMailboxId)
 				this.saving = true
@@ -116,6 +130,31 @@ export default {
 				}
 			},
 		},
+
+		saveSentCopy: {
+			get() {
+				return this.account.saveSentCopy
+			},
+
+			async set(saveSentCopy) {
+				this.saving = true
+				try {
+					await this.mainStore.patchAccount({
+						account: this.account,
+						data: {
+							saveSentCopy,
+						},
+					})
+				} catch (error) {
+					logger.error('could not change saving a copy of sent messages', {
+						error,
+					})
+				} finally {
+					this.saving = false
+				}
+			},
+		},
+
 		trashMailbox: {
 			get() {
 				const mb = this.mainStore.getMailbox(this.account.trashMailboxId)
@@ -124,6 +163,7 @@ export default {
 				}
 				return mb.databaseId
 			},
+
 			async set(trashMailboxId) {
 				logger.debug('setting trash folder to ' + trashMailboxId)
 				this.saving = true
@@ -143,6 +183,7 @@ export default {
 				}
 			},
 		},
+
 		archiveMailbox: {
 			get() {
 				const mb = this.mainStore.getMailbox(this.account.archiveMailboxId)
@@ -151,6 +192,7 @@ export default {
 				}
 				return mb.databaseId
 			},
+
 			async set(archiveMailboxId) {
 				logger.debug('setting archive folder to ' + archiveMailboxId)
 				this.saving = true
@@ -170,6 +212,7 @@ export default {
 				}
 			},
 		},
+
 		junkMailbox: {
 			get() {
 				const mb = this.mainStore.getMailbox(this.account.junkMailboxId)
@@ -178,6 +221,7 @@ export default {
 				}
 				return mb.databaseId
 			},
+
 			async set(junkMailboxId) {
 				logger.debug('setting junk folder to ' + junkMailboxId)
 				this.saving = true
@@ -197,6 +241,7 @@ export default {
 				}
 			},
 		},
+
 		snoozeMailbox: {
 			get() {
 				const mb = this.mainStore.getMailbox(this.account.snoozeMailboxId)
@@ -205,6 +250,7 @@ export default {
 				}
 				return mb.databaseId
 			},
+
 			async set(snoozeMailboxId) {
 				logger.debug('setting snooze folder to ' + snoozeMailboxId)
 				this.saving = true
@@ -227,16 +273,3 @@ export default {
 	},
 }
 </script>
-
-<style lang="scss" scoped>
-.button.icon-rename {
-	background-color: transparent;
-	border: none;
-	opacity: 0.3;
-
-	&:hover,
-	&:focus {
-		opacity: 1;
-	}
-}
-</style>

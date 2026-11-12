@@ -14,23 +14,21 @@ use ReturnTypeWillChange;
 
 class PhishingDetectionList implements JsonSerializable {
 
-	/** @var PhishingDetectionResult[] */
-	private array $checks;
-
 	/**
 	 * @param PhishingDetectionResult[] $checks
 	 */
-	public function __construct(array $checks = []) {
-		$this->checks = $checks;
+	public function __construct(
+		private array $checks = [],
+	) {
 	}
 
-	public function addCheck(PhishingDetectionResult $check) {
+	public function addCheck(PhishingDetectionResult $check): void {
 		$this->checks[] = $check;
 	}
 
-	private function isWarning() {
+	private function isWarning(): bool {
 		foreach ($this->checks as $check) {
-			if (in_array($check->getType(), [PhishingDetectionResult::DATE_CHECK, PhishingDetectionResult::LINK_CHECK, PhishingDetectionResult::CUSTOM_EMAIL_CHECK, PhishingDetectionResult::CONTACTS_CHECK]) && $check->isPhishing()) {
+			if (in_array($check->getType(), [PhishingDetectionResult::DATE_CHECK, PhishingDetectionResult::LINK_CHECK, PhishingDetectionResult::CUSTOM_EMAIL_CHECK, PhishingDetectionResult::CONTACTS_CHECK, PhishingDetectionResult::IMAP_FLAG_CHECK]) && $check->isPhishing()) {
 				return true;
 			}
 		}
@@ -40,9 +38,7 @@ class PhishingDetectionList implements JsonSerializable {
 	#[\Override]
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
-		$result = array_map(static function (PhishingDetectionResult $check) {
-			return $check->jsonSerialize();
-		}, $this->checks);
+		$result = array_map(static fn (PhishingDetectionResult $check) => $check->jsonSerialize(), $this->checks);
 		return [
 			'checks' => $result,
 			'warning' => $this->isWarning(),

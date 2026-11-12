@@ -9,26 +9,33 @@
 
 <script>
 import { showError } from '@nextcloud/dialogs'
-import { translate as t } from '@nextcloud/l10n'
-
-import logger from './logger.js'
-import { matchError } from './errors/match.js'
+import { t } from '@nextcloud/l10n'
+import { mapState, mapStores } from 'pinia'
 import MailboxLockedError from './errors/MailboxLockedError.js'
-import { mapStores, mapState } from 'pinia'
-import useMainStore from './store/mainStore.js'
+import { matchError } from './errors/match.js'
 import initAfterAppCreation from './init.js'
+import logger from './logger.js'
+import useMainStore from './store/mainStore.js'
 
 export default {
 	name: 'App',
+	data() {
+		return {
+			syncing: false,
+		}
+	},
+
 	computed: {
 		...mapStores(useMainStore),
 		...mapState(useMainStore, [
 			'isExpiredSession',
 		]),
+
 		hasMailAccounts() {
 			return !!this.mainStore.getAccounts.find((account) => !account.isUnified)
 		},
 	},
+
 	watch: {
 		isExpiredSession(expired) {
 			if (expired) {
@@ -40,6 +47,7 @@ export default {
 			}
 		},
 	},
+
 	async mounted() {
 		initAfterAppCreation()
 		// Redirect to setup page if no accounts are configured
@@ -54,12 +62,21 @@ export default {
 		await this.mainStore.loadCollections()
 		this.mainStore.hasCurrentUserPrincipalAndCollectionsMutation(true)
 	},
+
 	methods: {
 		reload() {
 			window.location.reload()
 		},
+
 		sync() {
 			setTimeout(async () => {
+				// Don't sync a previous sync is still running
+				if (this.syncing) {
+					this.sync()
+					return
+				}
+
+				this.syncing = true
 				try {
 					await this.mainStore.syncInboxes()
 
@@ -74,6 +91,7 @@ export default {
 						},
 					})
 				} finally {
+					this.syncing = false
 					// Start over
 					this.sync()
 				}

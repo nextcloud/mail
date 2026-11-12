@@ -22,7 +22,7 @@
 			<div><AirplaneIcon :title="t('mail', 'Airplane')" /></div>
 			<div>{{ flightNumber }}</div>
 			<div v-if="reservation">
-				{{ t('mail', 'Reservation {id}', {id: reservation}) }}
+				{{ t('mail', 'Reservation {id}', { id: reservation }) }}
 			</div>
 			<div v-else>
 				<ArrowIcon decorative />
@@ -47,16 +47,15 @@
 </template>
 
 <script>
-import AirplaneIcon from 'vue-material-design-icons/Airplane.vue'
-import ArrowIcon from 'vue-material-design-icons/ArrowRight.vue'
+import { showError, showSuccess } from '@nextcloud/dialogs'
+import moment from '@nextcloud/moment'
 import ical from 'ical.js'
 import md5 from 'md5'
-import moment from '@nextcloud/moment'
-import { showError, showSuccess } from '@nextcloud/dialogs'
-
+import AirplaneIcon from 'vue-material-design-icons/Airplane.vue'
+import ArrowIcon from 'vue-material-design-icons/ArrowRight.vue'
 import CalendarImport from './CalendarImport.vue'
-import { importCalendarEvent } from '../../service/DAVService.js'
 import logger from '../../logger.js'
+import { importCalendarEvent } from '../../service/DAVService.js'
 
 export default {
 	name: 'FlightReservation',
@@ -65,20 +64,24 @@ export default {
 		ArrowIcon,
 		CalendarImport,
 	},
+
 	props: {
 		data: {
 			type: Object,
 			required: true,
 		},
+
 		calendars: {
 			type: Array,
 			required: true,
 		},
+
 		messageId: {
 			type: String,
 			required: true,
 		},
 	},
+
 	computed: {
 		departureTime() {
 			if (!('departureTime' in this.data.reservationFor)) {
@@ -86,37 +89,44 @@ export default {
 			}
 			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.departureTime)).format('LT')
 		},
+
 		departureDate() {
 			if (!('departureTime' in this.data.reservationFor)) {
 				return
 			}
 			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.departureTime)).format('L')
 		},
+
 		arrivalTime() {
 			if (!('arrivalTime' in this.data.reservationFor)) {
 				return
 			}
 			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.arrivalTime)).format('LT')
 		},
+
 		arrivalDate() {
 			if (!('arrivalTime' in this.data.reservationFor)) {
 				return
 			}
 			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.arrivalTime)).format('L')
 		},
+
 		flightNumber() {
 			return this.data.reservationFor.airline.iataCode + this.data.reservationFor.flightNumber
 		},
+
 		reservation() {
 			if (!('reservationNumber' in this.data)) {
 				return
 			}
 			return this.data.reservationNumber
 		},
+
 		canImport() {
 			return 'departureTime' in this.data.reservationFor && 'arrivalTime' in this.data.reservationFor
 		},
 	},
+
 	methods: {
 		handleImport(calendar) {
 			const event = new ical.Component('VEVENT')

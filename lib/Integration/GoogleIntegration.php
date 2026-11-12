@@ -12,9 +12,10 @@ namespace OCA\Mail\Integration;
 use Exception;
 use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\ConfigLexicon;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Http\Client\IClientService;
-use OCP\IConfig;
+use OCP\IAppConfig;
 use OCP\IURLGenerator;
 use OCP\Security\ICrypto;
 use Psr\Log\LoggerInterface;
@@ -23,52 +24,52 @@ use function json_encode;
 
 class GoogleIntegration {
 	private ITimeFactory $timeFactory;
-	private IConfig $config;
+	private IAppConfig $appConfig;
 	private ICrypto $crypto;
 	private IClientService $clientService;
 	private IURLGenerator $urlGenerator;
-	private LoggerInterface $logger;
 
-	public function __construct(ITimeFactory $timeFactory,
-		IConfig $config,
+	public function __construct(
+		ITimeFactory $timeFactory,
+		IAppConfig $appConfig,
 		ICrypto $crypto,
 		IClientService $clientService,
 		IURLGenerator $urlGenerator,
-		LoggerInterface $logger) {
+		private LoggerInterface $logger,
+	) {
 		$this->timeFactory = $timeFactory;
 		$this->clientService = $clientService;
 		$this->crypto = $crypto;
-		$this->config = $config;
+		$this->appConfig = $appConfig;
 		$this->urlGenerator = $urlGenerator;
-		$this->logger = $logger;
 	}
 
 	public function configure(string $clientId, string $clientSecret): void {
-		$this->config->setAppValue(
+		$this->appConfig->setValueString(
 			Application::APP_ID,
-			'google_oauth_client_id',
+			ConfigLexicon::GOOGLE_OAUTH_CLIENT_ID,
 			$clientId
 		);
-		$this->config->setAppValue(
+		$this->appConfig->setValueString(
 			Application::APP_ID,
-			'google_oauth_client_secret',
+			ConfigLexicon::GOOGLE_OAUTH_CLIENT_SECRET,
 			$this->crypto->encrypt($clientSecret),
 		);
 	}
 
-	public function unlink() {
-		$this->config->deleteAppValue(
+	public function unlink(): void {
+		$this->appConfig->deleteKey(
 			Application::APP_ID,
-			'google_oauth_client_id',
+			ConfigLexicon::GOOGLE_OAUTH_CLIENT_ID,
 		);
-		$this->config->deleteAppValue(
+		$this->appConfig->deleteKey(
 			Application::APP_ID,
-			'google_oauth_client_secret',
+			ConfigLexicon::GOOGLE_OAUTH_CLIENT_SECRET,
 		);
 	}
 
 	public function getClientId(): ?string {
-		$value = $this->config->getAppValue(Application::APP_ID, 'google_oauth_client_id');
+		$value = $this->appConfig->getValueString(Application::APP_ID, ConfigLexicon::GOOGLE_OAUTH_CLIENT_ID);
 		if ($value === '') {
 			return null;
 		}
@@ -82,8 +83,8 @@ class GoogleIntegration {
 
 	public function finishConnect(Account $account,
 		string $code): Account {
-		$clientId = $this->config->getAppValue(Application::APP_ID, 'google_oauth_client_id');
-		$encryptedClientSecret = $this->config->getAppValue(Application::APP_ID, 'google_oauth_client_secret');
+		$clientId = $this->appConfig->getValueString(Application::APP_ID, ConfigLexicon::GOOGLE_OAUTH_CLIENT_ID);
+		$encryptedClientSecret = $this->appConfig->getValueString(Application::APP_ID, ConfigLexicon::GOOGLE_OAUTH_CLIENT_SECRET);
 		if (empty($clientId) || empty($encryptedClientSecret)) {
 			// This is highly unexpected
 			$this->logger->critical('Can not finish Google account linking due to missing client secrets');
@@ -119,7 +120,8 @@ class GoogleIntegration {
 	}
 
 	public function refresh(Account $account): Account {
-		if ($account->getMailAccount()->getOauthTokenTtl() === null || $account->getMailAccount()->getOauthRefreshToken() === null) {
+		$oauthRefreshToken = $account->getMailAccount()->getOauthRefreshToken();
+		if ($account->getMailAccount()->getOauthTokenTtl() === null || $oauthRefreshToken === null) {
 			// Account is not authorized yet
 			return $account;
 		}
@@ -130,14 +132,14 @@ class GoogleIntegration {
 			return $account;
 		}
 
-		$clientId = $this->config->getAppValue(Application::APP_ID, 'google_oauth_client_id');
-		$encryptedClientSecret = $this->config->getAppValue(Application::APP_ID, 'google_oauth_client_secret');
+		$clientId = $this->appConfig->getValueString(Application::APP_ID, ConfigLexicon::GOOGLE_OAUTH_CLIENT_ID);
+		$encryptedClientSecret = $this->appConfig->getValueString(Application::APP_ID, ConfigLexicon::GOOGLE_OAUTH_CLIENT_SECRET);
 		if (empty($clientId) || empty($encryptedClientSecret)) {
 			// Nothing to do here
 			return $account;
 		}
 
-		$refreshToken = $this->crypto->decrypt($account->getMailAccount()->getOauthRefreshToken());
+		$refreshToken = $this->crypto->decrypt($oauthRefreshToken);
 		$clientSecret = $this->crypto->decrypt($encryptedClientSecret);
 		$httpClient = $this->clientService->newClient();
 		try {
@@ -151,8 +153,9 @@ class GoogleIntegration {
 				], JSON_THROW_ON_ERROR)
 			]);
 		} catch (Exception $e) {
-			$this->logger->warning('Could not refresh oauth token: ' . $e->getMessage(), [
+			$this->logger->warning('Could not refresh Google OAuth token for account {accountId}: ' . $e->getMessage(), [
 				'exception' => $e,
+				'accountId' => $account->getId(),
 			]);
 			return $account;
 		}

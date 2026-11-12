@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import {mailboxHasRights} from '../../../util/acl.js'
+import { mailboxHasRights } from '../../../util/acl.js'
 
 describe('acl', () => {
 	describe('mailboxHasRights', () => {
@@ -13,7 +13,6 @@ describe('acl', () => {
 			const actual = mailboxHasRights(mailbox, 'l')
 
 			expect(actual).toBeTruthy
-
 		})
 
 		it('allow when right included', () => {

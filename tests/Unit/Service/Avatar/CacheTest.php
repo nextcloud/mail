@@ -13,18 +13,18 @@ use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\Avatar\Cache;
 use OCP\ICache;
 use OCP\ICacheFactory;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class CacheTest extends TestCase {
 	public const BLACK_DOT_BASE64 = 'R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
 
-	/** @var ICacheFactory|PHPUnit_Framework_MockObject_MockObject */
+	/** @var ICacheFactory|MockObject */
 	private $cacheFactory;
 
-	/** @var ICache|PHPUnit_Framework_MockObject_MockObject */
+	/** @var ICache|MockObject */
 	private $cacheImpl;
 
-	/** @var AvatarFactory|PHPUnit_Framework_MockObject_MockObject */
+	/** @var AvatarFactory|MockObject */
 	private $avatarFactory;
 
 	/** @var Cache */

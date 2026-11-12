@@ -15,11 +15,9 @@ use function array_key_exists;
 use function count;
 
 class ThreadBuilder {
-	/** @var PerformanceLogger */
-	private $performanceLogger;
-
-	public function __construct(PerformanceLogger $performanceLogger) {
-		$this->performanceLogger = $performanceLogger;
+	public function __construct(
+		private PerformanceLogger $performanceLogger,
+	) {
 	}
 
 	/**
@@ -28,8 +26,9 @@ class ThreadBuilder {
 	 * @return Container[]
 	 */
 	public function build(array $messages, LoggerInterface $logger): array {
+		$n = count($messages);
 		$log = $this->performanceLogger->startWithLogger(
-			'Threading ' . count($messages) . ' messages',
+			"Threading $n messages",
 			$logger
 		);
 

@@ -1,0 +1,24 @@
+{
+	"patches": {
+		"glenscott/url-normalizer": [
+			{
+				"description": "Fix to prevent deprecation warning when using PHP >= 8.5",
+				"url": ".patches/url-normalizer-fix-deprecation-warning-on-PHP-8.5.patch",
+				"sha256":"856c3bc4d3e883f86efc3a24946681a3a6e4c22afa67d7b8cb1d78391668c365",
+				"extra": {
+					"upstream-fix-url": "https://github.com/glenscott/url-normalizer/pull/33"
+				}
+			}
+		],
+		"phpmailer/dkimvalidator": [
+			{
+				"description": "Fix incorrect canonicalization handling and modified message content",
+				"url": ".patches/dkimvalidator-fix-broken-canonical-handling.patch",
+				"sha256": "7d49ca7bc143d5a861cf27f01b33b16269e5f31550ec0ebb770b251bb21df316",
+				"extra": {
+					"upstream-fix-url": "https://github.com/PHPMailer/DKIMValidator/pull/21"
+				}
+			}
+		]
+	}
+}

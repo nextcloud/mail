@@ -18,8 +18,6 @@ use OCP\Files\File;
 use OCP\Files\SimpleFS\ISimpleFile;
 
 final class Message implements IMessage {
-	use ConvertAddresses;
-
 	/** @var string */
 	private $subject = '';
 
@@ -186,6 +184,9 @@ final class Message implements IMessage {
 		return $this->inReplyTo;
 	}
 
+	/**
+	 * @return void
+	 */
 	#[\Override]
 	public function setInReplyTo(string $id) {
 		$this->inReplyTo = $id;

@@ -4,50 +4,55 @@
 -->
 
 <template>
-	<AppContent pane-config-key="mail"
-		:show-details="isMessageShown"
+	<NcAppContent
+		paneConfigKey="mail-outbox"
+		:showDetails="isMessageShown"
 		@update:showDetails="hideMessage">
 		<OutboxMessageContent />
 		<!-- List -->
 		<template #list>
-			<AppContentList>
-				<Error v-if="error"
+			<NcAppContentList class="outbox-list">
+				<Error
+					v-if="error"
 					:error="t('mail', 'Could not open outbox')"
 					message=""
 					role="alert" />
 				<LoadingSkeleton v-else-if="loading" />
 				<EmptyMailbox v-else-if="messages.length === 0" />
-				<OutboxMessageListItem v-for="message in messages"
+				<OutboxMessageListItem
+					v-for="message in messages"
 					v-else
 					:key="message.id"
 					:message="message" />
-			</AppContentList>
+			</NcAppContentList>
 		</template>
-	</AppContent>
+	</NcAppContent>
 </template>
 
 <script>
-import { NcAppContent as AppContent, NcAppContentList as AppContentList } from '@nextcloud/vue'
-import LoadingSkeleton from './LoadingSkeleton.vue'
-import Error from './Error.vue'
+import { mapStores } from 'pinia'
+import NcAppContent from '@nextcloud/vue/components/NcAppContent'
+import NcAppContentList from '@nextcloud/vue/components/NcAppContentList'
 import EmptyMailbox from './EmptyMailbox.vue'
+import Error from './Error.vue'
+import LoadingSkeleton from './LoadingSkeleton.vue'
 import OutboxMessageContent from './OutboxMessageContent.vue'
 import OutboxMessageListItem from './OutboxMessageListItem.vue'
 import logger from '../logger.js'
 import useOutboxStore from '../store/outboxStore.js'
-import { mapStores } from 'pinia'
 
 export default {
 	name: 'Outbox',
 	components: {
-		AppContent,
-		AppContentList,
+		NcAppContent,
+		NcAppContentList,
 		Error,
 		LoadingSkeleton,
 		EmptyMailbox,
 		OutboxMessageListItem,
 		OutboxMessageContent,
 	},
+
 	data() {
 		return {
 			error: false,
@@ -55,11 +60,13 @@ export default {
 			refreshInterval: undefined,
 		}
 	},
+
 	computed: {
 		...mapStores(useOutboxStore),
 		isMessageShown() {
 			return !!this.$route.params.messageId
 		},
+
 		currentMessage() {
 			if (!this.isMessageShown) {
 				return null
@@ -67,28 +74,34 @@ export default {
 
 			return this.outboxStore.getMessage(this.$route.params.messageId)
 		},
+
 		messages() {
 			return this.outboxStore.getAllMessages
 		},
 	},
+
 	created() {
 		// Reload outbox contents every 60 seconds
 		this.refreshInterval = setInterval(async () => {
 			await this.fetchMessages()
 		}, 60000)
 	},
+
 	async mounted() {
 		await this.fetchMessages()
 	},
-	destroyed() {
+
+	unmounted() {
 		clearInterval(this.refreshInterval)
 	},
+
 	methods: {
 		hideMessage() {
 			this.$router.push({
 				name: 'outbox',
 			})
 		},
+
 		async fetchMessages() {
 			this.loading = true
 			this.error = false
@@ -105,9 +118,3 @@ export default {
 	},
 }
 </script>
-
-<style lang="scss" scoped>
-:deep(.button-vue--vue-secondary) {
-	box-shadow: none;
-}
-</style>

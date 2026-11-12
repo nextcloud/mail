@@ -24,6 +24,8 @@ use ReturnTypeWillChange;
  * @method void setPreview(string $preview)
  */
 class TextBlock extends Entity implements JsonSerializable {
+	public const TITLE_MAX_LENGTH = 64;
+
 	protected $owner;
 	protected $title;
 	protected $content;
@@ -37,6 +39,7 @@ class TextBlock extends Entity implements JsonSerializable {
 	}
 
 	#[ReturnTypeWillChange]
+	#[\Override]
 	public function jsonSerialize() {
 		return [
 			'id' => $this->getId(),

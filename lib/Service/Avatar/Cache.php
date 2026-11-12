@@ -19,12 +19,11 @@ class Cache {
 	/** @var ICache */
 	private $cache;
 
-	/** @var AvatarFactory */
-	private $avatarFactory;
-
-	public function __construct(ICacheFactory $cacheFactory, AvatarFactory $avatarFactory) {
+	public function __construct(
+		ICacheFactory $cacheFactory,
+		private AvatarFactory $avatarFactory,
+	) {
 		$this->cache = $cacheFactory->createLocal('mail.avatars');
-		$this->avatarFactory = $avatarFactory;
 	}
 
 	/**
@@ -33,7 +32,7 @@ class Cache {
 	 * @return string
 	 */
 	private function buildUrlKey(string $email, string $uid): string {
-		return base64_encode(json_encode([$email, $uid]));
+		return base64_encode(json_encode([$email, $uid], JSON_THROW_ON_ERROR));
 	}
 
 	/**
@@ -42,7 +41,7 @@ class Cache {
 	 * @return string
 	 */
 	private function buildImageKey(string $url, string $uid): string {
-		return base64_encode(json_encode([$url, $uid]));
+		return base64_encode(json_encode([$url, $uid], JSON_THROW_ON_ERROR));
 	}
 
 	/**

@@ -5,70 +5,58 @@
 
 <template>
 	<div class="new-message-attachments">
-		<div v-if="hasNextLine"
+		<div
+			v-if="hasNextLine"
 			class="new-message-attachments--counter"
 			:class="{ 'new-message-attachments--counter--with-errors': hasAttachmentErrors }"
 			@click="isToggle = !isToggle">
 			<span>
 				{{ n('mail', '{count} attachment', '{count} attachments', attachments.length, { count: attachments.length }) }} ({{ formatBytes(totalSizeOfUpload()) }})
 			</span>
-			<ChevronUp v-if="isToggle" :size="24" />
-			<ChevronDown v-if="!isToggle" :size="24" />
+			<ChevronUp v-if="isToggle" :size="20" />
+			<ChevronDown v-if="!isToggle" :size="20" />
 		</div>
-		<ul class="new-message-attachments--list"
+		<ul
+			class="new-message-attachments--list"
 			:class="{
 				hide: isToggle,
 				active: !isToggle && hasNextLine,
 			}">
-			<ComposerAttachment v-for="attachment in attachments"
+			<ComposerAttachment
+				v-for="attachment in attachments"
 				ref="attachments"
 				:key="attachment.id"
 				:attachment="attachment"
 				:uploading="uploading"
-				@on-delete-attachment="onDelete(attachment)" />
+				@onDeleteAttachment="onDelete(attachment)" />
 		</ul>
 
-		<input ref="localAttachments"
+		<input
+			ref="localAttachments"
 			type="file"
 			multiple
 			style="display: none;"
 			@change="onLocalAttachmentSelected">
-		<FilePicker v-if="isAttachementPickerOpen"
-			:name="t('mail','Choose a file to add as attachment')"
-			:buttons="attachementPickerButtons"
-			:filter-fn="filterAttachements"
-			@close="()=>isAttachementPickerOpen = false" />
-		<FilePicker v-if="isLinkPickerOpen"
-			:name="t('mail','Choose a file to share as a link')"
-			:multiselect="false"
-			:buttons="linkPickerButtons"
-			:filter-fn="filterAttachements"
-			@close="()=>isLinkPickerOpen = false" />
 	</div>
 </template>
 
 <script>
-import map from 'lodash/fp/map.js'
-import trimStart from 'lodash/fp/trimCharsStart.js'
 import { getRequestToken } from '@nextcloud/auth'
+import { getFilePickerBuilder, showError, showWarning } from '@nextcloud/dialogs'
 import { formatFileSize } from '@nextcloud/files'
+import { n, t } from '@nextcloud/l10n'
+import map from 'lodash/fp/map.js'
 import prop from 'lodash/fp/prop.js'
-import { showWarning } from '@nextcloud/dialogs'
-import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
 import sumBy from 'lodash/fp/sumBy.js'
-import { translate as t, translatePlural as n } from '@nextcloud/l10n'
-
-import Vue from 'vue'
-
-import logger from '../logger.js'
-import { getFileData } from '../service/FileService.js'
-import { shareFile } from '../service/FileSharingService.js'
-import { uploadLocalAttachment } from '../service/AttachmentService.js'
-
-import ComposerAttachment from './ComposerAttachment.vue'
-
+import trimStart from 'lodash/fp/trimCharsStart.js'
+import { reactive } from 'vue'
 import ChevronDown from 'vue-material-design-icons/ChevronDown.vue'
 import ChevronUp from 'vue-material-design-icons/ChevronUp.vue'
+import ComposerAttachment from './ComposerAttachment.vue'
+import logger from '../logger.js'
+import { uploadLocalAttachment } from '../service/AttachmentService.js'
+import { getFileData } from '../service/FileService.js'
+import { shareFile } from '../service/FileSharingService.js'
 
 const mimes = [
 	'image/gif',
@@ -81,25 +69,35 @@ const mimes = [
 export default {
 	name: 'ComposerAttachments',
 	components: {
-		FilePicker,
 		ComposerAttachment,
 		ChevronDown,
 		ChevronUp,
 	},
+
 	props: {
-		value: {
+		modelValue: {
 			type: Array,
 			required: true,
 		},
+
 		bus: {
 			type: Object,
 			required: true,
 		},
+
 		uploadSizeLimit: {
 			type: Number,
 			default: 0,
 		},
+
+		accountId: {
+			type: Number,
+			default: null,
+		},
 	},
+
+	emits: ['update:modelValue', 'update:blocksSending', 'onDeleteAttachment'],
+
 	data() {
 		return {
 			uploading: false,
@@ -108,29 +106,18 @@ export default {
 			attachments: [],
 			isToggle: false,
 			hasNextLine: false,
-			isAttachementPickerOpen: false,
-			isLinkPickerOpen: false,
-			attachementPickerButtons: [
-				{
-					label: t('mail', 'Choose'),
-					callback: this.onAddCloudAttachment,
-					type: 'primary',
-				},
-			],
-			linkPickerButtons: [
-				{
-					label: t('mail', 'Choose'),
-					callback: this.onAddCloudAttachmentLink,
-					type: 'primary',
-				},
-			],
-
 		}
 	},
+
 	computed: {
 		hasAttachmentErrors() {
-			return this.attachments.some(attachment => attachment.error)
+			return this.attachments.some((attachment) => attachment.error)
 		},
+
+		blocksSending() {
+			return this.attachments.some((attachment) => attachment.uploading || attachment.error)
+		},
+
 		uploadProgress() {
 			let uploaded = 0
 			let total = 0
@@ -140,6 +127,7 @@ export default {
 			}
 			return ((uploaded / total) * 100).toFixed(1)
 		},
+
 		total() {
 			let total = 0
 			for (const id in this.uploads) {
@@ -148,37 +136,46 @@ export default {
 			return total
 		},
 	},
+
 	watch: {
-		attachments() {
-			this.$nextTick(function() {
-				let prevTop = null
-				this.$refs.attachments.some((attachment, i) => {
-					const top = attachment.$el.getBoundingClientRect().top
-					if (prevTop !== null && prevTop !== top) {
-						if (!this.hasNextLine) {
-							this.isToggle = true
-							this.hasNextLine = true
-						}
-						return true
-					} else {
-						prevTop = top
-						if (this.$refs.attachments.length === i + 1) {
-							this.hasNextLine = false
-							this.isToggle = false
+		attachments: {
+			deep: true,
+			handler() {
+				this.$nextTick(function() {
+					let prevTop = null
+					this.$refs.attachments.some((attachment, i) => {
+						const top = attachment.$el.getBoundingClientRect().top
+						if (prevTop !== null && prevTop !== top) {
+							if (!this.hasNextLine) {
+								this.isToggle = true
+								this.hasNextLine = true
+							}
 							return true
+						} else {
+							prevTop = top
+							if (this.$refs.attachments.length === i + 1) {
+								this.hasNextLine = false
+								this.isToggle = false
+								return true
+							}
 						}
-					}
-					return false
+						return false
+					})
 				})
-			})
+			},
+		},
+
+		blocksSending(value) {
+			this.$emit('update:blocksSending', value)
 		},
 	},
+
 	created() {
 		this.bus.on('on-add-local-attachment', this.onAddLocalAttachment)
 		this.bus.on('on-add-cloud-attachment', this.openAttachementPicker)
-		this.bus.on('on-add-cloud-attachment-link', this.OpenLinkPicker)
 		this.bus.on('on-add-message-as-attachment', this.onAddMessageAsAttachment)
-		this.value.map(attachment => {
+		this.bus.on('on-add-local-files', this.addLocalFiles)
+		this.modelValue.map((attachment) => {
 			this.attachments.push({
 				id: attachment.id,
 				fileName: attachment.fileName,
@@ -187,30 +184,52 @@ export default {
 				finished: true,
 				sizeString: this.formatBytes(attachment.size),
 				imageBlobURL: attachment.isImage ? attachment.downloadUrl : attachment.mimeUrl,
+				type: attachment.type,
 			})
 			return attachment
 		})
 	},
+
 	methods: {
 		filterAttachements(node) {
 			const downloadShareAttribute = node.attributes['share-attributes'] ? JSON.parse(node.attributes['share-attributes'])?.find((shareAttribute) => shareAttribute.key === 'download') : undefined
 			const downloadPermissions = downloadShareAttribute !== undefined ? downloadShareAttribute.value : true
 			return (node.permissions & OC.PERMISSION_READ) && downloadPermissions
 		},
-		openAttachementPicker() {
-			this.isAttachementPickerOpen = true
+
+		async openAttachementPicker() {
+			const picker = getFilePickerBuilder(t('mail', 'Choose a file'))
+				.setMultiSelect(true)
+				.setFilter(this.filterAttachements)
+				.addButton({
+					label: t('mail', 'Add as attachment'),
+					variant: 'primary',
+					callback: this.onAddCloudAttachment,
+				})
+				.addButton({
+					label: t('mail', 'Add as share link'),
+					variant: 'primary',
+					callback: this.onAddCloudAttachmentLink,
+				})
+				.build()
+
+			try {
+				await picker.pickNodes()
+			} catch (error) {
+				logger.debug('file picker closed without picking a file', { error })
+			}
 		},
-		OpenLinkPicker() {
-			this.isLinkPickerOpen = true
-		},
+
 		onAddLocalAttachment() {
 			this.$refs.localAttachments.click()
 		},
+
 		emitNewAttachments(attachments) {
-			this.$emit('input', this.value.concat(attachments))
+			this.$emit('update:modelValue', this.modelValue.concat(attachments))
 		},
+
 		totalSizeOfUpload() {
-			return Object.values(this.value).reduce((acc, upload) => {
+			return Object.values(this.modelValue).reduce((acc, upload) => {
 				if (!upload.type === 'local') {
 					// Ignore link shares
 					return acc
@@ -219,12 +238,17 @@ export default {
 				return acc + upload.size
 			}, 0)
 		},
+
 		onLocalAttachmentSelected(e) {
+			return this.addLocalFiles(Array.from(e.target.files))
+		},
+
+		async addLocalFiles(files) {
 			this.uploading = true
 			// BUG - if choose again - progress lost/ move to complete()
-			Vue.set(this, 'uploads', {})
+			this.uploads = {}
 
-			const toUpload = sumBy(prop('size'), Object.values(e.target.files))
+			const toUpload = sumBy(prop('size'), Object.values(files))
 			const newTotal = toUpload + this.totalSizeOfUpload()
 			logger.debug('checking upload size limit', {
 				existingUploads: this.totalSizeOfUpload(),
@@ -233,7 +257,7 @@ export default {
 				newTotal,
 			})
 			if (this.uploadSizeLimit && newTotal > this.uploadSizeLimit) {
-				this.showAttachmentFileSizeWarning(e.target.files.length)
+				this.showAttachmentFileSizeWarning(files.length)
 				this.uploading = false
 				return
 			}
@@ -247,12 +271,11 @@ export default {
 					}
 					return item
 				})
-
 			}
 			// TODO bug: cancel axios on close or delete attachment
-			const promises = map((file) => {
+			const promises = map(async (file) => {
 				const controller = new AbortController()
-				const attachment = {
+				const attachment = reactive({
 					fileName: file.name,
 					fileType: file.type,
 					imageBlobURL: this.generatePreview(file),
@@ -262,55 +285,49 @@ export default {
 					total: file.size,
 					finished: false,
 					error: false,
+					uploading: true,
 					hasPreview: false,
+					type: 'local',
 					controller,
-				}
+				})
 				this.attachments.push(attachment)
 
-				Vue.set(this.uploads, file.name, {
+				this.uploads[file.name] = {
 					total: file.size,
 					uploaded: 0,
-				})
-				try {
-					return uploadLocalAttachment(file, progress(file.name), controller)
-						.catch(() => {
-							this.attachments.some(attachment => {
-								if (attachment.displayName === file.name && !attachment.error) {
-									this.$set(attachment, 'error', true)
-									return true
-								}
-								return false
-							})
-						})
-						.then(({ file, id }) => {
-							logger.info('local attachment uploaded', { file, id })
-
-							attachment.id = id
-
-							this.emitNewAttachments([{
-								fileName: file.name,
-								displayName: trimStart('/', file.name),
-								id,
-								size: file.size,
-								type: 'local',
-							}])
-						})
-				} catch (error) {
-					logger.error('Could not upload file', { file, error })
 				}
-			}, e.target.files)
+				try {
+					const { id } = await uploadLocalAttachment(file, this.accountId, progress(file.name), controller)
+					logger.info('local attachment uploaded', { file, id })
 
-			const done = Promise.all(promises)
-				.catch((error) => logger.error('could not upload all attachments', { error }))
-				.then(() => (this.uploading = false))
+					attachment.id = id
 
-			this.$emit('upload', done)
+					this.emitNewAttachments([{
+						fileName: file.name,
+						displayName: trimStart('/', file.name),
+						id,
+						size: file.size,
+						type: 'local',
+					}])
+				} catch (error) {
+					if (controller.signal.aborted) {
+						return
+					}
+					logger.error('Could not upload file', { file, error })
+					attachment.error = true
+					showError(t('mail', 'Could not upload {fileName}', { fileName: file.name }))
+				} finally {
+					attachment.uploading = false
+				}
+			}, files)
 
-			return done
+			await Promise.all(promises)
+			this.uploading = false
 		},
+
 		async onAddCloudAttachment(nodes) {
 			try {
-				const paths = nodes.map(node => node.path)
+				const paths = nodes.map((node) => node.path)
 				this.cloudAttachement = false
 				// maybe fiiled front with placeholder loader...?
 				const filesFromCloud = await Promise.all(paths.map(getFileData))
@@ -341,7 +358,7 @@ export default {
 						total: filesFromCloud[i].size,
 						sizeString: this.formatBytes(filesFromCloud[i].size),
 						hasPreview: filesFromCloud[i]['has-preview'],
-						// dont know, may be it will be conflict if cloud & local has equal IDs?
+						// don't know, may be it will be conflict if cloud & local has equal IDs?
 						id: filesFromCloud[i].fileid,
 						uploaded: 0,
 					}
@@ -354,6 +371,7 @@ export default {
 				logger.error('could not choose a file as attachment', { error })
 			}
 		},
+
 		async onAddCloudAttachmentLink(nodes) {
 			try {
 				this.cloudAttachementLink = false
@@ -364,6 +382,7 @@ export default {
 				logger.error('could not choose a file as attachment link', { error })
 			}
 		},
+
 		/**
 		 * Add a forwarded message as an attachment
 		 *
@@ -383,6 +402,7 @@ export default {
 			})
 			this.emitNewAttachments([attachment])
 		},
+
 		showAttachmentFileSizeWarning(num) {
 			showWarning(n(
 				'mail',
@@ -394,6 +414,7 @@ export default {
 				},
 			))
 		},
+
 		onDelete(attachment) {
 			// If the attachment is still uploading, abort the upload
 			if (!attachment.finished && attachment.controller) {
@@ -408,11 +429,11 @@ export default {
 				type: attachment.type,
 			}
 
-			this.attachments = this.attachments.filter(a => a !== attachment)
+			this.attachments = this.attachments.filter((a) => a !== attachment)
 
 			this.$emit(
-				'input',
-				this.value.filter(a => {
+				'update:modelValue',
+				this.modelValue.filter((a) => {
 					if (val.type === 'cloud') {
 						return a.fileName !== val.fileName
 					} else {
@@ -422,7 +443,7 @@ export default {
 			)
 
 			const updatedUploads = Object.keys(this.uploads)
-				.filter(fileName => fileName !== attachment.fileName)
+				.filter((fileName) => fileName !== attachment.fileName)
 				.reduce((acc, fileName) => {
 					acc[fileName] = this.uploads[fileName]
 					return acc
@@ -430,35 +451,41 @@ export default {
 
 			this.uploads = updatedUploads
 
-			this.$emit('on-delete-attachment', attachment)
+			this.$emit('onDeleteAttachment', attachment)
 		},
+
 		appendToBodyAtCursor(toAppend) {
 			this.bus.emit('append-to-body-at-cursor', toAppend)
 		},
+
 		formatBytes(bytes, decimals = 2) {
-			if (bytes === 0) return '0 B'
+			if (bytes === 0) {
+				return '0 B'
+			}
 			const k = 1024
 			const dm = decimals < 0 ? 0 : decimals
 			const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
 			const i = Math.floor(Math.log(bytes) / Math.log(k))
 			return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
 		},
+
 		changeProgress(item, progress) {
 			this.attachments.map((attachment, i) => {
 				if (item.fileName === attachment.fileName) {
 					if (!attachment.finished) {
 						const _progress = progress <= attachment.total ? progress : attachment.total
-						this.$set(attachment, 'progress', _progress)
-						this.$set(attachment, 'sizeString', this.formatBytes(_progress))
-						this.$set(attachment, 'percent', (_progress / attachment.total) * 100).toFixed(1)
+						attachment.progress = _progress
+						attachment.sizeString = this.formatBytes(_progress)
+						attachment.percent = ((_progress / attachment.total) * 100).toFixed(1)
 						if (item.total <= _progress) {
-							this.$set(attachment, 'finished', true)
+							attachment.finished = true
 						}
 					}
 				}
 				return attachment
 			})
 		},
+
 		generatePreview(file) {
 			if (this.isImage(file)) {
 				return URL.createObjectURL(file)
@@ -466,6 +493,7 @@ export default {
 				return false
 			}
 		},
+
 		isImage(file) {
 			return file.type && mimes.indexOf(file.type) !== -1
 		},

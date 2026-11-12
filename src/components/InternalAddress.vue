@@ -5,71 +5,112 @@
 
 <template>
 	<div>
-		<div v-for="domain in sortedDomains"
-			:key="domain.address"
-			class="address">
-			{{ domain.address }}
-			<p class="address__type">
-				({{ t('mail', 'domain') }})
-			</p>
-			<ButtonVue type="tertiary"
-				class="button"
-				:aria-label="t('mail', 'Remove')"
-				@click="removeInternalAddress(domain)">
-				{{ t('mail','Remove') }}
-			</ButtonVue>
-		</div>
-		<div v-for="email in sortedEmails"
-			:key="email.address"
-			class="address">
-			{{ email.address }}
-			<p class="address__type">
-				({{ t('mail', 'email') }})
-			</p>
-			<ButtonVue type="tertiary"
-				class="button"
-				:aria-label="t('mail','Remove')"
-				@click="removeInternalAddress(email)">
-				{{ t('mail','Remove') }}
-			</ButtonVue>
-		</div>
-		<ButtonVue type="primary"
+		<NcListItem
+			v-for="domain in sortedDomains"
+			:key="domain.address">
+			<template #name>
+				{{ domain.address }}
+			</template>
+			<template #icon>
+				<IconDomain v-if="domain.type === 'domain'" :size="20" :title="senderType(domain.type)" />
+				<IconEmail v-if="domain.type === 'individual'" :size="20" :title="senderType(domain.type)" />
+			</template>
+			<template #extra-actions>
+				<NcActionButton
+					:title="t('mail', 'Remove')"
+					:aria-label="t('mail', 'Remove')"
+					@click="removeInternalAddress(domain)">
+					<template #icon>
+						<IconDelete :size="20" />
+					</template>
+				</NcActionButton>
+			</template>
+		</NcListItem>
+
+		<NcListItem
+			v-for="email in sortedEmails"
+			:key="email.address">
+			<template #name>
+				{{ email.address }}
+			</template>
+			<template #icon>
+				<IconDomain v-if="email.type === 'domain'" :size="20" :title="senderType(email.type)" />
+				<IconEmail v-if="email.type === 'individual'" :size="20" :title="senderType(email.type)" />
+			</template>
+			<template #extra-actions>
+				<NcActionButton
+					:title="t('mail', 'Remove')"
+					:aria-label="t('mail', 'Remove')"
+					@click="removeInternalAddress(email)">
+					<template #icon>
+						<IconDelete :size="20" />
+					</template>
+				</NcActionButton>
+			</template>
+		</NcListItem>
+
+		<NcButton
+			variant="secondary"
+			wide
 			@click="openDialog = true">
 			<template #icon>
 				<IconAdd :size="20" />
 			</template>
 			{{ t('mail', 'Add internal address') }}
-		</ButtonVue>
-		<NcDialog :open.sync="openDialog"
+		</NcButton>
+		<NcDialog
+			v-model:open="openDialog"
 			:buttons="buttons"
 			:name="t('mail', 'Add internal address')"
+			:isForm="true"
+			:noClose="saving"
 			@close="openDialog = false">
-			<NcTextField class="input" :label="t('mail', 'Add internal email or domain')" :value.sync="newAddress" />
+			<NcTextField
+				ref="addressField"
+				v-model="newAddress"
+				class="input"
+				:label="t('mail', 'Add internal email or domain')"
+				:readonly="saving"
+				:error="errorMessage !== ''"
+				:helperText="errorMessage" />
 		</NcDialog>
 	</div>
 </template>
 
 <script>
 
-import { NcButton as ButtonVue, NcDialog, NcTextField } from '@nextcloud/vue'
+import IconCancel from '@mdi/svg/svg/cancel.svg'
+import IconCheck from '@mdi/svg/svg/check.svg'
+import { showError } from '@nextcloud/dialogs'
 import prop from 'lodash/fp/prop.js'
 import sortBy from 'lodash/fp/sortBy.js'
-import IconAdd from 'vue-material-design-icons/Plus.vue'
-import IconCancel from '@mdi/svg/svg/cancel.svg'
-import IconCheck from '@mdi/svg/svg/check-outline.svg'
-import logger from '../logger.js'
-import { showError } from '@nextcloud/dialogs'
 import { mapStores } from 'pinia'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
+import NcListItem from '@nextcloud/vue/components/NcListItem'
+import NcTextField from '@nextcloud/vue/components/NcTextField'
+import IconDomain from 'vue-material-design-icons/Domain.vue'
+import IconEmail from 'vue-material-design-icons/EmailOutline.vue'
+import IconAdd from 'vue-material-design-icons/Plus.vue'
+import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
+import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
+import { parseInternalAddress } from '../util/internalAddress.js'
 
 const sortByAddress = sortBy(prop('address'))
 
 export default {
 	name: 'InternalAddress',
 	components: {
-		ButtonVue,
+		NcButton,
 		NcDialog,
 		NcTextField,
+		NcActionButton,
+		NcListItem,
+		IconDomain,
+		IconEmail,
+		IconDelete,
 		IconAdd,
 	},
 
@@ -77,33 +118,62 @@ export default {
 		return {
 			openDialog: false,
 			newAddress: '',
-			buttons: [
+			saving: false,
+			errorMessage: '',
+		}
+	},
+
+	computed: {
+		...mapStores(useMainStore),
+		buttons() {
+			return [
 				{
-					label: 'Cancel',
+					label: t('mail', 'Cancel'),
 					icon: IconCancel,
+					disabled: this.saving,
 					callback: () => { this.openDialog = false },
 				},
 				{
-					label: 'Ok',
-					type: 'primary',
+					label: t('mail', 'Ok'),
+					type: 'submit',
+					variant: 'primary',
 					icon: IconCheck,
-					callback: () => { this.addInternalAddress() },
+					disabled: this.newEntry.address === '',
+					callback: () => this.addInternalAddress(),
 				},
-			],
-		}
-	},
-	computed: {
-		...mapStores(useMainStore),
+			]
+		},
+
+		newEntry() {
+			return parseInternalAddress(this.newAddress)
+		},
+
 		list() {
 			return this.mainStore.getInternalAddresses
 		},
+
 		sortedDomains() {
-			return sortByAddress(this.list.filter(a => a.type === 'domain'))
+			return sortByAddress(this.list.filter((a) => a.type === 'domain'))
 		},
+
 		sortedEmails() {
-			return sortByAddress(this.list.filter(a => a.type === 'individual'))
+			return sortByAddress(this.list.filter((a) => a.type === 'individual'))
 		},
 	},
+
+	watch: {
+		newAddress() {
+			this.errorMessage = ''
+		},
+
+		openDialog(open) {
+			if (!open) {
+				this.newAddress = ''
+				this.errorMessage = ''
+			}
+		},
+	},
+
 	methods: {
 		async removeInternalAddress(sender) {
 			// Remove the item immediately
@@ -118,57 +188,46 @@ export default {
 				}))
 			}
 		},
+
 		async addInternalAddress() {
-			const type = this.checkType()
+			const { address, type } = this.newEntry
+			this.errorMessage = ''
+			this.saving = true
 			try {
 				await this.mainStore.addInternalAddress({
-					address: this.newAddress,
+					address,
 					type,
-				}).then(async () => {
-					this.newAddress = ''
-					this.openDialog = false
 				})
+				this.openDialog = false
 			} catch (error) {
-				logger.error(`Could not add internal address ${this.newAddress}`, {
+				if (error.response?.status === 422) {
+					this.errorMessage = t('mail', 'Enter a valid email address or domain')
+					await this.$nextTick()
+					this.$refs.addressField?.focus()
+					return false
+				}
+
+				logger.error(`Could not add internal address ${address}`, {
 					error,
 				})
 				showError(t('mail', 'Could not add internal address {address}', {
-					address: this.newAddress,
+					address,
 				}))
+				return false
+			} finally {
+				this.saving = false
 			}
 		},
-		checkType() {
-			const parts = this.newAddress.split('@')
-			if (parts.length !== 2) {
-				return 'domain'
-			}
-			// remove '@'' from domain if added by mistake
-			if (parts[0].length === 0) {
-				this.newAddress = parts[1]
-				return 'domain'
-			}
-			return 'individual'
-		},
+
 		senderType(type) {
 			switch (type) {
-			case 'individual':
-				return t('mail', 'individual')
-			case 'domain':
-				return t('mail', 'domain')
+				case 'individual':
+					return t('mail', 'individual')
+				case 'domain':
+					return t('mail', 'domain')
 			}
 			return type
 		},
 	},
 }
 </script>
-
-<style lang="scss" scoped>
-.address {
-	display: flex;
-	align-items: center;
-	&__type{
-		color: var(--color-text-maxcontrast);
-	}
-}
-
-</style>

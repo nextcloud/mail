@@ -23,7 +23,6 @@ class Version3001Date20230307113544 extends SimpleMigrationStep {
 		$accountsTable->addColumn('junk_mailbox_id', 'integer', [
 			'notnull' => false,
 			'default' => null,
-			'length' => 20,
 		]);
 		$accountsTable->addColumn('move_junk', 'boolean', [
 			'notnull' => false,

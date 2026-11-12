@@ -10,7 +10,7 @@
 		</h2>
 
 		<div class="event-data__row event-data__row--date">
-			<CalendarIcon class="event-data__row__icon" :size="16" />
+			<CalendarIcon class="event-data__row__icon" :size="20" />
 			<div>
 				{{ startDate }}
 				<span v-if="startTimezone && startTimezone !== endTimezone" class="muted">
@@ -24,14 +24,15 @@
 			</div>
 		</div>
 
-		<div v-if="location"
+		<div
+			v-if="location"
 			class="event-data__row event-data__row--location">
-			<MapMarkerIcon class="event-data__row__icon" :size="16" />
+			<MapMarkerIcon class="event-data__row__icon" :size="20" />
 			<span>{{ location }}</span>
 		</div>
 
 		<div class="event-data__row event-data__row--participants">
-			<AccountMultipleIcon class="event-data__row__icon" :size="16" />
+			<AccountMultipleIcon class="event-data__row__icon" :size="20" />
 			<ul>
 				<li v-for="{ name, isOrganizer, key } in attendees" :key="key">
 					{{ name }}
@@ -43,13 +44,13 @@
 </template>
 
 <script>
+import { DateTimeValue } from '@nextcloud/calendar-js'
+import moment from '@nextcloud/moment'
+import { getReadableTimezoneName } from '@nextcloud/timezones'
 import AccountMultipleIcon from 'vue-material-design-icons/AccountMultipleOutline.vue'
 import CalendarIcon from 'vue-material-design-icons/CalendarOutline.vue'
 import MapMarkerIcon from 'vue-material-design-icons/MapMarkerOutline.vue'
-import { getReadableTimezoneName } from '@nextcloud/timezones'
-import moment from '@nextcloud/moment'
 import { removeMailtoPrefix } from '../../util/eventAttendee.js'
-import { DateTimeValue } from '@nextcloud/calendar-js'
 
 /**
  * Check whether two dates are on the exact same day, month and year.
@@ -87,12 +88,14 @@ export default {
 		CalendarIcon,
 		MapMarkerIcon,
 	},
+
 	props: {
 		event: {
 			type: Object,
 			required: true,
 		},
 	},
+
 	computed: {
 		/**
 		 * @return {string}
@@ -188,7 +191,7 @@ export default {
 	gap: 5px;
 
 	&__heading {
-		margin-inline-start: 36px;
+		margin-inline-start: 8px;
 	}
 
 	&__row {
@@ -205,6 +208,6 @@ export default {
 }
 
 .muted {
-	color: var(--color-text-lighter);
+	color: var(--color-text-maxcontrast);
 }
 </style>

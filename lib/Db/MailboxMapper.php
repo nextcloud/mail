@@ -51,6 +51,23 @@ class MailboxMapper extends QBMapper {
 	}
 
 	/**
+	 * @throws Exception
+	 */
+	public function countByAccount(Account $account): int {
+		$qb = $this->db->getQueryBuilder();
+
+		$select = $qb->select($qb->func()->count('*', 'count'))
+			->from($this->getTableName())
+			->where($qb->expr()->eq('account_id', $qb->createNamedParameter($account->getId())));
+
+		$result = $select->executeQuery();
+		$count = (int)$result->fetchOne();
+		$result->closeCursor();
+
+		return $count;
+	}
+
+	/**
 	 * @return \Generator<int>
 	 */
 	public function findAllIds(): \Generator {
@@ -128,7 +145,6 @@ class MailboxMapper extends QBMapper {
 		return $this->findEntities($select);
 	}
 
-
 	/**
 	 * @param int $id
 	 * @param string $uid
@@ -155,6 +171,29 @@ class MailboxMapper extends QBMapper {
 			// Not possible due to DB constraints
 			throw new ServiceException('The impossible has happened', 42, $e);
 		}
+	}
+
+	/**
+	 * @throws DoesNotExistException
+	 */
+	public function findAccountIdForMailbox(int $mailboxId): int {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('account_id')
+			->from($this->getTableName())
+			->where($qb->expr()->eq('id', $qb->createNamedParameter($mailboxId, IQueryBuilder::PARAM_INT)));
+
+		$row = $this->findOneQuery($qb);
+		return (int)$row['account_id'];
+	}
+
+	public function findSpecialUseMailbox(Account $account, string $specialUse): ?Mailbox {
+		foreach ($this->findAll($account) as $mailbox) {
+			if ($mailbox->isSpecialUse($specialUse) || ($specialUse === 'inbox' && $mailbox->isInbox())) {
+				return $mailbox;
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -247,9 +286,7 @@ class MailboxMapper extends QBMapper {
 			->leftJoin('m', 'mail_accounts', 'a', $qb1->expr()->eq('m.account_id', 'a.id'))
 			->where($qb1->expr()->isNull('a.id'));
 		$result = $idsQuery->executeQuery();
-		$ids = array_map(static function (array $row) {
-			return (int)$row['id'];
-		}, $result->fetchAll());
+		$ids = array_map(static fn (array $row) => (int)$row['id'], $result->fetchAll());
 		$result->closeCursor();
 
 		$qb2 = $this->db->getQueryBuilder();
@@ -276,9 +313,7 @@ class MailboxMapper extends QBMapper {
 			);
 
 		$cursor = $query->executeQuery();
-		$uids = array_map(static function (array $row) {
-			return (int)$row['uid'];
-		}, $cursor->fetchAll());
+		$uids = array_map(static fn (array $row) => (int)$row['uid'], $cursor->fetchAll());
 		$cursor->closeCursor();
 
 		return $uids;

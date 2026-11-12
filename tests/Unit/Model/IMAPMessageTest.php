@@ -17,10 +17,12 @@ use Horde_Imap_Client_DateTime;
 use Horde_Mime_Part;
 use OCA\Mail\AddressList;
 use OCA\Mail\Db\Tag;
+use OCA\Mail\Html\ProxyHmacGenerator;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\Html;
 use OCP\IRequest;
 use OCP\IURLGenerator;
+use RuntimeException;
 
 class IMAPMessageTest extends TestCase {
 	/** @var Html|MockObject */
@@ -37,13 +39,12 @@ class IMAPMessageTest extends TestCase {
 		//linkToRoute 'mail.proxy.proxy'
 		$urlGenerator->expects($this->any())
 			->method('linkToRoute')
-			->will($this->returnCallback(function ($url) {
-				return "https://docs.example.com/server/go.php?to=$url";
-			}));
+			->will($this->returnCallback(fn ($url) => "https://docs.example.com/server/go.php?to=$url"));
 		$request = $this->getMockBuilder(IRequest::class)
 			->disableOriginalConstructor()
 			->getMock();
-		$htmlService = new Html($urlGenerator, $request);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+		$htmlService = new Html($urlGenerator, $request, $hmacGenerator);
 
 		$part = Horde_Mime_Part::parseMessage(file_get_contents(__DIR__ . '/../../data/mail-message-123.txt'),
 			['level' => 1]);
@@ -72,6 +73,7 @@ class IMAPMessageTest extends TestCase {
 			'',
 			'disposition',
 			false,
+			false,
 			[],
 			null,
 			false,
@@ -89,6 +91,79 @@ class IMAPMessageTest extends TestCase {
 
 		$actualPlainTextBody = $message->getPlainBody();
 		$this->assertEquals($plainTextBody, $actualPlainTextBody);
+	}
+
+	private function createHtmlMessage(): IMAPMessage {
+		return new IMAPMessage(
+			1234,
+			'<memo-test@example.com>',
+			[],
+			AddressList::parse('from@mail.com'),
+			AddressList::parse('to@mail.com'),
+			AddressList::parse('cc@mail.com'),
+			AddressList::parse('bcc@mail.com'),
+			AddressList::parse('reply-to@mail.com'),
+			'subject',
+			'plain body',
+			'<p>html body</p>',
+			true,
+			[],
+			[],
+			false,
+			[],
+			new Horde_Imap_Client_DateTime('2016-01-01 00:00:00'),
+			'',
+			'disposition',
+			false,
+			false,
+			[],
+			null,
+			false,
+			'',
+			'',
+			false,
+			false,
+			false,
+			$this->htmlService,
+			false,
+		);
+	}
+
+	public function testGetHtmlBodyIsMemoized(): void {
+		$this->htmlService->expects($this->exactly(2))
+			->method('sanitizeHtmlMailBody')
+			->willReturnCallback(fn (int $id) => "<p>$id</p>");
+		$message = $this->createHtmlMessage();
+
+		$first = $message->getHtmlBody(123);
+		$second = $message->getHtmlBody(123);
+		$other = $message->getHtmlBody(456);
+
+		$this->assertSame('<p>123</p>', $first);
+		$this->assertSame('<p>123</p>', $second);
+		$this->assertSame('<p>456</p>', $other);
+	}
+
+	public function testGetHtmlBodyIsNotMemoizedWhenSanitizingFails(): void {
+		$failed = false;
+		$this->htmlService->method('sanitizeHtmlMailBody')
+			->willReturnCallback(function (int $id) use (&$failed) {
+				if ($id === 456 && !$failed) {
+					$failed = true;
+					throw new RuntimeException('sanitizing failed');
+				}
+				return "<p>$id</p>";
+			});
+		$message = $this->createHtmlMessage();
+		$message->getHtmlBody(123);
+		try {
+			$message->getHtmlBody(456);
+		} catch (RuntimeException) {
+		}
+
+		$retry = $message->getHtmlBody(456);
+
+		$this->assertSame('<p>456</p>', $retry);
 	}
 
 	public function testSerialize() {
@@ -114,6 +189,7 @@ class IMAPMessageTest extends TestCase {
 			new Horde_Imap_Client_DateTime('2016-01-01 00:00:00'),
 			'',
 			'disposition',
+			false,
 			false,
 			[],
 			null,
@@ -147,7 +223,7 @@ class IMAPMessageTest extends TestCase {
 				'draft' => false,
 				'forwarded' => false,
 				'hasAttachments' => false,
-				'mdnsent' => false,
+				'$mdnsent' => false,
 				'important' => true,
 			],
 			'unsubscribeUrl' => null,
@@ -159,6 +235,7 @@ class IMAPMessageTest extends TestCase {
 			'phishingDetails' => [],
 			'scheduling' => [],
 			'isPgpMimeEncrypted' => false,
+			'hasAiGeneratedHeader' => false,
 		], $json);
 		$this->assertEquals(1234, $json['uid']);
 	}

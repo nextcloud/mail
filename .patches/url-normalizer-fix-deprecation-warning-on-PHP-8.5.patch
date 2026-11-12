@@ -1,0 +1,35 @@
+From 5b09c44ecfeb59756427f9d84b8da2ab22cd1d4b Mon Sep 17 00:00:00 2001
+From: David Dreschner <david.dreschner@nextcloud.com>
+Date: Thu, 12 Feb 2026 12:21:20 +0100
+Subject: [PATCH] fix: Fix deprecation warning on PHP >= 8.5
+
+Signed-off-by: David Dreschner <david.dreschner@nextcloud.com>
+---
+ src/URL/Normalizer.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/URL/Normalizer.php b/src/URL/Normalizer.php
+index 930f7b7..7dabf14 100755
+--- a/src/URL/Normalizer.php
++++ b/src/URL/Normalizer.php
+@@ -83,7 +83,7 @@ class Normalizer
+         // parse URL into respective parts
+         $url_components = $this->mbParseUrl($this->url);
+ 
+-        if (! $url_components) {
++        if (count($url_components) === 0) {
+             // Reset URL
+             $this->url = '';
+ 
+@@ -356,7 +356,7 @@ class Normalizer
+ 
+     private function mbParseUrl($url)
+     {
+-        $result = false;
++        $result = [];
+ 
+         // Build arrays of values we need to decode before parsing
+         $entities = array('%21', '%2A', '%27', '%28', '%29', '%3B', '%3A', '%40', '%26', '%3D', '%24', '%2C', '%2F', '%3F', '%23', '%5B', '%5D');
+-- 
+2.43.0
+

@@ -14,6 +14,7 @@ use OCA\Mail\Db\Provisioning;
 use OCA\Mail\Service\Provisioning\Manager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IUser;
+use OCP\LDAP\ILDAPProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class ManagerTest extends TestCase {
@@ -61,6 +62,30 @@ class ManagerTest extends TestCase {
 		$this->assertEquals(0, $count);
 	}
 
+	public function testDisabledAppDoesUnprovision() {
+		/** @var IUser|MockObject $user */
+		$user = $this->createConfiguredMock(IUser::class, [
+			'getEmailAddress' => 'bruce.wayne@batman.com',
+			'getUID' => 'bruce'
+		]);
+		$configs = [new Provisioning()];
+		$this->mock->getParameter('appManager')
+			->expects($this->once())
+			->method('isEnabledForUser')
+			->willReturn(false);
+		$this->mock->getParameter('aliasMapper')
+			->expects($this->once())
+			->method('deleteProvisionedAliasesByUid')
+			->with($user->getUID());
+		$this->mock->getParameter('mailAccountMapper')
+			->expects($this->once())
+			->method('deleteProvisionedAccountsByUid')
+			->with($user->getUID());
+
+		$result = $this->manager->provisionSingleUser($configs, $user);
+		$this->assertFalse($result);
+	}
+
 	public function testUpdateProvisionSingleUser() {
 		/** @var IUser|MockObject $user */
 		$user = $this->createConfiguredMock(IUser::class, [
@@ -72,15 +97,20 @@ class ManagerTest extends TestCase {
 		$config->setProvisioningDomain('batman.com');
 		$config->setEmailTemplate('%USER%@batman.com');
 		$configs = [$config];
-		$account = new MailAccount();
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
+		$this->mock->getParameter('appManager')
+			->expects($this->once())
+			->method('isEnabledForUser')
+			->willReturn(true);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('findProvisionedAccount')
-			->willReturn($account);
+			->willReturn($mailAccount);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('update')
-			->with($account);
+			->with($mailAccount);
 
 		$result = $this->manager->provisionSingleUser($configs, $user);
 		$this->assertTrue($result);
@@ -92,12 +122,17 @@ class ManagerTest extends TestCase {
 			'getEmailAddress' => 'bruce.wayne@batman.com',
 			'getUID' => 'bruce'
 		]);
-		$account = new MailAccount();
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
 		$config = new Provisioning();
 		$config->setId(1);
 		$config->setProvisioningDomain('batman.com');
 		$config->setEmailTemplate('%USER%@batman.com');
 		$configs = [$config];
+		$this->mock->getParameter('appManager')
+			->expects($this->once())
+			->method('isEnabledForUser')
+			->willReturn(true);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('findProvisionedAccount')
@@ -105,11 +140,14 @@ class ManagerTest extends TestCase {
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('insert')
-			->willReturn($account);
+			->willReturn($mailAccount);
 		$this->mock->getParameter('tagMapper')
 			->expects($this->once())
 			->method('createDefaultTags')
-			->with($account);
+			->with($mailAccount);
+		$this->mock->getParameter('accountService')
+			->expects($this->once())
+			->method('scheduleBackgroundJobs');
 
 		$result = $this->manager->provisionSingleUser($configs, $user);
 		$this->assertTrue($result);
@@ -121,21 +159,25 @@ class ManagerTest extends TestCase {
 			'getEmailAddress' => 'bruce.wayne@batman.com',
 			'getUID' => 'bruce.wayne'
 		]);
-		$account = new MailAccount();
 		$config = new Provisioning();
 		$config->setId(1);
 		$config->setProvisioningDomain('*');
 		$config->setEmailTemplate('%USER%@batman.com');
 		$configs = [$config];
-		$account = new MailAccount();
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
+		$this->mock->getParameter('appManager')
+			->expects($this->once())
+			->method('isEnabledForUser')
+			->willReturn(true);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('findProvisionedAccount')
-			->willReturn($account);
+			->willReturn($mailAccount);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('update')
-			->with($account);
+			->with($mailAccount);
 
 		$result = $this->manager->provisionSingleUser($configs, $user);
 		$this->assertTrue($result);
@@ -147,12 +189,17 @@ class ManagerTest extends TestCase {
 			'getEmailAddress' => 'bruce.wayne@batman.com',
 			'getUID' => 'bruce'
 		]);
-		$account = new MailAccount();
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
 		$config = new Provisioning();
 		$config->setId(1);
 		$config->setProvisioningDomain('*');
 		$config->setEmailTemplate('%USER%@batman.com');
 		$configs = [$config];
+		$this->mock->getParameter('appManager')
+			->expects($this->once())
+			->method('isEnabledForUser')
+			->willReturn(true);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('findProvisionedAccount')
@@ -160,11 +207,11 @@ class ManagerTest extends TestCase {
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('insert')
-			->willReturn($account);
+			->willReturn($mailAccount);
 		$this->mock->getParameter('tagMapper')
 			->expects($this->once())
 			->method('createDefaultTags')
-			->with($account);
+			->with($mailAccount);
 
 		$result = $this->manager->provisionSingleUser($configs, $user);
 		$this->assertTrue($result);
@@ -175,12 +222,15 @@ class ManagerTest extends TestCase {
 		$user = $this->createConfiguredMock(IUser::class, [
 			'getEmailAddress' => 'bruce.wayne@batman.com'
 		]);
-		$account = new MailAccount();
 		$config = new Provisioning();
 		$config->setId(1);
 		$config->setProvisioningDomain('arkham-asylum.com');
 		$config->setEmailTemplate('%USER%@batman.com');
 		$configs = [$config];
+		$this->mock->getParameter('appManager')
+			->expects($this->once())
+			->method('isEnabledForUser')
+			->willReturn(true);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->never())
 			->method('findProvisionedAccount');
@@ -211,7 +261,7 @@ class ManagerTest extends TestCase {
 
 	public function testUpdatePasswordNotProvisioned(): void {
 		/** @var IUser|MockObject $user */
-		$user = $this->createMock(IUser::class);
+		$user = $this->createStub(IUser::class);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('findProvisionedAccount')
@@ -223,31 +273,33 @@ class ManagerTest extends TestCase {
 
 	public function testUpdateLoginPassword(): void {
 		/** @var IUser|MockObject $user */
-		$user = $this->createMock(IUser::class);
-		$account = new MailAccount();
+		$user = $this->createStub(IUser::class);
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('findProvisionedAccount')
-			->willReturn($account);
+			->willReturn($mailAccount);
 		$config = new Provisioning();
 		$config->setProvisioningDomain(Provisioning::WILDCARD);
 		$config->setMasterPasswordEnabled(false);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('update')
-			->with($account);
+			->with($mailAccount);
 
 		$this->manager->updatePassword($user, '123456', [$config]);
 	}
 
 	public function testUpdateMasterPasswordWithExistingLoginPassword(): void {
 		/** @var IUser|MockObject $user */
-		$user = $this->createMock(IUser::class);
-		$account = new MailAccount();
+		$user = $this->createStub(IUser::class);
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('findProvisionedAccount')
-			->willReturn($account);
+			->willReturn($mailAccount);
 		$config = new Provisioning();
 		$config->setProvisioningDomain(Provisioning::WILDCARD);
 		$config->setMasterPasswordEnabled(true);
@@ -260,19 +312,20 @@ class ManagerTest extends TestCase {
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('update')
-			->with($account);
+			->with($mailAccount);
 
 		$this->manager->updatePassword($user, '123456', [$config]);
 	}
 
 	public function testUpdateMasterPasswordWithoutLoginPassword(): void {
 		/** @var IUser|MockObject $user */
-		$user = $this->createMock(IUser::class);
-		$account = new MailAccount();
+		$user = $this->createStub(IUser::class);
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('findProvisionedAccount')
-			->willReturn($account);
+			->willReturn($mailAccount);
 		$config = new Provisioning();
 		$config->setProvisioningDomain(Provisioning::WILDCARD);
 		$config->setMasterPasswordEnabled(true);
@@ -285,7 +338,7 @@ class ManagerTest extends TestCase {
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('update')
-			->with($account);
+			->with($mailAccount);
 
 		$this->manager->updatePassword($user, null, [$config]);
 	}
@@ -320,5 +373,238 @@ class ManagerTest extends TestCase {
 		]);
 
 		self::assertInstanceOf(Provisioning::class, $result);
+	}
+
+	private function ldapPlaceholderConfig(): Provisioning {
+		$config = new Provisioning();
+		$config->setId(1);
+		$config->setProvisioningDomain('*');
+		$config->setEmailTemplate('%LDAP:sAMAccountName%@batman.com');
+		$config->setImapUser('%LDAP:sAMAccountName%');
+		$config->setSmtpUser('%LDAP:sAMAccountName%');
+		return $config;
+	}
+
+	public function testProvisionSingleUserResolvesLdapPlaceholders(): void {
+		/** @var IUser|MockObject $user */
+		$user = $this->createConfiguredMock(IUser::class, [
+			'getEmailAddress' => 'bruce.wayne@batman.com',
+			'getUID' => 'bruce',
+			'getBackendClassName' => 'LDAP',
+		]);
+		$configs = [$this->ldapPlaceholderConfig()];
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
+		$ldapProvider = $this->createMock(ILDAPProvider::class);
+		$ldapProvider->expects($this->once())
+			->method('getUserAttribute')
+			->with('bruce', 'sAMAccountName')
+			->willReturn('BWAYNE');
+		$this->mock->getParameter('ldapProviderFactory')
+			->method('isAvailable')
+			->willReturn(true);
+		$this->mock->getParameter('ldapProviderFactory')
+			->method('getLDAPProvider')
+			->willReturn($ldapProvider);
+		$this->mock->getParameter('appManager')
+			->expects($this->once())
+			->method('isEnabledForUser')
+			->willReturn(true);
+		$this->mock->getParameter('mailAccountMapper')
+			->expects($this->once())
+			->method('findProvisionedAccount')
+			->willReturn($mailAccount);
+		$this->mock->getParameter('mailAccountMapper')
+			->expects($this->once())
+			->method('update')
+			->with($this->callback(static function (MailAccount $account) {
+				return $account->getEmail() === 'BWAYNE@batman.com'
+					&& $account->getInboundUser() === 'BWAYNE'
+					&& $account->getOutboundUser() === 'BWAYNE';
+			}))
+			->willReturn($mailAccount);
+
+		$result = $this->manager->provisionSingleUser($configs, $user);
+
+		$this->assertTrue($result);
+	}
+
+	private function expectNoAccountWrite(): void {
+		$this->mock->getParameter('mailAccountMapper')
+			->expects($this->never())
+			->method('findProvisionedAccount');
+		$this->mock->getParameter('mailAccountMapper')
+			->expects($this->never())
+			->method('update');
+		$this->mock->getParameter('mailAccountMapper')
+			->expects($this->never())
+			->method('insert');
+	}
+
+	public function provideUnresolvableLdapValues(): array {
+		return [
+			'empty' => [''],
+			'control characters' => ["BWAYNE\r\nX"],
+			'invalid UTF-8' => ["BWAYNE\xFF"],
+			'space' => ['Bruce Wayne'],
+			'unicode line separator' => ["BWAYNE\u{2028}X"],
+			'trailing newline' => ["BWAYNE\n"],
+			'trailing carriage return' => ["BWAYNE\r"],
+			'comma escaping the domain' => ['ceo@evil.example,x'],
+			'angle brackets escaping the domain' => ['a@b.com<c@d.com>'],
+			'longer than the account column' => [str_repeat('a', 65)],
+		];
+	}
+
+	/**
+	 * @dataProvider provideUnresolvableLdapValues
+	 */
+	public function testProvisionSingleUserSkipsUnusableLdapValue(string $ldapValue): void {
+		/** @var IUser|MockObject $user */
+		$user = $this->createConfiguredMock(IUser::class, [
+			'getEmailAddress' => 'bruce.wayne@batman.com',
+			'getUID' => 'bruce',
+			'getBackendClassName' => 'LDAP',
+		]);
+		$configs = [$this->ldapPlaceholderConfig()];
+		$ldapProvider = $this->createMock(ILDAPProvider::class);
+		$ldapProvider->expects($this->once())
+			->method('getUserAttribute')
+			->willReturn($ldapValue);
+		$this->mock->getParameter('ldapProviderFactory')
+			->method('isAvailable')
+			->willReturn(true);
+		$this->mock->getParameter('ldapProviderFactory')
+			->method('getLDAPProvider')
+			->willReturn($ldapProvider);
+		$this->mock->getParameter('logger')
+			->expects($this->atLeastOnce())
+			->method('warning');
+		$this->mock->getParameter('appManager')
+			->expects($this->once())
+			->method('isEnabledForUser')
+			->willReturn(true);
+		$this->expectNoAccountWrite();
+
+		$result = $this->manager->provisionSingleUser($configs, $user);
+
+		$this->assertFalse($result);
+	}
+
+	public function testProvisionSingleUserSkipsWhenLdapThrows(): void {
+		/** @var IUser|MockObject $user */
+		$user = $this->createConfiguredMock(IUser::class, [
+			'getEmailAddress' => 'bruce.wayne@batman.com',
+			'getUID' => 'bruce',
+			'getBackendClassName' => 'LDAP',
+		]);
+		$configs = [$this->ldapPlaceholderConfig()];
+		$ldapProvider = $this->createMock(ILDAPProvider::class);
+		$ldapProvider->expects($this->once())
+			->method('getUserAttribute')
+			->willThrowException(new \Exception('User id not found in LDAP'));
+		$this->mock->getParameter('ldapProviderFactory')
+			->method('isAvailable')
+			->willReturn(true);
+		$this->mock->getParameter('ldapProviderFactory')
+			->method('getLDAPProvider')
+			->willReturn($ldapProvider);
+		$this->mock->getParameter('logger')
+			->expects($this->atLeastOnce())
+			->method('warning');
+		$this->mock->getParameter('appManager')
+			->expects($this->once())
+			->method('isEnabledForUser')
+			->willReturn(true);
+		$this->expectNoAccountWrite();
+
+		$result = $this->manager->provisionSingleUser($configs, $user);
+
+		$this->assertFalse($result);
+	}
+
+	public function testProvisionSingleUserSkipsWhenLdapUnavailable(): void {
+		/** @var IUser|MockObject $user */
+		$user = $this->createConfiguredMock(IUser::class, [
+			'getEmailAddress' => 'bruce.wayne@batman.com',
+			'getUID' => 'bruce',
+			'getBackendClassName' => 'LDAP',
+		]);
+		$configs = [$this->ldapPlaceholderConfig()];
+		$this->mock->getParameter('ldapProviderFactory')
+			->method('isAvailable')
+			->willReturn(false);
+		$this->mock->getParameter('ldapProviderFactory')
+			->expects($this->never())
+			->method('getLDAPProvider');
+		$this->mock->getParameter('appManager')
+			->expects($this->once())
+			->method('isEnabledForUser')
+			->willReturn(true);
+		$this->expectNoAccountWrite();
+
+		$result = $this->manager->provisionSingleUser($configs, $user);
+
+		$this->assertFalse($result);
+	}
+
+	public function testProvisionSingleUserNonLdapBackendSkipsLookup(): void {
+		/** @var IUser|MockObject $user */
+		$user = $this->createConfiguredMock(IUser::class, [
+			'getEmailAddress' => 'bruce.wayne@batman.com',
+			'getUID' => 'bruce',
+			'getBackendClassName' => 'Database',
+		]);
+		$configs = [$this->ldapPlaceholderConfig()];
+		$this->mock->getParameter('ldapProviderFactory')
+			->method('isAvailable')
+			->willReturn(true);
+		$this->mock->getParameter('ldapProviderFactory')
+			->expects($this->never())
+			->method('getLDAPProvider');
+		$this->mock->getParameter('appManager')
+			->expects($this->once())
+			->method('isEnabledForUser')
+			->willReturn(true);
+		$this->expectNoAccountWrite();
+
+		$result = $this->manager->provisionSingleUser($configs, $user);
+
+		$this->assertFalse($result);
+	}
+
+	public function testProvisionSingleUserWithoutLdapTokensSkipsFactory(): void {
+		/** @var IUser|MockObject $user */
+		$user = $this->createConfiguredMock(IUser::class, [
+			'getEmailAddress' => 'bruce.wayne@batman.com',
+			'getUID' => 'bruce',
+			'getBackendClassName' => 'LDAP',
+		]);
+		$config = new Provisioning();
+		$config->setId(1);
+		$config->setProvisioningDomain('*');
+		$config->setEmailTemplate('%USERID%@batman.com');
+		$configs = [$config];
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1000);
+		$this->mock->getParameter('ldapProviderFactory')
+			->expects($this->never())
+			->method('isAvailable');
+		$this->mock->getParameter('appManager')
+			->expects($this->once())
+			->method('isEnabledForUser')
+			->willReturn(true);
+		$this->mock->getParameter('mailAccountMapper')
+			->expects($this->once())
+			->method('findProvisionedAccount')
+			->willReturn($mailAccount);
+		$this->mock->getParameter('mailAccountMapper')
+			->expects($this->once())
+			->method('update')
+			->willReturn($mailAccount);
+
+		$result = $this->manager->provisionSingleUser($configs, $user);
+
+		$this->assertTrue($result);
 	}
 }

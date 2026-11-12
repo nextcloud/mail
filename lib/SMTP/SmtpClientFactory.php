@@ -9,10 +9,12 @@ declare(strict_types=1);
 
 namespace OCA\Mail\SMTP;
 
+use Exception;
 use Horde_Mail_Transport;
 use Horde_Mail_Transport_Smtphorde;
 use Horde_Smtp_Password_Xoauth2;
 use OCA\Mail\Account;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Support\HostNameFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
@@ -24,15 +26,13 @@ class SmtpClientFactory {
 	/** @var ICrypto */
 	private $crypto;
 
-	/** @var HostNameFactory */
-	private $hostNameFactory;
-
-	public function __construct(IConfig $config,
+	public function __construct(
+		IConfig $config,
 		ICrypto $crypto,
-		HostNameFactory $hostNameFactory) {
+		private HostNameFactory $hostNameFactory,
+	) {
 		$this->config = $config;
 		$this->crypto = $crypto;
-		$this->hostNameFactory = $hostNameFactory;
 	}
 
 	/**
@@ -64,7 +64,15 @@ class SmtpClientFactory {
 			],
 		];
 		if ($account->getMailAccount()->getAuthMethod() === 'xoauth2') {
-			$decryptedAccessToken = $this->crypto->decrypt($account->getMailAccount()->getOauthAccessToken());
+			try {
+				$oauthAccessToken = $account->getMailAccount()->getOauthAccessToken();
+				if ($oauthAccessToken === null) {
+					throw new ServiceException('Missing access token for xoauth2 account');
+				}
+				$decryptedAccessToken = $this->crypto->decrypt($oauthAccessToken);
+			} catch (Exception $e) {
+				throw new ServiceException('Could not decrypt account access token: ' . $e->getMessage(), 0, $e);
+			}
 
 			$params['password'] = $decryptedAccessToken; // Not used, but Horde wants this
 			$params['xoauth2_token'] = new Horde_Smtp_Password_Xoauth2(
@@ -72,8 +80,8 @@ class SmtpClientFactory {
 				$decryptedAccessToken,
 			);
 		}
-		if ($account->getDebug() || $this->config->getSystemValueBool('app.mail.debug')) {
-			$fn = 'mail-' . $account->getUserId() . '-' . $account->getId() . '-smtp.log';
+		if ($account->getMailAccount()->getDebug() || $this->config->getSystemValueBool('app.mail.debug')) {
+			$fn = "mail-{$account->getUserId()}-{$account->getId()}-smtp.log";
 			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/' . $fn;
 		}
 		return new Horde_Mail_Transport_Smtphorde($params);

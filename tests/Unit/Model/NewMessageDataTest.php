@@ -14,7 +14,7 @@ use OCA\Mail\Model\NewMessageData;
 
 class NewMessageDataTest extends TestCase {
 	public function testConstructionFromSimpleRequestData() {
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$to = '"Test" <test@domain.com>';
 		$cc = '';
 		$bcc = '';
@@ -35,7 +35,7 @@ class NewMessageDataTest extends TestCase {
 	}
 
 	public function testConstructionFromComplexRequestData() {
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$to = '"Test" <test@domain.com>, test2@domain.de';
 		$cc = 'test2@domain.at';
 		$bcc = '"Test3" <test3@domain.net>';

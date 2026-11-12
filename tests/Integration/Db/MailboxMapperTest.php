@@ -34,7 +34,7 @@ class MailboxMapperTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->db = \OC::$server->getDatabaseConnection();
+		$this->db = \OCP\Server::get(\OCP\IDBConnection::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
 		$this->mapper = new MailboxMapper(
 			$this->db,
@@ -80,6 +80,38 @@ class MailboxMapperTest extends TestCase {
 		$result = $this->mapper->findAll($account);
 
 		$this->assertCount(5, $result);
+	}
+
+	public function testCountByAccountNoData() {
+		$account = $this->createMock(Account::class);
+		$account->method('getId')->willReturn(13);
+
+		$count = $this->mapper->countByAccount($account);
+
+		$this->assertSame(0, $count);
+	}
+
+	public function testCountByAccountOnlyCountsItsOwnAccount() {
+		$account = $this->createMock(Account::class);
+		$account->method('getId')->willReturn(13);
+		foreach (range(1, 10) as $i) {
+			$qb = $this->db->getQueryBuilder();
+			$insert = $qb->insert($this->mapper->getTableName())
+				->values([
+					'name' => $qb->createNamedParameter("folder$i"),
+					'account_id' => $qb->createNamedParameter($i <= 5 ? 13 : 14, IQueryBuilder::PARAM_INT),
+					'delimiter' => $qb->createNamedParameter('.'),
+					'messages' => $qb->createNamedParameter(0, IQueryBuilder::PARAM_INT),
+					'unseen' => $qb->createNamedParameter(0, IQueryBuilder::PARAM_INT),
+					'selectable' => $qb->createNamedParameter(true, IQueryBuilder::PARAM_BOOL),
+					'name_hash' => $qb->createNamedParameter(md5("folder$i")),
+				]);
+			$insert->executeStatement();
+		}
+
+		$count = $this->mapper->countByAccount($account);
+
+		$this->assertSame(5, $count);
 	}
 
 	public function testNoInboxFound() {

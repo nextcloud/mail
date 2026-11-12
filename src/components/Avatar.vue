@@ -4,71 +4,82 @@
 -->
 
 <template>
-	<NcAvatar v-if="loading || !hasAvatar"
-		:display-name="displayName"
+	<NcAvatar
+		v-if="loading || !hasAvatar"
+		:displayName="displayName"
 		:size="size"
-		:disable-tooltip="disableTooltip" />
-	<NcAvatar v-else
-		:display-name="displayName"
+		:disableTooltip="disableTooltip" />
+	<NcAvatar
+		v-else
+		:displayName="displayName"
 		:url="avatarUrl"
 		:size="size"
-		:disable-tooltip="disableTooltip" />
+		:disableTooltip="disableTooltip" />
 </template>
 
 <script>
-import NcAvatar from '@nextcloud/vue/components/NcAvatar'
 import { generateUrl } from '@nextcloud/router'
-import { fetchAvatarUrlMemoized } from '../service/AvatarService.js'
+import NcAvatar from '@nextcloud/vue/components/NcAvatar'
 import logger from '../logger.js'
+import { fetchAvatarUrlMemoized } from '../service/AvatarService.js'
 
 export default {
 	name: 'Avatar',
 	components: {
 		NcAvatar,
 	},
+
 	props: {
 		displayName: {
 			type: String,
 			required: true,
 		},
+
 		avatar: {
 			type: Object,
 			default: null,
 		},
+
 		fetchAvatar: {
 			type: Boolean,
 			default: false,
 		},
+
 		email: {
 			type: String,
 			required: true,
 		},
+
 		disableTooltip: {
 			type: Boolean,
 			default: false,
 		},
+
 		size: {
 			type: Number,
 			default: 40,
 		},
 	},
+
 	data() {
 		return {
 			loading: true,
 			avatarUrl: undefined,
 		}
 	},
+
 	computed: {
 		hasAvatar() {
 			return this.avatarUrl !== undefined
 		},
 	},
+
 	async mounted() {
 		if (this.avatar) {
 			this.avatarUrl = this.avatar.isExternal
 				? generateUrl('/apps/mail/api/avatars/image/{email}', {
-					email: this.email,
-				})
+						email: this.email,
+					})
 				: this.avatar.url
 		} else if (this.fetchAvatar) {
 			if (this.email !== '') {

@@ -11,6 +11,7 @@
 			<directory suffix=".php">../lib</directory>
 		</include>
 		<exclude>
+			<directory suffix=".php">../mail/lib/Migration</directory>
 			<directory suffix=".php">../mail/lib/Vendor</directory>
 		</exclude>
 		<report>

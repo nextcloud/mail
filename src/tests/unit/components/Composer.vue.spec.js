@@ -3,22 +3,22 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import {createLocalVue, shallowMount} from '@vue/test-utils'
-
+import { shallowMount } from '@vue/test-utils'
+import { createPinia } from 'pinia'
+import { vi } from 'vitest'
 import Composer from '../../../components/Composer.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
-import { createPinia, PiniaVuePlugin } from 'pinia'
-
 import useMainStore from '../../../store/mainStore.js'
 
-const localVue = createLocalVue()
-
-localVue.mixin(Nextcloud)
-localVue.use(PiniaVuePlugin)
 const pinia = createPinia()
 
-describe('Composer', () => {
+const $route = {
+	params: {
+		mailboxId: '123', // String because it comes from URL params
+	},
+}
 
+describe('Composer', () => {
 	let store
 
 	beforeEach(() => {
@@ -26,21 +26,131 @@ describe('Composer', () => {
 			value: 0,
 		})
 
+		const defaultAccount = {
+			id: 123,
+			editorMode: 'plaintext',
+			isUnified: false,
+			aliases: [],
+			connectionStatus: true,
+			emailAddress: 'test@example.com',
+			name: 'Test Account',
+		}
+
 		shallowMount(Composer, {
-			propsData: {
+			props: {
 				isFirstOpen: true,
-				accounts: [],
+				accounts: [defaultAccount],
 			},
-			localVue,
-			pinia,
-			store,
+			global: {
+				mixins: [Nextcloud],
+				plugins: [pinia],
+				mocks: {
+					$route,
+				},
+			},
 		})
 		store = useMainStore()
+
+		// Add a mailbox to the store for the route param to reference
+		store.mailboxes[123] = {
+			id: 123,
+			databaseId: 123,
+			accountId: 123,
+			name: 'INBOX',
+			attributes: [],
+			specialUse: ['inbox'],
+			envelopeLists: {},
+			mailboxes: [],
+		}
+	})
+
+	it('emits the recipients when one is picked', async () => {
+		const view = shallowMount(Composer, {
+			props: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
+		})
+
+		view.vm.onNewToAddr({ id: 1, email: 'test@domain.tld', label: 'test' })
+		await view.vm.$nextTick()
+
+		expect(view.emitted('update:to').at(-1)[0]).toEqual([
+			expect.objectContaining({ email: 'test@domain.tld' }),
+		])
+	})
+
+	it('does not allow clearing the sender', () => {
+		const view = shallowMount(Composer, {
+			props: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
+		})
+
+		const from = view.findAllComponents({ name: 'NcSelect' }).find((select) => select.attributes('id') === 'from')
+
+		expect(from.props('clearable')).toBe(false)
+	})
+
+	it('shows the Cc/Bcc toggle below the recipient picker', async () => {
+		const view = shallowMount(Composer, {
+			props: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
+		})
+
+		const toggle = view.findComponent('.composer-fields__to-footer .copy-toggle')
+		toggle.vm.$emit('click')
+		await view.vm.$nextTick()
+
+		expect(toggle.exists()).toBe(true)
+		expect(view.find('#cc').exists()).toBe(true)
 	})
 
 	it('does not drop the reply message ID', () => {
 		const view = shallowMount(Composer, {
-			propsData: {
+			props: {
 				inReplyToMessageId: 'abc123',
 				isFirstOpen: true,
 				accounts: [
@@ -52,8 +162,12 @@ describe('Composer', () => {
 					},
 				],
 			},
-			store,
-			localVue,
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
 		})
 
 		const composerData = view.vm.getMessageData()
@@ -63,7 +177,7 @@ describe('Composer', () => {
 
 	it('disabled the send button', () => {
 		const view = shallowMount(Composer, {
-			propsData: {
+			props: {
 				inReplyToMessageId: 'abc123',
 				isFirstOpen: true,
 				accounts: [
@@ -75,8 +189,12 @@ describe('Composer', () => {
 					},
 				],
 			},
-			store,
-			localVue,
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
 		})
 
 		const canSend = view.vm.canSend
@@ -86,7 +204,7 @@ describe('Composer', () => {
 
 	it('enables the send button if data is entered', () => {
 		const view = shallowMount(Composer, {
-			propsData: {
+			props: {
 				inReplyToMessageId: 'abc123',
 				to: [
 					{ label: 'test', email: 'test@domain.tld' },
@@ -101,8 +219,12 @@ describe('Composer', () => {
 					},
 				],
 			},
-			store,
-			localVue,
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
 		})
 
 		const canSend = view.vm.canSend
@@ -110,9 +232,12 @@ describe('Composer', () => {
 		expect(canSend).toEqual(true)
 	})
 
-	it('should not S/MIME sign messages if there are no certs', () => {
+	it('does not send while attachments block sending', async () => {
 		const view = shallowMount(Composer, {
-			propsData: {
+			props: {
+				to: [
+					{ label: 'test', email: 'test@domain.tld' },
+				],
 				isFirstOpen: true,
 				accounts: [
 					{
@@ -123,13 +248,67 @@ describe('Composer', () => {
 					},
 				],
 			},
-			computed: {
-				smimeCertificateForCurrentAlias() {
-					return undefined
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
 				},
 			},
-			store,
-			localVue,
+		})
+
+		await view.findComponent({ name: 'ComposerAttachments' }).vm.$emit('update:blocksSending', true)
+		await view.vm.onSend()
+
+		expect(view.vm.canSend).toEqual(false)
+		expect(view.emitted('send')).toBeUndefined()
+	})
+
+	it('saves the draft when the attachments change', async () => {
+		const view = shallowMount(Composer, {
+			props: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
+		})
+		view.vm.saveDraftDebounced = vi.fn()
+
+		await view.findComponent({ name: 'ComposerAttachments' }).vm.$emit('update:modelValue', [{ id: 1, fileName: 'a.txt', type: 'local' }])
+
+		expect(view.vm.saveDraftDebounced).toHaveBeenCalled()
+	})
+
+	it('should not S/MIME sign messages if there are no certs', () => {
+		const view = shallowMount(Composer, {
+			props: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
 		})
 
 		view.vm.wantsSmimeSign = false
@@ -140,8 +319,10 @@ describe('Composer', () => {
 	})
 
 	it('should S/MIME sign messages if there are certs', () => {
+		store.smimeCertificates = [{ id: 1, emailAddress: 'test@example.com' }]
+
 		const view = shallowMount(Composer, {
-			propsData: {
+			props: {
 				isFirstOpen: true,
 				accounts: [
 					{
@@ -149,16 +330,16 @@ describe('Composer', () => {
 						editorMode: 'plaintext',
 						isUnified: false,
 						aliases: [],
+						smimeCertificateId: 1,
 					},
 				],
 			},
-			computed: {
-				smimeCertificateForCurrentAlias() {
-					return { foo: 'bar' }
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
 				},
 			},
-			store,
-			localVue,
 		})
 
 		view.vm.wantsSmimeSign = true
@@ -170,7 +351,7 @@ describe('Composer', () => {
 
 	it('should not S/MIME encrypt messages if there are no certs', () => {
 		const view = shallowMount(Composer, {
-			propsData: {
+			props: {
 				isFirstOpen: true,
 				accounts: [
 					{
@@ -181,13 +362,12 @@ describe('Composer', () => {
 					},
 				],
 			},
-			computed: {
-				smimeCertificateForCurrentAlias() {
-					return undefined
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
 				},
 			},
-			store,
-			localVue,
 		})
 
 		view.vm.wantsSmimeEncrypt = false
@@ -198,29 +378,34 @@ describe('Composer', () => {
 	})
 
 	it('should not S/MIME encrypt messages if there are missing recipient certs', () => {
+		store.smimeCertificates = [{ id: 1, emailAddress: 'test@example.com' }]
+
 		const view = shallowMount(Composer, {
-			propsData: {
+			props: {
 				isFirstOpen: true,
+				to: [
+					{ label: 'john', email: 'john@foo.bar' },
+				],
 				accounts: [
 					{
 						id: 123,
 						editorMode: 'plaintext',
 						isUnified: false,
 						aliases: [],
+						smimeCertificateId: 1,
 					},
 				],
 			},
-			computed: {
-				smimeCertificateForCurrentAlias() {
-					return { foo: 'bar' }
-				},
-				missingSmimeCertificatesForRecipients() {
-					return ['john@foo.bar']
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
 				},
 			},
-			store,
-			localVue,
 		})
+
+		// Simulate a recipient whose certificate is not in the store
+		view.vm.selectTo = [{ email: 'john@foo.bar' }]
 
 		view.vm.wantsSmimeEncrypt = false
 		expect(view.vm.shouldSmimeEncrypt).toEqual(false)
@@ -230,8 +415,10 @@ describe('Composer', () => {
 	})
 
 	it('should S/MIME sign messages if there are certs', () => {
+		store.smimeCertificates = [{ id: 1, emailAddress: 'test@example.com' }]
+
 		const view = shallowMount(Composer, {
-			propsData: {
+			props: {
 				isFirstOpen: true,
 				accounts: [
 					{
@@ -239,19 +426,16 @@ describe('Composer', () => {
 						editorMode: 'plaintext',
 						isUnified: false,
 						aliases: [],
+						smimeCertificateId: 1,
 					},
 				],
 			},
-			computed: {
-				smimeCertificateForCurrentAlias() {
-					return { foo: 'bar' }
-				},
-				missingSmimeCertificatesForRecipients() {
-					return []
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
 				},
 			},
-			store,
-			localVue,
 		})
 
 		view.vm.wantsSmimeEncrypt = true
@@ -263,7 +447,7 @@ describe('Composer', () => {
 
 	it('generate title for submit button', () => {
 		const view = shallowMount(Composer, {
-            propsData: {
+			props: {
 				isFirstOpen: true,
 				accounts: [
 					{
@@ -273,11 +457,14 @@ describe('Composer', () => {
 						aliases: [],
 					},
 				],
-            },
-			store,
-			localVue,
+			},
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
 		})
-
 
 		expect(view.vm.submitButtonTitle).toEqual('Send')
 
@@ -293,8 +480,8 @@ describe('Composer', () => {
 
 	it('generate title for submit button (send later)', () => {
 		const view = shallowMount(Composer, {
-            propsData: {
-                isFirstOpen: true,
+			props: {
+				isFirstOpen: true,
 				accounts: [
 					{
 						id: 123,
@@ -303,9 +490,13 @@ describe('Composer', () => {
 						aliases: [],
 					},
 				],
-            },
-			store,
-			localVue,
+			},
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
 		})
 
 		view.vm.sendAtVal = '2023-01-01 14:00'
@@ -322,5 +513,247 @@ describe('Composer', () => {
 		expect(view.vm.submitButtonTitle).toEqual('Encrypt with Mailvelope and send later Jan 1, 02:00 PM')
 	})
 
+	it('does not open the recipient dropdown on focus without a search term', () => {
+		const view = shallowMount(Composer, {
+			props: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
+		})
 
+		expect(view.vm.shouldOpenRecipientDropdown({
+			noDrop: false,
+			open: true,
+			search: '',
+		})).toEqual(false)
+	})
+
+	it('opens the recipient dropdown once a search term is entered', () => {
+		const view = shallowMount(Composer, {
+			props: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
+		})
+
+		expect(view.vm.shouldOpenRecipientDropdown({
+			noDrop: false,
+			open: true,
+			search: 'alice',
+		})).toEqual(true)
+	})
+
+	it('inserts the signature when composing a new message', () => {
+		const view = shallowMount(Composer, {
+			props: {
+				isFirstOpen: true,
+				isDraft: false,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
+		})
+		const insertSignature = vi.spyOn(view.vm, 'insertSignature').mockImplementation(() => {})
+
+		view.vm.onEditorReady({ getData: () => '' })
+
+		expect(insertSignature).toHaveBeenCalled()
+	})
+
+	it('does not insert the signature when opening a draft', () => {
+		const view = shallowMount(Composer, {
+			props: {
+				isFirstOpen: true,
+				isDraft: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
+		})
+		const insertSignature = vi.spyOn(view.vm, 'insertSignature').mockImplementation(() => {})
+
+		view.vm.onEditorReady({ getData: () => '' })
+
+		expect(insertSignature).not.toHaveBeenCalled()
+	})
+
+	it('inserts the signature on alias change even when opening a draft', () => {
+		const view = shallowMount(Composer, {
+			props: {
+				isFirstOpen: true,
+				isDraft: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
+		})
+		const insertSignature = vi.spyOn(view.vm, 'insertSignature').mockImplementation(() => {})
+		view.vm.changeSignature = true
+
+		view.vm.onEditorReady({ getData: () => '' })
+
+		expect(insertSignature).toHaveBeenCalled()
+	})
+	it('starts in rich text when the signature contains an image', () => {
+		const view = shallowMount(Composer, {
+			props: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+						connectionStatus: true,
+						signature: '<p>Regards<img src="cid:logo"></p>',
+					},
+				],
+			},
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
+		})
+
+		expect(view.vm.editorMode).toEqual('richtext')
+	})
+
+	it('switches to rich text when the signature contains an image', () => {
+		const editorExecute = vi.fn()
+		const view = shallowMount(Composer, {
+			props: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+				stubs: {
+					TextEditor: {
+						template: '<div />',
+						methods: { editorExecute },
+					},
+				},
+			},
+		})
+		view.vm.selectedAlias = {
+			id: 123,
+			signature: '<p>Regards<img src="cid:logo"></p>',
+			signatureAboveQuote: false,
+		}
+
+		view.vm.insertSignature()
+
+		expect(view.vm.editorMode).toEqual('richtext')
+		expect(editorExecute).not.toHaveBeenCalled()
+	})
+
+	it('keeps plain text when the signature contains no image', () => {
+		const editorExecute = vi.fn()
+		const view = shallowMount(Composer, {
+			props: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+				stubs: {
+					TextEditor: {
+						template: '<div />',
+						methods: { editorExecute },
+					},
+				},
+			},
+		})
+		view.vm.selectedAlias = {
+			id: 123,
+			signature: '<p>Regards</p>',
+			signatureAboveQuote: false,
+		}
+
+		view.vm.insertSignature()
+
+		expect(view.vm.editorMode).toEqual('plaintext')
+		expect(editorExecute).toHaveBeenCalled()
+	})
 })

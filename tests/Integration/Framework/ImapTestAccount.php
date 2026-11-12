@@ -7,7 +7,6 @@
 
 namespace OCA\Mail\Tests\Integration\Framework;
 
-use OC;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\IMAP\MailboxSync;
@@ -40,12 +39,12 @@ trait ImapTestAccount {
 		$mailAccount->setInboundPort(993);
 		$mailAccount->setInboundSslMode('ssl');
 		$mailAccount->setInboundUser('user@domain.tld');
-		$mailAccount->setInboundPassword(OC::$server->getCrypto()->encrypt('mypassword'));
+		$mailAccount->setInboundPassword(\OCP\Server::get(\OCP\Security\ICrypto::class)->encrypt('mypassword'));
 
 		$mailAccount->setOutboundHost('127.0.0.1');
 		$mailAccount->setOutboundPort(25);
 		$mailAccount->setOutboundUser('user@domain.tld');
-		$mailAccount->setOutboundPassword(OC::$server->getCrypto()->encrypt('mypassword'));
+		$mailAccount->setOutboundPassword(\OCP\Server::get(\OCP\Security\ICrypto::class)->encrypt('mypassword'));
 		$mailAccount->setOutboundSslMode('none');
 		$mailAccount->setDebug(false);
 		$acc = $accountService->save($mailAccount);
