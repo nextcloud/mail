@@ -94,6 +94,20 @@ class IMAPClientFactoryTest extends TestCase {
 		$this->assertInstanceOf(Horde_Imap_Client_Socket::class, $client);
 	}
 
+	public function testGetClientWithDebug(): void {
+		$account = $this->getTestAccount();
+		$account->getMailAccount()->setUserId('bob');
+		$account->getMailAccount()->setDebug(true);
+		$this->config->method('getSystemValueString')
+			->willReturnCallback(fn (string $key) => $key === 'datadirectory' ? sys_get_temp_dir() : '');
+		$this->crypto->method('decrypt')
+			->willReturn('mypassword');
+
+		$client = $this->factory->getClient($account);
+
+		$this->assertSame(sys_get_temp_dir() . '/mail-bob-123-imap.log', $client->getParam('debug'));
+	}
+
 	public function testGetClientDecryptionFailing(): void {
 		$this->expectException(Exception::class);
 		$account = $this->getTestAccount();
