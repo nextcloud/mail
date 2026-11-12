@@ -17,11 +17,12 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Support\DebugLogPathFactory;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IConfig;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class DebugAccountTest extends TestCase {
-	private AccountService|\PHPUnit\Framework\MockObject\MockObject $accountService;
+	private AccountService&MockObject $accountService;
 	private string $dataDirectory;
 
 	protected function setUp(): void {

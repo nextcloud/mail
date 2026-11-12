@@ -30,8 +30,7 @@ class SmtpClientFactoryTest extends TestCase {
 	/** @var HostNameFactory|MockObject */
 	private $hostNameFactory;
 
-	/** @var DebugLogPathFactory|MockObject */
-	private $debugLogPathFactory;
+	private DebugLogPathFactory&MockObject $debugLogPathFactory;
 
 	/** @var SmtpClientFactory */
 	private $factory;
