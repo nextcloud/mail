@@ -80,9 +80,9 @@ final class DebugAccount extends Command {
 			}
 			$output->writeln('Existing log files are not deleted automatically:');
 		}
-		$output->writeln('IMAP log: ' . $this->debugLogPathFactory->buildPath($account, 'imap'));
-		$output->writeln('SMTP log: ' . $this->debugLogPathFactory->buildPath($account, 'smtp'));
-		$output->writeln('Sieve log: ' . $this->debugLogPathFactory->buildPath($account, 'sieve'));
+		$output->writeln('IMAP log: ' . $this->debugLogPathFactory->buildPath($account, DebugLogPathFactory::PROTOCOL_IMAP));
+		$output->writeln('SMTP log: ' . $this->debugLogPathFactory->buildPath($account, DebugLogPathFactory::PROTOCOL_SMTP));
+		$output->writeln('Sieve log: ' . $this->debugLogPathFactory->buildPath($account, DebugLogPathFactory::PROTOCOL_SIEVE));
 
 		return 0;
 	}

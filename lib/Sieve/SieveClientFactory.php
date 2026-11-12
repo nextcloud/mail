@@ -43,7 +43,7 @@ class SieveClientFactory {
 				$password = $account->getMailAccount()->getInboundPassword();
 			}
 
-			$logFile = $this->debugLogPathFactory->getPath($account, 'sieve');
+			$logFile = $this->debugLogPathFactory->getPath($account, DebugLogPathFactory::PROTOCOL_SIEVE);
 
 			$this->cache[$account->getId()] = $this->createClient(
 				$account->getMailAccount()->getSieveHost(),
