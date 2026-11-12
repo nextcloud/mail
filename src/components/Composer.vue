@@ -329,15 +329,11 @@
 			@update:blocksSending="attachmentsPending = $event" />
 		<div class="composer-actions-right composer-actions">
 			<div class="composer-actions--primary-actions">
-				<p class="composer-actions-draft-status">
-					<span v-if="savingDraft" class="draft-status">{{ t('mail', 'Saving draft …') }}</span>
-					<span v-else-if="!canSaveDraft" class="draft-status">{{ t('mail', 'Error saving draft') }}</span>
-					<span v-else-if="draftSaved" class="draft-status">{{ t('mail', 'Draft saved') }}</span>
-				</p>
 				<NcButton
-					v-if="!savingDraft && !canSaveDraft"
+					v-if="!canSaveDraft"
 					class="button"
 					variant="tertiary"
+					:disabled="savingDraft"
 					:aria-label="t('mail', 'Save draft')"
 					@click="saveDraft">
 					<template #icon>
@@ -345,15 +341,20 @@
 					</template>
 				</NcButton>
 				<NcButton
-					v-if="!savingDraft && draftSaved"
 					class="button"
 					variant="tertiary"
+					:disabled="savingDraft"
 					:aria-label="t('mail', 'Discard & close draft')"
 					@click="$emit('discardDraft')">
 					<template #icon>
 						<Delete :size="20" :title="t('mail', 'Discard & close draft')" />
 					</template>
 				</NcButton>
+				<p class="composer-actions-draft-status">
+					<span v-if="savingDraft" class="draft-status">{{ t('mail', 'Saving draft …') }}</span>
+					<span v-else-if="!canSaveDraft" class="draft-status">{{ t('mail', 'Error saving draft') }}</span>
+					<span v-else-if="draftSaved" class="draft-status">{{ t('mail', 'Draft saved') }}</span>
+				</p>
 			</div>
 			<div class="composer-actions--secondary-actions">
 				<NcButton
@@ -2198,6 +2199,7 @@ $composer-text-inset: calc(var(--default-grid-baseline) * 2);
 	}
 	.composer-actions--primary-actions {
 		padding-inline-end: 5px;
+		flex-direction: row-reverse;
 	}
 }
 
