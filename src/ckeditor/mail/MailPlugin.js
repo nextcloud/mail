@@ -53,7 +53,8 @@ export default class Mail extends Plugin {
 
 		this.listenTo(viewDocument, 'clipboardInput', (event, data) => {
 			const text = data.dataTransfer.getData('text/plain')
-			if (data.content || data.dataTransfer.getData('text/html') || !text.includes('\n')) {
+			const hasOwnContent = data.content && typeof data.content !== 'string'
+			if (hasOwnContent || data.dataTransfer.getData('text/html') || !text.includes('\n')) {
 				return
 			}
 
