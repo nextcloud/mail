@@ -687,6 +687,11 @@ class MessagesController extends Controller {
 						$this->urlGenerator->linkTo('mail', 'js/htmlresponse.js', [
 							'v' => $this->appManager->getAppVersion('mail'),
 						])
+					),
+					$this->urlGenerator->getAbsoluteURL(
+						$this->urlGenerator->linkTo('mail', 'css/htmlresponse.css', [
+							'v' => $this->appManager->getAppVersion('mail'),
+						])
 					)
 				);
 
