@@ -277,6 +277,15 @@ git commit --fixup=<sha>   # targets the specific commit being corrected
 
 The branch will be rebased and squashed into a clean history before merge (CI enforces this). The failing "clean history" CI check is intentional and expected during review — ignore it until the PR has a positive review, then rebase to clean up.
 
+### GitHub comments and reviews
+
+Agents may post GitHub text directly (PR and issue comments, review comments, PR descriptions), as long as it is written **for humans**: plain, concise, and skimmable.
+
+- A human must review the text before it is posted.
+- Disclose the AI assistance in every posted body, e.g. with an `Assisted by <harness>:<model-id>` footer.
+- Fill out the repo's PR/issue template completely when opening a PR or issue.
+- Additional info meant only for agents can go into a description or comment, but must be wrapped in a collapsed `<details>` block so human readers can skip it or dive in.
+
 ### Commit Message Format
 
 Commit messages are the project's durable record — read years later through `git log` and `git blame`. The diff already shows *what* changed and *how*; the message exists to capture **intent**: the *why*.
