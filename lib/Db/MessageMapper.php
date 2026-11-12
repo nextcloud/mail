@@ -58,6 +58,10 @@ class MessageMapper extends QBMapper {
 	 */
 	private const MAX_IN_PARAMETERS = 1000;
 
+	/** sent_at is a 4-byte INTEGER column; bounds must stay within its range across all supported DBs */
+	private const SENT_AT_MIN = -2147483648;
+	private const SENT_AT_MAX = 2147483647;
+
 	/** @var ITimeFactory */
 	private $timeFactory;
 
@@ -1436,10 +1440,20 @@ class MessageMapper extends QBMapper {
 		$select = $this->db->getQueryBuilder();
 		$subSelect = $this->db->getQueryBuilder();
 
+		// MIN/MAX return NULL when no known id matches, so COALESCE to a bound that keeps all rows.
+		// sent_at is a 4-byte INTEGER column, so the bound must stay within its range (PHP_INT_MIN/MAX
+		// overflow PostgreSQL's native integer type and get rejected).
+		if ($sortOrder === IMailSearch::ORDER_NEWEST_FIRST) {
+			$fallback = (string)$select->createNamedParameter(self::SENT_AT_MIN, IQueryBuilder::PARAM_INT);
+			$aggregate = (string)$subSelect->func()->min('sent_at');
+			$sentAtBound = $subSelect->createFunction('COALESCE(' . $aggregate . ', ' . $fallback . ')');
+		} else {
+			$fallback = (string)$select->createNamedParameter(self::SENT_AT_MAX, IQueryBuilder::PARAM_INT);
+			$aggregate = (string)$subSelect->func()->max('sent_at');
+			$sentAtBound = $subSelect->createFunction('COALESCE(' . $aggregate . ', ' . $fallback . ')');
+		}
 		$subSelect
-			->select($sortOrder === IMailSearch::ORDER_NEWEST_FIRST
-				? $subSelect->func()->min('sent_at')
-				: $subSelect->func()->max('sent_at'))
+			->select($sentAtBound)
 			->from($this->getTableName())
 			->where(
 				$subSelect->expr()->eq('mailbox_id', $select->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT)),
