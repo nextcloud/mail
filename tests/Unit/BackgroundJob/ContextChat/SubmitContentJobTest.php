@@ -22,6 +22,7 @@ use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\NewMessagesSynchronized;
 use OCA\Mail\Model\IMAPMessage;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\ContextChat\TaskService;
 use OCA\Mail\Service\MailManager;
@@ -35,6 +36,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class SubmitContentJobTest extends TestCase {
+	private ProtocolFactory&MockObject $protocolFactory;
 	/** @var TaskService|MockObject */
 	private $taskService;
 
@@ -88,6 +90,7 @@ class SubmitContentJobTest extends TestCase {
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
 
+		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
 		$this->submitContentJob = new SubmitContentJob(
 			$this->time,
 			$this->taskService,
@@ -98,6 +101,7 @@ class SubmitContentJobTest extends TestCase {
 			$this->contentManager,
 			$this->logger,
 			$this->mailboxMapper,
+			$this->protocolFactory,
 		);
 	}
 
@@ -123,6 +127,8 @@ class SubmitContentJobTest extends TestCase {
 			->willReturn(12 * 60 * 60);
 		$this->taskService->expects($this->never())->method('findNext');
 		$this->mailboxMapper->expects($this->never())->method('findById');
+		$this->protocolFactory->expects(self::never())
+			->method('releaseClients');
 		$this->submitContentJob->setLastRun(0);
 		$this->submitContentJob->start($this->createMock(IJobList::class));
 	}
@@ -180,6 +186,9 @@ class SubmitContentJobTest extends TestCase {
 		$this->contextChatProvider->expects($this->once())->method('getId')->willReturn('mail');
 		$this->contentManager->expects($this->once())->method('submitContent');
 		$this->taskService->expects($this->once())->method('setLastMessage')->with($task->getMailboxId(), 2);
+		$this->protocolFactory->expects(self::once())
+			->method('releaseClients')
+			->with($account);
 
 		$this->submitContentJob->setLastRun(0);
 		$this->submitContentJob->start($this->createMock(IJobList::class));
