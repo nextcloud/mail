@@ -1935,6 +1935,36 @@ $composer-text-inset: calc(var(--default-grid-baseline) * 2);
 .composer-actions {
 	position: sticky;
 	background: linear-gradient(rgba(255, 255, 255, 0), var(--color-main-background-translucent) 50%);
+
+	&-right {
+		display: flex;
+		align-items: center;
+		flex-direction: row;
+		justify-content: space-between;
+		bottom: var(--default-grid-baseline);
+	}
+
+	&--primary-actions {
+		display: flex;
+		flex-direction: row;
+		padding-inline-start: calc(var(--default-grid-baseline) * 2);
+		align-items: center;
+
+		.button {
+			padding: 2px;
+		}
+	}
+
+	&--secondary-actions {
+		display: flex;
+		flex-direction: row;
+		padding: calc(var(--default-grid-baseline) * 2);
+		gap: 5px;
+	}
+
+	&-draft-status {
+		padding-inline-start: 0;
+	}
 }
 
 .composer-fields {
@@ -1957,7 +1987,7 @@ $composer-text-inset: calc(var(--default-grid-baseline) * 2);
 		border-radius: 0;
 	}
 
-	.composer-fields--custom {
+	&--custom {
 		flex: 1;
 		min-width: 0;
 		display: flex;
@@ -2157,47 +2187,19 @@ $composer-text-inset: calc(var(--default-grid-baseline) * 2);
 	border: none;
 }
 
-.composer-actions-right {
-	display: flex;
-	align-items: center;
-	flex-direction: row;
-	justify-content: space-between;
-	bottom: var(--default-grid-baseline);
-}
-
-.composer-actions--primary-actions {
-	display: flex;
-	flex-direction: row;
-	padding-inline-start: calc(var(--default-grid-baseline) * 2);
-	align-items: center;
-}
-
-.composer-actions--secondary-actions {
-	display: flex;
-	flex-direction: row;
-	padding: calc(var(--default-grid-baseline) * 2);
-	gap: 5px;
-}
-
-.composer-actions--primary-actions .button {
-	padding: 2px;
-}
-
-.composer-actions-draft-status {
-	padding-inline-start: 0;
-}
-
 @media only screen and (max-width: 580px) {
-	.composer-actions-right {
-		align-items: end;
-		flex-direction: column-reverse;
-	}
-	.composer-actions-draft-status {
-		text-align: end;
-		padding-inline-end: 15px;
-	}
-	.composer-actions--primary-actions {
-		padding-inline-end: 5px;
+	.composer-actions {
+		&-right {
+			align-items: end;
+			flex-direction: column-reverse;
+		}
+		&-draft-status {
+			text-align: end;
+			padding-inline-end: 15px;
+		}
+		&--primary-actions {
+			padding-inline-end: 5px;
+		}
 	}
 }
 

@@ -846,9 +846,7 @@ export default {
 :deep(.input-field) {
 	margin: calc(var(--default-grid-baseline) * 3) 0;
 }
-</style>
 
-<style scoped>
 h4 {
 	font-size: 17px;
 	text-align: start;
@@ -858,30 +856,32 @@ h4 {
 	display: flex;
 }
 
-.account-form__heading--required:after {
-	content:" *";
-}
+.account-form {
+	&__heading--required:after {
+		content:" *";
+	}
 
-.account-form__submit-buttons {
-	display: flex;
-	justify-content: center;
-	margin-top: var(--default-grid-baseline);
-}
+	&__submit-buttons {
+		display: flex;
+		justify-content: center;
+		margin-top: var(--default-grid-baseline);
+	}
 
-.account-form__submit-button {
-	display: flex;
-	align-items: center;
-}
+	&__submit-button {
+		display: flex;
+		align-items: center;
+	}
 
-.account-form--feedback {
-	color: var(--color-text-maxcontrast);
-	margin-top: var(--default-grid-baseline);
-	text-align: center;
-}
+	&--feedback {
+		color: var(--color-text-maxcontrast);
+		margin-top: var(--default-grid-baseline);
+		text-align: center;
+	}
 
-.account-form--error {
-	text-align: start;
-	font-size: 14px;
+	&--error {
+		text-align: start;
+		font-size: 14px;
+	}
 }
 
 #account-form {
