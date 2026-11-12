@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fd9e6e899cb8b1f758581f0fad37e454",
+    "content-hash": "46c97262ceb6dd3c2982c33d5e9c985c",
     "packages": [
         {
             "name": "amphp/amp",
@@ -93,7 +93,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-03-21T18:52:26+00:00"
+            "time": "2024-03-21T18:52:26+00:00",
+            "published-time": "2024-03-21T18:55:04+00:00"
         },
         {
             "name": "amphp/byte-stream",
@@ -164,7 +165,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-04-13T18:00:56+00:00"
+            "time": "2024-04-13T18:00:56+00:00",
+            "published-time": "2024-04-13T18:05:26+00:00"
         },
         {
             "name": "amphp/parallel",
@@ -238,7 +240,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-12-08T16:28:11+00:00"
+            "time": "2024-12-08T16:28:11+00:00",
+            "published-time": "2025-06-26T20:06:46+00:00"
         },
         {
             "name": "amphp/parser",
@@ -300,7 +303,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-03-21T19:16:53+00:00"
+            "time": "2024-03-21T19:16:53+00:00",
+            "published-time": "2024-03-21T19:18:30+00:00"
         },
         {
             "name": "amphp/process",
@@ -365,7 +369,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-12-13T17:38:25+00:00"
+            "time": "2024-12-13T17:38:25+00:00",
+            "published-time": "2024-12-13T17:41:02+00:00"
         },
         {
             "name": "amphp/serialization",
@@ -423,7 +428,8 @@
                 "issues": "https://github.com/amphp/serialization/issues",
                 "source": "https://github.com/amphp/serialization/tree/master"
             },
-            "time": "2020-03-25T21:39:07+00:00"
+            "time": "2020-03-25T21:39:07+00:00",
+            "published-time": "2020-03-28T14:03:17+00:00"
         },
         {
             "name": "amphp/sync",
@@ -491,7 +497,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-10-25T18:29:10+00:00"
+            "time": "2021-10-25T18:29:10+00:00",
+            "published-time": "2021-10-25T18:32:28+00:00"
         },
         {
             "name": "andrewdalpino/okbloomer",
@@ -554,7 +561,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-01-24T03:41:23+00:00"
+            "time": "2022-01-24T03:41:23+00:00",
+            "published-time": "2022-01-24T03:52:24+00:00"
         },
         {
             "name": "arthurhoaro/favicon",
@@ -2724,16 +2732,16 @@
         },
         {
             "name": "rubix/ml",
-            "version": "2.6.0",
+            "version": "2.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RubixML/ML.git",
-                "reference": "8fdea4a0607ec44dadf91d83e706b4e393fa2db5"
+                "reference": "cd708bdbda55a9e96394969a4490baa3b0820624"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RubixML/ML/zipball/8fdea4a0607ec44dadf91d83e706b4e393fa2db5",
-                "reference": "8fdea4a0607ec44dadf91d83e706b4e393fa2db5",
+                "url": "https://api.github.com/repos/RubixML/ML/zipball/cd708bdbda55a9e96394969a4490baa3b0820624",
+                "reference": "cd708bdbda55a9e96394969a4490baa3b0820624",
                 "shasum": ""
             },
             "require": {
@@ -2881,7 +2889,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-18T22:28:55+00:00"
+            "time": "2026-10-06T19:51:35+00:00",
+            "published-time": "2026-10-06T20:14:28+00:00"
         },
         {
             "name": "rubix/tensor",
@@ -2981,7 +2990,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-18T22:03:04+00:00"
+            "time": "2026-09-18T22:03:04+00:00",
+            "published-time": "2026-09-18T22:09:05+00:00"
         },
         {
             "name": "sabberworm/php-css-parser",
@@ -3269,7 +3279,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-09T11:45:10+00:00"
+            "time": "2024-09-09T11:45:10+00:00",
+            "published-time": "2024-09-09T12:24:35+00:00"
         },
         {
             "name": "symfony/polyfill-php80",
@@ -3349,7 +3360,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-09T11:45:10+00:00"
+            "time": "2024-09-09T11:45:10+00:00",
+            "published-time": "2024-09-09T12:24:33+00:00"
         },
         {
             "name": "symfony/polyfill-php82",
@@ -3425,7 +3437,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-09T11:45:10+00:00"
+            "time": "2024-09-09T11:45:10+00:00",
+            "published-time": "2024-09-09T12:24:34+00:00"
         },
         {
             "name": "symfony/polyfill-php83",
@@ -3501,7 +3514,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-09T11:45:10+00:00"
+            "time": "2024-09-09T11:45:10+00:00",
+            "published-time": "2024-09-09T12:24:33+00:00"
         },
         {
             "name": "wamania/php-stemmer",
