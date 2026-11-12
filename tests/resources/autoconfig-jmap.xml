@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  - SPDX-FileCopyrightText: 2026 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+<clientConfig version="1.1">
+  <emailProvider id="example.org">
+    <domain>example.org</domain>
+    <displayName>Example</displayName>
+    <incomingServer type="jmap">
+      <url>https://jmap.example.org/.well-known/jmap</url>
+      <username>%EMAILLOCALPART%</username>
+      <authentication>OAuth2</authentication>
+      <authentication>password-cleartext</authentication>
+      <authentication>GSSAPI</authentication>
+    </incomingServer>
+  </emailProvider>
+</clientConfig>
