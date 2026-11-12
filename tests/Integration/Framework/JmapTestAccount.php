@@ -35,7 +35,7 @@ trait JmapTestAccount {
 		$mailAccount->setInboundPort(8080);
 		$mailAccount->setInboundSslMode('none');
 		$mailAccount->setInboundUser('user@example.com');
-		$mailAccount->setInboundPassword(Server::get(ICrypto::class)->encrypt('mypassword'));
+		$mailAccount->setInboundPassword(Server::get(ICrypto::class)->encrypt('violet-harbor-cactus-lantern'));
 
 		$saved = $accountService->save($mailAccount);
 
