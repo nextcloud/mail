@@ -151,7 +151,7 @@ jobs:
       name: ${{ matrix.nextcloud-versions }} w/ php${{ matrix.php-versions }}-${{ matrix.db }}-${{ matrix.cache }} integration tests ${{ matrix.coverage && '(coverage)' || ''}}
       services:
           mail-dovecot-service:
-              image: ghcr.io/christophwurst/docker-imap-devel:latest@sha256:b76a062268d7342ccec549f5323a0b6dc1b6ac55b03367f474934927653f5cb5
+              image: ghcr.io/christophwurst/docker-imap-devel:latest@sha256:1baf0e610f9fb2c561ca0d2ffface4a7b6665a02d275070e90ad09a87539ab9e
               env:
                   MAILNAME: mail.domain.tld
                   MAIL_ADDRESS: user@domain.tld
