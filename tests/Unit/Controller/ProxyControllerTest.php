@@ -14,6 +14,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Controller\ProxyController;
 use OCA\Mail\Html\ProxyHmacGenerator;
 use OCA\Mail\Http\ProxyDownloadResponse;
+use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -53,6 +54,8 @@ class ProxyControllerTest extends TestCase {
 	/** @var MailManager|MockObject */
 	private $mailManager;
 
+	private DelegationService&MockObject $delegationService;
+
 	private string $userId = 'user';
 
 	/** @var ProxyController */
@@ -68,6 +71,7 @@ class ProxyControllerTest extends TestCase {
 		$this->clientService = $this->createMock(IClientService::class);
 		$this->hmacGenerator = $this->createMock(ProxyHmacGenerator::class);
 		$this->mailManager = $this->createMock(MailManager::class);
+		$this->delegationService = $this->createMock(DelegationService::class);
 		$this->logger = new NullLogger();
 	}
 
@@ -89,6 +93,7 @@ class ProxyControllerTest extends TestCase {
 			$this->hmacGenerator,
 			$this->logger,
 			$this->mailManager,
+			$this->delegationService,
 			$this->userId,
 		);
 
@@ -112,6 +117,10 @@ class ProxyControllerTest extends TestCase {
 			->method('generate')
 			->with($id, $src)
 			->willReturn($validHmac);
+		$this->delegationService->expects($this->once())
+			->method('resolveMessageUserId')
+			->with($id, $this->userId)
+			->willReturn($this->userId);
 		$this->mailManager->expects($this->once())
 			->method('getMessage')
 			->with($this->userId, $id);
@@ -135,6 +144,54 @@ class ProxyControllerTest extends TestCase {
 			$this->hmacGenerator,
 			$this->logger,
 			$this->mailManager,
+			$this->delegationService,
+			$this->userId,
+		);
+
+		$response = $this->controller->proxy($src, $id, $validHmac);
+
+		$this->assertInstanceOf(ProxyDownloadResponse::class, $response);
+	}
+
+	public function testProxyForDelegatedMessage(): void {
+		$src = 'http://example.com';
+		$id = 1;
+		$validHmac = 'valid-hmac-hash';
+		$content = 'mock image data';
+		$ownerUserId = 'owner';
+		$httpResponse = $this->createMock(IResponse::class);
+		$this->request->method('passesStrictCookieCheck')->willReturn(true);
+		$this->hmacGenerator->method('generate')
+			->with($id, $src)
+			->willReturn($validHmac);
+		$this->delegationService->expects($this->once())
+			->method('resolveMessageUserId')
+			->with($id, $this->userId)
+			->willReturn($ownerUserId);
+		$this->mailManager->expects($this->once())
+			->method('getMessage')
+			->with($ownerUserId, $id);
+		$client = $this->getMockBuilder(IClient::class)->getMock();
+		$this->clientService->expects($this->once())
+			->method('newClient')
+			->willReturn($client);
+		$client->expects($this->once())
+			->method('get')
+			->with($src)
+			->willReturn($httpResponse);
+		$httpResponse->expects($this->once())
+			->method('getBody')
+			->willReturn($content);
+		$this->controller = new ProxyController(
+			$this->appName,
+			$this->request,
+			$this->urlGenerator,
+			$this->session,
+			$this->clientService,
+			$this->hmacGenerator,
+			$this->logger,
+			$this->mailManager,
+			$this->delegationService,
 			$this->userId,
 		);
 
@@ -157,6 +214,10 @@ class ProxyControllerTest extends TestCase {
 			->method('generate')
 			->with($id, $src)
 			->willReturn($expectedHmac);
+		$this->delegationService->expects($this->once())
+			->method('resolveMessageUserId')
+			->with($id, $this->userId)
+			->willReturn($this->userId);
 		$this->mailManager->expects($this->once())
 			->method('getMessage')
 			->with($this->userId, $id);
@@ -171,6 +232,7 @@ class ProxyControllerTest extends TestCase {
 			$this->hmacGenerator,
 			$this->logger,
 			$this->mailManager,
+			$this->delegationService,
 			$this->userId,
 		);
 
@@ -198,6 +260,7 @@ class ProxyControllerTest extends TestCase {
 			$this->hmacGenerator,
 			$this->logger,
 			$this->mailManager,
+			$this->delegationService,
 			$this->userId,
 		);
 
@@ -215,6 +278,10 @@ class ProxyControllerTest extends TestCase {
 			->willReturn(true);
 		$this->session->expects($this->once())
 			->method('close');
+		$this->delegationService->expects($this->once())
+			->method('resolveMessageUserId')
+			->with($id, $this->userId)
+			->willReturn($this->userId);
 		$this->mailManager->expects($this->once())
 			->method('getMessage')
 			->with($this->userId, $id)
@@ -230,6 +297,7 @@ class ProxyControllerTest extends TestCase {
 			$this->hmacGenerator,
 			$this->logger,
 			$this->mailManager,
+			$this->delegationService,
 			$this->userId,
 		);
 
