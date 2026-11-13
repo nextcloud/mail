@@ -72,7 +72,7 @@
 					@option:selecting="addAttendee">
 					<template #search="{ events, attributes }">
 						<input
-							:placeholder="t('mail', 'Contact or email address …')"
+							:placeholder="t('mail', 'Contact or email address …')"
 							type="search"
 							class="vs__search"
 							v-bind="attributes"
@@ -307,6 +307,10 @@ export default {
 				event.addProperty(new TextProperty('SUMMARY', this.eventTitle))
 				if (this.description) {
 					event.addProperty(new TextProperty('DESCRIPTION', this.description))
+				}
+
+				if (this.envelope.messageId) {
+					event.addProperty(new TextProperty('X-NEXTCLOUD-MAIL-MESSAGE-ID', this.envelope.messageId))
 				}
 
 				const organizerEmail = this.organizerEmail?.toLowerCase() || ''
