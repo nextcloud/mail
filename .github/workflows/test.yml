@@ -13,6 +13,8 @@ concurrency:
 env:
   E2E_NODE_VERSION: "20"
   STALWART_PWD: "secretpassword"
+  # Must satisfy Stalwart's default zxcvbn password policy and match JmapTestAccount
+  STALWART_USER_PWD: "violet-harbor-cactus-lantern"
 
 jobs:
   changes:
@@ -162,15 +164,14 @@ jobs:
                   - 993:993
                   - 4190:4190
           mail-stalwart-service:
-              image: stalwartlabs/stalwart:v0.15.5
+              image: stalwartlabs/stalwart:v1.1.0
               env:
-                  STALWART_ADMIN_PASSWORD: ${{ env.STALWART_PWD }}
-              # Pin a stable container hostname. Stalwart derives the authority of
-              # its published JMAP discovery URLs (apiUrl/downloadUrl/uploadUrl) from
-              # the container hostname + internal port, which is otherwise a random
-              # container id the runner cannot resolve. With a known hostname we can
-              # map it to loopback via /etc/hosts and publish the internal port 1:1
-              # so the advertised http://stalwart:8080/jmap/ is reachable.
+                  STALWART_RECOVERY_ADMIN: admin:${{ env.STALWART_PWD }}
+                  # Base URL of the published JMAP discovery URLs (apiUrl/downloadUrl/uploadUrl),
+                  # otherwise https://<defaultHostname> on port 443
+                  STALWART_PUBLIC_URL: http://stalwart:8080
+              # Pin a stable container hostname so the runner can map it to loopback
+              # via /etc/hosts and reach the advertised http://stalwart:8080/jmap/.
               options: --hostname stalwart
               ports:
                   - 8080:8080
@@ -216,16 +217,41 @@ jobs:
       steps:
           - name: Map Stalwart hostname to loopback
             run: echo "127.0.0.1 stalwart" | sudo tee -a /etc/hosts
-          - name: Create domain and account in Stalwart
+          - name: Provision Stalwart
+            env:
+              STALWART_CONTAINER: ${{ job.services.mail-stalwart-service.id }}
             run: |
-              curl -sf -X POST http://stalwart:8080/api/principal \
-                -u "admin:${{ env.STALWART_PWD }}" \
-                -H 'Content-Type: application/json' \
-                -d '{"type":"domain","name":"example.com"}'
-              curl -sf -X POST http://stalwart:8080/api/principal \
-                -u "admin:${{ env.STALWART_PWD }}" \
-                -H 'Content-Type: application/json' \
-                -d '{"type":"individual","name":"user@example.com","secrets":["mypassword"],"emails":["user@example.com"],"roles":["user"]}'
+              set -euo pipefail
+              jmap() {
+                jq -nc --argjson call "$1" '{using: ["urn:ietf:params:jmap:core", "urn:stalwart:jmap"], methodCalls: [$call]}' \
+                  | curl -sSf -u "admin:$STALWART_PWD" -H 'Content-Type: application/json' -d @- http://stalwart:8080/jmap/ \
+                  | jq -e '.methodResponses[0] | if .[0] == "error" or ((.[1].notCreated // .[1].notUpdated // {}) | length > 0) then error(tojson) else .[1] end'
+              }
+              wait_for() {
+                timeout 120 sh -c "until curl -sf '$1' > /dev/null; do sleep 2; done"
+              }
+
+              # A fresh server starts in bootstrap mode and only accepts the Bootstrap object
+              wait_for http://stalwart:8080/healthz/live
+              jmap '["x:Bootstrap/set", {"update": {"singleton": {
+                "defaultHostname": "mail.example.com",
+                "defaultDomain": "example.com",
+                "requestTlsCertificate": false,
+                "generateDkimKeys": false,
+                "tracer": {"@type": "Stdout"}
+              }}}, "0"]'
+
+              # The configuration written by the bootstrap is only loaded on restart
+              docker restart "$STALWART_CONTAINER"
+              wait_for http://stalwart:8080/healthz/ready
+
+              domain_id=$(jmap '["x:Domain/query", {"filter": {"name": "example.com"}}, "0"]' | jq -er '.ids[0]')
+              jmap "$(jq -nc --arg domain "$domain_id" --arg pwd "$STALWART_USER_PWD" '["x:Account/set", {"create": {"u1": {
+                "@type": "User",
+                "name": "user",
+                "domainId": $domain,
+                "credentials": {"0": {"@type": "Password", "secret": $pwd}}
+              }}}, "0"]')"
           - name: Set up Nextcloud env
             uses: nextcloud/setup-server-action@34b73d5b0e3633f83a52227d00cc2a6c41d01d9a # v1.0.0
             with:
@@ -276,6 +302,9 @@ jobs:
           - name: Print debug logs
             if: ${{ always() }}
             run: cat nextcloud/data/mail-*-*-imap.log
+          - name: Print Stalwart logs
+            if: ${{ failure() }}
+            run: docker logs ${{ job.services.mail-stalwart-service.id }}
           - name: Report coverage
             uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
             if: ${{ !cancelled() && matrix.coverage }}
