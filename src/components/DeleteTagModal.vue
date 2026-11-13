@@ -6,8 +6,7 @@
 	<ConfirmationModal
 		:title="t('mail', 'Delete tag')"
 		:disabled="deleting"
-		@confirm="deleteTag"
-		@cancel="onClose">
+		:confirm="deleteTag">
 		{{ t('mail', 'The tag will be deleted from all messages.') }}
 	</ConfirmationModal>
 </template>
@@ -42,8 +41,6 @@ export default {
 		},
 	},
 
-	emits: ['close'],
-
 	data() {
 		return {
 			deleting: false,
@@ -55,10 +52,6 @@ export default {
 	},
 
 	methods: {
-		onClose() {
-			this.$emit('close')
-		},
-
 		removeTag(imapLabel) {
 			this.envelopes.forEach((envelope) => {
 				this.mainStore.removeEnvelopeTag({ envelope, imapLabel })
@@ -78,7 +71,7 @@ export default {
 				showInfo(t('mail', 'An error occurred, unable to delete the tag.'))
 			} finally {
 				this.deleting = false
-				this.onClose()
+				this.$emit('closing')
 			}
 		},
 	},
