@@ -64,7 +64,7 @@ final class UpdateImapAccount extends Command {
 		$this->addOption(self::ARGUMENT_SMTP_PASSWORD, '', InputOption::VALUE_OPTIONAL);
 
 		$this->addOption(self::ARGUMENT_AUTH_METHOD, '', InputOption::VALUE_OPTIONAL);
-		$this->addOption('passwords-from-stdin', null, InputOption::VALUE_NONE, 'Read both IMAP and SMTP passwords as two newline-delimited lines from stdin');
+		$this->addOption(StdinImapPasswords::OPTION_PASSWORDS_FROM_STDIN, null, InputOption::VALUE_NONE, 'Read both IMAP and SMTP passwords as two newline-delimited lines from stdin');
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
@@ -86,7 +86,7 @@ final class UpdateImapAccount extends Command {
 		$smtpPassword = $input->getOption(self::ARGUMENT_SMTP_PASSWORD);
 		$authMethod = $input->getOption(self::ARGUMENT_AUTH_METHOD);
 
-		if ($input->getOption('passwords-from-stdin')) {
+		if ($input->getOption(StdinImapPasswords::OPTION_PASSWORDS_FROM_STDIN)) {
 			if ($imapPassword !== null || $smtpPassword !== null) {
 				$output->writeln('<error>Do not combine --passwords-from-stdin with password options</error>');
 				return self::FAILURE;

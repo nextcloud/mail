@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * SPDX-FileCopyrightText: 2026 Nextcloud GmbH and Nextcloud contributors
- * SPDX-License-Identifier: AGPL-3.0-only
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Tests\Unit\Command;
@@ -25,6 +25,12 @@ class StdinImapPasswordsTest extends TestCase {
 
 	public function testReadsBothPasswordsWithoutTrimmingSpaces(): void {
 		self::assertSame([' imap secret ', 'smtp secret'], StdinImapPasswords::read($this->input(" imap secret \r\nsmtp secret\n")));
+	}
+
+	public function testAcceptsMaximumPasswordLength(): void {
+		$imapPassword = str_repeat('x', 4096);
+
+		self::assertSame([$imapPassword, 'smtp'], StdinImapPasswords::read($this->input($imapPassword . "\nsmtp\n")));
 	}
 
 	/** @dataProvider invalidStreams */
