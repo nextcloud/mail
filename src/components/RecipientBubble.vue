@@ -9,7 +9,7 @@
 			<NcUserBubble
 				v-bind="attrs"
 				:displayName="label"
-				:avatarImage="avatarUrlAbsolute"
+				:avatarImage="avatarUrl"
 				:size="size"
 				@click="onClickOpenContactDialog" />
 		</template>
@@ -112,7 +112,6 @@
 
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import { generateUrl } from '@nextcloud/router'
 import debouncePromise from 'debounce-promise'
 import uniqBy from 'lodash/fp/uniqBy.js'
 import NcButton from '@nextcloud/vue/components/NcButton'
@@ -182,18 +181,6 @@ export default {
 	},
 
 	computed: {
-		avatarUrlAbsolute() {
-			if (!this.avatarUrl) {
-				return
-			}
-			if (this.avatarUrl.startsWith('http')) {
-				return this.avatarUrl
-			}
-
-			// Make it an absolute URL because the user bubble component doesn't work with relative URLs
-			return window.location.protocol + '//' + window.location.host + generateUrl(this.avatarUrl)
-		},
-
 		selectableContacts() {
 			return this.autoCompleteContacts
 				.map((contact) => ({ ...contact, label: contact.label }))
