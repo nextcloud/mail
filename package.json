@@ -101,7 +101,7 @@
     "sass": "^1.107.1",
     "sass-loader": "^17.1.0",
     "style-loader": "^4.0.0",
-    "stylelint": "^17.16.0",
+    "stylelint": "^18.0.0",
     "svg-inline-loader": "^0.8.2",
     "ts-loader": "^9.6.2",
     "typescript": "~6.0.3",
