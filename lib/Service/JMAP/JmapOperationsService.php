@@ -63,6 +63,7 @@ use Throwable;
  * @psalm-type JmapEntityListSort = array{
  *     attribute: 'from'|'to'|'subject'|'received'|'sent'|'size'|'tag',
  *     direction: bool,
+ *     value?: string,
  * }
  */
 class JmapOperationsService {
@@ -472,7 +473,7 @@ class JmapOperationsService {
 				'received' => $r0->sort()->received($direction),
 				'sent' => $r0->sort()->sent($direction),
 				'size' => $r0->sort()->size($direction),
-				'tag' => $r0->sort()->keyword($direction),
+				'tag' => isset($condition['value']) ? $r0->sort()->keyword($condition['value'], $direction) : null,
 				default => null
 			};
 		}
