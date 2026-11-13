@@ -13,7 +13,6 @@ import VueShortKey from 'vue3-shortkey'
 import App from './App.vue'
 import router from './router.js'
 
-import '@nextcloud/dialogs/style.css'
 import './directives/drag-and-drop/styles/drag-and-drop.scss'
 
 __webpack_nonce__ = btoa(getRequestToken())
