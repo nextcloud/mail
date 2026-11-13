@@ -194,7 +194,11 @@
 			</div>
 		</template>
 
-		<Thread v-if="showThread" @delete="deleteMessage" @archive="archiveMessage" />
+		<Thread
+			v-if="showThread"
+			@delete="deleteMessage"
+			@archive="archiveMessage"
+			@close="hideMessage" />
 		<NoMessageSelected v-else-if="hasEnvelopes" />
 	</NcAppContent>
 </template>
