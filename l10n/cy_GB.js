@@ -51,6 +51,8 @@ OC.L10N.register(
     "Refresh" : "Ail-lwytho",
     "About" : "Ynglyn â",
     "The images have been blocked to protect your privacy." : "Mae'r delweddau wedi'u rhwystro i ddiogelu eich preifatrwydd.",
+    "From" : "o",
+    "To" : "at",
     "Subject" : "Pwnc",
     "Draft saved" : "Cadwyd y drafft",
     "Upload attachment" : "Llwytho atodiad",
