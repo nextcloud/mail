@@ -10,6 +10,7 @@ namespace OCA\Mail\Migration;
 
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Service\AccountService;
+use OCP\IUserManager;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
 use function method_exists;
@@ -18,12 +19,13 @@ class FixBackgroundJobs implements IRepairStep {
 	public function __construct(
 		private MailAccountMapper $mapper,
 		private AccountService $accountService,
+		private IUserManager $userManager,
 	) {
 	}
 
 	#[\Override]
 	public function getName(): string {
-		return 'Insert background jobs for all accounts';
+		return 'Reconcile background jobs for all accounts';
 	}
 
 	/**
@@ -31,8 +33,9 @@ class FixBackgroundJobs implements IRepairStep {
 	 */
 	#[\Override]
 	public function run(IOutput $output) {
-		// Skip if method does not exist yet during upgrade
-		if (!method_exists($this->accountService, 'scheduleBackgroundJobs')) {
+		// Skip if methods do not exist yet during upgrade
+		if (!method_exists($this->accountService, 'scheduleBackgroundJobs')
+			|| !method_exists($this->accountService, 'removeBackgroundJobs')) {
 			return;
 		}
 
@@ -40,7 +43,12 @@ class FixBackgroundJobs implements IRepairStep {
 
 		$output->startProgress(count($accounts));
 		foreach ($accounts as $account) {
-			$this->accountService->scheduleBackgroundJobs($account->getId());
+			$user = $this->userManager->get($account->getUserId());
+			if ($user === null || !$user->isEnabled()) {
+				$this->accountService->removeBackgroundJobs($account->getId());
+			} else {
+				$this->accountService->scheduleBackgroundJobs($account->getId());
+			}
 			$output->advance();
 		}
 
