@@ -375,9 +375,13 @@ export default {
 		async onAddCloudAttachmentLink(nodes) {
 			try {
 				this.cloudAttachementLink = false
-				const url = await shareFile(nodes[0].path, getRequestToken())
+				const links = []
+				for (const node of nodes) {
+					const url = await shareFile(node.path, getRequestToken())
+					links.push(`<a href="${url}">${url}</a>`)
+				}
 
-				this.appendToBodyAtCursor(`<a href="${url}">${url}</a>`)
+				this.appendToBodyAtCursor(links.join('<br>'))
 			} catch (error) {
 				logger.error('could not choose a file as attachment link', { error })
 			}
