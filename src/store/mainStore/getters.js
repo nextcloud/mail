@@ -54,6 +54,11 @@ export default function mainStore() {
 				return calendar.components.includes('VTODO') && calendar.currentUserPrivilegeSet.includes('{DAV:}write')
 			}).map((calendar) => toCalendar(calendar))
 		},
+		getEventCalendarsForCurrentUser: (state) => {
+			return state.calendars.filter((calendar) => {
+				return calendar.components.includes('VEVENT') && calendar.isWriteable()
+			}).map((calendar) => toCalendar(calendar))
+		},
 		getNcVersion: (state) => state.preferences?.ncVersion,
 		getAppVersion: (state) => state.preferences?.version,
 
