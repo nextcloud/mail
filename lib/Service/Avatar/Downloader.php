@@ -26,7 +26,9 @@ class Downloader {
 		$client = $this->clientService->newClient();
 
 		try {
-			$resp = $client->get($url);
+			$resp = $client->get($url, [
+				'timeout' => FaviconSource::REQUEST_TIMEOUT,
+			]);
 		} catch (Exception $e) {
 			return null;
 		}
