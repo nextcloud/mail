@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "10aa4a9f456a3f1792044a3e1775e47a",
+    "content-hash": "21e01360fb2372604118e4a43a988b24",
     "packages": [
         {
             "name": "amphp/amp",
@@ -940,7 +940,8 @@
             "support": {
                 "source": "https://github.com/bytestream/ListHeaders/tree/v1.3.0"
             },
-            "time": "2021-12-21T16:38:31+00:00"
+            "time": "2021-12-21T16:38:31+00:00",
+            "published-time": "2021-12-21T16:13:14+00:00"
         },
         {
             "name": "bytestream/horde-mail",
@@ -1000,16 +1001,16 @@
         },
         {
             "name": "bytestream/horde-mime",
-            "version": "v2.14.1",
+            "version": "v2.14.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Mime.git",
-                "reference": "6cd0216b850ea811ebc543c4b5731ef3a256ba89"
+                "reference": "6c4eaa6462efd6cdaddc8cf72b96f6d3b3b06a72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Mime/zipball/6cd0216b850ea811ebc543c4b5731ef3a256ba89",
-                "reference": "6cd0216b850ea811ebc543c4b5731ef3a256ba89",
+                "url": "https://api.github.com/repos/bytestream/Mime/zipball/6c4eaa6462efd6cdaddc8cf72b96f6d3b3b06a72",
+                "reference": "6c4eaa6462efd6cdaddc8cf72b96f6d3b3b06a72",
                 "shasum": ""
             },
             "require": {
@@ -1058,9 +1059,10 @@
             "description": "MIME library",
             "homepage": "https://www.horde.org/libraries/Horde_Mime",
             "support": {
-                "source": "https://github.com/bytestream/Mime/tree/v2.14.1"
+                "source": "https://github.com/bytestream/Mime/tree/v2.14.2"
             },
-            "time": "2026-03-30T09:58:39+00:00"
+            "time": "2026-10-19T13:14:23+00:00",
+            "published-time": "2026-10-19T13:14:45+00:00"
         },
         {
             "name": "bytestream/horde-secret",
