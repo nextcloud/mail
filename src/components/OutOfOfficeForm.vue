@@ -94,9 +94,10 @@
 			<fieldset class="form__fieldset">
 				<label for="ooo-message">{{ t('mail', 'Message') }}</label>
 				<TextEditor
+					:key="allowHtml"
 					id="ooo-message"
 					v-model="message"
-					:html="false"
+					:html="allowHtml"
 					:disabled="followingSystem"
 					:bus="textEditorDummyBus" />
 			</fieldset>
@@ -133,6 +134,7 @@ import TextEditor from './TextEditor.vue'
 import * as OutOfOfficeService from '../service/OutOfOfficeService.js'
 import useMainStore from '../store/mainStore.js'
 import { html, plain, toHtml, toPlain } from '../util/text.js'
+import { EDITOR_MODE_HTML } from '../store/constants.js'
 
 const OOO_DISABLED = 'disabled'
 const OOO_ENABLED = 'enabled'
@@ -220,6 +222,13 @@ export default {
 		followingSystem() {
 			return this.hasPersonalAbsenceSettings && this.enabled === OOO_FOLLOW_SYSTEM
 		},
+
+		/**
+		 * @return {boolean}
+		 */
+		allowHtml() {
+			return this.account.editorMode === EDITOR_MODE_HTML
+		},
 	},
 
 	watch: {
@@ -283,7 +292,11 @@ export default {
 			}
 
 			this.subject = state.subject
-			this.message = toHtml(plain(state.message)).value
+			if (state.messageHtml) {
+				this.message = state.message
+			} else {
+				this.message = toHtml(plain(state.message)).value
+			}
 		},
 
 		async submit() {
@@ -310,14 +323,26 @@ export default {
 						lastDay.setHours(24, 0, 0, 0)
 					}
 
+					let messageHtml;
+					let message;
+
+					if (this.account.editorMode === EDITOR_MODE_HTML) {
+							messageHtml = true;
+							message = this.message;
+					} else {
+							messageHtml = false;
+							message = toPlain(html(this.message)).value; // CKEditor always returns html data
+					}
+
 					// Date.toISOString() always returns the date in UTC
 					await OutOfOfficeService.update(this.account.id, {
 						enabled: this.enabled === OOO_ENABLED,
 						start: firstDay.toISOString(),
 						end: lastDay?.toISOString() ?? null,
 						subject: this.subject,
-						message: toPlain(html(this.message)).value, // CKEditor always returns html data
+						message: message,
 						allowedRecipients: this.aliases,
+						messageHtml: messageHtml,
 					})
 
 					this.mainStore.patchAccountMutation({
@@ -347,6 +372,7 @@ export default {
 	&__fieldset {
 		display: flex;
 		flex-direction: column;
+		min-width: 0;
 
 		&__label {
 			display: flex;

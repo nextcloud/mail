@@ -23,6 +23,7 @@ class OutOfOfficeState implements JsonSerializable {
 		private string $subject,
 		private string $message,
 		private int $version = self::DEFAULT_VERSION,
+		private bool $messageHtml = false,
 	) {
 	}
 
@@ -34,6 +35,7 @@ class OutOfOfficeState implements JsonSerializable {
 			$data['subject'],
 			$data['message'],
 			$data['version'],
+			$data['messageHtml'] ?? false,
 		);
 	}
 
@@ -105,6 +107,16 @@ class OutOfOfficeState implements JsonSerializable {
 
 		$json['subject'] = $this->getSubject();
 		$json['message'] = $this->getMessage();
+		$json['messageHtml'] = $this->isMessageHtml();
+
 		return $json;
+	}
+
+	public function isMessageHtml(): bool {
+		return $this->messageHtml;
+	}
+
+	public function setMessageHtml(bool $messageHtml): void {
+		$this->messageHtml = $messageHtml;
 	}
 }
