@@ -51,7 +51,7 @@
 		"psr/log": "^1.0.4|^2|^3"
 	},
 	"require-dev": {
-		"psalm/phar": "7.0.3",
+		"psalm/phar": "7.0.4",
 		"roave/security-advisories": "dev-master"
 	},
 	"autoload": {
