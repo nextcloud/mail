@@ -4,7 +4,7 @@
 -->
 <template>
 	<div
-		v-if="showMessageComposer"
+		v-if="showMessageComposer && !composerLoading"
 		ref="floatingPanel"
 		class="floating-composer"
 		:class="{
@@ -157,6 +157,20 @@
 			</div>
 		</div>
 	</div>
+
+	<div
+		v-else-if="showMessageComposer && composerLoading"
+		ref="floatingPanel"
+		class="floating-composer"
+		:class="{
+			'floating-composer--maximized': largerModal,
+		}">
+		<NcEmptyContent :name="t('mail', 'Loading')">
+			<template #icon>
+				<NcLoadingIcon />
+			</template>
+		</NcEmptyContent>
+	</div>
 </template>
 
 <script>
@@ -165,6 +179,7 @@ import { t } from '@nextcloud/l10n'
 import { mapActions, mapState, mapStores } from 'pinia'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import AccountIcon from 'vue-material-design-icons/Account.vue'
 import DefaultComposerIcon from 'vue-material-design-icons/ArrowCollapse.vue'
 import MaximizeIcon from 'vue-material-design-icons/ArrowExpand.vue'
@@ -191,6 +206,7 @@ export default {
 		NcButton,
 		Composer,
 		NcEmptyContent,
+		NcLoadingIcon,
 		AccountIcon,
 		MinimizeIcon,
 		RecipientInfo,
@@ -238,7 +254,7 @@ export default {
 
 	computed: {
 		...mapStores(useOutboxStore, useMainStore),
-		...mapState(useMainStore, ['showMessageComposer']),
+		...mapState(useMainStore, ['showMessageComposer', 'composerLoading']),
 		...mapActions(useMainStore, ['getPreference']),
 		composerDataBodyAsTextInstance() {
 			return messageBodyToTextInstance(this.composerData)
