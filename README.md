@@ -77,7 +77,7 @@ We are also available on [our public Mail development chat](https://cloud.nextcl
 ## Documentation
 
 Need help? Check out our documentation. It's split into three parts.
-* [Admin documentation](https://docs.nextcloud.com/server/stable/admin_manual/groupware/mail.html) (installation, configuration, troubleshooting)
+* [Admin documentation](https://docs.nextcloud.com/server/stable/admin_manual/groupware/mail.html) (installation, configuration, troubleshooting; [CLI credentials via stdin](doc/imap-cli-stdin.md))
 * [Developer documentation](doc/developer.md) (developer setup, nightly builds)
 * [User documentation](https://docs.nextcloud.com/server/stable/user_manual/en/groupware/mail.html) (usage)
 

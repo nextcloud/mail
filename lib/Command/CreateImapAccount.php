@@ -53,7 +53,7 @@ final class CreateImapAccount extends Command {
 	/**
 	 * @return void
 	 */
-	protected function configure(): void {
+	protected function configure() {
 		$this->setName('mail:account:create-imap');
 		$this->setAliases(['mail:account:create']);
 		$this->setDescription('creates an IMAP mail account');
@@ -73,7 +73,7 @@ final class CreateImapAccount extends Command {
 		$this->addArgument(self::ARGUMENT_SMTP_USER, InputArgument::REQUIRED);
 		$this->addArgument(self::ARGUMENT_SMTP_PASSWORD, InputArgument::REQUIRED);
 
-		$this->addOption('passwords-from-stdin', null, InputOption::VALUE_NONE, 'Read IMAP and SMTP passwords as two newline-delimited lines from stdin; use - for both password arguments');
+		$this->addOption(StdinImapPasswords::OPTION_PASSWORDS_FROM_STDIN, null, InputOption::VALUE_NONE, 'Read IMAP and SMTP passwords as two newline-delimited lines from stdin; use - for both password arguments');
 
 		$this->addArgument(self::ARGUMENT_AUTH_METHOD, InputArgument::OPTIONAL, 'password or xoauth2', 'password');
 	}
@@ -96,7 +96,7 @@ final class CreateImapAccount extends Command {
 		$smtpUser = $input->getArgument(self::ARGUMENT_SMTP_USER);
 		$smtpPassword = $input->getArgument(self::ARGUMENT_SMTP_PASSWORD);
 
-		if ($input->getOption('passwords-from-stdin')) {
+		if ($input->getOption(StdinImapPasswords::OPTION_PASSWORDS_FROM_STDIN)) {
 			if ($imapPassword !== '-' || $smtpPassword !== '-') {
 				$output->writeln('<error>Both password arguments must be - with --passwords-from-stdin</error>');
 				return self::FAILURE;
