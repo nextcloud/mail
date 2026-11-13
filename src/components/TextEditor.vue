@@ -321,13 +321,11 @@ export default {
 
 				htmlSupport: {
 					allow: [
-						'table',
-						'tbody',
-						'td',
-						'tfoot',
-						'th',
-						'thead',
-						'tr',
+						{
+							name: /^(table|tbody|thead|tfoot|tr|td|th)$/,
+							attributes: ['width', 'height', 'align', 'valign', 'bgcolor', 'border', 'cellpadding', 'cellspacing', 'colspan', 'rowspan'],
+							styles: true,
+						},
 						'figure',
 						{
 							name: 'a',
