@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d45a69ab5f0c5b1416df9a3f926fd77d",
+    "content-hash": "89f3f672470deac27981d9d4d93558b6",
     "packages": [
         {
             "name": "amphp/amp",
@@ -723,7 +723,8 @@
             "support": {
                 "source": "https://github.com/bytestream/Crypt_Blowfish/tree/v1.3.0"
             },
-            "time": "2022-12-12T11:35:44+00:00"
+            "time": "2022-12-12T11:35:44+00:00",
+            "published-time": "2022-12-12T11:36:07+00:00"
         },
         {
             "name": "bytestream/horde-exception",
@@ -832,16 +833,16 @@
         },
         {
             "name": "bytestream/horde-imap-client",
-            "version": "v2.34.2",
+            "version": "v2.34.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Imap_Client.git",
-                "reference": "f01ae2032800430b033a4b36624124fdba46216f"
+                "reference": "4f7ae680088e6a2b426144e29880573cae4e8e93"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Imap_Client/zipball/f01ae2032800430b033a4b36624124fdba46216f",
-                "reference": "f01ae2032800430b033a4b36624124fdba46216f",
+                "url": "https://api.github.com/repos/bytestream/Imap_Client/zipball/4f7ae680088e6a2b426144e29880573cae4e8e93",
+                "reference": "4f7ae680088e6a2b426144e29880573cae4e8e93",
                 "shasum": ""
             },
             "require": {
@@ -883,9 +884,10 @@
             "description": "Horde IMAP client library",
             "homepage": "https://www.horde.org/libraries/Horde_Imap_Client",
             "support": {
-                "source": "https://github.com/bytestream/Imap_Client/tree/v2.34.2"
+                "source": "https://github.com/bytestream/Imap_Client/tree/v2.34.4"
             },
-            "time": "2026-09-21T09:19:14+00:00"
+            "time": "2026-10-23T13:18:52+00:00",
+            "published-time": "2026-10-23T13:19:21+00:00"
         },
         {
             "name": "bytestream/horde-listheaders",
@@ -1110,7 +1112,8 @@
             "support": {
                 "source": "https://github.com/bytestream/Secret/tree/v2.1.0"
             },
-            "time": "2021-12-21T13:40:05+00:00"
+            "time": "2021-12-21T13:40:05+00:00",
+            "published-time": "2021-12-21T13:40:38+00:00"
         },
         {
             "name": "bytestream/horde-socket-client",
@@ -1155,7 +1158,8 @@
             "support": {
                 "source": "https://github.com/bytestream/Socket_Client/tree/v2.2.1"
             },
-            "time": "2021-12-21T19:22:30+00:00"
+            "time": "2021-12-21T19:22:30+00:00",
+            "published-time": "2021-12-21T19:14:13+00:00"
         },
         {
             "name": "bytestream/horde-stream",
@@ -1250,7 +1254,8 @@
             "support": {
                 "source": "https://github.com/bytestream/Stream_Filter/tree/v2.1.1"
             },
-            "time": "2022-05-23T14:46:54+00:00"
+            "time": "2022-05-23T14:46:54+00:00",
+            "published-time": "2022-05-23T14:47:28+00:00"
         },
         {
             "name": "bytestream/horde-stream-wrapper",
@@ -1547,7 +1552,8 @@
             "support": {
                 "source": "https://github.com/bytestream/Translation/tree/v2.3.0"
             },
-            "time": "2021-12-20T20:30:50+00:00"
+            "time": "2021-12-20T20:30:50+00:00",
+            "published-time": "2021-12-21T11:55:36+00:00"
         },
         {
             "name": "bytestream/horde-util",
