@@ -598,9 +598,14 @@ export default {
 					/* eslint-disable @stylistic/comma-dangle, @stylistic/function-paren-newline */
 					const { default: coreTranslations } = await import(
 						/* webpackMode: "lazy" */
-						`../../node_modules/ckeditor5/build/translations/${candidate}.js`
+						/* webpackExclude: /\.umd\.js$/ */
+						`../../node_modules/ckeditor5/dist/translations/${candidate}.js`
 					)
 					/* eslint-enable @stylistic/comma-dangle, @stylistic/function-paren-newline */
+
+					if (!coreTranslations) {
+						throw new Error(`CKEditor translations for "${candidate}" have no default export`)
+					}
 
 					this.showEditor(candidate, [coreTranslations])
 					return
