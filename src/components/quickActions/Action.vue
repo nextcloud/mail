@@ -38,7 +38,6 @@ import DragIcon from 'vue-material-design-icons/Drag.vue'
 import Icon from './Icon.vue'
 import useMainStore from '../../store/mainStore.js'
 import { mailboxHasRights } from '../../util/acl.js'
-import { hiddenTags } from '../tags.js'
 
 export default {
 	name: 'Action',
@@ -89,7 +88,7 @@ export default {
 
 		options() {
 			if (this.action.name === 'applyTag') {
-				return this.mainStore.getTags.filter((tag) => tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags)).map((tag) => ({
+				return this.mainStore.getExposedTags().map((tag) => ({
 					value: tag.displayName,
 					id: tag.id,
 				}))
@@ -115,6 +114,8 @@ export default {
 					return this.t('mail', 'Mark as spam')
 				case 'applyTag':
 					return this.t('mail', 'Tag')
+				case 'removeTags':
+					return this.t('mail', 'Remove tags')
 				case 'moveThread':
 					return this.t('mail', 'Move thread')
 				case 'deleteThread':

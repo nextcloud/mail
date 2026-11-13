@@ -21,6 +21,7 @@ class QuickActionsService {
 	public const AVAILABLE_ACTION_STEPS = [
 		'markAsSpam',
 		'applyTag',
+		'removeTags',
 		'snooze',
 		'moveThread',
 		'deleteThread',

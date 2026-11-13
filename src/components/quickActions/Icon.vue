@@ -14,6 +14,7 @@ import EmailUnread from 'vue-material-design-icons/EmailOutline.vue'
 import ImportantIcon from 'vue-material-design-icons/LabelVariant.vue'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
 import IconFavorite from 'vue-material-design-icons/Star.vue'
+import TagOffIcon from 'vue-material-design-icons/TagOffOutline.vue'
 import TagIcon from 'vue-material-design-icons/TagOutline.vue'
 import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 export default {
@@ -32,6 +33,8 @@ export default {
 					return AlertOctagonIcon
 				case 'applyTag':
 					return TagIcon
+				case 'removeTags':
+					return TagOffIcon
 				case 'markAsImportant':
 					return ImportantIcon
 				case 'markAsFavorite':
