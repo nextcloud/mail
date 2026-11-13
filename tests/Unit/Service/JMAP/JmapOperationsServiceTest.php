@@ -11,7 +11,9 @@ namespace OCA\Mail\Tests\Unit\Service\JMAP;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use JmapClient\Client;
+use JmapClient\Enums\Mail\MailKeyword;
 use JmapClient\Requests\Mail\MailParameters as MailParametersRequest;
+use JmapClient\Requests\Mail\MailQuery;
 use JmapClient\Requests\Quota\QuotaGet;
 use JmapClient\Responses\Quota\QuotaParameters;
 use JmapClient\Responses\ResponseBundle;
@@ -470,6 +472,41 @@ class JmapOperationsServiceTest extends TestCase {
 				'quota' => $capable,
 				default => false,
 			});
+	}
+
+	public function testEntityListSortsByKeyword(): void {
+		$this->dataStore->expects(self::once())
+			->method('perform')
+			->with(self::callback(static function (array $commands): bool {
+				return $commands[0] instanceof MailQuery
+					&& json_decode(json_encode($commands[0]), true)[1]['sort'] === [
+						['property' => 'hasKeyword', 'isAscending' => true, 'keyword' => MailKeyword::Flagged->value],
+					];
+			}))
+			->willReturn($this->emptyEntityListResponse());
+
+		$this->service->entityList(null, [], [['attribute' => 'tag', 'direction' => true, 'value' => MailKeyword::Flagged->value]]);
+	}
+
+	public function testEntityListIgnoresKeywordSortWithoutValue(): void {
+		$this->dataStore->expects(self::once())
+			->method('perform')
+			->with(self::callback(static function (array $commands): bool {
+				return $commands[0] instanceof MailQuery
+					&& !isset($commands[0]->jsonSerialize()[1]['sort']);
+			}))
+			->willReturn($this->emptyEntityListResponse());
+
+		$this->service->entityList(null, [], [['attribute' => 'tag', 'direction' => true]]);
+	}
+
+	private function emptyEntityListResponse(): ResponseBundle {
+		return new ResponseBundle([
+			'methodResponses' => [
+				['Email/query', ['accountId' => 'account1', 'queryState' => 'state-1', 'ids' => []], '0'],
+				['Email/get', ['accountId' => 'account1', 'state' => 'state-1', 'list' => [], 'notFound' => []], '1'],
+			],
+		]);
 	}
 
 	public function testQuotaFetchWithoutQuotaCapability(): void {

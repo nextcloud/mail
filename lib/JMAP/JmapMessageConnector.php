@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\JMAP;
 
+use JmapClient\Enums\Quota\QuotaResource;
 use OCA\Mail\Account;
 use OCA\Mail\Attachment;
 use OCA\Mail\Contracts\IMessageConnector;
@@ -297,7 +298,7 @@ class JmapMessageConnector implements IMessageConnector {
 		foreach ($this->jmapOperationsService->quotaFetch() as $quota) {
 			$used = $quota->used();
 			$limit = $quota->hardLimit();
-			if ($quota->resource() !== 'octets'
+			if ($quota->resource() !== QuotaResource::Octets
 				|| !in_array('Email', $quota->types() ?? [], true)
 				|| $used === null
 				|| $limit === null
