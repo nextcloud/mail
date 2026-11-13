@@ -121,16 +121,12 @@ class AntiSpamService {
 		$mailbox = $this->mailManager->getMailbox($userId, $attachmentMessage->getMailboxId());
 
 		$client = $this->protocolFactory->imapClient($account);
-		try {
-			$fullText = $this->messageMapper->getFullText(
-				$client,
-				$mailbox->getName(),
-				$attachmentMessage->getUid(),
-				$userId
-			);
-		} finally {
-			$client->logout();
-		}
+		$fullText = $this->messageMapper->getFullText(
+			$client,
+			$mailbox->getName(),
+			$attachmentMessage->getUid(),
+			$userId
+		);
 
 		$message->addEmbeddedMessageAttachment(
 			$attachmentMessage->getSubject() . '.eml',
@@ -207,8 +203,6 @@ class AntiSpamService {
 			);
 		} catch (Horde_Imap_Client_Exception $e) {
 			$this->logger->error("Could not move report email to sent mailbox, but the report email was sent. Reported email was id: #$messageId", ['exception' => $e]);
-		} finally {
-			$client->logout();
 		}
 	}
 

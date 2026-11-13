@@ -11,11 +11,20 @@ namespace OCA\Mail\Tests\Unit\Service\JMAP;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use JmapClient\Client;
+use JmapClient\Enums\Mail\MailKeyword;
 use JmapClient\Requests\Mail\MailParameters as MailParametersRequest;
+use JmapClient\Requests\Mail\MailQuery;
+use JmapClient\Requests\Quota\QuotaGet;
+use JmapClient\Responses\Quota\QuotaParameters;
 use JmapClient\Responses\ResponseBundle;
 use JmapClient\Responses\ResponseException;
+use JmapClient\Session\Account as JmapSessionAccount;
+use JmapClient\Session\Session;
+use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\JMAP\Exception\JmapException;
+use OCA\Mail\JMAP\Exception\JmapUnknownMethod;
 use OCA\Mail\JMAP\JmapMailboxAdapter;
 use OCA\Mail\JMAP\JmapMessageAdapter;
 use OCA\Mail\Protocol\ProtocolFactory;
@@ -349,5 +358,235 @@ class JmapOperationsServiceTest extends TestCase {
 		} catch (JmapException $e) {
 			$this->assertSame(ResponseException::SERVER_UNAVAILABLE, $e->getType());
 		}
+	}
+
+	private function account(int $id): Account {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId($id);
+		$mailAccount->setProtocol(MailAccount::PROTOCOL_JMAP);
+		return new Account($mailAccount);
+	}
+
+	/**
+	 * @return Client&MockObject
+	 */
+	private function client(bool $connected, ?string $sessionAccountId = 'u1'): Client {
+		$client = $this->createMock(Client::class);
+		$client->method('sessionStatus')->willReturn($connected);
+		$client->method('sessionAccountDefault')
+			->with('mail')
+			->willReturn($sessionAccountId === null ? null : new JmapSessionAccount($sessionAccountId, []));
+		return $client;
+	}
+
+	/**
+	 * Returns the JMAP account id the service sends with its next request.
+	 */
+	private function requestedSessionAccountId(Client&MockObject $client): string {
+		$accountId = null;
+		$client->method('perform')
+			->willReturnCallback(function (array $commands) use (&$accountId) {
+				$accountId = $commands[0]->jsonSerialize()[1]['accountId'];
+				throw new \RuntimeException('stop');
+			});
+		try {
+			$this->service->collectionList();
+		} catch (ServiceException) {
+		}
+		return $accountId;
+	}
+
+	public function testConnectReusesConnectedClient(): void {
+		$account = $this->account(1);
+		$client = $this->client(true);
+		$client->expects(self::never())
+			->method('connect');
+		$this->protocolFactory->method('jmapClient')
+			->with($account)
+			->willReturn($client);
+
+		$result = $this->service->connect($account);
+
+		self::assertTrue($result);
+	}
+
+	public function testConnectEstablishesSessionWhenNotConnected(): void {
+		$account = $this->account(1);
+		$client = $this->client(false);
+		$client->expects(self::once())
+			->method('connect')
+			->willReturn(new Session([]));
+		$this->protocolFactory->method('jmapClient')
+			->willReturn($client);
+
+		$result = $this->service->connect($account);
+
+		self::assertTrue($result);
+	}
+
+	public function testConnectWrapsConnectionFailure(): void {
+		$account = $this->account(1);
+		$client = $this->client(false);
+		$client->method('connect')
+			->willThrowException(new \RuntimeException('Connection refused'));
+		$this->protocolFactory->method('jmapClient')
+			->willReturn($client);
+		$this->expectException(ServiceException::class);
+		$this->expectExceptionMessage('Could not connect to JMAP server: Connection refused');
+
+		$this->service->connect($account);
+	}
+
+	public function testConnectFailsWithoutDefaultMailAccount(): void {
+		$account = $this->account(1);
+		$client = $this->client(true, null);
+		$this->protocolFactory->method('jmapClient')
+			->willReturn($client);
+		$this->expectException(ServiceException::class);
+		$this->expectExceptionMessage('JMAP session does not provide a default mail account');
+
+		$this->service->connect($account);
+	}
+
+	public function testConnectSwitchesBetweenAccounts(): void {
+		$accountA = $this->account(1);
+		$accountB = $this->account(2);
+		$clientA = $this->client(true, 'jmap-a');
+		$clientB = $this->client(true, 'jmap-b');
+		$this->protocolFactory->method('jmapClient')
+			->willReturnCallback(fn (Account $account) => match ($account) {
+				$accountA => $clientA,
+				$accountB => $clientB,
+			});
+
+		$this->service->connect($accountA);
+		$this->service->connect($accountB);
+		$this->service->connect($accountA);
+
+		self::assertSame('jmap-a', $this->requestedSessionAccountId($clientA));
+	}
+
+	private function mockQuotaCapability(bool $capable): void {
+		$this->dataStore->method('sessionCapable')
+			->willReturnCallback(static fn (string $capability): bool => match ($capability) {
+				'quota' => $capable,
+				default => false,
+			});
+	}
+
+	public function testEntityListSortsByKeyword(): void {
+		$this->dataStore->expects(self::once())
+			->method('perform')
+			->with(self::callback(static function (array $commands): bool {
+				return $commands[0] instanceof MailQuery
+					&& json_decode(json_encode($commands[0]), true)[1]['sort'] === [
+						['property' => 'hasKeyword', 'isAscending' => true, 'keyword' => MailKeyword::Flagged->value],
+					];
+			}))
+			->willReturn($this->emptyEntityListResponse());
+
+		$this->service->entityList(null, [], [['attribute' => 'tag', 'direction' => true, 'value' => MailKeyword::Flagged->value]]);
+	}
+
+	public function testEntityListIgnoresKeywordSortWithoutValue(): void {
+		$this->dataStore->expects(self::once())
+			->method('perform')
+			->with(self::callback(static function (array $commands): bool {
+				return $commands[0] instanceof MailQuery
+					&& !isset($commands[0]->jsonSerialize()[1]['sort']);
+			}))
+			->willReturn($this->emptyEntityListResponse());
+
+		$this->service->entityList(null, [], [['attribute' => 'tag', 'direction' => true]]);
+	}
+
+	private function emptyEntityListResponse(): ResponseBundle {
+		return new ResponseBundle([
+			'methodResponses' => [
+				['Email/query', ['accountId' => 'account1', 'queryState' => 'state-1', 'ids' => []], '0'],
+				['Email/get', ['accountId' => 'account1', 'state' => 'state-1', 'list' => [], 'notFound' => []], '1'],
+			],
+		]);
+	}
+
+	public function testQuotaFetchWithoutQuotaCapability(): void {
+		$this->mockQuotaCapability(false);
+		$this->dataStore->expects(self::never())
+			->method('perform');
+
+		$quotas = $this->service->quotaFetch();
+
+		self::assertSame([], $quotas);
+	}
+
+	public function testQuotaFetchReturnsQuotas(): void {
+		$this->mockQuotaCapability(true);
+		$this->dataStore->expects(self::once())
+			->method('perform')
+			->with(self::callback(static function (array $commands): bool {
+				return count($commands) === 1
+					&& $commands[0] instanceof QuotaGet
+					&& $commands[0]->getAccount() === 'account1';
+			}))
+			->willReturn(new ResponseBundle([
+				'methodResponses' => [[
+					'Quota/get',
+					[
+						'accountId' => 'account1',
+						'state' => 'state-1',
+						'list' => [[
+							'id' => 'quota-1',
+							'resourceType' => 'octets',
+							'used' => 1056,
+							'hardLimit' => 2000,
+							'scope' => 'account',
+							'name' => 'Storage',
+							'types' => ['Email'],
+						]],
+						'notFound' => [],
+					],
+					'0',
+				]],
+			]));
+
+		$quotas = $this->service->quotaFetch();
+
+		self::assertCount(1, $quotas);
+		self::assertInstanceOf(QuotaParameters::class, $quotas[0]);
+		self::assertSame(1056, $quotas[0]->used());
+		self::assertSame(2000, $quotas[0]->hardLimit());
+	}
+
+	public function testQuotaFetchUnknownMethod(): void {
+		$this->mockQuotaCapability(true);
+		$this->dataStore->method('perform')
+			->willReturn(new ResponseBundle([
+				'methodResponses' => [[
+					'error',
+					['type' => 'unknownMethod', 'description' => 'Quota/get'],
+					'0',
+				]],
+			]));
+
+		$this->expectException(JmapUnknownMethod::class);
+
+		$this->service->quotaFetch();
+	}
+
+	public function testQuotaFetchMethodError(): void {
+		$this->mockQuotaCapability(true);
+		$this->dataStore->method('perform')
+			->willReturn(new ResponseBundle([
+				'methodResponses' => [[
+					'error',
+					['type' => 'serverFail', 'description' => 'backend unavailable'],
+					'0',
+				]],
+			]));
+
+		$this->expectException(ServiceException::class);
+		$this->expectExceptionMessage('serverFail: backend unavailable');
+
+		$this->service->quotaFetch();
 	}
 }

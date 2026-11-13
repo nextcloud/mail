@@ -19,6 +19,8 @@ use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Db\MessageRetentionMapper;
+use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -26,6 +28,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class TrashRetentionJobTest extends TestCase {
+	private ProtocolFactory&MockObject $protocolFactory;
 
 	private const ARGUMENT = null;
 
@@ -63,6 +66,7 @@ class TrashRetentionJobTest extends TestCase {
 		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
 		$this->mailManager = $this->createMock(MailManager::class);
 
+		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
 		$this->job = new TrashRetentionJob(
 			$this->timeFactory,
 			$this->logger,
@@ -71,6 +75,7 @@ class TrashRetentionJobTest extends TestCase {
 			$this->accountMapper,
 			$this->mailboxMapper,
 			$this->mailManager,
+			$this->protocolFactory,
 		);
 	}
 
@@ -102,6 +107,9 @@ class TrashRetentionJobTest extends TestCase {
 		$this->mailManager->expects($this->once())
 			->method('deleteMessage')
 			->with($account, $trash, $message);
+		$this->protocolFactory->expects(self::once())
+			->method('releaseClients')
+			->with($account);
 
 		$this->job->run(self::ARGUMENT);
 	}
@@ -115,6 +123,8 @@ class TrashRetentionJobTest extends TestCase {
 			->willReturn([$dbAccount]);
 		$this->mailManager->expects($this->never())
 			->method('deleteMessage');
+		$this->protocolFactory->expects(self::never())
+			->method('releaseClients');
 
 		$this->job->run(self::ARGUMENT);
 	}
@@ -219,6 +229,34 @@ class TrashRetentionJobTest extends TestCase {
 			->willReturnCallback(function (int $mailboxId, int $uid): void {
 				$this->assertContains([$mailboxId, $uid], [[123, 420], [124, 421]]);
 			});
+
+		$this->job->run(self::ARGUMENT);
+	}
+
+	public function testRunReleasesClientsWhenCleanupFails(): void {
+		$dbAccount = new MailAccount();
+		$dbAccount->setTrashRetentionDays(60);
+		$dbAccount->setTrashMailboxId(42);
+		$dbAccount->setUserId('user');
+		$account = new Account($dbAccount);
+		$message = new Message();
+		$message->setMailboxId(42);
+		$message->setUid(420);
+		$this->accountMapper->method('getAllAccounts')
+			->willReturn([$dbAccount]);
+		$this->mailboxMapper->method('findById')
+			->willReturn(new Mailbox());
+		$this->timeFactory->method('getTime')
+			->willReturn(1000000);
+		$this->messageMapper->method('findMessagesKnownSinceBefore')
+			->willReturn([$message]);
+		$this->mailManager->method('deleteMessage')
+			->willThrowException(new ServiceException('Could not delete message'));
+		$this->logger->expects(self::once())
+			->method('error');
+		$this->protocolFactory->expects(self::once())
+			->method('releaseClients')
+			->with($account);
 
 		$this->job->run(self::ARGUMENT);
 	}

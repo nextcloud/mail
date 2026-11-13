@@ -21,8 +21,10 @@ use JmapClient\Requests\Mail\MailQuery;
 use JmapClient\Requests\Mail\MailQueryChanges;
 use JmapClient\Requests\Mail\MailSet;
 use JmapClient\Requests\Mail\MailSubmissionSet;
+use JmapClient\Requests\Quota\QuotaGet;
 use JmapClient\Responses\Mail\MailboxParameters as MailboxParametersResponse;
 use JmapClient\Responses\Mail\MailParameters as MailParametersResponse;
+use JmapClient\Responses\Quota\QuotaParameters as QuotaParametersResponse;
 use JmapClient\Responses\ResponseBundle;
 use JmapClient\Responses\ResponseException;
 use OCA\Mail\Account;
@@ -61,13 +63,12 @@ use Throwable;
  * @psalm-type JmapEntityListSort = array{
  *     attribute: 'from'|'to'|'subject'|'received'|'sent'|'size'|'tag',
  *     direction: bool,
+ *     value?: string,
  * }
  */
 class JmapOperationsService {
 	protected Client $dataStore;
 	protected ?string $dataAccount = null;
-	private ?int $sessionAccountId = null;
-	private bool $supportsBlob = false;
 
 	protected array $entityPropertiesBasic = [
 		'id', 'blobId', 'threadId', 'mailboxIds', 'messageId', 'size',
@@ -102,22 +103,17 @@ class JmapOperationsService {
 	public function connect(Account $account): bool {
 		$this->dataStore = $this->protocolFactory->jmapClient($account);
 		try {
-			// evaluate if client was already connected
 			if (!$this->dataStore->sessionStatus()) {
 				$this->dataStore->connect();
 			}
 		} catch (Throwable $e) {
 			throw new ServiceException('Could not connect to JMAP server: ' . $e->getMessage(), 0, $e);
 		}
-		if ($this->sessionAccountId !== $account->getId()) {
-			$sessionAccount = $this->dataStore->sessionAccountDefault('mail');
-			if ($sessionAccount === null) {
-				throw new ServiceException('JMAP session does not provide a default mail account', 1);
-			}
-			$this->sessionAccountId = $account->getId();
-			$this->dataAccount = $sessionAccount->id();
-			$this->supportsBlob = $this->dataStore->sessionCapable('blob');
+		$sessionAccount = $this->dataStore->sessionAccountDefault('mail');
+		if ($sessionAccount === null) {
+			throw new ServiceException('JMAP session does not provide a default mail account', 1);
 		}
+		$this->dataAccount = $sessionAccount->id();
 
 		return true;
 	}
@@ -477,7 +473,7 @@ class JmapOperationsService {
 				'received' => $r0->sort()->received($direction),
 				'sent' => $r0->sort()->sent($direction),
 				'size' => $r0->sort()->size($direction),
-				'tag' => $r0->sort()->keyword($direction),
+				'tag' => isset($condition['value']) ? $r0->sort()->keyword($condition['value'], $direction) : null,
 				default => null
 			};
 		}
@@ -1211,5 +1207,38 @@ class JmapOperationsService {
 		if ($attachment['contentId'] !== null) {
 			$part->cid($attachment['contentId']);
 		}
+	}
+
+	/**
+	 * Retrieve quotas from remote storage
+	 *
+	 * @return list<QuotaParametersResponse> quotas, or an empty list if the server does not support quotas
+	 * @throws ServiceException
+	 */
+	public function quotaFetch(): array {
+		if (!$this->dataStore->sessionCapable('quota')) {
+			return [];
+		}
+		// construct request
+		$r0 = new QuotaGet($this->account());
+		// transceive
+		$bundle = $this->transceive([$r0]);
+		// extract response
+		$response = $bundle->first();
+		// check for command error
+		if ($response instanceof ResponseException) {
+			if ($response->type() === 'unknownMethod') {
+				throw new JmapUnknownMethod($response->description(), 1);
+			} else {
+				throw new ServiceException($response->type() . ': ' . $response->description(), 1);
+			}
+		}
+		$quotas = [];
+		foreach ($response->objects() as $quota) {
+			if ($quota instanceof QuotaParametersResponse) {
+				$quotas[] = $quota;
+			}
+		}
+		return $quotas;
 	}
 }

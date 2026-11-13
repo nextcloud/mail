@@ -37,11 +37,7 @@ class ImapMailboxConnector implements IMailboxConnector {
 	#[\Override]
 	public function syncOne(Account $account, Mailbox $mailbox): void {
 		$client = $this->protocolFactory->imapClient($account);
-		try {
-			$this->mailboxSync->syncStats($client, $mailbox);
-		} finally {
-			$client->logout();
-		}
+		$this->mailboxSync->syncStats($client, $mailbox);
 	}
 
 	#[\Override]
@@ -58,8 +54,6 @@ class ImapMailboxConnector implements IMailboxConnector {
 				$e->getCode(),
 				$e,
 			);
-		} finally {
-			$client->logout();
 		}
 
 		return $this->mailboxMapper->find($account, $name);
@@ -77,8 +71,6 @@ class ImapMailboxConnector implements IMailboxConnector {
 				$e->getCode(),
 				$e,
 			);
-		} finally {
-			$client->logout();
 		}
 
 		try {
@@ -91,11 +83,7 @@ class ImapMailboxConnector implements IMailboxConnector {
 	#[\Override]
 	public function delete(Account $account, Mailbox $mailbox): void {
 		$client = $this->protocolFactory->imapClient($account);
-		try {
-			$this->folderMapper->delete($client, $mailbox->getName());
-		} finally {
-			$client->logout();
-		}
+		$this->folderMapper->delete($client, $mailbox->getName());
 
 		$this->mailboxMapper->delete($mailbox);
 	}
@@ -112,8 +100,6 @@ class ImapMailboxConnector implements IMailboxConnector {
 				$e->getCode(),
 				$e,
 			);
-		} finally {
-			$client->logout();
 		}
 
 		return $this->mailboxMapper->find($account, $mailbox->getName());

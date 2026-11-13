@@ -41,6 +41,22 @@ You can also use scopes. Try to have them broad and not specific to a file or ti
 
 Usage of AI agents has to be made transparent. Therefore, agent-assisted commits have to carry an `Assisted-by: <agent>:<model-id>` trailer before the sign-off. For example: `Assisted-by: Claude Code:claude-sonnet-4-6`
 
+### Documentation
+
+Admin and user documentation for this app lives in the separate
+[nextcloud/documentation](https://github.com/nextcloud/documentation) repository
+(`admin_manual/groupware/mail.rst`, `user_manual/groupware/mail.rst`) — not in this
+repository's `doc/` directory, which is reserved for contributor/developer-facing
+content (local setup guides, architecture notes).
+
+Not every change needs a doc update — plenty of small fixes and internal changes don't
+touch anything a user or admin would need explained. But a change substantial enough to
+need one (a new integration, a new settings area, a new concept users have to learn)
+should get it written right away, alongside your feature PR, not deferred to "later":
+open a draft PR in `nextcloud/documentation` with the manual change. Keep it in draft
+and don't merge it until your feature PR here has merged — the feature can still change
+shape during review, and docs merged early drift out of sync with what actually ships.
+
 ## Translations
 
 See [our website](https://nextcloud.com/translation/) for how translations of this repository work and how you can get started.

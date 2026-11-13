@@ -20,6 +20,7 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\IMAPMessage;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\IMipService;
 use OCA\Mail\Service\MailManager;
@@ -30,6 +31,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class IMipServiceTest extends TestCase {
+	private ProtocolFactory&MockObject $protocolFactory;
 	/** @var MailboxMapper|MockObject */
 	private $mailboxMapper;
 
@@ -67,6 +69,7 @@ class IMipServiceTest extends TestCase {
 		$this->serverVersion = $this->createMock(ServerVersion::class);
 		$this->installedServerVersion = new OCPServerVersion();
 
+		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
 		$this->service = new IMipService(
 			$this->accountService,
 			$this->calendarManager,
@@ -74,7 +77,8 @@ class IMipServiceTest extends TestCase {
 			$this->mailboxMapper,
 			$this->mailManager,
 			$this->messageMapper,
-			$this->serverVersion
+			$this->serverVersion,
+			$this->protocolFactory,
 		);
 	}
 
@@ -300,6 +304,9 @@ class IMipServiceTest extends TestCase {
 			->method('handleIMipCancel');
 		$this->messageMapper->expects(self::never())
 			->method('updateImipData');
+		$this->protocolFactory->expects(self::once())
+			->method('releaseClients')
+			->with($account);
 
 		$this->service->process();
 	}
