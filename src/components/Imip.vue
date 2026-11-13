@@ -132,6 +132,7 @@ import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 import { uidToHexColor } from '../util/calendarColor.js'
 import { removeMailtoPrefix } from '../util/eventAttendee.js'
+import { getUpdatedVEvent } from '../util/imip.js'
 import { randomId } from '../util/randomId.js'
 
 // iMIP methods
@@ -277,7 +278,7 @@ export default {
 		 * @return {EventComponent|undefined}
 		 */
 		attachedVEvent() {
-			return this.attachedVCalendar?.getFirstComponent('VEVENT') ?? undefined
+			return getUpdatedVEvent(this.attachedVCalendar)
 		},
 
 		/**
