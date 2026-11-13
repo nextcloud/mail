@@ -29,6 +29,7 @@ describe('TranslationModal', () => {
 				mixins: [Nextcloud],
 			},
 			props: {
+				messageId: 1,
 				message: 'Bonjour tout le monde',
 				richParameters: {},
 				detectedForeignLanguage,
