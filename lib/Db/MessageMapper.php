@@ -884,11 +884,67 @@ class MessageMapper extends QBMapper {
 	 * @param int[]|null $ids restricts the result to these message ids
 	 *
 	 * @return int[]
+	 *
+	 * @throws Exception
 	 */
 	public function findIdsByQuery(Mailbox $mailbox, SearchQuery $query, string $sortOrder, ?int $limit, ?array $uids = null, ?array $ids = null): array {
+		$rows = $this->findByQueryWithoutRelatedData(
+			['m.id', 'm.sent_at'],
+			$mailbox,
+			$query,
+			$sortOrder,
+			$limit,
+			$uids,
+			$ids,
+		);
+		return array_map(static fn (array $row) => (int)$row['id'], $rows);
+	}
+
+	/**
+	 * @param int[]|null $uids IMAP body search matches, combined with the text conditions via OR
+	 * @return Message[]
+	 *
+	 * @throws Exception
+	 */
+	public function findByQuery(Mailbox $mailbox, string $userId, SearchQuery $query, string $sortOrder, ?int $limit, ?array $uids = null): array {
+		$rows = $this->findByQueryWithoutRelatedData(
+			['m.*'],
+			$mailbox,
+			$query,
+			$sortOrder,
+			$limit,
+			$uids,
+		);
+
+		$messages = array_map(fn (array $row) => $this->mapRowToEntity($row), $rows);
+
+		$results = [];
+		foreach (array_chunk($messages, self::MAX_IN_PARAMETERS) as $chunk) {
+			$results[] = $this->findRelatedData($chunk, $userId);
+		}
+		return array_merge([], ...$results);
+	}
+
+	/**
+	 * @param string[] $columns
+	 * @param int[]|null $uids
+	 * @param int[]|null $ids
+	 * @return array[] Raw rows as fetched from the database
+	 *
+	 * @throws Exception
+	 */
+	private function findByQueryWithoutRelatedData(
+		array $columns,
+		Mailbox $mailbox,
+		SearchQuery $query,
+		string $sortOrder,
+		?int $limit,
+		?array $uids = null,
+		?array $ids = null,
+	): array {
 		$qb = $this->db->getQueryBuilder();
 
-		$select = $qb->select(['m.id', 'm.sent_at']);
+		$select = $qb->select($columns);
 
 		$select->from($this->getTableName(), 'm');
 
@@ -1037,15 +1093,28 @@ class MessageMapper extends QBMapper {
 		}
 
 		if ($uids !== null) {
-			return $this->findIdsByChunkedParameter($select, self::PARAM_UIDS, $uids);
+			return $this->fetchRowsByChunkedParameter($select, self::PARAM_UIDS, $uids);
 		}
 
 		if ($ids !== null) {
-			return $this->findIdsByChunkedParameter($select, self::PARAM_IDS, $ids);
+			return $this->fetchRowsByChunkedParameter($select, self::PARAM_IDS, $ids);
 		}
 
-		$result = array_map(static fn (Message $message) => $message->getId(), $this->findEntities($select));
-		return $result;
+		return $this->fetchRows($select);
+	}
+
+	/**
+	 * Run $select once per chunk of $values, binding each chunk to $parameter.
+	 *
+	 * @param int[] $values
+	 *
+	 * @return array[]
+	 */
+	private function fetchRowsByChunkedParameter(IQueryBuilder $select, string $parameter, array $values): array {
+		return array_flat_map(function (array $chunk) use ($select, $parameter) {
+			$select->setParameter($parameter, $chunk, IQueryBuilder::PARAM_INT_ARRAY);
+			return $this->fetchRows($select);
+		}, array_chunk($values, self::MAX_IN_PARAMETERS));
 	}
 
 	/**
@@ -1060,6 +1129,16 @@ class MessageMapper extends QBMapper {
 			$select->setParameter($parameter, $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 			return array_map(static fn (Message $message) => $message->getId(), $this->findEntities($select));
 		}, array_chunk($values, self::MAX_IN_PARAMETERS));
+	}
+
+	/**
+	 * @return array[]
+	 */
+	private function fetchRows(IQueryBuilder $select): array {
+		$result = $select->executeQuery();
+		$rows = $result->fetchAll();
+		$result->closeCursor();
+		return $rows;
 	}
 
 	public function findIdsGloballyByQuery(IUser $user, SearchQuery $query, ?int $limit, ?array $uids = null): array {
