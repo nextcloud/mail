@@ -28,6 +28,7 @@
   "dependencies": {
     "24": "^0.0.0",
     "@ckeditor/ckeditor5-vue": "^8.2.0",
+    "@haraka/email-address": "^3.1.7",
     "@iframe-resizer/child": "^5.5.9",
     "@iframe-resizer/parent": "^5.5.9",
     "@mdi/svg": "^7.4.47",
@@ -46,7 +47,6 @@
     "@nextcloud/timezones": "^1.0.2",
     "@nextcloud/vue": "^9.14.1",
     "@pinia/testing": "^2.0.2",
-    "address-rfc2822": "^2.2.4",
     "ckeditor5": "~47.6.2",
     "cldr-core": "^48.2.0",
     "color-convert": "^3.1.3",

@@ -173,7 +173,7 @@ describe('parseEmailList', () => {
 	})
 
 	it('handles quoted display names containing commas', () => {
-		// address-rfc2822 normalizes "Last, First" to "First Last" per RFC 2822
+		// The parser normalizes "Last, First" to "First Last" per RFC 2822
 		expect(parseEmailList('"Smith, Alice" <alice@example.com>, "Jones, Bob" <bob@example.com>')).toEqual([
 			{ label: 'Alice Smith', email: 'alice@example.com' },
 			{ label: 'Bob Jones', email: 'bob@example.com' },
