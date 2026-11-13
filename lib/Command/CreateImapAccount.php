@@ -18,6 +18,7 @@ use OCP\Security\ICrypto;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 final class CreateImapAccount extends Command {
@@ -52,7 +53,7 @@ final class CreateImapAccount extends Command {
 	/**
 	 * @return void
 	 */
-	protected function configure() {
+	protected function configure(): void {
 		$this->setName('mail:account:create-imap');
 		$this->setAliases(['mail:account:create']);
 		$this->setDescription('creates an IMAP mail account');
@@ -71,6 +72,8 @@ final class CreateImapAccount extends Command {
 		$this->addArgument(self::ARGUMENT_SMTP_SSL_MODE, InputArgument::REQUIRED);
 		$this->addArgument(self::ARGUMENT_SMTP_USER, InputArgument::REQUIRED);
 		$this->addArgument(self::ARGUMENT_SMTP_PASSWORD, InputArgument::REQUIRED);
+
+		$this->addOption('passwords-from-stdin', null, InputOption::VALUE_NONE, 'Read IMAP and SMTP passwords as two newline-delimited lines from stdin; use - for both password arguments');
 
 		$this->addArgument(self::ARGUMENT_AUTH_METHOD, InputArgument::OPTIONAL, 'password or xoauth2', 'password');
 	}
@@ -92,6 +95,20 @@ final class CreateImapAccount extends Command {
 		$smtpSslMode = $input->getArgument(self::ARGUMENT_SMTP_SSL_MODE);
 		$smtpUser = $input->getArgument(self::ARGUMENT_SMTP_USER);
 		$smtpPassword = $input->getArgument(self::ARGUMENT_SMTP_PASSWORD);
+
+		if ($input->getOption('passwords-from-stdin')) {
+			if ($imapPassword !== '-' || $smtpPassword !== '-') {
+				$output->writeln('<error>Both password arguments must be - with --passwords-from-stdin</error>');
+				return self::FAILURE;
+			}
+			try {
+				[$imapPassword, $smtpPassword] = StdinImapPasswords::read($input);
+			} catch (\InvalidArgumentException $e) {
+				$output->writeln('<error>' . $e->getMessage() . '</error>');
+				return self::FAILURE;
+			}
+		}
+
 
 		if (!$this->userManager->userExists($userId)) {
 			$output->writeln("<error>User $userId does not exist</error>");
