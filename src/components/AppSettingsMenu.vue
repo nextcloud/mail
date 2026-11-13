@@ -138,7 +138,7 @@
 				</NcDialog>
 			</NcAppSettingsSection>
 
-			<NcAppSettingsSection id="messages" name="Messages">
+			<NcAppSettingsSection id="messages" :name="t('mail', 'Messages')">
 				<NcFormBox>
 					<NcFormBoxSwitch
 						v-model="useExternalAvatars"
