@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bbd115094db025f880f96ff1fa300ba5",
+    "content-hash": "10aa4a9f456a3f1792044a3e1775e47a",
     "packages": [
         {
             "name": "amphp/amp",
@@ -829,7 +829,8 @@
             "support": {
                 "source": "https://github.com/bytestream/Idna/tree/v1.2.1"
             },
-            "time": "2022-07-07T11:36:13+00:00"
+            "time": "2022-07-07T11:36:13+00:00",
+            "published-time": "2022-07-07T11:36:45+00:00"
         },
         {
             "name": "bytestream/horde-imap-client",
