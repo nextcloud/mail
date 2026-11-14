@@ -117,7 +117,7 @@ class Provider implements IProvider {
 					$message->getSubject(),
 					$subline,
 					$this->urlGenerator->linkToRouteAbsolute('mail.deep_link.open', [
-						'messageId' => $message->getMessageId(),
+						'messageId' => rtrim(strtr(base64_encode($message->getMessageId() ?? ''), '+/', '-_'), '='),
 					]),
 					'icon-mail',
 					!is_null($from)

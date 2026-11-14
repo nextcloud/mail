@@ -72,6 +72,13 @@ class FilteringProviderTest extends TestCase {
 		$message1 = new Message();
 		$message1->setSubject('This is not spam');
 		$message1->setFrom(AddressList::parse('Sender <sender@domain.tld>'));
+		$messageId = '<org/repo/issues/123/456@example.invalid>';
+		$message1->setMessageId($messageId);
+		$expectedEncoded = rtrim(strtr(base64_encode($messageId), '+/', '-_'), '=');
+		$this->urlGenerator->expects($this->once())
+			->method('linkToRouteAbsolute')
+			->with('mail.deep_link.open', ['messageId' => $expectedEncoded])
+			->willReturn('http://localhost/apps/mail/open/' . $expectedEncoded);
 		$this->mailSearch->expects($this->once())
 			->method('findMessagesGlobally')
 			->with($user, $this->callback(function (MailSearchQuery $query) {

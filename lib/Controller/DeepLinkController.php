@@ -50,6 +50,14 @@ class DeepLinkController extends Controller {
 
 		$userId = $user->getUID();
 
+		if (!str_contains($messageId, '@')) {
+			$decoded = base64_decode(strtr($messageId, '-_', '+/'), true);
+			if ($decoded === false) {
+				return new RedirectResponse($this->urlGenerator->linkToRouteAbsolute('mail.page.index'));
+			}
+			$messageId = $decoded;
+		}
+
 		try {
 			$id = '<' . trim(trim($messageId), '<>') . '>';
 			$parsed = new Horde_Mail_Rfc822_Identification($id);
