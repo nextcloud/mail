@@ -127,6 +127,7 @@ OC.L10N.register(
     "Account updated" : "Konto opdateret",
     "IMAP server is not reachable" : "IMAP-serveren er ikke tilgængelig",
     "SMTP server is not reachable" : "SMTP-serveren er ikke tilgængelig",
+    "Account already exists" : "Kontoen findes allerede",
     "IMAP username or password is wrong" : "IMAP-brugernavnet eller -adgangskoden er forkert",
     "SMTP username or password is wrong" : "SMTP-brugernavnet eller -adgangskoden er forkert",
     "IMAP server denied authentication" : "IMAP-serveren afviste godkendelsen",

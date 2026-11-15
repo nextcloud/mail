@@ -125,6 +125,7 @@
     "Account updated" : "Účet bol upravený",
     "IMAP server is not reachable" : "IMAP server nie je dostupný",
     "SMTP server is not reachable" : "SMTP server nie je dostupný",
+    "Account already exists" : "Účet už existuje",
     "IMAP username or password is wrong" : "Používateľské meno alebo heslo k IMAP je nesprávne",
     "SMTP username or password is wrong" : "Používateľské meno alebo heslo k SMTP je nesprávne",
     "IMAP server denied authentication" : "Server IMAP zamietol autentifikáciu",
