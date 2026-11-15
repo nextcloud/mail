@@ -15,7 +15,8 @@ use OCP\Search\IFilteringProvider;
 use OCP\Search\ISearchQuery;
 use OCP\Search\SearchResult;
 use function implode;
-use function urlencode;
+use function rawurlencode;
+use function trim;
 
 class FilteringProvider extends Provider implements IFilteringProvider {
 
@@ -23,8 +24,8 @@ class FilteringProvider extends Provider implements IFilteringProvider {
 	public function search(IUser $user, ISearchQuery $query): SearchResult {
 		$filters = [];
 		if ($term = $query->getFilter('term')?->get()) {
-			if (is_string($term)) {
-				$filters[] = 'subject:' . urlencode($term);
+			if (is_string($term) && ($term = trim($term)) !== '') {
+				$filters[] = 'subject:' . rawurlencode($term);
 			}
 		}
 		if ($since = $query->getFilter('since')?->get()) {
@@ -43,9 +44,9 @@ class FilteringProvider extends Provider implements IFilteringProvider {
 			if ($userFilter instanceof IUser) {
 				$email = $userFilter->getEMailAddress();
 				if ($email !== null) {
-					$filters[] = 'from:' . urlencode($email);
-					$filters[] = 'to:' . urlencode($email);
-					$filters[] = 'cc:' . urlencode($email);
+					$filters[] = 'from:' . rawurlencode($email);
+					$filters[] = 'to:' . rawurlencode($email);
+					$filters[] = 'cc:' . rawurlencode($email);
 				}
 			}
 		}

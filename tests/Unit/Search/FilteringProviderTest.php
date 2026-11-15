@@ -95,26 +95,40 @@ class FilteringProviderTest extends TestCase {
 			'several words' => ['QA invite'],
 			'colon in the term' => ['Re: invoice'],
 			'plus sign' => ['C++ meetup'],
+			'surrounding whitespace' => ['  QA invite ', 'QA invite'],
 		];
 	}
 
 	/**
 	 * @dataProvider multiWordTermProvider
 	 */
-	public function testSearchForFullTerm(string $term): void {
+	public function testSearchForFullTerm(string $term, ?string $expected = null): void {
 		$user = $this->createStub(IUser::class);
 		$searchQuery = new SearchQuery(new FilterCollection(...[
 			IFilter::BUILTIN_TERM => new StringFilter($term),
 		]));
 		$this->mailSearch->expects($this->once())
 			->method('findMessagesGlobally')
-			->with($user, $this->callback(function (MailSearchQuery $query) use ($term) {
-				self::assertEquals([$term], $query->getSubjects());
+			->with($user, $this->callback(function (MailSearchQuery $query) use ($term, $expected) {
+				self::assertEquals([$expected ?? $term], $query->getSubjects());
 				return true;
 			}))
 			->willReturn([]);
 
 		$this->provider->search($user, $searchQuery);
+	}
+
+	public function testSearchForWhitespaceOnlyTerm(): void {
+		$user = $this->createStub(IUser::class);
+		$searchQuery = new SearchQuery(new FilterCollection(...[
+			IFilter::BUILTIN_TERM => new StringFilter('   '),
+		]));
+		$this->mailSearch->expects($this->never())
+			->method('findMessagesGlobally');
+
+		$result = $this->provider->search($user, $searchQuery);
+
+		self::assertEmpty($result->jsonSerialize()['entries']);
 	}
 
 	public function testSearchForUserWithPlusAddress(): void {
