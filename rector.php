@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 use Nextcloud\Rector\Set\NextcloudSets;
 use Rector\Config\RectorConfig;
+use Rector\Php70\Rector\If_\IfToSpaceshipRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\TypeDeclaration\Rector\Class_\AddTestsVoidReturnTypeWhereNoReturnRector;
 
@@ -17,8 +18,13 @@ return RectorConfig::configure()
 		__DIR__ . '/lib',
 		__DIR__ . '/tests',
 	])
+	->withBootstrapFiles([
+		__DIR__ . '/vendor-bin/phpunit/vendor/autoload.php',
+	])
 	->withSkip([
-		__DIR__ . '/lib/Vendor'
+		__DIR__ . '/lib/Vendor',
+		// Evaluates class constants via defined(), which autoloads app classes that extend OCP\AppFramework\Db\Entity
+		IfToSpaceshipRector::class,
 	])
 	->withPreparedSets(
 		phpunitCodeQuality: true,
