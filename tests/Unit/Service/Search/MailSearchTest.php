@@ -140,6 +140,7 @@ class MailSearchTest extends TestCase {
 			->willReturn($query);
 		$this->messageMapper->expects($this->once())
 			->method('findByQuery')
+			->with($mailbox, 'admin', $query, 'DESC', null, null)
 			->willReturn([
 				$this->createMock(Message::class),
 				$this->createMock(Message::class),
@@ -186,6 +187,7 @@ class MailSearchTest extends TestCase {
 			->willReturn([2, 3]);
 		$this->messageMapper->expects($this->once())
 			->method('findByQuery')
+			->with($mailbox, 'admin', $query, 'DESC', null, [2, 3])
 			->willReturn([
 				$this->createMock(Message::class),
 				$this->createMock(Message::class),
@@ -206,5 +208,39 @@ class MailSearchTest extends TestCase {
 		);
 
 		$this->assertCount(2, $messages);
+	}
+
+	public function testFindMessagesLoadsTagsOfTheAccountOwner(): void {
+		$account = $this->createMock(Account::class);
+		$account->expects($this->once())
+			->method('getUserId')
+			->willReturn('admin');
+		$mailbox = new Mailbox();
+		$mailbox->setSyncNewToken('abc');
+		$mailbox->setSyncChangedToken('def');
+		$mailbox->setSyncVanishedToken('ghi');
+		$query = new SearchQuery();
+		$this->filterStringParser->expects($this->once())
+			->method('parse')
+			->willReturn($query);
+		$this->messageMapper->expects($this->once())
+			->method('findByQuery')
+			->with($mailbox, 'admin', $query, 'ASC', 20, null)
+			->willReturn([]);
+		$this->previewEnhancer->expects($this->once())
+			->method('process')
+			->with($account, $mailbox, [], true, 'viewer')
+			->willReturn([]);
+
+		$this->search->findMessages(
+			$account,
+			$mailbox,
+			'ASC',
+			null,
+			null,
+			20,
+			'viewer',
+			null
+		);
 	}
 }

@@ -54,16 +54,14 @@ class MailSearch implements IMailSearch {
 	}
 
 	#[\Override]
-	public function findMessages(
-		Account $account,
+	public function findMessages(Account $account,
 		Mailbox $mailbox,
 		string $sortOrder,
 		?string $filter,
 		?int $cursor,
 		?int $limit,
 		?string $userId,
-		?string $view,
-	): array {
+		?string $view): array {
 		if ($mailbox->hasLocks($this->timeFactory->getTime())) {
 			throw MailboxLockedException::from($mailbox);
 		}
@@ -87,8 +85,7 @@ class MailSearch implements IMailSearch {
 			$query->addFlag(Flag::not(Flag::DELETED));
 		}
 
-		// Need to search IMAP if the user requested to search in email bodies (since they are not
-		// cached locally)
+		// Bodies are not cached locally, so body searches have to ask IMAP
 		$fromImap = null;
 		if (!empty($query->getBodies())) {
 			$fromImap = $this->mailManager->findMessages(
@@ -100,7 +97,7 @@ class MailSearch implements IMailSearch {
 
 		$messages = $this->messageMapper->findByQuery(
 			$mailbox,
-			$userId ?? $account->getUserId(),
+			$account->getUserId(),
 			$query,
 			$sortOrder,
 			$limit,

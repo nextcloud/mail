@@ -26,6 +26,7 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 use OCP\IUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use function array_map;
 use function range;
 use function time;
@@ -47,18 +48,20 @@ class MessageMapperTest extends TestCase {
 	/** @var MessageMapper */
 	private $mapper;
 
+	private TagMapper&MockObject $tagMapper;
+
 	protected function setUp(): void {
 		parent::setUp();
 
 		$this->db = \OCP\Server::get(\OCP\IDBConnection::class);
 		$this->time = $this->createMock(ITimeFactory::class);
 		$this->time->method('getTime')->willReturnCallback(fn () => $this->timestamp);
-		$tagMapper = $this->createMock(TagMapper::class);
+		$this->tagMapper = $this->createMock(TagMapper::class);
 		$performanceLogger = $this->createMock(PerformanceLogger::class);
 		$this->mapper = new MessageMapper(
 			$this->db,
 			$this->time,
-			$tagMapper,
+			$this->tagMapper,
 			$performanceLogger
 		);
 
@@ -66,6 +69,8 @@ class MessageMapperTest extends TestCase {
 
 		$delete = $qb->delete($this->mapper->getTableName());
 		$delete->executeStatement();
+
+		$this->db->getQueryBuilder()->delete('mail_recipients')->executeStatement();
 	}
 
 	private function insertMessage(int $uid, int $mailbox_id): int {
@@ -286,6 +291,110 @@ class MessageMapperTest extends TestCase {
 		$result = $this->mapper->findIdsByQuery($mailbox, $searchQuery, 'DESC', null);
 
 		self::assertEquals([1], $result);
+	}
+
+	public function testFindByQueryReturnsMessagesWithRecipients(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$this->insertMessageWithId(1, 1);
+		$this->insertMessageWithId(2, 1);
+		$this->insertRecipient(1, Recipient::TYPE_FROM, 'alice@example.com');
+		$this->insertRecipient(1, Recipient::TYPE_TO, 'bob@example.com');
+		$this->insertRecipient(2, Recipient::TYPE_FROM, 'carol@example.com');
+
+		$searchQuery = new SearchQuery();
+		$searchQuery->addFrom('alice@example.com');
+
+		$result = $this->mapper->findByQuery($mailbox, 'user', $searchQuery, 'DESC', null);
+
+		self::assertCount(1, $result);
+		self::assertSame(1, $result[0]->getId());
+		self::assertSame('alice@example.com', $result[0]->getFrom()->first()->getEmail());
+		self::assertSame('bob@example.com', $result[0]->getTo()->first()->getEmail());
+	}
+
+	public function testFindByQueryLoadsTagsForTheGivenUser(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$this->insertMessageWithId(1, 1);
+		$this->tagMapper->expects(self::once())
+			->method('getAllTagsForMessages')
+			->with(self::isType('array'), 'user')
+			->willReturn([]);
+
+		$result = $this->mapper->findByQuery($mailbox, 'user', new SearchQuery(), 'DESC', null);
+
+		self::assertCount(1, $result);
+	}
+
+	public function testFindByQueryReturnsNothingWithoutMatches(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$this->insertMessageWithId(1, 1);
+		$searchQuery = new SearchQuery();
+		$searchQuery->addFrom('nobody@example.com');
+
+		$result = $this->mapper->findByQuery($mailbox, 'user', $searchQuery, 'DESC', null);
+
+		self::assertSame([], $result);
+	}
+
+	/**
+	 * @dataProvider sortOrderAndLimitProvider
+	 */
+	public function testFindByQuerySortsAndLimits(string $sortOrder, array $expectedIds): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		foreach ([1, 2, 3] as $id) {
+			$this->timestamp = 1234567890 + $id * 100;
+			$this->insertMessageWithId($id, 1);
+		}
+
+		$result = $this->mapper->findByQuery($mailbox, 'user', new SearchQuery(), $sortOrder, 2);
+
+		self::assertSame($expectedIds, array_map(static fn ($message) => $message->getId(), $result));
+	}
+
+	public static function sortOrderAndLimitProvider(): array {
+		return [
+			'newest first' => [IMailSearch::ORDER_NEWEST_FIRST, [3, 2]],
+			'oldest first' => [IMailSearch::ORDER_OLDEST_FIRST, [1, 2]],
+		];
+	}
+
+	public function testFindByQueryRestrictsToTheGivenUids(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		foreach ([1, 2, 3] as $id) {
+			$this->insertMessageWithId($id, 1);
+		}
+
+		$result = $this->mapper->findByQuery($mailbox, 'user', new SearchQuery(), 'ASC', null, [2, 3]);
+
+		self::assertEqualsCanonicalizing([2, 3], array_map(static fn ($message) => $message->getId(), $result));
+	}
+
+	public function testFindByQueryWithEmptyUidsReturnsNothing(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$this->insertMessageWithId(1, 1);
+
+		$result = $this->mapper->findByQuery($mailbox, 'user', new SearchQuery(), 'ASC', null, []);
+
+		self::assertSame([], $result);
+	}
+
+	public function testFindByQueryReturnsEveryMessageOnceWhenUidsSpanSeveralChunks(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		foreach ([1, 1001, 1002] as $uid) {
+			$this->insertMessage($uid, 1);
+		}
+
+		$result = $this->mapper->findByQuery($mailbox, 'user', new SearchQuery(), 'ASC', null, range(1, 1500));
+
+		self::assertCount(3, $result);
+		self::assertEqualsCanonicalizing([1, 1001, 1002], array_map(static fn ($message) => $message->getUid(), $result));
 	}
 
 	public function testFindIdsGloballyByQueryMatchesTheSender(): void {
