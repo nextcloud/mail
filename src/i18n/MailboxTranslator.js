@@ -51,7 +51,7 @@ function translateSpecial(mailbox) {
 }
 
 export function translate(mailbox) {
-	if (mailbox.specialUse.length > 0) {
+	if (mailbox.specialUse?.length > 0) {
 		try {
 			return translateSpecial(mailbox)
 		} catch (e) {

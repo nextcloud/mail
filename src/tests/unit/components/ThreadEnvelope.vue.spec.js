@@ -25,12 +25,12 @@ describe('ThreadEnvelope', () => {
 	const baseProps = () => ({
 		envelope: {
 			accountId: ACCOUNT_ID,
+			mailboxId: MAILBOX_ID,
 			from: [{ email: 'info@test.com' }],
 			flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
 			subject: '',
 			dateInt: 1692200926180,
 		},
-		mailboxId: MAILBOX_ID,
 		threadSubject: '',
 		threadIndex: 0,
 	})
