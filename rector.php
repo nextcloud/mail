@@ -10,7 +10,6 @@ declare(strict_types=1);
 use Nextcloud\Rector\Set\NextcloudSets;
 use Rector\Config\RectorConfig;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
-use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\TypeDeclaration\Rector\Class_\AddTestsVoidReturnTypeWhereNoReturnRector;
 
 return RectorConfig::configure()
@@ -25,7 +24,6 @@ return RectorConfig::configure()
 		phpunitCodeQuality: true,
 	)
 	->withSets([
-		PHPUnitSetList::PHPUNIT_90,
 		NextcloudSets::NEXTCLOUD_30,
 	])
 	->withPhpSets(
