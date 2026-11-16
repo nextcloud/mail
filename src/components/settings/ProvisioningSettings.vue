@@ -499,6 +499,7 @@ export default {
 				sieveSslMode: this.sieveSslMode,
 				ldapAliasesProvisioning: this.ldapAliasesProvisioning,
 				ldapAliasesAttribute: this.ldapAliasesAttribute,
+				saveSentCopy: this.saveSentCopy,
 			}
 		},
 	},
