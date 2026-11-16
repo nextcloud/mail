@@ -12,6 +12,7 @@ use Rector\Config\RectorConfig;
 use Rector\Php70\Rector\If_\IfToSpaceshipRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitThisCallRector;
+use Rector\PHPUnit\CodeQuality\Rector\MethodCall\WithCallbackIdenticalToStandaloneAssertsRector;
 use Rector\TypeDeclaration\Rector\Class_\AddTestsVoidReturnTypeWhereNoReturnRector;
 
 return RectorConfig::configure()
@@ -28,6 +29,8 @@ return RectorConfig::configure()
 		IfToSpaceshipRector::class,
 		// Tests call the static assertions and matchers via self::
 		PreferPHPUnitThisCallRector::class,
+		// Rewrites callback() closures to return void, but PHPUnit 9 requires a bool
+		WithCallbackIdenticalToStandaloneAssertsRector::class,
 	])
 	->withPreparedSets(
 		phpunitCodeQuality: true,
