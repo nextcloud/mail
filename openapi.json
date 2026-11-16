@@ -1,0 +1,1992 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "mail",
+        "version": "0.0.1",
+        "description": "💌 A mail app for Nextcloud",
+        "license": {
+            "name": "agpl"
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "basic_auth": {
+                "type": "http",
+                "scheme": "basic"
+            },
+            "bearer_auth": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        },
+        "schemas": {
+            "AccountListResponse": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "email",
+                    "isDelegated",
+                    "aliases"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "isDelegated": {
+                        "type": "boolean"
+                    },
+                    "aliases": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "id",
+                                "email",
+                                "name"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "format": "int64"
+                                },
+                                "email": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "nullable": true
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "IMAPFullMessage": {
+                "type": "object",
+                "required": [
+                    "uid",
+                    "messageId",
+                    "from",
+                    "to",
+                    "replyTo",
+                    "cc",
+                    "bcc",
+                    "subject",
+                    "dateInt",
+                    "flags",
+                    "dispositionNotificationTo",
+                    "hasDkimSignature",
+                    "phishingDetails",
+                    "unsubscribeUrl",
+                    "isOneClickUnsubscribe",
+                    "unsubscribeMailTo",
+                    "scheduling",
+                    "attachments",
+                    "inlineAttachments"
+                ],
+                "properties": {
+                    "uid": {
+                        "type": "integer",
+                        "format": "int64",
+                        "minimum": 0
+                    },
+                    "messageId": {
+                        "type": "string"
+                    },
+                    "from": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "label",
+                                "email"
+                            ],
+                            "properties": {
+                                "label": {
+                                    "type": "string"
+                                },
+                                "email": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "to": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "label",
+                                "email"
+                            ],
+                            "properties": {
+                                "label": {
+                                    "type": "string"
+                                },
+                                "email": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "replyTo": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "label",
+                                "email"
+                            ],
+                            "properties": {
+                                "label": {
+                                    "type": "string"
+                                },
+                                "email": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "cc": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "label",
+                                "email"
+                            ],
+                            "properties": {
+                                "label": {
+                                    "type": "string"
+                                },
+                                "email": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "bcc": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "label",
+                                "email"
+                            ],
+                            "properties": {
+                                "label": {
+                                    "type": "string"
+                                },
+                                "email": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "subject": {
+                        "type": "string"
+                    },
+                    "dateInt": {
+                        "type": "integer",
+                        "format": "int64",
+                        "minimum": 0
+                    },
+                    "flags": {
+                        "type": "object",
+                        "required": [
+                            "seen",
+                            "flagged",
+                            "answered",
+                            "deleted",
+                            "draft",
+                            "forwarded",
+                            "hasAttachments",
+                            "mdnsent",
+                            "important"
+                        ],
+                        "properties": {
+                            "seen": {
+                                "type": "boolean"
+                            },
+                            "flagged": {
+                                "type": "boolean"
+                            },
+                            "answered": {
+                                "type": "boolean"
+                            },
+                            "deleted": {
+                                "type": "boolean"
+                            },
+                            "draft": {
+                                "type": "boolean"
+                            },
+                            "forwarded": {
+                                "type": "boolean"
+                            },
+                            "hasAttachments": {
+                                "type": "boolean"
+                            },
+                            "mdnsent": {
+                                "type": "boolean"
+                            },
+                            "important": {
+                                "type": "boolean"
+                            }
+                        }
+                    },
+                    "hasHtmlBody": {
+                        "type": "boolean"
+                    },
+                    "body": {
+                        "type": "string"
+                    },
+                    "dispositionNotificationTo": {
+                        "type": "string"
+                    },
+                    "hasDkimSignature": {
+                        "type": "boolean"
+                    },
+                    "phishingDetails": {
+                        "type": "object",
+                        "required": [
+                            "checks",
+                            "warning"
+                        ],
+                        "properties": {
+                            "checks": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "type",
+                                        "isPhishing",
+                                        "message",
+                                        "additionalData"
+                                    ],
+                                    "properties": {
+                                        "type": {
+                                            "type": "string"
+                                        },
+                                        "isPhishing": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "additionalData": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "warning": {
+                                "type": "boolean"
+                            }
+                        }
+                    },
+                    "unsubscribeUrl": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "isOneClickUnsubscribe": {
+                        "type": "boolean"
+                    },
+                    "unsubscribeMailTo": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "scheduling": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "id",
+                                "messageId",
+                                "method",
+                                "contents"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "messageId": {
+                                    "type": "string"
+                                },
+                                "method": {
+                                    "type": "string"
+                                },
+                                "contents": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "attachments": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "id",
+                                "messageId",
+                                "filename",
+                                "mime",
+                                "size",
+                                "cid",
+                                "disposition"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "format": "int64",
+                                    "minimum": 1
+                                },
+                                "messageId": {
+                                    "type": "integer",
+                                    "format": "int64",
+                                    "minimum": 1
+                                },
+                                "filename": {
+                                    "type": "string"
+                                },
+                                "mime": {
+                                    "type": "string"
+                                },
+                                "size": {
+                                    "type": "integer",
+                                    "format": "int64",
+                                    "minimum": 0
+                                },
+                                "cid": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "disposition": {
+                                    "type": "string"
+                                },
+                                "downloadUrl": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "inlineAttachments": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "id",
+                                "messageId",
+                                "filename",
+                                "mime",
+                                "size",
+                                "cid",
+                                "disposition"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "format": "int64",
+                                    "minimum": 1
+                                },
+                                "messageId": {
+                                    "type": "integer",
+                                    "format": "int64",
+                                    "minimum": 1
+                                },
+                                "filename": {
+                                    "type": "string"
+                                },
+                                "mime": {
+                                    "type": "string"
+                                },
+                                "size": {
+                                    "type": "integer",
+                                    "format": "int64",
+                                    "minimum": 0
+                                },
+                                "cid": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "disposition": {
+                                    "type": "string"
+                                },
+                                "downloadUrl": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "MessageApiAttachment": {
+                "type": "object",
+                "required": [
+                    "name",
+                    "mime",
+                    "size",
+                    "content"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "mime": {
+                        "type": "string"
+                    },
+                    "size": {
+                        "type": "integer",
+                        "format": "int64",
+                        "minimum": 0
+                    },
+                    "content": {
+                        "type": "string"
+                    }
+                }
+            },
+            "MessageApiResponse": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/IMAPFullMessage"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "signature",
+                            "id",
+                            "isSenderTrusted",
+                            "smime",
+                            "rawUrl"
+                        ],
+                        "properties": {
+                            "signature": {
+                                "type": "string",
+                                "nullable": true
+                            },
+                            "itineraries": {
+                                "type": "object",
+                                "additionalProperties": {
+                                    "type": "object"
+                                }
+                            },
+                            "id": {
+                                "type": "integer",
+                                "format": "int64",
+                                "minimum": 1
+                            },
+                            "isSenderTrusted": {
+                                "type": "boolean"
+                            },
+                            "smime": {
+                                "type": "object",
+                                "required": [
+                                    "isSigned",
+                                    "signatureIsValid",
+                                    "isEncrypted"
+                                ],
+                                "properties": {
+                                    "isSigned": {
+                                        "type": "boolean"
+                                    },
+                                    "signatureIsValid": {
+                                        "type": "boolean",
+                                        "nullable": true
+                                    },
+                                    "isEncrypted": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            },
+                            "dkimValid": {
+                                "type": "boolean"
+                            },
+                            "rawUrl": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ]
+            },
+            "OCSMeta": {
+                "type": "object",
+                "required": [
+                    "status",
+                    "statuscode"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "statuscode": {
+                        "type": "integer"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "totalitems": {
+                        "type": "string"
+                    },
+                    "itemsperpage": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    },
+    "paths": {
+        "/ocs/v2.php/apps/mail/message/{id}": {
+            "get": {
+                "operationId": "message_api-get",
+                "summary": "Get a mail message with its metadata",
+                "tags": [
+                    "message_api"
+                ],
+                "security": [
+                    {
+                        "bearer_auth": []
+                    },
+                    {
+                        "basic_auth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "the message id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "OCS-APIRequest",
+                        "in": "header",
+                        "description": "Required to be true for the API request to pass",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Message found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "$ref": "#/components/schemas/MessageApiResponse"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "206": {
+                        "description": "Message could not be decrypted, no \"body\" data returned",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "$ref": "#/components/schemas/MessageApiResponse"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Message, Account or Mailbox not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Could not connect to IMAP server",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Current user is not logged in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {}
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ocs/v2.php/apps/mail/message/{id}/raw": {
+            "get": {
+                "operationId": "message_api-get-raw",
+                "summary": "Get the raw rfc2822 email",
+                "tags": [
+                    "message_api"
+                ],
+                "security": [
+                    {
+                        "bearer_auth": []
+                    },
+                    {
+                        "basic_auth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "the id of the message",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "OCS-APIRequest",
+                        "in": "header",
+                        "description": "Required to be true for the API request to pass",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Message found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Could not find message on IMAP",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Current user is not logged in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {}
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ocs/v2.php/apps/mail/message/{id}/attachment/{attachmentId}": {
+            "get": {
+                "operationId": "message_api-get-attachment",
+                "summary": "Get a mail message's attachments",
+                "tags": [
+                    "message_api"
+                ],
+                "security": [
+                    {
+                        "bearer_auth": []
+                    },
+                    {
+                        "basic_auth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "the mail id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "attachmentId",
+                        "in": "path",
+                        "description": "the attachment id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "OCS-APIRequest",
+                        "in": "header",
+                        "description": "Required to be true for the API request to pass",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Message found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "$ref": "#/components/schemas/MessageApiAttachment"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Could not find attachment",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Could not process attachment",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Current user is not logged in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {}
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ocs/v2.php/apps/mail/account/list": {
+            "get": {
+                "operationId": "account_api-list",
+                "summary": "List all email accounts and their aliases of the user which is currently logged-in",
+                "tags": [
+                    "account_api"
+                ],
+                "security": [
+                    {
+                        "bearer_auth": []
+                    },
+                    {
+                        "basic_auth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "OCS-APIRequest",
+                        "in": "header",
+                        "description": "Required to be true for the API request to pass",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Account list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/AccountListResponse"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User was not logged in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "object"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Current user is not logged in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {}
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ocs/v2.php/apps/mail/ocs/mailboxes": {
+            "get": {
+                "operationId": "mailboxes_api-list",
+                "summary": "List all mailboxes of an account of the user which is currently logged-in",
+                "tags": [
+                    "mailboxes_api"
+                ],
+                "security": [
+                    {
+                        "bearer_auth": []
+                    },
+                    {
+                        "basic_auth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "accountId",
+                        "in": "query",
+                        "description": "the mail account id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "OCS-APIRequest",
+                        "in": "header",
+                        "description": "Required to be true for the API request to pass",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Mailbox list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "object",
+                                                    "additionalProperties": {
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User was not logged in or account doesn't exist",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "object"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Current user is not logged in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {}
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ocs/v2.php/apps/mail/ocs/mailboxes/{mailboxId}/messages": {
+            "get": {
+                "operationId": "mailboxes_api-list-messages",
+                "summary": "List the newest messages in a mailbox of the user which is currently logged-in",
+                "tags": [
+                    "mailboxes_api"
+                ],
+                "security": [
+                    {
+                        "bearer_auth": []
+                    },
+                    {
+                        "basic_auth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "mailboxId",
+                        "in": "path",
+                        "description": "the mailbox id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "cursor",
+                        "in": "query",
+                        "description": "the query cursor",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64",
+                            "default": null
+                        }
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "the query filter",
+                        "schema": {
+                            "type": "string",
+                            "default": null
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "the number of messages to be returned, can be left ampty to get all messages",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64",
+                            "nullable": true,
+                            "default": null
+                        }
+                    },
+                    {
+                        "name": "view",
+                        "in": "query",
+                        "description": "returns messages in requested view ('singleton' or 'threaded')",
+                        "schema": {
+                            "type": "string",
+                            "default": null
+                        }
+                    },
+                    {
+                        "name": "OCS-APIRequest",
+                        "in": "header",
+                        "description": "Required to be true for the API request to pass",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Message list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "object",
+                                                    "additionalProperties": {
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User was not logged in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "object"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "User cannot access this mailbox",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "object"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Current user is not logged in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {}
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ocs/v2.php/apps/mail/message/send": {
+            "post": {
+                "operationId": "message_api-send",
+                "summary": "Send an email though a mail account that has been configured with Nextcloud Mail",
+                "tags": [
+                    "message_api"
+                ],
+                "security": [
+                    {
+                        "bearer_auth": []
+                    },
+                    {
+                        "basic_auth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "accountId",
+                                    "fromEmail",
+                                    "subject",
+                                    "body",
+                                    "isHtml",
+                                    "to"
+                                ],
+                                "properties": {
+                                    "accountId": {
+                                        "type": "integer",
+                                        "format": "int64",
+                                        "description": "The mail account to use for SMTP"
+                                    },
+                                    "fromEmail": {
+                                        "type": "string",
+                                        "description": "The \"From\" email address or alias email address"
+                                    },
+                                    "subject": {
+                                        "type": "string",
+                                        "description": "The subject"
+                                    },
+                                    "body": {
+                                        "type": "string",
+                                        "description": "The message body"
+                                    },
+                                    "isHtml": {
+                                        "type": "boolean",
+                                        "description": "If the message body contains HTML"
+                                    },
+                                    "to": {
+                                        "type": "array",
+                                        "description": "An array of \"To\" recipients in the format ['label' => 'Name', 'email' => 'Email Address'] or ['email' => 'Email Address']",
+                                        "items": {
+                                            "type": "object",
+                                            "required": [
+                                                "email"
+                                            ],
+                                            "properties": {
+                                                "label": {
+                                                    "type": "string"
+                                                },
+                                                "email": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "cc": {
+                                        "type": "array",
+                                        "default": [],
+                                        "description": "An optional array of 'CC' recipients in the format ['label' => 'Name', 'email' => 'Email Address'] or ['email' => 'Email Address']",
+                                        "items": {
+                                            "type": "object",
+                                            "required": [
+                                                "email"
+                                            ],
+                                            "properties": {
+                                                "label": {
+                                                    "type": "string"
+                                                },
+                                                "email": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "bcc": {
+                                        "type": "array",
+                                        "default": [],
+                                        "description": "An optional array of 'BCC' recipients in the format ['label' => 'Name', 'email' => 'Email Address'] or ['email' => 'Email Address']",
+                                        "items": {
+                                            "type": "object",
+                                            "required": [
+                                                "email"
+                                            ],
+                                            "properties": {
+                                                "label": {
+                                                    "type": "string"
+                                                },
+                                                "email": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "references": {
+                                        "type": "string",
+                                        "nullable": true,
+                                        "default": null,
+                                        "description": "An optional string of an RFC2392 \"message-id\" to set the \"Reply-To\" and \"References\" header on sending"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "OCS-APIRequest",
+                        "in": "header",
+                        "description": "Required to be true for the API request to pass",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The email was sent",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "202": {
+                        "description": "The email was accepted but not sent by the SMTP server and will be automatically retried",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Message could not be processed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "No \"Sent\" mailbox set for account",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Alias email not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "SMTP error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Current user is not logged in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {}
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ocs/v2.php/apps/mail/message/{id}/flags": {
+            "post": {
+                "operationId": "message_api-set-flags",
+                "summary": "Set flags (e.g. seen/unseen) on a mail message",
+                "tags": [
+                    "message_api"
+                ],
+                "security": [
+                    {
+                        "bearer_auth": []
+                    },
+                    {
+                        "basic_auth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "flags"
+                                ],
+                                "properties": {
+                                    "flags": {
+                                        "type": "object",
+                                        "description": "Flags to set, e.g. {\"seen\": true} to mark as read, {\"seen\": false} to mark as unread",
+                                        "additionalProperties": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "the message id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "OCS-APIRequest",
+                        "in": "header",
+                        "description": "Required to be true for the API request to pass",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Flags updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User, Message, Account or Mailbox not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Current user is not logged in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {}
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": []
+}
