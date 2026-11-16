@@ -207,6 +207,24 @@ class QuickActionsServiceTest extends TestCase {
 		$this->assertNull($result->getMailboxId());
 	}
 
+	public function testCreateRemoveTagsActionStepWithoutTagId(): void {
+		$name = 'removeTags';
+		$actionStep = new ActionStep();
+		$actionStep->setName($name);
+		$actionStep->setOrder(1);
+		$actionStep->setActionId(1);
+
+		$this->actionStepMapper->expects($this->once())
+			->method('insert')
+			->with($actionStep)
+			->willReturn($actionStep);
+
+		$result = $this->quickActionsService->createActionStep($name, 1, 1);
+
+		$this->assertEquals($name, $result->getName());
+		$this->assertNull($result->getTagId());
+	}
+
 	public function testUpdateActionStep(): void {
 		$actionStep = new ActionStep();
 		$actionStep->setName('oldName');

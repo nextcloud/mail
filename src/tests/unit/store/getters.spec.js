@@ -217,4 +217,41 @@ describe('Pinia main store getters', () => {
 
 		expect(result).toEqual(undefined)
 	})
+
+	describe('exposed tags', () => {
+		beforeEach(() => {
+			store.$patch({
+				tagList: [1, 2, 3, 4, 5],
+				tags: {
+					1: { id: 1, imapLabel: 'custom', displayName: 'Custom' },
+					2: { id: 2, imapLabel: '$label1', displayName: 'Important' },
+					3: { id: 3, imapLabel: 'notjunk', displayName: 'NotJunk' },
+					4: { id: 4, imapLabel: '', displayName: 'No label' },
+					5: { id: 5, imapLabel: 'other', displayName: 'Other' },
+				},
+				envelopes: {
+					10: { databaseId: 10, tags: [1, 2, 3, 4] },
+					11: { databaseId: 11, tags: [] },
+				},
+			})
+		})
+
+		it('excludes hidden, $label1 and label-less tags', () => {
+			const result = store.getExposedTags()
+
+			expect(result.map((tag) => tag.id)).toEqual([1, 5])
+		})
+
+		it('returns only the exposed tags of an envelope', () => {
+			const result = store.getEnvelopeExposedTags(10)
+
+			expect(result.map((tag) => tag.id)).toEqual([1])
+		})
+
+		it('returns no exposed tags for an envelope without tags', () => {
+			const result = store.getEnvelopeExposedTags(11)
+
+			expect(result).toEqual([])
+		})
+	})
 })

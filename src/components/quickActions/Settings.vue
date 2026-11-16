@@ -68,6 +68,12 @@
 						</template>
 						{{ t('mail', 'Tag') }}
 					</NcActionButton>
+					<NcActionButton :closeAfterClick="true" @click="addQuickAction('removeTags')">
+						<template #icon>
+							<TagOffIcon :size="20" />
+						</template>
+						{{ t('mail', 'Remove tags') }}
+					</NcActionButton>
 					<NcActionButton v-if="!deletionAndMovingDisabled" :closeAfterClick="true" @click="addQuickAction('moveThread')">
 						<template #icon>
 							<OpenInNewIcon :size="20" />
@@ -139,6 +145,7 @@ import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
 import IconEdit from 'vue-material-design-icons/PencilOutline.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import IconFavorite from 'vue-material-design-icons/Star.vue'
+import TagOffIcon from 'vue-material-design-icons/TagOffOutline.vue'
 import TagIcon from 'vue-material-design-icons/TagOutline.vue'
 import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 import Action from './Action.vue'
@@ -163,6 +170,7 @@ export default {
 		Draggable,
 		AlertOctagonIcon,
 		TagIcon,
+		TagOffIcon,
 		OpenInNewIcon,
 		ImportantIcon,
 		EmailRead,
