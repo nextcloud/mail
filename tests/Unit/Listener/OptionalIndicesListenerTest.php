@@ -53,5 +53,9 @@ class OptionalIndicesListenerTest extends TestCase {
 		$indexNames = array_column($event->getMissingIndices(), 'indexName');
 		self::assertContains('mail_msg_mb_del_snt_idx', $indexNames);
 		self::assertContains('mail_msg_imip_idx', $indexNames);
+
+		$replacementIndexNames = array_column($event->getIndicesToReplace(), 'newIndexName');
+		self::assertContains('mail_messages_msgid2_idx', $replacementIndexNames);
+		self::assertContains('mail_msg_imap_id2_idx', $replacementIndexNames);
 	}
 }
