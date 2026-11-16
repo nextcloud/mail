@@ -19,6 +19,7 @@ use OCA\Mail\Cache\HordeCacheFactory;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\IMAP\HordeImapClient;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Support\DebugLogPathFactory;
 use OCA\Mail\Tests\Integration\Framework\Caching;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
@@ -62,6 +63,7 @@ class IMAPClientFactoryTest extends TestCase {
 			$this->eventDispatcher,
 			$this->timeFactory,
 			$this->hordeCacheFactory,
+			new DebugLogPathFactory($this->config),
 		);
 	}
 
@@ -90,6 +92,20 @@ class IMAPClientFactoryTest extends TestCase {
 		$client = $this->factory->getClient($account);
 
 		$this->assertInstanceOf(Horde_Imap_Client_Socket::class, $client);
+	}
+
+	public function testGetClientWithDebug(): void {
+		$account = $this->getTestAccount();
+		$account->getMailAccount()->setUserId('bob');
+		$account->getMailAccount()->setDebug(true);
+		$this->config->method('getSystemValueString')
+			->willReturnCallback(fn (string $key) => $key === 'datadirectory' ? sys_get_temp_dir() : '');
+		$this->crypto->method('decrypt')
+			->willReturn('mypassword');
+
+		$client = $this->factory->getClient($account);
+
+		$this->assertSame(sys_get_temp_dir() . '/mail-bob-123-imap.log', $client->getParam('debug'));
 	}
 
 	public function testGetClientDecryptionFailing(): void {

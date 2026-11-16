@@ -14,6 +14,7 @@ use Horde\ManageSieve;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Sieve\SieveClientFactory;
+use OCA\Mail\Support\DebugLogPathFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
 use OCP\Server;
@@ -46,7 +47,7 @@ class SieveClientFactoryTest extends TestCase {
 				['app.mail.debug', false, false],
 			]);
 
-		$this->factory = new SieveClientFactory($this->crypto, $this->config);
+		$this->factory = new SieveClientFactory($this->crypto, $this->config, new DebugLogPathFactory($this->config));
 	}
 
 	/**
@@ -78,6 +79,23 @@ class SieveClientFactoryTest extends TestCase {
 
 		$client = $this->factory->getClient($account);
 		$this->assertInstanceOf(ManageSieve::class, $client);
+	}
+
+	public function testClientWithDebug(): void {
+		$logFile = sys_get_temp_dir() . '/mail-bob-123-sieve.log';
+		@unlink($logFile);
+		$account = $this->getTestAccount();
+		$account->getMailAccount()->setUserId('bob');
+		$account->getMailAccount()->setDebug(true);
+		$this->config->method('getSystemValueString')
+			->willReturnCallback(fn (string $key) => $key === 'datadirectory' ? sys_get_temp_dir() : '');
+		$this->crypto->method('decrypt')
+			->willReturn('');
+
+		$this->factory->getClient($account);
+
+		$this->assertFileExists($logFile);
+		unlink($logFile);
 	}
 
 	public function testClientInstallScript() {
