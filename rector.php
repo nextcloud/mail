@@ -11,6 +11,7 @@ use Nextcloud\Rector\Set\NextcloudSets;
 use Rector\Config\RectorConfig;
 use Rector\Php70\Rector\If_\IfToSpaceshipRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
+use Rector\PHPUnit\CodeQuality\Rector\Class_\NarrowUnusedSetUpDefinedPropertyRector;
 use Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitThisCallRector;
 use Rector\PHPUnit\CodeQuality\Rector\MethodCall\WithCallbackIdenticalToStandaloneAssertsRector;
 use Rector\TypeDeclaration\Rector\Class_\AddTestsVoidReturnTypeWhereNoReturnRector;
@@ -31,6 +32,8 @@ return RectorConfig::configure()
 		PreferPHPUnitThisCallRector::class,
 		// Rewrites callback() closures to return void, but PHPUnit 9 requires a bool
 		WithCallbackIdenticalToStandaloneAssertsRector::class,
+		// Removes setUp() properties that tests still read
+		NarrowUnusedSetUpDefinedPropertyRector::class,
 	])
 	->withPreparedSets(
 		phpunitCodeQuality: true,
