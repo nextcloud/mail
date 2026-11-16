@@ -41,7 +41,6 @@
 							<label :for="'mail-provision-save-sent-copy' + setting.id">
 								{{ t('mail', 'Save a copy of sent messages') }}
 							</label>
-							<p>{{ t('mail', 'Disable if the mail server already stores sent messages in the sent mailbox.') }}</p>
 						</div>
 					</div>
 				</div>
