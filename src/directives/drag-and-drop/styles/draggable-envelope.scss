@@ -8,9 +8,22 @@
 	cursor: default;
 }
 
+@keyframes ghost-appearing {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
 .draggable-envelope-ghost {
 	height: auto;
 	width: 300px;
+	position: relative;
+	z-index: 10000;
+	animation: .5s 1 normal ghost-appearing;
 
 	&--counter {
 		position: absolute;
@@ -36,7 +49,8 @@
 			width: 100%;
 			text-align: start;
 			margin-bottom: 1px;
-			background-color: #fff;
+			color: var(--color-main-text);
+			background-color: var(--color-main-background);
 			border-inline-start: 2px solid var(--color-primary-element);
 
 			&:first-child {
