@@ -11,6 +11,7 @@ use Nextcloud\Rector\Set\NextcloudSets;
 use Rector\Config\RectorConfig;
 use Rector\Php70\Rector\If_\IfToSpaceshipRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
+use Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitThisCallRector;
 use Rector\TypeDeclaration\Rector\Class_\AddTestsVoidReturnTypeWhereNoReturnRector;
 
 return RectorConfig::configure()
@@ -25,6 +26,8 @@ return RectorConfig::configure()
 		__DIR__ . '/lib/Vendor',
 		// Evaluates class constants via defined(), which autoloads app classes that extend OCP\AppFramework\Db\Entity
 		IfToSpaceshipRector::class,
+		// Tests call the static assertions and matchers via self::
+		PreferPHPUnitThisCallRector::class,
 	])
 	->withPreparedSets(
 		phpunitCodeQuality: true,
