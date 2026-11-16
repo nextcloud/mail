@@ -166,6 +166,8 @@ OC.L10N.register(
     "Untitled message" : "Nenaslovljeno sporočilo",
     "Confirm" : "Potrdi",
     "Revoke" : "Prekliči",
+    "Delegation" : "Pooblastila",
+    "Add delegate" : "Dodaj pooblaščenca",
     "Delete tag" : "Izbriši oznako",
     "Plain text" : "Besedilno",
     "Rich text" : "Obogateno besedilo",
