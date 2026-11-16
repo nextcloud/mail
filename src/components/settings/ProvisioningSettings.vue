@@ -31,6 +31,18 @@
 							:disabled="loading"
 							name="emailTemplate"
 							type="text">
+						<div>
+							<input
+								:id="'mail-provision-save-sent-copy' + setting.id"
+								v-model="saveSentCopy"
+								:disabled="loading"
+								type="checkbox"
+								class="checkbox">
+							<label :for="'mail-provision-save-sent-copy' + setting.id">
+								{{ t('mail', 'Save a copy of sent messages') }}
+							</label>
+							<p>{{ t('mail', 'Disable if the mail server already stores sent messages in the sent mailbox.') }}</p>
+						</div>
 					</div>
 				</div>
 				<div class="settings-group">
@@ -460,6 +472,7 @@ export default {
 
 			ldapAliasesProvisioning: this.setting.ldapAliasesProvisioning || false,
 			ldapAliasesAttribute: this.setting.ldapAliasesAttribute || '',
+			saveSentCopy: this.setting.saveSentCopy ?? true,
 			loading: false,
 		}
 	},
@@ -532,6 +545,7 @@ export default {
 					sieveSslMode: this.sieveSslMode,
 					ldapAliasesProvisioning: this.ldapAliasesProvisioning,
 					ldapAliasesAttribute: this.ldapAliasesAttribute,
+					saveSentCopy: this.saveSentCopy,
 				})
 
 				logger.info('provisioning setting updated')
