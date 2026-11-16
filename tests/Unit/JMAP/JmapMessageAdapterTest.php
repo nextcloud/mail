@@ -10,6 +10,8 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\JMAP;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use DateTimeImmutable;
+use JmapClient\Enums\Mail\MailHeaderForm;
 use JmapClient\Responses\Mail\MailParameters as MailParametersResponse;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\JMAP\JmapMessageAdapter;
@@ -64,7 +66,6 @@ class JmapMessageAdapterTest extends TestCase {
 		}
 
 		$source->method('keywords')->willReturn($keywords);
-		$source->method('parameter')->willReturn($values['__updatedAt'] ?? null);
 		$source->method('keyword')->willReturnCallback(
 			static fn (string $name): ?bool => $keywords[$name] ?? null,
 		);
@@ -110,6 +111,37 @@ class JmapMessageAdapterTest extends TestCase {
 		self::assertFalse($message->getFlagSeen());
 		self::assertFalse($message->getFlagImportant());
 		self::assertFalse($message->getFlagAttachments());
+	}
+
+	public function testMapsSentDateToTimestamp(): void {
+		$source = $this->source([
+			'sent' => new DateTimeImmutable('2026-11-12T10:00:00+02:00'),
+			'received' => new DateTimeImmutable('2026-11-12T09:00:00Z'),
+		]);
+
+		$message = $this->adapter->convertToDatabaseMessage($source);
+
+		self::assertSame(1794470400, $message->getSentAt());
+		self::assertSame(1794470400, $message->getUpdatedAt());
+	}
+
+	public function testFallsBackToReceivedDateWhenSentDateIsMissing(): void {
+		$source = $this->source(['received' => new DateTimeImmutable('2026-11-12T09:00:00Z')]);
+
+		$message = $this->adapter->convertToDatabaseMessage($source);
+
+		self::assertSame(1794474000, $message->getSentAt());
+	}
+
+	public function testModelMessageUsesReceivedDate(): void {
+		$source = $this->source([
+			'sent' => new DateTimeImmutable('2026-11-12T10:00:00+02:00'),
+			'received' => new DateTimeImmutable('2026-11-12T09:00:00Z'),
+		]);
+
+		$message = $this->adapter->convertToModelMessage($source, 1, false);
+
+		self::assertSame(1794474000, $message->getSentDate()->getTimestamp());
 	}
 
 	public function testImportantViaLegacyLabel(): void {
@@ -196,7 +228,7 @@ class JmapMessageAdapterTest extends TestCase {
 	public function testModelMessageAiGeneratedHeader(?string $headerValue, bool $expected): void {
 		$source = $this->source();
 		$source->method('header')->willReturnCallback(
-			static fn (string $name): ?string => $name === 'X-AI-Generated' ? $headerValue : null,
+			static fn (string $name, MailHeaderForm $form): ?string => $name === 'X-AI-Generated' && $form === MailHeaderForm::Text ? $headerValue : null,
 		);
 
 		$message = $this->adapter->convertToModelMessage($source, 1, false);

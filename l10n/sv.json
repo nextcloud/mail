@@ -125,6 +125,7 @@
     "Account updated" : "Kontot uppdaterat",
     "IMAP server is not reachable" : "Det går inte att nå IMAP-servern",
     "SMTP server is not reachable" : "Det går inte att nå SMTP-servern",
+    "Account already exists" : "Kontot finns redan",
     "IMAP username or password is wrong" : "IMAP-användarnamn eller lösenord är felaktigt",
     "SMTP username or password is wrong" : "SMTP-användarnamn eller lösenord är felaktigt",
     "IMAP server denied authentication" : "IMAP-servern avvisar autentisering",

@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\JMAP;
 
+use JmapClient\Enums\Mail\MailboxRole;
 use JmapClient\Requests\Mail\MailboxParameters as MailboxParametersRequest;
 use JmapClient\Responses\Mail\MailboxParameters as MailboxParametersResponse;
 use JsonException;
@@ -121,8 +122,8 @@ class JmapMailboxAdapter {
 		return in_array($role, $allowed, true) ? $role : null;
 	}
 
-	private function normalizeSpecialUse(string $role): string {
-		$role = strtolower($role);
+	private function normalizeSpecialUse(MailboxRole|string $role): string {
+		$role = strtolower($role instanceof MailboxRole ? $role->value : $role);
 
 		return $role === 'important' ? 'flagged' : $role;
 	}

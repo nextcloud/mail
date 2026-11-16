@@ -125,6 +125,7 @@
     "Account updated" : "Учётная запись обновлена",
     "IMAP server is not reachable" : "Сервер IMAP недоступен",
     "SMTP server is not reachable" : "Сервер SMTP недоступен",
+    "Account already exists" : "Учётная запись уже существует.",
     "IMAP username or password is wrong" : "Имя пользователя или пароль IMAP неверны",
     "SMTP username or password is wrong" : "Неверное имя пользователя или пароль SMTP",
     "IMAP server denied authentication" : "Сервер IMAP отказал в аутентификации",

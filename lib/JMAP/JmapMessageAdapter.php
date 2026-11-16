@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\JMAP;
 
 use Horde_Imap_Client_DateTime;
+use JmapClient\Enums\Mail\MailHeaderForm;
 use JmapClient\Responses\Mail\MailParameters as MailParametersResponse;
 use JmapClient\Responses\Mail\MailPart as MailPartResponse;
 use OCA\Mail\Address;
@@ -46,7 +47,6 @@ class JmapMessageAdapter {
 
 	public function convertToDatabaseMessage(MailParametersResponse $source): Message {
 		$keywords = $source->keywords();
-		$updatedAt = $source->parameter('updatedAt');
 
 		$message = new Message();
 		$message->setRemoteId($source->id());
@@ -55,7 +55,7 @@ class JmapMessageAdapter {
 		$message->setReferences($this->normalizeReferenceValue($source->references()));
 		$message->setThreadRootId($source->thread());
 		$message->setSubject($source->subject() ?? '');
-		$message->setSentAt($this->parseTimestamp($source->sent() ?? $source->received() ?? null));
+		$message->setSentAt(($source->sent() ?? $source->received())?->getTimestamp() ?? time());
 		$message->setFlagAnswered($source->answered() ?? false);
 		$message->setFlagDeleted($source->keyword('$deleted') ?? false);
 		$message->setFlagDraft($source->draft() ?? false);
@@ -69,7 +69,7 @@ class JmapMessageAdapter {
 		$message->setPreviewText($source->bodyTextPreview());
 		$message->setFlagAttachments($source->hasAttachment() ?? false);
 		$message->setStructureAnalyzed(true);
-		$message->setUpdatedAt($this->parseTimestamp($updatedAt ?? $source->sent() ?? null));
+		$message->setUpdatedAt($source->sent()?->getTimestamp() ?? time());
 
 		$message->setFrom($this->convertAddressList($source->from() ?? $source->sender()));
 		$message->setTo($this->convertAddressList($source->to() ?? []));
@@ -118,7 +118,7 @@ class JmapMessageAdapter {
 			$inlineAttachments,
 			$attachments !== [] || $inlineAttachments !== [],
 			$scheduling,
-			new Horde_Imap_Client_DateTime('@' . $this->parseTimestamp($source->received() ?? $source->sent() ?? null)),
+			new Horde_Imap_Client_DateTime('@' . (($source->received() ?? $source->sent())?->getTimestamp() ?? time())),
 			$this->normalizeRawMessageIdList($source->references()),
 			$dispositionNotificationTo,
 			$hasDkimSignature,
@@ -189,17 +189,6 @@ class JmapMessageAdapter {
 		return in_array($keyword, self::RESERVED_KEYWORDS, true);
 	}
 
-	private function parseTimestamp(mixed $value): int {
-		if (is_string($value) && $value !== '') {
-			$timestamp = strtotime($value);
-			if ($timestamp !== false) {
-				return $timestamp;
-			}
-		}
-
-		return time();
-	}
-
 	private function firstString(mixed $value): ?string {
 		if (is_string($value) && $value !== '') {
 			return $value;
@@ -238,7 +227,7 @@ class JmapMessageAdapter {
 	}
 
 	private function firstHeaderValue(MailParametersResponse $source, string $name): ?string {
-		$value = $source->header($name, 'asText');
+		$value = $source->header($name, MailHeaderForm::Text);
 		return $this->firstString($value);
 	}
 

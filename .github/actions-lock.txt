@@ -9,10 +9,10 @@
 6279c9e39a0d2bbc94e7f44db2e8cc6e lint-php-cs.yml
 418deda6469a90f8626a9705ebea4a85 lint-php.yml
 99024d814801405672676fd03f57c2ce lint-stylelint.yml
-f1909c78987565cb19a471c60dc53950 npm-audit-fix.yml
+db73bd92859c4fb9d0489c0378a73d9e npm-audit-fix.yml
 fd4e5b1b2edd3eb731b9216eca01bc2e openapi.yml
 2639f2b96989a4fcbb441ca8f1fecb2f pr-feedback.yml
 b8ec9a083becdc283f007669ae28b85a psalm-matrix.yml
 bea8a43904976fa01f1e091046541b37 release-relay.yml
 2dbec18233063b42f4d8e03bbb43671c reuse.yml
-ff4dc5f5f73469bf3569b654a68f49bf sync-workflow-templates.yml
+af7ef59cad90fa52cfed30e97921b7a9 sync-workflow-templates.yml

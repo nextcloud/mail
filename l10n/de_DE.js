@@ -127,6 +127,7 @@ OC.L10N.register(
     "Account updated" : "Konto aktualisiert",
     "IMAP server is not reachable" : "IMAP-Server ist nicht erreichbar",
     "SMTP server is not reachable" : "SMTP-Server ist nicht erreichbar",
+    "Account already exists" : "Konto existiert bereits",
     "IMAP username or password is wrong" : "Falscher IMAP-Benutzername oder Passwort",
     "SMTP username or password is wrong" : "Falscher SMTP-Benutzername oder Passwort",
     "IMAP server denied authentication" : "IMAP-Server hat die Anmeldung verweigert",

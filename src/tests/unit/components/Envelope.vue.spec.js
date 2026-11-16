@@ -383,4 +383,38 @@ describe('Envelope', () => {
 
 		expect(view.vm.hasWriteAcl).toBe(true)
 	})
+
+	it('removes the window resize listener on unmount', () => {
+		const addSpy = vi.spyOn(window, 'addEventListener')
+		const removeSpy = vi.spyOn(window, 'removeEventListener')
+
+		const view = shallowMount(Envelope, {
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
+			props: {
+				mailbox: {
+					specialRole: '',
+					databaseId: '3',
+					myAcls: undefined,
+				},
+				data: {
+					accountId: 123,
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
+				},
+			},
+		})
+
+		const [, handler] = addSpy.mock.calls.find(([name]) => name === 'resize')
+		view.unmount()
+
+		expect(removeSpy).toHaveBeenCalledWith('resize', handler)
+
+		addSpy.mockRestore()
+		removeSpy.mockRestore()
+	})
 })

@@ -92,6 +92,25 @@ class MicrosoftIntegrationTest extends TestCase {
 			->willReturn($response);
 	}
 
+	public function testGetClientId(): void {
+		$this->assertSame('client-id', $this->integration->getClientId());
+	}
+
+	public function testGetClientIdNotConfigured(): void {
+		$appConfig = $this->createMock(IAppConfig::class);
+		$appConfig->method('getValueString')->willReturn('');
+		$integration = new MicrosoftIntegration(
+			$this->timeFactory,
+			$appConfig,
+			$this->crypto,
+			$this->clientService,
+			$this->createMock(IURLGenerator::class),
+			$this->logger,
+		);
+
+		$this->assertSame('', $integration->getClientId());
+	}
+
 	public function testRefreshStoresRotatedRefreshToken(): void {
 		$account = $this->createExpiredAccount();
 		$this->mockTokenResponse([
