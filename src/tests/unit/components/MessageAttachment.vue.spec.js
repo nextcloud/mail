@@ -4,6 +4,7 @@
  */
 
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
 import MessageAttachment from '../../../components/MessageAttachment.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 import { saveAttachmentToFiles } from '../../../service/AttachmentService.js'
@@ -12,7 +13,8 @@ const localVue = createLocalVue()
 
 localVue.mixin(Nextcloud)
 
-vi.mock('@nextcloud/dialogs', () => ({
+vi.mock('@nextcloud/dialogs', async (importOriginal) => ({
+	...await importOriginal(),
 	showError: vi.fn(),
 	showSuccess: vi.fn(),
 }))
@@ -25,6 +27,10 @@ vi.mock('../../../util/filePicker.js', () => ({
 }))
 
 describe('MessageAttachment', () => {
+	beforeEach(() => {
+		setActivePinia(createPinia())
+	})
+
 	it('saves the attachment of its own message, not of the message in the route', async () => {
 		const view = shallowMount(MessageAttachment, {
 			localVue,

@@ -24,11 +24,9 @@
 				<NcActionButton
 					v-if="isCalendarEvent"
 					class="attachment-import calendar"
-					:disabled="loadingCalendars"
-					@click.stop="loadCalendars">
+					@click.stop="openCalendarPopover">
 					<template #icon>
-						<IconAdd v-if="!loadingCalendars" :size="20" />
-						<NcLoadingIcon v-else-if="loadingCalendars" :size="20" />
+						<IconAdd :size="20" />
 					</template>
 					{{ t('mail', 'Import into calendar') }}
 				</NcActionButton>
@@ -66,6 +64,9 @@
 					@click="entry.action">
 					{{ entry.text }}
 				</NcActionButton>
+				<NcActionText v-if="calendarMenuEntries.length === 0">
+					{{ t('mail', 'None of your calendars can store events') }}
+				</NcActionText>
 			</template>
 		</NcActions>
 	</div>
@@ -76,14 +77,16 @@
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { formatFileSize } from '@nextcloud/files'
 import { t } from '@nextcloud/l10n'
-import { NcActionButton, NcActions, NcLoadingIcon } from '@nextcloud/vue'
+import { NcActionButton, NcActions, NcActionText, NcLoadingIcon } from '@nextcloud/vue'
+import { mapStores } from 'pinia'
 import IconArrow from 'vue-material-design-icons/ArrowLeft.vue'
 import IconSave from 'vue-material-design-icons/FolderOutline.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconDownload from 'vue-material-design-icons/TrayArrowDown.vue'
 import Logger from '../logger.js'
 import { downloadAttachment, saveAttachmentToFiles } from '../service/AttachmentService.js'
-import { getUserCalendars, importCalendarEvent } from '../service/DAVService.js'
+import { importCalendarEvent } from '../service/DAVService.js'
+import useMainStore from '../store/mainStore.js'
 import { pickFolder } from '../util/filePicker.js'
 
 export default {
@@ -91,6 +94,7 @@ export default {
 	components: {
 		NcActions,
 		NcActionButton,
+		NcActionText,
 		IconAdd,
 		IconArrow,
 		NcLoadingIcon,
@@ -154,13 +158,13 @@ export default {
 	data() {
 		return {
 			savingToCloud: false,
-			loadingCalendars: false,
-			calendars: [],
 			showCalendarPopover: false,
 		}
 	},
 
 	computed: {
+		...mapStores(useMainStore),
+
 		name() {
 			if (this.mime === 'message/rfc822') {
 				return t('mail', 'Embedded message')
@@ -176,7 +180,7 @@ export default {
 		},
 
 		calendarMenuEntries() {
-			return this.calendars.map((cal) => {
+			return this.mainStore.getEventCalendarsForCurrentUser.map((cal) => {
 				return {
 					text: cal.displayname,
 					action: this.importCalendar(cal.url),
@@ -238,13 +242,8 @@ export default {
 			window.location = this.url
 		},
 
-		loadCalendars() {
-			this.loadingCalendars = true
-			getUserCalendars().then((calendars) => {
-				this.calendars = calendars
-				this.showCalendarPopover = true
-				this.loadingCalendars = false
-			})
+		openCalendarPopover() {
+			this.showCalendarPopover = true
 		},
 
 		closeCalendarPopover() {
