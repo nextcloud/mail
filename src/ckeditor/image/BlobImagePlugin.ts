@@ -26,10 +26,6 @@ class BlobUploadAdapter implements UploadAdapter {
 	abort(): void {}
 }
 
-/**
- * Holds images as blob: object URLs while editing. Run the editor's data
- * through embedBlobImages before persisting it.
- */
 export default class BlobImagePlugin extends Plugin {
 	static get requires() {
 		return [FileRepository] as const
