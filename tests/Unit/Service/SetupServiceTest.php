@@ -15,16 +15,20 @@ use Horde_Imap_Client_Socket;
 use Horde_Mail_Exception;
 use Horde_Mail_Transport_Smtphorde;
 use InvalidArgumentException;
+use JmapClient\Exceptions\RequestException;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\CouldNotConnectException;
+use OCA\Mail\Exception\DuplicateEmailAddress;
 use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\SetupService;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCP\Security\ICrypto;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
 class SetupServiceTest extends TestCase {
@@ -130,7 +134,7 @@ class SetupServiceTest extends TestCase {
 		self::assertSame($authMethod, $account->getAuthMethod(), 'Auth method does not match');
 	}
 
-	public function testCreateNewAccountWithPasswordAuth(): void {
+	public function testCreateNewImapAccountWithPasswordAuth(): void {
 		$this->mockPasswordEncryption();
 
 		$this->logger->expects(self::once())
@@ -177,7 +181,7 @@ class SetupServiceTest extends TestCase {
 			->method('createDefaultTags')
 			->with(self::isInstanceOf(MailAccount::class));
 
-		$result = $this->setupService->createNewAccount(
+		$result = $this->setupService->createNewImapAccount(
 			self::ACCOUNT_NAME,
 			self::EMAIL_ADDRESS,
 			self::IMAP_HOST,
@@ -204,7 +208,7 @@ class SetupServiceTest extends TestCase {
 		self::assertSame([], $debugCalls[1]['context']);
 	}
 
-	public function testCreateNewAccountWithOAuth2(): void {
+	public function testCreateNewImapAccountWithOAuth2(): void {
 		$this->crypto->expects(self::never())->method('encrypt');
 
 		$this->logger->expects(self::once())
@@ -227,7 +231,7 @@ class SetupServiceTest extends TestCase {
 
 		$this->tagMapper->expects(self::once())->method('createDefaultTags');
 
-		$result = $this->setupService->createNewAccount(
+		$result = $this->setupService->createNewImapAccount(
 			'OAuth2 Account',
 			'oauth@example.com',
 			self::IMAP_HOST,
@@ -247,11 +251,11 @@ class SetupServiceTest extends TestCase {
 		self::assertInstanceOf(Account::class, $result);
 	}
 
-	public function testCreateNewAccountWithInvalidAuthMethod(): void {
+	public function testCreateNewImapAccountWithInvalidAuthMethod(): void {
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid auth method invalid');
 
-		$this->setupService->createNewAccount(
+		$this->setupService->createNewImapAccount(
 			self::ACCOUNT_NAME,
 			self::EMAIL_ADDRESS,
 			self::IMAP_HOST,
@@ -269,7 +273,7 @@ class SetupServiceTest extends TestCase {
 		);
 	}
 
-	public function testCreateNewAccountImapConnectionFailure(): void {
+	public function testCreateNewImapAccountImapConnectionFailure(): void {
 		$this->expectException(CouldNotConnectException::class);
 
 		$this->mockPasswordEncryption();
@@ -285,7 +289,7 @@ class SetupServiceTest extends TestCase {
 			->method('newImapClient')
 			->willReturn($imapClient);
 
-		$this->setupService->createNewAccount(
+		$this->setupService->createNewImapAccount(
 			self::ACCOUNT_NAME,
 			self::EMAIL_ADDRESS,
 			self::IMAP_HOST,
@@ -303,7 +307,7 @@ class SetupServiceTest extends TestCase {
 		);
 	}
 
-	public function testCreateNewAccountSmtpConnectionFailure(): void {
+	public function testCreateNewImapAccountSmtpConnectionFailure(): void {
 		$this->expectException(CouldNotConnectException::class);
 
 		$this->mockPasswordEncryption();
@@ -318,7 +322,7 @@ class SetupServiceTest extends TestCase {
 			->method('create')
 			->willReturn($smtpTransport);
 
-		$this->setupService->createNewAccount(
+		$this->setupService->createNewImapAccount(
 			self::ACCOUNT_NAME,
 			self::EMAIL_ADDRESS,
 			self::IMAP_HOST,
@@ -333,6 +337,159 @@ class SetupServiceTest extends TestCase {
 			self::SMTP_PASSWORD,
 			self::USER_ID,
 			self::AUTH_METHOD_PASSWORD
+		);
+	}
+
+	public function testCreateNewJmapAccountTestsConnection(): void {
+		$this->crypto->expects(self::once())
+			->method('encrypt')
+			->with('jmap-password')
+			->willReturn('encrypted-jmap-password');
+		$this->protocolFactory->expects(self::once())
+			->method('testConnection')
+			->with(self::callback(fn (Account $account): bool => $account->getMailAccount()->isJmap()));
+		$this->smtpClientFactory->expects(self::never())->method('create');
+		$this->accountService->expects(self::once())
+			->method('save')
+			->with(self::callback(function (MailAccount $account): bool {
+				self::assertSame(MailAccount::PROTOCOL_JMAP, $account->getProtocol());
+				self::assertSame('jmap.example.com', $account->getInboundHost());
+				self::assertSame(443, $account->getInboundPort());
+				self::assertSame('yes', $account->getInboundSslMode());
+				self::assertSame(self::IMAP_USER, $account->getInboundUser());
+				self::assertSame('encrypted-jmap-password', $account->getInboundPassword());
+				self::assertSame('/jmap/session', $account->getPath());
+				self::assertSame(self::AUTH_METHOD_PASSWORD, $account->getAuthMethod());
+				self::assertSame(self::USER_ID, $account->getUserId());
+				self::assertFalse($account->getClassificationEnabled());
+				self::assertNull($account->getOutboundHost());
+				$account->setId(42);
+				return true;
+			}));
+		$this->accountService->expects(self::once())
+			->method('findById')
+			->with(42);
+		$this->tagMapper->expects(self::once())->method('createDefaultTags');
+
+		$result = $this->setupService->createNewJmapAccount(
+			self::ACCOUNT_NAME,
+			self::EMAIL_ADDRESS,
+			'jmap.example.com',
+			443,
+			'yes',
+			self::IMAP_USER,
+			'jmap-password',
+			'/jmap/session',
+			self::USER_ID,
+			null,
+			false,
+		);
+
+		self::assertInstanceOf(Account::class, $result);
+	}
+
+	public function testCreateNewJmapAccountWithoutPasswordSkipsConnectionTest(): void {
+		$this->crypto->expects(self::never())->method('encrypt');
+		$this->protocolFactory->expects(self::never())->method('testConnection');
+		$this->accountService->expects(self::once())
+			->method('save')
+			->with(self::callback(function (MailAccount $account): bool {
+				self::assertSame(42, $account->getId());
+				self::assertNull($account->getInboundPassword());
+				self::assertNull($account->getPath());
+				return true;
+			}));
+
+		$this->setupService->createNewJmapAccount(
+			self::ACCOUNT_NAME,
+			self::EMAIL_ADDRESS,
+			'jmap.example.com',
+			443,
+			'yes',
+			self::IMAP_USER,
+			null,
+			null,
+			self::USER_ID,
+			42,
+		);
+	}
+
+	public function testCreateNewJmapAccountConnectionFailure(): void {
+		$response = $this->createMock(ResponseInterface::class);
+		$response->method('getStatusCode')->willReturn(401);
+		$this->crypto->method('encrypt')->willReturn('encrypted-jmap-password');
+		$this->protocolFactory->expects(self::once())
+			->method('testConnection')
+			->willThrowException(new RequestException($this->createMock(RequestInterface::class), $response));
+		$this->accountService->expects(self::never())->method('save');
+
+		try {
+			$this->setupService->createNewJmapAccount(
+				self::ACCOUNT_NAME,
+				self::EMAIL_ADDRESS,
+				'jmap.example.com',
+				443,
+				'yes',
+				self::IMAP_USER,
+				'wrong-password',
+				null,
+				self::USER_ID,
+			);
+			self::fail('Expected CouldNotConnectException');
+		} catch (CouldNotConnectException $e) {
+			self::assertSame('JMAP', $e->getService());
+			self::assertSame('jmap.example.com', $e->getHost());
+			self::assertSame(443, $e->getPort());
+			self::assertSame('AUTHENTICATION_WRONG_PASSWORD', $e->getReason());
+		}
+	}
+
+	private function existingAccount(int $id): Account {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId($id);
+		return new Account($mailAccount);
+	}
+
+	public function testCreateNewJmapAccountExistingAddress(): void {
+		$this->accountService->expects(self::once())
+			->method('findByUserIdAndAddress')
+			->with(self::USER_ID, self::EMAIL_ADDRESS)
+			->willReturn([$this->existingAccount(7)]);
+		$this->protocolFactory->expects(self::never())->method('testConnection');
+		$this->accountService->expects(self::never())->method('save');
+		$this->expectException(DuplicateEmailAddress::class);
+
+		$this->setupService->createNewJmapAccount(
+			self::ACCOUNT_NAME,
+			self::EMAIL_ADDRESS,
+			'jmap.example.com',
+			443,
+			'yes',
+			self::IMAP_USER,
+			'jmap-password',
+			null,
+			self::USER_ID,
+		);
+	}
+
+	public function testUpdateJmapAccountKeepsOwnAddress(): void {
+		$this->accountService->expects(self::once())
+			->method('findByUserIdAndAddress')
+			->with(self::USER_ID, self::EMAIL_ADDRESS)
+			->willReturn([$this->existingAccount(42)]);
+		$this->accountService->expects(self::once())->method('save');
+
+		$this->setupService->createNewJmapAccount(
+			self::ACCOUNT_NAME,
+			self::EMAIL_ADDRESS,
+			'jmap.example.com',
+			443,
+			'yes',
+			self::IMAP_USER,
+			null,
+			null,
+			self::USER_ID,
+			42,
 		);
 	}
 }

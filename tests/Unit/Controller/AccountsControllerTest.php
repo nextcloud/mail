@@ -282,7 +282,7 @@ class AccountsControllerTest extends TestCase {
 		$smtpPassword = 'mypassword';
 		$account = $this->createStub(Account::class);
 		$this->setupService->expects(self::once())
-			->method('createNewAccount')
+			->method('createNewImapAccount')
 			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, 'password')
 			->willReturn($account);
 
@@ -312,7 +312,7 @@ class AccountsControllerTest extends TestCase {
 		$this->logger->expects(self::once())
 			->method('info');
 		$this->setupService->expects(self::never())
-			->method('createNewAccount');
+			->method('createNewImapAccount');
 
 		$expectedResponse = \OCA\Mail\Http\JsonResponse::error('Could not create account');
 		$response = $this->controller->create($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $imapPassword, $smtpPassword);
@@ -337,7 +337,7 @@ class AccountsControllerTest extends TestCase {
 		$smtpUser = 'user@domain.tld';
 		$smtpPassword = 'mypassword';
 		$this->setupService->expects(self::once())
-			->method('createNewAccount')
+			->method('createNewImapAccount')
 			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, 'password')
 			->willThrowException(new DuplicateEmailAddress());
 
@@ -366,7 +366,7 @@ class AccountsControllerTest extends TestCase {
 		$smtpUser = 'user@domain.tld';
 		$smtpPassword = 'mypassword';
 		$this->setupService->expects(self::once())
-			->method('createNewAccount')
+			->method('createNewImapAccount')
 			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, 'password')
 			->willThrowException(new ClientException());
 		$this->expectException(ClientException::class);
@@ -388,9 +388,11 @@ class AccountsControllerTest extends TestCase {
 		$smtpSslMode = 'none';
 		$smtpUser = 'user@domain.tld';
 		$smtpPassword = 'mypassword';
+		$this->accountService->method('find')
+			->willReturn(new Account(new MailAccount()));
 		$account = $this->createStub(Account::class);
 		$this->setupService->expects(self::once())
-			->method('createNewAccount')
+			->method('createNewImapAccount')
 			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, 'password', $id)
 			->willReturn($account);
 		$this->delegationService->expects(self::once())
@@ -418,13 +420,106 @@ class AccountsControllerTest extends TestCase {
 		$smtpSslMode = 'none';
 		$smtpUser = 'user@domain.tld';
 		$smtpPassword = 'mypassword';
+		$this->accountService->method('find')
+			->willReturn(new Account(new MailAccount()));
 		$this->setupService->expects(self::once())
-			->method('createNewAccount')
+			->method('createNewImapAccount')
 			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, 'password', $id)
 			->willThrowException(new ClientException());
 		$this->expectException(ClientException::class);
 
 		$this->controller->update($id, $accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $imapPassword, $smtpPassword);
+	}
+
+	public function testCreateJmapSuccess(): void {
+		$this->appConfig->method('getValueBool')
+			->willReturn(true);
+		$account = $this->createStub(Account::class);
+		$this->setupService->expects(self::never())
+			->method('createNewImapAccount');
+		$this->setupService->expects(self::once())
+			->method('createNewJmapAccount')
+			->with('Mail', 'user@domain.tld', 'jmap.domain.tld', 443, 'yes', 'user@domain.tld', 'mypassword', '/jmap/session', $this->userId, null, true)
+			->willReturn($account);
+		$this->mailboxSync->expects(self::never())
+			->method('sync');
+
+		$response = $this->controller->create('Mail', 'user@domain.tld', 'jmap.domain.tld', 443, 'yes', 'user@domain.tld', imapPassword: 'mypassword', classificationEnabled: true, protocol: MailAccount::PROTOCOL_JMAP, path: '/jmap/session');
+
+		self::assertEquals(\OCA\Mail\Http\JsonResponse::success($account, Http::STATUS_CREATED), $response);
+	}
+
+	public function testCreateJmapWithOauthIsRejected(): void {
+		$this->appConfig->method('getValueBool')
+			->willReturn(true);
+		$this->setupService->expects(self::never())
+			->method('createNewJmapAccount');
+
+		$response = $this->controller->create('Mail', 'user@domain.tld', 'jmap.domain.tld', 443, 'yes', 'user@domain.tld', authMethod: 'xoauth2', protocol: MailAccount::PROTOCOL_JMAP);
+
+		self::assertEquals(Http::STATUS_UNPROCESSABLE_ENTITY, $response->getStatus());
+		self::assertSame('INVALID_AUTH_METHOD', $response->getData()['data']['error']);
+	}
+
+	public function testCreateImapWithoutSmtpIsRejected(): void {
+		$this->appConfig->method('getValueBool')
+			->willReturn(true);
+		$this->setupService->expects(self::never())
+			->method('createNewImapAccount');
+
+		$response = $this->controller->create('Mail', 'user@domain.tld', 'localhost', 993, 'ssl', 'user@domain.tld', imapPassword: 'mypassword');
+
+		self::assertEquals(Http::STATUS_UNPROCESSABLE_ENTITY, $response->getStatus());
+		self::assertSame('SMTP_REQUIRED', $response->getData()['data']['error']);
+	}
+
+	public function testCreateUnknownProtocolIsRejected(): void {
+		$this->appConfig->method('getValueBool')
+			->willReturn(true);
+		$this->setupService->expects(self::never())
+			->method('createNewImapAccount');
+		$this->setupService->expects(self::never())
+			->method('createNewJmapAccount');
+
+		$response = $this->controller->create('Mail', 'user@domain.tld', 'localhost', 993, 'ssl', 'user@domain.tld', protocol: 'pop3');
+
+		self::assertEquals(Http::STATUS_UNPROCESSABLE_ENTITY, $response->getStatus());
+		self::assertSame('INVALID_PROTOCOL', $response->getData()['data']['error']);
+	}
+
+	public function testUpdateJmapSuccess(): void {
+		$id = 135;
+		$mailAccount = new MailAccount();
+		$mailAccount->setProtocol(MailAccount::PROTOCOL_JMAP);
+		$this->accountService->method('find')
+			->with($this->userId, $id)
+			->willReturn(new Account($mailAccount));
+		$account = $this->createStub(Account::class);
+		$this->setupService->expects(self::never())
+			->method('createNewImapAccount');
+		$this->setupService->expects(self::once())
+			->method('createNewJmapAccount')
+			->with('Mail', 'user@domain.tld', 'jmap.domain.tld', 443, 'yes', 'user@domain.tld', null, null, $this->userId, $id)
+			->willReturn($account);
+
+		$response = $this->controller->update($id, 'Mail', 'user@domain.tld', 'jmap.domain.tld', 443, 'yes', 'user@domain.tld');
+
+		self::assertEquals(\OCA\Mail\Http\JsonResponse::success($account), $response);
+	}
+
+	public function testUpdateKeepsStoredProtocol(): void {
+		$id = 135;
+		$this->accountService->method('find')
+			->willReturn(new Account(new MailAccount()));
+		$this->setupService->expects(self::never())
+			->method('createNewJmapAccount');
+		$this->setupService->expects(self::never())
+			->method('createNewImapAccount');
+
+		$response = $this->controller->update($id, 'Mail', 'user@domain.tld', 'jmap.domain.tld', 443, 'yes', 'user@domain.tld', path: '/jmap/session');
+
+		self::assertEquals(Http::STATUS_UNPROCESSABLE_ENTITY, $response->getStatus());
+		self::assertSame('SMTP_REQUIRED', $response->getData()['data']['error']);
 	}
 
 	public function draftDataProvider(): array {

@@ -13,6 +13,7 @@ namespace OCA\Mail\Controller;
 use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\ConfigLexicon;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\CouldNotConnectException;
 use OCA\Mail\Exception\DuplicateEmailAddress;
@@ -122,45 +123,30 @@ class AccountsController extends Controller {
 		int $imapPort,
 		string $imapSslMode,
 		string $imapUser,
-		string $smtpHost,
-		int $smtpPort,
-		string $smtpSslMode,
-		string $smtpUser,
+		?string $smtpHost = null,
+		?int $smtpPort = null,
+		?string $smtpSslMode = null,
+		?string $smtpUser = null,
 		?string $imapPassword = null,
 		?string $smtpPassword = null,
-		string $authMethod = 'password'): JSONResponse {
+		string $authMethod = 'password',
+		?string $path = null): JSONResponse {
 		try {
 			$effectiveUserId = $this->delegationService->resolveAccountUserId($id, $this->userId);
-			// Make sure the account actually exists
-			$this->accountService->find($this->userId, $id);
+			$protocol = $this->accountService->find($this->userId, $id)->getMailAccount()->getProtocol();
 		} catch (ClientException $e) {
 			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
 		}
-		if (!$this->hostValidator->isValid($imapHost)) {
-			return MailJsonResponse::fail(
-				[
-					'error' => 'CONNECTION_ERROR',
-					'service' => 'IMAP',
-					'host' => $imapHost,
-					'port' => $imapPort,
-				],
-			);
-		}
-		if (!$this->hostValidator->isValid($smtpHost)) {
-			return MailJsonResponse::fail(
-				[
-					'error' => 'CONNECTION_ERROR',
-					'service' => 'SMTP',
-					'host' => $smtpHost,
-					'port' => $smtpPort,
-				],
-			);
+		$invalid = $this->validateServerSettings($protocol, $imapHost, $imapPort, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $authMethod);
+		if ($invalid !== null) {
+			return $invalid;
 		}
 
 		try {
-			$result = MailJsonResponse::success(
-				$this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, $authMethod, $id)
-			);
+			$account = $protocol === MailAccount::PROTOCOL_JMAP
+				? $this->setup->createNewJmapAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $path, $this->userId, $id)
+				: $this->setup->createNewImapAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, (string)$smtpHost, (int)$smtpPort, (string)$smtpSslMode, (string)$smtpUser, $smtpPassword, $this->userId, $authMethod, $id);
+			$result = MailJsonResponse::success($account);
 			$this->delegationService->logDelegatedAction($this->userId, $effectiveUserId, "$this->userId updated account <$id> on behalf of $effectiveUserId");
 			return $result;
 		} catch (CouldNotConnectException $e) {
@@ -336,46 +322,28 @@ class AccountsController extends Controller {
 		int $imapPort,
 		string $imapSslMode,
 		string $imapUser,
-		string $smtpHost,
-		int $smtpPort,
-		string $smtpSslMode,
-		string $smtpUser,
+		?string $smtpHost = null,
+		?int $smtpPort = null,
+		?string $smtpSslMode = null,
+		?string $smtpUser = null,
 		?string $imapPassword = null,
 		?string $smtpPassword = null,
 		string $authMethod = 'password',
-		?bool $classificationEnabled = null): JSONResponse {
+		?bool $classificationEnabled = null,
+		string $protocol = MailAccount::PROTOCOL_IMAP,
+		?string $path = null): JSONResponse {
 		if (!$this->appConfig->getValueBool(Application::APP_ID, ConfigLexicon::ALLOW_NEW_MAIL_ACCOUNTS, true)) {
 			$this->logger->info('Creating account disabled by admin.');
 			return MailJsonResponse::error('Could not create account');
 		}
-		if (!$this->hostValidator->isValid($imapHost)) {
-			$this->logger->debug('Prevented access to invalid IMAP host', [
-				'host' => $imapHost,
-			]);
-			return MailJsonResponse::fail(
-				[
-					'error' => 'CONNECTION_ERROR',
-					'service' => 'IMAP',
-					'host' => $imapHost,
-					'port' => $imapPort,
-				],
-			);
-		}
-		if (!$this->hostValidator->isValid($smtpHost)) {
-			$this->logger->debug('Prevented access to invalid SMTP host', [
-				'host' => $smtpHost,
-			]);
-			return MailJsonResponse::fail(
-				[
-					'error' => 'CONNECTION_ERROR',
-					'service' => 'SMTP',
-					'host' => $smtpHost,
-					'port' => $smtpPort,
-				],
-			);
+		$invalid = $this->validateServerSettings($protocol, $imapHost, $imapPort, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $authMethod);
+		if ($invalid !== null) {
+			return $invalid;
 		}
 		try {
-			$account = $this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, $authMethod, null, $classificationEnabled);
+			$account = $protocol === MailAccount::PROTOCOL_JMAP
+				? $this->setup->createNewJmapAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $path, $this->userId, null, $classificationEnabled)
+				: $this->setup->createNewImapAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, (string)$smtpHost, (int)$smtpPort, (string)$smtpSslMode, (string)$smtpUser, $smtpPassword, $this->userId, $authMethod, null, $classificationEnabled);
 			// Set initial heartbeat
 			$this->config->setUserValue(
 				$account->getUserId(),
@@ -404,7 +372,7 @@ class AccountsController extends Controller {
 			]);
 			return MailJsonResponse::error('Could not create account');
 		}
-		if ($authMethod != 'xoauth2') {
+		if ($authMethod != 'xoauth2' && $protocol === MailAccount::PROTOCOL_IMAP) {
 			try {
 				$this->mailboxSync->sync($account, $this->logger);
 			} catch (ServiceException $e) {
@@ -416,6 +384,53 @@ class AccountsController extends Controller {
 		return MailJsonResponse::success(
 			$account, Http::STATUS_CREATED
 		);
+	}
+
+	/**
+	 * @return MailJsonResponse|null a failure response, null if the settings are valid
+	 */
+	private function validateServerSettings(string $protocol,
+		string $inboundHost,
+		int $inboundPort,
+		?string $smtpHost,
+		?int $smtpPort,
+		?string $smtpSslMode,
+		?string $smtpUser,
+		string $authMethod): ?MailJsonResponse {
+		if ($protocol !== MailAccount::PROTOCOL_IMAP && $protocol !== MailAccount::PROTOCOL_JMAP) {
+			return MailJsonResponse::fail(['error' => 'INVALID_PROTOCOL'], Http::STATUS_UNPROCESSABLE_ENTITY);
+		}
+		if ($protocol === MailAccount::PROTOCOL_JMAP && $authMethod !== 'password') {
+			return MailJsonResponse::fail(['error' => 'INVALID_AUTH_METHOD'], Http::STATUS_UNPROCESSABLE_ENTITY);
+		}
+		if ($protocol === MailAccount::PROTOCOL_IMAP && ($smtpHost === null || $smtpPort === null || $smtpSslMode === null || $smtpUser === null)) {
+			return MailJsonResponse::fail(['error' => 'SMTP_REQUIRED'], Http::STATUS_UNPROCESSABLE_ENTITY);
+		}
+
+		$service = $protocol === MailAccount::PROTOCOL_JMAP ? 'JMAP' : 'IMAP';
+		if (!$this->hostValidator->isValid($inboundHost)) {
+			$this->logger->debug("Prevented access to invalid $service host", [
+				'host' => $inboundHost,
+			]);
+			return MailJsonResponse::fail([
+				'error' => 'CONNECTION_ERROR',
+				'service' => $service,
+				'host' => $inboundHost,
+				'port' => $inboundPort,
+			]);
+		}
+		if ($smtpHost !== null && $protocol === MailAccount::PROTOCOL_IMAP && !$this->hostValidator->isValid($smtpHost)) {
+			$this->logger->debug('Prevented access to invalid SMTP host', [
+				'host' => $smtpHost,
+			]);
+			return MailJsonResponse::fail([
+				'error' => 'CONNECTION_ERROR',
+				'service' => 'SMTP',
+				'host' => $smtpHost,
+				'port' => $smtpPort,
+			]);
+		}
+		return null;
 	}
 
 	/**
