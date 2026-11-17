@@ -37,6 +37,8 @@ class JmapMessageAdapter {
 		'$notjunk',
 		'$phishing',
 		'$important',
+		'$hasattachment',
+		'$hasnoattachment',
 		Tag::LABEL_IMPORTANT,
 	];
 

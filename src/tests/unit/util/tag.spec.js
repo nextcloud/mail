@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { tagBackgroundColor, tagTextColor } from '../../../util/tag.js'
+import { tagBackgroundColor, tagTextColor, validateTag } from '../../../util/tag.js'
 
 describe('tag', () => {
 	describe('tagTextColor', () => {
@@ -25,6 +25,14 @@ describe('tag', () => {
 			const actual = tagBackgroundColor('#0082c9')
 
 			expect(actual).toBe('color-mix(in srgb, #0082c9 20%, var(--color-background-dark))')
+		})
+	})
+
+	describe('validateTag', () => {
+		it.each(['$hasattachment', '$hasnoattachment'])('rejects the hidden system tag %s', (name) => {
+			const actual = validateTag(1, name, [])
+
+			expect(actual).toBe('Tag name is a hidden system tag')
 		})
 	})
 })
