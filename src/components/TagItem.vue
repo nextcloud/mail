@@ -7,8 +7,8 @@
 		<button
 			class="tag-group__label"
 			:style="{
-				color: convertHex(tag.color, 1),
-				'background-color': convertHex(tag.color, 0.15),
+				color: tagTextColor(tag.color, isDarkTheme),
+				'background-color': tagBackgroundColor(tag.color),
 			}">
 			{{ translateTagDisplayName(tag) }}
 		</button>
@@ -67,12 +67,13 @@
 <script>
 import { showInfo } from '@nextcloud/dialogs'
 import { NcActionButton, NcActionInput, NcActions, NcActionText, NcColorPicker, NcLoadingIcon } from '@nextcloud/vue'
+import { useIsDarkTheme } from '@nextcloud/vue/composables/useIsDarkTheme'
 import { mapStores } from 'pinia'
 import IconEdit from 'vue-material-design-icons/PencilOutline.vue'
 import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
-import { translateTagDisplayName, validateTag } from '../util/tag.js'
+import { tagBackgroundColor, tagTextColor, translateTagDisplayName, validateTag } from '../util/tag.js'
 
 export default {
 	name: 'TagItem',
@@ -103,6 +104,7 @@ export default {
 	data() {
 		return {
 			isAdded: false,
+			isDarkTheme: useIsDarkTheme(),
 			editing: false,
 			editColor: null,
 			tagLabel: true,
@@ -126,6 +128,8 @@ export default {
 	},
 
 	methods: {
+		tagBackgroundColor,
+		tagTextColor,
 		translateTagDisplayName,
 		deleteTag() {
 			this.$emit('delete-tag', this.tag)
@@ -191,20 +195,6 @@ export default {
 				this.renameTagLabel = false
 				this.renameTagInput = false
 				this.showSaving = true
-			}
-		},
-
-		convertHex(color, opacity) {
-			if (color.length === 4) {
-				const r = parseInt(color.substring(1, 2), 16)
-				const g = parseInt(color.substring(2, 3), 16)
-				const b = parseInt(color.substring(3, 4), 16)
-				return `rgba(${r}, ${g}, ${b}, ${opacity})`
-			} else {
-				const r = parseInt(color.substring(1, 3), 16)
-				const g = parseInt(color.substring(3, 5), 16)
-				const b = parseInt(color.substring(5, 7), 16)
-				return `rgba(${r}, ${g}, ${b}, ${opacity})`
 			}
 		},
 
