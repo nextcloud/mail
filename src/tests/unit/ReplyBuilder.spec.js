@@ -4,6 +4,7 @@
  */
 
 import {
+	buildForwardSubject,
 	buildRecipients,
 	buildReplyBody,
 	buildReplySubject,
@@ -251,5 +252,43 @@ describe('ReplyBuilder', () => {
 		const replySubject = buildReplySubject(orig)
 
 		expect(replySubject).toEqual('Re: Hello')
+	})
+
+	it.each([
+		'AW: Hallo',
+		'رد: مرحبا',
+		'回复：你好',
+	])('does not add another reply prefix to %s', (orig) => {
+		const replySubject = buildReplySubject(orig)
+
+		expect(replySubject).toEqual(orig)
+	})
+
+	it('adds a reply prefix to an Arabic forward', () => {
+		const replySubject = buildReplySubject('إعادة توجيه: مرحبا')
+
+		expect(replySubject).toEqual('Re: إعادة توجيه: مرحبا')
+	})
+
+	it('adds fwd: to a forward subject', () => {
+		const forwardSubject = buildForwardSubject('Hello')
+
+		expect(forwardSubject).toEqual('Fwd: Hello')
+	})
+
+	it.each([
+		'WG: Hallo',
+		'ΠΡΘ: Γεια',
+		'转发：你好',
+	])('does not add another forward prefix to %s', (orig) => {
+		const forwardSubject = buildForwardSubject(orig)
+
+		expect(forwardSubject).toEqual(orig)
+	})
+
+	it('adds a forward prefix to an Arabic reply', () => {
+		const forwardSubject = buildForwardSubject('رد: مرحبا')
+
+		expect(forwardSubject).toEqual('Fwd: رد: مرحبا')
 	})
 })

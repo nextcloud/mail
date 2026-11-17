@@ -132,15 +132,27 @@ const replyPrepends = [
 	'απ',
 	'σχετ',
 	'השב',
+	'رد',
 	'回复',
 	'回覆',
 ]
+
+/**
+ * @param {string} subject the original subject
+ * @param {string[]} prepends lowercase prefixes without the colon
+ * @return {boolean}
+ */
+function hasPrepend(subject, prepends) {
+	const lowerSubject = subject.toLowerCase()
+	// CJK mail clients write the full-width colon
+	return prepends.some((prepend) => lowerSubject.startsWith(`${prepend}:`) || lowerSubject.startsWith(`${prepend}：`))
+}
 
 /*
  * Ref https://tools.ietf.org/html/rfc5322#section-3.6.5
  */
 export function buildReplySubject(original) {
-	if (replyPrepends.some((prepend) => original.toLowerCase().startsWith(`${prepend}:`))) {
+	if (hasPrepend(original, replyPrepends)) {
 		return original
 	}
 
@@ -166,16 +178,15 @@ const forwardPrepends = [
 	'vs',
 	'wg',
 	'yml',
-	'ΠΡΘ',
+	'πρθ',
 	'הועבר',
 	'إعادة توجيه',
-	'رد',
 	'轉寄',
 	'转发',
 ]
 
 export function buildForwardSubject(original) {
-	if (forwardPrepends.some((prepend) => original.toLowerCase().startsWith(`${prepend}:`))) {
+	if (hasPrepend(original, forwardPrepends)) {
 		return original
 	}
 
