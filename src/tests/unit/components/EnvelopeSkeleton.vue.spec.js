@@ -145,4 +145,12 @@ describe('EnvelopeSkeleton', () => {
 
 		expect(view.vm.isRouteActive).toBe(false)
 	})
+
+	it('labels the actions menu with a translated string from the mail app', () => {
+		t.mockImplementationOnce((app, text, vars) => `${app}: ${text.replace('{name}', vars.name)}`)
+
+		const view = mountSkeleton()
+
+		expect(view.vm.computedActionsAriaLabel).toBe('mail: Actions for item with name "Zoidberg"')
+	})
 })
