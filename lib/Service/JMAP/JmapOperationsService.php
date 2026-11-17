@@ -81,7 +81,7 @@ class JmapOperationsService {
 		'attachments', 'preview', 'bodyStructure', 'bodyValues',
 		'header:Disposition-Notification-To:asText',
 		'header:DKIM-Signature:asText',
-		'header:List-Unsubscribe:asText',
+		'header:List-Unsubscribe:asURLs',
 		'header:List-Unsubscribe-Post:asText',
 		'header:X-AI-Generated:asText',
 	];

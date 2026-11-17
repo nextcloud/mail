@@ -237,16 +237,12 @@ class JmapMessageAdapter {
 	 * @return array{0:?string,1:?string}
 	 */
 	private function extractUnsubscribeTargets(MailParametersResponse $source): array {
-		$headerValue = $this->firstHeaderValue($source, 'List-Unsubscribe');
-		if ($headerValue === null) {
-			return [null, null];
-		}
+		$targets = $source->header('List-Unsubscribe', MailHeaderForm::URLs);
 
 		$unsubscribeUrl = null;
 		$unsubscribeMailto = null;
-		foreach (preg_split('/\s*,\s*/', $headerValue) ?: [] as $entry) {
-			$target = trim($entry, " \t\n\r\0\x0B<>");
-			if ($target === '') {
+		foreach (is_array($targets) ? $targets : [] as $target) {
+			if (!is_string($target) || $target === '') {
 				continue;
 			}
 

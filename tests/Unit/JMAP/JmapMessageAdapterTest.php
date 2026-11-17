@@ -237,4 +237,96 @@ class JmapMessageAdapterTest extends TestCase {
 
 		self::assertSame($expected, $message->jsonSerialize()['hasAiGeneratedHeader']);
 	}
+
+	/**
+	 * @param mixed $urls List-Unsubscribe in the URLs form
+	 * @return array{unsubscribeUrl: ?string, unsubscribeMailto: ?string, isOneClickUnsubscribe: bool}
+	 */
+	private function unsubscribeTargets(mixed $urls, ?string $post = null): array {
+		$source = $this->source();
+		$source->method('header')->willReturnCallback(
+			static fn (string $name, MailHeaderForm $form): mixed => match (true) {
+				$name === 'List-Unsubscribe' && $form === MailHeaderForm::URLs => $urls,
+				$name === 'List-Unsubscribe-Post' && $form === MailHeaderForm::Text => $post,
+				default => null,
+			},
+		);
+
+		$json = $this->adapter->convertToModelMessage($source, 1, false)->jsonSerialize();
+
+		return [
+			'unsubscribeUrl' => $json['unsubscribeUrl'],
+			'unsubscribeMailto' => $json['unsubscribeMailto'],
+			'isOneClickUnsubscribe' => $json['isOneClickUnsubscribe'],
+		];
+	}
+
+	public function testModelMessageReadsUnsubscribeTargetsFromUrls(): void {
+		$targets = $this->unsubscribeTargets(
+			['https://example.org/unsubscribe', 'mailto:unsubscribe@example.org'],
+			'List-Unsubscribe=One-Click',
+		);
+
+		self::assertSame([
+			'unsubscribeUrl' => 'https://example.org/unsubscribe',
+			'unsubscribeMailto' => 'mailto:unsubscribe@example.org',
+			'isOneClickUnsubscribe' => true,
+		], $targets);
+	}
+
+	public function testModelMessageUsesTheFirstUnsubscribeTargetOfEachScheme(): void {
+		$targets = $this->unsubscribeTargets([
+			'mailto:first@example.org',
+			'ftp://example.org/unsubscribe',
+			'HTTPS://example.org/first',
+			'mailto:second@example.org',
+			'http://example.org/second',
+		]);
+
+		self::assertSame([
+			'unsubscribeUrl' => 'HTTPS://example.org/first',
+			'unsubscribeMailto' => 'mailto:first@example.org',
+			'isOneClickUnsubscribe' => false,
+		], $targets);
+	}
+
+	public function testModelMessageWithoutListUnsubscribe(): void {
+		$targets = $this->unsubscribeTargets(null, 'List-Unsubscribe=One-Click');
+
+		self::assertSame([
+			'unsubscribeUrl' => null,
+			'unsubscribeMailto' => null,
+			'isOneClickUnsubscribe' => false,
+		], $targets);
+	}
+
+	public function testModelMessageIsNotOneClickUnsubscribeWithMailtoOnly(): void {
+		$targets = $this->unsubscribeTargets(['mailto:unsubscribe@example.org'], 'List-Unsubscribe=One-Click');
+
+		self::assertSame([
+			'unsubscribeUrl' => null,
+			'unsubscribeMailto' => 'mailto:unsubscribe@example.org',
+			'isOneClickUnsubscribe' => false,
+		], $targets);
+	}
+
+	public function testModelMessageSkipsInvalidUnsubscribeTargets(): void {
+		$targets = $this->unsubscribeTargets(['', 42, null, 'mailto:unsubscribe@example.org']);
+
+		self::assertSame([
+			'unsubscribeUrl' => null,
+			'unsubscribeMailto' => 'mailto:unsubscribe@example.org',
+			'isOneClickUnsubscribe' => false,
+		], $targets);
+	}
+
+	public function testModelMessageIgnoresUnsubscribeTargetsThatAreNotAList(): void {
+		$targets = $this->unsubscribeTargets('https://example.org/unsubscribe', 'List-Unsubscribe=One-Click');
+
+		self::assertSame([
+			'unsubscribeUrl' => null,
+			'unsubscribeMailto' => null,
+			'isOneClickUnsubscribe' => false,
+		], $targets);
+	}
 }
