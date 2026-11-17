@@ -221,4 +221,32 @@ class ProvisioningMapperTest extends TestCase {
 		$this->assertArrayHasKey('masterUser', $provisioning->getUpdatedFields());
 	}
 
+	/** @dataProvider saveSentCopyData */
+	public function testValidateSaveSentCopy(array $input, bool $expected): void {
+		$data = [
+			'provisioningDomain' => 'static.test',
+			'emailTemplate' => '%USERID%@static.test',
+			'imapUser' => '%EMAIL%',
+			'imapHost' => 'static.test',
+			'imapPort' => '143',
+			'imapSslMode' => 'none',
+			'smtpUser' => '%EMAIL%',
+			'smtpHost' => 'static.test',
+			'smtpPort' => '25',
+			'smtpSslMode' => 'none',
+			'sieveEnabled' => false,
+		] + $input;
+
+		$provisioning = $this->mapper->validate($data);
+
+		$this->assertSame($expected, $provisioning->getSaveSentCopy());
+	}
+
+	public static function saveSentCopyData(): array {
+		return [
+			'default' => [[], true],
+			'enabled' => [['saveSentCopy' => true], true],
+			'disabled' => [['saveSentCopy' => false], false],
+		];
+	}
 }

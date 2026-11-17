@@ -16,7 +16,7 @@
 
 		<MailboxInlinePicker v-model="sentMailbox" :account="account" :disabled="saving" />
 		<NcCheckboxRadioSwitch
-			v-if="account.protocol !== 'jmap'"
+			v-if="account.protocol !== 'jmap' && !account.provisioningId"
 			v-model="saveSentCopy"
 			:disabled="saving">
 			{{ t('mail', 'Save a copy of sent messages') }}

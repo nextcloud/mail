@@ -143,6 +143,30 @@ class UpdateProvisioningTest extends TestCase {
 		self::assertSame(Command::SUCCESS, $status);
 	}
 
+	/** @dataProvider sentCopyOptions */
+	public function testSetsSaveSentCopy(bool $current, array $options, bool $expected): void {
+		$config = $this->existingConfig();
+		$config->setSaveSentCopy($current);
+		$this->provisioningManager->method('getConfigById')
+			->willReturn($config);
+		$this->provisioningManager->expects(self::once())
+			->method('updateProvisioning')
+			->with(self::callback(static fn (array $data): bool => $data['saveSentCopy'] === $expected));
+
+		$status = $this->tester->execute(array_merge(['id' => '3'], $options));
+
+		self::assertSame(Command::SUCCESS, $status);
+	}
+
+	public static function sentCopyOptions(): array {
+		return [
+			'keep disabled' => [false, [], false],
+			'keep enabled' => [true, [], true],
+			'disable' => [true, ['--no-save-sent-copy' => true], false],
+			'enable' => [false, ['--save-sent-copy' => true], true],
+		];
+	}
+
 	public function testUnknownId(): void {
 		$this->provisioningManager->method('getConfigById')
 			->willReturn(null);
