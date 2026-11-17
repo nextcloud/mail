@@ -163,15 +163,6 @@
       <code><![CDATA[$storage]]></code>
     </UndefinedDocblockClass>
   </file>
-  <file src="lib/Service/AutoConfig/IspDb.php">
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$xml]]></code>
-    </PossiblyInvalidArgument>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$domain]]></code>
-      <code><![CDATA[$serverConfigs['smtp'][0]]]></code>
-    </PossiblyUndefinedArrayOffset>
-  </file>
   <file src="lib/Service/Avatar/FaviconSource.php">
     <PossiblyInvalidArgument>
       <code><![CDATA[$body]]></code>

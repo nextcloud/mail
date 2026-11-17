@@ -99,6 +99,43 @@ class AutoconfigLookupTest extends TestCase {
 		], $this->requested);
 	}
 
+	public static function providerConfigurations(): array {
+		return [
+			'first of several IMAP and SMTP servers' => [
+				'user@gmx.com',
+				'autoconfig-gmx.xml',
+				new ServerEndpoint('user@gmx.com', 'imap.gmx.com', 993, ServerEndpoint::SECURITY_SSL),
+				new ServerEndpoint('user@gmx.com', 'mail.gmx.com', 465, ServerEndpoint::SECURITY_SSL),
+			],
+			'exchange server ignored' => [
+				'user@outlook.com',
+				'autoconfig-outlook.xml',
+				new ServerEndpoint('user@outlook.com', 'outlook.office365.com', 993, ServerEndpoint::SECURITY_SSL),
+				new ServerEndpoint('user@outlook.com', 'smtp.office365.com', 587, ServerEndpoint::SECURITY_STARTTLS),
+			],
+			'STARTTLS submission' => [
+				'user@freenet.de',
+				'autoconfig-freenet.xml',
+				new ServerEndpoint('user@freenet.de', 'mx.freenet.de', 993, ServerEndpoint::SECURITY_SSL),
+				new ServerEndpoint('user@freenet.de', 'mx.freenet.de', 587, ServerEndpoint::SECURITY_STARTTLS),
+			],
+		];
+	}
+
+	/** @dataProvider providerConfigurations */
+	public function testParsesProviderConfigurations(string $email, string $fixture, ServerEndpoint $incoming, ServerEndpoint $outgoing): void {
+		$domain = explode('@', $email)[1];
+		$this->responses = [
+			'https://autoconfig.' . $domain . '/mail/config-v1.1.xml?emailaddress=' . rawurlencode($email) => self::fixture($fixture),
+		];
+
+		$result = $this->lookup->lookup($this->context($email));
+
+		self::assertNotNull($result);
+		self::assertEquals(new ImapServerConfiguration($incoming, $outgoing), $result->getImap());
+		self::assertNull($result->getJmap());
+	}
+
 	public function testParsesJmap(): void {
 		$this->responses = [
 			'https://autoconfig.example.org/mail/config-v1.1.xml?emailaddress=user%40example.org' => self::fixture('autoconfig-jmap.xml'),
