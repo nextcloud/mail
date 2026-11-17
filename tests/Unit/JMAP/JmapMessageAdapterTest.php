@@ -13,6 +13,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use DateTimeImmutable;
 use JmapClient\Enums\Mail\MailHeaderForm;
 use JmapClient\Responses\Mail\MailParameters as MailParametersResponse;
+use JmapClient\Responses\Mail\MailPart as MailPartResponse;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\JMAP\JmapMessageAdapter;
 use OCA\Mail\Service\Html;
@@ -328,5 +329,49 @@ class JmapMessageAdapterTest extends TestCase {
 			'unsubscribeMailto' => null,
 			'isOneClickUnsubscribe' => false,
 		], $targets);
+	}
+
+	/**
+	 * @return list<array<string, mixed>>
+	 */
+	private function schedulingFor(string $calendarContent): array {
+		$source = $this->source();
+		$source->method('bodyPartStructure')->willReturn(new MailPartResponse([
+			'type' => 'multipart/mixed',
+			'subParts' => [
+				['partId' => '1', 'type' => 'text/plain'],
+				['partId' => '2', 'blobId' => 'blob-2', 'type' => 'text/calendar', 'name' => 'event.ics'],
+			],
+		]));
+		$source->method('bodyPartValue')->willReturnCallback(
+			static fn (string $partId): ?string => $partId === '2' ? $calendarContent : null,
+		);
+
+		return $this->adapter->convertToModelMessage($source, 7, true)->jsonSerialize()['scheduling'];
+	}
+
+	public function testModelMessageSchedulingIncludesCalendarContents(): void {
+		$ics = "BEGIN:VCALENDAR\r\nMETHOD:request\r\nBEGIN:VEVENT\r\nUID:abc\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n";
+
+		$scheduling = $this->schedulingFor($ics);
+
+		self::assertSame([[
+			'id' => '2',
+			'messageId' => 7,
+			'method' => 'REQUEST',
+			'contents' => $ics,
+		]], $scheduling);
+	}
+
+	public function testModelMessageSchedulingSkipsCalendarWithoutSupportedMethod(): void {
+		$scheduling = $this->schedulingFor("BEGIN:VCALENDAR\r\nMETHOD:PUBLISH\r\nEND:VCALENDAR\r\n");
+
+		self::assertSame([], $scheduling);
+	}
+
+	public function testModelMessageSchedulingSkipsCalendarWithoutContent(): void {
+		$scheduling = $this->schedulingFor('');
+
+		self::assertSame([], $scheduling);
 	}
 }
