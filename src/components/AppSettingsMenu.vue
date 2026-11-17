@@ -127,7 +127,7 @@
 						<NcButton
 							variant="primary"
 							class="text-block-buttons__button"
-							:disabled="!localTextBlock.title || !localTextBlock.content"
+							:disabled="!localTextBlock.title || !localTextBlock.content || textBlockSaving"
 							@click="newTextBlock">
 							<template #icon>
 								<IconCheck :size="20" />
@@ -338,6 +338,7 @@ import TextEditor from './TextEditor.vue'
 import TrustedSenders from './TrustedSenders.vue'
 import Logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
+import { embedBlobImages } from '../util/blobImages.js'
 
 export default {
 	name: 'AppSettingsMenu',
@@ -408,6 +409,7 @@ export default {
 			trapElements: [],
 			bus: mitt(),
 			textBlockDialogOpen: false,
+			textBlockSaving: false,
 			localTextBlock: {
 				title: '',
 				content: '',
@@ -863,12 +865,23 @@ export default {
 			document.body.append(iframe)
 		},
 
-		newTextBlock() {
-			this.mainStore.createTextBlock({ ...this.localTextBlock })
-			this.textBlockDialogOpen = false
-			this.localTextBlock = {
-				title: '',
-				content: '',
+		async newTextBlock() {
+			this.textBlockSaving = true
+			try {
+				await this.mainStore.createTextBlock({
+					...this.localTextBlock,
+					content: await embedBlobImages(this.localTextBlock.content),
+				})
+				this.textBlockDialogOpen = false
+				this.localTextBlock = {
+					title: '',
+					content: '',
+				}
+			} catch (error) {
+				showError(t('mail', 'Failed to save text block'))
+				Logger.error('Failed to save text block', { error })
+			} finally {
+				this.textBlockSaving = false
 			}
 		},
 
