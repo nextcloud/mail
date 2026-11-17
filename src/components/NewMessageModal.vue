@@ -407,6 +407,8 @@ export default {
 							showError(t('mail', 'Failed to save draft'))
 						}
 					}
+
+					return id
 				} finally {
 					this.savingDraft = false
 				}

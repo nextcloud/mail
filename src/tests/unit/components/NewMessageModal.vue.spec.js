@@ -8,7 +8,7 @@ import { shallowMount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import NewMessageModal from '../../../components/NewMessageModal.vue'
-import { saveDraft } from '../../../service/DraftService.js'
+import { saveDraft, updateDraft } from '../../../service/DraftService.js'
 import useMainStore from '../../../store/mainStore.js'
 
 vi.mock('@nextcloud/dialogs', async (importOriginal) => ({
@@ -227,6 +227,38 @@ describe('NewMessageModal', () => {
 
 			expect(event.preventDefault).toHaveBeenCalled()
 			expect(view.vm.mainStore.showMessageComposerMutation).not.toHaveBeenCalled()
+		})
+	})
+
+	describe('saving a draft after an earlier save', () => {
+		const message = { subject: 'Hello', attachments: [], isHtml: false, bodyPlain: 'Hi there', accountId: 1 }
+		let view
+
+		beforeEach(async () => {
+			view = mountModal({ data: { isHtml: false }, composerOpen: true })
+			saveDraft.mockResolvedValue({ id: 7 })
+			await view.vm.onDraft(message)
+		})
+
+		it('keeps the draft id when a later save fails', async () => {
+			updateDraft.mockRejectedValueOnce(new Error('Network error'))
+
+			const id = await view.vm.onDraft(message)
+
+			expect(id).toBe(7)
+			expect(view.vm.canSaveDraft).toBe(false)
+		})
+
+		it('updates the existing draft instead of creating a duplicate after a failed save', async () => {
+			updateDraft.mockRejectedValueOnce(new Error('Network error'))
+			await view.vm.onDraft(message)
+			updateDraft.mockResolvedValueOnce()
+
+			await view.vm.onDraft(message)
+
+			expect(saveDraft).toHaveBeenCalledTimes(1)
+			expect(updateDraft).toHaveBeenLastCalledWith(expect.objectContaining({ id: 7 }))
+			expect(view.vm.canSaveDraft).toBe(true)
 		})
 	})
 
