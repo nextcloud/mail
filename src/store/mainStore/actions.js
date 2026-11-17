@@ -114,6 +114,7 @@ import {
 	updateTextBlock,
 } from '../../service/TextBlockService.js'
 import * as ThreadService from '../../service/ThreadService.js'
+import { embedBlobImages } from '../../util/blobImages.js'
 import { sortAliases } from '../../util/emailAddress.js'
 import { normalizedEnvelopeListId } from '../../util/normalization.js'
 import {
@@ -686,6 +687,9 @@ export default function mainStoreActions() {
 				const messageData = { ...this.composerMessage.data }
 				if (restoreOriginalSendAt && message.type === 'outbox' && message.options?.originalSendAt) {
 					messageData.sendAt = message.options.originalSendAt
+					if (messageData.isHtml) {
+						messageData.bodyHtml = await embedBlobImages(messageData.bodyHtml)
+					}
 					updateDraft(messageData)
 				}
 				if (moveToImap) {

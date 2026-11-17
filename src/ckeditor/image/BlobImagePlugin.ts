@@ -7,7 +7,7 @@ import type { FileLoader, UploadAdapter, UploadResponse, ViewDocumentFragment, V
 
 import { FileRepository, Plugin, UpcastWriter } from 'ckeditor5'
 import logger from '../../logger.js'
-import { createBlobUrl } from '../../util/blobImages.js'
+import { createBlobUrl, createBlobUrlForDataUri } from '../../util/blobImages.js'
 
 const BASE64_DATA_URI = /^data:([^;,]*);base64,(.*)$/s
 
@@ -70,8 +70,10 @@ function dataUriToBlobUrl(src: string): string | null {
 	}
 
 	try {
-		const bytes = Uint8Array.from(atob(match[2]), (char) => char.charCodeAt(0))
-		return createBlobUrl(new Blob([bytes], { type: match[1] }))
+		return createBlobUrlForDataUri(src, () => {
+			const bytes = Uint8Array.from(atob(match[2]), (char) => char.charCodeAt(0))
+			return new Blob([bytes], { type: match[1] })
+		})
 	} catch (error) {
 		logger.warn('Could not convert inline image to a blob, keeping base64', { error })
 		return null

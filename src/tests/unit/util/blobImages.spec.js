@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { createBlobUrl, embedBlobImages, embeddedSize } from '../../../util/blobImages.js'
+import { createBlobUrl, createBlobUrlForDataUri, embedBlobImages, embeddedSize } from '../../../util/blobImages.js'
 
 describe('blobImages', () => {
 	let counter = 0
@@ -14,6 +14,18 @@ describe('blobImages', () => {
 
 	afterEach(() => {
 		delete URL.createObjectURL
+	})
+
+	it('reuses the blob URL for an identical data URI', () => {
+		const toBlob = vi.fn(() => new Blob(['image'], { type: 'image/png' }))
+
+		const first = createBlobUrlForDataUri('data:image/png;base64,Zmlyc3Q=', toBlob)
+		const second = createBlobUrlForDataUri('data:image/png;base64,Zmlyc3Q=', toBlob)
+		const other = createBlobUrlForDataUri('data:image/png;base64,b3RoZXI=', toBlob)
+
+		expect(second).toBe(first)
+		expect(other).not.toBe(first)
+		expect(toBlob).toHaveBeenCalledTimes(2)
 	})
 
 	it('leaves html without blob images untouched', async () => {

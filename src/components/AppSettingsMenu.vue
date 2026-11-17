@@ -127,7 +127,7 @@
 						<NcButton
 							variant="primary"
 							class="text-block-buttons__button"
-							:disabled="!localTextBlock.title || !localTextBlock.content"
+							:disabled="!localTextBlock.title || !localTextBlock.content || textBlockSaving"
 							@click="newTextBlock">
 							<template #icon>
 								<IconCheck :size="20" />
@@ -409,6 +409,7 @@ export default {
 			trapElements: [],
 			bus: mitt(),
 			textBlockDialogOpen: false,
+			textBlockSaving: false,
 			localTextBlock: {
 				title: '',
 				content: '',
@@ -865,14 +866,22 @@ export default {
 		},
 
 		async newTextBlock() {
-			this.mainStore.createTextBlock({
-				...this.localTextBlock,
-				content: await embedBlobImages(this.localTextBlock.content),
-			})
-			this.textBlockDialogOpen = false
-			this.localTextBlock = {
-				title: '',
-				content: '',
+			this.textBlockSaving = true
+			try {
+				await this.mainStore.createTextBlock({
+					...this.localTextBlock,
+					content: await embedBlobImages(this.localTextBlock.content),
+				})
+				this.textBlockDialogOpen = false
+				this.localTextBlock = {
+					title: '',
+					content: '',
+				}
+			} catch (error) {
+				showError(t('mail', 'Failed to save text block'))
+				Logger.error('Failed to save text block', { error })
+			} finally {
+				this.textBlockSaving = false
 			}
 		},
 

@@ -6,6 +6,7 @@
 import { createPinia, setActivePinia } from 'pinia'
 import { curry, range, reverse } from 'ramda'
 import * as AccountService from '../../../service/AccountService.js'
+import * as DraftService from '../../../service/DraftService.js'
 import * as InternalAddressService from '../../../service/InternalAddressService.js'
 import * as MailboxService from '../../../service/MailboxService.js'
 import * as MessageService from '../../../service/MessageService.js'
@@ -14,9 +15,11 @@ import * as OutboxService from '../../../service/OutboxService.js'
 import { PAGE_SIZE, UNIFIED_INBOX_ID } from '../../../store/constants.js'
 import useMainStore from '../../../store/mainStore.js'
 import useOutboxStore from '../../../store/outboxStore.js'
+import { createBlobUrl } from '../../../util/blobImages.js'
 import { normalizedEnvelopeListId } from '../../../util/normalization.js'
 
 vi.mock('../../../service/AccountService.js')
+vi.mock('../../../service/DraftService.js')
 vi.mock('../../../service/InternalAddressService.js')
 vi.mock('../../../service/MailboxService.js')
 vi.mock('../../../service/MessageService.js')
@@ -969,6 +972,26 @@ describe('Vuex store actions', () => {
 				data: expect.objectContaining({ sendAt: undefined }),
 				originalSendAt: pastSendAt,
 			}))
+		})
+	})
+
+	describe('stopComposerSession', () => {
+		it('embeds blob images when restoring the original send time of an outbox message', async () => {
+			URL.createObjectURL = vi.fn(() => 'blob:http://localhost/image')
+			const url = createBlobUrl(new Blob(['image'], { type: 'image/png' }))
+			store.newMessage = {
+				type: 'outbox',
+				data: { id: 42, isHtml: true, bodyHtml: `<p><img src="${url}"></p>`, sendAt: 200 },
+				options: { originalSendAt: 100 },
+			}
+
+			await store.stopComposerSession({ restoreOriginalSendAt: true })
+
+			expect(DraftService.updateDraft).toHaveBeenCalledWith(expect.objectContaining({
+				bodyHtml: '<p><img src="data:image/png;base64,aW1hZ2U="></p>',
+				sendAt: 100,
+			}))
+			delete URL.createObjectURL
 		})
 	})
 })
