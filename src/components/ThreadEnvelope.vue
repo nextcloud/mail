@@ -1036,7 +1036,7 @@ export default {
 		},
 
 		onToggleJunk() {
-			this.mainStore.toggleEnvelopeJunk(this.envelope)
+			this.mainStore.toggleEnvelopeJunk({ envelope: this.envelope })
 		},
 
 		onToggleSeen() {
