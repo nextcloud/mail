@@ -7,6 +7,7 @@ import type { FileLoader, UploadAdapter, UploadResponse, ViewDocumentFragment, V
 
 import { FileRepository, Plugin, UpcastWriter } from 'ckeditor5'
 import logger from '../../logger.js'
+import { createBlobUrl } from '../../util/blobImages.js'
 
 const BASE64_DATA_URI = /^data:([^;,]*);base64,(.*)$/s
 
@@ -19,15 +20,15 @@ class BlobUploadAdapter implements UploadAdapter {
 
 	async upload(): Promise<UploadResponse> {
 		const file = await this.loader.file
-		return { default: URL.createObjectURL(file!) }
+		return { default: createBlobUrl(file!) }
 	}
 
 	abort(): void {}
 }
 
 /**
- * Holds images as blob: object URLs while editing. Composer embeds them as
- * base64 again when the message is saved.
+ * Holds images as blob: object URLs while editing. Run the editor's data
+ * through embedBlobImages before persisting it.
  */
 export default class BlobImagePlugin extends Plugin {
 	static get requires() {
@@ -49,7 +50,7 @@ export default class BlobImagePlugin extends Plugin {
 					continue
 				}
 
-				const blobUrl = toBlobUrl(item.getAttribute('src') ?? '')
+				const blobUrl = dataUriToBlobUrl(item.getAttribute('src') ?? '')
 				if (blobUrl !== null) {
 					writer.setAttribute('src', blobUrl, item)
 				}
@@ -62,7 +63,7 @@ export default class BlobImagePlugin extends Plugin {
  * @param src image source to convert
  * @return an object URL for a base64 data URI, null for anything else
  */
-function toBlobUrl(src: string): string | null {
+function dataUriToBlobUrl(src: string): string | null {
 	const match = BASE64_DATA_URI.exec(src)
 	if (match === null) {
 		return null
@@ -70,7 +71,7 @@ function toBlobUrl(src: string): string | null {
 
 	try {
 		const bytes = Uint8Array.from(atob(match[2]), (char) => char.charCodeAt(0))
-		return URL.createObjectURL(new Blob([bytes], { type: match[1] }))
+		return createBlobUrl(new Blob([bytes], { type: match[1] }))
 	} catch (error) {
 		logger.warn('Could not convert inline image to a blob, keeping base64', { error })
 		return null
