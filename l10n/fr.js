@@ -850,6 +850,7 @@ OC.L10N.register(
     "Actions" : "Actions",
     "Add action" : "Ajouter une action",
     "Redirected messages might be rejected by the receiving server, and cannot be read by the recipient if encrypted." : "Les messages redirigés peuvent être rejetés par le serveur destinataire et ne peuvent pas être lus par leur destinataire s’ils sont chiffrés.",
+    "All incoming messages will be moved out of your inbox." : "Tous les messages entrants seront retirés de votre boîte de réception.",
     "Priority" : "Priorité",
     "Enable filter" : "Activer le filtre",
     "Tag" : "Étiquette",

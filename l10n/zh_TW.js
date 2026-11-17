@@ -127,6 +127,7 @@ OC.L10N.register(
     "Account updated" : "已更新帳號",
     "IMAP server is not reachable" : "IMAP 伺服器無法連線",
     "SMTP server is not reachable" : "SMTP 伺服器無法連線",
+    "Account already exists" : "帳號已存在",
     "IMAP username or password is wrong" : "IMAP 使用者名稱或密碼錯誤",
     "SMTP username or password is wrong" : "SMTP 使用者名稱或密碼錯誤",
     "IMAP server denied authentication" : "IMAP 伺服器拒絕驗證",

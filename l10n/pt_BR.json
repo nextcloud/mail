@@ -125,6 +125,7 @@
     "Account updated" : "Conta atualizada",
     "IMAP server is not reachable" : "O servidor IMAP não está acessível",
     "SMTP server is not reachable" : "O servidor SMTP não está acessível",
+    "Account already exists" : "A conta já existe",
     "IMAP username or password is wrong" : "O nome de usuário ou senha IMAP está errado",
     "SMTP username or password is wrong" : "O nome de usuário ou senha SMTP está errado",
     "IMAP server denied authentication" : "O servidor IMAP negou a autenticação",
