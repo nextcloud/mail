@@ -176,6 +176,8 @@ class JmapMessageAdapterTest extends TestCase {
 		$source = $this->source([], [
 			'$seen' => true,
 			'$flagged' => true,
+			'$hasattachment' => true,
+			'$hasnoattachment' => true,
 			'work' => true,
 			'urgent' => true,
 			'ignored' => false,
