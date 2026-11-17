@@ -4,7 +4,6 @@
  */
 
 const blobs = new Map()
-const dataUriUrls = new Map()
 
 /**
  * @param {Blob} blob image data
@@ -14,19 +13,6 @@ export function createBlobUrl(blob) {
 	const url = URL.createObjectURL(blob)
 	blobs.set(url, blob)
 	return url
-}
-
-/**
- * @param {string} dataUri base64 data URI
- * @param {() => Blob} toBlob decodes dataUri, only called on the first request for it
- * @return {string} object URL, the same one for every call with an identical dataUri
- */
-export function createBlobUrlForDataUri(dataUri, toBlob) {
-	// ponytail: entries live until page reload; revoking needs to know no editor, draft or store copy still references the URL
-	if (!dataUriUrls.has(dataUri)) {
-		dataUriUrls.set(dataUri, createBlobUrl(toBlob()))
-	}
-	return dataUriUrls.get(dataUri)
 }
 
 /**
