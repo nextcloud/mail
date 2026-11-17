@@ -8,7 +8,7 @@ import { shallowMount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import NewMessageModal from '../../../components/NewMessageModal.vue'
-import { saveDraft } from '../../../service/DraftService.js'
+import { deleteDraft, saveDraft } from '../../../service/DraftService.js'
 import useMainStore from '../../../store/mainStore.js'
 
 vi.mock('@nextcloud/dialogs', async (importOriginal) => ({
@@ -42,9 +42,9 @@ const ComposerStub = {
  * @param {boolean} options.composerOpen - whether the composer is still rendered
  * @return {object} the mounted wrapper
  */
-function mountModal({ data, composerOpen }) {
+function mountModal({ data, composerOpen, type = 'imap' }) {
 	const store = useMainStore()
-	store.newMessage = { type: 'imap', data, options: {} }
+	store.newMessage = { type, data, options: {} }
 	store.showMessageComposer = composerOpen
 	store.patchComposerData = vi.fn()
 
@@ -150,6 +150,57 @@ describe('NewMessageModal', () => {
 			expect(view.vm.mainStore.showMessageComposerMutation).toHaveBeenCalled()
 			expect(showError).toHaveBeenCalledTimes(1)
 			expect(showError).toHaveBeenCalledWith('Failed to save draft', { timeout: TOAST_DEFAULT_TIMEOUT * 4 })
+		})
+	})
+
+	describe('discarding draft', () => {
+		let view
+
+		it('discard outbox draft', async () => {
+			view = mountModal({ data: { id: 42, isHtml: false }, composerOpen: true, type: 'outbox' })
+			view.vm.mainStore.stopComposerSession = vi.fn().mockResolvedValue()
+			view.vm.outboxStore.deleteMessage = vi.fn().mockResolvedValue()
+
+			await view.vm.discardDraft()
+
+			expect(view.vm.mainStore.stopComposerSession).toHaveBeenCalled()
+			expect(view.vm.outboxStore.deleteMessage).toHaveBeenCalled()
+			expect(showSuccess).toHaveBeenCalledWith('Message discarded')
+		})
+
+		it('discard remote draft', async () => {
+			view = mountModal({ data: { draftId: 42, isHtml: false }, composerOpen: true })
+			view.vm.mainStore.stopComposerSession = vi.fn().mockResolvedValue()
+			view.vm.mainStore.deleteMessage = vi.fn().mockResolvedValue()
+
+			await view.vm.discardDraft()
+
+			expect(view.vm.mainStore.stopComposerSession).toHaveBeenCalled()
+			expect(view.vm.mainStore.deleteMessage).toHaveBeenCalled()
+			expect(showSuccess).toHaveBeenCalledWith('Message discarded')
+		})
+
+		it('discard local draft', async () => {
+			view = mountModal({ data: { id: 42, isHtml: false }, composerOpen: true })
+			view.vm.mainStore.stopComposerSession = vi.fn().mockResolvedValue()
+
+			await view.vm.discardDraft()
+
+			expect(view.vm.mainStore.stopComposerSession).toHaveBeenCalled()
+			expect(deleteDraft).toHaveBeenCalled()
+			expect(showSuccess).toHaveBeenCalledWith('Message discarded')
+		})
+
+		it('fails to discard local draft', async () => {
+			deleteDraft.mockRejectedValue(new Error('Database unavailable'))
+			view = mountModal({ data: { id: 42, isHtml: false }, composerOpen: true })
+			view.vm.mainStore.stopComposerSession = vi.fn().mockResolvedValue()
+
+			await view.vm.discardDraft()
+
+			expect(view.vm.mainStore.stopComposerSession).toHaveBeenCalled()
+			expect(deleteDraft).toHaveBeenCalled()
+			expect(showError).toHaveBeenCalledWith('Could not discard message')
 		})
 	})
 
