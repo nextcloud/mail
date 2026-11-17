@@ -1,3 +1,26 @@
+## [5.13.3](https://github.com/nextcloud/mail/compare/v5.13.2...v5.13.3) (2026-11-17)
+
+
+### Bug Fixes
+
+* **composer:** load CKEditor translations from dist ([5e55f28](https://github.com/nextcloud/mail/commit/5e55f282c698199e0cc79e6808d51165109cdcbd))
+* **deps:** bump node-forge from ^1.4.0 to v1.4.3 ([278d005](https://github.com/nextcloud/mail/commit/278d005af6f818e5b0be2438409ac9792435cea4))
+* **dns:** Update public suffix list ([da7cd0e](https://github.com/nextcloud/mail/commit/da7cd0e9a0ada5eeaa7783120db9b4e0058293e4))
+* **imap:** ensure findNewIds subquery boundary never returns NULL ([1e7c011](https://github.com/nextcloud/mail/commit/1e7c01153c415fc72d26eea47cb23d290545b31e)), closes [#4479](https://github.com/nextcloud/mail/issues/4479)
+* **imip:** show the component that was edited last ([78eef37](https://github.com/nextcloud/mail/commit/78eef3794b0d0dad9b9d51ea3fe8e43ad09c352d))
+* **integration:** don't return null on clientId ([#14046](https://github.com/nextcloud/mail/issues/14046)) ([#14137](https://github.com/nextcloud/mail/issues/14137)) ([865a55d](https://github.com/nextcloud/mail/commit/865a55d768a57641040f859445a504f061a0c78e))
+* **l10n:** Update translations from Transifex ([08efbc9](https://github.com/nextcloud/mail/commit/08efbc94f2cbce984b760c6d8e47da743096fc84))
+* **l10n:** Update translations from Transifex ([87111d2](https://github.com/nextcloud/mail/commit/87111d20c253041828a224ede66864aabe0ad130))
+* **l10n:** Update translations from Transifex ([37f3342](https://github.com/nextcloud/mail/commit/37f33422a0c72b7f5fa213a06d96d8dfced5f727))
+* **l10n:** Update translations from Transifex ([1b00081](https://github.com/nextcloud/mail/commit/1b0008160f33cd6bd2f6331fd51084f341864eb1))
+* **l10n:** Update translations from Transifex ([c5e2306](https://github.com/nextcloud/mail/commit/c5e23062353a833b24e35f557bea19645a8ffb76))
+* **l10n:** Update translations from Transifex ([8203f1d](https://github.com/nextcloud/mail/commit/8203f1de2a124f096184282e105c919b53fee232))
+* **l10n:** Update translations from Transifex ([f8ace28](https://github.com/nextcloud/mail/commit/f8ace28ffaf74c60d742c9ceb99dba420aae108e))
+* **ui:** sort the snoozed mailbox consistently ([7370374](https://github.com/nextcloud/mail/commit/7370374fb6a1a32c57f72c5902d6fa8c56c05657))
+* while creating a new account, check for his existance ([6207f7a](https://github.com/nextcloud/mail/commit/6207f7af5705b507f4b6c279f805bc3eb4aaad25))
+
+
+
 ## [5.13.2](https://github.com/nextcloud/mail/compare/v5.13.1...v5.13.2) (2026-11-10)
 
 
