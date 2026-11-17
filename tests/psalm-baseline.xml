@@ -155,14 +155,6 @@
       <code><![CDATA[$message->getAttachments()]]></code>
     </PossiblyNullArgument>
   </file>
-  <file src="lib/Service/AutoConfig/IspDb.php">
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$xml]]></code>
-    </PossiblyInvalidArgument>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$domain]]></code>
-    </PossiblyUndefinedArrayOffset>
-  </file>
   <file src="lib/Service/Avatar/FaviconSource.php">
     <PossiblyInvalidArgument>
       <code><![CDATA[$body]]></code>

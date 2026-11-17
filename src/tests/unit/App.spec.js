@@ -10,7 +10,6 @@ import App from '../../App.vue'
 import Nextcloud from '../../mixins/Nextcloud.js'
 import useMainStore from '../../store/mainStore.js'
 
-vi.mock('../../service/AutoConfigService.js')
 vi.mock('../../init.js')
 vi.mock('@nextcloud/dialogs', async (importOriginal) => ({
 	...await importOriginal(),
