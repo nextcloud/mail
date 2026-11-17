@@ -1958,6 +1958,9 @@ export default function mainStoreActions() {
 		expandAccountMutation(accountId) {
 			this.accountsUnmapped[accountId].collapsed = false
 		},
+		collapseAccountMutation(accountId) {
+			this.accountsUnmapped[accountId].collapsed = true
+		},
 		setAccountSettingMutation({
 			accountId,
 			key,

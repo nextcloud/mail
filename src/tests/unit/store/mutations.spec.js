@@ -1505,4 +1505,12 @@ describe('Pinia store mutations', () => {
 
 		expect(store.mailboxes[27].envelopeLists[''].length).toEqual(1)
 	})
+
+	it('collapses an account', () => {
+		store.accountsUnmapped[13] = { id: 13, collapsed: false }
+
+		store.collapseAccountMutation(13)
+
+		expect(store.accountsUnmapped[13].collapsed).toBe(true)
+	})
 })

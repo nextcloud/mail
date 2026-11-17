@@ -374,4 +374,53 @@ describe('NavigationMailbox', () => {
 			expect(push).not.toHaveBeenCalled()
 		})
 	})
+
+	describe('dragging an envelope', () => {
+		const ACCOUNT_ID = 3
+
+		/**
+		 * @param {boolean} collapsed whether the account was collapsed before the drag
+		 * @return {object} the mounted wrapper
+		 */
+		function mountMailbox(collapsed) {
+			return shallowMount(NavigationMailbox, {
+				global: {
+					mixins: [Nextcloud],
+				},
+				props: {
+					account: { id: ACCOUNT_ID, collapsed },
+					mailbox: { accountId: ACCOUNT_ID, unread: 0 },
+				},
+			})
+		}
+
+		it('collapses the account again when it was collapsed before the drag', () => {
+			const view = mountMailbox(true)
+
+			view.vm.onDragStart({ accountId: ACCOUNT_ID })
+			view.vm.onDragEnd({ accountId: ACCOUNT_ID })
+
+			expect(store.expandAccountMutation).toHaveBeenCalledWith(ACCOUNT_ID)
+			expect(store.collapseAccountMutation).toHaveBeenCalledWith(ACCOUNT_ID)
+		})
+
+		it('keeps the account expanded when it was expanded before the drag', () => {
+			const view = mountMailbox(false)
+
+			view.vm.onDragStart({ accountId: ACCOUNT_ID })
+			view.vm.onDragEnd({ accountId: ACCOUNT_ID })
+
+			expect(store.collapseAccountMutation).not.toHaveBeenCalled()
+		})
+
+		it('ignores drags from other accounts', () => {
+			const view = mountMailbox(true)
+
+			view.vm.onDragStart({ accountId: ACCOUNT_ID + 1 })
+			view.vm.onDragEnd({ accountId: ACCOUNT_ID + 1 })
+
+			expect(store.expandAccountMutation).not.toHaveBeenCalled()
+			expect(store.collapseAccountMutation).not.toHaveBeenCalled()
+		})
+	})
 })
