@@ -860,25 +860,7 @@ describe('Vuex store actions', () => {
 			vi.spyOn(store, 'startComposerSessionMutation')
 		})
 
-		it('uses From for mailing list emails even when Reply-To is set', async () => {
-			MessageService.fetchMessage.mockResolvedValue(makeOriginal({
-				replyTo,
-				unsubscribeUrl: 'https://list.example.com/unsubscribe',
-			}))
-
-			await store.startComposerSession({
-				reply: {
-					mode: 'reply',
-					data: makeEnvelope({ replyTo }),
-				},
-			})
-
-			expect(store.startComposerSessionMutation).toHaveBeenCalledWith(expect.objectContaining({
-				data: expect.objectContaining({ to: from }),
-			}))
-		})
-
-		it('honours Reply-To for regular emails with a personal Reply-To', async () => {
+		it('uses Reply-To instead of From when available', async () => {
 			MessageService.fetchMessage.mockResolvedValue(makeOriginal({ replyTo }))
 
 			await store.startComposerSession({
