@@ -8,7 +8,7 @@ import { shallowMount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import NewMessageModal from '../../../components/NewMessageModal.vue'
-import { saveDraft } from '../../../service/DraftService.js'
+import { saveDraft, updateDraft } from '../../../service/DraftService.js'
 import useMainStore from '../../../store/mainStore.js'
 
 vi.mock('@nextcloud/dialogs', async (importOriginal) => ({
@@ -38,13 +38,14 @@ const ComposerStub = {
  * Mount the modal around a composer that is either rendered or already gone.
  *
  * @param {object} options - test options
+ * @param {string} [options.type] - the type of the composer session
  * @param {object} options.data - the composer data held by the store
  * @param {boolean} options.composerOpen - whether the composer is still rendered
  * @return {object} the mounted wrapper
  */
-function mountModal({ data, composerOpen }) {
+function mountModal({ type = 'imap', data, composerOpen }) {
 	const store = useMainStore()
-	store.newMessage = { type: 'imap', data, options: {} }
+	store.newMessage = { type, data, options: {} }
 	store.showMessageComposer = composerOpen
 	store.patchComposerData = vi.fn()
 
@@ -150,6 +151,56 @@ describe('NewMessageModal', () => {
 			expect(view.vm.mainStore.showMessageComposerMutation).toHaveBeenCalled()
 			expect(showError).toHaveBeenCalledTimes(1)
 			expect(showError).toHaveBeenCalledWith('Failed to save draft', { timeout: TOAST_DEFAULT_TIMEOUT * 4 })
+		})
+	})
+
+	describe('editing an outbox message', () => {
+		let view
+
+		beforeEach(() => {
+			view = mountModal({ type: 'outbox', data: { id: 42, isHtml: false }, composerOpen: true })
+			view.vm.outboxStore.stopMessage = vi.fn()
+		})
+
+		it('saves changes to the outbox message and keeps it paused', async () => {
+			await view.vm.onDraft({ subject: 'Edited', isHtml: false, bodyPlain: 'Body', attachments: [{ id: 5, type: 'local' }] })
+
+			expect(view.vm.outboxStore.stopMessage).toHaveBeenCalledWith({
+				message: expect.objectContaining({
+					id: 42,
+					subject: 'Edited',
+					attachments: [{ id: 5, type: 'local' }],
+				}),
+			})
+			expect(saveDraft).not.toHaveBeenCalled()
+			expect(updateDraft).not.toHaveBeenCalled()
+			expect(view.vm.draftSaved).toBe(true)
+		})
+
+		it('keeps saving to the outbox message after a failed save', async () => {
+			view.vm.outboxStore.stopMessage.mockRejectedValueOnce(new Error('Database unavailable'))
+
+			await view.vm.onDraft({ subject: 'First', isHtml: false, attachments: [] })
+			await view.vm.onDraft({ subject: 'Second', isHtml: false, attachments: [] })
+
+			expect(view.vm.outboxStore.stopMessage).toHaveBeenLastCalledWith({
+				message: expect.objectContaining({ id: 42, subject: 'Second' }),
+			})
+			expect(saveDraft).not.toHaveBeenCalled()
+			expect(view.vm.canSaveDraft).toBe(true)
+		})
+
+		it('saves pending changes to the outbox message when closing', async () => {
+			view.vm.changed = true
+			view.vm.cookedComposerData = { subject: 'Edited', isHtml: false, attachments: [] }
+			view.vm.mainStore.stopComposerSession = vi.fn().mockResolvedValue()
+
+			await view.vm.onClose()
+
+			expect(view.vm.outboxStore.stopMessage).toHaveBeenCalledWith({ message: expect.objectContaining({ id: 42 }) })
+			expect(updateDraft).not.toHaveBeenCalled()
+			expect(view.vm.mainStore.stopComposerSession).toHaveBeenCalledWith(expect.objectContaining({ restoreOriginalSendAt: true }))
+			expect(showSuccess).toHaveBeenCalledWith('Message saved')
 		})
 	})
 
