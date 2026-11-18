@@ -206,7 +206,6 @@ export default {
 			QuotePlugin,
 			PickerPlugin,
 			Mention,
-			Link,
 			FindAndReplace,
 		]
 		const toolbar = ['undo', 'redo']
@@ -224,6 +223,7 @@ export default {
 				Superscript,
 				BlockQuote,
 				List,
+				Link,
 				Image,
 				ImageUpload,
 				ImageResize,
