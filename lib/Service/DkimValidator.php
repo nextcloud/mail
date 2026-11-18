@@ -17,9 +17,9 @@ class DkimValidator implements IDkimValidator {
 	#[\Override]
 	public function validate(string $rawMessage): bool {
 		try {
-			$validator = new Validator($rawMessage);
-			$signatures = $validator->validate();
-		} catch (DKIMException) {
+			$signatures = $this->createValidator($rawMessage)->validate();
+		} catch (DKIMException|\TypeError) {
+			// The library throws a TypeError when a selector's DNS record has no p= tag
 			$signatures = [];
 		}
 
@@ -30,5 +30,9 @@ class DkimValidator implements IDkimValidator {
 		}
 
 		return false;
+	}
+
+	protected function createValidator(string $rawMessage): Validator {
+		return new Validator($rawMessage);
 	}
 }
