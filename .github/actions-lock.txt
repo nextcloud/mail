@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2025 Nextcloud GmbH and Nextcloud contributors
 # SPDX-License-Identifier: MIT
-92678f1f5453d90fc2fd01698ade497c ai-policy.yml
+f75df1a028b90a751d6e284b8cb0e621 ai-policy.yml
 785ec8453e40b21ed7112d943b9bf03f appstore-build-publish.yml
 19ab9c47c8d96de93f37fab242c398cc block-unconventional-commits.yml
 2581a67c5bcdcd570427e6d51db767d7 fixup.yml
