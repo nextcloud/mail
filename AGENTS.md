@@ -244,12 +244,13 @@ composer test:integration:dev                                       # Run and st
 
 ## Git Workflow
 
-### Ticket readiness for AI-assisted PRs
+### Ticket readiness
 
-Before starting implementation on an AI-assisted change, confirm a ticket exists and is actually ready to be picked up:
+Bug fixes and small changes can go straight to a PR without opening a new ticket; still search for an existing ticket and reference it in the PR (e.g. `Closes #1234`) if there is one. New features and larger changes (touching several subsystems, needing an architectural decision, or without a clear approach yet) need a ticket that is ready to be picked up. Confirm this before starting implementation:
 - A ticket still labeled `0. to triage` is **not** ready — it has not been accepted by a maintainer, and the approach (or whether the change is wanted at all) has not been discussed yet. Do not start coding from it.
 - Only `1. to develop` (or a later pipeline label) signals the ticket has been triaged and discussed. That discussion must happen **before** the PR is opened, not in review after the fact.
 - If no ticket exists, or it is still `0. to triage`, stop and tell the contributor to get it triaged and discussed first rather than starting an agent-driven implementation.
+- If a bug fix turns out to need a larger change, stop and treat it as one.
 
 Do NOT commit changes unless explicitly asked to do so.
 
