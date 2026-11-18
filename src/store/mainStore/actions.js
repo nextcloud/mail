@@ -164,7 +164,7 @@ const addMailboxToState = curry((mailboxes, account, mailbox) => {
 	mailbox.mailboxes = []
 	Vue.set(mailbox, 'envelopeLists', {})
 
-	transformMailboxName(account, mailbox)
+		transformMailboxName(account, mailbox)
 
 	Vue.set(mailboxes, mailbox.databaseId, mailbox)
 	const parent = Object.values(mailboxes)
@@ -176,12 +176,24 @@ const addMailboxToState = curry((mailboxes, account, mailbox) => {
 		parent.mailboxes.push(mailbox.databaseId)
 	}
 
-	Object.defineProperty(mailbox, 'isSubscribed', {
-		get() {
-			return this.attributes?.includes('\\subscribed') ?? false
-		},
+		Object.defineProperty(mailbox, 'isSubscribed', {
+			get() {
+				return this.attributes?.includes('\\subscribed') ?? false
+			},
+		})
 	})
-})
+
+	newMailboxes.forEach((mailbox) => {
+		const parent = Object.values(mailboxes)
+			.filter((mb) => mb.accountId === account.id)
+			.find((mb) => mb.name === mailbox.path)
+		if (mailbox.path === '' || !parent) {
+			account.mailboxes.push(mailbox.databaseId)
+		} else {
+			parent.mailboxes.push(mailbox.databaseId)
+		}
+	})
+}
 
 function transformMailboxName(account, mailbox) {
 	// Add all mailboxes (including submailboxes to state, but only toplevel to account
@@ -1915,7 +1927,7 @@ export default function mainStoreActions() {
 			Vue.set(account, 'mailboxes', [])
 			Vue.set(account, 'aliases', sortAliases(account.aliases ?? []))
 
-			mailboxes.map(addMailboxToState(this.mailboxes, account))
+			addMailboxesToState(this.mailboxes, account, mailboxes)
 		},
 		editAccountMutation(account) {
 			Vue.set(this.accountsUnmapped, account.id, { ...this.accountsUnmapped[account.id], ...account })
@@ -1959,7 +1971,7 @@ export default function mainStoreActions() {
 			account,
 			mailbox,
 		}) {
-			addMailboxToState(this.mailboxes, account, mailbox)
+			addMailboxesToState(this.mailboxes, account, [mailbox])
 		},
 		updateMailboxMutation({ mailbox }) {
 			const account = this.accountsUnmapped[mailbox.accountId]
