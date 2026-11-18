@@ -10,7 +10,7 @@ namespace OCA\Mail\Tests\Unit\IMAP\Sync;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\IMAP\Sync\Response;
 
-class ResponseTest extends TestCase {
+final class ResponseTest extends TestCase {
 	public function testJsonSerialize() {
 		$newMessages = [];
 		$changedMessages = [];

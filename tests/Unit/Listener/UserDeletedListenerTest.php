@@ -23,7 +23,7 @@ use OCP\User\Events\UserDeletedEvent;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class UserDeletedListenerTest extends TestCase {
+final class UserDeletedListenerTest extends TestCase {
 	private AccountService&MockObject $accountService;
 
 	private TextBlockService&MockObject $textBlockService;

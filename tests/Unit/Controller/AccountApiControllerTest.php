@@ -21,7 +21,7 @@ use OCP\AppFramework\Http;
 use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class AccountApiControllerTest extends TestCase {
+final class AccountApiControllerTest extends TestCase {
 	private const USER_ID = 'user';
 
 	private AccountApiController $controller;

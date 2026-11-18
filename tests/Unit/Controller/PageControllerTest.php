@@ -50,7 +50,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use function urlencode;
 
-class PageControllerTest extends TestCase {
+final class PageControllerTest extends TestCase {
 	/** @var string */
 	private $appName;
 

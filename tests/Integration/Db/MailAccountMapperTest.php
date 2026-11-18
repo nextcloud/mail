@@ -22,7 +22,7 @@ use function random_int;
  * @group DB
  * @covers \OCA\Mail\Db\MailAccountMapper
  */
-class MailAccountMapperTest extends TestCase {
+final class MailAccountMapperTest extends TestCase {
 	use DatabaseTransaction;
 
 	/** @var MailAccountMapper */

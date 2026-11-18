@@ -42,7 +42,7 @@ use OCP\IURLGenerator;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class MessageApiControllerTest extends TestCase {
+final class MessageApiControllerTest extends TestCase {
 	private string $appName = 'mail';
 	private string $userId = 'john';
 	private MockObject|IRequest $request;

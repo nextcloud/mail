@@ -18,7 +18,7 @@ use OCP\IGroupManager;
 use OCP\IUser;
 use OCP\IUserManager;
 
-class ContactsIntegrationTest extends TestCase {
+final class ContactsIntegrationTest extends TestCase {
 	/** @var IManager */
 	private $contactsManager;
 

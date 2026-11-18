@@ -36,7 +36,7 @@ use OCP\EventDispatcher\IEventDispatcher;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class MailManagerTest extends TestCase {
+final class MailManagerTest extends TestCase {
 	/** @var ProtocolFactory|MockObject */
 	private $protocolFactory;
 

@@ -21,7 +21,7 @@ use OCP\IDBConnection;
 /**
  * @group DB
  */
-class AliasMapperTest extends TestCase {
+final class AliasMapperTest extends TestCase {
 	use DatabaseTransaction;
 
 	/** @var AliasMapper */

@@ -13,7 +13,7 @@ use OCA\Mail\Service\PhishingDetection\ImapFlagCheck;
 use OCP\IL10N;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class ImapFlagCheckTest extends TestCase {
+final class ImapFlagCheckTest extends TestCase {
 
 	private IL10N|MockObject $l10n;
 	private ImapFlagCheck $service;

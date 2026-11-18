@@ -22,7 +22,7 @@ use OCP\UserMigration\IImportSource;
 use OCP\UserMigration\UserMigrationException;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class QuickActionsMigrationServiceTest extends TestCase {
+final class QuickActionsMigrationServiceTest extends TestCase {
 	use RecordsConsoleOutput;
 
 	private const USER_ID = '123';

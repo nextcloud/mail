@@ -21,7 +21,7 @@ use OCA\Mail\Sieve\NamedSieveScript;
 use OCP\IUser;
 use OCP\User\IOutOfOfficeData;
 
-class OutOfOfficeServiceTest extends TestCase {
+final class OutOfOfficeServiceTest extends TestCase {
 	private ServiceMockObject $serviceMock;
 	private OutOfOfficeService $outOfOfficeService;
 

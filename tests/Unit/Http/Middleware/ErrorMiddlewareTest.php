@@ -26,7 +26,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
-class ErrorMiddlewareTest extends TestCase {
+final class ErrorMiddlewareTest extends TestCase {
 	/** @var IConfig|MockObject */
 	private $config;
 

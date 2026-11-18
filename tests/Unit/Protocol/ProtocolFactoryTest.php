@@ -24,7 +24,7 @@ use OCA\Mail\Protocol\ProtocolFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
 
-class ProtocolFactoryTest extends TestCase {
+final class ProtocolFactoryTest extends TestCase {
 	private IMAPClientFactory&MockObject $imapClientFactory;
 	private JmapClientFactory&MockObject $jmapClientFactory;
 	private ConnectionPool&MockObject $connectionPool;

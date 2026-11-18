@@ -14,7 +14,7 @@ use Horde_Imap_Client;
 use OCA\Mail\Service\PhishingDetection\ImapFlagCheck;
 use OCP\IL10N;
 
-class ImapFlagCheckTest extends TestCase {
+final class ImapFlagCheckTest extends TestCase {
 	private ImapFlagCheck $check;
 	private IL10N $l10n;
 

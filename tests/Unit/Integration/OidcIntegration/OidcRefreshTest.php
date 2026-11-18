@@ -15,7 +15,7 @@ use OCP\Http\Client\IResponse;
 /**
  * Renewing the access token with the stored refresh token.
  */
-class OidcRefreshTest extends OidcIntegrationTestCase {
+final class OidcRefreshTest extends OidcIntegrationTestCase {
 	public function testRefreshNoopWhenNotAuthorized(): void {
 		$account = $this->account('alice@example.com');
 

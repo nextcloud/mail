@@ -18,7 +18,7 @@ use OCA\Mail\Service\SieveService;
 use OCA\Mail\Sieve\SieveClientFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class SieveServiceTest extends TestCase {
+final class SieveServiceTest extends TestCase {
 	private SieveService $sieveService;
 
 	/** @var SieveClientFactory|MockObject */

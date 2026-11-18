@@ -20,7 +20,7 @@ use OCP\UserMigration\IImportSource;
 use OCP\UserMigration\UserMigrationException;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class AppConfigMigrationServiceTest extends TestCase {
+final class AppConfigMigrationServiceTest extends TestCase {
 	use RecordsConsoleOutput;
 
 	private const USER_ID = '123';

@@ -29,7 +29,7 @@ use OCP\Server;
 use PHPUnit\Framework\MockObject\MockObject;
 use function ltrim;
 
-class IMAPClientFactoryTest extends TestCase {
+final class IMAPClientFactoryTest extends TestCase {
 	/** @var ICrypto|MockObject */
 	private $crypto;
 

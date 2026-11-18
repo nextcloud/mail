@@ -10,7 +10,7 @@ namespace OCA\Mail\Tests;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\HordeTranslationHandler;
 
-class HordeTranslationHandlerTest extends TestCase {
+final class HordeTranslationHandlerTest extends TestCase {
 	private $handler;
 
 	protected function setUp(): void {

@@ -15,7 +15,7 @@ use JmapClient\Responses\Mail\MailboxPermissions;
 use OCA\Mail\JMAP\JmapMailboxAdapter;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class JmapMailboxAdapterTest extends TestCase {
+final class JmapMailboxAdapterTest extends TestCase {
 	private JmapMailboxAdapter $adapter;
 
 	protected function setUp(): void {

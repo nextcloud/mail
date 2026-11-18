@@ -35,7 +35,7 @@ use OCP\IUserManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class SubmitContentJobTest extends TestCase {
+final class SubmitContentJobTest extends TestCase {
 	private ProtocolFactory&MockObject $protocolFactory;
 	/** @var TaskService|MockObject */
 	private $taskService;

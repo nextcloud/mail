@@ -16,7 +16,7 @@ use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Tests\Integration\Framework\ImapTestAccount;
 use OCP\Server;
 
-class ProtocolFactoryImapTest extends TestCase {
+final class ProtocolFactoryImapTest extends TestCase {
 	use ImapTestAccount;
 
 	private ProtocolFactory $protocolFactory;

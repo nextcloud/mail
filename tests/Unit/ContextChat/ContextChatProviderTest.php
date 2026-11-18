@@ -29,7 +29,7 @@ use OCP\IUserManager;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class ContextChatProviderTest extends TestCase {
+final class ContextChatProviderTest extends TestCase {
 	/** @var TaskService|MockObject */
 	private $taskService;
 

@@ -27,7 +27,7 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class TrashRetentionJobTest extends TestCase {
+final class TrashRetentionJobTest extends TestCase {
 	private ProtocolFactory&MockObject $protocolFactory;
 
 	private const ARGUMENT = null;

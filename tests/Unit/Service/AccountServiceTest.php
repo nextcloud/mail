@@ -26,7 +26,7 @@ use OCP\IConfig;
 use OCP\IL10N;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class AccountServiceTest extends TestCase {
+final class AccountServiceTest extends TestCase {
 	private string $user = 'herbert';
 	private string $user2 = 'user';
 

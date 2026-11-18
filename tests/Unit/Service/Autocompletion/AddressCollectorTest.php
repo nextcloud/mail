@@ -17,7 +17,7 @@ use OCA\Mail\Db\CollectedAddressMapper;
 use OCA\Mail\Service\AutoCompletion\AddressCollector;
 use Psr\Log\LoggerInterface;
 
-class AddressCollectorTest extends TestCase {
+final class AddressCollectorTest extends TestCase {
 	private $mapper;
 	private $userId = 'testuser';
 	private $logger;

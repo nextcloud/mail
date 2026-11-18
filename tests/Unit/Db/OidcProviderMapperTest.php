@@ -17,7 +17,7 @@ use OCP\IDBConnection;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class OidcProviderMapperTest extends TestCase {
+final class OidcProviderMapperTest extends TestCase {
 	private IDBConnection&MockObject $db;
 	private OidcProviderMapper $mapper;
 

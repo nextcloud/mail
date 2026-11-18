@@ -16,7 +16,7 @@ use OCP\AppFramework\Http\Response;
 use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class AvatarControllerTest extends TestCase {
+final class AvatarControllerTest extends TestCase {
 	private IAvatarService&MockObject $avatarService;
 	private AvatarsController $controller;
 

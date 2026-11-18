@@ -16,7 +16,7 @@ use OCA\Mail\Service\Avatar\FaviconSource;
 use OCA\Mail\Service\Avatar\GravatarSource;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class CompositeAvatarSourceTest extends TestCase {
+final class CompositeAvatarSourceTest extends TestCase {
 	/** @var AddressbookSource|MockObject */
 	private $addressbookSource;
 

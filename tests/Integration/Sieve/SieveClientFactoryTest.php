@@ -19,7 +19,7 @@ use OCP\Security\ICrypto;
 use OCP\Server;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class SieveClientFactoryTest extends TestCase {
+final class SieveClientFactoryTest extends TestCase {
 	/** @var ICrypto|MockObject */
 	private $crypto;
 

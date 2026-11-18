@@ -22,7 +22,7 @@ use OCA\Mail\Tests\Integration\TestCase;
 use OCP\Server;
 use Psr\Log\NullLogger;
 
-class JmapMessageConnectorTest extends TestCase {
+final class JmapMessageConnectorTest extends TestCase {
 	use DatabaseTransaction;
 	use JmapTestAccount;
 

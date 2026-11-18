@@ -10,7 +10,7 @@ namespace OCA\Mail\Tests\Unit\Service\Attachment;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\Attachment\UploadedFile;
 
-class UploadedFileTest extends TestCase {
+final class UploadedFileTest extends TestCase {
 	public function testGetFileNameNotExisting() {
 		$file = new UploadedFile([]);
 

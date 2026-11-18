@@ -39,7 +39,7 @@ use OCP\Share\IShare;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class AttachmentServiceTest extends TestCase {
+final class AttachmentServiceTest extends TestCase {
 	private LocalAttachmentMapper&MockObject $mapper;
 	private AttachmentStorage&MockObject $storage;
 	private MailManager&MockObject $mailManager;

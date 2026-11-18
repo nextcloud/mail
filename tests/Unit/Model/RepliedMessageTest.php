@@ -13,7 +13,7 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Model\RepliedMessageData;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class RepliedMessageTest extends TestCase {
+final class RepliedMessageTest extends TestCase {
 	public function testGetAccount() {
 		/** @var Account|MockObject $account */
 		$account = $this->createStub(Account::class);

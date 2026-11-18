@@ -13,7 +13,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use JmapClient\Responses\ResponseException;
 use OCA\Mail\JMAP\Exception\JmapException;
 
-class JmapExceptionTest extends TestCase {
+final class JmapExceptionTest extends TestCase {
 	public static function transientProvider(): array {
 		return [
 			'server failure' => [ResponseException::SERVER_FAIL, false, true],

@@ -13,7 +13,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Controller\SmimeCertificatesController;
 use OCP\AppFramework\Http;
 
-class SmimeCertificatesControllerTest extends TestCase {
+final class SmimeCertificatesControllerTest extends TestCase {
 	public function testIndexNullUser(): void {
 		$serviceMock = $this->createServiceMock(SmimeCertificatesController::class, [
 			'appName' => 'mail',

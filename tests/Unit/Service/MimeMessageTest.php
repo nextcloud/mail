@@ -18,7 +18,7 @@ use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Service\DataUri\DataUriParser;
 use OCA\Mail\Service\MimeMessage;
 
-class MimeMessageTest extends TestCase {
+final class MimeMessageTest extends TestCase {
 	private DataUriParser $uriParser;
 	private MimeMessage $mimeMessage;
 	private Account $account;

@@ -14,7 +14,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Events\MessageSentEvent;
 
-class MessageSentEventTest extends TestCase {
+final class MessageSentEventTest extends TestCase {
 	public function testConstructorAndGetters(): void {
 		$account = $this->createStub(Account::class);
 		$localMessage = $this->createStub(LocalMessage::class);

@@ -11,7 +11,7 @@ namespace OCA\Mail\Tests\Unit\Http;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 
-class AttachmentDownloadResponseTest extends TestCase {
+final class AttachmentDownloadResponseTest extends TestCase {
 	/**
 	 * @dataProvider providesResponseData
 	 */

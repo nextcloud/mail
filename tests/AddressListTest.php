@@ -14,7 +14,7 @@ use Horde_Mail_Rfc822_List;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
 
-class AddressListTest extends TestCase {
+final class AddressListTest extends TestCase {
 	public function testSerialize() {
 		$list = new AddressList([
 			Address::fromRaw('User 1', 'user1@domain.tld'),

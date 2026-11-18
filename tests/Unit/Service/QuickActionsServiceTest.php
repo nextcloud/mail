@@ -19,7 +19,7 @@ use OCA\Mail\Service\QuickActionsService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class QuickActionsServiceTest extends TestCase {
+final class QuickActionsServiceTest extends TestCase {
 
 	/** @var ActionsMapper|MockObject */
 	private $actionsMapper;

@@ -21,7 +21,7 @@ use OCA\Mail\Service\AvatarService;
 use OCP\IUser;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class AvatarServiceTest extends TestCase {
+final class AvatarServiceTest extends TestCase {
 	public const BLACK_DOT_BASE64 = 'R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
 
 	/** @var IAvatarSource|MockObject */

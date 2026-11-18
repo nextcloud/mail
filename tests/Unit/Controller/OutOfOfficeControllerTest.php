@@ -18,7 +18,7 @@ use OCP\AppFramework\Http;
 use OCP\IUser;
 use OCP\User\IAvailabilityCoordinator;
 
-class OutOfOfficeControllerTest extends TestCase {
+final class OutOfOfficeControllerTest extends TestCase {
 	private ServiceMockObject $serviceMock;
 	private OutOfOfficeController $outOfOfficeController;
 

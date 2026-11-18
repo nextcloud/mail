@@ -23,7 +23,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class FlagRepliedMessageHandlerTest extends TestCase {
+final class FlagRepliedMessageHandlerTest extends TestCase {
 	private MailboxMapper|MockObject $mailboxMapper;
 	private LoggerInterface|MockObject $loggerInterface;
 	private MockObject|MailManager $mailManager;

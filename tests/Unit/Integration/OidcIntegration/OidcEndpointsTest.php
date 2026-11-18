@@ -16,7 +16,7 @@ use OCP\Http\Client\IResponse;
 /**
  * Resolving authorization/token/introspection endpoints from discovery or manual config.
  */
-class OidcEndpointsTest extends OidcIntegrationTestCase {
+final class OidcEndpointsTest extends OidcIntegrationTestCase {
 	public function testGetDiscoveryUsesCache(): void {
 		$provider = $this->provider();
 		$this->cache->method('get')

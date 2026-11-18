@@ -19,7 +19,7 @@ use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use OCA\Mail\Tests\Integration\Framework\ImapTestAccount;
 use OCP\Server;
 
-class AntiSpamServiceIntegrationTest extends TestCase {
+final class AntiSpamServiceIntegrationTest extends TestCase {
 	use ImapTest,
 		ImapTestAccount;
 

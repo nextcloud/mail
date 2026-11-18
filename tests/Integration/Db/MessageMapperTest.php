@@ -30,7 +30,7 @@ use function array_map;
 use function range;
 use function time;
 
-class MessageMapperTest extends TestCase {
+final class MessageMapperTest extends TestCase {
 	use DatabaseTransaction;
 
 	/** A user that has no mail accounts on a development instance */

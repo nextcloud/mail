@@ -20,7 +20,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 
-class AliasesControllerTest extends TestCase {
+final class AliasesControllerTest extends TestCase {
 	private $controller;
 	private $appName = 'mail';
 	private $request;

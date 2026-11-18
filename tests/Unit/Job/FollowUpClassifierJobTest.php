@@ -26,7 +26,7 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class FollowUpClassifierJobTest extends TestCase {
+final class FollowUpClassifierJobTest extends TestCase {
 	private ProtocolFactory&MockObject $protocolFactory;
 
 	private FollowUpClassifierJob $job;

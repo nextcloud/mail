@@ -25,7 +25,7 @@ use OCP\Security\ICrypto;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class MicrosoftIntegrationTest extends TestCase {
+final class MicrosoftIntegrationTest extends TestCase {
 	private ITimeFactory&MockObject $timeFactory;
 	private IAppConfig&MockObject $appConfig;
 	private ICrypto&MockObject $crypto;

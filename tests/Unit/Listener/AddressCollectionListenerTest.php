@@ -26,7 +26,7 @@ use OCP\EventDispatcher\IEventListener;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class AddressCollectionListenerTest extends TestCase {
+final class AddressCollectionListenerTest extends TestCase {
 	/** @var IUserPreferences|MockObject */
 	private $preferences;
 

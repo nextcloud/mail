@@ -14,7 +14,7 @@ use OCA\Mail\Command\DeleteAccount;
 use OCA\Mail\Service\AccountService;
 use Psr\Log\LoggerInterface;
 
-class DeleteAccountTest extends TestCase {
+final class DeleteAccountTest extends TestCase {
 	private $accountService;
 	private $logger;
 	private $command;

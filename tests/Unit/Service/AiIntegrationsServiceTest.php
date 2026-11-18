@@ -37,7 +37,7 @@ use OCP\TaskProcessing\TaskTypes\TextToTextSummary;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 
-class AiIntegrationsServiceTest extends TestCase {
+final class AiIntegrationsServiceTest extends TestCase {
 
 	private IAppConfig|MockObject $appConfig;
 	private NullLogger|MockObject $logger;

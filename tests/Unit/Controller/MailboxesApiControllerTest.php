@@ -25,7 +25,7 @@ use OCP\AppFramework\Http;
 use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class MailboxesApiControllerTest extends TestCase {
+final class MailboxesApiControllerTest extends TestCase {
 	private const USER_ID = 'user';
 
 	private MailboxesApiController $controller;

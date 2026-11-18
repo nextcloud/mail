@@ -30,7 +30,7 @@ use OCP\ServerVersion as OCPServerVersion;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class IMipServiceTest extends TestCase {
+final class IMipServiceTest extends TestCase {
 	private ProtocolFactory&MockObject $protocolFactory;
 	/** @var MailboxMapper|MockObject */
 	private $mailboxMapper;

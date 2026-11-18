@@ -15,7 +15,7 @@ use OCA\Mail\Service\AutoCompletion\AutoCompleteService;
 use OCA\Mail\Service\ContactsIntegration;
 use OCA\Mail\Service\GroupsIntegration;
 
-class AutoCompleteServiceTest extends TestCase {
+final class AutoCompleteServiceTest extends TestCase {
 	private $contactsIntegration;
 	private $groupsIntegration;
 	private $addressCollector;

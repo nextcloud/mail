@@ -28,7 +28,7 @@ use OCP\IRequest;
 use OCP\Server;
 use Psr\Log\LoggerInterface;
 
-class MailboxSynchronizationTest extends TestCase {
+final class MailboxSynchronizationTest extends TestCase {
 	use ImapTest,
 		ImapTestAccount;
 

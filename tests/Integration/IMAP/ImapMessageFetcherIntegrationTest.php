@@ -21,7 +21,7 @@ use OCP\ICertificateManager;
 use OCP\Security\ICrypto;
 use OCP\Server;
 
-class ImapMessageFetcherIntegrationTest extends TestCase {
+final class ImapMessageFetcherIntegrationTest extends TestCase {
 	use ImapTest,
 		ImapTestAccount;
 

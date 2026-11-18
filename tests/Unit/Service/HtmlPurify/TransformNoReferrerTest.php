@@ -14,7 +14,7 @@ use HTMLPurifier_Config;
 use HTMLPurifier_Context;
 use OCA\Mail\Service\HtmlPurify\TransformNoReferrer;
 
-class TransformNoReferrerTest extends TestCase {
+final class TransformNoReferrerTest extends TestCase {
 	private TransformNoReferrer $transform;
 
 	protected function setUp(): void {

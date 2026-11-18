@@ -22,7 +22,7 @@ use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class CreateProvisioningTest extends TestCase {
+final class CreateProvisioningTest extends TestCase {
 	private ProvisioningManager&MockObject $provisioningManager;
 	private CreateProvisioning $command;
 	private CommandTester $tester;

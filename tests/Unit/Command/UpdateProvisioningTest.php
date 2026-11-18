@@ -20,7 +20,7 @@ use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class UpdateProvisioningTest extends TestCase {
+final class UpdateProvisioningTest extends TestCase {
 	private ProvisioningManager&MockObject $provisioningManager;
 	private CommandTester $tester;
 

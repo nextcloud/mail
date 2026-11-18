@@ -24,7 +24,7 @@ use OCP\UserMigration\IImportSource;
 use OCP\UserMigration\UserMigrationException;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class AccountMigrationServiceTest extends TestCase {
+final class AccountMigrationServiceTest extends TestCase {
 	use RecordsConsoleOutput;
 
 	private const USER_ID = 'test_user';

@@ -12,7 +12,7 @@ use OCA\Mail\Account;
 use OCA\Mail\AddressList;
 use OCA\Mail\Model\NewMessageData;
 
-class NewMessageDataTest extends TestCase {
+final class NewMessageDataTest extends TestCase {
 	public function testConstructionFromSimpleRequestData() {
 		$account = $this->createStub(Account::class);
 		$to = '"Test" <test@domain.com>';

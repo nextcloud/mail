@@ -19,7 +19,7 @@ use OCA\Mail\JMAP\JmapMessageAdapter;
 use OCA\Mail\Service\Html;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class JmapMessageAdapterTest extends TestCase {
+final class JmapMessageAdapterTest extends TestCase {
 	private JmapMessageAdapter $adapter;
 
 	protected function setUp(): void {

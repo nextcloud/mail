@@ -15,7 +15,7 @@ use OCP\Http\Client\IResponse;
 /**
  * Exchanging an authorization code for tokens.
  */
-class OidcConnectTest extends OidcIntegrationTestCase {
+final class OidcConnectTest extends OidcIntegrationTestCase {
 	public function testFinishConnectStoresTokens(): void {
 		$provider = $this->provider();
 		$account = $this->account('alice@example.com');

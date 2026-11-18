@@ -23,7 +23,7 @@ use OCA\Mail\Service\DkimService;
 use OCP\ICache;
 use OCP\ICacheFactory;
 
-class DkimServiceTest extends TestCase {
+final class DkimServiceTest extends TestCase {
 	private ProtocolFactory $protocolFactory;
 	private IMessageConnector $messageConnector;
 	private ICache $cache;

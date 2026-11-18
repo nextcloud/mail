@@ -16,7 +16,7 @@ use OCA\Mail\Service\HtmlPurify\TransformStyleURLs;
 use OCP\IURLGenerator;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class TransformStyleURLsTest extends TestCase {
+final class TransformStyleURLsTest extends TestCase {
 	private TransformStyleURLs $transform;
 	private IURLGenerator|MockObject $urlGenerator;
 

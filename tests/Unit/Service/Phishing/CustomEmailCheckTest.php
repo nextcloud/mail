@@ -12,7 +12,7 @@ use OCA\Mail\Service\PhishingDetection\CustomEmailCheck;
 use OCP\IL10N;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class CustomEmailCheckTest extends TestCase {
+final class CustomEmailCheckTest extends TestCase {
 
 	private IL10N|MockObject $l10n;
 	private CustomEmailCheck|MockObject $service;

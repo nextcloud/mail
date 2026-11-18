@@ -59,7 +59,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use ReflectionObject;
 
-class MessagesControllerTest extends TestCase {
+final class MessagesControllerTest extends TestCase {
 	/** @var string */
 	private $appName;
 

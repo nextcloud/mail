@@ -19,7 +19,7 @@ use OCP\ICacheFactory;
 use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class ContactIntegrationControllerTest extends TestCase {
+final class ContactIntegrationControllerTest extends TestCase {
 	/** @var ContactIntegrationService&MockObject */
 	private $service;
 

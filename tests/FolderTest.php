@@ -12,7 +12,7 @@ use Horde_Imap_Client_Mailbox;
 use OCA\Mail\Folder;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class FolderTest extends TestCase {
+final class FolderTest extends TestCase {
 	/** @var int */
 	private $accountId;
 

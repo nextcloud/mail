@@ -24,7 +24,7 @@ use OCP\Files\SimpleFS\InMemoryFile;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class TransmissionServiceTest extends TestCase {
+final class TransmissionServiceTest extends TestCase {
 
 	private GroupsIntegration|MockObject $groupsIntegration;
 	private AttachmentService|MockObject $attachmentService;

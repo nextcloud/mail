@@ -44,7 +44,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use ReflectionMethod;
 
-class ImapTransmissionConnectorTest extends TestCase {
+final class ImapTransmissionConnectorTest extends TestCase {
 
 	private ProtocolFactory|MockObject $protocolFactory;
 	private TransmissionService|MockObject $transmissionService;

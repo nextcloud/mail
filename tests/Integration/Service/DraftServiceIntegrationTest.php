@@ -41,7 +41,7 @@ use OCP\Server;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
-class DraftServiceIntegrationTest extends TestCase {
+final class DraftServiceIntegrationTest extends TestCase {
 	use ImapTest,
 		ImapTestAccount,
 		TestUser;

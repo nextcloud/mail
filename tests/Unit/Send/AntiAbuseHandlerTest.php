@@ -21,7 +21,7 @@ use OCP\IUserManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class AntiAbuseHandlerTest extends TestCase {
+final class AntiAbuseHandlerTest extends TestCase {
 	private IUserManager|MockObject $userManager;
 	private MockObject|AntiAbuseService $antiAbuseService;
 	private LoggerInterface|MockObject $logger;

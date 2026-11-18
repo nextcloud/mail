@@ -12,7 +12,7 @@ namespace Unit\Sieve;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Sieve\SieveUtils;
 
-class SieveUtilsTest extends TestCase {
+final class SieveUtilsTest extends TestCase {
 	/**
 	 * @dataProvider providerEscapeString
 	 */

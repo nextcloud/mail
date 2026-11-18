@@ -19,7 +19,7 @@ use OCA\Mail\Service\PhishingDetection\PhishingDetectionService;
 use OCA\Mail\Service\PhishingDetection\ReplyToCheck;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class PhishingDetectionServiceTest extends TestCase {
+final class PhishingDetectionServiceTest extends TestCase {
 
 	private ContactCheck|MockObject $contactCheck;
 	private CustomEmailCheck|MockObject $customEmailCheck;

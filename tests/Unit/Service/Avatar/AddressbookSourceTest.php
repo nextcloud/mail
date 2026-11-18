@@ -14,7 +14,7 @@ use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\ContactsIntegration;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class AddressbookSourceTest extends TestCase {
+final class AddressbookSourceTest extends TestCase {
 	/** @var ContactsIntegration|MockObject */
 	private $ci;
 

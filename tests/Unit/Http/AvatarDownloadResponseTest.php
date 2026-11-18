@@ -10,7 +10,7 @@ namespace OCA\Mail\Tests\Unit\Http;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Http\AvatarDownloadResponse;
 
-class AvatarDownloadResponseTest extends TestCase {
+final class AvatarDownloadResponseTest extends TestCase {
 	public function testResponse() {
 		$response = new AvatarDownloadResponse('data');
 

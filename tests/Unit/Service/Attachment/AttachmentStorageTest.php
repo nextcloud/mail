@@ -18,7 +18,7 @@ use OCP\Files\SimpleFS\ISimpleFile;
 use OCP\Files\SimpleFS\ISimpleFolder;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class AttachmentStorageTest extends TestCase {
+final class AttachmentStorageTest extends TestCase {
 	private $tmpFilePath = '/tmp/nc_mail_attachment_test';
 
 	/** @var IAppData|MockObject */

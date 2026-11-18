@@ -13,7 +13,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\IMAP\Threading\Container;
 use OCA\Mail\IMAP\Threading\Message;
 
-class ContainerTest extends TestCase {
+final class ContainerTest extends TestCase {
 	public function testEmpty(): void {
 		$container = Container::empty();
 

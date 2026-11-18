@@ -15,7 +15,7 @@ use OCP\ICache;
 use OCP\ICacheFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class CacheTest extends TestCase {
+final class CacheTest extends TestCase {
 
 	private ICacheFactory&MockObject $cacheFactory;
 	private ICache&MockObject $cacheImpl;

@@ -13,7 +13,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Support\HostNameFactory;
 use OCP\Util;
 
-class HostNameFactoryTest extends TestCase {
+final class HostNameFactoryTest extends TestCase {
 	/** @var HostNameFactory */
 	private $factory;
 

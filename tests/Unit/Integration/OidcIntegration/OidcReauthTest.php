@@ -15,7 +15,7 @@ use OCP\Http\Client\IResponse;
 /**
  * Detecting a grant that can no longer be renewed, so the user is asked to reconnect.
  */
-class OidcReauthTest extends OidcIntegrationTestCase {
+final class OidcReauthTest extends OidcIntegrationTestCase {
 	public function testRefreshFlagsReauthWhenNoRefreshTokenIssued(): void {
 		$account = $this->expiredAccount(null);
 		$this->providerMapper->method('findByEmailDomain')->willReturn($this->provider());

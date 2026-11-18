@@ -15,7 +15,7 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Service\AliasesService;
 use OCP\AppFramework\Db\DoesNotExistException;
 
-class AliasesServiceTest extends TestCase {
+final class AliasesServiceTest extends TestCase {
 	/** @var AliasesService */
 	private $service;
 

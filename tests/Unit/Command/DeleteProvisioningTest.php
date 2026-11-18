@@ -19,7 +19,7 @@ use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class DeleteProvisioningTest extends TestCase {
+final class DeleteProvisioningTest extends TestCase {
 	private ProvisioningManager&MockObject $provisioningManager;
 	private DeleteProvisioning $command;
 	private CommandTester $tester;

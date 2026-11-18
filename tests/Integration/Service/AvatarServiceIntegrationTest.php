@@ -13,7 +13,7 @@ use OCA\Mail\Contracts\IAvatarService;
 use OCP\ICacheFactory;
 use OCP\Server;
 
-class AvatarServiceIntegrationTest extends TestCase {
+final class AvatarServiceIntegrationTest extends TestCase {
 	use TestUser;
 
 	/** @var IAvatarService */

@@ -16,7 +16,7 @@ use OCA\Mail\Address;
 use OCA\Mail\AddressList;
 use OCA\Mail\Model\Message;
 
-class MessageTest extends TestCase {
+final class MessageTest extends TestCase {
 	protected $message;
 
 	protected function setUp(): void {

@@ -15,7 +15,7 @@ use OCP\ICache;
 use OCP\ICacheFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class CacheTest extends TestCase {
+final class CacheTest extends TestCase {
 	public const BLACK_DOT_BASE64 = 'R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
 
 	/** @var ICacheFactory|MockObject */

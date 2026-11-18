@@ -27,7 +27,7 @@ use OCP\IConfig;
 use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class MailboxesControllerTest extends TestCase {
+final class MailboxesControllerTest extends TestCase {
 	/** @var string */
 	private $appName = 'mail';
 

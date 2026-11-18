@@ -18,7 +18,7 @@ use OCP\IConfig;
 use OCP\IDBConnection;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class OptionalIndicesListenerTest extends TestCase {
+final class OptionalIndicesListenerTest extends TestCase {
 
 	private IConfig&MockObject $config;
 	private IDBConnection&MockObject $connection;

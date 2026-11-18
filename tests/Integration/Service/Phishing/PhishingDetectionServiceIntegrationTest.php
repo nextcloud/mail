@@ -21,7 +21,7 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IL10N;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class PhishingDetectionServiceIntegrationTest extends TestCase {
+final class PhishingDetectionServiceIntegrationTest extends TestCase {
 	private ContactsIntegration|MockObject $contactsIntegration;
 	private IL10N|MockObject $l10n;
 	private ITimeFactory $timeFactory;

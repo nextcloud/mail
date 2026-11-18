@@ -12,7 +12,7 @@ namespace OCA\Mail\Tests\Unit\Db;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\Mailbox;
 
-class MailboxTest extends TestCase {
+final class MailboxTest extends TestCase {
 	private Mailbox $mailbox;
 
 	protected function setUp(): void {

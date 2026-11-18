@@ -17,7 +17,7 @@ use OCP\Http\Client\IClientService;
 use OCP\Http\Client\IResponse;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class GravatarSourceTest extends TestCase {
+final class GravatarSourceTest extends TestCase {
 	/** @var IClientService|MockObject */
 	private $clientService;
 

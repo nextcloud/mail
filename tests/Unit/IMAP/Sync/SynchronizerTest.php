@@ -23,7 +23,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use function range;
 
-class SynchronizerTest extends TestCase {
+final class SynchronizerTest extends TestCase {
 	/** @var MessageMapper|MockObject */
 	private $mapper;
 

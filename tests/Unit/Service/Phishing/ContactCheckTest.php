@@ -13,7 +13,7 @@ use OCA\Mail\Service\PhishingDetection\ContactCheck;
 use OCP\IL10N;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class ContactCheckTest extends TestCase {
+final class ContactCheckTest extends TestCase {
 
 	private IL10N|MockObject $l10n;
 	private ContactsIntegration|MockObject $contactsIntegration;

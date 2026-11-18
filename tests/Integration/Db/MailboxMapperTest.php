@@ -19,7 +19,7 @@ use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class MailboxMapperTest extends TestCase {
+final class MailboxMapperTest extends TestCase {
 	use DatabaseTransaction;
 
 	/** @var IDBConnection */

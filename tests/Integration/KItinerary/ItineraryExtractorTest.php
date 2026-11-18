@@ -17,7 +17,7 @@ use OCA\Mail\Integration\KItinerary\ItineraryExtractor;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class ItineraryExtractorTest extends TestCase {
+final class ItineraryExtractorTest extends TestCase {
 	/** @var BinaryAdapter|MockObject */
 	private $binaryAdapter;
 

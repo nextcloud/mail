@@ -22,7 +22,7 @@ use OCP\EventDispatcher\IEventDispatcher;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class JmapMessageConnectorTest extends TestCase {
+final class JmapMessageConnectorTest extends TestCase {
 	private JmapOperationsService&MockObject $jmapOperationsService;
 	private JmapMessageConnector $connector;
 	private Account&MockObject $account;

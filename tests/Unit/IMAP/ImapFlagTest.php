@@ -13,7 +13,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\IMAP\ImapFlag;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-class ImapFlagTest extends TestCase {
+final class ImapFlagTest extends TestCase {
 
 	private ImapFlag $imapFlag;
 

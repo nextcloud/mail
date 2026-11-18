@@ -34,7 +34,7 @@ use Psr\Log\LoggerInterface;
  * connection to the mail server is leaked (see moveMessages/deleteMessages/flagMessages/
  * tagMessages/isPermflagsEnabled).
  */
-class ImapMessageConnectorTest extends TestCase {
+final class ImapMessageConnectorTest extends TestCase {
 	private ProtocolFactory&MockObject $protocolFactory;
 	private ImapToDbSynchronizer&MockObject $synchronizer;
 	private FolderMapper&MockObject $imapMailboxMapper;

@@ -15,7 +15,7 @@ use OCA\Mail\Service\MailFilter\FilterBuilder;
 use OCA\Mail\Service\MailFilter\FilterValidator;
 use OCP\AppFramework\Http;
 
-class FilterValidatorTest extends TestCase {
+final class FilterValidatorTest extends TestCase {
 	private FilterValidator $validator;
 
 	protected function setUp(): void {

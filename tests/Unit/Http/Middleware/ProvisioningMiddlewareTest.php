@@ -22,7 +22,7 @@ use OCP\IUser;
 use OCP\IUserSession;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class ProvisioningMiddlewareTest extends TestCase {
+final class ProvisioningMiddlewareTest extends TestCase {
 	/** @var IUserSession|MockObject */
 	private $userSession;
 

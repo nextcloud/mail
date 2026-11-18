@@ -14,7 +14,7 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class PreferencesControllerTest extends TestCase {
+final class PreferencesControllerTest extends TestCase {
 	/** @var IUserPreferences|MockObject */
 	private $preferences;
 

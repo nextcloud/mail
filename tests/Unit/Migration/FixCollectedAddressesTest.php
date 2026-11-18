@@ -16,7 +16,7 @@ use OCP\Migration\IOutput;
 /**
  * @group DB
  */
-class FixCollectedAddressesTest extends TestCase {
+final class FixCollectedAddressesTest extends TestCase {
 	/** @var CollectedAddressMapper */
 	private $mapper;
 

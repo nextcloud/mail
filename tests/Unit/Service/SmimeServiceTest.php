@@ -27,7 +27,7 @@ use OCP\ITempManager;
 use OCP\Security\ICrypto;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class SmimeServiceTest extends TestCase {
+final class SmimeServiceTest extends TestCase {
 	private $tempFiles = [];
 
 	/** @var ITempManager|MockObject */

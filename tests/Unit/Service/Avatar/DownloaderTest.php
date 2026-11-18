@@ -15,7 +15,7 @@ use OCP\Http\Client\IClientService;
 use OCP\Http\Client\IResponse;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class DownloaderTest extends TestCase {
+final class DownloaderTest extends TestCase {
 	/** @var IClientService|MockObject */
 	private $clientService;
 

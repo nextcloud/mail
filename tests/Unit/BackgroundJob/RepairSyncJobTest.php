@@ -19,7 +19,7 @@ use OCA\Mail\Exception\ServiceException;
 use OCP\BackgroundJob\IJobList;
 use OCP\IUser;
 
-class RepairSyncJobTest extends TestCase {
+final class RepairSyncJobTest extends TestCase {
 	private ServiceMockObject $serviceMock;
 	private RepairSyncJob $job;
 

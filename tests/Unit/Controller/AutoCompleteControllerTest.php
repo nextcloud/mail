@@ -12,7 +12,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Controller\AutoCompleteController;
 use OCP\AppFramework\Http\JSONResponse;
 
-class AutoCompleteControllerTest extends TestCase {
+final class AutoCompleteControllerTest extends TestCase {
 	private $request;
 	private $service;
 	private $controller;

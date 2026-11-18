@@ -15,7 +15,7 @@ use OCP\Http\Client\IClientService;
 use OCP\Http\Client\IResponse;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class FaviconDataAccessTest extends TestCase {
+final class FaviconDataAccessTest extends TestCase {
 
 	private IClientService|MockObject $clientService;
 	private FaviconDataAccess $dataAccess;

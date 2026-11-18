@@ -13,7 +13,7 @@ namespace OCA\Mail\Tests\Integration\Db;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\MailAccount;
 
-class MailAccountTest extends TestCase {
+final class MailAccountTest extends TestCase {
 	public function testToAPI() {
 		$a = new MailAccount();
 		$a->setId(3);

@@ -17,7 +17,7 @@ use OCP\IUserManager;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CreateImapAccountTest extends TestCase {
+final class CreateImapAccountTest extends TestCase {
 	private $service;
 	private $crypto;
 	private $userManager;

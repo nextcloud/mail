@@ -23,7 +23,7 @@ use OCP\IUserManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class PreviewEnhancementProcessingJobTest extends TestCase {
+final class PreviewEnhancementProcessingJobTest extends TestCase {
 	private ProtocolFactory&MockObject $protocolFactory;
 	/** @var ITimeFactory|ITimeFactory&MockObject|MockObject */
 	private $time;

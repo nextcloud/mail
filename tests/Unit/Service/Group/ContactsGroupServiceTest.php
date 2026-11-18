@@ -12,7 +12,7 @@ use OCA\Mail\Service\Group\ContactsGroupService;
 use OCP\Contacts\IManager;
 use OCP\IConfig;
 
-class ContactsGroupServiceTest extends TestCase {
+final class ContactsGroupServiceTest extends TestCase {
 	/** @var IManager */
 	private $contactsManager;
 

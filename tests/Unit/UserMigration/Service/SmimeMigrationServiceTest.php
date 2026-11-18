@@ -23,7 +23,7 @@ use OCP\UserMigration\IExportDestination;
 use OCP\UserMigration\IImportSource;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class SmimeMigrationServiceTest extends TestCase {
+final class SmimeMigrationServiceTest extends TestCase {
 	use RecordsConsoleOutput;
 
 	private const USER_ID = '123';

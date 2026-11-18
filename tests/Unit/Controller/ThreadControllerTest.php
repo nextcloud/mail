@@ -29,7 +29,7 @@ use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class ThreadControllerTest extends TestCase {
+final class ThreadControllerTest extends TestCase {
 	/** @var string */
 	private $appName;
 

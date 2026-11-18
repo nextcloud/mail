@@ -15,7 +15,7 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Model\NewMessageData;
 
-class DraftSavedEventTest extends TestCase {
+final class DraftSavedEventTest extends TestCase {
 	public function testConstructorWithAllParams(): void {
 		$account = $this->createStub(Account::class);
 		$newMessageData = $this->createStub(NewMessageData::class);

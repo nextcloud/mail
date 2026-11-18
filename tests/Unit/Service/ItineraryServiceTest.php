@@ -26,7 +26,7 @@ use OCP\ICacheFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 
-class ItineraryServiceTest extends TestCase {
+final class ItineraryServiceTest extends TestCase {
 	/** @var MailManager|MockObject */
 	private $mailManager;
 

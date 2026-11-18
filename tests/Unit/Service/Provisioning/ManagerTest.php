@@ -17,7 +17,7 @@ use OCP\IUser;
 use OCP\LDAP\ILDAPProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class ManagerTest extends TestCase {
+final class ManagerTest extends TestCase {
 	/** @var ServiceMockObject */
 	private $mock;
 

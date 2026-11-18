@@ -34,7 +34,7 @@ use Psr\Log\LoggerInterface;
 use ReflectionProperty;
 use RuntimeException;
 
-class JmapOperationsServiceTest extends TestCase {
+final class JmapOperationsServiceTest extends TestCase {
 
 	private ProtocolFactory|MockObject $protocolFactory;
 	private JmapMailboxAdapter|MockObject $jmapMailboxAdapter;

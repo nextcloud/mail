@@ -17,7 +17,7 @@ use OCP\IGroupManager;
 use OCP\IUser;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class NextcloudGroupServiceTest extends TestCase {
+final class NextcloudGroupServiceTest extends TestCase {
 	/**
 	 * @var IGroupManager|MockObject
 	 */

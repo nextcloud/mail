@@ -30,7 +30,7 @@ use OCP\Security\ICrypto;
 use OCP\Server;
 use Psr\Log\NullLogger;
 
-class MailTransmissionIntegrationTest extends TestCase {
+final class MailTransmissionIntegrationTest extends TestCase {
 	use ImapTest,
 		TestUser;
 

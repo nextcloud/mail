@@ -19,7 +19,7 @@ use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Listener\MessageCacheUpdaterListener;
 use OCP\EventDispatcher\Event;
 
-class MessageCacheUpdaterListenerTest extends TestCase {
+final class MessageCacheUpdaterListenerTest extends TestCase {
 	/** @var ServiceMockObject */
 	private $serviceMock;
 

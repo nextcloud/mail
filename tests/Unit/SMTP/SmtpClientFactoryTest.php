@@ -19,7 +19,7 @@ use OCP\IConfig;
 use OCP\Security\ICrypto;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class SmtpClientFactoryTest extends TestCase {
+final class SmtpClientFactoryTest extends TestCase {
 	/** @var IConfig|MockObject */
 	private $config;
 

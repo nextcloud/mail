@@ -21,7 +21,7 @@ use OCA\Mail\Migration\MigrateImportantFromImapAndDb;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class MigrateImportantFromImapAndDbTest extends TestCase {
+final class MigrateImportantFromImapAndDbTest extends TestCase {
 	private Horde_Imap_Client_Socket|MockObject $client;
 	private MockObject|MessageMapper $messageMapper;
 	private MailboxMapper|MockObject $mailboxMapper;

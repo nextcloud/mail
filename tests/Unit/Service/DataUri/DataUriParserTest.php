@@ -14,7 +14,7 @@ use OCA\Mail\Exception\InvalidDataUriException;
 use OCA\Mail\Service\DataUri\DataUri;
 use OCA\Mail\Service\DataUri\DataUriParser;
 
-class DataUriParserTest extends TestCase {
+final class DataUriParserTest extends TestCase {
 	private DataUriParser $parser;
 
 	public function setUp(): void {

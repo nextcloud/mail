@@ -14,7 +14,7 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IL10N;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class DateCheckTest extends TestCase {
+final class DateCheckTest extends TestCase {
 
 	private IL10N|MockObject $l10n;
 	private DateCheck|MockObject $service;

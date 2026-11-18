@@ -20,7 +20,7 @@ use Psr\Log\LoggerInterface;
 /**
  * @group DB
  */
-class ProvisioningMapperTest extends TestCase {
+final class ProvisioningMapperTest extends TestCase {
 	use DatabaseTransaction;
 
 	/** @var ProvisioningMapper */

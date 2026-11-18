@@ -22,7 +22,7 @@ use OCA\Mail\IMAP\MailboxStats;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class FolderMapperTest extends TestCase {
+final class FolderMapperTest extends TestCase {
 	/** @var FolderMapper */
 	private $mapper;
 

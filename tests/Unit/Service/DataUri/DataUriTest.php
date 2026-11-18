@@ -12,7 +12,7 @@ namespace OCA\Mail\Tests\Unit\Service\DataUri;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\DataUri\DataUri;
 
-class DataUriTest extends TestCase {
+final class DataUriTest extends TestCase {
 	public function testEntity(): void {
 		$mediaType = 'image/png';
 		$parameters = ['charset' => 'US-ASCII'];

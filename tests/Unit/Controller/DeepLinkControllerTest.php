@@ -24,7 +24,7 @@ use OCP\IUser;
 use OCP\IUserSession;
 use Psr\Log\LoggerInterface;
 
-class DeepLinkControllerTest extends TestCase {
+final class DeepLinkControllerTest extends TestCase {
 	private string $appName;
 	private IRequest $request;
 	private MailAccountMapper $mailAccountMapper;

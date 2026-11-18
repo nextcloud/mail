@@ -25,7 +25,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Psr\Log\Test\TestLogger;
 
-class NewMessagesSummarizeListenerTest extends TestCase {
+final class NewMessagesSummarizeListenerTest extends TestCase {
 	private const NOW = 1_750_000_000;
 
 	private LoggerInterface $logger;

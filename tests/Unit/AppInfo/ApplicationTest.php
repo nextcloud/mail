@@ -11,7 +11,7 @@ namespace OCA\Mail\Tests\Unit\AppInfo;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\AppInfo\Application;
 
-class ApplicationTest extends TestCase {
+final class ApplicationTest extends TestCase {
 	public function testConstrucor() {
 		// Not really a test – it's just about code coverage
 		new Application();

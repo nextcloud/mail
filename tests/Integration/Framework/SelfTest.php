@@ -12,7 +12,7 @@ use OCA\Mail\Tests\Integration\TestCase;
 /**
  * Tests the IMAP test framework functionality
  */
-class SelfTest extends TestCase {
+final class SelfTest extends TestCase {
 	use ImapTest;
 
 	public function testResetAccount() {

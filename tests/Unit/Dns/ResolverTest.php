@@ -12,7 +12,7 @@ namespace OCA\Mail\Tests\Unit\Dns;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Dns\Resolver;
 
-class ResolverTest extends TestCase {
+final class ResolverTest extends TestCase {
 	private Resolver $resolver;
 
 	protected function setUp(): void {

@@ -22,7 +22,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IUser;
 use OCP\Notification\INotification;
 
-class QuotaJobTest extends TestCase {
+final class QuotaJobTest extends TestCase {
 	/** @var ServiceMockObject */
 	private $serviceMock;
 

@@ -30,7 +30,7 @@ use OCA\Mail\Service\TransmissionService;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class JmapTransmissionConnectorTest extends TestCase {
+final class JmapTransmissionConnectorTest extends TestCase {
 
 	private JmapOperationsService|MockObject $jmapOperationsService;
 	private TransmissionService|MockObject $transmissionService;

@@ -16,7 +16,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class ProvisionAccountsTest extends TestCase {
+final class ProvisionAccountsTest extends TestCase {
 	private ProvisioningManager&MockObject $provisioningManager;
 	private CommandTester $tester;
 

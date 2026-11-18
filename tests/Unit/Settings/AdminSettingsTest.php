@@ -15,7 +15,7 @@ use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Settings\AdminSettings;
 use OCP\AppFramework\Http\TemplateResponse;
 
-class AdminSettingsTest extends TestCase {
+final class AdminSettingsTest extends TestCase {
 	/** @var ServiceMockObject */
 	private $serviceMock;
 

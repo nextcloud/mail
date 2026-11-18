@@ -24,7 +24,7 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 use RuntimeException;
 
-class IMAPMessageTest extends TestCase {
+final class IMAPMessageTest extends TestCase {
 	/** @var Html|MockObject */
 	private $htmlService;
 

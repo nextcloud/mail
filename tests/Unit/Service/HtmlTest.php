@@ -17,7 +17,7 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\Server;
 
-class HtmlTest extends TestCase {
+final class HtmlTest extends TestCase {
 	/**
 	 * @dataProvider linkDetectionProvider
 	 * @param $expected

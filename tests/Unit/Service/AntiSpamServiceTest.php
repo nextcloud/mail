@@ -27,7 +27,7 @@ use OCP\IAppConfig;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class AntiSpamServiceTest extends TestCase {
+final class AntiSpamServiceTest extends TestCase {
 	private AntiSpamService $service;
 	private IAppConfig|MockObject $appConfig;
 	private DbMessageMapper|MockObject $dbMessageMapper;

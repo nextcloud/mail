@@ -12,7 +12,7 @@ namespace OCA\Mail\Tests\Unit\Integration\OidcIntegration;
 /**
  * Matching a mail account to a configured provider by its email domain.
  */
-class OidcAccountMatchingTest extends OidcIntegrationTestCase {
+final class OidcAccountMatchingTest extends OidcIntegrationTestCase {
 	public function testGetProviderForAccountMatchesOnDomain(): void {
 		$provider = $this->provider();
 		$this->providerMapper->expects($this->once())

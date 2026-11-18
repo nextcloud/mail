@@ -15,7 +15,7 @@ use OCA\Mail\Tests\Integration\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class FolderMapperIntegrationTest extends TestCase {
+final class FolderMapperIntegrationTest extends TestCase {
 	/** @var FolderMapper */
 	private $mapper;
 

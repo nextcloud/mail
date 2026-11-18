@@ -37,7 +37,7 @@ use OCP\EventDispatcher\IEventDispatcher;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class DraftsServiceTest extends TestCase {
+final class DraftsServiceTest extends TestCase {
 	/** @var MailboxMapper|MockObject */
 	private $mailboxMapper;
 

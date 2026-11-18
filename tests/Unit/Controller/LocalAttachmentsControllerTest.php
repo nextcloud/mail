@@ -18,7 +18,7 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class LocalAttachmentsControllerTest extends TestCase {
+final class LocalAttachmentsControllerTest extends TestCase {
 	/** @var IRequest|MockObject */
 	private $request;
 
