@@ -39,7 +39,9 @@ You can also use scopes. Try to have them broad and not specific to a file or ti
 * **imap**: for changes in the IMAP client
 * **ui**: for changes to the web UI
 
-Usage of AI agents has to be made transparent. Therefore, agent-assisted commits have to carry an `Assisted-by: <agent>:<model-id>` trailer before the sign-off. For example: `Assisted-by: ClaudeCode:claude-sonnet-4-6`
+Usage of AI agents has to be made transparent. Therefore, agent-assisted commits have to carry an `Assisted-by: <agent>:<model-id>` trailer before the sign-off. For example: `Assisted-by: ClaudeCode:claude-sonnet-5-5`
+
+PR descriptions, issue reports, review comments and answers to reviewers may be drafted with AI, but must be written for human readers: plain, concise and disclosed. Every pull request that changes runtime behavior must be tested on a live Nextcloud instance; an agent may help, but you test the change yourself as well. If a pull request shows neither understanding nor quality, maintainers may ask for a rewrite first and close it if nothing improves.
 
 ### Pull requests
 

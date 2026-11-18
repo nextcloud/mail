@@ -1,5 +1,5 @@
 <!--
-Write this description in your own words and delete the sections that do not apply.
+Write this description for human readers (AI-drafted text is fine if plain, concise and disclosed) and delete the sections that do not apply.
 Bug fixes and small changes don't need a ticket. New features and larger changes should follow a triaged ticket (label `1. to develop` or later); discuss them in the ticket before implementing them.
 -->
 

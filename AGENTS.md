@@ -6,6 +6,46 @@
 
 This file provides guidance to AI coding assistants working with code in this repository.
 
+## Nextcloud Contribution Policy
+
+All contributions generated or assisted by this agent must fully comply with:
+
+- **[AI Contribution Policy](https://github.com/nextcloud/.github/blob/master/AI_POLICY.md)** - the primary reference for AI-specific rules, covering disclosure, author accountability, communication, security, licensing, code quality, and autonomous agent behavior.
+- **[Contribution Guidelines](https://github.com/nextcloud/.github/blob/master/CONTRIBUTING.md)** - covering testing requirements, the Developer Certificate of Origin (DCO), license headers, and translations. These apply in full to all contributions regardless of how they were produced.
+
+### What this agent must always do
+
+- Add an `Assisted-by: AGENT_NAME:MODEL_VERSION` git trailer to every commit containing AI-assisted content.
+- Ensure every pull request includes a disclosure of AI tool use in the PR description, and end every AI-drafted issue or comment with a footer such as `Assisted by AGENT_NAME:MODEL_VERSION`.
+- Write issues, PR descriptions, and comments for human readers:
+  - Lead with what changed and why it matters, in plain and concise sentences.
+  - Keep the repository's PR or issue template intact and fill in every section. For a bug report, also state whether the bug was validated and reproduced on a live Nextcloud instance.
+  - Put information meant only for agents (plans, prompts, tool logs) into a collapsed `<details>` block.
+- Write commit message bodies that explain why the change was made, not how; the diff already shows what changed. Keep the repository's commit conventions and the required trailers.
+- Produce focused, scoped pull requests that address exactly one concern. Do not touch unrelated files or introduce incidental refactors.
+- Verify all dependencies against actual package registries before suggesting them. Do not use hallucinated or unverified package names.
+- Write code comments that document the code, never the process that produced it:
+  - Comments describe what the code does - method signatures, behavior, and constraints the code itself cannot express (e.g. a non-obvious invariant or workaround).
+  - Never add comments that document progress, decisions, or changes (e.g. "changed X to Y", "as requested", "this fixes ...", "previously this did ..."). That belongs in the commit message or PR discussion; in the code it goes stale and becomes misleading.
+  - Do not narrate self-explanatory code. If the code is readable without a comment, omit the comment.
+  - Keep comments brief - short and simple, matching the comment density of the surrounding code.
+- Reuse existing helper functions and utilities instead of re-implementing their logic inline. When fixing a flawed pattern, fix every occurrence of it across the changed code, not only the instance that was pointed out.
+- Run permission and access-control checks before the operation they guard, never after it and never only in the UI layer.
+- When adding or changing user-facing functionality, wire it up in every context where the affected component is used - the default authenticated view, public share pages, and embedded contexts such as the Smart Picker and reference widgets. When emitting new events, verify that every consumer of the component subscribes to and handles them.
+- Validate every change to runtime behavior on a live Nextcloud instance where you can, and give the contributor concrete steps to test it there themselves. Your testing supports theirs; it does not replace it.
+- Explicitly inform the contributor when any action they are about to take, or have taken, would violate the AI Contribution Policy or the Contribution Guidelines. Do not silently proceed. State which rule is at risk and what the contributor should do instead.
+- Warn the contributor if a pull request is growing too large. A PR approaching several thousand lines of changed code is a signal that it should be split into smaller, focused PRs. Suggest a logical split before the PR is opened, not after.
+- Recommend opening a ticket for discussion before starting implementation whenever a feature or change is sufficiently complex - for example when it touches multiple subsystems, requires architectural decisions, or the right approach is not yet clear. A ticket allows maintainers and the contributor to align on direction before code is written, avoiding wasted effort on a PR that may be rejected or require fundamental rework.
+
+### What this agent must never do, and what to do instead
+
+- Don't open issues, submit pull requests, or post comments on your own initiative. Instead, post only what the contributor asked for, on their behalf, and tell them what you posted.
+- Don't write texts for machines: no file-by-file restatement of the diff, no filler, no raw tool output. Instead, write short, skimmable text for a human reviewer that explains what changed and why.
+- Don't add `Signed-off-by` tags to commits on your own. Instead, show the contributor the changes and the proposed commit message, and only after they explicitly approve them, commit with `git commit -s` so the sign-off carries their configured identity. The contributor certifies the Developer Certificate of Origin by giving that approval.
+- Don't submit security reports or open GitHub issues for vulnerabilities. Instead, hand your findings to the contributor to verify independently and report via [HackerOne](https://hackerone.com/nextcloud).
+- Don't fully automate the resolution of issues labeled [`good first issue`](https://github.com/issues?q=org%3Anextcloud+label%3A%22good+first+issue%22) or similar beginner-friendly labels. Instead, explain the code and guide the contributor so they can solve the issue themselves.
+- Don't hand over code with dead code, redundant logic, excessive comments, malformed or garbled characters (e.g. `�` replacement characters), or unrelated changes. Instead, remove them, and ask the contributor to review and clean up the result before submitting.
+
 ## Commands
 
 ### Setup
@@ -314,17 +354,13 @@ This applies equally to human contributors — see the matching note in
 Commit messages are the project's durable record — read years later through `git log` and `git blame`. The diff already shows *what* changed and *how*; the message exists to capture **intent**: the *why*.
 
 - **Subject**: conventional-commit, imperative, concise — aim for under 60 characters, or GitHub truncates it.
-- **Body**: state the facts plainly — the problem and the reason for this approach. Keep it matter-of-fact; no storytelling, filler, or marketing tone. Omit it only when the subject already conveys the intent.
+- **Body**: explain why, not how — state the problem and the reason for this approach plainly. Keep it matter-of-fact; no storytelling, filler, or marketing tone. Omit it only when the subject already conveys the intent.
 - **Record what was intentionally left out.** Note deliberate omissions and deferrals (and why) so a later reader can tell a conscious decision from an oversight.
 - **Don't restate the diff.** Avoid mechanical bullet lists that echo the changed lines.
 
-All commits must include two trailers at the end:
-1. Agent/model attribution: `Assisted-by: <AgentName>:<model-id>`
-2. DCO sign-off: Use `git commit -s` to add automatically
+All AI-assisted commits must end with the agent/model attribution trailer `Assisted-by: <AgentName>:<model-id>`.
 
-When committing, use: `git commit -m "message" -s`
-
-This ensures the sign-off includes your configured Git user email.
+The contributor must review the changes before anything is committed. Only once they explicitly approve, commit with `git commit -m "message" -s` so the `Signed-off-by` line carries their configured Git identity. Without that approval, leave the changes staged and do not sign off.
 
 Example:
 ```
@@ -334,11 +370,10 @@ Some proxies drop UIDVALIDITY, which made us discard the local
 cache and force a full resync on every run. Treat a missing
 value as unchanged instead.
 
-Assisted-by: Devstral:devstral-small-2507
-Assisted-by: ClaudeCode:claude-sonnet-4-6
-Assisted-by: Qwen:qwen3-coder-32b
-Assisted-by: Copilot:gpt-4o
-Signed-off-by: Name <email>
+Assisted-by: Devstral:devstral-small-2-24b-instruct-2512
+Assisted-by: ClaudeCode:claude-sonnet-5-5
+Assisted-by: Qwen:qwen3-coder-next
+Assisted-by: Codex:gpt-6.1-sol
 ```
 
 ### Styling
