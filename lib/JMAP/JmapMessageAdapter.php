@@ -301,12 +301,15 @@ class JmapMessageAdapter {
 				$state['isPgpMimeEncrypted'] = true;
 			}
 			if ($type === 'text/calendar') {
-				$state['scheduling'][] = [
-					'id' => $partId,
-					'mime' => $type,
-					'fileName' => $part->name(),
-					'method' => $this->extractCalendarMethod($content),
-				];
+				$method = strtoupper($this->extractCalendarMethod($content) ?? '');
+				if (in_array($method, ['REQUEST', 'REPLY', 'CANCEL'], true)) {
+					$state['scheduling'][] = [
+						'id' => $partId,
+						'messageId' => $uid,
+						'method' => $method,
+						'contents' => $content,
+					];
+				}
 			}
 
 			if ($loadBody && $type === 'text/plain' && $state['plainBody'] === '') {
