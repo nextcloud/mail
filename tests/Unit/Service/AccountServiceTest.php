@@ -91,7 +91,7 @@ final class AccountServiceTest extends TestCase {
 		$this->client = $this->createMock(Horde_Imap_Client_Socket::class);
 	}
 
-	public function testFindByUserId() {
+	public function testFindByUserId(): void {
 		$this->mapper->expects(self::exactly(2))
 			->method('findByUserId')
 			->willReturnMap([
@@ -111,7 +111,7 @@ final class AccountServiceTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testFind() {
+	public function testFind(): void {
 		$accountId = 123;
 
 		$this->mapper->expects($this->once())
@@ -125,7 +125,7 @@ final class AccountServiceTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testFindById() {
+	public function testFindById(): void {
 		$accountId = 123;
 
 		$this->mapper->expects($this->once())
@@ -139,7 +139,7 @@ final class AccountServiceTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testDelete() {
+	public function testDelete(): void {
 		$accountId = 33;
 
 		$this->mapper->expects($this->once())
@@ -153,7 +153,7 @@ final class AccountServiceTest extends TestCase {
 		$this->accountService->delete($this->user, $accountId);
 	}
 
-	public function testDeleteByAccountId() {
+	public function testDeleteByAccountId(): void {
 		$accountId = 33;
 
 		$this->mapper->expects($this->once())
@@ -167,7 +167,7 @@ final class AccountServiceTest extends TestCase {
 		$this->accountService->deleteByAccountId($accountId);
 	}
 
-	public function testSave() {
+	public function testSave(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(1000);
 		$mailAccount->setUserId('user1');
@@ -191,7 +191,7 @@ final class AccountServiceTest extends TestCase {
 		$this->assertEquals($mailAccount, $actual);
 	}
 
-	public function testUpdateSignature() {
+	public function testUpdateSignature(): void {
 		$id = 3;
 		$uid = 'ian';
 		$signature = 'sig';
@@ -209,7 +209,7 @@ final class AccountServiceTest extends TestCase {
 
 		$this->accountService->updateSignature($id, $uid, $signature);
 	}
-	public function testAccountsFailedConnection() {
+	public function testAccountsFailedConnection(): void {
 		$accountId = 1;
 		$this->protocolFactory->expects($this->once())
 			->method('testConnection')
@@ -221,7 +221,7 @@ final class AccountServiceTest extends TestCase {
 		$connected = $this->accountService->testAccountConnection($this->user, $accountId);
 		$this->assertFalse($connected);
 	}
-	public function testAccountsSuccesfulConnection() {
+	public function testAccountsSuccesfulConnection(): void {
 		$accountId = 1;
 		$this->protocolFactory->expects($this->once())
 			->method('testConnection');

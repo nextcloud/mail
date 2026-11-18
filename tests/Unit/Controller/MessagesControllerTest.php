@@ -358,7 +358,7 @@ final class MessagesControllerTest extends TestCase {
 		$this->assertSame('no-cache, no-store, must-revalidate', $response->getHeaders()['Cache-Control']);
 	}
 
-	public function testSaveSingleAttachment() {
+	public function testSaveSingleAttachment(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -424,7 +424,7 @@ final class MessagesControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testSaveAllAttachments() {
+	public function testSaveAllAttachments(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -521,7 +521,7 @@ final class MessagesControllerTest extends TestCase {
 		$this->assertSame(Http::STATUS_BAD_REQUEST, $response->getStatus());
 	}
 
-	public function testDownloadAttachments() {
+	public function testDownloadAttachments(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -598,7 +598,7 @@ final class MessagesControllerTest extends TestCase {
 		$this->assertEquals($zipValues, $responseValues);
 	}
 
-	public function testDownloadAttachmentsNoAccountError() {
+	public function testDownloadAttachmentsNoAccountError(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -630,7 +630,7 @@ final class MessagesControllerTest extends TestCase {
 		$this->assertInstanceOf(JSONResponse::class, $response);
 	}
 
-	public function testDownloadAttachmentsNoMailboxError() {
+	public function testDownloadAttachmentsNoMailboxError(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -659,7 +659,7 @@ final class MessagesControllerTest extends TestCase {
 		$this->assertInstanceOf(JSONResponse::class, $response);
 	}
 
-	public function testDownloadAttachmentsNoMessageError() {
+	public function testDownloadAttachmentsNoMessageError(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -683,7 +683,7 @@ final class MessagesControllerTest extends TestCase {
 		$this->assertInstanceOf(JSONResponse::class, $response);
 	}
 
-	public function testSetFlagsUnseen() {
+	public function testSetFlagsUnseen(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -724,7 +724,7 @@ final class MessagesControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testSetTagFailing() {
+	public function testSetTagFailing(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 1;
@@ -755,7 +755,7 @@ final class MessagesControllerTest extends TestCase {
 		$this->controller->setTag($id, Tag::LABEL_IMPORTANT);
 	}
 
-	public function testSetTagNotFound() {
+	public function testSetTagNotFound(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 1;
@@ -789,7 +789,7 @@ final class MessagesControllerTest extends TestCase {
 		$this->controller->setTag($id, $imapLabel);
 	}
 
-	public function testSetTag() {
+	public function testSetTag(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 1;
@@ -828,7 +828,7 @@ final class MessagesControllerTest extends TestCase {
 		$this->controller->setTag($id, $tag->getImapLabel());
 	}
 
-	public function testRemoveTagFailing() {
+	public function testRemoveTagFailing(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 1;
@@ -859,7 +859,7 @@ final class MessagesControllerTest extends TestCase {
 		$this->controller->removeTag($id, Tag::LABEL_IMPORTANT);
 	}
 
-	public function testRemoveTagNotFound() {
+	public function testRemoveTagNotFound(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 1;
@@ -893,7 +893,7 @@ final class MessagesControllerTest extends TestCase {
 		$this->controller->removeTag($id, $imapLabel);
 	}
 
-	public function testRemoveTag() {
+	public function testRemoveTag(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 1;
@@ -932,7 +932,7 @@ final class MessagesControllerTest extends TestCase {
 		$this->controller->removeTag($id, $tag->getImapLabel());
 	}
 
-	public function testSetFlagsFlagged() {
+	public function testSetFlagsFlagged(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -973,7 +973,7 @@ final class MessagesControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testDestroy() {
+	public function testDestroy(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -1008,7 +1008,7 @@ final class MessagesControllerTest extends TestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-	public function testDestroyWithAccountNotFound() {
+	public function testDestroyWithAccountNotFound(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -1036,7 +1036,7 @@ final class MessagesControllerTest extends TestCase {
 		$this->assertEquals($expected, $this->controller->destroy($id));
 	}
 
-	public function testDestroyWithFolderOrMessageNotFound() {
+	public function testDestroyWithFolderOrMessageNotFound(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -1158,7 +1158,7 @@ final class MessagesControllerTest extends TestCase {
 		$this->controller->getThread($id);
 	}
 
-	public function testExport() {
+	public function testExport(): void {
 		$accountId = 17;
 		$mailboxId = 13;
 		$folderId = 'testfolder';
@@ -1201,7 +1201,7 @@ final class MessagesControllerTest extends TestCase {
 		$this->assertEquals($expectedResponse, $actualResponse);
 	}
 
-	public function testSaveFile() {
+	public function testSaveFile(): void {
 		$accountId = 17;
 		$mailboxId = 13;
 		$folderId = 'testfolder';
@@ -1257,7 +1257,7 @@ final class MessagesControllerTest extends TestCase {
 		$this->assertEquals($expectedResponse, $actualResponse);
 	}
 
-	public function testGetDkim() {
+	public function testGetDkim(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(100);
 		$mailAccount->setUserId($this->userId);

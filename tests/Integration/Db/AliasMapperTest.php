@@ -42,7 +42,7 @@ final class AliasMapperTest extends TestCase {
 		$this->mapper = new AliasMapper($this->db);
 	}
 
-	public function testFind() {
+	public function testFind(): void {
 		$accountMapper = new MailAccountMapper($this->db);
 		$account = new MailAccount();
 		$account->setName('Peter Parker');
@@ -86,7 +86,7 @@ final class AliasMapperTest extends TestCase {
 		);
 	}
 
-	public function testCountByAccountId() {
+	public function testCountByAccountId(): void {
 		$account = $this->insertAccount();
 
 		self::assertSame(0, $this->mapper->countByAccountId($account->getId(), $account->getUserId()));
@@ -102,7 +102,7 @@ final class AliasMapperTest extends TestCase {
 		self::assertSame(2, $this->mapper->countByAccountId($account->getId(), $account->getUserId()));
 	}
 
-	public function testCountByAccountIdIgnoresOtherUsers() {
+	public function testCountByAccountIdIgnoresOtherUsers(): void {
 		$account = $this->insertAccount();
 
 		$alias = new Alias();
@@ -156,7 +156,7 @@ final class AliasMapperTest extends TestCase {
 		return (new MailAccountMapper($this->db))->insert($account);
 	}
 
-	public function testDeleteProvisionedAliasesByUid() {
+	public function testDeleteProvisionedAliasesByUid(): void {
 		$accountMapper = new MailAccountMapper($this->db);
 
 		// Create first account with provisioning_id

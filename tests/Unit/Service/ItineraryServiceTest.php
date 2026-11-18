@@ -57,7 +57,7 @@ final class ItineraryServiceTest extends TestCase {
 		);
 	}
 
-	public function testExtractNoBodyNoAttachments() {
+	public function testExtractNoBodyNoAttachments(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(100);
 		$mailAccount->setUserId('1');
@@ -119,7 +119,7 @@ final class ItineraryServiceTest extends TestCase {
 		$this->assertNotNull($this->service->getCached($account, $mailbox, 13));
 	}
 
-	public function testExtractFromBody() {
+	public function testExtractFromBody(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(100);
 		$mailAccount->setUserId('1');
@@ -155,7 +155,7 @@ final class ItineraryServiceTest extends TestCase {
 		$this->assertEquals(['datafrombody'], $itinerary->jsonSerialize());
 	}
 
-	public function testExtractFromAttachments() {
+	public function testExtractFromAttachments(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(100);
 		$mailAccount->setUserId('1');

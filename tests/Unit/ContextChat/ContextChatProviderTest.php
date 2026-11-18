@@ -125,7 +125,7 @@ final class ContextChatProviderTest extends TestCase {
 	/**
 	 * @dataProvider provideEvents
 	 */
-	public function testHandleWithContextChat($event) {
+	public function testHandleWithContextChat($event): void {
 		$this->contentManager->expects($this->once())
 			->method('isContextChatAvailable')
 			->willReturn(true);

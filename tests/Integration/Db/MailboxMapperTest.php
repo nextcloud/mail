@@ -47,7 +47,7 @@ final class MailboxMapperTest extends TestCase {
 		$delete->executeStatement();
 	}
 
-	public function testFindAllNoData() {
+	public function testFindAllNoData(): void {
 		$account = $this->createMock(Account::class);
 		$account->method('getId')->willReturn(13);
 
@@ -56,7 +56,7 @@ final class MailboxMapperTest extends TestCase {
 		$this->assertEmpty($result);
 	}
 
-	public function testFindAll() {
+	public function testFindAll(): void {
 		$account = $this->createMock(Account::class);
 		$account->method('getId')->willReturn(13);
 		foreach (range(1, 10) as $i) {
@@ -82,7 +82,7 @@ final class MailboxMapperTest extends TestCase {
 		$this->assertCount(5, $result);
 	}
 
-	public function testCountByAccountNoData() {
+	public function testCountByAccountNoData(): void {
 		$account = $this->createMock(Account::class);
 		$account->method('getId')->willReturn(13);
 
@@ -91,7 +91,7 @@ final class MailboxMapperTest extends TestCase {
 		$this->assertSame(0, $count);
 	}
 
-	public function testCountByAccountOnlyCountsItsOwnAccount() {
+	public function testCountByAccountOnlyCountsItsOwnAccount(): void {
 		$account = $this->createMock(Account::class);
 		$account->method('getId')->willReturn(13);
 		foreach (range(1, 10) as $i) {
@@ -114,7 +114,7 @@ final class MailboxMapperTest extends TestCase {
 		$this->assertSame(5, $count);
 	}
 
-	public function testNoInboxFound() {
+	public function testNoInboxFound(): void {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
 		$account->method('getId')->willReturn(13);
@@ -123,7 +123,7 @@ final class MailboxMapperTest extends TestCase {
 		$this->mapper->find($account, 'INBOX');
 	}
 
-	public function testFindInbox() {
+	public function testFindInbox(): void {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
 		$account->method('getId')->willReturn(13);
@@ -148,7 +148,7 @@ final class MailboxMapperTest extends TestCase {
 		$this->assertSame('INBOX', $result->getName());
 	}
 
-	public function testMailboxesWithTrailingSpace() {
+	public function testMailboxesWithTrailingSpace(): void {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
 		$account->method('getId')->willReturn(13);

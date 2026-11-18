@@ -282,7 +282,7 @@ final class FolderMapperTest extends TestCase {
 		self::assertNull($stats);
 	}
 
-	public function testDetectSpecialUseFromAttributes() {
+	public function testDetectSpecialUseFromAttributes(): void {
 		$folders = [
 			$this->createMock(Folder::class),
 		];

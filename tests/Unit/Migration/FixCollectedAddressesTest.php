@@ -34,7 +34,7 @@ final class FixCollectedAddressesTest extends TestCase {
 		$this->repairStep = new FixCollectedAddresses($this->mapper);
 	}
 
-	public function testRunNothingToMigrate() {
+	public function testRunNothingToMigrate(): void {
 		$address1 = new CollectedAddress();
 		$address1->setId(100);
 		$address1->setEmail('user1@domain1.com');
@@ -61,7 +61,7 @@ final class FixCollectedAddressesTest extends TestCase {
 		$this->repairStep->run($this->output);
 	}
 
-	public function testRunMigrateOne() {
+	public function testRunMigrateOne(): void {
 		$address1 = new CollectedAddress();
 		$address1->setId(100);
 		$address1->setEmail('"User 1" <user1@domain1.com>');
@@ -92,7 +92,7 @@ final class FixCollectedAddressesTest extends TestCase {
 		$this->assertEquals('User 1', $address1->getDisplayName());
 	}
 
-	public function testRunDeleteFaulty() {
+	public function testRunDeleteFaulty(): void {
 		$address1 = new CollectedAddress();
 		$address1->setId(100);
 		$address1->setEmail('"User 1 <user1@domain1.com>>>');

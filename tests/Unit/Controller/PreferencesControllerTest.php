@@ -30,7 +30,7 @@ final class PreferencesControllerTest extends TestCase {
 		$this->controller = new PreferencesController($request, $this->preferences, 'george');
 	}
 
-	public function testGetPreference() {
+	public function testGetPreference(): void {
 		$this->preferences->expects($this->once())
 			->method('getPreference')
 			->with('george', 'test')
@@ -42,7 +42,7 @@ final class PreferencesControllerTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testSetPreference() {
+	public function testSetPreference(): void {
 		$this->preferences->expects($this->once())
 			->method('setPreference')
 			->with('george', 'test')

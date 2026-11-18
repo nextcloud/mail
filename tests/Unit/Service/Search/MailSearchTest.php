@@ -62,7 +62,7 @@ final class MailSearchTest extends TestCase {
 		);
 	}
 
-	public function testFindMessagesNotCached() {
+	public function testFindMessagesNotCached(): void {
 		$account = $this->createStub(Account::class);
 		$mailbox = new Mailbox();
 		$mailbox->setSyncNewToken('abc');
@@ -81,7 +81,7 @@ final class MailSearchTest extends TestCase {
 		);
 	}
 
-	public function testFindMessagesLocked() {
+	public function testFindMessagesLocked(): void {
 		$account = $this->createStub(Account::class);
 		$mailbox = new Mailbox();
 		$mailbox->setSyncNewLock(123);
@@ -99,7 +99,7 @@ final class MailSearchTest extends TestCase {
 		);
 	}
 
-	public function testNoFindMessages() {
+	public function testNoFindMessages(): void {
 		$account = $this->createMock(Account::class);
 		$account->expects($this->once())
 			->method('getUserId')
@@ -123,7 +123,7 @@ final class MailSearchTest extends TestCase {
 		$this->assertEmpty($messages);
 	}
 
-	public function testFindFlagsLocally() {
+	public function testFindFlagsLocally(): void {
 		$account = $this->createMock(Account::class);
 		$account->expects($this->once())
 			->method('getUserId')
@@ -164,7 +164,7 @@ final class MailSearchTest extends TestCase {
 		$this->assertCount(2, $messages);
 	}
 
-	public function testFindText() {
+	public function testFindText(): void {
 		$account = $this->createMock(Account::class);
 		$account->expects($this->once())
 			->method('getUserId')

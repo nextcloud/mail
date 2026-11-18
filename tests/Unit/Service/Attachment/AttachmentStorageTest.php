@@ -36,7 +36,7 @@ final class AttachmentStorageTest extends TestCase {
 		$this->storage = new AttachmentStorage($this->appData);
 	}
 
-	public function testSaveWithFolderNotExisting() {
+	public function testSaveWithFolderNotExisting(): void {
 		$folder = $this->createMock(ISimpleFolder::class);
 		$file = $this->createMock(ISimpleFile::class);
 		$uploadedFile = $this->createMock(UploadedFile::class);
@@ -63,7 +63,7 @@ final class AttachmentStorageTest extends TestCase {
 		$this->storage->save('fritz', 123, $uploadedFile);
 	}
 
-	public function testSaveWithPermissionProblems() {
+	public function testSaveWithPermissionProblems(): void {
 		$folder = $this->createStub(ISimpleFolder::class);
 		$file = $this->createStub(ISimpleFile::class);
 		$uploadedFile = $this->createStub(UploadedFile::class);
@@ -81,7 +81,7 @@ final class AttachmentStorageTest extends TestCase {
 		$this->storage->save('fritz', 123, $uploadedFile);
 	}
 
-	public function testSaveWithoutTempPath() {
+	public function testSaveWithoutTempPath(): void {
 		$folder = $this->createMock(ISimpleFolder::class);
 		$file = $this->createStub(ISimpleFile::class);
 		$uploadedFile = $this->createMock(UploadedFile::class);
@@ -106,7 +106,7 @@ final class AttachmentStorageTest extends TestCase {
 		$this->storage->save('fritz', 123, $uploadedFile);
 	}
 
-	public function testSaveWithFileReadError() {
+	public function testSaveWithFileReadError(): void {
 		$folder = $this->createMock(ISimpleFolder::class);
 		$file = $this->createStub(ISimpleFile::class);
 		$uploadedFile = $this->createMock(UploadedFile::class);
@@ -131,7 +131,7 @@ final class AttachmentStorageTest extends TestCase {
 		$this->storage->save('fritz', 123, $uploadedFile);
 	}
 
-	public function testSave() {
+	public function testSave(): void {
 		$folder = $this->createMock(ISimpleFolder::class);
 		$file = $this->createMock(ISimpleFile::class);
 		$uploadedFile = $this->createMock(UploadedFile::class);

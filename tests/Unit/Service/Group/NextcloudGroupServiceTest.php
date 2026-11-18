@@ -117,7 +117,7 @@ final class NextcloudGroupServiceTest extends TestCase {
 		self::assertEquals($expected, $actual);
 	}
 
-	public function testGetUsers() {
+	public function testGetUsers(): void {
 		$users = [
 			$this->createTestUser('bob', 'Bobby', 'bob@smith.net'),
 			$this->createTestUser('alice', 'Alice', 'alice@smith.net')
@@ -156,7 +156,7 @@ final class NextcloudGroupServiceTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testGetUsersWrong() {
+	public function testGetUsersWrong(): void {
 		$this->expectException(ServiceException::class);
 
 		$this->groupsManager->expects($this->once())

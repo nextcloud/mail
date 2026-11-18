@@ -34,7 +34,7 @@ final class AvatarServiceIntegrationTest extends TestCase {
 		$this->service = Server::get(IAvatarService::class);
 	}
 
-	public function testJansGravatar() {
+	public function testJansGravatar(): void {
 		$this->markTestSkipped('Unreliable test');
 		return;
 		$avatar = $this->service->getAvatar('hey@jancborchardt.net', 'john');

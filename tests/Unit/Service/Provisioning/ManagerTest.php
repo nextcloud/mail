@@ -62,7 +62,7 @@ final class ManagerTest extends TestCase {
 		$this->assertEquals(0, $count);
 	}
 
-	public function testDisabledAppDoesUnprovision() {
+	public function testDisabledAppDoesUnprovision(): void {
 		/** @var IUser|MockObject $user */
 		$user = $this->createConfiguredMock(IUser::class, [
 			'getEmailAddress' => 'bruce.wayne@batman.com',
@@ -86,7 +86,7 @@ final class ManagerTest extends TestCase {
 		$this->assertFalse($result);
 	}
 
-	public function testUpdateProvisionSingleUser() {
+	public function testUpdateProvisionSingleUser(): void {
 		/** @var IUser|MockObject $user */
 		$user = $this->createConfiguredMock(IUser::class, [
 			'getEmailAddress' => 'bruce.wayne@batman.com',
@@ -116,7 +116,7 @@ final class ManagerTest extends TestCase {
 		$this->assertTrue($result);
 	}
 
-	public function testProvisionSingleUser() {
+	public function testProvisionSingleUser(): void {
 		/** @var IUser|MockObject $user */
 		$user = $this->createConfiguredMock(IUser::class, [
 			'getEmailAddress' => 'bruce.wayne@batman.com',
@@ -153,7 +153,7 @@ final class ManagerTest extends TestCase {
 		$this->assertTrue($result);
 	}
 
-	public function testUpdateProvisionSingleUserWithWildcard() {
+	public function testUpdateProvisionSingleUserWithWildcard(): void {
 		/** @var IUser|MockObject $user */
 		$user = $this->createConfiguredMock(IUser::class, [
 			'getEmailAddress' => 'bruce.wayne@batman.com',
@@ -183,7 +183,7 @@ final class ManagerTest extends TestCase {
 		$this->assertTrue($result);
 	}
 
-	public function testProvisionSingleUserWithWildcard() {
+	public function testProvisionSingleUserWithWildcard(): void {
 		/** @var IUser|MockObject $user */
 		$user = $this->createConfiguredMock(IUser::class, [
 			'getEmailAddress' => 'bruce.wayne@batman.com',
@@ -217,7 +217,7 @@ final class ManagerTest extends TestCase {
 		$this->assertTrue($result);
 	}
 
-	public function testProvisionSingleUserNoDomainMatch() {
+	public function testProvisionSingleUserNoDomainMatch(): void {
 		/** @var IUser|MockObject $user */
 		$user = $this->createConfiguredMock(IUser::class, [
 			'getEmailAddress' => 'bruce.wayne@batman.com'
@@ -248,7 +248,7 @@ final class ManagerTest extends TestCase {
 		$this->assertFalse($result);
 	}
 
-	public function testDeprovision() {
+	public function testDeprovision(): void {
 		$config = new Provisioning();
 		$config->setProvisioningDomain('*');
 		$config->setId(1);

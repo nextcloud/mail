@@ -30,13 +30,13 @@ final class AdminSettingsTest extends TestCase {
 		$this->settings = $this->serviceMock->getService();
 	}
 
-	public function testGetSection() {
+	public function testGetSection(): void {
 		$section = $this->settings->getSection();
 
 		$this->assertSame('groupware', $section);
 	}
 
-	public function testGetForm() {
+	public function testGetForm(): void {
 		$this->serviceMock->getParameter('initialStateService')->expects($this->exactly(16))
 			->method('provideInitialState')
 			->withConsecutive(
@@ -112,7 +112,7 @@ final class AdminSettingsTest extends TestCase {
 		$this->assertEquals($expected, $form);
 	}
 
-	public function testGetPriority() {
+	public function testGetPriority(): void {
 		$priority = $this->settings->getPriority();
 
 		$this->assertIsInt($priority);

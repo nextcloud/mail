@@ -30,7 +30,7 @@ final class DownloaderTest extends TestCase {
 		$this->downloader = new Downloader($this->clientService);
 	}
 
-	public function testDownload() {
+	public function testDownload(): void {
 		$client = $this->createMock(IClient::class);
 		$this->clientService->expects($this->once())
 			->method('newClient')
@@ -49,7 +49,7 @@ final class DownloaderTest extends TestCase {
 		$this->assertEquals('data', $data);
 	}
 
-	public function testDownloadError() {
+	public function testDownloadError(): void {
 		$client = $this->createMock(IClient::class);
 		$this->clientService->expects($this->once())
 			->method('newClient')

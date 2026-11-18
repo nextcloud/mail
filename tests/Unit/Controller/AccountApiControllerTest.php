@@ -49,7 +49,7 @@ final class AccountApiControllerTest extends TestCase {
 		);
 	}
 
-	public function testListWithoutUser() {
+	public function testListWithoutUser(): void {
 		$controller = new AccountApiController(
 			'mail',
 			$this->request,
@@ -69,7 +69,7 @@ final class AccountApiControllerTest extends TestCase {
 		$this->assertEquals(Http::STATUS_NOT_FOUND, $actual->getStatus());
 	}
 
-	public function testList() {
+	public function testList(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(42);
 		$mailAccount->setEmail('foo@bar.com');
@@ -112,7 +112,7 @@ final class AccountApiControllerTest extends TestCase {
 		], $actual->getData());
 	}
 
-	public function testListWithAliasWithoutName() {
+	public function testListWithAliasWithoutName(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(42);
 		$mailAccount->setEmail('foo@bar.com');
@@ -155,7 +155,7 @@ final class AccountApiControllerTest extends TestCase {
 		], $actual->getData());
 	}
 
-	public function testListWithDelegatedAccounts() {
+	public function testListWithDelegatedAccounts(): void {
 		$ownMailAccount = new MailAccount();
 		$ownMailAccount->setId(42);
 		$ownMailAccount->setEmail('foo@bar.com');
@@ -224,7 +224,7 @@ final class AccountApiControllerTest extends TestCase {
 		], $actual->getData());
 	}
 
-	public function testListWithoutAliases() {
+	public function testListWithoutAliases(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(42);
 		$mailAccount->setEmail('foo@bar.com');

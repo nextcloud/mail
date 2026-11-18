@@ -78,7 +78,7 @@ final class CollectedAddressMapperTest extends TestCase {
 	/**
 	 * @dataProvider matchingData
 	 */
-	public function testFindMatching($query, $result) {
+	public function testFindMatching($query, $result): void {
 		$matches = $this->mapper->findMatching($this->userId, $query);
 
 		$this->assertCount(\count($result), $matches);
@@ -107,19 +107,19 @@ final class CollectedAddressMapperTest extends TestCase {
 		$this->assertSame($expected, $actual);
 	}
 
-	public function testGetTotal() {
+	public function testGetTotal(): void {
 		$total = $this->mapper->getTotal();
 
 		$this->assertSame(3, $total);
 	}
 
-	public function testGetChunk() {
+	public function testGetChunk(): void {
 		$chunk = $this->mapper->getChunk();
 
 		$this->assertCount(3, $chunk);
 	}
 
-	public function testGetChunkWithOffset() {
+	public function testGetChunkWithOffset(): void {
 		$chunk = $this->mapper->getChunk($this->address2->getId());
 
 		$this->assertCount(2, $chunk);

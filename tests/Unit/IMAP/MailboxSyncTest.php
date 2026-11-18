@@ -78,7 +78,7 @@ final class MailboxSyncTest extends TestCase {
 		);
 	}
 
-	public function testSyncSkipped() {
+	public function testSyncSkipped(): void {
 		$account = $this->createMock(Account::class);
 		$mailAccount = new MailAccount();
 		$mailAccount->setLastMailboxSync(100000 - 100);

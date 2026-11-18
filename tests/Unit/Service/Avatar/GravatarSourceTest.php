@@ -32,7 +32,7 @@ final class GravatarSourceTest extends TestCase {
 		$this->source = new GravatarSource($this->clientService);
 	}
 
-	public function testFetchExisting() {
+	public function testFetchExisting(): void {
 		$email = 'hey@jancborchardt.net';
 		$client = $this->createMock(IClient::class);
 		$avatarFactory = $this->createMock(AvatarFactory::class);
@@ -58,7 +58,7 @@ final class GravatarSourceTest extends TestCase {
 		$this->assertEquals($avatar, $actualAvatar);
 	}
 
-	public function testFetchHttpError() {
+	public function testFetchHttpError(): void {
 		$email = 'hey@jancborchardt.net';
 		$client = $this->createMock(IClient::class);
 		$avatarFactory = $this->createStub(AvatarFactory::class);

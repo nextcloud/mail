@@ -82,7 +82,7 @@ final class MailboxesControllerTest extends TestCase {
 		);
 	}
 
-	public function testIndex() {
+	public function testIndex(): void {
 		$account = $this->createMock(Account::class);
 		$folder = $this->createMock(Folder::class);
 		$accountId = 28;
@@ -116,13 +116,13 @@ final class MailboxesControllerTest extends TestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-	public function testShow() {
+	public function testShow(): void {
 		$this->expectException(NotImplemented::class);
 
 		$this->controller->show();
 	}
 
-	public function testCreate() {
+	public function testCreate(): void {
 		$account = $this->createStub(Account::class);
 		$mailbox = new Mailbox();
 		$mailbox->setId(99);
@@ -346,7 +346,7 @@ final class MailboxesControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testUpdate() {
+	public function testUpdate(): void {
 		$this->expectException(NotImplemented::class);
 
 		$this->controller->update();

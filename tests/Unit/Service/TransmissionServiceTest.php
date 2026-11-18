@@ -44,7 +44,7 @@ final class TransmissionServiceTest extends TestCase {
 		);
 	}
 
-	public function testGetAddressList() {
+	public function testGetAddressList(): void {
 		$expected = new AddressList([Address::fromRaw('Bob', 'bob@test.com')]);
 		$recipient = new Recipient();
 		$recipient->setLabel('Bob');
@@ -62,7 +62,7 @@ final class TransmissionServiceTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testGetAttachments() {
+	public function testGetAttachments(): void {
 		$id = 1;
 		$expected = [[
 			'type' => 'local',

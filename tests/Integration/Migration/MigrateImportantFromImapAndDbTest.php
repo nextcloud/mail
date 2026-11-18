@@ -43,7 +43,7 @@ final class MigrateImportantFromImapAndDbTest extends TestCase {
 		parent::setUp();
 	}
 
-	public function testMigrateImportantOnImap() {
+	public function testMigrateImportantOnImap(): void {
 		$account = $this->createStub(Account::class);
 		$mailbox = $this->createStub(Mailbox::class);
 		$uids = [1,2,3];
@@ -61,7 +61,7 @@ final class MigrateImportantFromImapAndDbTest extends TestCase {
 		$this->migration->migrateImportantOnImap($this->client, $account, $mailbox);
 	}
 
-	public function testMigrateImportantOnImapNoUids() {
+	public function testMigrateImportantOnImapNoUids(): void {
 		$account = $this->createStub(Account::class);
 		$mailbox = $this->createStub(Mailbox::class);
 		$uids = [];
@@ -78,7 +78,7 @@ final class MigrateImportantFromImapAndDbTest extends TestCase {
 		$this->migration->migrateImportantOnImap($this->client, $account, $mailbox);
 	}
 
-	public function testMigrateImportantOnImapExceptionGetFlagged() {
+	public function testMigrateImportantOnImapExceptionGetFlagged(): void {
 		$account = $this->createStub(Account::class);
 		$mailbox = $this->createStub(Mailbox::class);
 		$e = new Horde_Imap_Client_Exception('');
@@ -96,7 +96,7 @@ final class MigrateImportantFromImapAndDbTest extends TestCase {
 		$this->migration->migrateImportantOnImap($this->client, $account, $mailbox);
 	}
 
-	public function testMigrateImportantOnImapExceptionOnFlag() {
+	public function testMigrateImportantOnImapExceptionOnFlag(): void {
 		$account = $this->createStub(Account::class);
 		$mailbox = new Mailbox();
 		$mailbox->setName('INBOX');
@@ -138,7 +138,7 @@ final class MigrateImportantFromImapAndDbTest extends TestCase {
 		$this->migration->migrateImportantFromDb($this->client, $account, $mailbox);
 	}
 
-	public function testMigrateImportantFromDbNoUids() {
+	public function testMigrateImportantFromDbNoUids(): void {
 		$account = $this->createStub(Account::class);
 		$mailbox = new Mailbox();
 		$mailbox->setId(1);
@@ -156,7 +156,7 @@ final class MigrateImportantFromImapAndDbTest extends TestCase {
 		$this->migration->migrateImportantFromDb($this->client, $account, $mailbox);
 	}
 
-	public function testMigrateImportantFromDbExceptionOnFlag() {
+	public function testMigrateImportantFromDbExceptionOnFlag(): void {
 		$account = $this->createStub(Account::class);
 		$mailbox = new Mailbox();
 		$mailbox->setId(1);

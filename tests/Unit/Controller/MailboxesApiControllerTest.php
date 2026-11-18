@@ -60,7 +60,7 @@ final class MailboxesApiControllerTest extends TestCase {
 		);
 	}
 
-	public function testListMailboxesWithoutUser() {
+	public function testListMailboxesWithoutUser(): void {
 		$controller = new MailboxesApiController(
 			'mail',
 			$this->request,
@@ -80,7 +80,7 @@ final class MailboxesApiControllerTest extends TestCase {
 		$this->assertEquals(Http::STATUS_NOT_FOUND, $actual->getStatus());
 	}
 
-	public function testListMailboxes() {
+	public function testListMailboxes(): void {
 		$account = $this->createStub(Account::class);
 		$folder = $this->createStub(Folder::class);
 		$accountId = 42;
@@ -100,7 +100,7 @@ final class MailboxesApiControllerTest extends TestCase {
 		$this->assertEquals([$folder], $actual->getData());
 	}
 
-	public function testListMessagesWithoutUser() {
+	public function testListMessagesWithoutUser(): void {
 		$controller = new MailboxesApiController(
 			'mail',
 			$this->request,

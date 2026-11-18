@@ -80,7 +80,7 @@ final class IMAPClientFactoryTest extends TestCase {
 		return new Account($mailAccount);
 	}
 
-	public function testGetClient() {
+	public function testGetClient(): void {
 		$account = $this->getTestAccount();
 		$this->crypto->expects($this->once())
 			->method('decrypt')
@@ -103,7 +103,7 @@ final class IMAPClientFactoryTest extends TestCase {
 		$this->factory->getClient($account);
 	}
 
-	public function testClientConnectivity() {
+	public function testClientConnectivity(): void {
 		$account = $this->getTestAccount();
 		$this->crypto->expects($this->once())
 			->method('decrypt')

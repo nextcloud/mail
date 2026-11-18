@@ -89,7 +89,7 @@ final class MailManagerTest extends TestCase {
 		);
 	}
 
-	public function testGetFolders() {
+	public function testGetFolders(): void {
 		/** @var Account|MockObject $account */
 		$account = $this->createStub(Account::class);
 		$mailboxes = [
@@ -114,7 +114,7 @@ final class MailManagerTest extends TestCase {
 		$this->assertSame($mailboxes, $result);
 	}
 
-	public function testCreateFolder() {
+	public function testCreateFolder(): void {
 		$account = $this->createStub(Account::class);
 		$mailbox = new Mailbox();
 		$mailboxConnector = $this->createMock(IMailboxConnector::class);

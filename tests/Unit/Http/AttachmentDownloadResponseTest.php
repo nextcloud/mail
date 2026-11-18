@@ -15,7 +15,7 @@ final class AttachmentDownloadResponseTest extends TestCase {
 	/**
 	 * @dataProvider providesResponseData
 	 */
-	public function testIt(string $content, string $filename, string $contentType) {
+	public function testIt(string $content, string $filename, string $contentType): void {
 		$resp = new AttachmentDownloadResponse($content, $filename, $contentType);
 		$headers = $resp->getHeaders();
 		$this->assertEquals($content, $resp->render());

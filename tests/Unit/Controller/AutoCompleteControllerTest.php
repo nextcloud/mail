@@ -32,7 +32,7 @@ final class AutoCompleteControllerTest extends TestCase {
 		);
 	}
 
-	public function testAutoComplete() {
+	public function testAutoComplete(): void {
 		$term = 'john d';
 		$result = [
 			'id' => 13,

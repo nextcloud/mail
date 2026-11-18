@@ -294,7 +294,7 @@ final class AiIntegrationsServiceTest extends TestCase {
 	/**
 	 * @dataProvider isLlmProcessingEnabledDataProvider
 	 */
-	public function testIsLlmProcessingEnabled(bool $appConfigValue, bool $expected) {
+	public function testIsLlmProcessingEnabled(bool $appConfigValue, bool $expected): void {
 		$this->appConfig->expects(self::once())
 			->method('getValueBool')
 			->with(Application::APP_ID, ConfigLexicon::LLM_PROCESSING, false)

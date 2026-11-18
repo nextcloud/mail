@@ -78,7 +78,7 @@ final class AddressCollectorTest extends TestCase {
 		$this->collector->addAddresses($this->userId, $addressList);
 	}
 
-	public function testSearchAddress() {
+	public function testSearchAddress(): void {
 		$term = 'john';
 		$mapperResult = ['some', 'data'];
 

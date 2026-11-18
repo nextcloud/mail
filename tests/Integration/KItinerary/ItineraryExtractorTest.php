@@ -49,7 +49,7 @@ final class ItineraryExtractorTest extends TestCase {
 		);
 	}
 
-	public function testNoAdapterAvailable() {
+	public function testNoAdapterAvailable(): void {
 		$this->binaryAdapter->expects($this->never())
 			->method('extractFromString');
 		$this->flatpakAdapter->expects($this->never())
@@ -60,7 +60,7 @@ final class ItineraryExtractorTest extends TestCase {
 		$this->assertEquals([], $itinerary->jsonSerialize());
 	}
 
-	public function testBinAvailable() {
+	public function testBinAvailable(): void {
 		$this->binaryAdapter->expects($this->once())
 			->method('isAvailable')
 			->willReturn(true);
@@ -77,7 +77,7 @@ final class ItineraryExtractorTest extends TestCase {
 		$this->assertEquals([], $itinerary->jsonSerialize());
 	}
 
-	public function testFlatpakAvailable() {
+	public function testFlatpakAvailable(): void {
 		$this->binaryAdapter->expects($this->never())
 			->method('extractFromString');
 		$this->flatpakAdapter->expects($this->once())
@@ -91,7 +91,7 @@ final class ItineraryExtractorTest extends TestCase {
 		$this->assertEquals([], $itinerary->jsonSerialize());
 	}
 
-	public function testSysAvailable() {
+	public function testSysAvailable(): void {
 		$this->binaryAdapter->expects($this->never())
 			->method('extractFromString');
 		$this->sysAdapter->expects($this->once())

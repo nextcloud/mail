@@ -29,7 +29,7 @@ final class AddressbookSourceTest extends TestCase {
 		$this->source = new AddressbookSource($this->ci);
 	}
 
-	public function testFetch() {
+	public function testFetch(): void {
 		$email = 'john@doe.com';
 		$avatarFactory = $this->createMock(AvatarFactory::class);
 		$this->ci->expects($this->once())
@@ -47,7 +47,7 @@ final class AddressbookSourceTest extends TestCase {
 		$this->assertSame($avatar, $actualAvatar);
 	}
 
-	public function testFetchNoneFound() {
+	public function testFetchNoneFound(): void {
 		$email = 'john@doe.com';
 		$avatarFactory = $this->createStub(AvatarFactory::class);
 		$this->ci->expects($this->once())

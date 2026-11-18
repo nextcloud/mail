@@ -42,7 +42,7 @@ final class FolderMapperIntegrationTest extends TestCase {
 		]);
 	}
 
-	public function testGetFolders() {
+	public function testGetFolders(): void {
 		$account = $this->createMock(Account::class);
 		$account->method('getId')->willReturn(13);
 		$client = $this->getTestClient();

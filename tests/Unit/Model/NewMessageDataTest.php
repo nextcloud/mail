@@ -13,7 +13,7 @@ use OCA\Mail\AddressList;
 use OCA\Mail\Model\NewMessageData;
 
 final class NewMessageDataTest extends TestCase {
-	public function testConstructionFromSimpleRequestData() {
+	public function testConstructionFromSimpleRequestData(): void {
 		$account = $this->createStub(Account::class);
 		$to = '"Test" <test@domain.com>';
 		$cc = '';
@@ -34,7 +34,7 @@ final class NewMessageDataTest extends TestCase {
 		$this->assertTrue($messageData->isMdnRequested());
 	}
 
-	public function testConstructionFromComplexRequestData() {
+	public function testConstructionFromComplexRequestData(): void {
 		$account = $this->createStub(Account::class);
 		$to = '"Test" <test@domain.com>, test2@domain.de';
 		$cc = 'test2@domain.at';

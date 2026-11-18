@@ -69,7 +69,7 @@ final class SieveClientFactoryTest extends TestCase {
 		return new Account($mailAccount);
 	}
 
-	public function testClientConnectivity() {
+	public function testClientConnectivity(): void {
 		$account = $this->getTestAccount();
 		$this->crypto->expects($this->once())
 			->method('decrypt')
@@ -80,7 +80,7 @@ final class SieveClientFactoryTest extends TestCase {
 		$this->assertInstanceOf(ManageSieve::class, $client);
 	}
 
-	public function testClientInstallScript() {
+	public function testClientInstallScript(): void {
 		$account = $this->getTestAccount();
 		$this->crypto->expects($this->once())
 			->method('decrypt')

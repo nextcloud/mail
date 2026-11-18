@@ -23,7 +23,7 @@ final class HtmlTest extends TestCase {
 	 * @param $expected
 	 * @param $text
 	 */
-	public function testLinkDetection(string $expected, string $text) {
+	public function testLinkDetection(string $expected, string $text): void {
 		$urlGenerator = Server::get(IURLGenerator::class);
 		$request = Server::get(IRequest::class);
 		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
@@ -115,7 +115,7 @@ final class HtmlTest extends TestCase {
 	 * @param $expected
 	 * @param $text
 	 */
-	public function testParseMailBody($expectedBody, $expectedSignature, $text) {
+	public function testParseMailBody($expectedBody, $expectedSignature, $text): void {
 		$urlGenerator = \OCP\Server::get(\OCP\IURLGenerator::class);
 		$request = \OCP\Server::get(\OCP\IRequest::class);
 		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
@@ -235,7 +235,7 @@ final class HtmlTest extends TestCase {
 		];
 	}
 
-	public function testSanitizeStyleSheet() {
+	public function testSanitizeStyleSheet(): void {
 		$blockedUrl = '/apps/mail/img/blocked-image.png';
 		$urlGenerator = self::createMock(IURLGenerator::class);
 		$urlGenerator->expects(self::any())

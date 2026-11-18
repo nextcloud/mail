@@ -91,7 +91,7 @@ final class SmimeServiceTest extends TestCase {
 		return $tempFile;
 	}
 
-	public function testDecryptMimePartText() {
+	public function testDecryptMimePartText(): void {
 		$encryptedMessage = file_get_contents(__DIR__ . '/../../data/encrypted-message.txt');
 		$decryptedBody = file_get_contents(__DIR__ . '/../../data/decrypted-message-body.txt');
 
@@ -315,7 +315,7 @@ final class SmimeServiceTest extends TestCase {
 		$this->assertCount(2, $certificates);
 	}
 
-	public function testEncryptMimePartText() {
+	public function testEncryptMimePartText(): void {
 		$certificateDomainTld = $this->getTestCertificate('user@domain.tld');
 		$certificateImapLocalhost = $this->getTestCertificate('user@imap.localhost');
 
@@ -509,7 +509,7 @@ final class SmimeServiceTest extends TestCase {
 		));
 	}
 
-	public function testSignAndEncryptMimePart() {
+	public function testSignAndEncryptMimePart(): void {
 		$certificateDomainTld = $this->getTestCertificate('user@domain.tld');
 		$certificateImapLocalhost = $this->getTestCertificate('user@imap.localhost');
 

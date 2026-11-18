@@ -47,7 +47,7 @@ final class ContactsIntegrationTest extends TestCase {
 			$this->config);
 	}
 
-	public function testDisabledContactsManager() {
+	public function testDisabledContactsManager(): void {
 		$this->contactsManager->expects($this->once())
 			->method('isEnabled')
 			->will($this->returnValue(false));
@@ -60,7 +60,7 @@ final class ContactsIntegrationTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testGetMatchingRecipient() {
+	public function testGetMatchingRecipient(): void {
 		$term = 'jo'; // searching for: John Doe
 		$searchResult = [
 			[
@@ -140,7 +140,7 @@ final class ContactsIntegrationTest extends TestCase {
 		$this->assertSame($expected, $actual);
 	}
 
-	public function testGetMatchingRecipientRestrictedToGroup() {
+	public function testGetMatchingRecipientRestrictedToGroup(): void {
 		$term = 'jo'; // searching for: John Doe
 		$searchResult = [
 			[
@@ -210,7 +210,7 @@ final class ContactsIntegrationTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testGetMatchingRecipientRestrictedToGroupFullMatchUserId() {
+	public function testGetMatchingRecipientRestrictedToGroupFullMatchUserId(): void {
 		$term = 'jf'; // searching for: Jonathan Frakes
 		$searchResult = [
 			[
@@ -251,7 +251,7 @@ final class ContactsIntegrationTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testGetMatchingRecipientRestrictedToGroupFullMatchFullName() {
+	public function testGetMatchingRecipientRestrictedToGroupFullMatchFullName(): void {
 		$term = 'Jonathan Frakes'; // searching for: Jonathan Frakes
 		$searchResult = [
 			[
@@ -292,7 +292,7 @@ final class ContactsIntegrationTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testGetMatchingRecipientRestrictedToGroupFullMatchEmail() {
+	public function testGetMatchingRecipientRestrictedToGroupFullMatchEmail(): void {
 		$term = 'jonathan@frakes.com'; // searching for: Jonathan Frakes
 		$searchResult = [
 			[
@@ -333,7 +333,7 @@ final class ContactsIntegrationTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testGetMatchingRecipientRestrictedToGroupFullMatchFalse() {
+	public function testGetMatchingRecipientRestrictedToGroupFullMatchFalse(): void {
 		$term = 'jf'; // searching for: Jonathan Frakes
 
 		$searchResult = [

@@ -14,7 +14,7 @@ use OCA\Mail\Model\RepliedMessageData;
 use PHPUnit\Framework\MockObject\MockObject;
 
 final class RepliedMessageTest extends TestCase {
-	public function testGetAccount() {
+	public function testGetAccount(): void {
 		/** @var Account|MockObject $account */
 		$account = $this->createStub(Account::class);
 		$message = new Message();
@@ -23,7 +23,7 @@ final class RepliedMessageTest extends TestCase {
 		$this->assertEquals($account, $data->getAccount());
 	}
 
-	public function testGetMessage() {
+	public function testGetMessage(): void {
 		/** @var Account|MockObject $account */
 		$account = $this->createStub(Account::class);
 		$message = new Message();

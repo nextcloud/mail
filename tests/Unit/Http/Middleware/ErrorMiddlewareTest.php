@@ -48,7 +48,7 @@ final class ErrorMiddlewareTest extends TestCase {
 		);
 	}
 
-	public function testDoesNotChangeSuccessfulResponses() {
+	public function testDoesNotChangeSuccessfulResponses(): void {
 		$response = new JSONResponse();
 		$controller = $this->createStub(Controller::class);
 
@@ -57,7 +57,7 @@ final class ErrorMiddlewareTest extends TestCase {
 		$this->assertSame($response, $after);
 	}
 
-	public function testDoesNotChangeUntaggedMethodResponses() {
+	public function testDoesNotChangeUntaggedMethodResponses(): void {
 		$request = $this->createStub(IRequest::class);
 		$controller = new class($request) extends Controller {
 			public function __construct(IRequest $request) {
@@ -83,7 +83,7 @@ final class ErrorMiddlewareTest extends TestCase {
 	/**
 	 * @dataProvider trappedErrorsData
 	 */
-	public function testTrapsErrors($exception, $shouldLog, $expectedStatus) {
+	public function testTrapsErrors($exception, $shouldLog, $expectedStatus): void {
 		$request = $this->createStub(IRequest::class);
 		$controller = new class($request) extends Controller {
 			public function __construct(IRequest $request) {
@@ -105,7 +105,7 @@ final class ErrorMiddlewareTest extends TestCase {
 		$this->assertEquals($expectedStatus, $response->getStatus());
 	}
 
-	public function testSerializesRecursively() {
+	public function testSerializesRecursively(): void {
 		$inner = new Exception();
 		$outer = new ServiceException('Test', 0, $inner);
 		$request = $this->createStub(IRequest::class);

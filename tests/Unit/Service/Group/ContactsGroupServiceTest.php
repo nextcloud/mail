@@ -30,7 +30,7 @@ final class ContactsGroupServiceTest extends TestCase {
 			$this->config);
 	}
 
-	public function testDisabledContactsManager() {
+	public function testDisabledContactsManager(): void {
 		$this->contactsManager->expects($this->once())
 			->method('isEnabled')
 			->will($this->returnValue(false));
@@ -43,7 +43,7 @@ final class ContactsGroupServiceTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testSearchGroups() {
+	public function testSearchGroups(): void {
 		$term = 'wor'; // searching for: group Work
 		$searchResult = [
 			[
@@ -105,7 +105,7 @@ final class ContactsGroupServiceTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testGetUsersForGroup() {
+	public function testGetUsersForGroup(): void {
 		$groupId = 'work'; // searching for: group Work
 		$searchResult = [
 			[

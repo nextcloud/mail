@@ -33,7 +33,7 @@ final class AutoCompleteServiceTest extends TestCase {
 			$this->addressCollector);
 	}
 
-	public function testFindMatches() {
+	public function testFindMatches(): void {
 		$term = 'jo';
 
 		$contactsResult = [

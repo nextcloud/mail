@@ -23,7 +23,7 @@ final class HostNameFactoryTest extends TestCase {
 		$this->factory = new HostNameFactory();
 	}
 
-	public function testGetHostName() {
+	public function testGetHostName(): void {
 		$expected = Util::getServerHostName();
 
 		$actual = $this->factory->getHostName();

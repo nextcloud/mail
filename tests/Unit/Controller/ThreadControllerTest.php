@@ -88,7 +88,7 @@ final class ThreadControllerTest extends TestCase {
 		);
 	}
 
-	public function testMoveForbidden() {
+	public function testMoveForbidden(): void {
 		$this->mailManager
 			->method('getMessage')
 			->willThrowException(new DoesNotExistException('for some reason there is no such record'));

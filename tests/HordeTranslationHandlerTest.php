@@ -19,7 +19,7 @@ final class HordeTranslationHandlerTest extends TestCase {
 		$this->handler = new HordeTranslationHandler();
 	}
 
-	public function testT() {
+	public function testT(): void {
 		$message = 'Hello';
 
 		$expected = $message;
@@ -39,7 +39,7 @@ final class HordeTranslationHandlerTest extends TestCase {
 	/**
 	 * @dataProvider singularPluralDataProvider
 	 */
-	public function testNgettext($number) {
+	public function testNgettext($number): void {
 		$singular = 'mail';
 		$plural = 'mails';
 

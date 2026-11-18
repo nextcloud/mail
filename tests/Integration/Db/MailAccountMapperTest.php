@@ -61,7 +61,7 @@ final class MailAccountMapperTest extends TestCase {
 		$this->account->setOrder(27);
 	}
 
-	public function testFind() {
+	public function testFind(): void {
 		/** @var MailAccount $b */
 		$b = $this->mapper->insert($this->account);
 
@@ -77,7 +77,7 @@ final class MailAccountMapperTest extends TestCase {
 		$this->assertEquals($b->toJson(), $c->toJson());
 	}
 
-	public function testSave() {
+	public function testSave(): void {
 		$a = $this->account;
 
 		// test insert
