@@ -16,6 +16,7 @@ use Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitThisCallRector;
 use Rector\PHPUnit\CodeQuality\Rector\Class_\RemoveNeverUsedMockPropertyRector;
 use Rector\PHPUnit\CodeQuality\Rector\MethodCall\AssertEqualsToSameRector;
 use Rector\PHPUnit\CodeQuality\Rector\MethodCall\NarrowIdenticalWithConsecutiveRector;
+use Rector\PHPUnit\CodeQuality\Rector\MethodCall\SingleWithConsecutiveToWithRector;
 use Rector\PHPUnit\CodeQuality\Rector\MethodCall\WithCallbackIdenticalToStandaloneAssertsRector;
 use Rector\TypeDeclaration\Rector\Class_\AddTestsVoidReturnTypeWhereNoReturnRector;
 
@@ -38,8 +39,9 @@ return RectorConfig::configure()
 		// Remove test properties that tests still read
 		NarrowUnusedSetUpDefinedPropertyRector::class,
 		RemoveNeverUsedMockPropertyRector::class,
-		// Turns withConsecutive(['a', 'b']) into with(['a', 'b']), which matches one array argument
+		// Turn withConsecutive(['a', 'b']) into with(['a', 'b']), which matches one array argument
 		NarrowIdenticalWithConsecutiveRector::class,
+		SingleWithConsecutiveToWithRector::class,
 		// Switches to strict comparison on types it infers wrongly
 		AssertEqualsToSameRector::class,
 	])
