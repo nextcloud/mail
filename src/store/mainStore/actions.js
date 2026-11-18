@@ -2076,14 +2076,6 @@ export default function mainStoreActions() {
 		setComposerIndicatorDisabledMutation(disabled) {
 			this.newMessage.indicatorDisabled = disabled
 		},
-		convertComposerMessageToOutboxMutation({ message }) {
-			if (!this.newMessage) {
-				// If the message is dispatched in the background there is no newMessage data in state
-				return
-			}
-			this.newMessage.type = 'outbox'
-			this.newMessage.data.id = message.id
-		},
 		addEnvelopesMutation({
 			query,
 			envelopes,

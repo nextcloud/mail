@@ -494,7 +494,7 @@ export default {
 						draftMessage: dataForServer,
 						id,
 					})
-				} else if (this.composerData.type === 0) {
+				} else if (this.composerMessage.type === 'outbox') {
 					// This is an outbox message
 					dataForServer.id = this.composerData.id
 					await this.outboxStore.updateMessage({
