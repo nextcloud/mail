@@ -384,6 +384,39 @@ describe('Pinia store mutations', () => {
 		})
 	})
 
+	it('adds a special-use mailbox below its ordinary parents', () => {
+		store.addAccountMutation({
+			accountId: 13,
+			id: 13,
+			mailboxes: [
+				{
+					databaseId: 345,
+					name: 'shared/team@example.com/Sent Items',
+					delimiter: '/',
+					specialUse: ['sent'],
+				},
+				{
+					databaseId: 346,
+					name: 'shared/team@example.com',
+					delimiter: '/',
+					specialUse: [],
+				},
+				{
+					databaseId: 347,
+					name: 'shared',
+					delimiter: '/',
+					specialUse: [],
+				},
+			],
+			aliases: [],
+		})
+
+		expect(store.accountsUnmapped[13].mailboxes).toEqual([347])
+		expect(store.mailboxes[347].mailboxes).toEqual([346])
+		expect(store.mailboxes[346].mailboxes).toEqual([345])
+		expect(store.mailboxes[345].displayName).toEqual('Sent Items')
+	})
+
 	it('adds a top level mailbox', () => {
 		const account = {
 			accountId: 13,
