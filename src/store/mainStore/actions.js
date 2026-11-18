@@ -159,29 +159,34 @@ function combineEnvelopeLists(sortOrder) {
 	return pipe(flatten, orderBy(prop('dateInt'), 'desc'))
 }
 
-const addMailboxToState = curry((mailboxes, account, mailbox) => {
-	mailbox.accountId = account.id
-	mailbox.mailboxes = []
-	Vue.set(mailbox, 'envelopeLists', {})
+function addMailboxesToState(mailboxes, account, newMailboxes) {
+	newMailboxes.forEach((mailbox) => {
+		mailbox.accountId = account.id
+		mailbox.mailboxes = []
+		Vue.set(mailbox, 'envelopeLists', {})
 
-	transformMailboxName(account, mailbox)
+		transformMailboxName(account, mailbox)
 
-	Vue.set(mailboxes, mailbox.databaseId, mailbox)
-	const parent = Object.values(mailboxes)
-		.filter((mb) => mb.accountId === account.id)
-		.find((mb) => mb.name === mailbox.path)
-	if (mailbox.path === '' || !parent) {
-		account.mailboxes.push(mailbox.databaseId)
-	} else {
-		parent.mailboxes.push(mailbox.databaseId)
-	}
+		Vue.set(mailboxes, mailbox.databaseId, mailbox)
 
-	Object.defineProperty(mailbox, 'isSubscribed', {
-		get() {
-			return this.attributes?.includes('\\subscribed') ?? false
-		},
+		Object.defineProperty(mailbox, 'isSubscribed', {
+			get() {
+				return this.attributes?.includes('\\subscribed') ?? false
+			},
+		})
 	})
-})
+
+	newMailboxes.forEach((mailbox) => {
+		const parent = Object.values(mailboxes)
+			.filter((mb) => mb.accountId === account.id)
+			.find((mb) => mb.name === mailbox.path)
+		if (mailbox.path === '' || !parent) {
+			account.mailboxes.push(mailbox.databaseId)
+		} else {
+			parent.mailboxes.push(mailbox.databaseId)
+		}
+	})
+}
 
 function transformMailboxName(account, mailbox) {
 	// Add all mailboxes (including submailboxes to state, but only toplevel to account
@@ -250,7 +255,7 @@ export default function mainStoreActions() {
 			account.mailboxes = await fetchAllMailboxes(account.id, true)
 			const mailboxes = sortMailboxes(account.mailboxes || [], account)
 			Vue.set(account, 'mailboxes', [])
-			mailboxes.map(addMailboxToState(this.mailboxes, account))
+			addMailboxesToState(this.mailboxes, account, mailboxes)
 		},
 		async finishAccountSetup({ account }) {
 			logger.debug(`Fetching mailboxes for account ${account.id},  …`, { account })
@@ -1915,7 +1920,7 @@ export default function mainStoreActions() {
 			Vue.set(account, 'mailboxes', [])
 			Vue.set(account, 'aliases', sortAliases(account.aliases ?? []))
 
-			mailboxes.map(addMailboxToState(this.mailboxes, account))
+			addMailboxesToState(this.mailboxes, account, mailboxes)
 		},
 		editAccountMutation(account) {
 			Vue.set(this.accountsUnmapped, account.id, { ...this.accountsUnmapped[account.id], ...account })
@@ -1959,7 +1964,7 @@ export default function mainStoreActions() {
 			account,
 			mailbox,
 		}) {
-			addMailboxToState(this.mailboxes, account, mailbox)
+			addMailboxesToState(this.mailboxes, account, [mailbox])
 		},
 		updateMailboxMutation({ mailbox }) {
 			const account = this.accountsUnmapped[mailbox.accountId]
