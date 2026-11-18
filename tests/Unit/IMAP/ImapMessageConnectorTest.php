@@ -68,11 +68,9 @@ final class ImapMessageConnectorTest extends TestCase {
 			->willReturn($this->client);
 	}
 
-	public static function bodyLoadingOptions(): array {
-		return [
-			'without body' => [false],
-			'with body' => [true],
-		];
+	public static function bodyLoadingOptions(): \Iterator {
+		yield 'without body' => [false];
+		yield 'with body' => [true];
 	}
 
 	/** @dataProvider bodyLoadingOptions */

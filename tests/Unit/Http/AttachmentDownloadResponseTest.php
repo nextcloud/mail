@@ -28,9 +28,7 @@ final class AttachmentDownloadResponseTest extends TestCase {
 		$this->assertTrue($pos > 0);
 	}
 
-	public function providesResponseData() {
-		return [
-			['1234567890', 'test.txt', 'text/plain']
-		];
+	public function providesResponseData(): \Iterator {
+		yield ['1234567890', 'test.txt', 'text/plain'];
 	}
 }

@@ -168,12 +168,10 @@ final class ImapMessageFetcherIntegrationTest extends TestCase {
 		$this->assertTrue($message->isSignatureValid());
 	}
 
-	public function aiGeneratedHeaderProvider(): array {
-		return [
-			[LocalMessage::HEADER_AI_GENERATED . ": 1\r\n", true],
-			[LocalMessage::HEADER_AI_GENERATED . ": 0\r\n", false],
-			['', false],
-		];
+	public function aiGeneratedHeaderProvider(): \Iterator {
+		yield [LocalMessage::HEADER_AI_GENERATED . ": 1\r\n", true];
+		yield [LocalMessage::HEADER_AI_GENERATED . ": 0\r\n", false];
+		yield ['', false];
 	}
 
 	/**

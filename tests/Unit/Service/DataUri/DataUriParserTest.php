@@ -40,44 +40,42 @@ final class DataUriParserTest extends TestCase {
 		$this->parser->parse('hellohello;base64');
 	}
 
-	public function dataParse(): array {
-		return [
-			[
-				'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==',
-				new DataUri(
-					'image/png',
-					['charset' => 'US-ASCII'],
-					true,
-					'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='
-				)
-			],
-			[
-				'data:image/png;charset=TEST,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==',
-				new DataUri(
-					'image/png',
-					['charset' => 'TEST'],
-					false,
-					'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='
-				)
-			],
-			[
-				'data:text/plain2;charset=UTF-8;page=21,the%20data:1234,5678',
-				new DataUri(
-					'text/plain2',
-					['charset' => 'UTF-8', 'page' => '21'],
-					false,
-					'the%20data:1234,5678'
-				)
-			],
-			[
-				'data:,',
-				new DataUri(
-					'text/plain',
-					['charset' => 'US-ASCII'],
-					false,
-					''
-				)
-			]
+	public function dataParse(): \Iterator {
+		yield [
+			'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==',
+			new DataUri(
+				'image/png',
+				['charset' => 'US-ASCII'],
+				true,
+				'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='
+			)
+		];
+		yield [
+			'data:image/png;charset=TEST,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==',
+			new DataUri(
+				'image/png',
+				['charset' => 'TEST'],
+				false,
+				'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='
+			)
+		];
+		yield [
+			'data:text/plain2;charset=UTF-8;page=21,the%20data:1234,5678',
+			new DataUri(
+				'text/plain2',
+				['charset' => 'UTF-8', 'page' => '21'],
+				false,
+				'the%20data:1234,5678'
+			)
+		];
+		yield [
+			'data:,',
+			new DataUri(
+				'text/plain',
+				['charset' => 'US-ASCII'],
+				false,
+				''
+			)
 		];
 	}
 }

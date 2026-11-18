@@ -547,8 +547,9 @@ final class MailManagerTest extends TestCase {
 		$this->manager->updateTag(100, 'Hello Hello 👋', '#0082c9', 'admin');
 	}
 
-	public static function threadOperations(): array {
-		return [['move'], ['delete']];
+	public static function threadOperations(): \Iterator {
+		yield ['move'];
+		yield ['delete'];
 	}
 
 	/** @dataProvider threadOperations */

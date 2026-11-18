@@ -227,14 +227,13 @@ final class SmimeServiceTest extends TestCase {
 		);
 	}
 
-	public function provideIsEncryptedData(): array {
-		return [
-			['application/pkcs7-mime', ['smime-type' => 'enveloped-data'], true],
-			['application/pkcs7-mime', ['smime-type' => 'signed-data'], false],
-			['application/pkcs7-mime', [], false], // Should not happen in real life but who knows
-			['multipart/alternative', [], false],
-			['', [], false],
-		];
+	public function provideIsEncryptedData(): \Iterator {
+		yield ['application/pkcs7-mime', ['smime-type' => 'enveloped-data'], true];
+		yield ['application/pkcs7-mime', ['smime-type' => 'signed-data'], false];
+		yield ['application/pkcs7-mime', [], false];
+		// Should not happen in real life but who knows
+		yield ['multipart/alternative', [], false];
+		yield ['', [], false];
 	}
 
 	/**
@@ -362,78 +361,76 @@ final class SmimeServiceTest extends TestCase {
 		$this->assertFalse($decryptionResult->isSigned());
 	}
 
-	public function provideParseCertificateData(): array {
-		return [
-			[
-				$this->getTestCertificate('user@imap.localhost'),
-				new SmimeCertificateInfo(
-					'user',
-					'user@imap.localhost',
-					4862017735,
-					new SmimeCertificatePurposes(true, true),
-					true,
-				),
-			],
-			[
-				$this->getTestCertificate('cn-only@imap.localhost'),
-				new SmimeCertificateInfo(
-					'cn-only',
-					'cn-only@imap.localhost',
-					4862017727,
-					new SmimeCertificatePurposes(true, true),
-					true,
-				),
-			],
-			[
-				$this->getTestCertificate('user@domain.tld'),
-				new SmimeCertificateInfo(
-					'user',
-					'user@domain.tld',
-					4862017705,
-					new SmimeCertificatePurposes(true, true),
-					false,
-				),
-			],
-			[ // Full chain: Leaf -> Intermediate CA -> CA
-				$this->getTestCertificate('chain@imap.localhost'),
-				new SmimeCertificateInfo(
-					'chain',
-					'chain@imap.localhost',
-					4870519697,
-					new SmimeCertificatePurposes(true, true),
-					true,
-				),
-			],
-			[ // Partial chain: Leaf -> Intermediate CA
-				$this->getTestCertificate('chain-partial@imap.localhost'),
-				new SmimeCertificateInfo(
-					'chain',
-					'chain@imap.localhost',
-					4870519697,
-					new SmimeCertificatePurposes(true, true),
-					true,
-				),
-			],
-			[ // Leaf only
-				$this->getTestCertificate('chain-leaf-only@imap.localhost'),
-				new SmimeCertificateInfo(
-					'chain',
-					'chain@imap.localhost',
-					4870519697,
-					new SmimeCertificatePurposes(true, true),
-					false,
-				),
-			],
-			[ // Email address only in SAN, not in Subject (RFC 8550 / government PKI pattern)
-				$this->getTestCertificate('san-only@imap.localhost'),
-				new SmimeCertificateInfo(
-					'SAN Only User',
-					'san-only@imap.localhost',
-					4927747705,
-					new SmimeCertificatePurposes(true, true),
-					false,
-				),
-			],
+	public function provideParseCertificateData(): \Iterator {
+		yield [
+			$this->getTestCertificate('user@imap.localhost'),
+			new SmimeCertificateInfo(
+				'user',
+				'user@imap.localhost',
+				4862017735,
+				new SmimeCertificatePurposes(true, true),
+				true,
+			),
+		];
+		yield [
+			$this->getTestCertificate('cn-only@imap.localhost'),
+			new SmimeCertificateInfo(
+				'cn-only',
+				'cn-only@imap.localhost',
+				4862017727,
+				new SmimeCertificatePurposes(true, true),
+				true,
+			),
+		];
+		yield [
+			$this->getTestCertificate('user@domain.tld'),
+			new SmimeCertificateInfo(
+				'user',
+				'user@domain.tld',
+				4862017705,
+				new SmimeCertificatePurposes(true, true),
+				false,
+			),
+		];
+		yield [ // Full chain: Leaf -> Intermediate CA -> CA
+			$this->getTestCertificate('chain@imap.localhost'),
+			new SmimeCertificateInfo(
+				'chain',
+				'chain@imap.localhost',
+				4870519697,
+				new SmimeCertificatePurposes(true, true),
+				true,
+			),
+		];
+		yield [ // Partial chain: Leaf -> Intermediate CA
+			$this->getTestCertificate('chain-partial@imap.localhost'),
+			new SmimeCertificateInfo(
+				'chain',
+				'chain@imap.localhost',
+				4870519697,
+				new SmimeCertificatePurposes(true, true),
+				true,
+			),
+		];
+		yield [ // Leaf only
+			$this->getTestCertificate('chain-leaf-only@imap.localhost'),
+			new SmimeCertificateInfo(
+				'chain',
+				'chain@imap.localhost',
+				4870519697,
+				new SmimeCertificatePurposes(true, true),
+				false,
+			),
+		];
+		yield [ // Email address only in SAN, not in Subject (RFC 8550 / government PKI pattern)
+			$this->getTestCertificate('san-only@imap.localhost'),
+			new SmimeCertificateInfo(
+				'SAN Only User',
+				'san-only@imap.localhost',
+				4927747705,
+				new SmimeCertificatePurposes(true, true),
+				false,
+			),
 		];
 	}
 
@@ -456,11 +453,9 @@ final class SmimeServiceTest extends TestCase {
 		);
 	}
 
-	public static function provideCertificatesWithRepeatedSubjectFields(): array {
-		return [
-			'repeated common name' => ['repeated-common-name@imap.localhost', 'Alice', 'alice@imap.localhost'],
-			'repeated email address' => ['repeated-email-address@imap.localhost', 'Alice', 'alice@imap.localhost'],
-		];
+	public static function provideCertificatesWithRepeatedSubjectFields(): \Iterator {
+		yield 'repeated common name' => ['repeated-common-name@imap.localhost', 'Alice', 'alice@imap.localhost'];
+		yield 'repeated email address' => ['repeated-email-address@imap.localhost', 'Alice', 'alice@imap.localhost'];
 	}
 
 	/**

@@ -1297,12 +1297,10 @@ final class MessagesControllerTest extends TestCase {
 		$this->assertEquals(['valid' => true], $actualResponse->getData());
 	}
 
-	public static function provideCacheBusterData(): array {
-		return [
-			[null, false],
-			['', false],
-			['abcdef123', true],
-		];
+	public static function provideCacheBusterData(): \Iterator {
+		yield [null, false];
+		yield ['', false];
+		yield ['abcdef123', true];
 	}
 
 	/** @dataProvider provideCacheBusterData */
@@ -1353,12 +1351,10 @@ final class MessagesControllerTest extends TestCase {
 		}
 	}
 
-	public static function provideLimitData(): array {
-		return [
-			'20' => [20, 20],
-			'500' => [500, 100],
-			'null' => [null, 1],
-		];
+	public static function provideLimitData(): \Iterator {
+		yield '20' => [20, 20];
+		yield '500' => [500, 100];
+		yield 'null' => [null, 1];
 	}
 
 	/** @dataProvider provideLimitData */

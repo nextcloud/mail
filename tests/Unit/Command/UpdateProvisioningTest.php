@@ -184,8 +184,14 @@ final class UpdateProvisioningTest extends TestCase {
 		self::assertStringContainsString('positive integer', $this->tester->getDisplay());
 	}
 
-	public static function invalidIds(): array {
-		return [[''], ['0'], ['-1'], ['3typo'], ['3.5'], ['3e1'], ['99999999999999999999']];
+	public static function invalidIds(): \Iterator {
+		yield [''];
+		yield ['0'];
+		yield ['-1'];
+		yield ['3typo'];
+		yield ['3.5'];
+		yield ['3e1'];
+		yield ['99999999999999999999'];
 	}
 
 	/** @dataProvider passwordInputModes */
@@ -204,8 +210,9 @@ final class UpdateProvisioningTest extends TestCase {
 		self::assertStringNotContainsString('new password', $this->tester->getDisplay());
 	}
 
-	public static function passwordInputModes(): array {
-		return [[true], [false]];
+	public static function passwordInputModes(): \Iterator {
+		yield [true];
+		yield [false];
 	}
 
 	public function testRejectsMissingPasswordInput(): void {
@@ -232,8 +239,10 @@ final class UpdateProvisioningTest extends TestCase {
 		self::assertStringContainsString($option . ' must be an integer between 1 and 65535', $this->tester->getDisplay());
 	}
 
-	public static function invalidPorts(): array {
-		return [['--imap-port', ''], ['--smtp-port', '587typo'], ['--sieve-port', '65536']];
+	public static function invalidPorts(): \Iterator {
+		yield ['--imap-port', ''];
+		yield ['--smtp-port', '587typo'];
+		yield ['--sieve-port', '65536'];
 	}
 
 	public function testRequiresPortWhenEnablingSieve(): void {

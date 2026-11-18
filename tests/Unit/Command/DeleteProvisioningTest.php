@@ -97,7 +97,13 @@ final class DeleteProvisioningTest extends TestCase {
 		self::assertStringContainsString('positive integer', $this->tester->getDisplay());
 	}
 
-	public static function invalidIds(): array {
-		return [[''], ['0'], ['-1'], ['3typo'], ['3.5'], ['3e1'], ['99999999999999999999']];
+	public static function invalidIds(): \Iterator {
+		yield [''];
+		yield ['0'];
+		yield ['-1'];
+		yield ['3typo'];
+		yield ['3.5'];
+		yield ['3e1'];
+		yield ['99999999999999999999'];
 	}
 }

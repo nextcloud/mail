@@ -111,12 +111,10 @@ final class InternalAddressesMigrationServiceTest extends TestCase {
 		$this->migrationService->importInternalAddresses($this->user, $this->importSource, $this->output);
 	}
 
-	public static function provideFileContentsWithNoInternalAddressesImported(): array {
-		return [
-			'empty list' => [json_encode([])],
-			'invalid JSON' => ['this is not valid json {{{'],
-			'JSON object instead of list' => [json_encode(['unexpected' => 'object'])],
-		];
+	public static function provideFileContentsWithNoInternalAddressesImported(): \Iterator {
+		yield 'empty list' => [json_encode([])];
+		yield 'invalid JSON' => ['this is not valid json {{{'];
+		yield 'JSON object instead of list' => [json_encode(['unexpected' => 'object'])];
 	}
 
 	/**

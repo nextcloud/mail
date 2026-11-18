@@ -30,12 +30,10 @@ final class HordeTranslationHandlerTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function singularPluralDataProvider() {
-		return [
-			[0],
-			[1],
-			[2],
-		];
+	public function singularPluralDataProvider(): \Iterator {
+		yield [0];
+		yield [1];
+		yield [2];
 	}
 
 	/**

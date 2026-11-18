@@ -176,12 +176,10 @@ final class QuickActionsMigrationServiceTest extends TestCase {
 			self::ACCOUNT_MAPPING, self::MAILBOX_MAPPING, []);
 	}
 
-	public static function provideFileContentsWithNoQuickActionsImported(): array {
-		return [
-			'empty list' => [json_encode([])],
-			'invalid JSON' => ['this is not valid json {{{'],
-			'JSON object instead of list' => [json_encode(['unexpected' => 'object'])],
-		];
+	public static function provideFileContentsWithNoQuickActionsImported(): \Iterator {
+		yield 'empty list' => [json_encode([])];
+		yield 'invalid JSON' => ['this is not valid json {{{'];
+		yield 'JSON object instead of list' => [json_encode(['unexpected' => 'object'])];
 	}
 
 	/**
@@ -210,11 +208,9 @@ final class QuickActionsMigrationServiceTest extends TestCase {
 			self::ACCOUNT_MAPPING, self::MAILBOX_MAPPING, []);
 	}
 
-	public static function provideIncompleteMappings(): array {
-		return [
-			'no accounts imported' => ['accountMapping' => [], 'mailboxMapping' => self::MAILBOX_MAPPING],
-			'nothing imported' => ['accountMapping' => [], 'mailboxMapping' => []],
-		];
+	public static function provideIncompleteMappings(): \Iterator {
+		yield 'no accounts imported' => ['accountMapping' => [], 'mailboxMapping' => self::MAILBOX_MAPPING];
+		yield 'nothing imported' => ['accountMapping' => [], 'mailboxMapping' => []];
 	}
 
 	/**

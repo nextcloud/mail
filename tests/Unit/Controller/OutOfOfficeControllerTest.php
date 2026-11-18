@@ -33,11 +33,9 @@ final class OutOfOfficeControllerTest extends TestCase {
 		$this->outOfOfficeController = $this->serviceMock->getService();
 	}
 
-	public function followSystemDataProvider(): array {
-		return [
-			[false],
-			[true],
-		];
+	public function followSystemDataProvider(): \Iterator {
+		yield [false];
+		yield [true];
 	}
 
 	/**

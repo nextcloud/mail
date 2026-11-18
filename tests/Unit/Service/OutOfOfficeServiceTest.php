@@ -62,12 +62,10 @@ final class OutOfOfficeServiceTest extends TestCase {
 		$this->outOfOfficeService->updateFromSystem($mailAccount, $user);
 	}
 
-	public function enabledOutOfOfficeDataProvider(): array {
+	public function enabledOutOfOfficeDataProvider(): \Iterator {
 		$user = $this->createMock(IUser::class);
-		return [
-			[$this->createOutOfOfficeData('2', $user, 1000, 2000, 'Subject', 'Message')],
-			[$this->createOutOfOfficeData('2', $user, 1500, 2000, 'Subject', 'Message')],
-		];
+		yield [$this->createOutOfOfficeData('2', $user, 1000, 2000, 'Subject', 'Message')];
+		yield [$this->createOutOfOfficeData('2', $user, 1500, 2000, 'Subject', 'Message')];
 	}
 
 	/**
@@ -141,12 +139,10 @@ final class OutOfOfficeServiceTest extends TestCase {
 		self::assertEquals('Message', $state->getMessage());
 	}
 
-	public function disabledOutOfOfficeDataProvider(): array {
+	public function disabledOutOfOfficeDataProvider(): \Iterator {
 		$user = $this->createMock(IUser::class);
-		return [
-			[$this->createOutOfOfficeData('2', $user, 1000, 1250, 'Subject', 'Message')],
-			[$this->createOutOfOfficeData('2', $user, 1750, 2000, 'Subject', 'Message')],
-		];
+		yield [$this->createOutOfOfficeData('2', $user, 1000, 1250, 'Subject', 'Message')];
+		yield [$this->createOutOfOfficeData('2', $user, 1750, 2000, 'Subject', 'Message')];
 	}
 
 	/**

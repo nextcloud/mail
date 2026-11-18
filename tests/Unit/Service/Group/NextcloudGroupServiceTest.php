@@ -72,22 +72,20 @@ final class NextcloudGroupServiceTest extends TestCase {
 		return $mockUser;
 	}
 
-	public function dataForTestSearch(): array {
-		return [
-			['yes', 'no', [
-				[
-					'id' => 'testgroup',
-					'name' => 'first test group',
-				],
-				[
-					'id' => 'testgroup2',
-					'name' => 'second test group',
-				]
-			]],
-			['no', 'yes', []],
-			['no', 'no', []],
-			['yes', 'yes', []],
-		];
+	public function dataForTestSearch(): \Iterator {
+		yield ['yes', 'no', [
+			[
+				'id' => 'testgroup',
+				'name' => 'first test group',
+			],
+			[
+				'id' => 'testgroup2',
+				'name' => 'second test group',
+			]
+		]];
+		yield ['no', 'yes', []];
+		yield ['no', 'no', []];
+		yield ['yes', 'yes', []];
 	}
 
 	/**

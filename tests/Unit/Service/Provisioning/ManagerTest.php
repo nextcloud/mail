@@ -443,19 +443,17 @@ final class ManagerTest extends TestCase {
 			->method('insert');
 	}
 
-	public function provideUnresolvableLdapValues(): array {
-		return [
-			'empty' => [''],
-			'control characters' => ["BWAYNE\r\nX"],
-			'invalid UTF-8' => ["BWAYNE\xFF"],
-			'space' => ['Bruce Wayne'],
-			'unicode line separator' => ["BWAYNE\u{2028}X"],
-			'trailing newline' => ["BWAYNE\n"],
-			'trailing carriage return' => ["BWAYNE\r"],
-			'comma escaping the domain' => ['ceo@evil.example,x'],
-			'angle brackets escaping the domain' => ['a@b.com<c@d.com>'],
-			'longer than the account column' => [str_repeat('a', 65)],
-		];
+	public function provideUnresolvableLdapValues(): \Iterator {
+		yield 'empty' => [''];
+		yield 'control characters' => ["BWAYNE\r\nX"];
+		yield 'invalid UTF-8' => ["BWAYNE\xFF"];
+		yield 'space' => ['Bruce Wayne'];
+		yield 'unicode line separator' => ["BWAYNE\u{2028}X"];
+		yield 'trailing newline' => ["BWAYNE\n"];
+		yield 'trailing carriage return' => ["BWAYNE\r"];
+		yield 'comma escaping the domain' => ['ceo@evil.example,x'];
+		yield 'angle brackets escaping the domain' => ['a@b.com<c@d.com>'];
+		yield 'longer than the account column' => [str_repeat('a', 65)];
 	}
 
 	/**

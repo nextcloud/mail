@@ -216,13 +216,11 @@ final class JmapMessageAdapterTest extends TestCase {
 		self::assertSame('sender@example.com', $from->getEmail());
 	}
 
-	public static function aiGeneratedHeaderProvider(): array {
-		return [
-			'absent' => [null, false],
-			'set' => ['1', true],
-			'set with whitespace' => [' 1 ', true],
-			'other value' => ['0', false],
-		];
+	public static function aiGeneratedHeaderProvider(): \Iterator {
+		yield 'absent' => [null, false];
+		yield 'set' => ['1', true];
+		yield 'set with whitespace' => [' 1 ', true];
+		yield 'other value' => ['0', false];
 	}
 
 	/**

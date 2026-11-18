@@ -72,12 +72,10 @@ final class ErrorMiddlewareTest extends TestCase {
 		$this->middleware->afterException($controller, 'foo', $exception);
 	}
 
-	public function trappedErrorsData() {
-		return [
-			[new DoesNotExistException('does not exist'), false, Http::STATUS_NOT_FOUND],
-			[new ServiceException(), true, Http::STATUS_INTERNAL_SERVER_ERROR],
-			[new NotImplemented(), false, Http::STATUS_NOT_IMPLEMENTED],
-		];
+	public function trappedErrorsData(): \Iterator {
+		yield [new DoesNotExistException('does not exist'), false, Http::STATUS_NOT_FOUND];
+		yield [new ServiceException(), true, Http::STATUS_INTERNAL_SERVER_ERROR];
+		yield [new NotImplemented(), false, Http::STATUS_NOT_IMPLEMENTED];
 	}
 
 	/**
@@ -129,14 +127,12 @@ final class ErrorMiddlewareTest extends TestCase {
 		$this->assertInstanceOf(JSONResponse::class, $response);
 	}
 
-	public function temporaryExceptionsData(): array {
-		return [
-			[new ServiceException('not temporary'), false],
-			[new ServiceException('temporary', 0, new Horde_Imap_Client_Exception('', Horde_Imap_Client_Exception::DISCONNECT)), true],
-			[new ServiceException('temporary', 0, new Horde_Imap_Client_Exception('', Horde_Imap_Client_Exception::SERVER_CONNECT)), false],
-			[new ServiceException('temporary', 0, new Horde_Imap_Client_Exception('', Horde_Imap_Client_Exception::SERVER_READERROR)), true],
-			[new ServiceException('temporary', 0, new Horde_Imap_Client_Exception('', Horde_Imap_Client_Exception::SERVER_WRITEERROR)), true],
-		];
+	public function temporaryExceptionsData(): \Iterator {
+		yield [new ServiceException('not temporary'), false];
+		yield [new ServiceException('temporary', 0, new Horde_Imap_Client_Exception('', Horde_Imap_Client_Exception::DISCONNECT)), true];
+		yield [new ServiceException('temporary', 0, new Horde_Imap_Client_Exception('', Horde_Imap_Client_Exception::SERVER_CONNECT)), false];
+		yield [new ServiceException('temporary', 0, new Horde_Imap_Client_Exception('', Horde_Imap_Client_Exception::SERVER_READERROR)), true];
+		yield [new ServiceException('temporary', 0, new Horde_Imap_Client_Exception('', Horde_Imap_Client_Exception::SERVER_WRITEERROR)), true];
 	}
 
 	/**

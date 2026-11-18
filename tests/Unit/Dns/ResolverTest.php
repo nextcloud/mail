@@ -21,12 +21,10 @@ final class ResolverTest extends TestCase {
 		$this->resolver = new Resolver();
 	}
 
-	public function domainSplitData(): array {
-		return [
-			['nextcloud.com', false],
-			['test.ac.at', false],
-			['ac.at', true],
-		];
+	public function domainSplitData(): \Iterator {
+		yield ['nextcloud.com', false];
+		yield ['test.ac.at', false];
+		yield ['ac.at', true];
 	}
 
 	/**

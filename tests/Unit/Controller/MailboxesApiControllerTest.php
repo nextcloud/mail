@@ -176,12 +176,10 @@ final class MailboxesApiControllerTest extends TestCase {
 		$this->assertEquals(Http::STATUS_FORBIDDEN, $actual->getStatus());
 	}
 
-	public static function provideLimitData(): array {
-		return [
-			'20' => [20, 20],
-			'500' => [500, 100],
-			'null' => [null, 1],
-		];
+	public static function provideLimitData(): \Iterator {
+		yield '20' => [20, 20];
+		yield '500' => [500, 100];
+		yield 'null' => [null, 1];
 	}
 
 	/** @dataProvider provideLimitData */

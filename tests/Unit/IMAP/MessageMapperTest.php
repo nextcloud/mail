@@ -809,17 +809,15 @@ final class MessageMapperTest extends TestCase {
 		$this->assertEquals($bodyText, $data[$messageId]->getPreviewText());
 	}
 
-	public function isImipMessageProvider(): array {
-		return [
-			'google request' => ['request_google', true],
-			'outlook.com request' => ['request_outlook_com', true],
-			// Proton Mail Bridge strips the `method=` parameter from the
-			// text/calendar Content-Type header during E2E re-assembly. The
-			// message is still an iMIP REQUEST — the method lives in the ICS
-			// body. Must still be flagged as iMIP so downstream processing
-			// picks it up.
-			'proton bridge request (method= stripped)' => ['request_proton_bridge', true],
-		];
+	public function isImipMessageProvider(): \Iterator {
+		yield 'google request' => ['request_google', true];
+		yield 'outlook.com request' => ['request_outlook_com', true];
+		// Proton Mail Bridge strips the `method=` parameter from the
+		// text/calendar Content-Type header during E2E re-assembly. The
+		// message is still an iMIP REQUEST — the method lives in the ICS
+		// body. Must still be flagged as iMIP so downstream processing
+		// picks it up.
+		yield 'proton bridge request (method= stripped)' => ['request_proton_bridge', true];
 	}
 
 	public function testGetAttachmentFilenameFromContentDisposition(): void {

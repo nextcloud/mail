@@ -452,14 +452,12 @@ final class MessageApiControllerTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function mailData() {
-		return [
-			[LocalMessage::STATUS_PROCESSED, new DataResponse('', Http::STATUS_OK), 'john sent a message on behalf of john'],
-			[LocalMessage::STATUS_NO_SENT_MAILBOX, new DataResponse('Configuration error: Cannot send message without sent mailbox.', Http::STATUS_FORBIDDEN), 'john attempted sending a message on behalf of john but no sent mailbox is configured'],
-			[LocalMessage::STATUS_SMPT_SEND_FAIL, new DataResponse('SMTP error: could not send message. Message sending will be retried. Please check the logs.', Http::STATUS_INTERNAL_SERVER_ERROR), 'john attempted sending a message on behalf of john but SMTP sending failed'],
-			[LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL, new DataResponse('Email was sent but could not be copied to sent mailbox. Copying will be retried. Please check the logs.', Http::STATUS_ACCEPTED), 'john sent a message on behalf of john but copying to sent mailbox failed'],
-			[LocalMessage::STATUS_TOO_MANY_RECIPIENTS, new DataResponse('An error occurred. Please check the logs.', Http::STATUS_INTERNAL_SERVER_ERROR), 'john attempted sending a message on behalf of john but an unknown error occurred'],
-		];
+	public function mailData(): \Iterator {
+		yield [LocalMessage::STATUS_PROCESSED, new DataResponse('', Http::STATUS_OK), 'john sent a message on behalf of john'];
+		yield [LocalMessage::STATUS_NO_SENT_MAILBOX, new DataResponse('Configuration error: Cannot send message without sent mailbox.', Http::STATUS_FORBIDDEN), 'john attempted sending a message on behalf of john but no sent mailbox is configured'];
+		yield [LocalMessage::STATUS_SMPT_SEND_FAIL, new DataResponse('SMTP error: could not send message. Message sending will be retried. Please check the logs.', Http::STATUS_INTERNAL_SERVER_ERROR), 'john attempted sending a message on behalf of john but SMTP sending failed'];
+		yield [LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL, new DataResponse('Email was sent but could not be copied to sent mailbox. Copying will be retried. Please check the logs.', Http::STATUS_ACCEPTED), 'john sent a message on behalf of john but copying to sent mailbox failed'];
+		yield [LocalMessage::STATUS_TOO_MANY_RECIPIENTS, new DataResponse('An error occurred. Please check the logs.', Http::STATUS_INTERNAL_SERVER_ERROR), 'john attempted sending a message on behalf of john but an unknown error occurred'];
 	}
 
 	/**
@@ -497,11 +495,9 @@ final class MessageApiControllerTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function exceptionData() {
-		return [
-			[new ServiceException(), new DataResponse('Processing error: could not send message. Please check the logs', Http::STATUS_BAD_REQUEST)],
-			[new Exception(), new DataResponse('Fatal SMTP error: could not send message, and no resending is possible. Please check the mail server logs.', Http::STATUS_INTERNAL_SERVER_ERROR)],
-		];
+	public function exceptionData(): \Iterator {
+		yield [new ServiceException(), new DataResponse('Processing error: could not send message. Please check the logs', Http::STATUS_BAD_REQUEST)];
+		yield [new Exception(), new DataResponse('Fatal SMTP error: could not send message, and no resending is possible. Please check the mail server logs.', Http::STATUS_INTERNAL_SERVER_ERROR)];
 	}
 
 	public function testWithAttachment(): void {

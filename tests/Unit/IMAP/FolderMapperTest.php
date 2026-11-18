@@ -327,10 +327,8 @@ final class FolderMapperTest extends TestCase {
 		$this->mapper->detectFolderSpecialUse($folders);
 	}
 
-	public function dataDetectSpecialUseFromFolderName(): array {
-		return [
-			'delimiter .' => ['.', 2],
-			'delimiter null' => [null, 1],
-		];
+	public function dataDetectSpecialUseFromFolderName(): \Iterator {
+		yield 'delimiter .' => ['.', 2];
+		yield 'delimiter null' => [null, 1];
 	}
 }

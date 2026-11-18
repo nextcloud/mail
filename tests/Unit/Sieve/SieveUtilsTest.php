@@ -21,14 +21,12 @@ final class SieveUtilsTest extends TestCase {
 		$this->assertSame($expected, $actual);
 	}
 
-	public static function providerEscapeString(): array {
-		return [
-			['foo"bar', 'foo\"bar'],
-			['foo\\bar', 'foo\\\\bar'],
-			['foo"\\bar', 'foo\"\\\\bar'],
-			['foobar', 'foobar'],
-			['', ''],
-		];
+	public static function providerEscapeString(): \Iterator {
+		yield ['foo"bar', 'foo\"bar'];
+		yield ['foo\\bar', 'foo\\\\bar'];
+		yield ['foo"\\bar', 'foo\"\\\\bar'];
+		yield ['foobar', 'foobar'];
+		yield ['', ''];
 	}
 
 	/**
@@ -39,13 +37,11 @@ final class SieveUtilsTest extends TestCase {
 		$this->assertSame($expected, $actual);
 	}
 
-	public static function providerStringList(): array {
-		return [
-			[['Hello', 'World'], '["Hello", "World"]'],
-			[['foo"bar', 'foo\\bar'], '["foo\"bar", "foo\\\\bar"]'],
-			[['foo"bar', 'foo\\bar', 'foo"\\bar'], '["foo\"bar", "foo\\\\bar", "foo\"\\\\bar"]'],
-			[['foobar'], '["foobar"]'],
-			[[], '[""]'],
-		];
+	public static function providerStringList(): \Iterator {
+		yield [['Hello', 'World'], '["Hello", "World"]'];
+		yield [['foo"bar', 'foo\\bar'], '["foo\"bar", "foo\\\\bar"]'];
+		yield [['foo"bar', 'foo\\bar', 'foo"\\bar'], '["foo\"bar", "foo\\\\bar", "foo\"\\\\bar"]'];
+		yield [['foobar'], '["foobar"]'];
+		yield [[], '[""]'];
 	}
 }

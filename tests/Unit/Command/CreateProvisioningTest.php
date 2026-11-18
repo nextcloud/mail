@@ -152,11 +152,9 @@ final class CreateProvisioningTest extends TestCase {
 		self::assertStringContainsString('--master-user requires the master password to be enabled with --master-password', $this->tester->getDisplay());
 	}
 
-	public static function masterUserWithoutMasterPassword(): array {
-		return [
-			'no master password option' => [['--master-user' => '*admin']],
-			'master password disabled' => [['--master-user' => '*admin', '--no-master-password' => true]],
-		];
+	public static function masterUserWithoutMasterPassword(): \Iterator {
+		yield 'no master password option' => [['--master-user' => '*admin']];
+		yield 'master password disabled' => [['--master-user' => '*admin', '--no-master-password' => true]];
 	}
 
 	/** @dataProvider passwordInputs */
@@ -174,15 +172,13 @@ final class CreateProvisioningTest extends TestCase {
 		self::assertStringNotContainsString($expected, $this->tester->getDisplay());
 	}
 
-	public static function passwordInputs(): array {
-		return [
-			'interactive' => [true, 'sesame', 'sesame'],
-			'interactive whitespace' => [true, ' sesame ', ' sesame '],
-			'interactive tabs' => [true, "\tsesame\t", "\tsesame\t"],
-			'non-interactive' => [false, 'sesame', 'sesame'],
-			'non-interactive whitespace' => [false, ' sesame ', ' sesame '],
-			'non-interactive CRLF' => [false, " sesame \r", ' sesame '],
-		];
+	public static function passwordInputs(): \Iterator {
+		yield 'interactive' => [true, 'sesame', 'sesame'];
+		yield 'interactive whitespace' => [true, ' sesame ', ' sesame '];
+		yield 'interactive tabs' => [true, "\tsesame\t", "\tsesame\t"];
+		yield 'non-interactive' => [false, 'sesame', 'sesame'];
+		yield 'non-interactive whitespace' => [false, ' sesame ', ' sesame '];
+		yield 'non-interactive CRLF' => [false, " sesame \r", ' sesame '];
 	}
 
 	public function testRejectsMissingPasswordInput(): void {
@@ -235,8 +231,9 @@ final class CreateProvisioningTest extends TestCase {
 		self::assertSame(Command::SUCCESS, $status);
 	}
 
-	public static function validPortBoundaries(): array {
-		return [[1], [65535]];
+	public static function validPortBoundaries(): \Iterator {
+		yield [1];
+		yield [65535];
 	}
 
 	public function testRequiresPortWhenEnablingSieve(): void {
@@ -260,11 +257,9 @@ final class CreateProvisioningTest extends TestCase {
 		self::assertStringContainsString('--sieve-user is required', $this->tester->getDisplay());
 	}
 
-	public static function missingSieveUsers(): array {
-		return [
-			'omitted' => [[]],
-			'empty' => [['--sieve-user' => '']],
-		];
+	public static function missingSieveUsers(): \Iterator {
+		yield 'omitted' => [[]];
+		yield 'empty' => [['--sieve-user' => '']];
 	}
 
 	public function testAllowsMissingPortWhenSieveIsDisabled(): void {
@@ -292,20 +287,18 @@ final class CreateProvisioningTest extends TestCase {
 		self::assertStringContainsString($message, $this->tester->getDisplay());
 	}
 
-	public static function contradictoryOptions(): array {
-		return [
-			'sieve' => [
-				['--no-sieve' => true, '--sieve-host' => 'sieve.example.com', '--sieve-port' => '4190'],
-				'--no-sieve cannot be combined with --sieve-host',
-			],
-			'ldap aliases' => [
-				['--no-ldap-aliases' => true, '--ldap-aliases-attribute' => 'mailAlias'],
-				'--no-ldap-aliases cannot be combined with --ldap-aliases-attribute',
-			],
-			'master password' => [
-				['--no-master-password' => true, '--master-password' => null],
-				'--no-master-password cannot be combined with --master-password',
-			],
+	public static function contradictoryOptions(): \Iterator {
+		yield 'sieve' => [
+			['--no-sieve' => true, '--sieve-host' => 'sieve.example.com', '--sieve-port' => '4190'],
+			'--no-sieve cannot be combined with --sieve-host',
+		];
+		yield 'ldap aliases' => [
+			['--no-ldap-aliases' => true, '--ldap-aliases-attribute' => 'mailAlias'],
+			'--no-ldap-aliases cannot be combined with --ldap-aliases-attribute',
+		];
+		yield 'master password' => [
+			['--no-master-password' => true, '--master-password' => null],
+			'--no-master-password cannot be combined with --master-password',
 		];
 	}
 
@@ -321,11 +314,9 @@ final class CreateProvisioningTest extends TestCase {
 		self::assertSame(Command::SUCCESS, $status);
 	}
 
-	public static function redundantDisableOptions(): array {
-		return [
-			'sieve' => [['--no-sieve' => true, '--sieve-host' => ''], 'sieveEnabled'],
-			'ldap aliases' => [['--no-ldap-aliases' => true, '--ldap-aliases-attribute' => ''], 'ldapAliasesProvisioning'],
-		];
+	public static function redundantDisableOptions(): \Iterator {
+		yield 'sieve' => [['--no-sieve' => true, '--sieve-host' => ''], 'sieveEnabled'];
+		yield 'ldap aliases' => [['--no-ldap-aliases' => true, '--ldap-aliases-attribute' => ''], 'ldapAliasesProvisioning'];
 	}
 
 	public function testRejectsUnknownSslMode(): void {

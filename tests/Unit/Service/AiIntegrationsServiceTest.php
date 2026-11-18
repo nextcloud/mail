@@ -199,12 +199,10 @@ final class AiIntegrationsServiceTest extends TestCase {
 		$this->assertSame($expected, $cachedResult);
 	}
 
-	public static function provideInvalidSmartReplyOutput(): array {
-		return [
-			'missing reply2' => ['{"reply1":"ok"}'],
-			'numeric reply' => ['{"reply1":"ok","reply2":123}'],
-			'list' => ['[]'],
-		];
+	public static function provideInvalidSmartReplyOutput(): \Iterator {
+		yield 'missing reply2' => ['{"reply1":"ok"}'];
+		yield 'numeric reply' => ['{"reply1":"ok","reply2":123}'];
+		yield 'list' => ['[]'];
 	}
 
 	/**
@@ -284,11 +282,9 @@ final class AiIntegrationsServiceTest extends TestCase {
 
 	}
 
-	public function isLlmProcessingEnabledDataProvider(): array {
-		return [
-			[false, false],
-			[true, true],
-		];
+	public function isLlmProcessingEnabledDataProvider(): \Iterator {
+		yield [false, false];
+		yield [true, true];
 	}
 
 	/**
@@ -410,16 +406,14 @@ final class AiIntegrationsServiceTest extends TestCase {
 		self::assertNull($result);
 	}
 
-	public static function provideInvalidEventDataOutput(): array {
-		return [
-			'invalid JSON' => ['Jason'],
-			'missing title' => ['{"agenda":"* Q&A"}'],
-			'missing agenda' => ['{"title":"Meeting"}'],
-			'null title' => ['{"title":null,"agenda":"* Q&A"}'],
-			'numeric agenda' => ['{"title":"Meeting","agenda":123}'],
-			'list' => ['[]'],
-			'scalar' => ['"Meeting"'],
-		];
+	public static function provideInvalidEventDataOutput(): \Iterator {
+		yield 'invalid JSON' => ['Jason'];
+		yield 'missing title' => ['{"agenda":"* Q&A"}'];
+		yield 'missing agenda' => ['{"title":"Meeting"}'];
+		yield 'null title' => ['{"title":null,"agenda":"* Q&A"}'];
+		yield 'numeric agenda' => ['{"title":"Meeting","agenda":123}'];
+		yield 'list' => ['[]'];
+		yield 'scalar' => ['"Meeting"'];
 	}
 
 	/**
@@ -751,13 +745,11 @@ final class AiIntegrationsServiceTest extends TestCase {
 		$this->assertTrue($result);
 	}
 
-	public static function provideUnusableFollowUpOutput(): array {
-		return [
-			'failed task' => ['{"expectsReply": false}', TaskProcessingTask::STATUS_FAILED],
-			'missing output' => [null, TaskProcessingTask::STATUS_SUCCESSFUL],
-			'empty output' => ['', TaskProcessingTask::STATUS_SUCCESSFUL],
-			'whitespace-only output' => ['   ', TaskProcessingTask::STATUS_SUCCESSFUL],
-		];
+	public static function provideUnusableFollowUpOutput(): \Iterator {
+		yield 'failed task' => ['{"expectsReply": false}', TaskProcessingTask::STATUS_FAILED];
+		yield 'missing output' => [null, TaskProcessingTask::STATUS_SUCCESSFUL];
+		yield 'empty output' => ['', TaskProcessingTask::STATUS_SUCCESSFUL];
+		yield 'whitespace-only output' => ['   ', TaskProcessingTask::STATUS_SUCCESSFUL];
 	}
 
 	/**

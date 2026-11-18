@@ -30,9 +30,7 @@ final class HtmlResponseTest extends TestCase {
 		$this->assertEquals($content, $plainResp->render());
 	}
 
-	public function providesResponseData() {
-		return [
-			['1234567890']
-		];
+	public function providesResponseData(): \Iterator {
+		yield ['1234567890'];
 	}
 }

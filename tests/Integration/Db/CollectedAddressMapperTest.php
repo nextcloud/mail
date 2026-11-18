@@ -70,11 +70,9 @@ final class CollectedAddressMapperTest extends TestCase {
 		$this->address3 = $this->mapper->insert($this->address3);
 	}
 
-	public function matchingData(): array {
-		return [
-			['user1@example.com', ['user1@example.com']],
-			['examp', ['user1@example.com', 'user2@example.com']],
-		];
+	public function matchingData(): \Iterator {
+		yield ['user1@example.com', ['user1@example.com']];
+		yield ['examp', ['user1@example.com', 'user2@example.com']];
 	}
 
 	/**
@@ -93,11 +91,9 @@ final class CollectedAddressMapperTest extends TestCase {
 		}
 	}
 
-	public function insertIfNewData(): array {
-		return [
-			['user1@example.com', false],
-			['user3@example.com', true],
-		];
+	public function insertIfNewData(): \Iterator {
+		yield ['user1@example.com', false];
+		yield ['user3@example.com', true];
 	}
 
 	/**

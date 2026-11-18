@@ -21,12 +21,10 @@ final class MailboxTest extends TestCase {
 		$this->mailbox = new Mailbox();
 	}
 
-	public static function provideCacheBusterData(): array {
-		return [
-			['new', 'changed', 'vanished', null, 'bbddae86e09069fc10c9f2ac401363b4'],
-			[null, null, null, null, 'dca1f7641c34734a8cd1c7b1c45abf73'],
-			[null, null, null, 'state', '3cc6800869b5dcd6495d309a4bd16273'],
-		];
+	public static function provideCacheBusterData(): \Iterator {
+		yield ['new', 'changed', 'vanished', null, 'bbddae86e09069fc10c9f2ac401363b4'];
+		yield [null, null, null, null, 'dca1f7641c34734a8cd1c7b1c45abf73'];
+		yield [null, null, null, 'state', '3cc6800869b5dcd6495d309a4bd16273'];
 	}
 
 	/** @dataProvider provideCacheBusterData */
@@ -66,13 +64,11 @@ final class MailboxTest extends TestCase {
 		$this->assertEquals($expectedCacheBuster, $json['cacheBuster']);
 	}
 
-	public static function provideCachedData(): array {
-		return [
-			['new', 'changed', 'vanished', null, true],
-			[null, null, null, 'state', true],
-			['new', null, 'vanished', null, false],
-			[null, null, null, null, false],
-		];
+	public static function provideCachedData(): \Iterator {
+		yield ['new', 'changed', 'vanished', null, true];
+		yield [null, null, null, 'state', true];
+		yield ['new', null, 'vanished', null, false];
+		yield [null, null, null, null, false];
 	}
 
 	/** @dataProvider provideCachedData */
