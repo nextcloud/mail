@@ -5,6 +5,7 @@
 
 import { shallowMount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
+import { vi } from 'vitest'
 import ThreadEnvelope from '../../../components/ThreadEnvelope.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 import useMainStore from '../../../store/mainStore.js'
@@ -179,5 +180,19 @@ describe('ThreadEnvelope', () => {
 		})
 
 		expect(view.vm.hasWriteAcl).toBe(true)
+	})
+
+	it('passes the envelope to the junk toggle', () => {
+		store.mailboxes[MAILBOX_ID] = { myAcls: undefined }
+		store.toggleEnvelopeJunk = vi.fn()
+		const props = baseProps()
+		const view = shallowMount(ThreadEnvelope, {
+			global: { mixins: [Nextcloud] },
+			props,
+		})
+
+		view.vm.onToggleJunk()
+
+		expect(store.toggleEnvelopeJunk).toHaveBeenCalledWith({ envelope: props.envelope })
 	})
 })

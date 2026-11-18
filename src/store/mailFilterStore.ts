@@ -14,6 +14,7 @@ export default defineStore('mailFilter', {
 	state: () => {
 		return {
 			filters: [] as MailFilter[],
+			savedFilters: [] as MailFilter[],
 		}
 	},
 	actions: {
@@ -32,10 +33,17 @@ export default defineStore('mailFilter', {
 					})
 					return filter
 				})
+				state.savedFilters = [...state.filters]
 			})
 		},
 		async store(accountId) {
-			await MailFilterService.updateFilters(accountId, this.filters)
+			try {
+				await MailFilterService.updateFilters(accountId, this.filters)
+				this.savedFilters = [...this.filters]
+			} catch (error) {
+				this.filters = [...this.savedFilters]
+				throw error
+			}
 		},
 		async update(filter: MailFilter) {
 			await this.$patch((state) => {
