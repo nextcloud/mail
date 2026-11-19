@@ -203,6 +203,7 @@ export default {
 		const plugins = [
 			Essentials,
 			Paragraph,
+			MailPlugin,
 			SignaturePlugin,
 			QuotePlugin,
 			PickerPlugin,
@@ -235,7 +236,6 @@ export default {
 				Font,
 				RemoveFormat,
 				Base64UploadAdapter,
-				MailPlugin,
 				SourceEditing,
 				TextDirectionPlugin,
 			])

@@ -54,6 +54,23 @@ final class MimeMessageTest extends TestCase {
 		$this->assertEquals('text/plain', $part->getType());
 	}
 
+	public function testPlainTextAlternativeKeepsLineBreaks(): void {
+		$html = '<p style="margin:0;">Best regards,</p><p style="margin:0;">Jan</p>'
+			. '<p style="margin:0;">Line one<br>Line two</p>'
+			. '<p style="margin:0;">&nbsp;</p>'
+			. '<p style="margin:0;"><br>After <strong>two</strong> blank lines</p>';
+
+		$part = $this->mimeMessage->build(null, $html, false, []);
+
+		$this->assertEquals('multipart/alternative', $part->getType());
+		$plainPart = $part->getParts()[0];
+		$this->assertEquals('text/plain', $plainPart->getType());
+		$this->assertEquals(
+			"Best regards,\nJan\nLine one\nLine two\n\u{00a0}\n\nAfter two blank lines",
+			trim($plainPart->getContents(), "\n"),
+		);
+	}
+
 	public function testMultipartAlternative(): void {
 		$messageData = new NewMessageData(
 			$this->account,
