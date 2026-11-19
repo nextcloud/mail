@@ -11,6 +11,7 @@
 
 		<Ckeditor
 			v-if="ready"
+			ref="ckeditor"
 			:modelValue="modelValue"
 			:config="config"
 			:editor="editor"
@@ -666,6 +667,7 @@ export default {
 				if (eventData.marker === '@') {
 					const lookback = this.contactMentionQuery?.length ? this.contactMentionQuery.length + '@'.length : 5
 					this.editorInstance.execute('insertItem', { email: item.email[0], label: item.label }, '@', lookback)
+					this.emitLatestData(editor)
 					this.$emit('mention', { email: item.email[0], label: item.label })
 				}
 				if (eventData.marker === '!') {
@@ -688,6 +690,7 @@ export default {
 
 			editor.keystrokes.set('Ctrl+Enter', (event) => {
 				logger.debug('Detected Ctrl+Enter/Cmd+Enter', event)
+				this.emitLatestData(editor)
 				this.$emit('submit', editor)
 			})
 
@@ -695,8 +698,12 @@ export default {
 				event.preventDefault()
 				event.stopPropagation()
 				logger.debug('Detected Ctrl+S/Cmd+S', event)
+				this.emitLatestData(editor)
 				this.$emit('save', editor)
 			})
+
+			// Clicking a button blurs the editor before its click handler reads the model
+			editor.editing.view.document.on('blur', () => this.emitLatestData(editor))
 
 			this.editorInstance = editor
 
@@ -727,6 +734,20 @@ export default {
 			this.bus.on('append-to-body-at-cursor', this.appendToBodyAtCursor)
 			this.bus.on('insert-text-block', this.insertTextBlock)
 			this.$emit('ready', editor)
+		},
+
+		/**
+		 * Emit the current text without waiting for the debounced input event of the Ckeditor wrapper.
+		 *
+		 * @param {object} editor the CKEditor instance
+		 */
+		emitLatestData(editor) {
+			const text = editor.data.get()
+			if (this.$refs.ckeditor) {
+				// Keeps the wrapper from setting the emitted text back into the editor
+				this.$refs.ckeditor.lastEditorData = text
+			}
+			this.onEditorInput(text)
 		},
 
 		onEditorInput(text) {
