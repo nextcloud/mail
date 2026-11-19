@@ -25,7 +25,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Psr\Log\Test\TestLogger;
 
-class FilterServiceTest extends TestCase {
+final class FilterServiceTest extends TestCase {
 
 	private string $testFolder;
 

@@ -21,7 +21,7 @@ use OCA\Mail\Service\AccountService;
 use OCP\EventDispatcher\Event;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class OauthTokenRefreshListenerTest extends TestCase {
+final class OauthTokenRefreshListenerTest extends TestCase {
 	private GoogleIntegration&MockObject $googleIntegration;
 	private MicrosoftIntegration&MockObject $microsoftIntegration;
 	private OidcIntegration&MockObject $oidcIntegration;

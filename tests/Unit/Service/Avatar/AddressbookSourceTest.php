@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -14,7 +16,7 @@ use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\ContactsIntegration;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class AddressbookSourceTest extends TestCase {
+final class AddressbookSourceTest extends TestCase {
 	/** @var ContactsIntegration|MockObject */
 	private $ci;
 
@@ -29,7 +31,7 @@ class AddressbookSourceTest extends TestCase {
 		$this->source = new AddressbookSource($this->ci);
 	}
 
-	public function testFetch() {
+	public function testFetch(): void {
 		$email = 'john@doe.com';
 		$avatarFactory = $this->createMock(AvatarFactory::class);
 		$this->ci->expects($this->once())
@@ -47,7 +49,7 @@ class AddressbookSourceTest extends TestCase {
 		$this->assertSame($avatar, $actualAvatar);
 	}
 
-	public function testFetchNoneFound() {
+	public function testFetchNoneFound(): void {
 		$email = 'john@doe.com';
 		$avatarFactory = $this->createStub(AvatarFactory::class);
 		$this->ci->expects($this->once())

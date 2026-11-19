@@ -19,7 +19,7 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class TransformURLSchemeTest extends TestCase {
+final class TransformURLSchemeTest extends TestCase {
 	private TransformURLScheme $filter;
 	private IURLGenerator|MockObject $urlGenerator;
 	private IRequest|MockObject $request;

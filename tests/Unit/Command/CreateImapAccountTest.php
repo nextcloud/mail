@@ -17,7 +17,7 @@ use OCP\IUserManager;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CreateImapAccountTest extends TestCase {
+final class CreateImapAccountTest extends TestCase {
 	private $service;
 	private $crypto;
 	private $userManager;
@@ -53,19 +53,19 @@ class CreateImapAccountTest extends TestCase {
 		$this->command = new CreateImapAccount($this->service, $this->crypto, $this->userManager, $this->classificationSettingsService);
 	}
 
-	public function testName() {
+	public function testName(): void {
 		$this->assertSame('mail:account:create-imap', $this->command->getName());
 	}
 
-	public function testAlias() {
+	public function testAlias(): void {
 		$this->assertSame(['mail:account:create'], $this->command->getAliases());
 	}
 
-	public function testDescription() {
+	public function testDescription(): void {
 		$this->assertSame('creates an IMAP mail account', $this->command->getDescription());
 	}
 
-	public function testArguments() {
+	public function testArguments(): void {
 		$actual = $this->command->getDefinition()->getArguments();
 
 		foreach ($actual as $actArg) {
@@ -78,7 +78,7 @@ class CreateImapAccountTest extends TestCase {
 		}
 	}
 
-	public function testInvalidUserId() {
+	public function testInvalidUserId(): void {
 		$userId = 'invalidUser';
 		$data = [
 			'user-id' => $userId,

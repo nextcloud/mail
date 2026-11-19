@@ -13,7 +13,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\Avatar\Avatar;
 use OCA\Mail\Service\Avatar\AvatarFactory;
 
-class AvatarFactoryTest extends TestCase {
+final class AvatarFactoryTest extends TestCase {
 	private AvatarFactory $factory;
 
 	protected function setUp(): void {

@@ -36,7 +36,7 @@ use OCP\EventDispatcher\IEventDispatcher;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class MailManagerTest extends TestCase {
+final class MailManagerTest extends TestCase {
 	/** @var ProtocolFactory|MockObject */
 	private $protocolFactory;
 
@@ -89,7 +89,7 @@ class MailManagerTest extends TestCase {
 		);
 	}
 
-	public function testGetFolders() {
+	public function testGetFolders(): void {
 		/** @var Account|MockObject $account */
 		$account = $this->createStub(Account::class);
 		$mailboxes = [
@@ -114,7 +114,7 @@ class MailManagerTest extends TestCase {
 		$this->assertSame($mailboxes, $result);
 	}
 
-	public function testCreateFolder() {
+	public function testCreateFolder(): void {
 		$account = $this->createStub(Account::class);
 		$mailbox = new Mailbox();
 		$mailboxConnector = $this->createMock(IMailboxConnector::class);
@@ -547,8 +547,9 @@ class MailManagerTest extends TestCase {
 		$this->manager->updateTag(100, 'Hello Hello 👋', '#0082c9', 'admin');
 	}
 
-	public static function threadOperations(): array {
-		return [['move'], ['delete']];
+	public static function threadOperations(): \Iterator {
+		yield ['move'];
+		yield ['delete'];
 	}
 
 	/** @dataProvider threadOperations */

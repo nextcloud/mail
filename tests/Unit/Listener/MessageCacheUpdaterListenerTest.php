@@ -19,7 +19,7 @@ use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Listener\MessageCacheUpdaterListener;
 use OCP\EventDispatcher\Event;
 
-class MessageCacheUpdaterListenerTest extends TestCase {
+final class MessageCacheUpdaterListenerTest extends TestCase {
 	/** @var ServiceMockObject */
 	private $serviceMock;
 
@@ -33,7 +33,7 @@ class MessageCacheUpdaterListenerTest extends TestCase {
 		$this->listener = $this->serviceMock->getService();
 	}
 
-	public function testHandleUnrelated() {
+	public function testHandleUnrelated(): void {
 		$event = new Event();
 		$this->serviceMock->getParameter('mapper')
 			->expects($this->never())
@@ -42,7 +42,7 @@ class MessageCacheUpdaterListenerTest extends TestCase {
 		$this->listener->handle($event);
 	}
 
-	public function testHandleMessageFlagged() {
+	public function testHandleMessageFlagged(): void {
 		$account = $this->createStub(Account::class);
 		$mailbox = $this->createStub(Mailbox::class);
 		$message = new Message();
@@ -64,7 +64,7 @@ class MessageCacheUpdaterListenerTest extends TestCase {
 		$this->assertTrue($message->getFlagJunk());
 	}
 
-	public function testHandleMessageFlaggedTag() {
+	public function testHandleMessageFlaggedTag(): void {
 		$account = $this->createStub(Account::class);
 		$mailbox = $this->createStub(Mailbox::class);
 		$message = new Message();

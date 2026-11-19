@@ -16,7 +16,7 @@ use OCP\IUser;
 /**
  * @covers \OCA\Mail\Db\Provisioning
  */
-class ProvisioningTest extends TestCase {
+final class ProvisioningTest extends TestCase {
 
 	private function createProvisioning(): Provisioning {
 		$provisioning = new Provisioning();

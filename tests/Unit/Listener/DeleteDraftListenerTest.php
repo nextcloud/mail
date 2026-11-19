@@ -29,7 +29,7 @@ use OCP\EventDispatcher\IEventListener;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class DeleteDraftListenerTest extends TestCase {
+final class DeleteDraftListenerTest extends TestCase {
 	/** @var ProtocolFactory|MockObject */
 	private $protocolFactory;
 

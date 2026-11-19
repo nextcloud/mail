@@ -12,7 +12,7 @@ namespace OCA\Mail\Tests\Unit\Db;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\MessageTags;
 
-class MessageTagsTest extends TestCase {
+final class MessageTagsTest extends TestCase {
 	private MessageTags $messageTags;
 
 	protected function setUp(): void {

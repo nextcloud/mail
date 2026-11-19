@@ -24,7 +24,7 @@ use Psr\Log\LoggerInterface;
 use function file_get_contents;
 use function str_starts_with;
 
-class IspDbTest extends TestCase {
+final class IspDbTest extends TestCase {
 	/** @var IClientService|MockObject */
 	private $clientService;
 

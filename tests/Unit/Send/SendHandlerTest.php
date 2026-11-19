@@ -24,7 +24,7 @@ use OCP\EventDispatcher\IEventDispatcher;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class SendHandlerTest extends TestCase {
+final class SendHandlerTest extends TestCase {
 	private MockObject|ProtocolFactory $protocolFactory;
 	private MockObject|IEventDispatcher $eventDispatcher;
 	private MockObject|MailboxMapper $mailboxMapper;

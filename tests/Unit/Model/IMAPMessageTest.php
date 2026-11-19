@@ -24,7 +24,7 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 use RuntimeException;
 
-class IMAPMessageTest extends TestCase {
+final class IMAPMessageTest extends TestCase {
 	/** @var Html|MockObject */
 	private $htmlService;
 
@@ -32,7 +32,7 @@ class IMAPMessageTest extends TestCase {
 		$this->htmlService = $this->createMock(Html::class);
 	}
 
-	public function testIconvHtmlMessage() {
+	public function testIconvHtmlMessage(): void {
 		$urlGenerator = $this->getMockBuilder(IURLGenerator::class)
 			->disableOriginalConstructor()
 			->getMock();
@@ -166,7 +166,7 @@ class IMAPMessageTest extends TestCase {
 		$this->assertSame('<p>456</p>', $retry);
 	}
 
-	public function testSerialize() {
+	public function testSerialize(): void {
 		$data = new Horde_Imap_Client_Data_Fetch();
 		$data->setUid(1234);
 		$m = new IMAPMessage(

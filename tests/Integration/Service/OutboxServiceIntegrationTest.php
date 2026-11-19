@@ -44,7 +44,7 @@ use OCP\Server;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
-class OutboxServiceIntegrationTest extends TestCase {
+final class OutboxServiceIntegrationTest extends TestCase {
 	use ImapTest,
 		ImapTestAccount,
 		TestUser;

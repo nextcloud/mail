@@ -29,7 +29,7 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\DB\Exception;
 use OCP\IRequest;
 
-class DraftsControllerTest extends TestCase {
+final class DraftsControllerTest extends TestCase {
 	private string $appName;
 	private DraftsService $service;
 	private string $userId;

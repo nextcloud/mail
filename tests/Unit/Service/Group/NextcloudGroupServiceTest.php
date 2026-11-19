@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2018 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-only
@@ -17,7 +19,7 @@ use OCP\IGroupManager;
 use OCP\IUser;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class NextcloudGroupServiceTest extends TestCase {
+final class NextcloudGroupServiceTest extends TestCase {
 	/**
 	 * @var IGroupManager|MockObject
 	 */
@@ -70,22 +72,20 @@ class NextcloudGroupServiceTest extends TestCase {
 		return $mockUser;
 	}
 
-	public function dataForTestSearch(): array {
-		return [
-			['yes', 'no', [
-				[
-					'id' => 'testgroup',
-					'name' => 'first test group',
-				],
-				[
-					'id' => 'testgroup2',
-					'name' => 'second test group',
-				]
-			]],
-			['no', 'yes', []],
-			['no', 'no', []],
-			['yes', 'yes', []],
-		];
+	public function dataForTestSearch(): \Iterator {
+		yield ['yes', 'no', [
+			[
+				'id' => 'testgroup',
+				'name' => 'first test group',
+			],
+			[
+				'id' => 'testgroup2',
+				'name' => 'second test group',
+			]
+		]];
+		yield ['no', 'yes', []];
+		yield ['no', 'no', []];
+		yield ['yes', 'yes', []];
 	}
 
 	/**
@@ -117,7 +117,7 @@ class NextcloudGroupServiceTest extends TestCase {
 		self::assertEquals($expected, $actual);
 	}
 
-	public function testGetUsers() {
+	public function testGetUsers(): void {
 		$users = [
 			$this->createTestUser('bob', 'Bobby', 'bob@smith.net'),
 			$this->createTestUser('alice', 'Alice', 'alice@smith.net')
@@ -156,7 +156,7 @@ class NextcloudGroupServiceTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testGetUsersWrong() {
+	public function testGetUsersWrong(): void {
 		$this->expectException(ServiceException::class);
 
 		$this->groupsManager->expects($this->once())

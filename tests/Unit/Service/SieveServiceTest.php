@@ -18,7 +18,7 @@ use OCA\Mail\Service\SieveService;
 use OCA\Mail\Sieve\SieveClientFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class SieveServiceTest extends TestCase {
+final class SieveServiceTest extends TestCase {
 	private SieveService $sieveService;
 
 	/** @var SieveClientFactory|MockObject */
@@ -103,14 +103,12 @@ class SieveServiceTest extends TestCase {
 		$this->assertEquals('', $actual->getScript());
 	}
 
-	public function scriptTrimDataProvider(): array {
-		return [
-			['# foo bar', '# foo bar'],
-			["# foo bar\r\n", '# foo bar'],
-			["# foo bar\r\n\r\n", '# foo bar'],
-			["\r\n# foo bar", "\r\n# foo bar"],
-			['# foo bar  ', '# foo bar  '],
-		];
+	public function scriptTrimDataProvider(): \Iterator {
+		yield ['# foo bar', '# foo bar'];
+		yield ["# foo bar\r\n", '# foo bar'];
+		yield ["# foo bar\r\n\r\n", '# foo bar'];
+		yield ["\r\n# foo bar", "\r\n# foo bar"];
+		yield ['# foo bar  ', '# foo bar  '];
 	}
 
 	/**

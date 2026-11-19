@@ -15,7 +15,7 @@ use OCA\Mail\JMAP\JmapMailboxConnector;
 use OCA\Mail\Tests\Integration\Framework\JmapTestAccount;
 use OCP\Server;
 
-class JmapMailboxConnectorTest extends AbstractMailboxConnectorTest {
+final class JmapMailboxConnectorTest extends AbstractMailboxConnectorTest {
 	use JmapTestAccount;
 
 	protected function createConnector(): IMailboxConnector {

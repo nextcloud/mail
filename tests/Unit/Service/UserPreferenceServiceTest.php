@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -11,7 +13,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\UserPreferenceService;
 use OCP\IConfig;
 
-class UserPreferenceServiceTest extends TestCase {
+final class UserPreferenceServiceTest extends TestCase {
 	/** @var IConfig */
 	private $config;
 
@@ -28,7 +30,7 @@ class UserPreferenceServiceTest extends TestCase {
 		$this->service = new UserPreferenceService($this->config, $this->userId);
 	}
 
-	public function testGetPreference() {
+	public function testGetPreference(): void {
 		$this->config->expects($this->once())
 			->method('getUserValue')
 			->with($this->userId, 'mail', 'test', null)
@@ -40,7 +42,7 @@ class UserPreferenceServiceTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testSetPreference() {
+	public function testSetPreference(): void {
 		$this->config->expects($this->once())
 			->method('setUserValue')
 			->with($this->userId, 'mail', 'test', '123')

@@ -19,7 +19,7 @@ use OCA\Mail\Events\MailboxesSynchronizedEvent;
 use OCA\Mail\Listener\MailboxesSynchronizedSpecialMailboxesUpdater;
 use Psr\Log\LoggerInterface;
 
-class MailboxesSynchronizedSpecialMailboxesUpdaterTest extends TestCase {
+final class MailboxesSynchronizedSpecialMailboxesUpdaterTest extends TestCase {
 	private MailAccountMapper $mailAccountMapper;
 	private MailboxMapper $mailboxMapper;
 	private MailboxesSynchronizedSpecialMailboxesUpdater $listener;

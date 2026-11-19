@@ -21,7 +21,7 @@ use OCP\EventDispatcher\Event;
 use OCP\IUser;
 use function class_exists;
 
-class InteractionListenerTest extends TestCase {
+final class InteractionListenerTest extends TestCase {
 	/** @var ServiceMockObject */
 	private $serviceMock;
 

@@ -33,7 +33,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 /**
  * @covers \OCA\Mail\Search\FilteringProvider
  */
-class FilteringProviderTest extends TestCase {
+final class FilteringProviderTest extends TestCase {
 	private IMailSearch&MockObject $mailSearch;
 	private IL10N&MockObject $l10n;
 	private IDateTimeFormatter $dateTimeFormatter;

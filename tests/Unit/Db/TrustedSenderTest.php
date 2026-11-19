@@ -12,7 +12,7 @@ namespace OCA\Mail\Tests\Unit\Db;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\TrustedSender;
 
-class TrustedSenderTest extends TestCase {
+final class TrustedSenderTest extends TestCase {
 	private TrustedSender $trustedSender;
 
 	protected function setUp(): void {

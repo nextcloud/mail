@@ -30,7 +30,7 @@ use OCP\Security\ICrypto;
 use OCP\Server;
 use Psr\Log\NullLogger;
 
-class MailTransmissionIntegrationTest extends TestCase {
+final class MailTransmissionIntegrationTest extends TestCase {
 	use ImapTest,
 		TestUser;
 
@@ -103,13 +103,13 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$this->chain = Server::get(Chain::class);
 	}
 
-	public function testSendMail() {
+	public function testSendMail(): void {
 		$this->chain->process($this->account, $this->message);
 
 		$this->addToAssertionCount(1);
 	}
 
-	public function testSendMailWithLocalAttachment() {
+	public function testSendMailWithLocalAttachment(): void {
 		$file = new UploadedFile([
 			'name' => 'text.txt',
 			'tmp_name' => __DIR__ . '/../../data/mail-message-123.txt',
@@ -124,7 +124,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$this->addToAssertionCount(1);
 	}
 
-	public function testSendReply() {
+	public function testSendReply(): void {
 		$mb = $this->getMessageBuilder();
 		$originalMessage = $mb->from('from@domain.tld')
 			->to('to@domain.tld')
@@ -149,7 +149,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$this->assertMessageCount(1, 'Sent');
 	}
 
-	public function testSendReplyWithoutSubject() {
+	public function testSendReplyWithoutSubject(): void {
 		$mb = $this->getMessageBuilder();
 		$originalMessage = $mb->from('from@domain.tld')
 			->to('to@domain.tld')
@@ -175,7 +175,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$this->assertMessageCount(1, 'Sent');
 	}
 
-	public function testSendReplyWithoutReplySubject() {
+	public function testSendReplyWithoutReplySubject(): void {
 		$mb = $this->getMessageBuilder();
 		$originalMessage = $mb->from('from@domain.tld')
 			->to('to@domain.tld')

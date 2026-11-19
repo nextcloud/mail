@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -16,7 +18,7 @@ use OCP\AppFramework\Http\Response;
 use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class AvatarControllerTest extends TestCase {
+final class AvatarControllerTest extends TestCase {
 	private IAvatarService&MockObject $avatarService;
 	private AvatarsController $controller;
 

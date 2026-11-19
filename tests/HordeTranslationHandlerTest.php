@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-only
@@ -10,7 +12,7 @@ namespace OCA\Mail\Tests;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\HordeTranslationHandler;
 
-class HordeTranslationHandlerTest extends TestCase {
+final class HordeTranslationHandlerTest extends TestCase {
 	private $handler;
 
 	protected function setUp(): void {
@@ -19,7 +21,7 @@ class HordeTranslationHandlerTest extends TestCase {
 		$this->handler = new HordeTranslationHandler();
 	}
 
-	public function testT() {
+	public function testT(): void {
 		$message = 'Hello';
 
 		$expected = $message;
@@ -28,18 +30,16 @@ class HordeTranslationHandlerTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function singularPluralDataProvider() {
-		return [
-			[0],
-			[1],
-			[2],
-		];
+	public function singularPluralDataProvider(): \Iterator {
+		yield [0];
+		yield [1];
+		yield [2];
 	}
 
 	/**
 	 * @dataProvider singularPluralDataProvider
 	 */
-	public function testNgettext($number) {
+	public function testNgettext($number): void {
 		$singular = 'mail';
 		$plural = 'mails';
 

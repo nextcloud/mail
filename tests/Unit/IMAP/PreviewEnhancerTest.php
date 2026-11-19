@@ -23,7 +23,7 @@ use OCA\Mail\Service\AvatarService;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class PreviewEnhancerTest extends TestCase {
+final class PreviewEnhancerTest extends TestCase {
 
 	/** @var ProtocolFactory|MockObject */
 	private $protocolFactory;

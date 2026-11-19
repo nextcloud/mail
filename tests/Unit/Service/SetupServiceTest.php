@@ -27,7 +27,7 @@ use OCP\Security\ICrypto;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class SetupServiceTest extends TestCase {
+final class SetupServiceTest extends TestCase {
 	private const ACCOUNT_NAME = 'Test Account';
 	private const EMAIL_ADDRESS = 'test@example.com';
 	private const IMAP_HOST = 'imap.example.com';

@@ -25,7 +25,7 @@ use OCP\AppFramework\Http;
 use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class MailboxesApiControllerTest extends TestCase {
+final class MailboxesApiControllerTest extends TestCase {
 	private const USER_ID = 'user';
 
 	private MailboxesApiController $controller;
@@ -60,7 +60,7 @@ class MailboxesApiControllerTest extends TestCase {
 		);
 	}
 
-	public function testListMailboxesWithoutUser() {
+	public function testListMailboxesWithoutUser(): void {
 		$controller = new MailboxesApiController(
 			'mail',
 			$this->request,
@@ -80,7 +80,7 @@ class MailboxesApiControllerTest extends TestCase {
 		$this->assertEquals(Http::STATUS_NOT_FOUND, $actual->getStatus());
 	}
 
-	public function testListMailboxes() {
+	public function testListMailboxes(): void {
 		$account = $this->createStub(Account::class);
 		$folder = $this->createStub(Folder::class);
 		$accountId = 42;
@@ -100,7 +100,7 @@ class MailboxesApiControllerTest extends TestCase {
 		$this->assertEquals([$folder], $actual->getData());
 	}
 
-	public function testListMessagesWithoutUser() {
+	public function testListMessagesWithoutUser(): void {
 		$controller = new MailboxesApiController(
 			'mail',
 			$this->request,
@@ -176,12 +176,10 @@ class MailboxesApiControllerTest extends TestCase {
 		$this->assertEquals(Http::STATUS_FORBIDDEN, $actual->getStatus());
 	}
 
-	public static function provideLimitData(): array {
-		return [
-			'20' => [20, 20],
-			'500' => [500, 100],
-			'null' => [null, 1],
-		];
+	public static function provideLimitData(): \Iterator {
+		yield '20' => [20, 20];
+		yield '500' => [500, 100];
+		yield 'null' => [null, 1];
 	}
 
 	/** @dataProvider provideLimitData */

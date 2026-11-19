@@ -30,7 +30,7 @@ use OCA\Mail\Service\TransmissionService;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class JmapTransmissionConnectorTest extends TestCase {
+final class JmapTransmissionConnectorTest extends TestCase {
 
 	private JmapOperationsService|MockObject $jmapOperationsService;
 	private TransmissionService|MockObject $transmissionService;
@@ -191,16 +191,14 @@ class JmapTransmissionConnectorTest extends TestCase {
 		$this->assertSame(LocalMessage::STATUS_PROCESSED, $message->getStatus());
 	}
 
-	public static function sendFailureProvider(): array {
-		return [
-			'transient server error' => [new JmapException('', ResponseException::SERVER_UNAVAILABLE), LocalMessage::STATUS_SMPT_SEND_FAIL],
-			'rate limit' => [new JmapException('', 'rateLimit'), LocalMessage::STATUS_RATELIMIT],
-			'too many recipients' => [new JmapException('', 'tooManyRecipients'), LocalMessage::STATUS_TOO_MANY_RECIPIENTS],
-			'permanent rejection' => [new JmapException('', 'forbiddenToSend'), LocalMessage::STATUS_ERROR],
-			'unknown error type' => [new JmapException('', 'somethingNew'), LocalMessage::STATUS_ERROR],
-			'delivery uncertain' => [new JmapException('', ResponseException::SERVER_FAIL, true), LocalMessage::STATUS_ERROR],
-			'not submitted' => [new ServiceException('upload failed'), LocalMessage::STATUS_SMPT_SEND_FAIL],
-		];
+	public static function sendFailureProvider(): \Iterator {
+		yield 'transient server error' => [new JmapException('', ResponseException::SERVER_UNAVAILABLE), LocalMessage::STATUS_SMPT_SEND_FAIL];
+		yield 'rate limit' => [new JmapException('', 'rateLimit'), LocalMessage::STATUS_RATELIMIT];
+		yield 'too many recipients' => [new JmapException('', 'tooManyRecipients'), LocalMessage::STATUS_TOO_MANY_RECIPIENTS];
+		yield 'permanent rejection' => [new JmapException('', 'forbiddenToSend'), LocalMessage::STATUS_ERROR];
+		yield 'unknown error type' => [new JmapException('', 'somethingNew'), LocalMessage::STATUS_ERROR];
+		yield 'delivery uncertain' => [new JmapException('', ResponseException::SERVER_FAIL, true), LocalMessage::STATUS_ERROR];
+		yield 'not submitted' => [new ServiceException('upload failed'), LocalMessage::STATUS_SMPT_SEND_FAIL];
 	}
 
 	/**

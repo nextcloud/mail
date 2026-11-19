@@ -35,7 +35,7 @@ use OCP\Security\IRemoteHostValidator;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class AccountsControllerTest extends TestCase {
+final class AccountsControllerTest extends TestCase {
 	/** @var string */
 	private $appName;
 

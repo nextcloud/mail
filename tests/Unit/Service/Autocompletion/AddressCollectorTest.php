@@ -17,7 +17,7 @@ use OCA\Mail\Db\CollectedAddressMapper;
 use OCA\Mail\Service\AutoCompletion\AddressCollector;
 use Psr\Log\LoggerInterface;
 
-class AddressCollectorTest extends TestCase {
+final class AddressCollectorTest extends TestCase {
 	private $mapper;
 	private $userId = 'testuser';
 	private $logger;
@@ -78,7 +78,7 @@ class AddressCollectorTest extends TestCase {
 		$this->collector->addAddresses($this->userId, $addressList);
 	}
 
-	public function testSearchAddress() {
+	public function testSearchAddress(): void {
 		$term = 'john';
 		$mapperResult = ['some', 'data'];
 

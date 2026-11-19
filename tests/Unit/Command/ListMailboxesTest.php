@@ -21,7 +21,7 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class ListMailboxesTest extends TestCase {
+final class ListMailboxesTest extends TestCase {
 	private AccountService|\PHPUnit\Framework\MockObject\MockObject $accountService;
 	private MailboxMapper|\PHPUnit\Framework\MockObject\MockObject $mailboxMapper;
 	private ITimeFactory|\PHPUnit\Framework\MockObject\MockObject $timeFactory;

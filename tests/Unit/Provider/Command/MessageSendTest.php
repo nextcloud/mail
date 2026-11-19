@@ -27,7 +27,7 @@ use OCP\Mail\Provider\Exception\SendException;
 use OCP\Mail\Provider\Message;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class MessageSendTest extends TestCase {
+final class MessageSendTest extends TestCase {
 
 	private IConfig&MockObject $config;
 	private ITimeFactory&MockObject $time;

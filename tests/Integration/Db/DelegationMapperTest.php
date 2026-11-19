@@ -23,7 +23,7 @@ use OCP\Server;
  * @group DB
  * @covers \OCA\Mail\Db\DelegationMapper
  */
-class DelegationMapperTest extends TestCase {
+final class DelegationMapperTest extends TestCase {
 	use DatabaseTransaction;
 
 	private IDBConnection $db;

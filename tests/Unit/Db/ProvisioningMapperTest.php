@@ -16,7 +16,7 @@ use OCA\Mail\Exception\ValidationException;
 use OCP\IDBConnection;
 use Psr\Log\NullLogger;
 
-class ProvisioningMapperTest extends TestCase {
+final class ProvisioningMapperTest extends TestCase {
 
 	private ProvisioningMapper $mapper;
 

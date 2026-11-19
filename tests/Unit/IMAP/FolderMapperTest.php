@@ -22,7 +22,7 @@ use OCA\Mail\IMAP\MailboxStats;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class FolderMapperTest extends TestCase {
+final class FolderMapperTest extends TestCase {
 	/** @var FolderMapper */
 	private $mapper;
 
@@ -282,7 +282,7 @@ class FolderMapperTest extends TestCase {
 		self::assertNull($stats);
 	}
 
-	public function testDetectSpecialUseFromAttributes() {
+	public function testDetectSpecialUseFromAttributes(): void {
 		$folders = [
 			$this->createMock(Folder::class),
 		];
@@ -327,10 +327,8 @@ class FolderMapperTest extends TestCase {
 		$this->mapper->detectFolderSpecialUse($folders);
 	}
 
-	public function dataDetectSpecialUseFromFolderName(): array {
-		return [
-			'delimiter .' => ['.', 2],
-			'delimiter null' => [null, 1],
-		];
+	public function dataDetectSpecialUseFromFolderName(): \Iterator {
+		yield 'delimiter .' => ['.', 2];
+		yield 'delimiter null' => [null, 1];
 	}
 }

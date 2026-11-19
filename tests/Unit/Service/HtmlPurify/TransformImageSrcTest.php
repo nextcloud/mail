@@ -18,7 +18,7 @@ use OCP\IURLGenerator;
 use OCP\Util;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class TransformImageSrcTest extends TestCase {
+final class TransformImageSrcTest extends TestCase {
 	private TransformImageSrc $transform;
 	private IURLGenerator|MockObject $urlGenerator;
 

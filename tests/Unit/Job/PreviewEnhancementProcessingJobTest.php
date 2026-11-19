@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -23,7 +25,7 @@ use OCP\IUserManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class PreviewEnhancementProcessingJobTest extends TestCase {
+final class PreviewEnhancementProcessingJobTest extends TestCase {
 	private ProtocolFactory&MockObject $protocolFactory;
 	/** @var ITimeFactory|ITimeFactory&MockObject|MockObject */
 	private $time;

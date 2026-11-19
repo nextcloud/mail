@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-FileCopyrightText: 2016 ownCloud, Inc.
@@ -12,7 +14,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Controller\AutoCompleteController;
 use OCP\AppFramework\Http\JSONResponse;
 
-class AutoCompleteControllerTest extends TestCase {
+final class AutoCompleteControllerTest extends TestCase {
 	private $request;
 	private $service;
 	private $controller;
@@ -32,7 +34,7 @@ class AutoCompleteControllerTest extends TestCase {
 		);
 	}
 
-	public function testAutoComplete() {
+	public function testAutoComplete(): void {
 		$term = 'john d';
 		$result = [
 			'id' => 13,

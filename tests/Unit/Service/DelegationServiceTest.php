@@ -35,7 +35,7 @@ use OCP\Notification\INotification;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class DelegationServiceTest extends TestCase {
+final class DelegationServiceTest extends TestCase {
 	private DelegationMapper&MockObject $delegationMapper;
 	private AccountService&MockObject $accountService;
 	private MailboxMapper&MockObject $mailboxMapper;

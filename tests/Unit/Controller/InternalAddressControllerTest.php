@@ -13,7 +13,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Controller\InternalAddressController;
 use OCP\AppFramework\Http;
 
-class InternalAddressControllerTest extends TestCase {
+final class InternalAddressControllerTest extends TestCase {
 	public function testSetAddressNullUser(): void {
 		$serviceMock = $this->createServiceMock(InternalAddressController::class, [
 			'userId' => null,

@@ -20,7 +20,7 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Listener\SpamReportListener;
 use OCP\EventDispatcher\Event;
 
-class SpamReportListenerTest extends TestCase {
+final class SpamReportListenerTest extends TestCase {
 	/** @var ServiceMockObject */
 	private $serviceMock;
 

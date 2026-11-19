@@ -20,7 +20,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CreateJmapAccountTest extends TestCase {
+final class CreateJmapAccountTest extends TestCase {
 	private AccountService&MockObject $service;
 	private ICrypto&MockObject $crypto;
 	private IUserManager&MockObject $userManager;

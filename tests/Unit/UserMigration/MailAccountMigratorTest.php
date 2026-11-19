@@ -22,7 +22,7 @@ use OCP\UserMigration\IImportSource;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class MailAccountMigratorTest extends TestCase {
+final class MailAccountMigratorTest extends TestCase {
 	use RecordsConsoleOutput;
 
 	private const EXPORT_DELEGATIONS = [

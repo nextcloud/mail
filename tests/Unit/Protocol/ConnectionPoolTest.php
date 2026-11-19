@@ -22,7 +22,7 @@ use OCA\Mail\Protocol\ConnectionPool;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class ConnectionPoolTest extends TestCase {
+final class ConnectionPoolTest extends TestCase {
 	private IMAPClientFactory&MockObject $imapClientFactory;
 	private JmapClientFactory&MockObject $jmapClientFactory;
 	private ConnectionPool $pool;

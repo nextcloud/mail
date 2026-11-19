@@ -12,7 +12,7 @@ namespace OCA\Mail\Tests\Unit\Model;
 use OCA\Mail\Model\EventData;
 use PHPUnit\Framework\TestCase;
 
-class EventDataTest extends TestCase {
+final class EventDataTest extends TestCase {
 
 	public function testAll(): void {
 		$data = new EventData('sum', 'des');

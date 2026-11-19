@@ -24,7 +24,7 @@ use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCP\BackgroundJob\IJobList;
 use OCP\TaskProcessing\TaskTypes\TextToText;
 
-class FollowUpClassifierListenerTest extends TestCase {
+final class FollowUpClassifierListenerTest extends TestCase {
 	private FollowUpClassifierListener $listener;
 
 	/** @var IJobList|MockObject */

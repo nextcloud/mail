@@ -12,7 +12,7 @@ namespace OCA\Mail\Tests\Unit\Dns;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Dns\Resolver;
 
-class ResolverTest extends TestCase {
+final class ResolverTest extends TestCase {
 	private Resolver $resolver;
 
 	protected function setUp(): void {
@@ -21,12 +21,10 @@ class ResolverTest extends TestCase {
 		$this->resolver = new Resolver();
 	}
 
-	public function domainSplitData(): array {
-		return [
-			['nextcloud.com', false],
-			['test.ac.at', false],
-			['ac.at', true],
-		];
+	public function domainSplitData(): \Iterator {
+		yield ['nextcloud.com', false];
+		yield ['test.ac.at', false];
+		yield ['ac.at', true];
 	}
 
 	/**

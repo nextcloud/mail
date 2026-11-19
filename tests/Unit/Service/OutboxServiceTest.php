@@ -31,7 +31,7 @@ use OCP\DB\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class OutboxServiceTest extends TestCase {
+final class OutboxServiceTest extends TestCase {
 	/** @var LocalMessageMapper|MockObject */
 	private $mapper;
 

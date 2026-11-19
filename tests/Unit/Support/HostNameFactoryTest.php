@@ -13,7 +13,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Support\HostNameFactory;
 use OCP\Util;
 
-class HostNameFactoryTest extends TestCase {
+final class HostNameFactoryTest extends TestCase {
 	/** @var HostNameFactory */
 	private $factory;
 
@@ -23,7 +23,7 @@ class HostNameFactoryTest extends TestCase {
 		$this->factory = new HostNameFactory();
 	}
 
-	public function testGetHostName() {
+	public function testGetHostName(): void {
 		$expected = Util::getServerHostName();
 
 		$actual = $this->factory->getHostName();

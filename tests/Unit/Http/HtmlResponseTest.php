@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-FileCopyrightText: 2015-2016 ownCloud, Inc.
@@ -11,14 +13,14 @@ namespace OCA\Mail\Tests\Unit\Http;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Http\HtmlResponse;
 
-class HtmlResponseTest extends TestCase {
+final class HtmlResponseTest extends TestCase {
 	/**
 	 * @dataProvider providesResponseData
 	 * @param $content
 	 * @param $filename
 	 * @param $contentType
 	 */
-	public function testIt($content) {
+	public function testIt($content): void {
 		$nonce = 'abc123';
 		$scriptUrl = 'next.cloud/script.js';
 		$plainResp = HtmlResponse::plain($content);
@@ -28,9 +30,7 @@ class HtmlResponseTest extends TestCase {
 		$this->assertEquals($content, $plainResp->render());
 	}
 
-	public function providesResponseData() {
-		return [
-			['1234567890']
-		];
+	public function providesResponseData(): \Iterator {
+		yield ['1234567890'];
 	}
 }

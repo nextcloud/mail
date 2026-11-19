@@ -23,7 +23,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
-class MailProviderTest extends TestCase {
+final class MailProviderTest extends TestCase {
 
 	private ContainerInterface&MockObject $containerInterface;
 	private AccountService&MockObject $accountService;

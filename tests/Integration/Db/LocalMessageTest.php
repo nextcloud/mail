@@ -14,7 +14,7 @@ use OCA\Mail\Db\LocalMessage;
 use OCP\AppFramework\Utility\ITimeFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class LocalMessageTest extends TestCase {
+final class LocalMessageTest extends TestCase {
 	/** @var ITimeFactory|MockObject */
 	private $timeFactory;
 

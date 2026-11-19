@@ -16,7 +16,7 @@ use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\AllowedRecipientsService;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class AllowedRecipientsServiceTest extends TestCase {
+final class AllowedRecipientsServiceTest extends TestCase {
 
 	private AliasesService&MockObject $aliasesService;
 	private AllowedRecipientsService $allowedRecipientsService;

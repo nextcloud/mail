@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-FileCopyrightText: 2015-2016 ownCloud, Inc.
@@ -11,8 +13,8 @@ namespace OCA\Mail\Tests\Unit\AppInfo;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\AppInfo\Application;
 
-class ApplicationTest extends TestCase {
-	public function testConstrucor() {
+final class ApplicationTest extends TestCase {
+	public function testConstrucor(): void {
 		// Not really a test – it's just about code coverage
 		new Application();
 

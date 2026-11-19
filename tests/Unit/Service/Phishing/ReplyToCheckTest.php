@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -12,7 +14,7 @@ use OCA\Mail\Service\PhishingDetection\ReplyToCheck;
 use OCP\IL10N;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class ReplyToCheckTest extends TestCase {
+final class ReplyToCheckTest extends TestCase {
 
 	private IL10N|MockObject $l10n;
 	private ReplyToCheck|MockObject $service;

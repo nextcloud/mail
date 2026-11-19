@@ -13,7 +13,7 @@ use OCA\Mail\Service\PhishingDetection\LinkCheck;
 use OCP\IL10N;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class LinkCheckTest extends TestCase {
+final class LinkCheckTest extends TestCase {
 
 	private IL10N&MockObject $l10n;
 	private LinkCheck|MockObject $service;

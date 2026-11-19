@@ -19,7 +19,7 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class InspectMailboxTest extends TestCase {
+final class InspectMailboxTest extends TestCase {
 	private MailboxMapper|\PHPUnit\Framework\MockObject\MockObject $mailboxMapper;
 	private ITimeFactory|\PHPUnit\Framework\MockObject\MockObject $timeFactory;
 	private InspectMailbox $command;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-only
@@ -18,7 +20,7 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class LocalAttachmentsControllerTest extends TestCase {
+final class LocalAttachmentsControllerTest extends TestCase {
 	/** @var IRequest|MockObject */
 	private $request;
 
@@ -45,7 +47,7 @@ class LocalAttachmentsControllerTest extends TestCase {
 		$this->controller = new LocalAttachmentsController('mail', $this->request, $this->service, $this->delegationService, $this->userId);
 	}
 
-	public function testCreateWithoutFile() {
+	public function testCreateWithoutFile(): void {
 		$this->request->expects($this->once())
 			->method('getUploadedFile')
 			->with('attachment')
@@ -55,7 +57,7 @@ class LocalAttachmentsControllerTest extends TestCase {
 		$this->controller->create();
 	}
 
-	public function testCreate() {
+	public function testCreate(): void {
 		$fileData = [
 			'name' => 'cat.jpg',
 		];
@@ -77,7 +79,7 @@ class LocalAttachmentsControllerTest extends TestCase {
 		$this->assertEquals(new JSONResponse($attachment, 201), $actual);
 	}
 
-	public function testCreateForDelegatedAccount() {
+	public function testCreateForDelegatedAccount(): void {
 		$fileData = [
 			'name' => 'cat.jpg',
 		];

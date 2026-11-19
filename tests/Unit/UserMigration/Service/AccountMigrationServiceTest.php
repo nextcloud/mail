@@ -24,7 +24,7 @@ use OCP\UserMigration\IImportSource;
 use OCP\UserMigration\UserMigrationException;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class AccountMigrationServiceTest extends TestCase {
+final class AccountMigrationServiceTest extends TestCase {
 	use RecordsConsoleOutput;
 
 	private const USER_ID = 'test_user';
@@ -616,15 +616,13 @@ class AccountMigrationServiceTest extends TestCase {
 		self::assertSame([null], $names);
 	}
 
-	public static function provideInvalidAccountData(): array {
-		return [
-			'missing account id' => ['accountId'],
-			'missing email address' => ['emailAddress'],
-			'missing sieve flag' => ['sieveEnabled'],
-			'missing special mailbox id' => ['sentMailboxId'],
-			'missing mailboxes' => ['mailboxes'],
-			'missing aliases' => ['aliases'],
-		];
+	public static function provideInvalidAccountData(): \Iterator {
+		yield 'missing account id' => ['accountId'];
+		yield 'missing email address' => ['emailAddress'];
+		yield 'missing sieve flag' => ['sieveEnabled'];
+		yield 'missing special mailbox id' => ['sentMailboxId'];
+		yield 'missing mailboxes' => ['mailboxes'];
+		yield 'missing aliases' => ['aliases'];
 	}
 
 	/**
@@ -644,21 +642,19 @@ class AccountMigrationServiceTest extends TestCase {
 		self::assertSame(['accounts' => [], 'mailboxes' => []], $mappings);
 	}
 
-	public static function provideMalformedAccountData(): array {
-		return [
-			'not an object' => ['not-an-account'],
-			'account id is not an int' => [['accountId' => 'nineteen']],
-			'mailboxes are not a list' => [['mailboxes' => ['unexpected' => 'object']]],
-			'aliases are not a list' => [['aliases' => ['unexpected' => 'object']]],
-			'mailbox is not an object' => [['mailboxes' => ['not-a-mailbox']]],
-			'alias is not an object' => [['aliases' => ['not-an-alias']]],
-			'unknown auth method' => [['authMethod' => 'plain']],
-			'imap host is not a string' => [['imapHost' => 42]],
-			'smtp host is not a string' => [['smtpHost' => ['smtp.doe.com']]],
-			'sieve host is not a string' => [['sieveHost' => true]],
-			'empty smtp host' => [['smtpHost' => '']],
-			'sieve host made of dots' => [['sieveHost' => '..']],
-		];
+	public static function provideMalformedAccountData(): \Iterator {
+		yield 'not an object' => ['not-an-account'];
+		yield 'account id is not an int' => [['accountId' => 'nineteen']];
+		yield 'mailboxes are not a list' => [['mailboxes' => ['unexpected' => 'object']]];
+		yield 'aliases are not a list' => [['aliases' => ['unexpected' => 'object']]];
+		yield 'mailbox is not an object' => [['mailboxes' => ['not-a-mailbox']]];
+		yield 'alias is not an object' => [['aliases' => ['not-an-alias']]];
+		yield 'unknown auth method' => [['authMethod' => 'plain']];
+		yield 'imap host is not a string' => [['imapHost' => 42]];
+		yield 'smtp host is not a string' => [['smtpHost' => ['smtp.doe.com']]];
+		yield 'sieve host is not a string' => [['sieveHost' => true]];
+		yield 'empty smtp host' => [['smtpHost' => '']];
+		yield 'sieve host made of dots' => [['sieveHost' => '..']];
 	}
 
 	/**
@@ -677,12 +673,10 @@ class AccountMigrationServiceTest extends TestCase {
 		self::assertSame(['accounts' => [], 'mailboxes' => []], $mappings);
 	}
 
-	public static function provideHostKeys(): array {
-		return [
-			'imap host' => ['imapHost'],
-			'smtp host' => ['smtpHost'],
-			'sieve host' => ['sieveHost'],
-		];
+	public static function provideHostKeys(): \Iterator {
+		yield 'imap host' => ['imapHost'];
+		yield 'smtp host' => ['smtpHost'];
+		yield 'sieve host' => ['sieveHost'];
 	}
 
 	/**
@@ -769,12 +763,10 @@ class AccountMigrationServiceTest extends TestCase {
 		self::assertSame(self::IMPORTED_SENT_ID, $this->savedAccount->getSentMailboxId());
 	}
 
-	public static function provideWronglyTypedAccountValues(): array {
-		return [
-			'order is a string' => ['order', 'abc'],
-			'password is an int' => ['inboundPassword', 12345],
-			'certificate id is an array' => ['smimeCertificateId', ['nope']],
-		];
+	public static function provideWronglyTypedAccountValues(): \Iterator {
+		yield 'order is a string' => ['order', 'abc'];
+		yield 'password is an int' => ['inboundPassword', 12345];
+		yield 'certificate id is an array' => ['smimeCertificateId', ['nope']];
 	}
 
 	/**

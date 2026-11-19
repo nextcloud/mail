@@ -13,17 +13,15 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use JmapClient\Responses\ResponseException;
 use OCA\Mail\JMAP\Exception\JmapException;
 
-class JmapExceptionTest extends TestCase {
-	public static function transientProvider(): array {
-		return [
-			'server failure' => [ResponseException::SERVER_FAIL, false, true],
-			'server unavailable' => [ResponseException::SERVER_UNAVAILABLE, false, true],
-			'partial server failure' => [ResponseException::SERVER_PARTIAL_FAIL, false, true],
-			'rate limit' => ['rateLimit', false, true],
-			'permanent rejection' => ['forbiddenToSend', false, false],
-			'unknown type' => ['somethingNew', false, false],
-			'uncertain outcome' => [ResponseException::SERVER_FAIL, true, false],
-		];
+final class JmapExceptionTest extends TestCase {
+	public static function transientProvider(): \Iterator {
+		yield 'server failure' => [ResponseException::SERVER_FAIL, false, true];
+		yield 'server unavailable' => [ResponseException::SERVER_UNAVAILABLE, false, true];
+		yield 'partial server failure' => [ResponseException::SERVER_PARTIAL_FAIL, false, true];
+		yield 'rate limit' => ['rateLimit', false, true];
+		yield 'permanent rejection' => ['forbiddenToSend', false, false];
+		yield 'unknown type' => ['somethingNew', false, false];
+		yield 'uncertain outcome' => [ResponseException::SERVER_FAIL, true, false];
 	}
 
 	/**

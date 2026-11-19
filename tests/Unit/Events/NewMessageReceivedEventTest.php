@@ -15,7 +15,7 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Events\NewMessageReceivedEvent;
 
-class NewMessageReceivedEventTest extends TestCase {
+final class NewMessageReceivedEventTest extends TestCase {
 	public function testConstructorAndGetter(): void {
 		$uri = 'imap://user@example.com/INBOX;UID=123';
 		$account = $this->createStub(Account::class);

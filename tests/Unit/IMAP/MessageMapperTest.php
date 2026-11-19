@@ -33,7 +33,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use function range;
 
-class MessageMapperTest extends TestCase {
+final class MessageMapperTest extends TestCase {
 	/** @var LoggerInterface|MockObject */
 	private $logger;
 
@@ -653,7 +653,7 @@ class MessageMapperTest extends TestCase {
 		self::assertEmpty($result['messages']);
 	}
 
-	public function testGetFlagged() {
+	public function testGetFlagged(): void {
 		/** @var Horde_Imap_Client_Socket|MockObject $imapClient */
 		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);
 		$mailbox = new Mailbox();
@@ -677,7 +677,7 @@ class MessageMapperTest extends TestCase {
 		$this->assertEquals($result, [1]);
 	}
 
-	public function testGetFlaggedNoMatches() {
+	public function testGetFlaggedNoMatches(): void {
 		/** @var Horde_Imap_Client_Socket|MockObject $imapClient */
 		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);
 		$mailbox = new Mailbox();
@@ -700,7 +700,7 @@ class MessageMapperTest extends TestCase {
 		$this->assertEquals($result, []);
 	}
 
-	public function testGetFlaggedSearchResultUnexpectedStructure() {
+	public function testGetFlaggedSearchResultUnexpectedStructure(): void {
 		/** @var Horde_Imap_Client_Socket|MockObject $imapClient */
 		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);
 		$mailbox = new Mailbox();
@@ -809,17 +809,15 @@ class MessageMapperTest extends TestCase {
 		$this->assertEquals($bodyText, $data[$messageId]->getPreviewText());
 	}
 
-	public function isImipMessageProvider(): array {
-		return [
-			'google request' => ['request_google', true],
-			'outlook.com request' => ['request_outlook_com', true],
-			// Proton Mail Bridge strips the `method=` parameter from the
-			// text/calendar Content-Type header during E2E re-assembly. The
-			// message is still an iMIP REQUEST — the method lives in the ICS
-			// body. Must still be flagged as iMIP so downstream processing
-			// picks it up.
-			'proton bridge request (method= stripped)' => ['request_proton_bridge', true],
-		];
+	public function isImipMessageProvider(): \Iterator {
+		yield 'google request' => ['request_google', true];
+		yield 'outlook.com request' => ['request_outlook_com', true];
+		// Proton Mail Bridge strips the `method=` parameter from the
+		// text/calendar Content-Type header during E2E re-assembly. The
+		// message is still an iMIP REQUEST — the method lives in the ICS
+		// body. Must still be flagged as iMIP so downstream processing
+		// picks it up.
+		yield 'proton bridge request (method= stripped)' => ['request_proton_bridge', true];
 	}
 
 	public function testGetAttachmentFilenameFromContentDisposition(): void {

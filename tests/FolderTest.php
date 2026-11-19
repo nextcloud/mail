@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2017-2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-only
@@ -12,7 +14,7 @@ use Horde_Imap_Client_Mailbox;
 use OCA\Mail\Folder;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class FolderTest extends TestCase {
+final class FolderTest extends TestCase {
 	/** @var int */
 	private $accountId;
 
@@ -29,7 +31,7 @@ class FolderTest extends TestCase {
 		$this->folder = new Folder($this->accountId, $this->mailbox, $attributes, $delimiter, []);
 	}
 
-	public function testGetMailbox() {
+	public function testGetMailbox(): void {
 		$this->mockFolder();
 		$this->mailbox->expects($this->once())
 			->method('__get')
@@ -39,7 +41,7 @@ class FolderTest extends TestCase {
 		$this->assertSame('Sent', $this->folder->getMailbox());
 	}
 
-	public function testGetDelimiter() {
+	public function testGetDelimiter(): void {
 		$this->mockFolder([], ',');
 
 		$this->assertSame(',', $this->folder->getDelimiter());
@@ -51,13 +53,13 @@ class FolderTest extends TestCase {
 		$this->assertNull($this->folder->getDelimiter());
 	}
 
-	public function testGetAttributes() {
+	public function testGetAttributes(): void {
 		$this->mockFolder(['\noselect']);
 
 		$this->assertSame(['\noselect'], $this->folder->getAttributes());
 	}
 
-	public function testSetStatus() {
+	public function testSetStatus(): void {
 		$this->mockFolder();
 
 		$this->folder->setStatus([
@@ -67,7 +69,7 @@ class FolderTest extends TestCase {
 		$this->addToAssertionCount(1);
 	}
 
-	public function testSpecialUse() {
+	public function testSpecialUse(): void {
 		$this->mockFolder();
 
 		$this->folder->addSpecialUse('flagged');
