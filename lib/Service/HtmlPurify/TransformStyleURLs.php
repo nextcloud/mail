@@ -67,9 +67,7 @@ class TransformStyleURLs extends HTMLPurifier_AttrTransform {
 			// An img has already been through TransformImageSrc, which saves the
 			// untouched style and then hides the image. Overwriting that backup
 			// would bake the hiding into what "Show images" restores.
-			if (!isset($attr['data-original-style'])) {
-				$attr['data-original-style'] = $attr['style'];
-			}
+			$attr['data-original-style'] ??= $attr['style'];
 			$attr['style'] = $newStyle;
 		}
 

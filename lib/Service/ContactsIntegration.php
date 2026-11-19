@@ -161,9 +161,7 @@ class ContactsIntegration {
 			return null;
 		}
 
-		if (!isset($addressbook)) {
-			$addressbook = key($this->contactsManager->getUserAddressBooks());
-		}
+		$addressbook ??= key($this->contactsManager->getUserAddressBooks());
 		if ($addressbook === null) {
 			return null;
 		}

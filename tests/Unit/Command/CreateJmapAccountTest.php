@@ -73,7 +73,7 @@ final class CreateJmapAccountTest extends TestCase {
 			} else {
 				self::assertTrue($actArg->isRequired());
 			}
-			self::assertTrue(in_array($actArg->getName(), $this->args, true));
+			self::assertContains($actArg->getName(), $this->args);
 		}
 	}
 

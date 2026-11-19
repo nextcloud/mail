@@ -247,8 +247,8 @@ final class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->exactly(2))
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 		$imapMessage = $this->createStub(IMAPMessage::class);
 		$this->mailManager->expects($this->exactly(2))
 			->method('getImapMessage')
@@ -346,7 +346,7 @@ final class MessagesControllerTest extends TestCase {
 
 		$response = $this->controller->downloadAttachment(123, '2');
 
-		$this->assertStringContainsString('.eml', $response->getHeaders()['Content-Disposition']);
+		$this->assertStringContainsString('.eml', (string)$response->getHeaders()['Content-Disposition']);
 		$this->assertCachedFor($response, 60 * 60);
 	}
 
@@ -381,16 +381,16 @@ final class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 		$this->mailManager->expects($this->once())
 			->method('getMailAttachment')
 			->with($this->account, $mailbox, $message, $attachmentId)
-			->will($this->returnValue($this->attachment));
+			->willReturn($this->attachment);
 		$this->attachment->expects($this->once())
 			->method('getName')
 			->with()
-			->will($this->returnValue('cat.jpg'));
+			->willReturn('cat.jpg');
 		$folderNode = $this->createStub(Folder::class);
 		$this->userFolder->expects($this->once())
 			->method('get')
@@ -406,13 +406,13 @@ final class MessagesControllerTest extends TestCase {
 		$this->userFolder->expects($this->once())
 			->method('newFile')
 			->with('Downloads/cat.jpg')
-			->will($this->returnValue($file));
+			->willReturn($file);
 		$file->expects($this->once())
 			->method('putContent')
 			->with('abcdefg');
 		$this->attachment->expects($this->once())
 			->method('getContent')
-			->will($this->returnValue('abcdefg'));
+			->willReturn('abcdefg');
 
 		$expected = new JSONResponse();
 		$response = $this->controller->saveAttachment(
@@ -448,17 +448,17 @@ final class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 
 		$this->mailManager->expects($this->once())
 			->method('getMailAttachments')
 			->with($this->account, $mailbox, $message)
-			->will($this->returnValue([$this->attachment]));
+			->willReturn([$this->attachment]);
 		$this->attachment->expects($this->once())
 			->method('getName')
 			->with()
-			->will($this->returnValue('cat.jpg'));
+			->willReturn('cat.jpg');
 		$folderNode = $this->createStub(Folder::class);
 		$this->userFolder->expects($this->once())
 			->method('get')
@@ -474,13 +474,13 @@ final class MessagesControllerTest extends TestCase {
 		$this->userFolder->expects($this->once())
 			->method('newFile')
 			->with('Downloads/cat.jpg')
-			->will($this->returnValue($file));
+			->willReturn($file);
 		$file->expects($this->once())
 			->method('putContent')
 			->with('abcdefg');
 		$this->attachment->expects($this->once())
 			->method('getContent')
-			->will($this->returnValue('abcdefg'));
+			->willReturn('abcdefg');
 
 		$expected = new JSONResponse();
 		$response = $this->controller->saveAttachment(
@@ -554,8 +554,8 @@ final class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 
 		//
 		$this->mailManager->expects($this->once())
@@ -706,8 +706,8 @@ final class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 		$this->mailManager->expects($this->once())
 			->method('flagMessages')
 			->with($this->account, $mailbox, 'seen', false, $message);
@@ -745,7 +745,7 @@ final class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->with($this->userId, $accountId)
 			->willThrowException(new DoesNotExistException(''));
 		$this->mailManager->expects($this->never())
 			->method('getTagByLabel');
@@ -777,8 +777,8 @@ final class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 		$this->mailManager->expects($this->once())
 			->method('getTagByLabel')
 			->with($imapLabel, $this->userId)
@@ -812,8 +812,8 @@ final class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 		$this->mailManager->expects($this->once())
 			->method('getTagByLabel')
 			->with($tag->getImapLabel(), $this->userId)
@@ -849,7 +849,7 @@ final class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->with($this->userId, $accountId)
 			->willThrowException(new DoesNotExistException(''));
 		$this->mailManager->expects($this->never())
 			->method('getTagByLabel');
@@ -881,8 +881,8 @@ final class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 		$this->mailManager->expects($this->once())
 			->method('getTagByLabel')
 			->with($imapLabel, $this->userId)
@@ -916,8 +916,8 @@ final class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 		$this->mailManager->expects($this->once())
 			->method('getTagByLabel')
 			->with($tag->getImapLabel(), $this->userId)
@@ -955,8 +955,8 @@ final class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 		$this->mailManager->expects($this->once())
 			->method('flagMessages')
 			->with($this->account, $mailbox, 'flagged', true, $message);
@@ -993,8 +993,8 @@ final class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 		$this->mailManager->expects($this->once())
 			->method('deleteMessage')
 			->with($this->account, $mailbox, $message);
@@ -1028,8 +1028,8 @@ final class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->throwException(new DoesNotExistException('')));
+			->with($this->userId, $accountId)
+			->willThrowException(new DoesNotExistException(''));
 
 		$expected = new JSONResponse([], Http::STATUS_FORBIDDEN);
 
@@ -1056,8 +1056,8 @@ final class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 		$this->mailManager->expects($this->once())
 			->method('deleteMessage')
 			->with($this->account, $mailbox, $message)
@@ -1089,7 +1089,7 @@ final class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->with($this->userId, $accountId)
 			->willReturn($this->account);
 		$this->mailManager->expects($this->once())
 			->method('getThread')
@@ -1119,7 +1119,7 @@ final class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->with($this->userId, $accountId)
 			->willReturn($this->account);
 		$this->mailManager->expects($this->never())
 			->method('getThread');
@@ -1150,7 +1150,7 @@ final class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->with($this->userId, $accountId)
 			->willReturn($this->account);
 		$this->mailManager->expects($this->once())
 			->method('getThread');
@@ -1183,8 +1183,8 @@ final class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->exactly(1))
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 		$source = file_get_contents(__DIR__ . '/../../data/mail-message-123.txt');
 		$this->mailManager->expects($this->exactly(1))
 			->method('getSource')
@@ -1227,8 +1227,8 @@ final class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->exactly(1))
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 		$source = file_get_contents(__DIR__ . '/../../data/mail-message-123.txt');
 		$this->mailManager->expects($this->exactly(1))
 			->method('getSource')
@@ -1249,7 +1249,7 @@ final class MessagesControllerTest extends TestCase {
 		$this->userFolder->expects($this->once())
 			->method('newFile')
 			->with('Downloads/core_master has new results.eml')
-			->will($this->returnValue($file));
+			->willReturn($file);
 
 		$expectedResponse = new JSONResponse();
 		$actualResponse = $this->controller->saveFile($messageId, $targetPath);
@@ -1284,8 +1284,8 @@ final class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->exactly(1))
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($account->getId()))
-			->will($this->returnValue($account));
+			->with($this->userId, $account->getId())
+			->willReturn($account);
 		$this->dkimService->expects($this->exactly(1))
 			->method('validate')
 			->with($account, $mailbox, $message)

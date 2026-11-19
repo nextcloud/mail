@@ -35,7 +35,7 @@ final class ContactsGroupServiceTest extends TestCase {
 	public function testDisabledContactsManager(): void {
 		$this->contactsManager->expects($this->once())
 			->method('isEnabled')
-			->will($this->returnValue(false));
+			->willReturn(false);
 		$this->contactsManager->expects($this->never())
 			->method('search');
 
@@ -78,11 +78,11 @@ final class ContactsGroupServiceTest extends TestCase {
 			->willReturn('yes');
 		$this->contactsManager->expects($this->once())
 			->method('isEnabled')
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->contactsManager->expects($this->once())
 			->method('search')
 			->with($term, ['CATEGORIES'])
-			->will($this->returnValue($searchResult));
+			->willReturn($searchResult);
 		$expected = [
 			[
 				'id' => 'work1',
@@ -141,11 +141,11 @@ final class ContactsGroupServiceTest extends TestCase {
 			->willReturn('yes');
 		$this->contactsManager->expects($this->once())
 			->method('isEnabled')
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->contactsManager->expects($this->once())
 			->method('search')
 			->with($groupId, ['CATEGORIES'])
-			->will($this->returnValue($searchResult));
+			->willReturn($searchResult);
 		$expected = [
 			[
 				'email' => 'jonathan@frakes.com',

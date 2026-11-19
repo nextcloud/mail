@@ -215,7 +215,7 @@ final class SendHandlerTest extends TestCase {
 			->willReturn($connector);
 		$connector->expects(self::once())
 			->method('sendMessage')
-			->willReturnCallback(function ($acct, $msg, $mbx) {
+			->willReturnCallback(function ($acct, $msg, $mbx): void {
 				$msg->setStatus(LocalMessage::STATUS_SMPT_SEND_FAIL);
 			});
 		$this->eventDispatcher->expects(self::never())
@@ -246,7 +246,7 @@ final class SendHandlerTest extends TestCase {
 			->willReturn($connector);
 		$connector->expects(self::once())
 			->method('sendMessage')
-			->willReturnCallback(static function ($acct, LocalMessage $msg) use ($resultStatus) {
+			->willReturnCallback(static function ($acct, LocalMessage $msg) use ($resultStatus): void {
 				$msg->setStatus($resultStatus);
 			});
 

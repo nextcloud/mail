@@ -39,7 +39,7 @@ final class IMAPMessageTest extends TestCase {
 		//linkToRoute 'mail.proxy.proxy'
 		$urlGenerator->expects($this->any())
 			->method('linkToRoute')
-			->will($this->returnCallback(fn ($url) => "https://docs.example.com/server/go.php?to=$url"));
+			->willReturnCallback(fn ($url) => "https://docs.example.com/server/go.php?to=$url");
 		$request = $this->getMockBuilder(IRequest::class)
 			->disableOriginalConstructor()
 			->getMock();
@@ -87,7 +87,7 @@ final class IMAPMessageTest extends TestCase {
 		);
 
 		$actualHtmlBody = $message->getHtmlBody(123);
-		$this->assertTrue(strlen($actualHtmlBody) > 1000);
+		$this->assertGreaterThan(1000, strlen($actualHtmlBody));
 
 		$actualPlainTextBody = $message->getPlainBody();
 		$this->assertEquals($plainTextBody, $actualPlainTextBody);

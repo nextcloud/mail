@@ -176,11 +176,9 @@ final class DeleteDraftListenerTest extends TestCase {
 
 		$this->eventDispatcher->expects($this->once())
 			->method('dispatchTyped')
-			->with($this->callback(static function (MessageDeletedEvent $deletedEvent) use ($account, $mailbox, $uid): bool {
-				return $deletedEvent->getAccount() === $account
+			->with($this->callback(static fn (MessageDeletedEvent $deletedEvent): bool => $deletedEvent->getAccount() === $account
 					&& $deletedEvent->getMailbox() === $mailbox
-					&& $deletedEvent->getUid() === $uid;
-			}));
+					&& $deletedEvent->getUid() === $uid));
 
 		$this->listener->handle($event);
 	}

@@ -48,7 +48,7 @@ final class FixCollectedAddressesTest extends TestCase {
 
 		$this->mapper->expects($this->exactly(2))
 			->method('getChunk')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				[
 					null, [
 						$address1,
@@ -56,7 +56,7 @@ final class FixCollectedAddressesTest extends TestCase {
 					]],
 				[
 					201, []]
-			]));
+			]);
 		$this->mapper->expects($this->never())
 			->method('update');
 
@@ -75,7 +75,7 @@ final class FixCollectedAddressesTest extends TestCase {
 
 		$this->mapper->expects($this->exactly(2))
 			->method('getChunk')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				[
 					null, [
 						$address1,
@@ -83,7 +83,7 @@ final class FixCollectedAddressesTest extends TestCase {
 					]],
 				[
 					201, []]
-			]));
+			]);
 		$this->mapper->expects($this->once())
 			->method('update')
 			->with($address1);
@@ -106,7 +106,7 @@ final class FixCollectedAddressesTest extends TestCase {
 
 		$this->mapper->expects($this->exactly(2))
 			->method('getChunk')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				[
 					null, [
 						$address1,
@@ -114,7 +114,7 @@ final class FixCollectedAddressesTest extends TestCase {
 					]],
 				[
 					201, []]
-			]));
+			]);
 		$this->mapper->expects($this->once())
 			->method('delete')
 			->with($address1);

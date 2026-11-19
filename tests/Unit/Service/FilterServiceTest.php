@@ -191,7 +191,7 @@ final class FilterServiceTest extends TestCase {
 			->willReturn($script);
 
 		$this->sieveService->method('updateActiveScript')
-			->willReturnCallback(function (string $userId, int $accountId, string $script) {
+			->willReturnCallback(function (string $userId, int $accountId, string $script): void {
 				// the .sieve files have \r\n line endings
 				$script .= "\r\n";
 
@@ -227,7 +227,7 @@ final class FilterServiceTest extends TestCase {
 			->willReturn($script);
 
 		$this->sieveService->method('updateActiveScript')
-			->willReturnCallback(function (string $userId, int $accountId, string $script) {
+			->willReturnCallback(function (string $userId, int $accountId, string $script): void {
 				// the .sieve files have \r\n line endings
 				$script .= "\r\n";
 

@@ -39,7 +39,7 @@ final class TransformNoReferrerTest extends TestCase {
 
 		$result = $this->transform->transform($attr, $config, $context);
 
-		$this->assertFalse(isset($result['rel']));
+		$this->assertArrayNotHasKey('rel', $result);
 	}
 
 	public function testExternalUrlAddNoreferrer(): void {
@@ -59,8 +59,8 @@ final class TransformNoReferrerTest extends TestCase {
 
 		$result = $this->transform->transform($attr, $config, $context);
 
-		$this->assertStringContainsString('nofollow', $result['rel']);
-		$this->assertStringContainsString('noreferrer', $result['rel']);
+		$this->assertStringContainsString('nofollow', (string)$result['rel']);
+		$this->assertStringContainsString('noreferrer', (string)$result['rel']);
 	}
 
 	public function testRelAttributeDoesNotExistCreatesRel(): void {
@@ -93,8 +93,8 @@ final class TransformNoReferrerTest extends TestCase {
 
 		$result = $this->transform->transform($attr, $config, $context);
 
-		$this->assertStringContainsString('nofollow', $result['rel']);
-		$this->assertStringContainsString('noopener', $result['rel']);
-		$this->assertStringContainsString('noreferrer', $result['rel']);
+		$this->assertStringContainsString('nofollow', (string)$result['rel']);
+		$this->assertStringContainsString('noopener', (string)$result['rel']);
+		$this->assertStringContainsString('noreferrer', (string)$result['rel']);
 	}
 }

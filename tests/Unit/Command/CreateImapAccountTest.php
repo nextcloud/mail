@@ -74,7 +74,7 @@ final class CreateImapAccountTest extends TestCase {
 			} else {
 				self::assertTrue($actArg->isRequired());
 			}
-			self::assertTrue(in_array($actArg->getName(), $this->args));
+			self::assertContains($actArg->getName(), $this->args);
 		}
 	}
 

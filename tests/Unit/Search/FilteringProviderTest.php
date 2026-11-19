@@ -90,13 +90,11 @@ final class FilteringProviderTest extends TestCase {
 		self::assertNotEmpty($entries);
 	}
 
-	public static function multiWordTermProvider(): array {
-		return [
-			'several words' => ['QA invite'],
-			'colon in the term' => ['Re: invoice'],
-			'plus sign' => ['C++ meetup'],
-			'surrounding whitespace' => ['  QA invite ', 'QA invite'],
-		];
+	public static function multiWordTermProvider(): \Iterator {
+		yield 'several words' => ['QA invite'];
+		yield 'colon in the term' => ['Re: invoice'];
+		yield 'plus sign' => ['C++ meetup'];
+		yield 'surrounding whitespace' => ['  QA invite ', 'QA invite'];
 	}
 
 	/**

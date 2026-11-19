@@ -40,9 +40,7 @@ class StatisticsDao {
 		$combined = [];
 		foreach ($results as $index) {
 			foreach ($index as $email => $count) {
-				if (!isset($combined[$email])) {
-					$combined[$email] = 0;
-				}
+				$combined[$email] ??= 0;
 				$combined[$email] += $count;
 			}
 		}

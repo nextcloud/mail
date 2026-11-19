@@ -107,9 +107,9 @@ final class QuickActionsMigrationServiceTest extends TestCase {
 			->with(QuickActionsMigrationService::QUICK_ACTIONS_FILE)
 			->willReturn(json_encode($quickActions));
 
-		$accountMapping = [self::QUICK_STEP_ACCOUNT_ID => rand(100, 199)];
-		$mailboxMapping = [self::QUICK_STEP_MAILBOX_ID => rand(200, 299)];
-		$tagMapping = [2 => rand(300, 399)];
+		$accountMapping = [self::QUICK_STEP_ACCOUNT_ID => random_int(100, 199)];
+		$mailboxMapping = [self::QUICK_STEP_MAILBOX_ID => random_int(200, 299)];
+		$tagMapping = [2 => random_int(300, 399)];
 
 		$createdIds = [];
 		$createCallCount = 0;
@@ -126,7 +126,7 @@ final class QuickActionsMigrationServiceTest extends TestCase {
 				self::assertSame($expected->getName(), $name);
 				self::assertSame($accountMapping[$expected->getAccountId()], $accountId);
 				$newActions = new Actions();
-				$newActions->setId(rand(400, 499));
+				$newActions->setId(random_int(400, 499));
 				$newActions->setName($name);
 				$newActions->setAccountId($accountId);
 				$createdIds[] = $newActions->getId();
@@ -156,7 +156,7 @@ final class QuickActionsMigrationServiceTest extends TestCase {
 				self::assertSame($expected['tagId'], $tagId);
 				self::assertSame($expected['mailboxId'], $mailboxId);
 				$newStep = new ActionStep();
-				$newStep->setId(rand(500, 599));
+				$newStep->setId(random_int(500, 599));
 				$createStepCallCount++;
 				return $newStep;
 			});

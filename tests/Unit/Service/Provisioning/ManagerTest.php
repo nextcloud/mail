@@ -419,11 +419,9 @@ final class ManagerTest extends TestCase {
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('update')
-			->with($this->callback(static function (MailAccount $account) {
-				return $account->getEmail() === 'BWAYNE@batman.com'
+			->with($this->callback(static fn (MailAccount $account) => $account->getEmail() === 'BWAYNE@batman.com'
 					&& $account->getInboundUser() === 'BWAYNE'
-					&& $account->getOutboundUser() === 'BWAYNE';
-			}))
+					&& $account->getOutboundUser() === 'BWAYNE'))
 			->willReturn($mailAccount);
 
 		$result = $this->manager->provisionSingleUser($configs, $user);

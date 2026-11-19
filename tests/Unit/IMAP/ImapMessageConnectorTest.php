@@ -228,6 +228,7 @@ final class ImapMessageConnectorTest extends TestCase {
 			->method('logout');
 
 		$quota = $this->connector->getQuota($this->account);
+		$this->assertInstanceOf(\OCA\Mail\Service\Quota::class, $quota);
 
 		self::assertSame(1024, $quota->getUsage());
 		self::assertSame(2048, $quota->getLimit());

@@ -128,9 +128,7 @@ class TagMapper extends QBMapper {
 
 			while (($row = $queryResult->fetch()) !== false) {
 				$messageId = $row['imap_message_id'];
-				if (!isset($tags[$messageId])) {
-					$tags[$messageId] = [];
-				}
+				$tags[$messageId] ??= [];
 
 				// Construct a Tag instance but omit any other joined columns
 				$tags[$messageId][] = Tag::fromRow(array_filter(

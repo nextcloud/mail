@@ -135,17 +135,17 @@ final class AccountsControllerTest extends TestCase {
 	public function testIndex(): void {
 		$this->account->expects(self::once())
 			->method('jsonSerialize')
-			->will(self::returnValue([
+			->willReturn([
 				'accountId' => 123,
-			]));
+			]);
 		$this->accountService->expects(self::once())
 			->method('findByUserId')
 			->with(self::equalTo($this->userId))
-			->will(self::returnValue([$this->account]));
+			->willReturn([$this->account]);
 		$this->aliasesService->expects(self::any())
 			->method('findAll')
 			->with(self::equalTo($this->accountId), self::equalTo($this->userId))
-			->will(self::returnValue(['a1', 'a2']));
+			->willReturn(['a1', 'a2']);
 		$this->accountService->expects(self::once())
 			->method('findDelegatedAccounts')
 			->with(self::equalTo($this->userId))
@@ -170,7 +170,7 @@ final class AccountsControllerTest extends TestCase {
 		$this->accountService->expects(self::once())
 			->method('find')
 			->with(self::equalTo($this->userId), self::equalTo($this->accountId))
-			->will(self::returnValue($this->account));
+			->willReturn($this->account);
 
 		$response = $this->controller->show($this->accountId);
 
@@ -182,7 +182,7 @@ final class AccountsControllerTest extends TestCase {
 		$this->accountService->expects(self::once())
 			->method('find')
 			->with(self::equalTo($this->userId), self::equalTo($this->accountId))
-			->will(self::throwException(new DoesNotExistException('test123')));
+			->willThrowException(new DoesNotExistException('test123'));
 		$this->expectException(DoesNotExistException::class);
 
 		$this->controller->show($this->accountId);
@@ -228,7 +228,7 @@ final class AccountsControllerTest extends TestCase {
 		$this->accountService->expects(self::once())
 			->method('delete')
 			->with(self::equalTo($this->userId), self::equalTo($this->accountId))
-			->will(self::throwException(new DoesNotExistException('test')));
+			->willThrowException(new DoesNotExistException('test'));
 		$this->expectException(DoesNotExistException::class);
 
 		$this->controller->destroy($this->accountId);

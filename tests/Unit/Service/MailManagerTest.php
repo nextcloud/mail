@@ -106,7 +106,7 @@ final class MailManagerTest extends TestCase {
 			->with($account, false);
 		$this->mailboxMapper->expects($this->once())
 			->method('findAll')
-			->with($this->equalTo($account))
+			->with($account)
 			->willReturn($mailboxes);
 
 		$result = $this->manager->getMailboxes($account);
@@ -333,9 +333,7 @@ final class MailManagerTest extends TestCase {
 			});
 		$this->dbMessageMapper->expects($this->once())
 			->method('updateBulk')
-			->with($account, true, $this->callback(function (Message $message) use ($otherTag, $tag): bool {
-				return $message->getTags() === [$otherTag, $tag];
-			}));
+			->with($account, true, $this->callback(fn (Message $message): bool => $message->getTags() === [$otherTag, $tag]));
 
 		$this->manager->tagMessages($account, $mailbox, $tag, true, $message);
 	}
@@ -371,9 +369,7 @@ final class MailManagerTest extends TestCase {
 			});
 		$this->dbMessageMapper->expects($this->once())
 			->method('updateBulk')
-			->with($account, true, $this->callback(function (Message $message) use ($otherTag, $tag): bool {
-				return $message->getTags() === [$otherTag];
-			}));
+			->with($account, true, $this->callback(fn (Message $message): bool => $message->getTags() === [$otherTag]));
 
 		$this->manager->tagMessages($account, $mailbox, $tag, false, $message);
 	}

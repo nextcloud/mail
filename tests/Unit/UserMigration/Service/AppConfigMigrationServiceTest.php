@@ -283,9 +283,7 @@ final class AppConfigMigrationServiceTest extends TestCase {
 	}
 
 	private function getAppKeys(): array {
-		return array_map(function (array $appConfig) {
-			return $appConfig['key'];
-		}, $this->getAppConfig());
+		return array_map(fn (array $appConfig) => $appConfig['key'], $this->getAppConfig());
 	}
 
 	private function getAppValue(string $key): ?string {

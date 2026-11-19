@@ -54,9 +54,7 @@ final class MailboxesSynchronizedSpecialMailboxesUpdaterTest extends TestCase {
 			->willReturn([$sharedSent, $personalSent]);
 		$this->mailAccountMapper->expects($this->once())
 			->method('update')
-			->with($this->callback(function (MailAccount $updated) {
-				return $updated->getSentMailboxId() === 200;
-			}));
+			->with($this->callback(fn (MailAccount $updated) => $updated->getSentMailboxId() === 200));
 
 		$this->listener->handle(new MailboxesSynchronizedEvent($account));
 	}
@@ -78,9 +76,7 @@ final class MailboxesSynchronizedSpecialMailboxesUpdaterTest extends TestCase {
 			->willReturn([$sharedDrafts, $personalDrafts]);
 		$this->mailAccountMapper->expects($this->once())
 			->method('update')
-			->with($this->callback(function (MailAccount $updated) {
-				return $updated->getDraftsMailboxId() === 200;
-			}));
+			->with($this->callback(fn (MailAccount $updated) => $updated->getDraftsMailboxId() === 200));
 
 		$this->listener->handle(new MailboxesSynchronizedEvent($account));
 	}
@@ -98,9 +94,7 @@ final class MailboxesSynchronizedSpecialMailboxesUpdaterTest extends TestCase {
 			->willReturn([$sharedSent]);
 		$this->mailAccountMapper->expects($this->once())
 			->method('update')
-			->with($this->callback(function (MailAccount $updated) {
-				return $updated->getSentMailboxId() === 100;
-			}));
+			->with($this->callback(fn (MailAccount $updated) => $updated->getSentMailboxId() === 100));
 
 		$this->listener->handle(new MailboxesSynchronizedEvent($account));
 	}

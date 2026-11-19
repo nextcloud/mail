@@ -156,11 +156,9 @@ final class LegacyAccountMigrationServiceTest extends TestCase {
 	 */
 	public function testImportSkipsUnusableAccountFiles(string $contents): void {
 		$this->importSource->method('getFileContents')
-			->willReturnCallback(static function (string $path) use ($contents): string {
-				return $path === LegacyAccountMigrationService::ACCOUNT_INDEX_FILE
+			->willReturnCallback(static fn (string $path): string => $path === LegacyAccountMigrationService::ACCOUNT_INDEX_FILE
 					? json_encode([self::EXPORTED_ACCOUNT_ID => self::ACCOUNT_PATH])
-					: $contents;
-			});
+					: $contents);
 		$this->serviceMock->getParameter('accountService')->expects(self::never())->method('save');
 
 		$mapping = $this->migrationService->importAccounts($this->user, $this->importSource, $this->output);
@@ -315,11 +313,9 @@ final class LegacyAccountMigrationServiceTest extends TestCase {
 
 	private function expectArchive(array $index, array $accountData): void {
 		$this->importSource->method('getFileContents')
-			->willReturnCallback(static function (string $path) use ($index, $accountData): string {
-				return $path === LegacyAccountMigrationService::ACCOUNT_INDEX_FILE
+			->willReturnCallback(static fn (string $path): string => $path === LegacyAccountMigrationService::ACCOUNT_INDEX_FILE
 					? json_encode($index, JSON_THROW_ON_ERROR)
-					: json_encode($accountData, JSON_THROW_ON_ERROR);
-			});
+					: json_encode($accountData, JSON_THROW_ON_ERROR));
 	}
 
 	private function expectAccountToBeSaved(): void {
@@ -403,11 +399,9 @@ final class LegacyAccountMigrationServiceTest extends TestCase {
 	public function testImportReportsAnInvalidAccountFileAsANotice(): void {
 		$this->recordConsoleOutput();
 		$this->importSource->method('getFileContents')
-			->willReturnCallback(static function (string $path): string {
-				return $path === LegacyAccountMigrationService::ACCOUNT_INDEX_FILE
+			->willReturnCallback(static fn (string $path): string => $path === LegacyAccountMigrationService::ACCOUNT_INDEX_FILE
 					? json_encode([self::EXPORTED_ACCOUNT_ID => self::ACCOUNT_PATH])
-					: '"just a string"';
-			});
+					: '"just a string"');
 
 		$this->migrationService->importAccounts($this->user, $this->importSource, $this->output);
 

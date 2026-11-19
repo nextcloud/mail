@@ -133,13 +133,13 @@ final class MessageTest extends TestCase {
 			->getMock();
 		$file->expects($this->once())
 			->method('getName')
-			->will($this->returnValue($name));
+			->willReturn($name);
 		$file->expects($this->once())
 			->method('getContent')
-			->will($this->returnValue($contents));
+			->willReturn($contents);
 		$file->expects($this->once())
 			->method('getMimeType')
-			->will($this->returnValue($mimeType));
+			->willReturn($mimeType);
 
 		$expected = new Horde_Mime_Part();
 		$expected->setCharset('us-ascii');

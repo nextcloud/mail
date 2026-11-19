@@ -77,10 +77,10 @@ final class ListMailboxesTest extends TestCase {
 
 		$this->assertSame(Command::SUCCESS, $exitCode);
 		$display = $tester->getDisplay();
-		$this->assertStringContainsString('INBOX', $display);
-		$this->assertStringNotContainsString('Sync in background', $display);
-		$this->assertStringContainsString('Shared', $display);
-		$this->assertStringContainsString('Lock', $display);
+		$this->assertStringContainsString('INBOX', (string)$display);
+		$this->assertStringNotContainsString('Sync in background', (string)$display);
+		$this->assertStringContainsString('Shared', (string)$display);
+		$this->assertStringContainsString('Lock', (string)$display);
 	}
 
 	public function testShowsNoLockWhenUnlocked(): void {
@@ -99,7 +99,7 @@ final class ListMailboxesTest extends TestCase {
 		$tester = new CommandTester($this->command);
 		$tester->execute(['account-id' => '42']);
 
-		$this->assertStringContainsString('-', $tester->getDisplay());
+		$this->assertStringContainsString('-', (string)$tester->getDisplay());
 	}
 
 	public function testOrdersMailboxesByNameThenId(): void {

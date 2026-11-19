@@ -39,9 +39,7 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 	}
 
 	private function getOrInsertCachedMailbox(string $mailbox): CachedMailbox {
-		if (!isset($this->cachedMailboxes[$mailbox])) {
-			$this->cachedMailboxes[$mailbox] = new CachedMailbox();
-		}
+		$this->cachedMailboxes[$mailbox] ??= new CachedMailbox();
 
 		return $this->cachedMailboxes[$mailbox];
 	}

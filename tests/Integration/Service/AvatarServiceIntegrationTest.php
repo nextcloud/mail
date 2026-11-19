@@ -40,7 +40,7 @@ final class AvatarServiceIntegrationTest extends TestCase {
 		$this->markTestSkipped('Unreliable test');
 		return;
 		$avatar = $this->service->getAvatar('hey@jancborchardt.net', 'john');
-		$this->assertNotNull($avatar);
+		$this->assertInstanceOf(\OCA\Mail\Service\Avatar\Avatar::class, $avatar);
 		$this->assertEquals('https://secure.gravatar.com/avatar/2fd3f4d5d762955e5b603794a888fa97?size=128&d=404', $avatar->getUrl());
 		$image = $this->service->getAvatarImage('hey@jancborchardt.net', 'john');
 		$this->assertNotNull($image);

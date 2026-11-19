@@ -119,10 +119,10 @@ final class JmapMailboxAdapterTest extends TestCase {
 		]));
 
 		$acls = $mailbox->getMyAcls();
-		self::assertStringContainsString('l', $acls);
-		self::assertStringContainsString('r', $acls);
-		self::assertStringContainsString('i', $acls);
-		self::assertStringContainsString('s', $acls);
+		self::assertStringContainsString('l', (string)$acls);
+		self::assertStringContainsString('r', (string)$acls);
+		self::assertStringContainsString('i', (string)$acls);
+		self::assertStringContainsString('s', (string)$acls);
 	}
 
 	public function testFullRightsGrantAdministerFlag(): void {
@@ -133,7 +133,7 @@ final class JmapMailboxAdapterTest extends TestCase {
 			'delete' => true,
 		]));
 
-		self::assertStringContainsString('a', $mailbox->getMyAcls());
+		self::assertStringContainsString('a', (string)$mailbox->getMyAcls());
 	}
 
 	public function testNoRightsObjectYieldsNullAcl(): void {

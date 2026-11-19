@@ -489,9 +489,9 @@ final class ImapTransmissionConnectorTest extends TestCase {
 		$this->connector->saveMessage($account, $mailbox, $localMessage);
 
 		$this->assertNotNull($capturedRaw);
-		$this->assertStringContainsString('multipart/mixed', $capturedRaw);
-		$this->assertStringContainsString('test.txt', $capturedRaw);
-		$this->assertStringContainsString('Attachment contents', $capturedRaw);
+		$this->assertStringContainsString('multipart/mixed', (string)$capturedRaw);
+		$this->assertStringContainsString('test.txt', (string)$capturedRaw);
+		$this->assertStringContainsString('Attachment contents', (string)$capturedRaw);
 	}
 
 	private function prepareAiGeneratedMessage(): array {
@@ -533,7 +533,7 @@ final class ImapTransmissionConnectorTest extends TestCase {
 		$this->connector->sendMessage($account, $localMessage, $sentMailbox);
 
 		$this->assertSame(LocalMessage::STATUS_PROCESSED, $localMessage->getStatus());
-		$this->assertStringContainsString(LocalMessage::HEADER_AI_GENERATED . ': 1', $localMessage->getRaw());
+		$this->assertStringContainsString(LocalMessage::HEADER_AI_GENERATED . ': 1', (string)$localMessage->getRaw());
 	}
 
 	public function testSendMessageWithoutSentCopy(): void {
@@ -617,7 +617,7 @@ final class ImapTransmissionConnectorTest extends TestCase {
 
 		$this->connector->saveMessage($account, $mailbox, $localMessage);
 
-		$this->assertStringContainsString(LocalMessage::HEADER_AI_GENERATED . ': 1', $capturedRaw);
+		$this->assertStringContainsString(LocalMessage::HEADER_AI_GENERATED . ': 1', (string)$capturedRaw);
 	}
 
 	public function testSaveMessageKeepsBcc(): void {

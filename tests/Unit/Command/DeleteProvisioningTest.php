@@ -59,7 +59,7 @@ final class DeleteProvisioningTest extends TestCase {
 		$status = $this->tester->execute(['id' => '3']);
 
 		self::assertSame(Command::SUCCESS, $status);
-		self::assertStringContainsString('Aborted', $this->tester->getDisplay());
+		self::assertStringContainsString('Aborted', (string)$this->tester->getDisplay());
 	}
 
 	public function testDeleteForced(): void {
@@ -94,7 +94,7 @@ final class DeleteProvisioningTest extends TestCase {
 		$status = $this->tester->execute(['id' => $id, '--force' => true]);
 
 		self::assertSame(Command::INVALID, $status);
-		self::assertStringContainsString('positive integer', $this->tester->getDisplay());
+		self::assertStringContainsString('positive integer', (string)$this->tester->getDisplay());
 	}
 
 	public static function invalidIds(): \Iterator {

@@ -45,11 +45,11 @@ final class AttachmentStorageTest extends TestCase {
 
 		$this->appData->expects($this->once())
 			->method('getFolder')
-			->with($this->equalTo('mail_fritz'))
+			->with('mail_fritz')
 			->willThrowException(new NotFoundException());
 		$this->appData->expects($this->once())
 			->method('newFolder')
-			->with($this->equalTo('mail_fritz'))
+			->with('mail_fritz')
 			->willReturn($folder);
 		$folder->expects($this->once())
 			->method('newFile')
@@ -60,7 +60,7 @@ final class AttachmentStorageTest extends TestCase {
 			->willReturn($this->tmpFilePath);
 		$file->expects($this->once())
 			->method('putContent')
-			->with($this->equalTo('test test'));
+			->with('test test');
 
 		$this->storage->save('fritz', 123, $uploadedFile);
 	}
@@ -72,11 +72,11 @@ final class AttachmentStorageTest extends TestCase {
 
 		$this->appData->expects($this->once())
 			->method('getFolder')
-			->with($this->equalTo('mail_fritz'))
+			->with('mail_fritz')
 			->willThrowException(new NotFoundException());
 		$this->appData->expects($this->once())
 			->method('newFolder')
-			->with($this->equalTo('mail_fritz'))
+			->with('mail_fritz')
 			->willThrowException(new NotPermittedException());
 		$this->expectException(NotPermittedException::class);
 
@@ -90,11 +90,11 @@ final class AttachmentStorageTest extends TestCase {
 
 		$this->appData->expects($this->once())
 			->method('getFolder')
-			->with($this->equalTo('mail_fritz'))
+			->with('mail_fritz')
 			->willThrowException(new NotFoundException());
 		$this->appData->expects($this->once())
 			->method('newFolder')
-			->with($this->equalTo('mail_fritz'))
+			->with('mail_fritz')
 			->willReturn($folder);
 		$folder->expects($this->once())
 			->method('newFile')
@@ -115,11 +115,11 @@ final class AttachmentStorageTest extends TestCase {
 
 		$this->appData->expects($this->once())
 			->method('getFolder')
-			->with($this->equalTo('mail_fritz'))
+			->with('mail_fritz')
 			->willThrowException(new NotFoundException());
 		$this->appData->expects($this->once())
 			->method('newFolder')
-			->with($this->equalTo('mail_fritz'))
+			->with('mail_fritz')
 			->willReturn($folder);
 		$folder->expects($this->once())
 			->method('newFile')
@@ -140,7 +140,7 @@ final class AttachmentStorageTest extends TestCase {
 
 		$this->appData->expects($this->once())
 			->method('getFolder')
-			->with($this->equalTo('mail_fritz'))
+			->with('mail_fritz')
 			->willReturn($folder);
 		$folder->expects($this->once())
 			->method('newFile')
@@ -151,7 +151,7 @@ final class AttachmentStorageTest extends TestCase {
 			->willReturn($this->tmpFilePath);
 		$file->expects($this->once())
 			->method('putContent')
-			->with($this->equalTo('test test'));
+			->with('test test');
 
 		$this->storage->save('fritz', 123, $uploadedFile);
 	}

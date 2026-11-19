@@ -48,7 +48,7 @@ final class SynchronizerTest extends TestCase {
 		$hordeSync = $this->createMock(Horde_Imap_Client_Data_Sync::class);
 		$imapClient->expects($this->once())
 			->method('sync')
-			->with($this->equalTo(new Horde_Imap_Client_Mailbox('inbox')), $this->equalTo('123456'))
+			->with(new Horde_Imap_Client_Mailbox('inbox'), '123456')
 			->willReturn($hordeSync);
 		$newMessages = [];
 		$changedMessages = [];
@@ -103,7 +103,7 @@ final class SynchronizerTest extends TestCase {
 		$hordeSync = $this->createMock(Horde_Imap_Client_Data_Sync::class);
 		$imapClient->expects($this->exactly(3))
 			->method('sync')
-			->with($this->equalTo(new Horde_Imap_Client_Mailbox('inbox')), $this->equalTo('123456'))
+			->with(new Horde_Imap_Client_Mailbox('inbox'), '123456')
 			->willReturn($hordeSync);
 		$newMessages = $changedMessages = $vanishedMessageUids = [];
 		$hordeSync->expects($this->any())
