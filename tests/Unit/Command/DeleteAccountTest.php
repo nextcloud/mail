@@ -48,7 +48,7 @@ final class DeleteAccountTest extends TestCase {
 
 		foreach ($actual as $actArg) {
 			$this->assertTrue($actArg->isRequired());
-			$this->assertTrue(in_array($actArg->getName(), $this->args));
+			$this->assertContains($actArg->getName(), $this->args);
 		}
 	}
 }

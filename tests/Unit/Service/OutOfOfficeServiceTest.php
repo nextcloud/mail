@@ -132,6 +132,7 @@ final class OutOfOfficeServiceTest extends TestCase {
 			->with('user', 1, '# new sieve script');
 
 		$state = $this->outOfOfficeService->updateFromSystem($mailAccount, $user);
+		$this->assertInstanceOf(\OCA\Mail\Service\OutOfOffice\OutOfOfficeState::class, $state);
 		self::assertTrue($state->isEnabled());
 		self::assertEquals(new DateTimeImmutable("@$startDate"), $state->getStart());
 		self::assertEquals(new DateTimeImmutable("@$endDate"), $state->getEnd());

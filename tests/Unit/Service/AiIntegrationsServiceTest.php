@@ -133,10 +133,10 @@ final class AiIntegrationsServiceTest extends TestCase {
 
 		$this->taskProcessingManager->expects($this->once())
 			->method('runTask')
-			->will($this->returnCallback(function (TaskProcessingTask $task) {
+			->willReturnCallback(function (TaskProcessingTask $task) {
 				$task->setOutput(['output' => '{"reply1":"reply1","reply2":"reply2"}']);
 				return $task;
-			}));
+			});
 
 		$result = $this->aiIntegrationsService->getSmartReply($account, $mailbox, $message, $currentUserId);
 
@@ -183,10 +183,10 @@ final class AiIntegrationsServiceTest extends TestCase {
 
 		$this->taskProcessingManager->expects($this->once())
 			->method('runTask')
-			->will($this->returnCallback(function (TaskProcessingTask $task) {
+			->willReturnCallback(function (TaskProcessingTask $task) {
 				$task->setOutput(['output' => '```json{"reply1":"reply1","reply2":"reply2"}```']);
 				return $task;
-			}));
+			});
 
 		$firstResult = $this->aiIntegrationsService->getSmartReply($account, $mailbox, $message, $currentUserId);
 		$cachedResult = $this->aiIntegrationsService->getSmartReply($account, $mailbox, $message, $currentUserId);
@@ -227,10 +227,10 @@ final class AiIntegrationsServiceTest extends TestCase {
 
 		$this->taskProcessingManager->expects($this->once())
 			->method('runTask')
-			->will($this->returnCallback(function (TaskProcessingTask $task) use ($output) {
+			->willReturnCallback(function (TaskProcessingTask $task) use ($output) {
 				$task->setOutput(['output' => $output]);
 				return $task;
-			}));
+			});
 
 		$this->expectException(ServiceException::class);
 		$this->expectExceptionMessage('Smart reply output has an unexpected structure');
@@ -250,15 +250,15 @@ final class AiIntegrationsServiceTest extends TestCase {
 			->willReturn([TextToText::ID => $this->taskProcessingProvider]);
 		$imapMessage->method('isOneClickUnsubscribe')->willReturn(true);
 		$replies = $this->aiIntegrationsService->getSmartReply($account, $mailbox, $message, '');
-		$this->assertEquals($replies, []);
+		$this->assertEquals([], $replies);
 		$imapMessage->method('isOneClickUnsubscribe')->willReturn(false);
 		$imapMessage->method('getUnsubscribeUrl')->willReturn('iAmAnUnsubscribeUrl');
 		$replies = $this->aiIntegrationsService->getSmartReply($account, $mailbox, $message, '');
-		$this->assertEquals($replies, []);
+		$this->assertEquals([], $replies);
 		$imapMessage->method('isOneClickUnsubscribe')->willReturn(false);
 		$imapMessage->method('getUnsubscribeUrl')->willReturn(null);
 		$replies = $this->aiIntegrationsService->getSmartReply($account, $mailbox, $message, '');
-		$this->assertEquals($replies, []);
+		$this->assertEquals([], $replies);
 	}
 
 	public function testLlmAvailable(): void {

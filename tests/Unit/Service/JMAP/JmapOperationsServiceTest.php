@@ -477,12 +477,10 @@ final class JmapOperationsServiceTest extends TestCase {
 	public function testEntityListSortsByKeyword(): void {
 		$this->dataStore->expects(self::once())
 			->method('perform')
-			->with(self::callback(static function (array $commands): bool {
-				return $commands[0] instanceof MailQuery
+			->with(self::callback(static fn (array $commands): bool => $commands[0] instanceof MailQuery
 					&& json_decode(json_encode($commands[0]), true)[1]['sort'] === [
 						['property' => 'hasKeyword', 'isAscending' => true, 'keyword' => MailKeyword::Flagged->value],
-					];
-			}))
+					]))
 			->willReturn($this->emptyEntityListResponse());
 
 		$this->service->entityList(null, [], [['attribute' => 'tag', 'direction' => true, 'value' => MailKeyword::Flagged->value]]);
@@ -491,10 +489,8 @@ final class JmapOperationsServiceTest extends TestCase {
 	public function testEntityListIgnoresKeywordSortWithoutValue(): void {
 		$this->dataStore->expects(self::once())
 			->method('perform')
-			->with(self::callback(static function (array $commands): bool {
-				return $commands[0] instanceof MailQuery
-					&& !isset($commands[0]->jsonSerialize()[1]['sort']);
-			}))
+			->with(self::callback(static fn (array $commands): bool => $commands[0] instanceof MailQuery
+					&& !isset($commands[0]->jsonSerialize()[1]['sort'])))
 			->willReturn($this->emptyEntityListResponse());
 
 		$this->service->entityList(null, [], [['attribute' => 'tag', 'direction' => true]]);
@@ -523,11 +519,9 @@ final class JmapOperationsServiceTest extends TestCase {
 		$this->mockQuotaCapability(true);
 		$this->dataStore->expects(self::once())
 			->method('perform')
-			->with(self::callback(static function (array $commands): bool {
-				return count($commands) === 1
+			->with(self::callback(static fn (array $commands): bool => count($commands) === 1
 					&& $commands[0] instanceof QuotaGet
-					&& $commands[0]->getAccount() === 'account1';
-			}))
+					&& $commands[0]->getAccount() === 'account1'))
 			->willReturn(new ResponseBundle([
 				'methodResponses' => [[
 					'Quota/get',

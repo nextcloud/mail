@@ -1165,9 +1165,7 @@ class JmapOperationsService {
 	 * retrieve identity from remote storage
 	 */
 	public function identityFetch(?string $account = null): array {
-		if ($account === null) {
-			$account = $this->account();
-		}
+		$account ??= $this->account();
 		// construct set request
 		$r0 = new MailIdentityGet($account);
 		// transmit request and receive response

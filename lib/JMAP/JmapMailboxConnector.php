@@ -218,9 +218,7 @@ class JmapMailboxConnector implements IMailboxConnector {
 		if ($subscribed) {
 			$attributes[] = '\\subscribed';
 		} else {
-			$attributes = array_filter($attributes, static function ($attribute) {
-				return $attribute !== '\\subscribed';
-			});
+			$attributes = array_filter($attributes, static fn ($attribute) => $attribute !== '\\subscribed');
 		}
 		$mailbox->setAttributes(json_encode(array_values(array_unique($attributes)), JSON_THROW_ON_ERROR));
 		// update remote store

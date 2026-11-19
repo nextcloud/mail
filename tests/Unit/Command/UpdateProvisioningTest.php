@@ -58,14 +58,12 @@ final class UpdateProvisioningTest extends TestCase {
 			->willReturn($this->existingConfig());
 		$this->provisioningManager->expects(self::once())
 			->method('updateProvisioning')
-			->with(self::callback(static function (array $data): bool {
-				return $data['id'] === 3
+			->with(self::callback(static fn (array $data): bool => $data['id'] === 3
 					&& $data['imapHost'] === 'imap.example.net'
 					&& $data['smtpHost'] === 'smtp.example.com'
 					&& $data['emailTemplate'] === '%USERID%@example.com'
 					&& $data['masterPasswordEnabled'] === true
-					&& $data['masterPassword'] === Provisioning::MASTER_PASSWORD_PLACEHOLDER;
-			}));
+					&& $data['masterPassword'] === Provisioning::MASTER_PASSWORD_PLACEHOLDER));
 
 		$status = $this->tester->execute([
 			'id' => '3',
@@ -80,11 +78,9 @@ final class UpdateProvisioningTest extends TestCase {
 			->willReturn($this->existingConfig());
 		$this->provisioningManager->expects(self::once())
 			->method('updateProvisioning')
-			->with(self::callback(static function (array $data): bool {
-				return $data['masterPasswordEnabled'] === false
+			->with(self::callback(static fn (array $data): bool => $data['masterPasswordEnabled'] === false
 					&& $data['masterPassword'] === ''
-					&& $data['masterUser'] === '';
-			}));
+					&& $data['masterUser'] === ''));
 
 		$status = $this->tester->execute([
 			'id' => '3',
@@ -108,7 +104,7 @@ final class UpdateProvisioningTest extends TestCase {
 		]);
 
 		self::assertSame(Command::INVALID, $status);
-		self::assertStringContainsString('--master-user requires the master password to be enabled with --master-password', $this->tester->getDisplay());
+		self::assertStringContainsString('--master-user requires the master password to be enabled with --master-password', (string)$this->tester->getDisplay());
 	}
 
 	public function testUpdatesMasterUserWhenMasterPasswordEnabled(): void {
@@ -116,10 +112,8 @@ final class UpdateProvisioningTest extends TestCase {
 			->willReturn($this->existingConfig());
 		$this->provisioningManager->expects(self::once())
 			->method('updateProvisioning')
-			->with(self::callback(static function (array $data): bool {
-				return $data['masterPasswordEnabled'] === true
-					&& $data['masterUser'] === '*admin';
-			}));
+			->with(self::callback(static fn (array $data): bool => $data['masterPasswordEnabled'] === true
+					&& $data['masterUser'] === '*admin'));
 
 		$status = $this->tester->execute([
 			'id' => '3',
@@ -168,7 +162,7 @@ final class UpdateProvisioningTest extends TestCase {
 		]);
 
 		self::assertSame(Command::INVALID, $status);
-		self::assertStringContainsString('Invalid or missing values: --email-template', $this->tester->getDisplay());
+		self::assertStringContainsString('Invalid or missing values: --email-template', (string)$this->tester->getDisplay());
 	}
 
 	/** @dataProvider invalidIds */
@@ -181,7 +175,7 @@ final class UpdateProvisioningTest extends TestCase {
 		$status = $this->tester->execute(['id' => $id, '--imap-host' => 'imap.example.net']);
 
 		self::assertSame(Command::INVALID, $status);
-		self::assertStringContainsString('positive integer', $this->tester->getDisplay());
+		self::assertStringContainsString('positive integer', (string)$this->tester->getDisplay());
 	}
 
 	public static function invalidIds(): \Iterator {
@@ -207,7 +201,7 @@ final class UpdateProvisioningTest extends TestCase {
 		$status = $this->tester->execute(['id' => '3', '--master-password' => null], ['interactive' => $interactive]);
 
 		self::assertSame(Command::SUCCESS, $status);
-		self::assertStringNotContainsString('new password', $this->tester->getDisplay());
+		self::assertStringNotContainsString('new password', (string)$this->tester->getDisplay());
 	}
 
 	public static function passwordInputModes(): \Iterator {
@@ -236,7 +230,7 @@ final class UpdateProvisioningTest extends TestCase {
 		$status = $this->tester->execute(['id' => '3', $option => $port]);
 
 		self::assertSame(Command::INVALID, $status);
-		self::assertStringContainsString($option . ' must be an integer between 1 and 65535', $this->tester->getDisplay());
+		self::assertStringContainsString($option . ' must be an integer between 1 and 65535', (string)$this->tester->getDisplay());
 	}
 
 	public static function invalidPorts(): \Iterator {
@@ -254,7 +248,7 @@ final class UpdateProvisioningTest extends TestCase {
 		$status = $this->tester->execute(['id' => '3', '--sieve-host' => 'sieve.example.com']);
 
 		self::assertSame(Command::INVALID, $status);
-		self::assertStringContainsString('--sieve-port is required', $this->tester->getDisplay());
+		self::assertStringContainsString('--sieve-port is required', (string)$this->tester->getDisplay());
 	}
 
 	public function testKeepsExistingPortWhenEnablingSieve(): void {
@@ -283,7 +277,7 @@ final class UpdateProvisioningTest extends TestCase {
 		$status = $this->tester->execute(['id' => '3', '--sieve-host' => 'sieve.example.com']);
 
 		self::assertSame(Command::INVALID, $status);
-		self::assertStringContainsString('--sieve-user is required', $this->tester->getDisplay());
+		self::assertStringContainsString('--sieve-user is required', (string)$this->tester->getDisplay());
 	}
 
 	public function testCannotClearUserWhileSieveIsEnabled(): void {
@@ -299,7 +293,7 @@ final class UpdateProvisioningTest extends TestCase {
 		$status = $this->tester->execute(['id' => '3', '--sieve-user' => '']);
 
 		self::assertSame(Command::INVALID, $status);
-		self::assertStringContainsString('--sieve-user is required', $this->tester->getDisplay());
+		self::assertStringContainsString('--sieve-user is required', (string)$this->tester->getDisplay());
 	}
 
 	public function testCannotClearPortWhileSieveIsEnabled(): void {
@@ -315,7 +309,7 @@ final class UpdateProvisioningTest extends TestCase {
 		$status = $this->tester->execute(['id' => '3', '--sieve-port' => '']);
 
 		self::assertSame(Command::INVALID, $status);
-		self::assertStringContainsString('--sieve-port is required', $this->tester->getDisplay());
+		self::assertStringContainsString('--sieve-port is required', (string)$this->tester->getDisplay());
 	}
 
 	public function testCanDisableSieveAndClearItsPort(): void {

@@ -330,7 +330,7 @@ final class SmimeServiceTest extends TestCase {
 
 		$this->crypto
 			->method('decrypt')
-			->will($this->returnArgument(0));
+			->willReturnArgument(0);
 		$this->tempManager
 			->method('getTemporaryFile')
 			->willReturnCallback(fn () => $this->createTempFile());
@@ -482,7 +482,7 @@ final class SmimeServiceTest extends TestCase {
 
 		$this->crypto
 			->method('decrypt')
-			->will($this->returnArgument(0));
+			->willReturnArgument(0);
 		$this->tempManager
 			->method('getTemporaryFile')
 			->willReturnCallback(fn () => $this->createTempFile());
@@ -513,7 +513,7 @@ final class SmimeServiceTest extends TestCase {
 
 		$this->crypto
 			->method('decrypt')
-			->will($this->returnArgument(0));
+			->willReturnArgument(0);
 		$this->tempManager
 			->method('getTemporaryFile')
 			->willReturnCallback(fn () => $this->createTempFile());

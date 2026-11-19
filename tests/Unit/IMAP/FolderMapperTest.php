@@ -41,12 +41,12 @@ final class FolderMapperTest extends TestCase {
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$client->expects($this->once())
 			->method('listMailboxes')
-			->with($this->equalTo('*'), $this->equalTo(Horde_Imap_Client::MBOX_ALL_SUBSCRIBED),
-				$this->equalTo([
+			->with('*', Horde_Imap_Client::MBOX_ALL_SUBSCRIBED,
+				[
 					'delimiter' => true,
 					'attributes' => true,
 					'special_use' => true,
-				]))
+				])
 			->willReturn([]);
 
 		$folders = $this->mapper->getFolders($account, $client);
@@ -60,12 +60,12 @@ final class FolderMapperTest extends TestCase {
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$client->expects($this->once())
 			->method('listMailboxes')
-			->with($this->equalTo('*'), $this->equalTo(Horde_Imap_Client::MBOX_ALL_SUBSCRIBED),
-				$this->equalTo([
+			->with('*', Horde_Imap_Client::MBOX_ALL_SUBSCRIBED,
+				[
 					'delimiter' => true,
 					'attributes' => true,
 					'special_use' => true,
-				]))
+				])
 			->willReturn([
 				[
 					'mailbox' => new Horde_Imap_Client_Mailbox('INBOX'),
@@ -95,12 +95,12 @@ final class FolderMapperTest extends TestCase {
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$client->expects($this->once())
 			->method('listMailboxes')
-			->with($this->equalTo('*'), $this->equalTo(Horde_Imap_Client::MBOX_ALL_SUBSCRIBED),
-				$this->equalTo([
+			->with('*', Horde_Imap_Client::MBOX_ALL_SUBSCRIBED,
+				[
 					'delimiter' => true,
 					'attributes' => true,
 					'special_use' => true,
-				]))
+				])
 			->willReturn([
 				[
 					'mailbox' => new Horde_Imap_Client_Mailbox('INBOX'),
@@ -131,16 +131,16 @@ final class FolderMapperTest extends TestCase {
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$client->expects($this->once())
 			->method('createMailbox')
-			->with($this->equalTo('new'));
+			->with('new');
 		$client->expects($this->once())
 			->method('listMailboxes')
-			->with($this->equalTo('new'), $this->equalTo(Horde_Imap_Client::MBOX_ALL_SUBSCRIBED),
-				$this->equalTo([
+			->with('new', Horde_Imap_Client::MBOX_ALL_SUBSCRIBED,
+				[
 					'delimiter' => true,
 					'attributes' => true,
 					'special_use' => true,
 					'status' => Horde_Imap_Client::STATUS_ALL,
-				]))
+				])
 			->willReturn([
 				[
 					'mailbox' => new Horde_Imap_Client_Mailbox('new'),
@@ -293,7 +293,7 @@ final class FolderMapperTest extends TestCase {
 			]);
 		$folders[0]->expects($this->once())
 			->method('addSpecialUse')
-			->with($this->equalTo('sent'));
+			->with('sent');
 		$folders[0]->expects($this->once())
 			->method('getSpecialUse')
 			->willReturn(['sent']);
@@ -322,7 +322,7 @@ final class FolderMapperTest extends TestCase {
 			->willReturn('Sent');
 		$folders[0]->expects($this->once())
 			->method('addSpecialUse')
-			->with($this->equalTo('sent'));
+			->with('sent');
 
 		$this->mapper->detectFolderSpecialUse($folders);
 	}

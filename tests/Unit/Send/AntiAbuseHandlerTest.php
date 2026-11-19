@@ -59,7 +59,7 @@ final class AntiAbuseHandlerTest extends TestCase {
 		$this->sendHandler->expects(self::once())
 			->method('process');
 
-		$this->handler->process($account, $localMessage, $client);
+		$this->handler->process($account, $localMessage);
 	}
 
 	public function testProcessNoUser(): void {
@@ -81,7 +81,7 @@ final class AntiAbuseHandlerTest extends TestCase {
 		$this->sendHandler->expects(self::never())
 			->method('process');
 
-		$this->handler->process($account, $localMessage, $client);
+		$this->handler->process($account, $localMessage);
 	}
 
 	public function testProcessAlreadyProcessed(): void {
@@ -102,6 +102,6 @@ final class AntiAbuseHandlerTest extends TestCase {
 		$this->sendHandler->expects(self::once())
 			->method('process');
 
-		$this->handler->process($account, $localMessage, $client);
+		$this->handler->process($account, $localMessage);
 	}
 }

@@ -85,7 +85,7 @@ final class AddressCollectorTest extends TestCase {
 		$this->mapper->expects($this->once())
 			->method('findMatching')
 			->with($this->userId, $term)
-			->will($this->returnValue($mapperResult));
+			->willReturn($mapperResult);
 
 		$result = $this->collector->searchAddress($this->userId, $term);
 

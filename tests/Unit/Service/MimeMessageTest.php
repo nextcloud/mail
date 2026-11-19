@@ -221,7 +221,7 @@ final class MimeMessageTest extends TestCase {
 
 		$inlineImageContentId = 'cid:' . $inlineImagePart->getContentId();
 		$htmlBody = $alternativeSubParts[1]->getContents();
-		$this->assertStringContainsString($inlineImageContentId, $htmlBody);
+		$this->assertStringContainsString($inlineImageContentId, (string)$htmlBody);
 
 		$attachmentPart1 = $subParts[1];
 		$this->assertEquals('image/png', $attachmentPart1->getType());
@@ -328,8 +328,8 @@ final class MimeMessageTest extends TestCase {
 		$this->assertEquals('text/html', $alternativeSubParts[1]->getType());
 
 		$htmlBody = $alternativeSubParts[1]->getContents();
-		$this->assertStringContainsString('cid:test-inline-image@example.com', $htmlBody);
-		$this->assertStringNotContainsString('data-cid', $htmlBody);
+		$this->assertStringContainsString('cid:test-inline-image@example.com', (string)$htmlBody);
+		$this->assertStringNotContainsString('data-cid', (string)$htmlBody);
 	}
 
 	public function testMultipartAlternativeGreek(): void {
@@ -368,11 +368,11 @@ final class MimeMessageTest extends TestCase {
 και συνείδηση, και οφείλουν να
 συμπεριφέρονται μεταξύ τους με πνεύμα
 αδελφοσύνης.',
-			$subParts[0]->getContents(),
+			(string)$subParts[0]->getContents(),
 		);
 		$this->assertStringContainsString(
 			'Όλοι οι άνθρωποι γεννιούνται ελεύθεροι και ίσοι στην αξιοπρέπεια και τα δικαιώματα. Είναι προικισμένοι με λογική και συνείδηση, και οφείλουν να συμπεριφέρονται μεταξύ τους με πνεύμα αδελφοσύνης.',
-			$subParts[1]->getContents()
+			(string)$subParts[1]->getContents()
 		);
 	}
 
@@ -409,8 +409,8 @@ final class MimeMessageTest extends TestCase {
 		$this->assertEquals('text/html', $alternativeSubParts[1]->getType());
 
 		$htmlBody = $alternativeSubParts[1]->getContents();
-		$this->assertStringContainsString('data:text/html;base64,', $htmlBody);
-		$this->assertStringNotContainsString('data-cid', $htmlBody);
+		$this->assertStringContainsString('data:text/html;base64,', (string)$htmlBody);
+		$this->assertStringNotContainsString('data-cid', (string)$htmlBody);
 	}
 
 	private function createAttachmentPart(string $name, string $content, string $mime, string $disposition): Horde_Mime_Part {

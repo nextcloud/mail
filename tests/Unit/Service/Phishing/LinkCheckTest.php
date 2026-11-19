@@ -82,7 +82,7 @@ final class LinkCheckTest extends TestCase {
 			'linkText' => 'Öffne iplookup.flagfox.net ↗',
 			'href' => 'https://iplookup.flagfox.net/',
 		]], $actualJson['additionalData']);
-		$this->assertTrue(is_string(json_encode($actualJson, JSON_THROW_ON_ERROR)));
+		$this->assertIsString(json_encode($actualJson, JSON_THROW_ON_ERROR));
 	}
 
 	public function testAddressCasing(): void {

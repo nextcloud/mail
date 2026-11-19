@@ -73,7 +73,7 @@ final class UnlockMailboxTest extends TestCase {
 		$exitCode = $tester->execute(['mailbox-id' => '10']);
 
 		$this->assertSame(Command::SUCCESS, $exitCode);
-		$this->assertStringContainsString('Mailbox not locked', $tester->getDisplay());
+		$this->assertStringContainsString('Mailbox not locked', (string)$tester->getDisplay());
 	}
 
 	public function testRefusesToUnlockAnActivelyLockedMailbox(): void {

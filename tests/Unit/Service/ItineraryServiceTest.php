@@ -116,7 +116,7 @@ final class ItineraryServiceTest extends TestCase {
 		$itinerary = $this->service->extract($account, $mailbox, $message);
 
 		$this->assertEquals([], $itinerary->jsonSerialize());
-		$this->assertNotNull($this->service->getCached($account, $mailbox, 13));
+		$this->assertInstanceOf(\Nextcloud\KItinerary\Itinerary::class, $this->service->getCached($account, $mailbox, 13));
 	}
 
 	public function testExtractFromBody(): void {
@@ -264,7 +264,8 @@ final class ItineraryServiceTest extends TestCase {
 			$mailbox,
 			1
 		);
+		$this->assertInstanceOf(\Nextcloud\KItinerary\Itinerary::class, $result);
 
-		$this->assertEquals(1, $result->count());
+		$this->assertCount(1, $result);
 	}
 }

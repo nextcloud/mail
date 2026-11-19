@@ -48,9 +48,7 @@ final class SmimeMigrationServiceTest extends TestCase {
 
 		$this->serviceMock->getParameter('crypto')
 			->method('encrypt')
-			->willReturnCallback(function (string $value) {
-				return $value . '_encrypted';
-			});
+			->willReturnCallback(fn (string $value) => $value . '_encrypted');
 
 		$this->serviceMock->getParameter('crypto')
 			->method('decrypt')

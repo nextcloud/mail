@@ -1,0 +1,88 @@
+# SPDX-FileCopyrightText: 2026 Nextcloud GmbH and Nextcloud contributors
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+name: Lint rector
+
+on: pull_request
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lint-rector-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest-low
+
+    outputs:
+      relevant: ${{ steps.filter.outputs.relevant }}
+
+    name: changes
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Detect relevant changes
+        id: filter
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          if git diff --name-only "origin/$BASE_REF...HEAD" | grep -qE '\.php$|^composer\.(json|lock)$|^vendor-bin/rector/|^rector\.php$|^\.github/workflows/'; then
+            echo "relevant=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "relevant=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  rector:
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.relevant == 'true'
+
+    name: rector
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Get php version
+        id: versions
+        uses: nextcloud-libraries/nextcloud-version-matrix@71959de73c244b11ecbf4503b87c41d65b0f64ae # v1.3.4
+
+      - name: Set up php${{ steps.versions.outputs.php-min }}
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: ${{ steps.versions.outputs.php-min }}
+          extensions: bz2, ctype, curl, dom, fileinfo, gd, iconv, intl, json, libxml, mbstring, openssl, pcntl, posix, session, simplexml, xmlreader, xmlwriter, zip, zlib, sqlite, pdo_sqlite
+          coverage: none
+          ini-file: development
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install composer dependencies
+        uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda # 4.0.0
+
+      - name: Run rector
+        run: composer run rector -- --no-progress-bar
+
+      - name: Fail on leftover changes
+        run: git diff --exit-code -- lib tests ':!lib/Vendor' || ( echo 'Please run `composer run rector` and commit the result' && exit 1 )
+
+  summary:
+    runs-on: ubuntu-latest-low
+    needs: [changes, rector]
+
+    if: always()
+
+    name: rector-summary
+
+    steps:
+      - name: Summary status
+        run: if ${{ needs.changes.result != 'success' || (needs.rector.result != 'success' && needs.rector.result != 'skipped') }}; then exit 1; fi

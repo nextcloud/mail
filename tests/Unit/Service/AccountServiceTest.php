@@ -119,7 +119,7 @@ final class AccountServiceTest extends TestCase {
 		$this->mapper->expects($this->once())
 			->method('find')
 			->with($this->user, $accountId)
-			->will($this->returnValue($this->account1));
+			->willReturn($this->account1);
 
 		$expected = new Account($this->account1);
 		$actual = $this->accountService->find($this->user, $accountId);
@@ -133,7 +133,7 @@ final class AccountServiceTest extends TestCase {
 		$this->mapper->expects($this->once())
 			->method('findById')
 			->with($accountId)
-			->will($this->returnValue($this->account1));
+			->willReturn($this->account1);
 
 		$expected = new Account($this->account1);
 		$actual = $this->accountService->findById($accountId);
@@ -147,7 +147,7 @@ final class AccountServiceTest extends TestCase {
 		$this->mapper->expects($this->once())
 			->method('find')
 			->with($this->user, $accountId)
-			->will($this->returnValue($this->account1));
+			->willReturn($this->account1);
 		$this->mapper->expects($this->once())
 			->method('delete')
 			->with($this->account1);
@@ -161,7 +161,7 @@ final class AccountServiceTest extends TestCase {
 		$this->mapper->expects($this->once())
 			->method('findById')
 			->with($accountId)
-			->will($this->returnValue($this->account1));
+			->willReturn($this->account1);
 		$this->mapper->expects($this->once())
 			->method('delete')
 			->with($this->account1);
@@ -177,7 +177,7 @@ final class AccountServiceTest extends TestCase {
 		$this->mapper->expects($this->once())
 			->method('save')
 			->with($mailAccount)
-			->will($this->returnArgument(0));
+			->willReturnArgument(0);
 
 		$this->time->expects(self::once())
 			->method('getTime')

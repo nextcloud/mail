@@ -58,9 +58,9 @@ final class TransformStyleURLsTest extends TestCase {
 
 		$result = $this->transform->transform($attr, $config, $context);
 
-		$this->assertStringContainsString('/apps/mail/img/blocked-image.png', $result['style']);
-		$this->assertStringNotContainsString('http://example.com/image.jpg', $result['style']);
-		$this->assertTrue(isset($result['data-original-style']));
+		$this->assertStringContainsString('/apps/mail/img/blocked-image.png', (string)$result['style']);
+		$this->assertStringNotContainsString('http://example.com/image.jpg', (string)$result['style']);
+		$this->assertArrayHasKey('data-original-style', $result);
 		$this->assertSame('background-image: url(http://example.com/image.jpg);', $result['data-original-style']);
 	}
 
@@ -76,8 +76,8 @@ final class TransformStyleURLsTest extends TestCase {
 
 		$result = $this->transform->transform($attr, $config, $context);
 
-		$this->assertStringContainsString('/apps/mail/img/blocked-image.png', $result['style']);
-		$this->assertStringNotContainsString('https://example.com/image.jpg', $result['style']);
+		$this->assertStringContainsString('/apps/mail/img/blocked-image.png', (string)$result['style']);
+		$this->assertStringNotContainsString('https://example.com/image.jpg', (string)$result['style']);
 	}
 
 	public function testMultiplePropertiesSomeWithUrl(): void {
@@ -92,10 +92,10 @@ final class TransformStyleURLsTest extends TestCase {
 
 		$result = $this->transform->transform($attr, $config, $context);
 
-		$this->assertStringContainsString('color: blue', $result['style']);
-		$this->assertStringContainsString('margin: 5px', $result['style']);
-		$this->assertStringContainsString('/apps/mail/img/blocked-image.png', $result['style']);
-		$this->assertStringNotContainsString('http://example.com/bg.png', $result['style']);
+		$this->assertStringContainsString('color: blue', (string)$result['style']);
+		$this->assertStringContainsString('margin: 5px', (string)$result['style']);
+		$this->assertStringContainsString('/apps/mail/img/blocked-image.png', (string)$result['style']);
+		$this->assertStringNotContainsString('http://example.com/bg.png', (string)$result['style']);
 	}
 
 	public function testDataOriginalStylePreservation(): void {
@@ -110,8 +110,8 @@ final class TransformStyleURLsTest extends TestCase {
 
 		$result = $this->transform->transform($attr, $config, $context);
 
-		$this->assertTrue(isset($result['data-original-style']));
-		$this->assertStringContainsString('http://example.com/img.png', $result['data-original-style']);
+		$this->assertArrayHasKey('data-original-style', $result);
+		$this->assertStringContainsString('http://example.com/img.png', (string)$result['data-original-style']);
 		$this->assertSame('background: url(http://example.com/img.png) no-repeat;', $result['data-original-style']);
 	}
 
@@ -127,7 +127,7 @@ final class TransformStyleURLsTest extends TestCase {
 
 		$result = $this->transform->transform($attr, $config, $context);
 
-		$this->assertStringContainsString('/apps/mail/img/blocked-image.png', $result['style']);
+		$this->assertStringContainsString('/apps/mail/img/blocked-image.png', (string)$result['style']);
 	}
 
 	public function testUrlWithDoubleQuotes(): void {
@@ -142,7 +142,7 @@ final class TransformStyleURLsTest extends TestCase {
 
 		$result = $this->transform->transform($attr, $config, $context);
 
-		$this->assertStringContainsString('/apps/mail/img/blocked-image.png', $result['style']);
+		$this->assertStringContainsString('/apps/mail/img/blocked-image.png', (string)$result['style']);
 	}
 
 	public function testUrlWithoutQuotes(): void {
@@ -157,7 +157,7 @@ final class TransformStyleURLsTest extends TestCase {
 
 		$result = $this->transform->transform($attr, $config, $context);
 
-		$this->assertStringContainsString('/apps/mail/img/blocked-image.png', $result['style']);
+		$this->assertStringContainsString('/apps/mail/img/blocked-image.png', (string)$result['style']);
 	}
 
 	public function testRelativeUrlsNotReplaced(): void {
@@ -192,8 +192,8 @@ final class TransformStyleURLsTest extends TestCase {
 
 		$result = $this->transform->transform($attr, $config, $context);
 
-		$this->assertStringContainsString('/apps/mail/img/blocked-image.png', $result['style']);
-		$this->assertStringNotContainsString('http://example.com/1.png', $result['style']);
+		$this->assertStringContainsString('/apps/mail/img/blocked-image.png', (string)$result['style']);
+		$this->assertStringNotContainsString('http://example.com/1.png', (string)$result['style']);
 	}
 
 	public function testExistingOriginalStyleBackupKept(): void {

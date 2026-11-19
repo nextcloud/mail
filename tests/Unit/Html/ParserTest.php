@@ -58,6 +58,6 @@ final class ParserTest extends TestCase {
 		$doc = Parser::parseToDomDocument($html);
 
 		$this->assertInstanceOf(DOMDocument::class, $doc);
-		$this->assertNotNull($doc->documentElement);
+		$this->assertInstanceOf(\DOMElement::class, $doc->documentElement);
 	}
 }

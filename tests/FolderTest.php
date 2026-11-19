@@ -35,7 +35,7 @@ final class FolderTest extends TestCase {
 		$this->mockFolder();
 		$this->mailbox->expects($this->once())
 			->method('__get')
-			->with($this->equalTo('utf8'))
+			->with('utf8')
 			->willReturn('Sent');
 
 		$this->assertSame('Sent', $this->folder->getMailbox());

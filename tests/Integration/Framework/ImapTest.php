@@ -39,15 +39,13 @@ trait ImapTest {
 	 * @return Horde_Imap_Client_Socket
 	 */
 	private function getTestClient(): Horde_Imap_Client_Socket {
-		if ($this->client === null) {
-			$this->client = new Horde_Imap_Client_Socket([
-				'username' => 'user@domain.tld',
-				'password' => 'mypassword',
-				'hostspec' => '127.0.0.1',
-				'port' => 993,
-				'secure' => 'ssl',
-			]);
-		}
+		$this->client ??= new Horde_Imap_Client_Socket([
+			'username' => 'user@domain.tld',
+			'password' => 'mypassword',
+			'hostspec' => '127.0.0.1',
+			'port' => 993,
+			'secure' => 'ssl',
+		]);
 
 		return $this->client;
 	}
@@ -81,9 +79,7 @@ trait ImapTest {
 	 * @return array<string>
 	 */
 	public function getMailboxes(?Horde_Imap_Client_Socket $client = null) {
-		if ($client === null) {
-			$client = $this->getTestClient();
-		}
+		$client ??= $this->getTestClient();
 
 		return $this->listMailboxes($client);
 	}

@@ -78,11 +78,11 @@ final class MailProviderTest extends TestCase {
 		]));
 		// define account services find
 		$this->accountService->expects($this->any())->method('findByUserId')
-			->will(
-				$this->returnValueMap([
+			->willReturnMap(
+				[
 					['user0', []],
 					['user1', [100 => $mailAccount]]
-				])
+				]
 			);
 		// construct mail provider
 		$mailProvider = new MailProvider($this->containerInterface, $this->accountService, $this->logger, $this->l10n);
@@ -119,11 +119,11 @@ final class MailProviderTest extends TestCase {
 		);
 		// define account services find
 		$this->accountService->expects($this->any())->method('findByUserId')
-			->will(
-				$this->returnValueMap([
+			->willReturnMap(
+				[
 					['user0', []],
 					['user1', [$mailAccount]]
-				])
+				]
 			);
 		// construct mail provider
 		$mailProvider = new MailProvider($this->containerInterface, $this->accountService, $this->logger, $this->l10n);
@@ -201,11 +201,11 @@ final class MailProviderTest extends TestCase {
 		);
 		// define account services find
 		$this->accountService->expects($this->any())->method('findByUserIdAndAddress')
-			->will(
-				$this->returnValueMap([
+			->willReturnMap(
+				[
 					['user0', 'user0@testing.com', []],
 					['user1', 'user1@testing.com', [$mailAccount]]
-				])
+				]
 			);
 		// construct mail provider
 		$mailProvider = new MailProvider($this->containerInterface, $this->accountService, $this->logger, $this->l10n);

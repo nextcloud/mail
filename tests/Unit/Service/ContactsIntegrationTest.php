@@ -50,7 +50,7 @@ final class ContactsIntegrationTest extends TestCase {
 	public function testDisabledContactsManager(): void {
 		$this->contactsManager->expects($this->once())
 			->method('isEnabled')
-			->will($this->returnValue(false));
+			->willReturn(false);
 		$this->contactsManager->expects($this->never())
 			->method('search');
 
@@ -172,10 +172,10 @@ final class ContactsIntegrationTest extends TestCase {
 		$this->userManager->expects($this->once())
 			->method('get')
 			->with('auser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 		$this->groupManager->expects($this->once())
 			->method('getUserGroupIds')
-			->will($this->returnValue(['agroup']));
+			->willReturn(['agroup']);
 		$this->groupManager->expects(self::exactly(2))
 			->method('isInGroup')
 			->withConsecutive(['jf', 'agroup'], ['jd', 'agroup'])
@@ -227,10 +227,10 @@ final class ContactsIntegrationTest extends TestCase {
 		$this->userManager->expects($this->once())
 			->method('get')
 			->with('auser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 		$this->groupManager->expects($this->once())
 			->method('getUserGroupIds')
-			->will($this->returnValue(['agroup']));
+			->willReturn(['agroup']);
 		$this->groupManager->expects(self::exactly(1))
 			->method('isInGroup')
 			->withConsecutive(['jf', 'agroup'])
@@ -268,10 +268,10 @@ final class ContactsIntegrationTest extends TestCase {
 		$this->userManager->expects($this->once())
 			->method('get')
 			->with('auser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 		$this->groupManager->expects($this->once())
 			->method('getUserGroupIds')
-			->will($this->returnValue(['agroup']));
+			->willReturn(['agroup']);
 		$this->groupManager->expects(self::exactly(1))
 			->method('isInGroup')
 			->withConsecutive(['jf', 'agroup'])
@@ -309,10 +309,10 @@ final class ContactsIntegrationTest extends TestCase {
 		$this->userManager->expects($this->once())
 			->method('get')
 			->with('auser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 		$this->groupManager->expects($this->once())
 			->method('getUserGroupIds')
-			->will($this->returnValue(['agroup']));
+			->willReturn(['agroup']);
 		$this->groupManager->expects(self::exactly(1))
 			->method('isInGroup')
 			->withConsecutive(['jf', 'agroup'])
@@ -352,10 +352,10 @@ final class ContactsIntegrationTest extends TestCase {
 		$this->userManager->expects($this->once())
 			->method('get')
 			->with('auser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 		$this->groupManager->expects($this->once())
 			->method('getUserGroupIds')
-			->will($this->returnValue(['agroup']));
+			->willReturn(['agroup']);
 		$this->groupManager->expects(self::exactly(1))
 			->method('isInGroup')
 			->withConsecutive(['jf', 'agroup'])
@@ -387,7 +387,7 @@ final class ContactsIntegrationTest extends TestCase {
 				$shareeEnumerationFullMatchEmail ? 'yes' : ' no');
 		$this->contactsManager->expects($this->once())
 			->method('isEnabled')
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->contactsManager->expects($this->once())
 			->method('search')
 			->with(
@@ -398,7 +398,7 @@ final class ContactsIntegrationTest extends TestCase {
 					'fullmatch' => $shareeEnumerationFullMatch,
 					'limit' => 20,
 				])
-			->will($this->returnValue($searchResult));
+			->willReturn($searchResult);
 	}
 
 	public function testGetContactsWithName(): void {

@@ -669,14 +669,12 @@ class MessagesController extends Controller {
 			$imapMessageCacheKey = "message_$id";
 
 			$html = $cacheInstance->get($imapMessageCacheKey);
-			if ($html === null) {
-				$html = $this->mailManager->getImapMessage(
-					$account,
-					$mailbox,
-					$message,
-					true
-				)->getHtmlBody($id);
-			}
+			$html ??= $this->mailManager->getImapMessage(
+				$account,
+				$mailbox,
+				$message,
+				true
+			)->getHtmlBody($id);
 
 			$htmlResponse = $plain
 				? HtmlResponse::plain($html)
@@ -747,11 +745,9 @@ class MessagesController extends Controller {
 
 		// Body party and embedded messages do not have a name
 		$attachmentName = $attachment->getName();
-		if ($attachmentName === null) {
-			$attachmentName = $this->l10n->t('Embedded message %s', [
-				$attachmentId,
-			]) . '.eml';
-		}
+		$attachmentName ??= $this->l10n->t('Embedded message %s', [
+			$attachmentId,
+		]) . '.eml';
 
 		$content = $attachment->getContent();
 		$response = new AttachmentDownloadResponse(

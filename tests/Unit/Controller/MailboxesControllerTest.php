@@ -88,11 +88,11 @@ final class MailboxesControllerTest extends TestCase {
 		$accountId = 28;
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->with($this->userId, $accountId)
 			->willReturn($account);
 		$this->mailManager->expects($this->once())
 			->method('getMailboxes')
-			->with($this->equalTo($account))
+			->with($account)
 			->willReturn([
 				$folder
 			]);
@@ -129,11 +129,11 @@ final class MailboxesControllerTest extends TestCase {
 		$accountId = 28;
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->with($this->userId, $accountId)
 			->willReturn($account);
 		$this->mailManager->expects($this->once())
 			->method('createMailbox')
-			->with($this->equalTo($account), $this->equalTo('new'))
+			->with($account, 'new')
 			->willReturn($mailbox);
 		$this->delegationService->expects($this->once())
 			->method('logDelegatedAction')

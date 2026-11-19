@@ -128,7 +128,7 @@ final class AddressCollectionListenerTest extends TestCase {
 			->method('addAddresses')
 			->with(
 				$account->getUserId(),
-				$this->equalTo($addresses)
+				$addresses
 			);
 		$this->logger->expects($this->never())->method($this->anything());
 

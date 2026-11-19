@@ -46,7 +46,7 @@ final class AutoCompleteControllerTest extends TestCase {
 			->method('findMatches')
 			->with(
 				'testuser',
-				$this->equalTo($term)
+				$term
 			)
 			->willReturn($result);
 

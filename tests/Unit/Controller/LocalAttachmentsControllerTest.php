@@ -71,7 +71,7 @@ final class LocalAttachmentsControllerTest extends TestCase {
 			->method('resolveAccountUserId');
 		$this->service->expects($this->once())
 			->method('addFile')
-			->with($this->equalTo($this->userId), $this->equalTo($uploadedFile))
+			->with($this->userId, $uploadedFile)
 			->willReturn($attachment);
 
 		$actual = $this->controller->create();
@@ -95,7 +95,7 @@ final class LocalAttachmentsControllerTest extends TestCase {
 			->willReturn('owner');
 		$this->service->expects($this->once())
 			->method('addFile')
-			->with($this->equalTo('owner'), $this->equalTo($uploadedFile))
+			->with('owner', $uploadedFile)
 			->willReturn($attachment);
 
 		$actual = $this->controller->create(42);

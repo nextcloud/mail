@@ -674,7 +674,7 @@ final class MessageMapperTest extends TestCase {
 			->willReturn($searchResult);
 
 		$result = $this->mapper->getFlagged($imapClient, $mailbox, $flag);
-		$this->assertEquals($result, [1]);
+		$this->assertEquals([1], $result);
 	}
 
 	public function testGetFlaggedNoMatches(): void {
@@ -697,7 +697,7 @@ final class MessageMapperTest extends TestCase {
 			->willReturn($searchResult);
 
 		$result = $this->mapper->getFlagged($imapClient, $mailbox, $flag);
-		$this->assertEquals($result, []);
+		$this->assertEquals([], $result);
 	}
 
 	public function testGetFlaggedSearchResultUnexpectedStructure(): void {
@@ -714,7 +714,7 @@ final class MessageMapperTest extends TestCase {
 			->willReturn($searchResult);
 
 		$result = $this->mapper->getFlagged($imapClient, $mailbox, $flag);
-		$this->assertEquals($result, []);
+		$this->assertEquals([], $result);
 	}
 
 	/**

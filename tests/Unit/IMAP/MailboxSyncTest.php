@@ -144,7 +144,7 @@ final class MailboxSyncTest extends TestCase {
 		$this->dispatcher
 			->expects($this->once())
 			->method('dispatchTyped')
-			->with($this->equalTo(new MailboxesSynchronizedEvent($account)));
+			->with(new MailboxesSynchronizedEvent($account));
 
 		$this->sync->sync($account, new NullLogger());
 	}

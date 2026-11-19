@@ -306,6 +306,6 @@ final class ImapMessageFetcherIntegrationTest extends TestCase {
 
 		$this->assertCount(1, $message->scheduling);
 		$this->assertSame('REQUEST', $message->scheduling[0]['method']);
-		$this->assertStringContainsString('METHOD:REQUEST', $message->scheduling[0]['contents']);
+		$this->assertStringContainsString('METHOD:REQUEST', (string)$message->scheduling[0]['contents']);
 	}
 }

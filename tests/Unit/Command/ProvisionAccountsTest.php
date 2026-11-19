@@ -35,6 +35,6 @@ final class ProvisionAccountsTest extends TestCase {
 		$status = $this->tester->execute([]);
 
 		self::assertSame(Command::SUCCESS, $status);
-		self::assertStringContainsString('42', $this->tester->getDisplay());
+		self::assertStringContainsString('42', (string)$this->tester->getDisplay());
 	}
 }

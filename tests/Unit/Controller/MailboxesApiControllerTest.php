@@ -86,11 +86,11 @@ final class MailboxesApiControllerTest extends TestCase {
 		$accountId = 42;
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo(self::USER_ID), $this->equalTo($accountId))
+			->with(self::USER_ID, $accountId)
 			->willReturn($account);
 		$this->mailManager->expects($this->once())
 			->method('getMailboxes')
-			->with($this->equalTo($account))
+			->with($account)
 			->willReturn([
 				$folder
 			]);
