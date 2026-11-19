@@ -8,11 +8,16 @@ import { createPinia } from 'pinia'
 import AccountForm from '../../../components/AccountForm.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 import { queryIspdb, queryMx, testConnectivity } from '../../../service/AutoConfigService.js'
+import { discover, DiscoveryError } from '../../../service/DiscoveryService.ts'
 import useMainStore from '../../../store/mainStore.js'
 
 const pinia = createPinia()
 
 vi.mock('../../../service/AutoConfigService.js')
+vi.mock('../../../service/DiscoveryService.ts', async (importOriginal) => ({
+	...await importOriginal(),
+	discover: vi.fn(),
+}))
 
 describe('AccountForm', () => {
 	let save
@@ -225,5 +230,179 @@ describe('AccountForm with JMAP', () => {
 			authMethod: 'password',
 			classificationEnabled: false,
 		})
+	})
+})
+
+describe('AccountForm auto discovery', () => {
+	let store
+
+	const endpoint = (host, port) => ({ host, port, security: 'ssl', username: 'tom@tom.turbo' })
+	const jmapEvent = {
+		type: 'candidate',
+		protocol: 'jmap',
+		source: 'well-known',
+		config: { jmap: { endpoint: endpoint('jmap.tom.turbo', 443), path: '/.well-known/jmap', authentication: ['password'] } },
+	}
+	const imapEvent = {
+		type: 'candidate',
+		protocol: 'imap',
+		source: 'autoconfig',
+		config: { imap: { incoming: endpoint('imap.tom.turbo', 993), outgoing: endpoint('smtp.tom.turbo', 465) } },
+	}
+	const connectionFailure = (service, error = 'AUTHENTICATION_WRONG_PASSWORD') => ({ data: { error, service } })
+
+	const mount = () => {
+		const view = shallowMount(AccountForm, {
+			props: {
+				displayName: 'Tom Turbo',
+				email: 'tom@tom.turbo',
+			},
+			global: {
+				mixins: [Nextcloud],
+				plugins: [pinia],
+			},
+		})
+		view.vm.autoConfig.password = 'secret'
+		return view
+	}
+
+	const discovers = (...events) => discover.mockImplementation(async (email, onEvent) => {
+		for (const event of events) {
+			onEvent(event)
+		}
+	})
+
+	beforeEach(() => {
+		store = useMainStore()
+		store.googleOauthUrl = undefined
+		store.microsoftOauthUrl = undefined
+		discover.mockReset()
+	})
+
+	it('creates the account with the only usable candidate without asking', async () => {
+		const account = { id: 7, emailAddress: 'tom@tom.turbo' }
+		discovers(jmapEvent)
+		vi.spyOn(store, 'startAccountSetup').mockResolvedValue(account)
+		vi.spyOn(store, 'finishAccountSetup').mockResolvedValue(account)
+		const view = mount()
+
+		await view.vm.onSubmit()
+
+		expect(discover).toHaveBeenCalledWith('tom@tom.turbo', expect.any(Function), expect.any(AbortSignal))
+		expect(view.vm.discoveryChoices).toEqual([])
+		expect(store.startAccountSetup).toHaveBeenCalledTimes(1)
+		expect(store.startAccountSetup.mock.calls[0][0]).toMatchObject({ protocol: 'jmap', imapHost: 'jmap.tom.turbo', imapSslMode: 'yes', imapPassword: 'secret' })
+		expect(view.emitted('accountCreated')).toEqual([[account]])
+		expect(view.vm.discoveryProgress).toBe(null)
+	})
+
+	it('lets the user choose when both protocols are found', async () => {
+		const account = { id: 7, emailAddress: 'tom@tom.turbo' }
+		discovers(imapEvent, jmapEvent)
+		vi.spyOn(store, 'startAccountSetup').mockResolvedValue(account)
+		vi.spyOn(store, 'finishAccountSetup').mockResolvedValue(account)
+		const view = mount()
+
+		const submit = view.vm.onSubmit()
+		await vi.waitFor(() => expect(view.vm.discoveryChoices).toHaveLength(2))
+		await view.vm.$nextTick()
+
+		const progress = view.findComponent({ name: 'AccountFormDiscoveryProgress' })
+		expect(progress.props('choices')).toEqual(['jmap', 'imap'])
+		expect(store.startAccountSetup).not.toHaveBeenCalled()
+
+		progress.vm.$emit('choose', 'imap')
+		await submit
+
+		expect(store.startAccountSetup).toHaveBeenCalledTimes(1)
+		expect(store.startAccountSetup.mock.calls[0][0]).toMatchObject({ imapHost: 'imap.tom.turbo', smtpHost: 'smtp.tom.turbo', imapPassword: 'secret', smtpPassword: 'secret' })
+		expect(store.startAccountSetup.mock.calls[0][0].protocol).toBeUndefined()
+		expect(view.emitted('accountCreated')).toEqual([[account]])
+		expect(view.vm.discoveryChoices).toEqual([])
+	})
+
+	it('hides the inputs and shows the progress while discovering', async () => {
+		let failSetup
+		discovers(jmapEvent)
+		vi.spyOn(store, 'startAccountSetup').mockReturnValueOnce(new Promise((resolve, reject) => {
+			failSetup = reject
+		}))
+		const view = mount()
+
+		const submit = view.vm.onSubmit()
+		await vi.waitFor(() => expect(store.startAccountSetup).toHaveBeenCalled())
+		await view.vm.$nextTick()
+
+		expect(view.find('.account-form__fields').attributes('style')).toContain('display: none')
+		const progress = view.findComponent({ name: 'AccountFormDiscoveryProgress' })
+		expect(progress.props('email')).toBe('tom@tom.turbo')
+		expect(progress.props('message')).toBe('Testing authentication')
+
+		failSetup(connectionFailure('JMAP'))
+		await submit
+		await view.vm.$nextTick()
+
+		expect(view.find('.account-form__fields').attributes('style')).not.toContain('display: none')
+		expect(view.findComponent({ name: 'AccountFormDiscoveryProgress' }).exists()).toBe(false)
+	})
+
+	it('switches to manual mode with the candidate when it fails to connect', async () => {
+		discovers(jmapEvent)
+		vi.spyOn(store, 'startAccountSetup').mockRejectedValueOnce(connectionFailure('JMAP'))
+		const view = mount()
+
+		await view.vm.onSubmit()
+
+		expect(store.startAccountSetup).toHaveBeenCalledTimes(1)
+		expect(view.vm.mode).toBe('manual')
+		expect(view.vm.protocol).toBe('jmap')
+		expect(view.vm.jmapConfig.host).toBe('jmap.tom.turbo')
+		expect(view.vm.feedback).toBe('JMAP username or password is wrong')
+	})
+
+	it('stays in auto mode after an unrelated error', async () => {
+		discovers(imapEvent)
+		vi.spyOn(store, 'startAccountSetup').mockRejectedValueOnce(new Error('server error'))
+		const view = mount()
+
+		await view.vm.onSubmit()
+
+		expect(store.startAccountSetup).toHaveBeenCalledTimes(1)
+		expect(view.vm.mode).toBe('auto')
+		expect(view.vm.feedback).toBe('There was an error while setting up your account')
+	})
+
+	it('reports when nothing was discovered', async () => {
+		discovers({ type: 'complete', protocol: 'jmap', found: false }, { type: 'complete', protocol: 'imap', found: false })
+		vi.spyOn(store, 'startAccountSetup')
+		const view = mount()
+
+		await view.vm.onSubmit()
+
+		expect(store.startAccountSetup).not.toHaveBeenCalled()
+		expect(view.vm.mode).toBe('auto')
+		expect(view.vm.feedback).toBe('Configuration discovery failed. Please use the manual settings')
+	})
+
+	it('fills the manual form with a candidate that needs more input', async () => {
+		discovers({ ...imapEvent, config: { imap: { incoming: endpoint('imap.tom.turbo', 993), outgoing: null } } })
+		vi.spyOn(store, 'startAccountSetup')
+		const view = mount()
+
+		await view.vm.onSubmit()
+
+		expect(store.startAccountSetup).not.toHaveBeenCalled()
+		expect(view.vm.mode).toBe('manual')
+		expect(view.vm.imapConfig.imapHost).toBe('imap.tom.turbo')
+		expect(view.vm.imapConfig.smtpHost).toBe('')
+	})
+
+	it('reports a rate limited discovery', async () => {
+		discover.mockRejectedValue(new DiscoveryError('Discovery failed with status 429', 429))
+		const view = mount()
+
+		await view.vm.onSubmit()
+
+		expect(view.vm.feedback).toBe('Configuration discovery temporarily not available. Please try again later.')
 	})
 })
