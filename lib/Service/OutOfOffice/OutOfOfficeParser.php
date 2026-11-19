@@ -11,9 +11,12 @@ namespace OCA\Mail\Service\OutOfOffice;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use Horde_Mime_Part;
 use JsonException;
 use OCA\Mail\Exception\OutOfOfficeParserException;
 use OCA\Mail\Sieve\SieveUtils;
+use OCA\Mail\Service\DataUri\DataUriParser;
+use OCA\Mail\Service\MimeMessage;
 
 /**
  * Parses and builds out-of-office states from/to sieve scripts.
@@ -141,8 +144,23 @@ class OutOfOfficeParser {
 			$vacation[] = ":addresses [$joinedRecipients]";
 		}
 
-		$escapedMessage = SieveUtils::escapeString($state->getMessage());
-		$vacation[] = "\"$escapedMessage\"";
+		if ($state->isMessageHtml() === true) {
+			$mimeMessage = new MimeMessage(new DataUriParser);
+			$mimeParts = $mimeMessage->build(null, $state->getMessage(), false, []);
+
+			$mimeString = $mimeParts->toString(
+				['headers' => true, 'encode' => Horde_Mime_Part::ENCODE_7BIT]
+			);
+			$mimeString = str_replace("\n", "\r\n", $mimeString);
+			$mimeString = SieveUtils::escapeString($mimeString);
+
+			$vacationMessage = ":mime \"$mimeString\"";
+		} else {
+			$escapedMessage = SieveUtils::escapeString($state->getMessage());
+			$vacationMessage = "\"$escapedMessage\"";
+		}
+
+		$vacation[] = $vacationMessage;
 		$vacationCommand = implode(' ', $vacation);
 
 		$subjectSection = [
