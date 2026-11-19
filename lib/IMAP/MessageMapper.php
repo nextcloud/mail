@@ -819,13 +819,12 @@ class MessageMapper {
 
 		$contentType = $mimeHeaders['content-type'];
 		if ($contentType instanceof Horde_Mime_Headers_ContentParam_ContentType) {
-			if (str_contains($contentType->value_single, 'text/calendar')) {
-				$mimePart->setType('text/calendar');
-				$mimePart->setContentTypeParameter('name', $contentType['name'] ?? 'calendar.ics');
-			} else {
-				$mimePart->setType($contentType->value_single);
-				/** @psalm-suppress PossiblyNullArgument */
-				$mimePart->setContentTypeParameter('name', $contentType['name'] ?? null);
+			$mimePart->setType($contentType->value_single);
+			foreach ($contentType->params as $label => $data) {
+				$mimePart->setContentTypeParameter($label, $data);
+			}
+			if ($mimePart->getType() === 'text/calendar' && !isset($contentType['name'])) {
+				$mimePart->setContentTypeParameter('name', 'calendar.ics');
 			}
 		}
 
