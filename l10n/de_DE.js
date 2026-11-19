@@ -545,6 +545,7 @@ OC.L10N.register(
     "Import into calendar" : "In Kalender importieren",
     "Download attachment" : "Anhang herunterladen",
     "Save to Files" : "Unter Dateien speichern",
+    "None of your calendars can store events" : "Keiner Ihrer Kalender kann Ereignisse speichern",
     "Choose a folder to store the attachments in" : "Ordner zum Speichern des Anhangs auswählen",
     "Attachments saved to Files" : "Anhänge wurden in Dateien gespeichert",
     "Error while saving attachments" : "Fehler beim Speichern der Anhänge",

@@ -545,6 +545,7 @@ OC.L10N.register(
     "Import into calendar" : "匯入到日曆",
     "Download attachment" : "下載附件",
     "Save to Files" : "儲存至雲端檔案",
+    "None of your calendars can store events" : "您的所有行事曆均無法儲存活動",
     "Choose a folder to store the attachments in" : "選擇一個資料夾來存放附件",
     "Attachments saved to Files" : "附件已儲存至「檔案」",
     "Error while saving attachments" : "儲存附件時發生錯誤",
