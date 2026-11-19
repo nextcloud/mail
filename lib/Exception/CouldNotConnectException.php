@@ -10,6 +10,10 @@ declare(strict_types=1);
 namespace OCA\Mail\Exception;
 
 use Horde_Imap_Client_Exception;
+use JmapClient\Exceptions\RequestException;
+use JmapClient\Exceptions\TransportException;
+use OCA\Mail\JMAP\Exception\JmapTransportException;
+use OCP\AppFramework\Http;
 use Throwable;
 
 class CouldNotConnectException extends ServiceException {
@@ -59,6 +63,16 @@ class CouldNotConnectException extends ServiceException {
 	}
 
 	public function getReason(): string {
+		if ($this->previous instanceof RequestException) {
+			return match ($this->previous->getCode()) {
+				Http::STATUS_UNAUTHORIZED => 'AUTHENTICATION_WRONG_PASSWORD',
+				Http::STATUS_FORBIDDEN => 'AUTHENTICATION_DENIED',
+				default => 'OTHER',
+			};
+		}
+		if ($this->previous instanceof TransportException || $this->previous instanceof JmapTransportException) {
+			return 'CONNECTION_ERROR';
+		}
 		if (!($this->previous instanceof Horde_Imap_Client_Exception)) {
 			return 'OTHER';
 		}

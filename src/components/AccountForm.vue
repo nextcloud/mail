@@ -5,6 +5,7 @@
 <template>
 	<form id="account-form" @submit.prevent="onSubmit">
 		<NcRadioGroup
+			v-if="account?.protocol !== 'jmap'"
 			v-model="mode"
 			:label="t('mail', 'Mail server configuration mode')"
 			hideLabel>
@@ -68,162 +69,28 @@
 				{{ t('mail', 'Please enter an email of the format name@example.com') }}
 			</p>
 
-			<h4>{{ t('mail', 'IMAP Settings') }}</h4>
-			<NcInputField
-				id="man-imap-host"
-				v-model="manualConfig.imapHost"
-				:label="t('mail', 'IMAP Host')"
-				type="text"
-				:placeholder="t('mail', 'IMAP Host')"
-				:disabled="loading"
-				required
-				@change="syncCredentials" />
-			<h4 class="account-form__heading--required">
-				{{ t('mail', 'IMAP Security') }}
-			</h4>
-			<div class="flex-row">
-				<NcCheckboxRadioSwitch
-					id="man-imap-sec-none"
-					:buttonVariant="true"
-					:modelValue="manualConfig.imapSslMode"
-					type="radio"
-					name="man-imap-sec"
-					:disabled="loading"
-					value="none"
-					buttonVariantGrouped="horizontal"
-					@update:modelValue="onImapSslModeChange">
-					{{ t('mail', 'None') }}
-				</NcCheckboxRadioSwitch>
-				<NcCheckboxRadioSwitch
-					id="man-imap-sec-ssl"
-					:buttonVariant="true"
-					:modelValue="manualConfig.imapSslMode"
-					type="radio"
-					name="man-imap-sec"
-					:disabled="loading"
-					value="ssl"
-					buttonVariantGrouped="horizontal"
-					@update:modelValue="onImapSslModeChange">
-					{{ t('mail', 'SSL/TLS') }}
-				</NcCheckboxRadioSwitch>
-				<NcCheckboxRadioSwitch
-					id="man-imap-sec-tls"
-					:buttonVariant="true"
-					:modelValue="manualConfig.imapSslMode"
-					type="radio"
-					name="man-imap-sec"
-					:disabled="loading"
-					value="tls"
-					buttonVariantGrouped="horizontal"
-					@update:modelValue="onImapSslModeChange">
-					{{ t('mail', 'STARTTLS') }}
-				</NcCheckboxRadioSwitch>
-			</div>
-			<NcInputField
-				id="man-imap-port"
-				v-model="manualConfig.imapPort"
-				:label="t('mail', 'IMAP Port')"
-				type="number"
-				:placeholder="t('mail', 'IMAP Port')"
-				:disabled="loading"
-				required
-				@change="clearFeedback" />
-			<NcInputField
-				id="man-imap-user"
-				v-model="manualConfig.imapUser"
-				:label="t('mail', 'IMAP User')"
-				type="text"
-				:placeholder="t('mail', 'IMAP User')"
-				:disabled="loading"
-				required
-				@change="syncCredentials" />
-			<NcPasswordField
-				v-if="!useOauth"
-				id="man-imap-password"
-				v-model="manualConfig.imapPassword"
-				:label="optionalPasswordPlaceholder(t('mail', 'IMAP Password'))"
-				:disabled="loading"
-				required
-				@change="syncCredentials" />
+			<NcRadioGroup
+				v-if="isSetup"
+				v-model="protocol"
+				:label="t('mail', 'Mail server protocol')"
+				hideLabel>
+				<NcRadioGroupButton :label="t('mail', 'IMAP/SMTP')" value="imap" :disabled="loading" />
+				<NcRadioGroupButton :label="t('mail', 'JMAP')" value="jmap" :disabled="loading" />
+			</NcRadioGroup>
 
-			<h4>{{ t('mail', 'SMTP Settings') }}</h4>
-			<NcInputField
-				id="man-smtp-host"
-				v-model="manualConfig.smtpHost"
-				:label="t('mail', 'SMTP Host')"
-				type="text"
-				name="smtp-host"
-				:placeholder="t('mail', 'SMTP Host')"
+			<AccountFormJmap
+				v-if="isJmap"
+				v-model="jmapConfig"
 				:disabled="loading"
-				required
-				@change="unsyncCredentials" />
-			<h4 class="account-form__heading--required">
-				{{ t('mail', 'SMTP Security') }}
-			</h4>
-			<div class="flex-row">
-				<NcCheckboxRadioSwitch
-					id="man-imap-sec-none"
-					:buttonVariant="true"
-					:modelValue="manualConfig.smtpSslMode"
-					type="radio"
-					name="man-smtp-sec"
-					:disabled="loading"
-					value="none"
-					buttonVariantGrouped="horizontal"
-					@update:modelValue="onSmtpSslModeChange">
-					{{ t('mail', 'None') }}
-				</NcCheckboxRadioSwitch>
-				<NcCheckboxRadioSwitch
-					id="man-imap-sec-ssl"
-					:buttonVariant="true"
-					:modelValue="manualConfig.smtpSslMode"
-					type="radio"
-					name="man-smtp-sec"
-					:disabled="loading"
-					value="ssl"
-					buttonVariantGrouped="horizontal"
-					@update:modelValue="onSmtpSslModeChange">
-					{{ t('mail', 'SSL/TLS') }}
-				</NcCheckboxRadioSwitch>
-				<NcCheckboxRadioSwitch
-					id="man-imap-sec-tls"
-					:buttonVariant="true"
-					:modelValue="manualConfig.smtpSslMode"
-					type="radio"
-					name="man-smtp-sec"
-					:disabled="loading"
-					value="tls"
-					buttonVariantGrouped="horizontal"
-					@update:modelValue="onSmtpSslModeChange">
-					{{ t('mail', 'STARTTLS') }}
-				</NcCheckboxRadioSwitch>
-			</div>
-			<NcInputField
-				id="man-smtp-port"
-				v-model="manualConfig.smtpPort"
-				:label="t('mail', 'SMTP Port')"
-				type="number"
-				:placeholder="t('mail', 'SMTP Port')"
-				:disabled="loading"
-				required
+				:passwordOptional="!isSetup"
 				@change="clearFeedback" />
-			<NcInputField
-				id="man-smtp-user"
-				v-model="manualConfig.smtpUser"
-				:label="t('mail', 'SMTP User')"
-				type="text"
-				:placeholder="t('mail', 'SMTP User')"
+			<AccountFormImap
+				v-else
+				v-model="imapConfig"
 				:disabled="loading"
-				required
-				@change="unsyncCredentials" />
-			<NcPasswordField
-				v-if="!useOauth"
-				id="man-smtp-password"
-				v-model="manualConfig.smtpPassword"
-				:label="optionalPasswordPlaceholder(t('mail', 'SMTP Password'))"
-				:disabled="loading"
-				required
-				@change="unsyncCredentials" />
+				:passwordOptional="!isSetup"
+				:hidePasswords="useOauth"
+				@change="clearFeedback" />
 			<NcCheckboxRadioSwitch
 				v-if="isSetup"
 				id="auto-classification-enabled"
@@ -289,8 +156,11 @@ import NcPasswordField from '@nextcloud/vue/components/NcPasswordField'
 import NcRadioGroup from '@nextcloud/vue/components/NcRadioGroup'
 import NcRadioGroupButton from '@nextcloud/vue/components/NcRadioGroupButton'
 import IconCheck from 'vue-material-design-icons/Check.vue'
+import AccountFormImap from './AccountFormImap.vue'
+import AccountFormJmap from './AccountFormJmap.vue'
 import { CONSENT_ABORTED, getUserConsent } from '../integration/oauth.js'
 import logger from '../logger.js'
+import { PROTOCOL_IMAP, PROTOCOL_JMAP } from '../models/accountServerConfig.ts'
 import {
 	queryIspdb,
 	queryMx,
@@ -304,6 +174,8 @@ import { findProviderForEmail, loadOidcProviders, openOidcConsent } from '../uti
 export default {
 	name: 'AccountForm',
 	components: {
+		AccountFormImap,
+		AccountFormJmap,
 		NcPasswordField,
 		NcInputField,
 		NcCheckboxRadioSwitch,
@@ -343,10 +215,13 @@ export default {
 			}
 		}
 
+		const editsJmap = this.account?.protocol === PROTOCOL_JMAP
+
 		return {
 			loading: false,
 			loadingMessage: undefined,
 			mode: this.account !== undefined ? 'manual' : 'auto',
+			protocol: editsJmap ? PROTOCOL_JMAP : PROTOCOL_IMAP,
 			accountName: this.displayName,
 			emailAddress: this.email,
 			classificationEnabled: fromAccountOr('classificationEnabled', loadState('mail', 'importance_classification_default', true)),
@@ -354,7 +229,7 @@ export default {
 				password: '',
 			},
 
-			manualConfig: {
+			imapConfig: {
 				imapHost: fromAccountOr('imapHost', ''),
 				imapPort: fromAccountOr('imapPort', 993),
 				imapSslMode: fromAccountOr('imapSslMode', 'ssl'),
@@ -366,6 +241,15 @@ export default {
 				smtpUser: fromAccountOr('smtpUser', ''),
 				smtpPassword: '',
 				syncSmtpCredentials: true,
+			},
+
+			jmapConfig: {
+				host: editsJmap ? this.account.imapHost : '',
+				port: editsJmap ? this.account.imapPort : 443,
+				sslMode: editsJmap ? this.account.imapSslMode : 'yes',
+				user: editsJmap ? this.account.imapUser : '',
+				password: '',
+				path: (editsJmap ? this.account.path : null) ?? '',
 			},
 
 			feedback: null,
@@ -420,25 +304,35 @@ export default {
 				return this.loading
 			}
 
+			if (this.isJmap) {
+				return !this.emailAddress || !isValidEmail(this.emailAddress)
+					|| !this.jmapConfig.host || !this.jmapConfig.port || !this.jmapConfig.user
+					|| (this.isSetup && !this.jmapConfig.password)
+			}
+
 			let requiresPassword = false
 			if (this.isSetup) {
-				requiresPassword = !this.useOauth && (!this.manualConfig.imapPassword || !this.manualConfig.smtpPassword)
+				requiresPassword = !this.useOauth && (!this.imapConfig.imapPassword || !this.imapConfig.smtpPassword)
 			}
 
 			return !this.emailAddress || !isValidEmail(this.emailAddress)
-				|| !this.manualConfig.imapHost || !this.manualConfig.imapPort || !this.manualConfig.imapUser
-				|| !this.manualConfig.smtpHost || !this.manualConfig.smtpPort || !this.manualConfig.smtpUser
+				|| !this.imapConfig.imapHost || !this.imapConfig.imapPort || !this.imapConfig.imapUser
+				|| !this.imapConfig.smtpHost || !this.imapConfig.smtpPort || !this.imapConfig.smtpUser
 				|| requiresPassword
 		},
 
+		isJmap() {
+			return this.mode === 'manual' && this.protocol === PROTOCOL_JMAP
+		},
+
 		isGoogleAccount() {
-			return this.manualConfig.imapHost === 'imap.gmail.com'
-				|| this.manualConfig.smtpHost === 'smtp.gmail.com'
+			return !this.isJmap && (this.imapConfig.imapHost === 'imap.gmail.com'
+				|| this.imapConfig.smtpHost === 'smtp.gmail.com')
 		},
 
 		isMicrosoftAccount() {
-			return this.manualConfig.imapHost === 'outlook.office365.com'
-				|| this.manualConfig.smtpHost === 'outlook.office365.com'
+			return !this.isJmap && (this.imapConfig.imapHost === 'outlook.office365.com'
+				|| this.imapConfig.smtpHost === 'outlook.office365.com')
 		},
 
 		/**
@@ -451,7 +345,7 @@ export default {
 		},
 
 		isOidcAccount() {
-			return !this.isGoogleAccount && !this.isMicrosoftAccount && !!this.oidcProvider
+			return !this.isJmap && !this.isGoogleAccount && !this.isMicrosoftAccount && !!this.oidcProvider
 		},
 
 		hasPasswordAlternatives() {
@@ -504,19 +398,27 @@ export default {
 				}
 
 				// IMAP
-				if (this.manualConfig.imapUser === '') {
-					this.manualConfig.imapUser = this.emailAddress
+				if (this.imapConfig.imapUser === '') {
+					this.imapConfig.imapUser = this.emailAddress
 				}
-				if (this.manualConfig.imapPassword === '') {
-					this.manualConfig.imapPassword = this.autoConfig.password
+				if (this.imapConfig.imapPassword === '') {
+					this.imapConfig.imapPassword = this.autoConfig.password
 				}
 
 				// SMTP
-				if (this.manualConfig.smtpUser === '') {
-					this.manualConfig.smtpUser = this.emailAddress
+				if (this.imapConfig.smtpUser === '') {
+					this.imapConfig.smtpUser = this.emailAddress
 				}
-				if (this.manualConfig.smtpPassword === '') {
-					this.manualConfig.smtpPassword = this.autoConfig.password
+				if (this.imapConfig.smtpPassword === '') {
+					this.imapConfig.smtpPassword = this.autoConfig.password
+				}
+
+				// JMAP
+				if (this.jmapConfig.user === '') {
+					this.jmapConfig.user = this.emailAddress
+				}
+				if (this.jmapConfig.password === '') {
+					this.jmapConfig.password = this.autoConfig.password
 				}
 			},
 		},
@@ -526,14 +428,14 @@ export default {
 		isValidEmail,
 
 		applyOidcProvider(provider) {
-			this.manualConfig.imapHost = provider.imapHost
-			this.manualConfig.imapPort = provider.imapPort
-			this.manualConfig.imapSslMode = provider.imapSslMode
-			this.manualConfig.imapUser = this.emailAddress
-			this.manualConfig.smtpHost = provider.smtpHost
-			this.manualConfig.smtpPort = provider.smtpPort
-			this.manualConfig.smtpSslMode = provider.smtpSslMode
-			this.manualConfig.smtpUser = this.emailAddress
+			this.imapConfig.imapHost = provider.imapHost
+			this.imapConfig.imapPort = provider.imapPort
+			this.imapConfig.imapSslMode = provider.imapSslMode
+			this.imapConfig.imapUser = this.emailAddress
+			this.imapConfig.smtpHost = provider.smtpHost
+			this.imapConfig.smtpPort = provider.smtpPort
+			this.imapConfig.smtpSslMode = provider.smtpSslMode
+			this.imapConfig.smtpUser = this.emailAddress
 		},
 
 		async requestOauthConsent(account, isUpdate) {
@@ -561,34 +463,6 @@ export default {
 			}
 		},
 
-		onImapSslModeChange(value) {
-			this.clearFeedback()
-			this.manualConfig.imapSslMode = value
-			switch (this.manualConfig.imapSslMode) {
-				case 'none':
-				case 'tls':
-					this.manualConfig.imapPort = 143
-					break
-				case 'ssl':
-					this.manualConfig.imapPort = 993
-					break
-			}
-		},
-
-		onSmtpSslModeChange(value) {
-			this.clearFeedback()
-			this.manualConfig.smtpSslMode = value
-			switch (this.manualConfig.smtpSslMode) {
-				case 'none':
-				case 'tls':
-					this.manualConfig.smtpPort = 587
-					break
-				case 'ssl':
-					this.manualConfig.smtpPort = 465
-					break
-			}
-		},
-
 		clearFeedback() {
 			this.feedback = null
 		},
@@ -601,38 +475,23 @@ export default {
 			}
 		},
 
-		syncCredentials() {
-			if (this.manualConfig.syncSmtpCredentials) {
-				this.manualConfig.smtpHost = this.manualConfig.imapHost
-				this.manualConfig.smtpUser = this.manualConfig.imapUser
-				this.manualConfig.smtpPassword = this.manualConfig.imapPassword
-			}
-
-			this.clearFeedback()
-		},
-
-		unsyncCredentials() {
-			this.manualConfig.syncSmtpCredentials = false
-			this.clearFeedback()
-		},
-
 		applyAutoConfig(config) {
 			if (!config) {
 				return false
 			}
 			if (config?.imapConfig) {
-				this.manualConfig.imapUser = config.imapConfig.username
-				this.manualConfig.imapHost = config.imapConfig.host
-				this.manualConfig.imapPort = config.imapConfig.port
-				this.manualConfig.imapSslMode = config.imapConfig.security
-				this.manualConfig.imapPassword = this.autoConfig.password
+				this.imapConfig.imapUser = config.imapConfig.username
+				this.imapConfig.imapHost = config.imapConfig.host
+				this.imapConfig.imapPort = config.imapConfig.port
+				this.imapConfig.imapSslMode = config.imapConfig.security
+				this.imapConfig.imapPassword = this.autoConfig.password
 			}
 			if (config?.smtpConfig) {
-				this.manualConfig.smtpUser = config.smtpConfig.username
-				this.manualConfig.smtpHost = config.smtpConfig.host
-				this.manualConfig.smtpPort = config.smtpConfig.port
-				this.manualConfig.smtpSslMode = config.smtpConfig.security
-				this.manualConfig.smtpPassword = this.autoConfig.password
+				this.imapConfig.smtpUser = config.smtpConfig.username
+				this.imapConfig.smtpHost = config.smtpConfig.host
+				this.imapConfig.smtpPort = config.smtpConfig.port
+				this.imapConfig.smtpSslMode = config.smtpConfig.security
+				this.imapConfig.smtpPassword = this.autoConfig.password
 			}
 			return true
 		},
@@ -727,30 +586,53 @@ export default {
 						this.feedback = t('mail', 'Password required')
 						return
 					}
-					if (this.mode === 'manual' && (this.manualConfig.imapPassword === '' || this.manualConfig.smtpPassword === '')) {
+					if (this.isJmap && this.jmapConfig.password === '') {
+						this.feedback = t('mail', 'Password required')
+						return
+					}
+					if (this.mode === 'manual' && !this.isJmap && (this.imapConfig.imapPassword === '' || this.imapConfig.smtpPassword === '')) {
 						this.feedback = t('mail', 'Password required')
 						return
 					}
 				}
 				this.loadingMessage = t('mail', 'Testing authentication')
-				const data = {
-					...this.manualConfig,
-					accountName: this.accountName,
-					emailAddress: this.emailAddress,
-					imapHost: this.manualConfig.imapHost.trim(),
-					smtpHost: this.manualConfig.smtpHost.trim(),
-					authMethod: this.useOauth ? 'xoauth2' : 'password',
-					classificationEnabled: this.classificationEnabled,
-				}
-				if (this.useOauth) {
-					delete data.imapPassword
-					delete data.smtpPassword
-				} else if (!this.isSetup) {
-					if (data.imapPassword === '') {
-						delete data.imapPassword
+				let data
+				if (this.isJmap) {
+					data = {
+						protocol: PROTOCOL_JMAP,
+						accountName: this.accountName,
+						emailAddress: this.emailAddress,
+						imapHost: this.jmapConfig.host.trim(),
+						imapPort: this.jmapConfig.port,
+						imapSslMode: this.jmapConfig.sslMode,
+						imapUser: this.jmapConfig.user,
+						path: this.jmapConfig.path.trim() || null,
+						authMethod: 'password',
+						classificationEnabled: this.classificationEnabled,
 					}
-					if (data.smtpPassword === '') {
+					if (this.jmapConfig.password !== '') {
+						data.imapPassword = this.jmapConfig.password
+					}
+				} else {
+					data = {
+						...this.imapConfig,
+						accountName: this.accountName,
+						emailAddress: this.emailAddress,
+						imapHost: this.imapConfig.imapHost.trim(),
+						smtpHost: this.imapConfig.smtpHost.trim(),
+						authMethod: this.useOauth ? 'xoauth2' : 'password',
+						classificationEnabled: this.classificationEnabled,
+					}
+					if (this.useOauth) {
+						delete data.imapPassword
 						delete data.smtpPassword
+					} else if (!this.isSetup) {
+						if (data.imapPassword === '') {
+							delete data.imapPassword
+						}
+						if (data.smtpPassword === '') {
+							delete data.smtpPassword
+						}
 					}
 				}
 				if (!this.account) {
@@ -799,6 +681,8 @@ export default {
 						this.feedback = t('mail', 'IMAP server is not reachable')
 					} else if (error.data.service === 'SMTP') {
 						this.feedback = t('mail', 'SMTP server is not reachable')
+					} else if (error.data.service === 'JMAP') {
+						this.feedback = t('mail', 'JMAP server is not reachable')
 					}
 				} else if (error.data?.error === 'ACCOUNT_EXISTS') {
 					this.feedback = t('mail', 'Account already exists')
@@ -807,12 +691,16 @@ export default {
 						this.feedback = t('mail', 'IMAP username or password is wrong')
 					} else if (error.data.service === 'SMTP') {
 						this.feedback = t('mail', 'SMTP username or password is wrong')
+					} else if (error.data.service === 'JMAP') {
+						this.feedback = t('mail', 'JMAP username or password is wrong')
 					}
 				} else if (error.data?.error === 'AUTHENTICATION_DENIED') {
 					if (error.data.service === 'IMAP') {
 						this.feedback = t('mail', 'IMAP server denied authentication')
 					} else if (error.data.service === 'SMTP') {
 						this.feedback = t('mail', 'SMTP server denied authentication')
+					} else if (error.data.service === 'JMAP') {
+						this.feedback = t('mail', 'JMAP server denied authentication')
 					}
 				} else if (error.data?.error === 'AUTHENTICATION') {
 					if (error.data.service === 'IMAP') {
@@ -825,6 +713,8 @@ export default {
 						this.feedback = t('mail', 'IMAP connection failed')
 					} else if (error.data?.service === 'SMTP') {
 						this.feedback = t('mail', 'SMTP connection failed')
+					} else if (error.data?.service === 'JMAP') {
+						this.feedback = t('mail', 'JMAP connection failed')
 					} else if (error.message === CONSENT_ABORTED) {
 						this.feedback = t('mail', 'Authorization pop-up closed')
 					} else if (error.response?.status === 429) {
@@ -847,20 +737,7 @@ export default {
 	margin: calc(var(--default-grid-baseline) * 3) 0;
 }
 
-h4 {
-	font-size: 17px;
-	text-align: start;
-}
-
-.flex-row {
-	display: flex;
-}
-
 .account-form {
-	&__heading--required:after {
-		content:" *";
-	}
-
 	&__submit-buttons {
 		display: flex;
 		justify-content: center;
