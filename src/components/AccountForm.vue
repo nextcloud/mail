@@ -171,11 +171,6 @@ import AccountFormJmap from './AccountFormJmap.vue'
 import { CONSENT_ABORTED, getUserConsent } from '../integration/oauth.js'
 import logger from '../logger.js'
 import { PROTOCOL_IMAP, PROTOCOL_JMAP } from '../models/accountServerConfig.ts'
-import {
-	queryIspdb,
-	queryMx,
-	testConnectivity,
-} from '../service/AutoConfigService.js'
 import { discover, DiscoveryError } from '../service/DiscoveryService.ts'
 import { generateOauthState } from '../service/OauthStateService.js'
 import useMainStore from '../store/mainStore.js'
@@ -508,95 +503,6 @@ export default {
 				return fallback
 			} else {
 				return t('mail', 'Leave blank to not change password')
-			}
-		},
-
-		applyAutoConfig(config) {
-			if (!config) {
-				return false
-			}
-			if (config?.imapConfig) {
-				this.imapConfig.imapUser = config.imapConfig.username
-				this.imapConfig.imapHost = config.imapConfig.host
-				this.imapConfig.imapPort = config.imapConfig.port
-				this.imapConfig.imapSslMode = config.imapConfig.security
-				this.imapConfig.imapPassword = this.autoConfig.password
-			}
-			if (config?.smtpConfig) {
-				this.imapConfig.smtpUser = config.smtpConfig.username
-				this.imapConfig.smtpHost = config.smtpConfig.host
-				this.imapConfig.smtpPort = config.smtpConfig.port
-				this.imapConfig.smtpSslMode = config.smtpConfig.security
-				this.imapConfig.smtpPassword = this.autoConfig.password
-			}
-			return true
-		},
-
-		async detectConfig() {
-			this.loadingMessage = t('mail', 'Looking up configuration')
-			const config = await queryIspdb(this.emailAddress.split('@').pop(), this.emailAddress)
-			logger.debug('fetched auto config', { config })
-			// Apply settings to manual mode before submitting so the user
-			// can make modifications if the config fails
-			if (this.applyAutoConfig(config)) {
-				logger.debug('ISP DB config applied')
-				return true
-			} else {
-				const mxHosts = await queryMx(this.emailAddress)
-				logger.debug('MX hosts fetched', { mxHosts })
-
-				if (mxHosts.length) {
-					// Try the TLD of the MX
-					// FIXME: breaks with eTLDs like .co.uk
-					const tldMx = mxHosts[0].split('.').splice(-2).join('.').toLowerCase()
-					const mxConfig = await queryIspdb(
-						tldMx,
-						this.emailAddress,
-					)
-					logger.debug('fetched MX auto config', { mxConfig })
-					if (mxConfig && this.applyAutoConfig(mxConfig)) {
-						return true
-					}
-				}
-
-				// Test the highest priority MX for open IMAP/SMTP ports
-				this.loadingMessage = t('mail', 'Checking mail host connectivity')
-				const imapAndSmtpHosts = mxHosts.slice(0, 1).flatMap((host) => {
-					return [993, 143, 465, 587].map((port) => ({
-						host,
-						port,
-					}))
-				})
-				const results = await Promise.all(imapAndSmtpHosts.map(async ({ host, port }) => {
-					return {
-						host,
-						port,
-						canConnect: await testConnectivity(host, port),
-					}
-				}))
-				const firstImapHost = results.filter(({ canConnect, port }) => canConnect && port === 993)[0]
-				const firstSmtpHost = results.filter(({ canConnect, port }) => canConnect && [465, 587].includes(port))[0]
-				logger.debug('MX connectivity tested', { firstImapHost, firstSmtpHost })
-				if (firstImapHost && firstSmtpHost) {
-					this.applyAutoConfig({
-						imapConfig: {
-							username: this.emailAddress, // Assumption
-							host: firstImapHost.host,
-							port: firstImapHost.port,
-							security: firstImapHost.port === 993 ? 'ssl' : 'tls',
-						},
-						smtpConfig: {
-							username: this.emailAddress, // Assumption
-							host: firstSmtpHost.host,
-							port: firstSmtpHost.port,
-							security: firstSmtpHost.port === 465 ? 'ssl' : 'tls',
-						},
-					})
-					return true
-				} else {
-					this.feedback = t('mail', 'Configuration discovery failed. Please use the manual settings')
-				}
-				return false
 			}
 		},
 
