@@ -543,6 +543,7 @@
     "Import into calendar" : "Importer dans l’agenda",
     "Download attachment" : "Télécharger la pièce jointe",
     "Save to Files" : "Enregistrer dans Fichiers",
+    "None of your calendars can store events" : "Aucun de vos agendas ne peut stocker d'événements",
     "Choose a folder to store the attachments in" : "Sélectionnez un dossier dans lequel enregistrer les pièces jointes",
     "Attachments saved to Files" : "Pièces jointes sauvegardées dans Fichiers",
     "Error while saving attachments" : "Erreur à la sauvegarde des pièces jointes",

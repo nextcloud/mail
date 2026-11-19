@@ -543,6 +543,7 @@
     "Import into calendar" : "Importér til kalender",
     "Download attachment" : "Hent vedhæftet fil",
     "Save to Files" : "Gem i Filer",
+    "None of your calendars can store events" : "Ingen af dine kalendere kan gemme begivenheder",
     "Choose a folder to store the attachments in" : "Vælg den mappe, som de vedhæftede filer skal gemmes i",
     "Attachments saved to Files" : "De vedhæftede filer er gemt i Filer",
     "Error while saving attachments" : "Fejl under lagring af vedhæftede filer",

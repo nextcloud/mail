@@ -545,6 +545,7 @@ OC.L10N.register(
     "Import into calendar" : "Importovať do kalendára",
     "Download attachment" : "Stiahnuť prílohu",
     "Save to Files" : "Uložiť do Files",
+    "None of your calendars can store events" : "Žiadny z vašich kalendárov nemôže ukladať udalosti",
     "Choose a folder to store the attachments in" : "Vyberte priečinok na ukladanie príloh",
     "Attachments saved to Files" : "Prílohy boli uložené do aplikácie Files",
     "Error while saving attachments" : "Chyba pri ukladaní príloh",

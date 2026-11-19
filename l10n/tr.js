@@ -545,6 +545,7 @@ OC.L10N.register(
     "Import into calendar" : "Şu takvimin içine aktar",
     "Download attachment" : "Ek dosyayı indir",
     "Save to Files" : "Dosyalara kaydet",
+    "None of your calendars can store events" : "Takvimlerinizin hiçbirine etkinlikler kaydedilemez",
     "Choose a folder to store the attachments in" : "Ek dosyalarının kaydedileceği bir klasör seçin",
     "Attachments saved to Files" : "Ek dosyalar Dosyalar uygulamasına kaydedildi.",
     "Error while saving attachments" : "Ek dosyalar kaydedilirken sorun çıktı",
