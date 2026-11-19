@@ -8,39 +8,63 @@
 		<p>
 			{{ t('mail', 'Drafts are saved in:') }}
 		</p>
-		<MailboxInlinePicker v-model="draftsMailbox" :account="account" :disabled="saving" />
+		<MailboxInlinePicker
+			:modelValue="account.draftsMailboxId"
+			:account="account"
+			:disabled="saving.draftsMailboxId"
+			@update:modelValue="(folderId) => updateFolder('draftsMailboxId', folderId)" />
 
 		<p>
 			{{ t('mail', 'Sent messages are saved in:') }}
 		</p>
+		<MailboxInlinePicker
+			:modelValue="account.sentMailboxId"
+			:account="account"
+			:disabled="saving.sentMailboxId"
+			@update:modelValue="(folderId) => updateFolder('sentMailboxId', folderId)" />
 
-		<MailboxInlinePicker v-model="sentMailbox" :account="account" :disabled="saving" />
 		<NcCheckboxRadioSwitch
 			v-if="account.protocol !== 'jmap'"
 			v-model="saveSentCopy"
-			:disabled="saving">
+			:disabled="savingSaveSentCopy">
 			{{ t('mail', 'Save a copy of sent messages') }}
 		</NcCheckboxRadioSwitch>
+
 		<p>
 			{{ t('mail', 'Deleted messages are moved in:') }}
 		</p>
+		<MailboxInlinePicker
+			:modelValue="account.trashMailboxId"
+			:account="account"
+			:disabled="saving.trashMailboxId"
+			@update:modelValue="(folderId) => updateFolder('trashMailboxId', folderId)" />
 
-		<MailboxInlinePicker v-model="trashMailbox" :account="account" :disabled="saving" />
 		<p>
 			{{ t('mail', 'Archived messages are moved in:') }}
 		</p>
+		<MailboxInlinePicker
+			:modelValue="account.archiveMailboxId"
+			:account="account"
+			:disabled="saving.archiveMailboxId"
+			@update:modelValue="(folderId) => updateFolder('archiveMailboxId', folderId)" />
 
-		<MailboxInlinePicker v-model="archiveMailbox" :account="account" :disabled="saving" />
 		<p>
 			{{ t('mail', 'Snoozed messages are moved in:') }}
 		</p>
-
-		<MailboxInlinePicker v-model="snoozeMailbox" :account="account" :disabled="saving" />
+		<MailboxInlinePicker
+			:modelValue="account.snoozeMailboxId"
+			:account="account"
+			:disabled="saving.snoozeMailboxId"
+			@update:modelValue="(folderId) => updateFolder('snoozeMailboxId', folderId)" />
 
 		<p>
 			{{ t('mail', 'Junk messages are saved in:') }}
 		</p>
-		<MailboxInlinePicker v-model="junkMailbox" :account="account" :disabled="saving" />
+		<MailboxInlinePicker
+			:modelValue="account.junkMailboxId"
+			:account="account"
+			:disabled="saving.junkMailboxId"
+			@update:modelValue="(folderId) => updateFolder('junkMailboxId', folderId)" />
 	</div>
 </template>
 
@@ -67,69 +91,21 @@ export default {
 
 	data() {
 		return {
-			saving: false,
+			saving: {
+				draftsMailboxId: false,
+				sentMailboxId: false,
+				trashMailboxId: false,
+				archiveMailboxId: false,
+				snoozeMailboxId: false,
+				junkMailboxId: false,
+			},
+
+			savingSaveSentCopy: false,
 		}
 	},
 
 	computed: {
 		...mapStores(useMainStore),
-		draftsMailbox: {
-			get() {
-				const mb = this.mainStore.getMailbox(this.account.draftsMailboxId)
-				if (!mb) {
-					return
-				}
-				return mb.databaseId
-			},
-
-			async set(draftsMailboxId) {
-				logger.debug('setting drafts folder to ' + draftsMailboxId)
-				this.saving = true
-				try {
-					await this.mainStore.patchAccount({
-						account: this.account,
-						data: {
-							draftsMailboxId,
-						},
-					})
-				} catch (error) {
-					logger.error('could not set drafts folder', {
-						error,
-					})
-				} finally {
-					this.saving = false
-				}
-			},
-		},
-
-		sentMailbox: {
-			get() {
-				const mb = this.mainStore.getMailbox(this.account.sentMailboxId)
-				if (!mb) {
-					return
-				}
-				return mb.databaseId
-			},
-
-			async set(sentMailboxId) {
-				logger.debug('setting sent folder to ' + sentMailboxId)
-				this.saving = true
-				try {
-					await this.mainStore.patchAccount({
-						account: this.account,
-						data: {
-							sentMailboxId,
-						},
-					})
-				} catch (error) {
-					logger.error('could not set sent folder', {
-						error,
-					})
-				} finally {
-					this.saving = false
-				}
-			},
-		},
 
 		saveSentCopy: {
 			get() {
@@ -137,7 +113,7 @@ export default {
 			},
 
 			async set(saveSentCopy) {
-				this.saving = true
+				this.savingSaveSentCopy = true
 				try {
 					await this.mainStore.patchAccount({
 						account: this.account,
@@ -150,125 +126,29 @@ export default {
 						error,
 					})
 				} finally {
-					this.saving = false
+					this.savingSaveSentCopy = false
 				}
 			},
 		},
+	},
 
-		trashMailbox: {
-			get() {
-				const mb = this.mainStore.getMailbox(this.account.trashMailboxId)
-				if (!mb) {
-					return
-				}
-				return mb.databaseId
-			},
-
-			async set(trashMailboxId) {
-				logger.debug('setting trash folder to ' + trashMailboxId)
-				this.saving = true
-				try {
-					await this.mainStore.patchAccount({
-						account: this.account,
-						data: {
-							trashMailboxId,
-						},
-					})
-				} catch (error) {
-					logger.error('could not set trash folder', {
-						error,
-					})
-				} finally {
-					this.saving = false
-				}
-			},
-		},
-
-		archiveMailbox: {
-			get() {
-				const mb = this.mainStore.getMailbox(this.account.archiveMailboxId)
-				if (!mb) {
-					return
-				}
-				return mb.databaseId
-			},
-
-			async set(archiveMailboxId) {
-				logger.debug('setting archive folder to ' + archiveMailboxId)
-				this.saving = true
-				try {
-					await this.mainStore.patchAccount({
-						account: this.account,
-						data: {
-							archiveMailboxId,
-						},
-					})
-				} catch (error) {
-					logger.error('could not set archive folder', {
-						error,
-					})
-				} finally {
-					this.saving = false
-				}
-			},
-		},
-
-		junkMailbox: {
-			get() {
-				const mb = this.mainStore.getMailbox(this.account.junkMailboxId)
-				if (!mb) {
-					return
-				}
-				return mb.databaseId
-			},
-
-			async set(junkMailboxId) {
-				logger.debug('setting junk folder to ' + junkMailboxId)
-				this.saving = true
-				try {
-					await this.mainStore.patchAccount({
-						account: this.account,
-						data: {
-							junkMailboxId,
-						},
-					})
-				} catch (error) {
-					logger.error('could not set junk folder', {
-						error,
-					})
-				} finally {
-					this.saving = false
-				}
-			},
-		},
-
-		snoozeMailbox: {
-			get() {
-				const mb = this.mainStore.getMailbox(this.account.snoozeMailboxId)
-				if (!mb) {
-					return
-				}
-				return mb.databaseId
-			},
-
-			async set(snoozeMailboxId) {
-				logger.debug('setting snooze folder to ' + snoozeMailboxId)
-				this.saving = true
-				try {
-					await this.mainStore.patchAccount({
-						account: this.account,
-						data: {
-							snoozeMailboxId,
-						},
-					})
-				} catch (error) {
-					logger.error('could not set snooze folder', {
-						error,
-					})
-				} finally {
-					this.saving = false
-				}
-			},
+	methods: {
+		async updateFolder(type, id) {
+			this.saving[type] = true
+			try {
+				await this.mainStore.patchAccount({
+					account: this.account,
+					data: {
+						[type]: id,
+					},
+				})
+			} catch (error) {
+				logger.error('could not set default folder', {
+					error,
+				})
+			} finally {
+				this.saving[type] = false
+			}
 		},
 	},
 }
