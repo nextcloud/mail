@@ -422,6 +422,7 @@ class PageControllerTest extends TestCase {
 				['allow-new-accounts', true],
 				['llm_summaries_available', false],
 				['llm_translation_enabled', false],
+				['llm_translation_languages', ['input' => [], 'output' => []]],
 				['llm_freeprompt_available', false],
 				['llm_followup_available', false],
 				['context_chat_available', true],
