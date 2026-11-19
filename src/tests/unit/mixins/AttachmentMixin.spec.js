@@ -7,10 +7,13 @@ import { shallowMount } from '@vue/test-utils'
 import { h } from 'vue'
 import AttachmentMixin from '../../../mixins/AttachmentMixin.js'
 
+const DOCX_MIME = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+
 const attachments = [
 	{ downloadUrl: '/cat.png', fileName: 'cat.png', mime: 'image/png' },
 	{ downloadUrl: '/notes.txt', fileName: 'notes.txt', mime: 'text/plain' },
 	{ downloadUrl: '/invoice.pdf', fileName: 'invoice.pdf', mime: 'application/pdf' },
+	{ downloadUrl: '/report.docx', fileName: 'report.docx', mime: DOCX_MIME },
 ]
 
 function mountMixin() {
@@ -78,6 +81,55 @@ describe('AttachmentMixin', () => {
 			fileInfo: view.vm.fileInfos[2],
 			list: view.vm.previewableFileInfos,
 		})
+		expect(open).not.toHaveBeenCalled()
+
+		view.vm.showViewer(view.vm.fileInfos[0])
+
+		expect(open).toHaveBeenCalledTimes(1)
+	})
+
+	it('does not preview office attachments without a source-capable handler', () => {
+		global.OCA = {
+			Viewer: {
+				mimetypes: [DOCX_MIME],
+				availableHandlers: [{ id: 'onlyoffice', mimes: [DOCX_MIME] }],
+			},
+		}
+
+		const view = mountMixin()
+
+		expect(view.vm.previewableFileInfos).toEqual([])
+		expect(view.vm.canPreview(view.vm.fileInfos[3])).toBe(false)
+	})
+
+	it('opens office attachments with a source-capable handler', () => {
+		const openWith = vi.fn()
+		const open = vi.fn()
+		global.OCA = {
+			Viewer: {
+				mimetypes: [DOCX_MIME, 'image/png'],
+				availableHandlers: [
+					{ id: 'onlyoffice', mimes: [DOCX_MIME] },
+					{ id: 'eurooffice', mimes: [DOCX_MIME], supportsSource: true },
+				],
+				openWith,
+				open,
+			},
+		}
+
+		const view = mountMixin()
+		const fileInfo = view.vm.fileInfos[3]
+
+		expect(view.vm.canPreview(fileInfo)).toBe(true)
+
+		view.vm.showViewer(fileInfo)
+
+		expect(openWith).toHaveBeenCalledWith('eurooffice', {
+			fileInfo,
+			list: view.vm.previewableFileInfos,
+		})
+		expect(fileInfo.source).toBe('/report.docx')
+		expect(fileInfo.basename).toBe('report.docx')
 		expect(open).not.toHaveBeenCalled()
 
 		view.vm.showViewer(view.vm.fileInfos[0])
