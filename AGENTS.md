@@ -294,8 +294,6 @@ Bug fixes and small changes can go straight to a PR without opening a new ticket
 
 Do NOT commit changes unless explicitly asked to do so.
 
-Never fully automate the resolution of issues labeled [`good first issue`](https://github.com/issues?q=org%3Anextcloud+label%3A%22good+first+issue%22) or similar beginner-friendly labels.
-
 After completing code changes:
 1. Verify your work is complete and tests pass
 2. Never push directly to `main` — always create a feature branch with a descriptive name (e.g. `perf/imap-selective-headers`, `fix/sync-token`, `chore/update-agents`).
@@ -320,12 +318,7 @@ The branch will be rebased and squashed into a clean history before merge (CI en
 
 ### GitHub comments and reviews
 
-Agents may post GitHub text directly (PR and issue comments, review comments, PR descriptions), as long as it is written **for humans**: plain, concise, and skimmable.
-
-- A human must review the text before it is posted.
-- Disclose the AI assistance in every posted body, e.g. with an `Assisted by <harness>:<model-id>` footer.
-- Fill out the repo's PR/issue template completely when opening a PR or issue.
-- Additional info meant only for agents can go into a description or comment, but must be wrapped in a collapsed `<details>` block so human readers can skip it or dive in.
+Agents may post GitHub text directly (PR and issue comments, review comments, PR descriptions), following the rules for human-readable, disclosed text above. A human must review the text before it is posted.
 
 ### Official documentation (user_manual / admin_manual)
 
@@ -357,10 +350,6 @@ Commit messages are the project's durable record — read years later through `g
 - **Body**: explain why, not how — state the problem and the reason for this approach plainly. Keep it matter-of-fact; no storytelling, filler, or marketing tone. Omit it only when the subject already conveys the intent.
 - **Record what was intentionally left out.** Note deliberate omissions and deferrals (and why) so a later reader can tell a conscious decision from an oversight.
 - **Don't restate the diff.** Avoid mechanical bullet lists that echo the changed lines.
-
-All AI-assisted commits must end with the agent/model attribution trailer `Assisted-by: <AgentName>:<model-id>`.
-
-The contributor must review the changes before anything is committed. Only once they explicitly approve, commit with `git commit -m "message" -s` so the `Signed-off-by` line carries their configured Git identity. Without that approval, leave the changes staged and do not sign off.
 
 Example:
 ```
