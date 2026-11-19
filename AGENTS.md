@@ -41,7 +41,7 @@ All contributions generated or assisted by this agent must fully comply with:
 
 - Don't open issues, submit pull requests, or post comments on your own initiative. Instead, post only what the contributor asked for, on their behalf, and tell them what you posted.
 - Don't write texts for machines: no file-by-file restatement of the diff, no filler, no raw tool output. Instead, write short, skimmable text for a human reviewer that explains what changed and why.
-- Don't add `Signed-off-by` tags to commits on your own. Instead, show the contributor the changes and the proposed commit message, and only after they explicitly approve them, commit with `git commit -s` so the sign-off carries their configured identity. The contributor certifies the Developer Certificate of Origin by giving that approval.
+- Don't add `Signed-off-by` tags to commits on your own. Instead, show the contributor the changes and the proposed commit message, and only after they explicitly approve them, commit with `git commit -s` so the sign-off carries their configured identity. The contributor certifies the Developer Certificate of Origin by giving that approval. This is a deliberate local exception to the AI Contribution Policy's rule that agents never add `Signed-off-by`.
 - Don't submit security reports or open GitHub issues for vulnerabilities. Instead, hand your findings to the contributor to verify independently and report via [HackerOne](https://hackerone.com/nextcloud).
 - Don't fully automate the resolution of issues labeled [`good first issue`](https://github.com/issues?q=org%3Anextcloud+label%3A%22good+first+issue%22) or similar beginner-friendly labels. Instead, explain the code and guide the contributor so they can solve the issue themselves.
 - Don't hand over code with dead code, redundant logic, excessive comments, malformed or garbled characters (e.g. `�` replacement characters), or unrelated changes. Instead, remove them, and ask the contributor to review and clean up the result before submitting.
@@ -114,6 +114,7 @@ The diff shows *what* changed and *how*; a comment exists only to capture *why* 
 
 - **Default to none.** Most changes need zero comments; express intent through clear names and small functions. This codebase uses essentially none.
 - **Comment the *why*, never the *how*.** Legitimate reasons: a non-obvious workaround (link the issue/ticket), a subtle business rule, a deliberate deviation from the expected. Never narrate what the next lines do.
+- **These rules are stricter than the generic comment rules in the Nextcloud Contribution Policy section; where they differ, follow these.**
 - **No multi-line explanatory blocks, AI-style walkthroughs, or section banners.**
 - **Remove a stale comment** only when you're already editing that code for the task at hand — no drive-by cleanups.
 
@@ -292,18 +293,18 @@ Bug fixes and small changes can go straight to a PR without opening a new ticket
 - If no ticket exists, or it is still `0. to triage`, stop and tell the contributor to get it triaged and discussed first rather than starting an agent-driven implementation.
 - If a bug fix turns out to need a larger change, stop and treat it as one.
 
-Do NOT commit changes unless explicitly asked to do so.
+Do NOT commit changes until the contributor has reviewed them and explicitly approved the commit; see the sign-off rule in the Nextcloud Contribution Policy section at the top of this file.
 
 After completing code changes:
 1. Verify your work is complete and tests pass
 2. Never push directly to `main` — always create a feature branch with a descriptive name (e.g. `perf/imap-selective-headers`, `fix/sync-token`, `chore/update-agents`).
 3. Worktree branches must use descriptive feature-branch names, not generated names like `agent-xxxx`.
 4. Make sure there is no trailing whitespace
-5. Leave changes in working directory or staged (do not commit)
+5. Leave changes in working directory or staged until the contributor approves the commit
 6. Provide a summary of what was changed and why
 7. Suggest a commit message using Conventional Commits format
    - There is a [contributing doc](./.github/CONTRIBUTING.md) with suggestions
-8. The user will review and commit when ready
+8. The user reviews the changes and approves the commit
 
 ### PR Review Workflow
 
@@ -314,11 +315,13 @@ Instead, address feedback with **fixup commits**:
 git commit --fixup=<sha>   # targets the specific commit being corrected
 ```
 
+Fixup commits follow the same approval and sign-off rule as any other commit.
+
 The branch will be rebased and squashed into a clean history before merge (CI enforces this). The failing "clean history" CI check is intentional and expected during review — ignore it until the PR has a positive review, then rebase to clean up.
 
 ### GitHub comments and reviews
 
-Agents may post GitHub text directly (PR and issue comments, review comments, PR descriptions), following the rules for human-readable, disclosed text above. A human must review the text before it is posted.
+Agents may post GitHub text directly (PR and issue comments, review comments, PR descriptions), following the human-readable, disclosed text rules in the Nextcloud Contribution Policy section at the top of this file. The order is: draft, human review, post, then tell the contributor what was posted.
 
 ### Official documentation (user_manual / admin_manual)
 
