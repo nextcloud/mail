@@ -63,9 +63,9 @@ class Version1130Date20220412111833 extends SimpleMigrationStep {
 				. 'Path to backup file: ' . $this->backupPath
 			);
 
-			fputcsv($backupFile, ['local_message_id', 'message_id', 'type', 'label', 'email']);
+			fputcsv($backupFile, ['local_message_id', 'message_id', 'type', 'label', 'email'], escape: '');
 			foreach ($this->recipients as $recipient) {
-				fputcsv($backupFile, array_values($recipient));
+				fputcsv($backupFile, array_values($recipient), escape: '');
 			}
 			fclose($backupFile);
 		}

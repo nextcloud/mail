@@ -91,7 +91,6 @@ final class ImapTransmissionConnectorTest extends TestCase {
 	 */
 	private function callPrivate(string $method, array $args) {
 		$reflection = new ReflectionMethod(ImapTransmissionConnector::class, $method);
-		$reflection->setAccessible(true);
 		return $reflection->invoke($this->connector, ...$args);
 	}
 

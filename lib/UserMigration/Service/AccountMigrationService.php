@@ -331,8 +331,7 @@ class AccountMigrationService {
 
 		$newAccount->setShowSubscribedOnly($accountData['showSubscribedOnly']);
 
-		$oldCertificateId = $accountData['smimeCertificateId'];
-		$newAccount->setSmimeCertificateId($certificatesMapping[$oldCertificateId] ?? null);
+		$newAccount->setSmimeCertificateId($this->mapCertificateId($accountData['smimeCertificateId'], $certificatesMapping));
 		$newAccount->setEditorMode($accountData['editorMode'] ?? 'plaintext');
 		$newAccount->setTrashRetentionDays($accountData['trashRetentionDays']);
 		$newAccount->setOooFollowsSystem($accountData['outOfOfficeFollowsSystem']);
@@ -677,17 +676,25 @@ class AccountMigrationService {
 		$userId = $mailAccount->getUserId();
 
 		foreach ($accountData['aliases'] as $alias) {
-			$oldCertificateId = $alias['smimeCertificateId'];
-
 			$this->aliasesService->create(
 				$userId,
 				$mailAccount->getId(),
 				$alias['alias'],
 				$alias['name'],
 				$alias['signature'],
-				$certificatesMapping[$oldCertificateId] ?? null,
+				$this->mapCertificateId($alias['smimeCertificateId'], $certificatesMapping),
 			);
 		}
+	}
+
+	/**
+	 * @param array<int, int> $certificatesMapping
+	 */
+	private function mapCertificateId(?int $oldCertificateId, array $certificatesMapping): ?int {
+		if ($oldCertificateId === null) {
+			return null;
+		}
+		return $certificatesMapping[$oldCertificateId] ?? null;
 	}
 
 	/**
