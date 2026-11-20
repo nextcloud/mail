@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import escapeHtml from 'escape-html'
 import negate from 'lodash/fp/negate.js'
 import { formatDateTimeFromUnix } from './util/formatDateTime.js'
 import { html } from './util/text.js'
@@ -16,7 +17,7 @@ import { html } from './util/text.js'
  */
 export function buildReplyBody(original, from, date, replyOnTop = true) {
 	const startEnd = '<p></p><p></p>'
-	const plainBody = '<br>&gt; ' + original.value.replace(/\n/g, '<br>&gt; ')
+	const plainBody = '<br>&gt; ' + escapeHtml(original.value).replace(/\n/g, '<br>&gt; ')
 	const htmlBody = `<blockquote>${original.value}</blockquote>`
 	const quoteStart = '<div class="quote">'
 	const quoteEnd = '</div>'
@@ -25,9 +26,12 @@ export function buildReplyBody(original, from, date, replyOnTop = true) {
 		case 'plain':
 			if (from) {
 				const dateString = formatDateTimeFromUnix(date)
+				const fromLabel = escapeHtml(from.label || '')
+				const fromEmail = escapeHtml(from.email || '')
+				const fromHeader = `"${fromLabel}" ${fromEmail} – ${dateString}`
 				return replyOnTop
-					? html(`${startEnd}${quoteStart}"${from.label}" ${from.email} – ${dateString}` + plainBody + quoteEnd)
-					: html(`${quoteStart}"${from.label}" ${from.email} – ${dateString}` + plainBody + quoteEnd + startEnd)
+					? html(`${startEnd}${quoteStart}${fromHeader}` + plainBody + quoteEnd)
+					: html(`${quoteStart}${fromHeader}` + plainBody + quoteEnd + startEnd)
 			} else {
 				return replyOnTop
 					? html(`${startEnd}${quoteStart}${plainBody}${quoteEnd}`)
@@ -36,9 +40,12 @@ export function buildReplyBody(original, from, date, replyOnTop = true) {
 		case 'html':
 			if (from) {
 				const dateString = formatDateTimeFromUnix(date)
+				const fromLabel = escapeHtml(from.label || '')
+				const fromEmail = escapeHtml(from.email || '')
+				const fromHeader = `"${fromLabel}" ${fromEmail} – ${dateString}`
 				return replyOnTop
-					? html(`${startEnd}${quoteStart}"${from.label}" ${from.email} – ${dateString}<br>${htmlBody}${quoteEnd}`)
-					: html(`${quoteStart}"${from.label}" ${from.email} – ${dateString}<br>${htmlBody}${quoteEnd}${startEnd}`)
+					? html(`${startEnd}${quoteStart}${fromHeader}<br>${htmlBody}${quoteEnd}`)
+					: html(`${quoteStart}${fromHeader}<br>${htmlBody}${quoteEnd}${startEnd}`)
 			} else {
 				return replyOnTop
 					? html(`${startEnd}${quoteStart}${htmlBody}${quoteEnd}`)
