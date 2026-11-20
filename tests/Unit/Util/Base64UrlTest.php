@@ -12,7 +12,7 @@ namespace OCA\Mail\Tests\Unit\Util;
 use OCA\Mail\Util\Base64Url;
 use PHPUnit\Framework\TestCase;
 
-class Base64UrlTest extends TestCase {
+final class Base64UrlTest extends TestCase {
 	public function testEncodeRfc4648Vectors(): void {
 		self::assertSame('', Base64Url::encode(''));
 		self::assertSame('Zg', Base64Url::encode('f'));
