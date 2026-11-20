@@ -35,6 +35,7 @@
     "@nextcloud/auth": "^2.6.0",
     "@nextcloud/axios": "^2.6.0",
     "@nextcloud/calendar-js": "^8.1.8",
+    "@nextcloud/capabilities": "^1.2.1",
     "@nextcloud/cdav-library": "^2.8.2",
     "@nextcloud/dialogs": "^8.0.0",
     "@nextcloud/files": "^4.1.1",
