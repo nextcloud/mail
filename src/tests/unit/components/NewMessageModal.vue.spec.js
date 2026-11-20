@@ -156,6 +156,56 @@ describe('NewMessageModal', () => {
 		})
 	})
 
+	describe('editing an outbox message', () => {
+		let view
+
+		beforeEach(() => {
+			view = mountModal({ type: 'outbox', data: { id: 42, isHtml: false }, composerOpen: true })
+			view.vm.outboxStore.stopMessage = vi.fn()
+		})
+
+		it('saves changes to the outbox message and keeps it paused', async () => {
+			await view.vm.onDraft({ subject: 'Edited', isHtml: false, bodyPlain: 'Body', attachments: [{ id: 5, type: 'local' }] })
+
+			expect(view.vm.outboxStore.stopMessage).toHaveBeenCalledWith({
+				message: expect.objectContaining({
+					id: 42,
+					subject: 'Edited',
+					attachments: [{ id: 5, type: 'local' }],
+				}),
+			})
+			expect(saveDraft).not.toHaveBeenCalled()
+			expect(updateDraft).not.toHaveBeenCalled()
+			expect(view.vm.draftSaved).toBe(true)
+		})
+
+		it('keeps saving to the outbox message after a failed save', async () => {
+			view.vm.outboxStore.stopMessage.mockRejectedValueOnce(new Error('Database unavailable'))
+
+			await view.vm.onDraft({ subject: 'First', isHtml: false, attachments: [] })
+			await view.vm.onDraft({ subject: 'Second', isHtml: false, attachments: [] })
+
+			expect(view.vm.outboxStore.stopMessage).toHaveBeenLastCalledWith({
+				message: expect.objectContaining({ id: 42, subject: 'Second' }),
+			})
+			expect(saveDraft).not.toHaveBeenCalled()
+			expect(view.vm.canSaveDraft).toBe(true)
+		})
+
+		it('saves pending changes to the outbox message when closing', async () => {
+			view.vm.changed = true
+			view.vm.cookedComposerData = { subject: 'Edited', isHtml: false, attachments: [] }
+			view.vm.mainStore.stopComposerSession = vi.fn().mockResolvedValue()
+
+			await view.vm.onClose()
+
+			expect(view.vm.outboxStore.stopMessage).toHaveBeenCalledWith({ message: expect.objectContaining({ id: 42 }) })
+			expect(updateDraft).not.toHaveBeenCalled()
+			expect(view.vm.mainStore.stopComposerSession).toHaveBeenCalledWith(expect.objectContaining({ restoreOriginalSendAt: true }))
+			expect(showSuccess).toHaveBeenCalledWith('Message saved')
+		})
+	})
+
 	describe('sending', () => {
 		let sendingToast
 		let view
