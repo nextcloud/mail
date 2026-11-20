@@ -29,14 +29,14 @@ jobs:
         run: |
           has_headings() {
             for heading in "$@"; do
-              if ! grep -qixF "### $heading" <<< "${ISSUE_BODY//$'\r'/}"; then
+              if ! grep -qixF -e "## $heading" -e "### $heading" <<< "${ISSUE_BODY//$'\r'/}"; then
                 return 1
               fi
             done
           }
 
           # Field labels of .github/ISSUE_TEMPLATE/bug_report_form.yml
-          if has_headings "Steps to reproduce" "Expected behavior" "Actual behavior" "Mail app version" "Nextcloud version"; then
+          if has_headings "Steps to reproduce" "Expected behavior" "Actual behavior" "Mail app version"; then
             echo "Bug form headings present, nothing to do"
             exit 0
           fi

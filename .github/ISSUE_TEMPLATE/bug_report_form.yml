@@ -2,8 +2,8 @@ name: "Bug"
 description: "Have you encountered a bug? Submit a report and help us improve Nextcloud Mail"
 type: "Bug"
 labels: ["bug", "0. to triage"]
-# The labels of the fields "Steps to reproduce", "Expected behavior", "Actual behavior",
-# "Mail app version" and "Nextcloud version" are checked by .github/workflows/issue-template-check.yml.
+# The labels of the fields "Steps to reproduce", "Expected behavior", "Actual behavior"
+# and "Mail app version" are checked by .github/workflows/issue-template-check.yml.
 # Keep both in sync.
 body:
 - type: textarea
