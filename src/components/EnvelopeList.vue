@@ -498,12 +498,14 @@ export default {
 				}
 			}
 
-			await Promise.all(this.selectedEnvelopes.map(async (envelope) => {
-				logger.info(`deleting thread ${envelope.threadRootId}`)
-				await this.mainStore.deleteThread({
-					envelope,
-				})
-			})).catch(async (error) => {
+			try {
+				for (const envelope of this.selectedEnvelopes) {
+					logger.info(`deleting thread ${envelope.threadRootId}`)
+					await this.mainStore.deleteThread({
+						envelope,
+					})
+				}
+			} catch (error) {
 				showError(await matchError(error, {
 					[NoTrashMailboxConfiguredError.getName()]() {
 						return t('mail', 'No trash folder configured')
@@ -513,7 +515,7 @@ export default {
 						return t('mail', 'Could not delete message')
 					},
 				}))
-			})
+			}
 			if (nextEnvelopeToNavigate) {
 				await this.$router.push({
 					name: 'message',
