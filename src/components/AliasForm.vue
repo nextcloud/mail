@@ -43,6 +43,16 @@
 				</NcButton>
 			</template>
 			<template v-else>
+				<NcButton
+					variant="tertiary-no-background"
+					:aria-label="t('mail', 'Copy email address')"
+					:title="t('mail', 'Copy email address')"
+					@click.prevent="copyEmailAddress">
+					<template #icon>
+						<IconClipboard :size="20" />
+					</template>
+				</NcButton>
+
 				<!-- Extra buttons -->
 				<slot />
 
@@ -73,11 +83,14 @@
 </template>
 
 <script>
+import { showSuccess } from '@nextcloud/dialogs'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import IconCheck from 'vue-material-design-icons/Check.vue'
+import IconClipboard from 'vue-material-design-icons/ClipboardTextOutline.vue'
 import IconRename from 'vue-material-design-icons/PencilOutline.vue'
 import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
+import { copyToClipboard } from '../util/clipboard.js'
 
 export default {
 	name: 'AliasForm',
@@ -87,6 +100,7 @@ export default {
 		NcLoadingIcon,
 		IconDelete,
 		IconCheck,
+		IconClipboard,
 	},
 
 	props: {
@@ -137,6 +151,15 @@ export default {
 	},
 
 	methods: {
+		async copyEmailAddress() {
+			const copied = await copyToClipboard(this.alias.alias, t('mail', 'Copy email address'))
+			if (!copied) {
+				return
+			}
+
+			showSuccess(t('mail', 'Copied email address to clipboard'))
+		},
+
 		/**
 		 * Call alias update event handler of parent.
 		 *
