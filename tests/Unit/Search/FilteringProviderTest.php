@@ -72,6 +72,13 @@ class FilteringProviderTest extends TestCase {
 		$message1 = new Message();
 		$message1->setSubject('This is not spam');
 		$message1->setFrom(AddressList::parse('Sender <sender@domain.tld>'));
+		$messageId = '<org/repo/issues/123/456@example.invalid>';
+		$message1->setMessageId($messageId);
+		$expectedEncoded = 'PG9yZy9yZXBvL2lzc3Vlcy8xMjMvNDU2QGV4YW1wbGUuaW52YWxpZD4';
+		$this->urlGenerator->expects($this->once())
+			->method('linkToRouteAbsolute')
+			->with('mail.deep_link.open', ['messageId' => $expectedEncoded])
+			->willReturn('http://localhost/apps/mail/open/' . $expectedEncoded);
 		$this->mailSearch->expects($this->once())
 			->method('findMessagesGlobally')
 			->with($user, $this->callback(function (MailSearchQuery $query) {
@@ -88,6 +95,40 @@ class FilteringProviderTest extends TestCase {
 		$entries = $result->jsonSerialize()['entries'] ?? [];
 
 		self::assertNotEmpty($entries);
+		self::assertSame('http://localhost/apps/mail/open/' . $expectedEncoded, $entries[0]->jsonSerialize()['resourceUrl']);
+	}
+
+	public function testSearchForMessageWithoutMessageIdFallsBackToThreadRoute(): void {
+		$term = 'spam';
+		$user = $this->createStub(IUser::class);
+		$filters = [
+			IFilter::BUILTIN_TERM => new StringFilter($term),
+		];
+		$filterCollection = new FilterCollection(... $filters);
+		$searchQuery = new SearchQuery($filterCollection);
+		$message1 = new Message();
+		$message1->setId(42);
+		$message1->setMailboxId(7);
+		$message1->setSubject('This is not spam');
+		$message1->setFrom(AddressList::parse('Sender <sender@domain.tld>'));
+		// No messageId set -> should fall back to thread route
+
+		$this->urlGenerator->expects($this->once())
+			->method('linkToRouteAbsolute')
+			->with('mail.page.thread', ['mailboxId' => 7, 'id' => 42])
+			->willReturn('http://localhost/apps/mail/box/7/thread/42');
+		$this->mailSearch->expects($this->once())
+			->method('findMessagesGlobally')
+			->willReturn([$message1]);
+
+		$result = $this->provider->search(
+			$user,
+			$searchQuery
+		);
+		$entries = $result->jsonSerialize()['entries'] ?? [];
+
+		self::assertNotEmpty($entries);
+		self::assertSame('http://localhost/apps/mail/box/7/thread/42', $entries[0]->jsonSerialize()['resourceUrl']);
 	}
 
 	public function testSearchForUserNoEmail(): void {

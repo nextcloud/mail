@@ -685,7 +685,7 @@ export default {
 			}
 
 			const trimmedMessageId = this.envelope.messageId.trim().replace(/^<|>$/g, '')
-			const url = window.location.origin + generateUrl('/apps/mail/open/' + encodeURIComponent(trimmedMessageId))
+			const url = window.location.origin + generateUrl('/apps/mail/open/' + Base64.encodeURL(trimmedMessageId))
 
 			try {
 				await navigator.clipboard.writeText(url)
