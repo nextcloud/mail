@@ -104,6 +104,14 @@ class SyncService {
 				!$partialOnly,
 			);
 
+		if (!$partialOnly) {
+			// The initial sync fills the cache of a mailbox the client has not
+			// loaded yet; the client loads the first page from the message list
+			// right after. Returning the cache as new messages here would send
+			// every message of the mailbox through the preview enhancer.
+			return new Response([], [], [], $mailbox->getStats());
+		}
+
 		$query = $filter === null ? null : $this->filterStringParser->parse($filter);
 		return $this->getDatabaseSyncChanges(
 			$account,
