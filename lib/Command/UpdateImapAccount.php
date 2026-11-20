@@ -64,6 +64,7 @@ final class UpdateImapAccount extends Command {
 		$this->addOption(self::ARGUMENT_SMTP_PASSWORD, '', InputOption::VALUE_OPTIONAL);
 
 		$this->addOption(self::ARGUMENT_AUTH_METHOD, '', InputOption::VALUE_OPTIONAL);
+		$this->addOption(StdinImapPasswords::OPTION_PASSWORDS_FROM_STDIN, null, InputOption::VALUE_NONE, 'Read both IMAP and SMTP passwords as two newline-delimited lines from stdin');
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
@@ -84,6 +85,20 @@ final class UpdateImapAccount extends Command {
 		$smtpUser = $input->getOption(self::ARGUMENT_SMTP_USER);
 		$smtpPassword = $input->getOption(self::ARGUMENT_SMTP_PASSWORD);
 		$authMethod = $input->getOption(self::ARGUMENT_AUTH_METHOD);
+
+		if ($input->getOption(StdinImapPasswords::OPTION_PASSWORDS_FROM_STDIN)) {
+			if ($imapPassword !== null || $smtpPassword !== null) {
+				$output->writeln('<error>Do not combine --passwords-from-stdin with password options</error>');
+				return self::FAILURE;
+			}
+			try {
+				[$imapPassword, $smtpPassword] = StdinImapPasswords::read($input);
+			} catch (\InvalidArgumentException $e) {
+				$output->writeln('<error>' . $e->getMessage() . '</error>');
+				return self::FAILURE;
+			}
+		}
+
 
 		try {
 			$mailAccount = $this->mapper->findById($accountId);
@@ -125,7 +140,7 @@ final class UpdateImapAccount extends Command {
 			$mailAccount->setInboundSslMode($imapSslMode);
 		}
 
-		if ($input->getOption(self::ARGUMENT_IMAP_PASSWORD) !== null) {
+		if ($imapPassword !== null) {
 			$mailAccount->setInboundPassword($this->crypto->encrypt($imapPassword));
 		}
 
@@ -147,7 +162,7 @@ final class UpdateImapAccount extends Command {
 			$mailAccount->setOutboundSslMode($smtpSslMode);
 		}
 
-		if ($input->getOption(self::ARGUMENT_SMTP_PASSWORD) !== null) {
+		if ($smtpPassword !== null) {
 			$mailAccount->setOutboundPassword($this->crypto->encrypt($smtpPassword));
 		}
 
