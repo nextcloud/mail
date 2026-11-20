@@ -155,13 +155,6 @@
       <code><![CDATA[$fullText]]></code>
       <code><![CDATA[$message->getAttachments()]]></code>
     </PossiblyNullArgument>
-    <UndefinedClass>
-      <code><![CDATA[SharedStorage]]></code>
-    </UndefinedClass>
-    <UndefinedDocblockClass>
-      <code><![CDATA[$share]]></code>
-      <code><![CDATA[$storage]]></code>
-    </UndefinedDocblockClass>
   </file>
   <file src="lib/Service/AutoConfig/IspDb.php">
     <PossiblyInvalidArgument>

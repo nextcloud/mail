@@ -11,7 +11,6 @@ namespace OCA\Mail\Tests\Unit\Service\Attachment;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OC\Files\Node\File;
-use OCA\Files_Sharing\SharedStorage;
 use OCA\Mail\Account;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalAttachmentMapper;
@@ -31,6 +30,7 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\Folder;
 use OCP\Files\IMimeTypeDetector;
 use OCP\Files\NotPermittedException;
+use OCP\Files\Storage\ISharedStorage;
 use OCP\ICache;
 use OCP\ICacheFactory;
 use OCP\IURLGenerator;
@@ -494,10 +494,10 @@ final class AttachmentServiceTest extends TestCase {
 
 	public function testHandleAttachmentsCloudAttachmentNoDownloadPermission(): void {
 		$userId = 'linus';
-		$storage = $this->createMock(SharedStorage::class);
+		$storage = $this->createMock(ISharedStorage::class);
 		$storage->expects(self::once())
 			->method('instanceOfStorage')
-			->with(SharedStorage::class)
+			->with(ISharedStorage::class)
 			->willReturn(true);
 		$share = $this->createMock(IShare::class);
 		$attributes = $this->createMock(IAttributes::class);
@@ -547,7 +547,7 @@ final class AttachmentServiceTest extends TestCase {
 			'getName' => 'cat.jpg',
 			'getMimeType' => 'text/plain',
 			'getContent' => 'Lorem ipsum dolor sit amet',
-			'getStorage' => $this->createMock(SharedStorage::class)
+			'getStorage' => $this->createMock(ISharedStorage::class)
 		]);
 		$account = $this->createConfiguredMock(Account::class, [
 			'getUserId' => $userId
