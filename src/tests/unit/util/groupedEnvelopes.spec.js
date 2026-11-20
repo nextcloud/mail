@@ -43,4 +43,17 @@ describe('groupEnvelopesByDate', () => {
 		expect(lastHourGroup[0]).toEqual(older)
 		expect(lastHourGroup[1]).toEqual(newer)
 	})
+
+	it('groups days earlier in the current week into thisWeek and the previous week into lastWeek', () => {
+		const friday = new Date(2026, 10, 20, 12).getTime()
+		const wednesday = makeEnvelope(new Date(2026, 10, 18, 9))
+		const previousFriday = makeEnvelope(new Date(2026, 10, 13, 9))
+
+		const result = groupEnvelopesByDate([wednesday, previousFriday], friday, 'newest')
+
+		expect(result).toEqual([
+			['thisWeek', [wednesday]],
+			['lastWeek', [previousFriday]],
+		])
+	})
 })
