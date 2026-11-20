@@ -13,6 +13,7 @@ use Horde_Mail_Rfc822_Identification;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Util\Base64Url;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
@@ -49,6 +50,14 @@ class DeepLinkController extends Controller {
 		}
 
 		$userId = $user->getUID();
+
+		if (!str_contains($messageId, '@')) {
+			$decoded = Base64Url::decode($messageId);
+			if ($decoded === false) {
+				return new RedirectResponse($this->urlGenerator->linkToRouteAbsolute('mail.page.index'));
+			}
+			$messageId = $decoded;
+		}
 
 		try {
 			$id = '<' . trim(trim($messageId), '<>') . '>';
