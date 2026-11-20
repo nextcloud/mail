@@ -264,6 +264,16 @@ export function moveMessage(id, destFolderId) {
 	})
 }
 
+export function copyMessage(id, destFolderId) {
+	const url = generateUrl('/apps/mail/api/messages/{id}/copy', {
+		id,
+	})
+
+	return axios.post(url, {
+		destFolderId,
+	})
+}
+
 export async function saveMessage(id, directory) {
 	const url = generateUrl('/apps/mail/api/messages/{id}/file', {
 		id,
