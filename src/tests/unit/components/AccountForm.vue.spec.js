@@ -65,16 +65,16 @@ describe('AccountForm', () => {
 		expect(queryIspdb).toHaveBeenCalled()
 		expect(queryMx).not.toHaveBeenCalled()
 		expect(detected).toBe(true)
-		expect(view.vm.manualConfig.imapUser).toBe('tom')
-		expect(view.vm.manualConfig.imapHost).toBe('imap.tom.turbo')
-		expect(view.vm.manualConfig.imapPort).toBe(993)
-		expect(view.vm.manualConfig.imapSslMode).toBe('ssl')
-		expect(view.vm.manualConfig.imapPassword).toBe('secret')
-		expect(view.vm.manualConfig.smtpUser).toBe('tom')
-		expect(view.vm.manualConfig.smtpHost).toBe('smtp.tom.turbo')
-		expect(view.vm.manualConfig.smtpPort).toBe(465)
-		expect(view.vm.manualConfig.smtpSslMode).toBe('ssl')
-		expect(view.vm.manualConfig.smtpPassword).toBe('secret')
+		expect(view.vm.imapConfig.imapUser).toBe('tom')
+		expect(view.vm.imapConfig.imapHost).toBe('imap.tom.turbo')
+		expect(view.vm.imapConfig.imapPort).toBe(993)
+		expect(view.vm.imapConfig.imapSslMode).toBe('ssl')
+		expect(view.vm.imapConfig.imapPassword).toBe('secret')
+		expect(view.vm.imapConfig.smtpUser).toBe('tom')
+		expect(view.vm.imapConfig.smtpHost).toBe('smtp.tom.turbo')
+		expect(view.vm.imapConfig.smtpPort).toBe(465)
+		expect(view.vm.imapConfig.smtpSslMode).toBe('ssl')
+		expect(view.vm.imapConfig.smtpPassword).toBe('secret')
 	})
 
 	it('fails to find auto config', async () => {
@@ -104,15 +104,126 @@ describe('AccountForm', () => {
 		expect(queryMx).toHaveBeenCalled()
 		expect(testConnectivity).toHaveBeenCalledTimes(4)
 		expect(detected).toBe(true)
-		expect(view.vm.manualConfig.imapUser).toBe('tom@tom.turbo')
-		expect(view.vm.manualConfig.imapHost).toBe('mx.tom.turbo')
-		expect(view.vm.manualConfig.imapPort).toBe(993)
-		expect(view.vm.manualConfig.imapSslMode).toBe('ssl')
-		expect(view.vm.manualConfig.imapPassword).toBe('secret')
-		expect(view.vm.manualConfig.smtpUser).toBe('tom@tom.turbo')
-		expect(view.vm.manualConfig.smtpHost).toBe('mx.tom.turbo')
-		expect(view.vm.manualConfig.smtpPort).toBe(465)
-		expect(view.vm.manualConfig.smtpSslMode).toBe('ssl')
-		expect(view.vm.manualConfig.smtpPassword).toBe('secret')
+		expect(view.vm.imapConfig.imapUser).toBe('tom@tom.turbo')
+		expect(view.vm.imapConfig.imapHost).toBe('mx.tom.turbo')
+		expect(view.vm.imapConfig.imapPort).toBe(993)
+		expect(view.vm.imapConfig.imapSslMode).toBe('ssl')
+		expect(view.vm.imapConfig.imapPassword).toBe('secret')
+		expect(view.vm.imapConfig.smtpUser).toBe('tom@tom.turbo')
+		expect(view.vm.imapConfig.smtpHost).toBe('mx.tom.turbo')
+		expect(view.vm.imapConfig.smtpPort).toBe(465)
+		expect(view.vm.imapConfig.smtpSslMode).toBe('ssl')
+		expect(view.vm.imapConfig.smtpPassword).toBe('secret')
+	})
+})
+
+describe('AccountForm with JMAP', () => {
+	let store
+
+	const mount = (props = {}) => shallowMount(AccountForm, {
+		props: {
+			displayName: 'Tom Turbo',
+			email: 'tom@tom.turbo',
+			...props,
+		},
+		global: {
+			mixins: [Nextcloud],
+			plugins: [pinia],
+		},
+	})
+
+	beforeEach(() => {
+		store = useMainStore()
+		store.googleOauthUrl = undefined
+		store.microsoftOauthUrl = undefined
+	})
+
+	it('creates a JMAP account without SMTP settings', async () => {
+		const account = { id: 7, emailAddress: 'tom@tom.turbo' }
+		vi.spyOn(store, 'startAccountSetup').mockResolvedValue(account)
+		vi.spyOn(store, 'finishAccountSetup').mockResolvedValue(account)
+		const view = mount()
+		view.vm.mode = 'manual'
+		view.vm.protocol = 'jmap'
+		await view.vm.$nextTick()
+		view.vm.jmapConfig.host = ' jmap.tom.turbo '
+		view.vm.jmapConfig.password = 'secret'
+
+		await view.vm.onSubmit()
+
+		expect(store.startAccountSetup).toHaveBeenCalledWith({
+			protocol: 'jmap',
+			accountName: 'Tom Turbo',
+			emailAddress: 'tom@tom.turbo',
+			imapHost: 'jmap.tom.turbo',
+			imapPort: 443,
+			imapSslMode: 'yes',
+			imapUser: 'tom@tom.turbo',
+			imapPassword: 'secret',
+			path: null,
+			authMethod: 'password',
+			classificationEnabled: true,
+		})
+		expect(view.emitted('accountCreated')).toEqual([[account]])
+	})
+
+	it('requires a password to create a JMAP account', async () => {
+		const view = mount()
+		view.vm.mode = 'manual'
+		view.vm.protocol = 'jmap'
+		view.vm.jmapConfig.host = 'jmap.tom.turbo'
+		view.vm.jmapConfig.user = 'tom'
+
+		expect(view.vm.isDisabledManual).toBe(true)
+
+		view.vm.jmapConfig.password = 'secret'
+
+		expect(view.vm.isDisabledManual).toBe(false)
+	})
+
+	it('never uses OAuth for JMAP', () => {
+		store.googleOauthUrl = 'https://google.oauth'
+		const view = mount()
+		view.vm.imapConfig.imapHost = 'imap.gmail.com'
+		view.vm.mode = 'manual'
+		view.vm.protocol = 'jmap'
+
+		expect(view.vm.isGoogleAccount).toBe(false)
+		expect(view.vm.useOauth).toBe(false)
+	})
+
+	it('updates a JMAP account and keeps the stored password', async () => {
+		const account = {
+			id: 7,
+			protocol: 'jmap',
+			imapHost: 'jmap.tom.turbo',
+			imapPort: 8443,
+			imapSslMode: 'yes',
+			imapUser: 'tom',
+			path: '/jmap/session',
+			classificationEnabled: false,
+		}
+		vi.spyOn(store, 'updateAccount').mockResolvedValue(account)
+		const view = mount({ account })
+
+		expect(view.vm.isJmap).toBe(true)
+		expect(view.vm.jmapConfig.port).toBe(8443)
+		expect(view.vm.jmapConfig.path).toBe('/jmap/session')
+
+		await view.vm.onSubmit()
+
+		expect(store.updateAccount).toHaveBeenCalledWith({
+			protocol: 'jmap',
+			accountId: 7,
+			accountName: 'Tom Turbo',
+			emailAddress: 'tom@tom.turbo',
+			imapHost: 'jmap.tom.turbo',
+			imapPort: 8443,
+			imapSslMode: 'yes',
+			imapUser: 'tom',
+			path: '/jmap/session',
+			authMethod: 'password',
+			classificationEnabled: false,
+		})
 	})
 })

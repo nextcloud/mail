@@ -76,7 +76,11 @@ module.exports = async () => ({
 			},
 			{
 				test: /\.tsx?$/,
-				use: 'ts-loader',
+				loader: 'ts-loader',
+				options: {
+					appendTsSuffixTo: [/\.vue$/],
+					onlyCompileBundledFiles: true,
+				},
 				exclude: /node_modules/,
 			},
 			{

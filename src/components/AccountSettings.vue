@@ -105,7 +105,7 @@
 			<SieveDisabledHint v-else />
 		</NcAppSettingsSection>
 		<NcAppSettingsSection
-			v-if="account && !account.provisioningId && !account.isDelegated && account.protocol !== 'jmap'"
+			v-if="account && !account.provisioningId && !account.isDelegated"
 			id="mail-server"
 			key="mail-server"
 			ref="mail-server"
