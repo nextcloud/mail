@@ -116,6 +116,11 @@ return [
 			'verb' => 'GET',
 		],
 		[
+			'name' => 'discovery#discover',
+			'url' => '/api/discovery',
+			'verb' => 'POST',
+		],
+		[
 			'name' => 'tags#create',
 			'url' => '/api/tags',
 			'verb' => 'POST'
