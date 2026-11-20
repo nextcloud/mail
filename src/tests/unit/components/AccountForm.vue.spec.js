@@ -43,6 +43,20 @@ describe('AccountForm', () => {
 		expect(view.vm.emailAddress).toBe('tom@tom.turbo')
 	})
 
+	it('allows auto setup without password when only google oauth is configured', () => {
+		store.googleOauthUrl = 'https://google.oauth'
+		store.microsoftOauthUrl = null
+
+		expect(view.vm.isDisabledAuto).toBe(false)
+	})
+
+	it('allows auto setup without password when only microsoft oauth is configured', () => {
+		store.googleOauthUrl = null
+		store.microsoftOauthUrl = 'https://microsoft.oauth'
+
+		expect(view.vm.isDisabledAuto).toBe(false)
+	})
+
 	it('applies server ISP DB config', async () => {
 		queryIspdb.mockImplementation(() => Promise.resolve({
 			imapConfig: {
