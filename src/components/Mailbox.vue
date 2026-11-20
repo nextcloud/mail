@@ -625,6 +625,8 @@ export default {
 					return t('mail', 'Today')
 				case 'yesterday':
 					return t('mail', 'Yesterday')
+				case 'thisWeek':
+					return t('mail', 'This week')
 				case 'lastWeek':
 					return t('mail', 'Last week')
 				case 'lastMonth':
