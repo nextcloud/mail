@@ -27,15 +27,23 @@ jobs:
           ISSUE_BODY: ${{ github.event.issue.body }}
           NEW_ISSUE_URL: https://github.com/${{ github.repository }}/issues/new/choose
         run: |
+          has_headings() {
+            for heading in "$@"; do
+              if ! grep -qixF "### $heading" <<< "${ISSUE_BODY//$'\r'/}"; then
+                return 1
+              fi
+            done
+          }
+
           # Field labels of .github/ISSUE_TEMPLATE/bug_report_form.yml
-          missing=false
-          for heading in "Steps to reproduce" "Expected behavior" "Actual behavior" "Mail app version" "Nextcloud version"; do
-            if ! grep -qiE "^#{1,6}[[:space:]]+${heading}[[:space:]]*$" <<< "$ISSUE_BODY"; then
-              missing=true
-            fi
-          done
-          if [ "$missing" = false ]; then
-            echo "All form headings present, nothing to do"
+          if has_headings "Steps to reproduce" "Expected behavior" "Actual behavior" "Mail app version" "Nextcloud version"; then
+            echo "Bug form headings present, nothing to do"
+            exit 0
+          fi
+
+          # Field labels of .github/ISSUE_TEMPLATE/feature_request.yml
+          if has_headings "Is your feature request related to a problem? Please describe." "Describe the solution you'd like"; then
+            echo "Feature request form headings present, nothing to do"
             exit 0
           fi
 

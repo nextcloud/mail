@@ -2,6 +2,9 @@ name: "Feature request"
 description: "You have a neat idea that should be implemented?"
 type: "Enhancement"
 labels: ["enhancement", "0. to triage"]
+# The labels of the fields "Is your feature request related to a problem? Please describe." and
+# "Describe the solution you'd like" are checked by .github/workflows/issue-template-check.yml.
+# Keep both in sync.
 body:
   - type: textarea
     id: description-problem
