@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-only
@@ -16,7 +18,7 @@ use OCP\Migration\IOutput;
 /**
  * @group DB
  */
-class FixCollectedAddressesTest extends TestCase {
+final class FixCollectedAddressesTest extends TestCase {
 	/** @var CollectedAddressMapper */
 	private $mapper;
 
@@ -34,7 +36,7 @@ class FixCollectedAddressesTest extends TestCase {
 		$this->repairStep = new FixCollectedAddresses($this->mapper);
 	}
 
-	public function testRunNothingToMigrate() {
+	public function testRunNothingToMigrate(): void {
 		$address1 = new CollectedAddress();
 		$address1->setId(100);
 		$address1->setEmail('user1@domain1.com');
@@ -46,7 +48,7 @@ class FixCollectedAddressesTest extends TestCase {
 
 		$this->mapper->expects($this->exactly(2))
 			->method('getChunk')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				[
 					null, [
 						$address1,
@@ -54,14 +56,14 @@ class FixCollectedAddressesTest extends TestCase {
 					]],
 				[
 					201, []]
-			]));
+			]);
 		$this->mapper->expects($this->never())
 			->method('update');
 
 		$this->repairStep->run($this->output);
 	}
 
-	public function testRunMigrateOne() {
+	public function testRunMigrateOne(): void {
 		$address1 = new CollectedAddress();
 		$address1->setId(100);
 		$address1->setEmail('"User 1" <user1@domain1.com>');
@@ -73,7 +75,7 @@ class FixCollectedAddressesTest extends TestCase {
 
 		$this->mapper->expects($this->exactly(2))
 			->method('getChunk')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				[
 					null, [
 						$address1,
@@ -81,7 +83,7 @@ class FixCollectedAddressesTest extends TestCase {
 					]],
 				[
 					201, []]
-			]));
+			]);
 		$this->mapper->expects($this->once())
 			->method('update')
 			->with($address1);
@@ -92,7 +94,7 @@ class FixCollectedAddressesTest extends TestCase {
 		$this->assertEquals('User 1', $address1->getDisplayName());
 	}
 
-	public function testRunDeleteFaulty() {
+	public function testRunDeleteFaulty(): void {
 		$address1 = new CollectedAddress();
 		$address1->setId(100);
 		$address1->setEmail('"User 1 <user1@domain1.com>>>');
@@ -104,7 +106,7 @@ class FixCollectedAddressesTest extends TestCase {
 
 		$this->mapper->expects($this->exactly(2))
 			->method('getChunk')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				[
 					null, [
 						$address1,
@@ -112,7 +114,7 @@ class FixCollectedAddressesTest extends TestCase {
 					]],
 				[
 					201, []]
-			]));
+			]);
 		$this->mapper->expects($this->once())
 			->method('delete')
 			->with($address1);

@@ -17,7 +17,7 @@ use OCA\Mail\Service\Group\NextcloudGroupService;
 use OCA\Mail\Service\GroupsIntegration;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class GroupsIntegrationTest extends TestCase {
+final class GroupsIntegrationTest extends TestCase {
 	private NextcloudGroupService|MockObject $groupService1;
 	private NextcloudGroupService|MockObject $groupService2;
 	/** @var GroupsIntegration */

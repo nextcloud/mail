@@ -81,7 +81,7 @@ class JmapOperationsService {
 		'attachments', 'preview', 'bodyStructure', 'bodyValues',
 		'header:Disposition-Notification-To:asText',
 		'header:DKIM-Signature:asText',
-		'header:List-Unsubscribe:asText',
+		'header:List-Unsubscribe:asURLs',
 		'header:List-Unsubscribe-Post:asText',
 		'header:X-AI-Generated:asText',
 	];
@@ -1165,9 +1165,7 @@ class JmapOperationsService {
 	 * retrieve identity from remote storage
 	 */
 	public function identityFetch(?string $account = null): array {
-		if ($account === null) {
-			$account = $this->account();
-		}
+		$account ??= $this->account();
 		// construct set request
 		$r0 = new MailIdentityGet($account);
 		// transmit request and receive response

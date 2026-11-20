@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-only
@@ -10,14 +12,14 @@ namespace OCA\Mail\Tests\Unit\Service\Attachment;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\Attachment\UploadedFile;
 
-class UploadedFileTest extends TestCase {
-	public function testGetFileNameNotExisting() {
+final class UploadedFileTest extends TestCase {
+	public function testGetFileNameNotExisting(): void {
 		$file = new UploadedFile([]);
 
 		$this->assertEquals(null, $file->getFileName());
 	}
 
-	public function testGetFileName() {
+	public function testGetFileName(): void {
 		$file = new UploadedFile([
 			'name' => 'cat.jpg',
 		]);
@@ -25,13 +27,13 @@ class UploadedFileTest extends TestCase {
 		$this->assertEquals('cat.jpg', $file->getFileName());
 	}
 
-	public function testGetTempPathNotExisting() {
+	public function testGetTempPathNotExisting(): void {
 		$file = new UploadedFile([]);
 
 		$this->assertEquals(null, $file->getTempPath());
 	}
 
-	public function testGetTempPath() {
+	public function testGetTempPath(): void {
 		$file = new UploadedFile([
 			'tmp_name' => '/tmp/path',
 		]);

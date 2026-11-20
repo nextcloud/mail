@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-only
@@ -12,10 +14,10 @@ use OCA\Mail\Tests\Integration\TestCase;
 /**
  * Tests the IMAP test framework functionality
  */
-class SelfTest extends TestCase {
+final class SelfTest extends TestCase {
 	use ImapTest;
 
-	public function testResetAccount() {
+	public function testResetAccount(): void {
 		$this->assertCount(4, $this->getMailboxes());
 		$this->createImapMailbox('folder1');
 		$this->assertCount(5, $this->getMailboxes());
@@ -24,7 +26,7 @@ class SelfTest extends TestCase {
 		$this->assertCount(4, $this->getMailboxes());
 	}
 
-	public function testMessageCapabilities() {
+	public function testMessageCapabilities(): void {
 		$mb = $this->getMessageBuilder();
 		$message = $mb->to('fritz@phantom.at')
 			->from('tom@turbo.at')

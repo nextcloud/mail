@@ -23,7 +23,7 @@ use OCP\UserMigration\IExportDestination;
 use OCP\UserMigration\IImportSource;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class SmimeMigrationServiceTest extends TestCase {
+final class SmimeMigrationServiceTest extends TestCase {
 	use RecordsConsoleOutput;
 
 	private const USER_ID = '123';
@@ -48,9 +48,7 @@ class SmimeMigrationServiceTest extends TestCase {
 
 		$this->serviceMock->getParameter('crypto')
 			->method('encrypt')
-			->willReturnCallback(function (string $value) {
-				return $value . '_encrypted';
-			});
+			->willReturnCallback(fn (string $value) => $value . '_encrypted');
 
 		$this->serviceMock->getParameter('crypto')
 			->method('decrypt')
@@ -205,11 +203,9 @@ class SmimeMigrationServiceTest extends TestCase {
 		$this->assertCount(0, $mappedTags);
 	}
 
-	public static function provideCreateCertificateFailures(): array {
-		return [
-			'private key mismatch' => [new ServiceException('Private key does not match certificate')],
-			'unparsable certificate' => [new SmimeCertificateParserException('Could not parse certificate')],
-		];
+	public static function provideCreateCertificateFailures(): \Iterator {
+		yield 'private key mismatch' => [new ServiceException('Private key does not match certificate')];
+		yield 'unparsable certificate' => [new SmimeCertificateParserException('Could not parse certificate')];
 	}
 
 	/**
@@ -274,12 +270,10 @@ class SmimeMigrationServiceTest extends TestCase {
 		$this->assertWritten('broken.json', 0);
 	}
 
-	public static function provideFileContentsWithNoCertificatesImported(): array {
-		return [
-			'empty list' => [json_encode([])],
-			'invalid JSON' => ['this is not valid json {{{'],
-			'missing required fields' => [json_encode(['unexpected' => 'field'])],
-		];
+	public static function provideFileContentsWithNoCertificatesImported(): \Iterator {
+		yield 'empty list' => [json_encode([])];
+		yield 'invalid JSON' => ['this is not valid json {{{'];
+		yield 'missing required fields' => [json_encode(['unexpected' => 'field'])];
 	}
 
 	/**

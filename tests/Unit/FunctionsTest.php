@@ -13,7 +13,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use function OCA\Mail\array_flat_map;
 use function OCA\Mail\chunk_uid_sequence;
 
-class FunctionsTest extends TestCase {
+final class FunctionsTest extends TestCase {
 	public function testFlatMapEmpty(): void {
 		$map = function () {
 		};

@@ -12,7 +12,7 @@ namespace OCA\Mail\Tests\Integration\Db;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\Recipient;
 
-class RecipientTest extends TestCase {
+final class RecipientTest extends TestCase {
 	protected function setUp(): void {
 	}
 

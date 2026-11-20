@@ -22,7 +22,7 @@ use OCP\IUser;
 use OCP\IUserSession;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class ProvisioningMiddlewareTest extends TestCase {
+final class ProvisioningMiddlewareTest extends TestCase {
 	/** @var IUserSession|MockObject */
 	private $userSession;
 
@@ -49,7 +49,7 @@ class ProvisioningMiddlewareTest extends TestCase {
 		);
 	}
 
-	public function testBeforeControllerNotLoggedIn() {
+	public function testBeforeControllerNotLoggedIn(): void {
 		$this->credentialStore->expects($this->never())
 			->method('getLoginCredentials');
 		$this->provisioningManager->expects($this->never())
@@ -61,7 +61,7 @@ class ProvisioningMiddlewareTest extends TestCase {
 		);
 	}
 
-	public function testBeforeControllerNoCredentialsAvailable() {
+	public function testBeforeControllerNoCredentialsAvailable(): void {
 		$user = $this->createConfiguredMock(IUser::class, [
 			'getEmailAddress' => 'bruce.wayne@batman.com'
 		]);
@@ -87,7 +87,7 @@ class ProvisioningMiddlewareTest extends TestCase {
 		);
 	}
 
-	public function testBeforeControllerNoPasswordAvailable() {
+	public function testBeforeControllerNoPasswordAvailable(): void {
 		$user = $this->createConfiguredMock(IUser::class, [
 			'getEmailAddress' => 'bruce.wayne@batman.com'
 		]);
@@ -117,7 +117,7 @@ class ProvisioningMiddlewareTest extends TestCase {
 		);
 	}
 
-	public function testBeforeControllerPasswordlessSignin() {
+	public function testBeforeControllerPasswordlessSignin(): void {
 		$user = $this->createConfiguredMock(IUser::class, [
 			'getEmailAddress' => 'bruce.wayne@batman.com'
 		]);
@@ -145,7 +145,7 @@ class ProvisioningMiddlewareTest extends TestCase {
 		);
 	}
 
-	public function testBeforeControllerNoConfigAvailable() {
+	public function testBeforeControllerNoConfigAvailable(): void {
 		$user = $this->createConfiguredMock(IUser::class, [
 			'getEmailAddress' => 'bruce.wayne@batman.com'
 		]);
@@ -166,7 +166,7 @@ class ProvisioningMiddlewareTest extends TestCase {
 		);
 	}
 
-	public function testBeforeController() {
+	public function testBeforeController(): void {
 		$user = $this->createConfiguredMock(IUser::class, [
 			'getEmailAddress' => 'bruce.wayne@batman.com'
 		]);

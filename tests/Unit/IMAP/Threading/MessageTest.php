@@ -12,7 +12,7 @@ namespace OCA\Mail\Tests\Unit\IMAP\Threading;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\IMAP\Threading\Message;
 
-class MessageTest extends TestCase {
+final class MessageTest extends TestCase {
 	public function testGetId(): void {
 		$message = new Message('', 'id', []);
 

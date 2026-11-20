@@ -16,7 +16,7 @@ use OCA\Mail\Db\TagMapper;
 use OCP\IDBConnection;
 use OCP\IL10N;
 
-class TagMapperTest extends TestCase {
+final class TagMapperTest extends TestCase {
 	use DatabaseTransaction;
 
 	private IDBConnection $db;

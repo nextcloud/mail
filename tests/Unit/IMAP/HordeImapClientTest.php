@@ -36,7 +36,7 @@ class TestableHordeImapClient extends HordeImapClient {
 	}
 }
 
-class HordeImapClientTest extends TestCase {
+final class HordeImapClientTest extends TestCase {
 	private IMemcacheWithTTL|MockObject $cache;
 	private ITimeFactory|MockObject $timeFactory;
 	private TestableHordeImapClient $client;

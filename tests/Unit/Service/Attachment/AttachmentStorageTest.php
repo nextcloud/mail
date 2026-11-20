@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-only
@@ -18,7 +20,7 @@ use OCP\Files\SimpleFS\ISimpleFile;
 use OCP\Files\SimpleFS\ISimpleFolder;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class AttachmentStorageTest extends TestCase {
+final class AttachmentStorageTest extends TestCase {
 	private $tmpFilePath = '/tmp/nc_mail_attachment_test';
 
 	/** @var IAppData|MockObject */
@@ -36,18 +38,18 @@ class AttachmentStorageTest extends TestCase {
 		$this->storage = new AttachmentStorage($this->appData);
 	}
 
-	public function testSaveWithFolderNotExisting() {
+	public function testSaveWithFolderNotExisting(): void {
 		$folder = $this->createMock(ISimpleFolder::class);
 		$file = $this->createMock(ISimpleFile::class);
 		$uploadedFile = $this->createMock(UploadedFile::class);
 
 		$this->appData->expects($this->once())
 			->method('getFolder')
-			->with($this->equalTo('mail_fritz'))
+			->with('mail_fritz')
 			->willThrowException(new NotFoundException());
 		$this->appData->expects($this->once())
 			->method('newFolder')
-			->with($this->equalTo('mail_fritz'))
+			->with('mail_fritz')
 			->willReturn($folder);
 		$folder->expects($this->once())
 			->method('newFile')
@@ -58,41 +60,41 @@ class AttachmentStorageTest extends TestCase {
 			->willReturn($this->tmpFilePath);
 		$file->expects($this->once())
 			->method('putContent')
-			->with($this->equalTo('test test'));
+			->with('test test');
 
 		$this->storage->save('fritz', 123, $uploadedFile);
 	}
 
-	public function testSaveWithPermissionProblems() {
+	public function testSaveWithPermissionProblems(): void {
 		$folder = $this->createStub(ISimpleFolder::class);
 		$file = $this->createStub(ISimpleFile::class);
 		$uploadedFile = $this->createStub(UploadedFile::class);
 
 		$this->appData->expects($this->once())
 			->method('getFolder')
-			->with($this->equalTo('mail_fritz'))
+			->with('mail_fritz')
 			->willThrowException(new NotFoundException());
 		$this->appData->expects($this->once())
 			->method('newFolder')
-			->with($this->equalTo('mail_fritz'))
+			->with('mail_fritz')
 			->willThrowException(new NotPermittedException());
 		$this->expectException(NotPermittedException::class);
 
 		$this->storage->save('fritz', 123, $uploadedFile);
 	}
 
-	public function testSaveWithoutTempPath() {
+	public function testSaveWithoutTempPath(): void {
 		$folder = $this->createMock(ISimpleFolder::class);
 		$file = $this->createStub(ISimpleFile::class);
 		$uploadedFile = $this->createMock(UploadedFile::class);
 
 		$this->appData->expects($this->once())
 			->method('getFolder')
-			->with($this->equalTo('mail_fritz'))
+			->with('mail_fritz')
 			->willThrowException(new NotFoundException());
 		$this->appData->expects($this->once())
 			->method('newFolder')
-			->with($this->equalTo('mail_fritz'))
+			->with('mail_fritz')
 			->willReturn($folder);
 		$folder->expects($this->once())
 			->method('newFile')
@@ -106,18 +108,18 @@ class AttachmentStorageTest extends TestCase {
 		$this->storage->save('fritz', 123, $uploadedFile);
 	}
 
-	public function testSaveWithFileReadError() {
+	public function testSaveWithFileReadError(): void {
 		$folder = $this->createMock(ISimpleFolder::class);
 		$file = $this->createStub(ISimpleFile::class);
 		$uploadedFile = $this->createMock(UploadedFile::class);
 
 		$this->appData->expects($this->once())
 			->method('getFolder')
-			->with($this->equalTo('mail_fritz'))
+			->with('mail_fritz')
 			->willThrowException(new NotFoundException());
 		$this->appData->expects($this->once())
 			->method('newFolder')
-			->with($this->equalTo('mail_fritz'))
+			->with('mail_fritz')
 			->willReturn($folder);
 		$folder->expects($this->once())
 			->method('newFile')
@@ -131,14 +133,14 @@ class AttachmentStorageTest extends TestCase {
 		$this->storage->save('fritz', 123, $uploadedFile);
 	}
 
-	public function testSave() {
+	public function testSave(): void {
 		$folder = $this->createMock(ISimpleFolder::class);
 		$file = $this->createMock(ISimpleFile::class);
 		$uploadedFile = $this->createMock(UploadedFile::class);
 
 		$this->appData->expects($this->once())
 			->method('getFolder')
-			->with($this->equalTo('mail_fritz'))
+			->with('mail_fritz')
 			->willReturn($folder);
 		$folder->expects($this->once())
 			->method('newFile')
@@ -149,7 +151,7 @@ class AttachmentStorageTest extends TestCase {
 			->willReturn($this->tmpFilePath);
 		$file->expects($this->once())
 			->method('putContent')
-			->with($this->equalTo('test test'));
+			->with('test test');
 
 		$this->storage->save('fritz', 123, $uploadedFile);
 	}

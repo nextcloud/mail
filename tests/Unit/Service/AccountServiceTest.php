@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-FileCopyrightText: 2015-2016 ownCloud, Inc.
@@ -26,7 +28,7 @@ use OCP\IConfig;
 use OCP\IL10N;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class AccountServiceTest extends TestCase {
+final class AccountServiceTest extends TestCase {
 	private string $user = 'herbert';
 	private string $user2 = 'user';
 
@@ -91,7 +93,7 @@ class AccountServiceTest extends TestCase {
 		$this->client = $this->createMock(Horde_Imap_Client_Socket::class);
 	}
 
-	public function testFindByUserId() {
+	public function testFindByUserId(): void {
 		$this->mapper->expects(self::exactly(2))
 			->method('findByUserId')
 			->willReturnMap([
@@ -111,13 +113,13 @@ class AccountServiceTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testFind() {
+	public function testFind(): void {
 		$accountId = 123;
 
 		$this->mapper->expects($this->once())
 			->method('find')
 			->with($this->user, $accountId)
-			->will($this->returnValue($this->account1));
+			->willReturn($this->account1);
 
 		$expected = new Account($this->account1);
 		$actual = $this->accountService->find($this->user, $accountId);
@@ -125,13 +127,13 @@ class AccountServiceTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testFindById() {
+	public function testFindById(): void {
 		$accountId = 123;
 
 		$this->mapper->expects($this->once())
 			->method('findById')
 			->with($accountId)
-			->will($this->returnValue($this->account1));
+			->willReturn($this->account1);
 
 		$expected = new Account($this->account1);
 		$actual = $this->accountService->findById($accountId);
@@ -139,13 +141,13 @@ class AccountServiceTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testDelete() {
+	public function testDelete(): void {
 		$accountId = 33;
 
 		$this->mapper->expects($this->once())
 			->method('find')
 			->with($this->user, $accountId)
-			->will($this->returnValue($this->account1));
+			->willReturn($this->account1);
 		$this->mapper->expects($this->once())
 			->method('delete')
 			->with($this->account1);
@@ -153,13 +155,13 @@ class AccountServiceTest extends TestCase {
 		$this->accountService->delete($this->user, $accountId);
 	}
 
-	public function testDeleteByAccountId() {
+	public function testDeleteByAccountId(): void {
 		$accountId = 33;
 
 		$this->mapper->expects($this->once())
 			->method('findById')
 			->with($accountId)
-			->will($this->returnValue($this->account1));
+			->willReturn($this->account1);
 		$this->mapper->expects($this->once())
 			->method('delete')
 			->with($this->account1);
@@ -167,7 +169,7 @@ class AccountServiceTest extends TestCase {
 		$this->accountService->deleteByAccountId($accountId);
 	}
 
-	public function testSave() {
+	public function testSave(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(1000);
 		$mailAccount->setUserId('user1');
@@ -175,7 +177,7 @@ class AccountServiceTest extends TestCase {
 		$this->mapper->expects($this->once())
 			->method('save')
 			->with($mailAccount)
-			->will($this->returnArgument(0));
+			->willReturnArgument(0);
 
 		$this->time->expects(self::once())
 			->method('getTime')
@@ -191,7 +193,7 @@ class AccountServiceTest extends TestCase {
 		$this->assertEquals($mailAccount, $actual);
 	}
 
-	public function testUpdateSignature() {
+	public function testUpdateSignature(): void {
 		$id = 3;
 		$uid = 'ian';
 		$signature = 'sig';
@@ -209,7 +211,7 @@ class AccountServiceTest extends TestCase {
 
 		$this->accountService->updateSignature($id, $uid, $signature);
 	}
-	public function testAccountsFailedConnection() {
+	public function testAccountsFailedConnection(): void {
 		$accountId = 1;
 		$this->protocolFactory->expects($this->once())
 			->method('testConnection')
@@ -221,7 +223,7 @@ class AccountServiceTest extends TestCase {
 		$connected = $this->accountService->testAccountConnection($this->user, $accountId);
 		$this->assertFalse($connected);
 	}
-	public function testAccountsSuccesfulConnection() {
+	public function testAccountsSuccesfulConnection(): void {
 		$accountId = 1;
 		$this->protocolFactory->expects($this->once())
 			->method('testConnection');

@@ -13,7 +13,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\IMAP\ImapFlag;
 use OCA\Mail\Service\MailFilter\FilterBuilder;
 
-class FilterBuilderTest extends TestCase {
+final class FilterBuilderTest extends TestCase {
 	private FilterBuilder $builder;
 
 	public function setUp(): void {

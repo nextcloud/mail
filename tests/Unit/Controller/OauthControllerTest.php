@@ -18,7 +18,7 @@ use OCP\AppFramework\Http;
 use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class OauthControllerTest extends TestCase {
+final class OauthControllerTest extends TestCase {
 	private IRequest&MockObject $request;
 	private AccountService&MockObject $accountService;
 	private OauthStateService&MockObject $oauthStateService;

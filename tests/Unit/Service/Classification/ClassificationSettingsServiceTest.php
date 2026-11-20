@@ -17,7 +17,7 @@ use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCP\IAppConfig;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class ClassificationSettingsServiceTest extends TestCase {
+final class ClassificationSettingsServiceTest extends TestCase {
 
 	private IUserPreferences&MockObject $preferences;
 	private IAppConfig&MockObject $appConfig;

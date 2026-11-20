@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -17,7 +19,7 @@ use OCP\IUser;
 use OCP\LDAP\ILDAPProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class ManagerTest extends TestCase {
+final class ManagerTest extends TestCase {
 	/** @var ServiceMockObject */
 	private $mock;
 
@@ -62,7 +64,7 @@ class ManagerTest extends TestCase {
 		$this->assertEquals(0, $count);
 	}
 
-	public function testDisabledAppDoesUnprovision() {
+	public function testDisabledAppDoesUnprovision(): void {
 		/** @var IUser|MockObject $user */
 		$user = $this->createConfiguredMock(IUser::class, [
 			'getEmailAddress' => 'bruce.wayne@batman.com',
@@ -86,7 +88,7 @@ class ManagerTest extends TestCase {
 		$this->assertFalse($result);
 	}
 
-	public function testUpdateProvisionSingleUser() {
+	public function testUpdateProvisionSingleUser(): void {
 		/** @var IUser|MockObject $user */
 		$user = $this->createConfiguredMock(IUser::class, [
 			'getEmailAddress' => 'bruce.wayne@batman.com',
@@ -116,7 +118,7 @@ class ManagerTest extends TestCase {
 		$this->assertTrue($result);
 	}
 
-	public function testProvisionSingleUser() {
+	public function testProvisionSingleUser(): void {
 		/** @var IUser|MockObject $user */
 		$user = $this->createConfiguredMock(IUser::class, [
 			'getEmailAddress' => 'bruce.wayne@batman.com',
@@ -153,7 +155,7 @@ class ManagerTest extends TestCase {
 		$this->assertTrue($result);
 	}
 
-	public function testUpdateProvisionSingleUserWithWildcard() {
+	public function testUpdateProvisionSingleUserWithWildcard(): void {
 		/** @var IUser|MockObject $user */
 		$user = $this->createConfiguredMock(IUser::class, [
 			'getEmailAddress' => 'bruce.wayne@batman.com',
@@ -183,7 +185,7 @@ class ManagerTest extends TestCase {
 		$this->assertTrue($result);
 	}
 
-	public function testProvisionSingleUserWithWildcard() {
+	public function testProvisionSingleUserWithWildcard(): void {
 		/** @var IUser|MockObject $user */
 		$user = $this->createConfiguredMock(IUser::class, [
 			'getEmailAddress' => 'bruce.wayne@batman.com',
@@ -217,7 +219,7 @@ class ManagerTest extends TestCase {
 		$this->assertTrue($result);
 	}
 
-	public function testProvisionSingleUserNoDomainMatch() {
+	public function testProvisionSingleUserNoDomainMatch(): void {
 		/** @var IUser|MockObject $user */
 		$user = $this->createConfiguredMock(IUser::class, [
 			'getEmailAddress' => 'bruce.wayne@batman.com'
@@ -248,7 +250,7 @@ class ManagerTest extends TestCase {
 		$this->assertFalse($result);
 	}
 
-	public function testDeprovision() {
+	public function testDeprovision(): void {
 		$config = new Provisioning();
 		$config->setProvisioningDomain('*');
 		$config->setId(1);
@@ -417,11 +419,9 @@ class ManagerTest extends TestCase {
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('update')
-			->with($this->callback(static function (MailAccount $account) {
-				return $account->getEmail() === 'BWAYNE@batman.com'
+			->with($this->callback(static fn (MailAccount $account) => $account->getEmail() === 'BWAYNE@batman.com'
 					&& $account->getInboundUser() === 'BWAYNE'
-					&& $account->getOutboundUser() === 'BWAYNE';
-			}))
+					&& $account->getOutboundUser() === 'BWAYNE'))
 			->willReturn($mailAccount);
 
 		$result = $this->manager->provisionSingleUser($configs, $user);
@@ -441,19 +441,17 @@ class ManagerTest extends TestCase {
 			->method('insert');
 	}
 
-	public function provideUnresolvableLdapValues(): array {
-		return [
-			'empty' => [''],
-			'control characters' => ["BWAYNE\r\nX"],
-			'invalid UTF-8' => ["BWAYNE\xFF"],
-			'space' => ['Bruce Wayne'],
-			'unicode line separator' => ["BWAYNE\u{2028}X"],
-			'trailing newline' => ["BWAYNE\n"],
-			'trailing carriage return' => ["BWAYNE\r"],
-			'comma escaping the domain' => ['ceo@evil.example,x'],
-			'angle brackets escaping the domain' => ['a@b.com<c@d.com>'],
-			'longer than the account column' => [str_repeat('a', 65)],
-		];
+	public function provideUnresolvableLdapValues(): \Iterator {
+		yield 'empty' => [''];
+		yield 'control characters' => ["BWAYNE\r\nX"];
+		yield 'invalid UTF-8' => ["BWAYNE\xFF"];
+		yield 'space' => ['Bruce Wayne'];
+		yield 'unicode line separator' => ["BWAYNE\u{2028}X"];
+		yield 'trailing newline' => ["BWAYNE\n"];
+		yield 'trailing carriage return' => ["BWAYNE\r"];
+		yield 'comma escaping the domain' => ['ceo@evil.example,x'];
+		yield 'angle brackets escaping the domain' => ['a@b.com<c@d.com>'];
+		yield 'longer than the account column' => [str_repeat('a', 65)];
 	}
 
 	/**

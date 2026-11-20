@@ -20,7 +20,7 @@ use OCP\EventDispatcher\IEventDispatcher;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class JmapMailboxConnectorTest extends TestCase {
+final class JmapMailboxConnectorTest extends TestCase {
 	private JmapOperationsService&MockObject $jmapOperationsService;
 	private MailboxMapper&MockObject $mailboxMapper;
 	private JmapMailboxConnector $connector;
@@ -57,9 +57,7 @@ class JmapMailboxConnectorTest extends TestCase {
 			->willReturn($parent);
 		$this->jmapOperationsService->expects(self::once())
 			->method('collectionCreate')
-			->with($parent, self::callback(static function (Mailbox $mailbox): bool {
-				return $mailbox->getName() === 'Child';
-			}))
+			->with($parent, self::callback(static fn (Mailbox $mailbox): bool => $mailbox->getName() === 'Child'))
 			->willReturnCallback(static function (?Mailbox $location, Mailbox $mailbox): Mailbox {
 				self::assertSame('parent-id', $location?->getRemoteId());
 				$mailbox->setRemoteId('child-id');
@@ -68,10 +66,8 @@ class JmapMailboxConnectorTest extends TestCase {
 			});
 		$this->mailboxMapper->expects(self::once())
 			->method('insert')
-			->with(self::callback(static function (Mailbox $mailbox): bool {
-				return $mailbox->getName() === 'Parent/Child'
-					&& $mailbox->getNameHash() === md5('Parent/Child');
-			}))
+			->with(self::callback(static fn (Mailbox $mailbox): bool => $mailbox->getName() === 'Parent/Child'
+					&& $mailbox->getNameHash() === md5('Parent/Child')))
 			->willReturnArgument(0);
 
 		$mailbox = $this->connector->create($this->account, 'Parent/Child');
@@ -92,16 +88,12 @@ class JmapMailboxConnectorTest extends TestCase {
 			->willReturn(true);
 		$this->jmapOperationsService->expects(self::once())
 			->method('collectionModify')
-			->with('mailbox-id', self::callback(static function (Mailbox $mailbox): bool {
-				return $mailbox->getName() === 'After';
-			}), ['name'])
+			->with('mailbox-id', self::callback(static fn (Mailbox $mailbox): bool => $mailbox->getName() === 'After'), ['name'])
 			->willReturnArgument(1);
 		$this->mailboxMapper->expects(self::once())
 			->method('update')
-			->with(self::callback(static function (Mailbox $mailbox): bool {
-				return $mailbox->getName() === 'Parent/After'
-					&& $mailbox->getNameHash() === md5('Parent/After');
-			}))
+			->with(self::callback(static fn (Mailbox $mailbox): bool => $mailbox->getName() === 'Parent/After'
+					&& $mailbox->getNameHash() === md5('Parent/After')))
 			->willReturnArgument(0);
 
 		$renamed = $this->connector->rename($this->account, $mailbox, 'Parent/After');

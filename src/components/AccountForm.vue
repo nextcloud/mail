@@ -298,6 +298,7 @@ import {
 } from '../service/AutoConfigService.js'
 import { generateOauthState } from '../service/OauthStateService.js'
 import useMainStore from '../store/mainStore.js'
+import { isValidEmail } from '../util/emailAddress.js'
 import { findProviderForEmail, loadOidcProviders, openOidcConsent } from '../util/oidc.js'
 
 export default {
@@ -398,7 +399,7 @@ export default {
 				requiresPassword = !this.autoConfig.password && !this.googleOauthUrl && !this.microsoftOauthUrl
 			}
 
-			if (!this.emailAddress || !this.isValidEmail(this.emailAddress) || requiresPassword) {
+			if (!this.emailAddress || !isValidEmail(this.emailAddress) || requiresPassword) {
 				return true
 			}
 
@@ -424,7 +425,7 @@ export default {
 				requiresPassword = !this.useOauth && (!this.manualConfig.imapPassword || !this.manualConfig.smtpPassword)
 			}
 
-			return !this.emailAddress || !this.isValidEmail(this.emailAddress)
+			return !this.emailAddress || !isValidEmail(this.emailAddress)
 				|| !this.manualConfig.imapHost || !this.manualConfig.imapPort || !this.manualConfig.imapUser
 				|| !this.manualConfig.smtpHost || !this.manualConfig.smtpPort || !this.manualConfig.smtpUser
 				|| requiresPassword
@@ -522,6 +523,8 @@ export default {
 	},
 
 	methods: {
+		isValidEmail,
+
 		applyOidcProvider(provider) {
 			this.manualConfig.imapHost = provider.imapHost
 			this.manualConfig.imapPort = provider.imapPort
@@ -797,6 +800,8 @@ export default {
 					} else if (error.data.service === 'SMTP') {
 						this.feedback = t('mail', 'SMTP server is not reachable')
 					}
+				} else if (error.data?.error === 'ACCOUNT_EXISTS') {
+					this.feedback = t('mail', 'Account already exists')
 				} else if (error.data?.error === 'AUTHENTICATION_WRONG_PASSWORD') {
 					if (error.data.service === 'IMAP') {
 						this.feedback = t('mail', 'IMAP username or password is wrong')
@@ -832,11 +837,6 @@ export default {
 				this.loading = false
 				this.loadingMessage = undefined
 			}
-		},
-
-		isValidEmail(email) {
-			const regExpEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(localhost|((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})))$/
-			return regExpEmail.test(email)
 		},
 	},
 }

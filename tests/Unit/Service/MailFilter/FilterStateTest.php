@@ -12,7 +12,7 @@ namespace OCA\Mail\Tests\Unit\Service\MailFilter;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\MailFilter\FilterState;
 
-class FilterStateTest extends TestCase {
+final class FilterStateTest extends TestCase {
 	public function testConstructor(): void {
 		$filters = ['filter1' => ['name' => 'Test']];
 

@@ -20,7 +20,7 @@ use Psr\Log\LoggerInterface;
 /**
  * @group DB
  */
-class ProvisioningMapperTest extends TestCase {
+final class ProvisioningMapperTest extends TestCase {
 	use DatabaseTransaction;
 
 	/** @var ProvisioningMapper */
@@ -60,7 +60,7 @@ class ProvisioningMapperTest extends TestCase {
 		$this->data['sieveEnabled'] = false;
 	}
 
-	public function testValidate() {
+	public function testValidate(): void {
 		$provisioning = new Provisioning();
 		$provisioning->setId(1);
 		$provisioning->setProvisioningDomain($this->data['provisioningDomain']);
@@ -89,7 +89,7 @@ class ProvisioningMapperTest extends TestCase {
 		}
 	}
 
-	public function testValidateException() {
+	public function testValidateException(): void {
 		$data = [];
 		$data['provisioningDomain'] = 'heart-of-gold.com' ;
 
@@ -98,7 +98,7 @@ class ProvisioningMapperTest extends TestCase {
 		$provisioning = $this->mapper->validate($data);
 	}
 
-	public function testValidateRejectsMalformedLdapPlaceholder() {
+	public function testValidateRejectsMalformedLdapPlaceholder(): void {
 		$data = $this->data;
 		$data['emailTemplate'] = '%ldap:uid%@heart-of-gold.com';
 
@@ -107,7 +107,7 @@ class ProvisioningMapperTest extends TestCase {
 		$this->mapper->validate($data);
 	}
 
-	public function testValidateAcceptsLdapPlaceholder() {
+	public function testValidateAcceptsLdapPlaceholder(): void {
 		$data = $this->data;
 		$data['emailTemplate'] = '%LDAP:sAMAccountName%@heart-of-gold.com';
 
@@ -116,7 +116,7 @@ class ProvisioningMapperTest extends TestCase {
 		$this->assertSame('%LDAP:sAMAccountName%@heart-of-gold.com', $provisioning->getEmailTemplate());
 	}
 
-	public function testGetNoResult() {
+	public function testGetNoResult(): void {
 		$db = $this->mapper->get(99999);
 		$this->assertNull($db);
 	}
@@ -124,7 +124,7 @@ class ProvisioningMapperTest extends TestCase {
 	/**
 	 * @return void
 	 */
-	public function testUpdate() {
+	public function testUpdate(): void {
 		$provisioning = new Provisioning();
 		$provisioning->setProvisioningDomain('somebody-elses-problem.com');
 		$provisioning->setEmailTemplate($this->data['emailTemplate']);
@@ -148,7 +148,7 @@ class ProvisioningMapperTest extends TestCase {
 		$this->assertEquals('arthur-dent.com', $update->getProvisioningDomain());
 	}
 
-	public function testGetAll() {
+	public function testGetAll(): void {
 		$provisioning = new Provisioning();
 		$provisioning->setProvisioningDomain($this->data['provisioningDomain']);
 		$provisioning->setEmailTemplate($this->data['emailTemplate']);
@@ -170,7 +170,7 @@ class ProvisioningMapperTest extends TestCase {
 		$this->assertContainsOnlyInstancesOf(Provisioning::class, $results);
 	}
 
-	public function testGet() {
+	public function testGet(): void {
 		$provisioning = new Provisioning();
 		$provisioning->setProvisioningDomain($this->data['provisioningDomain']);
 		$provisioning->setEmailTemplate($this->data['emailTemplate']);
@@ -198,7 +198,7 @@ class ProvisioningMapperTest extends TestCase {
 		}
 	}
 
-	public function testFindUniqueImapHosts() {
+	public function testFindUniqueImapHosts(): void {
 		$provisioning = new Provisioning();
 		$provisioning->setProvisioningDomain($this->data['provisioningDomain']);
 		$provisioning->setEmailTemplate($this->data['emailTemplate']);

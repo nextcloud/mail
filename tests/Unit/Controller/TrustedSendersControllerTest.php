@@ -13,7 +13,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Controller\TrustedSendersController;
 use OCP\AppFramework\Http;
 
-class TrustedSendersControllerTest extends TestCase {
+final class TrustedSendersControllerTest extends TestCase {
 	public function testSetTrustedNullUser(): void {
 		$serviceMock = $this->createServiceMock(TrustedSendersController::class, [
 			'userId' => null,

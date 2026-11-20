@@ -12,4 +12,7 @@ export const hiddenTags = {
 	notjunk: '',
 	loadremoteimages: '',
 	'unsubscribe newsletter': '',
+	// JMAP accounts keep the keyword as display name
+	$hasattachment: '',
+	$hasnoattachment: '',
 }

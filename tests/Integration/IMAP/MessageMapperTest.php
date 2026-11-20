@@ -21,7 +21,7 @@ use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use OCA\Mail\Tests\Integration\Framework\ImapTestAccount;
 use OCP\Server;
 
-class MessageMapperTest extends TestCase {
+final class MessageMapperTest extends TestCase {
 	use ImapTest,
 		ImapTestAccount;
 

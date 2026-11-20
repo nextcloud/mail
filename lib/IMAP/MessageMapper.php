@@ -819,13 +819,12 @@ class MessageMapper {
 
 		$contentType = $mimeHeaders['content-type'];
 		if ($contentType instanceof Horde_Mime_Headers_ContentParam_ContentType) {
-			if (str_contains($contentType->value_single, 'text/calendar')) {
-				$mimePart->setType('text/calendar');
-				$mimePart->setContentTypeParameter('name', $contentType['name'] ?? 'calendar.ics');
-			} else {
-				$mimePart->setType($contentType->value_single);
-				/** @psalm-suppress PossiblyNullArgument */
-				$mimePart->setContentTypeParameter('name', $contentType['name'] ?? null);
+			$mimePart->setType($contentType->value_single);
+			foreach ($contentType->params as $label => $data) {
+				$mimePart->setContentTypeParameter($label, $data);
+			}
+			if ($mimePart->getType() === 'text/calendar' && !isset($contentType['name'])) {
+				$mimePart->setContentTypeParameter('name', 'calendar.ics');
 			}
 		}
 
@@ -905,10 +904,16 @@ class MessageMapper {
 					$hasAttachments = true;
 				}
 
+				// Flag the message as iMIP when we see a text/calendar part.
+				// Proton Mail Bridge is known to strip the `method=` parameter
+				// from the Content-Type header while re-assembling a message
+				// after E2E-decryption, so requiring the parameter here would
+				// drop every Bridge-delivered invitation. The actual method
+				// (REQUEST/REPLY/CANCEL) is parsed out of the ICS body
+				// downstream in ImapMessageFetcher::getPart() — see the
+				// matching fallback there.
 				if ($part->getType() === 'text/calendar') {
-					if ($part->getContentTypeParameter('method') !== null) {
-						$isImipMessage = true;
-					}
+					$isImipMessage = true;
 				}
 			}
 

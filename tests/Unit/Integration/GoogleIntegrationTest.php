@@ -21,7 +21,7 @@ use OCP\Security\ICrypto;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class GoogleIntegrationTest extends TestCase {
+final class GoogleIntegrationTest extends TestCase {
 	private IAppConfig&MockObject $appConfig;
 	private GoogleIntegration $integration;
 

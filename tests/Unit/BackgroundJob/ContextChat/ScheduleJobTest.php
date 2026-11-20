@@ -26,7 +26,7 @@ use OCP\ContextChat\IContentManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class ScheduleJobTest extends TestCase {
+final class ScheduleJobTest extends TestCase {
 	private TaskService&MockObject $taskService;
 	private AccountService&MockObject $accountService;
 	private MailManager&MockObject $mailManager;

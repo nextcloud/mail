@@ -25,7 +25,7 @@ use OCP\SetupCheck\SetupResult;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\Test\TestLogger;
 
-class MailConnectionPerformanceTest extends TestCase {
+final class MailConnectionPerformanceTest extends TestCase {
 
 	private IL10N&MockObject $l10n;
 	private TestLogger $logger;

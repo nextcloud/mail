@@ -17,7 +17,7 @@ use OCP\IDBConnection;
 use OCP\IUser;
 use OCP\Server;
 
-class TrustedSenderMapperTest extends TestCase {
+final class TrustedSenderMapperTest extends TestCase {
 	use DatabaseTransaction, TestUser;
 
 	/** @var IDBConnection */

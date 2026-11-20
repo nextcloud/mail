@@ -15,7 +15,7 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Tests\Integration\TestCase;
 
-class TagsControllerTest extends TestCase {
+final class TagsControllerTest extends TestCase {
 	/** @var ServiceMockObject */
 	private $serviceMock;
 

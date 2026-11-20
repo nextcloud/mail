@@ -132,9 +132,7 @@ class SnoozeService {
 				// Could not find mailbox, moving back to INBOX
 			}
 		}
-		if ($originalMailbox === null) {
-			$originalMailbox = $this->mailboxMapper->find($srcAccount, $originalMailboxName);
-		}
+		$originalMailbox ??= $this->mailboxMapper->find($srcAccount, $originalMailboxName);
 
 		$this->mailManager->moveMessage(
 			$srcAccount,
@@ -212,9 +210,7 @@ class SnoozeService {
 				// Could not find mailbox, moving back to INBOX
 			}
 		}
-		if ($originalMailbox === null) {
-			$originalMailbox = $this->mailboxMapper->find($srcAccount, $originalMailboxName);
-		}
+		$originalMailbox ??= $this->mailboxMapper->find($srcAccount, $originalMailboxName);
 
 		$messages = $this->messageMapper->findThread($srcAccount, $selectedMessage->getThreadRootId());
 
@@ -320,9 +316,7 @@ class SnoozeService {
 					// Could not find mailbox, moving back to INBOX
 				}
 			}
-			if ($srcMailbox === null) {
-				$srcMailbox = $this->mailboxMapper->find($account, $srcMailboxName);
-			}
+			$srcMailbox ??= $this->mailboxMapper->find($account, $srcMailboxName);
 
 			$this->mailManager->flagMessages($account, $snoozeMailbox, 'seen', false, $message);
 

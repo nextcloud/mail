@@ -33,7 +33,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 /**
  * @covers \OCA\Mail\Search\FilteringProvider
  */
-class FilteringProviderTest extends TestCase {
+final class FilteringProviderTest extends TestCase {
 	private IMailSearch&MockObject $mailSearch;
 	private IL10N&MockObject $l10n;
 	private IDateTimeFormatter $dateTimeFormatter;
@@ -88,6 +88,69 @@ class FilteringProviderTest extends TestCase {
 		$entries = $result->jsonSerialize()['entries'] ?? [];
 
 		self::assertNotEmpty($entries);
+	}
+
+	public static function multiWordTermProvider(): \Iterator {
+		yield 'several words' => ['QA invite'];
+		yield 'colon in the term' => ['Re: invoice'];
+		yield 'plus sign' => ['C++ meetup'];
+		yield 'surrounding whitespace' => ['  QA invite ', 'QA invite'];
+	}
+
+	/**
+	 * @dataProvider multiWordTermProvider
+	 */
+	public function testSearchForFullTerm(string $term, ?string $expected = null): void {
+		$user = $this->createStub(IUser::class);
+		$searchQuery = new SearchQuery(new FilterCollection(...[
+			IFilter::BUILTIN_TERM => new StringFilter($term),
+		]));
+		$this->mailSearch->expects($this->once())
+			->method('findMessagesGlobally')
+			->with($user, $this->callback(function (MailSearchQuery $query) use ($term, $expected) {
+				self::assertEquals([$expected ?? $term], $query->getSubjects());
+				return true;
+			}))
+			->willReturn([]);
+
+		$this->provider->search($user, $searchQuery);
+	}
+
+	public function testSearchForWhitespaceOnlyTerm(): void {
+		$user = $this->createStub(IUser::class);
+		$searchQuery = new SearchQuery(new FilterCollection(...[
+			IFilter::BUILTIN_TERM => new StringFilter('   '),
+		]));
+		$this->mailSearch->expects($this->never())
+			->method('findMessagesGlobally');
+
+		$result = $this->provider->search($user, $searchQuery);
+
+		self::assertEmpty($result->jsonSerialize()['entries']);
+	}
+
+	public function testSearchForUserWithPlusAddress(): void {
+		$user = $this->createStub(IUser::class);
+		$otherUser = $this->createMock(IUser::class);
+		$otherUser->method('getEMailAddress')
+			->willReturn('other+news@domain.tld');
+		$this->userManager->method('get')
+			->with('bob')
+			->willReturn($otherUser);
+		$searchQuery = new SearchQuery(new FilterCollection(...[
+			IFilter::BUILTIN_PERSON => new UserFilter('bob', $this->userManager),
+		]));
+		$this->mailSearch->expects($this->once())
+			->method('findMessagesGlobally')
+			->with($user, $this->callback(function (MailSearchQuery $query) {
+				self::assertEquals(['other+news@domain.tld'], $query->getFrom());
+				self::assertEquals(['other+news@domain.tld'], $query->getTo());
+				self::assertEquals(['other+news@domain.tld'], $query->getCc());
+				return true;
+			}))
+			->willReturn([]);
+
+		$this->provider->search($user, $searchQuery);
 	}
 
 	public function testSearchForUserNoEmail(): void {

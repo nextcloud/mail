@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2025 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -13,7 +15,7 @@ use OCA\Mail\Service\PhishingDetection\ImapFlagCheck;
 use OCP\IL10N;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class ImapFlagCheckTest extends TestCase {
+final class ImapFlagCheckTest extends TestCase {
 
 	private IL10N|MockObject $l10n;
 	private ImapFlagCheck $service;

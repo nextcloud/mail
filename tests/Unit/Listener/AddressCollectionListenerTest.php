@@ -26,7 +26,7 @@ use OCP\EventDispatcher\IEventListener;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class AddressCollectionListenerTest extends TestCase {
+final class AddressCollectionListenerTest extends TestCase {
 	/** @var IUserPreferences|MockObject */
 	private $preferences;
 
@@ -57,7 +57,7 @@ class AddressCollectionListenerTest extends TestCase {
 		);
 	}
 
-	public function testHandleUnrelated() {
+	public function testHandleUnrelated(): void {
 		$event = new Event();
 		$this->addressCollector->expects($this->never())
 			->method('addAddresses');
@@ -68,7 +68,7 @@ class AddressCollectionListenerTest extends TestCase {
 		$this->addToAssertionCount(1);
 	}
 
-	public function testHandleOptOut() {
+	public function testHandleOptOut(): void {
 		$account = $this->createConfiguredMock(Account::class, [
 			'getUserId' => 'test'
 		]);
@@ -83,7 +83,7 @@ class AddressCollectionListenerTest extends TestCase {
 		$this->listener->handle($event);
 	}
 
-	public function testHandle() {
+	public function testHandle(): void {
 		/** @var Account|MockObject $account */
 		$account = $this->createConfiguredMock(Account::class, [
 			'getUserId' => 'test'
@@ -128,7 +128,7 @@ class AddressCollectionListenerTest extends TestCase {
 			->method('addAddresses')
 			->with(
 				$account->getUserId(),
-				$this->equalTo($addresses)
+				$addresses
 			);
 		$this->logger->expects($this->never())->method($this->anything());
 

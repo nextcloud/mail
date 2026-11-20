@@ -44,7 +44,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use ReflectionMethod;
 
-class ImapTransmissionConnectorTest extends TestCase {
+final class ImapTransmissionConnectorTest extends TestCase {
 
 	private ProtocolFactory|MockObject $protocolFactory;
 	private TransmissionService|MockObject $transmissionService;
@@ -219,7 +219,7 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->assertEquals('', $part->getDisposition());
 	}
 
-	public function testApplySmimeSignature() {
+	public function testApplySmimeSignature(): void {
 		$send = new \Horde_Mime_Part();
 		$send->setContents('Test');
 		$localMessage = new LocalMessage();
@@ -241,7 +241,7 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->assertEquals(LocalMessage::STATUS_RAW, $localMessage->getStatus());
 	}
 
-	public function testApplySmimeSignatureNoCertId() {
+	public function testApplySmimeSignatureNoCertId(): void {
 		$send = new \Horde_Mime_Part();
 		$send->setContents('Test');
 		$localMessage = new LocalMessage();
@@ -260,7 +260,7 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->assertEquals(LocalMessage::STATUS_SMIME_SIGN_NO_CERT_ID, $localMessage->getStatus());
 	}
 
-	public function testApplySmimeSignatureNoCertFound() {
+	public function testApplySmimeSignatureNoCertFound(): void {
 		$send = new \Horde_Mime_Part();
 		$send->setContents('Test');
 		$localMessage = new LocalMessage();
@@ -281,7 +281,7 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->assertEquals(LocalMessage::STATUS_SMIME_SIGN_CERT, $localMessage->getStatus());
 	}
 
-	public function testApplySmimeSignatureFailedSigning() {
+	public function testApplySmimeSignatureFailedSigning(): void {
 		$send = new \Horde_Mime_Part();
 		$send->setContents('Test');
 		$localMessage = new LocalMessage();
@@ -305,7 +305,7 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->assertEquals(LocalMessage::STATUS_SMIME_SIGN_FAIL, $localMessage->getStatus());
 	}
 
-	public function testApplySmimeEncryption() {
+	public function testApplySmimeEncryption(): void {
 		$send = new \Horde_Mime_Part();
 		$send->setContents('Test');
 		$localMessage = new LocalMessage();
@@ -333,7 +333,7 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->assertEquals(LocalMessage::STATUS_RAW, $localMessage->getStatus());
 	}
 
-	public function testApplySmimeEncryptionNoCertId() {
+	public function testApplySmimeEncryptionNoCertId(): void {
 		$send = new \Horde_Mime_Part();
 		$send->setContents('Test');
 		$localMessage = new LocalMessage();
@@ -350,7 +350,7 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->assertEquals(LocalMessage::STATUS_SMIME_ENCRYPT_NO_CERT_ID, $localMessage->getStatus());
 	}
 
-	public function testApplySmimeEncryptionNoAddressCerts() {
+	public function testApplySmimeEncryptionNoAddressCerts(): void {
 		$send = new \Horde_Mime_Part();
 		$send->setContents('Test');
 		$localMessage = new LocalMessage();
@@ -376,7 +376,7 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->assertEquals(LocalMessage::STATUS_SMIME_ENCRYT_FAIL, $localMessage->getStatus());
 	}
 
-	public function testApplySmimeEncryptionNoCert() {
+	public function testApplySmimeEncryptionNoCert(): void {
 		$send = new \Horde_Mime_Part();
 		$send->setContents('Test');
 		$localMessage = new LocalMessage();
@@ -405,7 +405,7 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->assertEquals(LocalMessage::STATUS_SMIME_ENCRYPT_CERT, $localMessage->getStatus());
 	}
 
-	public function testApplySmimeEncryptionEncryptFail() {
+	public function testApplySmimeEncryptionEncryptFail(): void {
 		$send = new \Horde_Mime_Part();
 		$send->setContents('Test');
 		$localMessage = new LocalMessage();
@@ -489,9 +489,9 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->connector->saveMessage($account, $mailbox, $localMessage);
 
 		$this->assertNotNull($capturedRaw);
-		$this->assertStringContainsString('multipart/mixed', $capturedRaw);
-		$this->assertStringContainsString('test.txt', $capturedRaw);
-		$this->assertStringContainsString('Attachment contents', $capturedRaw);
+		$this->assertStringContainsString('multipart/mixed', (string)$capturedRaw);
+		$this->assertStringContainsString('test.txt', (string)$capturedRaw);
+		$this->assertStringContainsString('Attachment contents', (string)$capturedRaw);
 	}
 
 	private function prepareAiGeneratedMessage(): array {
@@ -533,7 +533,7 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->connector->sendMessage($account, $localMessage, $sentMailbox);
 
 		$this->assertSame(LocalMessage::STATUS_PROCESSED, $localMessage->getStatus());
-		$this->assertStringContainsString(LocalMessage::HEADER_AI_GENERATED . ': 1', $localMessage->getRaw());
+		$this->assertStringContainsString(LocalMessage::HEADER_AI_GENERATED . ': 1', (string)$localMessage->getRaw());
 	}
 
 	public function testSendMessageWithoutSentCopy(): void {
@@ -617,7 +617,7 @@ class ImapTransmissionConnectorTest extends TestCase {
 
 		$this->connector->saveMessage($account, $mailbox, $localMessage);
 
-		$this->assertStringContainsString(LocalMessage::HEADER_AI_GENERATED . ': 1', $capturedRaw);
+		$this->assertStringContainsString(LocalMessage::HEADER_AI_GENERATED . ': 1', (string)$capturedRaw);
 	}
 
 	public function testSaveMessageKeepsBcc(): void {

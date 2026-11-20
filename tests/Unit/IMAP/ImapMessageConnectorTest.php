@@ -34,7 +34,7 @@ use Psr\Log\LoggerInterface;
  * connection to the mail server is leaked (see moveMessages/deleteMessages/flagMessages/
  * tagMessages/isPermflagsEnabled).
  */
-class ImapMessageConnectorTest extends TestCase {
+final class ImapMessageConnectorTest extends TestCase {
 	private ProtocolFactory&MockObject $protocolFactory;
 	private ImapToDbSynchronizer&MockObject $synchronizer;
 	private FolderMapper&MockObject $imapMailboxMapper;
@@ -68,11 +68,9 @@ class ImapMessageConnectorTest extends TestCase {
 			->willReturn($this->client);
 	}
 
-	public static function bodyLoadingOptions(): array {
-		return [
-			'without body' => [false],
-			'with body' => [true],
-		];
+	public static function bodyLoadingOptions(): \Iterator {
+		yield 'without body' => [false];
+		yield 'with body' => [true];
 	}
 
 	/** @dataProvider bodyLoadingOptions */
@@ -230,6 +228,7 @@ class ImapMessageConnectorTest extends TestCase {
 			->method('logout');
 
 		$quota = $this->connector->getQuota($this->account);
+		$this->assertInstanceOf(\OCA\Mail\Service\Quota::class, $quota);
 
 		self::assertSame(1024, $quota->getUsage());
 		self::assertSame(2048, $quota->getLimit());

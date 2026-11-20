@@ -21,7 +21,7 @@ use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 use OCP\Server;
 
-class ThreadMapperTest extends TestCase {
+final class ThreadMapperTest extends TestCase {
 	use DatabaseTransaction;
 
 	/** A user that has no mail accounts on a development instance */

@@ -56,8 +56,8 @@
 					<NcDateTimePicker
 						id="ooo-first-day"
 						v-model="firstDay"
-						:class="{ 'form__date-picker--disabled': !enabled }"
-						:inert="!enabled" />
+						:class="{ 'form__date-picker--disabled': !isEnabled }"
+						:inert="!isEnabled" />
 				</fieldset>
 
 				<fieldset class="form__fieldset">
@@ -66,7 +66,7 @@
 							id="ooo-enable-last-day"
 							v-model="enableLastDay"
 							type="checkbox"
-							:disabled="!enabled">
+							:disabled="!isEnabled">
 						<label for="ooo-enable-last-day">
 							{{ t('mail', 'Last day (optional)') }}
 						</label>
@@ -74,8 +74,8 @@
 					<NcDateTimePicker
 						id="ooo-last-day"
 						v-model="lastDay"
-						:class="{ 'form__date-picker--disabled': !enabled || !enableLastDay }"
-						:inert="!enabled || !enableLastDay" />
+						:class="{ 'form__date-picker--disabled': !isEnabled || !enableLastDay }"
+						:inert="!isEnabled || !enableLastDay" />
 				</fieldset>
 			</div>
 
@@ -212,6 +212,10 @@ export default {
 				},
 				...this.account.aliases,
 			].map(({ name, alias }) => `${name} <${alias}>`)
+		},
+
+		isEnabled() {
+			return this.enabled === OOO_ENABLED
 		},
 
 		/**

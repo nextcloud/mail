@@ -15,7 +15,7 @@ use OCP\Http\Client\IResponse;
 /**
  * Renewing the access token with the stored refresh token.
  */
-class OidcRefreshTest extends OidcIntegrationTestCase {
+final class OidcRefreshTest extends OidcIntegrationTestCase {
 	public function testRefreshNoopWhenNotAuthorized(): void {
 		$account = $this->account('alice@example.com');
 
@@ -59,12 +59,10 @@ class OidcRefreshTest extends OidcIntegrationTestCase {
 			'authorization_endpoint' => 'https://idp.example.com/auth',
 			'token_endpoint' => 'https://idp.example.com/token',
 		]));
-		$this->crypto->method('decrypt')->willReturnCallback(static function (string $v): string {
-			return match ($v) {
-				'enc-refresh' => 'plain-refresh',
-				'encrypted-secret' => 'plain-secret',
-				default => $v,
-			};
+		$this->crypto->method('decrypt')->willReturnCallback(static fn (string $v): string => match ($v) {
+			'enc-refresh' => 'plain-refresh',
+			'encrypted-secret' => 'plain-secret',
+			default => $v,
 		});
 		$this->crypto->method('encrypt')->willReturnCallback(static fn (string $v): string => 'enc:' . $v);
 

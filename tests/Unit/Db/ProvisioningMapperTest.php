@@ -16,7 +16,7 @@ use OCA\Mail\Exception\ValidationException;
 use OCP\IDBConnection;
 use Psr\Log\NullLogger;
 
-class ProvisioningMapperTest extends TestCase {
+final class ProvisioningMapperTest extends TestCase {
 
 	private ProvisioningMapper $mapper;
 
@@ -51,7 +51,7 @@ class ProvisioningMapperTest extends TestCase {
 			$exception = $e;
 		}
 
-		$this->assertNotNull($exception);
+		$this->assertInstanceOf(\OCA\Mail\Exception\ValidationException::class, $exception);
 		$this->assertCount(2, $exception->getFields());
 		$this->assertArrayHasKey('imapHost', $exception->getFields());
 		$this->assertArrayHasKey('smtpHost', $exception->getFields());
@@ -81,7 +81,7 @@ class ProvisioningMapperTest extends TestCase {
 			$exception = $e;
 		}
 
-		$this->assertNotNull($exception);
+		$this->assertInstanceOf(\OCA\Mail\Exception\ValidationException::class, $exception);
 		$this->assertCount(1, $exception->getFields());
 		$this->assertArrayHasKey('ldapAliasesAttribute', $exception->getFields());
 	}
@@ -110,7 +110,7 @@ class ProvisioningMapperTest extends TestCase {
 			$exception = $e;
 		}
 
-		$this->assertNotNull($exception);
+		$this->assertInstanceOf(\OCA\Mail\Exception\ValidationException::class, $exception);
 		$this->assertCount(1, $exception->getFields());
 		$this->assertArrayHasKey('masterPassword', $exception->getFields());
 	}
@@ -189,7 +189,7 @@ class ProvisioningMapperTest extends TestCase {
 			$exception = $e;
 		}
 
-		$this->assertNotNull($exception);
+		$this->assertInstanceOf(\OCA\Mail\Exception\ValidationException::class, $exception);
 		$this->assertCount(1, $exception->getFields());
 		$this->assertArrayHasKey('masterPassword', $exception->getFields());
 	}

@@ -14,7 +14,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Events\OutboxMessageCreatedEvent;
 
-class OutboxMessageCreatedEventTest extends TestCase {
+final class OutboxMessageCreatedEventTest extends TestCase {
 	public function testConstructorAndGetters(): void {
 		$account = $this->createStub(Account::class);
 		$message = $this->createStub(Message::class);

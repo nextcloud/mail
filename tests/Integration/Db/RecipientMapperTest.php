@@ -22,7 +22,7 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IDBConnection;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class RecipientMapperTest extends TestCase {
+final class RecipientMapperTest extends TestCase {
 	use DatabaseTransaction;
 	use ImapTestAccount;
 

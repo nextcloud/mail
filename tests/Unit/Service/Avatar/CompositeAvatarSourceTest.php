@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -16,7 +18,7 @@ use OCA\Mail\Service\Avatar\FaviconSource;
 use OCA\Mail\Service\Avatar\GravatarSource;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class CompositeAvatarSourceTest extends TestCase {
+final class CompositeAvatarSourceTest extends TestCase {
 	/** @var AddressbookSource|MockObject */
 	private $addressbookSource;
 
@@ -39,7 +41,7 @@ class CompositeAvatarSourceTest extends TestCase {
 		$this->source = new CompositeAvatarSource($this->addressbookSource, $this->faviconSource, $this->gravatarSource);
 	}
 
-	public function testFetchNoneFound() {
+	public function testFetchNoneFound(): void {
 		$email = 'jane@doe.com';
 		$avatarFactory = $this->createStub(AvatarFactory::class);
 		$this->addressbookSource->expects($this->any())
@@ -69,7 +71,7 @@ class CompositeAvatarSourceTest extends TestCase {
 		$this->assertNull($actualAvatar);
 	}
 
-	public function testFetchNoneFoundQueryOnlyInternal() {
+	public function testFetchNoneFoundQueryOnlyInternal(): void {
 		$email = 'jane@doe.com';
 		$avatarFactory = $this->createStub(AvatarFactory::class);
 		$this->addressbookSource->expects($this->once())
@@ -99,7 +101,7 @@ class CompositeAvatarSourceTest extends TestCase {
 		$this->assertNull($actualAvatar);
 	}
 
-	public function testFetchFromGravatar() {
+	public function testFetchFromGravatar(): void {
 		$email = 'jane@doe.com';
 		$avatar = new Avatar('https://gravatar.com', 'image/jpeg');
 		$avatarFactory = $this->createStub(AvatarFactory::class);

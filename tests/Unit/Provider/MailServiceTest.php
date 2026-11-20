@@ -14,7 +14,7 @@ use OCA\Mail\Provider\MailService;
 use OCP\Mail\Provider\Address;
 use Psr\Container\ContainerInterface;
 
-class MailServiceTest extends TestCase {
+final class MailServiceTest extends TestCase {
 
 	private MailService $mailService;
 	private Address $primaryAddress;

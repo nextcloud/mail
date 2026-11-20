@@ -29,7 +29,7 @@ use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class OidcIntegrationControllerTest extends TestCase {
+final class OidcIntegrationControllerTest extends TestCase {
 	private OidcIntegration&MockObject $oidcIntegration;
 	private AccountService&MockObject $accountService;
 	private LoggerInterface&MockObject $logger;

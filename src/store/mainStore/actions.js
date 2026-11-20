@@ -536,13 +536,8 @@ export default function mainStoreActions() {
 					if (reply.mode === 'reply') {
 						logger.debug('Show simple reply composer', { reply })
 						const account = this.getAccount(reply.data.accountId)
-						// For mailing list emails, "Reply to sender" must use From because
-						// Reply-To points to the list address, not the original sender.
-						// For regular emails, honor Reply-To if the sender set one.
-						const isMailingList = !!(original.unsubscribeUrl || original.unsubscribeMailto)
-						let to = (!isMailingList && original.replyTo?.length > 0)
-							? original.replyTo
-							: reply.data.from
+						// RFC 5322 (3.6.2 and Appendix A.2) state Reply-To should take precedence.
+						let to = original.replyTo?.length > 0 ? original.replyTo : reply.data.from
 						// Replying to a message we sent ourselves: follow up with the
 						// original recipient(s) instead of addressing ourselves.
 						const isOwnMessage = to.length > 0
@@ -1958,6 +1953,9 @@ export default function mainStoreActions() {
 		expandAccountMutation(accountId) {
 			this.accountsUnmapped[accountId].collapsed = false
 		},
+		collapseAccountMutation(accountId) {
+			this.accountsUnmapped[accountId].collapsed = true
+		},
 		setAccountSettingMutation({
 			accountId,
 			key,
@@ -2075,14 +2073,6 @@ export default function mainStoreActions() {
 		},
 		setComposerIndicatorDisabledMutation(disabled) {
 			this.newMessage.indicatorDisabled = disabled
-		},
-		convertComposerMessageToOutboxMutation({ message }) {
-			if (!this.newMessage) {
-				// If the message is dispatched in the background there is no newMessage data in state
-				return
-			}
-			this.newMessage.type = 'outbox'
-			this.newMessage.data.id = message.id
 		},
 		addEnvelopesMutation({
 			query,

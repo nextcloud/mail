@@ -21,7 +21,7 @@ use OCP\ICertificateManager;
 use OCP\Security\ICrypto;
 use OCP\Server;
 
-class ImapMessageFetcherIntegrationTest extends TestCase {
+final class ImapMessageFetcherIntegrationTest extends TestCase {
 	use ImapTest,
 		ImapTestAccount;
 
@@ -168,12 +168,10 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 		$this->assertTrue($message->isSignatureValid());
 	}
 
-	public function aiGeneratedHeaderProvider(): array {
-		return [
-			[LocalMessage::HEADER_AI_GENERATED . ": 1\r\n", true],
-			[LocalMessage::HEADER_AI_GENERATED . ": 0\r\n", false],
-			['', false],
-		];
+	public function aiGeneratedHeaderProvider(): \Iterator {
+		yield [LocalMessage::HEADER_AI_GENERATED . ": 1\r\n", true];
+		yield [LocalMessage::HEADER_AI_GENERATED . ": 0\r\n", false];
+		yield ['', false];
 	}
 
 	/**
@@ -284,5 +282,30 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 		$attachment = $message->attachments[0];
 		$this->assertEquals('attach.zip', $attachment['fileName']);
 		$this->assertSame('application/zip', $attachment['mime']);
+	}
+
+	/**
+	 * Proton Mail Bridge strips the `method=` parameter from the
+	 * text/calendar Content-Type during E2E re-assembly. The fetcher must
+	 * fall back to parsing the METHOD: line out of the ICS body, and
+	 * still emit a scheduling entry so downstream rendering picks it up.
+	 */
+	public function testFetchMessageWithImipRequestMissingMethodParam(): void {
+		$rawMessage = file_get_contents(__DIR__ . '/../../data/imip/request_proton_bridge.txt');
+		$uid = $this->saveMimeMessage('INBOX', $rawMessage);
+		$fetcher = $this->fetcherFactory
+			->build(
+				$uid,
+				'INBOX',
+				$this->getTestClient(),
+				$this->account->getUserId()
+			)
+			->withBody(true);
+
+		$message = $fetcher->fetchMessage();
+
+		$this->assertCount(1, $message->scheduling);
+		$this->assertSame('REQUEST', $message->scheduling[0]['method']);
+		$this->assertStringContainsString('METHOD:REQUEST', (string)$message->scheduling[0]['contents']);
 	}
 }

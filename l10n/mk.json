@@ -36,6 +36,7 @@
     "Account updated" : "Сметката е ажурирана",
     "IMAP server is not reachable" : "IMAP серверот не е достапен",
     "SMTP server is not reachable" : "SMTP серверот не е достапен",
+    "Account already exists" : "Сметката веќе постои",
     "IMAP username or password is wrong" : "IMAP лозинката или корисничкото име се грешни",
     "SMTP username or password is wrong" : "SMTP лозинката или корисничкото име се грешни",
     "IMAP connection failed" : "Неуспешна IMAP врска",

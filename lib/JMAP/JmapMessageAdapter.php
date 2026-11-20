@@ -37,6 +37,8 @@ class JmapMessageAdapter {
 		'$notjunk',
 		'$phishing',
 		'$important',
+		'$hasattachment',
+		'$hasnoattachment',
 		Tag::LABEL_IMPORTANT,
 	];
 
@@ -235,16 +237,12 @@ class JmapMessageAdapter {
 	 * @return array{0:?string,1:?string}
 	 */
 	private function extractUnsubscribeTargets(MailParametersResponse $source): array {
-		$headerValue = $this->firstHeaderValue($source, 'List-Unsubscribe');
-		if ($headerValue === null) {
-			return [null, null];
-		}
+		$targets = $source->header('List-Unsubscribe', MailHeaderForm::URLs);
 
 		$unsubscribeUrl = null;
 		$unsubscribeMailto = null;
-		foreach (preg_split('/\s*,\s*/', $headerValue) ?: [] as $entry) {
-			$target = trim($entry, " \t\n\r\0\x0B<>");
-			if ($target === '') {
+		foreach (is_array($targets) ? $targets : [] as $target) {
+			if (!is_string($target) || $target === '') {
 				continue;
 			}
 
@@ -303,12 +301,15 @@ class JmapMessageAdapter {
 				$state['isPgpMimeEncrypted'] = true;
 			}
 			if ($type === 'text/calendar') {
-				$state['scheduling'][] = [
-					'id' => $partId,
-					'mime' => $type,
-					'fileName' => $part->name(),
-					'method' => $this->extractCalendarMethod($content),
-				];
+				$method = strtoupper($this->extractCalendarMethod($content) ?? '');
+				if (in_array($method, ['REQUEST', 'REPLY', 'CANCEL'], true)) {
+					$state['scheduling'][] = [
+						'id' => $partId,
+						'messageId' => $uid,
+						'method' => $method,
+						'contents' => $content,
+					];
+				}
 			}
 
 			if ($loadBody && $type === 'text/plain' && $state['plainBody'] === '') {

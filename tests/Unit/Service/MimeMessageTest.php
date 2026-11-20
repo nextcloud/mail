@@ -18,7 +18,7 @@ use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Service\DataUri\DataUriParser;
 use OCA\Mail\Service\MimeMessage;
 
-class MimeMessageTest extends TestCase {
+final class MimeMessageTest extends TestCase {
 	private DataUriParser $uriParser;
 	private MimeMessage $mimeMessage;
 	private Account $account;
@@ -31,7 +31,7 @@ class MimeMessageTest extends TestCase {
 		$this->account = new Account(new MailAccount());
 	}
 
-	public function testTextPlain() {
+	public function testTextPlain(): void {
 		$messageData = new NewMessageData(
 			$this->account,
 			new AddressList(),
@@ -54,7 +54,24 @@ class MimeMessageTest extends TestCase {
 		$this->assertEquals('text/plain', $part->getType());
 	}
 
-	public function testMultipartAlternative() {
+	public function testPlainTextAlternativeKeepsLineBreaks(): void {
+		$html = '<p style="margin:0;">Best regards,</p><p style="margin:0;">Jan</p>'
+			. '<p style="margin:0;">Line one<br>Line two</p>'
+			. '<p style="margin:0;">&nbsp;</p>'
+			. '<p style="margin:0;"><br>After <strong>two</strong> blank lines</p>';
+
+		$part = $this->mimeMessage->build(null, $html, false, []);
+
+		$this->assertEquals('multipart/alternative', $part->getType());
+		$plainPart = $part->getParts()[0];
+		$this->assertEquals('text/plain', $plainPart->getType());
+		$this->assertEquals(
+			"Best regards,\nJan\nLine one\nLine two\n\u{00a0}\n\nAfter two blank lines",
+			trim($plainPart->getContents(), "\n"),
+		);
+	}
+
+	public function testMultipartAlternative(): void {
 		$messageData = new NewMessageData(
 			$this->account,
 			new AddressList(),
@@ -83,7 +100,7 @@ class MimeMessageTest extends TestCase {
 		$this->assertEquals('text/html', $subParts[1]->getType());
 	}
 
-	public function testMultipartAlternativeEmptyContent() {
+	public function testMultipartAlternativeEmptyContent(): void {
 		$messageData = new NewMessageData(
 			$this->account,
 			new AddressList(),
@@ -112,7 +129,7 @@ class MimeMessageTest extends TestCase {
 		$this->assertEquals('text/html', $subParts[1]->getType());
 	}
 
-	public function testMultipartMixedAlternative() {
+	public function testMultipartMixedAlternative(): void {
 		$messageData = new NewMessageData(
 			$this->account,
 			new AddressList(),
@@ -159,7 +176,7 @@ class MimeMessageTest extends TestCase {
 		$this->assertEquals('attachment', $attachmentPart->getDisposition());
 	}
 
-	public function testMultipartMixedRelated() {
+	public function testMultipartMixedRelated(): void {
 		$messageData = new NewMessageData(
 			$this->account,
 			new AddressList(),
@@ -221,7 +238,7 @@ class MimeMessageTest extends TestCase {
 
 		$inlineImageContentId = 'cid:' . $inlineImagePart->getContentId();
 		$htmlBody = $alternativeSubParts[1]->getContents();
-		$this->assertStringContainsString($inlineImageContentId, $htmlBody);
+		$this->assertStringContainsString($inlineImageContentId, (string)$htmlBody);
 
 		$attachmentPart1 = $subParts[1];
 		$this->assertEquals('image/png', $attachmentPart1->getType());
@@ -328,11 +345,11 @@ class MimeMessageTest extends TestCase {
 		$this->assertEquals('text/html', $alternativeSubParts[1]->getType());
 
 		$htmlBody = $alternativeSubParts[1]->getContents();
-		$this->assertStringContainsString('cid:test-inline-image@example.com', $htmlBody);
-		$this->assertStringNotContainsString('data-cid', $htmlBody);
+		$this->assertStringContainsString('cid:test-inline-image@example.com', (string)$htmlBody);
+		$this->assertStringNotContainsString('data-cid', (string)$htmlBody);
 	}
 
-	public function testMultipartAlternativeGreek() {
+	public function testMultipartAlternativeGreek(): void {
 		$messageData = new NewMessageData(
 			$this->account,
 			new AddressList(),
@@ -368,11 +385,11 @@ class MimeMessageTest extends TestCase {
 και συνείδηση, και οφείλουν να
 συμπεριφέρονται μεταξύ τους με πνεύμα
 αδελφοσύνης.',
-			$subParts[0]->getContents(),
+			(string)$subParts[0]->getContents(),
 		);
 		$this->assertStringContainsString(
 			'Όλοι οι άνθρωποι γεννιούνται ελεύθεροι και ίσοι στην αξιοπρέπεια και τα δικαιώματα. Είναι προικισμένοι με λογική και συνείδηση, και οφείλουν να συμπεριφέρονται μεταξύ τους με πνεύμα αδελφοσύνης.',
-			$subParts[1]->getContents()
+			(string)$subParts[1]->getContents()
 		);
 	}
 
@@ -409,8 +426,8 @@ class MimeMessageTest extends TestCase {
 		$this->assertEquals('text/html', $alternativeSubParts[1]->getType());
 
 		$htmlBody = $alternativeSubParts[1]->getContents();
-		$this->assertStringContainsString('data:text/html;base64,', $htmlBody);
-		$this->assertStringNotContainsString('data-cid', $htmlBody);
+		$this->assertStringContainsString('data:text/html;base64,', (string)$htmlBody);
+		$this->assertStringNotContainsString('data-cid', (string)$htmlBody);
 	}
 
 	private function createAttachmentPart(string $name, string $content, string $mime, string $disposition): Horde_Mime_Part {

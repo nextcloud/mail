@@ -84,15 +84,13 @@ final class SharingRestrictionServiceTest extends TestCase {
 		return $users;
 	}
 
-	public static function legacyUserShareProvider(): array {
-		return [
-			'no restrictions' => [[], ['bob' => ['group-a'], 'alice' => ['group-b']], true],
-			'common group' => [['groupMembersOnly' => true, 'excludedGroups' => ['everyone']], ['bob' => ['everyone', 'team'], 'alice' => ['everyone', 'team']], true],
-			'sharing api disabled' => [['apiEnabled' => false], ['bob' => ['team'], 'alice' => ['team']], false],
-			'sharing disabled for sharer' => [['disabledForUser' => true], ['bob' => ['team'], 'alice' => ['team']], false],
-			'no common group' => [['groupMembersOnly' => true], ['bob' => ['group-a'], 'alice' => ['group-b']], false],
-			'only common group is excluded' => [['groupMembersOnly' => true, 'excludedGroups' => ['everyone']], ['bob' => ['everyone', 'group-a'], 'alice' => ['everyone', 'group-b']], false],
-		];
+	public static function legacyUserShareProvider(): \Iterator {
+		yield 'no restrictions' => [[], ['bob' => ['group-a'], 'alice' => ['group-b']], true];
+		yield 'common group' => [['groupMembersOnly' => true, 'excludedGroups' => ['everyone']], ['bob' => ['everyone', 'team'], 'alice' => ['everyone', 'team']], true];
+		yield 'sharing api disabled' => [['apiEnabled' => false], ['bob' => ['team'], 'alice' => ['team']], false];
+		yield 'sharing disabled for sharer' => [['disabledForUser' => true], ['bob' => ['team'], 'alice' => ['team']], false];
+		yield 'no common group' => [['groupMembersOnly' => true], ['bob' => ['group-a'], 'alice' => ['group-b']], false];
+		yield 'only common group is excluded' => [['groupMembersOnly' => true, 'excludedGroups' => ['everyone']], ['bob' => ['everyone', 'group-a'], 'alice' => ['everyone', 'group-b']], false];
 	}
 
 	/**
@@ -105,16 +103,14 @@ final class SharingRestrictionServiceTest extends TestCase {
 		$this->assertSame($expected, $this->createLegacyService()->canShareWithUser('bob', $users['alice']));
 	}
 
-	public static function legacyGroupShareProvider(): array {
-		return [
-			'no restrictions' => [[], ['group-b'], true],
-			'own group' => [['groupMembersOnly' => true], ['group-a'], true],
-			'sharing api disabled' => [['apiEnabled' => false], ['group-a'], false],
-			'sharing disabled for sharer' => [['disabledForUser' => true], ['group-a'], false],
-			'group sharing disabled' => [['groupSharing' => false], ['group-a'], false],
-			'not a member' => [['groupMembersOnly' => true], ['group-b'], false],
-			'member of excluded group' => [['groupMembersOnly' => true, 'excludedGroups' => ['group-a']], ['group-a'], false],
-		];
+	public static function legacyGroupShareProvider(): \Iterator {
+		yield 'no restrictions' => [[], ['group-b'], true];
+		yield 'own group' => [['groupMembersOnly' => true], ['group-a'], true];
+		yield 'sharing api disabled' => [['apiEnabled' => false], ['group-a'], false];
+		yield 'sharing disabled for sharer' => [['disabledForUser' => true], ['group-a'], false];
+		yield 'group sharing disabled' => [['groupSharing' => false], ['group-a'], false];
+		yield 'not a member' => [['groupMembersOnly' => true], ['group-b'], false];
+		yield 'member of excluded group' => [['groupMembersOnly' => true, 'excludedGroups' => ['group-a']], ['group-a'], false];
 	}
 
 	/**

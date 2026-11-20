@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -14,7 +16,7 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class PreferencesControllerTest extends TestCase {
+final class PreferencesControllerTest extends TestCase {
 	/** @var IUserPreferences|MockObject */
 	private $preferences;
 
@@ -30,7 +32,7 @@ class PreferencesControllerTest extends TestCase {
 		$this->controller = new PreferencesController($request, $this->preferences, 'george');
 	}
 
-	public function testGetPreference() {
+	public function testGetPreference(): void {
 		$this->preferences->expects($this->once())
 			->method('getPreference')
 			->with('george', 'test')
@@ -42,7 +44,7 @@ class PreferencesControllerTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testSetPreference() {
+	public function testSetPreference(): void {
 		$this->preferences->expects($this->once())
 			->method('setPreference')
 			->with('george', 'test')

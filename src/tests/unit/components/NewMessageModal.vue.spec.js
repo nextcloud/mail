@@ -8,7 +8,7 @@ import { shallowMount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import NewMessageModal from '../../../components/NewMessageModal.vue'
-import { saveDraft } from '../../../service/DraftService.js'
+import { saveDraft, updateDraft } from '../../../service/DraftService.js'
 import useMainStore from '../../../store/mainStore.js'
 
 vi.mock('@nextcloud/dialogs', async (importOriginal) => ({
@@ -38,13 +38,14 @@ const ComposerStub = {
  * Mount the modal around a composer that is either rendered or already gone.
  *
  * @param {object} options - test options
+ * @param {string} [options.type] - the type of the composer session
  * @param {object} options.data - the composer data held by the store
  * @param {boolean} options.composerOpen - whether the composer is still rendered
  * @return {object} the mounted wrapper
  */
-function mountModal({ data, composerOpen }) {
+function mountModal({ type = 'imap', data, composerOpen }) {
 	const store = useMainStore()
-	store.newMessage = { type: 'imap', data, options: {} }
+	store.newMessage = { type, data, options: {} }
 	store.showMessageComposer = composerOpen
 	store.patchComposerData = vi.fn()
 
@@ -65,6 +66,8 @@ function mountModal({ data, composerOpen }) {
 }
 
 describe('NewMessageModal', () => {
+	const message = { subject: 'Hello', attachments: [], isHtml: false, bodyPlain: 'Hi there', accountId: 1 }
+
 	beforeEach(() => {
 		vi.clearAllMocks()
 		setActivePinia(createPinia())
@@ -154,7 +157,6 @@ describe('NewMessageModal', () => {
 	})
 
 	describe('sending', () => {
-		const message = { subject: 'Hello', attachments: [], isHtml: false, bodyPlain: 'Hi there', accountId: 1 }
 		let sendingToast
 		let view
 
@@ -202,6 +204,28 @@ describe('NewMessageModal', () => {
 		})
 	})
 
+	describe('sending an outbox message', () => {
+		let view
+
+		beforeEach(() => {
+			showLoading.mockReturnValue({ hideToast: vi.fn() })
+			view = mountModal({ type: 'outbox', data: { id: 42, isHtml: false }, composerOpen: true })
+			view.vm.mainStore.stopComposerSession = vi.fn().mockResolvedValue()
+			view.vm.outboxStore.updateMessage = vi.fn().mockResolvedValue()
+			view.vm.outboxStore.enqueueFromDraft = vi.fn()
+			view.vm.outboxStore.sendMessageWithUndo = vi.fn().mockResolvedValue()
+		})
+
+		it('updates the message in the outbox and sends it', async () => {
+			await view.vm.onSend(message)
+
+			expect(view.vm.outboxStore.updateMessage).toHaveBeenCalledWith({ message: expect.objectContaining({ id: 42 }), id: 42 })
+			expect(updateDraft).not.toHaveBeenCalled()
+			expect(view.vm.outboxStore.enqueueFromDraft).not.toHaveBeenCalled()
+			expect(view.vm.outboxStore.sendMessageWithUndo).toHaveBeenCalledWith({ id: 42 })
+		})
+	})
+
 	describe('leaving the page with unsaved changes', () => {
 		let event
 		let view
@@ -227,6 +251,38 @@ describe('NewMessageModal', () => {
 
 			expect(event.preventDefault).toHaveBeenCalled()
 			expect(view.vm.mainStore.showMessageComposerMutation).not.toHaveBeenCalled()
+		})
+	})
+
+	describe('saving a draft after an earlier save', () => {
+		const message = { subject: 'Hello', attachments: [], isHtml: false, bodyPlain: 'Hi there', accountId: 1 }
+		let view
+
+		beforeEach(async () => {
+			view = mountModal({ data: { isHtml: false }, composerOpen: true })
+			saveDraft.mockResolvedValue({ id: 7 })
+			await view.vm.onDraft(message)
+		})
+
+		it('keeps the draft id when a later save fails', async () => {
+			updateDraft.mockRejectedValueOnce(new Error('Network error'))
+
+			const id = await view.vm.onDraft(message)
+
+			expect(id).toBe(7)
+			expect(view.vm.canSaveDraft).toBe(false)
+		})
+
+		it('updates the existing draft instead of creating a duplicate after a failed save', async () => {
+			updateDraft.mockRejectedValueOnce(new Error('Network error'))
+			await view.vm.onDraft(message)
+			updateDraft.mockResolvedValueOnce()
+
+			await view.vm.onDraft(message)
+
+			expect(saveDraft).toHaveBeenCalledTimes(1)
+			expect(updateDraft).toHaveBeenLastCalledWith(expect.objectContaining({ id: 7 }))
+			expect(view.vm.canSaveDraft).toBe(true)
 		})
 	})
 

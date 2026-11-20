@@ -79,9 +79,7 @@ class ThreadBuilder {
 			$parent = null;
 			foreach ($message->getReferences() as $reference) {
 				$refContainer = $idTable[$reference] ?? null;
-				if ($refContainer === null) {
-					$refContainer = $idTable[$reference] = Container::empty($reference);
-				}
+				$refContainer ??= $idTable[$reference] = Container::empty($reference);
 				if (!$refContainer->hasParent()
 					&& !($parent !== null && !$parent->hasAncestor($refContainer))
 					&& !($parent !== null && !$refContainer->hasAncestor($parent))) {

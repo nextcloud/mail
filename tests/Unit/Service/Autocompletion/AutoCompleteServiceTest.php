@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-FileCopyrightText: 2016 ownCloud, Inc.
@@ -15,7 +17,7 @@ use OCA\Mail\Service\AutoCompletion\AutoCompleteService;
 use OCA\Mail\Service\ContactsIntegration;
 use OCA\Mail\Service\GroupsIntegration;
 
-class AutoCompleteServiceTest extends TestCase {
+final class AutoCompleteServiceTest extends TestCase {
 	private $contactsIntegration;
 	private $groupsIntegration;
 	private $addressCollector;
@@ -33,7 +35,7 @@ class AutoCompleteServiceTest extends TestCase {
 			$this->addressCollector);
 	}
 
-	public function testFindMatches() {
+	public function testFindMatches(): void {
 		$term = 'jo';
 
 		$contactsResult = [

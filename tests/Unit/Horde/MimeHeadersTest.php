@@ -17,7 +17,7 @@ use Horde_Mime_Headers_ContentParam;
  * Ensures that Horde_Mime_Headers and its header element parameters
  * are accessible case-insensitively.
  */
-class MimeHeadersTest extends TestCase {
+final class MimeHeadersTest extends TestCase {
 	private Horde_Mime_Headers $headers;
 
 	protected function setUp(): void {

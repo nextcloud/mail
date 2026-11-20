@@ -13,7 +13,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use DOMDocument;
 use OCA\Mail\Html\Parser;
 
-class ParserTest extends TestCase {
+final class ParserTest extends TestCase {
 	public function testParseToDomDocument(): void {
 		$html = '<html><body><p>Test content</p></body></html>';
 
@@ -58,6 +58,6 @@ class ParserTest extends TestCase {
 		$doc = Parser::parseToDomDocument($html);
 
 		$this->assertInstanceOf(DOMDocument::class, $doc);
-		$this->assertNotNull($doc->documentElement);
+		$this->assertInstanceOf(\DOMElement::class, $doc->documentElement);
 	}
 }

@@ -12,7 +12,7 @@ namespace OCA\Mail\Tests\Unit\Db;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\LocalAttachment;
 
-class LocalAttachmentTest extends TestCase {
+final class LocalAttachmentTest extends TestCase {
 	public function testIsDispositionAttachmentOrInlineWithAttachment(): void {
 		$attachment = new LocalAttachment();
 		$attachment->setDisposition(LocalAttachment::DISPOSITION_ATTACHMENT);

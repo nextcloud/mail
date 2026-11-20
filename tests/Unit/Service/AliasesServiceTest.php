@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-only
@@ -15,7 +17,7 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Service\AliasesService;
 use OCP\AppFramework\Db\DoesNotExistException;
 
-class AliasesServiceTest extends TestCase {
+final class AliasesServiceTest extends TestCase {
 	/** @var AliasesService */
 	private $service;
 
@@ -91,7 +93,7 @@ class AliasesServiceTest extends TestCase {
 			});
 
 		$result = $this->service->create(
-			300,
+			$this->user,
 			$entity->getAccountId(),
 			$entity->getAlias(),
 			$entity->getName()
@@ -162,7 +164,7 @@ class AliasesServiceTest extends TestCase {
 			->willThrowException(new DoesNotExistException('Account does not exist'));
 
 		$this->service->create(
-			300,
+			$this->user,
 			$entity->getAccountId(),
 			$entity->getAlias(),
 			$entity->getName()
@@ -235,6 +237,6 @@ class AliasesServiceTest extends TestCase {
 		$this->aliasMapper->expects(self::never())
 			->method('update');
 
-		$this->service->updateSignature($this->user, '999999', 'Kind regards<br>Herbert');
+		$this->service->updateSignature($this->user, 999999, 'Kind regards<br>Herbert');
 	}
 }

@@ -22,7 +22,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IConfig;
 use OCP\IUser;
 
-class SyncJobTest extends TestCase {
+final class SyncJobTest extends TestCase {
 	/** @var ServiceMockObject */
 	private $serviceMock;
 

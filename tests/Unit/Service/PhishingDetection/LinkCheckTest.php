@@ -13,7 +13,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\PhishingDetection\LinkCheck;
 use OCP\IL10N;
 
-class LinkCheckTest extends TestCase {
+final class LinkCheckTest extends TestCase {
 	private LinkCheck $check;
 	private IL10N $l10n;
 

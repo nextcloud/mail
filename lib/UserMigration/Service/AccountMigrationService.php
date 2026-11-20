@@ -554,19 +554,17 @@ class AccountMigrationService {
 	 */
 	private function getMailboxes(Account $account, array &$accountData): void {
 		$mailboxes = $this->mailboxMapper->findAll($account);
-		$accountData['mailboxes'] = array_map(static function (Mailbox $mailbox) {
-			return [
-				'databaseId' => $mailbox->getId(),
-				'name' => $mailbox->getName(),
-				'attributes' => $mailbox->getAttributes(),
-				'delimiter' => $mailbox->getDelimiter(),
-				'specialUse' => $mailbox->getSpecialUse(),
-				'selectable' => $mailbox->getSelectable(),
-				'syncInBackground' => $mailbox->getSyncInBackground(),
-				'myAcls' => $mailbox->getMyAcls(),
-				'shared' => $mailbox->isShared(),
-			];
-		}, $mailboxes);
+		$accountData['mailboxes'] = array_map(static fn (Mailbox $mailbox) => [
+			'databaseId' => $mailbox->getId(),
+			'name' => $mailbox->getName(),
+			'attributes' => $mailbox->getAttributes(),
+			'delimiter' => $mailbox->getDelimiter(),
+			'specialUse' => $mailbox->getSpecialUse(),
+			'selectable' => $mailbox->getSelectable(),
+			'syncInBackground' => $mailbox->getSyncInBackground(),
+			'myAcls' => $mailbox->getMyAcls(),
+			'shared' => $mailbox->isShared(),
+		], $mailboxes);
 	}
 
 	/**
@@ -582,14 +580,12 @@ class AccountMigrationService {
 			$account->getId(),
 			$account->getUserId(), // perf: this adds overhead - add dedicated method to fetch by account id only
 		);
-		$accountData['aliases'] = array_map(static function (Alias $alias) {
-			return [
-				'alias' => $alias->getAlias(),
-				'name' => $alias->getName(),
-				'signature' => $alias->getSignature(),
-				'smimeCertificateId' => $alias->getSmimeCertificateId(),
-			];
-		}, $aliases);
+		$accountData['aliases'] = array_map(static fn (Alias $alias) => [
+			'alias' => $alias->getAlias(),
+			'name' => $alias->getName(),
+			'signature' => $alias->getSignature(),
+			'smimeCertificateId' => $alias->getSmimeCertificateId(),
+		], $aliases);
 	}
 
 	/**

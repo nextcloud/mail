@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -13,7 +15,7 @@ use OCA\Mail\Contracts\IAvatarService;
 use OCP\ICacheFactory;
 use OCP\Server;
 
-class AvatarServiceIntegrationTest extends TestCase {
+final class AvatarServiceIntegrationTest extends TestCase {
 	use TestUser;
 
 	/** @var IAvatarService */
@@ -34,11 +36,11 @@ class AvatarServiceIntegrationTest extends TestCase {
 		$this->service = Server::get(IAvatarService::class);
 	}
 
-	public function testJansGravatar() {
+	public function testJansGravatar(): void {
 		$this->markTestSkipped('Unreliable test');
 		return;
 		$avatar = $this->service->getAvatar('hey@jancborchardt.net', 'john');
-		$this->assertNotNull($avatar);
+		$this->assertInstanceOf(\OCA\Mail\Service\Avatar\Avatar::class, $avatar);
 		$this->assertEquals('https://secure.gravatar.com/avatar/2fd3f4d5d762955e5b603794a888fa97?size=128&d=404', $avatar->getUrl());
 		$image = $this->service->getAvatarImage('hey@jancborchardt.net', 'john');
 		$this->assertNotNull($image);

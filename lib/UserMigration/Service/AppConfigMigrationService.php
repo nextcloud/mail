@@ -53,12 +53,10 @@ class AppConfigMigrationService {
 	private function getAppConfigSettings(IUser $user): array {
 		$appConfigKeys = $this->config->getUserKeys($user->getUID(), Application::APP_ID);
 
-		return array_values(array_map(function (string $appConfigKey) use ($user) {
-			return [
-				'key' => $appConfigKey,
-				'value' => $this->config->getUserValue($user->getUID(), Application::APP_ID, $appConfigKey)
-			];
-		}, $appConfigKeys));
+		return array_values(array_map(fn (string $appConfigKey) => [
+			'key' => $appConfigKey,
+			'value' => $this->config->getUserValue($user->getUID(), Application::APP_ID, $appConfigKey)
+		], $appConfigKeys));
 	}
 
 	/**

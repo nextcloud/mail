@@ -14,7 +14,7 @@ use OCA\Mail\Service\ContactsIntegration;
 use OCA\Mail\Service\PhishingDetection\ContactCheck;
 use OCP\IL10N;
 
-class ContactCheckTest extends TestCase {
+final class ContactCheckTest extends TestCase {
 	private ContactCheck $check;
 	private ContactsIntegration $contactsIntegration;
 	private IL10N $l10n;

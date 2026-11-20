@@ -15,7 +15,7 @@ use OCP\Http\Client\IClientService;
 use OCP\Http\Client\IResponse;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class FaviconDataAccessTest extends TestCase {
+final class FaviconDataAccessTest extends TestCase {
 
 	private IClientService|MockObject $clientService;
 	private FaviconDataAccess $dataAccess;
@@ -30,7 +30,7 @@ class FaviconDataAccessTest extends TestCase {
 		);
 	}
 
-	public function testRetrieveUrl() {
+	public function testRetrieveUrl(): void {
 		$client = $this->createMock(IClient::class);
 		$this->clientService->expects(self::once())
 			->method('newClient')
@@ -49,7 +49,7 @@ class FaviconDataAccessTest extends TestCase {
 		self::assertSame('html', $body);
 	}
 
-	public function testRetrieveHeader() {
+	public function testRetrieveHeader(): void {
 		$client = $this->createMock(IClient::class);
 		$this->clientService->expects(self::once())
 			->method('newClient')

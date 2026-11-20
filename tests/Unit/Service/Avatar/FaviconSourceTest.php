@@ -21,7 +21,7 @@ use OCP\Http\Client\IResponse;
 use OCP\Security\IRemoteHostValidator;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class FaviconSourceTest extends TestCase {
+final class FaviconSourceTest extends TestCase {
 	/** @var IClientService|MockObject */
 	private $clientService;
 

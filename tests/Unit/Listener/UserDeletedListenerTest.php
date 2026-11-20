@@ -23,7 +23,7 @@ use OCP\User\Events\UserDeletedEvent;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class UserDeletedListenerTest extends TestCase {
+final class UserDeletedListenerTest extends TestCase {
 	private AccountService&MockObject $accountService;
 
 	private TextBlockService&MockObject $textBlockService;
@@ -148,7 +148,7 @@ class UserDeletedListenerTest extends TestCase {
 
 		$this->accountService->expects($this->exactly(3))
 			->method('delete')
-			->willReturnCallback(function ($userId, $accountId) {
+			->willReturnCallback(function (string $userId, int $accountId): void {
 				$this->assertSame('test-user', $userId);
 				$this->assertContains($accountId, [1, 2, 3]);
 			});
@@ -218,7 +218,7 @@ class UserDeletedListenerTest extends TestCase {
 
 		$this->accountService->expects($this->exactly(3))
 			->method('delete')
-			->willReturnCallback(function ($userId, $accountId) use ($exception) {
+			->willReturnCallback(function (string $userId, int $accountId) use ($exception): void {
 				$this->assertSame('test-user', $userId);
 				if ($accountId === 2) {
 					throw $exception;

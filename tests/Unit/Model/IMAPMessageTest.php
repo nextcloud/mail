@@ -24,7 +24,7 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 use RuntimeException;
 
-class IMAPMessageTest extends TestCase {
+final class IMAPMessageTest extends TestCase {
 	/** @var Html|MockObject */
 	private $htmlService;
 
@@ -32,14 +32,14 @@ class IMAPMessageTest extends TestCase {
 		$this->htmlService = $this->createMock(Html::class);
 	}
 
-	public function testIconvHtmlMessage() {
+	public function testIconvHtmlMessage(): void {
 		$urlGenerator = $this->getMockBuilder(IURLGenerator::class)
 			->disableOriginalConstructor()
 			->getMock();
 		//linkToRoute 'mail.proxy.proxy'
 		$urlGenerator->expects($this->any())
 			->method('linkToRoute')
-			->will($this->returnCallback(fn ($url) => "https://docs.example.com/server/go.php?to=$url"));
+			->willReturnCallback(fn ($url) => "https://docs.example.com/server/go.php?to=$url");
 		$request = $this->getMockBuilder(IRequest::class)
 			->disableOriginalConstructor()
 			->getMock();
@@ -87,7 +87,7 @@ class IMAPMessageTest extends TestCase {
 		);
 
 		$actualHtmlBody = $message->getHtmlBody(123);
-		$this->assertTrue(strlen($actualHtmlBody) > 1000);
+		$this->assertGreaterThan(1000, strlen($actualHtmlBody));
 
 		$actualPlainTextBody = $message->getPlainBody();
 		$this->assertEquals($plainTextBody, $actualPlainTextBody);
@@ -166,7 +166,7 @@ class IMAPMessageTest extends TestCase {
 		$this->assertSame('<p>456</p>', $retry);
 	}
 
-	public function testSerialize() {
+	public function testSerialize(): void {
 		$data = new Horde_Imap_Client_Data_Fetch();
 		$data->setUid(1234);
 		$m = new IMAPMessage(

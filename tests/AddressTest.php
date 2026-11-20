@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -11,8 +13,8 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Mail_Rfc822_Address;
 use OCA\Mail\Address;
 
-class AddressTest extends TestCase {
-	public function testSerialization() {
+final class AddressTest extends TestCase {
+	public function testSerialization(): void {
 		$address = Address::fromRaw('Christoph Wurst', 'christoph@domain.tld');
 
 		$expected = [
@@ -24,7 +26,7 @@ class AddressTest extends TestCase {
 		$this->assertEquals($expected, $json);
 	}
 
-	public function testToHorde() {
+	public function testToHorde(): void {
 		$address = Address::fromRaw('Christoph Wurst', 'christoph@domain.tld');
 		$expected = new Horde_Mail_Rfc822_Address('christoph@domain.tld');
 		$expected->personal = 'Christoph Wurst';
@@ -34,7 +36,7 @@ class AddressTest extends TestCase {
 		$this->assertEquals($expected, $horde);
 	}
 
-	public function testEqualsIdentical() {
+	public function testEqualsIdentical(): void {
 		$address = Address::fromRaw('Christoph Wurst', 'christoph@domain.tld');
 
 		$equals = $address->equals($address);
@@ -42,7 +44,7 @@ class AddressTest extends TestCase {
 		$this->assertTrue($equals);
 	}
 
-	public function testEquals() {
+	public function testEquals(): void {
 		$address1 = Address::fromRaw('Christoph Wurst', 'christoph@domain1.tld');
 		$address2 = Address::fromRaw('Christoph Wurst', 'christoph@domain1.tld');
 
@@ -51,7 +53,7 @@ class AddressTest extends TestCase {
 		$this->assertTrue($equals);
 	}
 
-	public function testDoesNotEqual() {
+	public function testDoesNotEqual(): void {
 		$address1 = Address::fromRaw('Christoph Wurst', 'christoph@domain1.tld');
 		$address2 = Address::fromRaw('Christoph Wurst', 'christoph@domain2.tld');
 
@@ -60,7 +62,7 @@ class AddressTest extends TestCase {
 		$this->assertFalse($equals);
 	}
 
-	public function testDoesNotEqualBecauseDifferentLabel() {
+	public function testDoesNotEqualBecauseDifferentLabel(): void {
 		$address1 = Address::fromRaw('Christoph Wurst', 'christoph@domain.tld');
 		$address2 = Address::fromRaw('Wurst Christoph', 'christoph@domain.tld');
 

@@ -20,7 +20,7 @@ use OCA\Mail\Send\SendHandler;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class ChainTest extends TestCase {
+final class ChainTest extends TestCase {
 	private Chain $chain;
 	private MockObject|AntiAbuseHandler $antiAbuseHandler;
 	private SendHandler|MockObject $sendHandler;

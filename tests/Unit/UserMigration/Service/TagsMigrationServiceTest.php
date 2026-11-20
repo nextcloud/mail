@@ -21,7 +21,7 @@ use OCP\UserMigration\IImportSource;
 use OCP\UserMigration\UserMigrationException;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class TagsMigrationServiceTest extends TestCase {
+final class TagsMigrationServiceTest extends TestCase {
 	use RecordsConsoleOutput;
 
 	private const USER_ID = '123';
@@ -159,12 +159,10 @@ class TagsMigrationServiceTest extends TestCase {
 		$this->assertCount(0, $mappedTags);
 	}
 
-	public static function provideFileContentsWithNoTagsImported(): array {
-		return [
-			'empty list' => [json_encode([])],
-			'invalid JSON' => ['this is not valid json {{{'],
-			'JSON object instead of list' => [json_encode(['unexpected' => 'object'])],
-		];
+	public static function provideFileContentsWithNoTagsImported(): \Iterator {
+		yield 'empty list' => [json_encode([])];
+		yield 'invalid JSON' => ['this is not valid json {{{'];
+		yield 'JSON object instead of list' => [json_encode(['unexpected' => 'object'])];
 	}
 
 	/**
@@ -216,17 +214,15 @@ class TagsMigrationServiceTest extends TestCase {
 		);
 	}
 
-	public static function provideInvalidTagValues(): array {
-		return [
-			'empty imap label' => [['imapLabel' => '']],
-			'imap label longer than the column' => [['imapLabel' => str_repeat('a', Tag::IMAP_LABEL_MAX_LENGTH + 1)]],
-			'imap label with a trailing space' => [['imapLabel' => 'testing ']],
-			'imap label with a trailing newline' => [['imapLabel' => "testing\n"]],
-			'imap label with non-ASCII characters' => [['imapLabel' => 'tästing']],
-			'imap system flag' => [['imapLabel' => '\\deleted']],
-			'display name longer than the tag form allows' => [['displayName' => str_repeat('ä', Tag::DISPLAY_NAME_MAX_LENGTH + 1)]],
-			'color longer than the tag form allows' => [['color' => str_repeat('f', Tag::COLOR_MAX_LENGTH + 1)]],
-		];
+	public static function provideInvalidTagValues(): \Iterator {
+		yield 'empty imap label' => [['imapLabel' => '']];
+		yield 'imap label longer than the column' => [['imapLabel' => str_repeat('a', Tag::IMAP_LABEL_MAX_LENGTH + 1)]];
+		yield 'imap label with a trailing space' => [['imapLabel' => 'testing ']];
+		yield 'imap label with a trailing newline' => [['imapLabel' => "testing\n"]];
+		yield 'imap label with non-ASCII characters' => [['imapLabel' => 'tästing']];
+		yield 'imap system flag' => [['imapLabel' => '\\deleted']];
+		yield 'display name longer than the tag form allows' => [['displayName' => str_repeat('ä', Tag::DISPLAY_NAME_MAX_LENGTH + 1)]];
+		yield 'color longer than the tag form allows' => [['color' => str_repeat('f', Tag::COLOR_MAX_LENGTH + 1)]];
 	}
 
 	/**
