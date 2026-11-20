@@ -1,0 +1,44 @@
+# SPDX-FileCopyrightText: 2026 Nextcloud GmbH and Nextcloud contributors
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+name: Issue template check
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  check-template:
+    runs-on: ubuntu-latest-low
+
+    if: >-
+      github.repository_owner != 'nextcloud-gmbh'
+      && github.event.issue.type == null
+
+    steps:
+      - name: Ask for the issue form
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          NEW_ISSUE_URL: https://github.com/${{ github.repository }}/issues/new/choose
+        run: |
+          missing=false
+          for heading in "Steps to reproduce" "Expected behavior" "Actual behavior" "Mail app version" "Nextcloud version"; do
+            if ! grep -qiE "^#{1,6}[[:space:]]+${heading}[[:space:]]*$" <<< "$ISSUE_BODY"; then
+              missing=true
+            fi
+          done
+          if [ "$missing" = false ]; then
+            echo "All form headings present, nothing to do"
+            exit 0
+          fi
+
+          gh issue edit "$ISSUE_NUMBER" --add-label "0. to triage" --add-label "needs info"
+          gh issue comment "$ISSUE_NUMBER" --body "Thanks for the report! This issue was not created with one of our issue forms, which are required for bug reports and feature requests. The forms ask for the app version, server version, logs and other details we need to triage an issue.
+
+          Please [open a new issue with the matching form]($NEW_ISSUE_URL) and copy your description into it. If you submitted this through the GitHub CLI or an API client, please use the web form instead. Without the requested details this issue may be closed."
