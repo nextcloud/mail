@@ -36,6 +36,7 @@ describe('AccountForm', () => {
 
 		store = useMainStore()
 		store.googleOauthUrl = 'https://google.oauth'
+		store.microsoftOauthUrl = null
 	})
 
 	it('uses name and email from nextcloud account', () => {
@@ -44,9 +45,6 @@ describe('AccountForm', () => {
 	})
 
 	it('allows auto setup without password when only google oauth is configured', () => {
-		store.googleOauthUrl = 'https://google.oauth'
-		store.microsoftOauthUrl = null
-
 		expect(view.vm.isDisabledAuto).toBe(false)
 	})
 

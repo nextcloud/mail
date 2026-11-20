@@ -407,8 +407,7 @@ export default {
 				return false
 			}
 
-			return (!this.googleOauthUrl && !this.autoConfig.password)
-				&& (!this.microsoftOauthUrl && !this.autoConfig.password)
+			return !this.autoConfig.password && !this.googleOauthUrl && !this.microsoftOauthUrl
 		},
 
 		isDisabledManual() {
