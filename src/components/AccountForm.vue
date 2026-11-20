@@ -4,139 +4,148 @@
 -->
 <template>
 	<form id="account-form" @submit.prevent="onSubmit">
-		<NcRadioGroup
-			v-if="account?.protocol !== 'jmap'"
-			v-model="mode"
-			:label="t('mail', 'Mail server configuration mode')"
-			hideLabel>
-			<NcRadioGroupButton :label="t('mail', 'Auto')" value="auto" :disabled="loading" />
-			<NcRadioGroupButton :label="t('mail', 'Manual')" value="manual" :disabled="loading" />
-		</NcRadioGroup>
-		<div v-show="mode === 'auto'" class="account-form__panel">
-			<NcInputField
-				id="auto-name"
-				v-model="accountName"
-				:label="t('mail', 'Name')"
-				type="text"
-				:placeholder="t('mail', 'Name')"
-				:disabled="loading"
-				autofocus />
-			<NcInputField
-				id="auto-address"
-				v-model="emailAddress"
-				:label="t('mail', 'Mail address')"
-				:disabled="loading"
-				:placeholder="t('mail', 'name@example.org')"
-				required
-				type="email"
-				@change="clearFeedback" />
-			<p v-if="!isValidEmail(emailAddress)" class="account-form--error">
-				{{ t('mail', 'Please enter an email of the format name@example.com') }}
-			</p>
-			<NcPasswordField
-				v-if="!isOidcAccount"
-				id="auto-password"
-				v-model="autoConfig.password"
-				:disabled="loading"
-				:label="optionalPasswordPlaceholder(t('mail', 'Password'))"
-				:required="!hasPasswordAlternatives"
-				@change="clearFeedback" />
-			<NcCheckboxRadioSwitch
-				id="auto-classification-enabled"
-				v-model="classificationEnabled"
-				:disabled="loading">
-				{{ t('mail', 'Enable mark as important classification') }}
-			</NcCheckboxRadioSwitch>
-		</div>
-		<div v-show="mode === 'manual'" class="account-form__panel">
-			<NcInputField
-				id="man-name"
-				v-model="accountName"
-				:label="t('mail', 'Name')"
-				type="text"
-				:placeholder="t('mail', 'Name')"
-				:disabled="loading" />
-			<NcInputField
-				id="man-address"
-				v-model="emailAddress"
-				:label="t('mail', 'Mail address')"
-				type="email"
-				:placeholder="t('mail', 'name@example.org')"
-				:disabled="loading"
-				required
-				@change="clearFeedback" />
-			<p v-if="!isValidEmail(emailAddress)" class="account-form--error">
-				{{ t('mail', 'Please enter an email of the format name@example.com') }}
-			</p>
-
+		<AccountFormDiscoveryProgress
+			v-if="discoveryProgress"
+			:progress="discoveryProgress"
+			:email="emailAddress"
+			:message="loadingMessage"
+			:choices="discoveredProtocols"
+			@choose="onDiscoveryChoice" />
+		<div v-show="!discoveryProgress" class="account-form__fields">
 			<NcRadioGroup
-				v-if="isSetup"
-				v-model="protocol"
-				:label="t('mail', 'Mail server protocol')"
+				v-if="account?.protocol !== 'jmap'"
+				v-model="mode"
+				:label="t('mail', 'Mail server configuration mode')"
 				hideLabel>
-				<NcRadioGroupButton :label="t('mail', 'IMAP/SMTP')" value="imap" :disabled="loading" />
-				<NcRadioGroupButton :label="t('mail', 'JMAP')" value="jmap" :disabled="loading" />
+				<NcRadioGroupButton :label="t('mail', 'Auto')" value="auto" :disabled="loading" />
+				<NcRadioGroupButton :label="t('mail', 'Manual')" value="manual" :disabled="loading" />
 			</NcRadioGroup>
+			<div v-show="mode === 'auto'" class="account-form__panel">
+				<NcInputField
+					id="auto-name"
+					v-model="accountName"
+					:label="t('mail', 'Name')"
+					type="text"
+					:placeholder="t('mail', 'Name')"
+					:disabled="loading"
+					autofocus />
+				<NcInputField
+					id="auto-address"
+					v-model="emailAddress"
+					:label="t('mail', 'Mail address')"
+					:disabled="loading"
+					:placeholder="t('mail', 'name@example.org')"
+					required
+					type="email"
+					@change="clearFeedback" />
+				<p v-if="!isValidEmail(emailAddress)" class="account-form--error">
+					{{ t('mail', 'Please enter an email of the format name@example.com') }}
+				</p>
+				<NcPasswordField
+					v-if="!isOidcAccount"
+					id="auto-password"
+					v-model="autoConfig.password"
+					:disabled="loading"
+					:label="optionalPasswordPlaceholder(t('mail', 'Password'))"
+					:required="!hasPasswordAlternatives"
+					@change="clearFeedback" />
+				<NcCheckboxRadioSwitch
+					id="auto-classification-enabled"
+					v-model="classificationEnabled"
+					:disabled="loading">
+					{{ t('mail', 'Enable mark as important classification') }}
+				</NcCheckboxRadioSwitch>
+			</div>
+			<div v-show="mode === 'manual'" class="account-form__panel">
+				<NcInputField
+					id="man-name"
+					v-model="accountName"
+					:label="t('mail', 'Name')"
+					type="text"
+					:placeholder="t('mail', 'Name')"
+					:disabled="loading" />
+				<NcInputField
+					id="man-address"
+					v-model="emailAddress"
+					:label="t('mail', 'Mail address')"
+					type="email"
+					:placeholder="t('mail', 'name@example.org')"
+					:disabled="loading"
+					required
+					@change="clearFeedback" />
+				<p v-if="!isValidEmail(emailAddress)" class="account-form--error">
+					{{ t('mail', 'Please enter an email of the format name@example.com') }}
+				</p>
 
-			<AccountFormJmap
-				v-if="isJmap"
-				v-model="jmapConfig"
-				:disabled="loading"
-				:passwordOptional="!isSetup"
-				@change="clearFeedback" />
-			<AccountFormImap
-				v-else
-				v-model="imapConfig"
-				:disabled="loading"
-				:passwordOptional="!isSetup"
-				:hidePasswords="useOauth"
-				@change="clearFeedback" />
-			<NcCheckboxRadioSwitch
-				v-if="isSetup"
-				id="auto-classification-enabled"
-				v-model="classificationEnabled"
-				:disabled="loading">
-				{{ t('mail', 'Enable mark as important classification') }}
-			</NcCheckboxRadioSwitch>
-		</div>
-		<div v-if="isGoogleAccount && !googleOauthUrl" class="account-form__google-sso">
-			{{ t('mail', 'Google requires OAuth authentication. If your Nextcloud admin has not configured Google OAuth, you can use a Google App Password instead.') }}
-		</div>
-		<div v-if="isMicrosoftAccount && !microsoftOauthUrl" class="account-form__microsoft-sso">
-			{{ t('mail', 'Microsoft requires OAuth authentication. Ask your Nextcloud admin to configure Microsoft OAuth in the admin settings.') }}
-		</div>
-		<div v-if="isOidcAccount" class="account-form__oidc-sso">
-			{{ t('mail', 'This email domain uses single sign-on. You will be redirected to your identity provider to grant access to your mail account.') }}
-		</div>
-		<div class="account-form__submit-buttons">
-			<NcButton
-				v-if="mode === 'auto'"
-				:aria-label="submitButtonText"
-				class="account-form__submit-button"
-				variant="primary"
-				type="submit"
-				:disabled="isDisabledAuto || loading"
-				@click.prevent="onSubmit">
-				<template #icon>
-					<NcLoadingIcon v-if="loading" :size="20" />
-					<IconCheck v-else :size="20" />
-				</template>
-				{{ submitButtonText }}
-			</NcButton>
-			<NcButton
-				v-else-if="mode === 'manual'"
-				:aria-label="submitButtonText"
-				class="account-form__submit-button"
-				variant="primary"
-				type="submit"
-				:disabled="isDisabledManual || loading"
-				@click.prevent="onSubmit">
-				<template #icon>
-					<NcLoadingIcon v-if="loading" :size="20" />
-					<IconCheck v-else :size="20" />
-				</template>
-				{{ submitButtonText }}
-			</NcButton>
+				<NcRadioGroup
+					v-if="isSetup"
+					v-model="protocol"
+					:label="t('mail', 'Mail server protocol')"
+					hideLabel>
+					<NcRadioGroupButton :label="t('mail', 'IMAP/SMTP')" value="imap" :disabled="loading" />
+					<NcRadioGroupButton :label="t('mail', 'JMAP')" value="jmap" :disabled="loading" />
+				</NcRadioGroup>
+
+				<AccountFormJmap
+					v-if="isJmap"
+					v-model="jmapConfig"
+					:disabled="loading"
+					:passwordOptional="!isSetup"
+					@change="clearFeedback" />
+				<AccountFormImap
+					v-else
+					v-model="imapConfig"
+					:disabled="loading"
+					:passwordOptional="!isSetup"
+					:hidePasswords="useOauth"
+					@change="clearFeedback" />
+				<NcCheckboxRadioSwitch
+					v-if="isSetup"
+					id="auto-classification-enabled"
+					v-model="classificationEnabled"
+					:disabled="loading">
+					{{ t('mail', 'Enable mark as important classification') }}
+				</NcCheckboxRadioSwitch>
+			</div>
+			<div v-if="isGoogleAccount && !googleOauthUrl" class="account-form__google-sso">
+				{{ t('mail', 'Google requires OAuth authentication. If your Nextcloud admin has not configured Google OAuth, you can use a Google App Password instead.') }}
+			</div>
+			<div v-if="isMicrosoftAccount && !microsoftOauthUrl" class="account-form__microsoft-sso">
+				{{ t('mail', 'Microsoft requires OAuth authentication. Ask your Nextcloud admin to configure Microsoft OAuth in the admin settings.') }}
+			</div>
+			<div v-if="isOidcAccount" class="account-form__oidc-sso">
+				{{ t('mail', 'This email domain uses single sign-on. You will be redirected to your identity provider to grant access to your mail account.') }}
+			</div>
+			<div class="account-form__submit-buttons">
+				<NcButton
+					v-if="mode === 'auto'"
+					:aria-label="submitButtonText"
+					class="account-form__submit-button"
+					variant="primary"
+					type="submit"
+					:disabled="isDisabledAuto || loading"
+					@click.prevent="onSubmit">
+					<template #icon>
+						<NcLoadingIcon v-if="loading" :size="20" />
+						<IconCheck v-else :size="20" />
+					</template>
+					{{ submitButtonText }}
+				</NcButton>
+				<NcButton
+					v-else-if="mode === 'manual'"
+					:aria-label="submitButtonText"
+					class="account-form__submit-button"
+					variant="primary"
+					type="submit"
+					:disabled="isDisabledManual || loading"
+					@click.prevent="onSubmit">
+					<template #icon>
+						<NcLoadingIcon v-if="loading" :size="20" />
+						<IconCheck v-else :size="20" />
+					</template>
+					{{ submitButtonText }}
+				</NcButton>
+			</div>
 		</div>
 		<div v-if="feedback" class="account-form--feedback">
 			{{ feedback }}
@@ -156,6 +165,7 @@ import NcPasswordField from '@nextcloud/vue/components/NcPasswordField'
 import NcRadioGroup from '@nextcloud/vue/components/NcRadioGroup'
 import NcRadioGroupButton from '@nextcloud/vue/components/NcRadioGroupButton'
 import IconCheck from 'vue-material-design-icons/Check.vue'
+import AccountFormDiscoveryProgress from './AccountFormDiscoveryProgress.vue'
 import AccountFormImap from './AccountFormImap.vue'
 import AccountFormJmap from './AccountFormJmap.vue'
 import { CONSENT_ABORTED, getUserConsent } from '../integration/oauth.js'
@@ -166,14 +176,25 @@ import {
 	queryMx,
 	testConnectivity,
 } from '../service/AutoConfigService.js'
+import { discover, DiscoveryError } from '../service/DiscoveryService.ts'
 import { generateOauthState } from '../service/OauthStateService.js'
 import useMainStore from '../store/mainStore.js'
+import {
+	candidateFromEvent,
+	initialDiscoveryProgress,
+	isUsableCandidate,
+	orderCandidates,
+	toImapServerConfig,
+	toJmapServerConfig,
+	updateDiscoveryProgress,
+} from '../util/discovery.ts'
 import { isValidEmail } from '../util/emailAddress.js'
 import { findProviderForEmail, loadOidcProviders, openOidcConsent } from '../util/oidc.js'
 
 export default {
 	name: 'AccountForm',
 	components: {
+		AccountFormDiscoveryProgress,
 		AccountFormImap,
 		AccountFormJmap,
 		NcPasswordField,
@@ -253,6 +274,10 @@ export default {
 			},
 
 			feedback: null,
+			discoveryProgress: null,
+			discoveryController: null,
+			discoveryChoices: [],
+			resolveDiscoveryChoice: null,
 			password: '',
 			oidcProviders: loadOidcProviders(),
 		}
@@ -321,8 +346,12 @@ export default {
 				|| requiresPassword
 		},
 
+		discoveredProtocols() {
+			return this.discoveryChoices.map((candidate) => candidate.protocol)
+		},
+
 		isJmap() {
-			return this.mode === 'manual' && this.protocol === PROTOCOL_JMAP
+			return this.protocol === PROTOCOL_JMAP
 		},
 
 		isGoogleAccount() {
@@ -394,6 +423,9 @@ export default {
 			immediate: true,
 			handler(mode) {
 				if (mode !== 'manual') {
+					if (this.isSetup) {
+						this.protocol = PROTOCOL_IMAP
+					}
 					return
 				}
 
@@ -422,6 +454,10 @@ export default {
 				}
 			},
 		},
+	},
+
+	beforeUnmount() {
+		this.discoveryController?.abort()
 	},
 
 	methods: {
@@ -573,159 +609,252 @@ export default {
 			this.clearFeedback()
 			this.loading = true
 			try {
-				if (this.mode === 'auto') {
-					if (this.isOidcAccount) {
-						this.applyOidcProvider(this.oidcProvider)
-					} else if (!await this.detectConfig()) {
-						logger.warn('Auto mode failed')
-						return
-					}
-				}
-				if (!this.useOauth && this.isSetup) {
-					if (this.mode === 'auto' && this.autoConfig.password === '') {
-						this.feedback = t('mail', 'Password required')
-						return
-					}
-					if (this.isJmap && this.jmapConfig.password === '') {
-						this.feedback = t('mail', 'Password required')
-						return
-					}
-					if (this.mode === 'manual' && !this.isJmap && (this.imapConfig.imapPassword === '' || this.imapConfig.smtpPassword === '')) {
-						this.feedback = t('mail', 'Password required')
-						return
-					}
-				}
-				this.loadingMessage = t('mail', 'Testing authentication')
-				let data
-				if (this.isJmap) {
-					data = {
-						protocol: PROTOCOL_JMAP,
-						accountName: this.accountName,
-						emailAddress: this.emailAddress,
-						imapHost: this.jmapConfig.host.trim(),
-						imapPort: this.jmapConfig.port,
-						imapSslMode: this.jmapConfig.sslMode,
-						imapUser: this.jmapConfig.user,
-						path: this.jmapConfig.path.trim() || null,
-						authMethod: 'password',
-						classificationEnabled: this.classificationEnabled,
-					}
-					if (this.jmapConfig.password !== '') {
-						data.imapPassword = this.jmapConfig.password
-					}
+				if (this.mode === 'auto' && this.isOidcAccount) {
+					this.applyOidcProvider(this.oidcProvider)
+					await this.saveAccount()
+				} else if (this.mode === 'auto') {
+					await this.discoverAndSave()
 				} else {
-					data = {
-						...this.imapConfig,
-						accountName: this.accountName,
-						emailAddress: this.emailAddress,
-						imapHost: this.imapConfig.imapHost.trim(),
-						smtpHost: this.imapConfig.smtpHost.trim(),
-						authMethod: this.useOauth ? 'xoauth2' : 'password',
-						classificationEnabled: this.classificationEnabled,
-					}
-					if (this.useOauth) {
-						delete data.imapPassword
-						delete data.smtpPassword
-					} else if (!this.isSetup) {
-						if (data.imapPassword === '') {
-							delete data.imapPassword
-						}
-						if (data.smtpPassword === '') {
-							delete data.smtpPassword
-						}
-					}
-				}
-				if (!this.account) {
-					const account = await this.mainStore.startAccountSetup(data)
-					if (this.useOauth) {
-						try {
-							await this.requestOauthConsent(account, false)
-						} catch (e) {
-							// Clean up the temporary account before we continue
-							this.mainStore.deleteAccount(account)
-							logger.info(`Temporary account ${account.id} deleted`)
-							throw e
-						}
-						this.clearFeedback()
-					}
-					this.loadingMessage = t('mail', 'Loading account')
-					await this.mainStore.finishAccountSetup({ account })
-					this.$emit('accountCreated', account)
-				} else {
-					const oldAccountData = this.account
-					const account = await this.mainStore.updateAccount({
-						...data,
-						accountId: this.account.id,
-					})
-					if (this.useOauth) {
-						try {
-							await this.requestOauthConsent(account, true)
-						} catch (e) {
-							// Undo changes
-							await this.mainStore.updateAccount({
-								...oldAccountData,
-								accountId: oldAccountData.id,
-							})
-							logger.info(`Account ${account.id} update undone`)
-							throw e
-						}
-						this.clearFeedback()
-					}
-					this.feedback = t('mail', 'Account updated')
+					await this.saveAccount()
 				}
 			} catch (error) {
-				logger.error('could not save account details', { error })
-
-				if (error.data?.error === 'CONNECTION_ERROR') {
-					if (error.data.service === 'IMAP') {
-						this.feedback = t('mail', 'IMAP server is not reachable')
-					} else if (error.data.service === 'SMTP') {
-						this.feedback = t('mail', 'SMTP server is not reachable')
-					} else if (error.data.service === 'JMAP') {
-						this.feedback = t('mail', 'JMAP server is not reachable')
-					}
-				} else if (error.data?.error === 'ACCOUNT_EXISTS') {
-					this.feedback = t('mail', 'Account already exists')
-				} else if (error.data?.error === 'AUTHENTICATION_WRONG_PASSWORD') {
-					if (error.data.service === 'IMAP') {
-						this.feedback = t('mail', 'IMAP username or password is wrong')
-					} else if (error.data.service === 'SMTP') {
-						this.feedback = t('mail', 'SMTP username or password is wrong')
-					} else if (error.data.service === 'JMAP') {
-						this.feedback = t('mail', 'JMAP username or password is wrong')
-					}
-				} else if (error.data?.error === 'AUTHENTICATION_DENIED') {
-					if (error.data.service === 'IMAP') {
-						this.feedback = t('mail', 'IMAP server denied authentication')
-					} else if (error.data.service === 'SMTP') {
-						this.feedback = t('mail', 'SMTP server denied authentication')
-					} else if (error.data.service === 'JMAP') {
-						this.feedback = t('mail', 'JMAP server denied authentication')
-					}
-				} else if (error.data?.error === 'AUTHENTICATION') {
-					if (error.data.service === 'IMAP') {
-						this.feedback = t('mail', 'IMAP authentication error')
-					} else if (error.data.service === 'SMTP') {
-						this.feedback = t('mail', 'SMTP authentication error')
-					}
-				} else {
-					if (error.data?.service === 'IMAP') {
-						this.feedback = t('mail', 'IMAP connection failed')
-					} else if (error.data?.service === 'SMTP') {
-						this.feedback = t('mail', 'SMTP connection failed')
-					} else if (error.data?.service === 'JMAP') {
-						this.feedback = t('mail', 'JMAP connection failed')
-					} else if (error.message === CONSENT_ABORTED) {
-						this.feedback = t('mail', 'Authorization pop-up closed')
-					} else if (error.response?.status === 429) {
-						this.feedback = t('mail', 'Configuration discovery temporarily not available. Please try again later.')
-					} else {
-						this.feedback = t('mail', 'There was an error while setting up your account')
-					}
-				}
+				this.showError(error)
 			} finally {
 				this.loading = false
 				this.loadingMessage = undefined
+				this.discoveryProgress = null
+			}
+		},
+
+		async discoverCandidates() {
+			this.loadingMessage = t('mail', 'Looking up configuration')
+			this.discoveryProgress = initialDiscoveryProgress()
+			this.discoveryController = new AbortController()
+			const candidates = []
+			try {
+				await discover(this.emailAddress, (event) => {
+					this.discoveryProgress = updateDiscoveryProgress(this.discoveryProgress, event)
+					if (event.type === 'candidate') {
+						candidates.push(candidateFromEvent(event))
+					}
+				}, this.discoveryController.signal)
+			} finally {
+				this.discoveryController = null
+			}
+			logger.debug('discovered candidates', { candidates })
+
+			if (this.isSetup) {
+				return orderCandidates(candidates)
+			}
+			const ownProtocol = []
+			for (const candidate of candidates) {
+				if (candidate.protocol === this.account.protocol) {
+					ownProtocol.push(candidate)
+				}
+			}
+			return ownProtocol
+		},
+
+		applyCandidate(candidate) {
+			if (candidate.protocol === PROTOCOL_JMAP) {
+				this.protocol = PROTOCOL_JMAP
+				this.jmapConfig = toJmapServerConfig(candidate.jmap, this.autoConfig.password)
+			} else {
+				this.protocol = PROTOCOL_IMAP
+				this.imapConfig = toImapServerConfig(candidate.imap, this.autoConfig.password)
+			}
+		},
+
+		async discoverAndSave() {
+			const candidates = await this.discoverCandidates()
+			const usable = []
+			for (const candidate of candidates) {
+				if (isUsableCandidate(candidate)) {
+					usable.push(candidate)
+				}
+			}
+
+			if (usable.length === 0) {
+				if (candidates.length > 0) {
+					this.applyCandidate(candidates[0])
+					this.mode = 'manual'
+				}
+				this.feedback = t('mail', 'Configuration discovery failed. Please use the manual settings')
+				return
+			}
+
+			const candidate = usable.length === 1 ? usable[0] : await this.chooseCandidate(usable)
+			this.applyCandidate(candidate)
+			try {
+				await this.saveAccount()
+			} catch (error) {
+				if (error.data?.service !== undefined) {
+					this.mode = 'manual'
+				}
+				throw error
+			}
+		},
+
+		chooseCandidate(candidates) {
+			this.loadingMessage = t('mail', 'Your mail server supports more than one protocol. Choose how to connect.')
+			this.discoveryChoices = candidates
+			return new Promise((resolve) => {
+				this.resolveDiscoveryChoice = (protocol) => {
+					this.discoveryChoices = []
+					this.resolveDiscoveryChoice = null
+					resolve(candidates.find((candidate) => candidate.protocol === protocol))
+				}
+			})
+		},
+
+		onDiscoveryChoice(protocol) {
+			this.resolveDiscoveryChoice?.(protocol)
+		},
+
+		async saveAccount() {
+			if (!this.useOauth && this.isSetup) {
+				if (this.mode === 'auto' && this.autoConfig.password === '') {
+					this.feedback = t('mail', 'Password required')
+					return
+				}
+				if (this.isJmap && this.jmapConfig.password === '') {
+					this.feedback = t('mail', 'Password required')
+					return
+				}
+				if (this.mode === 'manual' && !this.isJmap && (this.imapConfig.imapPassword === '' || this.imapConfig.smtpPassword === '')) {
+					this.feedback = t('mail', 'Password required')
+					return
+				}
+			}
+			this.loadingMessage = t('mail', 'Testing authentication')
+			let data
+			if (this.isJmap) {
+				data = {
+					protocol: PROTOCOL_JMAP,
+					accountName: this.accountName,
+					emailAddress: this.emailAddress,
+					imapHost: this.jmapConfig.host.trim(),
+					imapPort: this.jmapConfig.port,
+					imapSslMode: this.jmapConfig.sslMode,
+					imapUser: this.jmapConfig.user,
+					path: this.jmapConfig.path.trim() || null,
+					authMethod: 'password',
+					classificationEnabled: this.classificationEnabled,
+				}
+				if (this.jmapConfig.password !== '') {
+					data.imapPassword = this.jmapConfig.password
+				}
+			} else {
+				data = {
+					...this.imapConfig,
+					accountName: this.accountName,
+					emailAddress: this.emailAddress,
+					imapHost: this.imapConfig.imapHost.trim(),
+					smtpHost: this.imapConfig.smtpHost.trim(),
+					authMethod: this.useOauth ? 'xoauth2' : 'password',
+					classificationEnabled: this.classificationEnabled,
+				}
+				if (this.useOauth) {
+					delete data.imapPassword
+					delete data.smtpPassword
+				} else if (!this.isSetup) {
+					if (data.imapPassword === '') {
+						delete data.imapPassword
+					}
+					if (data.smtpPassword === '') {
+						delete data.smtpPassword
+					}
+				}
+			}
+			if (!this.account) {
+				const account = await this.mainStore.startAccountSetup(data)
+				if (this.useOauth) {
+					try {
+						await this.requestOauthConsent(account, false)
+					} catch (e) {
+						// Clean up the temporary account before we continue
+						this.mainStore.deleteAccount(account)
+						logger.info(`Temporary account ${account.id} deleted`)
+						throw e
+					}
+					this.clearFeedback()
+				}
+				this.loadingMessage = t('mail', 'Loading account')
+				await this.mainStore.finishAccountSetup({ account })
+				this.$emit('accountCreated', account)
+			} else {
+				const oldAccountData = this.account
+				const account = await this.mainStore.updateAccount({
+					...data,
+					accountId: this.account.id,
+				})
+				if (this.useOauth) {
+					try {
+						await this.requestOauthConsent(account, true)
+					} catch (e) {
+						// Undo changes
+						await this.mainStore.updateAccount({
+							...oldAccountData,
+							accountId: oldAccountData.id,
+						})
+						logger.info(`Account ${account.id} update undone`)
+						throw e
+					}
+					this.clearFeedback()
+				}
+				this.feedback = t('mail', 'Account updated')
+			}
+		},
+
+		showError(error) {
+			logger.error('could not save account details', { error })
+
+			if (error.data?.error === 'CONNECTION_ERROR') {
+				if (error.data.service === 'IMAP') {
+					this.feedback = t('mail', 'IMAP server is not reachable')
+				} else if (error.data.service === 'SMTP') {
+					this.feedback = t('mail', 'SMTP server is not reachable')
+				} else if (error.data.service === 'JMAP') {
+					this.feedback = t('mail', 'JMAP server is not reachable')
+				}
+			} else if (error.data?.error === 'ACCOUNT_EXISTS') {
+				this.feedback = t('mail', 'Account already exists')
+			} else if (error.data?.error === 'AUTHENTICATION_WRONG_PASSWORD') {
+				if (error.data.service === 'IMAP') {
+					this.feedback = t('mail', 'IMAP username or password is wrong')
+				} else if (error.data.service === 'SMTP') {
+					this.feedback = t('mail', 'SMTP username or password is wrong')
+				} else if (error.data.service === 'JMAP') {
+					this.feedback = t('mail', 'JMAP username or password is wrong')
+				}
+			} else if (error.data?.error === 'AUTHENTICATION_DENIED') {
+				if (error.data.service === 'IMAP') {
+					this.feedback = t('mail', 'IMAP server denied authentication')
+				} else if (error.data.service === 'SMTP') {
+					this.feedback = t('mail', 'SMTP server denied authentication')
+				} else if (error.data.service === 'JMAP') {
+					this.feedback = t('mail', 'JMAP server denied authentication')
+				}
+			} else if (error.data?.error === 'AUTHENTICATION') {
+				if (error.data.service === 'IMAP') {
+					this.feedback = t('mail', 'IMAP authentication error')
+				} else if (error.data.service === 'SMTP') {
+					this.feedback = t('mail', 'SMTP authentication error')
+				}
+			} else {
+				if (error.data?.service === 'IMAP') {
+					this.feedback = t('mail', 'IMAP connection failed')
+				} else if (error.data?.service === 'SMTP') {
+					this.feedback = t('mail', 'SMTP connection failed')
+				} else if (error.data?.service === 'JMAP') {
+					this.feedback = t('mail', 'JMAP connection failed')
+				} else if (error.message === CONSENT_ABORTED) {
+					this.feedback = t('mail', 'Authorization pop-up closed')
+				} else if (error.response?.status === 429 || (error instanceof DiscoveryError && error.status === 429)) {
+					this.feedback = t('mail', 'Configuration discovery temporarily not available. Please try again later.')
+				} else {
+					this.feedback = t('mail', 'There was an error while setting up your account')
+				}
 			}
 		},
 	},
