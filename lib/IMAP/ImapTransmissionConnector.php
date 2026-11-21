@@ -397,6 +397,7 @@ class ImapTransmissionConnector implements ITransmissionConnector {
 			[$localAttachment, $file] = $this->attachmentService->getAttachment($account->getMailAccount()->getUserId(), (int)$attachment['id']);
 			$part = new Horde_Mime_Part();
 			$part->setCharset('us-ascii');
+			$part->setHeaderCharset('UTF-8');
 
 			if ($localAttachment->isDispositionAttachmentOrInline()) {
 				$part->setDisposition($localAttachment->getDisposition());
