@@ -31,7 +31,7 @@ use OCP\EventDispatcher\IEventDispatcher;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class ImapToDbSynchronizerTest extends TestCase {
+final class ImapToDbSynchronizerTest extends TestCase {
 	private DatabaseMessageMapper&MockObject $dbMapper;
 	private ProtocolFactory&MockObject $protocolFactory;
 	private ImapMessageMapper&MockObject $imapMapper;

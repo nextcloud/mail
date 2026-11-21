@@ -28,7 +28,7 @@ use OCP\IRequest;
 use OCP\Server;
 use Psr\Log\LoggerInterface;
 
-class MailboxSynchronizationTest extends TestCase {
+final class MailboxSynchronizationTest extends TestCase {
 	use ImapTest,
 		ImapTestAccount;
 
@@ -66,7 +66,7 @@ class MailboxSynchronizationTest extends TestCase {
 		$this->client->logout();
 	}
 
-	public function testSyncEmptyMailbox() {
+	public function testSyncEmptyMailbox(): void {
 		/** @var MailManager $mailManager */
 		$mailManager = Server::get(MailManager::class);
 		$mailBoxes = $mailManager->getMailboxes(new Account($this->account));
@@ -104,7 +104,7 @@ class MailboxSynchronizationTest extends TestCase {
 		self::assertEmpty($data['vanishedMessages']);
 	}
 
-	public function testSyncNewMessage() {
+	public function testSyncNewMessage(): void {
 		/** @var SyncService $syncService */
 		$syncService = Server::get(SyncService::class);
 		/** @var MailManager $mailManager */
@@ -146,7 +146,7 @@ class MailboxSynchronizationTest extends TestCase {
 		self::assertCount(0, $syncJson['vanishedMessages']);
 	}
 
-	public function testSyncChangedMessage() {
+	public function testSyncChangedMessage(): void {
 		/** @var SyncService $syncService */
 		$syncService = Server::get(SyncService::class);
 		$mailbox = 'INBOX';
@@ -189,7 +189,7 @@ class MailboxSynchronizationTest extends TestCase {
 		self::assertCount(0, $syncJson['vanishedMessages']);
 	}
 
-	public function testSyncVanishedMessage() {
+	public function testSyncVanishedMessage(): void {
 		$mailbox = 'INBOX';
 		$message = $this->getMessageBuilder()
 			->from('ralph@buffington@domain.tld')
@@ -232,7 +232,7 @@ class MailboxSynchronizationTest extends TestCase {
 		//		self::assertCount(1, $syncJson['vanishedMessages'], 'Message does not show as vanished, possibly because UID and ID are mixed up above.');
 	}
 
-	public function testUnsolicitedVanishedMessage() {
+	public function testUnsolicitedVanishedMessage(): void {
 		$mailbox = 'INBOX';
 		$message = $this->getMessageBuilder()
 			->from('ralph@buffington@domain.tld')

@@ -17,7 +17,7 @@ use OCP\IDBConnection;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class OidcProviderMapperTest extends TestCase {
+final class OidcProviderMapperTest extends TestCase {
 	private IDBConnection&MockObject $db;
 	private OidcProviderMapper $mapper;
 
@@ -201,14 +201,12 @@ class OidcProviderMapperTest extends TestCase {
 		}
 	}
 
-	public static function invalidPortProvider(): array {
-		return [
-			'negative' => [-1],
-			'above range' => [65536],
-			'far above range' => [99999999],
-			'not a number' => ['imap'],
-			'missing' => [null],
-		];
+	public static function invalidPortProvider(): \Iterator {
+		yield 'negative' => [-1];
+		yield 'above range' => [65536];
+		yield 'far above range' => [99999999];
+		yield 'not a number' => ['imap'];
+		yield 'missing' => [null];
 	}
 
 	/**

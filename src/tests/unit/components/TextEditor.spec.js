@@ -3,10 +3,11 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { shallowMount } from '@vue/test-utils'
+import { Ckeditor } from '@ckeditor/ckeditor5-vue'
+import { flushPromises, mount, shallowMount } from '@vue/test-utils'
 import { GeneralHtmlSupport, Paragraph } from 'ckeditor5'
 import mitt from 'mitt'
-import { vi } from 'vitest'
+import { beforeEach, vi } from 'vitest'
 import TextEditor from '../../../components/TextEditor.vue'
 import ImageDowncastPlugin from '../../../ckeditor/image/ImageDowncastPlugin.ts'
 import MailPlugin from '../../../ckeditor/mail/MailPlugin.js'
@@ -236,6 +237,9 @@ describe('TextEditor', () => {
 			editing: {
 				view: {
 					focus: vi.fn(),
+					document: {
+						on: vi.fn(),
+					},
 				},
 			},
 		}
@@ -258,5 +262,98 @@ describe('TextEditor', () => {
 		expect(updateEditorData).toHaveBeenCalledTimes(1)
 
 		vi.useRealTimers()
+	})
+
+	describe('emitting the latest text', () => {
+		let wrapper
+		let editor
+		let keystrokes
+
+		beforeEach(async () => {
+			wrapper = shallowMount(TextEditor, {
+				global: {
+					mixins: [Nextcloud],
+				},
+				props: {
+					modelValue: '<p>bonjour</p>',
+					bus: mitt(),
+				},
+			})
+			wrapper.vm.$refs.toolbarContainer = document.createElement('div')
+			wrapper.vm.$refs.editableContainer = document.createElement('div')
+			wrapper.vm.$refs.ckeditor = { lastEditorData: '<p>bonjour</p>' }
+
+			editor = await VirtualTestEditor.create({
+				licenseKey: 'GPL',
+				initialData: '<p>bonjour</p>',
+				plugins: [Paragraph],
+			})
+			editor.ui = {
+				view: {
+					toolbar: {
+						element: document.createElement('div'),
+						items: [],
+					},
+					editable: { element: document.createElement('div') },
+				},
+			}
+			keystrokes = {}
+			vi.spyOn(editor.keystrokes, 'set').mockImplementation((key, handler) => {
+				keystrokes[key] = handler
+			})
+			wrapper.vm.onEditorReady(editor)
+			editor.data.set('<p>bonjour bonjour</p>')
+		})
+
+		it('emits the text when the editor loses focus', () => {
+			editor.editing.view.document.fire('blur', {})
+
+			expect(wrapper.emitted('update:modelValue')).toEqual([['<p>bonjour bonjour</p>']])
+			expect(wrapper.vm.$refs.ckeditor.lastEditorData).toBe('<p>bonjour bonjour</p>')
+		})
+
+		it('emits the text before asking to save', () => {
+			keystrokes['Ctrl+S']({ preventDefault: vi.fn(), stopPropagation: vi.fn() })
+
+			expect(wrapper.emitted('update:modelValue')).toEqual([['<p>bonjour bonjour</p>']])
+			expect(Object.keys(wrapper.emitted())).toEqual(expect.arrayContaining(['update:modelValue', 'save']))
+			expect(wrapper.emitted('save')).toHaveLength(1)
+		})
+
+		it('emits the text before asking to send', () => {
+			keystrokes['Ctrl+Enter']({})
+
+			expect(wrapper.emitted('update:modelValue')).toEqual([['<p>bonjour bonjour</p>']])
+			expect(wrapper.emitted('submit')).toHaveLength(1)
+		})
+	})
+
+	it('does not reset the Ckeditor wrapper with text it was told about', async () => {
+		class ElementEditor extends VirtualTestEditor {
+			static async create(elementOrConfig, config) {
+				const editor = await super.create(config ?? elementOrConfig)
+				editor.ui = { getEditableElement: () => document.createElement('div') }
+				return editor
+			}
+		}
+		const view = mount(Ckeditor, {
+			props: {
+				editor: ElementEditor,
+				modelValue: '<p>bonjour</p>',
+				config: { licenseKey: 'GPL', plugins: [Paragraph] },
+			},
+		})
+		await flushPromises()
+		const editor = view.vm.instance
+		const setData = vi.spyOn(editor.data, 'set')
+
+		view.vm.lastEditorData = '<p>bonjour bonjour</p>'
+		await view.setProps({ modelValue: '<p>bonjour bonjour</p>' })
+
+		expect(setData).not.toHaveBeenCalled()
+
+		await view.setProps({ modelValue: '<p>au revoir</p>' })
+
+		expect(setData).toHaveBeenCalledWith('<p>au revoir</p>')
 	})
 })

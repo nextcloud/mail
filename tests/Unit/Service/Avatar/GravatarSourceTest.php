@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -17,7 +19,7 @@ use OCP\Http\Client\IClientService;
 use OCP\Http\Client\IResponse;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class GravatarSourceTest extends TestCase {
+final class GravatarSourceTest extends TestCase {
 	/** @var IClientService|MockObject */
 	private $clientService;
 
@@ -32,7 +34,7 @@ class GravatarSourceTest extends TestCase {
 		$this->source = new GravatarSource($this->clientService);
 	}
 
-	public function testFetchExisting() {
+	public function testFetchExisting(): void {
 		$email = 'hey@jancborchardt.net';
 		$client = $this->createMock(IClient::class);
 		$avatarFactory = $this->createMock(AvatarFactory::class);
@@ -58,7 +60,7 @@ class GravatarSourceTest extends TestCase {
 		$this->assertEquals($avatar, $actualAvatar);
 	}
 
-	public function testFetchHttpError() {
+	public function testFetchHttpError(): void {
 		$email = 'hey@jancborchardt.net';
 		$client = $this->createMock(IClient::class);
 		$avatarFactory = $this->createStub(AvatarFactory::class);

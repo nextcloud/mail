@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\BackgroundJob;
 
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -32,6 +33,7 @@ class QuotaJob extends TimedJob {
 		IManager $notificationManager,
 		private LoggerInterface $logger,
 		IJobList $jobList,
+		private ProtocolFactory $protocolFactory,
 	) {
 		parent::__construct($time);
 
@@ -72,7 +74,12 @@ class QuotaJob extends TimedJob {
 			return;
 		}
 
-		$quota = $this->mailManager->getQuota($account);
+		try {
+			$quota = $this->mailManager->getQuota($account);
+		} finally {
+			$this->protocolFactory->releaseClients($account);
+		}
+
 		if ($quota === null) {
 			$this->logger->debug("Could not get quota information for account <{$account->getEmail()}>", ['app' => 'mail']);
 			return;

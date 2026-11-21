@@ -13,7 +13,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Events\MailboxesSynchronizedEvent;
 
-class MailboxesSynchronizedEventTest extends TestCase {
+final class MailboxesSynchronizedEventTest extends TestCase {
 	public function testConstructorAndGetter(): void {
 		$account = $this->createStub(Account::class);
 

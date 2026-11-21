@@ -155,13 +155,6 @@
       <code><![CDATA[$fullText]]></code>
       <code><![CDATA[$message->getAttachments()]]></code>
     </PossiblyNullArgument>
-    <UndefinedClass>
-      <code><![CDATA[SharedStorage]]></code>
-    </UndefinedClass>
-    <UndefinedDocblockClass>
-      <code><![CDATA[$share]]></code>
-      <code><![CDATA[$storage]]></code>
-    </UndefinedDocblockClass>
   </file>
   <file src="lib/Service/AutoConfig/IspDb.php">
     <PossiblyInvalidArgument>
@@ -303,8 +296,6 @@
   </file>
   <file src="lib/Settings/AdminSettings.php">
     <PossiblyNullArgument>
-      <code><![CDATA[$this->googleIntegration->getClientId()]]></code>
-      <code><![CDATA[$this->microsoftIntegration->getClientId()]]></code>
       <code><![CDATA[$this->microsoftIntegration->getTenantId()]]></code>
     </PossiblyNullArgument>
   </file>

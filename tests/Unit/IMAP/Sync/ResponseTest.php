@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-only
@@ -10,8 +12,8 @@ namespace OCA\Mail\Tests\Unit\IMAP\Sync;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\IMAP\Sync\Response;
 
-class ResponseTest extends TestCase {
-	public function testJsonSerialize() {
+final class ResponseTest extends TestCase {
+	public function testJsonSerialize(): void {
 		$newMessages = [];
 		$changedMessages = [];
 		$vanishedMessages = [];

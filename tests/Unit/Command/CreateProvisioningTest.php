@@ -22,7 +22,7 @@ use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class CreateProvisioningTest extends TestCase {
+final class CreateProvisioningTest extends TestCase {
 	private ProvisioningManager&MockObject $provisioningManager;
 	private CreateProvisioning $command;
 	private CommandTester $tester;
@@ -74,20 +74,18 @@ class CreateProvisioningTest extends TestCase {
 		$status = $this->tester->execute($this->options);
 
 		self::assertSame(Command::SUCCESS, $status);
-		self::assertStringContainsString('3', $this->tester->getDisplay());
+		self::assertStringContainsString('3', (string)$this->tester->getDisplay());
 	}
 
 	public function testCreateWithSieveAndLdapAliases(): void {
 		$this->provisioningManager->expects(self::once())
 			->method('newProvisioning')
-			->with(self::callback(static function (array $data): bool {
-				return $data['sieveEnabled'] === true
+			->with(self::callback(static fn (array $data): bool => $data['sieveEnabled'] === true
 					&& $data['sieveHost'] === 'sieve.example.com'
 					&& $data['sieveUser'] === '%USERID%'
 					&& $data['sievePort'] === 4190
 					&& $data['ldapAliasesProvisioning'] === true
-					&& $data['ldapAliasesAttribute'] === 'proxyAddresses';
-			}))
+					&& $data['ldapAliasesAttribute'] === 'proxyAddresses'))
 			->willReturn(new Provisioning());
 
 		$status = $this->tester->execute(array_merge($this->options, [
@@ -104,11 +102,9 @@ class CreateProvisioningTest extends TestCase {
 	public function testCreateWithMasterPassword(): void {
 		$this->provisioningManager->expects(self::once())
 			->method('newProvisioning')
-			->with(self::callback(static function (array $data): bool {
-				return $data['masterPasswordEnabled'] === true
+			->with(self::callback(static fn (array $data): bool => $data['masterPasswordEnabled'] === true
 					&& $data['masterPassword'] === 'sesame'
-					&& $data['masterUser'] === '*masteruser';
-			}))
+					&& $data['masterUser'] === '*masteruser'))
 			->willReturn(new Provisioning());
 
 		$this->tester->setInputs(['sesame']);
@@ -131,9 +127,7 @@ class CreateProvisioningTest extends TestCase {
 	public function testCreateWithoutMasterPassword(): void {
 		$this->provisioningManager->expects(self::once())
 			->method('newProvisioning')
-			->with(self::callback(static function (array $data): bool {
-				return !isset($data['masterPasswordEnabled']);
-			}))
+			->with(self::callback(static fn (array $data): bool => !isset($data['masterPasswordEnabled'])))
 			->willReturn(new Provisioning());
 
 		$status = $this->tester->execute($this->options);
@@ -149,14 +143,12 @@ class CreateProvisioningTest extends TestCase {
 		$status = $this->tester->execute(array_merge($this->options, $options));
 
 		self::assertSame(Command::INVALID, $status);
-		self::assertStringContainsString('--master-user requires the master password to be enabled with --master-password', $this->tester->getDisplay());
+		self::assertStringContainsString('--master-user requires the master password to be enabled with --master-password', (string)$this->tester->getDisplay());
 	}
 
-	public static function masterUserWithoutMasterPassword(): array {
-		return [
-			'no master password option' => [['--master-user' => '*admin']],
-			'master password disabled' => [['--master-user' => '*admin', '--no-master-password' => true]],
-		];
+	public static function masterUserWithoutMasterPassword(): \Iterator {
+		yield 'no master password option' => [['--master-user' => '*admin']];
+		yield 'master password disabled' => [['--master-user' => '*admin', '--no-master-password' => true]];
 	}
 
 	/** @dataProvider passwordInputs */
@@ -171,18 +163,16 @@ class CreateProvisioningTest extends TestCase {
 		$status = $this->tester->execute($this->options + ['--master-password' => null], ['interactive' => $interactive]);
 
 		self::assertSame(Command::SUCCESS, $status);
-		self::assertStringNotContainsString($expected, $this->tester->getDisplay());
+		self::assertStringNotContainsString($expected, (string)$this->tester->getDisplay());
 	}
 
-	public static function passwordInputs(): array {
-		return [
-			'interactive' => [true, 'sesame', 'sesame'],
-			'interactive whitespace' => [true, ' sesame ', ' sesame '],
-			'interactive tabs' => [true, "\tsesame\t", "\tsesame\t"],
-			'non-interactive' => [false, 'sesame', 'sesame'],
-			'non-interactive whitespace' => [false, ' sesame ', ' sesame '],
-			'non-interactive CRLF' => [false, " sesame \r", ' sesame '],
-		];
+	public static function passwordInputs(): \Iterator {
+		yield 'interactive' => [true, 'sesame', 'sesame'];
+		yield 'interactive whitespace' => [true, ' sesame ', ' sesame '];
+		yield 'interactive tabs' => [true, "\tsesame\t", "\tsesame\t"];
+		yield 'non-interactive' => [false, 'sesame', 'sesame'];
+		yield 'non-interactive whitespace' => [false, ' sesame ', ' sesame '];
+		yield 'non-interactive CRLF' => [false, " sesame \r", ' sesame '];
 	}
 
 	public function testRejectsMissingPasswordInput(): void {
@@ -192,7 +182,7 @@ class CreateProvisioningTest extends TestCase {
 		$status = $this->tester->execute($this->options + ['--master-password' => null], ['interactive' => false]);
 
 		self::assertSame(Command::INVALID, $status);
-		self::assertStringContainsString('Could not read master password', $this->tester->getDisplay());
+		self::assertStringContainsString('Could not read master password', (string)$this->tester->getDisplay());
 	}
 
 	/** @dataProvider invalidPorts */
@@ -203,7 +193,7 @@ class CreateProvisioningTest extends TestCase {
 		$status = $this->tester->execute(array_merge($this->options, [$option => $port]));
 
 		self::assertSame(Command::INVALID, $status);
-		self::assertStringContainsString($option . ' must be an integer between 1 and 65535', $this->tester->getDisplay());
+		self::assertStringContainsString($option . ' must be an integer between 1 and 65535', (string)$this->tester->getDisplay());
 	}
 
 	public static function invalidPorts(): array {
@@ -235,8 +225,9 @@ class CreateProvisioningTest extends TestCase {
 		self::assertSame(Command::SUCCESS, $status);
 	}
 
-	public static function validPortBoundaries(): array {
-		return [[1], [65535]];
+	public static function validPortBoundaries(): \Iterator {
+		yield [1];
+		yield [65535];
 	}
 
 	public function testRequiresPortWhenEnablingSieve(): void {
@@ -246,7 +237,7 @@ class CreateProvisioningTest extends TestCase {
 		$status = $this->tester->execute($this->options + ['--sieve-host' => 'sieve.example.com', '--sieve-user' => '%USERID%']);
 
 		self::assertSame(Command::INVALID, $status);
-		self::assertStringContainsString('--sieve-port is required', $this->tester->getDisplay());
+		self::assertStringContainsString('--sieve-port is required', (string)$this->tester->getDisplay());
 	}
 
 	/** @dataProvider missingSieveUsers */
@@ -257,14 +248,12 @@ class CreateProvisioningTest extends TestCase {
 		$status = $this->tester->execute($this->options + $user + ['--sieve-host' => 'sieve.example.com', '--sieve-port' => '4190']);
 
 		self::assertSame(Command::INVALID, $status);
-		self::assertStringContainsString('--sieve-user is required', $this->tester->getDisplay());
+		self::assertStringContainsString('--sieve-user is required', (string)$this->tester->getDisplay());
 	}
 
-	public static function missingSieveUsers(): array {
-		return [
-			'omitted' => [[]],
-			'empty' => [['--sieve-user' => '']],
-		];
+	public static function missingSieveUsers(): \Iterator {
+		yield 'omitted' => [[]];
+		yield 'empty' => [['--sieve-user' => '']];
 	}
 
 	public function testAllowsMissingPortWhenSieveIsDisabled(): void {
@@ -289,23 +278,21 @@ class CreateProvisioningTest extends TestCase {
 		$status = $this->tester->execute(array_merge($this->options, $options), ['interactive' => false]);
 
 		self::assertSame(Command::INVALID, $status);
-		self::assertStringContainsString($message, $this->tester->getDisplay());
+		self::assertStringContainsString($message, (string)$this->tester->getDisplay());
 	}
 
-	public static function contradictoryOptions(): array {
-		return [
-			'sieve' => [
-				['--no-sieve' => true, '--sieve-host' => 'sieve.example.com', '--sieve-port' => '4190'],
-				'--no-sieve cannot be combined with --sieve-host',
-			],
-			'ldap aliases' => [
-				['--no-ldap-aliases' => true, '--ldap-aliases-attribute' => 'mailAlias'],
-				'--no-ldap-aliases cannot be combined with --ldap-aliases-attribute',
-			],
-			'master password' => [
-				['--no-master-password' => true, '--master-password' => null],
-				'--no-master-password cannot be combined with --master-password',
-			],
+	public static function contradictoryOptions(): \Iterator {
+		yield 'sieve' => [
+			['--no-sieve' => true, '--sieve-host' => 'sieve.example.com', '--sieve-port' => '4190'],
+			'--no-sieve cannot be combined with --sieve-host',
+		];
+		yield 'ldap aliases' => [
+			['--no-ldap-aliases' => true, '--ldap-aliases-attribute' => 'mailAlias'],
+			'--no-ldap-aliases cannot be combined with --ldap-aliases-attribute',
+		];
+		yield 'master password' => [
+			['--no-master-password' => true, '--master-password' => null],
+			'--no-master-password cannot be combined with --master-password',
 		];
 	}
 
@@ -321,11 +308,9 @@ class CreateProvisioningTest extends TestCase {
 		self::assertSame(Command::SUCCESS, $status);
 	}
 
-	public static function redundantDisableOptions(): array {
-		return [
-			'sieve' => [['--no-sieve' => true, '--sieve-host' => ''], 'sieveEnabled'],
-			'ldap aliases' => [['--no-ldap-aliases' => true, '--ldap-aliases-attribute' => ''], 'ldapAliasesProvisioning'],
-		];
+	public static function redundantDisableOptions(): \Iterator {
+		yield 'sieve' => [['--no-sieve' => true, '--sieve-host' => ''], 'sieveEnabled'];
+		yield 'ldap aliases' => [['--no-ldap-aliases' => true, '--ldap-aliases-attribute' => ''], 'ldapAliasesProvisioning'];
 	}
 
 	public function testRejectsUnknownSslMode(): void {
@@ -335,7 +320,7 @@ class CreateProvisioningTest extends TestCase {
 		$status = $this->tester->execute(array_merge($this->options, ['--imap-ssl-mode' => 'starttls']));
 
 		self::assertSame(Command::INVALID, $status);
-		self::assertStringContainsString('--imap-ssl-mode must be one of none, ssl, tls', $this->tester->getDisplay());
+		self::assertStringContainsString('--imap-ssl-mode must be one of none, ssl, tls', (string)$this->tester->getDisplay());
 	}
 
 	public function testReportsInvalidFields(): void {
@@ -349,6 +334,6 @@ class CreateProvisioningTest extends TestCase {
 		$status = $this->tester->execute($this->options);
 
 		self::assertSame(Command::INVALID, $status);
-		self::assertStringContainsString('Invalid or missing values: --imap-host, --master-password', $this->tester->getDisplay());
+		self::assertStringContainsString('Invalid or missing values: --imap-host, --master-password', (string)$this->tester->getDisplay());
 	}
 }

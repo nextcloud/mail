@@ -104,8 +104,6 @@ class PreviewEnhancer {
 			]);
 
 			return $messages;
-		} finally {
-			$client->logout();
 		}
 
 		return $this->mapper->updatePreviewDataBulk(...array_map(static function (Message $message) use ($data) {

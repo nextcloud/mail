@@ -16,7 +16,7 @@ use OCA\Mail\Exception\ValidationException;
 /**
  * Admin CRUD for the configured providers.
  */
-class OidcProviderCrudTest extends OidcIntegrationTestCase {
+final class OidcProviderCrudTest extends OidcIntegrationTestCase {
 	public function testGetProvidersDelegatesToMapper(): void {
 		$this->providerMapper->expects($this->once())
 			->method('getAll')

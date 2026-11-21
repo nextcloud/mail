@@ -16,6 +16,7 @@ use OCA\Mail\Controller\AccountsController;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\DelegationForbiddenException;
+use OCA\Mail\Exception\DuplicateEmailAddress;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
@@ -34,7 +35,7 @@ use OCP\Security\IRemoteHostValidator;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class AccountsControllerTest extends TestCase {
+final class AccountsControllerTest extends TestCase {
 	/** @var string */
 	private $appName;
 
@@ -134,17 +135,17 @@ class AccountsControllerTest extends TestCase {
 	public function testIndex(): void {
 		$this->account->expects(self::once())
 			->method('jsonSerialize')
-			->will(self::returnValue([
+			->willReturn([
 				'accountId' => 123,
-			]));
+			]);
 		$this->accountService->expects(self::once())
 			->method('findByUserId')
 			->with(self::equalTo($this->userId))
-			->will(self::returnValue([$this->account]));
+			->willReturn([$this->account]);
 		$this->aliasesService->expects(self::any())
 			->method('findAll')
 			->with(self::equalTo($this->accountId), self::equalTo($this->userId))
-			->will(self::returnValue(['a1', 'a2']));
+			->willReturn(['a1', 'a2']);
 		$this->accountService->expects(self::once())
 			->method('findDelegatedAccounts')
 			->with(self::equalTo($this->userId))
@@ -169,7 +170,7 @@ class AccountsControllerTest extends TestCase {
 		$this->accountService->expects(self::once())
 			->method('find')
 			->with(self::equalTo($this->userId), self::equalTo($this->accountId))
-			->will(self::returnValue($this->account));
+			->willReturn($this->account);
 
 		$response = $this->controller->show($this->accountId);
 
@@ -181,7 +182,7 @@ class AccountsControllerTest extends TestCase {
 		$this->accountService->expects(self::once())
 			->method('find')
 			->with(self::equalTo($this->userId), self::equalTo($this->accountId))
-			->will(self::throwException(new DoesNotExistException('test123')));
+			->willThrowException(new DoesNotExistException('test123'));
 		$this->expectException(DoesNotExistException::class);
 
 		$this->controller->show($this->accountId);
@@ -227,7 +228,7 @@ class AccountsControllerTest extends TestCase {
 		$this->accountService->expects(self::once())
 			->method('delete')
 			->with(self::equalTo($this->userId), self::equalTo($this->accountId))
-			->will(self::throwException(new DoesNotExistException('test')));
+			->willThrowException(new DoesNotExistException('test'));
 		$this->expectException(DoesNotExistException::class);
 
 		$this->controller->destroy($this->accountId);
@@ -315,6 +316,35 @@ class AccountsControllerTest extends TestCase {
 
 		$expectedResponse = \OCA\Mail\Http\JsonResponse::error('Could not create account');
 		$response = $this->controller->create($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $imapPassword, $smtpPassword);
+
+		self::assertEquals($expectedResponse, $response);
+	}
+
+	public function testCreateManualNoDuplicate(): void {
+		$this->appConfig->expects(self::once())
+			->method('getValueBool')
+			->willReturn(true);
+		$email = 'user@domain.tld';
+		$accountName = 'Mail';
+		$imapHost = 'localhost';
+		$imapPort = 993;
+		$imapSslMode = 'ssl';
+		$imapUser = 'user@domain.tld';
+		$imapPassword = 'mypassword';
+		$smtpHost = 'localhost';
+		$smtpPort = 465;
+		$smtpSslMode = 'none';
+		$smtpUser = 'user@domain.tld';
+		$smtpPassword = 'mypassword';
+		$this->setupService->expects(self::once())
+			->method('createNewAccount')
+			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, 'password')
+			->willThrowException(new DuplicateEmailAddress());
+
+		$expectedResponse = \OCA\Mail\Http\JsonResponse::fail([
+			'error' => 'ACCOUNT_EXISTS',
+		]);
+		$response = $this->controller->create($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $imapPassword, $smtpPassword, 'password');
 
 		self::assertEquals($expectedResponse, $response);
 	}

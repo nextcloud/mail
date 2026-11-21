@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import { getFirstDay } from '@nextcloud/l10n'
+
 export function groupEnvelopesByDate(envelopes, syncTimestamp, sortOrder = 'newest') {
 	const now = new Date(syncTimestamp)
 
@@ -10,7 +12,9 @@ export function groupEnvelopesByDate(envelopes, syncTimestamp, sortOrder = 'newe
 	const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate())
 	const startOfYesterday = new Date(startOfToday)
 	startOfYesterday.setDate(startOfYesterday.getDate() - 1)
-	const startOfLastWeek = new Date(now)
+	const startOfThisWeek = new Date(startOfToday)
+	startOfThisWeek.setDate(startOfThisWeek.getDate() - ((startOfToday.getDay() - getFirstDay() + 7) % 7))
+	const startOfLastWeek = new Date(startOfThisWeek)
 	startOfLastWeek.setDate(startOfLastWeek.getDate() - 7)
 	const startOfLastMonth = new Date(now)
 	startOfLastMonth.setMonth(startOfLastMonth.getMonth() - 1)
@@ -19,6 +23,7 @@ export function groupEnvelopesByDate(envelopes, syncTimestamp, sortOrder = 'newe
 		lastHour: [],
 		today: [],
 		yesterday: [],
+		thisWeek: [],
 		lastWeek: [],
 		lastMonth: [],
 	}
@@ -35,6 +40,8 @@ export function groupEnvelopesByDate(envelopes, syncTimestamp, sortOrder = 'newe
 			groups.today.push(envelope)
 		} else if (date >= startOfYesterday && date < startOfToday) {
 			groups.yesterday.push(envelope)
+		} else if (date >= startOfThisWeek) {
+			groups.thisWeek.push(envelope)
 		} else if (date >= startOfLastWeek) {
 			groups.lastWeek.push(envelope)
 		} else if (date >= startOfLastMonth) {
@@ -58,7 +65,7 @@ export function groupEnvelopesByDate(envelopes, syncTimestamp, sortOrder = 'newe
 
 	const groupOrder = []
 
-	const fixedGroups = ['lastHour', 'today', 'yesterday', 'lastWeek', 'lastMonth']
+	const fixedGroups = ['lastHour', 'today', 'yesterday', 'thisWeek', 'lastWeek', 'lastMonth']
 	groupOrder.push(...(sortOrder === 'newest' ? fixedGroups : fixedGroups.toReversed()))
 
 	const monthOrder = Object.keys(monthsMap).map(Number)

@@ -17,7 +17,7 @@ use OCP\DB\ISchemaWrapper;
 use OCP\Migration\IOutput;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class Version5120Date20260820000000Test extends TestCase {
+final class Version5120Date20260820000000Test extends TestCase {
 
 	private IAppConfig&MockObject $appConfig;
 	private IOutput&MockObject $output;

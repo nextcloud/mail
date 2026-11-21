@@ -15,6 +15,7 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\SmimeDecryptException;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\ContextChat\TaskService;
 use OCA\Mail\Service\MailManager;
@@ -39,6 +40,7 @@ class SubmitContentJob extends TimedJob {
 		private IContentManager $contentManager,
 		private LoggerInterface $logger,
 		private MailboxMapper $mailboxMapper,
+		private ProtocolFactory $protocolFactory,
 	) {
 		parent::__construct($time);
 
@@ -108,47 +110,51 @@ class SubmitContentJob extends TimedJob {
 
 		$items = [];
 
-		$startTime = $this->time->getTime();
-		foreach ($messages as $message) {
-			if ($this->time->getTime() - $startTime > ContextChatProvider::CONTEXT_CHAT_JOB_INTERVAL) {
-				break;
-			}
-			try {
-				$imapMessage = $this->mailManager->getImapMessage($account, $mailbox, $message, true);
-			} catch (ServiceException $e) {
-				// couldn't load message, let's skip it. Retrying would be too costly
-				continue;
-			} catch (SmimeDecryptException $e) {
-				// encryption problem, skip this message
-				continue;
-			}
-
-			// Skip encrypted messages
-			if ($imapMessage->isEncrypted()) {
-				continue;
-			}
-
-			$fullMessage = $imapMessage->getFullMessage($imapMessage->getUid(), true);
-
-			$items[] = new ContentItem(
-				"{$mailbox->getId()}:{$message->getId()}",
-				$this->contextChatProvider->getId(),
-				$imapMessage->getSubject(),
-				$fullMessage['body'] ?? '',
-				'E-Mail',
-				$imapMessage->getSentDate(),
-				[$account->getUserId()],
-			);
-		}
-
-		if (count($items) > 0) {
-			$this->contentManager->submitContent($this->contextChatProvider->getAppId(), $items);
-		}
-
 		try {
-			$this->taskService->setLastMessage($task->getMailboxId(), $message->getId());
-		} catch (MultipleObjectsReturnedException|Exception $e) {
-			$this->logger->warning('Exception occurred when trying to update task', ['exception' => $e]);
+			$startTime = $this->time->getTime();
+			foreach ($messages as $message) {
+				if ($this->time->getTime() - $startTime > ContextChatProvider::CONTEXT_CHAT_JOB_INTERVAL) {
+					break;
+				}
+				try {
+					$imapMessage = $this->mailManager->getImapMessage($account, $mailbox, $message, true);
+				} catch (ServiceException $e) {
+					// couldn't load message, let's skip it. Retrying would be too costly
+					continue;
+				} catch (SmimeDecryptException $e) {
+					// encryption problem, skip this message
+					continue;
+				}
+
+				// Skip encrypted messages
+				if ($imapMessage->isEncrypted()) {
+					continue;
+				}
+
+				$fullMessage = $imapMessage->getFullMessage($imapMessage->getUid(), true);
+
+				$items[] = new ContentItem(
+					"{$mailbox->getId()}:{$message->getId()}",
+					$this->contextChatProvider->getId(),
+					$imapMessage->getSubject(),
+					$fullMessage['body'] ?? '',
+					'E-Mail',
+					$imapMessage->getSentDate(),
+					[$account->getUserId()],
+				);
+			}
+
+			if (count($items) > 0) {
+				$this->contentManager->submitContent($this->contextChatProvider->getAppId(), $items);
+			}
+
+			try {
+				$this->taskService->setLastMessage($task->getMailboxId(), $message->getId());
+			} catch (MultipleObjectsReturnedException|Exception $e) {
+				$this->logger->warning('Exception occurred when trying to update task', ['exception' => $e]);
+			}
+		} finally {
+			$this->protocolFactory->releaseClients($account);
 		}
 	}
 }

@@ -15,7 +15,7 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Events\NewMessagesSynchronized;
 
-class NewMessagesSynchronizedTest extends TestCase {
+final class NewMessagesSynchronizedTest extends TestCase {
 	public function testConstructorAndGetters(): void {
 		$account = $this->createStub(Account::class);
 		$mailbox = $this->createStub(Mailbox::class);

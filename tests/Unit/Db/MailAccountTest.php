@@ -12,7 +12,7 @@ namespace OCA\Mail\Tests\Unit\Db;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\MailAccount;
 
-class MailAccountTest extends TestCase {
+final class MailAccountTest extends TestCase {
 	public function testDefaultsToImap(): void {
 		$account = new MailAccount();
 

@@ -10,8 +10,6 @@ import { generateFilePath } from '@nextcloud/router'
 import { createApp } from 'vue'
 import AdminSettings from './components/settings/AdminSettings.vue'
 
-import '@nextcloud/dialogs/style.css'
-
 __webpack_nonce__ = btoa(getRequestToken())
 
 __webpack_public_path__ = generateFilePath('mail', '', 'js/')

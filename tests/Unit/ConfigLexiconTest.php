@@ -16,7 +16,7 @@ use OCP\Config\Lexicon\Preset;
 use OCP\Config\Lexicon\Strictness;
 use OCP\Config\ValueType;
 
-class ConfigLexiconTest extends TestCase {
+final class ConfigLexiconTest extends TestCase {
 
 	private ConfigLexicon $lexicon;
 

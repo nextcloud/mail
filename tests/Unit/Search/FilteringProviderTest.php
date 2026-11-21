@@ -33,7 +33,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 /**
  * @covers \OCA\Mail\Search\FilteringProvider
  */
-class FilteringProviderTest extends TestCase {
+final class FilteringProviderTest extends TestCase {
 	private IMailSearch&MockObject $mailSearch;
 	private IL10N&MockObject $l10n;
 	private IDateTimeFormatter $dateTimeFormatter;
@@ -72,6 +72,13 @@ class FilteringProviderTest extends TestCase {
 		$message1 = new Message();
 		$message1->setSubject('This is not spam');
 		$message1->setFrom(AddressList::parse('Sender <sender@domain.tld>'));
+		$messageId = '<org/repo/issues/123/456@example.invalid>';
+		$message1->setMessageId($messageId);
+		$expectedEncoded = 'PG9yZy9yZXBvL2lzc3Vlcy8xMjMvNDU2QGV4YW1wbGUuaW52YWxpZD4';
+		$this->urlGenerator->expects($this->once())
+			->method('linkToRouteAbsolute')
+			->with('mail.deep_link.open', ['messageId' => $expectedEncoded])
+			->willReturn('http://localhost/apps/mail/open/' . $expectedEncoded);
 		$this->mailSearch->expects($this->once())
 			->method('findMessagesGlobally')
 			->with($user, $this->callback(function (MailSearchQuery $query) {
@@ -88,6 +95,103 @@ class FilteringProviderTest extends TestCase {
 		$entries = $result->jsonSerialize()['entries'] ?? [];
 
 		self::assertNotEmpty($entries);
+		self::assertSame('http://localhost/apps/mail/open/' . $expectedEncoded, $entries[0]->jsonSerialize()['resourceUrl']);
+	}
+
+	public function testSearchForMessageWithoutMessageIdFallsBackToThreadRoute(): void {
+		$term = 'spam';
+		$user = $this->createStub(IUser::class);
+		$filters = [
+			IFilter::BUILTIN_TERM => new StringFilter($term),
+		];
+		$filterCollection = new FilterCollection(... $filters);
+		$searchQuery = new SearchQuery($filterCollection);
+		$message1 = new Message();
+		$message1->setId(42);
+		$message1->setMailboxId(7);
+		$message1->setSubject('This is not spam');
+		$message1->setFrom(AddressList::parse('Sender <sender@domain.tld>'));
+		// No messageId set -> should fall back to thread route
+
+		$this->urlGenerator->expects($this->once())
+			->method('linkToRouteAbsolute')
+			->with('mail.page.thread', ['mailboxId' => 7, 'id' => 42])
+			->willReturn('http://localhost/apps/mail/box/7/thread/42');
+		$this->mailSearch->expects($this->once())
+			->method('findMessagesGlobally')
+			->willReturn([$message1]);
+
+		$result = $this->provider->search(
+			$user,
+			$searchQuery
+		);
+		$entries = $result->jsonSerialize()['entries'] ?? [];
+
+		self::assertNotEmpty($entries);
+		self::assertSame('http://localhost/apps/mail/box/7/thread/42', $entries[0]->jsonSerialize()['resourceUrl']);
+	}
+
+	public static function multiWordTermProvider(): \Iterator {
+		yield 'several words' => ['QA invite'];
+		yield 'colon in the term' => ['Re: invoice'];
+		yield 'plus sign' => ['C++ meetup'];
+		yield 'surrounding whitespace' => ['  QA invite ', 'QA invite'];
+	}
+
+	/**
+	 * @dataProvider multiWordTermProvider
+	 */
+	public function testSearchForFullTerm(string $term, ?string $expected = null): void {
+		$user = $this->createStub(IUser::class);
+		$searchQuery = new SearchQuery(new FilterCollection(...[
+			IFilter::BUILTIN_TERM => new StringFilter($term),
+		]));
+		$this->mailSearch->expects($this->once())
+			->method('findMessagesGlobally')
+			->with($user, $this->callback(function (MailSearchQuery $query) use ($term, $expected) {
+				self::assertEquals([$expected ?? $term], $query->getSubjects());
+				return true;
+			}))
+			->willReturn([]);
+
+		$this->provider->search($user, $searchQuery);
+	}
+
+	public function testSearchForWhitespaceOnlyTerm(): void {
+		$user = $this->createStub(IUser::class);
+		$searchQuery = new SearchQuery(new FilterCollection(...[
+			IFilter::BUILTIN_TERM => new StringFilter('   '),
+		]));
+		$this->mailSearch->expects($this->never())
+			->method('findMessagesGlobally');
+
+		$result = $this->provider->search($user, $searchQuery);
+
+		self::assertEmpty($result->jsonSerialize()['entries']);
+	}
+
+	public function testSearchForUserWithPlusAddress(): void {
+		$user = $this->createStub(IUser::class);
+		$otherUser = $this->createMock(IUser::class);
+		$otherUser->method('getEMailAddress')
+			->willReturn('other+news@domain.tld');
+		$this->userManager->method('get')
+			->with('bob')
+			->willReturn($otherUser);
+		$searchQuery = new SearchQuery(new FilterCollection(...[
+			IFilter::BUILTIN_PERSON => new UserFilter('bob', $this->userManager),
+		]));
+		$this->mailSearch->expects($this->once())
+			->method('findMessagesGlobally')
+			->with($user, $this->callback(function (MailSearchQuery $query) {
+				self::assertEquals(['other+news@domain.tld'], $query->getFrom());
+				self::assertEquals(['other+news@domain.tld'], $query->getTo());
+				self::assertEquals(['other+news@domain.tld'], $query->getCc());
+				return true;
+			}))
+			->willReturn([]);
+
+		$this->provider->search($user, $searchQuery);
 	}
 
 	public function testSearchForUserNoEmail(): void {

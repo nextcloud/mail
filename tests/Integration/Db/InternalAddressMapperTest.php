@@ -18,7 +18,7 @@ use OCP\IDBConnection;
 use OCP\IUser;
 use OCP\Server;
 
-class InternalAddressMapperTest extends TestCase {
+final class InternalAddressMapperTest extends TestCase {
 	use DatabaseTransaction, TestUser;
 
 	/** @var IDBConnection */

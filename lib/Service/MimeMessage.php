@@ -270,9 +270,27 @@ class MimeMessage {
 	 */
 	public function htmlToTextCallback(DOMDocument $doc, DOMNode $node) {
 		if ($node instanceof DOMElement && strtolower($node->tagName) === 'p') {
-			return $node->textContent . "\n";
+			return $this->getTextWithLineBreaks($node) . "\n";
 		}
 
 		return null;
+	}
+
+	/**
+	 * Get the text content of a node, keeping <br> as line breaks
+	 */
+	private function getTextWithLineBreaks(DOMNode $node): string {
+		if ($node instanceof DOMElement && strtolower($node->tagName) === 'br') {
+			return "\n";
+		}
+		if (!$node->hasChildNodes()) {
+			return $node->textContent;
+		}
+
+		$text = '';
+		foreach ($node->childNodes as $child) {
+			$text .= $this->getTextWithLineBreaks($child);
+		}
+		return $text;
 	}
 }

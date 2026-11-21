@@ -151,7 +151,7 @@ final class TestAccount extends Command {
 		$io->text('Opening IMAP connection...');
 
 		try {
-			$imapClient = $this->protocolFactory->imapClient($account);
+			$imapClient = $this->protocolFactory->newImapClient($account);
 		} catch (\Exception $e) {
 			$io->error('Could not create IMAP client: ' . $e->getMessage());
 			return self::FAILURE;

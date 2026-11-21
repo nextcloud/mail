@@ -217,4 +217,36 @@ describe('Pinia main store getters', () => {
 
 		expect(result).toEqual(undefined)
 	})
+	it('gets writable event calendars', () => {
+		const calendar = (name, components, writeable) => ({
+			url: `/remote.php/dav/calendars/user/${name}/`,
+			displayname: name,
+			components,
+			isWriteable: () => writeable,
+			isShareable: () => false,
+		})
+		store.calendars = [
+			calendar('personal', ['VEVENT'], true),
+			calendar('tasks', ['VTODO'], true),
+			calendar('mixed', ['VEVENT', 'VTODO'], true),
+			calendar('shared-readonly', ['VEVENT'], false),
+		]
+
+		const calendars = store.getEventCalendarsForCurrentUser
+
+		expect(calendars.map((c) => c.displayname)).toEqual(['personal', 'mixed'])
+	})
+	it('gets no event calendars when there are only task calendars', () => {
+		store.calendars = [{
+			url: '/remote.php/dav/calendars/user/tasks/',
+			displayname: 'tasks',
+			components: ['VTODO'],
+			isWriteable: () => true,
+			isShareable: () => false,
+		}]
+
+		const calendars = store.getEventCalendarsForCurrentUser
+
+		expect(calendars).toEqual([])
+	})
 })

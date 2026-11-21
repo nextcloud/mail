@@ -93,11 +93,6 @@ export default defineStore('outbox', {
 
 			this.addMessageMutation({ message })
 
-			// Future drafts/sends after an error should go through outbox logic
-			this.mainStore.convertComposerMessageToOutboxMutation({ message }, {
-				root: true,
-			})
-
 			return message
 		},
 
@@ -105,11 +100,6 @@ export default defineStore('outbox', {
 			const message = await OutboxService.enqueueMessageFromDraft(id, draftMessage)
 
 			this.addMessageMutation({ message })
-
-			// Future drafts/sends after an error should go through outbox logic
-			this.mainStore.convertComposerMessageToOutboxMutation({ message }, {
-				root: true,
-			})
 
 			return message
 		},
@@ -188,7 +178,7 @@ export default defineStore('outbox', {
 						await this.mainStore.startComposerSession({
 							type: 'outbox',
 							data: { ...message },
-						}, { root: true })
+						})
 					},
 					{
 						timeout: UNDO_DELAY,

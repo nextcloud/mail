@@ -32,7 +32,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\AutoConfig\MxRecord;
 use Psr\Log\LoggerInterface;
 
-class MxRecordTest extends TestCase {
+final class MxRecordTest extends TestCase {
 	/** @var MxRecord */
 	private $record;
 

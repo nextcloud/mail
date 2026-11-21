@@ -27,7 +27,7 @@ use OCP\Security\ICrypto;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class SetupServiceTest extends TestCase {
+final class SetupServiceTest extends TestCase {
 	private const ACCOUNT_NAME = 'Test Account';
 	private const EMAIL_ADDRESS = 'test@example.com';
 	private const IMAP_HOST = 'imap.example.com';
@@ -78,7 +78,7 @@ class SetupServiceTest extends TestCase {
 		$imapClient->expects(self::once())->method('logout');
 
 		$this->protocolFactory->expects(self::once())
-			->method('imapClient')
+			->method('newImapClient')
 			->willReturn($imapClient);
 
 		return $imapClient;
@@ -214,7 +214,7 @@ class SetupServiceTest extends TestCase {
 			->method('debug')
 			->with(self::stringContains('account created '));
 
-		$this->protocolFactory->expects(self::never())->method('imapClient');
+		$this->protocolFactory->expects(self::never())->method('newImapClient');
 		$this->smtpClientFactory->expects(self::never())->method('create');
 
 		$this->accountService->expects(self::once())
@@ -282,7 +282,7 @@ class SetupServiceTest extends TestCase {
 			->method('logout');
 
 		$this->protocolFactory->expects(self::once())
-			->method('imapClient')
+			->method('newImapClient')
 			->willReturn($imapClient);
 
 		$this->setupService->createNewAccount(

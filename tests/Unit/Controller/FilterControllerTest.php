@@ -20,7 +20,7 @@ use OCP\AppFramework\Http;
 use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class FilterControllerTest extends TestCase {
+final class FilterControllerTest extends TestCase {
 	private IRequest&MockObject $request;
 	private FilterService&MockObject $filterService;
 	private AccountService&MockObject $accountService;

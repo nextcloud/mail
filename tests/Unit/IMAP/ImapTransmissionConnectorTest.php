@@ -10,6 +10,7 @@ namespace OCA\Mail\Tests\Unit\IMAP;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Exception;
+use Horde_Imap_Client_Fetch_Results;
 use Horde_Imap_Client_Socket;
 use Horde_Mail_Transport_Null;
 use OCA\Mail\Account;
@@ -19,6 +20,7 @@ use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Exception\AttachmentNotFoundException;
@@ -42,7 +44,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use ReflectionMethod;
 
-class ImapTransmissionConnectorTest extends TestCase {
+final class ImapTransmissionConnectorTest extends TestCase {
 
 	private ProtocolFactory|MockObject $protocolFactory;
 	private TransmissionService|MockObject $transmissionService;
@@ -217,7 +219,7 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->assertEquals('', $part->getDisposition());
 	}
 
-	public function testApplySmimeSignature() {
+	public function testApplySmimeSignature(): void {
 		$send = new \Horde_Mime_Part();
 		$send->setContents('Test');
 		$localMessage = new LocalMessage();
@@ -239,7 +241,7 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->assertEquals(LocalMessage::STATUS_RAW, $localMessage->getStatus());
 	}
 
-	public function testApplySmimeSignatureNoCertId() {
+	public function testApplySmimeSignatureNoCertId(): void {
 		$send = new \Horde_Mime_Part();
 		$send->setContents('Test');
 		$localMessage = new LocalMessage();
@@ -258,7 +260,7 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->assertEquals(LocalMessage::STATUS_SMIME_SIGN_NO_CERT_ID, $localMessage->getStatus());
 	}
 
-	public function testApplySmimeSignatureNoCertFound() {
+	public function testApplySmimeSignatureNoCertFound(): void {
 		$send = new \Horde_Mime_Part();
 		$send->setContents('Test');
 		$localMessage = new LocalMessage();
@@ -279,7 +281,7 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->assertEquals(LocalMessage::STATUS_SMIME_SIGN_CERT, $localMessage->getStatus());
 	}
 
-	public function testApplySmimeSignatureFailedSigning() {
+	public function testApplySmimeSignatureFailedSigning(): void {
 		$send = new \Horde_Mime_Part();
 		$send->setContents('Test');
 		$localMessage = new LocalMessage();
@@ -303,7 +305,7 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->assertEquals(LocalMessage::STATUS_SMIME_SIGN_FAIL, $localMessage->getStatus());
 	}
 
-	public function testApplySmimeEncryption() {
+	public function testApplySmimeEncryption(): void {
 		$send = new \Horde_Mime_Part();
 		$send->setContents('Test');
 		$localMessage = new LocalMessage();
@@ -331,7 +333,7 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->assertEquals(LocalMessage::STATUS_RAW, $localMessage->getStatus());
 	}
 
-	public function testApplySmimeEncryptionNoCertId() {
+	public function testApplySmimeEncryptionNoCertId(): void {
 		$send = new \Horde_Mime_Part();
 		$send->setContents('Test');
 		$localMessage = new LocalMessage();
@@ -348,7 +350,7 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->assertEquals(LocalMessage::STATUS_SMIME_ENCRYPT_NO_CERT_ID, $localMessage->getStatus());
 	}
 
-	public function testApplySmimeEncryptionNoAddressCerts() {
+	public function testApplySmimeEncryptionNoAddressCerts(): void {
 		$send = new \Horde_Mime_Part();
 		$send->setContents('Test');
 		$localMessage = new LocalMessage();
@@ -374,7 +376,7 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->assertEquals(LocalMessage::STATUS_SMIME_ENCRYT_FAIL, $localMessage->getStatus());
 	}
 
-	public function testApplySmimeEncryptionNoCert() {
+	public function testApplySmimeEncryptionNoCert(): void {
 		$send = new \Horde_Mime_Part();
 		$send->setContents('Test');
 		$localMessage = new LocalMessage();
@@ -403,7 +405,7 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->assertEquals(LocalMessage::STATUS_SMIME_ENCRYPT_CERT, $localMessage->getStatus());
 	}
 
-	public function testApplySmimeEncryptionEncryptFail() {
+	public function testApplySmimeEncryptionEncryptFail(): void {
 		$send = new \Horde_Mime_Part();
 		$send->setContents('Test');
 		$localMessage = new LocalMessage();
@@ -487,9 +489,9 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->connector->saveMessage($account, $mailbox, $localMessage);
 
 		$this->assertNotNull($capturedRaw);
-		$this->assertStringContainsString('multipart/mixed', $capturedRaw);
-		$this->assertStringContainsString('test.txt', $capturedRaw);
-		$this->assertStringContainsString('Attachment contents', $capturedRaw);
+		$this->assertStringContainsString('multipart/mixed', (string)$capturedRaw);
+		$this->assertStringContainsString('test.txt', (string)$capturedRaw);
+		$this->assertStringContainsString('Attachment contents', (string)$capturedRaw);
 	}
 
 	private function prepareAiGeneratedMessage(): array {
@@ -531,7 +533,7 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->connector->sendMessage($account, $localMessage, $sentMailbox);
 
 		$this->assertSame(LocalMessage::STATUS_PROCESSED, $localMessage->getStatus());
-		$this->assertStringContainsString(LocalMessage::HEADER_AI_GENERATED . ': 1', $localMessage->getRaw());
+		$this->assertStringContainsString(LocalMessage::HEADER_AI_GENERATED . ': 1', (string)$localMessage->getRaw());
 	}
 
 	public function testSendMessageWithoutSentCopy(): void {
@@ -615,7 +617,7 @@ class ImapTransmissionConnectorTest extends TestCase {
 
 		$this->connector->saveMessage($account, $mailbox, $localMessage);
 
-		$this->assertStringContainsString(LocalMessage::HEADER_AI_GENERATED . ': 1', $capturedRaw);
+		$this->assertStringContainsString(LocalMessage::HEADER_AI_GENERATED . ': 1', (string)$capturedRaw);
 	}
 
 	public function testSaveMessageKeepsBcc(): void {
@@ -653,5 +655,84 @@ class ImapTransmissionConnectorTest extends TestCase {
 		$this->assertMatchesRegularExpression('/^Bcc: Carol <carol@example\.com>$/mi', $capturedRaw);
 		$this->assertMatchesRegularExpression('/^Message-ID: /mi', $capturedRaw);
 		$this->assertMatchesRegularExpression('/^MIME-Version: 1\.0$/mi', $capturedRaw);
+	}
+
+	private function imapAccount(): Account {
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('bob');
+		$mailAccount->setName('Bob');
+		$mailAccount->setEmail('bob@example.com');
+		return new Account($mailAccount);
+	}
+
+	private function sharedImapClient(): Horde_Imap_Client_Socket&MockObject {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client->expects(self::never())
+			->method('logout');
+		$this->protocolFactory->method('imapClient')
+			->willReturn($client);
+		return $client;
+	}
+
+	public function testRetryCopyToSentKeepsSharedClient(): void {
+		$this->sharedImapClient();
+		$message = new LocalMessage();
+		$message->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
+		$message->setRaw('raw message');
+		$this->messageMapper->expects(self::once())
+			->method('save');
+
+		$this->connector->sendMessage($this->imapAccount(), $message, new Mailbox());
+
+		self::assertSame(LocalMessage::STATUS_PROCESSED, $message->getStatus());
+	}
+
+	public function testRetryCopyToSentFailureKeepsSharedClient(): void {
+		$this->sharedImapClient();
+		$message = new LocalMessage();
+		$message->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
+		$message->setRaw('raw message');
+		$this->messageMapper->method('save')
+			->willThrowException(new Horde_Imap_Client_Exception('Connection lost'));
+
+		$this->connector->sendMessage($this->imapAccount(), $message, new Mailbox());
+
+		self::assertSame(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL, $message->getStatus());
+	}
+
+	public function testSaveMessageFailureKeepsSharedClient(): void {
+		$this->sharedImapClient();
+		$mailbox = new Mailbox();
+		$mailbox->setName('Drafts');
+		$message = new LocalMessage();
+		$message->setSubject('Hello');
+		$message->setBodyPlain('Body');
+		$message->setHtml(false);
+		$this->transmissionService->method('getAddressList')
+			->willReturn(new AddressList([]));
+		$this->transmissionService->method('getAttachments')
+			->willReturn([]);
+		$this->performanceLogger->method('start')
+			->willReturn($this->createMock(PerformanceLoggerTask::class));
+		$this->messageMapper->method('save')
+			->willThrowException(new Horde_Imap_Client_Exception('APPEND failed'));
+		$this->expectException(ServiceException::class);
+
+		$this->connector->saveMessage($this->imapAccount(), $mailbox, $message);
+	}
+
+	public function testSendMdnKeepsSharedClient(): void {
+		$client = $this->sharedImapClient();
+		$client->method('fetch')
+			->willReturn(new Horde_Imap_Client_Fetch_Results());
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
+		$message = new Message();
+		$message->setId(1);
+		$message->setUid(42);
+		$this->expectException(ServiceException::class);
+		$this->expectExceptionMessage('Message "1" not found.');
+
+		$this->connector->sendMdn($this->imapAccount(), $mailbox, $message);
 	}
 }

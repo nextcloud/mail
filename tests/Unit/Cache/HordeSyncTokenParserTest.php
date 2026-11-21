@@ -12,7 +12,7 @@ namespace OCA\Mail\Tests\Unit\Cache;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Cache\HordeSyncTokenParser;
 
-class HordeSyncTokenParserTest extends TestCase {
+final class HordeSyncTokenParserTest extends TestCase {
 	private HordeSyncTokenParser $parser;
 
 	protected function setUp(): void {

@@ -22,7 +22,7 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IDBConnection;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class LocalAttachmentMapperTest extends TestCase {
+final class LocalAttachmentMapperTest extends TestCase {
 	use DatabaseTransaction;
 
 	/** @var IDBConnection */

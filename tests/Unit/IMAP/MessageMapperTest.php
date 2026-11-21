@@ -33,7 +33,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use function range;
 
-class MessageMapperTest extends TestCase {
+final class MessageMapperTest extends TestCase {
 	/** @var LoggerInterface|MockObject */
 	private $logger;
 
@@ -653,7 +653,7 @@ class MessageMapperTest extends TestCase {
 		self::assertEmpty($result['messages']);
 	}
 
-	public function testGetFlagged() {
+	public function testGetFlagged(): void {
 		/** @var Horde_Imap_Client_Socket|MockObject $imapClient */
 		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);
 		$mailbox = new Mailbox();
@@ -674,10 +674,10 @@ class MessageMapperTest extends TestCase {
 			->willReturn($searchResult);
 
 		$result = $this->mapper->getFlagged($imapClient, $mailbox, $flag);
-		$this->assertEquals($result, [1]);
+		$this->assertEquals([1], $result);
 	}
 
-	public function testGetFlaggedNoMatches() {
+	public function testGetFlaggedNoMatches(): void {
 		/** @var Horde_Imap_Client_Socket|MockObject $imapClient */
 		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);
 		$mailbox = new Mailbox();
@@ -697,10 +697,10 @@ class MessageMapperTest extends TestCase {
 			->willReturn($searchResult);
 
 		$result = $this->mapper->getFlagged($imapClient, $mailbox, $flag);
-		$this->assertEquals($result, []);
+		$this->assertEquals([], $result);
 	}
 
-	public function testGetFlaggedSearchResultUnexpectedStructure() {
+	public function testGetFlaggedSearchResultUnexpectedStructure(): void {
 		/** @var Horde_Imap_Client_Socket|MockObject $imapClient */
 		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);
 		$mailbox = new Mailbox();
@@ -714,7 +714,7 @@ class MessageMapperTest extends TestCase {
 			->willReturn($searchResult);
 
 		$result = $this->mapper->getFlagged($imapClient, $mailbox, $flag);
-		$this->assertEquals($result, []);
+		$this->assertEquals([], $result);
 	}
 
 	/**
@@ -809,11 +809,15 @@ class MessageMapperTest extends TestCase {
 		$this->assertEquals($bodyText, $data[$messageId]->getPreviewText());
 	}
 
-	public function isImipMessageProvider(): array {
-		return [
-			'google request' => ['request_google', true],
-			'outlook.com request' => ['request_outlook_com', true],
-		];
+	public function isImipMessageProvider(): \Iterator {
+		yield 'google request' => ['request_google', true];
+		yield 'outlook.com request' => ['request_outlook_com', true];
+		// Proton Mail Bridge strips the `method=` parameter from the
+		// text/calendar Content-Type header during E2E re-assembly. The
+		// message is still an iMIP REQUEST — the method lives in the ICS
+		// body. Must still be flagged as iMIP so downstream processing
+		// picks it up.
+		yield 'proton bridge request (method= stripped)' => ['request_proton_bridge', true];
 	}
 
 	public function testGetAttachmentFilenameFromContentDisposition(): void {
@@ -900,6 +904,59 @@ class MessageMapperTest extends TestCase {
 
 		$this->assertEquals('text/calendar', $attachment->getType());
 		$this->assertEquals('calendar.ics', $attachment->getName());
+	}
+
+	public function testGetAttachmentTextCalendarKeepsMethod(): void {
+		$messageUid = 1;
+		$attachmentId = '2';
+		$headerText = "Content-Type: text/calendar; method=request; charset=\"utf-8\"; name=\"event.ics\"\r\n"
+			. "Content-Transfer-Encoding: 7bit\r\n";
+		$fetchData = new Horde_Imap_Client_Data_Fetch();
+		$fetchData->setMimeHeader($attachmentId, $headerText);
+		$fetchData->setBodyPart($attachmentId, 'BEGIN:VCALENDAR');
+		$fetchData->setUid($messageUid);
+		$fetchResult = new Horde_Imap_Client_Fetch_Results();
+		$fetchResult[$messageUid] = $fetchData;
+		$imapClient = $this->createMock(Horde_Imap_Client_Base::class);
+		$imapClient->method('fetch')->willReturn($fetchResult);
+		$this->sMimeService->method('isEncrypted')->willReturn(false);
+
+		$attachment = $this->mapper->getAttachment(
+			$imapClient,
+			'INBOX',
+			$messageUid,
+			$attachmentId,
+			'alice',
+		);
+
+		$this->assertEquals('text/calendar; method=REQUEST', $attachment->getType());
+		$this->assertEquals('event.ics', $attachment->getName());
+	}
+
+	public function testGetAttachmentTextCalendarDropsUnknownMethod(): void {
+		$messageUid = 1;
+		$attachmentId = '2';
+		$headerText = "Content-Type: text/calendar; method=\"REQUEST; foo=bar\"\r\n"
+			. "Content-Transfer-Encoding: 7bit\r\n";
+		$fetchData = new Horde_Imap_Client_Data_Fetch();
+		$fetchData->setMimeHeader($attachmentId, $headerText);
+		$fetchData->setBodyPart($attachmentId, 'BEGIN:VCALENDAR');
+		$fetchData->setUid($messageUid);
+		$fetchResult = new Horde_Imap_Client_Fetch_Results();
+		$fetchResult[$messageUid] = $fetchData;
+		$imapClient = $this->createMock(Horde_Imap_Client_Base::class);
+		$imapClient->method('fetch')->willReturn($fetchResult);
+		$this->sMimeService->method('isEncrypted')->willReturn(false);
+
+		$attachment = $this->mapper->getAttachment(
+			$imapClient,
+			'INBOX',
+			$messageUid,
+			$attachmentId,
+			'alice',
+		);
+
+		$this->assertEquals('text/calendar', $attachment->getType());
 	}
 
 	public function testGetAttachmentAppliesContentTransferEncoding(): void {

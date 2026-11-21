@@ -14,7 +14,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Events\MessageDeletedEvent;
 
-class MessageDeletedEventTest extends TestCase {
+final class MessageDeletedEventTest extends TestCase {
 	public function testConstructorAndGetters(): void {
 		$account = $this->createStub(Account::class);
 		$mailbox = $this->createStub(Mailbox::class);

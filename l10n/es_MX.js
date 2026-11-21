@@ -277,6 +277,7 @@ OC.L10N.register(
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "No tienes permiso para mover este mensaje al buzón de archivado y/o eliminar este mensaje de la carpeta actual",
     "Last hour" : "Última hora",
     "Today" : "Hoy",
+    "This week" : "Esta semana",
     "Last week" : "Semana pasada",
     "Last month" : "Mes pasado",
     "Choose" : "Seleccionar",

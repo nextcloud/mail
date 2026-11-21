@@ -244,12 +244,13 @@ composer test:integration:dev                                       # Run and st
 
 ## Git Workflow
 
-### Ticket readiness for AI-assisted PRs
+### Ticket readiness
 
-Before starting implementation on an AI-assisted change, confirm a ticket exists and is actually ready to be picked up:
+Bug fixes and small changes can go straight to a PR without opening a new ticket; still search for an existing ticket and reference it in the PR (e.g. `Closes #1234`) if there is one. New features and larger changes (touching several subsystems, needing an architectural decision, or without a clear approach yet) need a ticket that is ready to be picked up. Confirm this before starting implementation:
 - A ticket still labeled `0. to triage` is **not** ready — it has not been accepted by a maintainer, and the approach (or whether the change is wanted at all) has not been discussed yet. Do not start coding from it.
 - Only `1. to develop` (or a later pipeline label) signals the ticket has been triaged and discussed. That discussion must happen **before** the PR is opened, not in review after the fact.
 - If no ticket exists, or it is still `0. to triage`, stop and tell the contributor to get it triaged and discussed first rather than starting an agent-driven implementation.
+- If a bug fix turns out to need a larger change, stop and treat it as one.
 
 Do NOT commit changes unless explicitly asked to do so.
 
@@ -276,6 +277,37 @@ git commit --fixup=<sha>   # targets the specific commit being corrected
 ```
 
 The branch will be rebased and squashed into a clean history before merge (CI enforces this). The failing "clean history" CI check is intentional and expected during review — ignore it until the PR has a positive review, then rebase to clean up.
+
+### GitHub comments and reviews
+
+Agents may post GitHub text directly (PR and issue comments, review comments, PR descriptions), as long as it is written **for humans**: plain, concise, and skimmable.
+
+- A human must review the text before it is posted.
+- Disclose the AI assistance in every posted body, e.g. with an `Assisted by <harness>:<model-id>` footer.
+- Fill out the repo's PR/issue template completely when opening a PR or issue.
+- Additional info meant only for agents can go into a description or comment, but must be wrapped in a collapsed `<details>` block so human readers can skip it or dive in.
+
+### Official documentation (user_manual / admin_manual)
+
+Admin- and user-facing documentation for this app lives in the separate
+[`nextcloud/documentation`](https://github.com/nextcloud/documentation) repository
+(`admin_manual/groupware/mail.rst`, `user_manual/groupware/mail.rst`) — not in this
+app's `doc/` directory. `doc/admin.md` and `doc/user.md` were deliberately removed for
+this reason (commit `491f4888`, 2026-01-16). `doc/` here is reserved for
+contributor/developer-facing content only (local setup guides, architecture notes),
+mirroring `doc/developer.md`.
+
+Not every change needs a doc update — a lot of small fixes and internal changes don't
+touch anything a user or admin would need explained. But a change substantial enough to
+need one (a new integration, a new settings area, a new concept the user has to learn)
+should get it written right away, alongside the feature PR, not deferred to "later":
+open a draft pull request in `nextcloud/documentation` with the
+`admin_manual`/`user_manual` change. Keep it in draft and don't merge it until the
+feature PR itself has merged — the feature can still change shape during review, and
+docs merged early drift out of sync with what actually ships.
+
+This applies equally to human contributors — see the matching note in
+[CONTRIBUTING.md](./.github/CONTRIBUTING.md).
 
 ### Commit Message Format
 

@@ -14,7 +14,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Events\SynchronizationEvent;
 use Psr\Log\LoggerInterface;
 
-class SynchronizationEventTest extends TestCase {
+final class SynchronizationEventTest extends TestCase {
 	public function testConstructorAndGetters(): void {
 		$account = $this->createStub(Account::class);
 		$logger = $this->createStub(LoggerInterface::class);

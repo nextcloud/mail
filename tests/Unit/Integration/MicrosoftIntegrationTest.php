@@ -25,7 +25,7 @@ use OCP\Security\ICrypto;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class MicrosoftIntegrationTest extends TestCase {
+final class MicrosoftIntegrationTest extends TestCase {
 	private ITimeFactory&MockObject $timeFactory;
 	private IAppConfig&MockObject $appConfig;
 	private ICrypto&MockObject $crypto;
@@ -90,6 +90,25 @@ class MicrosoftIntegrationTest extends TestCase {
 					&& $options['form_params']['refresh_token'] === 'old-refresh-token'),
 			)
 			->willReturn($response);
+	}
+
+	public function testGetClientId(): void {
+		$this->assertSame('client-id', $this->integration->getClientId());
+	}
+
+	public function testGetClientIdNotConfigured(): void {
+		$appConfig = $this->createMock(IAppConfig::class);
+		$appConfig->method('getValueString')->willReturn('');
+		$integration = new MicrosoftIntegration(
+			$this->timeFactory,
+			$appConfig,
+			$this->crypto,
+			$this->clientService,
+			$this->createMock(IURLGenerator::class),
+			$this->logger,
+		);
+
+		$this->assertSame('', $integration->getClientId());
 	}
 
 	public function testRefreshStoresRotatedRefreshToken(): void {

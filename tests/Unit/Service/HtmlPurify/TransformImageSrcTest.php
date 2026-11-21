@@ -18,7 +18,7 @@ use OCP\IURLGenerator;
 use OCP\Util;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class TransformImageSrcTest extends TestCase {
+final class TransformImageSrcTest extends TestCase {
 	private TransformImageSrc $transform;
 	private IURLGenerator|MockObject $urlGenerator;
 
@@ -67,7 +67,7 @@ class TransformImageSrcTest extends TestCase {
 		$result = $this->transform->transform($attr, $config, $context);
 
 		$this->assertSame('/apps/mail/img/blocked-image.png', $result['src']);
-		$this->assertStringContainsString('display: none', $result['style']);
+		$this->assertStringContainsString('display: none', (string)$result['style']);
 	}
 
 	public function testTrackingPixelEdgeCaseWidth4Height4(): void {
@@ -97,7 +97,7 @@ class TransformImageSrcTest extends TestCase {
 		$result = $this->transform->transform($attr, $config, $context);
 
 		$this->assertSame('https://example.com/image.png', $result['src']);
-		$this->assertFalse(isset($result['style']));
+		$this->assertArrayNotHasKey('style', $result);
 	}
 
 	public function testNonTrackingImagePassesThrough(): void {
@@ -110,7 +110,7 @@ class TransformImageSrcTest extends TestCase {
 		$result = $this->transform->transform($attr, $config, $context);
 
 		$this->assertSame('https://example.com/image.png', $result['src']);
-		$this->assertFalse(isset($result['style']));
+		$this->assertArrayNotHasKey('style', $result);
 	}
 
 	public function testTrackingPixelStylePreserved(): void {
@@ -127,8 +127,8 @@ class TransformImageSrcTest extends TestCase {
 
 		$result = $this->transform->transform($attr, $config, $context);
 
-		$this->assertStringContainsString('display: none !important;', $result['style']);
-		$this->assertStringContainsString('margin: 10px;', $result['style']);
+		$this->assertStringContainsString('display: none !important;', (string)$result['style']);
+		$this->assertStringContainsString('margin: 10px;', (string)$result['style']);
 	}
 
 	public function testTrackingPixelStyleCreateNew(): void {
@@ -158,7 +158,7 @@ class TransformImageSrcTest extends TestCase {
 		$result = $this->transform->transform($attr, $config, $context);
 
 		$this->assertSame('https://example.com/pixel.png', $result['src']);
-		$this->assertFalse(isset($result['style']));
+		$this->assertArrayNotHasKey('style', $result);
 	}
 
 	public function testTrackingPixelStyleNotBackedUp(): void {

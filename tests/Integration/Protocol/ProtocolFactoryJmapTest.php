@@ -16,7 +16,7 @@ use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Tests\Integration\Framework\JmapTestAccount;
 use OCP\Server;
 
-class ProtocolFactoryJmapTest extends TestCase {
+final class ProtocolFactoryJmapTest extends TestCase {
 	use JmapTestAccount;
 
 	private ProtocolFactory $protocolFactory;

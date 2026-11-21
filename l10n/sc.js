@@ -62,6 +62,7 @@ OC.L10N.register(
     "Newest first" : "In antis is prus reghentes",
     "Oldest first" : "In antis is prus betzos",
     "Ok" : "AB",
+    "Messages" : "Messàgios",
     "Manually" : "A manu",
     "Shared with me" : "Cumpartzidos cun megus",
     "Security" : "Seguresa",

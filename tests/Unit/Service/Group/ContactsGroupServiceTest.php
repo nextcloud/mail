@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-only
@@ -12,7 +14,7 @@ use OCA\Mail\Service\Group\ContactsGroupService;
 use OCP\Contacts\IManager;
 use OCP\IConfig;
 
-class ContactsGroupServiceTest extends TestCase {
+final class ContactsGroupServiceTest extends TestCase {
 	/** @var IManager */
 	private $contactsManager;
 
@@ -30,10 +32,10 @@ class ContactsGroupServiceTest extends TestCase {
 			$this->config);
 	}
 
-	public function testDisabledContactsManager() {
+	public function testDisabledContactsManager(): void {
 		$this->contactsManager->expects($this->once())
 			->method('isEnabled')
-			->will($this->returnValue(false));
+			->willReturn(false);
 		$this->contactsManager->expects($this->never())
 			->method('search');
 
@@ -43,7 +45,7 @@ class ContactsGroupServiceTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testSearchGroups() {
+	public function testSearchGroups(): void {
 		$term = 'wor'; // searching for: group Work
 		$searchResult = [
 			[
@@ -76,11 +78,11 @@ class ContactsGroupServiceTest extends TestCase {
 			->willReturn('yes');
 		$this->contactsManager->expects($this->once())
 			->method('isEnabled')
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->contactsManager->expects($this->once())
 			->method('search')
 			->with($term, ['CATEGORIES'])
-			->will($this->returnValue($searchResult));
+			->willReturn($searchResult);
 		$expected = [
 			[
 				'id' => 'work1',
@@ -105,7 +107,7 @@ class ContactsGroupServiceTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testGetUsersForGroup() {
+	public function testGetUsersForGroup(): void {
 		$groupId = 'work'; // searching for: group Work
 		$searchResult = [
 			[
@@ -139,11 +141,11 @@ class ContactsGroupServiceTest extends TestCase {
 			->willReturn('yes');
 		$this->contactsManager->expects($this->once())
 			->method('isEnabled')
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->contactsManager->expects($this->once())
 			->method('search')
 			->with($groupId, ['CATEGORIES'])
-			->will($this->returnValue($searchResult));
+			->willReturn($searchResult);
 		$expected = [
 			[
 				'email' => 'jonathan@frakes.com',

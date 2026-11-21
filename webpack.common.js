@@ -27,6 +27,13 @@ const plugins = [
 		excludeAliases: ['console'],
 	}),
 
+	// @haraka/email-address imports node:url, which has no browser build
+	new webpack.NormalModuleReplacementPlugin(/^node:url$/, (resource) => {
+		if (resource.context.includes(path.join('node_modules', '@haraka', 'email-address'))) {
+			resource.request = path.join(__dirname, 'src/util/domainToAscii.js')
+		}
+	}),
+
 	// Fix warning when bundling moment locales
 	new IgnorePlugin({
 		resourceRegExp: /^\.\/locale$/,

@@ -12,7 +12,7 @@ namespace OCA\Mail\Tests\Unit\Cache;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Cache\HordeSyncToken;
 
-class HordeSyncTokenTest extends TestCase {
+final class HordeSyncTokenTest extends TestCase {
 	public function testConstructorAndGetters(): void {
 		$nextUid = 1234;
 		$uidValidity = 5678;

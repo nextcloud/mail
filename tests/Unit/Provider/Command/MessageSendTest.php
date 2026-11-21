@@ -27,7 +27,7 @@ use OCP\Mail\Provider\Exception\SendException;
 use OCP\Mail\Provider\Message;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class MessageSendTest extends TestCase {
+final class MessageSendTest extends TestCase {
 
 	private IConfig&MockObject $config;
 	private ITimeFactory&MockObject $time;
@@ -99,10 +99,10 @@ class MessageSendTest extends TestCase {
 		// define time factory return
 		$this->time->method('getTime')->willReturn(1719792000);
 		// define account service returns
-		$this->accountService->method('find')->will(
-			$this->returnValueMap([
+		$this->accountService->expects($this->atLeast(1))->method('find')->willReturnMap(
+			[
 				['user1', 100, $this->localAccount]
-			])
+			]
 		);
 		// construct mail app attachment
 		$localAttachmentReturned = $this->localAttachmentData;
@@ -152,10 +152,10 @@ class MessageSendTest extends TestCase {
 		// define time factory return
 		$this->time->method('getTime')->willReturn(1719792000);
 		// define account service returns
-		$this->accountService->method('find')->will(
-			$this->returnValueMap([
+		$this->accountService->expects($this->atLeast(1))->method('find')->willReturnMap(
+			[
 				['user1', 100, $this->localAccount]
-			])
+			]
 		);
 		// construct mail app message objects
 		$localMessageFresh = $this->localMessageData;
@@ -234,8 +234,8 @@ class MessageSendTest extends TestCase {
 		// define time factory return
 		$this->time->method('getTime')->willReturn(1719792000);
 		// define account service returns
-		$this->accountService->method('find')->will(
-			$this->throwException(new ClientException('Something went wrong'))
+		$this->accountService->method('find')->willThrowException(
+			new ClientException('Something went wrong')
 		);
 
 		// construct mail provider message
@@ -251,10 +251,10 @@ class MessageSendTest extends TestCase {
 		// define time factory return
 		$this->time->method('getTime')->willReturn(1719792000);
 		// define account service returns
-		$this->accountService->method('find')->will(
-			$this->returnValueMap([
+		$this->accountService->expects($this->atLeast(1))->method('find')->willReturnMap(
+			[
 				['user1', 100, $this->localAccount]
-			])
+			]
 		);
 		// define attachment service returns
 		$this->attachmentService->expects($this->once())->method('addFileFromString')
@@ -263,8 +263,8 @@ class MessageSendTest extends TestCase {
 				$this->mailAttachment->getName(),
 				$this->mailAttachment->getType(),
 				$this->mailAttachment->getContents()
-			)->will(
-				$this->throwException(new UploadException('Something went wrong'))
+			)->willThrowException(
+				new UploadException('Something went wrong')
 			);
 		// construct mail provider message with attachment
 		$mailMessage = $this->mailMessage;
@@ -280,10 +280,10 @@ class MessageSendTest extends TestCase {
 		// define time factory return
 		$this->time->method('getTime')->willReturn(1719792000);
 		// define account service returns
-		$this->accountService->method('find')->will(
-			$this->returnValueMap([
+		$this->accountService->expects($this->atLeast(1))->method('find')->willReturnMap(
+			[
 				['user1', 100, $this->localAccount]
-			])
+			]
 		);
 		// construct mail app message objects
 		$localMessageFresh = $this->localMessageData;
@@ -308,8 +308,8 @@ class MessageSendTest extends TestCase {
 			->with(
 				$localMessageReturned,
 				$this->localAccount,
-			)->will(
-				$this->throwException(new \Exception('Something went wrong'))
+			)->willThrowException(
+				new \Exception('Something went wrong')
 			);
 		// construct mail provider message
 		$mailMessage = $this->mailMessage;

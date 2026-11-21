@@ -37,7 +37,7 @@ use OCP\EventDispatcher\IEventDispatcher;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class DraftsServiceTest extends TestCase {
+final class DraftsServiceTest extends TestCase {
 	/** @var MailboxMapper|MockObject */
 	private $mailboxMapper;
 
@@ -636,6 +636,9 @@ class DraftsServiceTest extends TestCase {
 			->willReturn($account);
 		$this->logger->expects(self::once())
 			->method('debug');
+		$this->protocolFactory->expects(self::once())
+			->method('releaseClients')
+			->with($account);
 
 		$this->draftsService->flush();
 	}
@@ -654,6 +657,8 @@ class DraftsServiceTest extends TestCase {
 			->method('findById');
 		$this->logger->expects(self::never())
 			->method('debug');
+		$this->protocolFactory->expects(self::never())
+			->method('releaseClients');
 		$this->logger->expects(self::never())
 			->method('warning');
 

@@ -50,7 +50,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use function urlencode;
 
-class PageControllerTest extends TestCase {
+final class PageControllerTest extends TestCase {
 	/** @var string */
 	private $appName;
 
@@ -233,10 +233,10 @@ class PageControllerTest extends TestCase {
 		$this->accountService->expects($this->once())
 			->method('findByUserId')
 			->with($this->userId)
-			->will($this->returnValue([
+			->willReturn([
 				$account1,
 				$account2,
-			]));
+			]);
 		$this->accountService->expects($this->once())
 			->method('findDelegatedAccounts')
 			->with($this->userId)
@@ -253,26 +253,26 @@ class PageControllerTest extends TestCase {
 			);
 		$account1->expects($this->once())
 			->method('jsonSerialize')
-			->will($this->returnValue([
+			->willReturn([
 				'accountId' => 1,
-			]));
+			]);
 		$account1->expects($this->once())
 			->method('getId')
-			->will($this->returnValue(1));
+			->willReturn(1);
 		$account2->expects($this->once())
 			->method('jsonSerialize')
-			->will($this->returnValue([
+			->willReturn([
 				'accountId' => 2,
-			]));
+			]);
 		$account2->expects($this->once())
 			->method('getId')
-			->will($this->returnValue(2));
+			->willReturn(2);
 		$this->aliasesService->expects($this->exactly(2))
 			->method('findAll')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				[1, $this->userId, ['a11', 'a12']],
 				[2, $this->userId, ['a21', 'a22']],
-			]));
+			]);
 		$accountsJson = [
 			[
 				'accountId' => 1,
@@ -299,7 +299,7 @@ class PageControllerTest extends TestCase {
 		$user = $this->createMock(IUser::class);
 		$this->userSession->expects($this->once())
 			->method('getUser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 		$this->config
 			->method('getSystemValue')
 			->willReturnMap([
@@ -338,16 +338,16 @@ class PageControllerTest extends TestCase {
 			->willReturn(false);
 
 		$user->method('getUID')
-			->will($this->returnValue('jane'));
+			->willReturn('jane');
 		$this->userManager->expects($this->once())
 			->method('getDisplayName')
-			->with($this->equalTo('jane'))
-			->will($this->returnValue('Jane Doe'));
+			->with('jane')
+			->willReturn('Jane Doe');
 		$this->config->expects($this->once())
 			->method('getUserValue')
-			->with($this->equalTo('jane'), $this->equalTo('settings'),
-				$this->equalTo('email'), $this->equalTo(''))
-			->will($this->returnValue('jane@doe.cz'));
+			->with('jane', 'settings',
+				'email', '')
+			->willReturn('jane@doe.cz');
 
 		$this->appManager->method('isEnabledForUser')->willReturn(true);
 
@@ -439,7 +439,7 @@ class PageControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testComposeSimple() {
+	public function testComposeSimple(): void {
 		$address = 'user@example.com';
 		$uri = "mailto:$address";
 
@@ -450,7 +450,7 @@ class PageControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testComposeWithSubject() {
+	public function testComposeWithSubject(): void {
 		$address = 'user@example.com';
 		$subject = 'hello there';
 		$uri = "mailto:$address?subject=$subject";
@@ -463,7 +463,7 @@ class PageControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testComposeWithCc() {
+	public function testComposeWithCc(): void {
 		$address = 'user@example.com';
 		$cc = 'other@example.com';
 		$uri = "mailto:$address?cc=$cc";
@@ -476,7 +476,7 @@ class PageControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testComposeBcc() {
+	public function testComposeBcc(): void {
 		$bcc = 'blind@example.com';
 		$uri = "mailto:?bcc=$bcc";
 
@@ -487,7 +487,7 @@ class PageControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testComposeWithBcc() {
+	public function testComposeWithBcc(): void {
 		$address = 'user@example.com';
 		$bcc = 'blind@example.com';
 		$uri = "mailto:$address?bcc=$bcc";
@@ -500,7 +500,7 @@ class PageControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testComposeWithMultilineBody() {
+	public function testComposeWithMultilineBody(): void {
 		$address = 'user@example.com';
 		$body = 'Hi!\nWhat\'s up?\nAnother line';
 		$uri = "mailto:$address?body=$body";

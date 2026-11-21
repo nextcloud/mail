@@ -17,7 +17,7 @@ use OCA\Mail\Service\ContextChat\ContextChatSettingsService;
 use OCP\IAppConfig;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class ContextChatSettingsServiceTest extends TestCase {
+final class ContextChatSettingsServiceTest extends TestCase {
 
 	private IUserPreferences&MockObject $preferences;
 	private IAppConfig&MockObject $appConfig;

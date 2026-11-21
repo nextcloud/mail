@@ -383,4 +383,73 @@ describe('Envelope', () => {
 
 		expect(view.vm.hasWriteAcl).toBe(true)
 	})
+
+	it('hides the tags of server keywords', () => {
+		store.tags = {
+			1: { id: 1, imapLabel: '$hasattachment', displayName: '$hasattachment' },
+			2: { id: 2, imapLabel: '$hasnoattachment', displayName: '$hasnoattachment' },
+			3: { id: 3, imapLabel: '$hasnoattachment', displayName: 'Hasnoattachment' },
+			4: { id: 4, imapLabel: 'work', displayName: 'Work' },
+		}
+		store.envelopes[42] = { databaseId: 42, tags: [1, 2, 3, 4] }
+
+		const view = shallowMount(Envelope, {
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
+			props: {
+				data: {
+					databaseId: 42,
+					accountId: 123,
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
+				},
+				account: { sentMailboxId: '1' },
+				mailbox: {
+					myAcls: undefined,
+					databaseId: '3',
+					specialRole: '',
+				},
+			},
+		})
+
+		expect(view.vm.tags.map((tag) => tag.displayName)).toEqual(['Work'])
+	})
+
+	it('removes the window resize listener on unmount', () => {
+		const addSpy = vi.spyOn(window, 'addEventListener')
+		const removeSpy = vi.spyOn(window, 'removeEventListener')
+
+		const view = shallowMount(Envelope, {
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
+			props: {
+				mailbox: {
+					specialRole: '',
+					databaseId: '3',
+					myAcls: undefined,
+				},
+				data: {
+					accountId: 123,
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
+				},
+			},
+		})
+
+		const [, handler] = addSpy.mock.calls.find(([name]) => name === 'resize')
+		view.unmount()
+
+		expect(removeSpy).toHaveBeenCalledWith('resize', handler)
+
+		addSpy.mockRestore()
+		removeSpy.mockRestore()
+	})
 })

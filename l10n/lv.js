@@ -98,6 +98,7 @@ OC.L10N.register(
     "More options" : "Vairāk iespēju",
     "Remove" : "Noņemt",
     "Today" : "Šodien",
+    "This week" : "Šonedēļ",
     "Could not open folder" : "Nevarēja atvērt mapi",
     "Choose" : "Izvēlēties",
     "No results" : "Nav iznākuma",

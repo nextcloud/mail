@@ -16,7 +16,7 @@ use function fopen;
 use function fwrite;
 use function mb_convert_encoding;
 
-class ConverterTest extends TestCase {
+final class ConverterTest extends TestCase {
 
 	public Converter $converter;
 	protected function setUp(): void {

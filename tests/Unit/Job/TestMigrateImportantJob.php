@@ -75,7 +75,7 @@ class TestMigrateImportantJob extends TestCase {
 		self::$argument = ['mailboxId' => 1];
 	}
 
-	public function testRun() {
+	public function testRun(): void {
 		$mailbox = new Mailbox();
 		$mailbox->setId(self::$argument['mailboxId']);
 		$mailbox->setName('INBOX');
@@ -109,7 +109,7 @@ class TestMigrateImportantJob extends TestCase {
 		$this->job->run(self::$argument);
 	}
 
-	public function testRunNoMailbox() {
+	public function testRunNoMailbox(): void {
 		$e = new DoesNotExistException('does not exist');
 
 		$this->mailboxMapper->expects($this->once())
@@ -134,7 +134,7 @@ class TestMigrateImportantJob extends TestCase {
 		$this->job->run(self::$argument);
 	}
 
-	public function testRunNoAccount() {
+	public function testRunNoAccount(): void {
 		$mailbox = new Mailbox();
 		$mailbox->setId(self::$argument['mailboxId']);
 		$mailbox->setName('INBOX');
@@ -165,7 +165,7 @@ class TestMigrateImportantJob extends TestCase {
 		$this->job->run(self::$argument);
 	}
 
-	public function testNoPermflags() {
+	public function testNoPermflags(): void {
 		$mailbox = new Mailbox();
 		$mailbox->setId(self::$argument['mailboxId']);
 		$mailbox->setName('INBOX');
@@ -195,7 +195,7 @@ class TestMigrateImportantJob extends TestCase {
 		$this->job->run(self::$argument);
 	}
 
-	public function testErrorOnMigrateOnImap() {
+	public function testErrorOnMigrateOnImap(): void {
 		$mailbox = new Mailbox();
 		$mailbox->setId(self::$argument['mailboxId']);
 		$mailbox->setName('INBOX');
@@ -232,7 +232,7 @@ class TestMigrateImportantJob extends TestCase {
 		$this->job->run(self::$argument);
 	}
 
-	public function testErrorOnMigrateDbToImap() {
+	public function testErrorOnMigrateDbToImap(): void {
 		$mailbox = new Mailbox();
 		$mailbox->setId(self::$argument['mailboxId']);
 		$mailbox->setName('INBOX');
@@ -269,7 +269,7 @@ class TestMigrateImportantJob extends TestCase {
 		$this->job->run(self::$argument);
 	}
 
-	public function testErrorOnOnBoth() {
+	public function testErrorOnOnBoth(): void {
 		$mailbox = new Mailbox();
 		$mailbox->setId(self::$argument['mailboxId']);
 		$mailbox->setName('INBOX');

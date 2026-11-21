@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-only
@@ -13,8 +15,8 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Model\RepliedMessageData;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class RepliedMessageTest extends TestCase {
-	public function testGetAccount() {
+final class RepliedMessageTest extends TestCase {
+	public function testGetAccount(): void {
 		/** @var Account|MockObject $account */
 		$account = $this->createStub(Account::class);
 		$message = new Message();
@@ -23,7 +25,7 @@ class RepliedMessageTest extends TestCase {
 		$this->assertEquals($account, $data->getAccount());
 	}
 
-	public function testGetMessage() {
+	public function testGetMessage(): void {
 		/** @var Account|MockObject $account */
 		$account = $this->createStub(Account::class);
 		$message = new Message();

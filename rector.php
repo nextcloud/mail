@@ -9,8 +9,15 @@ declare(strict_types=1);
 
 use Nextcloud\Rector\Set\NextcloudSets;
 use Rector\Config\RectorConfig;
+use Rector\Php70\Rector\If_\IfToSpaceshipRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
-use Rector\PHPUnit\Set\PHPUnitSetList;
+use Rector\PHPUnit\CodeQuality\Rector\Class_\NarrowUnusedSetUpDefinedPropertyRector;
+use Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitThisCallRector;
+use Rector\PHPUnit\CodeQuality\Rector\Class_\RemoveNeverUsedMockPropertyRector;
+use Rector\PHPUnit\CodeQuality\Rector\MethodCall\AssertEqualsToSameRector;
+use Rector\PHPUnit\CodeQuality\Rector\MethodCall\NarrowIdenticalWithConsecutiveRector;
+use Rector\PHPUnit\CodeQuality\Rector\MethodCall\SingleWithConsecutiveToWithRector;
+use Rector\PHPUnit\CodeQuality\Rector\MethodCall\WithCallbackIdenticalToStandaloneAssertsRector;
 use Rector\TypeDeclaration\Rector\Class_\AddTestsVoidReturnTypeWhereNoReturnRector;
 
 return RectorConfig::configure()
@@ -18,14 +25,30 @@ return RectorConfig::configure()
 		__DIR__ . '/lib',
 		__DIR__ . '/tests',
 	])
+	->withBootstrapFiles([
+		__DIR__ . '/vendor-bin/phpunit/vendor/autoload.php',
+	])
 	->withSkip([
-		__DIR__ . '/lib/Vendor'
+		__DIR__ . '/lib/Vendor',
+		// Evaluates class constants via defined(), which autoloads app classes that extend OCP\AppFramework\Db\Entity
+		IfToSpaceshipRector::class,
+		// Tests call the static assertions and matchers via self::
+		PreferPHPUnitThisCallRector::class,
+		// Rewrites callback() closures to return void, but PHPUnit 9 requires a bool
+		WithCallbackIdenticalToStandaloneAssertsRector::class,
+		// Remove test properties that tests still read
+		NarrowUnusedSetUpDefinedPropertyRector::class,
+		RemoveNeverUsedMockPropertyRector::class,
+		// Turn withConsecutive(['a', 'b']) into with(['a', 'b']), which matches one array argument
+		NarrowIdenticalWithConsecutiveRector::class,
+		SingleWithConsecutiveToWithRector::class,
+		// Switches to strict comparison on types it infers wrongly
+		AssertEqualsToSameRector::class,
 	])
 	->withPreparedSets(
 		phpunitCodeQuality: true,
 	)
 	->withSets([
-		PHPUnitSetList::PHPUNIT_90,
 		NextcloudSets::NEXTCLOUD_30,
 	])
 	->withPhpSets(

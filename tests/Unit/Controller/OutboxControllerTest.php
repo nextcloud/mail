@@ -29,7 +29,7 @@ use OCP\DB\Exception;
 use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class OutboxControllerTest extends TestCase {
+final class OutboxControllerTest extends TestCase {
 	private string $appName;
 
 	/** @var OutboxService&MockObject */

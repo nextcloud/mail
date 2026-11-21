@@ -19,7 +19,7 @@ use OCP\Security\ICrypto;
 use OCP\Server;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class SieveClientFactoryTest extends TestCase {
+final class SieveClientFactoryTest extends TestCase {
 	/** @var ICrypto|MockObject */
 	private $crypto;
 
@@ -69,7 +69,7 @@ class SieveClientFactoryTest extends TestCase {
 		return new Account($mailAccount);
 	}
 
-	public function testClientConnectivity() {
+	public function testClientConnectivity(): void {
 		$account = $this->getTestAccount();
 		$this->crypto->expects($this->once())
 			->method('decrypt')
@@ -80,7 +80,7 @@ class SieveClientFactoryTest extends TestCase {
 		$this->assertInstanceOf(ManageSieve::class, $client);
 	}
 
-	public function testClientInstallScript() {
+	public function testClientInstallScript(): void {
 		$account = $this->getTestAccount();
 		$this->crypto->expects($this->once())
 			->method('decrypt')

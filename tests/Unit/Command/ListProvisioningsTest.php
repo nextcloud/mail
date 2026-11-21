@@ -17,7 +17,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class ListProvisioningsTest extends TestCase {
+final class ListProvisioningsTest extends TestCase {
 	private ProvisioningManager&MockObject $provisioningManager;
 	private CommandTester $tester;
 
@@ -64,10 +64,10 @@ class ListProvisioningsTest extends TestCase {
 
 		self::assertSame(Command::SUCCESS, $status);
 		$display = $this->tester->getDisplay();
-		self::assertStringContainsString('%USERID%@imap.example.com:993 (ssl)', $display);
-		self::assertStringContainsString('%USERID%@smtp.example.com:587 (tls)', $display);
-		self::assertStringContainsString('yes (user: *masteruser)', $display);
-		self::assertStringNotContainsString('sesame', $display);
+		self::assertStringContainsString('%USERID%@imap.example.com:993 (ssl)', (string)$display);
+		self::assertStringContainsString('%USERID%@smtp.example.com:587 (tls)', (string)$display);
+		self::assertStringContainsString('yes (user: *masteruser)', (string)$display);
+		self::assertStringNotContainsString('sesame', (string)$display);
 	}
 
 	public function testListSieveAndMasterPasswordWithoutUser(): void {
@@ -84,8 +84,8 @@ class ListProvisioningsTest extends TestCase {
 
 		self::assertSame(Command::SUCCESS, $status);
 		$display = $this->tester->getDisplay();
-		self::assertStringContainsString('sieve.example.com:4190 (tls)', $display);
-		self::assertStringNotContainsString('(user:', $display);
+		self::assertStringContainsString('sieve.example.com:4190 (tls)', (string)$display);
+		self::assertStringNotContainsString('(user:', (string)$display);
 	}
 
 	public function testListJsonHidesMasterPassword(): void {

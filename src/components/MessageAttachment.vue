@@ -24,11 +24,9 @@
 				<NcActionButton
 					v-if="isCalendarEvent"
 					class="attachment-import calendar"
-					:disabled="loadingCalendars"
-					@click.stop="loadCalendars">
+					@click.stop="openCalendarPopover">
 					<template #icon>
-						<IconAdd v-if="!loadingCalendars" :size="20" />
-						<NcLoadingIcon v-else-if="loadingCalendars" :size="20" />
+						<IconAdd :size="20" />
 					</template>
 					{{ t('mail', 'Import into calendar') }}
 				</NcActionButton>
@@ -66,6 +64,9 @@
 					@click="entry.action">
 					{{ entry.text }}
 				</NcActionButton>
+				<NcActionText v-if="calendarMenuEntries.length === 0">
+					{{ t('mail', 'None of your calendars can store events') }}
+				</NcActionText>
 			</template>
 		</NcActions>
 	</div>
@@ -76,8 +77,10 @@
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { formatFileSize } from '@nextcloud/files'
 import { t } from '@nextcloud/l10n'
+import { mapStores } from 'pinia'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
+import NcActionText from '@nextcloud/vue/components/NcActionText'
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import IconArrow from 'vue-material-design-icons/ArrowLeft.vue'
 import IconSave from 'vue-material-design-icons/FolderOutline.vue'
@@ -85,14 +88,30 @@ import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconDownload from 'vue-material-design-icons/TrayArrowDown.vue'
 import Logger from '../logger.js'
 import { downloadAttachment, saveAttachmentToFiles } from '../service/AttachmentService.js'
-import { getUserCalendars, importCalendarEvent } from '../service/DAVService.js'
+import { importCalendarEvent } from '../service/DAVService.js'
+import useMainStore from '../store/mainStore.js'
 import { pickFolder } from '../util/filePicker.js'
+
+/**
+ * RFC 4791 section 5.3.2.1, answered by Nextcloud 33.0.7, 34.0.2 and later.
+ * Older servers fail without it and keep the generic error.
+ *
+ * @param {Error} error the error of the failed PUT
+ * @return {boolean}
+ */
+function isUidConflict(error) {
+	const response = error?.response
+	return response?.status === 409
+		&& typeof response.data === 'string'
+		&& response.data.includes('no-uid-conflict')
+}
 
 export default {
 	name: 'MessageAttachment',
 	components: {
 		NcActions,
 		NcActionButton,
+		NcActionText,
 		IconAdd,
 		IconArrow,
 		NcLoadingIcon,
@@ -158,13 +177,13 @@ export default {
 	data() {
 		return {
 			savingToCloud: false,
-			loadingCalendars: false,
-			calendars: [],
 			showCalendarPopover: false,
 		}
 	},
 
 	computed: {
+		...mapStores(useMainStore),
+
 		name() {
 			if (this.mime === 'message/rfc822') {
 				return t('mail', 'Embedded message')
@@ -180,10 +199,10 @@ export default {
 		},
 
 		calendarMenuEntries() {
-			return this.calendars.map((cal) => {
+			return this.mainStore.getEventCalendarsForCurrentUser.map((cal) => {
 				return {
 					text: cal.displayname,
-					action: this.importCalendar(cal.url),
+					action: this.importCalendar(cal),
 				}
 			})
 		},
@@ -242,31 +261,30 @@ export default {
 			window.location = this.url
 		},
 
-		loadCalendars() {
-			this.loadingCalendars = true
-			getUserCalendars().then((calendars) => {
-				this.calendars = calendars
-				this.showCalendarPopover = true
-				this.loadingCalendars = false
-			})
+		openCalendarPopover() {
+			this.showCalendarPopover = true
 		},
 
 		closeCalendarPopover() {
 			this.showCalendarPopover = false
 		},
 
-		importCalendar(url) {
-			return () => {
-				downloadAttachment(this.url)
-					.then(importCalendarEvent(url))
-					.then(() => {
-						showSuccess(t('mail', 'calendar imported'))
-					})
-					.catch((error) => {
-						Logger.error('Could not import event', { error })
+		importCalendar(calendar) {
+			return async () => {
+				try {
+					const data = await downloadAttachment(this.url)
+					await importCalendarEvent(calendar.url, data)
+					showSuccess(t('mail', 'calendar imported'))
+				} catch (error) {
+					Logger.error('Could not import event', { error })
+					if (isUidConflict(error)) {
+						showError(t('mail', 'This event is already in the calendar {calendar}', { calendar: calendar.displayname }))
+					} else {
 						showError(t('mail', 'Could not create event'))
-					})
-					.then(() => (this.showCalendarPopover = false))
+					}
+				} finally {
+					this.showCalendarPopover = false
+				}
 			}
 		},
 	},

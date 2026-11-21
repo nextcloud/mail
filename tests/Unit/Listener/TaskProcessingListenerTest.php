@@ -20,7 +20,7 @@ use OCP\TaskProcessing\TaskTypes\TextToText;
 use OCP\TaskProcessing\TaskTypes\TextToTextSummary;
 use Psr\Log\LoggerInterface;
 
-class TaskProcessingListenerTest extends TestCase {
+final class TaskProcessingListenerTest extends TestCase {
 
 	/** @var TaskProcessingListener */
 	private $listener;

@@ -51,23 +51,45 @@ class ProtocolFactory {
 		private ContainerInterface $container,
 		private IMAPClientFactory $imapClientFactory,
 		private JmapClientFactory $jmapClientFactory,
+		private ConnectionPool $connectionPool,
 	) {
 	}
 
 	/**
+	 * Get the account's shared IMAP client
+	 *
+	 * Callers must not log out; the connection is closed when the account is
+	 * released or the process ends.
+	 *
 	 * @throws ServiceException
 	 */
 	public function imapClient(Account $account, bool $useCache = true): Horde_Imap_Client_Socket {
 		$this->verifyProtocol($account, MailAccount::PROTOCOL_IMAP);
-		return $this->imapClientFactory->getClient($account, $useCache);
+		return $this->connectionPool->imap($account, $useCache);
 	}
 
 	/**
+	 * Get a new IMAP client that is not shared, the caller must log out
+	 *
+	 * @throws ServiceException
+	 */
+	public function newImapClient(Account $account): Horde_Imap_Client_Socket {
+		$this->verifyProtocol($account, MailAccount::PROTOCOL_IMAP);
+		return $this->imapClientFactory->getClient($account);
+	}
+
+	/**
+	 * Get the account's shared JMAP client, which may already be connected
+	 *
 	 * @throws ServiceException
 	 */
 	public function jmapClient(Account $account): JmapClient {
 		$this->verifyProtocol($account, MailAccount::PROTOCOL_JMAP);
-		return $this->jmapClientFactory->getClient($account);
+		return $this->connectionPool->jmap($account);
+	}
+
+	public function releaseClients(Account $account): void {
+		$this->connectionPool->release($account);
 	}
 
 	/**
@@ -79,15 +101,17 @@ class ProtocolFactory {
 		$protocol = $account->getMailAccount()->getProtocol();
 
 		if ($protocol === MailAccount::PROTOCOL_IMAP) {
-			$this->imapClient($account)->close();
+			$client = $this->newImapClient($account);
+			try {
+				$client->login();
+			} finally {
+				$client->logout();
+			}
 			return;
 		}
 
 		if ($protocol === MailAccount::PROTOCOL_JMAP) {
-			$client = $this->jmapClient($account);
-			if (!$client->sessionStatus()) {
-				$client->connect();
-			}
+			$this->jmapClientFactory->getClient($account)->connect();
 			return;
 		}
 

@@ -32,6 +32,7 @@ OC.L10N.register(
     "Decline" : "ප්‍රතික්ෂේප",
     "Remove" : "ඉවත් කරන්න",
     "Today" : "අද",
+    "This week" : "මෙම සතිය",
     "Choose" : "තෝරන්න",
     "No results" : "ප්‍රතිථල නැත",
     "Favorites" : "ප්‍රියතම",

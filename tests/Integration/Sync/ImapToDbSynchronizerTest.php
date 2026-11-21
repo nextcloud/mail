@@ -22,7 +22,7 @@ use OCA\Mail\Tests\Integration\TestCase;
 use OCP\Server;
 use Psr\Log\LoggerInterface;
 
-class ImapToDbSynchronizerTest extends TestCase {
+final class ImapToDbSynchronizerTest extends TestCase {
 	use ImapTest,
 		ImapTestAccount;
 

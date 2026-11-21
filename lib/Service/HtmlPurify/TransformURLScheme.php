@@ -41,9 +41,7 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 	 */
 	#[\Override]
 	public function filter(&$uri, $config, $context) {
-		if ($uri->scheme === null) {
-			$uri->scheme = 'https';
-		}
+		$uri->scheme ??= 'https';
 
 		// Only HTTPS and HTTP urls should get rewritten
 		if ($uri->scheme === 'https' || $uri->scheme === 'http' || $uri->scheme === 'ftp') {

@@ -44,4 +44,7 @@
   <testsuite name="Mail app tests">
     <directory suffix="Test.php">Integration</directory>
   </testsuite>
+  <extensions>
+    <extension class="OCA\Mail\Tests\Integration\Framework\ReleaseConnectionsExtension"/>
+  </extensions>
 </phpunit>

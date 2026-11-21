@@ -273,6 +273,7 @@ export default {
 			subfolderSaving: false,
 			showSubMailboxes: false,
 			wasExpandedBeforeDrag: false,
+			accountWasCollapsedBeforeDrag: false,
 			menuOpen: false,
 			renameLabel: true,
 			renameInput: false,
@@ -692,6 +693,7 @@ export default {
 				return
 			}
 			this.wasExpandedBeforeDrag = this.showSubMailboxes
+			this.accountWasCollapsedBeforeDrag = this.account.collapsed
 			this.mainStore.expandAccountMutation(accountId)
 			this.showSubMailboxes = true
 		},
@@ -701,6 +703,9 @@ export default {
 				return
 			}
 			this.showSubMailboxes = this.wasExpandedBeforeDrag
+			if (this.accountWasCollapsedBeforeDrag) {
+				this.mainStore.collapseAccountMutation(accountId)
+			}
 		},
 
 		onEnvelopesMoved({ mailboxId, movedEnvelopes }) {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2021 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -21,7 +23,7 @@ use OCA\Mail\Migration\MigrateImportantFromImapAndDb;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class MigrateImportantFromImapAndDbTest extends TestCase {
+final class MigrateImportantFromImapAndDbTest extends TestCase {
 	private Horde_Imap_Client_Socket|MockObject $client;
 	private MockObject|MessageMapper $messageMapper;
 	private MailboxMapper|MockObject $mailboxMapper;
@@ -43,7 +45,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		parent::setUp();
 	}
 
-	public function testMigrateImportantOnImap() {
+	public function testMigrateImportantOnImap(): void {
 		$account = $this->createStub(Account::class);
 		$mailbox = $this->createStub(Mailbox::class);
 		$uids = [1,2,3];
@@ -61,7 +63,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		$this->migration->migrateImportantOnImap($this->client, $account, $mailbox);
 	}
 
-	public function testMigrateImportantOnImapNoUids() {
+	public function testMigrateImportantOnImapNoUids(): void {
 		$account = $this->createStub(Account::class);
 		$mailbox = $this->createStub(Mailbox::class);
 		$uids = [];
@@ -78,7 +80,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		$this->migration->migrateImportantOnImap($this->client, $account, $mailbox);
 	}
 
-	public function testMigrateImportantOnImapExceptionGetFlagged() {
+	public function testMigrateImportantOnImapExceptionGetFlagged(): void {
 		$account = $this->createStub(Account::class);
 		$mailbox = $this->createStub(Mailbox::class);
 		$e = new Horde_Imap_Client_Exception('');
@@ -96,7 +98,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		$this->migration->migrateImportantOnImap($this->client, $account, $mailbox);
 	}
 
-	public function testMigrateImportantOnImapExceptionOnFlag() {
+	public function testMigrateImportantOnImapExceptionOnFlag(): void {
 		$account = $this->createStub(Account::class);
 		$mailbox = new Mailbox();
 		$mailbox->setName('INBOX');
@@ -138,7 +140,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		$this->migration->migrateImportantFromDb($this->client, $account, $mailbox);
 	}
 
-	public function testMigrateImportantFromDbNoUids() {
+	public function testMigrateImportantFromDbNoUids(): void {
 		$account = $this->createStub(Account::class);
 		$mailbox = new Mailbox();
 		$mailbox->setId(1);
@@ -156,7 +158,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		$this->migration->migrateImportantFromDb($this->client, $account, $mailbox);
 	}
 
-	public function testMigrateImportantFromDbExceptionOnFlag() {
+	public function testMigrateImportantFromDbExceptionOnFlag(): void {
 		$account = $this->createStub(Account::class);
 		$mailbox = new Mailbox();
 		$mailbox->setId(1);

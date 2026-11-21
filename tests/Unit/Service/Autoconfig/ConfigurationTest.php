@@ -12,7 +12,7 @@ namespace OCA\Mail\Tests\Unit\Service\Autoconfig;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\AutoConfig\Configuration;
 
-class ConfigurationTest extends TestCase {
+final class ConfigurationTest extends TestCase {
 	public function testEmptyConfig(): void {
 		$cfg = new Configuration(null, null);
 

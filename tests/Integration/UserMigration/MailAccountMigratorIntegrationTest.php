@@ -28,7 +28,7 @@ use OCP\UserMigration\UserMigrationException;
 use Symfony\Component\Console\Output\OutputInterface;
 use function array_key_exists;
 
-class MailAccountMigratorIntegrationTest extends TestCase {
+final class MailAccountMigratorIntegrationTest extends TestCase {
 
 	use DatabaseTransaction;
 	use TestUser;

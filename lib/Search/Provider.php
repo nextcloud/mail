@@ -13,6 +13,7 @@ use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Service\Search\FilterStringParser;
+use OCA\Mail\Util\Base64Url;
 use OCP\IDateTimeFormatter;
 use OCP\IL10N;
 use OCP\IURLGenerator;
@@ -22,6 +23,7 @@ use OCP\Search\ISearchQuery;
 use OCP\Search\SearchResult;
 use OCP\Search\SearchResultEntry;
 use function array_map;
+use function trim;
 
 class Provider implements IProvider {
 	/** @var IL10N */
@@ -110,15 +112,23 @@ class Provider implements IProvider {
 					$from = null;
 				}
 
+				$messageId = $message->getMessageId();
+				$url = ($messageId !== null && trim($messageId) !== '')
+					? $this->urlGenerator->linkToRouteAbsolute('mail.deep_link.open', [
+						'messageId' => Base64Url::encode($messageId),
+					])
+					: $this->urlGenerator->linkToRouteAbsolute('mail.page.thread', [
+						'mailboxId' => $message->getMailboxId(),
+						'id' => $message->getId(),
+					]);
+
 				return new SearchResultEntry(
 					is_null($from) ? '' : $this->urlGenerator->linkToRoute('mail.avatars.image', [
 						'email' => $from,
 					]),
 					$message->getSubject(),
 					$subline,
-					$this->urlGenerator->linkToRouteAbsolute('mail.deep_link.open', [
-						'messageId' => $message->getMessageId(),
-					]),
+					$url,
 					'icon-mail',
 					!is_null($from)
 				);

@@ -12,7 +12,7 @@ namespace OCA\Mail\Tests\Unit\Db;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\OidcProvider;
 
-class OidcProviderTest extends TestCase {
+final class OidcProviderTest extends TestCase {
 	private function fullProvider(): OidcProvider {
 		$provider = new OidcProvider();
 		$provider->setId(3);

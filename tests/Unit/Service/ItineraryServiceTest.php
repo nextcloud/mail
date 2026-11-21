@@ -26,7 +26,7 @@ use OCP\ICacheFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 
-class ItineraryServiceTest extends TestCase {
+final class ItineraryServiceTest extends TestCase {
 	/** @var MailManager|MockObject */
 	private $mailManager;
 
@@ -57,7 +57,7 @@ class ItineraryServiceTest extends TestCase {
 		);
 	}
 
-	public function testExtractNoBodyNoAttachments() {
+	public function testExtractNoBodyNoAttachments(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(100);
 		$mailAccount->setUserId('1');
@@ -116,10 +116,10 @@ class ItineraryServiceTest extends TestCase {
 		$itinerary = $this->service->extract($account, $mailbox, $message);
 
 		$this->assertEquals([], $itinerary->jsonSerialize());
-		$this->assertNotNull($this->service->getCached($account, $mailbox, 13));
+		$this->assertInstanceOf(\Nextcloud\KItinerary\Itinerary::class, $this->service->getCached($account, $mailbox, 13));
 	}
 
-	public function testExtractFromBody() {
+	public function testExtractFromBody(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(100);
 		$mailAccount->setUserId('1');
@@ -155,7 +155,7 @@ class ItineraryServiceTest extends TestCase {
 		$this->assertEquals(['datafrombody'], $itinerary->jsonSerialize());
 	}
 
-	public function testExtractFromAttachments() {
+	public function testExtractFromAttachments(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(100);
 		$mailAccount->setUserId('1');
@@ -264,7 +264,8 @@ class ItineraryServiceTest extends TestCase {
 			$mailbox,
 			1
 		);
+		$this->assertInstanceOf(\Nextcloud\KItinerary\Itinerary::class, $result);
 
-		$this->assertEquals(1, $result->count());
+		$this->assertCount(1, $result);
 	}
 }

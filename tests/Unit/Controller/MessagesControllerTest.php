@@ -59,7 +59,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use ReflectionObject;
 
-class MessagesControllerTest extends TestCase {
+final class MessagesControllerTest extends TestCase {
 	/** @var string */
 	private $appName;
 
@@ -247,8 +247,8 @@ class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->exactly(2))
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 		$imapMessage = $this->createStub(IMAPMessage::class);
 		$this->mailManager->expects($this->exactly(2))
 			->method('getImapMessage')
@@ -346,7 +346,7 @@ class MessagesControllerTest extends TestCase {
 
 		$response = $this->controller->downloadAttachment(123, '2');
 
-		$this->assertStringContainsString('.eml', $response->getHeaders()['Content-Disposition']);
+		$this->assertStringContainsString('.eml', (string)$response->getHeaders()['Content-Disposition']);
 		$this->assertCachedFor($response, 60 * 60);
 	}
 
@@ -358,7 +358,7 @@ class MessagesControllerTest extends TestCase {
 		$this->assertSame('no-cache, no-store, must-revalidate', $response->getHeaders()['Cache-Control']);
 	}
 
-	public function testSaveSingleAttachment() {
+	public function testSaveSingleAttachment(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -381,16 +381,16 @@ class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 		$this->mailManager->expects($this->once())
 			->method('getMailAttachment')
 			->with($this->account, $mailbox, $message, $attachmentId)
-			->will($this->returnValue($this->attachment));
+			->willReturn($this->attachment);
 		$this->attachment->expects($this->once())
 			->method('getName')
 			->with()
-			->will($this->returnValue('cat.jpg'));
+			->willReturn('cat.jpg');
 		$folderNode = $this->createStub(Folder::class);
 		$this->userFolder->expects($this->once())
 			->method('get')
@@ -406,13 +406,13 @@ class MessagesControllerTest extends TestCase {
 		$this->userFolder->expects($this->once())
 			->method('newFile')
 			->with('Downloads/cat.jpg')
-			->will($this->returnValue($file));
+			->willReturn($file);
 		$file->expects($this->once())
 			->method('putContent')
 			->with('abcdefg');
 		$this->attachment->expects($this->once())
 			->method('getContent')
-			->will($this->returnValue('abcdefg'));
+			->willReturn('abcdefg');
 
 		$expected = new JSONResponse();
 		$response = $this->controller->saveAttachment(
@@ -424,7 +424,7 @@ class MessagesControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testSaveAllAttachments() {
+	public function testSaveAllAttachments(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -448,17 +448,17 @@ class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 
 		$this->mailManager->expects($this->once())
 			->method('getMailAttachments')
 			->with($this->account, $mailbox, $message)
-			->will($this->returnValue([$this->attachment]));
+			->willReturn([$this->attachment]);
 		$this->attachment->expects($this->once())
 			->method('getName')
 			->with()
-			->will($this->returnValue('cat.jpg'));
+			->willReturn('cat.jpg');
 		$folderNode = $this->createStub(Folder::class);
 		$this->userFolder->expects($this->once())
 			->method('get')
@@ -474,13 +474,13 @@ class MessagesControllerTest extends TestCase {
 		$this->userFolder->expects($this->once())
 			->method('newFile')
 			->with('Downloads/cat.jpg')
-			->will($this->returnValue($file));
+			->willReturn($file);
 		$file->expects($this->once())
 			->method('putContent')
 			->with('abcdefg');
 		$this->attachment->expects($this->once())
 			->method('getContent')
-			->will($this->returnValue('abcdefg'));
+			->willReturn('abcdefg');
 
 		$expected = new JSONResponse();
 		$response = $this->controller->saveAttachment(
@@ -521,7 +521,7 @@ class MessagesControllerTest extends TestCase {
 		$this->assertSame(Http::STATUS_BAD_REQUEST, $response->getStatus());
 	}
 
-	public function testDownloadAttachments() {
+	public function testDownloadAttachments(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -554,8 +554,8 @@ class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 
 		//
 		$this->mailManager->expects($this->once())
@@ -598,7 +598,7 @@ class MessagesControllerTest extends TestCase {
 		$this->assertEquals($zipValues, $responseValues);
 	}
 
-	public function testDownloadAttachmentsNoAccountError() {
+	public function testDownloadAttachmentsNoAccountError(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -630,7 +630,7 @@ class MessagesControllerTest extends TestCase {
 		$this->assertInstanceOf(JSONResponse::class, $response);
 	}
 
-	public function testDownloadAttachmentsNoMailboxError() {
+	public function testDownloadAttachmentsNoMailboxError(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -659,7 +659,7 @@ class MessagesControllerTest extends TestCase {
 		$this->assertInstanceOf(JSONResponse::class, $response);
 	}
 
-	public function testDownloadAttachmentsNoMessageError() {
+	public function testDownloadAttachmentsNoMessageError(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -683,7 +683,7 @@ class MessagesControllerTest extends TestCase {
 		$this->assertInstanceOf(JSONResponse::class, $response);
 	}
 
-	public function testSetFlagsUnseen() {
+	public function testSetFlagsUnseen(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -706,8 +706,8 @@ class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 		$this->mailManager->expects($this->once())
 			->method('flagMessages')
 			->with($this->account, $mailbox, 'seen', false, $message);
@@ -724,7 +724,7 @@ class MessagesControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testSetTagFailing() {
+	public function testSetTagFailing(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 1;
@@ -745,7 +745,7 @@ class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->with($this->userId, $accountId)
 			->willThrowException(new DoesNotExistException(''));
 		$this->mailManager->expects($this->never())
 			->method('getTagByLabel');
@@ -755,7 +755,7 @@ class MessagesControllerTest extends TestCase {
 		$this->controller->setTag($id, Tag::LABEL_IMPORTANT);
 	}
 
-	public function testSetTagNotFound() {
+	public function testSetTagNotFound(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 1;
@@ -777,8 +777,8 @@ class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 		$this->mailManager->expects($this->once())
 			->method('getTagByLabel')
 			->with($imapLabel, $this->userId)
@@ -789,7 +789,7 @@ class MessagesControllerTest extends TestCase {
 		$this->controller->setTag($id, $imapLabel);
 	}
 
-	public function testSetTag() {
+	public function testSetTag(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 1;
@@ -812,8 +812,8 @@ class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 		$this->mailManager->expects($this->once())
 			->method('getTagByLabel')
 			->with($tag->getImapLabel(), $this->userId)
@@ -828,7 +828,7 @@ class MessagesControllerTest extends TestCase {
 		$this->controller->setTag($id, $tag->getImapLabel());
 	}
 
-	public function testRemoveTagFailing() {
+	public function testRemoveTagFailing(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 1;
@@ -849,7 +849,7 @@ class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->with($this->userId, $accountId)
 			->willThrowException(new DoesNotExistException(''));
 		$this->mailManager->expects($this->never())
 			->method('getTagByLabel');
@@ -859,7 +859,7 @@ class MessagesControllerTest extends TestCase {
 		$this->controller->removeTag($id, Tag::LABEL_IMPORTANT);
 	}
 
-	public function testRemoveTagNotFound() {
+	public function testRemoveTagNotFound(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 1;
@@ -881,8 +881,8 @@ class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 		$this->mailManager->expects($this->once())
 			->method('getTagByLabel')
 			->with($imapLabel, $this->userId)
@@ -893,7 +893,7 @@ class MessagesControllerTest extends TestCase {
 		$this->controller->removeTag($id, $imapLabel);
 	}
 
-	public function testRemoveTag() {
+	public function testRemoveTag(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 1;
@@ -916,8 +916,8 @@ class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 		$this->mailManager->expects($this->once())
 			->method('getTagByLabel')
 			->with($tag->getImapLabel(), $this->userId)
@@ -932,7 +932,7 @@ class MessagesControllerTest extends TestCase {
 		$this->controller->removeTag($id, $tag->getImapLabel());
 	}
 
-	public function testSetFlagsFlagged() {
+	public function testSetFlagsFlagged(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -955,8 +955,8 @@ class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 		$this->mailManager->expects($this->once())
 			->method('flagMessages')
 			->with($this->account, $mailbox, 'flagged', true, $message);
@@ -973,7 +973,7 @@ class MessagesControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testDestroy() {
+	public function testDestroy(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -993,8 +993,8 @@ class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 		$this->mailManager->expects($this->once())
 			->method('deleteMessage')
 			->with($this->account, $mailbox, $message);
@@ -1008,7 +1008,7 @@ class MessagesControllerTest extends TestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-	public function testDestroyWithAccountNotFound() {
+	public function testDestroyWithAccountNotFound(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -1028,15 +1028,15 @@ class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->throwException(new DoesNotExistException('')));
+			->with($this->userId, $accountId)
+			->willThrowException(new DoesNotExistException(''));
 
 		$expected = new JSONResponse([], Http::STATUS_FORBIDDEN);
 
 		$this->assertEquals($expected, $this->controller->destroy($id));
 	}
 
-	public function testDestroyWithFolderOrMessageNotFound() {
+	public function testDestroyWithFolderOrMessageNotFound(): void {
 		$accountId = 17;
 		$mailboxId = 987;
 		$id = 123;
@@ -1056,8 +1056,8 @@ class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 		$this->mailManager->expects($this->once())
 			->method('deleteMessage')
 			->with($this->account, $mailbox, $message)
@@ -1089,7 +1089,7 @@ class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->with($this->userId, $accountId)
 			->willReturn($this->account);
 		$this->mailManager->expects($this->once())
 			->method('getThread')
@@ -1119,7 +1119,7 @@ class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->with($this->userId, $accountId)
 			->willReturn($this->account);
 		$this->mailManager->expects($this->never())
 			->method('getThread');
@@ -1150,7 +1150,7 @@ class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->with($this->userId, $accountId)
 			->willReturn($this->account);
 		$this->mailManager->expects($this->once())
 			->method('getThread');
@@ -1158,7 +1158,7 @@ class MessagesControllerTest extends TestCase {
 		$this->controller->getThread($id);
 	}
 
-	public function testExport() {
+	public function testExport(): void {
 		$accountId = 17;
 		$mailboxId = 13;
 		$folderId = 'testfolder';
@@ -1183,8 +1183,8 @@ class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->exactly(1))
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 		$source = file_get_contents(__DIR__ . '/../../data/mail-message-123.txt');
 		$this->mailManager->expects($this->exactly(1))
 			->method('getSource')
@@ -1201,7 +1201,7 @@ class MessagesControllerTest extends TestCase {
 		$this->assertEquals($expectedResponse, $actualResponse);
 	}
 
-	public function testSaveFile() {
+	public function testSaveFile(): void {
 		$accountId = 17;
 		$mailboxId = 13;
 		$folderId = 'testfolder';
@@ -1227,8 +1227,8 @@ class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->exactly(1))
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->returnValue($this->account));
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
 		$source = file_get_contents(__DIR__ . '/../../data/mail-message-123.txt');
 		$this->mailManager->expects($this->exactly(1))
 			->method('getSource')
@@ -1249,7 +1249,7 @@ class MessagesControllerTest extends TestCase {
 		$this->userFolder->expects($this->once())
 			->method('newFile')
 			->with('Downloads/core_master has new results.eml')
-			->will($this->returnValue($file));
+			->willReturn($file);
 
 		$expectedResponse = new JSONResponse();
 		$actualResponse = $this->controller->saveFile($messageId, $targetPath);
@@ -1257,7 +1257,7 @@ class MessagesControllerTest extends TestCase {
 		$this->assertEquals($expectedResponse, $actualResponse);
 	}
 
-	public function testGetDkim() {
+	public function testGetDkim(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(100);
 		$mailAccount->setUserId($this->userId);
@@ -1284,8 +1284,8 @@ class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->exactly(1))
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($account->getId()))
-			->will($this->returnValue($account));
+			->with($this->userId, $account->getId())
+			->willReturn($account);
 		$this->dkimService->expects($this->exactly(1))
 			->method('validate')
 			->with($account, $mailbox, $message)
@@ -1297,12 +1297,10 @@ class MessagesControllerTest extends TestCase {
 		$this->assertEquals(['valid' => true], $actualResponse->getData());
 	}
 
-	public static function provideCacheBusterData(): array {
-		return [
-			[null, false],
-			['', false],
-			['abcdef123', true],
-		];
+	public static function provideCacheBusterData(): \Iterator {
+		yield [null, false];
+		yield ['', false];
+		yield ['abcdef123', true];
 	}
 
 	/** @dataProvider provideCacheBusterData */
@@ -1353,12 +1351,10 @@ class MessagesControllerTest extends TestCase {
 		}
 	}
 
-	public static function provideLimitData(): array {
-		return [
-			'20' => [20, 20],
-			'500' => [500, 100],
-			'null' => [null, 1],
-		];
+	public static function provideLimitData(): \Iterator {
+		yield '20' => [20, 20];
+		yield '500' => [500, 100];
+		yield 'null' => [null, 1];
 	}
 
 	/** @dataProvider provideLimitData */

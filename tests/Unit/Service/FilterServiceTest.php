@@ -25,7 +25,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Psr\Log\Test\TestLogger;
 
-class FilterServiceTest extends TestCase {
+final class FilterServiceTest extends TestCase {
 
 	private string $testFolder;
 
@@ -191,7 +191,7 @@ class FilterServiceTest extends TestCase {
 			->willReturn($script);
 
 		$this->sieveService->method('updateActiveScript')
-			->willReturnCallback(function (string $userId, int $accountId, string $script) {
+			->willReturnCallback(function (string $userId, int $accountId, string $script): void {
 				// the .sieve files have \r\n line endings
 				$script .= "\r\n";
 
@@ -227,7 +227,7 @@ class FilterServiceTest extends TestCase {
 			->willReturn($script);
 
 		$this->sieveService->method('updateActiveScript')
-			->willReturnCallback(function (string $userId, int $accountId, string $script) {
+			->willReturnCallback(function (string $userId, int $accountId, string $script): void {
 				// the .sieve files have \r\n line endings
 				$script .= "\r\n";
 

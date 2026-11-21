@@ -16,7 +16,7 @@ use OCP\Http\Client\IResponse;
 /**
  * Resolving authorization/token/introspection endpoints from discovery or manual config.
  */
-class OidcEndpointsTest extends OidcIntegrationTestCase {
+final class OidcEndpointsTest extends OidcIntegrationTestCase {
 	public function testGetDiscoveryUsesCache(): void {
 		$provider = $this->provider();
 		$this->cache->method('get')
@@ -200,10 +200,8 @@ class OidcEndpointsTest extends OidcIntegrationTestCase {
 		$client = $this->createMock(IClient::class);
 		$client->expects($this->once())
 			->method('post')
-			->with('https://manual.example.com/introspect', $this->callback(function (array $options): bool {
-				return $options['body']['token'] === 'tok'
-					&& $options['body']['token_type_hint'] === 'refresh_token';
-			}))
+			->with('https://manual.example.com/introspect', $this->callback(fn (array $options): bool => $options['body']['token'] === 'tok'
+					&& $options['body']['token_type_hint'] === 'refresh_token'))
 			->willReturn($response);
 		$this->clientService->method('newClient')->willReturn($client);
 

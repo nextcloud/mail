@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-FileCopyrightText: 2015-2016 ownCloud, Inc.
@@ -11,11 +13,11 @@ namespace OCA\Mail\Tests\Unit\Http;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 
-class AttachmentDownloadResponseTest extends TestCase {
+final class AttachmentDownloadResponseTest extends TestCase {
 	/**
 	 * @dataProvider providesResponseData
 	 */
-	public function testIt(string $content, string $filename, string $contentType) {
+	public function testIt(string $content, string $filename, string $contentType): void {
 		$resp = new AttachmentDownloadResponse($content, $filename, $contentType);
 		$headers = $resp->getHeaders();
 		$this->assertEquals($content, $resp->render());
@@ -23,12 +25,10 @@ class AttachmentDownloadResponseTest extends TestCase {
 		$this->assertEquals($contentType, $headers['Content-Type']);
 		$this->assertArrayHasKey('Content-Disposition', $headers);
 		$pos = strpos($headers['Content-Disposition'], $filename);
-		$this->assertTrue($pos > 0);
+		$this->assertGreaterThan(0, $pos);
 	}
 
-	public function providesResponseData() {
-		return [
-			['1234567890', 'test.txt', 'text/plain']
-		];
+	public function providesResponseData(): \Iterator {
+		yield ['1234567890', 'test.txt', 'text/plain'];
 	}
 }

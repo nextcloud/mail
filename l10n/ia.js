@@ -36,6 +36,7 @@ OC.L10N.register(
     "Accept" : "Acceptar",
     "Decline" : "Refusar",
     "Today" : "Hodie",
+    "This week" : "Iste septimana",
     "Favorites" : "Favoritos",
     "Other" : "Altere",
     "Unnamed" : "Non nominate",

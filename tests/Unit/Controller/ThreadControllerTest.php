@@ -29,7 +29,7 @@ use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class ThreadControllerTest extends TestCase {
+final class ThreadControllerTest extends TestCase {
 	/** @var string */
 	private $appName;
 
@@ -88,7 +88,7 @@ class ThreadControllerTest extends TestCase {
 		);
 	}
 
-	public function testMoveForbidden() {
+	public function testMoveForbidden(): void {
 		$this->mailManager
 			->method('getMessage')
 			->willThrowException(new DoesNotExistException('for some reason there is no such record'));

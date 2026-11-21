@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2023 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -18,7 +20,7 @@ use OCP\AppFramework\Http;
 use OCP\IUser;
 use OCP\User\IAvailabilityCoordinator;
 
-class OutOfOfficeControllerTest extends TestCase {
+final class OutOfOfficeControllerTest extends TestCase {
 	private ServiceMockObject $serviceMock;
 	private OutOfOfficeController $outOfOfficeController;
 
@@ -31,11 +33,9 @@ class OutOfOfficeControllerTest extends TestCase {
 		$this->outOfOfficeController = $this->serviceMock->getService();
 	}
 
-	public function followSystemDataProvider(): array {
-		return [
-			[false],
-			[true],
-		];
+	public function followSystemDataProvider(): \Iterator {
+		yield [false];
+		yield [true];
 	}
 
 	/**

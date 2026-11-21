@@ -20,7 +20,7 @@ use OCP\UserMigration\IImportSource;
 use OCP\UserMigration\UserMigrationException;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class TrustedSendersMigrationServiceTest extends TestCase {
+final class TrustedSendersMigrationServiceTest extends TestCase {
 	use RecordsConsoleOutput;
 
 	private const USER_ID = '123';
@@ -119,12 +119,10 @@ class TrustedSendersMigrationServiceTest extends TestCase {
 		$this->migrationService->importTrustedSenders($this->user, $this->importSource, $this->output);
 	}
 
-	public static function provideFileContentsWithNoTrustedSendersImported(): array {
-		return [
-			'empty list' => [json_encode([])],
-			'invalid JSON' => ['this is not valid json {{{'],
-			'JSON object instead of list' => [json_encode(['unexpected' => 'object'])],
-		];
+	public static function provideFileContentsWithNoTrustedSendersImported(): \Iterator {
+		yield 'empty list' => [json_encode([])];
+		yield 'invalid JSON' => ['this is not valid json {{{'];
+		yield 'JSON object instead of list' => [json_encode(['unexpected' => 'object'])];
 	}
 
 	/**

@@ -18,7 +18,7 @@ use OCP\IGroupManager;
 use OCP\IUser;
 use OCP\IUserManager;
 
-class ContactsIntegrationTest extends TestCase {
+final class ContactsIntegrationTest extends TestCase {
 	/** @var IManager */
 	private $contactsManager;
 
@@ -47,10 +47,10 @@ class ContactsIntegrationTest extends TestCase {
 			$this->config);
 	}
 
-	public function testDisabledContactsManager() {
+	public function testDisabledContactsManager(): void {
 		$this->contactsManager->expects($this->once())
 			->method('isEnabled')
-			->will($this->returnValue(false));
+			->willReturn(false);
 		$this->contactsManager->expects($this->never())
 			->method('search');
 
@@ -60,7 +60,7 @@ class ContactsIntegrationTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testGetMatchingRecipient() {
+	public function testGetMatchingRecipient(): void {
 		$term = 'jo'; // searching for: John Doe
 		$searchResult = [
 			[
@@ -140,7 +140,7 @@ class ContactsIntegrationTest extends TestCase {
 		$this->assertSame($expected, $actual);
 	}
 
-	public function testGetMatchingRecipientRestrictedToGroup() {
+	public function testGetMatchingRecipientRestrictedToGroup(): void {
 		$term = 'jo'; // searching for: John Doe
 		$searchResult = [
 			[
@@ -172,10 +172,10 @@ class ContactsIntegrationTest extends TestCase {
 		$this->userManager->expects($this->once())
 			->method('get')
 			->with('auser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 		$this->groupManager->expects($this->once())
 			->method('getUserGroupIds')
-			->will($this->returnValue(['agroup']));
+			->willReturn(['agroup']);
 		$this->groupManager->expects(self::exactly(2))
 			->method('isInGroup')
 			->withConsecutive(['jf', 'agroup'], ['jd', 'agroup'])
@@ -210,7 +210,7 @@ class ContactsIntegrationTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testGetMatchingRecipientRestrictedToGroupFullMatchUserId() {
+	public function testGetMatchingRecipientRestrictedToGroupFullMatchUserId(): void {
 		$term = 'jf'; // searching for: Jonathan Frakes
 		$searchResult = [
 			[
@@ -227,10 +227,10 @@ class ContactsIntegrationTest extends TestCase {
 		$this->userManager->expects($this->once())
 			->method('get')
 			->with('auser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 		$this->groupManager->expects($this->once())
 			->method('getUserGroupIds')
-			->will($this->returnValue(['agroup']));
+			->willReturn(['agroup']);
 		$this->groupManager->expects(self::exactly(1))
 			->method('isInGroup')
 			->withConsecutive(['jf', 'agroup'])
@@ -251,7 +251,7 @@ class ContactsIntegrationTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testGetMatchingRecipientRestrictedToGroupFullMatchFullName() {
+	public function testGetMatchingRecipientRestrictedToGroupFullMatchFullName(): void {
 		$term = 'Jonathan Frakes'; // searching for: Jonathan Frakes
 		$searchResult = [
 			[
@@ -268,10 +268,10 @@ class ContactsIntegrationTest extends TestCase {
 		$this->userManager->expects($this->once())
 			->method('get')
 			->with('auser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 		$this->groupManager->expects($this->once())
 			->method('getUserGroupIds')
-			->will($this->returnValue(['agroup']));
+			->willReturn(['agroup']);
 		$this->groupManager->expects(self::exactly(1))
 			->method('isInGroup')
 			->withConsecutive(['jf', 'agroup'])
@@ -292,7 +292,7 @@ class ContactsIntegrationTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testGetMatchingRecipientRestrictedToGroupFullMatchEmail() {
+	public function testGetMatchingRecipientRestrictedToGroupFullMatchEmail(): void {
 		$term = 'jonathan@frakes.com'; // searching for: Jonathan Frakes
 		$searchResult = [
 			[
@@ -309,10 +309,10 @@ class ContactsIntegrationTest extends TestCase {
 		$this->userManager->expects($this->once())
 			->method('get')
 			->with('auser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 		$this->groupManager->expects($this->once())
 			->method('getUserGroupIds')
-			->will($this->returnValue(['agroup']));
+			->willReturn(['agroup']);
 		$this->groupManager->expects(self::exactly(1))
 			->method('isInGroup')
 			->withConsecutive(['jf', 'agroup'])
@@ -333,7 +333,7 @@ class ContactsIntegrationTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testGetMatchingRecipientRestrictedToGroupFullMatchFalse() {
+	public function testGetMatchingRecipientRestrictedToGroupFullMatchFalse(): void {
 		$term = 'jf'; // searching for: Jonathan Frakes
 
 		$searchResult = [
@@ -352,10 +352,10 @@ class ContactsIntegrationTest extends TestCase {
 		$this->userManager->expects($this->once())
 			->method('get')
 			->with('auser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 		$this->groupManager->expects($this->once())
 			->method('getUserGroupIds')
-			->will($this->returnValue(['agroup']));
+			->willReturn(['agroup']);
 		$this->groupManager->expects(self::exactly(1))
 			->method('isInGroup')
 			->withConsecutive(['jf', 'agroup'])
@@ -387,7 +387,7 @@ class ContactsIntegrationTest extends TestCase {
 				$shareeEnumerationFullMatchEmail ? 'yes' : ' no');
 		$this->contactsManager->expects($this->once())
 			->method('isEnabled')
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->contactsManager->expects($this->once())
 			->method('search')
 			->with(
@@ -398,7 +398,7 @@ class ContactsIntegrationTest extends TestCase {
 					'fullmatch' => $shareeEnumerationFullMatch,
 					'limit' => 20,
 				])
-			->will($this->returnValue($searchResult));
+			->willReturn($searchResult);
 	}
 
 	public function testGetContactsWithName(): void {
