@@ -25,6 +25,9 @@ use Throwable;
 use function array_filter;
 
 class IMipService {
+	/** iTIP methods (RFC 5546 section 1.4) */
+	public const CALENDAR_METHODS = ['ADD', 'CANCEL', 'COUNTER', 'DECLINECOUNTER', 'PUBLISH', 'REFRESH', 'REPLY', 'REQUEST'];
+
 	private IManager $calendarManager;
 
 	public function __construct(
