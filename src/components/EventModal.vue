@@ -310,7 +310,7 @@ export default {
 				}
 
 				if (this.envelope.messageId) {
-					event.addProperty(new TextProperty('X-NEXTCLOUD-MAIL-MESSAGE-ID', this.envelope.messageId))
+					event.addProperty(new TextProperty('X-NC-MAIL-DEEPLINK', this.envelope.messageId))
 				}
 
 				const organizerEmail = this.organizerEmail?.toLowerCase() || ''
