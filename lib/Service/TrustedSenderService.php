@@ -10,12 +10,16 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Contracts\ITrustedSenderService;
+use OCA\Mail\Db\AddressEntryType;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\TrustedSenderMapper;
+use OCA\Mail\Exception\InvalidAddressException;
+use OCP\DB\Exception;
 
 class TrustedSenderService implements ITrustedSenderService {
 	public function __construct(
 		private TrustedSenderMapper $mapper,
+		private AddressEntryNormalizer $normalizer,
 	) {
 	}
 
@@ -44,25 +48,29 @@ class TrustedSenderService implements ITrustedSenderService {
 		);
 	}
 
+	/**
+	 * @throws InvalidAddressException
+	 */
 	#[\Override]
 	public function trust(string $uid, string $email, string $type, ?bool $trust = true): void {
-		if ($trust && $this->isTrusted($uid, $email)) {
-			// Nothing to do
+		if (!$trust) {
+			// Valid values are stored normalized, older entries as they were entered
+			foreach (array_unique([$email, $this->normalizer->tryNormalize($email, $type) ?? $email]) as $storedEmail) {
+				$this->mapper->remove($uid, $storedEmail, $type);
+			}
 			return;
 		}
 
-		if ($trust) {
-			$this->mapper->create(
-				$uid,
-				$email,
-				$type
-			);
-		} else {
-			$this->mapper->remove(
-				$uid,
-				$email,
-				$type
-			);
+		$entryType = AddressEntryType::tryFrom($type) ?? throw new InvalidAddressException('Invalid type');
+		$email = $this->normalizer->normalize($email, $entryType);
+		try {
+			$this->mapper->create($uid, $email, $entryType->value);
+		} catch (Exception $exception) {
+			if ($exception->getReason() !== Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
+				throw $exception;
+			}
+
+			// Already listed, e.g. by a concurrent request
 		}
 	}
 

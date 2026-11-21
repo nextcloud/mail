@@ -11,6 +11,7 @@ namespace OCA\Mail\UserMigration\Service;
 
 use JsonException;
 use OCA\Mail\Contracts\ITrustedSenderService;
+use OCA\Mail\Exception\InvalidAddressException;
 use OCA\Mail\UserMigration\MailAccountMigrator;
 use OCP\IL10N;
 use OCP\IUser;
@@ -100,12 +101,7 @@ class TrustedSendersMigrationService {
 
 		foreach ($trustedSenders as $trustedSender) {
 			if (!$this->isWellFormedTrustedSender($trustedSender)) {
-				$output->writeln(
-					$this->l10n->t(
-						'A trusted sender of %s is invalid and will be skipped. Continue …',
-						[$user->getUID()]
-					)
-				);
+				$this->reportInvalidTrustedSender($user, $output);
 
 				continue;
 			}
@@ -117,8 +113,21 @@ class TrustedSendersMigrationService {
 				), OutputInterface::VERBOSITY_VERBOSE
 			);
 
-			$this->trustedSenderService->trust($user->getUID(), $trustedSender['email'], $trustedSender['type']);
+			try {
+				$this->trustedSenderService->trust($user->getUID(), $trustedSender['email'], $trustedSender['type']);
+			} catch (InvalidAddressException) {
+				$this->reportInvalidTrustedSender($user, $output);
+			}
 		}
+	}
+
+	private function reportInvalidTrustedSender(IUser $user, OutputInterface $output): void {
+		$output->writeln(
+			$this->l10n->t(
+				'A trusted sender of %s is invalid and will be skipped. Continue …',
+				[$user->getUID()]
+			)
+		);
 	}
 
 	/**
