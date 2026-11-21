@@ -10,12 +10,14 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import ComposerAttachments from '../../../components/ComposerAttachments.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 import { uploadLocalAttachment } from '../../../service/AttachmentService.js'
+import { shareFile } from '../../../service/FileSharingService.js'
 
 vi.mock('@nextcloud/dialogs', async (importOriginal) => ({
 	...await importOriginal(),
 	showError: vi.fn(),
 }))
 vi.mock('../../../service/AttachmentService.js')
+vi.mock('../../../service/FileSharingService.js')
 
 describe('ComposerAttachments', () => {
 	let view
@@ -113,5 +115,15 @@ describe('ComposerAttachments', () => {
 
 		expect(showError).not.toHaveBeenCalled()
 		expect(view.emitted('update:blocksSending')).toEqual([[true], [false]])
+	})
+	it('inserts a share link for every picked file', async () => {
+		shareFile.mockImplementation((path) => Promise.resolve(`https://cloud.example.com/s${path}`))
+		const appendToBody = vi.fn()
+		view.props('bus').on('append-to-body-at-cursor', appendToBody)
+
+		await view.vm.onAddCloudAttachmentLink([{ path: '/a.txt' }, { path: '/b.txt' }])
+
+		expect(shareFile).toHaveBeenCalledTimes(2)
+		expect(appendToBody).toHaveBeenCalledWith('<a href="https://cloud.example.com/s/a.txt">https://cloud.example.com/s/a.txt</a><br><a href="https://cloud.example.com/s/b.txt">https://cloud.example.com/s/b.txt</a>')
 	})
 })
