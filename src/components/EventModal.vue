@@ -309,8 +309,9 @@ export default {
 					event.addProperty(new TextProperty('DESCRIPTION', this.description))
 				}
 
+				const messageId = this.envelope.messageId?.trim().replace(/^<|>$/g, '')
 				if (this.envelope.messageId) {
-					event.addProperty(new TextProperty('X-NC-MAIL-DEEPLINK', this.envelope.messageId))
+					event.addProperty(new TextProperty('X-NC-MAIL-DEEPLINK', Base64.encodeURL(messageId)))
 				}
 
 				const organizerEmail = this.organizerEmail?.toLowerCase() || ''
