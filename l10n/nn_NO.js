@@ -20,6 +20,7 @@ OC.L10N.register(
     "Newest first" : "Nyaste fyrst",
     "Oldest first" : "Eldste fyrst",
     "Ok" : "Greitt",
+    "Messages" : "Meldingar",
     "Privacy" : "Personvern",
     "Archive" : "Arkiver",
     "Delete" : "Ta bort",

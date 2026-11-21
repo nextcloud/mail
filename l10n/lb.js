@@ -20,6 +20,7 @@ OC.L10N.register(
     "General" : "Allgemeng",
     "List" : "Lëscht",
     "Ok" : "OK",
+    "Messages" : "Noriichten",
     "Shared with me" : "Mat mir gedeelt",
     "Privacy" : "Dateschutz",
     "Archive" : "Archiv",

@@ -79,6 +79,7 @@ OC.L10N.register(
     "More options" : "Më shumë opsione",
     "Remove" : "Hiq",
     "Today" : "Sot",
+    "This week" : "Këtë javë",
     "Choose" : "Zgjidhni",
     "No results" : "Asnjë rezultat",
     "Favorites" : "Favorites",

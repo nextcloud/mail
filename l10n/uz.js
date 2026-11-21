@@ -50,6 +50,7 @@ OC.L10N.register(
     "Last hour" : "So'nggi soat",
     "Today" : "Bugun",
     "Yesterday" : "Kecha",
+    "This week" : "Shu hafta",
     "Last week" : "O`tgan yil",
     "Last month" : "Oxirgi oy",
     "Choose" : "Choose",
