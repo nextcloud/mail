@@ -11,8 +11,12 @@ namespace OCA\Mail;
 use Horde_Mime_Part;
 
 class Attachment {
-	private const CALENDAR_METHODS = ['ADD', 'CANCEL', 'COUNTER', 'DECLINECOUNTER', 'PUBLISH', 'REFRESH', 'REPLY', 'REQUEST'];
+	/** @var array<string, string> */
+	private array $typeParameters;
 
+	/**
+	 * @param array<string, string> $typeParameters Content-Type parameters, e.g. the iTIP method
+	 */
 	public function __construct(
 		private ?string $id,
 		private ?string $name,
@@ -21,7 +25,9 @@ class Attachment {
 		private int $size,
 		public readonly ?string $contentId,
 		public readonly ?string $disposition,
+		array $typeParameters = [],
 	) {
+		$this->typeParameters = array_change_key_case($typeParameters);
 	}
 
 	public static function fromMimePart(Horde_Mime_Part $mimePart): self {
@@ -30,20 +36,15 @@ class Attachment {
 			$disposition = null;
 		}
 
-		$type = $mimePart->getType();
-		$method = strtoupper((string)$mimePart->getContentTypeParameter('method'));
-		if ($type === 'text/calendar' && in_array($method, self::CALENDAR_METHODS, true)) {
-			$type .= '; method=' . $method;
-		}
-
 		return new Attachment(
 			$mimePart->getMimeId(),
 			$mimePart->getName(),
-			$type,
+			$mimePart->getType(),
 			$mimePart->getContents(),
 			(int)$mimePart->getBytes(),
 			$mimePart->getContentId(),
 			$disposition,
+			$mimePart->getAllContentTypeParameters(),
 		);
 	}
 
@@ -57,6 +58,13 @@ class Attachment {
 
 	public function getType(): string {
 		return $this->type;
+	}
+
+	/**
+	 * @return array<string, string> Content-Type parameters keyed by lower case name
+	 */
+	public function getTypeParameters(): array {
+		return $this->typeParameters;
 	}
 
 	public function getContent(): string {
