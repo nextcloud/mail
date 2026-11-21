@@ -423,14 +423,12 @@ final class AttachmentServiceTest extends TestCase {
 		$this->service->handleAttachments($account, [$attachments]);
 	}
 
-	public function forwardedAttachmentTypeProvider(): array {
-		return [
-			'calendar with method' => ['text/calendar', ['method' => 'request', 'charset' => 'utf-8'], 'text/calendar; method=REQUEST'],
-			'unknown method' => ['text/calendar', ['method' => 'FOO'], 'text/calendar'],
-			'injected method' => ['text/calendar', ['method' => "REQUEST\r\nBcc: x@example.com"], 'text/calendar'],
-			'calendar without method' => ['text/calendar', [], 'text/calendar'],
-			'other type with method' => ['application/pdf', ['method' => 'REQUEST'], 'application/pdf'],
-		];
+	public function forwardedAttachmentTypeProvider(): \Iterator {
+		yield 'calendar with method' => ['text/calendar', ['method' => 'request', 'charset' => 'utf-8'], 'text/calendar; method=REQUEST'];
+		yield 'unknown method' => ['text/calendar', ['method' => 'FOO'], 'text/calendar'];
+		yield 'injected method' => ['text/calendar', ['method' => "REQUEST\r\nBcc: x@example.com"], 'text/calendar'];
+		yield 'calendar without method' => ['text/calendar', [], 'text/calendar'];
+		yield 'other type with method' => ['application/pdf', ['method' => 'REQUEST'], 'application/pdf'];
 	}
 
 	/**

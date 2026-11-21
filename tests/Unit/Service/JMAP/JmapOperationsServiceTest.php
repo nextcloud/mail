@@ -159,6 +159,8 @@ final class JmapOperationsServiceTest extends TestCase {
 		$this->assertNotNull($attachmentPart);
 		$this->assertEquals('real-uploaded-blob', $attachmentPart->blobId);
 		$this->assertEquals('photo.jpg', $attachmentPart->name);
+		$this->assertEquals('image/jpeg', $attachmentPart->type);
+		$this->assertFalse(isset($attachmentPart->{'header:Content-Type:asRaw'}));
 		$this->assertFalse(isset($attachmentPart->partId), 'must not set partId alongside blobId');
 	}
 
@@ -199,6 +201,73 @@ final class JmapOperationsServiceTest extends TestCase {
 		$this->assertNotNull($attachmentPart);
 		$this->assertFalse(isset($attachmentPart->name));
 		$this->assertFalse(isset($attachmentPart->disposition));
+		$this->assertSame(' text/calendar; method=REQUEST', $attachmentPart->{'header:Content-Type:asRaw'});
+		$this->assertFalse(isset($attachmentPart->type));
+	}
+
+	private function mockAttachmentFetch(string $type, ?string $contentType, array &$captured = []): void {
+		$part = ['blobId' => 'blob-1', 'type' => $type, 'name' => 'invite.ics', 'size' => 15];
+		if ($contentType !== null) {
+			$part['header:Content-Type:asRaw'] = $contentType;
+		}
+		$this->dataStore->method('perform')
+			->willReturnCallback(static function (array $requests) use (&$captured, $part): ResponseBundle {
+				$captured = $requests;
+				return new ResponseBundle([
+					'methodResponses' => [
+						['Email/get', [
+							'accountId' => 'account1',
+							'state' => 'state-1',
+							'list' => [['id' => 'email-1', 'attachments' => [$part]]],
+							'notFound' => [],
+						], '0'],
+					],
+				]);
+			});
+		$this->dataStore->method('download')
+			->willReturnCallback(static function (string $account, string $identifier, &$data): void {
+				$data = 'BEGIN:VCALENDAR';
+			});
+	}
+
+	public function testAttachmentFetchRequestsContentTypeHeader(): void {
+		$captured = [];
+		$this->mockAttachmentFetch('text/calendar', null, $captured);
+
+		$this->service->attachmentFetch('email-1', 'blob-1');
+
+		$command = $captured[0]->jsonSerialize()[1];
+		$this->assertContains('header:Content-Type:asRaw', $command['bodyProperties']);
+		$this->assertContains('type', $command['bodyProperties']);
+		$this->assertContains('blobId', $command['bodyProperties']);
+	}
+
+	public function testAttachmentFetchReportsContentTypeParameters(): void {
+		$this->mockAttachmentFetch('text/calendar', " text/calendar; method=request;\r\n charset=\"utf-8\"");
+
+		$attachments = $this->service->attachmentFetch('email-1', 'blob-1');
+
+		$this->assertCount(1, $attachments);
+		$this->assertSame('text/calendar', $attachments[0]->getType());
+		$this->assertSame(['method' => 'request', 'charset' => 'utf-8'], $attachments[0]->getTypeParameters());
+		$this->assertSame('BEGIN:VCALENDAR', $attachments[0]->getContent());
+	}
+
+	public function testAttachmentFetchLowerCasesParameterNames(): void {
+		$this->mockAttachmentFetch('text/calendar', ' text/calendar; METHOD="Reply"');
+
+		$attachments = $this->service->attachmentFetch('email-1', 'blob-1');
+
+		$this->assertSame(['method' => 'Reply'], $attachments[0]->getTypeParameters());
+	}
+
+	public function testAttachmentFetchWithoutContentTypeHeader(): void {
+		$this->mockAttachmentFetch('text/calendar', null);
+
+		$attachments = $this->service->attachmentFetch('email-1', 'blob-1');
+
+		$this->assertSame('text/calendar', $attachments[0]->getType());
+		$this->assertSame([], $attachments[0]->getTypeParameters());
 	}
 
 	public function testEntitySaveWithoutAttachmentsDoesNotTouchUpload(): void {
@@ -494,6 +563,24 @@ final class JmapOperationsServiceTest extends TestCase {
 			->willReturn($this->emptyEntityListResponse());
 
 		$this->service->entityList(null, [], [['attribute' => 'tag', 'direction' => true]]);
+	}
+
+	public function testEntityListRequestsBodyPropertiesForDefaultGranularity(): void {
+		$this->dataStore->expects(self::once())
+			->method('perform')
+			->with(self::callback(static fn (array $commands): bool => in_array('header:Content-Type:asRaw', $commands[1]->jsonSerialize()[1]['bodyProperties'] ?? [], true)))
+			->willReturn($this->emptyEntityListResponse());
+
+		$this->service->entityList();
+	}
+
+	public function testEntityListOmitsBodyPropertiesForBasicGranularity(): void {
+		$this->dataStore->expects(self::once())
+			->method('perform')
+			->with(self::callback(static fn (array $commands): bool => !isset($commands[1]->jsonSerialize()[1]['bodyProperties'])))
+			->willReturn($this->emptyEntityListResponse());
+
+		$this->service->entityList(null, [], [], null, 'basic');
 	}
 
 	private function emptyEntityListResponse(): ResponseBundle {
