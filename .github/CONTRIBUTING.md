@@ -39,7 +39,7 @@ You can also use scopes. Try to have them broad and not specific to a file or ti
 * **imap**: for changes in the IMAP client
 * **ui**: for changes to the web UI
 
-Usage of AI agents has to be made transparent. Therefore, agent-assisted commits have to carry an `Assisted-by: <agent>:<model-id>` trailer before the sign-off. For example: `Assisted-by: ClaudeCode:claude-sonnet-4-6`
+Usage of AI agents has to be made transparent. Therefore, agent-assisted commits have to carry an `Assisted-by: <agent>:<model-id>` trailer before the sign-off. For example: `Assisted-by: ClaudeCode:claude-sonnet-5-5`
 
 ### Pull requests
 
