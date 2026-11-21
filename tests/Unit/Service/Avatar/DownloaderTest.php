@@ -12,6 +12,7 @@ namespace OCA\Mail\Tests\Unit\Service\Avatar;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Exception;
 use OCA\Mail\Service\Avatar\Downloader;
+use OCA\Mail\Service\Avatar\FaviconSource;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
 use OCP\Http\Client\IResponse;
@@ -40,7 +41,9 @@ final class DownloaderTest extends TestCase {
 		$response = $this->createMock(IResponse::class);
 		$client->expects($this->once())
 			->method('get')
-			->with('https://domain.tld/favicon.ico')
+			->with('https://domain.tld/favicon.ico', [
+				'timeout' => FaviconSource::REQUEST_TIMEOUT,
+			])
 			->willReturn($response);
 		$response->expects($this->once())
 			->method('getBody')
@@ -58,7 +61,9 @@ final class DownloaderTest extends TestCase {
 			->willReturn($client);
 		$client->expects($this->once())
 			->method('get')
-			->with('https://domain.tld/favicon.ico')
+			->with('https://domain.tld/favicon.ico', [
+				'timeout' => FaviconSource::REQUEST_TIMEOUT,
+			])
 			->willThrowException(new Exception());
 
 		$data = $this->downloader->download('https://domain.tld/favicon.ico');
