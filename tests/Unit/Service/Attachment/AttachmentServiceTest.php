@@ -12,7 +12,6 @@ namespace OCA\Mail\Tests\Unit\Service\Attachment;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OC\Files\Node\File;
 use OCA\Mail\Account;
-use OCA\Mail\Attachment;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalAttachmentMapper;
 use OCA\Mail\Db\LocalMessage;
@@ -421,43 +420,6 @@ final class AttachmentServiceTest extends TestCase {
 			->with($userId, 123, 'Lorem ipsum dolor sit amet');
 
 		$this->service->handleAttachments($account, [$attachments]);
-	}
-
-	public function forwardedAttachmentTypeProvider(): array {
-		return [
-			'calendar with method' => ['text/calendar', ['method' => 'request', 'charset' => 'utf-8'], 'text/calendar; method=REQUEST'],
-			'unknown method' => ['text/calendar', ['method' => 'FOO'], 'text/calendar'],
-			'injected method' => ['text/calendar', ['method' => "REQUEST\r\nBcc: x@example.com"], 'text/calendar'],
-			'calendar without method' => ['text/calendar', [], 'text/calendar'],
-			'other type with method' => ['application/pdf', ['method' => 'REQUEST'], 'application/pdf'],
-		];
-	}
-
-	/**
-	 * @dataProvider forwardedAttachmentTypeProvider
-	 */
-	public function testHandleAttachmentsForwardedAttachmentType(string $type, array $typeParameters, string $expectedType): void {
-		$account = $this->createConfiguredMock(Account::class, ['getUserId' => 'linus']);
-		$mailbox = new Mailbox();
-		$mailbox->setId(9);
-		$message = new Message();
-		$message->setUid(999);
-		$this->mailManager->method('getMailbox')->willReturn($mailbox);
-		$this->mailManager->method('getMessageIdForUid')->willReturn(50);
-		$this->mailManager->method('getMessage')->willReturn($message);
-		$this->mailManager->method('getMailAttachment')
-			->willReturn(new Attachment('2', 'invite.ics', $type, 'BEGIN:VCALENDAR', 15, null, null, $typeParameters));
-		$this->mapper->expects(self::once())
-			->method('insert')
-			->with(self::callback(static fn (LocalAttachment $attachment): bool => $attachment->getMimeType() === $expectedType))
-			->willReturn(LocalAttachment::fromParams(['id' => 123, 'userId' => 'linus']));
-
-		$this->service->handleAttachments($account, [[
-			'type' => 'message-attachment',
-			'mailboxId' => 9,
-			'uid' => 999,
-			'id' => '2',
-		]]);
 	}
 
 	public function testHandleAttachmentsForwardedInlineAttachmentPreservesContentId(): void {

@@ -12,7 +12,6 @@ namespace OCA\Mail\Service\Attachment;
 use finfo;
 use InvalidArgumentException;
 use OCA\Mail\Account;
-use OCA\Mail\Attachment;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalAttachmentMapper;
@@ -23,7 +22,6 @@ use OCA\Mail\Exception\AttachmentNotFoundException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\Exception\UploadException;
-use OCA\Mail\Service\IMipService;
 use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -360,7 +358,7 @@ class AttachmentService implements IAttachmentService {
 			$localAttachment = $this->addFileFromString(
 				$account->getUserId(),
 				$imapAttachment->getName() ?? 'unknown',
-				$this->forwardedType($imapAttachment),
+				$imapAttachment->getType(),
 				$imapAttachment->getContent(),
 				$imapAttachment->contentId,
 				$imapAttachment->disposition,
@@ -370,18 +368,6 @@ class AttachmentService implements IAttachmentService {
 			return null;
 		}
 		return $localAttachment->getId();
-	}
-
-	/**
-	 * Keeps the iTIP method so a forwarded invitation is still recognised as iMIP (RFC 6047 section 2.4)
-	 */
-	private function forwardedType(Attachment $attachment): string {
-		$type = $attachment->getType();
-		$method = strtoupper($attachment->getTypeParameters()['method'] ?? '');
-		if (strtolower($type) !== 'text/calendar' || !in_array($method, IMipService::CALENDAR_METHODS, true)) {
-			return $type;
-		}
-		return $type . '; method=' . $method;
 	}
 
 	private function hasDownloadPermissions(File $file, string $fileName): bool {
