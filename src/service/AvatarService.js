@@ -4,7 +4,7 @@
  */
 
 import Axios from '@nextcloud/axios'
-import { generateUrl } from '@nextcloud/router'
+import { generateUrl, getBaseUrl } from '@nextcloud/router'
 import memoize from 'lodash/fp/memoize.js'
 
 export function fetchAvatarUrl(email) {
@@ -25,7 +25,7 @@ export function fetchAvatarUrl(email) {
 			if (res.data.isExternal) {
 				return generateUrl('/apps/mail/api/avatars/image/{email}', {
 					email,
-				})
+				}, { baseURL: getBaseUrl() })
 			}
 
 			return res.data.url
