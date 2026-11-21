@@ -253,6 +253,10 @@ class ImapTransmissionConnector implements ITransmissionConnector {
 		if ($message->getSubject() !== null) {
 			$headers->addHeader('Subject', $message->getSubject());
 		}
+		if (($inReplyTo = $message->getInReplyToMessageId()) !== null) {
+			$headers->addHeader('References', $inReplyTo);
+			$headers->addHeader('In-Reply-To', $inReplyTo);
+		}
 		if ($message->isAiGenerated()) {
 			$headers->addHeader(LocalMessage::HEADER_AI_GENERATED, '1');
 		}
