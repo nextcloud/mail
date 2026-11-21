@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "24": "^0.0.0",
-    "@ckeditor/ckeditor5-vue": "^8.2.0",
+    "@ckeditor/ckeditor5-vue": "^9.0.0",
     "@haraka/email-address": "^3.1.7",
     "@iframe-resizer/child": "^5.5.9",
     "@iframe-resizer/parent": "^5.5.9",
