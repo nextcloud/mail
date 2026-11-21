@@ -50,6 +50,7 @@ OC.L10N.register(
     "Remove" : "ลบออก",
     "Today" : "วันนี้",
     "Yesterday" : "เมื่อวาน",
+    "This week" : "สัปดาห์นี้",
     "Last week" : "สัปดาห์ที่แล้ว",
     "Last month" : "เดือนที่แล้ว",
     "Choose" : "เลือก",

@@ -96,6 +96,7 @@ OC.L10N.register(
     "Decline" : "Malakcepti",
     "Remove" : "Forigi",
     "Today" : "Hodiaŭ",
+    "This week" : "Ĉi semajno",
     "Choose" : "Elekti",
     "Choose target folder" : "Elekti celan dosierujon",
     "Favorites" : "Pliŝataĵoj",

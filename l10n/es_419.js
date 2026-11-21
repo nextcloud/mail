@@ -71,6 +71,7 @@ OC.L10N.register(
     "Decline" : "Declinar",
     "Remove" : "Eliminar",
     "Today" : "Hoy",
+    "This week" : "Esta semana",
     "Choose" : "Seleccionar",
     "No results" : "No hay resultados",
     "Favorites" : "Favoritos",

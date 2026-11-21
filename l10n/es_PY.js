@@ -72,6 +72,7 @@ OC.L10N.register(
     "Decline" : "Declinar",
     "Remove" : "Eliminar",
     "Today" : "Hoy",
+    "This week" : "Esta semana",
     "Choose" : "Seleccionar",
     "Choose target folder" : "Seleccionar carpeta destino",
     "No results" : "No hay resultados",

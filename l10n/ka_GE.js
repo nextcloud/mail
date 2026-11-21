@@ -74,6 +74,7 @@ OC.L10N.register(
     "Decline" : "ურაყოფა",
     "Remove" : "წაშლა",
     "Today" : "დღეს",
+    "This week" : "ამ კვირაში",
     "Choose" : "აირჩიეთ",
     "No results" : "შედეგები არაა",
     "Favorites" : "რჩეულები",

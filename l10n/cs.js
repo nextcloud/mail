@@ -157,6 +157,7 @@ OC.L10N.register(
     "Title of the text block" : "Nadpis textového bloku",
     "Content of the text block" : "Obsah textového bloku",
     "Ok" : "OK",
+    "Messages" : "Zprávy",
     "Avatars from Gravatar and favicons" : "Zástupné obrázky z Gravatar a favicons",
     "Immediately" : "Okamžitě",
     "Manually" : "Ručně",
