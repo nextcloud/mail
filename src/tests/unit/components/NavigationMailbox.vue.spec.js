@@ -326,4 +326,101 @@ describe('NavigationMailbox', () => {
 
 		expect(view.vm.hasDeleteAcl).toBe(true)
 	})
+
+	describe('when envelopes are dropped onto it', () => {
+		const mountWithRoute = (route, push) => shallowMount(NavigationMailbox, {
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route: route,
+					$router: { push },
+				},
+			},
+			props: {
+				account: {},
+				mailbox: {
+					databaseId: 7,
+				},
+			},
+		})
+
+		it('navigates to the folder root when the open message was moved', () => {
+			const push = vi.fn()
+			const view = mountWithRoute({ name: 'message', params: { mailboxId: '3', threadId: '42' } }, push)
+
+			view.vm.onEnvelopesMoved({ mailboxId: 7, movedEnvelopes: [{ databaseId: 41 }, { databaseId: 42 }] })
+
+			expect(push).toHaveBeenCalledWith({
+				name: 'mailbox',
+				params: { mailboxId: '3', filter: undefined },
+			})
+		})
+
+		it('stays on the open message when other messages were moved', () => {
+			const push = vi.fn()
+			const view = mountWithRoute({ name: 'message', params: { mailboxId: '3', threadId: '42' } }, push)
+
+			view.vm.onEnvelopesMoved({ mailboxId: 7, movedEnvelopes: [{ databaseId: 41 }] })
+
+			expect(push).not.toHaveBeenCalled()
+		})
+
+		it('ignores moves into another mailbox', () => {
+			const push = vi.fn()
+			const view = mountWithRoute({ name: 'message', params: { mailboxId: '3', threadId: '42' } }, push)
+
+			view.vm.onEnvelopesMoved({ mailboxId: 8, movedEnvelopes: [{ databaseId: 42 }] })
+
+			expect(push).not.toHaveBeenCalled()
+		})
+	})
+
+	describe('dragging an envelope', () => {
+		const ACCOUNT_ID = 3
+
+		/**
+		 * @param {boolean} collapsed whether the account was collapsed before the drag
+		 * @return {object} the mounted wrapper
+		 */
+		function mountMailbox(collapsed) {
+			return shallowMount(NavigationMailbox, {
+				global: {
+					mixins: [Nextcloud],
+				},
+				props: {
+					account: { id: ACCOUNT_ID, collapsed },
+					mailbox: { accountId: ACCOUNT_ID, unread: 0 },
+				},
+			})
+		}
+
+		it('collapses the account again when it was collapsed before the drag', () => {
+			const view = mountMailbox(true)
+
+			view.vm.onDragStart({ accountId: ACCOUNT_ID })
+			view.vm.onDragEnd({ accountId: ACCOUNT_ID })
+
+			expect(store.expandAccountMutation).toHaveBeenCalledWith(ACCOUNT_ID)
+			expect(store.collapseAccountMutation).toHaveBeenCalledWith(ACCOUNT_ID)
+		})
+
+		it('keeps the account expanded when it was expanded before the drag', () => {
+			const view = mountMailbox(false)
+
+			view.vm.onDragStart({ accountId: ACCOUNT_ID })
+			view.vm.onDragEnd({ accountId: ACCOUNT_ID })
+
+			expect(store.collapseAccountMutation).not.toHaveBeenCalled()
+		})
+
+		it('ignores drags from other accounts', () => {
+			const view = mountMailbox(true)
+
+			view.vm.onDragStart({ accountId: ACCOUNT_ID + 1 })
+			view.vm.onDragEnd({ accountId: ACCOUNT_ID + 1 })
+
+			expect(store.expandAccountMutation).not.toHaveBeenCalled()
+			expect(store.collapseAccountMutation).not.toHaveBeenCalled()
+		})
+	})
 })

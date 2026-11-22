@@ -15,7 +15,7 @@ use HTMLPurifier_Context;
 use HTMLPurifier_Token_Start;
 use OCA\Mail\Service\HtmlPurify\TransformCidDataAttr;
 
-class TransformCidDataAttrTest extends TestCase {
+final class TransformCidDataAttrTest extends TestCase {
 	private HTMLPurifier_Config $config;
 
 	private array $inlineAttachments = [

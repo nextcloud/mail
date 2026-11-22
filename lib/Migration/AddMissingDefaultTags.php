@@ -15,9 +15,6 @@ use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
 use function sprintf;
 
-/**
- * @psalm-api
- */
 class AddMissingDefaultTags implements IRepairStep {
 	public function __construct(
 		private MailAccountMapper $accountMapper,

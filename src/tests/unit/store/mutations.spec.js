@@ -107,6 +107,44 @@ describe('Pinia store mutations', () => {
 		])
 	})
 
+	it('adds an account unfolded by default', () => {
+		store.addAccountMutation({
+			accountId: 13,
+			id: 13,
+			mailboxes: [],
+			aliases: [],
+		})
+
+		expect(store.accountsUnmapped[13].folded).toBe(false)
+	})
+
+	it('keeps a persisted folded state when adding an account', () => {
+		store.addAccountMutation({
+			accountId: 13,
+			id: 13,
+			mailboxes: [],
+			aliases: [],
+			folded: true,
+		})
+
+		expect(store.accountsUnmapped[13].folded).toBe(true)
+	})
+
+	it('toggles the folded state of an account', () => {
+		store.addAccountMutation({
+			accountId: 13,
+			id: 13,
+			mailboxes: [],
+			aliases: [],
+		})
+
+		store.toggleAccountFoldedMutation(13)
+		expect(store.accountsUnmapped[13].folded).toBe(true)
+
+		store.toggleAccountFoldedMutation(13)
+		expect(store.accountsUnmapped[13].folded).toBe(false)
+	})
+
 	it('adds an account with one level of mailboxes', () => {
 		store.addAccountMutation({
 			accountId: 13,
@@ -382,6 +420,39 @@ describe('Pinia store mutations', () => {
 			tagList: [],
 			tags: {},
 		})
+	})
+
+	it('adds a special-use mailbox below its ordinary parents', () => {
+		store.addAccountMutation({
+			accountId: 13,
+			id: 13,
+			mailboxes: [
+				{
+					databaseId: 345,
+					name: 'shared/team@example.com/Sent Items',
+					delimiter: '/',
+					specialUse: ['sent'],
+				},
+				{
+					databaseId: 346,
+					name: 'shared/team@example.com',
+					delimiter: '/',
+					specialUse: [],
+				},
+				{
+					databaseId: 347,
+					name: 'shared',
+					delimiter: '/',
+					specialUse: [],
+				},
+			],
+			aliases: [],
+		})
+
+		expect(store.accountsUnmapped[13].mailboxes).toEqual([347])
+		expect(store.mailboxes[347].mailboxes).toEqual([346])
+		expect(store.mailboxes[346].mailboxes).toEqual([345])
+		expect(store.mailboxes[345].displayName).toEqual('Sent Items')
 	})
 
 	it('adds a top level mailbox', () => {
@@ -1504,5 +1575,13 @@ describe('Pinia store mutations', () => {
 		})
 
 		expect(store.mailboxes[27].envelopeLists[''].length).toEqual(1)
+	})
+
+	it('collapses an account', () => {
+		store.accountsUnmapped[13] = { id: 13, collapsed: false }
+
+		store.collapseAccountMutation(13)
+
+		expect(store.accountsUnmapped[13].collapsed).toBe(true)
 	})
 })

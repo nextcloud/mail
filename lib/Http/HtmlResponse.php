@@ -14,6 +14,7 @@ use OCP\AppFramework\Http\Response;
 
 /**
  * @psalm-suppress MissingTemplateParam
+ * @psalm-suppress UnusedConstructor the private constructor is called via new self(...) from the static factory methods below
  * @todo spec template with 28+
  */
 class HtmlResponse extends Response {

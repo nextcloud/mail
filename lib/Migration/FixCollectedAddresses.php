@@ -16,9 +16,6 @@ use OCA\Mail\Db\CollectedAddressMapper;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
 
-/**
- * @psalm-api
- */
 class FixCollectedAddresses implements IRepairStep {
 	public function __construct(
 		private CollectedAddressMapper $mapper,

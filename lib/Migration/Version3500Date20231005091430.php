@@ -21,9 +21,6 @@ use Psr\Log\LoggerInterface;
 /**
  * @codeCoverageIgnore
  */
-/**
- * @psalm-api
- */
 class Version3500Date20231005091430 extends SimpleMigrationStep {
 	/** @var IConfig */
 	protected $config;

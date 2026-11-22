@@ -11,11 +11,13 @@ namespace Unit\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Exception\InvalidFilterException;
 use OCA\Mail\IMAP\ImapFlag;
 use OCA\Mail\Service\AllowedRecipientsService;
 use OCA\Mail\Service\FilterService;
 use OCA\Mail\Service\MailFilter\FilterBuilder;
 use OCA\Mail\Service\MailFilter\FilterParser;
+use OCA\Mail\Service\MailFilter\FilterValidator;
 use OCA\Mail\Service\OutOfOffice\OutOfOfficeParser;
 use OCA\Mail\Service\SieveService;
 use OCA\Mail\Sieve\NamedSieveScript;
@@ -23,7 +25,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Psr\Log\Test\TestLogger;
 
-class FilterServiceTest extends TestCase {
+final class FilterServiceTest extends TestCase {
 
 	private string $testFolder;
 
@@ -55,6 +57,7 @@ class FilterServiceTest extends TestCase {
 			$this->outOfOfficeParser,
 			$this->filterParser,
 			$this->filterBuilder,
+			new FilterValidator(),
 			$this->sieveService,
 			$this->logger
 		);
@@ -188,7 +191,7 @@ class FilterServiceTest extends TestCase {
 			->willReturn($script);
 
 		$this->sieveService->method('updateActiveScript')
-			->willReturnCallback(function (string $userId, int $accountId, string $script) {
+			->willReturnCallback(function (string $userId, int $accountId, string $script): void {
 				// the .sieve files have \r\n line endings
 				$script .= "\r\n";
 
@@ -224,7 +227,7 @@ class FilterServiceTest extends TestCase {
 			->willReturn($script);
 
 		$this->sieveService->method('updateActiveScript')
-			->willReturnCallback(function (string $userId, int $accountId, string $script) {
+			->willReturnCallback(function (string $userId, int $accountId, string $script): void {
 				// the .sieve files have \r\n line endings
 				$script .= "\r\n";
 
@@ -235,5 +238,18 @@ class FilterServiceTest extends TestCase {
 			->willReturn(['alice@mail.internal']);
 
 		$this->filterService->update($mailAccount, $filters);
+	}
+
+	public function testUpdateInvalid(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1);
+		$mailAccount->setUserId('alice');
+		$this->sieveService->expects(self::never())
+			->method('getActiveScript');
+		$this->sieveService->expects(self::never())
+			->method('updateActiveScript');
+		$this->expectException(InvalidFilterException::class);
+
+		$this->filterService->update($mailAccount, [['name' => 'Marketing']]);
 	}
 }

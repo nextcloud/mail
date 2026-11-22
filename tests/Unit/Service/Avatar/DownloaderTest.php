@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -15,7 +17,7 @@ use OCP\Http\Client\IClientService;
 use OCP\Http\Client\IResponse;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class DownloaderTest extends TestCase {
+final class DownloaderTest extends TestCase {
 	/** @var IClientService|MockObject */
 	private $clientService;
 
@@ -30,7 +32,7 @@ class DownloaderTest extends TestCase {
 		$this->downloader = new Downloader($this->clientService);
 	}
 
-	public function testDownload() {
+	public function testDownload(): void {
 		$client = $this->createMock(IClient::class);
 		$this->clientService->expects($this->once())
 			->method('newClient')
@@ -49,7 +51,7 @@ class DownloaderTest extends TestCase {
 		$this->assertEquals('data', $data);
 	}
 
-	public function testDownloadError() {
+	public function testDownloadError(): void {
 		$client = $this->createMock(IClient::class);
 		$this->clientService->expects($this->once())
 			->method('newClient')

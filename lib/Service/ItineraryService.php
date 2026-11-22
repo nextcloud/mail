@@ -55,9 +55,17 @@ class ItineraryService {
 			return $cached;
 		}
 
+		$cacheKey = $this->buildCacheKey($account, $mailbox, $message->getId());
+		$itinerary = new Itinerary();
+
+		if (!$this->extractor->hasAdapter()) {
+			$this->logger->debug('No KItinerary adapter is available, skipping itinerary extraction');
+			$this->cache->set($cacheKey, json_encode($itinerary), self::CACHE_TTL);
+			return $itinerary;
+		}
+
 		$imapMessage = $this->mailManager->getImapMessage($account, $mailbox, $message, true);
 
-		$itinerary = new Itinerary();
 		$htmlBody = $imapMessage->htmlMessage;
 		if ($htmlBody !== '') {
 			$itinerary = $itinerary->merge(
@@ -79,13 +87,12 @@ class ItineraryService {
 
 		// Lastly, we put the extracted data through the tool again, so it can combine
 		// and pick the most relevant information
-		$final = $this->extractor->extract(json_encode($itinerary));
+		$final = $this->extractor->extract(json_encode($itinerary, JSON_THROW_ON_ERROR));
 		$nItinerary = count($itinerary);
 		$nFinal = count($final);
 		$this->logger->debug("Reduced $nItinerary itinerary entries to $nFinal entries");
 
-		$cache_key = $this->buildCacheKey($account, $mailbox, $message->getId());
-		$this->cache->set($cache_key, json_encode($final), self::CACHE_TTL);
+		$this->cache->set($cacheKey, json_encode($final, JSON_THROW_ON_ERROR), self::CACHE_TTL);
 
 		return $final;
 	}

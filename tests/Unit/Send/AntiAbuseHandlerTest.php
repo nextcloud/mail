@@ -21,7 +21,7 @@ use OCP\IUserManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class AntiAbuseHandlerTest extends TestCase {
+final class AntiAbuseHandlerTest extends TestCase {
 	private IUserManager|MockObject $userManager;
 	private MockObject|AntiAbuseService $antiAbuseService;
 	private LoggerInterface|MockObject $logger;
@@ -59,7 +59,7 @@ class AntiAbuseHandlerTest extends TestCase {
 		$this->sendHandler->expects(self::once())
 			->method('process');
 
-		$this->handler->process($account, $localMessage, $client);
+		$this->handler->process($account, $localMessage);
 	}
 
 	public function testProcessNoUser(): void {
@@ -81,7 +81,7 @@ class AntiAbuseHandlerTest extends TestCase {
 		$this->sendHandler->expects(self::never())
 			->method('process');
 
-		$this->handler->process($account, $localMessage, $client);
+		$this->handler->process($account, $localMessage);
 	}
 
 	public function testProcessAlreadyProcessed(): void {
@@ -102,6 +102,6 @@ class AntiAbuseHandlerTest extends TestCase {
 		$this->sendHandler->expects(self::once())
 			->method('process');
 
-		$this->handler->process($account, $localMessage, $client);
+		$this->handler->process($account, $localMessage);
 	}
 }

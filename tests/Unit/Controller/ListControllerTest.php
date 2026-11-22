@@ -24,7 +24,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\Http\Client\IClient;
 
-class ListControllerTest extends TestCase {
+final class ListControllerTest extends TestCase {
 	private ServiceMockObject $serviceMock;
 	private ListController $controller;
 	private string $userId = 'user123';

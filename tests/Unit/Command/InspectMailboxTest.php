@@ -19,7 +19,7 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class InspectMailboxTest extends TestCase {
+final class InspectMailboxTest extends TestCase {
 	private MailboxMapper|\PHPUnit\Framework\MockObject\MockObject $mailboxMapper;
 	private ITimeFactory|\PHPUnit\Framework\MockObject\MockObject $timeFactory;
 	private InspectMailbox $command;
@@ -67,15 +67,15 @@ class InspectMailboxTest extends TestCase {
 
 		$this->assertSame(Command::SUCCESS, $exitCode);
 		$display = $tester->getDisplay();
-		$this->assertStringContainsString('INBOX', $display);
-		$this->assertStringNotContainsString('Name hash', $display);
-		$this->assertStringContainsString('Delimiter', $display);
-		$this->assertStringContainsString('Selectable', $display);
-		$this->assertStringContainsString('Lock New', $display);
-		$this->assertStringContainsString(date('Y-m-d H:i:s', 999) . ' (active)', $display);
-		$this->assertStringContainsString('Lock Changed', $display);
-		$this->assertStringContainsString('Token New', $display);
-		$this->assertStringContainsString('uid=100, validity=200, modseq=300', $display);
+		$this->assertStringContainsString('INBOX', (string)$display);
+		$this->assertStringNotContainsString('Name hash', (string)$display);
+		$this->assertStringContainsString('Delimiter', (string)$display);
+		$this->assertStringContainsString('Selectable', (string)$display);
+		$this->assertStringContainsString('Lock New', (string)$display);
+		$this->assertStringContainsString(date('Y-m-d H:i:s', 999) . ' (active)', (string)$display);
+		$this->assertStringContainsString('Lock Changed', (string)$display);
+		$this->assertStringContainsString('Token New', (string)$display);
+		$this->assertStringContainsString('uid=100, validity=200, modseq=300', (string)$display);
 	}
 
 	public function testShowsStaleLock(): void {
@@ -92,7 +92,7 @@ class InspectMailboxTest extends TestCase {
 		$tester = new CommandTester($this->command);
 		$tester->execute(['mailbox-id' => '1']);
 
-		$this->assertStringContainsString(date('Y-m-d H:i:s', 1) . ' (stale)', $tester->getDisplay());
+		$this->assertStringContainsString(date('Y-m-d H:i:s', 1) . ' (stale)', (string)$tester->getDisplay());
 	}
 
 	public function testShowsSyncInBackgroundYesForInboxRegardlessOfFlag(): void {

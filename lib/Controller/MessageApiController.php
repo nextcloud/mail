@@ -127,7 +127,7 @@ class MessageApiController extends OCSController {
 
 		if ($fromEmail !== $mailAccount->getEmail()) {
 			try {
-				$alias = $this->aliasesService->findByAliasAndUserId($fromEmail, $effectiveUserId);
+				$alias = $this->aliasesService->findByAliasForAccount($fromEmail, $accountId);
 			} catch (DoesNotExistException $e) {
 				$this->logger->error("Alias $fromEmail for mail account $accountId not found", ['exception' => $e]);
 				// Cannot send from this email as it is not configured as an alias

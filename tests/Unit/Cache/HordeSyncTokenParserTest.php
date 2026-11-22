@@ -12,7 +12,7 @@ namespace OCA\Mail\Tests\Unit\Cache;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Cache\HordeSyncTokenParser;
 
-class HordeSyncTokenParserTest extends TestCase {
+final class HordeSyncTokenParserTest extends TestCase {
 	private HordeSyncTokenParser $parser;
 
 	protected function setUp(): void {
@@ -54,6 +54,14 @@ class HordeSyncTokenParserTest extends TestCase {
 		$token = base64_encode('');
 
 		$result = $this->parser->parseSyncToken($token);
+
+		$this->assertNull($result->getNextUid());
+		$this->assertNull($result->getUidValidity());
+		$this->assertNull($result->getHighestModSeq());
+	}
+
+	public function testParseInvalidBase64Token(): void {
+		$result = $this->parser->parseSyncToken('not valid base64!!');
 
 		$this->assertNull($result->getNextUid());
 		$this->assertNull($result->getUidValidity());

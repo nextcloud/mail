@@ -66,7 +66,7 @@ class ContactsGroupService implements IGroupService {
 	}
 
 	#[\Override]
-	public function getUsers(string $groupId): array {
+	public function getUsers(string $groupId, string $userId): array {
 		if (!$this->contactsManager->isEnabled()) {
 			return [];
 		}

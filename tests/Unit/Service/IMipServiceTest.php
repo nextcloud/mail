@@ -20,6 +20,7 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\IMAPMessage;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\IMipService;
 use OCA\Mail\Service\MailManager;
@@ -29,7 +30,8 @@ use OCP\ServerVersion as OCPServerVersion;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class IMipServiceTest extends TestCase {
+final class IMipServiceTest extends TestCase {
+	private ProtocolFactory&MockObject $protocolFactory;
 	/** @var MailboxMapper|MockObject */
 	private $mailboxMapper;
 
@@ -67,6 +69,7 @@ class IMipServiceTest extends TestCase {
 		$this->serverVersion = $this->createMock(ServerVersion::class);
 		$this->installedServerVersion = new OCPServerVersion();
 
+		$this->protocolFactory = $this->createMock(ProtocolFactory::class);
 		$this->service = new IMipService(
 			$this->accountService,
 			$this->calendarManager,
@@ -74,7 +77,8 @@ class IMipServiceTest extends TestCase {
 			$this->mailboxMapper,
 			$this->mailManager,
 			$this->messageMapper,
-			$this->serverVersion
+			$this->serverVersion,
+			$this->protocolFactory,
 		);
 	}
 
@@ -208,7 +212,7 @@ class IMipServiceTest extends TestCase {
 		$this->calendarManager->expects(self::never())
 			->method('handleIMipCancel');
 		$this->logger->expects(self::once())
-			->method('warning')
+			->method('info')
 			->with(
 				'iMIP message could not be processed because it does not contain a supported scheduling method',
 				['messageId' => $message->getId(), 'mailboxId' => $mailbox->getId()]
@@ -300,6 +304,9 @@ class IMipServiceTest extends TestCase {
 			->method('handleIMipCancel');
 		$this->messageMapper->expects(self::never())
 			->method('updateImipData');
+		$this->protocolFactory->expects(self::once())
+			->method('releaseClients')
+			->with($account);
 
 		$this->service->process();
 	}
@@ -799,16 +806,6 @@ class IMipServiceTest extends TestCase {
 		$this->calendarManager->expects(self::once())
 			->method('handleIMip')
 			->willReturn(false);
-		$this->logger->expects(self::once())
-			->method('warning')
-			->with(
-				'iMIP message could not be processed by the calendar app, see the preceding log entry for the reason',
-				[
-					'messageId' => $message->getId(),
-					'mailboxId' => $mailbox->getId(),
-					'method' => 'REQUEST',
-				]
-			);
 		$this->messageMapper->expects(self::once())
 			->method('updateImipData')
 			->with(self::callback(fn (Message $msg) => $msg->isImipProcessed() === false && $msg->isImipError() === true));
@@ -870,8 +867,6 @@ class IMipServiceTest extends TestCase {
 		$this->calendarManager->expects(self::exactly(2))
 			->method('handleIMip')
 			->willReturnOnConsecutiveCalls(false, true);
-		$this->logger->expects(self::once())
-			->method('warning');
 		$this->messageMapper->expects(self::once())
 			->method('updateImipData')
 			->with(self::callback(fn (Message $msg) => $msg->isImipProcessed() === false && $msg->isImipError() === true));

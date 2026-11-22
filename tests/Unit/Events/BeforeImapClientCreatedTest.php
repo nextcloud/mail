@@ -13,7 +13,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Events\BeforeImapClientCreated;
 
-class BeforeImapClientCreatedTest extends TestCase {
+final class BeforeImapClientCreatedTest extends TestCase {
 	public function testConstructorAndGetter(): void {
 		$account = $this->createStub(Account::class);
 

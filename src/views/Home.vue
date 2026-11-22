@@ -12,9 +12,11 @@
 			:mailbox="activeMailbox" />
 
 		<template v-if="hasComposerSession && accounts !== null">
-			<ComposerSessionIndicator v-if="!showMessageComposer" @close="onCloseMessageModal" />
+			<ComposerSessionIndicator v-if="!showMessageComposer && !composerMessage?.indicatorDisabled" @close="onCloseMessageModal" />
 			<NewMessageModal ref="newMessageModal" :accounts="accounts" />
 		</template>
+
+		<OidcReauthDialog />
 	</NcContent>
 </template>
 
@@ -25,6 +27,7 @@ import NcContent from '@nextcloud/vue/components/NcContent'
 import ComposerSessionIndicator from '../components/ComposerSessionIndicator.vue'
 import MailboxThread from '../components/MailboxThread.vue'
 import Navigation from '../components/Navigation.vue'
+import OidcReauthDialog from '../components/OidcReauthDialog.vue'
 import Outbox from '../components/Outbox.vue'
 import logger from '../logger.js'
 import { testAccountConnection } from '../service/AccountService.js'
@@ -39,6 +42,7 @@ export default {
 		MailboxThread,
 		Navigation,
 		NewMessageModal: defineAsyncComponent(() => import(/* webpackChunkName: "new-message-modal" */ '../components/NewMessageModal.vue')),
+		OidcReauthDialog,
 		Outbox,
 		ComposerSessionIndicator,
 	},
@@ -51,7 +55,7 @@ export default {
 
 	computed: {
 		...mapStores(useMainStore),
-		...mapState(useMainStore, ['composerSessionId', 'showMessageComposer']),
+		...mapState(useMainStore, ['composerSessionId', 'showMessageComposer', 'composerMessage']),
 		accounts() {
 			return this.mainStore.getAccounts.filter((a) => !a.isUnified)
 		},
@@ -91,6 +95,11 @@ export default {
 				account,
 				data: { connectionStatus: await testAccountConnection(account.accountId) },
 			})
+			// Testing the connection creates an IMAP client, which runs the token refresh
+			// on the server; that may flag the account for re-authentication (even when the
+			// still-valid access token means the test itself passed). Re-read the flag so
+			// the reconnect dialog can show. checkOidcReauth ignores non-OIDC accounts.
+			await this.mainStore.checkOidcReauth(account)
 		}
 	},
 

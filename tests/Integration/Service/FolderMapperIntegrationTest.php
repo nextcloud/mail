@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-only
@@ -15,7 +17,7 @@ use OCA\Mail\Tests\Integration\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class FolderMapperIntegrationTest extends TestCase {
+final class FolderMapperIntegrationTest extends TestCase {
 	/** @var FolderMapper */
 	private $mapper;
 
@@ -42,7 +44,7 @@ class FolderMapperIntegrationTest extends TestCase {
 		]);
 	}
 
-	public function testGetFolders() {
+	public function testGetFolders(): void {
 		$account = $this->createMock(Account::class);
 		$account->method('getId')->willReturn(13);
 		$client = $this->getTestClient();

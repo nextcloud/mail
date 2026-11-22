@@ -16,7 +16,7 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Security\ICrypto;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class OauthStateServiceTest extends TestCase {
+final class OauthStateServiceTest extends TestCase {
 	private ICrypto&MockObject $crypto;
 	private ITimeFactory&MockObject $time;
 	private OauthStateService $service;

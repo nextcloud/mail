@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Command;
 
-use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Security\ICrypto;
@@ -92,7 +91,7 @@ final class UpdateImapAccount extends Command {
 			return self::FAILURE;
 		}
 
-		if ($mailAccount->getProtocol() !== MailAccount::PROTOCOL_IMAP) {
+		if (!$mailAccount->isImap()) {
 			$output->writeln('<error>Account ' . $accountId . ' uses protocol ' . $mailAccount->getProtocol() . '. Use mail:account:update-jmap instead.</error>');
 			return self::FAILURE;
 		}

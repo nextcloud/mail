@@ -14,9 +14,6 @@ use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
 
-/**
- * @psalm-api
- */
 class ProvisionAccounts implements IRepairStep {
 	public function __construct(
 		private ProvisioningManager $provisioningManager,

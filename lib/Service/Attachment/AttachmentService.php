@@ -11,7 +11,6 @@ namespace OCA\Mail\Service\Attachment;
 
 use finfo;
 use InvalidArgumentException;
-use OCA\Files_Sharing\SharedStorage;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Db\LocalAttachment;
@@ -32,6 +31,7 @@ use OCP\Files\IMimeTypeDetector;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use OCP\Files\SimpleFS\ISimpleFile;
+use OCP\Files\Storage\ISharedStorage;
 use OCP\ICacheFactory;
 use OCP\IURLGenerator;
 use Psr\Log\LoggerInterface;
@@ -372,13 +372,13 @@ class AttachmentService implements IAttachmentService {
 
 	private function hasDownloadPermissions(File $file, string $fileName): bool {
 		$storage = $file->getStorage();
-		if ($storage->instanceOfStorage(SharedStorage::class)) {
+		if ($storage->instanceOfStorage(ISharedStorage::class)) {
 
-			/** @var SharedStorage $storage */
+			/** @var ISharedStorage $storage */
 			$share = $storage->getShare();
 			$attributes = $share->getAttributes();
 
-			if ($attributes->getAttribute('permissions', 'download') === false) {
+			if ($attributes?->getAttribute('permissions', 'download') === false) {
 				$this->logger->warning('Could not create attachment, no download permission for file: ' . $fileName);
 				return false;
 			}

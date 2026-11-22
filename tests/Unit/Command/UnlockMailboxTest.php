@@ -18,7 +18,7 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class UnlockMailboxTest extends TestCase {
+final class UnlockMailboxTest extends TestCase {
 	private MailboxMapper|\PHPUnit\Framework\MockObject\MockObject $mailboxMapper;
 	private ITimeFactory|\PHPUnit\Framework\MockObject\MockObject $timeFactory;
 	private UnlockMailbox $command;
@@ -73,7 +73,7 @@ class UnlockMailboxTest extends TestCase {
 		$exitCode = $tester->execute(['mailbox-id' => '10']);
 
 		$this->assertSame(Command::SUCCESS, $exitCode);
-		$this->assertStringContainsString('Mailbox not locked', $tester->getDisplay());
+		$this->assertStringContainsString('Mailbox not locked', (string)$tester->getDisplay());
 	}
 
 	public function testRefusesToUnlockAnActivelyLockedMailbox(): void {

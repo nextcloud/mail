@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\UserMigration;
 
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\ConfigLexicon;
 use OCA\Mail\UserMigration\Service\AccountMigrationService;
 use OCA\Mail\UserMigration\Service\AppConfigMigrationService;
 use OCA\Mail\UserMigration\Service\InternalAddressesMigrationService;
@@ -19,6 +20,7 @@ use OCA\Mail\UserMigration\Service\SmimeMigrationService;
 use OCA\Mail\UserMigration\Service\TagsMigrationService;
 use OCA\Mail\UserMigration\Service\TextBlocksMigrationService;
 use OCA\Mail\UserMigration\Service\TrustedSendersMigrationService;
+use OCP\IAppConfig;
 use OCP\IL10N;
 use OCP\IUser;
 use OCP\UserMigration\IExportDestination;
@@ -26,6 +28,7 @@ use OCP\UserMigration\IImportSource;
 use OCP\UserMigration\IMigrator;
 use OCP\UserMigration\ISizeEstimationMigrator;
 use OCP\UserMigration\UserMigrationException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class MailAccountMigrator implements IMigrator, ISizeEstimationMigrator {
@@ -52,6 +55,8 @@ class MailAccountMigrator implements IMigrator, ISizeEstimationMigrator {
 		private readonly SmimeMigrationService $smimeMigrationService,
 		private readonly QuickActionsMigrationService $quickActionsMigrationService,
 		private readonly LegacyAccountMigrationService $legacyAccountMigrationService,
+		private readonly IAppConfig $appConfig,
+		private readonly LoggerInterface $logger,
 	) {
 	}
 
@@ -113,11 +118,19 @@ class MailAccountMigrator implements IMigrator, ISizeEstimationMigrator {
 			), OutputInterface::VERBOSITY_VERBOSE
 		);
 
+		// The migrator cannot tell an import by the admin from the user's own, so both are gated.
+		$newAccountsAllowed = $this->appConfig->getValueBool(Application::APP_ID, ConfigLexicon::ALLOW_NEW_MAIL_ACCOUNTS, true);
+		if (!$newAccountsAllowed) {
+			$this->reportSkippedAccounts($user, $output);
+		}
+
 		if ($this->getArchiveVersion($importSource) === self::LEGACY_VERSION) {
-			$this->accountMigrationService->scheduleBackgroundJobs(
-				$this->legacyAccountMigrationService->importAccounts($user, $importSource, $output),
-				$output,
-			);
+			if ($newAccountsAllowed) {
+				$this->accountMigrationService->scheduleBackgroundJobs(
+					$this->legacyAccountMigrationService->importAccounts($user, $importSource, $output),
+					$output,
+				);
+			}
 
 			return;
 		}
@@ -127,8 +140,9 @@ class MailAccountMigrator implements IMigrator, ISizeEstimationMigrator {
 		$this->textBlocksMigrationService->importTextBlocks($user, $importSource, $output);
 		$migratedTags = $this->tagsMigrationService->importTags($user, $importSource, $output);
 		$migratedCertificates = $this->smimeMigrationService->importCertificates($user, $importSource, $output);
-		$migratedAccountsAndMailboxes = $this->accountMigrationService->importAccounts($user, $importSource, $output,
-			$migratedCertificates);
+		$migratedAccountsAndMailboxes = $newAccountsAllowed
+			? $this->accountMigrationService->importAccounts($user, $importSource, $output, $migratedCertificates)
+			: ['accounts' => [], 'mailboxes' => []];
 
 		try {
 			$this->appConfigMigrationService->importAppConfiguration($user, $importSource, $output,
@@ -138,6 +152,16 @@ class MailAccountMigrator implements IMigrator, ISizeEstimationMigrator {
 		} finally {
 			$this->accountMigrationService->scheduleBackgroundJobs($migratedAccountsAndMailboxes['accounts'], $output);
 		}
+	}
+
+	private function reportSkippedAccounts(IUser $user, OutputInterface $output): void {
+		$this->logger->info('Skipping the mail accounts of ' . $user->getUID() . ' because adding mail accounts is disabled by the admin');
+		$output->writeln(
+			$this->l10n->t(
+				'Adding mail accounts is disabled, so the mail accounts of %s will be skipped. Continue …',
+				[$user->getUID()]
+			)
+		);
 	}
 
 	private function getArchiveVersion(IImportSource $importSource): ?int {

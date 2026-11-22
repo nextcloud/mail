@@ -38,7 +38,7 @@ use function array_merge;
 use function array_udiff;
 use function get_class;
 use function ltrim;
-use function mb_convert_encoding;
+use function mb_scrub;
 use function mb_strcut;
 use function OCA\Mail\array_flat_map;
 use function strlen;
@@ -57,6 +57,10 @@ class MessageMapper extends QBMapper {
 	 * TODO: replace with IQueryBuilder::MAX_IN_PARAMETERS once the minimum server version is 35
 	 */
 	private const MAX_IN_PARAMETERS = 1000;
+
+	/** sent_at is a 4-byte INTEGER column; bounds must stay within its range across all supported DBs */
+	private const SENT_AT_MIN = -2147483648;
+	private const SENT_AT_MAX = 2147483647;
 
 	/** @var ITimeFactory */
 	private $timeFactory;
@@ -338,15 +342,16 @@ class MessageMapper extends QBMapper {
 				];
 				foreach ($recipientTypes as $type => $recipients) {
 					foreach ($recipients->iterate() as $recipient) {
-						if ($recipient->getEmail() === null) {
+						$recipientEmail = $recipient->getEmail();
+						if ($recipientEmail === null) {
 							// If for some reason the e-mail is not set we should ignore this entry
 							continue;
 						}
 
 						$qb2->setParameter('message_id', $message->getId(), IQueryBuilder::PARAM_INT);
 						$qb2->setParameter('type', $type, IQueryBuilder::PARAM_INT);
-						$qb2->setParameter('label', mb_strcut($recipient->getLabel(), 0, 255), IQueryBuilder::PARAM_STR);
-						$qb2->setParameter('email', mb_strcut($recipient->getEmail(), 0, 255), IQueryBuilder::PARAM_STR);
+						$qb2->setParameter('label', mb_strcut($recipient->getLabel() ?? $recipientEmail, 0, 255), IQueryBuilder::PARAM_STR);
+						$qb2->setParameter('email', mb_strcut($recipientEmail, 0, 255), IQueryBuilder::PARAM_STR);
 
 						$qb2->executeStatement();
 					}
@@ -607,10 +612,11 @@ class MessageMapper extends QBMapper {
 				$query->setParameter('mailbox_id', $message->getMailboxId(), IQueryBuilder::PARAM_INT);
 				$query->setParameter('flag_attachments', $message->getFlagAttachments(), $message->getFlagAttachments() === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_BOOL);
 				$previewText = null;
-				if ($message->getPreviewText() !== null) {
-					$convertedText = mb_convert_encoding($message->getPreviewText(), 'UTF-8', 'UTF-8');
+				$rawPreviewText = $message->getPreviewText();
+				if ($rawPreviewText !== null) {
+					$convertedText = mb_scrub($rawPreviewText, 'UTF-8');
 					//converting the spaces is necessary for ltrim to work
-					$previewText = mb_strcut(ltrim(preg_replace('/\s/u', ' ', $convertedText)), 0, 255);
+					$previewText = mb_strcut(ltrim(preg_replace('/\s/u', ' ', $convertedText) ?? $convertedText), 0, 255);
 
 					// Make sure modifications are visible when these objects are used right away
 					$message->setPreviewText($previewText);
@@ -779,11 +785,16 @@ class MessageMapper extends QBMapper {
 			->from($this->getTableName())
 			->where(
 				$qb->expr()->eq('mailbox_id', $qb->createNamedParameter($mailbox->getId()), IQueryBuilder::PARAM_INT),
-				$qb->expr()->in('remote_id', $qb->createNamedParameter($rids, IQueryBuilder::PARAM_STR_ARRAY))
+				$qb->expr()->in('remote_id', $qb->createParameter('remote_ids'), IQueryBuilder::PARAM_STR_ARRAY)
 			)
 			->orderBy('sent_at', 'desc');
 
-		return $this->findRecipients($this->findEntities($select));
+		$messages = array_flat_map(function (array $chunk) use ($select) {
+			$select->setParameter('remote_ids', $chunk, IQueryBuilder::PARAM_STR_ARRAY);
+			return $this->findEntities($select);
+		}, array_chunk($rids, self::MAX_IN_PARAMETERS));
+
+		return $this->findRecipients($messages);
 	}
 
 	/**
@@ -1429,10 +1440,20 @@ class MessageMapper extends QBMapper {
 		$select = $this->db->getQueryBuilder();
 		$subSelect = $this->db->getQueryBuilder();
 
+		// MIN/MAX return NULL when no known id matches, so COALESCE to a bound that keeps all rows.
+		// sent_at is a 4-byte INTEGER column, so the bound must stay within its range (PHP_INT_MIN/MAX
+		// overflow PostgreSQL's native integer type and get rejected).
+		if ($sortOrder === IMailSearch::ORDER_NEWEST_FIRST) {
+			$fallback = (string)$select->createNamedParameter(self::SENT_AT_MIN, IQueryBuilder::PARAM_INT);
+			$aggregate = (string)$subSelect->func()->min('sent_at');
+			$sentAtBound = $subSelect->createFunction('COALESCE(' . $aggregate . ', ' . $fallback . ')');
+		} else {
+			$fallback = (string)$select->createNamedParameter(self::SENT_AT_MAX, IQueryBuilder::PARAM_INT);
+			$aggregate = (string)$subSelect->func()->max('sent_at');
+			$sentAtBound = $subSelect->createFunction('COALESCE(' . $aggregate . ', ' . $fallback . ')');
+		}
 		$subSelect
-			->select($sortOrder === IMailSearch::ORDER_NEWEST_FIRST
-				? $subSelect->func()->min('sent_at')
-				: $subSelect->func()->max('sent_at'))
+			->select($sentAtBound)
 			->from($this->getTableName())
 			->where(
 				$subSelect->expr()->eq('mailbox_id', $select->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT)),

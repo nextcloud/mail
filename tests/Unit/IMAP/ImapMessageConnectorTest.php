@@ -11,12 +11,14 @@ namespace OCA\Mail\Tests\Unit\IMAP;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Exception;
+use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\ImapMessageConnector;
 use OCA\Mail\IMAP\MessageMapper;
@@ -32,7 +34,7 @@ use Psr\Log\LoggerInterface;
  * connection to the mail server is leaked (see moveMessages/deleteMessages/flagMessages/
  * tagMessages/isPermflagsEnabled).
  */
-class ImapMessageConnectorTest extends TestCase {
+final class ImapMessageConnectorTest extends TestCase {
 	private ProtocolFactory&MockObject $protocolFactory;
 	private ImapToDbSynchronizer&MockObject $synchronizer;
 	private FolderMapper&MockObject $imapMailboxMapper;
@@ -66,11 +68,9 @@ class ImapMessageConnectorTest extends TestCase {
 			->willReturn($this->client);
 	}
 
-	public static function bodyLoadingOptions(): array {
-		return [
-			'without body' => [false],
-			'with body' => [true],
-		];
+	public static function bodyLoadingOptions(): \Iterator {
+		yield 'without body' => [false];
+		yield 'with body' => [true];
 	}
 
 	/** @dataProvider bodyLoadingOptions */
@@ -90,14 +90,14 @@ class ImapMessageConnectorTest extends TestCase {
 			->method('findByIds')
 			->with($this->client, 'INBOX', [1, 2], 'user', $loadBody, true)
 			->willReturn($fetchedMessages);
-		$this->client->expects(self::once())->method('logout');
+		$this->client->expects(self::never())->method('logout');
 
 		$result = $this->connector->fetchMessages($this->account, $mailbox, $loadBody, $message, $otherMessage);
 
 		self::assertSame($fetchedMessages, $result);
 	}
 
-	public function testMoveMessagesLogsOutClientWhenMapperThrows(): void {
+	public function testMoveMessagesKeepsSharedClientWhenMapperThrows(): void {
 		$sourceMailbox = new Mailbox();
 		$sourceMailbox->setName('INBOX');
 		$targetMailbox = new Mailbox();
@@ -107,7 +107,7 @@ class ImapMessageConnectorTest extends TestCase {
 
 		$this->imapMessageMapper->method('move')
 			->willThrowException(new ServiceException('could not move'));
-		$this->client->expects(self::once())
+		$this->client->expects(self::never())
 			->method('logout');
 
 		$this->expectException(ServiceException::class);
@@ -115,7 +115,7 @@ class ImapMessageConnectorTest extends TestCase {
 		$this->connector->moveMessages($this->account, $targetMailbox, $sourceMailbox, $message);
 	}
 
-	public function testDeleteMessagesLogsOutClientWhenMapperThrows(): void {
+	public function testDeleteMessagesKeepsSharedClientWhenMapperThrows(): void {
 		$mailbox = new Mailbox();
 		$mailbox->setName('INBOX');
 		$message = new Message();
@@ -123,7 +123,7 @@ class ImapMessageConnectorTest extends TestCase {
 
 		$this->imapMessageMapper->method('expunge')
 			->willThrowException(new ServiceException('could not expunge'));
-		$this->client->expects(self::once())
+		$this->client->expects(self::never())
 			->method('logout');
 
 		$this->expectException(ServiceException::class);
@@ -131,7 +131,7 @@ class ImapMessageConnectorTest extends TestCase {
 		$this->connector->deleteMessages($this->account, $mailbox, $message);
 	}
 
-	public function testFlagMessagesLogsOutClientWhenMapperThrows(): void {
+	public function testFlagMessagesKeepsSharedClientWhenMapperThrows(): void {
 		$mailbox = new Mailbox();
 		$mailbox->setName('INBOX');
 		$message = new Message();
@@ -139,7 +139,7 @@ class ImapMessageConnectorTest extends TestCase {
 
 		$this->imapMessageMapper->method('addFlag')
 			->willThrowException(new Horde_Imap_Client_Exception('store failed'));
-		$this->client->expects(self::once())
+		$this->client->expects(self::never())
 			->method('logout');
 
 		$this->expectException(ServiceException::class);
@@ -147,7 +147,7 @@ class ImapMessageConnectorTest extends TestCase {
 		$this->connector->flagMessages($this->account, $mailbox, 'seen', true, $message);
 	}
 
-	public function testTagMessagesLogsOutClientWhenPermflagsCheckThrows(): void {
+	public function testTagMessagesKeepsSharedClientWhenPermflagsCheckThrows(): void {
 		$mailbox = new Mailbox();
 		$mailbox->setName('INBOX');
 		$tag = new Tag();
@@ -158,7 +158,7 @@ class ImapMessageConnectorTest extends TestCase {
 
 		$this->client->method('status')
 			->willThrowException(new Horde_Imap_Client_Exception('status failed'));
-		$this->client->expects(self::once())
+		$this->client->expects(self::never())
 			->method('logout');
 
 		$this->expectException(ServiceException::class);
@@ -166,7 +166,7 @@ class ImapMessageConnectorTest extends TestCase {
 		$this->connector->tagMessages($this->account, $mailbox, $tag, true, $message);
 	}
 
-	public function testTagMessagesLogsOutClientWhenPermflagsNotSupported(): void {
+	public function testTagMessagesKeepsSharedClientWhenPermflagsNotSupported(): void {
 		$mailbox = new Mailbox();
 		$mailbox->setName('INBOX');
 		$tag = new Tag();
@@ -177,7 +177,7 @@ class ImapMessageConnectorTest extends TestCase {
 
 		$this->client->method('status')
 			->willReturn(['permflags' => []]);
-		$this->client->expects(self::once())
+		$this->client->expects(self::never())
 			->method('logout');
 
 		$result = $this->connector->tagMessages($this->account, $mailbox, $tag, true, $message);
@@ -185,13 +185,13 @@ class ImapMessageConnectorTest extends TestCase {
 		self::assertSame([], $result);
 	}
 
-	public function testIsPermflagsEnabledLogsOutClientWhenStatusThrows(): void {
+	public function testIsPermflagsEnabledKeepsSharedClientWhenStatusThrows(): void {
 		$mailbox = new Mailbox();
 		$mailbox->setName('INBOX');
 
 		$this->client->method('status')
 			->willThrowException(new Horde_Imap_Client_Exception('status failed'));
-		$this->client->expects(self::once())
+		$this->client->expects(self::never())
 			->method('logout');
 
 		$this->expectException(ServiceException::class);
@@ -199,17 +199,38 @@ class ImapMessageConnectorTest extends TestCase {
 		$this->connector->isPermflagsEnabled($this->account, $mailbox);
 	}
 
-	public function testIsPermflagsEnabledLogsOutClientOnSuccess(): void {
+	public function testIsPermflagsEnabledKeepsSharedClientOnSuccess(): void {
 		$mailbox = new Mailbox();
 		$mailbox->setName('INBOX');
 
 		$this->client->method('status')
 			->willReturn(['permflags' => ['\\*']]);
-		$this->client->expects(self::once())
+		$this->client->expects(self::never())
 			->method('logout');
 
 		$result = $this->connector->isPermflagsEnabled($this->account, $mailbox);
 
 		self::assertTrue($result);
+	}
+
+	public function testGetQuotaSkipsNoSelectFolders(): void {
+		$this->imapMailboxMapper->method('getFolders')
+			->with($this->account, $this->client)
+			->willReturn([
+				new Folder(new Horde_Imap_Client_Mailbox('INBOX'), [], '/', null),
+				new Folder(new Horde_Imap_Client_Mailbox('Shared Folders'), ['\\Noselect'], '/', null),
+			]);
+		$this->client->expects(self::once())
+			->method('getQuotaRoot')
+			->with('INBOX')
+			->willReturn(['' => ['storage' => ['usage' => 1, 'limit' => 2]]]);
+		$this->client->expects(self::never())
+			->method('logout');
+
+		$quota = $this->connector->getQuota($this->account);
+		$this->assertInstanceOf(\OCA\Mail\Service\Quota::class, $quota);
+
+		self::assertSame(1024, $quota->getUsage());
+		self::assertSame(2048, $quota->getLimit());
 	}
 }

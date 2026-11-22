@@ -21,7 +21,7 @@ use OCP\IConfig;
 use OCP\Security\ICrypto;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class JmapClientFactoryTest extends TestCase {
+final class JmapClientFactoryTest extends TestCase {
 	private ICrypto&MockObject $crypto;
 	private IConfig&MockObject $config;
 	private IClientService&MockObject $clientService;

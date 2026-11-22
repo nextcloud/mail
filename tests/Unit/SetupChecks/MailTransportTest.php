@@ -17,7 +17,7 @@ use OCP\IL10N;
 use OCP\SetupCheck\SetupResult;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class MailTransportTest extends TestCase {
+final class MailTransportTest extends TestCase {
 	private IConfig&MockObject $config;
 	private IL10N&MockObject $l10n;
 	private MailTransport $check;

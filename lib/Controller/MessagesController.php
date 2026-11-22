@@ -32,6 +32,7 @@ use OCA\Mail\Service\ItineraryService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\SmimeService;
 use OCA\Mail\Service\SnoozeService;
+use OCP\App\IAppManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -88,6 +89,7 @@ class MessagesController extends Controller {
 		private AiIntegrationsService $aiIntegrationService,
 		private ICacheFactory $cacheFactory,
 		private DelegationService $delegationService,
+		private IAppManager $appManager,
 	) {
 		parent::__construct($appName, $request);
 		$this->l10n = $l10n;
@@ -667,14 +669,12 @@ class MessagesController extends Controller {
 			$imapMessageCacheKey = "message_$id";
 
 			$html = $cacheInstance->get($imapMessageCacheKey);
-			if ($html === null) {
-				$html = $this->mailManager->getImapMessage(
-					$account,
-					$mailbox,
-					$message,
-					true
-				)->getHtmlBody($id);
-			}
+			$html ??= $this->mailManager->getImapMessage(
+				$account,
+				$mailbox,
+				$message,
+				true
+			)->getHtmlBody($id);
 
 			$htmlResponse = $plain
 				? HtmlResponse::plain($html)
@@ -682,7 +682,9 @@ class MessagesController extends Controller {
 					$html,
 					$this->nonceManager->getNonce(),
 					$this->urlGenerator->getAbsoluteURL(
-						$this->urlGenerator->linkTo('mail', 'js/htmlresponse.js')
+						$this->urlGenerator->linkTo('mail', 'js/htmlresponse.js', [
+							'v' => $this->appManager->getAppVersion('mail'),
+						])
 					)
 				);
 
@@ -743,20 +745,22 @@ class MessagesController extends Controller {
 
 		// Body party and embedded messages do not have a name
 		$attachmentName = $attachment->getName();
-		if ($attachmentName === null) {
-			return new AttachmentDownloadResponse(
-				$attachment->getContent(),
-				$this->l10n->t('Embedded message %s', [
-					$attachmentId,
-				]) . '.eml',
-				$attachment->getType()
-			);
-		}
-		return new AttachmentDownloadResponse(
-			$attachment->getContent(),
+		$attachmentName ??= $this->l10n->t('Embedded message %s', [
+			$attachmentId,
+		]) . '.eml';
+
+		$content = $attachment->getContent();
+		$response = new AttachmentDownloadResponse(
+			$content,
 			$attachmentName,
 			$attachment->getType()
 		);
+
+		if ($content !== '') {
+			$response->cacheFor(60 * 60, false, true);
+		}
+
+		return $response;
 	}
 
 	/**

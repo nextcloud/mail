@@ -16,6 +16,7 @@ use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\OutboxMessageCreatedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Send\Chain;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -42,6 +43,7 @@ class OutboxService {
 		ITimeFactory $timeFactory,
 		private LoggerInterface $logger,
 		private Chain $sendChain,
+		private ProtocolFactory $protocolFactory,
 	) {
 		$this->eventDispatcher = $eventDispatcher;
 		$this->timeFactory = $timeFactory;
@@ -208,6 +210,12 @@ class OutboxService {
 					'id' => $message->getId(),
 					'exception' => $e,
 				]);
+			}
+		}
+
+		foreach ($accounts as $account) {
+			if ($account !== null) {
+				$this->protocolFactory->releaseClients($account);
 			}
 		}
 	}

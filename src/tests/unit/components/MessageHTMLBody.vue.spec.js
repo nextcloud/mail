@@ -17,7 +17,7 @@ vi.mock('../../../service/TrustedSenderService.js', () => ({ trustSender: vi.fn(
 describe('MessageHTMLBody', () => {
 	// Attached, because only an iframe that is part of a document has a
 	// `contentDocument` to listen on.
-	const mountBody = () => shallowMount(MessageHTMLBody, {
+	const mountBody = (props = {}) => shallowMount(MessageHTMLBody, {
 		attachTo: document.body,
 		global: {
 			mixins: [Nextcloud],
@@ -29,6 +29,7 @@ describe('MessageHTMLBody', () => {
 				from: [{ email: 'alice@example.com' }],
 				isSenderTrusted: false,
 			},
+			...props,
 		},
 	})
 
@@ -85,6 +86,51 @@ describe('MessageHTMLBody', () => {
 			expect(view.findComponent(BlockedContentWarning).exists()).toBe(false)
 		})
 
+		it('keeps the aspect ratio of a revealed image with a style of its own', async () => {
+			const view = mountBody()
+			const doc = view.vm.getIframeDoc()
+			doc.write('<img width="768" height="576" data-original-src="https://example.com/a.png" data-original-style="display:block" style="display: none !important;">')
+			doc.close()
+			vi.spyOn(doc.defaultView, 'getComputedStyle').mockReturnValue({ height: '576px' })
+			view.vm.onMessageFrameLoad()
+			await view.vm.$nextTick()
+
+			view.findComponent(BlockedContentWarning).vm.$emit('show')
+
+			const image = doc.querySelector('img')
+			expect(image.style.display).toBe('block')
+			expect(image.style.aspectRatio).toBe('768 / 576')
+			expect(image.style.height).toBe('auto')
+		})
+
+		it('keeps a revealed element with a style of its own within the frame width', async () => {
+			const view = mountBody()
+			const doc = view.vm.getIframeDoc()
+			doc.write('<div data-original-style="background: url(https://example.com/a.png)" style="max-width: 100%;"></div>')
+			doc.close()
+			view.vm.onMessageFrameLoad()
+			await view.vm.$nextTick()
+
+			view.findComponent(BlockedContentWarning).vm.$emit('show')
+
+			const element = doc.querySelector('div')
+			expect(element.style.background).toContain('https://example.com/a.png')
+			expect(element.style.maxWidth).toBe('100%')
+		})
+
+		it('keeps the max-width a revealed element sets for itself', async () => {
+			const view = mountBody()
+			const doc = view.vm.getIframeDoc()
+			doc.write('<div data-original-style="background: url(https://example.com/a.png); max-width: 600px" style="max-width: 100%;"></div>')
+			doc.close()
+			view.vm.onMessageFrameLoad()
+			await view.vm.$nextTick()
+
+			view.findComponent(BlockedContentWarning).vm.$emit('show')
+
+			expect(doc.querySelector('div').style.maxWidth).toBe('600px')
+		})
+
 		it('remembers a sender the reader trusts', async () => {
 			const view = mountBody()
 			loadFrameWithBlockedImage(view)
@@ -106,6 +152,18 @@ describe('MessageHTMLBody', () => {
 			await view.vm.$nextTick()
 
 			expect(trustSender).toHaveBeenCalledWith('example.com', 'domain', true)
+			expect(view.findComponent(BlockedContentWarning).exists()).toBe(false)
+		})
+
+		it('shows images from every sender when the reader chose so', async () => {
+			const view = mountBody({ alwaysShowExternalImages: true })
+
+			loadFrameWithBlockedImage(view)
+			await view.vm.$nextTick()
+
+			expect(view.vm.getIframeDoc().querySelector('img').getAttribute('src'))
+				.toBe('https://example.com/tracker.gif')
+			expect(trustSender).not.toHaveBeenCalled()
 			expect(view.findComponent(BlockedContentWarning).exists()).toBe(false)
 		})
 	})

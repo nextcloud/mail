@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\UserMigration\Service;
 
 use JsonException;
+use OCA\Mail\Db\Actions;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\QuickActionsService;
 use OCA\Mail\UserMigration\MailAccountMigrator;
@@ -102,17 +103,6 @@ class QuickActionsMigrationService {
 			), OutputInterface::VERBOSITY_VERBOSE
 		);
 
-		if (count($accountMapping) === 0) {
-			$output->writeln(
-				$this->l10n->t(
-					'Missing account mapping when importing quick actions for %s. Continue …',
-					[$user->getUID()]
-				), OutputInterface::VERBOSITY_VERBOSE
-			);
-
-			return;
-		}
-
 		try {
 			$quickActionsFileContent = $importSource->getFileContents(self::QUICK_ACTIONS_FILE);
 		} catch (UserMigrationException) {
@@ -134,13 +124,24 @@ class QuickActionsMigrationService {
 				$this->l10n->t(
 					'Quick actions configuration for %s is invalid and will be skipped. Continue …',
 					[$user->getUID()]
-				), OutputInterface::VERBOSITY_VERBOSE
+				)
 			);
 
 			return;
 		}
 
 		foreach ($quickActions as $quickAction) {
+			if (!$this->isWellFormedQuickAction($quickAction)) {
+				$output->writeln(
+					$this->l10n->t(
+						'A quick action of %s is invalid and will be skipped. Continue …',
+						[$user->getUID()]
+					)
+				);
+
+				continue;
+			}
+
 			$oldAccountId = $quickAction['accountId'];
 
 			if (!array_key_exists($oldAccountId, $accountMapping)) {
@@ -148,7 +149,7 @@ class QuickActionsMigrationService {
 					$this->l10n->t(
 						'Skipping quick action %1$s because account %2$s was not imported. Continue …',
 						[$quickAction['name'], (string)$oldAccountId]
-					), OutputInterface::VERBOSITY_VERBOSE
+					)
 				);
 
 				continue;
@@ -159,7 +160,7 @@ class QuickActionsMigrationService {
 					$this->l10n->t(
 						'Skipping quick action %s because it references a tag or mailbox that was not imported. Continue …',
 						[$quickAction['name']]
-					), OutputInterface::VERBOSITY_VERBOSE
+					)
 				);
 
 				continue;
@@ -183,7 +184,7 @@ class QuickActionsMigrationService {
 					$this->l10n->t(
 						'Skipping quick action %s because it could not be recreated. Continue …',
 						[$quickAction['name']]
-					), OutputInterface::VERBOSITY_VERBOSE
+					)
 				);
 			}
 		}
@@ -217,8 +218,8 @@ class QuickActionsMigrationService {
 			$mappedActionSteps[] = [
 				'name' => $actionStep['name'],
 				'order' => $actionStep['order'],
-				'tagId' => $tagMapping[$actionStep['tagId']] ?? null,
-				'mailboxId' => $mailboxMapping[$actionStep['mailboxId']] ?? null,
+				'tagId' => $actionStep['tagId'] === null ? null : $tagMapping[$actionStep['tagId']],
+				'mailboxId' => $actionStep['mailboxId'] === null ? null : $mailboxMapping[$actionStep['mailboxId']],
 			];
 		}
 
@@ -228,8 +229,7 @@ class QuickActionsMigrationService {
 	}
 
 	/**
-	 * Validate the parsed quick actions to ensure they
-	 * have the expected structure and types.
+	 * Validate that the parsed quick actions are a list.
 	 *
 	 * @throws UserMigrationException
 	 */
@@ -238,40 +238,37 @@ class QuickActionsMigrationService {
 		if (!$quickActionsArrayIsValid) {
 			throw new UserMigrationException('Invalid quick actions export structure');
 		}
-
-		foreach ($quickActions as $quickAction) {
-			$quickActionArrayIsValid = is_array($quickAction);
-
-			$idIsValid = $quickActionArrayIsValid
-				&& array_key_exists('id', $quickAction)
-				&& is_int($quickAction['id']);
-
-			$nameIsValid = $quickActionArrayIsValid
-				&& array_key_exists('name', $quickAction)
-				&& is_string($quickAction['name']);
-
-			$accountIdIsValid = $quickActionArrayIsValid
-				&& array_key_exists('accountId', $quickAction)
-				&& is_int($quickAction['accountId']);
-
-			$actionStepsArrayIsValid = $quickActionArrayIsValid
-				&& array_key_exists('actionSteps', $quickAction)
-				&& is_array($quickAction['actionSteps'])
-				&& array_is_list($quickAction['actionSteps'])
-				&& $this->validateQuickSteps($quickAction['actionSteps']);
-
-			if (
-				!$idIsValid
-				|| !$nameIsValid
-				|| !$accountIdIsValid
-				|| !$actionStepsArrayIsValid
-			) {
-				throw new UserMigrationException('Invalid quick action entry');
-			}
-		}
 	}
 
-	private function validateQuickSteps(mixed $quickSteps): bool {
+	private function isWellFormedQuickAction(mixed $quickAction): bool {
+		$quickActionArrayIsValid = is_array($quickAction);
+
+		$idIsValid = $quickActionArrayIsValid
+			&& array_key_exists('id', $quickAction)
+			&& is_int($quickAction['id']);
+
+		$nameIsValid = $quickActionArrayIsValid
+			&& array_key_exists('name', $quickAction)
+			&& is_string($quickAction['name'])
+			&& mb_strlen($quickAction['name']) <= Actions::NAME_MAX_LENGTH;
+
+		$accountIdIsValid = $quickActionArrayIsValid
+			&& array_key_exists('accountId', $quickAction)
+			&& is_int($quickAction['accountId']);
+
+		$actionStepsArrayIsValid = $quickActionArrayIsValid
+			&& array_key_exists('actionSteps', $quickAction)
+			&& is_array($quickAction['actionSteps'])
+			&& array_is_list($quickAction['actionSteps'])
+			&& $this->areWellFormedQuickSteps($quickAction['actionSteps']);
+
+		return $idIsValid
+			&& $nameIsValid
+			&& $accountIdIsValid
+			&& $actionStepsArrayIsValid;
+	}
+
+	private function areWellFormedQuickSteps(mixed $quickSteps): bool {
 		$quickStepsArrayIsValid = true;
 
 		foreach ($quickSteps as $actionStep) {

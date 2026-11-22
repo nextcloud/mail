@@ -25,7 +25,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Psr\Log\Test\TestLogger;
 
-class NewMessagesSummarizeListenerTest extends TestCase {
+final class NewMessagesSummarizeListenerTest extends TestCase {
 	private const NOW = 1_750_000_000;
 
 	private LoggerInterface $logger;
@@ -102,16 +102,14 @@ class NewMessagesSummarizeListenerTest extends TestCase {
 		$this->listener->handle($event);
 	}
 
-	public static function provideSkippedSpecialUses(): array {
-		return [
-			'all' => ['["all"]'],
-			'archive' => ['["archive"]'],
-			'drafts' => ['["drafts"]'],
-			'flagged' => ['["flagged"]'],
-			'junk' => ['["junk"]'],
-			'sent' => ['["sent"]'],
-			'trash' => ['["trash"]'],
-		];
+	public static function provideSkippedSpecialUses(): \Iterator {
+		yield 'all' => ['["all"]'];
+		yield 'archive' => ['["archive"]'];
+		yield 'drafts' => ['["drafts"]'];
+		yield 'flagged' => ['["flagged"]'];
+		yield 'junk' => ['["junk"]'];
+		yield 'sent' => ['["sent"]'];
+		yield 'trash' => ['["trash"]'];
 	}
 
 	/**
@@ -127,15 +125,13 @@ class NewMessagesSummarizeListenerTest extends TestCase {
 		$this->listener->handle($event);
 	}
 
-	public static function provideAccountMailboxSetters(): array {
-		return [
-			'archive' => ['setArchiveMailboxId'],
-			'drafts' => ['setDraftsMailboxId'],
-			'junk' => ['setJunkMailboxId'],
-			'sent' => ['setSentMailboxId'],
-			'snooze' => ['setSnoozeMailboxId'],
-			'trash' => ['setTrashMailboxId'],
-		];
+	public static function provideAccountMailboxSetters(): \Iterator {
+		yield 'archive' => ['setArchiveMailboxId'];
+		yield 'drafts' => ['setDraftsMailboxId'];
+		yield 'junk' => ['setJunkMailboxId'];
+		yield 'sent' => ['setSentMailboxId'];
+		yield 'snooze' => ['setSnoozeMailboxId'];
+		yield 'trash' => ['setTrashMailboxId'];
 	}
 
 	/**

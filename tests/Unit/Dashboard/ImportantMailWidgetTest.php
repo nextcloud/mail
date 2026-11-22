@@ -25,7 +25,7 @@ use OCP\IUser;
 use OCP\IUserManager;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class ImportantMailWidgetTest extends TestCase {
+final class ImportantMailWidgetTest extends TestCase {
 
 	private IL10N&MockObject $l10n;
 	private IURLGenerator&MockObject $urlGenerator;

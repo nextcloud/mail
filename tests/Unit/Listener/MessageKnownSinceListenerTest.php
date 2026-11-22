@@ -21,7 +21,7 @@ use OCA\Mail\Listener\MessageKnownSinceListener;
 use OCP\AppFramework\Utility\ITimeFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class MessageKnownSinceListenerTest extends TestCase {
+final class MessageKnownSinceListenerTest extends TestCase {
 
 	/** @var MessageRetentionMapper|MockObject */
 	private $messageRetentionMapper;

@@ -5,6 +5,7 @@
 
 import { shallowMount } from '@vue/test-utils'
 import { createPinia } from 'pinia'
+import { vi } from 'vitest'
 import Composer from '../../../components/Composer.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 import useMainStore from '../../../store/mainStore.js'
@@ -61,6 +62,90 @@ describe('Composer', () => {
 			envelopeLists: {},
 			mailboxes: [],
 		}
+	})
+
+	it('emits the recipients when one is picked', async () => {
+		const view = shallowMount(Composer, {
+			props: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
+		})
+
+		view.vm.onNewToAddr({ id: 1, email: 'test@domain.tld', label: 'test' })
+		await view.vm.$nextTick()
+
+		expect(view.emitted('update:to').at(-1)[0]).toEqual([
+			expect.objectContaining({ email: 'test@domain.tld' }),
+		])
+	})
+
+	it('does not allow clearing the sender', () => {
+		const view = shallowMount(Composer, {
+			props: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
+		})
+
+		const from = view.findAllComponents({ name: 'NcSelect' }).find((select) => select.attributes('id') === 'from')
+
+		expect(from.props('clearable')).toBe(false)
+	})
+
+	it('shows the Cc/Bcc toggle below the recipient picker', async () => {
+		const view = shallowMount(Composer, {
+			props: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
+		})
+
+		const toggle = view.findComponent('.composer-fields__to-footer .copy-toggle')
+		toggle.vm.$emit('click')
+		await view.vm.$nextTick()
+
+		expect(toggle.exists()).toBe(true)
+		expect(view.find('#cc').exists()).toBe(true)
 	})
 
 	it('does not drop the reply message ID', () => {
@@ -145,6 +230,64 @@ describe('Composer', () => {
 		const canSend = view.vm.canSend
 
 		expect(canSend).toEqual(true)
+	})
+
+	it('does not send while attachments block sending', async () => {
+		const view = shallowMount(Composer, {
+			props: {
+				to: [
+					{ label: 'test', email: 'test@domain.tld' },
+				],
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
+		})
+
+		await view.findComponent({ name: 'ComposerAttachments' }).vm.$emit('update:blocksSending', true)
+		await view.vm.onSend()
+
+		expect(view.vm.canSend).toEqual(false)
+		expect(view.emitted('send')).toBeUndefined()
+	})
+
+	it('saves the draft when the attachments change', async () => {
+		const view = shallowMount(Composer, {
+			props: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
+		})
+		view.vm.saveDraftDebounced = vi.fn()
+
+		await view.findComponent({ name: 'ComposerAttachments' }).vm.$emit('update:modelValue', [{ id: 1, fileName: 'a.txt', type: 'local' }])
+
+		expect(view.vm.saveDraftDebounced).toHaveBeenCalled()
 	})
 
 	it('should not S/MIME sign messages if there are no certs', () => {

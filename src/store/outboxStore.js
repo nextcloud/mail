@@ -4,7 +4,7 @@
  */
 
 import { showError, showSuccess, showUndo } from '@nextcloud/dialogs'
-import { t } from '@nextcloud/l10n'
+import { n, t } from '@nextcloud/l10n'
 import { defineStore } from 'pinia'
 import logger from '../logger.js'
 import * as OutboxService from '../service/OutboxService.js'
@@ -88,13 +88,10 @@ export default defineStore('outbox', {
 			this.deleteMessageMutation({ id })
 		},
 
-		async enqueueMessage({ message }) {
-			this.addMessageMutation({ message })
+		async enqueueMessage({ message: data }) {
+			const message = await OutboxService.enqueueMessage(data)
 
-			// Future drafts/sends after an error should go through outbox logic
-			this.mainStore.convertComposerMessageToOutboxMutation({ message }, {
-				root: true,
-			})
+			this.addMessageMutation({ message })
 
 			return message
 		},
@@ -103,11 +100,6 @@ export default defineStore('outbox', {
 			const message = await OutboxService.enqueueMessageFromDraft(id, draftMessage)
 
 			this.addMessageMutation({ message })
-
-			// Future drafts/sends after an error should go through outbox logic
-			this.mainStore.convertComposerMessageToOutboxMutation({ message }, {
-				root: true,
-			})
 
 			return message
 		},
@@ -178,7 +170,7 @@ export default defineStore('outbox', {
 				const message = this.getMessage(id)
 
 				showUndo(
-					t('mail', 'Sending message…'),
+					n('mail', 'Message will be sent in %n second', 'Message will be sent in %n seconds', UNDO_DELAY / 1000),
 					async () => {
 						logger.info('Attempting to stop sending message ' + message.id)
 						const stopped = await this.stopMessage({ message })
@@ -186,7 +178,7 @@ export default defineStore('outbox', {
 						await this.mainStore.startComposerSession({
 							type: 'outbox',
 							data: { ...message },
-						}, { root: true })
+						})
 					},
 					{
 						timeout: UNDO_DELAY,

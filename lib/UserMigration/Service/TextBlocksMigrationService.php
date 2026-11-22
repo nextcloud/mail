@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\UserMigration\Service;
 
 use JsonException;
+use OCA\Mail\Db\TextBlock;
 use OCA\Mail\Service\TextBlockService;
 use OCA\Mail\UserMigration\MailAccountMigrator;
 use OCP\IL10N;
@@ -106,13 +107,24 @@ class TextBlocksMigrationService {
 				$this->l10n->t(
 					'Text blocks configuration for %s is invalid and will be skipped. Continue …',
 					[$user->getUID()]
-				), OutputInterface::VERBOSITY_VERBOSE
+				)
 			);
 
 			return;
 		}
 
 		foreach ($textBlocks as $textBlock) {
+			if (!$this->isWellFormedTextBlock($textBlock)) {
+				$output->writeln(
+					$this->l10n->t(
+						'A text block of %s is invalid and will be skipped. Continue …',
+						[$user->getUID()]
+					)
+				);
+
+				continue;
+			}
+
 			$output->writeln(
 				$this->l10n->t(
 					'Importing text block %1$s for %2$s',
@@ -125,8 +137,7 @@ class TextBlocksMigrationService {
 	}
 
 	/**
-	 * Validate the parsed text blocks to ensure they
-	 * have the expected structure and types.
+	 * Validate that the parsed text blocks are a list.
 	 *
 	 * @throws UserMigrationException
 	 */
@@ -135,21 +146,20 @@ class TextBlocksMigrationService {
 		if (!$textBlocksArrayIsValid) {
 			throw new UserMigrationException('Invalid text blocks export structure');
 		}
+	}
 
-		foreach ($textBlocks as $textBlock) {
-			$textBlockArrayIsValid = is_array($textBlock);
+	private function isWellFormedTextBlock(mixed $textBlock): bool {
+		$textBlockArrayIsValid = is_array($textBlock);
 
-			$titleIsValid = $textBlockArrayIsValid
-				&& array_key_exists('title', $textBlock)
-				&& is_string($textBlock['title']);
+		$titleIsValid = $textBlockArrayIsValid
+			&& array_key_exists('title', $textBlock)
+			&& is_string($textBlock['title'])
+			&& mb_strlen($textBlock['title']) <= TextBlock::TITLE_MAX_LENGTH;
 
-			$contentIsValid = $textBlockArrayIsValid
-				&& array_key_exists('content', $textBlock)
-				&& is_string($textBlock['content']);
+		$contentIsValid = $textBlockArrayIsValid
+			&& array_key_exists('content', $textBlock)
+			&& is_string($textBlock['content']);
 
-			if (!$titleIsValid || !$contentIsValid) {
-				throw new UserMigrationException('Invalid text block entry');
-			}
-		}
+		return $titleIsValid && $contentIsValid;
 	}
 }

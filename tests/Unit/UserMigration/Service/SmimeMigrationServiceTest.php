@@ -15,6 +15,7 @@ use Exception;
 use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\SmimeCertificateParserException;
+use OCA\Mail\Tests\Unit\UserMigration\RecordsConsoleOutput;
 use OCA\Mail\UserMigration\MailAccountMigrator;
 use OCA\Mail\UserMigration\Service\SmimeMigrationService;
 use OCP\IUser;
@@ -22,7 +23,9 @@ use OCP\UserMigration\IExportDestination;
 use OCP\UserMigration\IImportSource;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class SmimeMigrationServiceTest extends TestCase {
+final class SmimeMigrationServiceTest extends TestCase {
+	use RecordsConsoleOutput;
+
 	private const USER_ID = '123';
 	private OutputInterface $output;
 	private IUser $user;
@@ -45,9 +48,7 @@ class SmimeMigrationServiceTest extends TestCase {
 
 		$this->serviceMock->getParameter('crypto')
 			->method('encrypt')
-			->willReturnCallback(function (string $value) {
-				return $value . '_encrypted';
-			});
+			->willReturnCallback(fn (string $value) => $value . '_encrypted');
 
 		$this->serviceMock->getParameter('crypto')
 			->method('decrypt')
@@ -202,11 +203,9 @@ class SmimeMigrationServiceTest extends TestCase {
 		$this->assertCount(0, $mappedTags);
 	}
 
-	public static function provideCreateCertificateFailures(): array {
-		return [
-			'private key mismatch' => [new ServiceException('Private key does not match certificate')],
-			'unparsable certificate' => [new SmimeCertificateParserException('Could not parse certificate')],
-		];
+	public static function provideCreateCertificateFailures(): \Iterator {
+		yield 'private key mismatch' => [new ServiceException('Private key does not match certificate')];
+		yield 'unparsable certificate' => [new SmimeCertificateParserException('Could not parse certificate')];
 	}
 
 	/**
@@ -243,12 +242,38 @@ class SmimeMigrationServiceTest extends TestCase {
 		self::assertSame([$chainCertificate->getId() => 500], $mappedCertificates);
 	}
 
-	public static function provideFileContentsWithNoCertificatesImported(): array {
-		return [
-			'empty list' => [json_encode([])],
-			'invalid JSON' => ['this is not valid json {{{'],
-			'missing required fields' => [json_encode(['unexpected' => 'field'])],
-		];
+	public function testImportReportsAnInvalidCertificateFileAsANotice(): void {
+		$this->recordConsoleOutput();
+		$this->importSource->method('getFolderListing')->willReturn(['broken.json']);
+		$this->importSource->method('getFileContents')->willReturn('this is not valid json {{{');
+
+		$this->migrationService->importCertificates($this->user, $this->importSource, $this->output);
+
+		$this->assertWritten('broken.json', 0);
+	}
+
+	public function testImportReportsACertificateThatCannotBeCreatedAsANotice(): void {
+		$this->recordConsoleOutput();
+		$userCertificate = $this->getUserCertificate();
+		$this->importSource->method('getFolderListing')->willReturn(['broken.json']);
+		$this->importSource->method('getFileContents')->willReturn(json_encode([
+			'id' => $userCertificate->getId(),
+			'certificate' => $userCertificate->getCertificate(),
+			'privateKey' => $userCertificate->getPrivateKey(),
+		]));
+		$this->serviceMock->getParameter('smimeService')
+			->method('createCertificate')
+			->willThrowException(new ServiceException('Private key does not match certificate'));
+
+		$this->migrationService->importCertificates($this->user, $this->importSource, $this->output);
+
+		$this->assertWritten('broken.json', 0);
+	}
+
+	public static function provideFileContentsWithNoCertificatesImported(): \Iterator {
+		yield 'empty list' => [json_encode([])];
+		yield 'invalid JSON' => ['this is not valid json {{{'];
+		yield 'missing required fields' => [json_encode(['unexpected' => 'field'])];
 	}
 
 	/**

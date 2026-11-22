@@ -19,7 +19,7 @@ use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class DeleteProvisioningTest extends TestCase {
+final class DeleteProvisioningTest extends TestCase {
 	private ProvisioningManager&MockObject $provisioningManager;
 	private DeleteProvisioning $command;
 	private CommandTester $tester;
@@ -59,7 +59,7 @@ class DeleteProvisioningTest extends TestCase {
 		$status = $this->tester->execute(['id' => '3']);
 
 		self::assertSame(Command::SUCCESS, $status);
-		self::assertStringContainsString('Aborted', $this->tester->getDisplay());
+		self::assertStringContainsString('Aborted', (string)$this->tester->getDisplay());
 	}
 
 	public function testDeleteForced(): void {
@@ -94,10 +94,16 @@ class DeleteProvisioningTest extends TestCase {
 		$status = $this->tester->execute(['id' => $id, '--force' => true]);
 
 		self::assertSame(Command::INVALID, $status);
-		self::assertStringContainsString('positive integer', $this->tester->getDisplay());
+		self::assertStringContainsString('positive integer', (string)$this->tester->getDisplay());
 	}
 
-	public static function invalidIds(): array {
-		return [[''], ['0'], ['-1'], ['3typo'], ['3.5'], ['3e1'], ['99999999999999999999']];
+	public static function invalidIds(): \Iterator {
+		yield [''];
+		yield ['0'];
+		yield ['-1'];
+		yield ['3typo'];
+		yield ['3.5'];
+		yield ['3e1'];
+		yield ['99999999999999999999'];
 	}
 }

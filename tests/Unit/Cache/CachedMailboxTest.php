@@ -12,7 +12,7 @@ namespace OCA\Mail\Tests\Unit\Cache;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Cache\CachedMailbox;
 
-class CachedMailboxTest extends TestCase {
+final class CachedMailboxTest extends TestCase {
 	public function testConstructorDefaults(): void {
 		$mailbox = new CachedMailbox();
 

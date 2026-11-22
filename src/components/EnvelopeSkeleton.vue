@@ -150,15 +150,6 @@ export default {
 		},
 
 		/**
-		 * Pass in `true` if you want the matching behavior to
-		 * be non-inclusive: https://router.vuejs.org/api/#exact
-		 */
-		exact: {
-			type: Boolean,
-			default: false,
-		},
-
-		/**
 		 * The route for the router link.
 		 */
 		to: {
@@ -309,11 +300,8 @@ export default {
 			}
 
 			const target = this.resolvedRoute.path
-			if (this.exact || this.$route.path === target) {
-				return this.$route.path === target
-			}
-
-			return this.$route.path.startsWith(target.endsWith('/') ? target : `${target}/`)
+			return this.$route.path === target
+				|| this.$route.path.startsWith(target.endsWith('/') ? target : `${target}/`)
 		},
 
 		showAdditionalElements() {
@@ -326,7 +314,7 @@ export default {
 		},
 
 		computedActionsAriaLabel() {
-			return this.actionsAriaLabel || t('Actions for item with name "{name}"', { name: this.name })
+			return this.actionsAriaLabel || t('mail', 'Actions for item with name "{name}"', { name: this.name })
 		},
 	},
 

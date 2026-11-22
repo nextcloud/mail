@@ -19,9 +19,6 @@ use OCP\Migration\Attributes\IndexType;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
-/**
- * @psalm-api
- */
 #[AddColumn(table: 'mail_messages', name: 'remote_id', type: ColumnType::STRING)]
 #[AddIndex(table: 'mail_messages', type: IndexType::INDEX)]
 class Version5011Date20260401000003 extends SimpleMigrationStep {

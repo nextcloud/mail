@@ -19,7 +19,7 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class TransformURLSchemeTest extends TestCase {
+final class TransformURLSchemeTest extends TestCase {
 	private TransformURLScheme $filter;
 	private IURLGenerator|MockObject $urlGenerator;
 	private IRequest|MockObject $request;
@@ -272,7 +272,7 @@ class TransformURLSchemeTest extends TestCase {
 		$this->assertSame('https', $uri->scheme);
 		$this->assertSame('mail.example.com', $uri->host);
 		$this->assertSame('/apps/mail/proxy', $uri->path);
-		$this->assertStringContainsString('id=42', $uri->query);
+		$this->assertStringContainsString('id=42', (string)$uri->query);
 	}
 
 	public function testCidSchemeWithValidAttachment(): void {
@@ -340,7 +340,7 @@ class TransformURLSchemeTest extends TestCase {
 
 		$this->filter->filter($uri, $config, $context);
 
-		$this->assertStringContainsString('id%3D123%26name%3Dtest', $uri->query);
+		$this->assertStringContainsString('id%3D123%26name%3Dtest', (string)$uri->query);
 	}
 
 	public function testUriWithFragment(): void {
@@ -374,7 +374,7 @@ class TransformURLSchemeTest extends TestCase {
 
 		$this->filter->filter($uri, $config, $context);
 
-		$this->assertStringContainsString('%23section', $uri->query);
+		$this->assertStringContainsString('%23section', (string)$uri->query);
 	}
 
 	public function testSrcWithPercentEncodedQueryPreservedForHmac(): void {
@@ -444,6 +444,6 @@ class TransformURLSchemeTest extends TestCase {
 
 		$this->assertSame('https', $uri->scheme);
 		$this->assertSame('mail.example.com', $uri->host);
-		$this->assertStringContainsString('/apps/mail/api/messages/42/attachment/123', $uri->path);
+		$this->assertStringContainsString('/apps/mail/api/messages/42/attachment/123', (string)$uri->path);
 	}
 }

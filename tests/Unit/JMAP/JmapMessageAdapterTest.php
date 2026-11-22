@@ -10,13 +10,16 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\JMAP;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use DateTimeImmutable;
+use JmapClient\Enums\Mail\MailHeaderForm;
 use JmapClient\Responses\Mail\MailParameters as MailParametersResponse;
+use JmapClient\Responses\Mail\MailPart as MailPartResponse;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\JMAP\JmapMessageAdapter;
 use OCA\Mail\Service\Html;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class JmapMessageAdapterTest extends TestCase {
+final class JmapMessageAdapterTest extends TestCase {
 	private JmapMessageAdapter $adapter;
 
 	protected function setUp(): void {
@@ -64,7 +67,6 @@ class JmapMessageAdapterTest extends TestCase {
 		}
 
 		$source->method('keywords')->willReturn($keywords);
-		$source->method('parameter')->willReturn($values['__updatedAt'] ?? null);
 		$source->method('keyword')->willReturnCallback(
 			static fn (string $name): ?bool => $keywords[$name] ?? null,
 		);
@@ -112,6 +114,37 @@ class JmapMessageAdapterTest extends TestCase {
 		self::assertFalse($message->getFlagAttachments());
 	}
 
+	public function testMapsSentDateToTimestamp(): void {
+		$source = $this->source([
+			'sent' => new DateTimeImmutable('2026-11-12T10:00:00+02:00'),
+			'received' => new DateTimeImmutable('2026-11-12T09:00:00Z'),
+		]);
+
+		$message = $this->adapter->convertToDatabaseMessage($source);
+
+		self::assertSame(1794470400, $message->getSentAt());
+		self::assertSame(1794470400, $message->getUpdatedAt());
+	}
+
+	public function testFallsBackToReceivedDateWhenSentDateIsMissing(): void {
+		$source = $this->source(['received' => new DateTimeImmutable('2026-11-12T09:00:00Z')]);
+
+		$message = $this->adapter->convertToDatabaseMessage($source);
+
+		self::assertSame(1794474000, $message->getSentAt());
+	}
+
+	public function testModelMessageUsesReceivedDate(): void {
+		$source = $this->source([
+			'sent' => new DateTimeImmutable('2026-11-12T10:00:00+02:00'),
+			'received' => new DateTimeImmutable('2026-11-12T09:00:00Z'),
+		]);
+
+		$message = $this->adapter->convertToModelMessage($source, 1, false);
+
+		self::assertSame(1794474000, $message->getSentDate()->getTimestamp());
+	}
+
 	public function testImportantViaLegacyLabel(): void {
 		$source = $this->source([], ['$label1' => true]);
 
@@ -144,6 +177,8 @@ class JmapMessageAdapterTest extends TestCase {
 		$source = $this->source([], [
 			'$seen' => true,
 			'$flagged' => true,
+			'$hasattachment' => true,
+			'$hasnoattachment' => true,
 			'work' => true,
 			'urgent' => true,
 			'ignored' => false,
@@ -181,13 +216,11 @@ class JmapMessageAdapterTest extends TestCase {
 		self::assertSame('sender@example.com', $from->getEmail());
 	}
 
-	public static function aiGeneratedHeaderProvider(): array {
-		return [
-			'absent' => [null, false],
-			'set' => ['1', true],
-			'set with whitespace' => [' 1 ', true],
-			'other value' => ['0', false],
-		];
+	public static function aiGeneratedHeaderProvider(): \Iterator {
+		yield 'absent' => [null, false];
+		yield 'set' => ['1', true];
+		yield 'set with whitespace' => [' 1 ', true];
+		yield 'other value' => ['0', false];
 	}
 
 	/**
@@ -196,11 +229,147 @@ class JmapMessageAdapterTest extends TestCase {
 	public function testModelMessageAiGeneratedHeader(?string $headerValue, bool $expected): void {
 		$source = $this->source();
 		$source->method('header')->willReturnCallback(
-			static fn (string $name): ?string => $name === 'X-AI-Generated' ? $headerValue : null,
+			static fn (string $name, MailHeaderForm $form): ?string => $name === 'X-AI-Generated' && $form === MailHeaderForm::Text ? $headerValue : null,
 		);
 
 		$message = $this->adapter->convertToModelMessage($source, 1, false);
 
 		self::assertSame($expected, $message->jsonSerialize()['hasAiGeneratedHeader']);
+	}
+
+	/**
+	 * @param mixed $urls List-Unsubscribe in the URLs form
+	 * @return array{unsubscribeUrl: ?string, unsubscribeMailto: ?string, isOneClickUnsubscribe: bool}
+	 */
+	private function unsubscribeTargets(mixed $urls, ?string $post = null): array {
+		$source = $this->source();
+		$source->method('header')->willReturnCallback(
+			static fn (string $name, MailHeaderForm $form): mixed => match (true) {
+				$name === 'List-Unsubscribe' && $form === MailHeaderForm::URLs => $urls,
+				$name === 'List-Unsubscribe-Post' && $form === MailHeaderForm::Text => $post,
+				default => null,
+			},
+		);
+
+		$json = $this->adapter->convertToModelMessage($source, 1, false)->jsonSerialize();
+
+		return [
+			'unsubscribeUrl' => $json['unsubscribeUrl'],
+			'unsubscribeMailto' => $json['unsubscribeMailto'],
+			'isOneClickUnsubscribe' => $json['isOneClickUnsubscribe'],
+		];
+	}
+
+	public function testModelMessageReadsUnsubscribeTargetsFromUrls(): void {
+		$targets = $this->unsubscribeTargets(
+			['https://example.org/unsubscribe', 'mailto:unsubscribe@example.org'],
+			'List-Unsubscribe=One-Click',
+		);
+
+		self::assertSame([
+			'unsubscribeUrl' => 'https://example.org/unsubscribe',
+			'unsubscribeMailto' => 'mailto:unsubscribe@example.org',
+			'isOneClickUnsubscribe' => true,
+		], $targets);
+	}
+
+	public function testModelMessageUsesTheFirstUnsubscribeTargetOfEachScheme(): void {
+		$targets = $this->unsubscribeTargets([
+			'mailto:first@example.org',
+			'ftp://example.org/unsubscribe',
+			'HTTPS://example.org/first',
+			'mailto:second@example.org',
+			'http://example.org/second',
+		]);
+
+		self::assertSame([
+			'unsubscribeUrl' => 'HTTPS://example.org/first',
+			'unsubscribeMailto' => 'mailto:first@example.org',
+			'isOneClickUnsubscribe' => false,
+		], $targets);
+	}
+
+	public function testModelMessageWithoutListUnsubscribe(): void {
+		$targets = $this->unsubscribeTargets(null, 'List-Unsubscribe=One-Click');
+
+		self::assertSame([
+			'unsubscribeUrl' => null,
+			'unsubscribeMailto' => null,
+			'isOneClickUnsubscribe' => false,
+		], $targets);
+	}
+
+	public function testModelMessageIsNotOneClickUnsubscribeWithMailtoOnly(): void {
+		$targets = $this->unsubscribeTargets(['mailto:unsubscribe@example.org'], 'List-Unsubscribe=One-Click');
+
+		self::assertSame([
+			'unsubscribeUrl' => null,
+			'unsubscribeMailto' => 'mailto:unsubscribe@example.org',
+			'isOneClickUnsubscribe' => false,
+		], $targets);
+	}
+
+	public function testModelMessageSkipsInvalidUnsubscribeTargets(): void {
+		$targets = $this->unsubscribeTargets(['', 42, null, 'mailto:unsubscribe@example.org']);
+
+		self::assertSame([
+			'unsubscribeUrl' => null,
+			'unsubscribeMailto' => 'mailto:unsubscribe@example.org',
+			'isOneClickUnsubscribe' => false,
+		], $targets);
+	}
+
+	public function testModelMessageIgnoresUnsubscribeTargetsThatAreNotAList(): void {
+		$targets = $this->unsubscribeTargets('https://example.org/unsubscribe', 'List-Unsubscribe=One-Click');
+
+		self::assertSame([
+			'unsubscribeUrl' => null,
+			'unsubscribeMailto' => null,
+			'isOneClickUnsubscribe' => false,
+		], $targets);
+	}
+
+	/**
+	 * @return list<array<string, mixed>>
+	 */
+	private function schedulingFor(string $calendarContent): array {
+		$source = $this->source();
+		$source->method('bodyPartStructure')->willReturn(new MailPartResponse([
+			'type' => 'multipart/mixed',
+			'subParts' => [
+				['partId' => '1', 'type' => 'text/plain'],
+				['partId' => '2', 'blobId' => 'blob-2', 'type' => 'text/calendar', 'name' => 'event.ics'],
+			],
+		]));
+		$source->method('bodyPartValue')->willReturnCallback(
+			static fn (string $partId): ?string => $partId === '2' ? $calendarContent : null,
+		);
+
+		return $this->adapter->convertToModelMessage($source, 7, true)->jsonSerialize()['scheduling'];
+	}
+
+	public function testModelMessageSchedulingIncludesCalendarContents(): void {
+		$ics = "BEGIN:VCALENDAR\r\nMETHOD:request\r\nBEGIN:VEVENT\r\nUID:abc\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n";
+
+		$scheduling = $this->schedulingFor($ics);
+
+		self::assertSame([[
+			'id' => '2',
+			'messageId' => 7,
+			'method' => 'REQUEST',
+			'contents' => $ics,
+		]], $scheduling);
+	}
+
+	public function testModelMessageSchedulingSkipsCalendarWithoutSupportedMethod(): void {
+		$scheduling = $this->schedulingFor("BEGIN:VCALENDAR\r\nMETHOD:PUBLISH\r\nEND:VCALENDAR\r\n");
+
+		self::assertSame([], $scheduling);
+	}
+
+	public function testModelMessageSchedulingSkipsCalendarWithoutContent(): void {
+		$scheduling = $this->schedulingFor('');
+
+		self::assertSame([], $scheduling);
 	}
 }

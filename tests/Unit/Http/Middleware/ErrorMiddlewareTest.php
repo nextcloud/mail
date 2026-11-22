@@ -26,7 +26,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
-class ErrorMiddlewareTest extends TestCase {
+final class ErrorMiddlewareTest extends TestCase {
 	/** @var IConfig|MockObject */
 	private $config;
 
@@ -48,7 +48,7 @@ class ErrorMiddlewareTest extends TestCase {
 		);
 	}
 
-	public function testDoesNotChangeSuccessfulResponses() {
+	public function testDoesNotChangeSuccessfulResponses(): void {
 		$response = new JSONResponse();
 		$controller = $this->createStub(Controller::class);
 
@@ -57,7 +57,7 @@ class ErrorMiddlewareTest extends TestCase {
 		$this->assertSame($response, $after);
 	}
 
-	public function testDoesNotChangeUntaggedMethodResponses() {
+	public function testDoesNotChangeUntaggedMethodResponses(): void {
 		$request = $this->createStub(IRequest::class);
 		$controller = new class($request) extends Controller {
 			public function __construct(IRequest $request) {
@@ -72,18 +72,16 @@ class ErrorMiddlewareTest extends TestCase {
 		$this->middleware->afterException($controller, 'foo', $exception);
 	}
 
-	public function trappedErrorsData() {
-		return [
-			[new DoesNotExistException('does not exist'), false, Http::STATUS_NOT_FOUND],
-			[new ServiceException(), true, Http::STATUS_INTERNAL_SERVER_ERROR],
-			[new NotImplemented(), false, Http::STATUS_NOT_IMPLEMENTED],
-		];
+	public function trappedErrorsData(): \Iterator {
+		yield [new DoesNotExistException('does not exist'), false, Http::STATUS_NOT_FOUND];
+		yield [new ServiceException(), true, Http::STATUS_INTERNAL_SERVER_ERROR];
+		yield [new NotImplemented(), false, Http::STATUS_NOT_IMPLEMENTED];
 	}
 
 	/**
 	 * @dataProvider trappedErrorsData
 	 */
-	public function testTrapsErrors($exception, $shouldLog, $expectedStatus) {
+	public function testTrapsErrors($exception, $shouldLog, $expectedStatus): void {
 		$request = $this->createStub(IRequest::class);
 		$controller = new class($request) extends Controller {
 			public function __construct(IRequest $request) {
@@ -105,7 +103,7 @@ class ErrorMiddlewareTest extends TestCase {
 		$this->assertEquals($expectedStatus, $response->getStatus());
 	}
 
-	public function testSerializesRecursively() {
+	public function testSerializesRecursively(): void {
 		$inner = new Exception();
 		$outer = new ServiceException('Test', 0, $inner);
 		$request = $this->createStub(IRequest::class);
@@ -129,14 +127,12 @@ class ErrorMiddlewareTest extends TestCase {
 		$this->assertInstanceOf(JSONResponse::class, $response);
 	}
 
-	public function temporaryExceptionsData(): array {
-		return [
-			[new ServiceException('not temporary'), false],
-			[new ServiceException('temporary', 0, new Horde_Imap_Client_Exception('', Horde_Imap_Client_Exception::DISCONNECT)), true],
-			[new ServiceException('temporary', 0, new Horde_Imap_Client_Exception('', Horde_Imap_Client_Exception::SERVER_CONNECT)), false],
-			[new ServiceException('temporary', 0, new Horde_Imap_Client_Exception('', Horde_Imap_Client_Exception::SERVER_READERROR)), true],
-			[new ServiceException('temporary', 0, new Horde_Imap_Client_Exception('', Horde_Imap_Client_Exception::SERVER_WRITEERROR)), true],
-		];
+	public function temporaryExceptionsData(): \Iterator {
+		yield [new ServiceException('not temporary'), false];
+		yield [new ServiceException('temporary', 0, new Horde_Imap_Client_Exception('', Horde_Imap_Client_Exception::DISCONNECT)), true];
+		yield [new ServiceException('temporary', 0, new Horde_Imap_Client_Exception('', Horde_Imap_Client_Exception::SERVER_CONNECT)), false];
+		yield [new ServiceException('temporary', 0, new Horde_Imap_Client_Exception('', Horde_Imap_Client_Exception::SERVER_READERROR)), true];
+		yield [new ServiceException('temporary', 0, new Horde_Imap_Client_Exception('', Horde_Imap_Client_Exception::SERVER_WRITEERROR)), true];
 	}
 
 	/**

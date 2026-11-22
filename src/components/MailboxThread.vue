@@ -37,7 +37,7 @@
 							<SectionTitle
 								class="section-title"
 								:name="t('mail', 'Favorites')" />
-							<NcPopover trigger="hover focus">
+							<NcPopover :triggers="['hover', 'focus']">
 								<template #trigger>
 									<NcButton
 										variant="tertiary-no-background"
@@ -84,7 +84,7 @@
 							<SectionTitle
 								class="section-title"
 								:name="t('mail', 'Favorites')" />
-							<NcPopover trigger="hover focus">
+							<NcPopover :triggers="['hover', 'focus']">
 								<template #trigger>
 									<NcButton
 										variant="tertiary-no-background"
@@ -118,7 +118,7 @@
 							<SectionTitle
 								class="section-title"
 								:name="t('mail', 'Follow up')" />
-							<NcPopover trigger="hover focus">
+							<NcPopover :triggers="['hover', 'focus']">
 								<template #trigger>
 									<NcButton
 										variant="tertiary-no-background"
@@ -149,7 +149,7 @@
 							<SectionTitle
 								class="section-title important"
 								:name="t('mail', 'Important')" />
-							<NcPopover trigger="hover focus">
+							<NcPopover :triggers="['hover', 'focus']">
 								<template #trigger>
 									<NcButton
 										variant="tertiary-no-background"
@@ -201,7 +201,6 @@
 
 <script>
 import { useIsMobile } from '@nextcloud/vue/composables/useIsMobile'
-import addressParser from 'address-rfc2822'
 import mitt from 'mitt'
 import { mapStores } from 'pinia'
 import NcAppContent from '@nextcloud/vue/components/NcAppContent'
@@ -223,6 +222,7 @@ import {
 	UNIFIED_INBOX_ID,
 } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
+import { parseEmailList } from '../util/emailAddress.js'
 import { groupEnvelopesByDate } from '../util/groupedEnvelopes.js'
 import {
 	priorityImportantQuery,
@@ -590,29 +590,7 @@ export default {
 		},
 
 		stringToRecipients(str) {
-			if (str === undefined) {
-				return []
-			}
-
-			let addresses = []
-			try {
-				addresses = addressParser.parse(str)
-			} catch (error) {
-				logger.debug('could not parse string into email addresses', { str, error })
-			}
-
-			return addresses.map((address) => {
-				const result = {
-					label: address.name(),
-					email: address.address,
-				}
-
-				if (result.label === '') {
-					result.label = result.email
-				}
-
-				return result
-			})
+			return parseEmailList(str)
 		},
 
 		onUpdateSearchQuery(query) {

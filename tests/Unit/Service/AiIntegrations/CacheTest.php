@@ -15,7 +15,7 @@ use OCP\ICache;
 use OCP\ICacheFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class CacheTest extends TestCase {
+final class CacheTest extends TestCase {
 
 	private ICacheFactory&MockObject $cacheFactory;
 	private ICache&MockObject $cacheImpl;
@@ -93,14 +93,12 @@ class CacheTest extends TestCase {
 		$this->cache->resetFailures('key');
 	}
 
-	public static function backoffTtlDataProvider(): array {
-		return [
-			[0, Cache::FAILURE_INITIAL_TTL],
-			[1, Cache::FAILURE_INITIAL_TTL],
-			[2, Cache::FAILURE_INITIAL_TTL * 2],
-			[3, Cache::FAILURE_INITIAL_TTL * 4],
-			[1000, Cache::FAILURE_MAX_TTL],
-		];
+	public static function backoffTtlDataProvider(): \Iterator {
+		yield [0, Cache::FAILURE_INITIAL_TTL];
+		yield [1, Cache::FAILURE_INITIAL_TTL];
+		yield [2, Cache::FAILURE_INITIAL_TTL * 2];
+		yield [3, Cache::FAILURE_INITIAL_TTL * 4];
+		yield [1000, Cache::FAILURE_MAX_TTL];
 	}
 
 	/**

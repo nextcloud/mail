@@ -11,7 +11,6 @@ namespace OCA\Mail\Tests\Unit\Service\Attachment;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OC\Files\Node\File;
-use OCA\Files_Sharing\SharedStorage;
 use OCA\Mail\Account;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalAttachmentMapper;
@@ -31,6 +30,7 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\Folder;
 use OCP\Files\IMimeTypeDetector;
 use OCP\Files\NotPermittedException;
+use OCP\Files\Storage\ISharedStorage;
 use OCP\ICache;
 use OCP\ICacheFactory;
 use OCP\IURLGenerator;
@@ -39,7 +39,7 @@ use OCP\Share\IShare;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class AttachmentServiceTest extends TestCase {
+final class AttachmentServiceTest extends TestCase {
 	private LocalAttachmentMapper&MockObject $mapper;
 	private AttachmentStorage&MockObject $storage;
 	private MailManager&MockObject $mailManager;
@@ -81,7 +81,7 @@ class AttachmentServiceTest extends TestCase {
 		);
 	}
 
-	public function testAddFileWithUploadException() {
+	public function testAddFileWithUploadException(): void {
 		$userId = 'jan';
 		$uploadedFile = $this->createMock(UploadedFile::class);
 		$uploadedFile->expects($this->once())
@@ -101,21 +101,21 @@ class AttachmentServiceTest extends TestCase {
 
 		$this->mapper->expects($this->once())
 			->method('insert')
-			->with($this->equalTo($attachment))
+			->with($attachment)
 			->willReturn($persistedAttachment);
 		$this->storage->expects($this->once())
 			->method('save')
-			->with($this->equalTo($userId), $this->equalTo(123), $this->equalTo($uploadedFile))
+			->with($userId, 123, $uploadedFile)
 			->willThrowException(new UploadException());
 		$this->mapper->expects($this->once())
 			->method('delete')
-			->with($this->equalTo($persistedAttachment));
+			->with($persistedAttachment);
 		$this->expectException(UploadException::class);
 
 		$this->service->addFile($userId, $uploadedFile);
 	}
 
-	public function testAddFile() {
+	public function testAddFile(): void {
 		$userId = 'jan';
 		$uploadedFile = $this->createMock(UploadedFile::class);
 		$uploadedFile->expects($this->once())
@@ -136,16 +136,16 @@ class AttachmentServiceTest extends TestCase {
 
 		$this->mapper->expects($this->once())
 			->method('insert')
-			->with($this->equalTo($attachment))
+			->with($attachment)
 			->willReturn($persistedAttachment);
 		$this->storage->expects($this->once())
 			->method('save')
-			->with($this->equalTo($userId), $this->equalTo(123), $this->equalTo($uploadedFile));
+			->with($userId, 123, $uploadedFile);
 
 		$this->service->addFile($userId, $uploadedFile);
 	}
 
-	public function testAddFileFromStringWithUploadException() {
+	public function testAddFileFromStringWithUploadException(): void {
 		$userId = 'jan';
 		$attachment = LocalAttachment::fromParams([
 			'userId' => $userId,
@@ -164,21 +164,21 @@ class AttachmentServiceTest extends TestCase {
 
 		$this->mapper->expects($this->once())
 			->method('insert')
-			->with($this->equalTo($attachment))
+			->with($attachment)
 			->willReturn($persistedAttachment);
 		$this->storage->expects($this->once())
 			->method('saveContent')
-			->with($this->equalTo($userId), $this->equalTo(123), $this->equalTo('Lorem ipsum dolor sit amet'))
+			->with($userId, 123, 'Lorem ipsum dolor sit amet')
 			->willThrowException(new NotPermittedException());
 		$this->mapper->expects($this->once())
 			->method('delete')
-			->with($this->equalTo($persistedAttachment));
+			->with($persistedAttachment);
 		$this->expectException(UploadException::class);
 
 		$this->service->addFileFromString($userId, 'cat.jpg', 'image/jpg', 'Lorem ipsum dolor sit amet', null, null);
 	}
 
-	public function testAddFileFromString() {
+	public function testAddFileFromString(): void {
 		$userId = 'jan';
 		$attachment = LocalAttachment::fromParams([
 			'userId' => $userId,
@@ -195,11 +195,11 @@ class AttachmentServiceTest extends TestCase {
 
 		$this->mapper->expects($this->once())
 			->method('insert')
-			->with($this->equalTo($attachment))
+			->with($attachment)
 			->willReturn($persistedAttachment);
 		$this->storage->expects($this->once())
 			->method('saveContent')
-			->with($this->equalTo($userId), $this->equalTo(123), $this->equalTo('Lorem ipsum dolor sit amet'));
+			->with($userId, 123, 'Lorem ipsum dolor sit amet');
 
 		$this->service->addFileFromString(
 			$userId,
@@ -344,11 +344,11 @@ class AttachmentServiceTest extends TestCase {
 			->willReturn('Lorem ipsum dolor sit amet');
 		$this->mapper->expects($this->once())
 			->method('insert')
-			->with($this->equalTo($attachment))
+			->with($attachment)
 			->willReturn($persistedAttachment);
 		$this->storage->expects($this->once())
 			->method('saveContent')
-			->with($this->equalTo($userId), $this->equalTo(123), $this->equalTo('Lorem ipsum dolor sit amet'));
+			->with($userId, 123, 'Lorem ipsum dolor sit amet');
 		$this->service->handleAttachments($account, [$attachments]);
 	}
 
@@ -413,11 +413,11 @@ class AttachmentServiceTest extends TestCase {
 			->willReturn($imapAttachment);
 		$this->mapper->expects($this->once())
 			->method('insert')
-			->with($this->equalTo($attachment))
+			->with($attachment)
 			->willReturn($persistedAttachment);
 		$this->storage->expects($this->once())
 			->method('saveContent')
-			->with($this->equalTo($userId), $this->equalTo(123), $this->equalTo('Lorem ipsum dolor sit amet'));
+			->with($userId, 123, 'Lorem ipsum dolor sit amet');
 
 		$this->service->handleAttachments($account, [$attachments]);
 	}
@@ -483,21 +483,21 @@ class AttachmentServiceTest extends TestCase {
 			->willReturn($imapAttachment);
 		$this->mapper->expects($this->once())
 			->method('insert')
-			->with($this->equalTo($attachment))
+			->with($attachment)
 			->willReturn($persistedAttachment);
 		$this->storage->expects($this->once())
 			->method('saveContent')
-			->with($this->equalTo($userId), $this->equalTo(456), $this->equalTo('fake png content'));
+			->with($userId, 456, 'fake png content');
 
 		$this->service->handleAttachments($account, [$attachments]);
 	}
 
 	public function testHandleAttachmentsCloudAttachmentNoDownloadPermission(): void {
 		$userId = 'linus';
-		$storage = $this->createMock(SharedStorage::class);
+		$storage = $this->createMock(ISharedStorage::class);
 		$storage->expects(self::once())
 			->method('instanceOfStorage')
-			->with(SharedStorage::class)
+			->with(ISharedStorage::class)
 			->willReturn(true);
 		$share = $this->createMock(IShare::class);
 		$attributes = $this->createMock(IAttributes::class);
@@ -547,7 +547,7 @@ class AttachmentServiceTest extends TestCase {
 			'getName' => 'cat.jpg',
 			'getMimeType' => 'text/plain',
 			'getContent' => 'Lorem ipsum dolor sit amet',
-			'getStorage' => $this->createMock(SharedStorage::class)
+			'getStorage' => $this->createMock(ISharedStorage::class)
 		]);
 		$account = $this->createConfiguredMock(Account::class, [
 			'getUserId' => $userId
@@ -582,11 +582,11 @@ class AttachmentServiceTest extends TestCase {
 			->willReturn($file);
 		$this->mapper->expects($this->once())
 			->method('insert')
-			->with($this->equalTo($attachment))
+			->with($attachment)
 			->willReturn($persistedAttachment);
 		$this->storage->expects($this->once())
 			->method('saveContent')
-			->with($this->equalTo($userId), $this->equalTo(123), $this->equalTo('Lorem ipsum dolor sit amet'));
+			->with($userId, 123, 'Lorem ipsum dolor sit amet');
 
 		$this->service->handleAttachments($account, [$attachments]);
 	}

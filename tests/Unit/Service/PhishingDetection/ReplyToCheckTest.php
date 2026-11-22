@@ -13,7 +13,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\PhishingDetection\ReplyToCheck;
 use OCP\IL10N;
 
-class ReplyToCheckTest extends TestCase {
+final class ReplyToCheckTest extends TestCase {
 	private ReplyToCheck $check;
 	private IL10N $l10n;
 

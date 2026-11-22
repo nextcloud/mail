@@ -52,6 +52,7 @@ class SentMessagesExtractor implements IExtractor {
 			return [0];
 		}
 
+		/** @psalm-suppress PossiblyNullArrayOffset */
 		return [($this->messagesSent[$email] ?? 0) / $messagesSentTotal];
 	}
 }

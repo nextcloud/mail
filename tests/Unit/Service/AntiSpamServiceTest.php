@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2021 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-only
@@ -27,7 +29,7 @@ use OCP\IAppConfig;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class AntiSpamServiceTest extends TestCase {
+final class AntiSpamServiceTest extends TestCase {
 	private AntiSpamService $service;
 	private IAppConfig|MockObject $appConfig;
 	private DbMessageMapper|MockObject $dbMessageMapper;
@@ -174,7 +176,7 @@ class AntiSpamServiceTest extends TestCase {
 		$this->protocolFactory->expects(self::exactly(2))
 			->method('imapClient')
 			->willReturn($client);
-		$client->expects(self::exactly(2))
+		$client->expects(self::never())
 			->method('logout');
 		$this->imapMessageMapper->expects(self::once())
 			->method('getFullText')
@@ -240,7 +242,7 @@ class AntiSpamServiceTest extends TestCase {
 		$this->protocolFactory->expects(self::exactly(2))
 			->method('imapClient')
 			->willReturn($client);
-		$client->expects(self::exactly(2))
+		$client->expects(self::never())
 			->method('logout');
 		$this->imapMessageMapper->expects(self::once())
 			->method('getFullText')

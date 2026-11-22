@@ -23,7 +23,7 @@ use OCP\IRequest;
 use OCP\IUserManager;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class DelegationControllerTest extends TestCase {
+final class DelegationControllerTest extends TestCase {
 	private string $appName = 'mail';
 	private string $currentUserId = 'owner';
 

@@ -89,6 +89,7 @@
 			<NcSelect
 				v-model="selectedCalendar"
 				class="modal-content__calendar-picker"
+				:clearable="false"
 				label="displayname"
 				:aria-label-combobox="t('mail', 'Select calendar')"
 				:options="calendars">

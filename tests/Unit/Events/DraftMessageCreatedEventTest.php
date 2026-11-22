@@ -14,7 +14,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Events\DraftMessageCreatedEvent;
 
-class DraftMessageCreatedEventTest extends TestCase {
+final class DraftMessageCreatedEventTest extends TestCase {
 	public function testConstructorAndGetters(): void {
 		$account = $this->createStub(Account::class);
 		$draft = $this->createStub(Message::class);

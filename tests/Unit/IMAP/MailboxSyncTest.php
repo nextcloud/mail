@@ -32,7 +32,7 @@ use OCP\IDBConnection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 
-class MailboxSyncTest extends TestCase {
+final class MailboxSyncTest extends TestCase {
 	/** @var MailboxMapper|MockObject */
 	private $mailboxMapper;
 
@@ -78,7 +78,7 @@ class MailboxSyncTest extends TestCase {
 		);
 	}
 
-	public function testSyncSkipped() {
+	public function testSyncSkipped(): void {
 		$account = $this->createMock(Account::class);
 		$mailAccount = new MailAccount();
 		$mailAccount->setLastMailboxSync(100000 - 100);
@@ -144,7 +144,7 @@ class MailboxSyncTest extends TestCase {
 		$this->dispatcher
 			->expects($this->once())
 			->method('dispatchTyped')
-			->with($this->equalTo(new MailboxesSynchronizedEvent($account)));
+			->with(new MailboxesSynchronizedEvent($account));
 
 		$this->sync->sync($account, new NullLogger());
 	}
@@ -304,7 +304,7 @@ class MailboxSyncTest extends TestCase {
 			->method('imapClient')
 			->with($account)
 			->willReturn($client);
-		$client->expects($this->once())
+		$client->expects($this->never())
 			->method('logout');
 
 		$this->sync->sync($account, new NullLogger(), false);

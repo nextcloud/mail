@@ -18,7 +18,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class UpdateImapAccountTest extends TestCase {
+final class UpdateImapAccountTest extends TestCase {
 	private MailAccountMapper&MockObject $mapper;
 	private ICrypto&MockObject $crypto;
 	private UpdateImapAccount $command;

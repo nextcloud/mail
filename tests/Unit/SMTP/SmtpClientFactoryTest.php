@@ -19,7 +19,7 @@ use OCP\IConfig;
 use OCP\Security\ICrypto;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class SmtpClientFactoryTest extends TestCase {
+final class SmtpClientFactoryTest extends TestCase {
 	/** @var IConfig|MockObject */
 	private $config;
 
@@ -42,7 +42,7 @@ class SmtpClientFactoryTest extends TestCase {
 		$this->factory = new SmtpClientFactory($this->config, $this->crypto, $this->hostNameFactory);
 	}
 
-	public function testSmtpTransport() {
+	public function testSmtpTransport(): void {
 		$mailAccount = new MailAccount([
 			'smtpHost' => 'smtp.domain.tld',
 			'smtpPort' => 25,

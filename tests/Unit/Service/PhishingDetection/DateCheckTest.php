@@ -15,7 +15,7 @@ use OCA\Mail\Service\PhishingDetection\DateCheck;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IL10N;
 
-class DateCheckTest extends TestCase {
+final class DateCheckTest extends TestCase {
 	private DateCheck $check;
 	private IL10N $l10n;
 	private ITimeFactory $timeFactory;

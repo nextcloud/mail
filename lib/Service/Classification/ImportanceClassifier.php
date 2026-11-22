@@ -420,9 +420,7 @@ class ImportanceClassifier {
 
 		// Persistence is disabled on some instances (due to no memory cache being available).
 		// Try to train a classifier on-the-fly on those instances.
-		if ($pipeline === null) {
-			$pipeline = $this->train($account, $logger);
-		}
+		$pipeline ??= $this->train($account, $logger);
 
 		// Can't train pipeline and no persistence available? -> Skip rule based classifier ...
 		// It won't yield good results. Instead, we have to wait for the user to accumulate more
@@ -508,7 +506,7 @@ class ImportanceClassifier {
 			'recall' => $recallImportant,
 			'precision' => $precisionImportant,
 			'f1Score' => $f1ScoreImportant,
-		]));
+		], JSON_THROW_ON_ERROR));
 		$logger->debug("classifier validated: recall(important)=$recallImportant, precision(important)=$precisionImportant f1(important)=$f1ScoreImportant");
 
 		$classifier = new Classifier();

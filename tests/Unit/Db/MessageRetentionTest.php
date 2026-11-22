@@ -12,7 +12,7 @@ namespace OCA\Mail\Tests\Unit\Db;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\MessageRetention;
 
-class MessageRetentionTest extends TestCase {
+final class MessageRetentionTest extends TestCase {
 	private MessageRetention $messageRetention;
 
 	protected function setUp(): void {

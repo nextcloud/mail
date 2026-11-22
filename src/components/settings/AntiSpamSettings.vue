@@ -95,7 +95,7 @@ export default {
 			this.loading = true
 
 			try {
-				await setAntiSpamEmail(email)
+				await setAntiSpamEmail(this.email)
 				logger.info('anti spam email updated')
 				showSuccess(t('mail', 'Successfully set up anti spam email addresses'))
 			} catch (error) {
@@ -111,13 +111,13 @@ export default {
 			try {
 				await deleteAntiSpamEmail()
 				logger.info('anti spam email deleted')
+				this.email = { spam: '', ham: '' }
 				showSuccess(t('mail', 'Successfully deleted anti spam reporting email'))
 			} catch (error) {
 				logger.error('Could not delete email setting', { error })
 				showError(t('mail', 'Error deleting anti spam reporting email'))
 			} finally {
 				this.loading = false
-				this.email = []
 			}
 		},
 	},

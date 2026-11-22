@@ -23,7 +23,7 @@ use OCA\Mail\Service\MailManager;
 use Psr\Log\LoggerInterface;
 use Psr\Log\Test\TestLogger;
 
-class MoveJunkListenerTest extends TestCase {
+final class MoveJunkListenerTest extends TestCase {
 	private MailManager $mailManager;
 	private MailboxMapper $mailboxMapper;
 	private LoggerInterface $logger;

@@ -158,29 +158,34 @@ function combineEnvelopeLists(sortOrder) {
 	return pipe(flatten, orderBy(prop('dateInt'), 'desc'))
 }
 
-const addMailboxToState = curry((mailboxes, account, mailbox) => {
-	mailbox.accountId = account.id
-	mailbox.mailboxes = []
-	mailbox.envelopeLists = {}
+function addMailboxesToState(mailboxes, account, newMailboxes) {
+	newMailboxes.forEach((mailbox) => {
+		mailbox.accountId = account.id
+		mailbox.mailboxes = []
+		mailbox.envelopeLists = {}
 
-	transformMailboxName(account, mailbox)
+		transformMailboxName(account, mailbox)
 
-	mailboxes[mailbox.databaseId] = mailbox
-	const parent = Object.values(mailboxes)
-		.filter((mb) => mb.accountId === account.id)
-		.find((mb) => mb.name === mailbox.path)
-	if (mailbox.path === '' || !parent) {
-		account.mailboxes.push(mailbox.databaseId)
-	} else {
-		parent.mailboxes.push(mailbox.databaseId)
-	}
+		mailboxes[mailbox.databaseId] = mailbox
 
-	Object.defineProperty(mailbox, 'isSubscribed', {
-		get() {
-			return this.attributes?.includes('\\subscribed') ?? false
-		},
+		Object.defineProperty(mailbox, 'isSubscribed', {
+			get() {
+				return this.attributes?.includes('\\subscribed') ?? false
+			},
+		})
 	})
-})
+
+	newMailboxes.forEach((mailbox) => {
+		const parent = Object.values(mailboxes)
+			.filter((mb) => mb.accountId === account.id)
+			.find((mb) => mb.name === mailbox.path)
+		if (mailbox.path === '' || !parent) {
+			account.mailboxes.push(mailbox.databaseId)
+		} else {
+			parent.mailboxes.push(mailbox.databaseId)
+		}
+	})
+}
 
 function transformMailboxName(account, mailbox) {
 	// Add all mailboxes (including submailboxes to state, but only toplevel to account
@@ -209,6 +214,9 @@ function transformMailboxName(account, mailbox) {
 }
 
 export default function mainStoreActions() {
+	let accountSettingsSave = Promise.resolve()
+	const foldedVersions = {}
+
 	return {
 		updateSyncTimestamp() {
 			this.syncTimestamp = Date.now()
@@ -239,6 +247,19 @@ export default function mainStoreActions() {
 				return account
 			})
 		},
+		async checkOidcReauth(account) {
+			if (!account || account.authMethod !== 'xoauth2' || account.oauthNeedsReauth) {
+				return
+			}
+			try {
+				const fresh = await fetchAccount(account.id)
+				if (fresh.oauthNeedsReauth) {
+					this.patchAccountMutation({ account, data: { oauthNeedsReauth: true } })
+				}
+			} catch (error) {
+				logger.error('Could not check OIDC re-authentication state', { error })
+			}
+		},
 		async startAccountSetup(config) {
 			const account = await createAccount(config)
 			logger.debug(`account ${account.id} created`, { account })
@@ -249,7 +270,7 @@ export default function mainStoreActions() {
 			account.mailboxes = await fetchAllMailboxes(account.id, true)
 			const mailboxes = sortMailboxes(account.mailboxes || [], account)
 			account.mailboxes = []
-			mailboxes.map(addMailboxToState(this.mailboxes, account))
+			addMailboxesToState(this.mailboxes, account, mailboxes)
 		},
 		async finishAccountSetup({ account }) {
 			logger.debug(`Fetching mailboxes for account ${account.id},  …`, { account })
@@ -313,7 +334,13 @@ export default function mainStoreActions() {
 					key,
 					value,
 				})
-				return await savePreference('account-settings', JSON.stringify(this.allAccountSettings))
+				// Every save sends the whole settings list, so queue them to keep an
+				// older snapshot from overwriting a newer one
+				const save = accountSettingsSave
+					.catch(() => {})
+					.then(() => savePreference('account-settings', JSON.stringify(this.allAccountSettings)))
+				accountSettingsSave = save
+				return await save
 			})
 		},
 		async deleteAccount(account) {
@@ -359,8 +386,44 @@ export default function mainStoreActions() {
 					key: 'collapsed',
 					value: false,
 				})
+				if (account.folded) {
+					foldedVersions[account.id] = (foldedVersions[account.id] ?? 0) + 1
+					this.toggleAccountFoldedMutation(account.id)
+					try {
+						await this.setAccountSetting({
+							accountId: account.id,
+							key: 'folded',
+							value: false,
+						})
+					} catch (error) {
+						logger.error(`could not save unfolded state of account ${account.id}`, { error })
+					}
+				}
 				return mailbox
 			})
+		},
+		async toggleAccountFolded(accountId) {
+			const previous = this.accountsUnmapped[accountId].folded
+			const version = (foldedVersions[accountId] ?? 0) + 1
+			foldedVersions[accountId] = version
+			this.toggleAccountFoldedMutation(accountId)
+			try {
+				await this.setAccountSetting({
+					accountId,
+					key: 'folded',
+					value: !previous,
+				})
+			} catch (error) {
+				if (foldedVersions[accountId] === version) {
+					this.toggleAccountFoldedMutation(accountId)
+					this.setAccountSettingMutation({
+						accountId,
+						key: 'folded',
+						value: previous,
+					})
+				}
+				throw error
+			}
 		},
 		async moveAccount({
 			account,
@@ -523,13 +586,8 @@ export default function mainStoreActions() {
 					if (reply.mode === 'reply') {
 						logger.debug('Show simple reply composer', { reply })
 						const account = this.getAccount(reply.data.accountId)
-						// For mailing list emails, "Reply to sender" must use From because
-						// Reply-To points to the list address, not the original sender.
-						// For regular emails, honor Reply-To if the sender set one.
-						const isMailingList = !!(original.unsubscribeUrl || original.unsubscribeMailto)
-						let to = (!isMailingList && original.replyTo?.length > 0)
-							? original.replyTo
-							: reply.data.from
+						// RFC 5322 (3.6.2 and Appendix A.2) state Reply-To should take precedence.
+						let to = original.replyTo?.length > 0 ? original.replyTo : reply.data.from
 						// Replying to a message we sent ourselves: follow up with the
 						// original recipient(s) instead of addressing ourselves.
 						const isOwnMessage = to.length > 0
@@ -616,7 +674,7 @@ export default function mainStoreActions() {
 				if (type === 'outbox' && data.id && data.sendAt) {
 					originalSendAt = data.sendAt
 					const outboxStore = useOutboxStore()
-					await outboxStore.stopMessage({ message: { ...data } })
+					data = await outboxStore.stopMessage({ message: { ...data } })
 				}
 
 				this.startComposerSessionMutation({
@@ -1287,6 +1345,11 @@ export default function mainStoreActions() {
 		}) {
 			return handleHttpAuthErrors(async () => {
 				const internalAddress = await addInternalAddress(address, type)
+				if (internalAddress === null) {
+					logger.debug('internal address is already internal')
+					return
+				}
+
 				this.addInternalAddressMutation(internalAddress)
 				logger.debug('internal address added')
 			})
@@ -1901,6 +1964,7 @@ export default function mainStoreActions() {
 		},
 		addAccountMutation(account) {
 			account.collapsed = account.collapsed ?? true
+			account.folded = account.folded ?? false
 
 			this.accountsUnmapped[account.id] = account
 
@@ -1914,7 +1978,7 @@ export default function mainStoreActions() {
 			account.mailboxes = []
 			account.aliases = sortAliases(account.aliases ?? [])
 
-			mailboxes.map(addMailboxToState(this.mailboxes, account))
+			addMailboxesToState(this.mailboxes, account, mailboxes)
 		},
 		editAccountMutation(account) {
 			this.accountsUnmapped[account.id] = { ...this.accountsUnmapped[account.id], ...account }
@@ -1937,8 +2001,14 @@ export default function mainStoreActions() {
 		toggleAccountCollapsedMutation(accountId) {
 			this.accountsUnmapped[accountId].collapsed = !this.accountsUnmapped[accountId].collapsed
 		},
+		toggleAccountFoldedMutation(accountId) {
+			this.accountsUnmapped[accountId].folded = !this.accountsUnmapped[accountId].folded
+		},
 		expandAccountMutation(accountId) {
 			this.accountsUnmapped[accountId].collapsed = false
+		},
+		collapseAccountMutation(accountId) {
+			this.accountsUnmapped[accountId].collapsed = true
 		},
 		setAccountSettingMutation({
 			accountId,
@@ -1958,7 +2028,7 @@ export default function mainStoreActions() {
 			account,
 			mailbox,
 		}) {
-			addMailboxToState(this.mailboxes, account, mailbox)
+			addMailboxesToState(this.mailboxes, account, [mailbox])
 		},
 		updateMailboxMutation({ mailbox }) {
 			const account = this.accountsUnmapped[mailbox.accountId]
@@ -2057,14 +2127,6 @@ export default function mainStoreActions() {
 		},
 		setComposerIndicatorDisabledMutation(disabled) {
 			this.newMessage.indicatorDisabled = disabled
-		},
-		convertComposerMessageToOutboxMutation({ message }) {
-			if (!this.newMessage) {
-				// If the message is dispatched in the background there is no newMessage data in state
-				return
-			}
-			this.newMessage.type = 'outbox'
-			this.newMessage.data.id = message.id
 		},
 		addEnvelopesMutation({
 			query,

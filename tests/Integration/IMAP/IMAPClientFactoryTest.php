@@ -29,7 +29,7 @@ use OCP\Server;
 use PHPUnit\Framework\MockObject\MockObject;
 use function ltrim;
 
-class IMAPClientFactoryTest extends TestCase {
+final class IMAPClientFactoryTest extends TestCase {
 	/** @var ICrypto|MockObject */
 	private $crypto;
 
@@ -80,7 +80,7 @@ class IMAPClientFactoryTest extends TestCase {
 		return new Account($mailAccount);
 	}
 
-	public function testGetClient() {
+	public function testGetClient(): void {
 		$account = $this->getTestAccount();
 		$this->crypto->expects($this->once())
 			->method('decrypt')
@@ -103,7 +103,7 @@ class IMAPClientFactoryTest extends TestCase {
 		$this->factory->getClient($account);
 	}
 
-	public function testClientConnectivity() {
+	public function testClientConnectivity(): void {
 		$account = $this->getTestAccount();
 		$this->crypto->expects($this->once())
 			->method('decrypt')

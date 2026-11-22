@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "95d2cc35c825780de5d0a12249ad127e",
+    "content-hash": "5b0da710fb11c485a6c350bf7fad9638",
     "packages": [
         {
             "name": "amphp/amp",
@@ -93,7 +93,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-03-21T18:52:26+00:00"
+            "time": "2024-03-21T18:52:26+00:00",
+            "published-time": "2024-03-21T18:55:04+00:00"
         },
         {
             "name": "amphp/byte-stream",
@@ -164,7 +165,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-04-13T18:00:56+00:00"
+            "time": "2024-04-13T18:00:56+00:00",
+            "published-time": "2024-04-13T18:05:26+00:00"
         },
         {
             "name": "amphp/parallel",
@@ -238,7 +240,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-12-08T16:28:11+00:00"
+            "time": "2024-12-08T16:28:11+00:00",
+            "published-time": "2025-06-26T20:06:46+00:00"
         },
         {
             "name": "amphp/parser",
@@ -300,7 +303,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-03-21T19:16:53+00:00"
+            "time": "2024-03-21T19:16:53+00:00",
+            "published-time": "2024-03-21T19:18:30+00:00"
         },
         {
             "name": "amphp/process",
@@ -365,7 +369,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-12-13T17:38:25+00:00"
+            "time": "2024-12-13T17:38:25+00:00",
+            "published-time": "2024-12-13T17:41:02+00:00"
         },
         {
             "name": "amphp/serialization",
@@ -423,7 +428,8 @@
                 "issues": "https://github.com/amphp/serialization/issues",
                 "source": "https://github.com/amphp/serialization/tree/master"
             },
-            "time": "2020-03-25T21:39:07+00:00"
+            "time": "2020-03-25T21:39:07+00:00",
+            "published-time": "2020-03-28T14:03:17+00:00"
         },
         {
             "name": "amphp/sync",
@@ -491,7 +497,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-10-25T18:29:10+00:00"
+            "time": "2021-10-25T18:29:10+00:00",
+            "published-time": "2021-10-25T18:32:28+00:00"
         },
         {
             "name": "andrewdalpino/okbloomer",
@@ -554,7 +561,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-01-24T03:41:23+00:00"
+            "time": "2022-01-24T03:41:23+00:00",
+            "published-time": "2022-01-24T03:52:24+00:00"
         },
         {
             "name": "arthurhoaro/favicon",
@@ -715,7 +723,8 @@
             "support": {
                 "source": "https://github.com/bytestream/Crypt_Blowfish/tree/v1.3.0"
             },
-            "time": "2022-12-12T11:35:44+00:00"
+            "time": "2022-12-12T11:35:44+00:00",
+            "published-time": "2022-12-12T11:36:07+00:00"
         },
         {
             "name": "bytestream/horde-exception",
@@ -820,20 +829,21 @@
             "support": {
                 "source": "https://github.com/bytestream/Idna/tree/v1.2.1"
             },
-            "time": "2022-07-07T11:36:13+00:00"
+            "time": "2022-07-07T11:36:13+00:00",
+            "published-time": "2022-07-07T11:36:45+00:00"
         },
         {
             "name": "bytestream/horde-imap-client",
-            "version": "v2.34.2",
+            "version": "v2.34.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Imap_Client.git",
-                "reference": "f01ae2032800430b033a4b36624124fdba46216f"
+                "reference": "4f7ae680088e6a2b426144e29880573cae4e8e93"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Imap_Client/zipball/f01ae2032800430b033a4b36624124fdba46216f",
-                "reference": "f01ae2032800430b033a4b36624124fdba46216f",
+                "url": "https://api.github.com/repos/bytestream/Imap_Client/zipball/4f7ae680088e6a2b426144e29880573cae4e8e93",
+                "reference": "4f7ae680088e6a2b426144e29880573cae4e8e93",
                 "shasum": ""
             },
             "require": {
@@ -875,9 +885,10 @@
             "description": "Horde IMAP client library",
             "homepage": "https://www.horde.org/libraries/Horde_Imap_Client",
             "support": {
-                "source": "https://github.com/bytestream/Imap_Client/tree/v2.34.2"
+                "source": "https://github.com/bytestream/Imap_Client/tree/v2.34.4"
             },
-            "time": "2026-09-21T09:19:14+00:00"
+            "time": "2026-10-23T13:18:52+00:00",
+            "published-time": "2026-10-23T13:19:21+00:00"
         },
         {
             "name": "bytestream/horde-listheaders",
@@ -929,20 +940,21 @@
             "support": {
                 "source": "https://github.com/bytestream/ListHeaders/tree/v1.3.0"
             },
-            "time": "2021-12-21T16:38:31+00:00"
+            "time": "2021-12-21T16:38:31+00:00",
+            "published-time": "2021-12-21T16:13:14+00:00"
         },
         {
             "name": "bytestream/horde-mail",
-            "version": "v2.7.2",
+            "version": "v2.7.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Mail.git",
-                "reference": "5054666fe1a43f86a85e911111c115a133d80334"
+                "reference": "1dce1f9e84ce747e9075fdfa1a4c9391c7ba9244"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Mail/zipball/5054666fe1a43f86a85e911111c115a133d80334",
-                "reference": "5054666fe1a43f86a85e911111c115a133d80334",
+                "url": "https://api.github.com/repos/bytestream/Mail/zipball/1dce1f9e84ce747e9075fdfa1a4c9391c7ba9244",
+                "reference": "1dce1f9e84ce747e9075fdfa1a4c9391c7ba9244",
                 "shasum": ""
             },
             "require": {
@@ -982,22 +994,23 @@
             "description": "Horde mail library",
             "homepage": "https://www.horde.org/libraries/Horde_Mail",
             "support": {
-                "source": "https://github.com/bytestream/Mail/tree/v2.7.2"
+                "source": "https://github.com/bytestream/Mail/tree/v2.7.3"
             },
-            "time": "2026-02-12T11:00:50+00:00"
+            "time": "2026-10-19T07:51:05+00:00",
+            "published-time": "2026-10-19T07:51:30+00:00"
         },
         {
             "name": "bytestream/horde-mime",
-            "version": "v2.14.1",
+            "version": "v2.14.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Mime.git",
-                "reference": "6cd0216b850ea811ebc543c4b5731ef3a256ba89"
+                "reference": "6c4eaa6462efd6cdaddc8cf72b96f6d3b3b06a72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Mime/zipball/6cd0216b850ea811ebc543c4b5731ef3a256ba89",
-                "reference": "6cd0216b850ea811ebc543c4b5731ef3a256ba89",
+                "url": "https://api.github.com/repos/bytestream/Mime/zipball/6c4eaa6462efd6cdaddc8cf72b96f6d3b3b06a72",
+                "reference": "6c4eaa6462efd6cdaddc8cf72b96f6d3b3b06a72",
                 "shasum": ""
             },
             "require": {
@@ -1046,9 +1059,10 @@
             "description": "MIME library",
             "homepage": "https://www.horde.org/libraries/Horde_Mime",
             "support": {
-                "source": "https://github.com/bytestream/Mime/tree/v2.14.1"
+                "source": "https://github.com/bytestream/Mime/tree/v2.14.2"
             },
-            "time": "2026-03-30T09:58:39+00:00"
+            "time": "2026-10-19T13:14:23+00:00",
+            "published-time": "2026-10-19T13:14:45+00:00"
         },
         {
             "name": "bytestream/horde-secret",
@@ -1101,7 +1115,8 @@
             "support": {
                 "source": "https://github.com/bytestream/Secret/tree/v2.1.0"
             },
-            "time": "2021-12-21T13:40:05+00:00"
+            "time": "2021-12-21T13:40:05+00:00",
+            "published-time": "2021-12-21T13:40:38+00:00"
         },
         {
             "name": "bytestream/horde-socket-client",
@@ -1146,7 +1161,8 @@
             "support": {
                 "source": "https://github.com/bytestream/Socket_Client/tree/v2.2.1"
             },
-            "time": "2021-12-21T19:22:30+00:00"
+            "time": "2021-12-21T19:22:30+00:00",
+            "published-time": "2021-12-21T19:14:13+00:00"
         },
         {
             "name": "bytestream/horde-stream",
@@ -1241,7 +1257,8 @@
             "support": {
                 "source": "https://github.com/bytestream/Stream_Filter/tree/v2.1.1"
             },
-            "time": "2022-05-23T14:46:54+00:00"
+            "time": "2022-05-23T14:46:54+00:00",
+            "published-time": "2022-05-23T14:47:28+00:00"
         },
         {
             "name": "bytestream/horde-stream-wrapper",
@@ -1538,7 +1555,8 @@
             "support": {
                 "source": "https://github.com/bytestream/Translation/tree/v2.3.0"
             },
-            "time": "2021-12-20T20:30:50+00:00"
+            "time": "2021-12-20T20:30:50+00:00",
+            "published-time": "2021-12-21T11:55:36+00:00"
         },
         {
             "name": "bytestream/horde-util",
@@ -2298,16 +2316,16 @@
         },
         {
             "name": "nextcloud/kitinerary-bin",
-            "version": "v1.0.4",
+            "version": "v1.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextcloud-libraries/kitinerary-bin.git",
-                "reference": "58ae0fc814e7b78f29555261e88742396bbd4345"
+                "reference": "20dced988d6c5a928e6c9a5ab1c382eb1ecee298"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud-libraries/kitinerary-bin/zipball/58ae0fc814e7b78f29555261e88742396bbd4345",
-                "reference": "58ae0fc814e7b78f29555261e88742396bbd4345",
+                "url": "https://api.github.com/repos/nextcloud-libraries/kitinerary-bin/zipball/20dced988d6c5a928e6c9a5ab1c382eb1ecee298",
+                "reference": "20dced988d6c5a928e6c9a5ab1c382eb1ecee298",
                 "shasum": ""
             },
             "require": {
@@ -2333,22 +2351,23 @@
             ],
             "description": "KItinerary binary executable",
             "support": {
-                "source": "https://github.com/nextcloud-libraries/kitinerary-bin/tree/v1.0.4"
+                "source": "https://github.com/nextcloud-libraries/kitinerary-bin/tree/v1.0.8"
             },
-            "time": "2025-05-15T19:18:43+00:00"
+            "time": "2026-11-16T10:59:34+00:00",
+            "published-time": "2026-11-16T18:52:03+00:00"
         },
         {
             "name": "nextcloud/kitinerary-flatpak",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextcloud-libraries/kitinerary-flatpak.git",
-                "reference": "9f5ea95be1e1f3b8f3a8637119c34f304766a877"
+                "reference": "5790f783d2a2b656c4ea410a6c5a0f2bd10bc159"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud-libraries/kitinerary-flatpak/zipball/9f5ea95be1e1f3b8f3a8637119c34f304766a877",
-                "reference": "9f5ea95be1e1f3b8f3a8637119c34f304766a877",
+                "url": "https://api.github.com/repos/nextcloud-libraries/kitinerary-flatpak/zipball/5790f783d2a2b656c4ea410a6c5a0f2bd10bc159",
+                "reference": "5790f783d2a2b656c4ea410a6c5a0f2bd10bc159",
                 "shasum": ""
             },
             "require": {
@@ -2374,22 +2393,23 @@
             ],
             "description": "KItinerary Flatpak binding",
             "support": {
-                "source": "https://github.com/nextcloud-libraries/kitinerary-flatpak/tree/v1.0.0"
+                "source": "https://github.com/nextcloud-libraries/kitinerary-flatpak/tree/v1.0.1"
             },
-            "time": "2024-01-19T13:36:53+00:00"
+            "time": "2026-11-04T13:03:15+00:00",
+            "published-time": "2026-11-04T13:09:21+00:00"
         },
         {
             "name": "nextcloud/kitinerary-sys",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextcloud-libraries/kitinerary-sys.git",
-                "reference": "f54aae1a22c407befa41127fe92c57292e1db8bf"
+                "reference": "73cee8b210c9e4c95b59f007021619c2e61351f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud-libraries/kitinerary-sys/zipball/f54aae1a22c407befa41127fe92c57292e1db8bf",
-                "reference": "f54aae1a22c407befa41127fe92c57292e1db8bf",
+                "url": "https://api.github.com/repos/nextcloud-libraries/kitinerary-sys/zipball/73cee8b210c9e4c95b59f007021619c2e61351f4",
+                "reference": "73cee8b210c9e4c95b59f007021619c2e61351f4",
                 "shasum": ""
             },
             "require": {
@@ -2418,9 +2438,10 @@
             ],
             "description": "KItinerary binding for the system package",
             "support": {
-                "source": "https://github.com/nextcloud-libraries/kitinerary-sys/tree/v2.0.0"
+                "source": "https://github.com/nextcloud-libraries/kitinerary-sys/tree/v2.0.1"
             },
-            "time": "2025-01-08T14:40:01+00:00"
+            "time": "2026-11-04T13:03:18+00:00",
+            "published-time": "2026-11-04T13:09:12+00:00"
         },
         {
             "name": "php-http/discovery",
@@ -2720,16 +2741,16 @@
         },
         {
             "name": "rubix/ml",
-            "version": "2.6.0",
+            "version": "2.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RubixML/ML.git",
-                "reference": "8fdea4a0607ec44dadf91d83e706b4e393fa2db5"
+                "reference": "cd708bdbda55a9e96394969a4490baa3b0820624"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RubixML/ML/zipball/8fdea4a0607ec44dadf91d83e706b4e393fa2db5",
-                "reference": "8fdea4a0607ec44dadf91d83e706b4e393fa2db5",
+                "url": "https://api.github.com/repos/RubixML/ML/zipball/cd708bdbda55a9e96394969a4490baa3b0820624",
+                "reference": "cd708bdbda55a9e96394969a4490baa3b0820624",
                 "shasum": ""
             },
             "require": {
@@ -2877,7 +2898,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-18T22:28:55+00:00"
+            "time": "2026-10-06T19:51:35+00:00",
+            "published-time": "2026-10-06T20:14:28+00:00"
         },
         {
             "name": "rubix/tensor",
@@ -2977,7 +2999,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-18T22:03:04+00:00"
+            "time": "2026-09-18T22:03:04+00:00",
+            "published-time": "2026-09-18T22:09:05+00:00"
         },
         {
             "name": "sabberworm/php-css-parser",
@@ -3059,21 +3082,21 @@
         },
         {
             "name": "sebastiankrupinski/jmap-client-php",
-            "version": "v2.4.0",
+            "version": "v2.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SebastianKrupinski/jmap-client-php.git",
-                "reference": "97a32df5e4e9ad9cdfda905cc45a28048bed47d0"
+                "reference": "bcd4f2b4060cd04b53bbec73f6372bd00fa08ddc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SebastianKrupinski/jmap-client-php/zipball/97a32df5e4e9ad9cdfda905cc45a28048bed47d0",
-                "reference": "97a32df5e4e9ad9cdfda905cc45a28048bed47d0",
+                "url": "https://api.github.com/repos/SebastianKrupinski/jmap-client-php/zipball/bcd4f2b4060cd04b53bbec73f6372bd00fa08ddc",
+                "reference": "bcd4f2b4060cd04b53bbec73f6372bd00fa08ddc",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "php": "^8.0",
+                "php": "^8.1",
                 "php-http/discovery": "^1.19",
                 "psr/http-client": "^1.0",
                 "psr/http-factory": "^1.0",
@@ -3118,7 +3141,7 @@
                 "issues": "https://github.com/SebastianKrupinski/jmap-client-php/issues",
                 "source": "https://github.com/SebastianKrupinski/jmap-client-php"
             },
-            "time": "2026-10-04T18:27:37+00:00"
+            "time": "2026-11-13T00:58:34+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -3265,7 +3288,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-09T11:45:10+00:00"
+            "time": "2024-09-09T11:45:10+00:00",
+            "published-time": "2024-09-09T12:24:35+00:00"
         },
         {
             "name": "symfony/polyfill-php80",
@@ -3345,7 +3369,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-09T11:45:10+00:00"
+            "time": "2024-09-09T11:45:10+00:00",
+            "published-time": "2024-09-09T12:24:33+00:00"
         },
         {
             "name": "symfony/polyfill-php82",
@@ -3421,7 +3446,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-09T11:45:10+00:00"
+            "time": "2024-09-09T11:45:10+00:00",
+            "published-time": "2024-09-09T12:24:34+00:00"
         },
         {
             "name": "symfony/polyfill-php83",
@@ -3497,7 +3523,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-09T11:45:10+00:00"
+            "time": "2024-09-09T11:45:10+00:00",
+            "published-time": "2024-09-09T12:24:33+00:00"
         },
         {
             "name": "wamania/php-stemmer",
@@ -3550,31 +3577,38 @@
         },
         {
             "name": "youthweb/urllinker",
-            "version": "2.1.0",
+            "version": "2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Art4/urllinker.git",
-                "reference": "d72c28bd68698ebb912783bc0e5caf6a8f0904b5"
+                "reference": "1e9345cb2f85fecb87514c2ce4578660b81c44fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Art4/urllinker/zipball/d72c28bd68698ebb912783bc0e5caf6a8f0904b5",
-                "reference": "d72c28bd68698ebb912783bc0e5caf6a8f0904b5",
+                "url": "https://api.github.com/repos/Art4/urllinker/zipball/1e9345cb2f85fecb87514c2ce4578660b81c44fb",
+                "reference": "1e9345cb2f85fecb87514c2ce4578660b81c44fb",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.1"
+                "php": "^8.2"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.84",
+                "friendsofphp/php-cs-fixer": "^3.95",
+                "phpstan/extension-installer": "^1.4",
                 "phpstan/phpstan": "^2.0",
-                "phpunit/phpunit": "^9.6 || ^11.0 || ^12.0",
+                "phpstan/phpstan-deprecation-rules": "^2.0",
+                "phpstan/phpstan-phpunit": "^2.0",
+                "phpstan/phpstan-strict-rules": "^2.0",
+                "phpunit/phpunit": "^11.0 || ^12.0",
                 "rector/rector": "^2.1"
             },
             "type": "library",
             "autoload": {
+                "files": [
+                    "src/compat.php"
+                ],
                 "psr-4": {
-                    "Youthweb\\UrlLinker\\": "src"
+                    "Art4\\UrlLinker\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3596,28 +3630,28 @@
             "homepage": "https://github.com/Art4/urllinker",
             "support": {
                 "issues": "https://github.com/Art4/urllinker/issues",
-                "source": "https://github.com/Art4/urllinker/tree/2.1.0"
+                "source": "https://github.com/Art4/urllinker/tree/2.2.1"
             },
-            "time": "2025-07-22T10:44:28+00:00"
+            "time": "2026-08-19T19:39:51+00:00"
         }
     ],
     "packages-dev": [
         {
             "name": "psalm/phar",
-            "version": "5.26.1",
+            "version": "7.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/psalm/phar.git",
-                "reference": "8a38e7ad04499a0ccd2c506fd1da6fc01fff4547"
+                "reference": "0e81326d855d18ddc8475df25b28231770f68d0b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/psalm/phar/zipball/8a38e7ad04499a0ccd2c506fd1da6fc01fff4547",
-                "reference": "8a38e7ad04499a0ccd2c506fd1da6fc01fff4547",
+                "url": "https://api.github.com/repos/psalm/phar/zipball/0e81326d855d18ddc8475df25b28231770f68d0b",
+                "reference": "0e81326d855d18ddc8475df25b28231770f68d0b",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1 || ^8.0"
+                "php": "^8.2"
             },
             "conflict": {
                 "vimeo/psalm": "*"
@@ -3633,9 +3667,10 @@
             "description": "Composer-based Psalm Phar",
             "support": {
                 "issues": "https://github.com/psalm/phar/issues",
-                "source": "https://github.com/psalm/phar/tree/5.26.1"
+                "source": "https://github.com/psalm/phar/tree/7.0.4"
             },
-            "time": "2024-09-09T16:22:43+00:00"
+            "time": "2026-11-06T00:45:37+00:00",
+            "published-time": "2026-11-06T00:45:48+00:00"
         },
         {
             "name": "roave/security-advisories",
@@ -4218,12 +4253,12 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=8.1 <=8.4",
+        "php": ">=8.2 <=8.4",
         "ext-openssl": "*"
     },
     "platform-dev": {},
     "platform-overrides": {
-        "php": "8.1"
+        "php": "8.2"
     },
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.11.0"
 }

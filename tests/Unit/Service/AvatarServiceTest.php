@@ -21,7 +21,7 @@ use OCA\Mail\Service\AvatarService;
 use OCP\IUser;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class AvatarServiceTest extends TestCase {
+final class AvatarServiceTest extends TestCase {
 	public const BLACK_DOT_BASE64 = 'R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
 
 	/** @var IAvatarSource|MockObject */
@@ -63,7 +63,7 @@ class AvatarServiceTest extends TestCase {
 		);
 	}
 
-	public function testGetCachedAvatarUrl() {
+	public function testGetCachedAvatarUrl(): void {
 		$email = 'jane@doe.com';
 		$uid = 'john';
 		$avatar = new Avatar('https://doe.com/favicon.ico');
@@ -77,7 +77,7 @@ class AvatarServiceTest extends TestCase {
 		$this->assertSame($avatar, $result);
 	}
 
-	public function testGetAvatarNoAvatarFound() {
+	public function testGetAvatarNoAvatarFound(): void {
 		$email = 'jane@doe.com';
 		$uid = 'john';
 		$this->preferences->expects($this->once())
@@ -101,7 +101,7 @@ class AvatarServiceTest extends TestCase {
 		$this->assertNull($url);
 	}
 
-	public function testGetAvatarMimeNotAllowed() {
+	public function testGetAvatarMimeNotAllowed(): void {
 		$email = 'jane@doe.com';
 		$uid = 'john';
 		$this->preferences->expects($this->once())
@@ -126,7 +126,7 @@ class AvatarServiceTest extends TestCase {
 		$this->assertNull($url);
 	}
 
-	public function testGetAvatarOnlyInternalAllowed() {
+	public function testGetAvatarOnlyInternalAllowed(): void {
 		$email = 'jane@doe.com';
 		$uid = 'john';
 		$avatar = new Avatar('https://doe.com/favicon.ico', 'image/png');
@@ -151,7 +151,7 @@ class AvatarServiceTest extends TestCase {
 		$this->assertEquals($avatar, $actualAvatar);
 	}
 
-	public function testGetAvatar() {
+	public function testGetAvatar(): void {
 		$email = 'jane@doe.com';
 		$uid = 'john';
 		$avatar = new Avatar('https://doe.com/favicon.ico', 'image/png');
@@ -176,7 +176,7 @@ class AvatarServiceTest extends TestCase {
 		$this->assertEquals($avatar, $actualAvatar);
 	}
 
-	public function testGetCachedAvatarImage() {
+	public function testGetCachedAvatarImage(): void {
 		$email = 'jane@doe.com';
 		$uid = 'john';
 		$avatar = new Avatar('https://doe.com/favicon.ico', 'image/png');
@@ -194,7 +194,7 @@ class AvatarServiceTest extends TestCase {
 		$this->assertEquals([$avatar, base64_decode(self::BLACK_DOT_BASE64)], $data);
 	}
 
-	public function testGetAvatarImageNoUrlCached() {
+	public function testGetAvatarImageNoUrlCached(): void {
 		$email = 'jane@doe.com';
 		$uid = 'john';
 		$this->cache->expects($this->once())
@@ -207,7 +207,7 @@ class AvatarServiceTest extends TestCase {
 		$this->assertNull($image);
 	}
 
-	public function testGetAvatarImageDownloadImage() {
+	public function testGetAvatarImageDownloadImage(): void {
 		$email = 'jane@doe.com';
 		$uid = 'john';
 		$avatar = new Avatar('https://doe.com/favicon.ico', 'image/jpg');
@@ -232,7 +232,7 @@ class AvatarServiceTest extends TestCase {
 		$this->assertEquals([$avatar, base64_decode(self::BLACK_DOT_BASE64)], $data);
 	}
 
-	public function testGetAvatarImageDownloadImageFails() {
+	public function testGetAvatarImageDownloadImageFails(): void {
 		$email = 'jane@doe.com';
 		$uid = 'john';
 		$avatar = new Avatar('https://doe.com/favicon.ico', 'image/jpg');

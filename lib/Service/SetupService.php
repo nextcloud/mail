@@ -17,6 +17,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\CouldNotConnectException;
+use OCA\Mail\Exception\DuplicateEmailAddress;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\SMTP\SmtpClientFactory;
@@ -62,6 +63,11 @@ class SetupService {
 		?int $accountId = null,
 		?bool $classificationEnabled = null): Account {
 		$this->logger->info('Setting up manually configured account');
+
+		if (empty($this->accountService->findByUserIdAndAddress($uid, $emailAddress)) === false) {
+			throw new DuplicateEmailAddress('Account already exists: ' . $emailAddress);
+		}
+
 		$newAccount = new MailAccount([
 			'accountId' => $accountId,
 			'accountName' => $accountName,
@@ -77,21 +83,25 @@ class SetupService {
 			'classificationEnabled' => $classificationEnabled,
 		]);
 		$newAccount->setUserId($uid);
-		if ($authMethod === 'password' && $imapPassword !== null) {
-			$newAccount->setInboundPassword($this->crypto->encrypt($imapPassword));
-		}
-		if ($authMethod === 'password' && $smtpPassword !== null) {
-			$newAccount->setOutboundPassword($this->crypto->encrypt($smtpPassword));
-		}
+
 		if (!in_array($authMethod, ['password', 'xoauth2'], true)) {
 			throw new InvalidArgumentException('Invalid auth method ' . $authMethod);
 		}
 		$newAccount->setAuthMethod($authMethod);
 
-		$account = new Account($newAccount);
-		if ($authMethod === 'password' && $imapPassword !== null) {
-			$this->logger->debug('Connecting to account {account}', ['account' => $newAccount->getEmail()]);
-			$this->testConnectivity($account);
+		if ($authMethod === 'password') {
+			if ($imapPassword !== null) {
+				$newAccount->setInboundPassword($this->crypto->encrypt($imapPassword));
+			}
+			if ($smtpPassword !== null) {
+				$newAccount->setOutboundPassword($this->crypto->encrypt($smtpPassword));
+			}
+
+			if ($imapPassword !== null && $smtpPassword !== null) {
+				$account = new Account($newAccount);
+				$this->logger->debug('Connecting to account {account}', ['account' => $newAccount->getEmail()]);
+				$this->testConnectivity($account);
+			}
 		}
 
 		$this->accountService->save($newAccount);
@@ -99,7 +109,7 @@ class SetupService {
 
 		$this->tagMapper->createDefaultTags($newAccount);
 
-		return $account;
+		return $this->accountService->findById($newAccount->getId());
 	}
 
 	/**
@@ -109,7 +119,7 @@ class SetupService {
 	protected function testConnectivity(Account $account): void {
 		$mailAccount = $account->getMailAccount();
 
-		$imapClient = $this->protocolFactory->imapClient($account);
+		$imapClient = $this->protocolFactory->newImapClient($account);
 		try {
 			$imapClient->login();
 		} catch (Horde_Imap_Client_Exception $e) {

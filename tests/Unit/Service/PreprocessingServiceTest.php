@@ -21,7 +21,7 @@ use OCA\Mail\Service\PreprocessingService;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class PreprocessingServiceTest extends TestCase {
+final class PreprocessingServiceTest extends TestCase {
 	/** @var MailboxMapper|MockObject */
 	private $mailboxMapper;
 

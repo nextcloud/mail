@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2021 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -19,7 +21,7 @@ use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use OCA\Mail\Tests\Integration\Framework\ImapTestAccount;
 use OCP\Server;
 
-class AntiSpamServiceIntegrationTest extends TestCase {
+final class AntiSpamServiceIntegrationTest extends TestCase {
 	use ImapTest,
 		ImapTestAccount;
 

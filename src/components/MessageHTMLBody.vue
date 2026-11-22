@@ -41,6 +41,8 @@ import MdnRequest from './MdnRequest.vue'
 import NeedsTranslationInfo from './NeedsTranslationInfo.vue'
 import logger from '../logger.js'
 import { trustSender } from '../service/TrustedSenderService.js'
+import { limitToContainerWidth } from '../util/fitWidth.ts'
+import { keepAttributeAspectRatio } from '../util/imageAspectRatio.ts'
 import { detectForeignLanguage } from '../util/languageDetection.ts'
 import { isPrintShortcut } from '../util/printMessage.ts'
 
@@ -67,6 +69,12 @@ export default {
 		message: {
 			required: true,
 			type: Object,
+		},
+
+		alwaysShowExternalImages: {
+			type: Boolean,
+			required: false,
+			default: false,
 		},
 	},
 
@@ -132,7 +140,7 @@ export default {
 					|| iframeDoc.querySelectorAll('style[data-original-content]').length > 0
 
 			this.$emit('load')
-			if (this.isSenderTrusted) {
+			if (this.isSenderTrusted || this.alwaysShowExternalImages) {
 				this.displayIframe()
 			}
 		},
@@ -159,12 +167,18 @@ export default {
 			})
 			iframeDoc
 				.querySelectorAll('[data-original-style]')
-				.forEach((node) => node.setAttribute('style', node.getAttribute('data-original-style')))
+				.forEach((node) => {
+					node.setAttribute('style', node.getAttribute('data-original-style'))
+					limitToContainerWidth(node)
+				})
 			iframeDoc
 				.querySelectorAll('style[data-original-content]')
 				.forEach((node) => {
 					node.innerHTML = node.getAttribute('data-original-content')
 				})
+			iframeDoc
+				.querySelectorAll('img[data-original-src]')
+				.forEach((image) => keepAttributeAspectRatio(image))
 			this.hasBlockedContent = false
 		},
 

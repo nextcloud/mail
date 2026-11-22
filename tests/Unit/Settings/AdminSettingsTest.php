@@ -15,7 +15,7 @@ use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Settings\AdminSettings;
 use OCP\AppFramework\Http\TemplateResponse;
 
-class AdminSettingsTest extends TestCase {
+final class AdminSettingsTest extends TestCase {
 	/** @var ServiceMockObject */
 	private $serviceMock;
 
@@ -30,14 +30,14 @@ class AdminSettingsTest extends TestCase {
 		$this->settings = $this->serviceMock->getService();
 	}
 
-	public function testGetSection() {
+	public function testGetSection(): void {
 		$section = $this->settings->getSection();
 
 		$this->assertSame('groupware', $section);
 	}
 
-	public function testGetForm() {
-		$this->serviceMock->getParameter('initialStateService')->expects($this->exactly(14))
+	public function testGetForm(): void {
+		$this->serviceMock->getParameter('initialStateService')->expects($this->exactly(16))
 			->method('provideInitialState')
 			->withConsecutive(
 				[
@@ -81,6 +81,14 @@ class AdminSettingsTest extends TestCase {
 					$this->anything()
 				],
 				[
+					'oidc_providers',
+					$this->anything()
+				],
+				[
+					'oidc_redirect_url',
+					$this->anything()
+				],
+				[
 					'microsoft_oauth_tenant_id',
 					$this->anything()
 				],
@@ -104,7 +112,7 @@ class AdminSettingsTest extends TestCase {
 		$this->assertEquals($expected, $form);
 	}
 
-	public function testGetPriority() {
+	public function testGetPriority(): void {
 		$priority = $this->settings->getPriority();
 
 		$this->assertIsInt($priority);

@@ -27,6 +27,7 @@ class TextBlockService {
 		private TextBlockShareMapper $textBlockShareMapper,
 		private IGroupManager $groupManager,
 		private IUserManager $userManager,
+		private SharingRestrictionService $sharingRestrictionService,
 	) {
 	}
 
@@ -89,12 +90,12 @@ class TextBlockService {
 	}
 
 	/**
-	 * @throws UserNotFoundException
+	 * @throws UserNotFoundException if the sharee does not exist or the sharer may not share with them
 	 * @throws ShareeAlreadyExistsException
 	 */
-	public function share(int $textBlockId, string $shareWith): void {
+	public function share(int $textBlockId, string $sharerId, string $shareWith): void {
 		$sharee = $this->userManager->get($shareWith);
-		if ($sharee === null) {
+		if ($sharee === null || !$this->sharingRestrictionService->canShareWithUser($sharerId, $sharee)) {
 			throw new UserNotFoundException('Sharee does not exist');
 		}
 		if ($this->textBlockShareMapper->shareExists($textBlockId, $shareWith)) {
@@ -124,11 +125,11 @@ class TextBlockService {
 	}
 
 	/**
-	 * @throws UserNotFoundException
+	 * @throws UserNotFoundException if the group does not exist or the sharer may not share with it
 	 * @throws ShareeAlreadyExistsException
 	 */
-	public function shareWithGroup(int $textBlockId, string $groupId): void {
-		if (!$this->groupManager->groupExists($groupId)) {
+	public function shareWithGroup(int $textBlockId, string $sharerId, string $groupId): void {
+		if (!$this->groupManager->groupExists($groupId) || !$this->sharingRestrictionService->canShareWithGroup($sharerId, $groupId)) {
 			throw new UserNotFoundException('Group does not exist');
 		}
 		if ($this->textBlockShareMapper->shareExists($textBlockId, $groupId)) {

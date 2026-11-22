@@ -76,24 +76,10 @@ class ImapTransmissionConnector implements ITransmissionConnector {
 	public function sendMessage(Account $account, LocalMessage $message, Mailbox $sentMailbox): void {
 		// If this is a retry of a failed copy-to-sent, skip SMTP and only re-attempt the copy.
 		if ($message->getStatus() === LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL) {
-			$raw = $message->getRaw();
-			if ($raw !== null) {
-				$client = $this->protocolFactory->imapClient($account);
-				try {
-					$this->messageMapper->save($client, $sentMailbox, $raw, []);
-					$message->setStatus(LocalMessage::STATUS_PROCESSED);
-				} catch (Horde_Imap_Client_Exception $e) {
-					$this->logger->error('Retry copy-to-sent failed: ' . $e->getMessage(), ['exception' => $e]);
-					$message->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
-				} finally {
-					$client->logout();
-				}
-			} else {
-				$message->setStatus(LocalMessage::STATUS_ERROR);
-			}
+			$this->saveToSentMailbox($account, $message, $sentMailbox);
 			return;
 		}
-		[$to, $cc, $bcc, $attachments] = $this->getRecipientsAndAttachments($message);
+		[$to, $cc, $bcc, $attachments] = $this->getRecipientsAndAttachments($account, $message);
 
 		$name = $account->getName();
 		$emailAddress = $account->getEMailAddress();
@@ -101,7 +87,7 @@ class ImapTransmissionConnector implements ITransmissionConnector {
 		$aliasId = $message->getAliasId();
 		if ($aliasId !== null) {
 			try {
-				$alias = $this->aliasesService->find($aliasId, $account->getUserId());
+				$alias = $this->aliasesService->findForAccount($aliasId, $account->getId());
 				$name = ($alias->getName() ?? $name);
 				$emailAddress = $alias->getAlias();
 			} catch (DoesNotExistException) {
@@ -185,7 +171,6 @@ class ImapTransmissionConnector implements ITransmissionConnector {
 			$message->setStatus(LocalMessage::STATUS_RAW);
 		} catch (Horde_Mime_Exception $e) {
 			if ($e->getPrevious() instanceof Horde_Smtp_Exception) {
-				/** @var Horde_Smtp_Exception $previousException */
 				$previousException = $e->getPrevious();
 				$this->logger->error('SMTP error: ' . $e->getMessage(), [
 					'exception' => $e,
@@ -221,24 +206,34 @@ class ImapTransmissionConnector implements ITransmissionConnector {
 			}
 		}
 
+		$this->saveToSentMailbox($account, $message, $sentMailbox);
+	}
+
+	private function saveToSentMailbox(Account $account, LocalMessage $message, Mailbox $sentMailbox): void {
+		if (!$account->getMailAccount()->getSaveSentCopy()) {
+			$message->setStatus(LocalMessage::STATUS_PROCESSED);
+			return;
+		}
+
 		$raw = $message->getRaw();
-		if ($raw !== null) {
-			$client = $this->protocolFactory->imapClient($account);
-			try {
-				$this->messageMapper->save($client, $sentMailbox, $raw, []);
-				$message->setStatus(LocalMessage::STATUS_PROCESSED);
-			} catch (Horde_Imap_Client_Exception $e) {
-				$this->logger->error('Copy to sent mailbox failed: ' . $e->getMessage(), ['exception' => $e]);
-				$message->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
-			} finally {
-				$client->logout();
-			}
+		if ($raw === null) {
+			$message->setStatus(LocalMessage::STATUS_ERROR);
+			return;
+		}
+
+		$client = $this->protocolFactory->imapClient($account);
+		try {
+			$this->messageMapper->save($client, $sentMailbox, $raw, []);
+			$message->setStatus(LocalMessage::STATUS_PROCESSED);
+		} catch (Horde_Imap_Client_Exception $e) {
+			$this->logger->error('Copy to sent mailbox failed: ' . $e->getMessage(), ['exception' => $e]);
+			$message->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
 		}
 	}
 
 	#[\Override]
 	public function saveMessage(Account $account, Mailbox $mailbox, LocalMessage $message, array $flags = []): void {
-		[$to, $cc, $bcc, $attachments] = $this->getRecipientsAndAttachments($message);
+		[$to, $cc, $bcc, $attachments] = $this->getRecipientsAndAttachments($account, $message);
 
 		$perfLogger = $this->performanceLogger->start('save message to IMAP mailbox');
 
@@ -292,8 +287,6 @@ class ImapTransmissionConnector implements ITransmissionConnector {
 			$perfLogger->step('save message on IMAP');
 		} catch (Horde_Exception $e) {
 			throw new ServiceException('Could not save message to IMAP mailbox', 0, $e);
-		} finally {
-			$client->logout();
 		}
 
 		$perfLogger->end();
@@ -311,14 +304,10 @@ class ImapTransmissionConnector implements ITransmissionConnector {
 		]);
 
 		$imapClient = $this->protocolFactory->imapClient($account);
-		try {
-			/** @var Horde_Imap_Client_Data_Fetch[] $fetchResults */
-			$fetchResults = iterator_to_array($imapClient->fetch($mailbox->getName(), $query, [
-				'ids' => new Horde_Imap_Client_Ids([$message->getUid()]),
-			]), false);
-		} finally {
-			$imapClient->logout();
-		}
+		/** @var Horde_Imap_Client_Data_Fetch[] $fetchResults */
+		$fetchResults = iterator_to_array($imapClient->fetch($mailbox->getName(), $query, [
+			'ids' => new Horde_Imap_Client_Ids([$message->getUid()]),
+		]), false);
 
 		if (count($fetchResults) < 1) {
 			throw new ServiceException("Message \"{$message->getId()}\" not found.");
@@ -372,11 +361,11 @@ class ImapTransmissionConnector implements ITransmissionConnector {
 	/**
 	 * @return array{0: AddressList, 1: AddressList, 2: AddressList, 3: array}
 	 */
-	private function getRecipientsAndAttachments(LocalMessage $message): array {
+	private function getRecipientsAndAttachments(Account $account, LocalMessage $message): array {
 		return [
-			$this->transmissionService->getAddressList($message, Recipient::TYPE_TO),
-			$this->transmissionService->getAddressList($message, Recipient::TYPE_CC),
-			$this->transmissionService->getAddressList($message, Recipient::TYPE_BCC),
+			$this->transmissionService->getAddressList($message, Recipient::TYPE_TO, $account->getUserId()),
+			$this->transmissionService->getAddressList($message, Recipient::TYPE_CC, $account->getUserId()),
+			$this->transmissionService->getAddressList($message, Recipient::TYPE_BCC, $account->getUserId()),
 			$this->transmissionService->getAttachments($message),
 		];
 	}

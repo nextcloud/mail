@@ -14,7 +14,7 @@ use OCA\Mail\Db\TrustedSenderMapper;
 use OCA\Mail\Service\TrustedSenderService;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class TrustedSenderServiceTest extends TestCase {
+final class TrustedSenderServiceTest extends TestCase {
 	/** @var TrustedSenderMapper|MockObject */
 	private $mapper;
 

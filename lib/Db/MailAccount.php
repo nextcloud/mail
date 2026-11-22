@@ -87,6 +87,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setOauthAccessToken(string $token)
  * @method string|null getOauthRefreshToken()
  * @method void setOauthRefreshToken(string $token)
+ * @method bool|null getOauthNeedsReauth()
+ * @method void setOauthNeedsReauth(bool $needsReauth)
  * @method int|null getOauthTokenTtl()
  * @method void setOauthTokenTtl(int|null $ttl)
  * @method int|null getSmimeCertificateId()
@@ -107,6 +109,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setClassificationEnabled(bool $classificationEnabled)
  * @method bool getImipCreate()
  * @method void setImipCreate(bool $value)
+ * @method bool getSaveSentCopy()
+ * @method void setSaveSentCopy(bool $saveSentCopy)
  * @method string getProtocol()
  * @method void setProtocol(string $protocol)
  * @method string|null getPath()
@@ -117,6 +121,8 @@ class MailAccount extends Entity {
 	public const PROTOCOL_JMAP = 'jmap';
 	public const SIGNATURE_MODE_PLAIN = 0;
 	public const SIGNATURE_MODE_HTML = 1;
+	public const AUTH_METHODS = ['password', 'xoauth2'];
+	public const DEFAULT_AUTH_METHOD = 'password';
 
 	protected $userId;
 	protected $name;
@@ -141,6 +147,7 @@ class MailAccount extends Entity {
 	protected $oauthAccessToken;
 	protected $oauthRefreshToken;
 	protected $oauthTokenTtl;
+	protected $oauthNeedsReauth;
 
 	/** @var int|null */
 	protected $draftsMailboxId;
@@ -199,6 +206,8 @@ class MailAccount extends Entity {
 	protected bool $classificationEnabled = true;
 
 	protected bool $imipCreate = false;
+
+	protected bool $saveSentCopy = true;
 
 	protected string $protocol = 'imap';
 
@@ -283,6 +292,7 @@ class MailAccount extends Entity {
 		$this->addType('provisioningId', 'integer');
 		$this->addType('order', 'integer');
 		$this->addType('showSubscribedOnly', 'boolean');
+		$this->addType('oauthNeedsReauth', 'boolean');
 		$this->addType('personalNamespace', 'string');
 		$this->addType('draftsMailboxId', 'integer');
 		$this->addType('sentMailboxId', 'integer');
@@ -302,8 +312,17 @@ class MailAccount extends Entity {
 		$this->addType('debug', 'boolean');
 		$this->addType('classificationEnabled', 'boolean');
 		$this->addType('imipCreate', 'boolean');
+		$this->addType('saveSentCopy', 'boolean');
 		$this->addType('protocol', 'string');
 		$this->addType('path', 'string');
+	}
+
+	public function isImap(): bool {
+		return $this->getProtocol() === self::PROTOCOL_IMAP;
+	}
+
+	public function isJmap(): bool {
+		return $this->getProtocol() === self::PROTOCOL_JMAP;
 	}
 
 	public function getOutOfOfficeFollowsSystem(): bool {
@@ -344,6 +363,7 @@ class MailAccount extends Entity {
 			'archiveMailboxId' => $this->getArchiveMailboxId(),
 			'snoozeMailboxId' => $this->getSnoozeMailboxId(),
 			'sieveEnabled' => ($this->isSieveEnabled() === true),
+			'oauthNeedsReauth' => ($this->getOauthNeedsReauth() === true),
 			'signatureAboveQuote' => ($this->isSignatureAboveQuote() === true),
 			'signatureMode' => $this->getSignatureMode(),
 			'smimeCertificateId' => $this->getSmimeCertificateId(),
@@ -355,6 +375,7 @@ class MailAccount extends Entity {
 			'debug' => $this->getDebug(),
 			'classificationEnabled' => $this->getClassificationEnabled(),
 			'imipCreate' => $this->getImipCreate(),
+			'saveSentCopy' => $this->getSaveSentCopy(),
 			'protocol' => $this->getProtocol(),
 			'path' => $this->getPath(),
 		];

@@ -20,7 +20,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CreateJmapAccountTest extends TestCase {
+final class CreateJmapAccountTest extends TestCase {
 	private AccountService&MockObject $service;
 	private ICrypto&MockObject $crypto;
 	private IUserManager&MockObject $userManager;
@@ -73,7 +73,7 @@ class CreateJmapAccountTest extends TestCase {
 			} else {
 				self::assertTrue($actArg->isRequired());
 			}
-			self::assertTrue(in_array($actArg->getName(), $this->args, true));
+			self::assertContains($actArg->getName(), $this->args);
 		}
 	}
 

@@ -13,8 +13,8 @@ namespace OCA\Mail\Tests\Integration\Db;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\MailAccount;
 
-class MailAccountTest extends TestCase {
-	public function testToAPI() {
+final class MailAccountTest extends TestCase {
+	public function testToAPI(): void {
 		$a = new MailAccount();
 		$a->setId(3);
 		$a->setName('Peter Parker');
@@ -74,12 +74,14 @@ class MailAccountTest extends TestCase {
 			'classificationEnabled' => true,
 			'authMethod' => 'password',
 			'imipCreate' => false,
+			'saveSentCopy' => true,
 			'protocol' => 'imap',
 			'path' => null,
+			'oauthNeedsReauth' => false,
 		], $a->toJson());
 	}
 
-	public function testMailAccountConstruct() {
+	public function testMailAccountConstruct(): void {
 		$expected = [
 			'id' => 12345,
 			'accountId' => 12345,
@@ -117,8 +119,10 @@ class MailAccountTest extends TestCase {
 			'classificationEnabled' => true,
 			'authMethod' => 'password',
 			'imipCreate' => false,
+			'saveSentCopy' => true,
 			'protocol' => 'imap',
 			'path' => null,
+			'oauthNeedsReauth' => false,
 		];
 		$a = new MailAccount($expected);
 		// TODO: fix inconsistency

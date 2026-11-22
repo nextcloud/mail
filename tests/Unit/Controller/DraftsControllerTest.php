@@ -20,6 +20,7 @@ use OCA\Mail\Exception\DelegationForbiddenException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\DraftsService;
 use OCA\Mail\Service\SmimeService;
@@ -28,7 +29,7 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\DB\Exception;
 use OCP\IRequest;
 
-class DraftsControllerTest extends TestCase {
+final class DraftsControllerTest extends TestCase {
 	private string $appName;
 	private DraftsService $service;
 	private string $userId;
@@ -64,6 +65,7 @@ class DraftsControllerTest extends TestCase {
 			$this->timeFactory,
 			$this->smimeService,
 			$this->delegationService,
+			$this->createMock(AliasesService::class),
 		);
 	}
 

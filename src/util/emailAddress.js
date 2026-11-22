@@ -3,10 +3,10 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import addressParser from 'address-rfc2822'
+import { parseHeader } from '@haraka/email-address'
 
 /**
- * Try to parse a string with address-rfc2822.
+ * Try to parse a string as an RFC 5322 address list.
  * Returns an array of {label, email} objects, or an empty array on failure.
  *
  * @param {string} str The input string
@@ -18,7 +18,9 @@ function tryParse(str) {
 	}
 
 	try {
-		return addressParser.parse(str).map((addr) => ({
+		return parseHeader(str).filter((addr) => {
+			return isValidEmail(addr.address)
+		}).map((addr) => ({
 			label: addr.name() || addr.address,
 			email: addr.address,
 		}))
@@ -99,7 +101,7 @@ export function parseEmailList(str) {
 	}
 
 	// Split on commas and semicolons (respecting quotes/angle brackets),
-	// then normalize to a comma-separated string for address-rfc2822.
+	// then normalize to a comma-separated string for the address parser.
 	const parts = splitOnDelimiters(str)
 	const normalized = parts.map((p) => p.trim()).filter(Boolean).join(', ')
 
@@ -129,6 +131,11 @@ export function parseEmailList(str) {
 		}
 	}
 	return list
+}
+
+export function isValidEmail(email) {
+	const regExpEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(localhost|((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})))$/
+	return regExpEmail.test(email)
 }
 
 /**

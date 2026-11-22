@@ -20,6 +20,8 @@ use ReturnTypeWillChange;
  * @method void setAccountId(int $accountId)
  */
 class Actions extends Entity implements JsonSerializable {
+	public const NAME_MAX_LENGTH = 64;
+
 	protected $name;
 	protected $accountId;
 	protected $actionSteps = [];

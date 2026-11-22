@@ -47,10 +47,12 @@ class ImportantMessagesExtractor implements IExtractor {
 		}
 		$email = $sender->getEmail();
 
+		/** @psalm-suppress PossiblyNullArrayOffset */
 		if (($total = $this->totalMessages[$email] ?? 0) === 0) {
 			// Prevent div by 0
 			return [0];
 		}
+		/** @psalm-suppress PossiblyNullArrayOffset */
 		return [($this->flaggedMessages[$email] ?? 0) / $total];
 	}
 }

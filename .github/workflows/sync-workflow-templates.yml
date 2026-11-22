@@ -11,8 +11,6 @@
 name: Update workflows
 on:
   workflow_dispatch:
-  schedule:
-      - cron: "45 22 * * 6"
 
 permissions:
   contents: read
@@ -27,7 +25,6 @@ jobs:
         branches:
           - ${{ github.event.repository.default_branch }}
           - 'stable5.13'
-          - 'stable5.12'
 
     name: Update workflows in ${{ matrix.branches }}
 
@@ -46,7 +43,7 @@ jobs:
         with:
           persist-credentials: false
           path: source
-          repository: nextcloud/.github
+          repository: ${{ github.repository_owner }}/.github
 
       - name: Checkout app
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -107,7 +104,7 @@ jobs:
                   echo "ℹ️ Locked version: $locked_version"
                   echo "ℹ️ Current version: $new_version"
                   echo "🆙 Updating existing workflow: $filename"
-                  echo "- 🆙 Updated [$filename](https://github.com/nextcloud/.github/commits/master/workflow-templates/$filename)" >> $GITHUB_ENV
+                  echo "- 🆙 Updated [$filename](https://github.com/${GITHUB_REPOSITORY_OWNER}/.github/commits/HEAD/workflow-templates/$filename)" >> $GITHUB_ENV
 
                   cp "$workflow" "$target_file"
 
@@ -146,7 +143,7 @@ jobs:
 
       - name: Create Pull Request
         if: steps.freeze.outputs.active != 'true'
-        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        uses: peter-evans/create-pull-request@3ffccacd46053766916f087ce41d627c0b8cf2d1 # v8.1.3
         with:
           token: ${{ secrets.COMMAND_BOT_WORKFLOWS }}
           commit-message: 'ci(actions): Update workflow templates from organization template repository'
@@ -159,7 +156,7 @@ jobs:
           draft: ${{ env.DRAFT_ONLY == 1 }}
           add-paths: .github/workflows/*.yml,.github/actions-lock.txt
           body: |
-            Automated update of all workflow templates from [nextcloud/.github](https://github.com/nextcloud/.github)
+            Automated update of all workflow templates from [${{ github.repository_owner }}/.github](https://github.com/${{ github.repository_owner }}/.github)
             ${{ env.SUMMARY }}
           labels: |
             dependencies

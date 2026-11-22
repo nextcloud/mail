@@ -21,7 +21,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class ClearMailboxCacheTest extends TestCase {
+final class ClearMailboxCacheTest extends TestCase {
 	private MailboxMapper|\PHPUnit\Framework\MockObject\MockObject $mailboxMapper;
 	private AccountService|\PHPUnit\Framework\MockObject\MockObject $accountService;
 	private SyncService|\PHPUnit\Framework\MockObject\MockObject $syncService;

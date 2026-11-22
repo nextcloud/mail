@@ -18,9 +18,6 @@ use function chmod;
 use function is_executable;
 use function is_file;
 
-/**
- * @psalm-api
- */
 class MakeItineraryExtractorExecutable implements IRepairStep {
 	/** @var string */
 	private $file;

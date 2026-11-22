@@ -15,7 +15,7 @@ use OCP\IConfig;
 use OCP\Security\ICrypto;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class ProxyHmacGeneratorTest extends TestCase {
+final class ProxyHmacGeneratorTest extends TestCase {
 	private ProxyHmacGenerator $generator;
 	private IConfig|MockObject $config;
 	private ICrypto|MockObject $crypto;

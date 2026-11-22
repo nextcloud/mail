@@ -17,7 +17,7 @@ use OCP\Http\Client\IClient;
 use OCP\Http\Client\IResponse;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class JmapClientAdapterTest extends TestCase {
+final class JmapClientAdapterTest extends TestCase {
 	private IClient&MockObject $ncClient;
 	private HttpFactory $factory;
 	private JmapClientAdapter $client;

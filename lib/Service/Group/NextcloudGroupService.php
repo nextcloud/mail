@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\Group;
 
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Service\SharingRestrictionService;
 use OCP\IConfig;
 use OCP\IGroupManager;
 
@@ -33,7 +34,11 @@ class NextcloudGroupService implements IGroupService {
 	 */
 	private $namespace = 'Nextcloud';
 
-	public function __construct(IGroupManager $groupManager, IConfig $config) {
+	public function __construct(
+		IGroupManager $groupManager,
+		IConfig $config,
+		private SharingRestrictionService $sharingRestrictionService,
+	) {
 		$this->groupManager = $groupManager;
 		$this->config = $config;
 	}
@@ -63,8 +68,9 @@ class NextcloudGroupService implements IGroupService {
 	}
 
 	#[\Override]
-	public function getUsers(string $groupId): array {
-		if (!$this->groupManager->groupExists($groupId)) {
+	public function getUsers(string $groupId, string $userId): array {
+		if (!$this->groupManager->groupExists($groupId)
+			|| !$this->sharingRestrictionService->canShareWithGroup($userId, $groupId)) {
 			throw new ServiceException("$groupId ({$this->getNamespace()}) does not exist");
 		}
 		$users = $this->groupManager->get($groupId)->getUsers();

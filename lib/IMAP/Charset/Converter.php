@@ -44,9 +44,7 @@ class Converter {
 	private function mbEncodings(): array {
 		/** @var list<string>|null $encodings */
 		static $encodings = null;
-		if ($encodings === null) {
-			$encodings = mb_list_encodings();
-		}
+		$encodings ??= mb_list_encodings();
 
 		return $encodings;
 	}

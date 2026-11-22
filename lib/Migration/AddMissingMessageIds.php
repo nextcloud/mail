@@ -17,9 +17,6 @@ use Psr\Log\LoggerInterface;
 use function method_exists;
 use function sprintf;
 
-/**
- * @psalm-api
- */
 class AddMissingMessageIds implements IRepairStep {
 	public function __construct(
 		private MessageMapper $mapper,

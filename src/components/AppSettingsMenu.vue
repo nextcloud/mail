@@ -138,7 +138,7 @@
 				</NcDialog>
 			</NcAppSettingsSection>
 
-			<NcAppSettingsSection id="messages" name="Messages">
+			<NcAppSettingsSection id="messages" :name="t('mail', 'Messages')">
 				<NcFormBox>
 					<NcFormBoxSwitch
 						v-model="useExternalAvatars"
@@ -177,7 +177,9 @@
 						{{ t('mail', 'New text block') }}
 					</NcButton>
 					<template v-if="getSharedTextBlocks().length > 0">
-						<h6>{{ t('mail', 'Shared with me') }}</h6>
+						<h6 class="text-blocks-shared-heading">
+							{{ t('mail', 'Shared with me') }}
+						</h6>
 						<List
 							:textBlocks="getSharedTextBlocks()"
 							:shared="true" />
@@ -191,7 +193,13 @@
 					:label="t('mail', 'Data collection')"
 					:description="t('mail', 'Allow the app to collect and process data locally to adapt to your preferences')" />
 
-				<NcFormGroup :label="t('mail', 'Always show images from')">
+				<NcFormBoxSwitch
+					v-model="useAlwaysShowExternalImages"
+					:disabled="hasLoadingState('always-show-external-images')"
+					:label="t('mail', 'Always show images')"
+					:description="t('mail', 'Load remote images in all messages without asking. Senders can then track when you open their messages.')" />
+
+				<NcFormGroup v-if="!useAlwaysShowExternalImages" :label="t('mail', 'Always show images from')">
 					<TrustedSenders />
 				</NcFormGroup>
 			</NcAppSettingsSection>
@@ -484,6 +492,16 @@ export default {
 
 			set(value) {
 				this.onToggleCollectData(value)
+			},
+		},
+
+		useAlwaysShowExternalImages: {
+			get() {
+				return this.mainStore.getPreference('always-show-external-images', 'false') === 'true'
+			},
+
+			set(value) {
+				this.onToggleAlwaysShowExternalImages(value)
 			},
 		},
 
@@ -794,6 +812,22 @@ export default {
 			}
 		},
 
+		async onToggleAlwaysShowExternalImages(enabled) {
+			this.setLoadingState('always-show-external-images', true)
+
+			try {
+				await this.mainStore.savePreference({
+					key: 'always-show-external-images',
+					value: enabled ? 'true' : 'false',
+				})
+			} catch (error) {
+				Logger.error('Could not save preferences', { error })
+				showError(t('mail', 'Could not update preference'))
+			} finally {
+				this.setLoadingState('always-show-external-images', false)
+			}
+		},
+
 		async onToggleInternalAddress(enabled) {
 			this.setLoadingState('internal-addresses', true)
 
@@ -858,5 +892,12 @@ export default {
 	&__button {
 		margin: var(--default-grid-baseline);
 	}
+}
+
+.text-blocks-shared-heading {
+	margin: calc(2 * var(--default-grid-baseline)) 0 0;
+	padding-inline: var(--form-element-label-offset);
+	font-size: var(--font-size);
+	font-weight: var(--font-weight-heading, bold);
 }
 </style>

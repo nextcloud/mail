@@ -13,7 +13,7 @@ use OCA\Mail\Service\PhishingDetection\LinkCheck;
 use OCP\IL10N;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class LinkCheckTest extends TestCase {
+final class LinkCheckTest extends TestCase {
 
 	private IL10N&MockObject $l10n;
 	private LinkCheck|MockObject $service;
@@ -82,7 +82,7 @@ class LinkCheckTest extends TestCase {
 			'linkText' => 'Öffne iplookup.flagfox.net ↗',
 			'href' => 'https://iplookup.flagfox.net/',
 		]], $actualJson['additionalData']);
-		$this->assertTrue(is_string(json_encode($actualJson, JSON_THROW_ON_ERROR)));
+		$this->assertIsString(json_encode($actualJson, JSON_THROW_ON_ERROR));
 	}
 
 	public function testAddressCasing(): void {

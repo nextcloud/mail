@@ -17,7 +17,9 @@ use OCA\Mail\ConfigLexicon;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Controller\PageController;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\OidcProvider;
 use OCA\Mail\Db\TagMapper;
+use OCA\Mail\Integration\OidcIntegration;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
@@ -48,7 +50,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use function urlencode;
 
-class PageControllerTest extends TestCase {
+final class PageControllerTest extends TestCase {
 	/** @var string */
 	private $appName;
 
@@ -122,6 +124,8 @@ class PageControllerTest extends TestCase {
 	private ContextChatSettingsService $contextChatSettingsService;
 
 	private ClassificationSettingsService|MockObject $classificationSettingsService;
+
+	private OidcIntegration&MockObject $oidcIntegration;
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -151,6 +155,7 @@ class PageControllerTest extends TestCase {
 		$this->appManager = $this->createMock(IAppManager::class);
 		$this->appManager->method('getAppVersion')->willReturn('0.0.1-dev.0');
 		$this->contextChatSettingsService = $this->createMock(ContextChatSettingsService::class);
+		$this->oidcIntegration = $this->createMock(OidcIntegration::class);
 		$this->contextChatSettingsService->method('isIndexingEnabled')->willReturn(true);
 
 		$this->classificationSettingsService = $this->createMock(ClassificationSettingsService::class);
@@ -180,7 +185,8 @@ class PageControllerTest extends TestCase {
 			$this->appManager,
 			$this->contextChatSettingsService,
 			$this->classificationSettingsService,
-			$this->appConfig
+			$this->appConfig,
+			$this->oidcIntegration,
 		);
 	}
 
@@ -188,7 +194,23 @@ class PageControllerTest extends TestCase {
 		$account1 = $this->createMock(Account::class);
 		$account2 = $this->createMock(Account::class);
 		$mailbox = $this->createStub(Mailbox::class);
-		$this->preferences->expects($this->exactly(15))
+		$oidcProvider = new OidcProvider();
+		$oidcProvider->setId(7);
+		$oidcProvider->setName('IdP');
+		$oidcProvider->setEmailDomain('example.com');
+		$oidcProvider->setImapHost('imap.example.com');
+		$oidcProvider->setImapPort(993);
+		$oidcProvider->setImapSslMode('ssl');
+		$oidcProvider->setSmtpHost('smtp.example.com');
+		$oidcProvider->setSmtpPort(587);
+		$oidcProvider->setSmtpSslMode('tls');
+		$this->oidcIntegration->method('getProviders')->willReturn([$oidcProvider]);
+		$this->urlGenerator->method('linkToRouteAbsolute')
+			->willReturnCallback(static fn (string $route): string => match ($route) {
+				'mail.oidcIntegration.authorize' => 'https://cloud.example.com/apps/mail/integration/oidc-authorize',
+				default => '',
+			});
+		$this->preferences->expects($this->exactly(16))
 			->method('getPreference')
 			->willReturnMap([
 				[$this->userId, 'account-settings', '[]', json_encode([])],
@@ -206,14 +228,15 @@ class PageControllerTest extends TestCase {
 				[$this->userId, 'sort-favorites', 'false', 'false'],
 				[$this->userId, 'compact-mode', 'false', 'false'],
 				[$this->userId, 'auto-mark-as-read', '3000', '3000'],
+				[$this->userId, 'always-show-external-images', 'false', 'false'],
 			]);
 		$this->accountService->expects($this->once())
 			->method('findByUserId')
 			->with($this->userId)
-			->will($this->returnValue([
+			->willReturn([
 				$account1,
 				$account2,
-			]));
+			]);
 		$this->accountService->expects($this->once())
 			->method('findDelegatedAccounts')
 			->with($this->userId)
@@ -230,26 +253,26 @@ class PageControllerTest extends TestCase {
 			);
 		$account1->expects($this->once())
 			->method('jsonSerialize')
-			->will($this->returnValue([
+			->willReturn([
 				'accountId' => 1,
-			]));
+			]);
 		$account1->expects($this->once())
 			->method('getId')
-			->will($this->returnValue(1));
+			->willReturn(1);
 		$account2->expects($this->once())
 			->method('jsonSerialize')
-			->will($this->returnValue([
+			->willReturn([
 				'accountId' => 2,
-			]));
+			]);
 		$account2->expects($this->once())
 			->method('getId')
-			->will($this->returnValue(2));
+			->willReturn(2);
 		$this->aliasesService->expects($this->exactly(2))
 			->method('findAll')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				[1, $this->userId, ['a11', 'a12']],
 				[2, $this->userId, ['a21', 'a22']],
-			]));
+			]);
 		$accountsJson = [
 			[
 				'accountId' => 1,
@@ -276,7 +299,7 @@ class PageControllerTest extends TestCase {
 		$user = $this->createMock(IUser::class);
 		$this->userSession->expects($this->once())
 			->method('getUser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 		$this->config
 			->method('getSystemValue')
 			->willReturnMap([
@@ -315,16 +338,16 @@ class PageControllerTest extends TestCase {
 			->willReturn(false);
 
 		$user->method('getUID')
-			->will($this->returnValue('jane'));
+			->willReturn('jane');
 		$this->userManager->expects($this->once())
 			->method('getDisplayName')
-			->with($this->equalTo('jane'))
-			->will($this->returnValue('Jane Doe'));
+			->with('jane')
+			->willReturn('Jane Doe');
 		$this->config->expects($this->once())
 			->method('getUserValue')
-			->with($this->equalTo('jane'), $this->equalTo('settings'),
-				$this->equalTo('email'), $this->equalTo(''))
-			->will($this->returnValue('jane@doe.cz'));
+			->with('jane', 'settings',
+				'email', '')
+			->willReturn('jane@doe.cz');
 
 		$this->appManager->method('isEnabledForUser')->willReturn(true);
 
@@ -347,7 +370,7 @@ class PageControllerTest extends TestCase {
 		$this->classificationSettingsService->expects(($this->once()))
 			->method(('isClassificationEnabledByDefault'))
 			->willReturn(true);
-		$this->initialState->expects($this->exactly(27))
+		$this->initialState->expects($this->exactly(28))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
@@ -376,12 +399,24 @@ class PageControllerTest extends TestCase {
 					'index-context-chat' => 'true',
 					'compact-mode' => 'false',
 					'auto-mark-as-read' => '3000',
+					'always-show-external-images' => 'false',
 				]],
 				['prefill_displayName', 'Jane Doe'],
 				['importance_classification_default', true],
 				['prefill_email', 'jane@doe.cz'],
 				['outbox-messages', []],
 				['quick-actions', []],
+				['oidc_providers', [[
+					'name' => 'IdP',
+					'emailDomain' => 'example.com',
+					'imapHost' => 'imap.example.com',
+					'imapPort' => 993,
+					'imapSslMode' => 'ssl',
+					'smtpHost' => 'smtp.example.com',
+					'smtpPort' => 587,
+					'smtpSslMode' => 'tls',
+					'authorizeUrl' => 'https://cloud.example.com/apps/mail/integration/oidc-authorize?providerId=7&state=_state_',
+				]]],
 				['disable-scheduled-send', false],
 				['disable-snooze', false],
 				['allow-new-accounts', true],
@@ -404,7 +439,7 @@ class PageControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testComposeSimple() {
+	public function testComposeSimple(): void {
 		$address = 'user@example.com';
 		$uri = "mailto:$address";
 
@@ -415,7 +450,7 @@ class PageControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testComposeWithSubject() {
+	public function testComposeWithSubject(): void {
 		$address = 'user@example.com';
 		$subject = 'hello there';
 		$uri = "mailto:$address?subject=$subject";
@@ -428,7 +463,7 @@ class PageControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testComposeWithCc() {
+	public function testComposeWithCc(): void {
 		$address = 'user@example.com';
 		$cc = 'other@example.com';
 		$uri = "mailto:$address?cc=$cc";
@@ -441,7 +476,7 @@ class PageControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testComposeBcc() {
+	public function testComposeBcc(): void {
 		$bcc = 'blind@example.com';
 		$uri = "mailto:?bcc=$bcc";
 
@@ -452,7 +487,7 @@ class PageControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testComposeWithBcc() {
+	public function testComposeWithBcc(): void {
 		$address = 'user@example.com';
 		$bcc = 'blind@example.com';
 		$uri = "mailto:$address?bcc=$bcc";
@@ -465,7 +500,7 @@ class PageControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testComposeWithMultilineBody() {
+	public function testComposeWithMultilineBody(): void {
 		$address = 'user@example.com';
 		$body = 'Hi!\nWhat\'s up?\nAnother line';
 		$uri = "mailto:$address?body=$body";

@@ -14,7 +14,7 @@ use DateTimeImmutable;
 use OCA\Mail\Service\OutOfOffice\OutOfOfficeParser;
 use OCA\Mail\Service\OutOfOffice\OutOfOfficeState;
 
-class OutOfOfficeParserTest extends TestCase {
+final class OutOfOfficeParserTest extends TestCase {
 	private OutOfOfficeParser $outOfOfficeParser;
 
 	protected function setUp(): void {

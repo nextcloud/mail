@@ -13,7 +13,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Service\Avatar\Avatar;
 
-class MessageTest extends TestCase {
+final class MessageTest extends TestCase {
 
 	public function testNewForMessageId(): void {
 		$expected = '<abc@123.com>';

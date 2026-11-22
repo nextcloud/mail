@@ -16,7 +16,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class ProvisionAccountsTest extends TestCase {
+final class ProvisionAccountsTest extends TestCase {
 	private ProvisioningManager&MockObject $provisioningManager;
 	private CommandTester $tester;
 
@@ -35,6 +35,6 @@ class ProvisionAccountsTest extends TestCase {
 		$status = $this->tester->execute([]);
 
 		self::assertSame(Command::SUCCESS, $status);
-		self::assertStringContainsString('42', $this->tester->getDisplay());
+		self::assertStringContainsString('42', (string)$this->tester->getDisplay());
 	}
 }

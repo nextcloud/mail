@@ -24,7 +24,7 @@ use OCA\Mail\Protocol\ProtocolFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class ImapMailboxConnectorTest extends TestCase {
+final class ImapMailboxConnectorTest extends TestCase {
 	private ProtocolFactory&MockObject $protocolFactory;
 	private MailboxSync&MockObject $mailboxSync;
 	private FolderMapper&MockObject $folderMapper;

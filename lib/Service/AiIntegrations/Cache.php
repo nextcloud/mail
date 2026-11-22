@@ -89,6 +89,7 @@ class Cache {
 			return self::FAILURE_INITIAL_TTL;
 		}
 
+		/** @psalm-suppress InvalidOperand 2 ** $x can be a float for large $x, but min() below clamps it back into int range before the final cast */
 		return (int)min(self::FAILURE_INITIAL_TTL * 2 ** ($attempt - 1), self::FAILURE_MAX_TTL);
 	}
 

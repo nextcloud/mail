@@ -11,5 +11,5 @@ export async function unsubscribe(id) {
 		id,
 	})
 
-	axios.post(url)
+	await axios.post(url)
 }

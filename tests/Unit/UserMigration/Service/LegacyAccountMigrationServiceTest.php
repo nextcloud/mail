@@ -14,17 +14,21 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Tests\Unit\UserMigration\RecordsConsoleOutput;
 use OCA\Mail\UserMigration\Service\LegacyAccountMigrationService;
 use OCP\IUser;
 use OCP\UserMigration\IImportSource;
 use OCP\UserMigration\UserMigrationException;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class LegacyAccountMigrationServiceTest extends TestCase {
+final class LegacyAccountMigrationServiceTest extends TestCase {
+	use RecordsConsoleOutput;
+
 	private const USER_ID = 'test_user';
 	private const EXPORTED_ACCOUNT_ID = 19;
 	private const IMPORTED_ACCOUNT_ID = 42;
 	private const ACCOUNT_PATH = 'mail/accounts/19.json';
+	private const DISALLOWED_HOST = '127.0.0.1';
 
 	private OutputInterface $output;
 	private IUser $user;
@@ -46,6 +50,9 @@ class LegacyAccountMigrationServiceTest extends TestCase {
 		$this->serviceMock->getParameter('crypto')
 			->method('encrypt')
 			->willReturnCallback(static fn (string $value): string => $value . '_encrypted');
+		$this->serviceMock->getParameter('hostValidator')
+			->method('isValid')
+			->willReturnCallback(static fn (string $host): bool => $host !== self::DISALLOWED_HOST);
 
 		$this->migrationService = $this->serviceMock->getService();
 	}
@@ -130,14 +137,18 @@ class LegacyAccountMigrationServiceTest extends TestCase {
 		self::assertSame([], $mapping);
 	}
 
-	public static function provideUnusableAccountFiles(): array {
-		return [
-			'not valid JSON' => ['this is not json {{{'],
-			'not an object' => ['"just a string"'],
-			'missing email address' => ['{"imapHost":"imap.doe.com"}'],
-			'missing imap host' => ['{"emailAddress":"jane@doe.com"}'],
-			'incomplete imap settings' => ['{"emailAddress":"jane@doe.com","imapHost":"imap.doe.com"}'],
-		];
+	public static function provideUnusableAccountFiles(): \Iterator {
+		yield 'not valid JSON' => ['this is not json {{{'];
+		yield 'not an object' => ['"just a string"'];
+		yield 'missing email address' => ['{"imapHost":"imap.doe.com"}'];
+		yield 'missing imap host' => ['{"emailAddress":"jane@doe.com"}'];
+		yield 'incomplete imap settings' => ['{"emailAddress":"jane@doe.com","imapHost":"imap.doe.com"}'];
+		yield 'imap host is not a string' => ['{"emailAddress":"jane@doe.com","imapHost":42,"imapPort":993,"imapSslMode":"ssl"}'];
+		yield 'unknown auth method' => ['{"emailAddress":"jane@doe.com","imapHost":"imap.doe.com","imapPort":993,"imapSslMode":"ssl","authMethod":"plain"}'];
+		yield 'empty imap host' => ['{"emailAddress":"jane@doe.com","imapHost":"","imapPort":993,"imapSslMode":"ssl"}'];
+		yield 'smtp host is not a string' => ['{"emailAddress":"jane@doe.com","imapHost":"imap.doe.com","imapPort":993,"imapSslMode":"ssl","smtpHost":42}'];
+		yield 'sieve host is not a string' => ['{"emailAddress":"jane@doe.com","imapHost":"imap.doe.com","imapPort":993,"imapSslMode":"ssl","sieveHost":true}'];
+		yield 'smtp host made of dots' => ['{"emailAddress":"jane@doe.com","imapHost":"imap.doe.com","imapPort":993,"imapSslMode":"ssl","smtpHost":"."}'];
 	}
 
 	/**
@@ -145,16 +156,148 @@ class LegacyAccountMigrationServiceTest extends TestCase {
 	 */
 	public function testImportSkipsUnusableAccountFiles(string $contents): void {
 		$this->importSource->method('getFileContents')
-			->willReturnCallback(static function (string $path) use ($contents): string {
-				return $path === LegacyAccountMigrationService::ACCOUNT_INDEX_FILE
+			->willReturnCallback(static fn (string $path): string => $path === LegacyAccountMigrationService::ACCOUNT_INDEX_FILE
 					? json_encode([self::EXPORTED_ACCOUNT_ID => self::ACCOUNT_PATH])
-					: $contents;
-			});
+					: $contents);
 		$this->serviceMock->getParameter('accountService')->expects(self::never())->method('save');
 
 		$mapping = $this->migrationService->importAccounts($this->user, $this->importSource, $this->output);
 
 		self::assertSame([], $mapping);
+	}
+
+	public static function provideDisallowedHosts(): \Iterator {
+		yield 'imap host' => [['imapHost' => self::DISALLOWED_HOST]];
+		yield 'smtp host' => [['smtpHost' => self::DISALLOWED_HOST]];
+		yield 'sieve host' => [['sieveHost' => self::DISALLOWED_HOST]];
+	}
+
+	/**
+	 * @dataProvider provideDisallowedHosts
+	 */
+	public function testImportSkipsAccountsWithADisallowedHost(array $hostSettings): void {
+		$this->expectArchive([self::EXPORTED_ACCOUNT_ID => self::ACCOUNT_PATH], array_merge($this->getV1AccountData(), $hostSettings));
+		$this->serviceMock->getParameter('accountService')->expects(self::never())->method('save');
+
+		$mapping = $this->migrationService->importAccounts($this->user, $this->importSource, $this->output);
+
+		self::assertSame([], $mapping);
+	}
+
+	public function testImportSkipsValidationOfMissingHosts(): void {
+		$accountData = $this->getV1AccountData();
+		unset($accountData['smtpHost']);
+		$this->expectArchive([self::EXPORTED_ACCOUNT_ID => self::ACCOUNT_PATH], $accountData);
+		$this->expectAccountToBeSaved();
+		$this->serviceMock->getParameter('aliasesService')->method('create')->willReturn(new Alias());
+		$this->serviceMock->getParameter('hostValidator')
+			->expects(self::once())
+			->method('isValid')
+			->with('imap.doe.com');
+
+		$mapping = $this->migrationService->importAccounts($this->user, $this->importSource, $this->output);
+
+		self::assertSame([self::EXPORTED_ACCOUNT_ID => self::IMPORTED_ACCOUNT_ID], $mapping);
+	}
+
+	public function testImportsOauthAccounts(): void {
+		$accountData = $this->getV1AccountData();
+		$accountData['authMethod'] = 'xoauth2';
+		$accountData['oauthRefreshToken'] = 'refresh';
+		$accountData['oauthAccessToken'] = 'access';
+		$this->expectArchive([self::EXPORTED_ACCOUNT_ID => self::ACCOUNT_PATH], $accountData);
+		$this->expectAccountToBeSaved();
+		$this->serviceMock->getParameter('aliasesService')->method('create')->willReturn(new Alias());
+
+		$mapping = $this->migrationService->importAccounts($this->user, $this->importSource, $this->output);
+
+		self::assertSame([self::EXPORTED_ACCOUNT_ID => self::IMPORTED_ACCOUNT_ID], $mapping);
+		self::assertSame('xoauth2', $this->savedAccount->getAuthMethod());
+		self::assertSame('refresh_encrypted', $this->savedAccount->getOauthRefreshToken());
+	}
+
+	public function testImportTreatsAMissingAuthMethodAsPassword(): void {
+		$accountData = $this->getV1AccountData();
+		unset($accountData['authMethod']);
+		$this->expectArchive([self::EXPORTED_ACCOUNT_ID => self::ACCOUNT_PATH], $accountData);
+		$this->expectAccountToBeSaved();
+		$this->serviceMock->getParameter('aliasesService')->method('create')->willReturn(new Alias());
+
+		$mapping = $this->migrationService->importAccounts($this->user, $this->importSource, $this->output);
+
+		self::assertSame([self::EXPORTED_ACCOUNT_ID => self::IMPORTED_ACCOUNT_ID], $mapping);
+		self::assertSame(MailAccount::DEFAULT_AUTH_METHOD, $this->savedAccount->getAuthMethod());
+		self::assertSame('imap_secret_encrypted', $this->savedAccount->getInboundPassword());
+	}
+
+	public static function provideWronglyTypedAccountValues(): \Iterator {
+		yield 'password is an int' => ['inboundPassword', 12345];
+		yield 'oauth token is an array' => ['oauthAccessToken', ['nope']];
+	}
+
+	/**
+	 * @dataProvider provideWronglyTypedAccountValues
+	 */
+	public function testImportSkipsAccountsWithWronglyTypedValues(string $key, mixed $value): void {
+		$accountData = $this->getV1AccountData();
+		$accountData[$key] = $value;
+		$this->expectArchive([self::EXPORTED_ACCOUNT_ID => self::ACCOUNT_PATH], $accountData);
+		$this->serviceMock->getParameter('accountService')->expects(self::never())->method('save');
+
+		$mapping = $this->migrationService->importAccounts($this->user, $this->importSource, $this->output);
+
+		self::assertSame([], $mapping);
+	}
+
+	public function testImportReportsAnUnreadableIndexAsANotice(): void {
+		$this->recordConsoleOutput();
+		$this->importSource->method('getFileContents')
+			->with(LegacyAccountMigrationService::ACCOUNT_INDEX_FILE)
+			->willThrowException(new UserMigrationException());
+
+		$this->migrationService->importAccounts($this->user, $this->importSource, $this->output);
+
+		$this->assertWritten('No readable account index', 0);
+	}
+
+	public function testImportReportsAnIndexThatIsNotAMapAsANotice(): void {
+		$this->recordConsoleOutput();
+		$this->importSource->method('getFileContents')
+			->with(LegacyAccountMigrationService::ACCOUNT_INDEX_FILE)
+			->willReturn('"just a string"');
+		$this->serviceMock->getParameter('accountService')->expects(self::never())->method('save');
+
+		$mapping = $this->migrationService->importAccounts($this->user, $this->importSource, $this->output);
+
+		self::assertSame([], $mapping);
+		$this->assertWritten('No readable account index', 0);
+	}
+
+	public function testImportSkipsOnlyTheMalformedIndexEntry(): void {
+		$this->recordConsoleOutput();
+		$this->expectArchive([18 => 42, self::EXPORTED_ACCOUNT_ID => self::ACCOUNT_PATH], $this->getV1AccountData());
+		$this->expectAccountToBeSaved();
+		$this->serviceMock->getParameter('aliasesService')->method('create')->willReturn(new Alias());
+
+		$mapping = $this->migrationService->importAccounts($this->user, $this->importSource, $this->output);
+
+		self::assertSame([self::EXPORTED_ACCOUNT_ID => self::IMPORTED_ACCOUNT_ID], $mapping);
+		$this->assertWritten('A mail account of ' . self::USER_ID . ' is invalid', 0);
+	}
+
+	public function testImportSkipsASecondAccountWithTheSameId(): void {
+		$this->recordConsoleOutput();
+		$this->expectArchive([18 => 'mail/accounts/18.json', self::EXPORTED_ACCOUNT_ID => self::ACCOUNT_PATH], $this->getV1AccountData());
+		$this->expectAccountToBeSaved();
+		$this->serviceMock->getParameter('accountService')
+			->expects(self::once())
+			->method('save');
+		$this->serviceMock->getParameter('aliasesService')->method('create')->willReturn(new Alias());
+
+		$mapping = $this->migrationService->importAccounts($this->user, $this->importSource, $this->output);
+
+		self::assertSame([self::EXPORTED_ACCOUNT_ID => self::IMPORTED_ACCOUNT_ID], $mapping);
+		$this->assertWritten('has the same ID as another account', 0);
 	}
 
 	public function testImportSkipsNonImapAccounts(): void {
@@ -170,11 +313,9 @@ class LegacyAccountMigrationServiceTest extends TestCase {
 
 	private function expectArchive(array $index, array $accountData): void {
 		$this->importSource->method('getFileContents')
-			->willReturnCallback(static function (string $path) use ($index, $accountData): string {
-				return $path === LegacyAccountMigrationService::ACCOUNT_INDEX_FILE
+			->willReturnCallback(static fn (string $path): string => $path === LegacyAccountMigrationService::ACCOUNT_INDEX_FILE
 					? json_encode($index, JSON_THROW_ON_ERROR)
-					: json_encode($accountData, JSON_THROW_ON_ERROR);
-			});
+					: json_encode($accountData, JSON_THROW_ON_ERROR));
 	}
 
 	private function expectAccountToBeSaved(): void {
@@ -227,5 +368,43 @@ class LegacyAccountMigrationServiceTest extends TestCase {
 					'smimeCertificateId' => null],
 			],
 		];
+	}
+
+	public function testImportReportsAnUnsupportedAccountAsANotice(): void {
+		$this->recordConsoleOutput();
+		$accountData = $this->getV1AccountData();
+		$accountData['protocol'] = MailAccount::PROTOCOL_JMAP;
+		$this->expectArchive([self::EXPORTED_ACCOUNT_ID => self::ACCOUNT_PATH], $accountData);
+
+		$this->migrationService->importAccounts($this->user, $this->importSource, $this->output);
+
+		$this->assertWritten(self::ACCOUNT_PATH, 0);
+	}
+
+	public function testImportReportsAnUnreadableAccountFileAsANotice(): void {
+		$this->recordConsoleOutput();
+		$this->importSource->method('getFileContents')
+			->willReturnCallback(static function (string $path): string {
+				if ($path === LegacyAccountMigrationService::ACCOUNT_INDEX_FILE) {
+					return json_encode([self::EXPORTED_ACCOUNT_ID => self::ACCOUNT_PATH]);
+				}
+				throw new UserMigrationException('not readable');
+			});
+
+		$this->migrationService->importAccounts($this->user, $this->importSource, $this->output);
+
+		$this->assertWritten(self::ACCOUNT_PATH, 0);
+	}
+
+	public function testImportReportsAnInvalidAccountFileAsANotice(): void {
+		$this->recordConsoleOutput();
+		$this->importSource->method('getFileContents')
+			->willReturnCallback(static fn (string $path): string => $path === LegacyAccountMigrationService::ACCOUNT_INDEX_FILE
+					? json_encode([self::EXPORTED_ACCOUNT_ID => self::ACCOUNT_PATH])
+					: '"just a string"');
+
+		$this->migrationService->importAccounts($this->user, $this->importSource, $this->output);
+
+		$this->assertWritten(self::ACCOUNT_PATH, 0);
 	}
 }

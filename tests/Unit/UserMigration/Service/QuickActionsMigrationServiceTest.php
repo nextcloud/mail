@@ -14,6 +14,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\Actions;
 use OCA\Mail\Db\ActionStep;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Tests\Unit\UserMigration\RecordsConsoleOutput;
 use OCA\Mail\UserMigration\Service\QuickActionsMigrationService;
 use OCP\IUser;
 use OCP\UserMigration\IExportDestination;
@@ -21,7 +22,9 @@ use OCP\UserMigration\IImportSource;
 use OCP\UserMigration\UserMigrationException;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class QuickActionsMigrationServiceTest extends TestCase {
+final class QuickActionsMigrationServiceTest extends TestCase {
+	use RecordsConsoleOutput;
+
 	private const USER_ID = '123';
 	private const FIRST_QUICK_STEP_ID = 1;
 	private const SECOND_QUICK_STEP_ID = 2;
@@ -104,9 +107,9 @@ class QuickActionsMigrationServiceTest extends TestCase {
 			->with(QuickActionsMigrationService::QUICK_ACTIONS_FILE)
 			->willReturn(json_encode($quickActions));
 
-		$accountMapping = [self::QUICK_STEP_ACCOUNT_ID => rand(100, 199)];
-		$mailboxMapping = [self::QUICK_STEP_MAILBOX_ID => rand(200, 299)];
-		$tagMapping = [2 => rand(300, 399)];
+		$accountMapping = [self::QUICK_STEP_ACCOUNT_ID => random_int(100, 199)];
+		$mailboxMapping = [self::QUICK_STEP_MAILBOX_ID => random_int(200, 299)];
+		$tagMapping = [2 => random_int(300, 399)];
 
 		$createdIds = [];
 		$createCallCount = 0;
@@ -123,7 +126,7 @@ class QuickActionsMigrationServiceTest extends TestCase {
 				self::assertSame($expected->getName(), $name);
 				self::assertSame($accountMapping[$expected->getAccountId()], $accountId);
 				$newActions = new Actions();
-				$newActions->setId(rand(400, 499));
+				$newActions->setId(random_int(400, 499));
 				$newActions->setName($name);
 				$newActions->setAccountId($accountId);
 				$createdIds[] = $newActions->getId();
@@ -153,7 +156,7 @@ class QuickActionsMigrationServiceTest extends TestCase {
 				self::assertSame($expected['tagId'], $tagId);
 				self::assertSame($expected['mailboxId'], $mailboxId);
 				$newStep = new ActionStep();
-				$newStep->setId(rand(500, 599));
+				$newStep->setId(random_int(500, 599));
 				$createStepCallCount++;
 				return $newStep;
 			});
@@ -173,12 +176,10 @@ class QuickActionsMigrationServiceTest extends TestCase {
 			self::ACCOUNT_MAPPING, self::MAILBOX_MAPPING, []);
 	}
 
-	public static function provideFileContentsWithNoQuickActionsImported(): array {
-		return [
-			'empty list' => [json_encode([])],
-			'invalid JSON' => ['this is not valid json {{{'],
-			'JSON object instead of list' => [json_encode(['unexpected' => 'object'])],
-		];
+	public static function provideFileContentsWithNoQuickActionsImported(): \Iterator {
+		yield 'empty list' => [json_encode([])];
+		yield 'invalid JSON' => ['this is not valid json {{{'];
+		yield 'JSON object instead of list' => [json_encode(['unexpected' => 'object'])];
 	}
 
 	/**
@@ -207,24 +208,28 @@ class QuickActionsMigrationServiceTest extends TestCase {
 			self::ACCOUNT_MAPPING, self::MAILBOX_MAPPING, []);
 	}
 
-	public static function provideIncompleteMappings(): array {
-		return [
-			'no accounts imported' => ['accountMapping' => [], 'mailboxMapping' => self::MAILBOX_MAPPING],
-			'nothing imported' => ['accountMapping' => [], 'mailboxMapping' => []],
-		];
+	public static function provideIncompleteMappings(): \Iterator {
+		yield 'no accounts imported' => ['accountMapping' => [], 'mailboxMapping' => self::MAILBOX_MAPPING];
+		yield 'nothing imported' => ['accountMapping' => [], 'mailboxMapping' => []];
 	}
 
 	/**
 	 * @dataProvider provideIncompleteMappings
 	 */
-	public function testImportWithoutAccountMappingIsSkipped(array $accountMapping,
+	public function testImportReportsEveryQuickActionWithoutImportedAccount(array $accountMapping,
 		array $mailboxMapping): void {
-		$this->importSource->expects(self::never())->method('getFileContents');
+		$this->recordConsoleOutput();
+		$this->importSource->method('getFileContents')
+			->with(QuickActionsMigrationService::QUICK_ACTIONS_FILE)
+			->willReturn(json_encode($this->getQuickActions()));
 		$this->serviceMock->getParameter('quickActionsService')->expects(self::never())->method('create');
 		$this->serviceMock->getParameter('quickActionsService')->expects(self::never())->method('createActionStep');
 
 		$this->migrationService->importQuickActions($this->user, $this->importSource, $this->output, $accountMapping,
 			$mailboxMapping, []);
+
+		$this->assertWritten('Skipping quick action First quick action because account', 0);
+		$this->assertWritten('Skipping quick action Second quick action because account', 0);
 	}
 
 	public function testImportSkipsOnlyTheQuickActionWhoseMailboxIsMissing(): void {
@@ -458,5 +463,118 @@ class QuickActionsMigrationServiceTest extends TestCase {
 
 	private function getQuickActions(): array {
 		return [$this->getFirstQuickAction(), $this->getSecondQuickAction()];
+	}
+
+	public function testImportReportsAQuickActionWithoutImportedAccountAsANotice(): void {
+		$this->recordConsoleOutput();
+		$quickAction = $this->getFirstQuickAction();
+		$quickAction->setName('Archived quick action');
+		$quickAction->setAccountId(self::QUICK_STEP_ACCOUNT_ID + 1);
+		$this->importSource->method('getFileContents')
+			->with(QuickActionsMigrationService::QUICK_ACTIONS_FILE)
+			->willReturn(json_encode([$quickAction]));
+
+		$this->migrationService->importQuickActions($this->user, $this->importSource, $this->output,
+			self::ACCOUNT_MAPPING, self::MAILBOX_MAPPING, self::TAG_MAPPING);
+
+		$this->assertWritten('Archived quick action', 0);
+	}
+
+	public function testImportReportsAQuickActionWithoutImportedMailboxAsANotice(): void {
+		$this->recordConsoleOutput();
+		$quickAction = $this->getFirstQuickAction();
+		$quickAction->setName('Archived quick action');
+		$this->importSource->method('getFileContents')
+			->with(QuickActionsMigrationService::QUICK_ACTIONS_FILE)
+			->willReturn(json_encode([$quickAction]));
+
+		$this->migrationService->importQuickActions($this->user, $this->importSource, $this->output,
+			self::ACCOUNT_MAPPING, [], self::TAG_MAPPING);
+
+		$this->assertWritten('Archived quick action', 0);
+	}
+
+	public function testImportReportsAQuickActionTheServiceRejectsAsANotice(): void {
+		$this->recordConsoleOutput();
+		$quickAction = $this->getFirstQuickAction();
+		$quickAction->setName('Archived quick action');
+		$this->importSource->method('getFileContents')
+			->with(QuickActionsMigrationService::QUICK_ACTIONS_FILE)
+			->willReturn(json_encode([$quickAction]));
+		$created = new Actions();
+		$created->setId(42);
+		$this->serviceMock->getParameter('quickActionsService')->method('create')->willReturn($created);
+		$this->serviceMock->getParameter('quickActionsService')
+			->method('createActionStep')
+			->willThrowException(new ServiceException('Invalid action step order'));
+
+		$this->migrationService->importQuickActions($this->user, $this->importSource, $this->output,
+			self::ACCOUNT_MAPPING, self::MAILBOX_MAPPING, self::TAG_MAPPING);
+
+		$this->assertWritten('Archived quick action', 0);
+	}
+
+	public function testImportReportsInvalidQuickActionsAsANotice(): void {
+		$this->recordConsoleOutput();
+		$this->importSource->method('getFileContents')
+			->with(QuickActionsMigrationService::QUICK_ACTIONS_FILE)
+			->willReturn('this is not valid json {{{');
+
+		$this->migrationService->importQuickActions($this->user, $this->importSource, $this->output,
+			self::ACCOUNT_MAPPING, self::MAILBOX_MAPPING, self::TAG_MAPPING);
+
+		$this->assertWritten('is invalid and will be skipped', 0);
+	}
+
+	public function testImportSkipsANameLongerThanTheColumn(): void {
+		$this->recordConsoleOutput();
+		$tooLong = $this->getFirstQuickAction();
+		$tooLong->setName(str_repeat('ä', Actions::NAME_MAX_LENGTH + 1));
+		$fits = $this->getSecondQuickAction();
+		$fits->setName(str_repeat('ä', Actions::NAME_MAX_LENGTH));
+		$this->importSource->method('getFileContents')
+			->with(QuickActionsMigrationService::QUICK_ACTIONS_FILE)
+			->willReturn(json_encode([$tooLong, $fits]));
+		$created = new Actions();
+		$created->setId(42);
+		$this->serviceMock->getParameter('quickActionsService')
+			->expects(self::once())
+			->method('create')
+			->with(str_repeat('ä', Actions::NAME_MAX_LENGTH), self::ACCOUNT_MAPPING[self::QUICK_STEP_ACCOUNT_ID])
+			->willReturn($created);
+		$this->serviceMock->getParameter('quickActionsService')
+			->method('createActionStep')
+			->willReturn(new ActionStep());
+
+		$this->migrationService->importQuickActions($this->user, $this->importSource, $this->output,
+			self::ACCOUNT_MAPPING, self::MAILBOX_MAPPING, self::TAG_MAPPING);
+
+		$this->assertWritten('A quick action of ' . self::USER_ID . ' is invalid', 0);
+	}
+
+	public function testImportSkipsOnlyTheMalformedQuickAction(): void {
+		$this->recordConsoleOutput();
+		$malformedQuickAction = array_merge(
+			json_decode(json_encode($this->getFirstQuickAction()), true),
+			['accountId' => 'not an id'],
+		);
+		$this->importSource->method('getFileContents')
+			->with(QuickActionsMigrationService::QUICK_ACTIONS_FILE)
+			->willReturn(json_encode([$malformedQuickAction, $this->getSecondQuickAction()]));
+		$created = new Actions();
+		$created->setId(42);
+		$this->serviceMock->getParameter('quickActionsService')
+			->expects(self::once())
+			->method('create')
+			->with('Second quick action', self::ACCOUNT_MAPPING[self::QUICK_STEP_ACCOUNT_ID])
+			->willReturn($created);
+		$this->serviceMock->getParameter('quickActionsService')
+			->method('createActionStep')
+			->willReturn(new ActionStep());
+
+		$this->migrationService->importQuickActions($this->user, $this->importSource, $this->output,
+			self::ACCOUNT_MAPPING, self::MAILBOX_MAPPING, self::TAG_MAPPING);
+
+		$this->assertWritten('A quick action of ' . self::USER_ID . ' is invalid', 0);
 	}
 }

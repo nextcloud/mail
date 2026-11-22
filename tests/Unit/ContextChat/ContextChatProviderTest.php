@@ -29,7 +29,7 @@ use OCP\IUserManager;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class ContextChatProviderTest extends TestCase {
+final class ContextChatProviderTest extends TestCase {
 	/** @var TaskService|MockObject */
 	private $taskService;
 
@@ -125,7 +125,7 @@ class ContextChatProviderTest extends TestCase {
 	/**
 	 * @dataProvider provideEvents
 	 */
-	public function testHandleWithContextChat($event) {
+	public function testHandleWithContextChat($event): void {
 		$this->contentManager->expects($this->once())
 			->method('isContextChatAvailable')
 			->willReturn(true);

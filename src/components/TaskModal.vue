@@ -49,7 +49,7 @@
 				inputId="url"
 				:placeholder="t('mail', 'Select calendar')"
 				:aria-label-combobox="t('mail', 'Select calendar')"
-				:allowEmpty="false"
+				:clearable="false"
 				:options="calendarChoices">
 				<template #option="{ id }">
 					<CalendarPickerOption

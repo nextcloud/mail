@@ -12,7 +12,7 @@ namespace Unit\Service\MailFilter;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\MailFilter\FilterParser;
 
-class FilterParserTest extends TestCase {
+final class FilterParserTest extends TestCase {
 	private FilterParser $filterParser;
 
 	private string $testFolder;

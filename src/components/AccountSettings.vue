@@ -105,7 +105,7 @@
 			<SieveDisabledHint v-else />
 		</NcAppSettingsSection>
 		<NcAppSettingsSection
-			v-if="account && !account.provisioningId && !account.isDelegated"
+			v-if="account && !account.provisioningId && !account.isDelegated && account.protocol !== 'jmap'"
 			id="mail-server"
 			key="mail-server"
 			ref="mail-server"
@@ -262,7 +262,7 @@ export default {
 
 	methods: {
 		scrollToAccountSettings() {
-			this.$refs.accountForm.$el.scrollIntoView({
+			this.$refs.accountForm?.$el.scrollIntoView({
 				behavior: 'smooth',
 			})
 		},

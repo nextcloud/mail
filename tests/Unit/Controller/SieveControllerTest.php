@@ -19,7 +19,7 @@ use OCA\Mail\Tests\Integration\TestCase;
 use OCP\Security\IRemoteHostValidator;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class SieveControllerTest extends TestCase {
+final class SieveControllerTest extends TestCase {
 	/** @var IRemoteHostValidator|MockObject */
 	private $remoteHostValidator;
 

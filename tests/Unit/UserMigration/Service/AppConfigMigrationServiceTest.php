@@ -12,6 +12,7 @@ namespace Unit\UserMigration\Service;
 use ChristophWurst\Nextcloud\Testing\ServiceMockObject;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\Tests\Unit\UserMigration\RecordsConsoleOutput;
 use OCA\Mail\UserMigration\Service\AppConfigMigrationService;
 use OCP\IUser;
 use OCP\UserMigration\IExportDestination;
@@ -19,7 +20,9 @@ use OCP\UserMigration\IImportSource;
 use OCP\UserMigration\UserMigrationException;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class AppConfigMigrationServiceTest extends TestCase {
+final class AppConfigMigrationServiceTest extends TestCase {
+	use RecordsConsoleOutput;
+
 	private const USER_ID = '123';
 	private const EXPORTED_ACCOUNT_ID = 19;
 	private const IMPORTED_ACCOUNT_ID = 42;
@@ -167,32 +170,30 @@ class AppConfigMigrationServiceTest extends TestCase {
 		);
 	}
 
-	public static function provideUnmappableReferences(): array {
-		return [
-			'account was not imported' => [
-				AppConfigMigrationService::ACCOUNT_SETTINGS_KEY,
-				'[{"accountId":999,"collapsed":false}]',
-			],
-			'account settings are not a list' => [
-				AppConfigMigrationService::ACCOUNT_SETTINGS_KEY,
-				'{"accountId":19}',
-			],
-			'account settings are invalid JSON' => [
-				AppConfigMigrationService::ACCOUNT_SETTINGS_KEY,
-				'not json at all',
-			],
-			'account settings entry without account id' => [
-				AppConfigMigrationService::ACCOUNT_SETTINGS_KEY,
-				'[{"collapsed":false}]',
-			],
-			'start mailbox was not imported' => [
-				AppConfigMigrationService::START_MAILBOX_ID_KEY,
-				'999',
-			],
-			'start mailbox is not numeric' => [
-				AppConfigMigrationService::START_MAILBOX_ID_KEY,
-				'',
-			],
+	public static function provideUnmappableReferences(): \Iterator {
+		yield 'account was not imported' => [
+			AppConfigMigrationService::ACCOUNT_SETTINGS_KEY,
+			'[{"accountId":999,"collapsed":false}]',
+		];
+		yield 'account settings are not a list' => [
+			AppConfigMigrationService::ACCOUNT_SETTINGS_KEY,
+			'{"accountId":19}',
+		];
+		yield 'account settings are invalid JSON' => [
+			AppConfigMigrationService::ACCOUNT_SETTINGS_KEY,
+			'not json at all',
+		];
+		yield 'account settings entry without account id' => [
+			AppConfigMigrationService::ACCOUNT_SETTINGS_KEY,
+			'[{"collapsed":false}]',
+		];
+		yield 'start mailbox was not imported' => [
+			AppConfigMigrationService::START_MAILBOX_ID_KEY,
+			'999',
+		];
+		yield 'start mailbox is not numeric' => [
+			AppConfigMigrationService::START_MAILBOX_ID_KEY,
+			'',
 		];
 	}
 
@@ -233,12 +234,10 @@ class AppConfigMigrationServiceTest extends TestCase {
 		$this->migrationService->importAppConfiguration($this->user, $this->importSource, $this->output, [], []);
 	}
 
-	public static function provideFileContentsWithNoSettingsImported(): array {
-		return [
-			'empty list' => [json_encode([])],
-			'invalid JSON' => ['this is not valid json {{{'],
-			'JSON object instead of list' => [json_encode(['unexpected' => 'object'])],
-		];
+	public static function provideFileContentsWithNoSettingsImported(): \Iterator {
+		yield 'empty list' => [json_encode([])];
+		yield 'invalid JSON' => ['this is not valid json {{{'];
+		yield 'JSON object instead of list' => [json_encode(['unexpected' => 'object'])];
 	}
 
 	/**
@@ -284,9 +283,7 @@ class AppConfigMigrationServiceTest extends TestCase {
 	}
 
 	private function getAppKeys(): array {
-		return array_map(function (array $appConfig) {
-			return $appConfig['key'];
-		}, $this->getAppConfig());
+		return array_map(fn (array $appConfig) => $appConfig['key'], $this->getAppConfig());
 	}
 
 	private function getAppValue(string $key): ?string {
@@ -296,5 +293,59 @@ class AppConfigMigrationServiceTest extends TestCase {
 			}
 		}
 		return null;
+	}
+
+	public function testImportReportsAnInvalidConfigurationAsANotice(): void {
+		$this->recordConsoleOutput();
+		$this->importSource->method('getFileContents')
+			->with(AppConfigMigrationService::APP_CONFIGURATION_FILE)
+			->willReturn('this is not valid json {{{');
+
+		$this->migrationService->importAppConfiguration($this->user, $this->importSource, $this->output, [], []);
+
+		$this->assertWritten('is invalid and will be skipped', 0);
+	}
+
+	public function testImportReportsARemovedKeyAsANotice(): void {
+		$this->recordConsoleOutput();
+		$this->importSource->method('getFileContents')
+			->with(AppConfigMigrationService::APP_CONFIGURATION_FILE)
+			->willReturn(json_encode([['key' => AppConfigMigrationService::START_MAILBOX_ID_KEY, 'value' => (string)self::EXPORTED_MAILBOX_ID]]));
+
+		$this->migrationService->importAppConfiguration($this->user, $this->importSource, $this->output, [], []);
+
+		$this->assertWritten('will be removed', 0);
+	}
+
+	public function testImportSkipsOnlyTheMalformedEntry(): void {
+		$this->recordConsoleOutput();
+		$this->importSource->method('getFileContents')
+			->with(AppConfigMigrationService::APP_CONFIGURATION_FILE)
+			->willReturn(json_encode([
+				['key' => 'collect-data', 'value' => null],
+				['key' => 'ui-heartbeat', 'value' => '1770367800'],
+			]));
+		$this->captureImportedValues(1);
+
+		$this->migrationService->importAppConfiguration($this->user, $this->importSource, $this->output, [], []);
+
+		self::assertSame(['ui-heartbeat' => '1770367800'], $this->importedValues);
+		$this->assertWritten('A mail app configuration entry of ' . self::USER_ID . ' is invalid', 0);
+	}
+
+	public function testImportSkipsAKeyLongerThanCoreAccepts(): void {
+		$this->recordConsoleOutput();
+		$this->importSource->method('getFileContents')
+			->with(AppConfigMigrationService::APP_CONFIGURATION_FILE)
+			->willReturn(json_encode([
+				['key' => str_repeat('k', 65), 'value' => 'true'],
+				['key' => str_repeat('k', 64), 'value' => 'true'],
+			]));
+		$this->captureImportedValues(1);
+
+		$this->migrationService->importAppConfiguration($this->user, $this->importSource, $this->output, [], []);
+
+		self::assertSame([str_repeat('k', 64) => 'true'], $this->importedValues);
+		$this->assertWritten('A mail app configuration entry of ' . self::USER_ID . ' is invalid', 0);
 	}
 }

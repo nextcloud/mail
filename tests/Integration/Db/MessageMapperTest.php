@@ -12,6 +12,7 @@ namespace OCA\Mail\Tests\Integration\Db;
 use ChristophWurst\Nextcloud\Testing\DatabaseTransaction;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
+use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\Mailbox;
@@ -29,7 +30,7 @@ use function array_map;
 use function range;
 use function time;
 
-class MessageMapperTest extends TestCase {
+final class MessageMapperTest extends TestCase {
 	use DatabaseTransaction;
 
 	/** A user that has no mail accounts on a development instance */
@@ -89,6 +90,21 @@ class MessageMapperTest extends TestCase {
 				'id' => $qb->createNamedParameter($id, IQueryBuilder::PARAM_INT),
 				'uid' => $qb->createNamedParameter($id, IQueryBuilder::PARAM_INT),
 				'message_id' => $qb->createNamedParameter('<abc' . $id . $mailbox_id . '@123.com>'),
+				'mailbox_id' => $qb->createNamedParameter($mailbox_id, IQueryBuilder::PARAM_INT),
+				'subject' => $qb->createNamedParameter('TEST'),
+				'sent_at' => $qb->createNamedParameter($this->time->getTime(), IQueryBuilder::PARAM_INT),
+				'in_reply_to' => $qb->createNamedParameter('<>')
+			]);
+		$insert->executeStatement();
+	}
+
+	private function insertMessageWithRemoteId(int $uid, int $mailbox_id, string $remoteId): void {
+		$qb = $this->db->getQueryBuilder();
+		$insert = $qb->insert($this->mapper->getTableName())
+			->values([
+				'uid' => $qb->createNamedParameter($uid, IQueryBuilder::PARAM_INT),
+				'message_id' => $qb->createNamedParameter('<abc' . $uid . $mailbox_id . '@123.com>'),
+				'remote_id' => $qb->createNamedParameter($remoteId),
 				'mailbox_id' => $qb->createNamedParameter($mailbox_id, IQueryBuilder::PARAM_INT),
 				'subject' => $qb->createNamedParameter('TEST'),
 				'sent_at' => $qb->createNamedParameter($this->time->getTime(), IQueryBuilder::PARAM_INT),
@@ -386,6 +402,56 @@ class MessageMapperTest extends TestCase {
 		self::assertEquals(0, $cnt);
 	}
 
+	/**
+	 * Verify we still find the one message of the mailbox if the passed IDs do not exist
+	 */
+	public function testFindNewIdsCoalescence(): void {
+		$uid = time();
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$qb = $this->db->getQueryBuilder();
+		$insert = $qb->insert($this->mapper->getTableName())
+			->values([
+				'uid' => $qb->createNamedParameter($uid, IQueryBuilder::PARAM_INT),
+				'message_id' => $qb->createNamedParameter('<abc@123.com>'),
+				'mailbox_id' => $qb->createNamedParameter(1, IQueryBuilder::PARAM_INT),
+				'subject' => $qb->createNamedParameter('TEST'),
+				'sent_at' => $qb->createNamedParameter(time(), IQueryBuilder::PARAM_INT),
+			]);
+		$insert->executeStatement();
+		$id = $insert->getLastInsertId();
+
+		$foundNewest = $this->mapper->findNewIds($mailbox, [$id + 1], null, IMailSearch::ORDER_NEWEST_FIRST);
+		$foundOldest = $this->mapper->findNewIds($mailbox, [$id + 1], null, IMailSearch::ORDER_OLDEST_FIRST);
+
+		self::assertCount(1, $foundNewest);
+		self::assertCount(1, $foundOldest);
+	}
+
+	/**
+	 * A spoofed Date header before the Unix epoch yields a negative sent_at;
+	 * the newest-first fallback boundary must not exclude it
+	 */
+	public function testFindNewIdsCoalescenceWithNegativeSentAt(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$qb = $this->db->getQueryBuilder();
+		$insert = $qb->insert($this->mapper->getTableName())
+			->values([
+				'uid' => $qb->createNamedParameter(time(), IQueryBuilder::PARAM_INT),
+				'message_id' => $qb->createNamedParameter('<abc@123.com>'),
+				'mailbox_id' => $qb->createNamedParameter(1, IQueryBuilder::PARAM_INT),
+				'subject' => $qb->createNamedParameter('TEST'),
+				'sent_at' => $qb->createNamedParameter(-100, IQueryBuilder::PARAM_INT),
+			]);
+		$insert->executeStatement();
+		$id = $insert->getLastInsertId();
+
+		$foundNewest = $this->mapper->findNewIds($mailbox, [$id + 1], null, IMailSearch::ORDER_NEWEST_FIRST);
+
+		self::assertCount(1, $foundNewest);
+	}
+
 	public function testFindIdsByQuery(): void {
 		$mailbox = new Mailbox();
 		$mailbox->setId(1);
@@ -550,5 +616,26 @@ class MessageMapperTest extends TestCase {
 
 		$mails = $this->mapper->findIdsAfter($mailbox, 2, 1234567890 + 200, 5);
 		$this->assertEquals([], $mails);
+	}
+
+	public function testFindByRemoteIdsAcrossSeveralChunks(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$rids = array_map(static fn (int $i) => 'rid-' . $i, range(1, 2500));
+		foreach ($rids as $i => $rid) {
+			$this->insertMessageWithRemoteId($i + 1, 1, $rid);
+		}
+		$this->insertMessageWithRemoteId(1, 2, 'rid-1');
+
+		$messages = $this->mapper->findByRemoteIds($mailbox, $rids);
+
+		self::assertCount(2500, $messages);
+		$found = array_map(static fn ($message) => $message->getRemoteId(), $messages);
+		sort($found);
+		sort($rids);
+		self::assertEquals($rids, $found);
+		foreach ($messages as $message) {
+			self::assertEquals(1, $message->getMailboxId());
+		}
 	}
 }

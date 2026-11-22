@@ -14,7 +14,7 @@ use HTMLPurifier_Config;
 use HTMLPurifier_Context;
 use OCA\Mail\Service\HtmlPurify\TransformHTMLLinks;
 
-class TransformHTMLLinksTest extends TestCase {
+final class TransformHTMLLinksTest extends TestCase {
 	private TransformHTMLLinks $transform;
 
 	protected function setUp(): void {

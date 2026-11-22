@@ -15,6 +15,12 @@
 		</p>
 
 		<MailboxInlinePicker v-model="sentMailbox" :account="account" :disabled="saving" />
+		<NcCheckboxRadioSwitch
+			v-if="account.protocol !== 'jmap'"
+			v-model="saveSentCopy"
+			:disabled="saving">
+			{{ t('mail', 'Save a copy of sent messages') }}
+		</NcCheckboxRadioSwitch>
 		<p>
 			{{ t('mail', 'Deleted messages are moved in:') }}
 		</p>
@@ -40,6 +46,7 @@
 
 <script>
 import { mapStores } from 'pinia'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import MailboxInlinePicker from './MailboxInlinePicker.vue'
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
@@ -48,6 +55,7 @@ export default {
 	name: 'AccountDefaultsSettings',
 	components: {
 		MailboxInlinePicker,
+		NcCheckboxRadioSwitch,
 	},
 
 	props: {
@@ -115,6 +123,30 @@ export default {
 					})
 				} catch (error) {
 					logger.error('could not set sent folder', {
+						error,
+					})
+				} finally {
+					this.saving = false
+				}
+			},
+		},
+
+		saveSentCopy: {
+			get() {
+				return this.account.saveSentCopy
+			},
+
+			async set(saveSentCopy) {
+				this.saving = true
+				try {
+					await this.mainStore.patchAccount({
+						account: this.account,
+						data: {
+							saveSentCopy,
+						},
+					})
+				} catch (error) {
+					logger.error('could not change saving a copy of sent messages', {
 						error,
 					})
 				} finally {

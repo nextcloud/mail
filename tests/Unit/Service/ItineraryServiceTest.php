@@ -26,7 +26,7 @@ use OCP\ICacheFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 
-class ItineraryServiceTest extends TestCase {
+final class ItineraryServiceTest extends TestCase {
 	/** @var MailManager|MockObject */
 	private $mailManager;
 
@@ -57,7 +57,7 @@ class ItineraryServiceTest extends TestCase {
 		);
 	}
 
-	public function testExtractNoBodyNoAttachments() {
+	public function testExtractNoBodyNoAttachments(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(100);
 		$mailAccount->setUserId('1');
@@ -80,6 +80,9 @@ class ItineraryServiceTest extends TestCase {
 			->with($account, $mailbox, $message)
 			->willReturn([]);
 		$this->itineraryExtractor->expects($this->once())
+			->method('hasAdapter')
+			->willReturn(true);
+		$this->itineraryExtractor->expects($this->once())
 			->method('extract')
 			->willReturn(new Itinerary());
 
@@ -88,7 +91,35 @@ class ItineraryServiceTest extends TestCase {
 		$this->assertEquals([], $itinerary->jsonSerialize());
 	}
 
-	public function testExtractFromBody() {
+	public function testExtractWithoutAdapterSkipsImapFetch(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(100);
+		$mailAccount->setUserId('1');
+		$account = new Account($mailAccount);
+
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
+
+		$message = new Message();
+		$message->setId(13);
+
+		$this->itineraryExtractor->expects($this->once())
+			->method('hasAdapter')
+			->willReturn(false);
+		$this->itineraryExtractor->expects($this->never())
+			->method('extract');
+		$this->mailManager->expects($this->never())
+			->method('getImapMessage');
+		$this->mailManager->expects($this->never())
+			->method('getMailAttachments');
+
+		$itinerary = $this->service->extract($account, $mailbox, $message);
+
+		$this->assertEquals([], $itinerary->jsonSerialize());
+		$this->assertInstanceOf(\Nextcloud\KItinerary\Itinerary::class, $this->service->getCached($account, $mailbox, 13));
+	}
+
+	public function testExtractFromBody(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(100);
 		$mailAccount->setUserId('1');
@@ -111,6 +142,9 @@ class ItineraryServiceTest extends TestCase {
 			->method('getMailAttachments')
 			->with($account, $mailbox, $message)
 			->willReturn([]);
+		$this->itineraryExtractor->expects($this->once())
+			->method('hasAdapter')
+			->willReturn(true);
 		$this->itineraryExtractor->expects($this->exactly(2))
 			->method('extract')
 			->withConsecutive([$body], ['["datafrombody"]'])
@@ -121,7 +155,7 @@ class ItineraryServiceTest extends TestCase {
 		$this->assertEquals(['datafrombody'], $itinerary->jsonSerialize());
 	}
 
-	public function testExtractFromAttachments() {
+	public function testExtractFromAttachments(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(100);
 		$mailAccount->setUserId('1');
@@ -147,6 +181,9 @@ class ItineraryServiceTest extends TestCase {
 			->method('getMailAttachments')
 			->with($account, $mailbox, $message)
 			->willReturn([$attachment]);
+		$this->itineraryExtractor->expects($this->once())
+			->method('hasAdapter')
+			->willReturn(true);
 		$this->itineraryExtractor->expects($this->exactly(2))
 			->method('extract')
 			->withConsecutive([$pdf], ['["datafrompdf"]'])
@@ -155,6 +192,42 @@ class ItineraryServiceTest extends TestCase {
 		$itinerary = $this->service->extract($account, $mailbox, $message);
 
 		$this->assertEquals(['datafrompdf'], $itinerary->jsonSerialize());
+	}
+
+	public function testExtractSecondCallIsServedFromCacheWithoutImapIo(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(100);
+		$mailAccount->setUserId('1');
+		$account = new Account($mailAccount);
+
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
+
+		$message = new Message();
+		$message->setId(13);
+
+		$imapMessage = $this->createMock(IMAPMessage::class);
+		$imapMessage->htmlMessage = '<html><body>hello</body></html>';
+		$this->mailManager->expects($this->once())
+			->method('getImapMessage')
+			->with($account, $mailbox, $message, true)
+			->willReturn($imapMessage);
+		$this->mailManager->expects($this->once())
+			->method('getMailAttachments')
+			->with($account, $mailbox, $message)
+			->willReturn([]);
+		$this->itineraryExtractor->expects($this->once())
+			->method('hasAdapter')
+			->willReturn(true);
+		$this->itineraryExtractor->expects($this->exactly(2))
+			->method('extract')
+			->willReturn(new Itinerary(['datafrombody']));
+
+		$first = $this->service->extract($account, $mailbox, $message);
+		$second = $this->service->extract($account, $mailbox, $message);
+
+		$this->assertEquals($first->jsonSerialize(), $second->jsonSerialize());
+		$this->assertEquals(['datafrombody'], $second->jsonSerialize());
 	}
 
 	public function testGetCachedMiss(): void {
@@ -191,7 +264,8 @@ class ItineraryServiceTest extends TestCase {
 			$mailbox,
 			1
 		);
+		$this->assertInstanceOf(\Nextcloud\KItinerary\Itinerary::class, $result);
 
-		$this->assertEquals(1, $result->count());
+		$this->assertCount(1, $result);
 	}
 }

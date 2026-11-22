@@ -456,6 +456,16 @@ return [
 			'verb' => 'GET',
 		],
 		[
+			'name' => 'oidcIntegration#authorize',
+			'url' => '/integration/oidc-auth/start',
+			'verb' => 'GET',
+		],
+		[
+			'name' => 'oidcIntegration#oauthRedirect',
+			'url' => '/integration/oidc-auth',
+			'verb' => 'GET',
+		],
+		[
 			'name' => 'microsoftIntegration#configure',
 			'url' => '/api/integration/microsoft',
 			'verb' => 'POST',
@@ -534,6 +544,7 @@ return [
 		'localAttachments' => ['url' => '/api/attachments'],
 		'mailboxes' => ['url' => '/api/mailboxes'],
 		'messages' => ['url' => '/api/messages'],
+		'oidcIntegration' => ['url' => '/api/integration/oidc/providers'],
 		'outbox' => ['url' => '/api/outbox'],
 		'preferences' => ['url' => '/api/preferences'],
 		'smimeCertificates' => ['url' => '/api/smime/certificates'],
