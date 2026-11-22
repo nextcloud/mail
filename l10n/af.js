@@ -83,6 +83,7 @@ OC.L10N.register(
     "Comment" : "Kommentaar",
     "Accept" : "Aanvaar",
     "Remove" : "Verwyder",
+    "This week" : "Vandeesweek",
     "Choose" : "Kies",
     "Choose target folder" : "Kies teikenvouer",
     "Favorites" : "Gunstelinge",
