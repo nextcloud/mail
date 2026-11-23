@@ -257,7 +257,7 @@ Do NOT commit changes unless explicitly asked to do so.
 Never fully automate the resolution of issues labeled [`good first issue`](https://github.com/issues?q=org%3Anextcloud+label%3A%22good+first+issue%22) or similar beginner-friendly labels.
 
 After completing code changes:
-1. Verify your work is complete and tests pass
+1. Verify your work is complete and tests pass. Validate every change to runtime behavior on a live Nextcloud instance where you can, and give the contributor concrete steps to test it there themselves — your testing supports theirs, it does not replace it.
 2. Never push directly to `main` — always create a feature branch with a descriptive name (e.g. `perf/imap-selective-headers`, `fix/sync-token`, `chore/update-agents`).
 3. Worktree branches must use descriptive feature-branch names, not generated names like `agent-xxxx`.
 4. Make sure there is no trailing whitespace
@@ -278,14 +278,15 @@ git commit --fixup=<sha>   # targets the specific commit being corrected
 
 The branch will be rebased and squashed into a clean history before merge (CI enforces this). The failing "clean history" CI check is intentional and expected during review — ignore it until the PR has a positive review, then rebase to clean up.
 
-### GitHub comments and reviews
+### Issues, PR descriptions and comments
 
-Agents may post GitHub text directly (PR and issue comments, review comments, PR descriptions), as long as it is written **for humans**: plain, concise, and skimmable.
+Issues, PR descriptions and comments may be drafted with AI and posted on the contributor's behalf when they ask for it. Write them for human readers (see the [AI Contribution Policy](https://github.com/nextcloud/.github/blob/master/AI_POLICY.md)):
 
-- A human must review the text before it is posted.
-- Disclose the AI assistance in every posted body, e.g. with an `Assisted by <harness>:<model-id>` footer.
-- Fill out the repo's PR/issue template completely when opening a PR or issue.
-- Additional info meant only for agents can go into a description or comment, but must be wrapped in a collapsed `<details>` block so human readers can skip it or dive in.
+- Lead with what changed and why it matters, in plain and concise sentences. Don't restate the diff file by file, add filler, or paste raw tool output.
+- Keep the repository's PR or issue template intact and fill in every section, including the AI disclosure checkbox. For a bug report, also state whether the bug was validated and reproduced on a live Nextcloud instance.
+- End AI-drafted issues and comments with a footer such as `Assisted by <AgentName>:<model-id>`.
+- Put information meant only for agents (plans, prompts, tool logs) into a collapsed `<details>` block.
+- Tell the contributor what you posted.
 
 ### Official documentation (user_manual / admin_manual)
 
@@ -334,10 +335,7 @@ Some proxies drop UIDVALIDITY, which made us discard the local
 cache and force a full resync on every run. Treat a missing
 value as unchanged instead.
 
-Assisted-by: Devstral:devstral-small-2507
-Assisted-by: ClaudeCode:claude-sonnet-4-6
-Assisted-by: Qwen:qwen3-coder-32b
-Assisted-by: Copilot:gpt-4o
+Assisted-by: ClaudeCode:claude-sonnet-5-5
 Signed-off-by: Name <email>
 ```
 
