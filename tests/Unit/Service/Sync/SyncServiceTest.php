@@ -124,4 +124,66 @@ final class SyncServiceTest extends TestCase {
 
 		$this->assertEquals($expectedResponse, $response);
 	}
+
+	public function testInitialSyncReturnsNoMessages(): void {
+		$account = $this->createMock(Account::class);
+		$account->method('getUserId')->willReturn('user');
+		$mailbox = new Mailbox();
+		$mailbox->setMessages(33000);
+		$mailbox->setUnseen(24000);
+		$this->clientFactory
+			->method('getClient')
+			->willReturn($this->createStub(\Horde_Imap_Client_Socket::class));
+		$this->synchronizer->expects($this->once())
+			->method('sync');
+		// The client loads the first page itself, so the cache is not read
+		$this->messageMapper->expects($this->never())
+			->method('findAllIds');
+		$this->messageMapper->expects($this->never())
+			->method('findNewIds');
+		$this->messageMapper->expects($this->never())
+			->method('findByMailboxAndIds');
+
+		$response = $this->syncService->syncMailbox(
+			$account,
+			$mailbox,
+			0,
+			false,
+			null,
+			[]
+		);
+
+		$this->assertEquals(new Response([], [], [], new MailboxStats(33000, 24000, null)), $response);
+	}
+
+	public function testPartialSyncReadsTheCache(): void {
+		$account = $this->createMock(Account::class);
+		$account->method('getUserId')->willReturn('user');
+		$mailbox = new Mailbox();
+		$mailbox->setMessages(3);
+		$mailbox->setUnseen(1);
+		$mailbox->setSyncNewToken('token');
+		$mailbox->setSyncChangedToken('token');
+		$mailbox->setSyncVanishedToken('token');
+		$this->clientFactory
+			->method('getClient')
+			->willReturn($this->createStub(\Horde_Imap_Client_Socket::class));
+		$this->synchronizer->expects($this->once())
+			->method('sync');
+		$this->messageMapper->expects($this->once())
+			->method('findNewIds')
+			->with($mailbox, [1, 2], null, 'DESC')
+			->willReturn([3]);
+		$this->messageMapper->method('findByMailboxAndIds')
+			->willReturn([]);
+
+		$this->syncService->syncMailbox(
+			$account,
+			$mailbox,
+			0,
+			true,
+			null,
+			[1, 2]
+		);
+	}
 }
