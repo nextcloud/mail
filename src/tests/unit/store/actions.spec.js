@@ -639,6 +639,28 @@ describe('Vuex store actions', () => {
 			expect(row.threadHasUnread).toBe(false)
 		})
 
+		it('keeps the thread unread when another message of it became unread while a write was pending', async () => {
+			const a = envelope(1, true, { threadHasUnread: false })
+			const b = envelope(3, true, { threadHasUnread: false })
+			store.envelopes = { 1: a, 3: b }
+			let failA
+			MessageService.setEnvelopeFlags.mockImplementation((id) => id === 1
+				? new Promise((resolve, reject) => {
+						failA = reject
+					})
+				: Promise.resolve({}))
+
+			const pendingA = store.toggleEnvelopeSeen({ envelope: a, seen: false })
+			await store.toggleEnvelopeSeen({ envelope: b, seen: false })
+			failA(new Error('offline'))
+			await expect(pendingA).rejects.toThrow('offline')
+
+			expect(a.flags.seen).toBe(true)
+			expect(b.flags.seen).toBe(false)
+			expect(a.threadHasUnread).toBe(true)
+			expect(b.threadHasUnread).toBe(true)
+		})
+
 		it('keeps the thread unread state when marking a message read fails', async () => {
 			const row = envelope(3, false, { threadHasUnread: true })
 			store.envelopes = { 3: row }

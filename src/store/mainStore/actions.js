@@ -1188,7 +1188,7 @@ export default function mainStoreActions() {
 						value: oldState,
 					})
 					thread.forEach((message, index) => {
-						message.threadHasUnread = oldThreadHasUnread[index]
+						message.threadHasUnread = oldThreadHasUnread[index] || thread.some((sibling) => !sibling.flags.seen)
 					})
 
 					throw error
