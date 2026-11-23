@@ -9,6 +9,12 @@ import Envelope from '../../../components/Envelope.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 import useMainStore from '../../../store/mainStore.js'
 
+vi.mock('@nextcloud/dialogs', async (importOriginal) => ({
+	...(await importOriginal()),
+	showSuccess: vi.fn(),
+	showWarning: vi.fn(),
+}))
+
 const $route = {
 	params: {
 		id: 1,
@@ -451,5 +457,105 @@ describe('Envelope', () => {
 
 		addSpy.mockRestore()
 		removeSpy.mockRestore()
+	})
+
+	describe('junk state', () => {
+		const mountWithMailbox = (mailboxId, flags) => {
+			return shallowMount(Envelope, {
+				global: {
+					mixins: [Nextcloud],
+					mocks: {
+						$route,
+					},
+				},
+				props: {
+					mailbox: {
+						myAcls: undefined,
+						databaseId: mailboxId,
+					},
+					data: {
+						accountId: 123,
+						mailboxId,
+						from: [{ email: 'info@test.com' }],
+						flags: { seen: false, flagged: false, answered: false, hasAttachments: false, draft: false, ...flags },
+					},
+				},
+			})
+		}
+
+		it('treats an unflagged message in the junk mailbox as junk', () => {
+			store.mailboxes[5] = { databaseId: 5, specialRole: 'junk' }
+
+			const view = mountWithMailbox(5, { $junk: false })
+
+			expect(view.vm.isJunk).toBe(true)
+		})
+
+		it('does not treat an unflagged message in the inbox as junk', () => {
+			store.mailboxes[3] = { databaseId: 3, specialRole: 'inbox' }
+
+			const view = mountWithMailbox(3, { $junk: false })
+
+			expect(view.vm.isJunk).toBe(false)
+		})
+
+		it('treats a flagged message outside the junk mailbox as junk', () => {
+			store.mailboxes[3] = { databaseId: 3, specialRole: 'inbox' }
+
+			const view = mountWithMailbox(3, { $junk: true })
+
+			expect(view.vm.isJunk).toBe(true)
+		})
+
+		it('does not toggle an unflagged junk-folder message from the quick action', async () => {
+			store.preferences['layout-message-view'] = 'list'
+			store.mailboxes[5] = { databaseId: 5, specialRole: 'junk', myAcls: undefined }
+			store.toggleEnvelopeJunk = vi.fn()
+			const view = mountWithMailbox(5, { $junk: false, seen: true })
+
+			await view.vm.executeQuickAction({ actionSteps: [{ name: 'markAsSpam' }] })
+
+			expect(store.toggleEnvelopeJunk).not.toHaveBeenCalled()
+		})
+
+		it('marks only the unflagged siblings of a thread root that is in the junk folder', async () => {
+			store.preferences['layout-message-view'] = 'threaded'
+			store.accountsUnmapped[123] = { id: 123, sentMailboxId: '1', archiveMailboxId: 99, junkMailboxId: 10, mailboxes: [] }
+			store.mailboxes[5] = { databaseId: 5, specialRole: 'junk', myAcls: undefined }
+			store.mailboxes[3] = { databaseId: 3, specialRole: 'inbox', myAcls: undefined }
+			const flags = { seen: true, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false }
+			const root = { databaseId: 1, accountId: 123, mailboxId: 5, threadRootId: 'thread', dateInt: 1, from: [{ email: 'info@test.com' }], flags }
+			const sibling = { ...root, databaseId: 2, mailboxId: 3 }
+			store.getEnvelopesByThreadRootId = vi.fn().mockReturnValue([root, sibling])
+			store.toggleEnvelopeJunk = vi.fn()
+			const view = shallowMount(Envelope, {
+				global: {
+					mixins: [Nextcloud],
+					mocks: {
+						$route,
+					},
+				},
+				props: {
+					mailbox: { myAcls: undefined, databaseId: 5 },
+					data: root,
+				},
+			})
+
+			await view.vm.executeQuickAction({ actionSteps: [{ name: 'markAsSpam' }] })
+
+			await vi.waitFor(() => expect(store.toggleEnvelopeJunk).toHaveBeenCalledWith({ envelope: sibling, removeEnvelope: true }))
+			expect(store.toggleEnvelopeJunk).toHaveBeenCalledTimes(1)
+		})
+
+		it('toggles an unflagged junk-folder message from the menu', async () => {
+			store.accountsUnmapped[123] = { id: 123, sentMailboxId: '1', archiveMailboxId: 99, junkMailboxId: 10, mailboxes: [] }
+			store.mailboxes[5] = { databaseId: 5, specialRole: 'junk', myAcls: undefined }
+			store.toggleEnvelopeJunk = vi.fn()
+			const view = mountWithMailbox(5, { $junk: false, seen: true })
+
+			await view.vm.onToggleJunk()
+
+			expect(store.toggleEnvelopeJunk).toHaveBeenCalledWith({ envelope: view.props('data'), removeEnvelope: false })
+		})
 	})
 })

@@ -339,14 +339,14 @@ export default {
 		isAtLeastOneSelectedJunk() {
 			// returns true if at least one selected message is marked as junk
 			return this.selectedEnvelopes.some((env) => {
-				return env.flags.$junk
+				return this.mainStore.isEnvelopeJunk(env)
 			})
 		},
 
 		isAtLeastOneSelectedNotJunk() {
 			// returns true if at least one selected message is not marked as not junk
 			return this.selectedEnvelopes.some((env) => {
-				return !env.flags.$junk
+				return !this.mainStore.isEnvelopeJunk(env)
 			})
 		},
 
@@ -443,7 +443,7 @@ export default {
 
 		async markSelectionJunk() {
 			for (const envelope of this.selectedEnvelopes) {
-				if (!envelope.flags.$junk) {
+				if (!this.mainStore.isEnvelopeJunk(envelope)) {
 					await this.mainStore.toggleEnvelopeJunk({
 						envelope,
 						removeEnvelope: await this.mainStore.moveEnvelopeToJunk(envelope),
@@ -455,7 +455,7 @@ export default {
 
 		async markSelectionNotJunk() {
 			for (const envelope of this.selectedEnvelopes) {
-				if (envelope.flags.$junk) {
+				if (this.mainStore.isEnvelopeJunk(envelope)) {
 					await this.mainStore.toggleEnvelopeJunk({
 						envelope,
 						removeEnvelope: await this.mainStore.moveEnvelopeToJunk(envelope),

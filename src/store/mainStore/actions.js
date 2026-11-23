@@ -1196,7 +1196,9 @@ export default function mainStoreActions() {
 		}) {
 			return handleHttpAuthErrors(async () => {
 				// Change immediately and switch back on error
-				const oldState = envelope.flags.$junk
+				const oldState = this.isEnvelopeJunk(envelope)
+				const oldJunk = envelope.flags.$junk === true
+				const oldNotJunk = envelope.flags.$notjunk === true
 				this.flagEnvelopeMutation({
 					envelope,
 					flag: '$junk',
@@ -1228,12 +1230,12 @@ export default function mainStoreActions() {
 					this.flagEnvelopeMutation({
 						envelope,
 						flag: '$junk',
-						value: oldState,
+						value: oldJunk,
 					})
 					this.flagEnvelopeMutation({
 						envelope,
 						flag: '$notjunk',
-						value: !oldState,
+						value: oldNotJunk,
 					})
 
 					throw error
@@ -1785,7 +1787,7 @@ export default function mainStoreActions() {
 				return false
 			}
 
-			if (!envelope.flags.$junk) {
+			if (!this.isEnvelopeJunk(envelope)) {
 				// move message to junk
 				return envelope.mailboxId !== account.junkMailboxId
 			}
@@ -2567,6 +2569,18 @@ export default function mainStoreActions() {
 		},
 		getInbox(accountId) {
 			return this.findMailboxBySpecialRole(accountId, 'inbox')
+		},
+		isEnvelopeJunk(envelope) {
+			if (envelope.flags.$junk) {
+				return true
+			}
+			if (envelope.mailboxId === undefined || envelope.mailboxId === null) {
+				return false
+			}
+			const junkMailboxId = this.getAccount(envelope.accountId)?.junkMailboxId
+			const inJunkMailbox = (junkMailboxId !== undefined && junkMailboxId !== null && junkMailboxId === envelope.mailboxId)
+				|| this.getMailbox(envelope.mailboxId)?.specialRole === 'junk'
+			return inJunkMailbox && !envelope.flags.$notjunk
 		},
 		getMyTextBlocks() {
 			return this.myTextBlocks

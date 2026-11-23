@@ -5,7 +5,9 @@
 
 import { showError } from '@nextcloud/dialogs'
 import { flushPromises } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
 import EnvelopeList from '../../../components/EnvelopeList.vue'
+import useMainStore from '../../../store/mainStore.js'
 
 vi.mock('@nextcloud/dialogs', async (importOriginal) => ({
 	...await importOriginal(),
@@ -61,5 +63,52 @@ describe('EnvelopeList', () => {
 		expect(deleteThread).toHaveBeenCalledTimes(1)
 		expect(showError).toHaveBeenCalledTimes(1)
 		expect(context.unselectAll).toHaveBeenCalled()
+	})
+})
+
+describe('EnvelopeList junk selection', () => {
+	let store
+	let ctx
+
+	beforeEach(() => {
+		setActivePinia(createPinia())
+		store = useMainStore()
+		store.accountsUnmapped[42] = { junkMailboxId: 10 }
+		store.mailboxes[1] = { databaseId: 1, specialRole: 'inbox' }
+		store.mailboxes[5] = { databaseId: 5, specialRole: 'junk' }
+		store.toggleEnvelopeJunk = vi.fn()
+		store.moveEnvelopeToJunk = vi.fn().mockResolvedValue(true)
+		ctx = {
+			mainStore: store,
+			selectedEnvelopes: [],
+			unselectAll: vi.fn(),
+		}
+	})
+
+	it('offers not spam for an unflagged message in the junk mailbox', () => {
+		const envelope = { accountId: 42, mailboxId: 5, flags: {} }
+		ctx.selectedEnvelopes = [envelope]
+
+		expect(EnvelopeList.computed.isAtLeastOneSelectedJunk.call(ctx)).toBe(true)
+		expect(EnvelopeList.computed.isAtLeastOneSelectedNotJunk.call(ctx)).toBe(false)
+	})
+
+	it('marks unflagged messages in the junk mailbox as not junk', async () => {
+		const envelope = { accountId: 42, mailboxId: 5, flags: {} }
+		ctx.selectedEnvelopes = [envelope]
+
+		await EnvelopeList.methods.markSelectionNotJunk.call(ctx)
+
+		expect(store.toggleEnvelopeJunk).toHaveBeenCalledTimes(1)
+		expect(store.toggleEnvelopeJunk).toHaveBeenCalledWith({ envelope, removeEnvelope: true })
+	})
+
+	it('does not mark an unflagged inbox message as not junk', async () => {
+		const envelope = { accountId: 42, mailboxId: 1, flags: {} }
+		ctx.selectedEnvelopes = [envelope]
+
+		await EnvelopeList.methods.markSelectionNotJunk.call(ctx)
+
+		expect(store.toggleEnvelopeJunk).not.toHaveBeenCalled()
 	})
 })

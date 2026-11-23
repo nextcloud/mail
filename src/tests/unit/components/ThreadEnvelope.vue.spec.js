@@ -195,4 +195,28 @@ describe('ThreadEnvelope', () => {
 
 		expect(store.toggleEnvelopeJunk).toHaveBeenCalledWith({ envelope: props.envelope })
 	})
+
+	it('treats an unflagged message in the junk mailbox as junk', () => {
+		store.mailboxes[MAILBOX_ID] = { myAcls: undefined, specialRole: 'junk' }
+		const props = baseProps()
+		props.envelope.mailboxId = MAILBOX_ID
+		const view = shallowMount(ThreadEnvelope, {
+			global: { mixins: [Nextcloud] },
+			props,
+		})
+
+		expect(view.vm.isJunk).toBe(true)
+	})
+
+	it('does not treat an unflagged message in the inbox as junk', () => {
+		store.mailboxes[MAILBOX_ID] = { myAcls: undefined, specialRole: 'inbox' }
+		const props = baseProps()
+		props.envelope.mailboxId = MAILBOX_ID
+		const view = shallowMount(ThreadEnvelope, {
+			global: { mixins: [Nextcloud] },
+			props,
+		})
+
+		expect(view.vm.isJunk).toBe(false)
+	})
 })
