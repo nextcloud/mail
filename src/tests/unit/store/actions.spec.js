@@ -661,6 +661,33 @@ describe('Vuex store actions', () => {
 			expect(b.threadHasUnread).toBe(true)
 		})
 
+		it.each([
+			['A then B', ['a', 'b']],
+			['B then A', ['b', 'a']],
+		])('clears the thread unread state when two pending writes fail (%s)', async (name, order) => {
+			const a = envelope(1, true, { threadHasUnread: false })
+			const b = envelope(3, true, { threadHasUnread: false })
+			store.envelopes = { 1: a, 3: b }
+			const fail = {}
+			MessageService.setEnvelopeFlags.mockImplementation((id) => new Promise((resolve, reject) => {
+				fail[id === 1 ? 'a' : 'b'] = reject
+			}))
+
+			const pending = [
+				store.toggleEnvelopeSeen({ envelope: a, seen: false }),
+				store.toggleEnvelopeSeen({ envelope: b, seen: false }),
+			].map((promise) => promise.catch(() => {}))
+			for (const key of order) {
+				fail[key](new Error('offline'))
+				await pending[key === 'a' ? 0 : 1]
+			}
+
+			expect(a.flags.seen).toBe(true)
+			expect(b.flags.seen).toBe(true)
+			expect(a.threadHasUnread).toBe(false)
+			expect(b.threadHasUnread).toBe(false)
+		})
+
 		it('keeps the thread unread state when marking a message read fails', async () => {
 			const row = envelope(3, false, { threadHasUnread: true })
 			store.envelopes = { 3: row }

@@ -216,6 +216,7 @@ function transformMailboxName(account, mailbox) {
 export default function mainStoreActions() {
 	let accountSettingsSave = Promise.resolve()
 	const foldedVersions = {}
+	const pendingSeenWrites = new Map()
 
 	return {
 		updateSyncTimestamp() {
@@ -1167,7 +1168,10 @@ export default function mainStoreActions() {
 				const oldState = envelope.flags.seen
 				const newState = seen === undefined ? !oldState : seen
 				const thread = this.getMailboxThreadEnvelopes(envelope)
-				const oldThreadHasUnread = thread.map((message) => message.threadHasUnread)
+				const threadKey = `${envelope.mailboxId}:${envelope.threadRootId}`
+				const pendingWrites = pendingSeenWrites.get(threadKey) ?? { count: 0, threadHasUnread: envelope.threadHasUnread }
+				pendingWrites.count++
+				pendingSeenWrites.set(threadKey, pendingWrites)
 				this.flagEnvelopeMutation({
 					envelope,
 					flag: 'seen',
@@ -1187,11 +1191,16 @@ export default function mainStoreActions() {
 						flag: 'seen',
 						value: oldState,
 					})
-					thread.forEach((message, index) => {
-						message.threadHasUnread = oldThreadHasUnread[index] || thread.some((sibling) => !sibling.flags.seen)
+					thread.forEach((message) => {
+						message.threadHasUnread = pendingWrites.threadHasUnread || thread.some((sibling) => !sibling.flags.seen)
 					})
 
 					throw error
+				} finally {
+					pendingWrites.count--
+					if (pendingWrites.count === 0) {
+						pendingSeenWrites.delete(threadKey)
+					}
 				}
 			})
 		},
