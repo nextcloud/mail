@@ -75,6 +75,8 @@ use function json_encode;
  * @method void setMentionsMe(bool $isMentionned)
  * @method string|null getRemoteId()
  * @method void setRemoteId(?string $remoteId)
+ * @method string|null getGovernanceLabelId()
+ * @method void setGovernanceLabelId(?string $governanceLabelId)
  */
 class Message extends Entity implements JsonSerializable {
 	private const MUTABLE_FLAGS = [
@@ -120,6 +122,7 @@ class Message extends Entity implements JsonSerializable {
 	protected $imipError = false;
 	protected $mentionsMe = false;
 	protected ?string $remoteId = null;
+	protected $governanceLabelId;
 
 	/**
 	 * @var bool|null
@@ -379,6 +382,7 @@ class Message extends Entity implements JsonSerializable {
 			'avatar' => $this->avatar?->jsonSerialize(),
 			'fetchAvatarFromClient' => $this->fetchAvatarFromClient,
 			'attachments' => $this->getAttachments(),
+			'governanceLabelId' => $this->getGovernanceLabelId(),
 		];
 	}
 }

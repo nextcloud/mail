@@ -16,6 +16,7 @@ final class MessageStructureData {
 		private bool $isImipMessage,
 		private bool $isEncrypted,
 		private bool $mentionsMe,
+		private ?string $governanceLabelHeader = null,
 	) {
 	}
 
@@ -37,5 +38,9 @@ final class MessageStructureData {
 
 	public function getMentionsMe(): bool {
 		return $this->mentionsMe;
+	}
+
+	public function getGovernanceLabelHeader(): ?string {
+		return $this->governanceLabelHeader;
 	}
 }

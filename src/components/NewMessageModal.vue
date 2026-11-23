@@ -136,6 +136,7 @@
 						:isDraft="composerData.draftId !== undefined"
 						:requestMdn="composerData.requestMdn"
 						:isAiGenerated="composerData.isAiGenerated"
+						:governanceLabelId="composerData.governanceLabelId"
 						:accounts="accounts"
 						@update:fromAccount="patchComposerData({ accountId: $event })"
 						@update:fromAlias="patchComposerData({ aliasId: $event })"
@@ -150,6 +151,7 @@
 						@update:smimeEncrypt="patchComposerData({ smimeSign: $event })"
 						@update:requestMdn="patchComposerData({ requestMdn: $event })"
 						@update:isAiGenerated="patchComposerData({ isAiGenerated: $event })"
+						@update:governanceLabelId="patchComposerData({ governanceLabelId: $event })"
 						@draft="onDraft"
 						@discardDraft="discardDraft"
 						@send="onSend" />

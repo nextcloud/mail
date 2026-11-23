@@ -262,7 +262,7 @@
 				</NcSelect>
 			</div>
 		</div>
-		<div class="composer-fields">
+		<div class="composer-fields composer-fields--subject">
 			<label for="subject" class="subject-label hidden-visually">
 				{{ t('mail', 'Subject') }}
 			</label>
@@ -275,6 +275,7 @@
 				autocomplete="off"
 				:placeholder="t('mail', 'Subject …')"
 				@input="saveDraftDebounced">
+			<GovernanceLabelPicker v-model="governanceLabelIdVal" />
 		</div>
 		<div v-if="noReply" class="warning noreply-warning">
 			{{ t('mail', 'This message came from a noreply address so your reply will probably not be read.') }}
@@ -581,6 +582,7 @@ import Delete from 'vue-material-design-icons/TrashCanOutline.vue'
 import Download from 'vue-material-design-icons/TrayArrowDown.vue'
 import IconUpload from 'vue-material-design-icons/TrayArrowUp.vue'
 import ComposerAttachments from './ComposerAttachments.vue'
+import GovernanceLabelPicker from './GovernanceLabelPicker.vue'
 import MailvelopeEditor from './MailvelopeEditor.vue'
 import RecipientListItem from './RecipientListItem.vue'
 import TextBlockModal from './textBlocks/TextBlockModal.vue'
@@ -614,6 +616,7 @@ export default {
 		NcActionRadio,
 		NcButton,
 		ComposerAttachments,
+		GovernanceLabelPicker,
 		TextBlockModal,
 		ChevronLeft,
 		Delete,
@@ -763,6 +766,11 @@ export default {
 			default: false,
 		},
 
+		governanceLabelId: {
+			type: String,
+			default: null,
+		},
+
 		accounts: {
 			type: Array,
 			required: true,
@@ -783,6 +791,7 @@ export default {
 		'update:smimeEncrypt',
 		'update:requestMdn',
 		'update:isAiGenerated',
+		'update:governanceLabelId',
 		'draft',
 		'update:fromAccount',
 		'update:fromAlias',
@@ -822,6 +831,7 @@ export default {
 			editorMode: (this.body?.format !== 'html') ? EDITOR_MODE_TEXT : EDITOR_MODE_HTML,
 			requestMdnVal: this.requestMdn,
 			isAiGeneratedVal: this.isAiGenerated,
+			governanceLabelIdVal: this.governanceLabelId,
 			changeSignature: false,
 			loadingIndicatorTo: false,
 			loadingIndicatorCc: false,
@@ -1162,6 +1172,10 @@ export default {
 			this.$emit('update:isAiGenerated', val)
 		},
 
+		governanceLabelIdVal(val) {
+			this.$emit('update:governanceLabelId', val)
+		},
+
 		selectedAlias: {
 			handler() {
 				const aliasEmailAddress = this.selectedAlias.emailAddress
@@ -1360,6 +1374,7 @@ export default {
 				isHtml: !this.encrypt && !this.editorPlainText,
 				requestMdn: this.requestMdnVal,
 				isAiGenerated: this.isAiGeneratedVal,
+				governanceLabelId: this.governanceLabelIdVal ?? undefined,
 				sendAt: this.sendAtVal !== 0 ? Math.floor(this.sendAtVal / 1000) : undefined,
 				smimeSign: this.shouldSmimeSign,
 				smimeEncrypt: this.shouldSmimeEncrypt,
@@ -2012,6 +2027,12 @@ $composer-text-inset: calc(var(--default-grid-baseline) * 2);
 		.v-select{
 			flex-grow: 0.95;
 		}
+	}
+
+	&--subject {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
 	}
 
 	.subject {

@@ -20,6 +20,7 @@ use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\Avatar\Avatar;
 use OCA\Mail\Service\AvatarService;
+use OCA\Mail\Service\GovernanceLabelService;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
@@ -40,6 +41,8 @@ final class PreviewEnhancerTest extends TestCase {
 	/** @var AttachmentService|MockObject */
 	private $attachmentService;
 
+	private $governanceLabelService;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -49,6 +52,7 @@ final class PreviewEnhancerTest extends TestCase {
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->avatarService = $this->createMock(AvatarService::class);
 		$this->attachmentService = $this->createMock(AttachmentService::class);
+		$this->governanceLabelService = $this->createMock(GovernanceLabelService::class);
 
 		$this->previewEnhancer = new PreviewEnhancer(
 			$this->protocolFactory,
@@ -56,7 +60,8 @@ final class PreviewEnhancerTest extends TestCase {
 			$this->dbMapper,
 			$this->logger,
 			$this->avatarService,
-			$this->attachmentService
+			$this->attachmentService,
+			$this->governanceLabelService
 		);
 	}
 
