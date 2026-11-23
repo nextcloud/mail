@@ -26,6 +26,33 @@
 		v-else-if="filter === 'starred'"
 		:size="20" />
 	<IconDraft
+		v-else-if="mailbox.specialRole === 'drafts' && active"
+		:size="20" />
+	<IconDraftOutline
+		v-else-if="mailbox.specialRole === 'drafts'"
+		:size="20" />
+	<IconSend
+		v-else-if="mailbox.specialRole === 'sent' && active"
+		:size="20" />
+	<IconSendOutline
+		v-else-if="mailbox.specialRole === 'sent'"
+		:size="20" />
+	<IconArchive
+		v-else-if="mailbox.specialRole === 'archive' && active"
+		:size="20" />
+	<IconArchiveOutline
+		v-else-if="mailbox.specialRole === 'archive'"
+		:size="20" />
+	<IconDelete
+		v-else-if="mailbox.specialRole === 'trash' && active"
+		:size="20" />
+	<IconDeleteOutline
+		v-else-if="mailbox.specialRole === 'trash'"
+		:size="20" />
+	<IconJunk
+		v-else-if="mailbox.specialRole === 'junk'"
+		:size="20" />
+	<IconDraft
 		v-else-if="mailbox.databaseId === account.draftsMailboxId && active"
 		:size="20" />
 	<IconDraftOutline

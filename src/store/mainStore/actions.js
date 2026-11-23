@@ -165,6 +165,7 @@ function addMailboxesToState(mailboxes, account, newMailboxes) {
 		mailbox.envelopeLists = {}
 
 		transformMailboxName(account, mailbox)
+		inferSpecialUseForSharedMailbox(mailbox)
 
 		mailboxes[mailbox.databaseId] = mailbox
 
@@ -189,6 +190,34 @@ function addMailboxesToState(mailboxes, account, newMailboxes) {
 			parent.mailboxes.push(mailbox.databaseId)
 		}
 	})
+}
+
+const inferredSharedSpecialUseMap = {
+	archive: 'archive',
+	drafts: 'drafts',
+	inbox: 'inbox',
+	junk: 'junk',
+	sent: 'sent',
+	trash: 'trash',
+}
+
+function inferSpecialUseForSharedMailbox(mailbox) {
+	if ((mailbox.specialUse?.length ?? 0) > 0 || !mailbox.delimiter) {
+		return
+	}
+
+	const pathSegments = mailbox.name.split(mailbox.delimiter)
+	if (pathSegments.length < 3 || pathSegments[0].toLowerCase() !== 'shared') {
+		return
+	}
+
+	const inferredSpecialUse = inferredSharedSpecialUseMap[mailbox.displayName.toLowerCase()]
+	if (!inferredSpecialUse) {
+		return
+	}
+
+	mailbox.specialUse = [inferredSpecialUse]
+	mailbox.specialRole = inferredSpecialUse
 }
 
 function createVirtualMailbox(account, name, delimiter) {

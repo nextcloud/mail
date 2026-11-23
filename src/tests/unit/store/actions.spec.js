@@ -347,6 +347,8 @@ describe('Vuex store actions', () => {
 		expect(ownerMailboxChildren).toHaveLength(1)
 		expect(ownerMailboxChildren[0].databaseId).toBe(21)
 		expect(ownerMailboxChildren[0].displayName).toBe('INBOX')
+		expect(ownerMailboxChildren[0].specialRole).toBe('inbox')
+		expect(ownerMailboxChildren[0].specialUse).toEqual(['inbox'])
 	})
 
 	it('combines unified inbox even if no inboxes are present', async () => {
