@@ -108,7 +108,7 @@ class Html {
 	 */
 	public function parseMailBody(string $body): array {
 		$signature = null;
-		$parts = preg_split("/-- (\n|(\r\n))/", $body);
+		$parts = preg_split("/^-- \r?\n/m", $body);
 		if ($parts === false) {
 			$parts = [$body];
 		}
