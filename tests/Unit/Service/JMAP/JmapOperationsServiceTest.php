@@ -62,11 +62,9 @@ final class JmapOperationsServiceTest extends TestCase {
 		// Bypass connect()'s session handshake and inject an already-connected data store,
 		// since attachmentUpload() only needs the data store and account id to be set.
 		$dataStoreProperty = new ReflectionProperty(JmapOperationsService::class, 'dataStore');
-		$dataStoreProperty->setAccessible(true);
 		$dataStoreProperty->setValue($this->service, $this->dataStore);
 
 		$dataAccountProperty = new ReflectionProperty(JmapOperationsService::class, 'dataAccount');
-		$dataAccountProperty->setAccessible(true);
 		$dataAccountProperty->setValue($this->service, 'account1');
 	}
 

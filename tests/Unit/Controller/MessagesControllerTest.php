@@ -135,6 +135,8 @@ final class MessagesControllerTest extends TestCase {
 
 	private IAppManager&MockObject $appManager;
 
+	private IFilenameValidator&MockObject $filenameValidator;
+
 	protected function setUp(): void {
 		parent::setUp();
 

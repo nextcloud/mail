@@ -827,6 +827,37 @@ final class AccountMigrationServiceTest extends TestCase {
 		self::assertSame([null], $certificateIds);
 	}
 
+	public function testImportAccountAndAliasWithoutCertificate(): void {
+		$accountData = $this->getExportedAccountData();
+		$accountData['smimeCertificateId'] = null;
+		$accountData['aliases'][0]['smimeCertificateId'] = null;
+		$this->expectAccountFileToBeImported($accountData);
+		$this->expectAccountToBeSaved();
+		$this->serviceMock->getParameter('mailboxMapper')
+			->method('insert')
+			->willReturnCallback(static function (Mailbox $mailbox): Mailbox {
+				$mailbox->setId(self::IMPORTED_INBOX_ID);
+				return $mailbox;
+			});
+		$certificateIds = [];
+		$this->serviceMock->getParameter('aliasesService')
+			->method('create')
+			->willReturnCallback(function (string $userId,
+				int $accountId,
+				string $alias,
+				?string $name,
+				?string $signature = null,
+				?int $smimeCertificateId = null) use (&$certificateIds): Alias {
+				$certificateIds[] = $smimeCertificateId;
+				return new Alias();
+			});
+
+		$this->migrationService->importAccounts($this->user, $this->importSource, $this->output, [11 => 22]);
+
+		self::assertNull($this->savedAccount->getSmimeCertificateId());
+		self::assertSame([null], $certificateIds);
+	}
+
 	public function testImportSkipsTheFailingAccountAndKeepsGoing(): void {
 		$this->expectAccountFileToBeImported($this->getExportedAccountData());
 		$this->expectAccountToBeSaved();
