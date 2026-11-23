@@ -313,6 +313,42 @@ describe('Vuex store actions', () => {
 		expect(MailboxService.create).toHaveBeenCalledWith(13, 'INBOX.Archive.2020')
 	})
 
+	it('creates virtual parent folders for orphan shared sub-mailboxes', async () => {
+		const account = {
+			id: 13,
+			personalNamespace: '',
+			mailboxes: [],
+		}
+
+		store.addAccountMutation(account)
+		MailboxService.fetchAll.mockResolvedValueOnce([
+			{
+				databaseId: 21,
+				name: 'shared/alice@example.com/INBOX',
+				delimiter: '/',
+				specialUse: [],
+				attributes: ['\\subscribed'],
+			},
+		])
+
+		await store.syncMailboxesForAccount(account)
+
+		const topLevelMailboxes = store.getMailboxes(13)
+		expect(topLevelMailboxes).toHaveLength(1)
+		expect(topLevelMailboxes[0].name).toBe('shared')
+		expect(topLevelMailboxes[0].isVirtual).toBe(true)
+
+		const sharedMailboxChildren = store.getSubMailboxes(topLevelMailboxes[0].databaseId)
+		expect(sharedMailboxChildren).toHaveLength(1)
+		expect(sharedMailboxChildren[0].name).toBe('shared/alice@example.com')
+		expect(sharedMailboxChildren[0].isVirtual).toBe(true)
+
+		const ownerMailboxChildren = store.getSubMailboxes(sharedMailboxChildren[0].databaseId)
+		expect(ownerMailboxChildren).toHaveLength(1)
+		expect(ownerMailboxChildren[0].databaseId).toBe(21)
+		expect(ownerMailboxChildren[0].displayName).toBe('INBOX')
+	})
+
 	it('combines unified inbox even if no inboxes are present', async () => {
 		const envelopes = await store.fetchEnvelopes({
 			mailboxId: UNIFIED_INBOX_ID,

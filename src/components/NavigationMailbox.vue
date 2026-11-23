@@ -299,8 +299,12 @@ export default {
 			return this.mailbox.specialRole !== 'inbox'
 		},
 
+		isVirtualMailbox() {
+			return this.mailbox.isVirtual === true
+		},
+
 		notVirtual() {
-			return !this.account.isUnified && this.mailbox.specialRole !== 'flagged' && !this.filter
+			return !this.account.isUnified && !this.isVirtualMailbox && this.mailbox.specialRole !== 'flagged' && !this.filter
 		},
 
 		notVirtualOrSpecial() {
@@ -319,6 +323,10 @@ export default {
 		},
 
 		to() {
+			if (this.isVirtualMailbox) {
+				return undefined
+			}
+
 			return {
 				name: 'mailbox',
 				params: {
@@ -374,7 +382,7 @@ export default {
 		},
 
 		isValidDropTarget() {
-			if (this.isActive || !this.hasInsertAcl) {
+			if (this.isVirtualMailbox || this.isActive || !this.hasInsertAcl) {
 				return false
 			}
 			return this.isDroppableSpecialMailbox || (!this.mailbox.specialRole && !this.account.isUnified)
@@ -388,6 +396,10 @@ export default {
 		},
 
 		showUnreadCounter() {
+			if (this.isVirtualMailbox) {
+				return false
+			}
+
 			if (this.filter === 'starred' || this.mailbox.specialRole === 'trash') {
 				return false
 			}

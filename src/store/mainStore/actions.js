@@ -176,6 +176,10 @@ function addMailboxesToState(mailboxes, account, newMailboxes) {
 	})
 
 	newMailboxes.forEach((mailbox) => {
+		if (mailbox.path !== '') {
+			ensureVirtualMailboxHierarchy(mailboxes, account, mailbox.path, mailbox.delimiter)
+		}
+
 		const parent = Object.values(mailboxes)
 			.filter((mb) => mb.accountId === account.id)
 			.find((mb) => mb.name === mailbox.path)
@@ -185,6 +189,59 @@ function addMailboxesToState(mailboxes, account, newMailboxes) {
 			parent.mailboxes.push(mailbox.databaseId)
 		}
 	})
+}
+
+function createVirtualMailbox(account, name, delimiter) {
+	const lastDelimiterIndex = name.lastIndexOf(delimiter)
+	return {
+		id: `virtual:${account.id}:${name}`,
+		databaseId: `virtual:${account.id}:${name}`,
+		accountId: account.id,
+		name,
+		displayName: name.substring(lastDelimiterIndex + 1),
+		delimiter,
+		path: lastDelimiterIndex === -1 ? '' : name.substring(0, lastDelimiterIndex),
+		attributes: ['\\subscribed'],
+		specialUse: [],
+		specialRole: '',
+		mailboxes: [],
+		envelopeLists: {},
+		unread: 0,
+		isVirtual: true,
+	}
+}
+
+function ensureVirtualMailboxHierarchy(mailboxes, account, path, delimiter) {
+	const segments = path.split(delimiter)
+	if (segments.length === 0) {
+		return
+	}
+
+	let parent = undefined
+	for (let i = 0; i < segments.length; i++) {
+		const name = segments.slice(0, i + 1).join(delimiter)
+		let current = Object.values(mailboxes)
+			.filter((mailbox) => mailbox.accountId === account.id)
+			.find((mailbox) => mailbox.name === name)
+
+		if (!current) {
+			current = createVirtualMailbox(account, name, delimiter)
+			mailboxes[current.databaseId] = current
+			Object.defineProperty(current, 'isSubscribed', {
+				get() {
+					return this.attributes?.includes('\\subscribed') ?? false
+				},
+			})
+
+			if (parent) {
+				parent.mailboxes.push(current.databaseId)
+			} else {
+				account.mailboxes.push(current.databaseId)
+			}
+		}
+
+		parent = current
+	}
 }
 
 function transformMailboxName(account, mailbox) {
