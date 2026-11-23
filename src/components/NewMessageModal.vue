@@ -604,7 +604,7 @@ export default {
 			}
 
 			// It's safe to stop the session and ultimately destroy this component as only data
-			// local this this function is accessed afterwards
+			// local to this function is accessed afterwards
 			await this.mainStore.stopComposerSession()
 
 			try {

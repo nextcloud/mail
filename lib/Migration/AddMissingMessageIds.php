@@ -58,7 +58,7 @@ class AddMissingMessageIds implements IRepairStep {
 			$id = IMAPMessage::generateMessageId();
 			$message->setMessageId($id);
 
-			// The thread root is is null if the message wasn't matched to a thread
+			// The thread root is null if the message wasn't matched to a thread
 			// based on its subject. In that case we set default for the thread root
 			// as well.
 			if ($message->getThreadRootId() === null) {
