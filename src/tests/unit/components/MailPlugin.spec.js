@@ -14,8 +14,9 @@ import VirtualTestEditor from '../../virtualtesteditor.js'
  * @param {Record<string, string>} data clipboard data by MIME type
  */
 function paste(editor, data) {
-	editor.editing.view.document.fire('clipboardInput', {
-		method: 'paste',
+	editor.editing.view.document.fire('paste', {
+		preventDefault: () => {},
+		stopPropagation: () => {},
 		dataTransfer: {
 			getData: (type) => data[type] ?? '',
 		},
