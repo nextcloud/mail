@@ -7,6 +7,7 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import ThreadEnvelope from '../../../components/ThreadEnvelope.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
+import useMainStore from '../../../store/mainStore.js'
 
 const localVue = createLocalVue()
 
@@ -428,5 +429,51 @@ describe('ThreadEnvelope', () => {
 		})
 
 		expect(view.vm.hasWriteAcl).toBe(true)
+	})
+
+	it('treats an unflagged message in the junk mailbox as junk', () => {
+		const store = useMainStore()
+		store.mailboxes[3] = { databaseId: 3, specialRole: 'junk', myAcls: undefined }
+		const view = shallowMount(ThreadEnvelope, {
+			propsData: {
+				account: {},
+				mailbox: { specialRole: '' },
+				envelope: {
+					accountId: 123,
+					mailboxId: 3,
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
+					subject: '',
+					dateInt: 1692200926180,
+				},
+				threadSubject: '',
+			},
+			localVue,
+		})
+
+		expect(view.vm.isJunk).toBe(true)
+	})
+
+	it('does not treat an unflagged message in the inbox as junk', () => {
+		const store = useMainStore()
+		store.mailboxes[3] = { databaseId: 3, specialRole: 'inbox', myAcls: undefined }
+		const view = shallowMount(ThreadEnvelope, {
+			propsData: {
+				account: {},
+				mailbox: { specialRole: '' },
+				envelope: {
+					accountId: 123,
+					mailboxId: 3,
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
+					subject: '',
+					dateInt: 1692200926180,
+				},
+				threadSubject: '',
+			},
+			localVue,
+		})
+
+		expect(view.vm.isJunk).toBe(false)
 	})
 })

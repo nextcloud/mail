@@ -636,6 +636,143 @@ describe('Vuex store actions', () => {
 		expect(removeEnvelope).toBeFalsy()
 	})
 
+	describe('junk state of an envelope', () => {
+		beforeEach(() => {
+			const account = {
+				id: 42,
+				junkMailboxId: 10,
+			}
+			store.addAccountMutation(account)
+			store.addMailboxMutation({
+				account,
+				mailbox: {
+					databaseId: 1,
+					specialRole: 'inbox',
+					name: 'INBOX',
+				},
+			})
+			store.addMailboxMutation({
+				account,
+				mailbox: {
+					databaseId: 5,
+					specialRole: 'junk',
+					name: 'Junk',
+				},
+			})
+		})
+
+		it('should treat a flagged message as junk', () => {
+			const envelope = { accountId: 42, mailboxId: 1, flags: { $junk: true } }
+
+			expect(store.isEnvelopeJunk(envelope)).toBe(true)
+		})
+
+		it('should not treat an unflagged inbox message as junk', () => {
+			const envelope = { accountId: 42, mailboxId: 1, flags: {} }
+
+			expect(store.isEnvelopeJunk(envelope)).toBe(false)
+		})
+
+		it('should treat an unflagged message in a junk-role mailbox as junk', () => {
+			const envelope = { accountId: 42, mailboxId: 5, flags: { $junk: false } }
+
+			expect(store.isEnvelopeJunk(envelope)).toBe(true)
+		})
+
+		it('should treat an unflagged message in the configured junk mailbox as junk', () => {
+			const envelope = { accountId: 42, mailboxId: 10, flags: {} }
+
+			expect(store.isEnvelopeJunk(envelope)).toBe(true)
+		})
+
+		it('should not treat a message marked not junk in a junk mailbox as junk', () => {
+			const envelope = { accountId: 42, mailboxId: 5, flags: { $notjunk: true } }
+
+			expect(store.isEnvelopeJunk(envelope)).toBe(false)
+		})
+
+		it('should treat a message with both junk keywords in a junk mailbox as junk', () => {
+			const envelope = { accountId: 42, mailboxId: 5, flags: { $junk: true, $notjunk: true } }
+
+			expect(store.isEnvelopeJunk(envelope)).toBe(true)
+		})
+
+		it('should not treat an envelope without mailbox as junk when the account has no junk mailbox', () => {
+			store.addAccountMutation({ id: 43 })
+			const envelope = { accountId: 43, flags: {} }
+
+			expect(store.isEnvelopeJunk(envelope)).toBe(false)
+		})
+
+		it('should not treat an envelope with a null mailbox as junk when the junk mailbox is also null', () => {
+			store.addAccountMutation({ id: 44, junkMailboxId: null })
+			const envelope = { accountId: 44, mailboxId: null, flags: {} }
+
+			expect(store.isEnvelopeJunk(envelope)).toBe(false)
+		})
+
+		it('should move an unflagged message in the junk mailbox to the inbox', async () => {
+			const envelope = { accountId: 42, mailboxId: 10, flags: {} }
+
+			const removeEnvelope = await store.moveEnvelopeToJunk(envelope)
+
+			expect(removeEnvelope).toBeTruthy()
+		})
+
+		it('should move an unflagged inbox message to the junk mailbox', async () => {
+			const envelope = { accountId: 42, mailboxId: 1, flags: {} }
+
+			const removeEnvelope = await store.moveEnvelopeToJunk(envelope)
+
+			expect(removeEnvelope).toBeTruthy()
+		})
+
+		it('should mark an unflagged message in a junk mailbox as not junk', async () => {
+			MessageService.setEnvelopeFlags.mockResolvedValue()
+			const envelope = {
+				databaseId: 99,
+				accountId: 42,
+				mailboxId: 5,
+				flags: { $junk: false, $notjunk: false },
+			}
+
+			await store.toggleEnvelopeJunk({ envelope, removeEnvelope: false })
+
+			expect(MessageService.setEnvelopeFlags).toHaveBeenCalledWith(99, { $junk: false, $notjunk: true })
+			expect(envelope.flags.$notjunk).toBe(true)
+		})
+
+		it('should mark an unflagged inbox message as junk', async () => {
+			MessageService.setEnvelopeFlags.mockResolvedValue()
+			const envelope = {
+				databaseId: 98,
+				accountId: 42,
+				mailboxId: 1,
+				flags: { $junk: false, $notjunk: false },
+			}
+
+			await store.toggleEnvelopeJunk({ envelope, removeEnvelope: false })
+
+			expect(MessageService.setEnvelopeFlags).toHaveBeenCalledWith(98, { $junk: true, $notjunk: false })
+		})
+
+		it('should restore the original keywords when marking as not junk fails', async () => {
+			MessageService.setEnvelopeFlags.mockRejectedValue(new Error('request failed'))
+			store.addEnvelopesMutation = vi.fn()
+			const envelope = {
+				databaseId: 97,
+				accountId: 42,
+				mailboxId: 5,
+				flags: { $junk: false, $notjunk: false },
+			}
+
+			await expect(store.toggleEnvelopeJunk({ envelope, removeEnvelope: true })).rejects.toThrow('request failed')
+
+			expect(envelope.flags).toEqual({ $junk: false, $notjunk: false })
+			expect(store.addEnvelopesMutation).toHaveBeenCalledWith([envelope])
+		})
+	})
+
 	it('includes a cache buster if requested', async () => {
 		const account = {
 			id: 13,

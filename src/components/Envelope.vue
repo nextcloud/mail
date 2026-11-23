@@ -49,11 +49,11 @@
 					:class="{ 'important-one-line': oneLineLayout, 'icon-important': !oneLineLayout }"
 					data-starred="true" />
 				<JunkIcon
-					v-if="data.flags.$junk"
+					v-if="isJunk"
 					:size="20"
 					class="app-content-list-item-star junk-icon-style"
 					:class="{ 'one-line': oneLineLayout, 'junk-icon-style': !oneLineLayout }"
-					:data-starred="data.flags.$junk ? 'true' : 'false'"
+					:data-starred="isJunk ? 'true' : 'false'"
 					@click.prevent="hasWriteAcl ? onToggleJunk() : false" />
 			</div>
 			<div
@@ -115,10 +115,10 @@
 						@click.stop.prevent="hasWriteAcl ? onToggleFlagged() : false" />
 
 					<JunkIcon
-						v-if="data.flags.$junk"
+						v-if="isJunk"
 						:size="20"
 						class="app-content-list-item-star junk-icon-style junk-icon--recipient"
-						:data-starred="data.flags.$junk ? 'true' : 'false'"
+						:data-starred="isJunk ? 'true' : 'false'"
 						@click.stop.prevent="hasWriteAcl ? onToggleJunk() : false" />
 				</template>
 
@@ -158,7 +158,7 @@
 							@click.prevent="hasWriteAcl ? onToggleFlagged() : false" />
 
 						<JunkIcon
-							v-if="data.flags.$junk"
+							v-if="isJunk"
 							:size="18"
 							class="junk-icon-style--compact"
 							@click.prevent="hasWriteAcl ? onToggleJunk() : false" />
@@ -267,7 +267,7 @@
 						<AlertOctagonIcon :size="20" />
 					</template>
 					{{
-						data.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
+						isJunk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
 					}}
 				</NcActionButton>
 				<NcActionButton
@@ -727,6 +727,10 @@ export default {
 			return isRTL()
 		},
 
+		isJunk() {
+			return this.mainStore.isEnvelopeJunk(this.data)
+		},
+
 		messageLongDate() {
 			return messageDateTime(new Date(this.data.dateInt))
 		},
@@ -1061,8 +1065,8 @@ export default {
 					switch (step.name) {
 						case 'markAsSpam':
 							if (this.layoutMessageViewThreaded) {
-								await this.onToggleJunkThread()
-							} else {
+								await this.onMarkThreadAsSpam()
+							} else if (!this.mainStore.isEnvelopeJunk(this.data)) {
 								await this.onToggleJunk()
 							}
 							break
@@ -1206,13 +1210,17 @@ export default {
 			}
 		},
 
-		async onToggleJunkThread() {
-			const removeEnvelope = await this.mainStore.moveEnvelopeToJunk(this.data)
-
+		async onMarkThreadAsSpam() {
 			const threadEnvelopes = this.layoutMessageViewThreaded
 				? this.mainStore.getEnvelopesByThreadRootId(this.data.accountId, this.data.threadRootId)
 				: [this.data]
 			threadEnvelopes.forEach(async (envelope) => {
+				if (this.mainStore.isEnvelopeJunk(envelope)) {
+					return
+				}
+
+				const removeEnvelope = await this.mainStore.moveEnvelopeToJunk(envelope)
+
 				if (this.isImportant) {
 					await this.mainStore.toggleEnvelopeImportant(envelope)
 				}

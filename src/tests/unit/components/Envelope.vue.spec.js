@@ -384,3 +384,109 @@ describe('Envelope', () => {
 		expect(view.vm.hasWriteAcl).toBe(true)
 	})
 })
+
+describe('Envelope junk state', () => {
+	let store
+
+	beforeEach(() => {
+		setActivePinia(createPinia())
+
+		store = useMainStore()
+
+		store.accountsUnmapped[123] = { id: 123, sentMailboxId: '1', archiveMailboxId: 99, junkMailboxId: 10, mailboxes: [] }
+		store.mailboxes[3] = { databaseId: 3, specialRole: 'inbox', myAcls: undefined }
+		store.mailboxes[5] = { databaseId: 5, specialRole: 'junk', myAcls: undefined }
+		store.toggleEnvelopeJunk = vi.fn()
+		store.moveEnvelopeToJunk = vi.fn().mockResolvedValue(true)
+	})
+
+	const mountInMailbox = (mailboxId, flags = {}) => {
+		return shallowMount(Envelope, {
+			mocks: {
+				$route,
+			},
+			propsData: {
+				mailbox: {
+					myAcls: undefined,
+					databaseId: mailboxId,
+				},
+				data: {
+					databaseId: 1,
+					accountId: 123,
+					mailboxId,
+					threadRootId: 'thread',
+					dateInt: 1,
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: true, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false, ...flags },
+				},
+			},
+			store,
+			localVue,
+		})
+	}
+
+	it('treats an unflagged message in the junk mailbox as junk', () => {
+		const view = mountInMailbox(5)
+
+		expect(view.vm.isJunk).toBe(true)
+	})
+
+	it('does not treat an unflagged message in the inbox as junk', () => {
+		const view = mountInMailbox(3)
+
+		expect(view.vm.isJunk).toBe(false)
+	})
+
+	it('treats a flagged message outside the junk mailbox as junk', () => {
+		const view = mountInMailbox(3, { $junk: true })
+
+		expect(view.vm.isJunk).toBe(true)
+	})
+
+	it('does not treat a message with $notjunk in the junk mailbox as junk', () => {
+		const view = mountInMailbox(5, { $notjunk: true })
+
+		expect(view.vm.isJunk).toBe(false)
+	})
+
+	it('does not toggle an unflagged junk-folder message from the quick action', async () => {
+		const view = mountInMailbox(5)
+
+		await view.vm.executeQuickAction({ actionSteps: [{ name: 'markAsSpam' }] })
+
+		expect(store.toggleEnvelopeJunk).not.toHaveBeenCalled()
+	})
+
+	it('marks only the non-junk siblings of a thread as spam from the quick action', async () => {
+		const root = {
+			databaseId: 1,
+			accountId: 123,
+			mailboxId: 5,
+			threadRootId: 'thread',
+			dateInt: 1,
+			from: [{ email: 'info@test.com' }],
+			flags: { seen: true, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
+		}
+		const sibling = { ...root, databaseId: 2, mailboxId: 3 }
+		store.getEnvelopesByThreadRootId = vi.fn().mockReturnValue([root, sibling])
+		const view = shallowMount(Envelope, {
+			mocks: {
+				$route,
+			},
+			propsData: {
+				mailbox: {
+					myAcls: undefined,
+					databaseId: 5,
+				},
+				data: root,
+			},
+			store,
+			localVue,
+		})
+
+		await view.vm.executeQuickAction({ actionSteps: [{ name: 'markAsSpam' }] })
+
+		await vi.waitFor(() => expect(store.toggleEnvelopeJunk).toHaveBeenCalledWith({ envelope: sibling, removeEnvelope: true }))
+		expect(store.toggleEnvelopeJunk).toHaveBeenCalledTimes(1)
+	})
+})
