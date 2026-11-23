@@ -11,8 +11,11 @@ namespace OCA\Mail\Tests\Unit\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Socket;
+use Horde_Mail_Exception;
 use Horde_Mail_Transport;
 use Horde_Mime_Part;
+use Horde_Smtp_Exception;
+use Horde_Smtp_Exception_Recipients;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
@@ -505,6 +508,109 @@ class MailTransmissionTest extends TestCase {
 			->method('save');
 
 		$this->transmission->saveLocalDraft(new Account($mailAccount), $localMessage);
+	}
+
+	private function transportFailingWith(Horde_Smtp_Exception $smtpException): Horde_Mail_Transport {
+		$transport = $this->createMock(Horde_Mail_Transport::class);
+		$transport->method('send')
+			->willThrowException(new Horde_Mail_Exception($smtpException));
+		return $transport;
+	}
+
+	private function sendMessageWithTransport(Horde_Mail_Transport $transport): array {
+		$mailAccount = new MailAccount();
+		$mailAccount->setName('Bob');
+		$mailAccount->setEmail('bob@mail.example');
+		$mailAccount->setUserId('bob');
+		$account = new Account($mailAccount);
+		$localMessage = new LocalMessage();
+		$localMessage->setSubject('Test');
+		$localMessage->setBodyPlain('Test');
+		$localMessage->setHtml(false);
+		$this->smtpClientFactory->method('create')
+			->willReturn($transport);
+		$this->transmissionService->method('getSignMimePart')
+			->willReturnCallback(static fn ($localMessage, $account, $mimePart) => $mimePart);
+		$this->transmissionService->method('getEncryptMimePart')
+			->willReturnCallback(static fn ($localMessage, $to, $cc, $bcc, $account, $mimePart) => $mimePart);
+
+		$this->transmission->sendMessage($account, $localMessage);
+
+		return [$account, $localMessage];
+	}
+
+	public function testSendMessageRecipientRejected(): void {
+		$smtpException = new Horde_Smtp_Exception_Recipients('5.1.1 <nobody@example.com>: Recipient address rejected');
+		$smtpException->setSmtpCode(550);
+		$smtpException->recipients = ['nobody@example.com'];
+		$this->logger->expects(self::once())
+			->method('error')
+			->with(
+				self::stringStartsWith('SMTP error: '),
+				self::callback(fn (array $context): bool => $context['smtpErrorCode'] === 550
+					&& array_key_exists('accountId', $context)
+					&& array_key_exists('localMessageId', $context)),
+			);
+
+		[, $localMessage] = $this->sendMessageWithTransport($this->transportFailingWith($smtpException));
+
+		$this->assertSame(LocalMessage::STATUS_ERROR, $localMessage->getStatus());
+		$this->assertSame(['nobody@example.com'], $localMessage->getRejectedRecipients());
+	}
+
+	public function testSendMessageTemporaryRecipientRefusalIsNotRejected(): void {
+		$smtpException = new Horde_Smtp_Exception_Recipients('4.1.1 <nobody@example.com>: Recipient address rejected');
+		$smtpException->setSmtpCode(450);
+		$smtpException->recipients = ['nobody@example.com'];
+
+		[, $localMessage] = $this->sendMessageWithTransport($this->transportFailingWith($smtpException));
+
+		$this->assertSame(LocalMessage::STATUS_ERROR, $localMessage->getStatus());
+		$this->assertSame([], $localMessage->getRejectedRecipients());
+	}
+
+	public function testSendMessageRetriableRecipientRefusalIsNotRejected(): void {
+		$smtpException = new Horde_Smtp_Exception_Recipients('5.2.2 <nobody@example.com>: Mailbox full');
+		$smtpException->setSmtpCode(552);
+		$smtpException->recipients = ['nobody@example.com'];
+
+		[, $localMessage] = $this->sendMessageWithTransport($this->transportFailingWith($smtpException));
+
+		$this->assertSame(LocalMessage::STATUS_SMPT_SEND_FAIL, $localMessage->getStatus());
+		$this->assertSame([], $localMessage->getRejectedRecipients());
+	}
+
+	public function testSendMessageSmtpErrorAfterDataIsLoggedWithCode(): void {
+		$smtpException = new Horde_Smtp_Exception('Transaction failed');
+		$smtpException->setSmtpCode(554);
+		$this->logger->expects(self::once())
+			->method('error')
+			->with(
+				self::stringStartsWith('SMTP error: '),
+				self::callback(fn (array $context): bool => $context['smtpErrorCode'] === 554),
+			);
+
+		[, $localMessage] = $this->sendMessageWithTransport($this->transportFailingWith($smtpException));
+
+		$this->assertSame(LocalMessage::STATUS_ERROR, $localMessage->getStatus());
+		$this->assertSame([], $localMessage->getRejectedRecipients());
+	}
+
+	public function testSendMessageNonSmtpFailureIsLoggedWithoutCode(): void {
+		$transport = $this->createMock(Horde_Mail_Transport::class);
+		$transport->method('send')
+			->willThrowException(new Horde_Mail_Exception('broken'));
+		$this->logger->expects(self::once())
+			->method('error')
+			->with(
+				'broken',
+				self::callback(fn (array $context): bool => !array_key_exists('smtpErrorCode', $context)),
+			);
+
+		[, $localMessage] = $this->sendMessageWithTransport($transport);
+
+		$this->assertSame(LocalMessage::STATUS_ERROR, $localMessage->getStatus());
+		$this->assertSame([], $localMessage->getRejectedRecipients());
 	}
 
 	public function testSendMessageWithAiGeneratedHeader(): void {

@@ -27,6 +27,7 @@ use Horde_Mime_Mail;
 use Horde_Mime_Mdn;
 use Horde_Mime_Part;
 use Horde_Smtp_Exception;
+use Horde_Smtp_Exception_Recipients;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
@@ -165,19 +166,34 @@ class MailTransmission implements IMailTransmission {
 			]));
 			$localMessage->setStatus(LocalMessage::STATUS_RAW);
 		} catch (Horde_Mime_Exception $e) {
-			if ($e->getPrevious() instanceof Horde_Smtp_Exception) {
-				/** @var Horde_Smtp_Exception $previousException */
-				$previousException = $e->getPrevious();
+			$smtpException = $this->findSmtpException($e);
+			if ($smtpException !== null) {
 				$this->logger->error('SMTP error: ' . $e->getMessage(), [
 					'exception' => $e,
-					'smtpErrorCode' => $previousException->getSmtpCode(),
+					'smtpErrorCode' => $smtpException->getSmtpCode(),
+					'accountId' => $account->getId(),
+					'localMessageId' => $localMessage->getId(),
 				]);
 			} else {
-				$this->logger->error($e->getMessage(), ['exception' => $e]);
+				$this->logger->error($e->getMessage(), [
+					'exception' => $e,
+					'accountId' => $account->getId(),
+					'localMessageId' => $localMessage->getId(),
+				]);
 			}
 			if (in_array($e->getCode(), self::RETRIABLE_CODES, true)) {
 				$localMessage->setStatus(LocalMessage::STATUS_SMPT_SEND_FAIL);
 				return;
+			}
+
+			if ($smtpException instanceof Horde_Smtp_Exception_Recipients && $smtpException->permanent) {
+				$rejectedRecipients = [];
+				foreach ($smtpException->recipients as $recipient) {
+					if (is_string($recipient)) {
+						$rejectedRecipients[] = $recipient;
+					}
+				}
+				$localMessage->setRejectedRecipients($rejectedRecipients);
 			}
 
 			try {
@@ -254,6 +270,15 @@ class MailTransmission implements IMailTransmission {
 		$perfLogger->step('emit post local draft save event');
 
 		$perfLogger->end();
+	}
+
+	private function findSmtpException(Throwable $e): ?Horde_Smtp_Exception {
+		for ($previous = $e->getPrevious(); $previous !== null; $previous = $previous->getPrevious()) {
+			if ($previous instanceof Horde_Smtp_Exception) {
+				return $previous;
+			}
+		}
+		return null;
 	}
 
 	private function buildMimePart(Account $account, LocalMessage $message, bool $isPgpMime): Horde_Mime_Part {
