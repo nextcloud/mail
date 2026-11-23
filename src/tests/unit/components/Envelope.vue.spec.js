@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { showError } from '@nextcloud/dialogs'
+import { showError, showSuccess } from '@nextcloud/dialogs'
 import { shallowMount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import Envelope from '../../../components/Envelope.vue'
@@ -13,6 +13,7 @@ import useMainStore from '../../../store/mainStore.js'
 vi.mock('@nextcloud/dialogs', async (importOriginal) => ({
 	...await importOriginal(),
 	showError: vi.fn(),
+	showSuccess: vi.fn(),
 }))
 
 const $route = {
@@ -460,6 +461,10 @@ describe('Envelope', () => {
 	})
 
 	describe('unread state of a thread row', () => {
+		beforeEach(() => {
+			vi.clearAllMocks()
+		})
+
 		const mountRow = (data, layout = 'threaded') => {
 			store.preferences['layout-message-view'] = layout
 			return shallowMount(Envelope, {
@@ -577,6 +582,63 @@ describe('Envelope', () => {
 			expect(store.toggleEnvelopeSeen).toHaveBeenCalledWith({ envelope: row, seen: true })
 		})
 
+		const quickAction = (...names) => ({ actionSteps: names.map((name) => ({ name })) })
+
+		it('does not mark a thread read when the mark as unread quick action runs on a read row with an unread thread', async () => {
+			const row = { accountId: 123, databaseId: 3, threadRootId: 'root', flags: { seen: true }, threadHasUnread: true }
+			store.envelopes = { 3: row }
+			store.toggleEnvelopeSeen = vi.fn()
+			const view = mountRow(row)
+
+			await view.vm.executeQuickAction(quickAction('markAsUnread'))
+
+			expect(store.toggleEnvelopeSeen).not.toHaveBeenCalled()
+		})
+
+		it('marks a thread read with the mark as read quick action when only an older message is unread', async () => {
+			const row = { accountId: 123, databaseId: 3, threadRootId: 'root', flags: { seen: true }, threadHasUnread: true }
+			store.envelopes = { 3: row }
+			store.fetchThread = vi.fn().mockResolvedValue([])
+			store.toggleEnvelopeSeen = vi.fn()
+			const view = mountRow(row)
+
+			await view.vm.executeQuickAction(quickAction('markAsRead'))
+
+			expect(store.toggleEnvelopeSeen).toHaveBeenCalledWith({ envelope: row, seen: true })
+			expect(showSuccess).toHaveBeenCalled()
+		})
+
+		it('reports a failed thread load of a quick action instead of success', async () => {
+			const row = { accountId: 123, databaseId: 3, threadRootId: 'root', flags: { seen: true }, threadHasUnread: true }
+			store.envelopes = { 3: row }
+			store.fetchThread = vi.fn().mockRejectedValue(new Error('offline'))
+			store.toggleEnvelopeSeen = vi.fn()
+			const view = mountRow(row)
+
+			await view.vm.executeQuickAction(quickAction('markAsRead', 'markAsUnread'))
+
+			expect(store.toggleEnvelopeSeen).not.toHaveBeenCalled()
+			expect(showError).toHaveBeenCalled()
+			expect(showSuccess).not.toHaveBeenCalled()
+		})
+
+		it('waits for marking as read before running the next quick action step', async () => {
+			const row = { accountId: 123, databaseId: 3, threadRootId: 'root', flags: { seen: false }, threadHasUnread: true }
+			store.envelopes = { 3: row }
+			const calls = []
+			const view = mountRow(row)
+			store.fetchThread = vi.fn().mockResolvedValue([])
+			store.toggleEnvelopeSeen = vi.fn(async ({ seen }) => {
+				await Promise.resolve()
+				await view.setProps({ data: { ...view.props('data'), flags: { seen }, threadHasUnread: !seen } })
+				calls.push(seen)
+			})
+
+			await view.vm.executeQuickAction(quickAction('markAsRead', 'markAsUnread'))
+
+			expect(calls).toEqual([true, false])
+		})
+
 		it('toggles only the shown message in the singleton layout', async () => {
 			const row = { accountId: 123, databaseId: 3, threadRootId: 'root', flags: { seen: true } }
 			store.envelopes = { 3: row, 1: { accountId: 123, databaseId: 1, threadRootId: 'root', flags: { seen: false } } }
@@ -586,7 +648,7 @@ describe('Envelope', () => {
 			await view.vm.onToggleSeen()
 
 			expect(store.toggleEnvelopeSeen).toHaveBeenCalledTimes(1)
-			expect(store.toggleEnvelopeSeen).toHaveBeenCalledWith({ envelope: view.vm.data })
+			expect(store.toggleEnvelopeSeen).toHaveBeenCalledWith({ envelope: view.vm.data, seen: false })
 		})
 	})
 })

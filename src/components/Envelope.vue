@@ -1130,13 +1130,13 @@ export default {
 							}
 							break
 						case 'markAsRead':
-							if (!this.data.flags.seen) {
-								this.onToggleSeen()
+							if (this.isUnread) {
+								await this.setSeen(true)
 							}
 							break
 						case 'markAsUnread':
-							if (this.data.flags.seen) {
-								this.onToggleSeen()
+							if (!this.isUnread) {
+								await this.setSeen(false)
 							}
 							break
 						case 'moveThread':
@@ -1231,26 +1231,26 @@ export default {
 		},
 
 		async onToggleSeen() {
+			try {
+				await this.setSeen(this.isUnread)
+			} catch (error) {
+				logger.error('Could not change the read state', { error })
+				showError(t('mail', 'Could not change the read state'))
+			}
+		},
+
+		async setSeen(seen) {
 			if (!this.layoutMessageViewThreaded) {
-				this.mainStore.toggleEnvelopeSeen({ envelope: this.data })
+				await this.mainStore.toggleEnvelopeSeen({ envelope: this.data, seen })
 				return
 			}
 
-			const seen = this.isUnread
 			if (seen && this.data.threadHasUnread) {
-				try {
-					await this.mainStore.fetchThread(this.data.databaseId)
-				} catch (error) {
-					logger.error('Could not load the thread to mark it as read', { error })
-					showError(t('mail', 'Could not mark the thread as read'))
-					return
-				}
+				await this.mainStore.fetchThread(this.data.databaseId)
 			}
-			this.mainStore
-				.getMailboxThreadEnvelopes(this.data)
-				.forEach((envelope) => {
-					this.mainStore.toggleEnvelopeSeen({ envelope, seen })
-				})
+			for (const envelope of this.mainStore.getMailboxThreadEnvelopes(this.data)) {
+				await this.mainStore.toggleEnvelopeSeen({ envelope, seen })
+			}
 		},
 
 		async onToggleJunkThread() {

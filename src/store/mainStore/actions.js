@@ -1166,6 +1166,8 @@ export default function mainStoreActions() {
 				// Change immediately and switch back on error
 				const oldState = envelope.flags.seen
 				const newState = seen === undefined ? !oldState : seen
+				const thread = this.getMailboxThreadEnvelopes(envelope)
+				const oldThreadHasUnread = thread.map((message) => message.threadHasUnread)
 				this.flagEnvelopeMutation({
 					envelope,
 					flag: 'seen',
@@ -1184,6 +1186,9 @@ export default function mainStoreActions() {
 						envelope,
 						flag: 'seen',
 						value: oldState,
+					})
+					thread.forEach((message, index) => {
+						message.threadHasUnread = oldThreadHasUnread[index]
 					})
 
 					throw error

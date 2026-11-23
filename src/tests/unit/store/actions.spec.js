@@ -614,6 +614,53 @@ describe('Vuex store actions', () => {
 			.toEqual(msgs2.map(mockEnvelope(21)).map((e) => e.databaseId).toSorted())
 	})
 
+	describe('toggleEnvelopeSeen', () => {
+		const envelope = (databaseId, seen, extra = {}) => ({
+			databaseId,
+			accountId: 13,
+			mailboxId: 27,
+			threadRootId: 'root',
+			flags: { seen },
+			...extra,
+		})
+
+		beforeEach(() => {
+			store.mailboxes[27] = { databaseId: 27, accountId: 13, unread: 0 }
+		})
+
+		it('restores the thread unread state when marking a message unread fails', async () => {
+			const row = envelope(3, true, { threadHasUnread: false })
+			store.envelopes = { 3: row }
+			MessageService.setEnvelopeFlags.mockRejectedValue(new Error('offline'))
+
+			await expect(store.toggleEnvelopeSeen({ envelope: row, seen: false })).rejects.toThrow('offline')
+
+			expect(row.flags.seen).toBe(true)
+			expect(row.threadHasUnread).toBe(false)
+		})
+
+		it('keeps the thread unread state when marking a message read fails', async () => {
+			const row = envelope(3, false, { threadHasUnread: true })
+			store.envelopes = { 3: row }
+			MessageService.setEnvelopeFlags.mockRejectedValue(new Error('offline'))
+
+			await expect(store.toggleEnvelopeSeen({ envelope: row, seen: true })).rejects.toThrow('offline')
+
+			expect(row.flags.seen).toBe(false)
+			expect(row.threadHasUnread).toBe(true)
+		})
+
+		it('marks the thread as having unread messages when a message becomes unread', async () => {
+			const row = envelope(3, true, { threadHasUnread: false })
+			store.envelopes = { 3: row }
+			MessageService.setEnvelopeFlags.mockResolvedValue({})
+
+			await store.toggleEnvelopeSeen({ envelope: row, seen: false })
+
+			expect(row.threadHasUnread).toBe(true)
+		})
+	})
+
 	describe('inbox sync', () => {
 		it('fetches the inbox first', async () => {
 			const account13 = {
