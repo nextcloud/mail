@@ -14,7 +14,7 @@
 			isDraggable,
 		}"
 		class="list-item-style envelope"
-		:class="{ seen: data.flags.seen, draft, selected: selected }"
+		:class="{ seen: !isUnread, draft, selected: selected }"
 		:to="link"
 		:data-envelope-id="data.databaseId"
 		:name="addresses"
@@ -186,7 +186,7 @@
 		<template #indicator>
 			<!-- Color dot -->
 			<IconBullet
-				v-if="!data.flags.seen"
+				v-if="isUnread"
 				:size="20"
 				:aria-hidden="false"
 				:aria-label="t('mail', 'This message is unread')"
@@ -225,7 +225,7 @@
 							:size="24" />
 					</template>
 					{{
-						data.flags.seen ? t('mail', 'Unread') : t('mail', 'Read')
+						isUnread ? t('mail', 'Read') : t('mail', 'Unread')
 					}}
 				</NcActionButton>
 				<NcActionButton
@@ -834,7 +834,12 @@ export default {
 		},
 
 		showImportantIconVariant() {
-			return this.data.flags.seen
+			return !this.isUnread
+		},
+
+		isUnread() {
+			return !this.data.flags.seen
+				|| (this.layoutMessageViewThreaded && this.data.threadHasUnread === true)
 		},
 
 		isEncrypted() {
@@ -1225,17 +1230,27 @@ export default {
 			})
 		},
 
-		onToggleSeen() {
-			if (this.layoutMessageViewThreaded) {
-				const threadEnvelopes = this.layoutMessageViewThreaded
-					? this.mainStore.getEnvelopesByThreadRootId(this.data.accountId, this.data.threadRootId)
-					: [this.data]
-				threadEnvelopes.forEach((envelope) => {
-					this.mainStore.toggleEnvelopeSeen({ envelope })
-				})
-			} else {
+		async onToggleSeen() {
+			if (!this.layoutMessageViewThreaded) {
 				this.mainStore.toggleEnvelopeSeen({ envelope: this.data })
+				return
 			}
+
+			const seen = this.isUnread
+			if (seen && this.data.threadHasUnread) {
+				try {
+					await this.mainStore.fetchThread(this.data.databaseId)
+				} catch (error) {
+					logger.error('Could not load the thread to mark it as read', { error })
+					showError(t('mail', 'Could not mark the thread as read'))
+					return
+				}
+			}
+			this.mainStore
+				.getMailboxThreadEnvelopes(this.data)
+				.forEach((envelope) => {
+					this.mainStore.toggleEnvelopeSeen({ envelope, seen })
+				})
 		},
 
 		async onToggleJunkThread() {

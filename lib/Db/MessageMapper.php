@@ -1013,14 +1013,12 @@ class MessageMapper extends QBMapper {
 			);
 		}
 
-		foreach ($query->getFlags() as $flag) {
-			$select->andWhere($qb->expr()->eq('m.' . $this->flagToColumnName($flag), $qb->createNamedParameter($flag->isSet(), IQueryBuilder::PARAM_BOOL)));
-		}
-		if (!empty($query->getFlagExpressions())) {
-			$select->andWhere(
-				...array_map(fn (FlagExpression $expr) => $this->flagExpressionToQuery($expr, $select, 'm'), $query->getFlagExpressions())
-			);
-		}
+		$this->applyFlagFilters(
+			$select,
+			$query,
+			$query->getThreaded(),
+			$mailbox->getId()
+		);
 
 		if ($query->getThreaded()) {
 			$select->andWhere($qb->expr()->isNull('m2.id'));
@@ -1246,6 +1244,39 @@ class MessageMapper extends QBMapper {
 			|| !empty($query->getBcc());
 	}
 
+	private function applyFlagFilters(IQueryBuilder $select, SearchQuery $query, bool $threaded, int $mailboxId): void {
+		$threadUnread = false;
+		foreach ($query->getFlags() as $flag) {
+			if ($threaded && $flag->getFlag() === Flag::SEEN && !$flag->isSet()) {
+				$threadUnread = true;
+				continue;
+			}
+			$select->andWhere($select->expr()->eq('m.' . $this->flagToColumnName($flag), $select->createNamedParameter($flag->isSet(), IQueryBuilder::PARAM_BOOL)));
+		}
+		if (!empty($query->getFlagExpressions())) {
+			$select->andWhere(
+				...array_map(fn (FlagExpression $expr) => $this->flagExpressionToQuery($expr, $select, 'm'), $query->getFlagExpressions())
+			);
+		}
+
+		if (!$threadUnread) {
+			return;
+		}
+
+		$unreadThreads = $this->db->getQueryBuilder();
+		$unreadThreads->select('f.thread_root_id')
+			->from($this->getTableName(), 'f')
+			->where(
+				$select->expr()->eq('f.mailbox_id', $select->createNamedParameter($mailboxId, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
+				$select->expr()->eq('f.flag_seen', $select->createNamedParameter(false, IQueryBuilder::PARAM_BOOL), IQueryBuilder::PARAM_BOOL),
+				$select->expr()->eq('f.flag_deleted', $select->createNamedParameter(false, IQueryBuilder::PARAM_BOOL), IQueryBuilder::PARAM_BOOL),
+			);
+		$select->andWhere($select->expr()->orX(
+			$select->expr()->eq('m.flag_seen', $select->createNamedParameter(false, IQueryBuilder::PARAM_BOOL), IQueryBuilder::PARAM_BOOL),
+			$select->expr()->in('m.thread_root_id', $select->createFunction($unreadThreads->getSQL()), IQueryBuilder::PARAM_STR_ARRAY),
+		));
+	}
+
 	private function flagExpressionToQuery(FlagExpression $expr, IQueryBuilder $qb, string $tableAlias): string {
 		$operands = array_map(function (object $operand) use ($qb, $tableAlias) {
 			if ($operand instanceof Flag) {
@@ -1354,6 +1385,54 @@ class MessageMapper extends QBMapper {
 			$results[] = $this->findRelatedData($this->findEntities($qb), $userId);
 		}
 		return array_merge([], ...$results);
+	}
+
+	/**
+	 * Flag the messages whose thread (within the same mailbox) contains an unread message.
+	 *
+	 * @param Message[] $messages
+	 *
+	 * @return Message[]
+	 */
+	public function findThreadUnreadState(array $messages): array {
+		$rootsByMailbox = [];
+		foreach ($messages as $message) {
+			$threadRootId = $message->getThreadRootId();
+			if ($threadRootId !== null) {
+				$rootsByMailbox[$message->getMailboxId()][$threadRootId] = true;
+			}
+		}
+		if ($rootsByMailbox === []) {
+			return $messages;
+		}
+
+		$qb = $this->db->getQueryBuilder();
+		$qb->selectDistinct(['mailbox_id', 'thread_root_id'])
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->in('mailbox_id', $qb->createNamedParameter(array_keys($rootsByMailbox), IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY),
+				$qb->expr()->in('thread_root_id', $qb->createParameter(self::PARAM_IDS), IQueryBuilder::PARAM_STR_ARRAY),
+				$qb->expr()->eq('flag_seen', $qb->createNamedParameter(false, IQueryBuilder::PARAM_BOOL), IQueryBuilder::PARAM_BOOL),
+				$qb->expr()->eq('flag_deleted', $qb->createNamedParameter(false, IQueryBuilder::PARAM_BOOL), IQueryBuilder::PARAM_BOOL),
+			);
+
+		$unreadThreads = [];
+		$allRoots = array_unique(array_merge([], ...array_map('array_keys', array_values($rootsByMailbox))));
+		foreach (array_chunk($allRoots, self::MAX_IN_PARAMETERS) as $chunk) {
+			$qb->setParameter(self::PARAM_IDS, $chunk, IQueryBuilder::PARAM_STR_ARRAY);
+			$result = $qb->executeQuery();
+			while (($row = $result->fetch()) !== false) {
+				$unreadThreads[(int)$row['mailbox_id']][(string)$row['thread_root_id']] = true;
+			}
+			$result->closeCursor();
+		}
+
+		foreach ($messages as $message) {
+			$threadRootId = $message->getThreadRootId();
+			$message->setThreadHasUnread($threadRootId !== null && isset($unreadThreads[$message->getMailboxId()][$threadRootId]));
+		}
+
+		return $messages;
 	}
 
 	/**

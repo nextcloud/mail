@@ -2170,6 +2170,9 @@ export default function mainStoreActions() {
 			this.normalizeTags(envelope)
 			existing.flags = envelope.flags
 			existing.tags = envelope.tags
+			if (envelope.threadHasUnread !== undefined) {
+				existing.threadHasUnread = envelope.threadHasUnread
+			}
 		},
 		flagEnvelopeMutation({
 			envelope,
@@ -2186,6 +2189,31 @@ export default function mainStoreActions() {
 				}
 			}
 			envelope.flags[flag] = value
+			if (flag === 'seen') {
+				this.updateThreadHasUnread(envelope)
+			}
+		},
+		updateThreadHasUnread(envelope) {
+			if (envelope.flags.deleted) {
+				return
+			}
+			const siblings = this.getMailboxThreadEnvelopes(envelope)
+			if (!envelope.flags.seen) {
+				siblings.forEach((sibling) => {
+					sibling.threadHasUnread = true
+				})
+				return
+			}
+
+			// Only trust a loaded thread that covers every known message of the thread
+			const loadedThread = siblings.find((sibling) => sibling.thread !== undefined)?.thread
+			if (loadedThread === undefined || !siblings.every((sibling) => loadedThread.includes(sibling.databaseId))) {
+				return
+			}
+			const threadHasUnread = siblings.some((sibling) => !sibling.flags.seen)
+			siblings.forEach((sibling) => {
+				sibling.threadHasUnread = threadHasUnread
+			})
 		},
 		addTagMutation({ tag }) {
 			this.tags[tag.id] = tag
@@ -2529,6 +2557,10 @@ export default function mainStoreActions() {
 				prop('dateInt'),
 				Object.values(this.envelopes).filter((envelope) => envelope.accountId === accountId && envelope.threadRootId === threadRootId),
 			)
+		},
+		getMailboxThreadEnvelopes(envelope) {
+			return this.getEnvelopesByThreadRootId(envelope.accountId, envelope.threadRootId)
+				.filter((sibling) => sibling.mailboxId === envelope.mailboxId && !sibling.flags.deleted)
 		},
 		getMessage(id) {
 			return this.messages[id]
