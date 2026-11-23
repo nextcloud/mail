@@ -33,6 +33,7 @@ class RepairMailTheads implements IRepairStep {
 		 * During the upgrade to v1.11.3 and later the old version of the
 		 * mapper is loaded before this new repair step is performed. Hence even after
 		 * the program code got replaced, the class doesn't have the new method. We
+		 * @psalm-suppress TypeDoesNotContainType
 		 */
 		if (!method_exists($this->mapper, 'resetInReplyTo')) {
 			$output->warning('New Mail code hasn\'t been loaded yet, skipping message ID repair. Please run `occ maintenance:repair` after the upgrade.');

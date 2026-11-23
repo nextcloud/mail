@@ -196,13 +196,13 @@ class Synchronizer {
 		// overly long IMAP commands they have to be chunked.
 		return array_merge(
 			[], // for php<7.4 https://www.php.net/manual/en/function.array-merge.php
-			...array_map(
+			...array_values(array_map(
 				static fn (Horde_Imap_Client_Ids $uids) => $imapClient->sync($mailbox, $request->getToken(), [
 					'criteria' => Horde_Imap_Client::SYNC_VANISHEDUIDS,
 					'ids' => $uids,
 				])->vanisheduids->ids,
 				chunk_uid_sequence($request->getUids(), self::UID_CHUNK_MAX_BYTES)
-			)
+			))
 		);
 	}
 }

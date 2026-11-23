@@ -164,6 +164,7 @@ class IMipService {
 								$processed = $this->calendarManager->handleIMipCancel($principalUri, $sender, $replyTo, $recipient, $schedulingInfo['contents']);
 							}
 						} else {
+							/** @psalm-suppress TypeDoesNotContainType */
 							if (!method_exists($this->calendarManager, 'handleIMip')) {
 								$this->logger->error('iMIP handling is not supported by server version installed', $logContext);
 								$allProcessed = false;

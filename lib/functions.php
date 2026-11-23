@@ -16,7 +16,7 @@ use function max;
 use function strlen;
 
 function array_flat_map(callable $map, array $data): array {
-	return array_merge([], ...array_map($map, $data));
+	return array_merge([], ...array_values(array_map($map, $data)));
 }
 
 /**
