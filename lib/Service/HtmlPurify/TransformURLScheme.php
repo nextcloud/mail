@@ -21,6 +21,8 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 
 class TransformURLScheme extends HTMLPurifier_URIFilter {
+	private HTMLPurifier_AttrDef_URI_Host $hostValidator;
+
 	public function __construct(
 		private int $messageId,
 		private array $inlineAttachments,
@@ -30,6 +32,7 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 	) {
 		$this->name = 'TransformURLScheme';
 		$this->post = true;
+		$this->hostValidator = new HTMLPurifier_AttrDef_URI_Host();
 	}
 
 	/**
@@ -45,14 +48,13 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 		if ($uri->scheme === null) {
 			// "www.example.com/path" parses as a relative path; without a host the browser resolves it against our own URL
 			if ($uri->host === null && $uri->path !== '' && $uri->path[0] !== '/') {
-				[$host, $path] = explode('/', $uri->path, 2) + [1 => null];
-				$host = (new HTMLPurifier_AttrDef_URI_Host())->validate(rawurldecode($host), $config, $context);
-				if (is_string($host)) {
+				[$segment, $path] = explode('/', $uri->path, 2) + [1 => null];
+				$host = $this->promotableHost(rawurldecode($segment), $config, $context);
+				if ($host !== null) {
 					$uri->host = $host;
 					$uri->path = $path === null ? '' : '/' . $path;
 				}
 			}
-			// on an http instance browsers read a host-less "https:path" as "https://path"
 			$attr = $context->exists('CurrentAttr') ? $context->get('CurrentAttr') : null;
 			if ($uri->host !== null || $attr !== 'href') {
 				$uri->scheme = 'https';
@@ -69,6 +71,18 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 		}
 
 		return true;
+	}
+
+	/**
+	 * A dot and a non-numeric last label keep "2024/report.pdf" from becoming an IPv4 host
+	 */
+	private function promotableHost(string $segment, HTMLPurifier_Config $config, HTMLPurifier_Context $context): ?string {
+		$lastDot = strrpos($segment, '.');
+		if ($lastDot === false || ctype_digit(substr($segment, $lastDot + 1)) || preg_match('/[\x00-\x20\x7f]/', $segment) === 1) {
+			return null;
+		}
+		$host = $this->hostValidator->validate($segment, $config, $context);
+		return is_string($host) ? $host : null;
 	}
 
 	private function filterHttpFtp(HTMLPurifier_URI $uri, HTMLPurifier_Context $context): HTMLPurifier_URI {

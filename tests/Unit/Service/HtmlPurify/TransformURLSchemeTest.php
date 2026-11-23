@@ -57,69 +57,87 @@ final class TransformURLSchemeTest extends TestCase {
 		$this->assertSame('https', $uri->scheme);
 	}
 
-	public function testSchemelessLinkGetsHostFromPath(): void {
-		$uri = new HTMLPurifier_URI(null, null, null, null, 'www.example.com/unsubscribe', 'token=abc', null);
-		$config = HTMLPurifier_Config::createDefault();
+	private function filterAs(string $attr, HTMLPurifier_URI $uri): HTMLPurifier_URI {
 		$context = new HTMLPurifier_Context();
-		$attr = 'href';
 		$context->register('CurrentAttr', $attr);
 
-		$this->filter->filter($uri, $config, $context);
+		$this->filter->filter($uri, HTMLPurifier_Config::createDefault(), $context);
 
-		$this->assertSame('https://www.example.com/unsubscribe?token=abc', $uri->toString());
+		return $uri;
+	}
+
+	public function testSchemelessLinkGetsHostFromPath(): void {
+		$uri = new HTMLPurifier_URI(null, null, null, null, 'www.example.com/unsubscribe', 'token=abc', null);
+
+		$result = $this->filterAs('href', $uri);
+
+		$this->assertSame('https://www.example.com/unsubscribe?token=abc', $result->toString());
 	}
 
 	public function testSchemelessBareDomainLink(): void {
 		$uri = new HTMLPurifier_URI(null, null, null, null, 'www.example.com', null, null);
-		$config = HTMLPurifier_Config::createDefault();
-		$context = new HTMLPurifier_Context();
-		$attr = 'href';
-		$context->register('CurrentAttr', $attr);
 
-		$this->filter->filter($uri, $config, $context);
+		$result = $this->filterAs('href', $uri);
 
-		$this->assertSame('https://www.example.com', $uri->toString());
+		$this->assertSame('https://www.example.com', $result->toString());
 	}
 
 	public function testFragmentOnlyLinkStaysRelative(): void {
 		$uri = new HTMLPurifier_URI(null, null, null, null, '', null, 'section');
-		$config = HTMLPurifier_Config::createDefault();
-		$context = new HTMLPurifier_Context();
-		$attr = 'href';
-		$context->register('CurrentAttr', $attr);
 
-		$this->filter->filter($uri, $config, $context);
+		$result = $this->filterAs('href', $uri);
 
-		$this->assertSame('#section', $uri->toString());
+		$this->assertSame('#section', $result->toString());
 	}
 
-	public function testSchemelessLinkWithInvalidHostStaysRelative(): void {
-		$uri = new HTMLPurifier_URI(null, null, null, null, 'trusted.example@other.example/path', null, null);
-		$config = HTMLPurifier_Config::createDefault();
-		$context = new HTMLPurifier_Context();
-		$attr = 'href';
-		$context->register('CurrentAttr', $attr);
-
-		$this->filter->filter($uri, $config, $context);
-
-		$this->assertSame('trusted.example@other.example/path', $uri->toString());
+	public function nonPromotableSegmentProvider(): \Iterator {
+		yield 'userinfo' => ['trusted.example@other.example/path'];
+		yield 'numeric segment' => ['2024/report.pdf'];
+		yield 'numeric last label' => ['10.0.0.1/admin'];
+		yield 'no dot' => ['images/logo.png'];
+		yield 'encoded newline' => ['example.com%0A/x'];
+		yield 'encoded space' => ['example.com%20/x'];
 	}
 
-	public function testHostlessSrcStillProxied(): void {
-		$uri = new HTMLPurifier_URI(null, null, null, null, '/image.png', null, null);
-		$config = HTMLPurifier_Config::createDefault();
-		$context = new HTMLPurifier_Context();
-		$attr = 'src';
-		$context->register('CurrentAttr', $attr);
-		$this->hmacGenerator->method('generate')->willReturn('abc123');
+	/**
+	 * @dataProvider nonPromotableSegmentProvider
+	 */
+	public function testSchemelessLinkStaysRelative(string $path): void {
+		$uri = new HTMLPurifier_URI(null, null, null, null, $path, null, null);
+
+		$result = $this->filterAs('href', $uri);
+
+		$this->assertNull($result->host);
+		$this->assertSame($path, $result->toString());
+	}
+
+	public function testSchemelessSrcWithEncodedNewlineKeepsProxyUrlFreeOfControlCharacters(): void {
+		$uri = new HTMLPurifier_URI(null, null, null, null, 'example.com%0A/x', null, null);
+		$this->hmacGenerator->expects($this->once())
+			->method('generate')
+			->with(42, self::callback(static fn (string $url): bool => preg_match('/[\x00-\x20\x7f]/', $url) === 0))
+			->willReturn('abc123');
 		$this->request->method('getServerProtocol')->willReturn('https');
 		$this->request->method('getServerHost')->willReturn('mail.example.com');
 		$this->urlGenerator->method('linkToRoute')->willReturn('/apps/mail/proxy?id=42&hmac=abc123');
 
-		$this->filter->filter($uri, $config, $context);
+		$this->filterAs('src', $uri);
+	}
 
-		$this->assertSame('mail.example.com', $uri->host);
-		$this->assertSame('/apps/mail/proxy', $uri->path);
+	public function testHostlessSrcStillProxied(): void {
+		$uri = new HTMLPurifier_URI(null, null, null, null, '/image.png', null, null);
+		$this->hmacGenerator->expects($this->once())
+			->method('generate')
+			->with(42, 'https:///image.png')
+			->willReturn('abc123');
+		$this->request->method('getServerProtocol')->willReturn('https');
+		$this->request->method('getServerHost')->willReturn('mail.example.com');
+		$this->urlGenerator->method('linkToRoute')->willReturn('/apps/mail/proxy?id=42&hmac=abc123');
+
+		$result = $this->filterAs('src', $uri);
+
+		$this->assertSame('mail.example.com', $result->host);
+		$this->assertSame('/apps/mail/proxy', $result->path);
 	}
 
 	public function testHttpSchemeHandledAsDirectLink(): void {
