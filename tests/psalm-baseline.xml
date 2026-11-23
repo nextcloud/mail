@@ -79,7 +79,6 @@
     <PossiblyNullArgument>
       <code><![CDATA[$attachmentIds]]></code>
       <code><![CDATA[$fullText]]></code>
-      <code><![CDATA[$htmlBodyId]]></code>
     </PossiblyNullArgument>
     <PossiblyNullReference>
       <code><![CDATA[getBodyPart]]></code>
@@ -162,7 +161,6 @@
     </PossiblyInvalidArgument>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$domain]]></code>
-      <code><![CDATA[$serverConfigs['smtp'][0]]]></code>
     </PossiblyUndefinedArrayOffset>
   </file>
   <file src="lib/Service/Avatar/FaviconSource.php">

@@ -32,6 +32,7 @@ class FixBackgroundJobs implements IRepairStep {
 	#[\Override]
 	public function run(IOutput $output) {
 		// Skip if method does not exist yet during upgrade
+		/** @psalm-suppress TypeDoesNotContainType */
 		if (!method_exists($this->accountService, 'scheduleBackgroundJobs')) {
 			return;
 		}
