@@ -13,7 +13,7 @@
 		"autoloader-suffix": "Mail"
 	},
 	"require": {
-		"php": ">=8.2 <=8.4",
+		"php": ">=8.2 <8.7",
 		"ext-openssl": "*",
 		"arthurhoaro/favicon": "^2.0.1",
 		"bamarni/composer-bin-plugin": "^1.9.1",
