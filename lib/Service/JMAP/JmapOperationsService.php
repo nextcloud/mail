@@ -24,6 +24,7 @@ use JmapClient\Requests\Mail\MailSubmissionSet;
 use JmapClient\Requests\Quota\QuotaGet;
 use JmapClient\Responses\Mail\MailboxParameters as MailboxParametersResponse;
 use JmapClient\Responses\Mail\MailParameters as MailParametersResponse;
+use JmapClient\Responses\Mail\MailPart as MailPartResponse;
 use JmapClient\Responses\Quota\QuotaParameters as QuotaParametersResponse;
 use JmapClient\Responses\ResponseBundle;
 use JmapClient\Responses\ResponseException;
@@ -84,6 +85,12 @@ class JmapOperationsService {
 		'header:List-Unsubscribe:asURLs',
 		'header:List-Unsubscribe-Post:asText',
 		'header:X-AI-Generated:asText',
+	];
+
+	protected array $entityBodyPropertiesDefault = [
+		'partId', 'blobId', 'size', 'name', 'type', 'charset',
+		'disposition', 'cid', 'language', 'location',
+		'header:Content-Type:asRaw',
 	];
 
 	public function __construct(
@@ -497,6 +504,7 @@ class JmapOperationsService {
 			$r1->property(...$this->entityPropertiesBasic);
 		} else {
 			$r1->property(...$this->entityPropertiesDefault);
+			$r1->bodyProperty(...$this->entityBodyPropertiesDefault);
 			$r1->bodyAll(true);
 		}
 		// transceive
@@ -736,6 +744,7 @@ class JmapOperationsService {
 		$r0->target(...$identifiers);
 		// select properties to return
 		$r0->property(...$this->entityPropertiesDefault);
+		$r0->bodyProperty(...$this->entityBodyPropertiesDefault);
 		$r0->bodyAll(true);
 		// transceive
 		$bundle = $this->transceive([$r0]);
@@ -1137,11 +1146,34 @@ class JmapOperationsService {
 					$attachment->size() ?? 0,
 					$attachment->cid(),
 					$attachment->disposition(),
+					$this->extractTypeParameters($attachment),
 				);
 			}
 		}
 
 		return $attachments;
+	}
+
+	/**
+	 * JMAP body part types carry no parameters (RFC 8621 section 4.1.4),
+	 * so they are read from the raw Content-Type header
+	 *
+	 * @return array<string, string>
+	 */
+	private function extractTypeParameters(MailPartResponse $part): array {
+		$contentType = $part->header('Content-Type');
+		if (!is_string($contentType)) {
+			return [];
+		}
+		$parameters = [];
+		foreach (array_slice(explode(';', $contentType), 1) as $parameter) {
+			[$key, $value] = array_pad(explode('=', $parameter, 2), 2, '');
+			$key = trim($key);
+			if ($key !== '') {
+				$parameters[$key] = trim($value, " \t\r\n\"");
+			}
+		}
+		return $parameters;
 	}
 
 	/**
@@ -1195,8 +1227,13 @@ class JmapOperationsService {
 	 */
 	private function addAttachmentPart(MailParametersRequest $message, array $attachment, string $blobId): void {
 		$part = $message->bodyPartStructure()->addPart();
-		$part->blob($blobId)
-			->type($attachment['type']);
+		$part->blob($blobId);
+		// JMAP has no property for content type parameters (e.g. the iTIP method)
+		if (str_contains($attachment['type'], ';')) {
+			$part->header('Content-Type', ' ' . $attachment['type']);
+		} else {
+			$part->type($attachment['type']);
+		}
 		// a name implies a disposition, so both are left out for parts without one (e.g. iMIP)
 		if ($attachment['disposition'] !== null) {
 			$part->name($attachment['name'])

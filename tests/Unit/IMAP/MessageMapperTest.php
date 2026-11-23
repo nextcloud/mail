@@ -906,7 +906,7 @@ final class MessageMapperTest extends TestCase {
 		$this->assertEquals('calendar.ics', $attachment->getName());
 	}
 
-	public function testGetAttachmentTextCalendarKeepsMethod(): void {
+	public function testGetAttachmentTextCalendarReportsTypeParameters(): void {
 		$messageUid = 1;
 		$attachmentId = '2';
 		$headerText = "Content-Type: text/calendar; method=request; charset=\"utf-8\"; name=\"event.ics\"\r\n"
@@ -929,34 +929,9 @@ final class MessageMapperTest extends TestCase {
 			'alice',
 		);
 
-		$this->assertEquals('text/calendar; method=REQUEST', $attachment->getType());
-		$this->assertEquals('event.ics', $attachment->getName());
-	}
-
-	public function testGetAttachmentTextCalendarDropsUnknownMethod(): void {
-		$messageUid = 1;
-		$attachmentId = '2';
-		$headerText = "Content-Type: text/calendar; method=\"REQUEST; foo=bar\"\r\n"
-			. "Content-Transfer-Encoding: 7bit\r\n";
-		$fetchData = new Horde_Imap_Client_Data_Fetch();
-		$fetchData->setMimeHeader($attachmentId, $headerText);
-		$fetchData->setBodyPart($attachmentId, 'BEGIN:VCALENDAR');
-		$fetchData->setUid($messageUid);
-		$fetchResult = new Horde_Imap_Client_Fetch_Results();
-		$fetchResult[$messageUid] = $fetchData;
-		$imapClient = $this->createMock(Horde_Imap_Client_Base::class);
-		$imapClient->method('fetch')->willReturn($fetchResult);
-		$this->sMimeService->method('isEncrypted')->willReturn(false);
-
-		$attachment = $this->mapper->getAttachment(
-			$imapClient,
-			'INBOX',
-			$messageUid,
-			$attachmentId,
-			'alice',
-		);
-
 		$this->assertEquals('text/calendar', $attachment->getType());
+		$this->assertEquals(['method' => 'request', 'charset' => 'utf-8', 'name' => 'event.ics'], $attachment->getTypeParameters());
+		$this->assertEquals('event.ics', $attachment->getName());
 	}
 
 	public function testGetAttachmentAppliesContentTransferEncoding(): void {
