@@ -81,6 +81,16 @@
 				{{ t('mail', 'Move message') }}
 			</NcActionButton>
 			<NcActionButton
+				:closeAfterClick="true"
+				@click.prevent="$emit('openCopyModal')">
+				<template #icon>
+					<ContentCopyIcon
+						:title="t('mail', 'Copy message')"
+						:size="20" />
+				</template>
+				{{ t('mail', 'Copy message') }}
+			</NcActionButton>
+			<NcActionButton
 				v-if="!isSnoozeDisabled && !isSnoozedMailbox"
 				:closeAfterClick="false"
 				@click="snoozeActionsOpen = true">
@@ -400,6 +410,7 @@ export default {
 	emits: [
 		'openTagModal',
 		'openMoveModal',
+		'openCopyModal',
 		'openTranslationModal',
 		'openEventModal',
 		'openTaskModal',
