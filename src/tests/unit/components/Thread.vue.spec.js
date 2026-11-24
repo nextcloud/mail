@@ -316,6 +316,25 @@ describe('Thread', () => {
 		expect(envelopes[0].mailboxId).toBe(23)
 	})
 
+	it('emits close when the close button is clicked', () => {
+		const view = shallowMount(Thread, {
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route: {
+						params: {
+							threadId: 200,
+						},
+					},
+				},
+			},
+		})
+
+		view.findComponent({ name: 'NcButton' }).vm.$emit('click')
+
+		expect(view.emitted('close')).toHaveLength(1)
+	})
+
 	describe('printing a message', () => {
 		let parent
 		let renderedMessages
