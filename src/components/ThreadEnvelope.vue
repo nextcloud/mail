@@ -65,6 +65,15 @@
 				@keydown.space.prevent="$emit('toggleExpand', $event)">
 				<div class="envelope__header__left__sender-subject-tags">
 					<div class="sender" :class="{ 'sender--expanded': expanded }">
+						<NcChip
+							:title="mailboxName(mailbox)"
+							variant="tertiary"
+							noClose="true">
+							<MailboxIcon
+								:account="account"
+								:mailbox="mailbox" />
+						</NcChip>
+
 						{{ envelope.from && envelope.from[0] ? envelope.from[0].label : '' }}
 						<span v-if="hasAiGeneratedContent" class="ai-generated-label">
 							<AiIcon :size="14" />
@@ -400,6 +409,7 @@ import NcActions from '@nextcloud/vue/components/NcActions'
 import NcActionText from '@nextcloud/vue/components/NcActionText'
 import AiIcon from '@nextcloud/vue/components/NcAssistantIcon'
 import NcButton from '@nextcloud/vue/components/NcButton'
+import NcChip from '@nextcloud/vue/components/NcChip'
 import ArchiveIcon from 'vue-material-design-icons/ArchiveArrowDownOutline.vue'
 import ChevronDownIcon from 'vue-material-design-icons/ChevronDown.vue'
 import ChevronUpIcon from 'vue-material-design-icons/ChevronUp.vue'
@@ -418,6 +428,7 @@ import ConfirmModal from './ConfirmationModal.vue'
 import Error from './Error.vue'
 import EventModal from './EventModal.vue'
 import JunkIcon from './icons/JunkIcon.vue'
+import MailboxIcon from './icons/MailboxIcon.vue'
 import MailFilterFromEnvelope from './mailFilter/MailFilterFromEnvelope.vue'
 import MenuEnvelope from './MenuEnvelope.vue'
 import Message from './Message.vue'
@@ -433,6 +444,7 @@ import importantSvg from '../../img/important.svg'
 import { isPgpText } from '../crypto/pgp.js'
 import { matchError } from '../errors/match.js'
 import NoTrashMailboxConfiguredError from '../errors/NoTrashMailboxConfiguredError.js'
+import { translate as translateMailboxName } from '../i18n/MailboxTranslator.js'
 import logger from '../logger.js'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder.js'
 import { smartReply } from '../service/AiIntergrationsService.js'
@@ -467,8 +479,10 @@ export default {
 		RecipientBubble,
 		NcActionButton,
 		NcButton,
+		NcChip,
 		Error,
 		IconFavorite,
+		MailboxIcon,
 		JunkIcon,
 		MessageLoadingSkeleton,
 		MenuEnvelope,
@@ -495,16 +509,6 @@ export default {
 		envelope: {
 			required: true,
 			type: Object,
-		},
-
-		mailboxId: {
-			required: false,
-			type: [
-				String,
-				Number,
-			],
-
-			default: undefined,
 		},
 
 		expanded: {
@@ -729,7 +733,7 @@ export default {
 		},
 
 		mailbox() {
-			return this.mainStore.getMailbox(this.mailboxId)
+			return this.mainStore.getMailbox(this.envelope.mailboxId)
 		},
 
 		archiveMailbox() {
@@ -1099,6 +1103,10 @@ export default {
 			})
 		},
 
+		mailboxName() {
+			return translateMailboxName(this.mailbox)
+		},
+
 		async unsubscribeViaOneClick() {
 			try {
 				this.unsubscribing = true
@@ -1425,7 +1433,7 @@ export default {
 		}
 
 		.subline {
-			margin-inline-start: 8px;
+			margin-inline-start: calc(var(--default-grid-baseline) * 3);
 			color: var(--color-text-maxcontrast);
 			cursor: default;
 			overflow: hidden;

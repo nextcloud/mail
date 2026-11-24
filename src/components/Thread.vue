@@ -24,7 +24,6 @@
 				ref="envelopeRefs"
 				:key="env.databaseId"
 				:envelope="env"
-				:mailboxId="$route.params.mailboxId"
 				:threadSubject="threadSubject"
 				:expanded="expandedThreads.includes(env.databaseId)"
 				:fullHeight="thread.length === 1"
