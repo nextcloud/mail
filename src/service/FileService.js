@@ -31,10 +31,16 @@ export async function getFileData(path) {
 					<oc:size />
 					<oc:fileid />
 					<nc:has-preview />
+					<d:getcontenttype />
+					<d:getetag />
 				</d:prop>
 			</d:propfind>`,
 		details: true,
 	})
 
 	return response?.data?.props
+}
+
+export function getFileDavUrl(path) {
+	return getClient('files').getFileDownloadLink(path)
 }
