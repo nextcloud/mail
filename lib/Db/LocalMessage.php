@@ -62,6 +62,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 
 	public const HEADER_AI_GENERATED = 'X-AI-Generated';
 
+	// The JS mirror in src/store/constants.js must be updated together with these.
 	public const STATUS_RAW = 0;
 	public const STATUS_NO_SENT_MAILBOX = 1;
 	public const STATUS_SMIME_SIGN_NO_CERT_ID = 2;
@@ -148,6 +149,9 @@ class LocalMessage extends Entity implements JsonSerializable {
 	/** @var bool */
 	protected $aiGenerated;
 
+	/** @var list<string> */
+	private array $rejectedRecipients = [];
+
 	public function __construct() {
 		$this->addType('type', 'integer');
 		$this->addType('accountId', 'integer');
@@ -200,6 +204,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 			'smimeSign' => $this->getSmimeSign() === true,
 			'smimeEncrypt' => $this->getSmimeEncrypt() === true,
 			'status' => $this->getStatus(),
+			'rejectedRecipients' => $this->getRejectedRecipients(),
 			'raw' => $this->getRaw(),
 			'requestMdn' => $this->getRequestMdn(),
 			'isAiGenerated' => $this->isAiGenerated(),
@@ -234,5 +239,19 @@ class LocalMessage extends Entity implements JsonSerializable {
 	 */
 	public function getRecipients(): ?array {
 		return $this->recipients;
+	}
+
+	/**
+	 * @param list<string> $rejectedRecipients
+	 */
+	public function setRejectedRecipients(array $rejectedRecipients): void {
+		$this->rejectedRecipients = $rejectedRecipients;
+	}
+
+	/**
+	 * @return list<string>
+	 */
+	public function getRejectedRecipients(): array {
+		return $this->rejectedRecipients;
 	}
 }
