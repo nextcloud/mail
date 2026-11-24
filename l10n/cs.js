@@ -399,6 +399,7 @@ OC.L10N.register(
     "Last hour" : "Uplynulá hodina",
     "Today" : "Dnes",
     "Yesterday" : "Včera",
+    "This week" : "Tento týden",
     "Last week" : "Uplynulý týden",
     "Last month" : "Uplynulý měsíc",
     "Could not open folder" : "Složku nebylo možné otevřít",

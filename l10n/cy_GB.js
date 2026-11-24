@@ -73,6 +73,7 @@ OC.L10N.register(
     "Decline" : "Gwrthod",
     "Remove" : "Gwaredu",
     "Today" : "Heddiw",
+    "This week" : "Wythnos yma",
     "Choose" : "Dewisa",
     "Favorites" : "Ffefrynnau",
     "Other" : "Arall",
