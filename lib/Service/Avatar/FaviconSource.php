@@ -17,6 +17,8 @@ use OCP\Http\Client\IClientService;
 use OCP\Security\IRemoteHostValidator;
 
 class FaviconSource implements IAvatarSource {
+	public const REQUEST_TIMEOUT = 5;
+
 	/** @var IClientService */
 	private $clientService;
 
@@ -70,7 +72,9 @@ class FaviconSource implements IAvatarSource {
 		/** @var string $iconUrl */
 		$client = $this->clientService->newClient();
 		try {
-			$response = $client->get($iconUrl);
+			$response = $client->get($iconUrl, [
+				'timeout' => self::REQUEST_TIMEOUT,
+			]);
 		} catch (Exception $exception) {
 			return null;
 		}
