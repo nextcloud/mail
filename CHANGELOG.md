@@ -1,3 +1,27 @@
+## [5.13.4](https://github.com/nextcloud/mail/compare/v5.13.3...v5.13.4) (2026-11-24)
+
+
+### Bug Fixes
+
+* **attachments:** preview PDFs with generic MIME type ([6514ef3](https://github.com/nextcloud/mail/commit/6514ef3fedf11e959ec80b22a987bf3a6b4e10de))
+* **calendar:** only offer writable event calendars for import ([521bc50](https://github.com/nextcloud/mail/commit/521bc50934c530fd4f68aa158520b7bd4855eec7))
+* **deeplink:** encode message-id as base64url for deep links ([c47b1da](https://github.com/nextcloud/mail/commit/c47b1da1669015ac02bf342950601f62b9fef251)), closes [#13970](https://github.com/nextcloud/mail/issues/13970)
+* **dkim:** handle DNS key records without a public key ([efd879c](https://github.com/nextcloud/mail/commit/efd879c6fa1efd4f63f8af8f89692d3002112bdd))
+* **imap:** detect iMIP when method= param is missing ([1ba2ac8](https://github.com/nextcloud/mail/commit/1ba2ac8e0ce8f75d9f3bfb8e9ce56fd12900bf73))
+* **l10n:** Update translations from Transifex ([25f4ad6](https://github.com/nextcloud/mail/commit/25f4ad647bfe7d87405e7a7a6eac881c4fb8775c))
+* **l10n:** Update translations from Transifex ([53c1ce6](https://github.com/nextcloud/mail/commit/53c1ce64b592114a48a74ef094f49591d641a0fb))
+* **l10n:** Update translations from Transifex ([391bd80](https://github.com/nextcloud/mail/commit/391bd80b98dc2ddbc95caf808d7a10669f482113))
+* **l10n:** Update translations from Transifex ([cb6456f](https://github.com/nextcloud/mail/commit/cb6456f4536cba7aff463e962efb663d200bf11d))
+* **l10n:** Update translations from Transifex ([ab0798e](https://github.com/nextcloud/mail/commit/ab0798e554c43a43effa93d777155b94cb2e4fc7))
+* **l10n:** Update translations from Transifex ([2811e7d](https://github.com/nextcloud/mail/commit/2811e7d9c9a0ca418edd753f704ba06de9c5ea4f))
+* **l10n:** Update translations from Transifex ([9af5657](https://github.com/nextcloud/mail/commit/9af5657dc73acff42298d134f176a29ee723526f))
+* **settings:** translate the Messages section heading ([16e130c](https://github.com/nextcloud/mail/commit/16e130c5cb1f46609d0554155029caf50bb0840f))
+* **sync:** don't return the mailbox as new messages from the initial sync ([529e865](https://github.com/nextcloud/mail/commit/529e865341f0df2b0eac0d4b54d6b657713b7a52))
+* **ui:** group envelopes by calendar week ([b974c8e](https://github.com/nextcloud/mail/commit/b974c8efbee3eb7836cc58f00f3ffd5a6f98a753))
+* **ui:** make tag labels readable on their background ([8a420c6](https://github.com/nextcloud/mail/commit/8a420c6e2c5c7a1db57bbfa1dee4a101ca172dff))
+
+
+
 ## [5.13.3](https://github.com/nextcloud/mail/compare/v5.13.2...v5.13.3) (2026-11-17)
 
 
