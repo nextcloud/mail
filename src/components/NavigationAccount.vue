@@ -367,7 +367,8 @@ export default {
 				await this.mainStore.toggleAccountFolded(this.account.id)
 			} catch (error) {
 				logger.error('could not save folded state of account', { error })
-				showError(t('mail', 'Could not save whether the account is collapsed'))
+				// TRANSLATORS The account section in the navigation can be expanded or collapsed to show or hide its folders. This state is saved on the server.
+				showError(t('mail', 'Could not save the expanded or collapsed state of the account section'))
 			} finally {
 				this.savingFolded = false
 			}
