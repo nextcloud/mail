@@ -688,6 +688,48 @@ describe('Vuex store actions', () => {
 			expect(b.threadHasUnread).toBe(false)
 		})
 
+		it('does not bring back unread state of a read message when a later write fails (loaded thread)', async () => {
+			const a = envelope(1, false, { threadHasUnread: true, thread: [1, 3] })
+			const b = envelope(3, true, { threadHasUnread: true, thread: [1, 3] })
+			store.envelopes = { 1: a, 3: b }
+			let failB
+			MessageService.setEnvelopeFlags.mockImplementation((id) => id === 3
+				? new Promise((resolve, reject) => {
+						failB = reject
+					})
+				: Promise.resolve({}))
+
+			const pendingB = store.toggleEnvelopeSeen({ envelope: b, seen: false })
+			await store.toggleEnvelopeSeen({ envelope: a, seen: true })
+			failB(new Error('offline'))
+			await expect(pendingB).rejects.toThrow('offline')
+
+			expect(a.flags.seen).toBe(true)
+			expect(b.flags.seen).toBe(true)
+			expect(a.threadHasUnread).toBe(false)
+			expect(b.threadHasUnread).toBe(false)
+		})
+
+		it('stays conservative when a write fails after the only loaded unread message was read (incomplete thread)', async () => {
+			const a = envelope(1, false, { threadHasUnread: true })
+			const b = envelope(3, true, { threadHasUnread: true })
+			store.envelopes = { 1: a, 3: b }
+			let failB
+			MessageService.setEnvelopeFlags.mockImplementation((id) => id === 3
+				? new Promise((resolve, reject) => {
+						failB = reject
+					})
+				: Promise.resolve({}))
+
+			const pendingB = store.toggleEnvelopeSeen({ envelope: b, seen: false })
+			await store.toggleEnvelopeSeen({ envelope: a, seen: true })
+			failB(new Error('offline'))
+			await expect(pendingB).rejects.toThrow('offline')
+
+			expect(a.threadHasUnread).toBe(true)
+			expect(b.threadHasUnread).toBe(true)
+		})
+
 		it('keeps the thread unread state when marking a message read fails', async () => {
 			const row = envelope(3, false, { threadHasUnread: true })
 			store.envelopes = { 3: row }

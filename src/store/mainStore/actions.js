@@ -1191,9 +1191,11 @@ export default function mainStoreActions() {
 						flag: 'seen',
 						value: oldState,
 					})
-					thread.forEach((message) => {
-						message.threadHasUnread = pendingWrites.threadHasUnread || thread.some((sibling) => !sibling.flags.seen)
-					})
+					if (this.getLoadedThread(thread) === undefined) {
+						thread.forEach((message) => {
+							message.threadHasUnread = pendingWrites.threadHasUnread || thread.some((sibling) => !sibling.flags.seen)
+						})
+					}
 
 					throw error
 				} finally {
@@ -2219,15 +2221,17 @@ export default function mainStoreActions() {
 				return
 			}
 
-			// Only trust a loaded thread that covers every known message of the thread
-			const loadedThread = siblings.find((sibling) => sibling.thread !== undefined)?.thread
-			if (loadedThread === undefined || !siblings.every((sibling) => loadedThread.includes(sibling.databaseId))) {
+			if (this.getLoadedThread(siblings) === undefined) {
 				return
 			}
 			const threadHasUnread = siblings.some((sibling) => !sibling.flags.seen)
 			siblings.forEach((sibling) => {
 				sibling.threadHasUnread = threadHasUnread
 			})
+		},
+		getLoadedThread(siblings) {
+			const loadedThread = siblings.find((sibling) => sibling.thread !== undefined)?.thread
+			return siblings.every((sibling) => loadedThread?.includes(sibling.databaseId)) ? loadedThread : undefined
 		},
 		addTagMutation({ tag }) {
 			this.tags[tag.id] = tag
