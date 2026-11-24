@@ -630,6 +630,7 @@ describe('Envelope', () => {
 			store.fetchThread = vi.fn().mockResolvedValue([])
 			store.toggleEnvelopeSeen = vi.fn(async ({ seen }) => {
 				await Promise.resolve()
+				row.flags.seen = seen
 				await view.setProps({ data: { ...view.props('data'), flags: { seen }, threadHasUnread: !seen } })
 				calls.push(seen)
 			})

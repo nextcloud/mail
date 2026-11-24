@@ -653,6 +653,30 @@ describe('Vuex store actions', () => {
 			expect(store.getThreadHasUnread(envelope(3, true))).toBe(false)
 		})
 
+		it('considers known unread messages of a thread that is not loaded', async () => {
+			const older = envelope(1, true)
+			const row = envelope(3, true, { threadHasUnread: false })
+			store.envelopes = { 1: older, 3: row }
+			const writes = controlledWrites()
+
+			const pendingOlder = store.toggleEnvelopeSeen({ envelope: older, seen: false })
+			writes[1].resolve({})
+			await pendingOlder
+			const pendingRow = store.toggleEnvelopeSeen({ envelope: row, seen: false })
+			writes[3].reject(new Error('offline'))
+			await expect(pendingRow).rejects.toThrow('offline')
+
+			expect(row.flags.seen).toBe(true)
+			expect(store.getThreadHasUnread(row)).toBe(true)
+		})
+
+		it('keeps the server value for a thread that is not loaded when the known messages are read', () => {
+			const row = envelope(3, true, { threadHasUnread: true })
+			store.envelopes = { 1: envelope(1, true), 3: row }
+
+			expect(store.getThreadHasUnread(row)).toBe(true)
+		})
+
 		it('derives the state from the messages of a loaded thread', () => {
 			const row = envelope(3, true, { threadHasUnread: true, thread: [1, 3] })
 			store.envelopes = { 1: envelope(1, true), 3: row }

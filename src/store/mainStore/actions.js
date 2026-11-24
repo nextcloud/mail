@@ -2538,15 +2538,16 @@ export default function mainStoreActions() {
 				.filter((sibling) => sibling.mailboxId === envelope.mailboxId && !sibling.flags.deleted)
 		},
 		getThreadHasUnread(envelope) {
-			if (envelope.thread === undefined) {
-				return envelope.threadHasUnread === true
+			const serverValue = envelope.threadHasUnread === true
+			if (envelope.thread === undefined && serverValue) {
+				return true
 			}
 			const siblings = this.getMailboxThreadEnvelopes(envelope)
 			const hasUnread = siblings.some((sibling) => !sibling.flags.seen)
-			if (siblings.every((sibling) => envelope.thread.includes(sibling.databaseId))) {
+			if (envelope.thread !== undefined && siblings.every((sibling) => envelope.thread.includes(sibling.databaseId))) {
 				return hasUnread
 			}
-			return hasUnread || envelope.threadHasUnread === true
+			return hasUnread || serverValue
 		},
 		getMessage(id) {
 			return this.messages[id]
