@@ -1047,6 +1047,31 @@ class MessagesController extends Controller {
 		return new JSONResponse($replies);
 	}
 
+	#[NoAdminRequired]
+	#[TrapError]
+	public function translate(int $messageId, string $fromLanguage, string $toLanguage): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+		try {
+			$effectiveUserId = $this->delegationService->resolveMessageUserId($messageId, $this->userId);
+			$message = $this->mailManager->getMessage($effectiveUserId, $messageId);
+			$mailbox = $this->mailManager->getMailbox($effectiveUserId, $message->getMailboxId());
+			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		try {
+			$translation = $this->aiIntegrationService->translateMessage($account, $mailbox, $message, $fromLanguage, $toLanguage, $effectiveUserId);
+		} catch (ServiceException $e) {
+			$this->logger->error('Translation failed: ' . $e->getMessage(), [
+				'exception' => $e,
+			]);
+			return new JSONResponse([], Http::STATUS_NO_CONTENT);
+		}
+		return new JSONResponse(['data' => $translation]);
+	}
+
 	private function enrichAttachments(int $id, array $attachments): array {
 		return array_map(
 			fn ($attachment) => $this->enrichAttachment($id, $attachment),

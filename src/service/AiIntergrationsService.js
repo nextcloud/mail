@@ -50,3 +50,19 @@ export async function smartReply(messageId) {
 		throw convertAxiosError(e)
 	}
 }
+
+export async function translateMessage(messageId, fromLanguage, toLanguage) {
+	const url = generateUrl('/apps/mail/api/messages/{messageId}/translate', {
+		messageId,
+	})
+
+	try {
+		const resp = await axios.post(url, { fromLanguage, toLanguage })
+		if (resp.status === 204) {
+			throw new Error('Translation failed, error in the llm service')
+		}
+		return resp.data.data
+	} catch (e) {
+		throw convertAxiosError(e)
+	}
+}
