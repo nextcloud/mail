@@ -59,7 +59,10 @@ export default class InsertSignatureCommand extends Command {
 		// The "-- " separator is a plain text convention (RFC 3676, section 4.3).
 		// HTML signatures are visually distinguishable already, so skip it there.
 		if (plainText) {
-			writer.append(writer.createText('-- '), signatureElement)
+			// A bare text node would merge with the next paragraph in plain text and drop the blank line
+			const separator = writer.createElement('paragraph')
+			writer.append(writer.createText('-- '), separator)
+			writer.append(separator, signatureElement)
 			writer.append(writer.createElement('paragraph'), signatureElement)
 		}
 		writer.append(modelFragment, signatureElement)
