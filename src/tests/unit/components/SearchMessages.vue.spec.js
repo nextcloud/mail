@@ -114,6 +114,34 @@ describe('SearchMessages', () => {
 		expect(view.emitted('search-changed').at(-1)).toEqual(['to:icloud.com from:icloud.com subject:icloud.com mentions:false match:anyof'])
 	})
 
+	it('restores the typed search only after the dialog is removed', async () => {
+		const view = mountView()
+		await typeQuery(view, 'icloud.com')
+		await openModal(view)
+		expect(view.vm.filterChanged).toBe(false)
+
+		view.vm.dismissSearchModal()
+
+		expect(view.vm.filterChanged).toBe(false)
+		await vi.runAllTimersAsync()
+		expect(view.vm.filterChanged).toBe(true)
+		expect(dialog()).toBeNull()
+	})
+
+	it('applies the modal only after the dialog is removed', async () => {
+		const view = mountView()
+		await typeQuery(view, 'icloud.com')
+		await openModal(view)
+		setInput('#subjectId', 'invoice')
+
+		view.vm.applySearchModal()
+
+		expect(view.emitted('search-changed')).toHaveLength(1)
+		await vi.runAllTimersAsync()
+		expect(view.emitted('search-changed')).toHaveLength(2)
+		expect(dialog()).toBeNull()
+	})
+
 	it('discards modal edits when the modal is dismissed', async () => {
 		const view = mountView()
 		await openModal(view)

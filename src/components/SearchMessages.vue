@@ -571,9 +571,12 @@ export default {
 		},
 
 		dismissSearchModal() {
-			this.moreSearchActions = false
-			this.restoreFilters(this.searchModalSnapshot)
+			const snapshot = this.searchModalSnapshot
 			this.searchModalSnapshot = null
+			this.moreSearchActions = false
+			this.$nextTick(() => {
+				this.restoreFilters(snapshot)
+			})
 		},
 
 		clearSearchModal() {
@@ -585,17 +588,19 @@ export default {
 			const snapshot = this.searchModalSnapshot
 			this.searchModalSnapshot = null
 			this.moreSearchActions = false
-			const { subject, body } = this.filterData
-			const hasTextCriteria = subject !== '' || body !== ''
-				|| hasNewAddress(this.searchInFrom, snapshot.searchInFrom)
-				|| hasNewAddress(this.searchInTo, snapshot.searchInTo)
-			if (!hasTextCriteria && snapshot.match === 'anyof' && this.query !== '') {
-				this.restoreFilters(snapshot)
-			} else {
-				this.match = 'allof'
-				this.query = ''
-			}
-			this.sendQueryEvent()
+			this.$nextTick(() => {
+				const { subject, body } = this.filterData
+				const hasTextCriteria = subject !== '' || body !== ''
+					|| hasNewAddress(this.searchInFrom, snapshot.searchInFrom)
+					|| hasNewAddress(this.searchInTo, snapshot.searchInTo)
+				if (!hasTextCriteria && snapshot.match === 'anyof' && this.query !== '') {
+					this.restoreFilters(snapshot)
+				} else {
+					this.match = 'allof'
+					this.query = ''
+				}
+				this.sendQueryEvent()
+			})
 		},
 
 		restoreFilters(snapshot) {
