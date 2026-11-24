@@ -216,7 +216,6 @@ function transformMailboxName(account, mailbox) {
 export default function mainStoreActions() {
 	let accountSettingsSave = Promise.resolve()
 	const foldedVersions = {}
-	const pendingSeenWrites = new Map()
 
 	return {
 		updateSyncTimestamp() {
@@ -1167,11 +1166,6 @@ export default function mainStoreActions() {
 				// Change immediately and switch back on error
 				const oldState = envelope.flags.seen
 				const newState = seen === undefined ? !oldState : seen
-				const thread = this.getMailboxThreadEnvelopes(envelope)
-				const threadKey = `${envelope.mailboxId}:${envelope.threadRootId}`
-				const pendingWrites = pendingSeenWrites.get(threadKey) ?? { count: 0, threadHasUnread: envelope.threadHasUnread }
-				pendingWrites.count++
-				pendingSeenWrites.set(threadKey, pendingWrites)
 				this.flagEnvelopeMutation({
 					envelope,
 					flag: 'seen',
@@ -1191,18 +1185,8 @@ export default function mainStoreActions() {
 						flag: 'seen',
 						value: oldState,
 					})
-					if (this.getLoadedThread(thread) === undefined) {
-						thread.forEach((message) => {
-							message.threadHasUnread = pendingWrites.threadHasUnread || thread.some((sibling) => !sibling.flags.seen)
-						})
-					}
 
 					throw error
-				} finally {
-					pendingWrites.count--
-					if (pendingWrites.count === 0) {
-						pendingSeenWrites.delete(threadKey)
-					}
 				}
 			})
 		},
@@ -2205,33 +2189,6 @@ export default function mainStoreActions() {
 				}
 			}
 			envelope.flags[flag] = value
-			if (flag === 'seen') {
-				this.updateThreadHasUnread(envelope)
-			}
-		},
-		updateThreadHasUnread(envelope) {
-			if (envelope.flags.deleted) {
-				return
-			}
-			const siblings = this.getMailboxThreadEnvelopes(envelope)
-			if (!envelope.flags.seen) {
-				siblings.forEach((sibling) => {
-					sibling.threadHasUnread = true
-				})
-				return
-			}
-
-			if (this.getLoadedThread(siblings) === undefined) {
-				return
-			}
-			const threadHasUnread = siblings.some((sibling) => !sibling.flags.seen)
-			siblings.forEach((sibling) => {
-				sibling.threadHasUnread = threadHasUnread
-			})
-		},
-		getLoadedThread(siblings) {
-			const loadedThread = siblings.find((sibling) => sibling.thread !== undefined)?.thread
-			return siblings.every((sibling) => loadedThread?.includes(sibling.databaseId)) ? loadedThread : undefined
 		},
 		addTagMutation({ tag }) {
 			this.tags[tag.id] = tag
@@ -2579,6 +2536,17 @@ export default function mainStoreActions() {
 		getMailboxThreadEnvelopes(envelope) {
 			return this.getEnvelopesByThreadRootId(envelope.accountId, envelope.threadRootId)
 				.filter((sibling) => sibling.mailboxId === envelope.mailboxId && !sibling.flags.deleted)
+		},
+		getThreadHasUnread(envelope) {
+			if (envelope.thread === undefined) {
+				return envelope.threadHasUnread === true
+			}
+			const siblings = this.getMailboxThreadEnvelopes(envelope)
+			const hasUnread = siblings.some((sibling) => !sibling.flags.seen)
+			if (siblings.every((sibling) => envelope.thread.includes(sibling.databaseId))) {
+				return hasUnread
+			}
+			return hasUnread || envelope.threadHasUnread === true
 		},
 		getMessage(id) {
 			return this.messages[id]

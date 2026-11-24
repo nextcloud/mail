@@ -554,8 +554,8 @@ describe('Envelope', () => {
 		})
 
 		it('reloads an already loaded thread before marking it as read', async () => {
-			const row = { accountId: 123, databaseId: 3, mailboxId: 7, threadRootId: 'root', flags: { seen: true }, threadHasUnread: true, thread: [3] }
-			store.envelopes = { 3: row }
+			const row = { accountId: 123, databaseId: 3, mailboxId: 7, threadRootId: 'root', flags: { seen: true }, threadHasUnread: true, thread: [1, 3] }
+			store.envelopes = { 1: { accountId: 123, databaseId: 1, mailboxId: 7, threadRootId: 'root', flags: { seen: false } }, 3: row }
 			store.fetchThread = vi.fn().mockResolvedValue([])
 			store.toggleEnvelopeSeen = vi.fn()
 			const view = mountRow(row)

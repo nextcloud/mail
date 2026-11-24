@@ -839,7 +839,7 @@ export default {
 
 		isUnread() {
 			return !this.data.flags.seen
-				|| (this.layoutMessageViewThreaded && this.data.threadHasUnread === true)
+				|| (this.layoutMessageViewThreaded && this.mainStore.getThreadHasUnread(this.data))
 		},
 
 		isEncrypted() {

@@ -614,7 +614,7 @@ describe('Vuex store actions', () => {
 			.toEqual(msgs2.map(mockEnvelope(21)).map((e) => e.databaseId).toSorted())
 	})
 
-	describe('toggleEnvelopeSeen', () => {
+	describe('thread unread state', () => {
 		const envelope = (databaseId, seen, extra = {}) => ({
 			databaseId,
 			accountId: 13,
@@ -623,12 +623,19 @@ describe('Vuex store actions', () => {
 			flags: { seen },
 			...extra,
 		})
+		const controlledWrites = () => {
+			const writes = {}
+			MessageService.setEnvelopeFlags.mockImplementation((id) => new Promise((resolve, reject) => {
+				writes[id] = { resolve, reject }
+			}))
+			return writes
+		}
 
 		beforeEach(() => {
 			store.mailboxes[27] = { databaseId: 27, accountId: 13, unread: 0 }
 		})
 
-		it('restores the thread unread state when marking a message unread fails', async () => {
+		it('only restores the seen flag when a write fails', async () => {
 			const row = envelope(3, true, { threadHasUnread: false })
 			store.envelopes = { 3: row }
 			MessageService.setEnvelopeFlags.mockRejectedValue(new Error('offline'))
@@ -637,118 +644,100 @@ describe('Vuex store actions', () => {
 
 			expect(row.flags.seen).toBe(true)
 			expect(row.threadHasUnread).toBe(false)
+			expect(store.getThreadHasUnread(row)).toBe(false)
 		})
 
-		it('keeps the thread unread when another message of it became unread while a write was pending', async () => {
-			const a = envelope(1, true, { threadHasUnread: false })
-			const b = envelope(3, true, { threadHasUnread: false })
+		it('uses the server value for a thread that is not loaded', () => {
+			expect(store.getThreadHasUnread(envelope(3, true, { threadHasUnread: true }))).toBe(true)
+			expect(store.getThreadHasUnread(envelope(3, true, { threadHasUnread: false }))).toBe(false)
+			expect(store.getThreadHasUnread(envelope(3, true))).toBe(false)
+		})
+
+		it('derives the state from the messages of a loaded thread', () => {
+			const row = envelope(3, true, { threadHasUnread: true, thread: [1, 3] })
+			store.envelopes = { 1: envelope(1, true), 3: row }
+
+			expect(store.getThreadHasUnread(row)).toBe(false)
+
+			store.envelopes[1].flags.seen = false
+
+			expect(store.getThreadHasUnread(row)).toBe(true)
+		})
+
+		it('ignores deleted messages and other mailboxes', () => {
+			const row = envelope(3, true, { threadHasUnread: true, thread: [1, 2, 3] })
+			store.envelopes = {
+				1: envelope(1, false, { flags: { seen: false, deleted: true } }),
+				2: envelope(2, false, { mailboxId: 28 }),
+				3: row,
+			}
+
+			expect(store.getThreadHasUnread(row)).toBe(false)
+		})
+
+		it('stays conservative when a known message is missing from the loaded thread', () => {
+			const read = envelope(3, true, { threadHasUnread: true, thread: [3] })
+			store.envelopes = { 3: read, 5: envelope(5, true) }
+
+			expect(store.getThreadHasUnread(read)).toBe(true)
+
+			read.threadHasUnread = false
+			store.envelopes[5].flags.seen = false
+
+			expect(store.getThreadHasUnread(read)).toBe(true)
+		})
+
+		it('keeps the thread unread when another message became unread while a write was pending', async () => {
+			const a = envelope(1, true, { thread: [1, 3] })
+			const b = envelope(3, true, { thread: [1, 3] })
 			store.envelopes = { 1: a, 3: b }
-			let failA
-			MessageService.setEnvelopeFlags.mockImplementation((id) => id === 1
-				? new Promise((resolve, reject) => {
-						failA = reject
-					})
-				: Promise.resolve({}))
+			const writes = controlledWrites()
 
 			const pendingA = store.toggleEnvelopeSeen({ envelope: a, seen: false })
-			await store.toggleEnvelopeSeen({ envelope: b, seen: false })
-			failA(new Error('offline'))
+			const pendingB = store.toggleEnvelopeSeen({ envelope: b, seen: false })
+			writes[3].resolve({})
+			await pendingB
+			writes[1].reject(new Error('offline'))
 			await expect(pendingA).rejects.toThrow('offline')
 
-			expect(a.flags.seen).toBe(true)
-			expect(b.flags.seen).toBe(false)
-			expect(a.threadHasUnread).toBe(true)
-			expect(b.threadHasUnread).toBe(true)
+			expect(store.getThreadHasUnread(b)).toBe(true)
 		})
 
 		it.each([
-			['A then B', ['a', 'b']],
-			['B then A', ['b', 'a']],
+			['A then B', [1, 3]],
+			['B then A', [3, 1]],
 		])('clears the thread unread state when two pending writes fail (%s)', async (name, order) => {
-			const a = envelope(1, true, { threadHasUnread: false })
-			const b = envelope(3, true, { threadHasUnread: false })
+			const a = envelope(1, true, { thread: [1, 3] })
+			const b = envelope(3, true, { thread: [1, 3] })
 			store.envelopes = { 1: a, 3: b }
-			const fail = {}
-			MessageService.setEnvelopeFlags.mockImplementation((id) => new Promise((resolve, reject) => {
-				fail[id === 1 ? 'a' : 'b'] = reject
-			}))
+			const writes = controlledWrites()
 
-			const pending = [
-				store.toggleEnvelopeSeen({ envelope: a, seen: false }),
-				store.toggleEnvelopeSeen({ envelope: b, seen: false }),
-			].map((promise) => promise.catch(() => {}))
-			for (const key of order) {
-				fail[key](new Error('offline'))
-				await pending[key === 'a' ? 0 : 1]
+			const pending = {
+				1: store.toggleEnvelopeSeen({ envelope: a, seen: false }).catch(() => {}),
+				3: store.toggleEnvelopeSeen({ envelope: b, seen: false }).catch(() => {}),
+			}
+			for (const id of order) {
+				writes[id].reject(new Error('offline'))
+				await pending[id]
 			}
 
-			expect(a.flags.seen).toBe(true)
-			expect(b.flags.seen).toBe(true)
-			expect(a.threadHasUnread).toBe(false)
-			expect(b.threadHasUnread).toBe(false)
+			expect(store.getThreadHasUnread(b)).toBe(false)
 		})
 
-		it('does not bring back unread state of a read message when a later write fails (loaded thread)', async () => {
+		it('keeps a successful read when a later write on the thread fails', async () => {
 			const a = envelope(1, false, { threadHasUnread: true, thread: [1, 3] })
 			const b = envelope(3, true, { threadHasUnread: true, thread: [1, 3] })
 			store.envelopes = { 1: a, 3: b }
-			let failB
-			MessageService.setEnvelopeFlags.mockImplementation((id) => id === 3
-				? new Promise((resolve, reject) => {
-						failB = reject
-					})
-				: Promise.resolve({}))
+			const writes = controlledWrites()
 
 			const pendingB = store.toggleEnvelopeSeen({ envelope: b, seen: false })
-			await store.toggleEnvelopeSeen({ envelope: a, seen: true })
-			failB(new Error('offline'))
+			const pendingA = store.toggleEnvelopeSeen({ envelope: a, seen: true })
+			writes[1].resolve({})
+			await pendingA
+			writes[3].reject(new Error('offline'))
 			await expect(pendingB).rejects.toThrow('offline')
 
-			expect(a.flags.seen).toBe(true)
-			expect(b.flags.seen).toBe(true)
-			expect(a.threadHasUnread).toBe(false)
-			expect(b.threadHasUnread).toBe(false)
-		})
-
-		it('stays conservative when a write fails after the only loaded unread message was read (incomplete thread)', async () => {
-			const a = envelope(1, false, { threadHasUnread: true })
-			const b = envelope(3, true, { threadHasUnread: true })
-			store.envelopes = { 1: a, 3: b }
-			let failB
-			MessageService.setEnvelopeFlags.mockImplementation((id) => id === 3
-				? new Promise((resolve, reject) => {
-						failB = reject
-					})
-				: Promise.resolve({}))
-
-			const pendingB = store.toggleEnvelopeSeen({ envelope: b, seen: false })
-			await store.toggleEnvelopeSeen({ envelope: a, seen: true })
-			failB(new Error('offline'))
-			await expect(pendingB).rejects.toThrow('offline')
-
-			expect(a.threadHasUnread).toBe(true)
-			expect(b.threadHasUnread).toBe(true)
-		})
-
-		it('keeps the thread unread state when marking a message read fails', async () => {
-			const row = envelope(3, false, { threadHasUnread: true })
-			store.envelopes = { 3: row }
-			MessageService.setEnvelopeFlags.mockRejectedValue(new Error('offline'))
-
-			await expect(store.toggleEnvelopeSeen({ envelope: row, seen: true })).rejects.toThrow('offline')
-
-			expect(row.flags.seen).toBe(false)
-			expect(row.threadHasUnread).toBe(true)
-		})
-
-		it('marks the thread as having unread messages when a message becomes unread', async () => {
-			const row = envelope(3, true, { threadHasUnread: false })
-			store.envelopes = { 3: row }
-			MessageService.setEnvelopeFlags.mockResolvedValue({})
-
-			await store.toggleEnvelopeSeen({ envelope: row, seen: false })
-
-			expect(row.threadHasUnread).toBe(true)
+			expect(store.getThreadHasUnread(b)).toBe(false)
 		})
 	})
 
