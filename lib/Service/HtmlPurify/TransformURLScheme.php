@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\HtmlPurify;
 
+use HTMLPurifier_AttrDef_URI_Host;
 use HTMLPurifier_Config;
 use HTMLPurifier_Context;
 use HTMLPurifier_URI;
@@ -20,6 +21,8 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 
 class TransformURLScheme extends HTMLPurifier_URIFilter {
+	private HTMLPurifier_AttrDef_URI_Host $hostValidator;
+
 	public function __construct(
 		private int $messageId,
 		private array $inlineAttachments,
@@ -29,6 +32,7 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 	) {
 		$this->name = 'TransformURLScheme';
 		$this->post = true;
+		$this->hostValidator = new HTMLPurifier_AttrDef_URI_Host();
 	}
 
 	/**
@@ -41,7 +45,21 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 	 */
 	#[\Override]
 	public function filter(&$uri, $config, $context) {
-		$uri->scheme ??= 'https';
+		if ($uri->scheme === null) {
+			// "www.example.com/path" parses as a relative path; without a host the browser resolves it against our own URL
+			if ($uri->host === null && $uri->path !== '' && $uri->path[0] !== '/') {
+				[$segment, $path] = explode('/', $uri->path, 2) + [1 => null];
+				$host = $this->promotableHost(rawurldecode($segment), $config, $context);
+				if ($host !== null) {
+					$uri->host = $host;
+					$uri->path = $path === null ? '' : '/' . $path;
+				}
+			}
+			$attr = $context->exists('CurrentAttr') ? $context->get('CurrentAttr') : null;
+			if ($uri->host !== null || $attr !== 'href') {
+				$uri->scheme = 'https';
+			}
+		}
 
 		// Only HTTPS and HTTP urls should get rewritten
 		if ($uri->scheme === 'https' || $uri->scheme === 'http' || $uri->scheme === 'ftp') {
@@ -53,6 +71,18 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 		}
 
 		return true;
+	}
+
+	/**
+	 * A dot and a non-numeric last label keep "2024/report.pdf" from becoming an IPv4 host
+	 */
+	private function promotableHost(string $segment, HTMLPurifier_Config $config, HTMLPurifier_Context $context): ?string {
+		$lastDot = strrpos($segment, '.');
+		if ($lastDot === false || ctype_digit(substr($segment, $lastDot + 1)) || preg_match('/[\x00-\x20\x7f]/', $segment) === 1) {
+			return null;
+		}
+		$host = $this->hostValidator->validate($segment, $config, $context);
+		return is_string($host) ? $host : null;
 	}
 
 	private function filterHttpFtp(HTMLPurifier_URI $uri, HTMLPurifier_Context $context): HTMLPurifier_URI {
