@@ -1133,4 +1133,86 @@ describe('Vuex store actions', () => {
 			}))
 		})
 	})
+
+	describe('traverse mailboxes', () => {
+		beforeEach(() => {
+			const account = {
+				id: 42,
+				mailboxes: [],
+			}
+
+			store.addAccountMutation(account)
+
+			const hierarchy = [
+				[1, 'Archive'],
+				[2, 'Archive.2020'],
+				[3, 'Archive.2021'],
+				[4, 'Archive.2020.January'],
+				[5, 'Archive.2020.February'],
+			]
+
+			hierarchy.forEach((data) => {
+				store.addMailboxMutation({
+					account,
+					mailbox: {
+						id: data[1],
+						name: data[1],
+						databaseId: data[0],
+						accountId: 42,
+						delimiter: '.',
+					},
+				})
+			})
+		})
+
+		it('iterates hierarchy', () => {
+			const mailboxes = [...store.getRecursiveMailboxIterator(42)]
+			const names = mailboxes.map((mailbox) => mailbox.name)
+			const ids = mailboxes.map((mailbox) => mailbox.databaseId)
+
+			expect(names).toEqual([
+				'Archive',
+				'Archive.2020',
+				'Archive.2020.January',
+				'Archive.2020.February',
+				'Archive.2021',
+			])
+
+			expect(ids).toEqual([
+				1,
+				2,
+				4,
+				5,
+				3,
+			])
+		})
+
+		it('get parents', () => {
+			let parent = store.getParentMailbox(4)
+			expect(parent.databaseId).toEqual(2)
+
+			parent = store.getParentMailbox(parent.databaseId)
+			expect(parent.databaseId).toEqual(1)
+
+			parent = store.getParentMailbox(parent.databaseId)
+			expect(parent).toEqual(undefined)
+		})
+
+		it('get broken parent', () => {
+			const parent = store.getParentMailbox(13)
+			expect(parent).toEqual(undefined)
+		})
+
+		it('empty account', () => {
+			const account = {
+				id: 17,
+				mailboxes: [],
+			}
+
+			store.addAccountMutation(account)
+
+			const mailboxes = [...store.getRecursiveMailboxIterator(17)]
+			expect(mailboxes.length).toEqual(0)
+		})
+	})
 })
