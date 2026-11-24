@@ -118,4 +118,53 @@ describe('AccountForm', () => {
 		expect(view.vm.manualConfig.smtpSslMode).toBe('ssl')
 		expect(view.vm.manualConfig.smtpPassword).toBe('secret')
 	})
+
+	describe('SMTP user of an OAuth account', () => {
+		beforeEach(() => {
+			view.vm.manualConfig.imapHost = 'imap.gmail.com'
+			view.vm.manualConfig.smtpUser = 'tom@tom.turbo'
+		})
+
+		it('follows a changed email address', async () => {
+			view.vm.emailAddress = 'tom@turbo.example'
+			await view.vm.$nextTick()
+
+			expect(view.vm.manualConfig.smtpUser).toBe('tom@turbo.example')
+		})
+
+		it('keeps an explicitly set value when the email address changes', async () => {
+			view.vm.manualConfig.smtpUser = 'delegate@tom.turbo'
+
+			view.vm.emailAddress = 'tom@turbo.example'
+			await view.vm.$nextTick()
+
+			expect(view.vm.manualConfig.smtpUser).toBe('delegate@tom.turbo')
+		})
+
+		it('is not overwritten by the IMAP user', () => {
+			view.vm.manualConfig.imapUser = 'tom'
+
+			view.vm.syncCredentials()
+
+			expect(view.vm.manualConfig.smtpUser).toBe('tom@tom.turbo')
+		})
+	})
+
+	it('copies the IMAP user to the SMTP user of a password account', () => {
+		view.vm.manualConfig.imapHost = 'imap.tom.turbo'
+		view.vm.manualConfig.imapUser = 'tom'
+
+		view.vm.syncCredentials()
+
+		expect(view.vm.manualConfig.smtpUser).toBe('tom')
+	})
+
+	it('prefills a missing SMTP user with the email address', async () => {
+		view.vm.manualConfig.smtpUser = null
+
+		view.vm.mode = 'manual'
+		await view.vm.$nextTick()
+
+		expect(view.vm.manualConfig.smtpUser).toBe('tom@tom.turbo')
+	})
 })
