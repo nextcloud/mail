@@ -97,6 +97,7 @@ OC.L10N.register(
     "Newest first" : "Първо най-новият",
     "Oldest first" : "Първо най-старият",
     "Ok" : "Добре",
+    "Messages" : "Съобщения",
     "Manually" : "Ръчно",
     "Shared with me" : "Споделено с мен",
     "Privacy" : "Поверителност",
