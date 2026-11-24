@@ -171,7 +171,10 @@ class AccountsController extends Controller {
 				'port' => $e->getPort(),
 			];
 
-			$this->logger->info('Creating account failed: ' . $e->getMessage(), $data);
+			$this->logger->info('Creating account failed: ' . $e->getMessage(), [
+				'exception' => $e,
+				...$data,
+			]);
 			return MailJsonResponse::fail($data);
 		} catch (DuplicateEmailAddress $e) {
 			$this->logger->info('Trying to create already existing account.');
