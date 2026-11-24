@@ -97,7 +97,9 @@ class ContactsGroupService implements IGroupService {
 			}
 			foreach ($emails as $email) {
 				$receivers[] = [
-					'email' => $email
+					'id' => $r['UID'],
+					'name' => $r['FN'] ?: $email,
+					'email' => $email,
 				];
 			}
 		}
