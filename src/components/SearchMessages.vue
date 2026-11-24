@@ -17,7 +17,7 @@
 				variant="tertiary"
 				:aria-label="t('mail', 'Open search modal')"
 				class="search-messages--filter"
-				@click="moreSearchActions = true">
+				@click="openSearchModal">
 				<template #icon>
 					<FilterVariantIcon :size="20" />
 				</template>
@@ -41,8 +41,7 @@
 				:name="t('mail', 'Search parameters')"
 				size="normal"
 				class="search-modal"
-				:buttons="dialogButtons"
-				@closing="closeSearchModal">
+				@closing="dismissSearchModal">
 				<div class="modal-inner--content">
 					<div class="modal-inner--field">
 						<label class="modal-inner--label" for="subjectId">
@@ -270,6 +269,24 @@
 						</div>
 					</div>
 				</div>
+				<template #actions>
+					<NcButton
+						variant="primary"
+						@click="clearSearchModal">
+						<template #icon>
+							<Close :size="20" />
+						</template>
+						{{ t('mail', 'Clear') }}
+					</NcButton>
+					<NcButton
+						variant="primary"
+						@click="applySearchModal">
+						<template #icon>
+							<MagnifyIcon :size="20" />
+						</template>
+						{{ t('mail', 'Search') }}
+					</NcButton>
+				</template>
 			</NcDialog>
 		</div>
 		<!-- Filter buttons -->
@@ -297,11 +314,9 @@
 </template>
 
 <script>
-import IconClose from '@mdi/svg/svg/close.svg'
-import IconMagnify from '@mdi/svg/svg/magnify.svg'
-import { t } from '@nextcloud/l10n'
 import moment from '@nextcloud/moment'
 import debouncePromise from 'debounce-promise'
+import debounce from 'lodash/fp/debounce.js'
 import uniqBy from 'lodash/fp/uniqBy.js'
 import { mapStores } from 'pinia'
 import NcButton from '@nextcloud/vue/components/NcButton'
@@ -313,11 +328,14 @@ import NcDialog from '@nextcloud/vue/components/NcDialog'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
 import Close from 'vue-material-design-icons/Close.vue'
 import FilterVariantIcon from 'vue-material-design-icons/FilterVariant.vue'
+import MagnifyIcon from 'vue-material-design-icons/Magnify.vue'
 import { findRecipient } from '../service/AutocompleteService.js'
 import useMainStore from '../store/mainStore.js'
 import { hiddenTags } from './tags.js'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
+
+const hasNewAddress = (addresses, previous) => addresses.some((address) => !previous.some((item) => item.email === address.email))
 
 export default {
 	name: 'SearchMessages',
@@ -330,6 +348,7 @@ export default {
 		NcCheckboxRadioSwitch,
 		FilterVariantIcon,
 		Close,
+		MagnifyIcon,
 	},
 
 	props: {
@@ -351,10 +370,11 @@ export default {
 			showButtons: false,
 			match: 'allof',
 			query: '',
-			debouncedSearchQuery: debouncePromise(this.sendQueryEvent, 700),
+			debouncedSearchQuery: debounce(700, this.sendQueryEvent),
 			autocompleteRecipients: [],
 			selectedTags: [],
 			moreSearchActions: false,
+			searchModalSnapshot: null,
 			searchInFrom: [],
 			searchInTo: [],
 			searchInCc: [],
@@ -365,20 +385,6 @@ export default {
 			mentionsMe: false,
 			startDate: null,
 			endDate: null,
-			dialogButtons: [
-				{
-					label: t('mail', 'Clear'),
-					callback: () => this.resetFilter(),
-					variant: 'primary',
-					icon: IconClose,
-				},
-				{
-					label: t('mail', 'Search'),
-					callback: () => this.closeSearchModal(),
-					variant: 'primary',
-					icon: IconMagnify,
-				},
-			],
 		}
 	},
 
@@ -558,12 +564,73 @@ export default {
 			return this.endDate !== null ? moment(this.endDate).add(1, 'days').unix().toString() : ''
 		},
 
-		closeSearchModal() {
+		openSearchModal() {
+			this.debouncedSearchQuery.flush()
+			this.searchModalSnapshot = this.copyFilters()
+			if (this.match === 'anyof' && this.query !== '') {
+				this.clearQueryValues(this.query)
+			}
+			this.moreSearchActions = true
+		},
+
+		dismissSearchModal() {
 			this.moreSearchActions = false
-			this.match = 'allof'
-			this.$nextTick(() => {
-				this.sendQueryEvent()
-			})
+			this.restoreFilters(this.searchModalSnapshot)
+			this.searchModalSnapshot = null
+		},
+
+		clearSearchModal() {
+			this.searchModalSnapshot = null
+			this.resetFilter()
+		},
+
+		applySearchModal() {
+			const snapshot = this.searchModalSnapshot
+			this.searchModalSnapshot = null
+			this.moreSearchActions = false
+			const { subject, body } = this.filterData
+			const hasTextCriteria = subject !== '' || body !== ''
+				|| hasNewAddress(this.searchInFrom, snapshot.searchInFrom)
+				|| hasNewAddress(this.searchInTo, snapshot.searchInTo)
+			if (!hasTextCriteria && snapshot.match === 'anyof' && this.query !== '') {
+				this.restoreFilters(snapshot)
+			} else {
+				this.match = 'allof'
+				this.query = ''
+			}
+			this.sendQueryEvent()
+		},
+
+		restoreFilters(snapshot) {
+			this.match = snapshot.match
+			this.searchInFrom = snapshot.searchInFrom
+			this.searchInTo = snapshot.searchInTo
+			this.searchInCc = snapshot.searchInCc
+			this.searchInBcc = snapshot.searchInBcc
+			this.searchInSubject = snapshot.searchInSubject
+			this.searchInMessageBody = snapshot.searchInMessageBody
+			this.selectedTags = snapshot.selectedTags
+			this.searchFlags = snapshot.searchFlags
+			this.mentionsMe = snapshot.mentionsMe
+			this.startDate = snapshot.startDate
+			this.endDate = snapshot.endDate
+		},
+
+		copyFilters() {
+			return {
+				match: this.match,
+				searchInFrom: [...this.searchInFrom],
+				searchInTo: [...this.searchInTo],
+				searchInCc: [...this.searchInCc],
+				searchInBcc: [...this.searchInBcc],
+				searchInSubject: this.searchInSubject,
+				searchInMessageBody: this.searchInMessageBody,
+				selectedTags: [...this.selectedTags],
+				searchFlags: [...this.searchFlags],
+				mentionsMe: this.mentionsMe,
+				startDate: this.startDate,
+				endDate: this.endDate,
+			}
 		},
 
 		sendQueryEvent() {
@@ -571,14 +638,23 @@ export default {
 		},
 
 		clearQueryFilters(oldQuery) {
-			const isQueryAddress = (addresses) => addresses.length === 1 && addresses[0].email === oldQuery
+			if (this.match !== 'anyof' || !this.clearQueryValues(oldQuery)) {
+				return
+			}
+
+			this.match = 'allof'
+			this.debouncedSearchQuery()
+		},
+
+		clearQueryValues(value) {
+			const isQueryAddress = (addresses) => addresses.length === 1 && addresses[0].email === value
 			let cleared = false
 
-			if (this.searchInSubject === oldQuery) {
+			if (this.searchInSubject === value) {
 				this.searchInSubject = null
 				cleared = true
 			}
-			if (this.searchInMessageBody === oldQuery) {
+			if (this.searchInMessageBody === value) {
 				this.searchInMessageBody = null
 				cleared = true
 			}
@@ -590,12 +666,8 @@ export default {
 				this.searchInTo = []
 				cleared = true
 			}
-			if (!cleared) {
-				return
-			}
 
-			this.match = 'allof'
-			this.debouncedSearchQuery()
+			return cleared
 		},
 
 		searchRecipients(term) {
