@@ -12,7 +12,7 @@ if address "From" "marketing@company.org" {
 }
 
 ### Nextcloud Mail: Vacation Responder ### DON'T EDIT ###
-# DATA: {"version":1,"enabled":true,"start":"2022-09-02T00:00:00+01:00","end":"2022-09-08T23:59:00+01:00","subject":"Re: ${subject}","message":"I'm on vacation."}
+# DATA: {"version":1,"enabled":true,"start":"2022-09-02T00:00:00+01:00","end":"2022-09-08T23:59:00+01:00","subject":"Re: ${subject}","message":"I'm on vacation.","messageHtml":false}
 set "subject" "";
 if header :matches "subject" "*" {
 	set "subject" "${1}";
