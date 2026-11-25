@@ -78,7 +78,7 @@
     "webdav": "5.11.0"
   },
   "devDependencies": {
-    "@babel/core": "^8.1.0",
+    "@babel/core": "^8.1.2",
     "@babel/preset-env": "^8.0.7",
     "@nextcloud/babel-config": "^2.0.0",
     "@nextcloud/browserslist-config": "^3.1.2",
