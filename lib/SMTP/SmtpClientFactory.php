@@ -75,8 +75,9 @@ class SmtpClientFactory {
 			}
 
 			$params['password'] = $decryptedAccessToken; // Not used, but Horde wants this
+			$outboundUser = $mailAccount->getOutboundUser();
 			$params['xoauth2_token'] = new Horde_Smtp_Password_Xoauth2(
-				$account->getEmail(),
+				$outboundUser === null || $outboundUser === '' ? $account->getEmail() : $outboundUser,
 				$decryptedAccessToken,
 			);
 		}

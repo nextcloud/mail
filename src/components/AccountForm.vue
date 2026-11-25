@@ -212,6 +212,7 @@
 				id="man-smtp-user"
 				v-model="manualConfig.smtpUser"
 				:label="t('mail', 'SMTP User')"
+				:helperText="useOauth ? t('mail', 'The account you sign in with. For a shared mailbox, enter your own email address.') : ''"
 				type="text"
 				:placeholder="t('mail', 'SMTP User')"
 				:disabled="loading"
@@ -455,13 +456,19 @@ export default {
 				}
 
 				// SMTP
-				if (this.manualConfig.smtpUser === '') {
+				if (!this.manualConfig.smtpUser) {
 					this.manualConfig.smtpUser = this.emailAddress
 				}
 				if (this.manualConfig.smtpPassword === '') {
 					this.manualConfig.smtpPassword = this.autoConfig.password
 				}
 			},
+		},
+
+		emailAddress(newEmail, oldEmail) {
+			if (this.useOauth && this.manualConfig.smtpUser === oldEmail) {
+				this.manualConfig.smtpUser = newEmail
+			}
 		},
 	},
 
@@ -501,7 +508,9 @@ export default {
 		syncCredentials() {
 			if (this.manualConfig.syncSmtpCredentials) {
 				this.manualConfig.smtpHost = this.manualConfig.imapHost
-				this.manualConfig.smtpUser = this.manualConfig.imapUser
+				if (!this.useOauth) {
+					this.manualConfig.smtpUser = this.manualConfig.imapUser
+				}
 				this.manualConfig.smtpPassword = this.manualConfig.imapPassword
 			}
 
