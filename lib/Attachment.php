@@ -11,6 +11,8 @@ namespace OCA\Mail;
 use Horde_Mime_Part;
 
 class Attachment {
+	private const CALENDAR_METHODS = ['ADD', 'CANCEL', 'COUNTER', 'DECLINECOUNTER', 'PUBLISH', 'REFRESH', 'REPLY', 'REQUEST'];
+
 	public function __construct(
 		private ?string $id,
 		private ?string $name,
@@ -28,10 +30,16 @@ class Attachment {
 			$disposition = null;
 		}
 
+		$type = $mimePart->getType();
+		$method = strtoupper((string)$mimePart->getContentTypeParameter('method'));
+		if ($type === 'text/calendar' && in_array($method, self::CALENDAR_METHODS, true)) {
+			$type .= '; method=' . $method;
+		}
+
 		return new Attachment(
 			$mimePart->getMimeId(),
 			$mimePart->getName(),
-			$mimePart->getType(),
+			$type,
 			$mimePart->getContents(),
 			(int)$mimePart->getBytes(),
 			$mimePart->getContentId(),
