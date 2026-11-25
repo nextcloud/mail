@@ -34,7 +34,7 @@ class Version0130Date20190408134101 extends SimpleMigrationStep {
 		$accountsTable = $schema->getTable('mail_accounts');
 		$accountsTable->addColumn('signature', Types::TEXT, [
 			'notnull' => false,
-			'length' => 1024,
+			'length' => null,
 			'default' => '',
 		]);
 
