@@ -170,7 +170,7 @@ jobs:
                   - 993:993
                   - 4190:4190
           mail-stalwart-service:
-              image: stalwartlabs/stalwart:v1.1.0
+              image: stalwartlabs/stalwart:v1.1.1
               env:
                   STALWART_RECOVERY_ADMIN: admin:${{ env.STALWART_PWD }}
                   # Base URL of the published JMAP discovery URLs (apiUrl/downloadUrl/uploadUrl),
