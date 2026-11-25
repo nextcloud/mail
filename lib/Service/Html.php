@@ -10,11 +10,14 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service;
 
+use DOMElement;
+use DOMXPath;
 use HTMLPurifier;
 use HTMLPurifier_Config;
 use HTMLPurifier_HTMLDefinition;
 use HTMLPurifier_URIDefinition;
 use HTMLPurifier_URISchemeRegistry;
+use OCA\Mail\Html\Parser as HtmlParser;
 use OCA\Mail\Html\ProxyHmacGenerator;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\HtmlPurify\CidURIScheme;
@@ -208,6 +211,12 @@ class Html {
 		// Keep the original on a PCRE error; purify(null) would silently return an empty body.
 		$mailBody = preg_replace('/<!\[\s*(?:end)?if\b[^\]]*\]\s*>/i', '', $mailBody) ?? $mailBody;
 
+		// HTMLPurifier marks a nested link as excluded and drops it together with
+		// everything inside it, which deletes the visible text of the marker. Browsers
+		// keep the inner link instead, so reduce nested links to that same shape before
+		// purifying. The body is left untouched unless there is a nested link.
+		$mailBody = $this->unwrapNestedLinks($mailBody);
+
 		$result = $purifier->purify($mailBody);
 		// eat xml parse errors within HTMLPurifier
 		libxml_clear_errors();
@@ -219,6 +228,50 @@ class Html {
 			$result = $this->sanitizeStyleSheet($joinedStyles) . $result;
 		}
 		return $result;
+	}
+
+	/**
+	 * Reduce nested links to the shape browsers build from the same markup.
+	 *
+	 * HTML does not allow a link inside a link, and parsers disagree on how to
+	 * recover. Browsers close the outer link and keep the inner one, so the text
+	 * stays visible. HTMLPurifier instead marks the inner link as excluded and
+	 * removes it with all of its content, which hides text like a verification
+	 * code that a transactional mail wrapped in a nested anchor.
+	 *
+	 * @param string $html The HTML body to normalize.
+	 * @return string The body with outer links unwrapped, or $html when it has none.
+	 */
+	private function unwrapNestedLinks(string $html): string {
+		// Most bodies have no nested link at all; skip the DOM round trip for them.
+		// The empty check also narrows the type for the parser below.
+		if ($html === ''
+			|| stripos($html, '</a') === false
+			|| preg_match('/<a\b[^>]*>(?:(?!<\/a).)*<a\b/is', $html) !== 1) {
+			return $html;
+		}
+
+		$document = HtmlParser::parseToDomDocument($html);
+		$xpath = new DOMXPath($document);
+		$outerLinks = $xpath->query('//a[.//a]');
+		if ($outerLinks === false || $outerLinks->length === 0) {
+			return $html;
+		}
+
+		/** @var DOMElement $outerLink */
+		foreach ($outerLinks as $outerLink) {
+			$parent = $outerLink->parentNode;
+			if ($parent === null) {
+				continue;
+			}
+			while ($outerLink->firstChild !== null) {
+				$parent->insertBefore($outerLink->firstChild, $outerLink);
+			}
+			$parent->removeChild($outerLink);
+		}
+
+		// serialize the whole document: saveHTML() on a fragment drops the doctype
+		return rtrim((string)$document->saveHTML(), "\n");
 	}
 
 	/**

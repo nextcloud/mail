@@ -305,4 +305,60 @@ final class HtmlTest extends TestCase {
 		$this->assertStringContainsString('<figure class="image image-style-align-center">', $result);
 		$this->assertStringContainsString('<figcaption>Caption</figcaption>', $result);
 	}
+
+	/**
+	 * Links cannot be nested. Browsers keep the inner one and the text with it,
+	 * so a verification code wrapped in a nested anchor must stay visible.
+	 */
+	public function testSanitizeHtmlMailBodyKeepsNestedLinkText(): void {
+		$urlGenerator = $this->createStub(IURLGenerator::class);
+		$request = $this->createStub(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$result = $html->sanitizeHtmlMailBody(
+			42,
+			'<p><a href=""><h1><a href="">123456</a></h1></a></p>'
+			. '<p><a href=""><p><a href="">Use the code below to sign in.</a></p></a></p>',
+			[],
+		);
+
+		$this->assertStringContainsString('123456', $result);
+		$this->assertStringContainsString('Use the code below to sign in.', $result);
+	}
+
+	public function testSanitizeHtmlMailBodyKeepsTextOfDeeplyNestedLinks(): void {
+		$urlGenerator = $this->createStub(IURLGenerator::class);
+		$request = $this->createStub(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$result = $html->sanitizeHtmlMailBody(
+			42,
+			'<div><a href="https://a.example"><h2><a href="https://b.example">Code 112233</a></h2></a></div>',
+			[],
+		);
+
+		$this->assertStringContainsString('Code 112233', $result);
+	}
+
+	/**
+	 * Bodies without a nested link must keep going through the untouched path.
+	 */
+	public function testSanitizeHtmlMailBodyLeavesSiblingLinksAlone(): void {
+		$urlGenerator = $this->createStub(IURLGenerator::class);
+		$request = $this->createStub(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+		$mailBody = '<p><a href="https://one.example">One</a> and <a href="https://two.example">Two</a></p>';
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$result = $html->sanitizeHtmlMailBody(42, $mailBody, []);
+
+		$this->assertSame(2, substr_count($result, '<a href="'));
+		$this->assertStringContainsString('href="https://one.example"', $result);
+		$this->assertStringContainsString('href="https://two.example"', $result);
+		$this->assertStringContainsString('One</a>', $result);
+		$this->assertStringContainsString('Two</a>', $result);
+		$this->assertStringContainsString(' and ', $result);
+	}
 }
