@@ -87,7 +87,7 @@
     "@playwright/test": "^1.65.1",
     "@typescript/native": "npm:typescript@~7.0.2",
     "@vitejs/plugin-vue": "^6.0.11",
-    "@vue/test-utils": "^2.5.1",
+    "@vue/test-utils": "^2.6.0",
     "autoprefixer": "^10.6.2",
     "babel-loader": "^10.1.1",
     "babel-loader-exclude-node-modules-except": "^1.2.4",
