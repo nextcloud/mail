@@ -57,7 +57,12 @@ use Throwable;
  * }
  * @psalm-type JmapEntityListGranularity = 'basic'|'default'
  * @psalm-type JmapEntityListRange = array{
- *     anchor: 'absolute'|'relative',
+ *     anchor: 'absolute',
+ *     position: int,
+ *     tally: int,
+ * }|array{
+ *     anchor: 'relative',
+ *     id: string,
  *     position: int,
  *     tally: int,
  * }
@@ -492,8 +497,9 @@ class JmapOperationsService {
 			if ($anchor === 'absolute' && $position !== null && $tally !== null) {
 				$r0->limitAbsolute((int)$position, (int)$tally);
 			}
-			if ($anchor === 'relative' && $position !== null && $tally !== null) {
-				$r0->limitRelative((int)$position, (int)$tally);
+			$id = $range['id'] ?? null;
+			if ($anchor === 'relative' && $id !== null && $position !== null && $tally !== null) {
+				$r0->limitRelative((string)$id, (int)$tally, (int)$position);
 			}
 		}
 		// construct second request
