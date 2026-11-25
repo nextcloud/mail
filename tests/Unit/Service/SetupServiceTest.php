@@ -19,6 +19,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\CouldNotConnectException;
+use OCA\Mail\Exception\DuplicateEmailAddress;
 use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\SetupService;
@@ -333,6 +334,72 @@ final class SetupServiceTest extends TestCase {
 			self::SMTP_PASSWORD,
 			self::USER_ID,
 			self::AUTH_METHOD_PASSWORD
+		);
+	}
+
+	public function testUpdatingExistingAccount(): void {
+		$account = $this->createStub(Account::class);
+		$account->expects(self::once())
+			->method('getId')
+			->willReturn(42);
+
+		$this->accountService->expects(self::once())
+			->method('findByUserIdAndAddress')
+			->with(self::USER_ID, self::EMAIL_ADDRESS)
+			->willReturn([
+				$account
+			]);
+
+		$this->setupService->createNewAccount(
+			self::ACCOUNT_NAME,
+			self::EMAIL_ADDRESS,
+			self::IMAP_HOST,
+			self::IMAP_PORT,
+			self::IMAP_SSL_MODE,
+			self::IMAP_USER,
+			self::IMAP_PASSWORD,
+			self::SMTP_HOST,
+			self::SMTP_PORT,
+			self::SMTP_SSL_MODE,
+			self::SMTP_USER,
+			self::SMTP_PASSWORD,
+			self::USER_ID,
+			self::AUTH_METHOD_PASSWORD,
+			42
+		);
+	}
+
+	public function testCreatingDuplicatedAccount(): void {
+		$this->expectException(DuplicateEmailAddress::class);
+
+		$account = $this->createStub(Account::class);
+		$account->expects(self::once())
+			->method('getId')
+			->willReturn(24);
+
+		$this->accountService->expects(self::once())
+			->method('findByUserIdAndAddress')
+			->with(self::USER_ID, self::EMAIL_ADDRESS)
+			->willReturn([
+				$account
+			]);
+
+		$this->setupService->createNewAccount(
+			self::ACCOUNT_NAME,
+			self::EMAIL_ADDRESS,
+			self::IMAP_HOST,
+			self::IMAP_PORT,
+			self::IMAP_SSL_MODE,
+			self::IMAP_USER,
+			self::IMAP_PASSWORD,
+			self::SMTP_HOST,
+			self::SMTP_PORT,
+			self::SMTP_SSL_MODE,
+			self::SMTP_USER,
+			self::SMTP_PASSWORD,
+			self::USER_ID,
+			self::AUTH_METHOD_PASSWORD,
+			42
 		);
 	}
 }
