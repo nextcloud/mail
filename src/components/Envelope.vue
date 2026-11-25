@@ -64,7 +64,8 @@
 					<div
 						class="compact-checkbox-wrapper"
 						@mousedown.stop.prevent
-						@click.stop.prevent>
+						@click.stop.prevent
+						@click.capture="onCompactCheckboxClick">
 						<NcCheckboxRadioSwitch
 							type="checkbox"
 							class="compact-checkbox"
@@ -1197,6 +1198,16 @@ export default {
 
 		onSelectMultiple() {
 			this.$emit('selectMultiple')
+		},
+
+		onCompactCheckboxClick(event) {
+			if (!event.shiftKey) {
+				return
+			}
+
+			event.stopPropagation()
+			event.preventDefault()
+			this.onSelectMultiple()
 		},
 
 		onToggleImportant() {

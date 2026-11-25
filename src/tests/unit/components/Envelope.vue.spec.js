@@ -452,4 +452,40 @@ describe('Envelope', () => {
 		addSpy.mockRestore()
 		removeSpy.mockRestore()
 	})
+
+	it('selects a range on shift click of the compact checkbox', async () => {
+		store.preferences['compact-mode'] = 'true'
+
+		const view = shallowMount(Envelope, {
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+				stubs: {
+					EnvelopeSkeleton: {
+						template: '<div><slot name="icon" /></div>',
+					},
+					NcCheckboxRadioSwitch: false,
+				},
+			},
+			props: {
+				mailbox: {
+					specialRole: '',
+					databaseId: '3',
+					myAcls: undefined,
+				},
+				data: {
+					accountId: 123,
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
+				},
+			},
+		})
+
+		await view.find('.compact-checkbox .checkbox-radio-switch__content').trigger('click', { shiftKey: true })
+
+		expect(view.emitted('selectMultiple')).toHaveLength(1)
+		expect(view.emitted('update:selected')).toBeUndefined()
+	})
 })
