@@ -99,6 +99,17 @@ final class CreateProvisioningTest extends TestCase {
 		self::assertSame(Command::SUCCESS, $status);
 	}
 
+	public function testCreateWithoutSentCopy(): void {
+		$this->provisioningManager->expects(self::once())
+			->method('newProvisioning')
+			->with(self::callback(static fn (array $data): bool => $data['saveSentCopy'] === false))
+			->willReturn(new Provisioning());
+
+		$status = $this->tester->execute(array_merge($this->options, ['--no-save-sent-copy' => true]));
+
+		self::assertSame(Command::SUCCESS, $status);
+	}
+
 	public function testCreateWithMasterPassword(): void {
 		$this->provisioningManager->expects(self::once())
 			->method('newProvisioning')
@@ -293,6 +304,10 @@ final class CreateProvisioningTest extends TestCase {
 		yield 'master password' => [
 			['--no-master-password' => true, '--master-password' => null],
 			'--no-master-password cannot be combined with --master-password',
+		];
+		yield 'save sent copy' => [
+			['--no-save-sent-copy' => true, '--save-sent-copy' => true],
+			'--no-save-sent-copy cannot be combined with --save-sent-copy',
 		];
 	}
 

@@ -130,6 +130,7 @@ class ProvisioningMapper extends QBMapper {
 
 		$provisioning->setLdapAliasesProvisioning($ldapAliasesProvisioning);
 		$provisioning->setLdapAliasesAttribute($ldapAliasesAttribute);
+		$provisioning->setSaveSentCopy((bool)($data['saveSentCopy'] ?? true));
 
 		if ($masterPasswordEnabled) {
 			$provisioning->enableMasterPassword($masterPassword, $masterUser);
