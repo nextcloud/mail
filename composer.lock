@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8c07a497ea715296e769e7c6a5d1a793",
+    "content-hash": "2653b55b1b3ff7aaffe20ed90328990e",
     "packages": [
         {
             "name": "amphp/amp",
@@ -3082,16 +3082,16 @@
         },
         {
             "name": "sebastiankrupinski/jmap-client-php",
-            "version": "v2.7.2",
+            "version": "v2.7.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SebastianKrupinski/jmap-client-php.git",
-                "reference": "ecf56aba183a32751a9b8928878d277965f3dbbf"
+                "reference": "b9135653b6141c2913edfc7e5a73bf6988c591ef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SebastianKrupinski/jmap-client-php/zipball/ecf56aba183a32751a9b8928878d277965f3dbbf",
-                "reference": "ecf56aba183a32751a9b8928878d277965f3dbbf",
+                "url": "https://api.github.com/repos/SebastianKrupinski/jmap-client-php/zipball/b9135653b6141c2913edfc7e5a73bf6988c591ef",
+                "reference": "b9135653b6141c2913edfc7e5a73bf6988c591ef",
                 "shasum": ""
             },
             "require": {
@@ -3141,8 +3141,8 @@
                 "issues": "https://github.com/SebastianKrupinski/jmap-client-php/issues",
                 "source": "https://github.com/SebastianKrupinski/jmap-client-php"
             },
-            "time": "2026-11-18T16:52:11+00:00",
-            "published-time": "2026-11-18T16:52:55+00:00"
+            "time": "2026-11-19T02:37:45+00:00",
+            "published-time": "2026-11-19T02:38:24+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",

@@ -128,7 +128,7 @@ final class JmapOperationsServiceTest extends TestCase {
 			->willReturnCallback(function (array $requests) use (&$captured) {
 				$captured = $requests;
 				$mailSetWire = $requests[0]->jsonSerialize();
-				$emailId = array_key_first($mailSetWire[1]['create']);
+				$emailId = array_key_first((array)$mailSetWire[1]['create']);
 				return new ResponseBundle([
 					'methodResponses' => [
 						['Email/set', ['created' => [$emailId => ['id' => 'remote-email-1']]], 'c0'],
@@ -150,8 +150,7 @@ final class JmapOperationsServiceTest extends TestCase {
 		$this->assertCount(1, $captured);
 
 		$mailSetWire = $captured[0]->jsonSerialize();
-		$emailId = array_key_first($mailSetWire[1]['create']);
-		$emailCreateObj = $mailSetWire[1]['create'][$emailId];
+		$emailCreateObj = current((array)$mailSetWire[1]['create']);
 		$this->assertFalse(isset($emailCreateObj->attachments), 'must not set the separate "attachments" property alongside bodyStructure');
 		$attachmentPart = $this->findAttachmentPart($emailCreateObj->bodyStructure);
 		$this->assertNotNull($attachmentPart);
@@ -180,7 +179,7 @@ final class JmapOperationsServiceTest extends TestCase {
 			->method('perform')
 			->willReturnCallback(function (array $requests) use (&$captured) {
 				$captured = $requests;
-				$emailId = array_key_first($requests[0]->jsonSerialize()[1]['create']);
+				$emailId = array_key_first((array)$requests[0]->jsonSerialize()[1]['create']);
 				return new ResponseBundle([
 					'methodResponses' => [
 						['Email/set', ['created' => [$emailId => ['id' => 'remote-email-2']]], 'c0'],
@@ -194,7 +193,7 @@ final class JmapOperationsServiceTest extends TestCase {
 		$this->service->entitySave($email, $attachments);
 
 		$mailSetWire = $captured[0]->jsonSerialize();
-		$emailCreateObj = $mailSetWire[1]['create'][array_key_first($mailSetWire[1]['create'])];
+		$emailCreateObj = current((array)$mailSetWire[1]['create']);
 		$attachmentPart = $this->findAttachmentPart($emailCreateObj->bodyStructure);
 		$this->assertNotNull($attachmentPart);
 		$this->assertFalse(isset($attachmentPart->name));
@@ -274,7 +273,7 @@ final class JmapOperationsServiceTest extends TestCase {
 			->method('perform')
 			->willReturnCallback(function (array $requests) {
 				$mailSetWire = $requests[0]->jsonSerialize();
-				$emailId = array_key_first($mailSetWire[1]['create']);
+				$emailId = array_key_first((array)$mailSetWire[1]['create']);
 				return new ResponseBundle([
 					'methodResponses' => [
 						['Email/set', ['created' => [$emailId => ['id' => 'remote-email-3']]], 'c0'],
@@ -579,6 +578,49 @@ final class JmapOperationsServiceTest extends TestCase {
 			->willReturn($this->emptyEntityListResponse());
 
 		$this->service->entityList(null, [], [], null, 'basic');
+	}
+
+	public function testEntityListLimitsAbsoluteRange(): void {
+		$this->dataStore->expects(self::once())
+			->method('perform')
+			->with(self::callback(static function (array $commands): bool {
+				$query = $commands[0]->jsonSerialize()[1];
+				return $query['position'] === 50
+					&& $query['limit'] === 25
+					&& !isset($query['anchor']);
+			}))
+			->willReturn($this->emptyEntityListResponse());
+
+		$this->service->entityList(null, [], [], ['anchor' => 'absolute', 'position' => 50, 'tally' => 25]);
+	}
+
+	public function testEntityListLimitsRelativeRangeFromAnchorRecord(): void {
+		$this->dataStore->expects(self::once())
+			->method('perform')
+			->with(self::callback(static function (array $commands): bool {
+				$query = $commands[0]->jsonSerialize()[1];
+				return $query['anchor'] === 'M1234'
+					&& $query['anchorOffset'] === 1
+					&& $query['limit'] === 25
+					&& !isset($query['position']);
+			}))
+			->willReturn($this->emptyEntityListResponse());
+
+		$this->service->entityList(null, [], [], ['anchor' => 'relative', 'id' => 'M1234', 'position' => 1, 'tally' => 25]);
+	}
+
+	public function testEntityListIgnoresRelativeRangeWithoutAnchorRecord(): void {
+		$this->dataStore->expects(self::once())
+			->method('perform')
+			->with(self::callback(static function (array $commands): bool {
+				$query = $commands[0]->jsonSerialize()[1];
+				return !isset($query['anchor'])
+					&& !isset($query['anchorOffset'])
+					&& !isset($query['limit']);
+			}))
+			->willReturn($this->emptyEntityListResponse());
+
+		$this->service->entityList(null, [], [], ['anchor' => 'relative', 'position' => 1, 'tally' => 25]);
 	}
 
 	private function emptyEntityListResponse(): ResponseBundle {
