@@ -11,6 +11,7 @@ namespace OCA\Mail\IMAP;
 
 use Horde_Imap_Client;
 use Horde_Imap_Client_Base;
+use Horde_Imap_Client_Data_Capability_Imap;
 use Horde_Imap_Client_Data_Fetch;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Exception_NoSupportExtension;
@@ -426,13 +427,7 @@ class MessageMapper {
 		Mailbox $mailbox,
 		array $uids,
 		string $flag): void {
-		$client->store(
-			$mailbox->getName(),
-			[
-				'ids' => new Horde_Imap_Client_Ids($uids),
-				'add' => [$flag],
-			]
-		);
+		$this->storeInChunks($client, $mailbox, $uids, ['add' => [$flag]]);
 	}
 
 	/**
@@ -442,13 +437,28 @@ class MessageMapper {
 		Mailbox $mailbox,
 		array $uids,
 		string $flag): void {
-		$client->store(
-			$mailbox->getName(),
-			[
-				'ids' => new Horde_Imap_Client_Ids($uids),
-				'remove' => [$flag],
-			]
-		);
+		$this->storeInChunks($client, $mailbox, $uids, ['remove' => [$flag]]);
+	}
+
+	/**
+	 * Servers reject a STORE beyond their line length, and Horde ignores the rejection
+	 *
+	 * @param int[] $uids
+	 * @param array{add: string[]}|array{remove: string[]} $flags
+	 *
+	 * @throws Horde_Imap_Client_Exception
+	 */
+	private function storeInChunks(Horde_Imap_Client_Socket $client, Mailbox $mailbox, array $uids, array $flags): void {
+		if ($uids === []) {
+			return;
+		}
+		// The capabilities before login don't announce CONDSTORE, which allows longer commands
+		$client->login();
+		/** @var Horde_Imap_Client_Data_Capability_Imap $capability */
+		$capability = $client->capability;
+		foreach ((new Horde_Imap_Client_Ids($uids))->split($capability->cmdlength) as $sequence) {
+			$client->store($mailbox->getName(), ['ids' => new Horde_Imap_Client_Ids($sequence)] + $flags);
+		}
 	}
 
 	/**

@@ -12,6 +12,7 @@ namespace OCA\Mail\Tests\Unit\IMAP;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Base;
+use Horde_Imap_Client_Data_Capability_Imap;
 use Horde_Imap_Client_Data_Fetch;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Fetch_Query;
@@ -1025,5 +1026,75 @@ final class MessageMapperTest extends TestCase {
 		$this->assertEquals('nextcloud.png', $attachment->getName());
 		$this->assertEquals('image/png', $attachment->getType());
 		$this->assertEquals('inline', $attachment->disposition);
+	}
+
+	public function testAddFlagStoresUnsortedUidsAsOneRange(): void {
+		$client = $this->createImapClientWithCommandLength(8000);
+		$mailbox = new Mailbox();
+		$mailbox->setName('Archive');
+		$client->expects($this->once())
+			->method('store')
+			->with('Archive', $this->callback(static fn (array $options): bool => (string)$options['ids'] === '1:20000' && $options['add'] === [Horde_Imap_Client::FLAG_SEEN]));
+
+		$this->mapper->addFlag($client, $mailbox, array_merge(range(10001, 20000), range(1, 10000)), Horde_Imap_Client::FLAG_SEEN);
+	}
+
+	public function testRemoveFlagSplitsUidsThatDoNotFormRanges(): void {
+		$commandLength = 8000;
+		$client = $this->createImapClientWithCommandLength($commandLength);
+		$mailbox = new Mailbox();
+		$mailbox->setName('Archive');
+		$uids = range(2, 40000, 2);
+		$maxSequenceLength = $commandLength + strlen(',' . max($uids));
+		$storedUids = [];
+		$client->expects($this->atLeastOnce())
+			->method('store')
+			->with('Archive', $this->callback(static fn (array $options): bool => strlen((string)$options['ids']) <= $maxSequenceLength && $options['remove'] === [Horde_Imap_Client::FLAG_SEEN]))
+			->willReturnCallback(static function (string $mailbox, array $options) use (&$storedUids): void {
+				$storedUids[] = $options['ids']->ids;
+			});
+
+		$this->mapper->removeFlag($client, $mailbox, array_reverse($uids), Horde_Imap_Client::FLAG_SEEN);
+
+		$this->assertSame($uids, array_merge(...$storedUids));
+	}
+
+	public function testAddFlagWithoutUidsStoresNothing(): void {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$mailbox = new Mailbox();
+		$mailbox->setName('Archive');
+		$client->expects($this->never())
+			->method('store');
+
+		$this->mapper->addFlag($client, $mailbox, [], Horde_Imap_Client::FLAG_SEEN);
+	}
+
+	public function testAddFlagStopsAtTheFirstFailingChunk(): void {
+		$client = $this->createImapClientWithCommandLength(2000);
+		$mailbox = new Mailbox();
+		$mailbox->setName('Archive');
+		$client->expects($this->exactly(2))
+			->method('store')
+			->willReturnCallback(static function (string $mailbox, array $options): void {
+				if (!in_array(2, $options['ids']->ids, true)) {
+					throw new Horde_Imap_Client_Exception('connection lost');
+				}
+			});
+
+		$this->expectException(Horde_Imap_Client_Exception::class);
+
+		$this->mapper->addFlag($client, $mailbox, range(2, 40000, 2), Horde_Imap_Client::FLAG_SEEN);
+	}
+
+	private function createImapClientWithCommandLength(int $commandLength): Horde_Imap_Client_Socket&MockObject {
+		$capability = $this->createMock(Horde_Imap_Client_Data_Capability_Imap::class);
+		$capability->method('__get')
+			->with('cmdlength')
+			->willReturn($commandLength);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client->method('__get')
+			->with('capability')
+			->willReturn($capability);
+		return $client;
 	}
 }
