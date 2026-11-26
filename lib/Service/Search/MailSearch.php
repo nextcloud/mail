@@ -77,12 +77,7 @@ class MailSearch implements IMailSearch {
 		?int $limit,
 		?string $userId,
 		?string $view): array {
-		if ($mailbox->hasLocks($this->timeFactory->getTime())) {
-			throw MailboxLockedException::from($mailbox);
-		}
-		if (!$mailbox->isCached()) {
-			throw MailboxNotCachedException::from($mailbox);
-		}
+		$this->assertCached($mailbox);
 
 		$query = $this->filterStringParser->parse($filter);
 		if ($cursor !== null) {
@@ -100,16 +95,36 @@ class MailSearch implements IMailSearch {
 			$query->addFlag(Flag::not(Flag::DELETED));
 		}
 
-		return $this->previewEnhancer->process(
+		$accountUserId = $account->getUserId();
+		$messages = $this->previewEnhancer->process(
 			$account,
 			$mailbox,
-			$this->messageMapper->findByIds($account->getUserId(),
+			$this->messageMapper->findByIds($accountUserId,
 				$this->getIdsLocally($account, $mailbox, $query, $sortOrder, $limit),
 				$sortOrder,
 			),
 			true,
 			$userId
 		);
+		// A sync may have reset the cache while the messages and their previews were read
+		$this->assertCached($this->mailManager->getMailbox($accountUserId, $mailbox->getId()));
+
+		return $messages;
+	}
+
+	/**
+	 * @throws MailboxLockedException
+	 * @throws MailboxNotCachedException
+	 */
+	private function assertCached(Mailbox $mailbox): void {
+		if ($mailbox->isCached()) {
+			return;
+		}
+		// Another process is filling the cache, so the client waits instead of starting an initial sync too
+		if ($mailbox->hasLocks($this->timeFactory->getTime())) {
+			throw MailboxLockedException::from($mailbox);
+		}
+		throw MailboxNotCachedException::from($mailbox);
 	}
 
 	/**
