@@ -1259,6 +1259,8 @@ class MessageMapper extends QBMapper {
 				return $this->flagExpressionToQuery($operand, $qb, $tableAlias);
 			}
 
+			// Psalm 7.10+ narrows $operand to never here (exhaustive instanceof), but the guard stays for runtime safety
+			/** @psalm-suppress NoValue */
 			throw new RuntimeException('Invalid operand type ' . get_class($operand));
 		}, $expr->getOperands());
 
