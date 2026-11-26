@@ -115,7 +115,6 @@ class FilterStringParser {
 				$flagArray = explode(',', $param);
 				foreach ($flagArray as $flagItem) {
 					if (array_key_exists($flagItem, $flagMap)) {
-						/** @var Flag $flag */
 						$flag = $flagMap[$flagItem];
 						if ($flag instanceof Flag) {
 							$query->addFlag($flag);
