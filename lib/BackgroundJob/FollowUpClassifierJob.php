@@ -46,7 +46,7 @@ class FollowUpClassifierJob extends QueuedJob {
 		$mailboxId = $argument[self::PARAM_MAILBOX_ID];
 		$userId = $argument[self::PARAM_USER_ID];
 
-		if (!$this->aiService->isLlmProcessingEnabled()) {
+		if (!$this->aiService->isFollowUpEnabledForUser($userId)) {
 			return;
 		}
 

@@ -254,8 +254,15 @@
 				</NcFormGroup>
 			</NcAppSettingsSection>
 
-			<NcAppSettingsSection v-if="followUpFeatureAvailable" id="autotagging-settings" :name="t('mail', 'Assistance features')">
+			<NcAppSettingsSection v-if="llmProcessingEnabled" id="autotagging-settings" :name="t('mail', 'Assistance features')">
 				<NcFormBox>
+					<NcFormBoxSwitch
+						v-model="useAiFeatures"
+						:label="t('mail', 'Use AI features')"
+						:disabled="hasLoadingState('ai-features')"
+						:description="t('mail', 'Summaries, smart replies, translation, event suggestions and follow-up reminders. When off, none of your messages are sent to the assistant.')" />
+				</NcFormBox>
+				<NcFormBox v-if="followUpFeatureAvailable && useAiFeatures">
 					<NcFormBoxSwitch
 						v-model="useFollowUpReminders"
 						:disabled="hasLoadingState('follow-up-reminders')">
@@ -525,6 +532,20 @@ export default {
 			},
 		},
 
+		llmProcessingEnabled() {
+			return this.mainStore.getPreference('llm-processing-enabled', false)
+		},
+
+		useAiFeatures: {
+			get() {
+				return this.mainStore.isAiEnabled()
+			},
+
+			set(value) {
+				this.onToggleAiFeatures(value)
+			},
+		},
+
 		useFollowUpReminders: {
 			get() {
 				return this.mainStore.getPreference('follow-up-reminders', 'true') === 'true'
@@ -777,6 +798,22 @@ export default {
 				showError(t('mail', 'Could not update preference'))
 			} finally {
 				this.setLoadingState('sort-order', false)
+			}
+		},
+
+		async onToggleAiFeatures(enabled) {
+			this.setLoadingState('ai-features', true)
+
+			try {
+				await this.mainStore.savePreference({
+					key: 'ai-features',
+					value: enabled ? 'true' : 'false',
+				})
+			} catch (error) {
+				Logger.error('Could not save preferences', { error })
+				showError(t('mail', 'Could not update preference'))
+			} finally {
+				this.setLoadingState('ai-features', false)
 			}
 		},
 

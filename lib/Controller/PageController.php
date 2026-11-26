@@ -241,6 +241,7 @@ class PageController extends Controller {
 			'search-priority-body' => $this->preferences->getPreference($this->userId, 'search-priority-body', 'false'),
 			'start-mailbox-id' => $this->preferences->getPreference($this->userId, 'start-mailbox-id'),
 			'follow-up-reminders' => $this->preferences->getPreference($this->userId, 'follow-up-reminders', 'true'),
+			'ai-features' => $this->preferences->getPreference($this->userId, 'ai-features', 'true'),
 			'sort-favorites' => $this->preferences->getPreference($this->userId, 'sort-favorites', 'false'),
 			'index-context-chat' => $this->contextChatSettingsService->isIndexingEnabled($this->userId) ? 'true' : 'false',
 			'compact-mode' => $this->preferences->getPreference($this->userId, 'compact-mode', 'false'),
@@ -332,6 +333,11 @@ class PageController extends Controller {
 		$this->initialStateService->provideInitialState(
 			'allow-new-accounts',
 			$this->appConfig->getValueBool(Application::APP_ID, ConfigLexicon::ALLOW_NEW_MAIL_ACCOUNTS, true)
+		);
+
+		$this->initialStateService->provideInitialState(
+			'llm_processing_enabled',
+			$this->aiIntegrationsService->isLlmProcessingEnabled(),
 		);
 
 		$this->initialStateService->provideInitialState(

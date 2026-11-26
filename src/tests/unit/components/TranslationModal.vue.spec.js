@@ -9,11 +9,15 @@ import TranslationModal from '../../../components/TranslationModal.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 import useMainStore from '../../../store/mainStore.js'
 
-const { getLanguage } = vi.hoisted(() => ({ getLanguage: vi.fn() }))
+const { getLanguage, translateText } = vi.hoisted(() => ({ getLanguage: vi.fn(), translateText: vi.fn() }))
 
 vi.mock('@nextcloud/l10n', async () => ({
 	...await vi.importActual('@nextcloud/l10n'),
 	getLanguage,
+}))
+
+vi.mock('../../../service/translationService.js', () => ({
+	translateText,
 }))
 
 describe('TranslationModal', () => {
@@ -106,6 +110,27 @@ describe('TranslationModal', () => {
 			const view = mountModal({ input: ['en', 'fr'] })
 
 			expect(view.vm.selectedFrom).toBeNull()
+		})
+	})
+
+	describe('translating', () => {
+		it('translates the message', async () => {
+			translateText.mockResolvedValue('Hello world')
+			const view = mountModal({ input: ['fr'], output: ['en'], detectedForeignLanguage: 'fr' })
+
+			await view.vm.translateMessage()
+
+			expect(translateText).toHaveBeenCalledWith('Bonjour tout le monde', 'fr', 'en')
+			expect(view.vm.translatedMessage).toBe('Hello world')
+		})
+
+		it('sends nothing once the user turned AI features off', async () => {
+			const view = mountModal({ input: ['fr'], output: ['en'], detectedForeignLanguage: 'fr' })
+			useMainStore().savePreferenceMutation({ key: 'ai-features', value: 'false' })
+
+			await view.vm.translateMessage()
+
+			expect(translateText).not.toHaveBeenCalled()
 		})
 	})
 })

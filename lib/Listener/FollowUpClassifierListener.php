@@ -42,7 +42,7 @@ class FollowUpClassifierListener implements IEventListener {
 			return;
 		}
 
-		if (!$this->aiService->isLlmProcessingEnabled()) {
+		if (!$this->aiService->isFollowUpEnabledForUser($event->getAccount()->getUserId())) {
 			return;
 		}
 

@@ -13,6 +13,7 @@ use JsonException;
 use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\ConfigLexicon;
+use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\PotentialPromptInjectionException;
@@ -39,6 +40,8 @@ use function sprintf;
 class AiIntegrationsService {
 
 	public const RECENT_MESSAGE_MAX_AGE = 'P14D';
+	public const PREFERENCE_AI_FEATURES = 'ai-features';
+	public const PREFERENCE_FOLLOW_UP_REMINDERS = 'follow-up-reminders';
 
 	public function __construct(
 		private LoggerInterface $logger,
@@ -48,6 +51,7 @@ class AiIntegrationsService {
 		private IFactory $l10nFactory,
 		private IUserManager $userManager,
 		private IAppConfig $appConfig,
+		private IUserPreferences $preferences,
 	) {
 	}
 
@@ -378,6 +382,16 @@ class AiIntegrationsService {
 	 */
 	public function isLlmProcessingEnabled(): bool {
 		return $this->appConfig->getValueBool(Application::APP_ID, ConfigLexicon::LLM_PROCESSING, false);
+	}
+
+	public function isLlmProcessingEnabledForUser(string $userId): bool {
+		return $this->isLlmProcessingEnabled()
+			&& $this->preferences->getPreference($userId, self::PREFERENCE_AI_FEATURES, 'true') !== 'false';
+	}
+
+	public function isFollowUpEnabledForUser(string $userId): bool {
+		return $this->isLlmProcessingEnabledForUser($userId)
+			&& $this->preferences->getPreference($userId, self::PREFERENCE_FOLLOW_UP_REMINDERS, 'true') !== 'false';
 	}
 
 	/**

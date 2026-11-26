@@ -103,7 +103,7 @@
 				{{ t('mail', 'Unsnooze') }}
 			</NcActionButton>
 			<NcActionButton
-				v-if="isTranslationEnabled ?? false"
+				v-if="(isTranslationEnabled ?? false) && mainStore.isAiEnabled()"
 				:closeAfterClick="true"
 				@click.prevent="$emit('openTranslationModal')">
 				<template #icon>

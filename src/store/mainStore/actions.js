@@ -2484,6 +2484,9 @@ export default function mainStoreActions() {
 		getPreference(key, def) {
 			return defaultTo(def, this.preferences[key])
 		},
+		isAiEnabled() {
+			return this.getPreference('ai-features', 'true') !== 'false'
+		},
 		getAccount(id) {
 			return this.accountsUnmapped[id]
 		},

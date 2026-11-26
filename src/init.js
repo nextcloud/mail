@@ -90,6 +90,14 @@ export default function initAfterAppCreation() {
 		value: preferences['follow-up-reminders'],
 	})
 	mainStore.savePreferenceMutation({
+		key: 'ai-features',
+		value: preferences['ai-features'],
+	})
+	mainStore.savePreferenceMutation({
+		key: 'llm-processing-enabled',
+		value: loadState('mail', 'llm_processing_enabled', false),
+	})
+	mainStore.savePreferenceMutation({
 		key: 'internal-addresses',
 		value: loadState('mail', 'internal-addresses', false),
 	})

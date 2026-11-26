@@ -25,6 +25,7 @@ use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\SnoozeService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
@@ -50,6 +51,9 @@ final class ThreadControllerTest extends TestCase {
 
 	/** @var AiIntegrationsService|MockObject */
 	private $aiIntergrationsService;
+	/** @var array<string, bool> */
+	private array $aiDisabledFor = [];
+	private ?string $messageOwner = null;
 
 	/** @var ThreadController */
 	private $controller;
@@ -70,9 +74,11 @@ final class ThreadControllerTest extends TestCase {
 		$this->mailManager = $this->createMock(MailManager::class);
 		$this->snoozeService = $this->createMock(SnoozeService::class);
 		$this->aiIntergrationsService = $this->createMock(AiIntegrationsService::class);
+		$this->aiIntergrationsService->method('isLlmProcessingEnabledForUser')
+			->willReturnCallback(fn (string $userId): bool => !($this->aiDisabledFor[$userId] ?? false));
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->delegationService = $this->createMock(DelegationService::class);
-		$this->delegationService->method('resolveMessageUserId')->willReturn($this->userId);
+		$this->delegationService->method('resolveMessageUserId')->willReturnCallback(fn (): string => $this->messageOwner ?? $this->userId);
 		$this->delegationService->method('resolveMailboxUserId')->willReturn($this->userId);
 
 		$this->controller = new ThreadController(
@@ -320,6 +326,49 @@ final class ThreadControllerTest extends TestCase {
 		$response = $this->controller->delete($message->getId());
 
 		$this->assertEquals(Http::STATUS_OK, $response->getStatus());
+	}
+
+	public function testSummarizeThreadWhenUserTurnedAiOff(): void {
+		$this->aiDisabledFor[$this->userId] = true;
+		$this->aiIntergrationsService->expects(self::never())
+			->method('summarizeThread');
+
+		$response = $this->controller->summarize(300);
+
+		$this->assertEquals(new JSONResponse([], Http::STATUS_NO_CONTENT), $response);
+	}
+
+	public function testGenerateEventDataWhenUserTurnedAiOff(): void {
+		$this->aiDisabledFor[$this->userId] = true;
+		$this->aiIntergrationsService->expects(self::never())
+			->method('generateEventData');
+
+		$response = $this->controller->generateEventData(300);
+
+		$this->assertEquals(new JSONResponse([], Http::STATUS_NO_CONTENT), $response);
+	}
+
+	public function testSummarizeDelegatedThreadWhenOwnerTurnedAiOff(): void {
+		$this->messageOwner = 'owner';
+		$this->aiDisabledFor['owner'] = true;
+		$message = new Message();
+		$message->setMailboxId(20);
+		$message->setThreadRootId('some-thread-root-id-1');
+		$this->mailManager->method('getMessage')
+			->with('owner', 300)
+			->willReturn($message);
+		$mailbox = new Mailbox();
+		$mailbox->setAccountId(1);
+		$this->mailManager->method('getMailbox')
+			->willReturn($mailbox);
+		$this->accountService->method('find')
+			->willReturn(new Account(new MailAccount()));
+		$this->aiIntergrationsService->expects(self::never())
+			->method('summarizeThread');
+
+		$response = $this->controller->summarize(300);
+
+		$this->assertEquals(new JSONResponse([], Http::STATUS_NO_CONTENT), $response);
 	}
 
 	public function testSummarizeThread(): void {

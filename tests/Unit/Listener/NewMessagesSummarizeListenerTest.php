@@ -52,6 +52,12 @@ final class NewMessagesSummarizeListenerTest extends TestCase {
 		);
 	}
 
+	private function createMailAccount(): MailAccount {
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('user');
+		return $mailAccount;
+	}
+
 	private function createMailbox(int $id, string $specialUse = '[]'): Mailbox {
 		$mailbox = new Mailbox();
 		$mailbox->setId($id);
@@ -70,6 +76,9 @@ final class NewMessagesSummarizeListenerTest extends TestCase {
 			->method('getAppValueBool')
 			->with('llm_processing', false)
 			->willReturn(true);
+		$this->aiService->method('isLlmProcessingEnabledForUser')
+			->with('user')
+			->willReturn(true);
 	}
 
 	private function maxAgeCutoff(): int {
@@ -79,7 +88,7 @@ final class NewMessagesSummarizeListenerTest extends TestCase {
 	}
 
 	public function testLlmEnabled(): void {
-		$account = new Account(new MailAccount());
+		$account = new Account($this->createMailAccount());
 		$message = $this->createMessage(self::NOW);
 		$event = new NewMessagesSynchronized($account, $this->createMailbox(1), [$message]);
 		$this->enableLlm();
@@ -102,6 +111,20 @@ final class NewMessagesSummarizeListenerTest extends TestCase {
 		$this->listener->handle($event);
 	}
 
+	public function testSkipsUserWhoTurnedAiOff(): void {
+		$account = new Account($this->createMailAccount());
+		$event = new NewMessagesSynchronized($account, $this->createMailbox(1), [$this->createMessage(self::NOW)]);
+		$this->appConfig->method('getAppValueBool')
+			->willReturn(true);
+		$this->aiService->method('isLlmProcessingEnabledForUser')
+			->with('user')
+			->willReturn(false);
+		$this->aiService->expects($this->never())
+			->method('summarizeMessages');
+
+		$this->listener->handle($event);
+	}
+
 	public static function provideSkippedSpecialUses(): \Iterator {
 		yield 'all' => ['["all"]'];
 		yield 'archive' => ['["archive"]'];
@@ -116,7 +139,7 @@ final class NewMessagesSummarizeListenerTest extends TestCase {
 	 * @dataProvider provideSkippedSpecialUses
 	 */
 	public function testSkipsSpecialUseMailbox(string $specialUse): void {
-		$account = new Account(new MailAccount());
+		$account = new Account($this->createMailAccount());
 		$event = new NewMessagesSynchronized($account, $this->createMailbox(1, $specialUse), [$this->createMessage(self::NOW)]);
 		$this->enableLlm();
 		$this->aiService->expects($this->never())
@@ -138,7 +161,7 @@ final class NewMessagesSummarizeListenerTest extends TestCase {
 	 * @dataProvider provideAccountMailboxSetters
 	 */
 	public function testSkipsAccountConfiguredMailbox(string $setter): void {
-		$mailAccount = new MailAccount();
+		$mailAccount = $this->createMailAccount();
 		$mailAccount->$setter(7);
 		$account = new Account($mailAccount);
 		$event = new NewMessagesSynchronized($account, $this->createMailbox(7), [$this->createMessage(self::NOW)]);
@@ -150,7 +173,7 @@ final class NewMessagesSummarizeListenerTest extends TestCase {
 	}
 
 	public function testOnlySummarizesRecentMessages(): void {
-		$account = new Account(new MailAccount());
+		$account = new Account($this->createMailAccount());
 		$recent = $this->createMessage(self::NOW);
 		$atCutoff = $this->createMessage($this->maxAgeCutoff());
 		$old = $this->createMessage($this->maxAgeCutoff() - 1);
@@ -164,7 +187,7 @@ final class NewMessagesSummarizeListenerTest extends TestCase {
 	}
 
 	public function testSkipsWhenAllMessagesAreOld(): void {
-		$account = new Account(new MailAccount());
+		$account = new Account($this->createMailAccount());
 		$event = new NewMessagesSynchronized($account, $this->createMailbox(1), [$this->createMessage($this->maxAgeCutoff() - 1)]);
 		$this->enableLlm();
 		$this->aiService->expects($this->never())
