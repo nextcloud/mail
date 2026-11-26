@@ -17,6 +17,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DatabaseMessageMapper;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\TagMapper;
@@ -44,11 +45,13 @@ use function array_chunk;
 use function array_filter;
 use function array_map;
 use function register_shutdown_function;
+use function sort;
 use function sprintf;
 
 class ImapToDbSynchronizer {
 	/** @var int */
 	public const MAX_NEW_MESSAGES = 5000;
+	public const PARTIAL_SYNC_CHUNK_SIZE = 500;
 
 	/** @var IEventDispatcher */
 	private $dispatcher;
@@ -383,9 +386,12 @@ class ImapToDbSynchronizer {
 		$perf->step('get all known UIDs');
 
 		$requestId = base64_encode(random_bytes(16));
+		$newToken = null;
+		$changedToken = null;
+		$vanishedToken = null;
 
 		if ($criteria & Horde_Imap_Client::SYNC_NEWMSGSUIDS) {
-			$response = $this->synchronizer->sync(
+			[$newUids] = $this->synchronizer->sync(
 				$client,
 				new Request(
 					$requestId,
@@ -393,23 +399,23 @@ class ImapToDbSynchronizer {
 					$mailbox->getSyncNewToken(),
 					$uids
 				),
-				$account->getUserId(),
 				$hasQresync,
 				$logger,
 				Horde_Imap_Client::SYNC_NEWMSGSUIDS,
 			);
-			$perf->step('get new messages via Horde');
+			$perf->step('get new message UIDs via Horde');
+			// Also true for messages that a failed run already stored, so their threads are built
+			$newOrVanished = $newUids !== [];
 
 			$highestKnownUid = $this->dbMapper->findHighestUid($mailbox);
-			if ($highestKnownUid === null) {
-				// Everything is relevant
-				$newMessages = $response->getNewMessages();
-			} else {
+			if ($highestKnownUid !== null) {
 				// Filter out anything that is already in the DB. Ideally this never happens, but if there is an error
 				// during a consecutive chunk INSERT, the sync token won't be updated. In that case the same message(s)
 				// will be seen as *new* and therefore cause conflicts.
-				$newMessages = array_filter($response->getNewMessages(), static fn (IMAPMessage $imapMessage) => $imapMessage->getUid() > $highestKnownUid);
+				$newUids = array_filter($newUids, static fn (int $uid) => $uid > $highestKnownUid);
 			}
+			// Ascending chunks keep the filter above valid when a later chunk fails
+			sort($newUids);
 
 			$importantTag = null;
 			try {
@@ -420,8 +426,11 @@ class ImapToDbSynchronizer {
 				]);
 			}
 
-			foreach (array_chunk($newMessages, 500) as $chunk) {
-				$dbMessages = array_map(static fn (IMAPMessage $imapMessage) => $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount()), $chunk);
+			foreach (array_chunk($newUids, self::PARTIAL_SYNC_CHUNK_SIZE) as $chunk) {
+				$dbMessages = $this->fetchDbMessages($client, $account, $mailbox, $chunk);
+				if ($dbMessages === []) {
+					continue;
+				}
 
 				$this->dbMapper->insertBulk($account, ...$dbMessages);
 
@@ -447,11 +456,10 @@ class ImapToDbSynchronizer {
 			}
 			$perf->step('persist new messages');
 
-			$mailbox->setSyncNewToken($client->getSyncToken($mailbox->getName()));
-			$newOrVanished = $newMessages !== [];
+			$newToken = $client->getSyncToken($mailbox->getName());
 		}
 		if ($criteria & Horde_Imap_Client::SYNC_FLAGSUIDS) {
-			$response = $this->synchronizer->sync(
+			[, $changedUids] = $this->synchronizer->sync(
 				$client,
 				new Request(
 					$requestId,
@@ -459,17 +467,20 @@ class ImapToDbSynchronizer {
 					$mailbox->getSyncChangedToken(),
 					$uids
 				),
-				$account->getUserId(),
 				$hasQresync,
 				$logger,
 				Horde_Imap_Client::SYNC_FLAGSUIDS,
 			);
-			$perf->step('get changed messages via Horde');
+			$perf->step('get changed message UIDs via Horde');
 
 			$permflagsEnabled = $this->mailManager->isPermflagsEnabled($client, $account, $mailbox->getName());
 
-			foreach (array_chunk($response->getChangedMessages(), 500) as $chunk) {
-				$this->dbMapper->updateBulk($account, $permflagsEnabled, ...array_map(static fn (IMAPMessage $imapMessage) => $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount()), $chunk));
+			foreach (array_chunk($changedUids, self::PARTIAL_SYNC_CHUNK_SIZE) as $chunk) {
+				$dbMessages = $this->fetchDbMessages($client, $account, $mailbox, $chunk);
+				if ($dbMessages === []) {
+					continue;
+				}
+				$this->dbMapper->updateBulk($account, $permflagsEnabled, ...$dbMessages);
 			}
 			$perf->step('persist changed messages');
 
@@ -478,11 +489,11 @@ class ImapToDbSynchronizer {
 			// a silent sync and we don't update the change token until the next full
 			// mailbox sync
 			if ($knownUids === null) {
-				$mailbox->setSyncChangedToken($client->getSyncToken($mailbox->getName()));
+				$changedToken = $client->getSyncToken($mailbox->getName());
 			}
 		}
 		if ($criteria & Horde_Imap_Client::SYNC_VANISHEDUIDS) {
-			$response = $this->synchronizer->sync(
+			[, , $vanishedUids] = $this->synchronizer->sync(
 				$client,
 				new Request(
 					$requestId,
@@ -490,14 +501,13 @@ class ImapToDbSynchronizer {
 					$mailbox->getSyncVanishedToken(),
 					$uids
 				),
-				$account->getUserId(),
 				$hasQresync,
 				$logger,
 				Horde_Imap_Client::SYNC_VANISHEDUIDS,
 			);
-			$perf->step('get vanished messages via Horde');
+			$perf->step('get vanished message UIDs via Horde');
 
-			foreach (array_chunk($response->getVanishedMessageUids(), 500) as $chunk) {
+			foreach (array_chunk($vanishedUids, self::PARTIAL_SYNC_CHUNK_SIZE) as $chunk) {
 				$this->dbMapper->deleteByUid($mailbox, ...$chunk);
 			}
 			$perf->step('delete vanished messages');
@@ -507,14 +517,36 @@ class ImapToDbSynchronizer {
 			// a silent sync and we don't update the vanish token until the next full
 			// mailbox sync
 			if ($knownUids === null) {
-				$mailbox->setSyncVanishedToken($client->getSyncToken($mailbox->getName()));
+				$vanishedToken = $client->getSyncToken($mailbox->getName());
 			}
-			$newOrVanished = $newOrVanished || !empty($response->getVanishedMessageUids());
+			$newOrVanished = $newOrVanished || $vanishedUids !== [];
+		}
+
+		// Unlocking saves the mailbox, so a failed run must not have advanced any token
+		if ($newToken !== null) {
+			$mailbox->setSyncNewToken($newToken);
+		}
+		if ($changedToken !== null) {
+			$mailbox->setSyncChangedToken($changedToken);
+		}
+		if ($vanishedToken !== null) {
+			$mailbox->setSyncVanishedToken($vanishedToken);
 		}
 		$this->mailboxMapper->update($mailbox);
 		$perf->end();
 
 		return $newOrVanished;
+	}
+
+	/**
+	 * @param int[] $uids
+	 * @return Message[]
+	 */
+	private function fetchDbMessages(Horde_Imap_Client_Base $client, Account $account, Mailbox $mailbox, array $uids): array {
+		return array_map(
+			static fn (IMAPMessage $imapMessage) => $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount()),
+			$this->imapMapper->findByIds($client, $mailbox->getName(), $uids, $account->getUserId()),
+		);
 	}
 
 	/**
