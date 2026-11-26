@@ -44,6 +44,7 @@
 </template>
 
 <script>
+import { getCapabilities } from '@nextcloud/capabilities'
 import NcAssistantContent from '@nextcloud/vue/components/NcAssistantContent'
 import NcAssistantIcon from '@nextcloud/vue/components/NcAssistantIcon'
 import NcButton from '@nextcloud/vue/components/NcButton'
@@ -74,10 +75,8 @@ export default {
 
 	computed: {
 		brand() {
-			if (OCA.Theming) {
-				return t('mail', '{name} Assistant', { name: OCA.Theming.name })
-			}
-			return t('mail', '{name} Assistant', { name: 'Nextcloud' })
+			const name = getCapabilities().theming?.name ?? 'Nextcloud'
+			return t('mail', '{name} Assistant', { name })
 		},
 	},
 
