@@ -558,4 +558,82 @@ describe('Envelope', () => {
 			expect(store.toggleEnvelopeJunk).toHaveBeenCalledWith({ envelope: view.props('data'), removeEnvelope: false })
 		})
 	})
+
+	describe('account label', () => {
+		const mountEnvelope = (mailbox) => shallowMount(Envelope, {
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
+			props: {
+				data: {
+					accountId: 123,
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
+				},
+				account: { sentMailboxId: '1' },
+				mailbox: {
+					databaseId: '3',
+					specialRole: '',
+					...mailbox,
+				},
+			},
+		})
+
+		it('shows the label of the account in a combined mailbox', () => {
+			store.accountsUnmapped[123] = { sentMailboxId: '1', emailAddress: 'jane@example.com', unifiedLabel: 'Work', unifiedLabelColor: '#0082c9' }
+
+			const view = mountEnvelope({ isUnified: true })
+
+			expect(view.vm.accountLabel).toMatchObject({ text: 'Work', color: '#0082c9', description: 'Received in jane@example.com' })
+			expect(view.vm.accountLabel.textColor).toContain('#0082c9')
+			expect(view.vm.accountLabel.textColor).not.toBe('#0082c9')
+		})
+
+		it('shows the label of the account in the priority inbox', () => {
+			store.accountsUnmapped[123] = { sentMailboxId: '1', emailAddress: 'jane@example.com', unifiedLabel: 'Work', unifiedLabelColor: '#0082c9' }
+
+			const view = mountEnvelope({ isPriorityInbox: true })
+
+			expect(view.vm.accountLabel).toMatchObject({ text: 'Work' })
+		})
+
+		it('updates the label when the account label changes', async () => {
+			store.addAccountMutation({ id: 123, accountId: 123, sentMailboxId: '1', emailAddress: 'jane@example.com', mailboxes: [], aliases: [] })
+			const view = mountEnvelope({ isUnified: true })
+			const before = view.vm.accountLabel
+
+			store.accountsUnmapped[123].unifiedLabel = 'Work'
+			await view.vm.$nextTick()
+
+			expect(before).toBeNull()
+			expect(view.vm.accountLabel).toMatchObject({ text: 'Work' })
+		})
+
+		it('does not show the label outside combined mailboxes', () => {
+			store.accountsUnmapped[123] = { sentMailboxId: '1', emailAddress: 'jane@example.com', unifiedLabel: 'Work', unifiedLabelColor: '#0082c9' }
+
+			const view = mountEnvelope({ isUnified: false })
+
+			expect(view.vm.accountLabel).toBeNull()
+		})
+
+		it('shows nothing when the account has no label and no color', () => {
+			store.accountsUnmapped[123] = { sentMailboxId: '1', emailAddress: 'jane@example.com', unifiedLabel: '', unifiedLabelColor: '' }
+
+			const view = mountEnvelope({ isUnified: true })
+
+			expect(view.vm.accountLabel).toBeNull()
+		})
+
+		it('keeps the color without a label, shown as a dot', () => {
+			store.accountsUnmapped[123] = { sentMailboxId: '1', emailAddress: 'jane@example.com', unifiedLabel: '', unifiedLabelColor: '#0082c9' }
+
+			const view = mountEnvelope({ isUnified: true })
+
+			expect(view.vm.accountLabel).toMatchObject({ text: '', color: '#0082c9' })
+		})
+	})
 })

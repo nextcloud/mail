@@ -69,6 +69,12 @@
 		</NcAppSettingsSection>
 		<NcAppSettingsSection
 			v-if="account"
+			id="unified-label"
+			:name="t('mail', 'Account label')">
+			<AccountLabelSettings :key="account.accountId" :account="account" />
+		</NcAppSettingsSection>
+		<NcAppSettingsSection
+			v-if="account"
 			id="classification"
 			key="classification"
 			:name="t('mail', 'Classification settings')">
@@ -154,6 +160,7 @@ import NcButton from '@nextcloud/vue/components/NcButton'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import AccountDefaultsSettings from '../components/AccountDefaultsSettings.vue'
 import AccountForm from '../components/AccountForm.vue'
+import AccountLabelSettings from '../components/AccountLabelSettings.vue'
 import AliasSettings from '../components/AliasSettings.vue'
 import EditorSettings from '../components/EditorSettings.vue'
 import SignatureSettings from '../components/SignatureSettings.vue'
@@ -177,6 +184,7 @@ export default {
 		SieveDisabledHint,
 		SieveFilterForm,
 		AccountForm,
+		AccountLabelSettings,
 		AliasSettings,
 		EditorSettings,
 		SignatureSettings,

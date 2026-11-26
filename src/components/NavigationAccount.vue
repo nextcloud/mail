@@ -18,9 +18,9 @@
 				class="navigation-account-header__link"
 				:to="inboxRoute"
 				:title="account.emailAddress">
-				{{ account.emailAddress }}
+				{{ displayName }}
 			</router-link>
-			<span v-else class="navigation-account-header__link">{{ account.emailAddress }}</span>
+			<span v-else class="navigation-account-header__link" :title="account.emailAddress">{{ displayName }}</span>
 		</h2>
 		<template v-if="account.folded && inboxUnread > 0">
 			<NcCounterBubble
@@ -233,6 +233,12 @@ export default {
 		...mapStores(useMainStore),
 		visible() {
 			return this.account.isUnified !== true && this.account.visible !== false
+		},
+
+		displayName() {
+			return this.account.unifiedLabelAsName && this.account.unifiedLabel
+				? this.account.unifiedLabel
+				: this.account.emailAddress
 		},
 
 		canDelegate() {

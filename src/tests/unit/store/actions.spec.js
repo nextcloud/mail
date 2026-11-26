@@ -614,6 +614,64 @@ describe('Vuex store actions', () => {
 			.toEqual(msgs2.map(mockEnvelope(21)).map((e) => e.databaseId).toSorted())
 	})
 
+	describe('unified label of an account', () => {
+		it('adds an account without a unified label', () => {
+			store.addAccountMutation({ id: 13, personalNamespace: '', mailboxes: [] })
+
+			expect(store.accountsUnmapped[13].unifiedLabel).toBe('')
+			expect(store.accountsUnmapped[13].unifiedLabelColor).toBe('')
+			expect(store.accountsUnmapped[13].unifiedLabelAsName).toBe(false)
+		})
+
+		it('sets and persists the unified label of an account', async () => {
+			store.addAccountMutation({ id: 13, personalNamespace: '', mailboxes: [] })
+			PreferenceService.savePreference.mockResolvedValue(undefined)
+
+			await store.setAccountUnifiedLabel({ accountId: 13, label: 'Work', color: '#0082c9', asName: true })
+
+			expect(store.accountsUnmapped[13].unifiedLabel).toBe('Work')
+			expect(store.accountsUnmapped[13].unifiedLabelColor).toBe('#0082c9')
+			expect(store.accountsUnmapped[13].unifiedLabelAsName).toBe(true)
+			expect(PreferenceService.savePreference).toHaveBeenCalledTimes(1)
+			expect(PreferenceService.savePreference).toHaveBeenCalledWith(
+				'account-settings',
+				JSON.stringify([{ accountId: 13, unifiedLabel: 'Work', unifiedLabelColor: '#0082c9', unifiedLabelAsName: true }]),
+			)
+		})
+
+		it('keeps a newer label when an older save fails', async () => {
+			store.addAccountMutation({ id: 13, personalNamespace: '', mailboxes: [], unifiedLabel: 'Home', unifiedLabelColor: '', unifiedLabelAsName: false })
+			let failFirst
+			PreferenceService.savePreference
+				.mockImplementationOnce(() => new Promise((resolve, reject) => { failFirst = reject }))
+				.mockResolvedValueOnce(undefined)
+
+			const first = store.setAccountUnifiedLabel({ accountId: 13, label: 'A', color: '' })
+			const second = store.setAccountUnifiedLabel({ accountId: 13, label: 'B', color: '' })
+			await vi.waitFor(() => expect(failFirst).toBeDefined())
+			failFirst(new Error('network down'))
+			await expect(first).rejects.toThrow('network down')
+			await second
+
+			expect(store.accountsUnmapped[13].unifiedLabel).toBe('B')
+			expect(PreferenceService.savePreference).toHaveBeenLastCalledWith(
+				'account-settings',
+				JSON.stringify([{ accountId: 13, unifiedLabel: 'B', unifiedLabelColor: '', unifiedLabelAsName: false }]),
+			)
+		})
+
+		it('restores the unified label when saving it fails', async () => {
+			store.addAccountMutation({ id: 13, personalNamespace: '', mailboxes: [], unifiedLabel: 'Home', unifiedLabelColor: '#ff0000', unifiedLabelAsName: true })
+			PreferenceService.savePreference.mockRejectedValue(new Error('network down'))
+
+			await expect(store.setAccountUnifiedLabel({ accountId: 13, label: 'Work', color: '#0082c9' })).rejects.toThrow('network down')
+
+			expect(store.accountsUnmapped[13].unifiedLabel).toBe('Home')
+			expect(store.accountsUnmapped[13].unifiedLabelColor).toBe('#ff0000')
+			expect(store.accountsUnmapped[13].unifiedLabelAsName).toBe(true)
+		})
+	})
+
 	describe('inbox sync', () => {
 		it('fetches the inbox first', async () => {
 			const account13 = {

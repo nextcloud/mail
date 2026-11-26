@@ -146,6 +146,18 @@ describe('NavigationAccount', () => {
 		expect(view.find('.navigation-account-header__name').text()).toBe('jane@example.com')
 	})
 
+	it('shows the label instead of the email address when enabled', () => {
+		const view = mountAccount({ folded: false, unifiedLabel: 'Work', unifiedLabelAsName: true })
+
+		expect(view.find('.navigation-account-header__name').text()).toBe('Work')
+	})
+
+	it('keeps the email address when the label is not used as the name', () => {
+		const view = mountAccount({ folded: false, unifiedLabel: 'Work', unifiedLabelAsName: false })
+
+		expect(view.find('.navigation-account-header__name').text()).toBe('jane@example.com')
+	})
+
 	it('does not link the name of a disabled account', () => {
 		const view = mountAccount({ folded: false }, { isDisabled: true })
 

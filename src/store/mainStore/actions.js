@@ -216,6 +216,7 @@ function transformMailboxName(account, mailbox) {
 export default function mainStoreActions() {
 	let accountSettingsSave = Promise.resolve()
 	const foldedVersions = {}
+	const unifiedLabelVersions = {}
 
 	return {
 		updateSyncTimestamp() {
@@ -421,6 +422,39 @@ export default function mainStoreActions() {
 						key: 'folded',
 						value: previous,
 					})
+				}
+				throw error
+			}
+		},
+		async setAccountUnifiedLabel({
+			accountId,
+			label,
+			color,
+			asName = false,
+		}) {
+			const account = this.accountsUnmapped[accountId]
+			const previous = {
+				label: account.unifiedLabel,
+				color: account.unifiedLabelColor,
+				asName: account.unifiedLabelAsName,
+			}
+			const apply = ({ label, color, asName }) => {
+				account.unifiedLabel = label
+				account.unifiedLabelColor = color
+				account.unifiedLabelAsName = asName
+				this.setAccountSettingMutation({ accountId, key: 'unifiedLabel', value: label })
+				this.setAccountSettingMutation({ accountId, key: 'unifiedLabelColor', value: color })
+				this.setAccountSettingMutation({ accountId, key: 'unifiedLabelAsName', value: asName })
+			}
+
+			const version = (unifiedLabelVersions[accountId] ?? 0) + 1
+			unifiedLabelVersions[accountId] = version
+			apply({ label, color, asName })
+			try {
+				await this.setAccountSetting({ accountId, key: 'unifiedLabelColor', value: color })
+			} catch (error) {
+				if (unifiedLabelVersions[accountId] === version) {
+					apply(previous)
 				}
 				throw error
 			}
@@ -1967,6 +2001,9 @@ export default function mainStoreActions() {
 		addAccountMutation(account) {
 			account.collapsed = account.collapsed ?? true
 			account.folded = account.folded ?? false
+			account.unifiedLabel = account.unifiedLabel ?? ''
+			account.unifiedLabelColor = account.unifiedLabelColor ?? ''
+			account.unifiedLabelAsName = account.unifiedLabelAsName ?? false
 
 			this.accountsUnmapped[account.id] = account
 

@@ -124,6 +124,22 @@
 				<span class="envelope__recipient-text">
 					{{ addresses }}
 				</span>
+				<span
+					v-if="accountLabel"
+					class="envelope__account-label"
+					:class="{ 'envelope__account-label--dot': !accountLabel.text }"
+					:title="accountLabel.description">
+					<span
+						class="envelope__account-label-bg"
+						:style="{ backgroundColor: accountLabel.color }" />
+					<span
+						v-if="accountLabel.text"
+						class="envelope__account-label-text"
+						:style="{ color: accountLabel.textColor }">
+						{{ accountLabel.text }}
+					</span>
+					<span v-else class="hidden-visually">{{ accountLabel.description }}</span>
+				</span>
 			</div>
 		</template>
 		<template #subname>
@@ -538,7 +554,7 @@
 
 <script>
 import { showError, showSuccess, showWarning } from '@nextcloud/dialogs'
-import { isRTL } from '@nextcloud/l10n'
+import { isRTL, t } from '@nextcloud/l10n'
 import moment from '@nextcloud/moment'
 import { generateUrl } from '@nextcloud/router'
 import { useIsDarkTheme } from '@nextcloud/vue/composables/useIsDarkTheme'
@@ -792,6 +808,23 @@ export default {
 						threadId: this.data.databaseId,
 					},
 				}
+			}
+		},
+
+		accountLabel() {
+			if (!this.mailbox.isUnified && !this.mailbox.isPriorityInbox) {
+				return null
+			}
+			const account = this.mainStore.getAccount(this.data.accountId)
+			if (!account?.unifiedLabel && !account?.unifiedLabelColor) {
+				return null
+			}
+			const color = account.unifiedLabelColor || 'var(--color-text-maxcontrast)'
+			return {
+				text: account.unifiedLabel,
+				color,
+				textColor: account.unifiedLabelColor ? tagTextColor(account.unifiedLabelColor, this.isDarkTheme) : color,
+				description: t('mail', 'Received in {email}', { email: account.emailAddress }),
 			}
 		},
 
@@ -1840,6 +1873,43 @@ export default {
 .recipient-icon {
 	flex: 0 0 auto;
 	margin-inline-end: 6px;
+}
+
+// Same look as the tags of a message
+.envelope__account-label {
+	position: relative;
+	flex: 0 0 auto;
+	max-width: 50%;
+	margin-inline-start: calc(var(--default-grid-baseline) * 2);
+	border-radius: var(--border-radius-pill);
+	overflow: hidden;
+	line-height: normal;
+
+	&--dot {
+		width: calc(var(--default-grid-baseline) * 2);
+		height: calc(var(--default-grid-baseline) * 2);
+	}
+}
+
+.envelope__account-label-bg {
+	position: absolute;
+	inset: 0;
+	opacity: 15%;
+
+	.envelope__account-label--dot & {
+		opacity: 100%;
+	}
+}
+
+.envelope__account-label-text {
+	position: relative;
+	display: block;
+	overflow: hidden;
+	padding-inline: calc(var(--default-grid-baseline) * 2);
+	font-size: calc(var(--default-font-size) * 0.8);
+	font-weight: bold;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .list-item__wrapper--active :deep(.compact-checkbox .checkbox-radio-switch__content) {

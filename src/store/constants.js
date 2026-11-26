@@ -9,6 +9,7 @@ export const UNIFIED_ACCOUNT_ID = 0
 export const UNIFIED_INBOX_ID = 'unified'
 export const PRIORITY_INBOX_ID = 'priority'
 export const FOLLOW_UP_MAILBOX_ID = 'follow-up'
+export const UNIFIED_LABEL_MAX_LENGTH = 20
 export const PAGE_SIZE = 20
 export const UNDO_DELAY = TOAST_UNDO_TIMEOUT
 export const EDITOR_MODE_HTML = 'richtext'
