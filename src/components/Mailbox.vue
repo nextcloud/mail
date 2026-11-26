@@ -530,11 +530,15 @@ export default {
 
 			this.refreshing = true
 			try {
-				await this.mainStore.syncEnvelopes({
+				const newMessages = await this.mainStore.syncEnvelopes({
 					mailboxId: this.mailbox.databaseId,
 					query: this.searchQuery,
 					init,
 				})
+				// A sync can replace the list with its first page, which only loadMore can complete
+				if ([newMessages].flat(Infinity).some(Boolean)) {
+					this.endReached = false
+				}
 			} catch (error) {
 				matchError(error, {
 					[MailboxLockedError.getName()](error) {

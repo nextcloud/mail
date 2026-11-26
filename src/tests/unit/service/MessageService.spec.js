@@ -53,4 +53,32 @@ describe('service/MessageService test suite', () => {
 			},
 		})
 	})
+
+	it('should send the message view with a sync', async () => {
+		generateUrl.mockReturnValueOnce('/generated-url')
+		axios.post.mockResolvedValueOnce({
+			status: 200,
+			data: { newMessages: [], changedMessages: [], vanishedMessages: [], stats: {} },
+		})
+
+		await MessageService.syncEnvelopes(
+			13, // account id
+			21, // mailbox id
+			[1, 2], // known ids
+			undefined, // last message timestamp
+			undefined, // query
+			false, // init
+			'newest', // sort order
+			'threaded', // layout
+		)
+
+		expect(axios.post).toHaveBeenCalledWith('/generated-url', {
+			ids: [1, 2],
+			lastMessageTimestamp: undefined,
+			init: false,
+			sortOrder: 'newest',
+			query: undefined,
+			view: 'threaded',
+		})
+	})
 })

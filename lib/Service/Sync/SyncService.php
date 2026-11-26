@@ -29,6 +29,7 @@ use function array_diff;
 use function array_map;
 
 class SyncService {
+	public const FIRST_PAGE_SIZE = 20;
 
 	public function __construct(
 		private ProtocolFactory $protocolFactory,
@@ -38,6 +39,7 @@ class SyncService {
 		private PreviewEnhancer $previewEnhancer,
 		private LoggerInterface $logger,
 		private MailboxSync $mailboxSync,
+		private IMailSearch $mailSearch,
 	) {
 	}
 
@@ -84,6 +86,7 @@ class SyncService {
 		?array $knownIds = null,
 		string $sortOrder = IMailSearch::ORDER_NEWEST_FIRST,
 		?string $filter = null,
+		?string $view = null,
 	): Response {
 		if ($partialOnly && !$mailbox->isCached()) {
 			throw MailboxNotCachedException::from($mailbox);
@@ -112,11 +115,22 @@ class SyncService {
 			return new Response([], [], [], $mailbox->getStats());
 		}
 
+		$knownIds ??= [];
+		if ($knownIds === [] || $this->messageMapper->findUidsForIds($mailbox, $knownIds) === []) {
+			// Without a known message to anchor on, the client gets the first page and loads further pages itself
+			return new Response(
+				$this->mailSearch->findMessages($account, $mailbox, $sortOrder, $filter, null, self::FIRST_PAGE_SIZE, $account->getUserId(), $view),
+				[],
+				$knownIds,
+				$mailbox->getStats(),
+			);
+		}
+
 		$query = $filter === null ? null : $this->filterStringParser->parse($filter);
 		return $this->getDatabaseSyncChanges(
 			$account,
 			$mailbox,
-			$knownIds ?? [],
+			$knownIds,
 			$lastMessageTimestamp,
 			$sortOrder,
 			$query
@@ -139,11 +153,7 @@ class SyncService {
 		?int $lastMessageTimestamp,
 		string $sortOrder,
 		?SearchQuery $query): Response {
-		if ($knownIds === []) {
-			$newIds = $this->messageMapper->findAllIds($mailbox);
-		} else {
-			$newIds = $this->messageMapper->findNewIds($mailbox, $knownIds, $lastMessageTimestamp, $sortOrder);
-		}
+		$newIds = $this->messageMapper->findNewIds($mailbox, $knownIds, $lastMessageTimestamp, $sortOrder);
 		$order = $sortOrder === 'oldest' ? IMailSearch::ORDER_OLDEST_FIRST : IMailSearch::ORDER_NEWEST_FIRST;
 		if ($query !== null) {
 			$newIds = $this->messageMapper->findIdsByQuery($mailbox, $query, $order, null, null, $newIds);

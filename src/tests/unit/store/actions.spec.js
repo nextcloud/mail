@@ -614,6 +614,30 @@ describe('Vuex store actions', () => {
 			.toEqual(msgs2.map(mockEnvelope(21)).map((e) => e.databaseId).toSorted())
 	})
 
+	it('sends the message view with a sync', async () => {
+		const account13 = { id: 13 }
+		store.preferences['sort-order'] = 'newest'
+		store.preferences['layout-message-view'] = 'singleton'
+		store.addAccountMutation(account13)
+		store.addMailboxMutation({
+			account: account13,
+			mailbox: {
+				name: 'Archive',
+				databaseId: 14,
+			},
+		})
+		MessageService.syncEnvelopes.mockResolvedValue({
+			newMessages: [],
+			changedMessages: [],
+			vanishedMessages: [],
+			stats: { total: 0, unread: 0 },
+		})
+
+		await store.syncEnvelopes({ mailboxId: 14 })
+
+		expect(MessageService.syncEnvelopes).toHaveBeenCalledWith(13, 14, [], null, undefined, false, 'newest', 'singleton')
+	})
+
 	describe('inbox sync', () => {
 		it('fetches the inbox first', async () => {
 			const account13 = {

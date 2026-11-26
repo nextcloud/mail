@@ -11,9 +11,12 @@ namespace OCA\Mail\Tests\Unit\Service\Sync;
 
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailboxConnector;
+use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Contracts\IMessageConnector;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
+use OCA\Mail\Exception\MailboxLockedException;
 use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\IMAP\MailboxStats;
 use OCA\Mail\IMAP\MailboxSync;
@@ -43,6 +46,8 @@ final class SyncServiceTest extends TestCase {
 	/** @var MailboxSync */
 	private $mailboxSync;
 
+	private IMailSearch&MockObject $mailSearch;
+
 	/** @var SyncService */
 	private $syncService;
 
@@ -55,6 +60,7 @@ final class SyncServiceTest extends TestCase {
 		$this->synchronizer = $this->createMock(ImapToDbSynchronizer::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->mailboxSync = $this->createMock(MailboxSync::class);
+		$this->mailSearch = $this->createMock(IMailSearch::class);
 
 		$this->protocolFactory->method('mailboxConnector')
 			->willReturn($this->mailboxConnector);
@@ -68,7 +74,8 @@ final class SyncServiceTest extends TestCase {
 			$this->messageMapper,
 			$this->createStub(PreviewEnhancer::class),
 			$this->createStub(\Psr\Log\LoggerInterface::class),
-			$this->mailboxSync
+			$this->mailboxSync,
+			$this->mailSearch,
 		);
 	}
 
@@ -144,8 +151,8 @@ final class SyncServiceTest extends TestCase {
 			->method('syncMailbox')
 			->willReturn(new \OCA\Mail\Protocol\SyncResult());
 		// The client loads the first page itself, so the cache is not read
-		$this->messageMapper->expects($this->never())
-			->method('findAllIds');
+		$this->mailSearch->expects($this->never())
+			->method('findMessages');
 		$this->messageMapper->expects($this->never())
 			->method('findNewIds');
 		$this->messageMapper->expects($this->never())
@@ -166,15 +173,13 @@ final class SyncServiceTest extends TestCase {
 	public function testPartialSyncReadsTheCache(): void {
 		$account = $this->createMock(Account::class);
 		$account->method('getUserId')->willReturn('user');
-		$mailbox = new Mailbox();
-		$mailbox->setMessages(3);
-		$mailbox->setUnseen(1);
-		$mailbox->setSyncNewToken('token');
-		$mailbox->setSyncChangedToken('token');
-		$mailbox->setSyncVanishedToken('token');
+		$mailbox = $this->createCachedMailbox();
 		$this->messageConnector->expects($this->once())
 			->method('syncMailbox')
 			->willReturn(new \OCA\Mail\Protocol\SyncResult());
+		$this->messageMapper->method('findUidsForIds')
+			->with($mailbox, [1, 2])
+			->willReturn([10, 20]);
 		$this->messageMapper->expects($this->once())
 			->method('findNewIds')
 			->with($mailbox, [1, 2], null, 'DESC')
@@ -190,5 +195,86 @@ final class SyncServiceTest extends TestCase {
 			null,
 			[1, 2]
 		);
+	}
+
+	public static function firstPageRequests(): \Iterator {
+		yield 'empty list, oldest first, filtered, threaded' => [[], IMailSearch::ORDER_OLDEST_FIRST, 'is:unread', IMailSearch::VIEW_THREADED];
+		yield 'no list, newest first, unfiltered, no view' => [null, IMailSearch::ORDER_NEWEST_FIRST, null, null];
+		yield 'only vanished known IDs' => [[1, 2], IMailSearch::ORDER_NEWEST_FIRST, null, IMailSearch::VIEW_THREADED];
+	}
+
+	/**
+	 * @dataProvider firstPageRequests
+	 */
+	public function testPartialSyncWithoutSurvivingKnownIdsReturnsTheFirstPage(?array $knownIds, string $sortOrder, ?string $filter, ?string $view): void {
+		$account = $this->createMock(Account::class);
+		$account->method('getUserId')->willReturn('user');
+		$mailbox = $this->createCachedMailbox();
+		$firstPage = [new Message(), new Message()];
+		$this->messageConnector->method('syncMailbox')
+			->willReturn(new \OCA\Mail\Protocol\SyncResult());
+		$this->messageMapper->method('findUidsForIds')
+			->willReturn([]);
+		$this->mailSearch->expects($this->once())
+			->method('findMessages')
+			->with($account, $mailbox, $sortOrder, $filter, null, SyncService::FIRST_PAGE_SIZE, 'user', $view)
+			->willReturn($firstPage);
+		$this->messageMapper->expects($this->never())
+			->method('findNewIds');
+
+		$response = $this->syncService->syncMailbox($account, $mailbox, 0, true, null, $knownIds, $sortOrder, $filter, $view);
+
+		$this->assertEquals(new Response($firstPage, [], $knownIds ?? [], new MailboxStats(20000, 3, null)), $response);
+	}
+
+	public function testPartialSyncWithKnownIdsVanishingDuringTheSyncReturnsTheFirstPage(): void {
+		$account = $this->createMock(Account::class);
+		$account->method('getUserId')->willReturn('user');
+		$mailbox = $this->createCachedMailbox();
+		$firstPage = [new Message()];
+		$synced = false;
+		$this->messageConnector->method('syncMailbox')
+			->willReturnCallback(static function () use (&$synced): \OCA\Mail\Protocol\SyncResult {
+				$synced = true;
+				return new \OCA\Mail\Protocol\SyncResult();
+			});
+		$this->messageMapper->method('findUidsForIds')
+			->with($mailbox, [1, 2])
+			->willReturnCallback(static function () use (&$synced): array {
+				return $synced ? [] : [10, 20];
+			});
+		$this->mailSearch->expects($this->once())
+			->method('findMessages')
+			->willReturn($firstPage);
+		$this->messageMapper->expects($this->never())
+			->method('findNewIds');
+
+		$response = $this->syncService->syncMailbox($account, $mailbox, 0, true, null, [1, 2]);
+
+		$this->assertEquals(new Response($firstPage, [], [1, 2], new MailboxStats(20000, 3, null)), $response);
+	}
+
+	public function testPartialSyncWithoutKnownIdsPropagatesSearchErrors(): void {
+		$account = $this->createMock(Account::class);
+		$account->method('getUserId')->willReturn('user');
+		$mailbox = $this->createCachedMailbox();
+		$this->messageConnector->method('syncMailbox')
+			->willReturn(new \OCA\Mail\Protocol\SyncResult());
+		$this->mailSearch->method('findMessages')
+			->willThrowException(MailboxLockedException::from($mailbox));
+
+		$this->expectException(MailboxLockedException::class);
+
+		$this->syncService->syncMailbox($account, $mailbox, 0, true, null, []);
+	}
+
+	private function createCachedMailbox(): Mailbox {
+		$mailbox = new Mailbox();
+		$mailbox->setMessages(20000);
+		$mailbox->setUnseen(3);
+		$mailbox->setSyncNewToken('token');
+		$mailbox->setSyncChangedToken('token');
+		$mailbox->setSyncVanishedToken('token');
+		return $mailbox;
 	}
 }
