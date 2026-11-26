@@ -242,6 +242,7 @@ class PageController extends Controller {
 			'start-mailbox-id' => $this->preferences->getPreference($this->userId, 'start-mailbox-id'),
 			'follow-up-reminders' => $this->preferences->getPreference($this->userId, 'follow-up-reminders', 'true'),
 			'sort-favorites' => $this->preferences->getPreference($this->userId, 'sort-favorites', 'false'),
+			'priority-inbox' => $this->preferences->getPreference($this->userId, 'priority-inbox', 'true'),
 			'index-context-chat' => $this->contextChatSettingsService->isIndexingEnabled($this->userId) ? 'true' : 'false',
 			'compact-mode' => $this->preferences->getPreference($this->userId, 'compact-mode', 'false'),
 			'auto-mark-as-read' => $this->preferences->getPreference($this->userId, 'auto-mark-as-read', '3000'),

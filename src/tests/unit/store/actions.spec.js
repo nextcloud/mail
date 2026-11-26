@@ -12,7 +12,7 @@ import * as MessageService from '../../../service/MessageService.js'
 import * as NotificationService from '../../../service/NotificationService.js'
 import * as OutboxService from '../../../service/OutboxService.js'
 import * as PreferenceService from '../../../service/PreferenceService.js'
-import { PAGE_SIZE, UNIFIED_INBOX_ID } from '../../../store/constants.js'
+import { PAGE_SIZE, PRIORITY_INBOX_ID, UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID } from '../../../store/constants.js'
 import useMainStore from '../../../store/mainStore.js'
 import useOutboxStore from '../../../store/outboxStore.js'
 import { normalizedEnvelopeListId } from '../../../util/normalization.js'
@@ -612,6 +612,25 @@ describe('Vuex store actions', () => {
 		].map((e) => e.databaseId).sort())
 		expect(store.mailboxes[21].envelopeLists[''].toSorted())
 			.toEqual(msgs2.map(mockEnvelope(21)).map((e) => e.databaseId).toSorted())
+	})
+
+	describe('priority inbox preference', () => {
+		it('lists the priority inbox among the unified mailboxes by default', () => {
+			const ids = store.getMailboxes(UNIFIED_ACCOUNT_ID).map((mailbox) => mailbox.databaseId)
+
+			expect(ids).toContain(PRIORITY_INBOX_ID)
+			expect(store.isPriorityInboxShown()).toBe(true)
+		})
+
+		it('leaves the priority inbox out when it is turned off', () => {
+			store.savePreferenceMutation({ key: 'priority-inbox', value: 'false' })
+
+			const ids = store.getMailboxes(UNIFIED_ACCOUNT_ID).map((mailbox) => mailbox.databaseId)
+
+			expect(ids).not.toContain(PRIORITY_INBOX_ID)
+			expect(ids).toContain(UNIFIED_INBOX_ID)
+			expect(store.getMailbox(PRIORITY_INBOX_ID)).toBeDefined()
+		})
 	})
 
 	describe('inbox sync', () => {

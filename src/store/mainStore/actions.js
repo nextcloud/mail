@@ -126,6 +126,7 @@ import {
 	FOLLOW_UP_MAILBOX_ID,
 	FOLLOW_UP_TAG_LABEL,
 	PAGE_SIZE,
+	PRIORITY_INBOX_ID,
 	UNIFIED_ACCOUNT_ID,
 	UNIFIED_INBOX_ID,
 } from '../constants.js'
@@ -2484,6 +2485,9 @@ export default function mainStoreActions() {
 		getPreference(key, def) {
 			return defaultTo(def, this.preferences[key])
 		},
+		isPriorityInboxShown() {
+			return this.getPreference('priority-inbox', 'true') !== 'false'
+		},
 		getAccount(id) {
 			return this.accountsUnmapped[id]
 		},
@@ -2491,7 +2495,11 @@ export default function mainStoreActions() {
 			return this.mailboxes[id]
 		},
 		getMailboxes(accountId) {
-			return this.accountsUnmapped[accountId].mailboxes.map((id) => this.mailboxes[id])
+			const ids = this.accountsUnmapped[accountId].mailboxes
+			const shownIds = accountId === UNIFIED_ACCOUNT_ID && !this.isPriorityInboxShown()
+				? ids.filter((id) => id !== PRIORITY_INBOX_ID)
+				: ids
+			return shownIds.map((id) => this.mailboxes[id])
 		},
 		* getRecursiveMailboxIterator(accountId) {
 			for (const mailbox of this.getMailboxes(accountId)) {
