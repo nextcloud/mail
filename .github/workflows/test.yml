@@ -322,7 +322,7 @@ jobs:
               fail_ci_if_error: ${{ !github.event.pull_request.head.repo.fork }}
               verbose: true
   frontend-unit-test:
-      runs-on: ubuntu-24.04
+      runs-on: ubuntu-26.04
       needs: changes
       if: needs.changes.outputs.frontend != 'false'
       name: Front-end unit tests
