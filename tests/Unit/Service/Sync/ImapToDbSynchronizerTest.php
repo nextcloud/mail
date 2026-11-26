@@ -24,7 +24,9 @@ use OCA\Mail\Db\MessageMapper as DatabaseMessageMapper;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Events\NewMessagesSynchronized;
 use OCA\Mail\Events\SynchronizationEvent;
+use OCA\Mail\Exception\IncompleteSyncException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Exception\UidValidityChangedException;
 use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 use OCA\Mail\IMAP\Sync\Synchronizer;
 use OCA\Mail\Model\IMAPMessage;
@@ -56,6 +58,8 @@ final class ImapToDbSynchronizerTest extends TestCase {
 	private array $fetchedChunks = [];
 	/** @var list<array{bool, int}> permflags flag and message count of each updateBulk call */
 	private array $bulkUpdates = [];
+	/** @var list<string> IMAP calls in order */
+	private array $imapCalls = [];
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -85,41 +89,78 @@ final class ImapToDbSynchronizerTest extends TestCase {
 		);
 	}
 
-	public function testInitialSyncGetsSyncTokenFromCacheClient(): void {
+	public function testInitialSyncReadsTheCacheClientTokenBeforeFetching(): void {
+		$initialClient = $this->createInitialSyncFixture(['messages' => [], 'all' => true, 'total' => 0]);
 		[$account, $mailbox] = $this->createAccountAndMailbox();
-		$capability = $this->createMock(Horde_Imap_Client_Data_Capability_Imap::class);
-		$capability->method('isEnabled')->with('QRESYNC')->willReturn(false);
-		$initialClient = $this->createMock(Horde_Imap_Client_Socket::class);
-		$initialClient->method('__get')->with('capability')->willReturn($capability);
-		$noCacheClient = $this->createStub(Horde_Imap_Client_Socket::class);
-		$initialClient->expects($this->once())
-			->method('getSyncToken')
-			->with('INBOX')
-			->willReturn('dG9rZW5XaXRoSA==');
-		$this->protocolFactory->expects($this->once())
-			->method('imapClient')
-			->with($account, false)
-			->willReturn($noCacheClient);
-		$this->dbMapper->method('findHighestUid')->willReturn(null);
-		$this->imapMapper->method('findAll')->willReturn([
-			'messages' => [],
-			'all' => true,
-			'total' => 0,
-		]);
-		$this->mailboxMapper->expects($this->once())
-			->method('update')
-			->with($this->callback(fn (Mailbox $mb) => $mb->getSyncNewToken() === 'dG9rZW5XaXRoSA=='
-					&& $mb->getSyncChangedToken() === 'dG9rZW5XaXRoSA=='
-					&& $mb->getSyncVanishedToken() === 'dG9rZW5XaXRoSA=='));
 		$this->dispatcher->expects($this->once())
 			->method('dispatchTyped')
 			->with($this->isInstanceOf(SynchronizationEvent::class));
-		$this->synchronizer->sync(
-			$account,
-			$initialClient,
-			$mailbox,
-			$this->createStub(LoggerInterface::class),
-		);
+
+		$this->synchronizer->sync($account, $initialClient, $mailbox, $this->createStub(LoggerInterface::class));
+
+		$this->assertSame(['token INBOX', 'findAll'], $this->imapCalls);
+		$this->assertSame(['newToken', 'newToken', 'newToken'], [$mailbox->getSyncNewToken(), $mailbox->getSyncChangedToken(), $mailbox->getSyncVanishedToken()]);
+	}
+
+	public function testIncompleteInitialSyncStoresNoToken(): void {
+		$initialClient = $this->createInitialSyncFixture(['messages' => [], 'all' => false, 'total' => 10]);
+		[$account, $mailbox] = $this->createAccountAndMailbox();
+		$this->mailboxMapper->expects($this->never())->method('update');
+
+		try {
+			$this->synchronizer->sync($account, $initialClient, $mailbox, $this->createStub(LoggerInterface::class));
+			$this->fail('Expected an IncompleteSyncException');
+		} catch (IncompleteSyncException) {
+		}
+
+		$this->assertSame([null, null, null], [$mailbox->getSyncNewToken(), $mailbox->getSyncChangedToken(), $mailbox->getSyncVanishedToken()]);
+	}
+
+	public function testPartialSyncReadsTheTokenOfTheSelectedMailboxBeforeTheImapSync(): void {
+		[$account, $mailbox, $client] = $this->createPartialSyncFixture();
+		$this->mockImapSync([], []);
+
+		$this->synchronizer->sync($account, $client, $mailbox, $this->createStub(LoggerInterface::class));
+
+		$this->assertSame(['select INBOX', 'token INBOX', 'sync', 'sync', 'sync'], $this->imapCalls);
+	}
+
+	public function testUidValidityChangeReadsTheTokenAgainForTheInitialSync(): void {
+		[$account, $mailbox, $client] = $this->createPartialSyncFixture();
+		$this->imapSynchronizer->method('sync')
+			->willReturnCallback(function (): never {
+				$this->imapCalls[] = 'sync';
+				throw new UidValidityChangedException();
+			});
+		$this->stubFindAll(['messages' => [], 'all' => true, 'total' => 0]);
+
+		$this->synchronizer->sync($account, $client, $mailbox, $this->createStub(LoggerInterface::class));
+
+		$this->assertSame(['select INBOX', 'token INBOX', 'sync', 'token INBOX', 'findAll'], $this->imapCalls);
+		$this->assertSame('newToken', $mailbox->getSyncChangedToken());
+	}
+
+	public static function syncTokenProvider(): \Iterator {
+		$all = Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS;
+		yield 'full sync' => [$all, null, ['newToken', 'newToken', 'newToken']];
+		yield 'known UIDs only advance the new token' => [$all, [1, 2], ['newToken', 'token', 'token']];
+		yield 'changed messages only' => [Horde_Imap_Client::SYNC_FLAGSUIDS, null, ['token', 'newToken', 'token']];
+		yield 'vanished messages only' => [Horde_Imap_Client::SYNC_VANISHEDUIDS, null, ['token', 'token', 'newToken']];
+	}
+
+	/**
+	 * @dataProvider syncTokenProvider
+	 *
+	 * @param int[]|null $knownUids
+	 * @param string[] $expected new, changed and vanished token
+	 */
+	public function testPartialSyncAdvancesTheTokensOfItsCriteria(int $criteria, ?array $knownUids, array $expected): void {
+		[$account, $mailbox, $client] = $this->createPartialSyncFixture();
+		$this->mockImapSync([], []);
+
+		$this->synchronizer->sync($account, $client, $mailbox, $this->createStub(LoggerInterface::class), $criteria, $knownUids);
+
+		$this->assertSame($expected, [$mailbox->getSyncNewToken(), $mailbox->getSyncChangedToken(), $mailbox->getSyncVanishedToken()]);
 	}
 
 	public function testPartialSyncFetchesNewMessagesInAscendingChunks(): void {
@@ -397,7 +438,7 @@ final class ImapToDbSynchronizerTest extends TestCase {
 		$capability->method('isEnabled')->willReturnCallback(static fn (string $extension): bool => $qresync && $extension === 'QRESYNC');
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$client->method('__get')->willReturnMap([['capability', $capability]]);
-		$client->method('getSyncToken')->willReturn('newToken');
+		$this->recordSyncToken($client);
 		$this->dbMapper->method('findAllUids')->willReturn([]);
 		return [$account, $mailbox, $client];
 	}
@@ -409,7 +450,50 @@ final class ImapToDbSynchronizerTest extends TestCase {
 	private function mockImapSync(array $newUids, array $changedUids, bool $hasQresync = false): void {
 		$this->imapSynchronizer->method('sync')
 			->with($this->anything(), $this->anything(), $hasQresync, $this->anything(), $this->anything())
-			->willReturn([$newUids, $changedUids, []]);
+			->willReturnCallback(function () use ($newUids, $changedUids): array {
+				$this->imapCalls[] = 'sync';
+				return [$newUids, $changedUids, []];
+			});
+	}
+
+	private function recordSyncToken(Horde_Imap_Client_Socket&MockObject $client): void {
+		$client->method('openMailbox')
+			->willReturnCallback(function (string $mailbox): void {
+				$this->imapCalls[] = "select $mailbox";
+			});
+		$client->method('getSyncToken')
+			->willReturnCallback(function (string $mailbox): string {
+				$this->imapCalls[] = "token $mailbox";
+				return 'newToken';
+			});
+	}
+
+	/**
+	 * @param array{messages: IMAPMessage[], all: bool, total: int} $result
+	 */
+	private function stubFindAll(array $result): void {
+		$this->protocolFactory->method('imapClient')
+			->with($this->anything(), false)
+			->willReturn($this->createStub(Horde_Imap_Client_Socket::class));
+		$this->imapMapper->method('findAll')
+			->willReturnCallback(function () use ($result): array {
+				$this->imapCalls[] = 'findAll';
+				return $result;
+			});
+	}
+
+	/**
+	 * @param array{messages: IMAPMessage[], all: bool, total: int} $result of findAll
+	 *
+	 * @return Horde_Imap_Client_Socket&MockObject the cache-enabled client
+	 */
+	private function createInitialSyncFixture(array $result): Horde_Imap_Client_Socket {
+		$capability = $this->createStub(Horde_Imap_Client_Data_Capability_Imap::class);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client->method('__get')->willReturnMap([['capability', $capability]]);
+		$this->recordSyncToken($client);
+		$this->stubFindAll($result);
+		return $client;
 	}
 
 	private function recordBulkUpdates(): void {
