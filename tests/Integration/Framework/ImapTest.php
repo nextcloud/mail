@@ -21,6 +21,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCP\AppFramework\QueryException;
 use OCP\Server;
+use function array_map;
 use function in_array;
 
 trait ImapTest {
@@ -173,6 +174,19 @@ trait ImapTest {
 					'data' => $mimeText,
 				]
 			])->ids[0];
+		} finally {
+			$client->logout();
+		}
+	}
+
+	/**
+	 * @param string[] $mimeTexts
+	 * @return int[] UIDs of the new messages
+	 */
+	public function saveMimeMessages(string $mailbox, array $mimeTexts, ?MailAccount $account = null): array {
+		$client = $this->getClient($account);
+		try {
+			return $client->append($mailbox, array_map(static fn (string $mimeText) => ['data' => $mimeText], $mimeTexts))->ids;
 		} finally {
 			$client->logout();
 		}
