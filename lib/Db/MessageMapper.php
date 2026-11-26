@@ -1579,20 +1579,23 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
-	 * @return Message[]
+	 * @return list<Message> at most $limit messages of the mailbox with a UID above $afterUid, ordered by UID
 	 *
 	 * @throws \OCP\DB\Exception
 	 */
-	public function getUnanalyzed(int $lastRun, array $mailboxIds): array {
+	public function getUnanalyzed(int $lastRun, int $mailboxId, int $afterUid, int $limit): array {
 		$qb = $this->db->getQueryBuilder();
 
 		$select = $qb->select('*')
 			->from($this->getTableName())
 			->where(
+				$qb->expr()->eq('mailbox_id', $qb->createNamedParameter($mailboxId, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
+				$qb->expr()->gt('uid', $qb->createNamedParameter($afterUid, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
 				$qb->expr()->gt('sent_at', $qb->createNamedParameter($lastRun, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
 				$qb->expr()->eq('structure_analyzed', $qb->createNamedParameter(false, IQueryBuilder::PARAM_BOOL), IQueryBuilder::PARAM_BOOL),
-				$qb->expr()->in('mailbox_id', $qb->createNamedParameter($mailboxIds, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY),
-			)->orderBy('sent_at', 'ASC');
+			)
+			->orderBy('uid', 'ASC')
+			->setMaxResults($limit);
 
 		return $this->findEntities($select);
 	}

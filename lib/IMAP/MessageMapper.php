@@ -899,7 +899,7 @@ class MessageMapper {
 
 			/** @var Horde_Mime_Part $part */
 			foreach ($structure->partIterator() as $part) {
-				if ($part->isAttachment()) {
+				if (ImapMessageFetcher::isVisibleAttachment($part)) {
 					$hasAttachments = true;
 				}
 

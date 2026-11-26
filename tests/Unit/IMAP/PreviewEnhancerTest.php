@@ -10,13 +10,18 @@ declare(strict_types=1);
 namespace Unit\IMAP;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Socket;
+use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
+use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DbMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper as ImapMapper;
+use OCA\Mail\IMAP\MessageStructureData;
 use OCA\Mail\IMAP\PreviewEnhancer;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\Avatar\Avatar;
@@ -111,4 +116,83 @@ class PreviewEnhancerTest extends TestCase {
 		$this->assertSame($message2Avatar, $message2->getAvatar());
 	}
 
+	public function testAnalyzesStructureBeforeLoadingAttachmentNames(): void {
+		[$account, $mailbox, $client] = $this->createImapAccountAndMailbox();
+		$message = $this->createMessage(7);
+		$this->imapMapper->method('getBodyStructureData')
+			->willReturn([7 => new MessageStructureData(false, 'Preview', false, false, false)]);
+		$this->attachmentService->expects($this->once())
+			->method('getAttachmentNames')
+			->with($account, $mailbox, $this->callback(static fn (Message $message): bool => $message->getStructureAnalyzed()), $client);
+
+		$this->previewEnhancer->process($account, $mailbox, [$message]);
+	}
+
+	public function testAnalyzesStructureInChunksWithOneClient(): void {
+		[$account, $mailbox, $client] = $this->createImapAccountAndMailbox();
+		$uids = range(1, 2 * PreviewEnhancer::CHUNK_SIZE + 1);
+		$messages = array_map(fn (int $uid): Message => $this->createMessage($uid), $uids);
+		$chunks = [];
+		$this->imapMapper->method('getBodyStructureData')
+			->willReturnCallback(static function (Horde_Imap_Client_Socket $usedClient, string $mailbox, array $uids) use (&$chunks, $client): array {
+				self::assertSame($client, $usedClient);
+				$chunks[] = $uids;
+				return [];
+			});
+		$client->expects($this->once())
+			->method('logout');
+
+		$result = $this->previewEnhancer->process($account, $mailbox, $messages);
+
+		$this->assertSame(array_chunk($uids, PreviewEnhancer::CHUNK_SIZE), $chunks);
+		$this->assertSame($messages, $result);
+	}
+
+	public function testKeepsAnalyzedChunksWhenALaterChunkFails(): void {
+		[$account, $mailbox] = $this->createImapAccountAndMailbox();
+		$messages = array_map(fn (int $uid): Message => $this->createMessage($uid), range(1, PreviewEnhancer::CHUNK_SIZE + 1));
+		$this->imapMapper->method('getBodyStructureData')
+			->willReturnCallback(static fn (Horde_Imap_Client_Socket $client, string $mailbox, array $uids): array => match ($uids[0]) {
+				1 => array_fill_keys($uids, new MessageStructureData(false, 'Preview', false, false, false)),
+				PreviewEnhancer::CHUNK_SIZE + 1 => throw new Horde_Imap_Client_Exception('connection lost'),
+			});
+		$this->dbMapper->expects($this->once())
+			->method('updatePreviewDataBulk')
+			->with(...array_slice($messages, 0, PreviewEnhancer::CHUNK_SIZE));
+
+		$this->previewEnhancer->process($account, $mailbox, $messages);
+
+		$this->assertFalse($messages[PreviewEnhancer::CHUNK_SIZE]->getStructureAnalyzed());
+	}
+
+	public function testLogsOutWithoutMessagesToAnalyze(): void {
+		[$account, $mailbox, $client] = $this->createImapAccountAndMailbox();
+		$this->imapMapper->expects($this->never())
+			->method('getBodyStructureData');
+		$client->expects($this->once())
+			->method('logout');
+
+		$this->previewEnhancer->process($account, $mailbox, [$this->createMessage(1, true)]);
+	}
+
+	/**
+	 * @return array{Account, Mailbox, Horde_Imap_Client_Socket&MockObject}
+	 */
+	private function createImapAccountAndMailbox(): array {
+		$mailAccount = new MailAccount();
+		$mailAccount->setEmail('user@example.com');
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$this->imapClientFactory->method('getClient')
+			->willReturn($client);
+		return [new Account($mailAccount), $mailbox, $client];
+	}
+
+	private function createMessage(int $uid, bool $structureAnalyzed = false): Message {
+		$message = new Message();
+		$message->setUid($uid);
+		$message->setStructureAnalyzed($structureAnalyzed);
+		return $message;
+	}
 }
