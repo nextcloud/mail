@@ -12,7 +12,9 @@ namespace OCA\Mail\Tests\Integration\Db;
 use ChristophWurst\Nextcloud\Testing\DatabaseTransaction;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
+use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\Exception\MailboxLockedException;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\DB\QueryBuilder\IQueryBuilder;
@@ -31,11 +33,14 @@ final class MailboxMapperTest extends TestCase {
 	/** @var ITimeFactory| MockObject */
 	private $timeFactory;
 
+	private int $now = 1000;
+
 	protected function setUp(): void {
 		parent::setUp();
 
 		$this->db = \OCP\Server::get(\OCP\IDBConnection::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
+		$this->timeFactory->method('getTime')->willReturnCallback(fn (): int => $this->now);
 		$this->mapper = new MailboxMapper(
 			$this->db,
 			$this->timeFactory
@@ -190,5 +195,79 @@ final class MailboxMapperTest extends TestCase {
 
 		$resultB = $this->mapper->find($account, 'Test ');
 		$this->assertSame('Test ', $resultB->getName());
+	}
+
+	public function testRefreshSyncLocksKeepsTheLocksPastTheTimeout(): void {
+		$mailbox = $this->insertMailbox();
+		$this->mapper->lockForNewSync($mailbox);
+		$this->mapper->lockForChangeSync($mailbox);
+		$this->now += Mailbox::LOCK_TIMEOUT;
+
+		$this->mapper->refreshSyncLocks($mailbox, new: true, changed: true, vanished: false);
+
+		$stored = $this->mapper->findById($mailbox->getId());
+		$this->assertSame([$this->now, $this->now, null], [$stored->getSyncNewLock(), $stored->getSyncChangedLock(), $stored->getSyncVanishedLock()]);
+		$this->assertSame([$this->now, $this->now, null], [$mailbox->getSyncNewLock(), $mailbox->getSyncChangedLock(), $mailbox->getSyncVanishedLock()]);
+	}
+
+	public function testRefreshSyncLocksInTheSecondOfLocking(): void {
+		$mailbox = $this->insertMailbox();
+		$this->mapper->lockForNewSync($mailbox);
+
+		$this->mapper->refreshSyncLocks($mailbox, new: true, changed: false, vanished: false);
+
+		$this->assertSame($this->now, $this->mapper->findById($mailbox->getId())->getSyncNewLock());
+	}
+
+	public function testRefreshSyncLocksThrowsAndLeavesTheLocksOfAnotherProcess(): void {
+		$mailbox = $this->insertMailbox();
+		$this->mapper->lockForNewSync($mailbox);
+		$this->now += Mailbox::LOCK_TIMEOUT + 1;
+		$this->mapper->lockForNewSync($this->mapper->findById($mailbox->getId()));
+		$takenOverAt = $this->now;
+		$this->now++;
+
+		try {
+			$this->mapper->refreshSyncLocks($mailbox, new: true, changed: false, vanished: false);
+			$this->fail('Expected a MailboxLockedException');
+		} catch (MailboxLockedException) {
+		}
+
+		$this->assertNull($mailbox->getSyncNewLock());
+		$this->assertSame($takenOverAt, $this->mapper->findById($mailbox->getId())->getSyncNewLock());
+	}
+
+	public function testRefreshSyncLocksLeavesLocksItWasNotGiven(): void {
+		$mailbox = $this->insertMailbox();
+		$this->mapper->lockForVanishedSync($mailbox);
+		$staleLock = $this->now;
+		$this->now += Mailbox::LOCK_TIMEOUT + 1;
+		$mailbox = $this->mapper->findById($mailbox->getId());
+		$this->mapper->lockForChangeSync($mailbox);
+
+		$this->mapper->refreshSyncLocks($mailbox, new: false, changed: true, vanished: false);
+
+		$stored = $this->mapper->findById($mailbox->getId());
+		$this->assertSame([null, $this->now, $staleLock], [$stored->getSyncNewLock(), $stored->getSyncChangedLock(), $stored->getSyncVanishedLock()]);
+	}
+
+	public function testRefreshSyncLocksWithoutLocks(): void {
+		$mailbox = $this->insertMailbox();
+
+		$this->mapper->refreshSyncLocks($mailbox, new: true, changed: true, vanished: true);
+
+		$this->assertNull($this->mapper->findById($mailbox->getId())->getSyncNewLock());
+	}
+
+	private function insertMailbox(): Mailbox {
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
+		$mailbox->setNameHash(md5('INBOX'));
+		$mailbox->setAccountId(13);
+		$mailbox->setDelimiter('.');
+		$mailbox->setMessages(0);
+		$mailbox->setUnseen(0);
+		$mailbox->setSelectable(true);
+		return $this->mapper->insert($mailbox);
 	}
 }
