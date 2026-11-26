@@ -201,6 +201,38 @@ final class OutboxControllerTest extends TestCase {
 		$this->assertEquals(Http::STATUS_INTERNAL_SERVER_ERROR, $actual->getStatus());
 	}
 
+	public function testSendFailedReturnsRejectedRecipients(): void {
+		$message = new LocalMessage();
+		$message->setId(1);
+		$message->setAccountId(1);
+		$newMessage = new LocalMessage();
+		$newMessage->setId(1);
+		$newMessage->setAccountId(1);
+		$newMessage->setStatus(LocalMessage::STATUS_ERROR);
+		$newMessage->setRecipients([]);
+		$newMessage->setRejectedRecipients(['unknown@example.com']);
+		$account = new Account(new MailAccount());
+
+		$this->service->expects(self::once())
+			->method('getMessage')
+			->with($message->getId(), $this->userId)
+			->willReturn($message);
+		$this->accountService->expects(self::once())
+			->method('find')
+			->with($this->userId, $message->getAccountId())
+			->willReturn($account);
+		$this->service->expects(self::once())
+			->method('sendMessage')
+			->with($message, $account)
+			->willReturn($newMessage);
+
+		$actual = $this->controller->send($message->getId());
+
+		$this->assertEquals(Http::STATUS_INTERNAL_SERVER_ERROR, $actual->getStatus());
+		$data = json_decode(json_encode($actual->getData()), true);
+		$this->assertSame(['unknown@example.com'], $data['data'][0]['rejectedRecipients']);
+	}
+
 	public function testSendNoMessage(): void {
 		$message = new LocalMessage();
 		$message->setId(1);

@@ -17,7 +17,6 @@ use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
 use OCA\Mail\Exception\MailboxDoesNotSupportModSequencesException;
 use OCA\Mail\Exception\UidValidityChangedException;
-use OCA\Mail\IMAP\MessageMapper;
 use Psr\Log\LoggerInterface;
 use function array_merge;
 use function OCA\Mail\chunk_uid_sequence;
@@ -33,15 +32,11 @@ class Synchronizer {
 	private const UID_CHUNK_MAX_BYTES = 10000;
 
 	private ?string $requestId = null;
-	private ?Response $response = null;
-
-	public function __construct(
-		private MessageMapper $messageMapper,
-	) {
-	}
+	/** @var list{int[], int[], int[]}|null */
+	private ?array $uids = null;
 
 	/**
-	 * @return Response
+	 * @psalm-return list{int[], int[], int[]} [$newUids, $changedUids, $vanishedUids]
 	 * @throws Horde_Imap_Client_Exception
 	 * @throws Horde_Imap_Client_Exception_Sync
 	 * @throws UidValidityChangedException
@@ -49,14 +44,13 @@ class Synchronizer {
 	 */
 	public function sync(Horde_Imap_Client_Base $imapClient,
 		Request $request,
-		string $userId,
 		bool $hasQresync, // TODO: query client directly, but could be unsafe because login has to happen prior
 		LoggerInterface $logger,
-		int $criteria = Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS): Response {
+		int $criteria = Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS): array {
 		// Return cached response from last full sync when QRESYNC is enabled
-		if ($hasQresync && $this->response !== null && $request->getId() === $this->requestId) {
+		if ($hasQresync && $this->uids !== null && $request->getId() === $this->requestId) {
 			$logger->debug('Reusing cached sync response');
-			return $this->response;
+			return $this->uids;
 		}
 
 		$mailbox = new Horde_Imap_Client_Mailbox($request->getMailbox());
@@ -79,22 +73,18 @@ class Synchronizer {
 			throw $e;
 		}
 
-		$logger->debug('Fetching new and changed messages after sync');
-		$newMessages = $this->messageMapper->findByIds($imapClient, $request->getMailbox(), $newUids, $userId);
-		$nNew = count($newMessages);
+		$nNew = count($newUids);
 		$logger->debug("Found {$nNew} new messages");
-		$changedMessages = $this->messageMapper->findByIds($imapClient, $request->getMailbox(), $changedUids, $userId);
-		$nChanged = count($changedMessages);
+		$nChanged = count($changedUids);
 		$logger->debug("Found {$nChanged} changed messages");
-		$vanishedMessageUids = $vanishedUids;
 
 		$this->requestId = $request->getId();
-		$this->response = new Response($newMessages, $changedMessages, $vanishedMessageUids, null);
-		return $this->response;
+		$this->uids = [$newUids, $changedUids, $vanishedUids];
+		return $this->uids;
 	}
 
 	/**
-	 * @psalm-return list{Horde_Imap_Client_Ids, Horde_Imap_Client_Ids, int[]} [$newUids, $changedUids, $vanishedUids]
+	 * @psalm-return list{int[], int[], int[]} [$newUids, $changedUids, $vanishedUids]
 	 * @throws Horde_Imap_Client_Exception
 	 * @throws Horde_Imap_Client_Exception_Sync
 	 */
@@ -111,14 +101,14 @@ class Synchronizer {
 		$logger->debug('Combined sync finished');
 
 		return [
-			$syncData->newmsgsuids,
-			$syncData->flagsuids,
+			$syncData->newmsgsuids->ids,
+			$syncData->flagsuids->ids,
 			$syncData->vanisheduids->ids,
 		];
 	}
 
 	/**
-	 * @psalm-return list{Horde_Imap_Client_Ids|array, Horde_Imap_Client_Ids|array, int[]} [$newUids, $changedUids, $vanishedUids]
+	 * @psalm-return list{int[], int[], int[]} [$newUids, $changedUids, $vanishedUids]
 	 * @throws Horde_Imap_Client_Exception
 	 * @throws Horde_Imap_Client_Exception_Sync
 	 */
@@ -130,12 +120,12 @@ class Synchronizer {
 		$logger->debug('Performing a split sync');
 
 		if ($criteria & Horde_Imap_Client::SYNC_NEWMSGSUIDS) {
-			$newUids = $this->getNewMessageUids($imapClient, $mailbox, $request);
+			$newUids = $this->getNewMessageUids($imapClient, $mailbox, $request)->ids;
 		} else {
 			$newUids = [];
 		}
 		if ($criteria & Horde_Imap_Client::SYNC_FLAGSUIDS) {
-			$changedUids = $this->getChangedMessageUids($imapClient, $mailbox, $request);
+			$changedUids = $this->getChangedMessageUids($imapClient, $mailbox, $request)->ids;
 		} else {
 			$changedUids = [];
 		}
@@ -196,13 +186,13 @@ class Synchronizer {
 		// overly long IMAP commands they have to be chunked.
 		return array_merge(
 			[], // for php<7.4 https://www.php.net/manual/en/function.array-merge.php
-			...array_map(
+			...array_values(array_map(
 				static fn (Horde_Imap_Client_Ids $uids) => $imapClient->sync($mailbox, $request->getToken(), [
 					'criteria' => Horde_Imap_Client::SYNC_VANISHEDUIDS,
 					'ids' => $uids,
 				])->vanisheduids->ids,
 				chunk_uid_sequence($request->getUids(), self::UID_CHUNK_MAX_BYTES)
-			)
+			))
 		);
 	}
 }

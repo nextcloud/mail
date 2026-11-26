@@ -29,6 +29,7 @@ class Version1140Date20221206162029 extends SimpleMigrationStep {
 	 */
 	#[\Override]
 	public function postSchemaChange(IOutput $output, Closure $schemaClosure, array $options): void {
+		/** @psalm-suppress TypeDoesNotContainType */
 		if (!method_exists($this->messageMapper, 'resetPreviewDataFlag')) {
 			$this->logger->warning('Service method missing due to in process upgrade');
 			return;

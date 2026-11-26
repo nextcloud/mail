@@ -8,6 +8,7 @@ import { n, t } from '@nextcloud/l10n'
 import { defineStore } from 'pinia'
 import logger from '../logger.js'
 import * as OutboxService from '../service/OutboxService.js'
+import { getSendErrorMessage } from '../util/outboxSendError.js'
 import { UNDO_DELAY } from './constants.js'
 import useMainStore from './mainStore.js'
 
@@ -146,8 +147,10 @@ export default defineStore('outbox', {
 				await OutboxService.sendMessage(id)
 				logger.debug(`Outbox message ${id} sent`)
 			} catch (error) {
-				const m = error.response.data.data[0]
-				this.updateMessageMutation({ message: m })
+				const failedMessage = error.response?.data?.data?.[0]
+				if (failedMessage?.id !== undefined) {
+					this.updateMessageMutation({ message: failedMessage })
+				}
 				logger.error(`Failed to send message ${id} from outbox`, { error })
 				throw error
 			}
@@ -194,7 +197,7 @@ export default defineStore('outbox', {
 						}
 						resolve(wasSent)
 					} catch (error) {
-						showError(t('mail', 'Could not send message'))
+						showError(getSendErrorMessage(this.getMessage(message.id)))
 						logger.error('Could not delay-send message ' + message.id, { message })
 						reject(error)
 					}

@@ -57,6 +57,8 @@ use ReturnTypeWillChange;
  * @method void setLdapAliasesProvisioning(bool $ldapAliasesProvisioning)
  * @method string|null getLdapAliasesAttribute()
  * @method void setLdapAliasesAttribute(?string $ldapAliasesAttribute)
+ * @method bool getSaveSentCopy()
+ * @method void setSaveSentCopy(bool $saveSentCopy)
  */
 class Provisioning extends Entity implements JsonSerializable {
 	public const WILDCARD = '*';
@@ -101,6 +103,7 @@ class Provisioning extends Entity implements JsonSerializable {
 	protected $aliases = [];
 	protected $ldapAliasesProvisioning;
 	protected $ldapAliasesAttribute;
+	protected bool $saveSentCopy = true;
 
 	public function __construct() {
 		$this->addType('imapPort', 'integer');
@@ -111,6 +114,7 @@ class Provisioning extends Entity implements JsonSerializable {
 		$this->addType('sieveEnabled', 'boolean');
 		$this->addType('sievePort', 'integer');
 		$this->addType('ldapAliasesProvisioning', 'boolean');
+		$this->addType('saveSentCopy', 'boolean');
 	}
 
 	#[\Override]
@@ -139,6 +143,7 @@ class Provisioning extends Entity implements JsonSerializable {
 			'aliases' => $this->getAliases(),
 			'ldapAliasesProvisioning' => $this->getLdapAliasesProvisioning(),
 			'ldapAliasesAttribute' => $this->getLdapAliasesAttribute(),
+			'saveSentCopy' => $this->getSaveSentCopy(),
 		];
 	}
 

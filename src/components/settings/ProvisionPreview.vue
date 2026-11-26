@@ -47,6 +47,10 @@
 			<br>
 			<em>{{ t('mail', 'Using master password for all users') }}</em>
 		</span>
+		<span v-if="!saveSentCopy">
+			<br>
+			<em>{{ t('mail', 'Not saving a copy of sent messages') }}</em>
+		</span>
 	</div>
 </template>
 
@@ -108,6 +112,10 @@ export default {
 
 		sieveEnabled() {
 			return this.templates.sieveEnabled
+		},
+
+		saveSentCopy() {
+			return this.templates.saveSentCopy
 		},
 
 		sieveHost() {

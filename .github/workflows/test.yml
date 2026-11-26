@@ -170,7 +170,7 @@ jobs:
                   - 993:993
                   - 4190:4190
           mail-stalwart-service:
-              image: stalwartlabs/stalwart:v1.1.0
+              image: stalwartlabs/stalwart:v1.1.1
               env:
                   STALWART_RECOVERY_ADMIN: admin:${{ env.STALWART_PWD }}
                   # Base URL of the published JMAP discovery URLs (apiUrl/downloadUrl/uploadUrl),
@@ -322,14 +322,14 @@ jobs:
               fail_ci_if_error: ${{ !github.event.pull_request.head.repo.fork }}
               verbose: true
   frontend-unit-test:
-      runs-on: ubuntu-24.04
+      runs-on: ubuntu-26.04
       needs: changes
       if: needs.changes.outputs.frontend != 'false'
       name: Front-end unit tests
       steps:
           - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
           - name: Read package.json node and npm engines version
-            uses: skjnldsv/read-package-engines-version-actions@06d6baf7d8f41934ab630e97d9e6c0bc9c9ac5e4 # v3
+            uses: skjnldsv/read-package-engines-version-actions@06d6db44aa62f4609ba070f556ec24bc99fb85cb # v4
             id: versions
             with:
               fallbackNode: '^14'

@@ -370,6 +370,7 @@ class Manager {
 		$account->setOutboundHost($config->getSmtpHost());
 		$account->setOutboundPort($config->getSmtpPort());
 		$account->setOutboundSslMode($config->getSmtpSslMode());
+		$account->setSaveSentCopy($config->getSaveSentCopy());
 		$account->setSieveEnabled($config->getSieveEnabled());
 
 		if ($config->getSieveEnabled()) {

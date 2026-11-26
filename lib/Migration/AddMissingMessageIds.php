@@ -41,6 +41,7 @@ class AddMissingMessageIds implements IRepairStep {
 		 * Do the ugly method check here and hope that the repair is run soonish.
 		 *
 		 * @see https://github.com/nextcloud/mail/issues/4746
+		 * @psalm-suppress TypeDoesNotContainType
 		 */
 		if (!method_exists($this->mapper, 'findWithEmptyMessageId')) {
 			$output->warning('New Mail code hasn\'t been loaded yes, skipping message clean-up. Please run `occ maintenance:repair` after the upgrade.');
@@ -57,7 +58,7 @@ class AddMissingMessageIds implements IRepairStep {
 			$id = IMAPMessage::generateMessageId();
 			$message->setMessageId($id);
 
-			// The thread root is is null if the message wasn't matched to a thread
+			// The thread root is null if the message wasn't matched to a thread
 			// based on its subject. In that case we set default for the thread root
 			// as well.
 			if ($message->getThreadRootId() === null) {

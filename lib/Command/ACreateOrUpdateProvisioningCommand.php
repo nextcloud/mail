@@ -28,6 +28,8 @@ abstract class ACreateOrUpdateProvisioningCommand extends AProvisioningCommand {
 	private const OPTION_NO_MASTER_PASSWORD = 'no-master-password';
 	private const OPTION_NO_SIEVE = 'no-sieve';
 	private const OPTION_NO_LDAP_ALIASES = 'no-ldap-aliases';
+	private const OPTION_SAVE_SENT_COPY = 'save-sent-copy';
+	private const OPTION_NO_SAVE_SENT_COPY = 'no-save-sent-copy';
 
 	/** Option name => [data key, description] */
 	private const FIELDS = [
@@ -75,6 +77,8 @@ abstract class ACreateOrUpdateProvisioningCommand extends AProvisioningCommand {
 		$this->addOption(self::OPTION_NO_MASTER_PASSWORD, null, InputOption::VALUE_NONE, 'Use the login password of each user');
 		$this->addOption(self::OPTION_NO_SIEVE, null, InputOption::VALUE_NONE, 'Disable Sieve');
 		$this->addOption(self::OPTION_NO_LDAP_ALIASES, null, InputOption::VALUE_NONE, 'Disable alias provisioning from LDAP');
+		$this->addOption(self::OPTION_SAVE_SENT_COPY, null, InputOption::VALUE_NONE, 'Save a copy of sent messages to the sent mailbox, the default');
+		$this->addOption(self::OPTION_NO_SAVE_SENT_COPY, null, InputOption::VALUE_NONE, 'Do not save a copy of sent messages, for mail servers that store them on their own');
 	}
 
 	/**
@@ -137,6 +141,12 @@ abstract class ACreateOrUpdateProvisioningCommand extends AProvisioningCommand {
 			$data['masterPassword'] = $this->askMasterPassword($input, $output);
 		}
 
+		if ($input->getOption(self::OPTION_NO_SAVE_SENT_COPY)) {
+			$data['saveSentCopy'] = false;
+		} elseif ($input->getOption(self::OPTION_SAVE_SENT_COPY)) {
+			$data['saveSentCopy'] = true;
+		}
+
 		$masterUser = $input->getOption('master-user');
 		if ($masterUser !== null && $masterUser !== '' && !($data['masterPasswordEnabled'] ?? false)) {
 			throw new InvalidArgumentException('--master-user requires the master password to be enabled with --' . self::OPTION_MASTER_PASSWORD);
@@ -183,8 +193,14 @@ abstract class ACreateOrUpdateProvisioningCommand extends AProvisioningCommand {
 			}
 		}
 
-		if ($input->getOption(self::OPTION_NO_MASTER_PASSWORD) && $input->getOption(self::OPTION_MASTER_PASSWORD)) {
-			throw new InvalidArgumentException('--' . self::OPTION_NO_MASTER_PASSWORD . ' cannot be combined with --' . self::OPTION_MASTER_PASSWORD);
+		$switches = [
+			[self::OPTION_NO_MASTER_PASSWORD, self::OPTION_MASTER_PASSWORD],
+			[self::OPTION_NO_SAVE_SENT_COPY, self::OPTION_SAVE_SENT_COPY],
+		];
+		foreach ($switches as [$disable, $enable]) {
+			if ($input->getOption($disable) && $input->getOption($enable)) {
+				throw new InvalidArgumentException("--$disable cannot be combined with --$enable");
+			}
 		}
 	}
 
