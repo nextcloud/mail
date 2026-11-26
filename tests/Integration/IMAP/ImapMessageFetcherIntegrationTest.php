@@ -9,11 +9,13 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Tests\Integration\IMAP;
 
+use Horde_Mime_Part;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Db\SmimeCertificateMapper;
 use OCA\Mail\IMAP\ImapMessageFetcherFactory;
+use OCA\Mail\Service\SmimeService;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use OCA\Mail\Tests\Integration\Framework\ImapTestAccount;
 use OCA\Mail\Tests\Integration\TestCase;
@@ -32,6 +34,7 @@ final class ImapMessageFetcherIntegrationTest extends TestCase {
 	private SmimeCertificateMapper $certificateMapper;
 	private ICrypto $crypto;
 	private ICertificateManager $certificateManager;
+	private SmimeCertificate $signingCertificate;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -48,7 +51,7 @@ final class ImapMessageFetcherIntegrationTest extends TestCase {
 		);
 
 		$this->importCertificate('user@imap.localhost');
-		$this->importCertificate('debug@imap.localhost');
+		$this->signingCertificate = $this->importCertificate('debug@imap.localhost');
 	}
 
 	protected function tearDown(): void {
@@ -166,6 +169,131 @@ final class ImapMessageFetcherIntegrationTest extends TestCase {
 		$this->assertFalse($message->isEncrypted());
 		$this->assertTrue($message->isSigned());
 		$this->assertTrue($message->isSignatureValid());
+	}
+
+	public function testFetchMessageWithSignedMessageWithAttachment(): void {
+		$uid = $this->saveMimeMessage('INBOX', $this->createSignedMessageWithAttachment('attachment'));
+		$fetcher = $this->fetcherFactory
+			->build(
+				$uid,
+				'INBOX',
+				$this->getTestClient(),
+				$this->account->getUserId()
+			)
+			->withBody(true);
+
+		$message = $fetcher->fetchMessage();
+
+		$this->assertEquals(self::LOREM, $message->getPlainBody());
+		$this->assertSame([['1.2', 'attachment.bin', 'application/octet-stream']], array_map(
+			static fn (array $attachment): array => [$attachment['id'], $attachment['fileName'], $attachment['mime']],
+			$message->getAttachments(),
+		));
+		$this->assertTrue($message->isSigned());
+		$this->assertTrue($message->isSignatureValid());
+	}
+
+	public function testFetchMessageWithLargeSignedMessageDoesNotParseItInMemory(): void {
+		$signedMessage = $this->createSignedMessageWithAttachment(random_bytes(2 * 1024 * 1024));
+		$uid = $this->saveMimeMessage('INBOX', $signedMessage);
+		$fetcher = $this->fetcherFactory
+			->build(
+				$uid,
+				'INBOX',
+				$this->getTestClient(),
+				$this->account->getUserId()
+			)
+			->withBody(true);
+		gc_collect_cycles();
+		memory_reset_peak_usage();
+		$memoryBefore = memory_get_usage();
+
+		$message = $fetcher->fetchMessage();
+
+		$this->assertLessThan(3 * strlen($signedMessage), memory_get_peak_usage() - $memoryBefore);
+		$this->assertEquals(self::LOREM, $message->getPlainBody());
+		$this->assertTrue($message->isSignatureValid());
+	}
+
+	public function testFetchMessageWithUnverifiedSignedMessage(): void {
+		$signedMessage = $this->createSignedMessageWithAttachment('attachment');
+		// Force verification to fail
+		$this->certificateManager->removeCertificate('imap.localhost.ca.crt');
+		$uid = $this->saveMimeMessage('INBOX', $signedMessage);
+		$fetcher = $this->fetcherFactory
+			->build(
+				$uid,
+				'INBOX',
+				$this->getTestClient(),
+				$this->account->getUserId()
+			)
+			->withBody(true);
+
+		$message = $fetcher->fetchMessage();
+
+		$this->assertEquals(self::LOREM, $message->getPlainBody());
+		$this->assertSame(['attachment.bin'], array_column($message->getAttachments(), 'fileName'));
+		$this->assertTrue($message->isSigned());
+		$this->assertFalse($message->isSignatureValid());
+	}
+
+	public function testFetchMessageWithSignedHtmlMessageWithInlineImage(): void {
+		$html = new Horde_Mime_Part();
+		$html->setType('text/html');
+		$html->setCharset('utf-8');
+		$html->setContents('<p>' . self::LOREM . '</p><img src="cid:inline-image">');
+		$image = new Horde_Mime_Part();
+		$image->setType('image/png');
+		$image->setDisposition('inline');
+		$image->setContentId('inline-image');
+		$image->setContents(file_get_contents(__DIR__ . '/../../data/nextcloud.png'));
+		$related = new Horde_Mime_Part();
+		$related->setType('multipart/related');
+		$related[] = $html;
+		$related[] = $image;
+		$uid = $this->saveMimeMessage('INBOX', $this->createSignedMessage($related));
+		$fetcher = $this->fetcherFactory
+			->build(
+				$uid,
+				'INBOX',
+				$this->getTestClient(),
+				$this->account->getUserId()
+			)
+			->withBody(true);
+
+		$message = $fetcher->fetchMessage();
+
+		$this->assertTrue($message->hasHtmlMessage());
+		$this->assertCount(0, $message->attachments);
+		$this->assertSame([['1.2', 'inline-image', 'image/png']], array_map(
+			static fn (array $attachment): array => [$attachment['id'], $attachment['cid'], $attachment['mime']],
+			$message->inlineAttachments,
+		));
+		$this->assertTrue($message->isSignatureValid());
+	}
+
+	private function createSignedMessageWithAttachment(string $attachmentContents): string {
+		$text = new Horde_Mime_Part();
+		$text->setType('text/plain');
+		$text->setCharset('utf-8');
+		$text->setContents(self::LOREM);
+		$attachment = new Horde_Mime_Part();
+		$attachment->setType('application/octet-stream');
+		$attachment->setDisposition('attachment');
+		$attachment->setName('attachment.bin');
+		$attachment->setContents($attachmentContents);
+		$content = new Horde_Mime_Part();
+		$content->setType('multipart/mixed');
+		$content[] = $text;
+		$content[] = $attachment;
+
+		return $this->createSignedMessage($content);
+	}
+
+	private function createSignedMessage(Horde_Mime_Part $content): string {
+		return Server::get(SmimeService::class)
+			->signMimePart($content, $this->signingCertificate)
+			->toString(['headers' => true]);
 	}
 
 	public function aiGeneratedHeaderProvider(): \Iterator {

@@ -198,13 +198,16 @@ class ImapMessageFetcher {
 
 				// Extract opaque signed content (smime-type="signed-data")
 				if ($isOpaqueSigned) {
-					$signedText = $this->smimeService->extractSignedContent($signedText);
+					$structure = Horde_Mime_Part::parseMessage($this->smimeService->extractSignedContent($signedText), [
+						'forcemime' => true,
+					]);
 				}
-
-				$structure = Horde_Mime_Part::parseMessage($signedText, [
-					'forcemime' => true,
-				]);
+				// Frees the full text before the parts are loaded
+				unset($signedText, $fullTextFetch, $headers);
 			}
+
+			// Parts of a detached-signed message are loaded on demand from the IMAP body structure
+			$isFetched = $isEncrypted || $isOpaqueSigned;
 
 			$this->hasAnyAttachment = $this->hasAttachments($structure);
 
@@ -212,16 +215,16 @@ class ImapMessageFetcher {
 			if ($structure_type === 'multipart') {
 				$i = 1;
 				foreach ($structure->getParts() as $p) {
-					$this->getPart($p, (string)$i++, $isEncrypted || $isSigned);
+					$this->getPart($p, (string)$i++, $isFetched);
 				}
 			} else {
 				$bodyPartId = $structure->findBody();
 				if (!is_null($bodyPartId)) {
-					$this->getPart($structure[$bodyPartId], $bodyPartId, $isEncrypted || $isSigned);
+					$this->getPart($structure[$bodyPartId], $bodyPartId, $isFetched);
 				} else {
 					// This handles the special case of a mail which only
 					// content is an attached file
-					$this->getPart($structure, '1', $isEncrypted || $isSigned);
+					$this->getPart($structure, '1', $isFetched);
 					$this->hasAnyAttachment = true;
 				}
 			}
