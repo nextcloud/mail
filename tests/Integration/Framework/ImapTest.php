@@ -8,8 +8,11 @@
 namespace OCA\Mail\Tests\Integration\Framework;
 
 use Horde_Imap_Client;
+use Horde_Imap_Client_Data_Namespace;
 use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
+use Horde_Imap_Client_Mailbox;
+use Horde_Imap_Client_Namespace_List;
 use Horde_Imap_Client_Socket;
 use Horde_Mail_Rfc822_Address;
 use Horde_Mime_Headers;
@@ -21,8 +24,11 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCP\AppFramework\QueryException;
 use OCP\Server;
+use function array_filter;
 use function array_map;
 use function in_array;
+use function str_starts_with;
+use function strlen;
 
 trait ImapTest {
 	/** @var Horde_Imap_Client_Socket */
@@ -55,14 +61,15 @@ trait ImapTest {
 
 	/**
 	 * Reset the testing account to empty default mailboxes and delete any
-	 * other mailboxes that have been created
+	 * other mailboxes that have been created. Mailboxes in shared or other
+	 * users' namespaces are left alone.
 	 */
 	public function resetImapAccount() {
 		$client = $this->getTestClient();
 		$mailboxes = $this->listMailboxes($client);
 
 		foreach ($mailboxes as $mailbox) {
-			if (in_array($mailbox, $this->defaultMailboxes)) {
+			if (in_array((string)$mailbox, $this->defaultMailboxes, true)) {
 				$this->emptyMailbox($client, $mailbox);
 			} else {
 				$this->deleteMailbox($client, $mailbox);
@@ -79,7 +86,9 @@ trait ImapTest {
 	}
 
 	/**
-	 * @return array<string>
+	 * Mailboxes of the test account's personal namespace.
+	 *
+	 * @return array<string, Horde_Imap_Client_Mailbox> keyed by mailbox name
 	 */
 	public function getMailboxes(?Horde_Imap_Client_Socket $client = null) {
 		if ($client === null) {
@@ -90,11 +99,32 @@ trait ImapTest {
 	}
 
 	/**
-	 * @param Horde_Imap_Client_Socket $client
-	 * @return array<string>
+	 * Mailboxes in shared or other users' namespaces don't belong to the test account.
+	 *
+	 * @return array<string, Horde_Imap_Client_Mailbox>
 	 */
-	private function listMailboxes(Horde_Imap_Client_Socket $client) {
-		return array_map(fn ($mailbox) => $mailbox['mailbox'], $client->listMailboxes('*'));
+	private function listMailboxes(Horde_Imap_Client_Socket $client): array {
+		$namespaces = $client->getNamespaces([], ['ob_return' => true]);
+
+		return array_filter(
+			array_map(fn ($mailbox) => $mailbox['mailbox'], $client->listMailboxes('*')),
+			fn ($mailbox) => !$this->isInForeignNamespace((string)$mailbox, $namespaces),
+		);
+	}
+
+	/**
+	 * The namespace with the longest matching prefix owns the mailbox, "" is the fallback.
+	 * Horde's Namespace_List::getNamespace() misses a namespace's root when separators differ.
+	 */
+	private function isInForeignNamespace(string $mailbox, Horde_Imap_Client_Namespace_List $namespaces): bool {
+		$owner = null;
+		foreach ($namespaces as $namespace) {
+			if (str_starts_with($mailbox . $namespace->delimiter, $namespace->name)
+				&& ($owner === null || strlen($namespace->name) > strlen($owner->name))) {
+				$owner = $namespace;
+			}
+		}
+		return $owner !== null && $owner->type !== Horde_Imap_Client_Data_Namespace::NS_PERSONAL;
 	}
 
 	/**
@@ -286,11 +316,9 @@ trait ImapTest {
 	}
 
 	/**
-	 * Assert that the test account has a certain mailbox
-	 *
-	 * @param string $mailbox
+	 * Assert that the test account has a certain mailbox in its personal namespace
 	 */
-	public function assertMailboxExists($mailbox) {
+	public function assertMailboxExists(string $mailbox): void {
 		$mailboxes = $this->getMailboxes();
 		$this->assertArrayHasKey($mailbox, $mailboxes);
 	}
