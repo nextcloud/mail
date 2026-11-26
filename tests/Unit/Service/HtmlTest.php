@@ -113,12 +113,35 @@ class HtmlTest extends TestCase {
 		$this->assertSame($expectedSignature, $s);
 	}
 
-	public function parseMailBodyProvider() {
-		return [
-			['abc', null, 'abc'],
-			['abc', 'def', "abc-- \r\ndef"],
-			["abc-- \r\ndef", 'ghi', "abc-- \r\ndef-- \r\nghi"],
-		];
+	public function parseMailBodyProvider(): \Iterator {
+		yield ['abc', null, 'abc'];
+		yield ["abc\r\n", 'def', "abc\r\n-- \r\ndef"];
+		yield ["abc\n", "def\n", "abc\n-- \ndef\n"];
+		yield ['', 'def', "-- \r\ndef"];
+		yield ["abc-- \r\ndef", null, "abc-- \r\ndef"];
+		yield ["abc\r\n--\r\ndef", null, "abc\r\n--\r\ndef"];
+		yield ["abc\r\n---\r\ndef", null, "abc\r\n---\r\ndef"];
+		yield ["abc\r\n -- \r\ndef", null, "abc\r\n -- \r\ndef"];
+		$quoted = "&gt; quote\r\n&gt; -- \r\n&gt; old signature\r\n\r\nreply\r\n";
+		yield [$quoted, null, $quoted];
+		$nested = "&gt;&gt; deep\r\n&gt;&gt; -- \r\n&gt;&gt; deep signature\r\n&gt; mid\r\n\r\nreply\r\n";
+		yield [$nested, null, $nested];
+		yield ["&gt; -- \r\n&gt; old\r\n\r\nreply\r\n", "Alice\r\n", "&gt; -- \r\n&gt; old\r\n\r\nreply\r\n-- \r\nAlice\r\n"];
+		yield ["abc\r\n-- \r\ndef\r\n", 'ghi', "abc\r\n-- \r\ndef\r\n-- \r\nghi"];
+	}
+
+	public function testParseMailBodyKeepsQuotedDelimiterOfConvertedPlainTextBody(): void {
+		$urlGenerator = $this->createStub(IURLGenerator::class);
+		$request = $this->createStub(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$text = "> quote\r\n> -- \r\n> old signature\r\n\r\nBonjour\r\n";
+
+		[$body, $signature] = $html->parseMailBody($html->convertLinks($text));
+
+		$this->assertStringContainsString('&gt; -- ', (string)$body);
+		$this->assertStringContainsString('Bonjour', (string)$body);
+		$this->assertNull($signature);
 	}
 
 	public function testSanitizeHtmlMailBodyRewritesCidToUrl(): void {
