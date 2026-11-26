@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Tests\Integration\Framework;
 
+use Horde_Imap_Client_Data_Namespace;
 use OCA\Mail\Tests\Integration\TestCase;
 
 /**
@@ -24,6 +25,26 @@ final class SelfTest extends TestCase {
 		$this->resetImapAccount();
 		$this->disconnectImapAccount();
 		$this->assertCount(4, $this->getMailboxes());
+	}
+
+	public function testResetLeavesSharedNamespaceAlone(): void {
+		$client = $this->getTestClient();
+		$sharedMailboxes = [];
+		foreach ($client->getNamespaces([], ['ob_return' => true]) as $namespace) {
+			if ($namespace->type === Horde_Imap_Client_Data_Namespace::NS_SHARED && $namespace->name !== '') {
+				$sharedMailboxes = [...$sharedMailboxes, ...array_keys($client->listMailboxes($namespace->name . '*'))];
+			}
+		}
+		if ($sharedMailboxes === []) {
+			$this->markTestSkipped('The IMAP server has no shared mailboxes');
+		}
+
+		$this->resetImapAccount();
+
+		foreach ($sharedMailboxes as $mailbox) {
+			$this->assertNotEmpty($client->listMailboxes($mailbox), "shared mailbox <$mailbox> was deleted");
+			$this->assertArrayNotHasKey($mailbox, $this->getMailboxes());
+		}
 	}
 
 	public function testMessageCapabilities(): void {
