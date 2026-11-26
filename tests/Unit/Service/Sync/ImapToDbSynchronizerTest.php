@@ -25,6 +25,7 @@ use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Events\NewMessagesSynchronized;
 use OCA\Mail\Events\SynchronizationEvent;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Exception\UidValidityChangedException;
 use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 use OCA\Mail\IMAP\Sync\Synchronizer;
 use OCA\Mail\Model\IMAPMessage;
@@ -34,7 +35,9 @@ use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
 use OCA\Mail\Support\PerformanceLogger;
 use OCA\Mail\Support\PerformanceLoggerTask;
+use OCP\DB\Exception as DBException;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\IDBConnection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use function array_fill;
@@ -51,11 +54,14 @@ final class ImapToDbSynchronizerTest extends TestCase {
 	private IEventDispatcher&MockObject $dispatcher;
 	private PerformanceLogger&MockObject $performanceLogger;
 	private MailManager&MockObject $mailManager;
+	private IDBConnection&MockObject $db;
 	private ImapToDbSynchronizer $synchronizer;
 	/** @var list<int[]> UID chunks passed to findByIds, in call order */
 	private array $fetchedChunks = [];
 	/** @var list<array{bool, int}> permflags flag and message count of each updateBulk call */
 	private array $bulkUpdates = [];
+	/** @var list<string> transaction and write steps of a cache reset, in call order */
+	private array $resetSteps = [];
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -69,6 +75,7 @@ final class ImapToDbSynchronizerTest extends TestCase {
 		$this->performanceLogger->method('startWithLogger')
 			->willReturn($this->createStub(PerformanceLoggerTask::class));
 		$this->mailManager = $this->createMock(MailManager::class);
+		$this->db = $this->createMock(IDBConnection::class);
 		$this->synchronizer = new ImapToDbSynchronizer(
 			$this->dbMapper,
 			$this->protocolFactory,
@@ -82,7 +89,46 @@ final class ImapToDbSynchronizerTest extends TestCase {
 			$this->mailManager,
 			$this->createStub(TagMapper::class),
 			$this->createStub(NewMessagesClassifier::class),
+			$this->db,
 		);
+	}
+
+	public function testClearCacheDeletesTheMessagesAndTokensInOneTransaction(): void {
+		[$account, $mailbox] = $this->createAccountAndCachedMailbox();
+		$this->recordResetSteps();
+
+		$this->synchronizer->clearCache($account, $mailbox);
+
+		$this->assertSame(['begin', 'delete messages', 'clear tokens', 'commit'], $this->resetSteps);
+	}
+
+	public function testClearCacheUnlocksWithoutSavingTheTokensOfARolledBackReset(): void {
+		[$account, $mailbox] = $this->createAccountAndCachedMailbox();
+		$this->mailboxMapper->method('clearSyncTokens')->willThrowException(new DBException('update failed'));
+		$this->db->expects($this->once())->method('rollBack');
+		$this->db->expects($this->never())->method('commit');
+		$this->mailboxMapper->expects($this->once())
+			->method('unlockFromVanishedSync')
+			->with($this->callback(static fn (Mailbox $mailbox): bool => $mailbox->isCached()));
+		$this->expectException(ServiceException::class);
+
+		$this->synchronizer->clearCache($account, $mailbox);
+	}
+
+	public function testUidValidityChangeResetsTheCacheInOneTransactionBeforeTheInitialSync(): void {
+		[$account, $mailbox, $client] = $this->createPartialSyncFixture();
+		$this->imapSynchronizer->method('sync')->willThrowException(new UidValidityChangedException());
+		$this->dbMapper->method('findHighestUid')->willReturn(null);
+		$this->imapMapper->method('findAll')->willReturn([
+			'messages' => [],
+			'all' => true,
+			'total' => 0,
+		]);
+		$this->recordResetSteps();
+
+		$this->synchronizer->sync($account, $client, $mailbox, $this->createStub(LoggerInterface::class));
+
+		$this->assertSame(['begin', 'delete messages', 'clear tokens', 'commit', 'save cached mailbox'], $this->resetSteps);
 	}
 
 	public function testInitialSyncGetsSyncTokenFromCacheClient(): void {
@@ -386,13 +432,21 @@ final class ImapToDbSynchronizerTest extends TestCase {
 	}
 
 	/**
-	 * @return array{Account, Mailbox, Horde_Imap_Client_Socket&MockObject}
+	 * @return array{Account, Mailbox}
 	 */
-	private function createPartialSyncFixture(bool $qresync = false): array {
+	private function createAccountAndCachedMailbox(): array {
 		[$account, $mailbox] = $this->createAccountAndMailbox();
 		$mailbox->setSyncNewToken('token');
 		$mailbox->setSyncChangedToken('token');
 		$mailbox->setSyncVanishedToken('token');
+		return [$account, $mailbox];
+	}
+
+	/**
+	 * @return array{Account, Mailbox, Horde_Imap_Client_Socket&MockObject}
+	 */
+	private function createPartialSyncFixture(bool $qresync = false): array {
+		[$account, $mailbox] = $this->createAccountAndCachedMailbox();
 		$capability = $this->createStub(Horde_Imap_Client_Data_Capability_Imap::class);
 		$capability->method('isEnabled')->willReturnCallback(static fn (string $extension): bool => $qresync && $extension === 'QRESYNC');
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
@@ -410,6 +464,25 @@ final class ImapToDbSynchronizerTest extends TestCase {
 		$this->imapSynchronizer->method('sync')
 			->with($this->anything(), $this->anything(), $hasQresync, $this->anything(), $this->anything())
 			->willReturn([$newUids, $changedUids, []]);
+	}
+
+	private function recordResetSteps(): void {
+		$this->db->method('beginTransaction')->willReturnCallback(function (): void {
+			$this->resetSteps[] = 'begin';
+		});
+		$this->db->method('commit')->willReturnCallback(function (): void {
+			$this->resetSteps[] = 'commit';
+		});
+		$this->dbMapper->method('deleteAll')->willReturnCallback(function (): void {
+			$this->resetSteps[] = 'delete messages';
+		});
+		$this->mailboxMapper->method('clearSyncTokens')->willReturnCallback(function (): void {
+			$this->resetSteps[] = 'clear tokens';
+		});
+		$this->mailboxMapper->method('update')->willReturnCallback(function (Mailbox $mailbox): Mailbox {
+			$this->resetSteps[] = $mailbox->isCached() ? 'save cached mailbox' : 'save uncached mailbox';
+			return $mailbox;
+		});
 	}
 
 	private function recordBulkUpdates(): void {

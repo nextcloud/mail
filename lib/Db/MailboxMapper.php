@@ -279,6 +279,21 @@ class MailboxMapper extends QBMapper {
 		$this->update($mailbox);
 	}
 
+	/**
+	 * Mark the mailbox as not cached, whatever tokens the given entity holds
+	 *
+	 * @throws Exception
+	 */
+	public function clearSyncTokens(Mailbox $mailbox): void {
+		$query = $this->db->getQueryBuilder();
+		$query->update($this->getTableName())
+			->set('sync_new_token', $query->createNamedParameter(null, IQueryBuilder::PARAM_NULL))
+			->set('sync_changed_token', $query->createNamedParameter(null, IQueryBuilder::PARAM_NULL))
+			->set('sync_vanished_token', $query->createNamedParameter(null, IQueryBuilder::PARAM_NULL))
+			->where($query->expr()->eq('id', $query->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT)));
+		$query->executeStatement();
+	}
+
 	public function deleteOrphans(): void {
 		$qb1 = $this->db->getQueryBuilder();
 		$idsQuery = $qb1->select('m.id')

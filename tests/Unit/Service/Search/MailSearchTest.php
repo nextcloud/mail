@@ -11,6 +11,7 @@ namespace OCA\Mail\Tests\Unit\Service\Search;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
+use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
@@ -26,6 +27,8 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 
 final class MailSearchTest extends TestCase {
+	private const NOW = 1_000_000;
+
 	/** @var FilterStringParser|MockObject */
 	private $filterStringParser;
 
@@ -81,16 +84,87 @@ final class MailSearchTest extends TestCase {
 		);
 	}
 
-	public function testFindMessagesLocked(): void {
+	public function testFindMessagesNotCachedAndLocked(): void {
 		$account = $this->createStub(Account::class);
 		$mailbox = new Mailbox();
-		$mailbox->setSyncNewLock(123);
+		$mailbox->setSyncNewLock(self::NOW);
+		$this->timeFactory->method('getTime')->willReturn(self::NOW);
 		$this->expectException(MailboxLockedException::class);
 
 		$this->search->findMessages(
 			$account,
 			$mailbox,
-			'DESC',
+			IMailSearch::ORDER_NEWEST_FIRST,
+			null,
+			null,
+			null,
+			null,
+			null,
+		);
+	}
+
+	public function testFindMessagesNotCachedWithAnExpiredLock(): void {
+		$account = $this->createStub(Account::class);
+		$mailbox = new Mailbox();
+		$mailbox->setSyncNewLock(self::NOW - Mailbox::LOCK_TIMEOUT);
+		$this->timeFactory->method('getTime')->willReturn(self::NOW);
+		$this->expectException(MailboxNotCachedException::class);
+
+		$this->search->findMessages(
+			$account,
+			$mailbox,
+			IMailSearch::ORDER_NEWEST_FIRST,
+			null,
+			null,
+			null,
+			null,
+			null,
+		);
+	}
+
+	public function testFindMessagesOfACachedMailboxWhileItSyncs(): void {
+		$account = $this->createStub(Account::class);
+		$account->method('getUserId')->willReturn('admin');
+		$mailbox = $this->createCachedMailbox();
+		$mailbox->setSyncNewLock(self::NOW);
+		$this->timeFactory->method('getTime')->willReturn(self::NOW);
+		$message = new Message();
+		$this->messageMapper->method('findByIds')->willReturn([$message]);
+		$this->previewEnhancer->method('process')->willReturnArgument(2);
+
+		$messages = $this->search->findMessages(
+			$account,
+			$mailbox,
+			IMailSearch::ORDER_NEWEST_FIRST,
+			null,
+			null,
+			null,
+			null,
+			null,
+		);
+
+		$this->assertSame([$message], $messages);
+	}
+
+	public function testFindMessagesWhileASyncResetsTheCache(): void {
+		$account = $this->createStub(Account::class);
+		$account->method('getUserId')->willReturn('admin');
+		$mailbox = $this->createCachedMailbox();
+		$this->timeFactory->method('getTime')->willReturn(self::NOW);
+		$this->previewEnhancer->method('process')
+			->willReturnCallback(static function (Account $account, Mailbox $mailbox, array $messages): array {
+				$mailbox->setSyncNewLock(self::NOW);
+				$mailbox->setSyncNewToken(null);
+				$mailbox->setSyncChangedToken(null);
+				$mailbox->setSyncVanishedToken(null);
+				return $messages;
+			});
+		$this->expectException(MailboxLockedException::class);
+
+		$this->search->findMessages(
+			$account,
+			$mailbox,
+			IMailSearch::ORDER_NEWEST_FIRST,
 			null,
 			null,
 			null,
@@ -104,10 +178,7 @@ final class MailSearchTest extends TestCase {
 		$account->expects($this->once())
 			->method('getUserId')
 			->willReturn('admin');
-		$mailbox = new Mailbox();
-		$mailbox->setSyncNewToken('abc');
-		$mailbox->setSyncChangedToken('def');
-		$mailbox->setSyncVanishedToken('ghi');
+		$mailbox = $this->createCachedMailbox();
 
 		$messages = $this->search->findMessages(
 			$account,
@@ -128,10 +199,7 @@ final class MailSearchTest extends TestCase {
 		$account->expects($this->once())
 			->method('getUserId')
 			->willReturn('admin');
-		$mailbox = new Mailbox();
-		$mailbox->setSyncNewToken('abc');
-		$mailbox->setSyncChangedToken('def');
-		$mailbox->setSyncVanishedToken('ghi');
+		$mailbox = $this->createCachedMailbox();
 		$query = new SearchQuery();
 		$query->addFlag(Flag::is(Flag::SEEN));
 		$this->filterStringParser->expects($this->once())
@@ -169,10 +237,7 @@ final class MailSearchTest extends TestCase {
 		$account->expects($this->once())
 			->method('getUserId')
 			->willReturn('admin');
-		$mailbox = new Mailbox();
-		$mailbox->setSyncNewToken('abc');
-		$mailbox->setSyncChangedToken('def');
-		$mailbox->setSyncVanishedToken('ghi');
+		$mailbox = $this->createCachedMailbox();
 		$query = new SearchQuery();
 		$query->addBody('my');
 		$query->addBody('search');
@@ -206,5 +271,15 @@ final class MailSearchTest extends TestCase {
 		);
 
 		$this->assertCount(2, $messages);
+	}
+
+	private function createCachedMailbox(): Mailbox {
+		$mailbox = new Mailbox();
+		$mailbox->setId(10);
+		$mailbox->setSyncNewToken('abc');
+		$mailbox->setSyncChangedToken('def');
+		$mailbox->setSyncVanishedToken('ghi');
+		$this->mailManager->method('getMailbox')->with('admin', 10)->willReturn($mailbox);
+		return $mailbox;
 	}
 }
