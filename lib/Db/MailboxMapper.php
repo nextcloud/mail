@@ -20,6 +20,7 @@ use OCP\DB\Exception;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\DB\QueryBuilder\IQueryFunction;
 use OCP\IDBConnection;
+use function array_filter;
 use function array_map;
 
 /**
@@ -239,6 +240,47 @@ class MailboxMapper extends QBMapper {
 		$mailbox->setSyncVanishedLock(
 			$this->lockForSync($mailbox, 'sync_vanished_lock', $mailbox->getSyncVanishedLock())
 		);
+	}
+
+	/**
+	 * Keeps the given sync locks of this process valid past Mailbox::LOCK_TIMEOUT
+	 *
+	 * @throws MailboxLockedException if another process took them over
+	 */
+	public function refreshSyncLocks(Mailbox $mailbox, bool $new, bool $changed, bool $vanished): void {
+		$locks = array_filter([
+			'sync_new_lock' => $new ? $mailbox->getSyncNewLock() : null,
+			'sync_changed_lock' => $changed ? $mailbox->getSyncChangedLock() : null,
+			'sync_vanished_lock' => $vanished ? $mailbox->getSyncVanishedLock() : null,
+		], static fn (?int $lock): bool => $lock !== null);
+		if ($locks === []) {
+			return;
+		}
+
+		$now = $this->timeFactory->getTime();
+		$query = $this->db->getQueryBuilder();
+		$query->update($this->getTableName())
+			->where($query->expr()->eq('id', $query->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT)));
+		foreach ($locks as $column => $lock) {
+			$query->set($column, $query->createNamedParameter($now, IQueryBuilder::PARAM_INT))
+				->andWhere($query->expr()->eq($column, $query->createNamedParameter($lock, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT));
+		}
+		$refreshed = $query->executeStatement() === 1;
+
+		// Dropping lost locks keeps unlocking from releasing those of the other process
+		$lock = $refreshed ? $now : null;
+		if (isset($locks['sync_new_lock'])) {
+			$mailbox->setSyncNewLock($lock);
+		}
+		if (isset($locks['sync_changed_lock'])) {
+			$mailbox->setSyncChangedLock($lock);
+		}
+		if (isset($locks['sync_vanished_lock'])) {
+			$mailbox->setSyncVanishedLock($lock);
+		}
+		if (!$refreshed) {
+			throw MailboxLockedException::from($mailbox);
+		}
 	}
 
 	/**
