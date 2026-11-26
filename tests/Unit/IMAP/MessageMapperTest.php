@@ -809,6 +809,36 @@ final class MessageMapperTest extends TestCase {
 		$this->assertEquals($bodyText, $data[$messageId]->getPreviewText());
 	}
 
+	public static function attachmentStructureProvider(): \Iterator {
+		$multipart = static fn (string $type, string ...$parts): string => "MIME-Version: 1.0\r\nContent-Type: $type; boundary=\"b\"\r\n\r\n"
+			. implode('', array_map(static fn (string $part): string => "--b\r\n$part\r\n", $parts))
+			. "--b--\r\n";
+		$text = "Content-Type: text/plain\r\n\r\nHello";
+		yield 'plain text' => ["Content-Type: text/plain\r\n\r\nHello\r\n", false];
+		yield 'regular attachment' => [$multipart('multipart/mixed', $text, "Content-Type: application/pdf; name=\"a.pdf\"\r\nContent-Disposition: attachment; filename=\"a.pdf\"\r\n\r\nPDF"), true];
+		yield 'forwarded message' => [$multipart('multipart/mixed', $text, "Content-Type: message/rfc822\r\n\r\nSubject: Forwarded\r\n\r\nBody"), true];
+		yield 'named invite without disposition' => [$multipart('multipart/mixed', $text, "Content-Type: text/calendar; method=REQUEST; name=\"invite.ics\"\r\n\r\nBEGIN:VCALENDAR\r\nEND:VCALENDAR"), true];
+		yield 'detached signature' => [$multipart('multipart/signed; protocol="application/pkcs7-signature"', $text, "Content-Type: application/pkcs7-signature; name=\"smime.p7s\"\r\nContent-Disposition: attachment; filename=\"smime.p7s\"\r\n\r\nSIG"), false];
+	}
+
+	/**
+	 * @dataProvider attachmentStructureProvider
+	 */
+	public function testGetBodyStructureFlagsAttachmentsLikeTheAttachmentList(string $mimeText, bool $expected): void {
+		$fetchData = new Horde_Imap_Client_Data_Fetch();
+		$fetchData->setStructure(\Horde_Mime_Part::parseMessage($mimeText));
+		$fetchData->setUid(100);
+		$fetchResult = new Horde_Imap_Client_Fetch_Results();
+		$fetchResult[100] = $fetchData;
+		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);
+		$imapClient->method('fetch')
+			->willReturn($fetchResult);
+
+		$data = $this->mapper->getBodyStructureData($imapClient, 'INBOX', [100], 'alice@example.org');
+
+		$this->assertSame($expected, $data[100]->hasAttachments());
+	}
+
 	public function isImipMessageProvider(): \Iterator {
 		yield 'google request' => ['request_google', true];
 		yield 'outlook.com request' => ['request_outlook_com', true];
