@@ -72,7 +72,7 @@
 					@option:selecting="addAttendee">
 					<template #search="{ events, attributes }">
 						<input
-							:placeholder="t('mail', 'Contact or email address …')"
+							:placeholder="t('mail', 'Contact or email address …')"
 							type="search"
 							class="vs__search"
 							v-bind="attributes"
@@ -307,6 +307,11 @@ export default {
 				event.addProperty(new TextProperty('SUMMARY', this.eventTitle))
 				if (this.description) {
 					event.addProperty(new TextProperty('DESCRIPTION', this.description))
+				}
+
+				const messageId = this.envelope.messageId?.trim().replace(/^<|>$/g, '')
+				if (this.envelope.messageId) {
+					event.addProperty(new TextProperty('X-NC-MAIL-DEEPLINK', Base64.encodeURL(messageId)))
 				}
 
 				const organizerEmail = this.organizerEmail?.toLowerCase() || ''
