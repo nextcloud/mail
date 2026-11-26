@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Service\Sync;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Horde_Imap_Client;
 use Horde_Imap_Client_Base;
 use Horde_Imap_Client_Data_Capability_Imap;
 use Horde_Imap_Client_Exception;
@@ -19,6 +20,7 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DatabaseMessageMapper;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Events\NewMessagesSynchronized;
@@ -48,9 +50,12 @@ class ImapToDbSynchronizerTest extends TestCase {
 	private Synchronizer&MockObject $imapSynchronizer;
 	private IEventDispatcher&MockObject $dispatcher;
 	private PerformanceLogger&MockObject $performanceLogger;
+	private IMailManager&MockObject $mailManager;
 	private ImapToDbSynchronizer $synchronizer;
 	/** @var list<int[]> UID chunks passed to findByIds, in call order */
 	private array $fetchedChunks = [];
+	/** @var list<array{bool, int}> permflags flag and message count of each updateBulk call */
+	private array $bulkUpdates = [];
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -63,6 +68,7 @@ class ImapToDbSynchronizerTest extends TestCase {
 		$this->performanceLogger = $this->createMock(PerformanceLogger::class);
 		$this->performanceLogger->method('startWithLogger')
 			->willReturn($this->createStub(PerformanceLoggerTask::class));
+		$this->mailManager = $this->createMock(IMailManager::class);
 		$this->synchronizer = new ImapToDbSynchronizer(
 			$this->dbMapper,
 			$this->clientFactory,
@@ -73,7 +79,7 @@ class ImapToDbSynchronizerTest extends TestCase {
 			$this->dispatcher,
 			$this->performanceLogger,
 			$this->createStub(LoggerInterface::class),
-			$this->createStub(IMailManager::class),
+			$this->mailManager,
 			$this->createStub(TagMapper::class),
 			$this->createStub(NewMessagesClassifier::class),
 		);
@@ -286,6 +292,84 @@ class ImapToDbSynchronizerTest extends TestCase {
 		$this->assertSame(['token', 'token', 'token'], [$mailbox->getSyncNewToken(), $mailbox->getSyncChangedToken(), $mailbox->getSyncVanishedToken()]);
 	}
 
+	public function testPartialSyncDoesNotFetchNewMessagesAgainAsChanged(): void {
+		[$account, $mailbox, $client] = $this->createPartialSyncFixture(qresync: true);
+		$this->mockImapSync(range(11, 30), [5, ...range(11, 30)], hasQresync: true);
+		$this->dbMapper->method('findHighestUid')->willReturn(10);
+		$this->mailManager->method('isPermflagsEnabled')->willReturn(true);
+		$this->recordFetchedChunks($client);
+		$this->recordBulkUpdates();
+		$this->dbMapper->expects($this->once())
+			->method('insertBulk');
+
+		$this->synchronizer->sync(
+			$account,
+			$client,
+			$mailbox,
+			$this->createStub(LoggerInterface::class),
+		);
+
+		$this->assertSame([range(11, 30), [5]], $this->fetchedChunks);
+		$this->assertSame([[true, 20], [true, 1]], $this->bulkUpdates);
+	}
+
+	public function testPartialSyncUpdatesNewMessagesStoredByAnEarlierRun(): void {
+		[$account, $mailbox, $client] = $this->createPartialSyncFixture(qresync: true);
+		$this->mockImapSync(range(5, 30), range(5, 30), hasQresync: true);
+		$this->dbMapper->method('findHighestUid')->willReturn(10);
+		$this->recordFetchedChunks($client);
+		$this->recordBulkUpdates();
+		$this->dbMapper->expects($this->once())
+			->method('insertBulk');
+
+		$this->synchronizer->sync(
+			$account,
+			$client,
+			$mailbox,
+			$this->createStub(LoggerInterface::class),
+		);
+
+		$this->assertSame([range(11, 30), range(5, 10)], $this->fetchedChunks);
+		$this->assertSame([[false, 20], [false, 6]], $this->bulkUpdates);
+	}
+
+	public function testPartialSyncWithoutQresyncOnlyUpdatesChangedMessages(): void {
+		[$account, $mailbox, $client] = $this->createPartialSyncFixture();
+		$this->mockImapSync(range(11, 30), [5]);
+		$this->dbMapper->method('findHighestUid')->willReturn(10);
+		$this->recordFetchedChunks($client);
+		$this->recordBulkUpdates();
+
+		$this->synchronizer->sync(
+			$account,
+			$client,
+			$mailbox,
+			$this->createStub(LoggerInterface::class),
+		);
+
+		$this->assertSame([[false, 1]], $this->bulkUpdates);
+	}
+
+	public function testPartialSyncOfChangedMessagesOnly(): void {
+		[$account, $mailbox, $client] = $this->createPartialSyncFixture();
+		$this->mockImapSync([], [5, 6]);
+		$this->recordFetchedChunks($client);
+		$this->recordBulkUpdates();
+		$this->dbMapper->expects($this->never())
+			->method('insertBulk');
+
+		$this->synchronizer->sync(
+			$account,
+			$client,
+			$mailbox,
+			$this->createStub(LoggerInterface::class),
+			Horde_Imap_Client::SYNC_FLAGSUIDS,
+		);
+
+		$this->assertSame([[5, 6]], $this->fetchedChunks);
+		$this->assertSame([[false, 2]], $this->bulkUpdates);
+	}
+
 	/**
 	 * @return array{Account, Mailbox}
 	 */
@@ -304,13 +388,13 @@ class ImapToDbSynchronizerTest extends TestCase {
 	/**
 	 * @return array{Account, Mailbox, Horde_Imap_Client_Socket&MockObject}
 	 */
-	private function createPartialSyncFixture(): array {
+	private function createPartialSyncFixture(bool $qresync = false): array {
 		[$account, $mailbox] = $this->createAccountAndMailbox();
 		$mailbox->setSyncNewToken('token');
 		$mailbox->setSyncChangedToken('token');
 		$mailbox->setSyncVanishedToken('token');
 		$capability = $this->createStub(Horde_Imap_Client_Data_Capability_Imap::class);
-		$capability->method('isEnabled')->willReturn(false);
+		$capability->method('isEnabled')->willReturnCallback(static fn (string $extension): bool => $qresync && $extension === 'QRESYNC');
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$client->method('__get')->willReturnMap([['capability', $capability]]);
 		$client->method('getSyncToken')->willReturn('newToken');
@@ -322,9 +406,18 @@ class ImapToDbSynchronizerTest extends TestCase {
 	 * @param int[] $newUids
 	 * @param int[] $changedUids
 	 */
-	private function mockImapSync(array $newUids, array $changedUids): void {
+	private function mockImapSync(array $newUids, array $changedUids, bool $hasQresync = false): void {
 		$this->imapSynchronizer->method('sync')
+			->with($this->anything(), $this->anything(), $hasQresync, $this->anything(), $this->anything())
 			->willReturn([$newUids, $changedUids, []]);
+	}
+
+	private function recordBulkUpdates(): void {
+		$this->dbMapper->method('updateBulk')
+			->willReturnCallback(function (Account $account, bool $permflagsEnabled, Message ...$messages): array {
+				$this->bulkUpdates[] = [$permflagsEnabled, count($messages)];
+				return $messages;
+			});
 	}
 
 	private function recordFetchedChunks(Horde_Imap_Client_Socket $client): void {

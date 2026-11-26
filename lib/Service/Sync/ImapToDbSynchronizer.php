@@ -42,6 +42,7 @@ use OCP\EventDispatcher\IEventDispatcher;
 use Psr\Log\LoggerInterface;
 use Throwable;
 use function array_chunk;
+use function array_diff;
 use function array_filter;
 use function array_map;
 use function register_shutdown_function;
@@ -389,7 +390,10 @@ class ImapToDbSynchronizer {
 		$newToken = null;
 		$changedToken = null;
 		$vanishedToken = null;
+		$syncsChanges = ($criteria & Horde_Imap_Client::SYNC_FLAGSUIDS) !== 0;
+		$permflagsEnabled = $syncsChanges && $this->mailManager->isPermflagsEnabled($client, $account, $mailbox->getName());
 
+		$newUids = [];
 		if ($criteria & Horde_Imap_Client::SYNC_NEWMSGSUIDS) {
 			[$newUids] = $this->synchronizer->sync(
 				$client,
@@ -433,6 +437,10 @@ class ImapToDbSynchronizer {
 				}
 
 				$this->dbMapper->insertBulk($account, ...$dbMessages);
+				if ($hasQresync && $syncsChanges) {
+					// Removes tags that another copy with the same Message-ID left behind
+					$this->dbMapper->updateBulk($account, $permflagsEnabled, ...$dbMessages);
+				}
 
 				if ($importantTag) {
 					$classified = $this->newMessagesClassifier->classifyNewMessages(
@@ -472,8 +480,8 @@ class ImapToDbSynchronizer {
 				Horde_Imap_Client::SYNC_FLAGSUIDS,
 			);
 			$perf->step('get changed message UIDs via Horde');
-
-			$permflagsEnabled = $this->mailManager->isPermflagsEnabled($client, $account, $mailbox->getName());
+			// QRESYNC can report new messages as changed too. They were just stored with their current flags.
+			$changedUids = array_diff($changedUids, $newUids);
 
 			foreach (array_chunk($changedUids, self::PARTIAL_SYNC_CHUNK_SIZE) as $chunk) {
 				$dbMessages = $this->fetchDbMessages($client, $account, $mailbox, $chunk);
