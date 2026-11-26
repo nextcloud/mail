@@ -9,7 +9,7 @@
 		:tag="tagToDelete"
 		:envelopes="envelopes"
 		:accountId="envelopes[0].accountId"
-		@close="closeDeleteModal" />
+		@closing="closeDeleteModal" />
 	<NcModal
 		v-else
 		closeOnClickOutside
