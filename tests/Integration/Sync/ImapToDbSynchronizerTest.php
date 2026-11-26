@@ -13,6 +13,7 @@ use Horde_Imap_Client;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper as DbMessageMapper;
 use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
 use OCA\Mail\Service\Sync\SyncService;
@@ -154,5 +155,37 @@ class ImapToDbSynchronizerTest extends TestCase {
 
 		// Assert that the cached state has been reconciled with IMAP
 		self::assertEqualsCanonicalizing([$uid1, $uid2, $uid3], $dbMessageMapper->findAllUids($inbox));
+	}
+
+	public function testPartialSyncStoresNewMessagesAcrossChunks(): void {
+		$message = $this->getMessageBuilder()
+			->from('ralph@buffington@domain.tld')
+			->to('user@domain.tld')
+			->subject('Message 1')
+			->finish();
+		$uid = $this->saveMessage('INBOX', $message, $this->account);
+		$account = new Account($this->account);
+		Server::get(IMailManager::class)->getMailboxes($account);
+		$mailboxMapper = Server::get(MailboxMapper::class);
+		$inbox = $mailboxMapper->find($account, 'INBOX');
+		Server::get(SyncService::class)->syncMailbox(
+			$account,
+			$inbox,
+			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
+			false,
+			null,
+			[],
+		);
+		$tokenAfterInitialSync = $mailboxMapper->findById($inbox->getId())->getSyncNewToken();
+		$mimeTexts = [];
+		for ($i = 1; $i <= ImapToDbSynchronizer::PARTIAL_SYNC_CHUNK_SIZE + 1; $i++) {
+			$mimeTexts[] = "From: ralph@domain.tld\r\nTo: user@domain.tld\r\nSubject: Bulk message $i\r\nMessage-ID: <bulk-$i@domain.tld>\r\n\r\nBody $i\r\n";
+		}
+		$newUids = $this->saveMimeMessages('INBOX', $mimeTexts, $this->account);
+
+		$this->synchronizer->syncAccount($account, Server::get(LoggerInterface::class));
+
+		self::assertEqualsCanonicalizing([$uid, ...$newUids], Server::get(DbMessageMapper::class)->findAllUids($inbox));
+		self::assertNotSame($tokenAfterInitialSync, $mailboxMapper->findById($inbox->getId())->getSyncNewToken());
 	}
 }
