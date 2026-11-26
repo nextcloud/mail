@@ -20,12 +20,14 @@ use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\Avatar\Avatar;
 use OCA\Mail\Service\AvatarService;
 use Psr\Log\LoggerInterface;
+use function array_chunk;
+use function array_filter;
 use function array_key_exists;
 use function array_map;
-use function array_merge;
-use function array_reduce;
 
 class PreviewEnhancer {
+	public const CHUNK_SIZE = 500;
+
 	public function __construct(
 		private readonly ProtocolFactory $protocolFactory,
 		private ImapMapper $imapMapper,
@@ -42,15 +44,12 @@ class PreviewEnhancer {
 	 * @return Message[]
 	 */
 	public function process(Account $account, Mailbox $mailbox, array $messages, bool $preLoadAvatars = false, ?string $userId = null): array {
-		$needAnalyze = array_reduce($messages, static function (array $carry, Message $message) {
-			if ($message->getStructureAnalyzed()) {
-				// Nothing to do
-				return $carry;
-			}
+		$needAnalyze = array_filter($messages, static fn (Message $message): bool => !$message->getStructureAnalyzed());
+		if ($needAnalyze !== []) {
+			$this->analyzeStructure($account, $mailbox, $needAnalyze);
+		}
 
-			return array_merge($carry, [$message->getUid()]);
-		}, []);
-
+		// After the analysis, messages without attachments skip loading the full message
 		foreach ($messages as $message) {
 			$attachments = $this->attachmentService->getAttachmentNames($account, $mailbox, $message);
 			$message->setAttachments($attachments);
@@ -72,55 +71,55 @@ class PreviewEnhancer {
 			}
 		}
 
-		if ($needAnalyze === []) {
-			// Nothing to enhance
-			return $messages;
-		}
+		return $messages;
+	}
 
+	/**
+	 * @param Message[] $messages
+	 */
+	private function analyzeStructure(Account $account, Mailbox $mailbox, array $messages): void {
 		if ($account->getMailAccount()->isJmap()) {
 			foreach ($messages as $message) {
-				if ($message->getStructureAnalyzed()) {
-					continue;
-				}
-
 				$message->setStructureAnalyzed(true);
 			}
 
-			return $this->mapper->updatePreviewDataBulk(...$messages);
+			$this->mapper->updatePreviewDataBulk(...$messages);
+			return;
 		}
 
 		$client = $this->protocolFactory->imapClient($account);
-		try {
-			$data = $this->imapMapper->getBodyStructureData(
-				$client,
-				$mailbox->getName(),
-				$needAnalyze,
-				$account->getEMailAddress()
-			);
-		} catch (Horde_Imap_Client_Exception $e) {
-			// Ignore for now, but log
-			$this->logger->warning('Could not fetch structure detail data to enhance message previews: ' . $e->getMessage(), [
-				'exception' => $e,
-			]);
+		foreach (array_chunk($messages, self::CHUNK_SIZE) as $chunk) {
+			try {
+				$data = $this->imapMapper->getBodyStructureData(
+					$client,
+					$mailbox->getName(),
+					array_map(static fn (Message $message): int => $message->getUid(), $chunk),
+					$account->getEMailAddress()
+				);
+			} catch (Horde_Imap_Client_Exception $e) {
+				// Ignore for now, but log
+				$this->logger->info('Could not fetch structure detail data to enhance message previews: ' . $e->getMessage(), [
+					'exception' => $e,
+				]);
 
-			return $messages;
-		}
-
-		return $this->mapper->updatePreviewDataBulk(...array_map(static function (Message $message) use ($data) {
-			if (!array_key_exists($message->getUid(), $data)) {
-				// Nothing to do
-				return $message;
+				return;
 			}
 
-			$structureData = $data[$message->getUid()];
-			$message->setFlagAttachments($structureData->hasAttachments());
-			$message->setPreviewText($structureData->getPreviewText());
-			$message->setStructureAnalyzed(true);
-			$message->setImipMessage($structureData->isImipMessage());
-			$message->setEncrypted($structureData->isEncrypted());
-			$message->setMentionsMe($structureData->getMentionsMe());
+			foreach ($chunk as $message) {
+				if (!array_key_exists($message->getUid(), $data)) {
+					continue;
+				}
 
-			return $message;
-		}, $messages));
+				$structureData = $data[$message->getUid()];
+				$message->setFlagAttachments($structureData->hasAttachments());
+				$message->setPreviewText($structureData->getPreviewText());
+				$message->setStructureAnalyzed(true);
+				$message->setImipMessage($structureData->isImipMessage());
+				$message->setEncrypted($structureData->isEncrypted());
+				$message->setMentionsMe($structureData->getMentionsMe());
+			}
+
+			$this->mapper->updatePreviewDataBulk(...$chunk);
+		}
 	}
 }
