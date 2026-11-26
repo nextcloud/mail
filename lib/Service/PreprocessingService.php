@@ -9,13 +9,15 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
-use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\IMAP\PreviewEnhancer;
 use Psr\Log\LoggerInterface;
+use function count;
 
 class PreprocessingService {
+	public const BATCH_SIZE = PreviewEnhancer::CHUNK_SIZE;
+
 	public function __construct(
 		private MessageMapper $messageMapper,
 		private LoggerInterface $logger,
@@ -30,28 +32,28 @@ class PreprocessingService {
 			$this->logger->debug('No mailboxes found.');
 			return;
 		}
-		$mailboxIds = array_unique(array_map(static fn (Mailbox $mailbox) => $mailbox->getId(), $mailboxes));
 
-		$messages = [];
-		foreach (array_chunk($mailboxIds, 1000) as $chunk) {
-			$messages = array_merge($messages, $this->messageMapper->getUnanalyzed($limitTimestamp, $chunk));
-		}
-		if ($messages === []) {
-			$this->logger->debug('No structure data to analyse.');
-			return;
-		}
-
+		$nTotal = 0;
 		foreach ($mailboxes as $mailbox) {
-			$filteredMessages = array_filter($messages, static fn ($message) => $message->getMailboxId() === $mailbox->getId());
-
-			if ($filteredMessages === []) {
-				continue;
-			}
-
-			$processedMessages = $this->previewEnhancer->process($account, $mailbox, $filteredMessages);
-			$nProcessed = count($processedMessages);
 			$mailboxId = $mailbox->getId();
-			$this->logger->debug("Processed $nProcessed messages for structure data for mailbox $mailboxId");
+			$afterUid = 0;
+			do {
+				$messages = $this->messageMapper->getUnanalyzed($limitTimestamp, $mailboxId, $afterUid, self::BATCH_SIZE);
+				$nMessages = count($messages);
+				if ($nMessages === 0) {
+					break;
+				}
+
+				$this->previewEnhancer->process($account, $mailbox, $messages);
+				$nTotal += $nMessages;
+				$this->logger->debug("Processed $nMessages messages for structure data for mailbox $mailboxId");
+
+				$afterUid = $messages[$nMessages - 1]->getUid();
+			} while ($nMessages === self::BATCH_SIZE);
+		}
+
+		if ($nTotal === 0) {
+			$this->logger->debug('No structure data to analyse.');
 		}
 	}
 }

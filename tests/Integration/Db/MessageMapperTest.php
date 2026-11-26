@@ -17,6 +17,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Db\TagMapper;
@@ -357,6 +358,18 @@ class MessageMapperTest extends TestCase {
 		$rows = $result->fetchAll();
 
 		$this->assertEmpty($rows);
+	}
+
+	public function testGetUnanalyzedReturnsTheNextPageOfTheMailboxAfterTheCursor(): void {
+		$this->insertMessage(1, 7);
+		$this->insertMessage(2, 7);
+		$this->insertMessage(3, 7);
+		$this->insertMessage(4, 7);
+		$this->insertMessage(2, 8);
+
+		$page = $this->mapper->getUnanalyzed($this->timestamp - 1, 7, 1, 2);
+
+		$this->assertSame([[7, 2], [7, 3]], array_map(static fn (Message $message): array => [$message->getMailboxId(), $message->getUid()], $page));
 	}
 
 	public function testResetPreviewDataFlag(): void {

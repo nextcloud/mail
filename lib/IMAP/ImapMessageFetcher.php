@@ -38,6 +38,8 @@ use function strtolower;
  * @psalm-import-type IMAPAttachment from IMAPMessage
  */
 class ImapMessageFetcher {
+	private const SIGNATURE_TYPES = ['application/pgp-signature', 'application/pkcs7-signature', 'application/x-pkcs7-signature'];
+
 	/** @var string[] */
 	private array $attachmentsToIgnore = ['signature.asc', 'smime.p7s'];
 
@@ -343,7 +345,7 @@ class ImapMessageFetcher {
 		}
 
 		$isAttachment = ($p->isAttachment() || $p->getType() === 'message/rfc822')
-			&& !in_array($p->getType(), ['application/pgp-signature', 'application/pkcs7-signature', 'application/x-pkcs7-signature']);
+			&& !in_array($p->getType(), self::SIGNATURE_TYPES);
 
 		// Regular attachments
 		if ($isAttachment) {
@@ -513,6 +515,15 @@ class ImapMessageFetcher {
 		}
 
 		return $this->converter->convert($p);
+	}
+
+	public static function isVisibleAttachment(Horde_Mime_Part $part): bool {
+		$type = $part->getType();
+		if ($type === 'text/calendar' && $part->getName() !== null) {
+			return true;
+		}
+		return ($part->isAttachment() || $type === 'message/rfc822')
+			&& !in_array($type, self::SIGNATURE_TYPES, true);
 	}
 
 	private function hasAttachments(Horde_Mime_Part $part): bool {

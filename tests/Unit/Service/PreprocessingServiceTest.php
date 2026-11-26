@@ -80,7 +80,7 @@ class PreprocessingServiceTest extends TestCase {
 			->willReturn([$mailbox]);
 		$this->messageMapper->expects(self::once())
 			->method('getUnanalyzed')
-			->with($timestamp, [$mailbox->getId()])
+			->with($timestamp, $mailbox->getId(), 0, PreprocessingService::BATCH_SIZE)
 			->willReturn([]);
 		$this->previewEnhancer->expects(self::never())
 			->method('process');
@@ -102,7 +102,7 @@ class PreprocessingServiceTest extends TestCase {
 			->willReturn([$mailbox]);
 		$this->messageMapper->expects(self::once())
 			->method('getUnanalyzed')
-			->with($timestamp, [$mailbox->getId()])
+			->with($timestamp, $mailbox->getId(), 0, PreprocessingService::BATCH_SIZE)
 			->willReturn([$message]);
 		$this->previewEnhancer->expects(self::once())
 			->method('process')
@@ -110,5 +110,41 @@ class PreprocessingServiceTest extends TestCase {
 			->willReturn([$message]);
 
 		$this->service->process($timestamp, $account);
+	}
+
+	public function testProcessesFullBatchesOfEachMailboxUntilAShorterOne(): void {
+		$account = new Account(new MailAccount());
+		$timestamp = 0;
+		$inbox = new Mailbox();
+		$inbox->setId(1);
+		$archive = new Mailbox();
+		$archive->setId(2);
+		$firstBatch = array_map(static fn (int $uid): Message => self::message($uid), range(1, PreprocessingService::BATCH_SIZE));
+		$secondBatch = [self::message(PreprocessingService::BATCH_SIZE + 1)];
+		$this->mailboxMapper->method('findAll')->willReturn([$inbox, $archive]);
+		$this->messageMapper->expects(self::exactly(3))
+			->method('getUnanalyzed')
+			->willReturnCallback(static fn (int $lastRun, int $mailboxId, int $afterUid, int $limit): array => match ([$lastRun, $mailboxId, $afterUid, $limit]) {
+				[$timestamp, 1, 0, PreprocessingService::BATCH_SIZE] => $firstBatch,
+				[$timestamp, 1, PreprocessingService::BATCH_SIZE, PreprocessingService::BATCH_SIZE] => $secondBatch,
+				[$timestamp, 2, 0, PreprocessingService::BATCH_SIZE] => [],
+			});
+		$processed = [];
+		$this->previewEnhancer->expects(self::exactly(2))
+			->method('process')
+			->willReturnCallback(static function (Account $account, Mailbox $mailbox, array $messages) use (&$processed): array {
+				$processed[] = [$mailbox->getId(), count($messages)];
+				return $messages;
+			});
+
+		$this->service->process($timestamp, $account);
+
+		self::assertSame([[1, PreprocessingService::BATCH_SIZE], [1, 1]], $processed);
+	}
+
+	private static function message(int $uid): Message {
+		$message = new Message();
+		$message->setUid($uid);
+		return $message;
 	}
 }
