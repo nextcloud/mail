@@ -12,6 +12,7 @@ namespace OCA\Mail\Tests\Integration\Db;
 use ChristophWurst\Nextcloud\Testing\DatabaseTransaction;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
+use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -190,5 +191,37 @@ final class MailboxMapperTest extends TestCase {
 
 		$resultB = $this->mapper->find($account, 'Test ');
 		$this->assertSame('Test ', $resultB->getName());
+	}
+
+	public function testClearSyncTokensOfAStaleEntityWithoutTokens(): void {
+		$account = $this->createMock(Account::class);
+		$account->method('getId')->willReturn(13);
+		$this->insertCachedMailbox('INBOX');
+		$this->insertCachedMailbox('Sent');
+		$stale = new Mailbox();
+		$stale->setId($this->mapper->find($account, 'INBOX')->getId());
+
+		$this->mapper->clearSyncTokens($stale);
+
+		$this->assertFalse($this->mapper->find($account, 'INBOX')->isCached());
+		$this->assertTrue($this->mapper->find($account, 'Sent')->isCached());
+	}
+
+	private function insertCachedMailbox(string $name): void {
+		$qb = $this->db->getQueryBuilder();
+		$qb->insert($this->mapper->getTableName())
+			->values([
+				'name' => $qb->createNamedParameter($name),
+				'account_id' => $qb->createNamedParameter(13, IQueryBuilder::PARAM_INT),
+				'sync_new_token' => $qb->createNamedParameter('VTEsVjE0Mjg1OTkxNDk='),
+				'sync_changed_token' => $qb->createNamedParameter('VTEsVjE0Mjg1OTkxNDk='),
+				'sync_vanished_token' => $qb->createNamedParameter('VTEsVjE0Mjg1OTkxNDk='),
+				'delimiter' => $qb->createNamedParameter('.'),
+				'messages' => $qb->createNamedParameter(0, IQueryBuilder::PARAM_INT),
+				'unseen' => $qb->createNamedParameter(0, IQueryBuilder::PARAM_INT),
+				'selectable' => $qb->createNamedParameter(true, IQueryBuilder::PARAM_BOOL),
+				'name_hash' => $qb->createNamedParameter(md5($name)),
+			])
+			->executeStatement();
 	}
 }

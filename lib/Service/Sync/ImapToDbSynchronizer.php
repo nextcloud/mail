@@ -38,7 +38,9 @@ use OCA\Mail\Service\Classification\NewMessagesClassifier;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Support\PerformanceLogger;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Db\TTransactional;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\IDBConnection;
 use Psr\Log\LoggerInterface;
 use Throwable;
 use function array_chunk;
@@ -50,6 +52,8 @@ use function sort;
 use function sprintf;
 
 class ImapToDbSynchronizer {
+	use TTransactional;
+
 	/** @var int */
 	public const MAX_NEW_MESSAGES = 5000;
 	public const PARTIAL_SYNC_CHUNK_SIZE = 500;
@@ -70,6 +74,7 @@ class ImapToDbSynchronizer {
 		private MailManager $mailManager,
 		private TagMapper $tagMapper,
 		private NewMessagesClassifier $newMessagesClassifier,
+		private IDBConnection $db,
 	) {
 		$this->dispatcher = $dispatcher;
 	}
@@ -160,12 +165,15 @@ class ImapToDbSynchronizer {
 	 */
 	private function resetCache(Account $account, Mailbox $mailbox): void {
 		$id = $account->getId() . ':' . $mailbox->getName();
-		$this->dbMapper->deleteAll($mailbox);
+		$this->atomicRetry(function () use ($mailbox): void {
+			$this->dbMapper->deleteAll($mailbox);
+			$this->mailboxMapper->clearSyncTokens($mailbox);
+		}, $this->db);
 		$this->logger->debug("All messages of $id cleared");
+		// Unlocking saves $mailbox, so it only gets the empty tokens once they are committed
 		$mailbox->setSyncNewToken(null);
 		$mailbox->setSyncChangedToken(null);
 		$mailbox->setSyncVanishedToken(null);
-		$this->mailboxMapper->update($mailbox);
 	}
 
 	/**
