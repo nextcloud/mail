@@ -221,7 +221,7 @@ export default {
 	},
 
 	unmounted() {
-		this.bus.off('load-more', this.onScroll)
+		this.bus.off('loadMore', this.onScroll)
 		this.bus.off('delete', this.onDelete)
 		this.bus.off('archive', this.onArchive)
 		this.bus.off('shortcut', this.handleShortcut)
