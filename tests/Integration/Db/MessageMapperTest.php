@@ -13,6 +13,9 @@ use ChristophWurst\Nextcloud\Testing\DatabaseTransaction;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailSearch;
+use OCA\Mail\Db\LocalAttachmentMapper;
+use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\Mailbox;
@@ -20,6 +23,7 @@ use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Db\Recipient;
+use OCA\Mail\Db\RecipientMapper;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\Search\SearchQuery;
 use OCA\Mail\Support\PerformanceLogger;
@@ -67,6 +71,7 @@ final class MessageMapperTest extends TestCase {
 
 		$delete = $qb->delete($this->mapper->getTableName());
 		$delete->executeStatement();
+		$this->db->getQueryBuilder()->delete('mail_recipients')->executeStatement();
 	}
 
 	private function insertMessage(int $uid, int $mailbox_id): int {
@@ -114,16 +119,19 @@ final class MessageMapperTest extends TestCase {
 		$insert->executeStatement();
 	}
 
-	private function insertRecipient(int $messageId, int $type, string $email, string $label = ''): void {
+	private function insertRecipient(int $messageId, int $type, string $email, string $label = '', ?int $id = null): int {
 		$qb = $this->db->getQueryBuilder();
-		$qb->insert('mail_recipients')
-			->values([
-				'message_id' => $qb->createNamedParameter($messageId, IQueryBuilder::PARAM_INT),
-				'type' => $qb->createNamedParameter($type, IQueryBuilder::PARAM_INT),
-				'email' => $qb->createNamedParameter($email),
-				'label' => $qb->createNamedParameter($label),
-			])
-			->executeStatement();
+		$values = [
+			'message_id' => $qb->createNamedParameter($messageId, IQueryBuilder::PARAM_INT),
+			'type' => $qb->createNamedParameter($type, IQueryBuilder::PARAM_INT),
+			'email' => $qb->createNamedParameter($email),
+			'label' => $qb->createNamedParameter($label),
+		];
+		if ($id !== null) {
+			$values['id'] = $qb->createNamedParameter($id, IQueryBuilder::PARAM_INT);
+		}
+		$qb->insert('mail_recipients')->values($values)->executeStatement();
+		return $id ?? $qb->getLastInsertId();
 	}
 
 	private function insertMailboxOfUser(string $userId): Mailbox {
@@ -650,5 +658,71 @@ final class MessageMapperTest extends TestCase {
 		foreach ($messages as $message) {
 			self::assertEquals(1, $message->getMailboxId());
 		}
+	}
+
+	public function testDeleteOrphansKeepsRecipientsWhoseIdMatchesAnOrphanedMessage(): void {
+		$mailbox = $this->insertMailboxOfUser('user');
+		$messageId = $this->insertMessage(1, $mailbox->getId());
+		$deletedMailboxId = $this->insertDeletedMailboxId();
+		$firstOrphanId = $this->insertMessage(2, $deletedMailboxId);
+		$secondOrphanId = $this->insertMessage(3, $deletedMailboxId);
+		$this->insertRecipient($messageId, Recipient::TYPE_FROM, 'alice@example.com', id: $firstOrphanId);
+		$this->insertDraftWithRecipient($mailbox->getAccountId(), $secondOrphanId);
+
+		$this->mapper->deleteOrphans();
+
+		$this->assertSame([$firstOrphanId, $secondOrphanId], $this->findIds('mail_recipients'));
+		$this->assertSame([$messageId], $this->findIds($this->mapper->getTableName()));
+	}
+
+	public function testDeleteOrphansDeletesRecipientsOfMissingAndOrphanedMessages(): void {
+		$mailbox = $this->insertMailboxOfUser('user');
+		$messageId = $this->insertMessage(1, $mailbox->getId());
+		$orphanId = $this->insertMessage(2, $this->insertDeletedMailboxId());
+		$missingMessageId = $this->insertMessage(3, $mailbox->getId());
+		$this->mapper->deleteByUid($mailbox, 3);
+		$recipientId = $this->insertRecipient($messageId, Recipient::TYPE_FROM, 'alice@example.com');
+		$this->insertRecipient($orphanId, Recipient::TYPE_FROM, 'bob@example.com');
+		$this->insertRecipient($missingMessageId, Recipient::TYPE_FROM, 'carol@example.com');
+
+		$this->mapper->deleteOrphans();
+
+		$this->assertSame([$recipientId], $this->findIds('mail_recipients'));
+	}
+
+	private function insertDeletedMailboxId(): int {
+		$mailbox = $this->insertMailboxOfUser('removed');
+		(new MailboxMapper($this->db, $this->time))->delete($mailbox);
+		return $mailbox->getId();
+	}
+
+	private function insertDraftWithRecipient(int $accountId, int $recipientId): void {
+		$message = new LocalMessage();
+		$message->setType(LocalMessage::TYPE_DRAFT);
+		$message->setAccountId($accountId);
+		$message->setSubject('subject');
+		$message->setBodyHtml('message');
+		$message->setHtml(true);
+		$recipient = new Recipient();
+		$recipient->setId($recipientId);
+		$recipient->setType(Recipient::TYPE_TO);
+		$recipient->setEmail('draft@example.com');
+		$recipient->setLabel('');
+		(new LocalMessageMapper($this->db, $this->createMock(LocalAttachmentMapper::class), new RecipientMapper($this->db)))
+			->saveWithRecipients($message, [$recipient], [], []);
+	}
+
+	/**
+	 * @return int[]
+	 */
+	private function findIds(string $table): array {
+		$result = $this->db->getQueryBuilder()
+			->select('id')
+			->from($table)
+			->orderBy('id')
+			->executeQuery();
+		$ids = array_map('intval', $result->fetchAll(\PDO::FETCH_COLUMN));
+		$result->closeCursor();
+		return $ids;
 	}
 }
