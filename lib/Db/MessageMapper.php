@@ -161,16 +161,6 @@ class MessageMapper extends QBMapper {
 		return $this->findUids($query);
 	}
 
-	public function findAllIds(Mailbox $mailbox): array {
-		$query = $this->db->getQueryBuilder();
-
-		$query->select('id')
-			->from($this->getTableName())
-			->where($query->expr()->eq('mailbox_id', $query->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT));
-
-		return $this->findIds($query);
-	}
-
 	/**
 	 * @param Mailbox $mailbox
 	 * @param int[] $ids

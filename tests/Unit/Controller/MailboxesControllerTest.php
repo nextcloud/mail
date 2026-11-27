@@ -10,13 +10,16 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Controller;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Horde_Imap_Client;
 use OCA\Mail\Account;
+use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Controller\MailboxesController;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\MailboxStats;
+use OCA\Mail\IMAP\Sync\Response;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\DelegationService;
 use OCA\Mail\Service\MailManager;
@@ -344,6 +347,37 @@ final class MailboxesControllerTest extends TestCase {
 		$stats = new MailboxStats(42, 10, null);
 		$expected = new JSONResponse($stats);
 		$this->assertEquals($expected, $response);
+	}
+
+	public function testSyncPassesTheMessageViewToTheSync(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setAccountId(7);
+		$account = $this->createMock(Account::class);
+		$syncResponse = new Response([], [], [], new MailboxStats(42, 10, null));
+		$this->mailManager->method('getMailbox')
+			->with('john', 13)
+			->willReturn($mailbox);
+		$this->accountService->method('find')
+			->with('john', 7)
+			->willReturn($account);
+		$this->syncService->expects($this->once())
+			->method('syncMailbox')
+			->with(
+				$account,
+				$mailbox,
+				Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
+				true,
+				null,
+				[1, 2],
+				IMailSearch::ORDER_NEWEST_FIRST,
+				null,
+				IMailSearch::VIEW_THREADED,
+			)
+			->willReturn($syncResponse);
+
+		$response = $this->controller->sync(13, ['1', '2'], null, false, 'newest', null, IMailSearch::VIEW_THREADED);
+
+		$this->assertEquals(new JSONResponse($syncResponse), $response);
 	}
 
 	public function testUpdate(): void {

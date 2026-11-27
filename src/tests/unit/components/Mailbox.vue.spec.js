@@ -81,4 +81,24 @@ describe('Mailbox', () => {
 		expect(view.vm.error).toBe(error)
 		expect(view.vm.loadingCacheInitialization).toBe(false)
 	})
+
+	it('loads further pages again after a sync added messages', async () => {
+		store.syncEnvelopes.mockResolvedValue([{ databaseId: 1 }])
+		const view = mountMailbox()
+		view.vm.endReached = true
+
+		await view.vm.sync()
+
+		expect(view.vm.endReached).toBe(false)
+	})
+
+	it('keeps the end of the list after a sync without new messages', async () => {
+		store.syncEnvelopes.mockResolvedValue([])
+		const view = mountMailbox()
+		view.vm.endReached = true
+
+		await view.vm.sync()
+
+		expect(view.vm.endReached).toBe(true)
+	})
 })
