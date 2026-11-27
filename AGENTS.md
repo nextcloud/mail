@@ -276,7 +276,7 @@ Instead, address feedback with **fixup commits**:
 git commit --fixup=<sha>   # targets the specific commit being corrected
 ```
 
-The branch will be rebased and squashed into a clean history before merge (CI enforces this). The failing "clean history" CI check is intentional and expected during review — ignore it until the PR has a positive review, then rebase to clean up.
+There is a CI check that prevents merging while the branch still contains fixup commits. The failing check is intentional and expected during review — ignore it until the PR has a positive review, then rebase to clean up the fixups. Use a regular merge commit.
 
 ### Issues, PR descriptions and comments
 
