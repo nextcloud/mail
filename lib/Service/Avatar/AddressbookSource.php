@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\Avatar;
 
 use OCA\Mail\Service\ContactsIntegration;
+use OCP\IConfig;
 
 /**
  * This class is just a think wrapper around the contacts integration to use it
@@ -18,6 +19,7 @@ use OCA\Mail\Service\ContactsIntegration;
 class AddressbookSource implements IAvatarSource {
 	public function __construct(
 		private ContactsIntegration $contactsIntegration,
+		private IConfig $config,
 	) {
 	}
 
@@ -43,6 +45,21 @@ class AddressbookSource implements IAvatarSource {
 
 		if ($url === false || $url === null) {
 			return null;
+		}
+
+		// The Nextcloud system addressbook can expose automatically generated
+		// initials as PHOTO. Let Gravatar and favicon take precedence over them.
+		$path = parse_url($url, PHP_URL_PATH);
+		if (is_string($path)
+			&& preg_match('~/remote\.php/dav/addressbooks/system/system/system/([^/]+)\.vcf$~', $path, $matches) === 1) {
+			$cardId = rawurldecode($matches[1]);
+			$separator = strpos($cardId, ':');
+			if ($separator !== false) {
+				$contactUid = substr($cardId, $separator + 1);
+				if ($this->config->getUserValue($contactUid, 'avatar', 'generated', 'false') === 'true') {
+					return null;
+				}
+			}
 		}
 
 		return $factory->createInternal($url);
