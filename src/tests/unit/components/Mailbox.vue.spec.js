@@ -45,6 +45,15 @@ describe('Mailbox', () => {
 		})
 	}
 
+	it('removes its bus handlers when unmounted', () => {
+		const view = mountMailbox()
+		const bus = view.props('bus')
+
+		view.unmount()
+
+		expect(bus.off.mock.calls).toEqual(bus.on.mock.calls)
+	})
+
 	it('initializes an uncached folder and then loads its messages', async () => {
 		store.syncEnvelopes.mockResolvedValue([])
 		const view = mountMailbox()
