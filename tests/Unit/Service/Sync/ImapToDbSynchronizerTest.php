@@ -26,6 +26,7 @@ use OCA\Mail\Db\MessageMapper as DatabaseMessageMapper;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Events\NewMessagesSynchronized;
 use OCA\Mail\Events\SynchronizationEvent;
+use OCA\Mail\Exception\MailboxDoesNotSupportModSequencesException;
 use OCA\Mail\Exception\MailboxLockedException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\UidValidityChangedException;
@@ -327,6 +328,20 @@ class ImapToDbSynchronizerTest extends TestCase {
 		$this->assertSame(['refresh', 'clear cache', 'refresh'], $steps);
 	}
 
+	public function testMissingModSequencesRefreshTheLocksBeforeClearingTheCache(): void {
+		[$account, $mailbox, $client] = $this->createPartialSyncFixture();
+		$this->imapSynchronizer->method('sync')->willThrowException(new MailboxDoesNotSupportModSequencesException('no mod-sequences'));
+		$this->clientFactory->method('getClient')
+			->willReturn($this->createStub(Horde_Imap_Client_Socket::class));
+		$this->imapMapper->method('findAll')->willReturn(['messages' => [], 'all' => true, 'total' => 0]);
+		$steps = [];
+		$this->recordLockSteps($steps);
+
+		$this->synchronizer->sync($account, $client, $mailbox, $this->createStub(LoggerInterface::class));
+
+		$this->assertSame(['refresh', 'clear cache', 'refresh'], $steps);
+	}
+
 	public function testSyncAccountSkipsMailboxesThatAnotherProcessIsSyncing(): void {
 		[$account, , $client] = $this->createPartialSyncFixture();
 		$locked = $this->createBackgroundMailbox(101);
@@ -379,7 +394,7 @@ class ImapToDbSynchronizerTest extends TestCase {
 		$this->dbMapper->expects($this->never())->method('deleteByUid');
 		$this->mailboxMapper->expects($this->never())->method('unlockFromVanishedSync');
 
-		$this->expectException(ServiceException::class);
+		$this->expectException(MailboxLockedException::class);
 		$this->synchronizer->repairSync($account, $mailbox, $this->createStub(LoggerInterface::class));
 	}
 
