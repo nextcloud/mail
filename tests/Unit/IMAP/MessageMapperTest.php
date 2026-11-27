@@ -1086,6 +1086,36 @@ final class MessageMapperTest extends TestCase {
 		$this->mapper->addFlag($client, $mailbox, range(2, 40000, 2), Horde_Imap_Client::FLAG_SEEN);
 	}
 
+	public function testAddFlagLogsInBeforeReadingTheCommandLength(): void {
+		$steps = [];
+		$capability = $this->createMock(Horde_Imap_Client_Data_Capability_Imap::class);
+		$capability->method('__get')
+			->with('cmdlength')
+			->willReturn(8000);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client->expects($this->once())
+			->method('login')
+			->willReturnCallback(static function () use (&$steps): void {
+				$steps[] = 'login';
+			});
+		$client->method('__get')
+			->with('capability')
+			->willReturnCallback(static function () use (&$steps, $capability): Horde_Imap_Client_Data_Capability_Imap {
+				$steps[] = 'capability';
+				return $capability;
+			});
+		$client->method('store')
+			->willReturnCallback(static function () use (&$steps): void {
+				$steps[] = 'store';
+			});
+		$mailbox = new Mailbox();
+		$mailbox->setName('Archive');
+
+		$this->mapper->addFlag($client, $mailbox, [1, 2, 3], Horde_Imap_Client::FLAG_SEEN);
+
+		$this->assertSame(['login', 'capability', 'store'], $steps);
+	}
+
 	private function createImapClientWithCommandLength(int $commandLength): Horde_Imap_Client_Socket&MockObject {
 		$capability = $this->createMock(Horde_Imap_Client_Data_Capability_Imap::class);
 		$capability->method('__get')
