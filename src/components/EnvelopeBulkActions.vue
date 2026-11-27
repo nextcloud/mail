@@ -213,7 +213,7 @@ export default {
 		},
 	},
 
-	emits: ['update:selection'],
+	emits: ['update:selection', 'removed'],
 
 	data() {
 		return {
@@ -279,7 +279,9 @@ export default {
 		},
 
 		selectedEnvelopes() {
-			return this.envelopes.filter((env) => this.selection.includes(env.databaseId))
+			return this.selection
+				.map((id) => this.mainStore.getEnvelope(id))
+				.filter((envelope) => envelope !== undefined)
 		},
 	},
 
@@ -340,6 +342,7 @@ export default {
 				}
 			}
 			this.unselectAll()
+			this.$emit('removed')
 		},
 
 		async markSelectionNotJunk() {
@@ -352,6 +355,7 @@ export default {
 				}
 			}
 			this.unselectAll()
+			this.$emit('removed')
 		},
 
 		async unfavoriteAll() {
@@ -428,6 +432,7 @@ export default {
 				})
 			}
 			this.unselectAll()
+			this.$emit('removed')
 		},
 
 		onOpenMoveModal() {
@@ -452,6 +457,7 @@ export default {
 		onCloseMoveModal() {
 			this.showMoveModal = false
 			this.unselectAll()
+			this.$emit('removed')
 		},
 
 		unselectAll() {

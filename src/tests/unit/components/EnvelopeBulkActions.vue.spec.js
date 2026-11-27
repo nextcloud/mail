@@ -28,6 +28,7 @@ function createContext(deleteThread) {
 		$router: { push: vi.fn() },
 		mainStore: { deleteThread },
 		unselectAll: vi.fn(),
+		$emit: vi.fn(),
 	}
 }
 
@@ -53,6 +54,7 @@ describe('EnvelopeBulkActions', () => {
 		expect(deleteThread).toHaveBeenCalledTimes(2)
 		expect(deleteThread).toHaveBeenNthCalledWith(2, { envelope: context.selectedEnvelopes[1] })
 		expect(context.unselectAll).toHaveBeenCalled()
+		expect(context.$emit).toHaveBeenCalledWith('removed')
 	})
 
 	it('stops at the first failed thread', async () => {
@@ -148,6 +150,7 @@ describe('EnvelopeBulkActions junk selection', () => {
 			mainStore: store,
 			selectedEnvelopes: [],
 			unselectAll: vi.fn(),
+			$emit: vi.fn(),
 		}
 	})
 
