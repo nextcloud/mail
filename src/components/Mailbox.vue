@@ -208,6 +208,7 @@ export default {
 
 	async mounted() {
 		if (this.mainStore.hasFetchedInitialEnvelopes) {
+			await this.loadEnvelopes()
 			return
 		}
 

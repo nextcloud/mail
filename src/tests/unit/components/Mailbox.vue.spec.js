@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { shallowMount } from '@vue/test-utils'
+import { flushPromises, shallowMount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import Mailbox from '../../../components/Mailbox.vue'
 import MailboxLockedError from '../../../errors/MailboxLockedError.js'
@@ -49,7 +49,7 @@ describe('Mailbox', () => {
 		store.syncEnvelopes.mockResolvedValue([])
 		const view = mountMailbox()
 
-		await view.vm.loadEnvelopes()
+		await flushPromises()
 
 		expect(store.syncEnvelopes).toHaveBeenCalledWith({ mailboxId: 22, query: 'is:pi-other', init: true })
 		expect(store.fetchEnvelopes).toHaveBeenCalledTimes(2)
@@ -62,7 +62,7 @@ describe('Mailbox', () => {
 		store.syncEnvelopes.mockRejectedValue(new MailboxLockedError('22 is already being synced'))
 		const view = mountMailbox()
 
-		await view.vm.loadEnvelopes()
+		await flushPromises()
 
 		expect(store.syncEnvelopes).toHaveBeenCalledTimes(1)
 		expect(store.fetchEnvelopes).toHaveBeenCalledTimes(2)
@@ -75,10 +75,22 @@ describe('Mailbox', () => {
 		store.syncEnvelopes.mockRejectedValue(error)
 		const view = mountMailbox()
 
-		await view.vm.loadEnvelopes()
+		await flushPromises()
 
 		expect(store.fetchEnvelopes).toHaveBeenCalledTimes(1)
 		expect(view.vm.error).toBe(error)
 		expect(view.vm.loadingCacheInitialization).toBe(false)
+	})
+
+	it('loads its messages when mounted after the initial load', async () => {
+		store.fetchEnvelopes = vi.fn().mockResolvedValue([])
+		const view = mountMailbox()
+
+		await flushPromises()
+
+		expect(store.fetchEnvelopes).toHaveBeenCalledTimes(1)
+		expect(store.fetchEnvelopes).toHaveBeenCalledWith({ mailboxId: 22, query: 'is:pi-other', limit: 20 })
+		expect(store.syncEnvelopes).not.toHaveBeenCalled()
+		expect(view.vm.syncedMailboxes.has('22is:pi-other')).toBe(true)
 	})
 })
