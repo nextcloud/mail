@@ -823,7 +823,7 @@ export default {
 			return {
 				text: account.unifiedLabel,
 				color,
-				textColor: account.unifiedLabelColor ? tagTextColor(account.unifiedLabelColor, this.isDarkTheme) : color,
+				textColor: account.unifiedLabelColor && this.isDarkTheme ? tagTextColor(account.unifiedLabelColor, true) : color,
 				description: t('mail', 'Received in {email}', { email: account.emailAddress }),
 			}
 		},

@@ -5,6 +5,7 @@
 
 import { shallowMount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
+import { ref } from 'vue'
 import Envelope from '../../../components/Envelope.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 import useMainStore from '../../../store/mainStore.js'
@@ -13,6 +14,11 @@ vi.mock('@nextcloud/dialogs', async (importOriginal) => ({
 	...(await importOriginal()),
 	showSuccess: vi.fn(),
 	showWarning: vi.fn(),
+}))
+
+const isDarkTheme = ref(false)
+vi.mock('@nextcloud/vue/composables/useIsDarkTheme', () => ({
+	useIsDarkTheme: () => isDarkTheme,
 }))
 
 const $route = {
@@ -26,6 +32,7 @@ describe('Envelope', () => {
 
 	beforeEach(() => {
 		setActivePinia(createPinia())
+		isDarkTheme.value = false
 
 		store = useMainStore()
 
@@ -587,9 +594,17 @@ describe('Envelope', () => {
 
 			const view = mountEnvelope({ isUnified: true })
 
-			expect(view.vm.accountLabel).toMatchObject({ text: 'Work', color: '#0082c9', description: 'Received in jane@example.com' })
+			expect(view.vm.accountLabel).toMatchObject({ text: 'Work', color: '#0082c9', textColor: '#0082c9', description: 'Received in jane@example.com' })
+		})
+
+		it('lightens the label text in the dark theme', () => {
+			store.accountsUnmapped[123] = { sentMailboxId: '1', emailAddress: 'jane@example.com', unifiedLabel: 'Work', unifiedLabelColor: '#0082c9' }
+			isDarkTheme.value = true
+
+			const view = mountEnvelope({ isUnified: true })
+
 			expect(view.vm.accountLabel.textColor).toContain('#0082c9')
-			expect(view.vm.accountLabel.textColor).not.toBe('#0082c9')
+			expect(view.vm.accountLabel.textColor).toContain('white')
 		})
 
 		it('shows the label of the account in the priority inbox', () => {
