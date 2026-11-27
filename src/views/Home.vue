@@ -31,6 +31,7 @@ import OidcReauthDialog from '../components/OidcReauthDialog.vue'
 import Outbox from '../components/Outbox.vue'
 import logger from '../logger.js'
 import { testAccountConnection } from '../service/AccountService.js'
+import { PRIORITY_INBOX_ID } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
 
 import '../../css/mail.scss'
@@ -108,6 +109,9 @@ export default {
 		let startMailboxId = this.mainStore.getPreference('start-mailbox-id')
 		if (startMailboxId && !this.mainStore.getMailbox(startMailboxId)) {
 			// The start ID is set but the mailbox doesn't exist anymore
+			startMailboxId = null
+		}
+		if (startMailboxId === PRIORITY_INBOX_ID && !this.mainStore.isPriorityInboxShown()) {
 			startMailboxId = null
 		}
 

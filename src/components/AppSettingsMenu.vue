@@ -72,6 +72,13 @@
 						:disabled="hasLoadingState('sort-favorites')"
 						:description="t('mail', 'When on, favorite messages will be sorted to the top of folders')" />
 				</NcFormBox>
+				<NcFormBox>
+					<NcFormBoxSwitch
+						v-model="showPriorityInbox"
+						:label="t('mail', 'Show priority inbox')"
+						:disabled="hasLoadingState('priority-inbox')"
+						:description="t('mail', 'When off, the priority inbox is not shown in the navigation')" />
+				</NcFormBox>
 				<NcRadioGroup v-model="layoutMode" :label="t('mail', 'Layout')">
 					<NcRadioGroupButton :label="t('mail', 'Vertical split')" value="vertical-split" :disabled="hasLoadingState('layout-mode')">
 						<template #icon>
@@ -337,6 +344,7 @@ import List from './textBlocks/List.vue'
 import TextEditor from './TextEditor.vue'
 import TrustedSenders from './TrustedSenders.vue'
 import Logger from '../logger.js'
+import { PRIORITY_INBOX_ID, UNIFIED_INBOX_ID } from '../store/constants.js'
 import useMainStore from '../store/mainStore.js'
 
 export default {
@@ -452,6 +460,16 @@ export default {
 
 			set(value) {
 				this.onToggleSortFavorites(value)
+			},
+		},
+
+		showPriorityInbox: {
+			get() {
+				return this.mainStore.isPriorityInboxShown()
+			},
+
+			set(value) {
+				this.onToggleShowPriorityInbox(value)
 			},
 		},
 
@@ -744,6 +762,28 @@ export default {
 				Logger.error('could not save preferences', { error })
 			} finally {
 				this.setLoadingState('sort-favorites', false)
+			}
+		},
+
+		async onToggleShowPriorityInbox(enabled) {
+			this.setLoadingState('priority-inbox', true)
+
+			try {
+				await this.mainStore.savePreference({
+					key: 'priority-inbox',
+					value: enabled ? 'true' : 'false',
+				})
+				if (!enabled && this.$route.params.mailboxId === PRIORITY_INBOX_ID) {
+					await this.$router.push({
+						name: 'mailbox',
+						params: { mailboxId: UNIFIED_INBOX_ID },
+					})
+				}
+			} catch (error) {
+				Logger.error('could not save preferences', { error })
+				showError(t('mail', 'Could not update preference'))
+			} finally {
+				this.setLoadingState('priority-inbox', false)
 			}
 		},
 

@@ -57,6 +57,10 @@ export default function initAfterAppCreation() {
 		key: 'sort-favorites',
 		value: preferences['sort-favorites'],
 	})
+	mainStore.savePreferenceMutation({
+		key: 'priority-inbox',
+		value: preferences['priority-inbox'],
+	})
 	let startMailboxId = preferences['start-mailbox-id']
 	if (startMailboxId && !['unified', 'priority'].includes(startMailboxId)) {
 		startMailboxId = parseInt(startMailboxId, 10)
