@@ -982,6 +982,7 @@ OC.L10N.register(
     "Sieve: {user} on {host}:{port} ({ssl} encryption)" : "過濾：{user} 在 {host}:{port}（{ssl} 加密）",
     "Using master user and master password" : "使用主控使用者與主控密碼",
     "Using master password for all users" : "為所有使用者使用主控密碼",
+    "Not saving a copy of sent messages" : "不儲存已傳送訊息的副本",
     "Configuration for \"{provisioningDomain}\"" : "「{provisioningDomain}」的設定",
     "Provisioning domain" : "預備設定網域",
     "Email address template" : "電子郵件地址範本",

@@ -1290,6 +1290,8 @@ class MessageMapper extends QBMapper {
 				return $this->flagExpressionToQuery($operand, $qb, $tableAlias);
 			}
 
+			// Psalm 7.10+ narrows $operand to never here (exhaustive instanceof), but the guard stays for runtime safety
+			/** @psalm-suppress NoValue */
 			throw new RuntimeException('Invalid operand type ' . get_class($operand));
 		}, $expr->getOperands());
 
@@ -1643,6 +1645,8 @@ class MessageMapper extends QBMapper {
 			$query->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 			$query->executeStatement();
 		}
+		unset($ids);
+
 		$qb3 = $this->db->getQueryBuilder();
 		$recipientIdsQuery = $qb3->selectDistinct('r.id')
 			->from('mail_recipients', 'r')
@@ -1652,8 +1656,9 @@ class MessageMapper extends QBMapper {
 				$qb3->expr()->isNull('r.local_message_id')
 			);
 		$result = $recipientIdsQuery->executeQuery();
+		$recipientIds = [];
 		while ($row = $result->fetch()) {
-			$ids[] = (int)$row['id'];
+			$recipientIds[] = (int)$row['id'];
 		}
 		$result->closeCursor();
 
@@ -1661,7 +1666,7 @@ class MessageMapper extends QBMapper {
 		$recipientsQuery = $qb4
 			->delete('mail_recipients')
 			->where($qb4->expr()->in('id', $qb4->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY));
-		foreach (array_chunk($ids, 1000) as $chunk) {
+		foreach (array_chunk($recipientIds, 1000) as $chunk) {
 			$recipientsQuery->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 			$recipientsQuery->executeStatement();
 		}
@@ -1735,20 +1740,23 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
-	 * @return Message[]
+	 * @return list<Message> at most $limit messages of the mailbox with a UID above $afterUid, ordered by UID
 	 *
 	 * @throws \OCP\DB\Exception
 	 */
-	public function getUnanalyzed(int $lastRun, array $mailboxIds): array {
+	public function getUnanalyzed(int $lastRun, int $mailboxId, int $afterUid, int $limit): array {
 		$qb = $this->db->getQueryBuilder();
 
 		$select = $qb->select('*')
 			->from($this->getTableName())
 			->where(
+				$qb->expr()->eq('mailbox_id', $qb->createNamedParameter($mailboxId, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
+				$qb->expr()->gt('uid', $qb->createNamedParameter($afterUid, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
 				$qb->expr()->gt('sent_at', $qb->createNamedParameter($lastRun, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
 				$qb->expr()->eq('structure_analyzed', $qb->createNamedParameter(false, IQueryBuilder::PARAM_BOOL), IQueryBuilder::PARAM_BOOL),
-				$qb->expr()->in('mailbox_id', $qb->createNamedParameter($mailboxIds, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY),
-			)->orderBy('sent_at', 'ASC');
+			)
+			->orderBy('uid', 'ASC')
+			->setMaxResults($limit);
 
 		return $this->findEntities($select);
 	}

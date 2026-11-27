@@ -982,6 +982,7 @@ OC.L10N.register(
     "Sieve: {user} on {host}:{port} ({ssl} encryption)" : "Sieve: {user} auf {host}:{port} ({ssl} encryption)",
     "Using master user and master password" : "Verwende Hauptbenutzer und Hauptpasswort",
     "Using master password for all users" : "Verwende Hauptpasswort für alle Benutzer",
+    "Not saving a copy of sent messages" : "Es wird keine Kopie der gesendeten Nachrichten gespeichert",
     "Configuration for \"{provisioningDomain}\"" : "Einstellungen für \"{provisioningDomain}\"",
     "Provisioning domain" : "Domain für die Bereitstellung",
     "Email address template" : "Adressvorlage für E-Mails",

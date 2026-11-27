@@ -38,6 +38,8 @@ use function strtolower;
  * @psalm-import-type IMAPAttachment from IMAPMessage
  */
 class ImapMessageFetcher {
+	private const SIGNATURE_TYPES = ['application/pgp-signature', 'application/pkcs7-signature', 'application/x-pkcs7-signature'];
+
 	/** @var string[] */
 	private array $attachmentsToIgnore = ['signature.asc', 'smime.p7s'];
 
@@ -196,13 +198,16 @@ class ImapMessageFetcher {
 
 				// Extract opaque signed content (smime-type="signed-data")
 				if ($isOpaqueSigned) {
-					$signedText = $this->smimeService->extractSignedContent($signedText);
+					$structure = Horde_Mime_Part::parseMessage($this->smimeService->extractSignedContent($signedText), [
+						'forcemime' => true,
+					]);
 				}
-
-				$structure = Horde_Mime_Part::parseMessage($signedText, [
-					'forcemime' => true,
-				]);
+				// Frees the full text before the parts are loaded
+				unset($signedText, $fullTextFetch, $headers);
 			}
+
+			// Parts of a detached-signed message are loaded on demand from the IMAP body structure
+			$isFetched = $isEncrypted || $isOpaqueSigned;
 
 			$this->hasAnyAttachment = $this->hasAttachments($structure);
 
@@ -210,16 +215,16 @@ class ImapMessageFetcher {
 			if ($structure_type === 'multipart') {
 				$i = 1;
 				foreach ($structure->getParts() as $p) {
-					$this->getPart($p, (string)$i++, $isEncrypted || $isSigned);
+					$this->getPart($p, (string)$i++, $isFetched);
 				}
 			} else {
 				$bodyPartId = $structure->findBody();
 				if (!is_null($bodyPartId)) {
-					$this->getPart($structure[$bodyPartId], $bodyPartId, $isEncrypted || $isSigned);
+					$this->getPart($structure[$bodyPartId], $bodyPartId, $isFetched);
 				} else {
 					// This handles the special case of a mail which only
 					// content is an attached file
-					$this->getPart($structure, '1', $isEncrypted || $isSigned);
+					$this->getPart($structure, '1', $isFetched);
 					$this->hasAnyAttachment = true;
 				}
 			}
@@ -343,7 +348,7 @@ class ImapMessageFetcher {
 		}
 
 		$isAttachment = ($p->isAttachment() || $p->getType() === 'message/rfc822')
-			&& !in_array($p->getType(), ['application/pgp-signature', 'application/pkcs7-signature', 'application/x-pkcs7-signature']);
+			&& !in_array($p->getType(), self::SIGNATURE_TYPES);
 
 		// Regular attachments
 		if ($isAttachment) {
@@ -513,6 +518,15 @@ class ImapMessageFetcher {
 		}
 
 		return $this->converter->convert($p);
+	}
+
+	public static function isVisibleAttachment(Horde_Mime_Part $part): bool {
+		$type = $part->getType();
+		if ($type === 'text/calendar' && $part->getName() !== null) {
+			return true;
+		}
+		return ($part->isAttachment() || $type === 'message/rfc822')
+			&& !in_array($type, self::SIGNATURE_TYPES, true);
 	}
 
 	private function hasAttachments(Horde_Mime_Part $part): bool {
