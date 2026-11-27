@@ -14,6 +14,7 @@ use OCA\Mail\Attachment;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\Tag;
+use OCA\Mail\Exception\MailboxLockedException;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Protocol\SyncResult;
 use OCA\Mail\Service\Quota;
@@ -24,6 +25,8 @@ interface IMessageConnector {
 
 	/**
 	 * Synchronize all relevant mailboxes for the account.
+	 *
+	 * @throws MailboxLockedException if another process is syncing the mailbox
 	 */
 	public function syncAll(Account $account, bool $force = false): void;
 
@@ -31,6 +34,8 @@ interface IMessageConnector {
 	 * Synchronize a single mailbox with protocol-specific options.
 	 *
 	 * @param int[]|null $knownUids
+	 *
+	 * @throws MailboxLockedException if another process is syncing the mailbox
 	 */
 	public function syncMailbox(Account $account, Mailbox $mailbox, LoggerInterface $logger, int $criteria, ?array $knownUids = null, bool $force = false): SyncResult;
 
