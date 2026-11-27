@@ -6,6 +6,7 @@
 import { plainTextToHtml, viewToPlainText } from 'ckeditor5'
 
 const COPIED_LINE_ELEMENTS = ['p', 'div', 'li']
+const LIST_INDENT = '  '
 
 /**
  * Convert plain text to HTML with one paragraph per line, the way the
@@ -225,6 +226,55 @@ export function normalizePastedLines(fragment, writer, blockElements, plainText)
 	splitPreformattedText(fragment, writer)
 	normalizeLineBreaks(fragment, writer, blockElements)
 	insertBlankLines(fragment, writer, blockElements, adjacentLines)
+}
+
+/**
+ * @param {import('ckeditor5').ViewElement} item a list item
+ * @param {import('ckeditor5').UpcastWriter} writer the writer
+ * @param {string[]} blockElements names of block elements
+ * @param {string} marker the text to put in front of the item
+ */
+function insertListMarker(item, writer, blockElements, marker) {
+	let target = item
+	let first = target.getChild(0)
+	while (first?.is('element') && blockElements.includes(first.name) && !first.is('element', 'ul') && !first.is('element', 'ol')) {
+		target = first
+		first = target.getChild(0)
+	}
+	writer.insertChild(0, writer.createText(marker), target)
+}
+
+/**
+ * Write the markers of pasted lists as text, for editors without list
+ * support. Unordered items get "- ", ordered items "1. " from the start
+ * attribute on, and nested lists are indented.
+ *
+ * @param {import('ckeditor5').ViewElement|import('ckeditor5').ViewDocumentFragment} parent the element to process
+ * @param {import('ckeditor5').UpcastWriter} writer the writer
+ * @param {string[]} blockElements names of block elements
+ * @param {number} depth the number of lists around the element
+ */
+export function addListMarkers(parent, writer, blockElements, depth = 0) {
+	for (const child of [...parent.getChildren()]) {
+		if (!child.is('element')) {
+			continue
+		}
+		if (!child.is('element', 'ul') && !child.is('element', 'ol')) {
+			addListMarkers(child, writer, blockElements, depth)
+			continue
+		}
+
+		const start = parseInt(child.getAttribute('start'), 10)
+		let number = Number.isNaN(start) ? 1 : start
+		for (const item of [...child.getChildren()]) {
+			if (!item.is('element', 'li')) {
+				continue
+			}
+			const marker = child.is('element', 'ol') ? `${number++}. ` : '- '
+			insertListMarker(item, writer, blockElements, LIST_INDENT.repeat(depth) + marker)
+			addListMarkers(item, writer, blockElements, depth + 1)
+		}
+	}
 }
 
 /**
