@@ -5,6 +5,7 @@
 
 import { showError, showSuccess, showUndo } from '@nextcloud/dialogs'
 import { n, t } from '@nextcloud/l10n'
+import pLimit from 'p-limit'
 import { defineStore } from 'pinia'
 import logger from '../logger.js'
 import * as OutboxService from '../service/OutboxService.js'
@@ -17,6 +18,7 @@ export default defineStore('outbox', {
 		return {
 			messageList: [],
 			messages: {},
+			updateLimiters: {},
 			mainStore: useMainStore(),
 		}
 	},
@@ -105,20 +107,34 @@ export default defineStore('outbox', {
 			return message
 		},
 
+		queueUpdate(id, buildMessage) {
+			this.updateLimiters[id] ??= pLimit(1)
+			return this.updateLimiters[id](async () => {
+				const message = buildMessage()
+				if (!message) {
+					return
+				}
+
+				const updatedMessage = await OutboxService.updateMessage(message, id)
+				this.updateMessageMutation({ message: updatedMessage })
+				return updatedMessage
+			})
+		},
+
 		async stopMessage({ message }) {
 			this.stopMessageMutation({ message })
-			const updatedMessage = await OutboxService.updateMessage({
-				...message,
-				sendAt: null,
-			}, message.id)
-			this.updateMessageMutation({ message: updatedMessage })
-			return updatedMessage
+			return this.queueUpdate(message.id, () => ({ ...message, sendAt: null }))
+		},
+
+		async resumeMessage({ id, sendAt }) {
+			return this.queueUpdate(id, () => {
+				const message = this.getMessage(id)
+				return message && { ...message, sendAt }
+			})
 		},
 
 		async updateMessage({ message, id }) {
-			const updatedMessage = await OutboxService.updateMessage(message, id)
-			this.updateMessageMutation({ message: updatedMessage })
-			return updatedMessage
+			return this.queueUpdate(id, () => message)
 		},
 
 		/**

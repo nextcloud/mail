@@ -356,6 +356,8 @@ export default {
 				return this.draftsPromise
 			}
 			this.changed = true
+			const isOutbox = this.composerMessage.type === 'outbox'
+			const outboxMessageId = this.composerData.id
 
 			this.draftsPromise = this.draftsPromise.then(async (id) => {
 				this.savingDraft = true
@@ -363,33 +365,29 @@ export default {
 				try {
 					let idToReturn
 					const dataForServer = this.getDataForServer(data, true)
-					if (!id) {
+					if (isOutbox) {
+						await this.outboxStore.stopMessage({ message: { ...dataForServer, id: outboxMessageId } })
+						idToReturn = outboxMessageId
+					} else if (!id) {
 						if (dataForServer.draftId) {
 							this.mainStore.removeEnvelopeMutation({ id: dataForServer.draftId })
 						}
 						const { id } = await saveDraft(dataForServer)
 						dataForServer.id = id
 						await this.mainStore.patchComposerData({ id, draftId: dataForServer.draftId })
-						this.canSaveDraft = true
-						this.draftSaved = true
-
 						idToReturn = id
 					} else {
 						dataForServer.id = id
 						await updateDraft(dataForServer)
-						this.canSaveDraft = true
-						this.draftSaved = true
 						idToReturn = id
 					}
 
+					this.canSaveDraft = true
+					this.draftSaved = true
 					this.mainStore.setComposerMessageSavedMutation(true)
 
 					if (showToast) {
-						if (this.composerMessage.type === 'outbox') {
-							showSuccess(t('mail', 'Message saved'))
-						} else {
-							showSuccess(t('mail', 'Draft saved'))
-						}
+						showSuccess(isOutbox ? t('mail', 'Message saved') : t('mail', 'Draft saved'))
 					}
 
 					if (idToReturn !== undefined) {
@@ -401,11 +399,7 @@ export default {
 					this.mainStore.setComposerIndicatorDisabledMutation(false)
 
 					if (showToast) {
-						if (this.composerMessage.type === 'outbox') {
-							showError(t('mail', 'Failed to save message'))
-						} else {
-							showError(t('mail', 'Failed to save draft'))
-						}
+						showError(isOutbox ? t('mail', 'Failed to save message') : t('mail', 'Failed to save draft'))
 					}
 
 					return id

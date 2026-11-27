@@ -58,7 +58,7 @@ import {
 	getCurrentUserPrincipal,
 	initializeClientForUserView,
 } from '../../service/caldavService.js'
-import { moveDraft, updateDraft } from '../../service/DraftService.js'
+import { moveDraft } from '../../service/DraftService.js'
 import * as FollowUpService from '../../service/FollowUpService.js'
 import {
 	addInternalAddress,
@@ -532,6 +532,13 @@ export default function mainStoreActions() {
 			templateMessageId,
 			isBlankMessage = false,
 		}) {
+			if (type === 'outbox' && this.composerMessage?.type === 'outbox' && this.composerMessage.data.id === data.id) {
+				if (!this.composerMessage.indicatorDisabled) {
+					this.showMessageComposerMutation()
+				}
+				return
+			}
+
 			// Silently close old session if already saved and show a discard modal otherwise
 			if (this.composerSessionId && !this.composerMessageIsSaved) {
 				// TODO: Nice to have: Add button to save current pending message
@@ -595,7 +602,7 @@ export default function mainStoreActions() {
 						if (reply.followUp || isOwnMessage) {
 							to = reply.data.to
 						}
-						this.startComposerSessionMutation({
+						await this.replaceComposerSession({
 							data: {
 								accountId: reply.data.accountId,
 								to,
@@ -617,7 +624,7 @@ export default function mainStoreActions() {
 							email: account.emailAddress,
 							label: account.name,
 						}, original.replyTo)
-						this.startComposerSessionMutation({
+						await this.replaceComposerSession({
 							data: {
 								accountId: reply.data.accountId,
 								to: recipients.to,
@@ -634,7 +641,7 @@ export default function mainStoreActions() {
 						return
 					} else if (reply.mode === 'forward') {
 						logger.debug('Show forward composer', { reply })
-						this.startComposerSessionMutation({
+						await this.replaceComposerSession({
 							data: {
 								accountId: reply.data.accountId,
 								to: [],
@@ -677,7 +684,7 @@ export default function mainStoreActions() {
 					data = await outboxStore.stopMessage({ message: { ...data } })
 				}
 
-				this.startComposerSessionMutation({
+				await this.replaceComposerSession({
 					type,
 					data,
 					forwardedMessages,
@@ -720,20 +727,37 @@ export default function mainStoreActions() {
 
 			return attachments
 		},
+		async restoreComposerOutboxSendAt() {
+			const message = this.composerMessage
+			if (message?.type !== 'outbox' || !message.options?.originalSendAt) {
+				return
+			}
+
+			await useOutboxStore().resumeMessage({
+				id: message.data.id,
+				sendAt: message.options.originalSendAt,
+			})
+		},
+		async replaceComposerSession(session) {
+			try {
+				await this.restoreComposerOutboxSendAt()
+			} catch (error) {
+				logger.error('Could not schedule the edited outbox message again', { error })
+				showError(t('mail', 'Could not schedule the edited message again'), { timeout: TOAST_DEFAULT_TIMEOUT * 4 })
+			}
+
+			this.startComposerSessionMutation(session)
+		},
 		async stopComposerSession({
 			restoreOriginalSendAt = false,
 			moveToImap = false,
 			id,
 		} = {}) {
 			return handleHttpAuthErrors(async () => {
-				// Restore original sendAt timestamp when requested
-				const message = this.composerMessage
-				const messageData = { ...this.composerMessage.data }
-				if (restoreOriginalSendAt && message.type === 'outbox' && message.options?.originalSendAt) {
-					messageData.sendAt = message.options.originalSendAt
-					updateDraft(messageData)
+				if (restoreOriginalSendAt) {
+					await this.restoreComposerOutboxSendAt()
 				}
-				if (moveToImap) {
+				if (moveToImap && this.composerMessage?.type !== 'outbox') {
 					await moveDraft(id)
 				}
 

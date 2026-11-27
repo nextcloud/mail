@@ -3,9 +3,11 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import { showError, TOAST_DEFAULT_TIMEOUT } from '@nextcloud/dialogs'
 import { createPinia, setActivePinia } from 'pinia'
 import { curry, range, reverse } from 'ramda'
 import * as AccountService from '../../../service/AccountService.js'
+import * as DraftService from '../../../service/DraftService.js'
 import * as InternalAddressService from '../../../service/InternalAddressService.js'
 import * as MailboxService from '../../../service/MailboxService.js'
 import * as MessageService from '../../../service/MessageService.js'
@@ -17,7 +19,12 @@ import useMainStore from '../../../store/mainStore.js'
 import useOutboxStore from '../../../store/outboxStore.js'
 import { normalizedEnvelopeListId } from '../../../util/normalization.js'
 
+vi.mock('@nextcloud/dialogs', async (importOriginal) => ({
+	...await importOriginal(),
+	showError: vi.fn(),
+}))
 vi.mock('../../../service/AccountService.js')
+vi.mock('../../../service/DraftService.js')
 vi.mock('../../../service/InternalAddressService.js')
 vi.mock('../../../service/MailboxService.js')
 vi.mock('../../../service/MessageService.js')
@@ -1268,6 +1275,146 @@ describe('Vuex store actions', () => {
 				data: expect.objectContaining({ sendAt: undefined }),
 				originalSendAt: pastSendAt,
 			}))
+		})
+	})
+
+	describe('while an outbox message is being edited', () => {
+		const originalSendAt = 1800000000
+		const editedMessage = {
+			id: 42,
+			accountId: 1,
+			subject: 'Edited',
+			sendAt: null,
+			attachments: [{ id: 5, type: 'local' }],
+		}
+		let outboxStore
+
+		beforeEach(() => {
+			OutboxService.updateMessage.mockImplementation(async (message) => ({ ...message }))
+			outboxStore = useOutboxStore()
+			outboxStore.addMessageMutation({ message: { ...editedMessage } })
+			store.startComposerSessionMutation({
+				type: 'outbox',
+				data: { ...editedMessage, subject: 'Stale' },
+				originalSendAt,
+			})
+			store.setComposerMessageSavedMutation(true)
+		})
+
+		it('restores its schedule before a new session replaces it', async () => {
+			await store.startComposerSession({ data: {}, isBlankMessage: true })
+
+			expect(OutboxService.updateMessage).toHaveBeenCalledWith({ ...editedMessage, sendAt: originalSendAt }, 42)
+			expect(outboxStore.getMessage(42).sendAt).toBe(originalSendAt)
+			expect(store.composerMessage.type).toBe('imap')
+		})
+
+		it('shows its composer with the unsaved changes again when it is reopened', async () => {
+			const sessionId = store.composerSessionId
+			store.hideMessageComposerMutation()
+			store.patchComposerData({ subject: 'Unsaved' })
+
+			await store.startComposerSession({ type: 'outbox', data: { ...editedMessage } })
+
+			expect(store.composerSessionId).toBe(sessionId)
+			expect(store.showMessageComposer).toBe(true)
+			expect(store.composerMessage.data.subject).toBe('Unsaved')
+			expect(store.composerMessage.options.originalSendAt).toBe(originalSendAt)
+			expect(OutboxService.updateMessage).not.toHaveBeenCalled()
+		})
+
+		it('keeps its composer hidden while it is being saved when it is reopened', async () => {
+			store.hideMessageComposerMutation()
+			store.setComposerIndicatorDisabledMutation(true)
+
+			await store.startComposerSession({ type: 'outbox', data: { ...editedMessage } })
+
+			expect(store.showMessageComposer).toBe(false)
+			expect(OutboxService.updateMessage).not.toHaveBeenCalled()
+		})
+
+		it('skips restoring its schedule once it left the outbox', async () => {
+			outboxStore.deleteMessageMutation({ id: 42 })
+
+			await store.startComposerSession({ data: {}, isBlankMessage: true })
+
+			expect(OutboxService.updateMessage).not.toHaveBeenCalled()
+			expect(store.composerMessage.type).toBe('imap')
+		})
+
+		it('starts the new session when restoring its schedule fails', async () => {
+			OutboxService.updateMessage.mockRejectedValue(new Error('Database unavailable'))
+
+			await store.startComposerSession({ data: {}, isBlankMessage: true })
+
+			expect(store.composerMessage.type).toBe('imap')
+			expect(showError).toHaveBeenCalledWith('Could not schedule the edited message again', { timeout: TOAST_DEFAULT_TIMEOUT * 4 })
+		})
+
+		it('keeps it paused when the new session cannot be prepared', async () => {
+			MessageService.fetchMessage.mockRejectedValue(new Error('IMAP unavailable'))
+
+			await expect(store.startComposerSession({
+				reply: { mode: 'reply', data: { databaseId: 9, accountId: 1 } },
+			})).rejects.toThrow('IMAP unavailable')
+
+			expect(OutboxService.updateMessage).not.toHaveBeenCalled()
+			expect(store.composerMessage.data.id).toBe(42)
+		})
+
+		it('restores its schedule with its saved state when the session is closed', async () => {
+			await store.stopComposerSession({ restoreOriginalSendAt: true, moveToImap: true, id: 42 })
+
+			expect(OutboxService.updateMessage).toHaveBeenCalledWith({ ...editedMessage, sendAt: originalSendAt }, 42)
+			expect(DraftService.updateDraft).not.toHaveBeenCalled()
+			expect(DraftService.moveDraft).not.toHaveBeenCalled()
+			expect(outboxStore.getMessage(42).sendAt).toBe(originalSendAt)
+			expect(store.composerMessage).toBeUndefined()
+		})
+
+		it('closes its session once it left the outbox', async () => {
+			outboxStore.deleteMessageMutation({ id: 42 })
+
+			await store.stopComposerSession({ restoreOriginalSendAt: true, moveToImap: true, id: 42 })
+
+			expect(OutboxService.updateMessage).not.toHaveBeenCalled()
+			expect(store.composerMessage).toBeUndefined()
+		})
+
+		it('keeps its session when restoring the schedule on close fails', async () => {
+			OutboxService.updateMessage.mockRejectedValue(new Error('Database unavailable'))
+
+			await expect(store.stopComposerSession({ restoreOriginalSendAt: true, moveToImap: true, id: 42 }))
+				.rejects.toThrow('Database unavailable')
+
+			expect(store.composerMessage.data.id).toBe(42)
+		})
+	})
+
+	describe('stopComposerSession', () => {
+		it('keeps an unscheduled outbox message out of the drafts', async () => {
+			store.startComposerSessionMutation({
+				type: 'outbox',
+				data: { id: 42, accountId: 1, subject: 'Failed', attachments: [] },
+			})
+
+			await store.stopComposerSession({ restoreOriginalSendAt: true, moveToImap: true, id: 42 })
+
+			expect(OutboxService.updateMessage).not.toHaveBeenCalled()
+			expect(DraftService.updateDraft).not.toHaveBeenCalled()
+			expect(DraftService.moveDraft).not.toHaveBeenCalled()
+		})
+
+		it('moves a changed draft to IMAP', async () => {
+			store.startComposerSessionMutation({
+				type: 'imap',
+				data: { id: 7, accountId: 1, subject: 'Draft', attachments: [] },
+			})
+
+			await store.stopComposerSession({ restoreOriginalSendAt: true, moveToImap: true, id: 7 })
+
+			expect(DraftService.moveDraft).toHaveBeenCalledWith(7)
+			expect(OutboxService.updateMessage).not.toHaveBeenCalled()
 		})
 	})
 })
