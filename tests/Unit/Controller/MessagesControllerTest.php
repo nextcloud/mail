@@ -13,6 +13,7 @@ namespace OCA\Mail\Tests\Unit\Controller;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Socket;
 use OC\AppFramework\Http\Request;
+use OC\Memcache\ArrayCache;
 use OC\Memcache\NullCache;
 use OC\Security\CSP\ContentSecurityPolicyNonceManager;
 use OCA\Mail\Account;
@@ -294,6 +295,82 @@ final class MessagesControllerTest extends TestCase {
 		$this->assertSame($expectedRichResponse->render(), $actualRichResponse->render());
 		$this->assertEquals($policy, $actualRichResponse->getContentSecurityPolicy());
 		$this->assertCachedFor($actualRichResponse, 60 * 60);
+	}
+
+	public function testGetHtmlBodyCachesSanitizedHtmlOnMiss(): void {
+		$accountId = 17;
+		$mailboxId = 13;
+		$folderId = 'testfolder';
+		$messageId = 4321;
+		$html = '<p>hello</p>';
+
+		$cache = new ArrayCache();
+		$cacheFactory = $this->createMock(ICacheFactory::class);
+		$cacheFactory->method('createDistributed')
+			->with("mail_account_$accountId")
+			->willReturn($cache);
+		$controller = new MessagesController(
+			$this->appName,
+			$this->request,
+			$this->accountService,
+			$this->mailManager,
+			$this->mailSearch,
+			$this->itineraryService,
+			$this->userId,
+			$this->userFolder,
+			$this->filenameValidator,
+			$this->logger,
+			$this->l10n,
+			$this->mimeTypeDetector,
+			$this->urlGenerator,
+			$this->nonceManager,
+			$this->trustedSenderService,
+			$this->protocolFactory,
+			$this->smimeService,
+			$this->dkimService,
+			$this->userPreferences,
+			$this->snoozeService,
+			$this->aiIntegrationsService,
+			$cacheFactory,
+			$this->delegationService,
+			$this->appManager,
+		);
+
+		$this->account
+			->method('getId')
+			->willReturn($accountId);
+		$mailbox = new Mailbox();
+		$message = new DbMessage();
+		$message->setMailboxId($mailboxId);
+		$message->setUid(123);
+		$mailbox->setAccountId($accountId);
+		$mailbox->setName($folderId);
+		$this->mailManager->method('getMessage')
+			->with($this->userId, $messageId)
+			->willReturn($message);
+		$this->mailManager->method('getMailbox')
+			->with($this->userId, $mailboxId)
+			->willReturn($mailbox);
+		$this->accountService->method('find')
+			->with($this->userId, $accountId)
+			->willReturn($this->account);
+		$imapMessage = $this->createMock(IMAPMessage::class);
+		$imapMessage->method('hasHtmlMessage')
+			->willReturn(true);
+		$imapMessage->method('getHtmlBody')
+			->with($messageId)
+			->willReturn($html);
+		$this->mailManager->expects($this->once())
+			->method('getImapMessage')
+			->with($this->account, $mailbox, $message, true)
+			->willReturn($imapMessage);
+
+		$firstResponse = $controller->getHtmlBody($messageId, true);
+		$secondResponse = $controller->getHtmlBody($messageId, true);
+
+		$this->assertSame($html, $cache->get("message_$messageId"));
+		$this->assertStringContainsString($html, $firstResponse->render());
+		$this->assertSame($firstResponse->render(), $secondResponse->render());
 	}
 
 	private function mockAttachmentDownload(int $id, string $attachmentId, string $contents, ?string $name, string $type): void {
