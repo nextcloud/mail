@@ -93,4 +93,14 @@ describe('Mailbox', () => {
 		expect(store.syncEnvelopes).not.toHaveBeenCalled()
 		expect(view.vm.syncedMailboxes.has('22is:pi-other')).toBe(true)
 	})
+
+	it('removes its bus handlers when unmounted', async () => {
+		const view = mountMailbox()
+		await flushPromises()
+		const bus = view.props('bus')
+
+		view.unmount()
+
+		expect(bus.off.mock.calls).toEqual(bus.on.mock.calls)
+	})
 })
