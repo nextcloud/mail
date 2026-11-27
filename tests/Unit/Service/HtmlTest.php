@@ -253,6 +253,77 @@ final class HtmlTest extends TestCase {
 		yield 'version gate' => ['<![if gte mso 9]>'];
 	}
 
+	/**
+	 * @dataProvider flexboxStyleProvider
+	 */
+	public function testSanitizeHtmlMailBodyHandlesFlexboxStyles(
+		string $style,
+		?string $expected,
+	): void {
+		$urlGenerator = $this->createStub(IURLGenerator::class);
+		$request = $this->createStub(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$mailBody = '<div style="' . htmlspecialchars($style) . '">Content</div>';
+		$result = $html->sanitizeHtmlMailBody(42, $mailBody, []);
+
+		self::assertStringContainsString('Content', $result);
+
+		if ($expected === null) {
+			self::assertStringNotContainsString('style="', $result);
+		} else {
+			self::assertStringContainsString('style="' . $expected . ';"', $result);
+		}
+	}
+
+	public function flexboxStyleProvider(): \Iterator {
+		yield 'display flex' => ['display:flex', 'display:flex'];
+		yield 'display inline-flex' => ['display:inline-flex', 'display:inline-flex'];
+		yield 'display block' => ['display:block', 'display:block'];
+		yield 'display none' => ['display:none', 'display:none'];
+		yield 'display table-cell' => ['display:table-cell', 'display:table-cell'];
+
+		yield 'justify center' => ['justify-content:center', 'justify-content:center'];
+		yield 'justify space-between' => ['justify-content:space-between', 'justify-content:space-between'];
+		yield 'align flex-end' => ['align-items:flex-end', 'align-items:flex-end'];
+		yield 'align stretch' => ['align-items:stretch', 'align-items:stretch'];
+		yield 'direction column' => ['flex-direction:column', 'flex-direction:column'];
+		yield 'direction row-reverse' => ['flex-direction:row-reverse', 'flex-direction:row-reverse'];
+		yield 'wrap' => ['flex-wrap:wrap', 'flex-wrap:wrap'];
+		yield 'wrap reverse' => ['flex-wrap:wrap-reverse', 'flex-wrap:wrap-reverse'];
+
+		yield 'flex integer' => ['flex:2', 'flex:2'];
+		yield 'flex zero' => ['flex:0', 'flex:0'];
+		yield 'flex decimal' => ['flex:0.5', 'flex:0.5'];
+
+		yield 'display important' => ['display:flex !important', 'display:flex'];
+		yield 'flex important' => ['flex:2 !important', 'flex:2'];
+
+		yield 'invalid display' => ['display:invalid', null];
+		yield 'invalid justify' => ['justify-content:invalid', null];
+		yield 'invalid align' => ['align-items:invalid', null];
+		yield 'invalid direction' => ['flex-direction:invalid', null];
+		yield 'invalid wrap' => ['flex-wrap:invalid', null];
+		yield 'negative flex' => ['flex:-2', null];
+		yield 'compound flex' => ['flex:2 1 auto', null];
+		yield 'flex URL' => ['flex:url(https://example.com/a)', null];
+		yield 'flex expression' => ['flex:expression(alert(1))', null];
+		yield 'negative important' => ['flex:-2 !important', null];
+
+		yield 'position fixed' => ['position:fixed', null];
+		yield 'position absolute' => ['position:absolute', null];
+		yield 'position relative' => ['position:relative', null];
+		yield 'top' => ['top:20px', null];
+		yield 'left' => ['left:20px', null];
+		yield 'z-index' => ['z-index:9999', null];
+
+		yield 'product layout' => [
+			'display:flex;justify-content:space-between;align-items:flex-end',
+			'display:flex;justify-content:space-between;align-items:flex-end',
+		];
+	}
+
 	public function testSanitizeStyleSheet(): void {
 		$blockedUrl = '/apps/mail/img/blocked-image.png';
 		$urlGenerator = self::createMock(IURLGenerator::class);

@@ -164,6 +164,63 @@ class Html {
 		// TODO: Fix this - requires https://github.com/owncloud/core/issues/10767 to be fixed
 		$config->set('Cache.DefinitionImpl', null);
 
+		// Extend the CSS definition with Flexbox properties.
+		$css = $config->getCSSDefinition();
+		$display = $css->info['display'];
+
+		if ($display instanceof \HTMLPurifier_AttrDef_CSS_ImportantDecorator
+			&& $display->def instanceof \HTMLPurifier_AttrDef_Enum) {
+			$display->def->valid_values += [
+				'flex' => true,
+				'inline-flex' => true,
+			];
+
+			$flexboxProperties = [
+				'justify-content' => [
+					'normal',
+					'center',
+					'flex-start',
+					'flex-end',
+					'space-between',
+					'space-around',
+					'space-evenly',
+				],
+				'align-items' => [
+					'normal',
+					'center',
+					'stretch',
+					'flex-start',
+					'flex-end',
+					'baseline',
+				],
+				'flex-direction' => [
+					'row',
+					'row-reverse',
+					'column',
+					'column-reverse',
+				],
+				'flex-wrap' => [
+					'nowrap',
+					'wrap',
+					'wrap-reverse',
+				],
+			];
+
+			$allowImportant = $config->get('CSS.AllowImportant');
+
+			foreach ($flexboxProperties as $property => $values) {
+				$css->info[$property] = new \HTMLPurifier_AttrDef_CSS_ImportantDecorator(
+					new \HTMLPurifier_AttrDef_Enum($values),
+					$allowImportant,
+				);
+			}
+
+			$css->info['flex'] = new \HTMLPurifier_AttrDef_CSS_ImportantDecorator(
+				new \HTMLPurifier_AttrDef_CSS_Number(true),
+				$allowImportant,
+			);
+		}
+
 		// Rewrite URL for redirection and proxying of content
 		/** @var HTMLPurifier_HTMLDefinition $def */
 		$def = $config->getHTMLDefinition(true);
