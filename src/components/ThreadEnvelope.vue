@@ -48,10 +48,10 @@
 					:data-starred="envelope.flags.flagged ? 'true' : 'false'"
 					@click.prevent="hasWriteAcl ? onToggleFlagged() : false" />
 				<JunkIcon
-					v-if="envelope.flags.$junk"
+					v-if="isJunk"
 					:size="18"
 					class="app-content-list-item-star junk-icon-style"
-					:data-starred="envelope.flags.$junk ? 'true' : 'false'"
+					:data-starred="isJunk ? 'true' : 'false'"
 					@click.prevent="hasWriteAcl ? onToggleJunk() : false" />
 			</div>
 
@@ -575,6 +575,10 @@ export default {
 
 		hasRecipients() {
 			return !!(this.envelope.to?.length || this.envelope.cc?.length || this.envelope.bcc?.length)
+		},
+
+		isJunk() {
+			return this.mainStore.isEnvelopeJunk(this.envelope)
 		},
 
 		inlineMenuSize() {

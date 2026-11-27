@@ -50,11 +50,11 @@
 				@click.prevent="onToggleJunk">
 				<template #icon>
 					<AlertOctagonIcon
-						:title="envelope.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')"
+						:title="isJunk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')"
 						:size="20" />
 				</template>
 				{{
-					envelope.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
+					isJunk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
 				}}
 			</NcActionButton>
 			<NcActionButton
@@ -416,6 +416,10 @@ export default {
 		account() {
 			const accountId = this.envelope.accountId ?? this.mailbox.accountId
 			return this.mainStore.getAccount(accountId)
+		},
+
+		isJunk() {
+			return this.mainStore.isEnvelopeJunk(this.envelope)
 		},
 
 		hasMultipleRecipients() {
