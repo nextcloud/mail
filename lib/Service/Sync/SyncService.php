@@ -24,6 +24,7 @@ use OCA\Mail\IMAP\PreviewEnhancer;
 use OCA\Mail\IMAP\Sync\Response;
 use OCA\Mail\Service\Search\FilterStringParser;
 use OCA\Mail\Service\Search\SearchQuery;
+use OCP\AppFramework\Utility\ITimeFactory;
 use Psr\Log\LoggerInterface;
 use function array_diff;
 use function array_map;
@@ -38,6 +39,7 @@ class SyncService {
 		private PreviewEnhancer $previewEnhancer,
 		private LoggerInterface $logger,
 		private MailboxSync $mailboxSync,
+		private ITimeFactory $timeFactory,
 	) {
 	}
 
@@ -74,6 +76,7 @@ class SyncService {
 	 *
 	 * @return Response
 	 * @throws ClientException
+	 * @throws MailboxLockedException
 	 * @throws MailboxNotCachedException
 	 * @throws ServiceException
 	 */
@@ -87,6 +90,10 @@ class SyncService {
 		?string $filter = null): Response {
 		if ($partialOnly && !$mailbox->isCached()) {
 			throw MailboxNotCachedException::from($mailbox);
+		}
+		// Web syncs need all three locks, which the synchronizer only tries to take after logging in to the mail server
+		if ($mailbox->hasLocks($this->timeFactory->getTime())) {
+			throw MailboxLockedException::from($mailbox);
 		}
 
 		$client = $this->clientFactory->getClient($account);
