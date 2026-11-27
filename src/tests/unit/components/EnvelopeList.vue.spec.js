@@ -7,6 +7,7 @@ import { showError } from '@nextcloud/dialogs'
 import { flushPromises } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import EnvelopeList from '../../../components/EnvelopeList.vue'
+import NoTrashMailboxConfiguredError from '../../../errors/NoTrashMailboxConfiguredError.js'
 import useMainStore from '../../../store/mainStore.js'
 
 vi.mock('@nextcloud/dialogs', async (importOriginal) => ({
@@ -42,13 +43,13 @@ describe('EnvelopeList', () => {
 
 		const done = EnvelopeList.methods.deleteAllSelected.call(context)
 		await flushPromises()
-		const callsBeforeFirstFinished = deleteThread.mock.calls.length
+		const callsBeforeFirstResolve = deleteThread.mock.calls.length
 		pending[0]()
 		await flushPromises()
 		pending[1]()
 		await done
 
-		expect(callsBeforeFirstFinished).toBe(1)
+		expect(callsBeforeFirstResolve).toBe(1)
 		expect(deleteThread).toHaveBeenCalledTimes(2)
 		expect(deleteThread).toHaveBeenNthCalledWith(2, { envelope: context.selectedEnvelopes[1] })
 		expect(context.unselectAll).toHaveBeenCalled()
@@ -63,6 +64,17 @@ describe('EnvelopeList', () => {
 		expect(deleteThread).toHaveBeenCalledTimes(1)
 		expect(showError).toHaveBeenCalledTimes(1)
 		expect(context.unselectAll).toHaveBeenCalled()
+	})
+
+	it('tells the user when no trash folder is configured', async () => {
+		const deleteThread = vi.fn().mockRejectedValue(new NoTrashMailboxConfiguredError())
+		const context = createContext(deleteThread)
+
+		await EnvelopeList.methods.deleteAllSelected.call(context)
+
+		expect(deleteThread).toHaveBeenCalledTimes(1)
+		expect(showError).toHaveBeenCalledTimes(1)
+		expect(t).toHaveBeenCalledWith('mail', 'No trash folder configured')
 	})
 })
 
