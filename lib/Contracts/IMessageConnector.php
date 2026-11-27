@@ -139,6 +139,7 @@ interface IMessageConnector {
 	 * Repair the local cache for a mailbox.
 	 *
 	 * @throws ServiceException
+	 * @throws MailboxLockedException if another process is syncing the mailbox
 	 */
 	public function repairSync(Account $account, Mailbox $mailbox): void;
 
