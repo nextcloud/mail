@@ -11,6 +11,7 @@
 						v-if="isAtLeastOneSelectedUnread"
 						variant="tertiary"
 						:title="n('mail', 'Mark {number} read', 'Mark {number} read', selection.length, { number: selection.length })"
+						:disabled="updatingSelection"
 						@click.prevent="markSelectedRead">
 						<EmailRead :size="20" />
 					</NcButton>
@@ -19,6 +20,7 @@
 						v-if="isAtLeastOneSelectedRead"
 						variant="tertiary"
 						:title="n('mail', 'Mark {number} unread', 'Mark {number} unread', selection.length, { number: selection.length })"
+						:disabled="updatingSelection"
 						@click.prevent="markSelectedUnread">
 						<EmailUnread :size="20" />
 					</NcButton>
@@ -27,6 +29,7 @@
 						v-if="isAtLeastOneSelectedUnimportant"
 						variant="tertiary"
 						:title="n('mail', 'Mark {number} as important', 'Mark {number} as important', selection.length, { number: selection.length })"
+						:disabled="updatingSelection"
 						@click.prevent="markSelectionImportant">
 						<ImportantIcon :size="20" />
 					</NcButton>
@@ -35,6 +38,7 @@
 						v-if="isAtLeastOneSelectedImportant"
 						variant="tertiary"
 						:title="n('mail', 'Mark {number} as unimportant', 'Mark {number} as unimportant', selection.length, { number: selection.length })"
+						:disabled="updatingSelection"
 						@click.prevent="markSelectionUnimportant">
 						<ImportantOutlineIcon :size="20" />
 					</NcButton>
@@ -43,6 +47,7 @@
 						v-if="isAtLeastOneSelectedFavorite"
 						variant="tertiary"
 						:title="n('mail', 'Unfavorite {number}', 'Unfavorite {number}', selection.length, { number: selection.length })"
+						:disabled="updatingSelection"
 						@click.prevent="unfavoriteAll">
 						<IconUnFavorite :size="20" />
 					</NcButton>
@@ -51,6 +56,7 @@
 						v-if="isAtLeastOneSelectedUnFavorite"
 						variant="tertiary"
 						:title="n('mail', 'Favorite {number}', 'Favorite {number}', selection.length, { number: selection.length })"
+						:disabled="updatingSelection"
 						@click.prevent="favoriteAll">
 						<IconFavorite :size="20" />
 					</NcButton>
@@ -285,6 +291,7 @@ export default {
 			showMoveModal: false,
 			showTagModal: false,
 			lastToggledIndex: undefined,
+			updatingSelection: false,
 			defaultView: false,
 			showQuickActionsSettings: false,
 		}
@@ -401,44 +408,50 @@ export default {
 			return this.selection.includes(idx)
 		},
 
-		markSelectedRead() {
-			this.selectedEnvelopes.forEach((envelope) => {
-				this.mainStore.toggleEnvelopeSeen({
-					envelope,
-					seen: true,
-				})
-			})
+		async applyToSelection(action) {
+			if (this.updatingSelection) {
+				return
+			}
+
+			this.updatingSelection = true
+			try {
+				for (const envelope of this.selectedEnvelopes) {
+					await action(envelope)
+				}
+			} catch (error) {
+				logger.error('could not update the selected messages', { error })
+			} finally {
+				this.updatingSelection = false
+			}
 			this.unselectAll()
 		},
 
-		markSelectedUnread() {
-			this.selectedEnvelopes.forEach((envelope) => {
-				this.mainStore.toggleEnvelopeSeen({
-					envelope,
-					seen: false,
-				})
-			})
-			this.unselectAll()
+		async markSelectedRead() {
+			await this.applyToSelection((envelope) => this.mainStore.toggleEnvelopeSeen({
+				envelope,
+				seen: true,
+			}))
 		},
 
-		markSelectionImportant() {
-			this.selectedEnvelopes.forEach((envelope) => {
-				this.mainStore.markEnvelopeImportantOrUnimportant({
-					envelope,
-					addTag: true,
-				})
-			})
-			this.unselectAll()
+		async markSelectedUnread() {
+			await this.applyToSelection((envelope) => this.mainStore.toggleEnvelopeSeen({
+				envelope,
+				seen: false,
+			}))
 		},
 
-		markSelectionUnimportant() {
-			this.selectedEnvelopes.forEach((envelope) => {
-				this.mainStore.markEnvelopeImportantOrUnimportant({
-					envelope,
-					addTag: false,
-				})
-			})
-			this.unselectAll()
+		async markSelectionImportant() {
+			await this.applyToSelection((envelope) => this.mainStore.markEnvelopeImportantOrUnimportant({
+				envelope,
+				addTag: true,
+			}))
+		},
+
+		async markSelectionUnimportant() {
+			await this.applyToSelection((envelope) => this.mainStore.markEnvelopeImportantOrUnimportant({
+				envelope,
+				addTag: false,
+			}))
 		},
 
 		async markSelectionJunk() {
@@ -465,24 +478,18 @@ export default {
 			this.unselectAll()
 		},
 
-		unfavoriteAll() {
-			this.selectedEnvelopes.forEach((envelope) => {
-				this.mainStore.markEnvelopeFavoriteOrUnfavorite({
-					envelope,
-					favFlag: false,
-				})
-			})
-			this.unselectAll()
+		async unfavoriteAll() {
+			await this.applyToSelection((envelope) => this.mainStore.markEnvelopeFavoriteOrUnfavorite({
+				envelope,
+				favFlag: false,
+			}))
 		},
 
-		favoriteAll() {
-			this.selectedEnvelopes.forEach((envelope) => {
-				this.mainStore.markEnvelopeFavoriteOrUnfavorite({
-					envelope,
-					favFlag: true,
-				})
-			})
-			this.unselectAll()
+		async favoriteAll() {
+			await this.applyToSelection((envelope) => this.mainStore.markEnvelopeFavoriteOrUnfavorite({
+				envelope,
+				favFlag: true,
+			}))
 		},
 
 		async deleteAllSelected() {

@@ -78,6 +78,60 @@ describe('EnvelopeList', () => {
 	})
 })
 
+describe('EnvelopeList flag selection', () => {
+	function createFlagContext(toggleEnvelopeSeen) {
+		return {
+			selectedEnvelopes: [{ databaseId: 1 }, { databaseId: 2 }],
+			mainStore: { toggleEnvelopeSeen },
+			updatingSelection: false,
+			applyToSelection: EnvelopeList.methods.applyToSelection,
+			unselectAll: vi.fn(),
+		}
+	}
+
+	it('marks the selected messages as read one after another', async () => {
+		const pending = []
+		const toggleEnvelopeSeen = vi.fn(() => new Promise((resolve) => pending.push(resolve)))
+		const context = createFlagContext(toggleEnvelopeSeen)
+
+		const done = EnvelopeList.methods.markSelectedRead.call(context)
+		await flushPromises()
+		const callsBeforeFirstResolve = toggleEnvelopeSeen.mock.calls.length
+		pending[0]()
+		await flushPromises()
+		pending[1]()
+		await done
+
+		expect(callsBeforeFirstResolve).toBe(1)
+		expect(toggleEnvelopeSeen).toHaveBeenNthCalledWith(1, { envelope: context.selectedEnvelopes[0], seen: true })
+		expect(toggleEnvelopeSeen).toHaveBeenNthCalledWith(2, { envelope: context.selectedEnvelopes[1], seen: true })
+		expect(context.unselectAll).toHaveBeenCalled()
+		expect(context.updatingSelection).toBe(false)
+	})
+
+	it('stops at the first message that cannot be marked', async () => {
+		const toggleEnvelopeSeen = vi.fn().mockRejectedValue(new Error('denied'))
+		const context = createFlagContext(toggleEnvelopeSeen)
+
+		await EnvelopeList.methods.markSelectedUnread.call(context)
+
+		expect(toggleEnvelopeSeen).toHaveBeenCalledTimes(1)
+		expect(context.unselectAll).toHaveBeenCalled()
+		expect(context.updatingSelection).toBe(false)
+	})
+
+	it('ignores a second run while one is in progress', async () => {
+		const toggleEnvelopeSeen = vi.fn()
+		const context = createFlagContext(toggleEnvelopeSeen)
+		context.updatingSelection = true
+
+		await EnvelopeList.methods.markSelectedRead.call(context)
+
+		expect(toggleEnvelopeSeen).not.toHaveBeenCalled()
+		expect(context.unselectAll).not.toHaveBeenCalled()
+	})
+})
+
 describe('EnvelopeList junk selection', () => {
 	let store
 	let ctx
