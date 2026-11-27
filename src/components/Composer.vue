@@ -326,7 +326,8 @@
 			:bus="bus"
 			:accountId="selectedAlias.id"
 			:uploadSizeLimit="attachmentSizeLimit"
-			@update:blocksSending="attachmentsPending = $event" />
+			@update:blocksSending="attachmentsPending = $event"
+			@update:sharingLinks="sharingLinks = $event" />
 		<div class="composer-actions-right composer-actions">
 			<div class="composer-actions--primary-actions">
 				<p class="composer-actions-draft-status">
@@ -378,7 +379,8 @@
 
 				<NcActions v-model:open="isAddAttachmentsOpen">
 					<template #icon>
-						<Paperclip :size="20" />
+						<NcLoadingIcon v-if="sharingLinks" :size="20" />
+						<Paperclip v-else :size="20" />
 					</template>
 					<NcActionButton :closeAfterClick="true" @click="onAddLocalAttachment">
 						<template #icon>
@@ -568,6 +570,7 @@ import NcActions from '@nextcloud/vue/components/NcActions'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
 import NcListItemIcon from '@nextcloud/vue/components/NcListItemIcon'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import { NcReferencePickerModal } from '@nextcloud/vue/components/NcRichText'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
@@ -623,6 +626,7 @@ export default {
 		IconLinkPicker,
 		NcSelect,
 		NcIconSvgWrapper,
+		NcLoadingIcon,
 		Paperclip,
 		TextEditor,
 		NcListItemIcon,
@@ -797,6 +801,7 @@ export default {
 		return {
 			sending: false,
 			attachmentsPending: false,
+			sharingLinks: false,
 			textBlockSvg,
 			showCC: this.cc.length > 0,
 			showBCC: this.bcc.length > 0,

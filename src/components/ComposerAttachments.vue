@@ -96,11 +96,12 @@ export default {
 		},
 	},
 
-	emits: ['update:modelValue', 'update:blocksSending', 'onDeleteAttachment'],
+	emits: ['update:modelValue', 'update:blocksSending', 'update:sharingLinks', 'onDeleteAttachment'],
 
 	data() {
 		return {
 			uploading: false,
+			sharingLinks: false,
 			uploads: {},
 			// this need if we want to pass in value only corrected uploaded files
 			attachments: [],
@@ -167,6 +168,10 @@ export default {
 
 		blocksSending(value) {
 			this.$emit('update:blocksSending', value)
+		},
+
+		sharingLinks(value) {
+			this.$emit('update:sharingLinks', value)
 		},
 	},
 
@@ -373,13 +378,23 @@ export default {
 		},
 
 		async onAddCloudAttachmentLink(nodes) {
+			this.sharingLinks = true
 			try {
-				this.cloudAttachementLink = false
-				const url = await shareFile(nodes[0].path, getRequestToken())
+				const links = []
+				for (const node of nodes) {
+					try {
+						const url = await shareFile(node.path, getRequestToken())
+						links.push(`<a href="${url}">${url}</a>`)
+					} catch (error) {
+						logger.error('could not share a file as attachment link', { error })
+					}
+				}
 
-				this.appendToBodyAtCursor(`<a href="${url}">${url}</a>`)
-			} catch (error) {
-				logger.error('could not choose a file as attachment link', { error })
+				if (links.length > 0) {
+					this.appendToBodyAtCursor(links.join('<br>'))
+				}
+			} finally {
+				this.sharingLinks = false
 			}
 		},
 
