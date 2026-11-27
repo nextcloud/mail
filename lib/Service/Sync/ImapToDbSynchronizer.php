@@ -615,6 +615,8 @@ class ImapToDbSynchronizer {
 				$this->mailboxMapper->refreshSyncLocks($mailbox, new: false, changed: false, vanished: true);
 				$this->dbMapper->deleteByUid($mailbox, ...$phantomVanishedUids);
 			}
+		} catch (ServiceException|MailboxLockedException $e) {
+			throw $e;
 		} catch (Throwable $e) {
 			$message = sprintf(
 				'Repair sync failed for %d:%s: %s',
