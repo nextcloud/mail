@@ -1487,6 +1487,8 @@ class MessageMapper extends QBMapper {
 			$query->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 			$query->executeStatement();
 		}
+		unset($ids);
+
 		$qb3 = $this->db->getQueryBuilder();
 		$recipientIdsQuery = $qb3->selectDistinct('r.id')
 			->from('mail_recipients', 'r')
@@ -1496,8 +1498,9 @@ class MessageMapper extends QBMapper {
 				$qb3->expr()->isNull('r.local_message_id')
 			);
 		$result = $recipientIdsQuery->executeQuery();
+		$recipientIds = [];
 		while ($row = $result->fetch()) {
-			$ids[] = (int)$row['id'];
+			$recipientIds[] = (int)$row['id'];
 		}
 		$result->closeCursor();
 
@@ -1505,7 +1508,7 @@ class MessageMapper extends QBMapper {
 		$recipientsQuery = $qb4
 			->delete('mail_recipients')
 			->where($qb4->expr()->in('id', $qb4->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY));
-		foreach (array_chunk($ids, 1000) as $chunk) {
+		foreach (array_chunk($recipientIds, 1000) as $chunk) {
 			$recipientsQuery->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 			$recipientsQuery->executeStatement();
 		}
