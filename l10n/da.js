@@ -982,6 +982,7 @@ OC.L10N.register(
     "Sieve: {user} on {host}:{port} ({ssl} encryption)" : "Sieve: {user} på {host}:{port} ({ssl}-kryptering)",
     "Using master user and master password" : "Bruger master-bruger og master-adgangskode",
     "Using master password for all users" : "Bruger master-adgangskode for alle brugere",
+    "Not saving a copy of sent messages" : "Gemmer ikke en kopi af sendte beskeder",
     "Configuration for \"{provisioningDomain}\"" : "Konfiguration for \"{provisioningDomain}\"",
     "Provisioning domain" : "Klargøringsdomæne",
     "Email address template" : "Skabelon for e-mailadresse",

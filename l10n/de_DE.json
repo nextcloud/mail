@@ -980,6 +980,7 @@
     "Sieve: {user} on {host}:{port} ({ssl} encryption)" : "Sieve: {user} auf {host}:{port} ({ssl} Verschlüsselung)",
     "Using master user and master password" : "Verwende Hauptbenutzer und Hauptpasswort",
     "Using master password for all users" : "Verwende Hauptpasswort für alle Benutzer",
+    "Not saving a copy of sent messages" : "Es wird keine Kopie der gesendeten Nachrichten gespeichert",
     "Configuration for \"{provisioningDomain}\"" : "Konfiguration für \"{provisioningDomain}\"",
     "Provisioning domain" : "Bereitstellungsdomäne",
     "Email address template" : "E-Mail-Adressvorlage",
