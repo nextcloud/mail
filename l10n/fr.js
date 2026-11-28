@@ -1083,6 +1083,7 @@ OC.L10N.register(
     "Could not load the message" : "Impossible de charger le message",
     "_The mail server rejected the recipient {recipients}. Check the address and try again._::_The mail server rejected the recipients {recipients}. Check the addresses and try again._" : ["Le serveur de messagerie a rejeté le destinataire {recipients}. Vérifiez l'adresse et réessayez.","Le serveur de messagerie a rejeté les destinataires {recipients}. Vérifiez les adresses et réessayez.","Le serveur de messagerie a rejeté les destinataires {recipients}. Vérifiez les adresses et réessayez."],
     "You sent too many messages in a short time. Please try again later." : "Vous avez envoyé trop de messages en peu de temps. Veuillez réessayer plus tard.",
+    "The mail server could not accept the message right now. It will be sent again automatically later." : "Le serveur de messagerie n'a pas pu accepter aussitôt le message. Ce dernier sera renvoyé automatiquement plus tard.",
     "Could not sign or encrypt the message with S/MIME. Check the S/MIME certificates." : "Impossible de signer ou chiffrer le message avec S/MIME. Vérifiez les certificats S/MIME.",
     "Date:" : "Date :",
     "Printing from the browser menu is not supported" : "L’impression depuis le menu du navigateur n’est pas prise en charge.",
