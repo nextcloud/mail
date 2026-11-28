@@ -669,12 +669,18 @@ class MessagesController extends Controller {
 			$imapMessageCacheKey = "message_$id";
 
 			$html = $cacheInstance->get($imapMessageCacheKey);
-			$html ??= $this->mailManager->getImapMessage(
-				$account,
-				$mailbox,
-				$message,
-				true
-			)->getHtmlBody($id);
+			if ($html === null) {
+				$imapMessage = $this->mailManager->getImapMessage(
+					$account,
+					$mailbox,
+					$message,
+					true
+				);
+				$html = $imapMessage->getHtmlBody($id);
+				if ($imapMessage->hasHtmlMessage()) {
+					$cacheInstance->set($imapMessageCacheKey, $html, 600);
+				}
+			}
 
 			$htmlResponse = $plain
 				? HtmlResponse::plain($html)
