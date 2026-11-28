@@ -182,6 +182,76 @@ describe('MailPlugin', () => {
 		})
 	})
 
+	it('keeps lists when pasting HTML into an editor with list support', () => {
+		paste(editor, { 'text/html': '<ul><li>One</li><li>Two</li></ul>', 'text/plain': 'One\nTwo' })
+
+		expect(editor.getData()).toContain('<ul><li')
+		expect(editor.getData()).not.toContain('- One')
+	})
+
+	describe('pasting lists into an editor without list support', () => {
+		let plainEditor
+
+		beforeEach(async () => {
+			plainEditor = await VirtualTestEditor.create({
+				licenseKey: 'GPL',
+				plugins: [Paragraph, ShiftEnter, MailPlugin],
+			})
+			plainEditor.editing.view.scrollToTheSelection = () => {}
+		})
+
+		it('marks the items of a list from HTML copied from a text editor', () => {
+			paste(plainEditor, {
+				'text/html': '<p>Test</p><ul><li><p>LIst</p></li><li><p>item</p></li></ul><p>Hello</p>',
+				'text/plain': 'Test\n\n- LIst\n- item\n\nHello',
+			})
+
+			expect(plainEditor.getData()).toEqual(paragraphs('Test', '- LIst', '- item', 'Hello'))
+		})
+
+		it('marks the items of an unordered list', () => {
+			paste(plainEditor, { 'text/html': '<ul><li>One</li><li>Two</li></ul>' })
+
+			expect(plainEditor.getData()).toEqual(paragraphs('- One', '- Two'))
+		})
+
+		it('numbers the items of an ordered list', () => {
+			paste(plainEditor, { 'text/html': '<ol><li>One</li><li>Two</li></ol>' })
+
+			expect(plainEditor.getData()).toEqual(paragraphs('1. One', '2. Two'))
+		})
+
+		it('numbers the items of an ordered list from its start attribute', () => {
+			paste(plainEditor, { 'text/html': '<ol start="3"><li>One</li><li>Two</li></ol>' })
+
+			expect(plainEditor.getData()).toEqual(paragraphs('3. One', '4. Two'))
+		})
+
+		it('numbers the items from 1 if the start attribute is not a number', () => {
+			paste(plainEditor, { 'text/html': '<ol start="x"><li>One</li></ol>' })
+
+			expect(plainEditor.getData()).toEqual(paragraphs('1. One'))
+		})
+
+		it('indents nested lists', () => {
+			paste(plainEditor, { 'text/html': '<ul><li>A<ul><li>B</li></ul></li><li>C</li></ul>' })
+
+			expect(plainEditor.getData()).toEqual(paragraphs('- A', '&nbsp; - B', '- C'))
+		})
+
+		it('marks lists inside other blocks', () => {
+			paste(plainEditor, { 'text/html': '<blockquote><ol><li>X</li></ol></blockquote>' })
+
+			expect(plainEditor.getData()).toEqual(paragraphs('1. X'))
+		})
+
+		it('does not change paragraphs without a list', () => {
+			paste(plainEditor, { 'text/html': '<p>a</p>' })
+
+			expect(plainEditor.getData()).toEqual(paragraphs('a'))
+		})
+	})
+
 	describe('copying', () => {
 		it('copies paragraphs and list items as consecutive lines', () => {
 			editor.setData('<p>Best regards,</p><p>Jan</p><p>&nbsp;</p><p>Line one<br>Line two</p><ul><li>One</li><li>Two</li></ul><p>After</p>')

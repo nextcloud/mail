@@ -4,7 +4,7 @@
  */
 
 import { ClipboardPipeline, Paragraph, Plugin, UpcastWriter } from 'ckeditor5'
-import { normalizePastedLines, plainTextToLines, toPlainText } from './clipboard.js'
+import { addListMarkers, normalizePastedLines, plainTextToLines, toPlainText } from './clipboard.js'
 
 /**
  * Mail conventions for the composer: one paragraph is one line, like in
@@ -66,12 +66,12 @@ export default class Mail extends Plugin {
 				return
 			}
 
-			normalizePastedLines(
-				data.content,
-				new UpcastWriter(viewDocument),
-				editor.data.htmlProcessor.domConverter.blockElements,
-				data.dataTransfer.getData('text/plain'),
-			)
+			const writer = new UpcastWriter(viewDocument)
+			const blockElements = editor.data.htmlProcessor.domConverter.blockElements
+			normalizePastedLines(data.content, writer, blockElements, data.dataTransfer.getData('text/plain'))
+			if (!editor.plugins.has('ListEditing')) {
+				addListMarkers(data.content, writer, blockElements)
+			}
 		})
 	}
 
