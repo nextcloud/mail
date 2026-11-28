@@ -6,7 +6,7 @@
 import { showError } from '@nextcloud/dialogs'
 import { flushPromises } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import EnvelopeList from '../../../components/EnvelopeList.vue'
+import EnvelopeBulkActions from '../../../components/EnvelopeBulkActions.vue'
 import NoTrashMailboxConfiguredError from '../../../errors/NoTrashMailboxConfiguredError.js'
 import useMainStore from '../../../store/mainStore.js'
 
@@ -23,15 +23,16 @@ function createContext(deleteThread) {
 	]
 	return {
 		selectedEnvelopes: envelopes.slice(0, 2),
-		sortedEnvelops: envelopes,
+		envelopes,
 		$route: { params: { mailboxId: 10, threadId: 99 } },
 		$router: { push: vi.fn() },
 		mainStore: { deleteThread },
 		unselectAll: vi.fn(),
+		$emit: vi.fn(),
 	}
 }
 
-describe('EnvelopeList', () => {
+describe('EnvelopeBulkActions', () => {
 	beforeEach(() => {
 		vi.clearAllMocks()
 	})
@@ -41,7 +42,7 @@ describe('EnvelopeList', () => {
 		const deleteThread = vi.fn(() => new Promise((resolve) => pending.push(resolve)))
 		const context = createContext(deleteThread)
 
-		const done = EnvelopeList.methods.deleteAllSelected.call(context)
+		const done = EnvelopeBulkActions.methods.deleteAllSelected.call(context)
 		await flushPromises()
 		const callsBeforeFirstResolve = deleteThread.mock.calls.length
 		pending[0]()
@@ -53,13 +54,14 @@ describe('EnvelopeList', () => {
 		expect(deleteThread).toHaveBeenCalledTimes(2)
 		expect(deleteThread).toHaveBeenNthCalledWith(2, { envelope: context.selectedEnvelopes[1] })
 		expect(context.unselectAll).toHaveBeenCalled()
+		expect(context.$emit).toHaveBeenCalledWith('removed')
 	})
 
 	it('stops at the first failed thread', async () => {
 		const deleteThread = vi.fn().mockRejectedValue(new Error('denied'))
 		const context = createContext(deleteThread)
 
-		await EnvelopeList.methods.deleteAllSelected.call(context)
+		await EnvelopeBulkActions.methods.deleteAllSelected.call(context)
 
 		expect(deleteThread).toHaveBeenCalledTimes(1)
 		expect(showError).toHaveBeenCalledTimes(1)
@@ -70,7 +72,7 @@ describe('EnvelopeList', () => {
 		const deleteThread = vi.fn().mockRejectedValue(new NoTrashMailboxConfiguredError())
 		const context = createContext(deleteThread)
 
-		await EnvelopeList.methods.deleteAllSelected.call(context)
+		await EnvelopeBulkActions.methods.deleteAllSelected.call(context)
 
 		expect(deleteThread).toHaveBeenCalledTimes(1)
 		expect(showError).toHaveBeenCalledTimes(1)
@@ -78,7 +80,61 @@ describe('EnvelopeList', () => {
 	})
 })
 
-describe('EnvelopeList junk selection', () => {
+describe('EnvelopeBulkActions flag selection', () => {
+	function createFlagContext(toggleEnvelopeSeen) {
+		return {
+			selectedEnvelopes: [{ databaseId: 1 }, { databaseId: 2 }],
+			mainStore: { toggleEnvelopeSeen },
+			updatingSelection: false,
+			applyToSelection: EnvelopeBulkActions.methods.applyToSelection,
+			unselectAll: vi.fn(),
+		}
+	}
+
+	it('marks the selected messages as read one after another', async () => {
+		const pending = []
+		const toggleEnvelopeSeen = vi.fn(() => new Promise((resolve) => pending.push(resolve)))
+		const context = createFlagContext(toggleEnvelopeSeen)
+
+		const done = EnvelopeBulkActions.methods.markSelectedRead.call(context)
+		await flushPromises()
+		const callsBeforeFirstResolve = toggleEnvelopeSeen.mock.calls.length
+		pending[0]()
+		await flushPromises()
+		pending[1]()
+		await done
+
+		expect(callsBeforeFirstResolve).toBe(1)
+		expect(toggleEnvelopeSeen).toHaveBeenNthCalledWith(1, { envelope: context.selectedEnvelopes[0], seen: true })
+		expect(toggleEnvelopeSeen).toHaveBeenNthCalledWith(2, { envelope: context.selectedEnvelopes[1], seen: true })
+		expect(context.unselectAll).toHaveBeenCalled()
+		expect(context.updatingSelection).toBe(false)
+	})
+
+	it('stops at the first message that cannot be marked', async () => {
+		const toggleEnvelopeSeen = vi.fn().mockRejectedValue(new Error('denied'))
+		const context = createFlagContext(toggleEnvelopeSeen)
+
+		await EnvelopeBulkActions.methods.markSelectedUnread.call(context)
+
+		expect(toggleEnvelopeSeen).toHaveBeenCalledTimes(1)
+		expect(context.unselectAll).toHaveBeenCalled()
+		expect(context.updatingSelection).toBe(false)
+	})
+
+	it('ignores a second run while one is in progress', async () => {
+		const toggleEnvelopeSeen = vi.fn()
+		const context = createFlagContext(toggleEnvelopeSeen)
+		context.updatingSelection = true
+
+		await EnvelopeBulkActions.methods.markSelectedRead.call(context)
+
+		expect(toggleEnvelopeSeen).not.toHaveBeenCalled()
+		expect(context.unselectAll).not.toHaveBeenCalled()
+	})
+})
+
+describe('EnvelopeBulkActions junk selection', () => {
 	let store
 	let ctx
 
@@ -94,6 +150,7 @@ describe('EnvelopeList junk selection', () => {
 			mainStore: store,
 			selectedEnvelopes: [],
 			unselectAll: vi.fn(),
+			$emit: vi.fn(),
 		}
 	})
 
@@ -101,15 +158,15 @@ describe('EnvelopeList junk selection', () => {
 		const envelope = { accountId: 42, mailboxId: 5, flags: {} }
 		ctx.selectedEnvelopes = [envelope]
 
-		expect(EnvelopeList.computed.isAtLeastOneSelectedJunk.call(ctx)).toBe(true)
-		expect(EnvelopeList.computed.isAtLeastOneSelectedNotJunk.call(ctx)).toBe(false)
+		expect(EnvelopeBulkActions.computed.isAtLeastOneSelectedJunk.call(ctx)).toBe(true)
+		expect(EnvelopeBulkActions.computed.isAtLeastOneSelectedNotJunk.call(ctx)).toBe(false)
 	})
 
 	it('marks unflagged messages in the junk mailbox as not junk', async () => {
 		const envelope = { accountId: 42, mailboxId: 5, flags: {} }
 		ctx.selectedEnvelopes = [envelope]
 
-		await EnvelopeList.methods.markSelectionNotJunk.call(ctx)
+		await EnvelopeBulkActions.methods.markSelectionNotJunk.call(ctx)
 
 		expect(store.toggleEnvelopeJunk).toHaveBeenCalledTimes(1)
 		expect(store.toggleEnvelopeJunk).toHaveBeenCalledWith({ envelope, removeEnvelope: true })
@@ -119,7 +176,7 @@ describe('EnvelopeList junk selection', () => {
 		const envelope = { accountId: 42, mailboxId: 1, flags: {} }
 		ctx.selectedEnvelopes = [envelope]
 
-		await EnvelopeList.methods.markSelectionNotJunk.call(ctx)
+		await EnvelopeBulkActions.methods.markSelectionNotJunk.call(ctx)
 
 		expect(store.toggleEnvelopeJunk).not.toHaveBeenCalled()
 	})

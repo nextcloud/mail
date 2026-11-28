@@ -19,33 +19,60 @@
 			:slowHint="t('mail', 'Indexing your messages. This can take a bit longer for larger folders.')" />
 		<EmptyMailboxSection v-else-if="isPriorityInbox && !hasMessages" key="empty-priority-inbox" />
 		<EmptyMailbox v-else-if="!hasMessages" key="empty-mailbox" />
-		<template v-else-if="hasGroupedEnvelopes && !isPriorityInbox">
-			<div v-for="[label, group] in groupEnvelopes" :key="label">
-				<SectionTitle class="section-title" :name="getLabelForGroup(label)" />
+		<div class="mailbox__list">
+			<EnvelopeBulkActions
+				:account="account"
+				:mailbox="mailbox"
+				:searchQuery="searchQuery"
+				:envelopes="flatEnvelopeList"
+				:selection="selection"
+				@update:selection="setSelection"
+				@removed="onEnvelopesRemoved" />
+			<template v-if="showList">
+				<div v-if="!selectMode" class="mailbox__select-all">
+					<NcCheckboxRadioSwitch
+						:modelValue="false"
+						type="checkbox"
+						@update:modelValue="selectAll">
+						{{ n('mail', 'Select %n message', 'Select all %n messages', flatEnvelopeList.length) }}
+					</NcCheckboxRadioSwitch>
+				</div>
+				<template v-if="hasGroupedEnvelopes && !isPriorityInbox">
+					<div v-for="([label, group], index) in groupEnvelopes" :key="label">
+						<SectionTitle class="section-title" :name="getLabelForGroup(label)" />
+						<EnvelopeList
+							:account="account"
+							:mailbox="mailbox"
+							:searchQuery="searchQuery"
+							:envelopes="group"
+							:loadingMore="false"
+							:loadMoreButton="false"
+							:skipTransition="skipListTransition"
+							:dateGrouped="true"
+							:selection="selection"
+							:flatIndex="groupFlatIndices[index]"
+							@delete="onDelete"
+							@select="onSelect"
+							@selectRange="onSelectRange" />
+					</div>
+				</template>
 				<EnvelopeList
+					v-else
 					:account="account"
+					:loadMoreLabel="loadMoreLabel"
 					:mailbox="mailbox"
 					:searchQuery="searchQuery"
-					:envelopes="group"
-					:loadingMore="false"
-					:loadMoreButton="false"
+					:envelopes="envelopesToShow"
+					:loadingMore="loadingMore"
+					:loadMoreButton="showLoadMore"
 					:skipTransition="skipListTransition"
-					:dateGrouped="true"
-					@delete="onDelete" />
-			</div>
-		</template>
-		<EnvelopeList
-			v-else
-			:account="account"
-			:loadMoreLabel="loadMoreLabel"
-			:mailbox="mailbox"
-			:searchQuery="searchQuery"
-			:envelopes="envelopesToShow"
-			:loadingMore="loadingMore"
-			:loadMoreButton="showLoadMore"
-			:skipTransition="skipListTransition"
-			@delete="onDelete"
-			@loadMore="loadMore" />
+					:selection="selection"
+					@delete="onDelete"
+					@loadMore="loadMore"
+					@select="onSelect"
+					@selectRange="onSelectRange" />
+			</template>
+		</div>
 	</div>
 </template>
 
@@ -53,13 +80,16 @@
 import { showError, showWarning } from '@nextcloud/dialogs'
 import { mapStores } from 'pinia'
 import { findIndex, propEq } from 'ramda'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import EmptyMailbox from './EmptyMailbox.vue'
 import EmptyMailboxSection from './EmptyMailboxSection.vue'
+import EnvelopeBulkActions from './EnvelopeBulkActions.vue'
 import EnvelopeList from './EnvelopeList.vue'
 import Error from './Error.vue'
 import Loading from './Loading.vue'
 import LoadingSkeleton from './LoadingSkeleton.vue'
 import SectionTitle from './SectionTitle.vue'
+import dragEventBus from '../directives/drag-and-drop/util/dragEventBus.js'
 import MailboxLockedError from '../errors/MailboxLockedError.js'
 import MailboxNotCachedError from '../errors/MailboxNotCachedError.js'
 import { matchError } from '../errors/match.js'
@@ -68,6 +98,7 @@ import NoTrashMailboxConfiguredError
 import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 import { mailboxHasRights } from '../util/acl.js'
+import { sortEnvelopes } from '../util/sortEnvelopes.js'
 import { wait } from '../util/wait.js'
 
 export default {
@@ -75,10 +106,12 @@ export default {
 	components: {
 		EmptyMailboxSection,
 		EmptyMailbox,
+		EnvelopeBulkActions,
 		EnvelopeList,
 		Error,
 		Loading,
 		LoadingSkeleton,
+		NcCheckboxRadioSwitch,
 		SectionTitle,
 	},
 
@@ -144,6 +177,8 @@ export default {
 			endReached: false,
 			syncedMailboxes: new Set(),
 			skipListTransition: false,
+			selection: [],
+			selectionAnchor: undefined,
 		}
 	},
 
@@ -178,10 +213,39 @@ export default {
 		showLoadMore() {
 			return !this.endReached && this.paginate === 'manual'
 		},
+
+		showList() {
+			return !this.error && !this.loadingEnvelopes && !this.loadingCacheInitialization && this.hasMessages
+		},
+
+		flatEnvelopeList() {
+			if (this.hasGroupedEnvelopes) {
+				return this.groupEnvelopes.flatMap(([, group]) => sortEnvelopes(group, this.sortOrder))
+			}
+			return sortEnvelopes(this.envelopesToShow, this.sortOrder)
+		},
+
+		groupFlatIndices() {
+			let offset = 0
+			return (this.groupEnvelopes ?? []).map(([, group]) => {
+				const index = offset
+				offset += group.length
+				return index
+			})
+		},
+
+		selectMode() {
+			return this.selection.length > 0
+		},
 	},
 
 	watch: {
+		flatEnvelopeList() {
+			this.setSelection(this.selection)
+		},
+
 		mailbox() {
+			this.unselectAll()
 			this.loadEnvelopes()
 				.then(() => {
 					logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.query}) after folder change`)
@@ -190,10 +254,12 @@ export default {
 		},
 
 		searchQuery() {
+			this.unselectAll()
 			this.loadEnvelopes()
 		},
 
 		sortOrder() {
+			this.unselectAll()
 			this.loadEnvelopes()
 		},
 	},
@@ -203,6 +269,7 @@ export default {
 		this.bus.on('delete', this.onDelete)
 		this.bus.on('archive', this.onArchive)
 		this.bus.on('shortcut', this.handleShortcut)
+		dragEventBus.on('envelopes-dropped', this.unselectAll)
 		this.loadMailboxInterval = setInterval(this.loadMailbox, 60000)
 	},
 
@@ -225,6 +292,7 @@ export default {
 		this.bus.off('delete', this.onDelete)
 		this.bus.off('archive', this.onArchive)
 		this.bus.off('shortcut', this.handleShortcut)
+		dragEventBus.off('envelopes-dropped', this.unselectAll)
 		this.stopInterval()
 	},
 
@@ -627,6 +695,64 @@ export default {
 			this.loadMailboxInterval = undefined
 		},
 
+		setSelection(ids) {
+			const selected = new Set(ids)
+			const selection = this.flatEnvelopeList
+				.map((envelope) => envelope.databaseId)
+				.filter((id) => selected.has(id))
+			if (selection.length !== this.selection.length
+				|| selection.some((id, index) => id !== this.selection[index])) {
+				this.selection = selection
+			}
+		},
+
+		onSelect(id, selected) {
+			this.selectionAnchor = id
+			this.setSelection(selected
+				? [...this.selection, id]
+				: this.selection.filter((selectedId) => selectedId !== id))
+		},
+
+		onSelectRange(flatIndex, deselect) {
+			const indexOf = (id) => this.flatEnvelopeList.findIndex((envelope) => envelope.databaseId === id)
+			let anchor = indexOf(this.selectionAnchor)
+			if (anchor === -1) {
+				anchor = indexOf(parseInt(this.$route.params.threadId, 10))
+			}
+			if (anchor === -1) {
+				return
+			}
+
+			const range = this.flatEnvelopeList
+				.slice(Math.min(anchor, flatIndex), Math.max(anchor, flatIndex) + 1)
+				.map((envelope) => envelope.databaseId)
+			if (deselect) {
+				const deselected = new Set(range)
+				this.setSelection(this.selection.filter((id) => !deselected.has(id)))
+			} else {
+				this.setSelection([...this.selection, ...range])
+			}
+			this.selectionAnchor = this.flatEnvelopeList[flatIndex].databaseId
+		},
+
+		selectAll() {
+			this.setSelection(this.flatEnvelopeList.map((envelope) => envelope.databaseId))
+		},
+
+		unselectAll() {
+			this.selectionAnchor = undefined
+			this.setSelection([])
+		},
+
+		async onEnvelopesRemoved() {
+			await this.$nextTick()
+			if (this.hasMessages || this.loadingEnvelopes || this.error) {
+				return
+			}
+
+			await this.loadEnvelopes()
+		},
+
 		getLabelForGroup(group) {
 			switch (group) {
 				case 'lastHour':
@@ -665,5 +791,13 @@ export default {
 	height: 100%;
 	display: flex;
 	justify-content: center;
+}
+
+.mailbox__select-all {
+	display: flex;
+	align-items: center;
+	margin-top: calc(2 * var(--default-grid-baseline));
+	padding: var(--default-grid-baseline) calc(2 * var(--default-grid-baseline));
+	border-bottom: 1px solid var(--color-border);
 }
 </style>
