@@ -64,8 +64,11 @@ class SetupService {
 		?bool $classificationEnabled = null): Account {
 		$this->logger->info('Setting up manually configured account');
 
-		if (empty($this->accountService->findByUserIdAndAddress($uid, $emailAddress)) === false) {
-			throw new DuplicateEmailAddress('Account already exists: ' . $emailAddress);
+		$existing = $this->accountService->findByUserIdAndAddress($uid, $emailAddress);
+		foreach ($existing as $exists) {
+			if ($exists->getId() != $accountId) {
+				throw new DuplicateEmailAddress('Account already exists: ' . $emailAddress);
+			}
 		}
 
 		$newAccount = new MailAccount([
