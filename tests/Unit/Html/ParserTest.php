@@ -60,4 +60,36 @@ final class ParserTest extends TestCase {
 		$this->assertInstanceOf(DOMDocument::class, $doc);
 		$this->assertInstanceOf(\DOMElement::class, $doc->documentElement);
 	}
+
+	public function testParseUtf8FragmentPreservesNonAsciiCharacters(): void {
+		$html = '<p><a href="https://example.org">Smluvními podmínkami služby Email.cz 🚀</a></p>';
+
+		$doc = Parser::parseToDomDocument($html);
+
+		$anchors = $doc->getElementsByTagName('a');
+		$this->assertEquals(1, $anchors->length);
+		$this->assertSame('Smluvními podmínkami služby Email.cz 🚀', $anchors->item(0)->textContent);
+		$this->assertStringNotContainsString('<?xml', (string)$doc->saveHTML());
+	}
+
+	public function testParseUtf8DocumentWithoutMetaCharsetPreservesCharacters(): void {
+		$html = '<html><body><p>Όλοι οι άνθρωποι, IČ: 26168685</p></body></html>';
+
+		$doc = Parser::parseToDomDocument($html);
+
+		$paragraphs = $doc->getElementsByTagName('p');
+		$this->assertEquals(1, $paragraphs->length);
+		$this->assertSame('Όλοι οι άνθρωποι, IČ: 26168685', $paragraphs->item(0)->textContent);
+		$this->assertStringNotContainsString('<?xml', (string)$doc->saveHTML());
+	}
+
+	public function testParseHtmlWithExistingXmlProcessingInstruction(): void {
+		$html = '<?xml version="1.0" encoding="UTF-8"?><html><body><p>Příliš žluťoučký kůň</p></body></html>';
+
+		$doc = Parser::parseToDomDocument($html);
+
+		$paragraphs = $doc->getElementsByTagName('p');
+		$this->assertEquals(1, $paragraphs->length);
+		$this->assertSame('Příliš žluťoučký kůň', $paragraphs->item(0)->textContent);
+	}
 }

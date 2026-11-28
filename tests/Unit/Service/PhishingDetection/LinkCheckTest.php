@@ -87,4 +87,15 @@ final class LinkCheckTest extends TestCase {
 
 		$this->assertFalse($result->isPhishing());
 	}
+
+	public function testLinkWithMismatchedDomainPreservesUtf8LinkText(): void {
+		$html = '<p><a href="https://o-seznam.cz/napoveda/email/smluvni-podminky">Smluvními podmínkami služby Email.cz</a></p>';
+
+		$result = $this->check->run($html);
+
+		$this->assertTrue($result->isPhishing());
+		$serialized = $result->jsonSerialize();
+		$this->assertCount(1, $serialized['additionalData']);
+		$this->assertSame('Smluvními podmínkami služby Email.cz', $serialized['additionalData'][0]['linkText']);
+	}
 }
