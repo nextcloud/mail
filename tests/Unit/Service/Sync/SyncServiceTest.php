@@ -12,6 +12,7 @@ namespace OCA\Mail\Tests\Unit\Service\Sync;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MessageMapper;
+use OCA\Mail\Exception\MailboxLockedException;
 use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MailboxStats;
@@ -21,12 +22,16 @@ use OCA\Mail\IMAP\Sync\Response;
 use OCA\Mail\Service\Search\FilterStringParser;
 use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
 use OCA\Mail\Service\Sync\SyncService;
+use OCP\AppFramework\Utility\ITimeFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class SyncServiceTest extends TestCase {
+	private const NOW = 1_000_000;
 
 	private IMAPClientFactory&MockObject $clientFactory;
+
+	private ITimeFactory&MockObject $timeFactory;
 
 	/** @var ImapToDbSynchronizer */
 	private $synchronizer;
@@ -47,6 +52,7 @@ final class SyncServiceTest extends TestCase {
 		$this->synchronizer = $this->createMock(ImapToDbSynchronizer::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->mailboxSync = $this->createMock(MailboxSync::class);
+		$this->timeFactory = $this->createMock(ITimeFactory::class);
 
 		$this->syncService = new SyncService(
 			$this->clientFactory,
@@ -55,7 +61,8 @@ final class SyncServiceTest extends TestCase {
 			$this->messageMapper,
 			$this->createStub(PreviewEnhancer::class),
 			$this->createStub(\Psr\Log\LoggerInterface::class),
-			$this->mailboxSync
+			$this->mailboxSync,
+			$this->timeFactory,
 		);
 	}
 
@@ -76,6 +83,54 @@ final class SyncServiceTest extends TestCase {
 			[],
 			'DESC'
 		);
+	}
+
+	public static function lockProvider(): \Iterator {
+		yield 'new messages, initial sync' => ['setSyncNewLock', false];
+		yield 'changed messages, partial sync' => ['setSyncChangedLock', true];
+		yield 'vanished messages, partial sync' => ['setSyncVanishedLock', true];
+	}
+
+	/**
+	 * @dataProvider lockProvider
+	 */
+	public function testSyncLockedMailbox(string $setLock, bool $partialOnly): void {
+		$account = $this->createStub(Account::class);
+		$mailbox = $this->createCachedMailbox();
+		$mailbox->$setLock(self::NOW);
+		$this->timeFactory->method('getTime')->willReturn(self::NOW);
+		$this->mailboxConnector->expects($this->never())->method('syncOne');
+		$this->messageConnector->expects($this->never())->method('syncMailbox');
+		$this->expectException(MailboxLockedException::class);
+
+		$this->syncService->syncMailbox($account, $mailbox, 0, $partialOnly, null);
+	}
+
+	public function testPartialSyncOfALockedUncachedMailbox(): void {
+		$account = $this->createStub(Account::class);
+		$mailbox = new Mailbox();
+		$mailbox->setSyncNewLock(self::NOW);
+		$this->timeFactory->method('getTime')->willReturn(self::NOW);
+		$this->mailboxConnector->expects($this->never())->method('syncOne');
+		$this->expectException(MailboxNotCachedException::class);
+
+		$this->syncService->syncMailbox($account, $mailbox, 0, true, null);
+	}
+
+	public function testSyncMailboxWithAnExpiredLock(): void {
+		$account = $this->createStub(Account::class);
+		$mailbox = $this->createCachedMailbox();
+		$mailbox->setSyncNewLock(self::NOW - Mailbox::LOCK_TIMEOUT);
+		$this->timeFactory->method('getTime')->willReturn(self::NOW);
+		$this->mailboxConnector->expects($this->once())
+			->method('syncOne')
+			->with($account, $mailbox);
+		$this->messageConnector->expects($this->once())
+			->method('syncMailbox')
+			->with($account, $mailbox, $this->isInstanceOf(\Psr\Log\LoggerInterface::class), 0, null, true)
+			->willReturn(new \OCA\Mail\Protocol\SyncResult());
+
+		$this->syncService->syncMailbox($account, $mailbox, 0, false, null);
 	}
 
 	public function testSyncMailboxReturnsFolderStats(): void {
@@ -185,5 +240,15 @@ final class SyncServiceTest extends TestCase {
 			null,
 			[1, 2]
 		);
+	}
+
+	private function createCachedMailbox(): Mailbox {
+		$mailbox = new Mailbox();
+		$mailbox->setMessages(0);
+		$mailbox->setUnseen(0);
+		$mailbox->setSyncNewToken('abc');
+		$mailbox->setSyncChangedToken('def');
+		$mailbox->setSyncVanishedToken('ghi');
+		return $mailbox;
 	}
 }
