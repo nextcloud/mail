@@ -7,6 +7,7 @@
 
 namespace OCA\Mail\Tests\Integration\Framework;
 
+use Horde_Imap_Client_Data_Namespace;
 use OCA\Mail\Tests\Integration\TestCase;
 
 /**
