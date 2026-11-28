@@ -13,12 +13,15 @@ use Horde_Imap_Client_Exception;
 use Horde_Mail_Exception;
 use Horde_Mail_Transport_Smtphorde;
 use InvalidArgumentException;
+use JmapClient\Exceptions\RequestException;
+use JmapClient\Exceptions\TransportException;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\CouldNotConnectException;
 use OCA\Mail\Exception\DuplicateEmailAddress;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\JMAP\Exception\JmapTransportException;
 use OCA\Mail\Protocol\ProtocolFactory;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCP\Security\ICrypto;
@@ -46,7 +49,7 @@ class SetupService {
 	 *
 	 * @return Account
 	 */
-	public function createNewAccount(string $accountName,
+	public function createNewImapAccount(string $accountName,
 		string $emailAddress,
 		string $imapHost,
 		int $imapPort,
@@ -101,6 +104,65 @@ class SetupService {
 				$account = new Account($newAccount);
 				$this->logger->debug('Connecting to account {account}', ['account' => $newAccount->getEmail()]);
 				$this->testConnectivity($account);
+			}
+		}
+
+		$this->accountService->save($newAccount);
+		$this->logger->debug("account created {$newAccount->getId()}");
+
+		$this->tagMapper->createDefaultTags($newAccount);
+
+		return $this->accountService->findById($newAccount->getId());
+	}
+
+	/**
+	 * @throws CouldNotConnectException
+	 * @throws DuplicateEmailAddress
+	 * @throws ServiceException
+	 */
+	public function createNewJmapAccount(string $accountName,
+		string $emailAddress,
+		string $host,
+		int $port,
+		string $sslMode,
+		string $user,
+		?string $password,
+		?string $path,
+		string $uid,
+		?int $accountId = null,
+		?bool $classificationEnabled = null): Account {
+		$this->logger->info('Setting up manually configured JMAP account');
+
+		foreach ($this->accountService->findByUserIdAndAddress($uid, $emailAddress) as $existing) {
+			if ($existing->getId() !== $accountId) {
+				throw new DuplicateEmailAddress('Account already exists: ' . $emailAddress);
+			}
+		}
+
+		$newAccount = new MailAccount([
+			'accountId' => $accountId,
+			'accountName' => $accountName,
+			'emailAddress' => $emailAddress,
+			'imapHost' => $host,
+			'imapPort' => $port,
+			'imapSslMode' => $sslMode,
+			'imapUser' => $user,
+		]);
+		$newAccount->setUserId($uid);
+		$newAccount->setProtocol(MailAccount::PROTOCOL_JMAP);
+		$newAccount->setAuthMethod('password');
+		$newAccount->setPath($path);
+		if ($classificationEnabled !== null) {
+			$newAccount->setClassificationEnabled($classificationEnabled);
+		}
+
+		if ($password !== null) {
+			$newAccount->setInboundPassword($this->crypto->encrypt($password));
+			$this->logger->debug('Connecting to account {account}', ['account' => $newAccount->getEmail()]);
+			try {
+				$this->protocolFactory->testConnection(new Account($newAccount));
+			} catch (RequestException|TransportException|JmapTransportException $e) {
+				throw new CouldNotConnectException($e, 'JMAP', $host, $port);
 			}
 		}
 
