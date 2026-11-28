@@ -253,6 +253,53 @@ final class HtmlTest extends TestCase {
 		yield 'version gate' => ['<![if gte mso 9]>'];
 	}
 
+	/**
+	 * @dataProvider conditionalStyleBlocksProvider
+	 */
+	public function testSanitizeHtmlMailBodyHandlesConditionalStyleBlocks(
+		string $opening,
+		string $closing,
+		bool $visible,
+	): void {
+		$urlGenerator = $this->createStub(IURLGenerator::class);
+		$request = $this->createStub(IRequest::class);
+		$hmacGenerator = $this->createStub(ProxyHmacGenerator::class);
+
+		$mailBody = <<<HTML
+			<style>.normal-before { color: red; }</style>
+			$opening
+			<style>table td { font-size: 1px; line-height: 1px; }</style>
+			<p>Conditional content</p>
+			$closing
+			<style>.normal-after { color: blue; }</style>
+			<p>Visible message</p>
+			HTML;
+
+		$html = new Html($urlGenerator, $request, $hmacGenerator);
+		$result = $html->sanitizeHtmlMailBody(42, $mailBody, []);
+
+		self::assertStringContainsString('.normal-before', $result);
+		self::assertStringContainsString('.normal-after', $result);
+		self::assertStringContainsString('Visible message', $result);
+
+		if ($visible) {
+			self::assertStringContainsString('line-height: 1px', $result);
+			self::assertStringContainsString('Conditional content', $result);
+		} else {
+			self::assertStringNotContainsString('line-height: 1px', $result);
+			self::assertStringNotContainsString('Conditional content', $result);
+		}
+	}
+
+	public function conditionalStyleBlocksProvider(): \Iterator {
+		yield 'hidden MSO' => ['<!--[if mso]>', '<![endif]-->', false];
+		yield 'hidden version gate' => ['<!--[if gte mso 9]>', '<![endif]-->', false];
+		yield 'hidden uppercase' => ['<!--[IF MSO]>', '<![ENDIF]-->', false];
+		yield 'revealed comment' => ['<!--[if !mso]><!-->', '<!--<![endif]-->', true];
+		yield 'revealed comment with space' => ['<!--[if !mso]><!-- -->', '<!--<![endif]-->', true];
+		yield 'revealed markers' => ['<![if !mso]>', '<![endif]>', true];
+	}
+
 	public function testSanitizeStyleSheet(): void {
 		$blockedUrl = '/apps/mail/img/blocked-image.png';
 		$urlGenerator = self::createMock(IURLGenerator::class);
