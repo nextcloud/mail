@@ -33,7 +33,7 @@ class Version1100Date20210317164707 extends SimpleMigrationStep {
 		$table = $schema->getTable('mail_aliases');
 		$table->addColumn('signature', Types::TEXT, [
 			'notnull' => false,
-			'length' => 1024,
+			'length' => null,
 			'default' => '',
 		]);
 
