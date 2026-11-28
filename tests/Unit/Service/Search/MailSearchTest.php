@@ -11,6 +11,7 @@ namespace OCA\Mail\Tests\Unit\Service\Search;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
+use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
@@ -144,6 +145,9 @@ final class MailSearchTest extends TestCase {
 				$this->createMock(Message::class),
 				$this->createMock(Message::class),
 			]);
+		$this->messageMapper->expects($this->once())
+			->method('findThreadUnreadState')
+			->willReturnArgument(0);
 		$this->mailManager->expects($this->never())
 			->method('findMessages');
 		$this->previewEnhancer->expects($this->once())
@@ -190,6 +194,9 @@ final class MailSearchTest extends TestCase {
 				$this->createMock(Message::class),
 				$this->createMock(Message::class),
 			]);
+		$this->messageMapper->expects($this->once())
+			->method('findThreadUnreadState')
+			->willReturnArgument(0);
 		$this->previewEnhancer->expects($this->once())
 			->method('process')
 			->willReturnArgument(2);
@@ -206,5 +213,49 @@ final class MailSearchTest extends TestCase {
 		);
 
 		$this->assertCount(2, $messages);
+	}
+
+	public function testFindMessagesFlagsThreadsWithUnreadMessagesInTheThreadedView(): void {
+		$account = $this->createMock(Account::class);
+		$account->method('getUserId')->willReturn('admin');
+		$mailbox = new Mailbox();
+		$mailbox->setSyncNewToken('abc');
+		$mailbox->setSyncChangedToken('def');
+		$mailbox->setSyncVanishedToken('ghi');
+		$this->filterStringParser->method('parse')->willReturn(new SearchQuery());
+		$found = [$this->createMock(Message::class)];
+		$flagged = [$this->createMock(Message::class), $this->createMock(Message::class)];
+		$this->messageMapper->method('findByIds')->willReturn($found);
+		$this->messageMapper->expects($this->once())
+			->method('findThreadUnreadState')
+			->with($found)
+			->willReturn($flagged);
+		$this->previewEnhancer->expects($this->once())
+			->method('process')
+			->with($account, $mailbox, $flagged)
+			->willReturnArgument(2);
+
+		$messages = $this->search->findMessages($account, $mailbox, 'DESC', null, null, null, null, IMailSearch::VIEW_THREADED);
+
+		$this->assertSame($flagged, $messages);
+	}
+
+	public function testFindMessagesDoesNotLookUpThreadsInTheSingletonView(): void {
+		$account = $this->createMock(Account::class);
+		$account->method('getUserId')->willReturn('admin');
+		$mailbox = new Mailbox();
+		$mailbox->setSyncNewToken('abc');
+		$mailbox->setSyncChangedToken('def');
+		$mailbox->setSyncVanishedToken('ghi');
+		$this->filterStringParser->method('parse')->willReturn(new SearchQuery());
+		$found = [$this->createMock(Message::class)];
+		$this->messageMapper->method('findByIds')->willReturn($found);
+		$this->messageMapper->expects($this->never())
+			->method('findThreadUnreadState');
+		$this->previewEnhancer->method('process')->willReturnArgument(2);
+
+		$messages = $this->search->findMessages($account, $mailbox, 'DESC', null, null, null, null, IMailSearch::VIEW_SINGLETON);
+
+		$this->assertSame($found, $messages);
 	}
 }

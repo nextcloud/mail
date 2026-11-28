@@ -1577,6 +1577,35 @@ describe('Pinia store mutations', () => {
 		expect(store.mailboxes[27].envelopeLists[''].length).toEqual(1)
 	})
 
+	describe('thread unread state', () => {
+		const envelope = (databaseId, seen, extra = {}) => ({
+			databaseId,
+			accountId: 13,
+			mailboxId: 27,
+			threadRootId: 'root',
+			flags: { seen, deleted: false },
+			...extra,
+		})
+
+		it('takes the thread unread state from a synced envelope', () => {
+			const row = envelope(3, true, { threadHasUnread: false, tags: [] })
+			store.envelopes = { 3: row }
+
+			store.updateEnvelopeMutation({ envelope: { ...envelope(3, true), threadHasUnread: true, tags: [] } })
+
+			expect(row.threadHasUnread).toBe(true)
+		})
+
+		it('keeps the thread unread state when a synced envelope does not carry it', () => {
+			const row = envelope(3, true, { threadHasUnread: true, tags: [] })
+			store.envelopes = { 3: row }
+
+			store.updateEnvelopeMutation({ envelope: { ...envelope(3, true), tags: [] } })
+
+			expect(row.threadHasUnread).toBe(true)
+		})
+	})
+
 	it('collapses an account', () => {
 		store.accountsUnmapped[13] = { id: 13, collapsed: false }
 

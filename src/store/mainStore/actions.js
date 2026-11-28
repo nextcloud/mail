@@ -2172,6 +2172,9 @@ export default function mainStoreActions() {
 			this.normalizeTags(envelope)
 			existing.flags = envelope.flags
 			existing.tags = envelope.tags
+			if (envelope.threadHasUnread !== undefined) {
+				existing.threadHasUnread = envelope.threadHasUnread
+			}
 		},
 		flagEnvelopeMutation({
 			envelope,
@@ -2531,6 +2534,22 @@ export default function mainStoreActions() {
 				prop('dateInt'),
 				Object.values(this.envelopes).filter((envelope) => envelope.accountId === accountId && envelope.threadRootId === threadRootId),
 			)
+		},
+		getMailboxThreadEnvelopes(envelope) {
+			return this.getEnvelopesByThreadRootId(envelope.accountId, envelope.threadRootId)
+				.filter((sibling) => sibling.mailboxId === envelope.mailboxId && !sibling.flags.deleted)
+		},
+		getThreadHasUnread(envelope) {
+			const serverValue = envelope.threadHasUnread === true
+			if (envelope.thread === undefined && serverValue) {
+				return true
+			}
+			const siblings = this.getMailboxThreadEnvelopes(envelope)
+			const hasUnread = siblings.some((sibling) => !sibling.flags.seen)
+			if (envelope.thread !== undefined && siblings.every((sibling) => envelope.thread.includes(sibling.databaseId))) {
+				return hasUnread
+			}
+			return hasUnread || serverValue
 		},
 		getMessage(id) {
 			return this.messages[id]

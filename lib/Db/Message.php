@@ -149,6 +149,8 @@ class Message extends Entity implements JsonSerializable {
 	/** @var array */
 	private $attachments = [];
 
+	private ?bool $threadHasUnread = null;
+
 	public function __construct() {
 		$this->from = new AddressList([]);
 		$this->to = new AddressList([]);
@@ -313,6 +315,10 @@ class Message extends Entity implements JsonSerializable {
 		$this->avatar = $avatar;
 	}
 
+	public function setThreadHasUnread(bool $threadHasUnread): void {
+		$this->threadHasUnread = $threadHasUnread;
+	}
+
 	public function setFetchAvatarFromClient(bool $fetchAvatarFromClient): void {
 		$this->fetchAvatarFromClient = $fetchAvatarFromClient;
 	}
@@ -371,6 +377,7 @@ class Message extends Entity implements JsonSerializable {
 			'inReplyTo' => $this->getInReplyTo(),
 			'references' => empty($this->getReferences()) ? null: json_decode($this->getReferences(), true),
 			'threadRootId' => $this->getThreadRootId(),
+			...($this->threadHasUnread === null ? [] : ['threadHasUnread' => $this->threadHasUnread]),
 			'imipMessage' => $this->isImipMessage(),
 			'previewText' => $this->getPreviewText(),
 			'summary' => $this->getSummary(),

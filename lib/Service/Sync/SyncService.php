@@ -155,7 +155,9 @@ class SyncService {
 		if ($query !== null) {
 			$newIds = $this->messageMapper->findIdsByQuery($mailbox, $query, $order, null, null, $newIds);
 		}
-		$new = $this->messageMapper->findByMailboxAndIds($mailbox, $account->getUserId(), $newIds);
+		$new = $this->messageMapper->findThreadUnreadState(
+			$this->messageMapper->findByMailboxAndIds($mailbox, $account->getUserId(), $newIds)
+		);
 
 		// TODO: $changed = $this->messageMapper->findChanged($account, $mailbox, $uids);
 		if ($query !== null) {
@@ -163,7 +165,9 @@ class SyncService {
 		} else {
 			$changedIds = $knownIds;
 		}
-		$changed = $this->messageMapper->findByMailboxAndIds($mailbox, $account->getUserId(), $changedIds);
+		$changed = $this->messageMapper->findThreadUnreadState(
+			$this->messageMapper->findByMailboxAndIds($mailbox, $account->getUserId(), $changedIds)
+		);
 
 		$stillKnownIds = array_map(static fn (Message $msg) => $msg->getId(), $changed);
 		$vanished = array_values(array_diff($knownIds, $stillKnownIds));

@@ -100,13 +100,18 @@ class MailSearch implements IMailSearch {
 			$query->addFlag(Flag::not(Flag::DELETED));
 		}
 
+		$messages = $this->messageMapper->findByIds($account->getUserId(),
+			$this->getIdsLocally($account, $mailbox, $query, $sortOrder, $limit),
+			$sortOrder,
+		);
+		if ($query->getThreaded()) {
+			$messages = $this->messageMapper->findThreadUnreadState($messages);
+		}
+
 		return $this->previewEnhancer->process(
 			$account,
 			$mailbox,
-			$this->messageMapper->findByIds($account->getUserId(),
-				$this->getIdsLocally($account, $mailbox, $query, $sortOrder, $limit),
-				$sortOrder,
-			),
+			$messages,
 			true,
 			$userId
 		);

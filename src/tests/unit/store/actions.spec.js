@@ -614,6 +614,157 @@ describe('Vuex store actions', () => {
 			.toEqual(msgs2.map(mockEnvelope(21)).map((e) => e.databaseId).toSorted())
 	})
 
+	describe('thread unread state', () => {
+		const envelope = (databaseId, seen, extra = {}) => ({
+			databaseId,
+			accountId: 13,
+			mailboxId: 27,
+			threadRootId: 'root',
+			flags: { seen },
+			...extra,
+		})
+		const controlledWrites = () => {
+			const writes = {}
+			MessageService.setEnvelopeFlags.mockImplementation((id) => new Promise((resolve, reject) => {
+				writes[id] = { resolve, reject }
+			}))
+			return writes
+		}
+
+		beforeEach(() => {
+			store.mailboxes[27] = { databaseId: 27, accountId: 13, unread: 0 }
+		})
+
+		it('only restores the seen flag when a write fails', async () => {
+			const row = envelope(3, true, { threadHasUnread: false })
+			store.envelopes = { 3: row }
+			MessageService.setEnvelopeFlags.mockRejectedValue(new Error('offline'))
+
+			await expect(store.toggleEnvelopeSeen({ envelope: row, seen: false })).rejects.toThrow('offline')
+
+			expect(row.flags.seen).toBe(true)
+			expect(row.threadHasUnread).toBe(false)
+			expect(store.getThreadHasUnread(row)).toBe(false)
+		})
+
+		it('uses the server value for a thread that is not loaded', () => {
+			expect(store.getThreadHasUnread(envelope(3, true, { threadHasUnread: true }))).toBe(true)
+			expect(store.getThreadHasUnread(envelope(3, true, { threadHasUnread: false }))).toBe(false)
+			expect(store.getThreadHasUnread(envelope(3, true))).toBe(false)
+		})
+
+		it('considers known unread messages of a thread that is not loaded', async () => {
+			const older = envelope(1, true)
+			const row = envelope(3, true, { threadHasUnread: false })
+			store.envelopes = { 1: older, 3: row }
+			const writes = controlledWrites()
+
+			const pendingOlder = store.toggleEnvelopeSeen({ envelope: older, seen: false })
+			writes[1].resolve({})
+			await pendingOlder
+			const pendingRow = store.toggleEnvelopeSeen({ envelope: row, seen: false })
+			writes[3].reject(new Error('offline'))
+			await expect(pendingRow).rejects.toThrow('offline')
+
+			expect(row.flags.seen).toBe(true)
+			expect(store.getThreadHasUnread(row)).toBe(true)
+		})
+
+		it('keeps the server value for a thread that is not loaded when the known messages are read', () => {
+			const row = envelope(3, true, { threadHasUnread: true })
+			store.envelopes = { 1: envelope(1, true), 3: row }
+
+			expect(store.getThreadHasUnread(row)).toBe(true)
+		})
+
+		it('derives the state from the messages of a loaded thread', () => {
+			const row = envelope(3, true, { threadHasUnread: true, thread: [1, 3] })
+			store.envelopes = { 1: envelope(1, true), 3: row }
+
+			expect(store.getThreadHasUnread(row)).toBe(false)
+
+			store.envelopes[1].flags.seen = false
+
+			expect(store.getThreadHasUnread(row)).toBe(true)
+		})
+
+		it('ignores deleted messages and other mailboxes', () => {
+			const row = envelope(3, true, { threadHasUnread: true, thread: [1, 2, 3] })
+			store.envelopes = {
+				1: envelope(1, false, { flags: { seen: false, deleted: true } }),
+				2: envelope(2, false, { mailboxId: 28 }),
+				3: row,
+			}
+
+			expect(store.getThreadHasUnread(row)).toBe(false)
+		})
+
+		it('stays conservative when a known message is missing from the loaded thread', () => {
+			const read = envelope(3, true, { threadHasUnread: true, thread: [3] })
+			store.envelopes = { 3: read, 5: envelope(5, true) }
+
+			expect(store.getThreadHasUnread(read)).toBe(true)
+
+			read.threadHasUnread = false
+			store.envelopes[5].flags.seen = false
+
+			expect(store.getThreadHasUnread(read)).toBe(true)
+		})
+
+		it('keeps the thread unread when another message became unread while a write was pending', async () => {
+			const a = envelope(1, true, { thread: [1, 3] })
+			const b = envelope(3, true, { thread: [1, 3] })
+			store.envelopes = { 1: a, 3: b }
+			const writes = controlledWrites()
+
+			const pendingA = store.toggleEnvelopeSeen({ envelope: a, seen: false })
+			const pendingB = store.toggleEnvelopeSeen({ envelope: b, seen: false })
+			writes[3].resolve({})
+			await pendingB
+			writes[1].reject(new Error('offline'))
+			await expect(pendingA).rejects.toThrow('offline')
+
+			expect(store.getThreadHasUnread(b)).toBe(true)
+		})
+
+		it.each([
+			['A then B', [1, 3]],
+			['B then A', [3, 1]],
+		])('clears the thread unread state when two pending writes fail (%s)', async (name, order) => {
+			const a = envelope(1, true, { thread: [1, 3] })
+			const b = envelope(3, true, { thread: [1, 3] })
+			store.envelopes = { 1: a, 3: b }
+			const writes = controlledWrites()
+
+			const pending = {
+				1: store.toggleEnvelopeSeen({ envelope: a, seen: false }).catch(() => {}),
+				3: store.toggleEnvelopeSeen({ envelope: b, seen: false }).catch(() => {}),
+			}
+			for (const id of order) {
+				writes[id].reject(new Error('offline'))
+				await pending[id]
+			}
+
+			expect(store.getThreadHasUnread(b)).toBe(false)
+		})
+
+		it('keeps a successful read when a later write on the thread fails', async () => {
+			const a = envelope(1, false, { threadHasUnread: true, thread: [1, 3] })
+			const b = envelope(3, true, { threadHasUnread: true, thread: [1, 3] })
+			store.envelopes = { 1: a, 3: b }
+			const writes = controlledWrites()
+
+			const pendingB = store.toggleEnvelopeSeen({ envelope: b, seen: false })
+			const pendingA = store.toggleEnvelopeSeen({ envelope: a, seen: true })
+			writes[1].resolve({})
+			await pendingA
+			writes[3].reject(new Error('offline'))
+			await expect(pendingB).rejects.toThrow('offline')
+
+			expect(store.getThreadHasUnread(b)).toBe(false)
+		})
+	})
+
 	describe('inbox sync', () => {
 		it('fetches the inbox first', async () => {
 			const account13 = {

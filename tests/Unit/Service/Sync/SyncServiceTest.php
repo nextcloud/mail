@@ -13,6 +13,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailboxConnector;
 use OCA\Mail\Contracts\IMessageConnector;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\MailboxLockedException;
 use OCA\Mail\Exception\MailboxNotCachedException;
@@ -245,6 +246,53 @@ final class SyncServiceTest extends TestCase {
 			null,
 			[1, 2]
 		);
+	}
+
+	public function testPartialSyncFlagsThreadsWithUnreadMessages(): void {
+		$account = $this->createMock(Account::class);
+		$account->method('getUserId')->willReturn('user');
+		$mailbox = new Mailbox();
+		$mailbox->setMessages(3);
+		$mailbox->setUnseen(1);
+		$mailbox->setSyncNewToken('token');
+		$mailbox->setSyncChangedToken('token');
+		$mailbox->setSyncVanishedToken('token');
+		$this->messageConnector->method('syncMailbox')
+			->willReturn(new \OCA\Mail\Protocol\SyncResult());
+		$this->messageMapper->method('findNewIds')->willReturn([3]);
+		$new = new Message();
+		$new->setId(3);
+		$changed = new Message();
+		$changed->setId(1);
+		$this->messageMapper->method('findByMailboxAndIds')
+			->willReturnCallback(static fn (Mailbox $mailbox, string $userId, array $ids) => $ids === [3] ? [$new] : [$changed]);
+		$this->messageMapper->expects($this->exactly(2))
+			->method('findThreadUnreadState')
+			->willReturnCallback(static function (array $messages): array {
+				foreach ($messages as $message) {
+					$message->setThreadHasUnread(true);
+				}
+				return $messages;
+			});
+		$previewEnhancer = $this->createMock(PreviewEnhancer::class);
+		$previewEnhancer->method('process')->willReturnArgument(2);
+		$syncService = new SyncService(
+			$this->protocolFactory,
+			$this->synchronizer,
+			$this->createStub(FilterStringParser::class),
+			$this->messageMapper,
+			$previewEnhancer,
+			$this->createStub(\Psr\Log\LoggerInterface::class),
+			$this->mailboxSync,
+			$this->timeFactory,
+		);
+
+		$response = $syncService->syncMailbox($account, $mailbox, 0, true, null, [1]);
+
+		$this->assertSame([$new], $response->getNewMessages());
+		$this->assertSame([$changed], $response->getChangedMessages());
+		$this->assertTrue($new->jsonSerialize()['threadHasUnread']);
+		$this->assertTrue($changed->jsonSerialize()['threadHasUnread']);
 	}
 
 	private function createCachedMailbox(): Mailbox {

@@ -25,6 +25,8 @@ use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Db\RecipientMapper;
 use OCA\Mail\Db\TagMapper;
+use OCA\Mail\Service\Search\Flag;
+use OCA\Mail\Service\Search\FlagExpression;
 use OCA\Mail\Service\Search\SearchQuery;
 use OCA\Mail\Support\PerformanceLogger;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -167,6 +169,52 @@ final class MessageMapperTest extends TestCase {
 			->executeStatement();
 	}
 
+	private function insertThreadMessage(int $mailboxId, string $threadRootId, int $position, bool $seen, bool $flagged = false, bool $deleted = false, bool $important = false): int {
+		$qb = $this->db->getQueryBuilder();
+		$qb->insert($this->mapper->getTableName())
+			->values([
+				'uid' => $qb->createNamedParameter($position, IQueryBuilder::PARAM_INT),
+				'message_id' => $qb->createNamedParameter('<' . $threadRootId . '-' . $mailboxId . '-' . $position . '@example.com>'),
+				'thread_root_id' => $qb->createNamedParameter($threadRootId),
+				'mailbox_id' => $qb->createNamedParameter($mailboxId, IQueryBuilder::PARAM_INT),
+				'subject' => $qb->createNamedParameter('TEST'),
+				'sent_at' => $qb->createNamedParameter($this->timestamp + $position, IQueryBuilder::PARAM_INT),
+				'in_reply_to' => $qb->createNamedParameter('<>'),
+				'flag_seen' => $qb->createNamedParameter($seen, IQueryBuilder::PARAM_BOOL),
+				'flag_flagged' => $qb->createNamedParameter($flagged, IQueryBuilder::PARAM_BOOL),
+				'flag_deleted' => $qb->createNamedParameter($deleted, IQueryBuilder::PARAM_BOOL),
+				'flag_important' => $qb->createNamedParameter($important, IQueryBuilder::PARAM_BOOL),
+			])
+			->executeStatement();
+		return $qb->getLastInsertId();
+	}
+
+	/**
+	 * @param array<string, bool[]> $threads thread root id => seen state of each message, oldest first
+	 *
+	 * @return array<string, int[]> message ids of each thread, oldest first
+	 */
+	private function insertThreads(int $mailboxId, array $threads): array {
+		$ids = [];
+		foreach ($threads as $threadRootId => $seenStates) {
+			foreach ($seenStates as $position => $seen) {
+				$ids[$threadRootId][] = $this->insertThreadMessage($mailboxId, $threadRootId, $position, $seen);
+			}
+		}
+		return $ids;
+	}
+
+	private function unreadQuery(bool $threaded = true): SearchQuery {
+		$query = new SearchQuery();
+		$query->setThreaded($threaded);
+		$query->addFlag(Flag::not(Flag::SEEN));
+		return $query;
+	}
+
+	private function newestOf(array $ids, string ...$threadRootIds): array {
+		return array_map(static fn (string $root) => end($ids[$root]), $threadRootIds);
+	}
+
 	public function testFindIdsByQueryMatchesTheSender(): void {
 		$mailbox = new Mailbox();
 		$mailbox->setId(1);
@@ -295,6 +343,234 @@ final class MessageMapperTest extends TestCase {
 		$result = $this->mapper->findIdsByQuery($mailbox, $searchQuery, 'DESC', null);
 
 		self::assertEquals([1], $result);
+	}
+
+	public function testFindIdsByQueryUnreadFilterFindsThreadsWithAnUnreadMessage(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$ids = $this->insertThreads(1, [
+			'older-unread' => [false, true, true],
+			'middle-unread' => [true, false, true],
+			'newest-unread' => [true, true, false],
+			'all-unread' => [false, false, false],
+			'all-read' => [true, true, true],
+			'single-unread' => [false],
+			'single-read' => [true],
+		]);
+
+		$result = $this->mapper->findIdsByQuery($mailbox, $this->unreadQuery(), 'DESC', null);
+
+		$expected = $this->newestOf($ids, 'older-unread', 'middle-unread', 'newest-unread', 'all-unread', 'single-unread');
+		sort($expected);
+		sort($result);
+		self::assertEquals($expected, $result);
+	}
+
+	public function testFindIdsByQueryUnreadFilterReturnsTheNewestMessageOfEachThreadOnce(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$ids = $this->insertThreads(1, ['all-unread' => [false, false, false]]);
+
+		$result = $this->mapper->findIdsByQuery($mailbox, $this->unreadQuery(), 'DESC', null);
+
+		self::assertEquals([$ids['all-unread'][2]], $result);
+	}
+
+	public function testFindIdsByQueryUnreadFilterInSingletonViewOnlyReturnsUnreadMessages(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$ids = $this->insertThreads(1, ['older-unread' => [false, true, true]]);
+
+		$result = $this->mapper->findIdsByQuery($mailbox, $this->unreadQuery(false), 'DESC', null);
+
+		self::assertEquals([$ids['older-unread'][0]], $result);
+	}
+
+	public function testFindIdsByQueryReadFilterOnlyMatchesTheNewestMessageOfAThread(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$ids = $this->insertThreads(1, [
+			'all-read' => [true, true, true],
+			'newest-unread' => [true, true, false],
+			'older-unread' => [false, true, true],
+		]);
+		$query = new SearchQuery();
+		$query->addFlag(Flag::is(Flag::SEEN));
+
+		$result = $this->mapper->findIdsByQuery($mailbox, $query, 'DESC', null);
+
+		$expected = $this->newestOf($ids, 'all-read', 'older-unread');
+		sort($expected);
+		sort($result);
+		self::assertEquals($expected, $result);
+	}
+
+	public function testFindIdsByQueryUnreadFilterIgnoresUnreadMessagesOfOtherMailboxes(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$this->insertThreads(1, ['shared-root' => [true, true]]);
+		$this->insertThreads(2, ['shared-root' => [false, true]]);
+
+		$result = $this->mapper->findIdsByQuery($mailbox, $this->unreadQuery(), 'DESC', null);
+
+		self::assertEquals([], $result);
+	}
+
+	public function testFindIdsByQueryUnreadFilterIgnoresDeletedUnreadMessages(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$this->insertThreadMessage(1, 'older-deleted', 0, false, false, true);
+		$this->insertThreadMessage(1, 'older-deleted', 1, true);
+		$this->insertThreadMessage(1, 'newest-deleted', 0, false);
+		$this->insertThreadMessage(1, 'newest-deleted', 1, true, false, true);
+		$query = $this->unreadQuery();
+		$query->addFlag(Flag::not(Flag::DELETED));
+
+		$result = $this->mapper->findIdsByQuery($mailbox, $query, 'DESC', null);
+
+		self::assertEquals([], $result);
+	}
+
+	public function testFindIdsByQueryUnreadAndStarredFilterNeedsAStarredShownMessage(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$this->insertThreadMessage(1, 'unread-older-starred-newest', 0, false);
+		$matching = $this->insertThreadMessage(1, 'unread-older-starred-newest', 1, true, true);
+		$this->insertThreadMessage(1, 'starred-older', 0, false, true);
+		$this->insertThreadMessage(1, 'starred-older', 1, true);
+		$query = $this->unreadQuery();
+		$query->addFlag(Flag::is(Flag::FLAGGED));
+
+		$result = $this->mapper->findIdsByQuery($mailbox, $query, 'DESC', null);
+
+		self::assertEquals([$matching], $result);
+	}
+
+	public function testFindIdsByQueryStarredAndNotStarredListAMixedThreadOnce(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$this->insertThreadMessage(1, 'older-starred', 0, true, true);
+		$olderStarred = $this->insertThreadMessage(1, 'older-starred', 1, true);
+		$this->insertThreadMessage(1, 'newest-starred', 0, true);
+		$newestStarred = $this->insertThreadMessage(1, 'newest-starred', 1, true, true);
+		$starred = new SearchQuery();
+		$starred->addFlag(Flag::is(Flag::FLAGGED));
+		$notStarred = new SearchQuery();
+		$notStarred->addFlag(Flag::not(Flag::FLAGGED));
+
+		self::assertEquals([$newestStarred], $this->mapper->findIdsByQuery($mailbox, $starred, 'DESC', null));
+		self::assertEquals([$olderStarred], $this->mapper->findIdsByQuery($mailbox, $notStarred, 'DESC', null));
+	}
+
+	public function testFindIdsByQueryImportantAndOtherListAMixedThreadOnce(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$this->insertThreadMessage(1, 'older-important', 0, true, false, false, true);
+		$olderImportant = $this->insertThreadMessage(1, 'older-important', 1, true);
+		$this->insertThreadMessage(1, 'newest-important', 0, true);
+		$newestImportant = $this->insertThreadMessage(1, 'newest-important', 1, true, false, false, true);
+		$important = new SearchQuery();
+		$important->addFlagExpression(FlagExpression::and(Flag::is(Flag::IMPORTANT)));
+		$other = new SearchQuery();
+		$other->addFlag(Flag::not(Flag::IMPORTANT));
+
+		self::assertEquals([$newestImportant], $this->mapper->findIdsByQuery($mailbox, $important, 'DESC', null));
+		self::assertEquals([$olderImportant], $this->mapper->findIdsByQuery($mailbox, $other, 'DESC', null));
+	}
+
+	public function testFindIdsByQueryFlagExpressionMatchesTheShownMessageOnly(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$this->insertThreadMessage(1, 'flagged-older', 0, true, true);
+		$this->insertThreadMessage(1, 'flagged-older', 1, true);
+		$this->insertThreadMessage(1, 'unread-older', 0, false);
+		$this->insertThreadMessage(1, 'unread-older', 1, true);
+		$this->insertThreadMessage(1, 'flagged-newest', 0, true);
+		$flaggedNewest = $this->insertThreadMessage(1, 'flagged-newest', 1, true, true);
+		$query = new SearchQuery();
+		$query->addFlagExpression(FlagExpression::or(Flag::not(Flag::SEEN), Flag::is(Flag::FLAGGED)));
+
+		$result = $this->mapper->findIdsByQuery($mailbox, $query, 'DESC', null);
+
+		self::assertEquals([$flaggedNewest], $result);
+	}
+
+	public function testFindIdsByQueryUnreadFilterRespectsTheLimit(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$ids = $this->insertThreads(1, [
+			'a' => [false, true],
+			'b' => [false, true],
+		]);
+
+		$result = $this->mapper->findIdsByQuery($mailbox, $this->unreadQuery(), 'DESC', 1);
+
+		self::assertCount(1, $result);
+		self::assertContains($result[0], [$ids['a'][1], $ids['b'][1]]);
+	}
+
+	public function testFindThreadUnreadStateFlagsThreadsWithAnUnreadMessage(): void {
+		$ids = $this->insertThreads(1, [
+			'older-unread' => [false, true, true],
+			'middle-unread' => [true, false, true],
+			'newest-unread' => [true, true, false],
+			'all-unread' => [false, false],
+			'all-read' => [true, true],
+			'single-unread' => [false],
+			'single-read' => [true],
+		]);
+		$messages = $this->mapper->findByIds('user', array_map(static fn (array $thread) => end($thread), $ids), 'ASC');
+
+		$result = $this->mapper->findThreadUnreadState($messages);
+
+		$state = [];
+		foreach ($result as $message) {
+			$state[$message->getThreadRootId()] = $message->jsonSerialize()['threadHasUnread'];
+		}
+		self::assertEquals([
+			'older-unread' => true,
+			'middle-unread' => true,
+			'newest-unread' => true,
+			'all-unread' => true,
+			'all-read' => false,
+			'single-unread' => true,
+			'single-read' => false,
+		], $state);
+	}
+
+	public function testFindThreadUnreadStateIgnoresDeletedAndForeignMailboxMessages(): void {
+		$this->insertThreadMessage(1, 'deleted-unread', 0, false, false, true);
+		$deletedUnread = $this->insertThreadMessage(1, 'deleted-unread', 1, true);
+		$this->insertThreadMessage(2, 'other-mailbox', 0, false);
+		$otherMailbox = $this->insertThreadMessage(1, 'other-mailbox', 1, true);
+		$messages = $this->mapper->findByIds('user', [$deletedUnread, $otherMailbox], 'ASC');
+
+		$result = $this->mapper->findThreadUnreadState($messages);
+
+		foreach ($result as $message) {
+			self::assertFalse($message->jsonSerialize()['threadHasUnread']);
+		}
+	}
+
+	public function testFindThreadUnreadStateWithoutMessages(): void {
+		self::assertEquals([], $this->mapper->findThreadUnreadState([]));
+	}
+
+	public function testFindThreadUnreadStateAcrossSeveralChunks(): void {
+		$newest = [];
+		foreach (range(1, 1500) as $i) {
+			$this->insertThreadMessage(1, 'thread-' . $i, 0, $i % 2 === 0);
+			$newest[] = $this->insertThreadMessage(1, 'thread-' . $i, 1, true);
+		}
+		$messages = $this->mapper->findByIds('user', $newest, 'ASC');
+
+		$result = $this->mapper->findThreadUnreadState($messages);
+
+		self::assertCount(1500, $result);
+		foreach ($result as $message) {
+			$i = (int)substr($message->getThreadRootId(), strlen('thread-'));
+			self::assertSame($i % 2 !== 0, $message->jsonSerialize()['threadHasUnread']);
+		}
 	}
 
 	public function testFindIdsGloballyByQueryMatchesTheSender(): void {
