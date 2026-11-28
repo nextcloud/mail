@@ -383,9 +383,12 @@ export default {
 				return this.loading
 			}
 
-			return !this.emailAddress || !this.isValidEmail(this.emailAddress)
-				|| (!this.googleOauthUrl && !this.autoConfig.password)
-				|| (!this.microsoftOauthUrl && !this.autoConfig.password)
+			let requiresPassword = false
+			if (this.isSetup) {
+				requiresPassword = !this.autoConfig.password && !this.googleOauthUrl && !this.microsoftOauthUrl
+			}
+
+			return !this.emailAddress || !this.isValidEmail(this.emailAddress) || requiresPassword
 		},
 
 		isDisabledManual() {
@@ -397,11 +400,15 @@ export default {
 				return this.loading
 			}
 
+			let requiresPassword = false
+			if (this.isSetup) {
+				requiresPassword = !this.useOauth && (!this.manualConfig.imapPassword || !this.manualConfig.smtpPassword)
+			}
+
 			return !this.emailAddress || !this.isValidEmail(this.emailAddress)
-				|| !this.manualConfig.imapHost || !this.manualConfig.imapPort
-				|| !this.manualConfig.imapUser || (!this.useOauth && !this.manualConfig.imapPassword)
-				|| !this.manualConfig.smtpHost || !this.manualConfig.smtpPort
-				|| !this.manualConfig.smtpUser || (!this.useOauth && !this.manualConfig.smtpPassword)
+				|| !this.manualConfig.imapHost || !this.manualConfig.imapPort || !this.manualConfig.imapUser
+				|| !this.manualConfig.smtpHost || !this.manualConfig.smtpPort || !this.manualConfig.smtpUser
+				|| requiresPassword
 		},
 
 		isGoogleAccount() {
@@ -503,6 +510,14 @@ export default {
 
 		clearFeedback() {
 			this.feedback = null
+		},
+
+		optionalPasswordPlaceholder(fallback) {
+			if (this.isSetup) {
+				return fallback
+			} else {
+				return t('mail', 'Leave blank to not change password')
+			}
 		},
 
 		syncCredentials() {
@@ -626,7 +641,7 @@ export default {
 						return
 					}
 				}
-				if (!this.useOauth) {
+				if (!this.useOauth && this.isSetup) {
 					if (this.mode === 'auto' && this.autoConfig.password === '') {
 						this.feedback = t('mail', 'Password required')
 						return
@@ -649,6 +664,13 @@ export default {
 				if (this.useOauth) {
 					delete data.imapPassword
 					delete data.smtpPassword
+				} else if (!this.isSetup) {
+					if (data.imapPassword === '') {
+						delete data.imapPassword
+					}
+					if (data.smtpPassword === '') {
+						delete data.smtpPassword
+					}
 				}
 				if (!this.account) {
 					const account = await this.mainStore.startAccountSetup(data)
