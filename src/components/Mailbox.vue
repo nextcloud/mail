@@ -207,13 +207,18 @@ export default {
 	},
 
 	async mounted() {
-		if (this.mainStore.hasFetchedInitialEnvelopes) {
+		const isInitialMount = !this.mainStore.hasFetchedInitialEnvelopes
+		if (!isInitialMount && this.envelopes.length > 0) {
 			return
 		}
 
 		await this.loadEnvelopes()
 		logger.debug(`syncing folder ${this.mailbox.databaseId} (${this.searchQuery}) after mount`)
 		await this.sync(false)
+
+		if (!isInitialMount) {
+			return
+		}
 
 		await this.prefetchOtherMailboxes()
 
