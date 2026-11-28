@@ -82,7 +82,7 @@
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { getLanguage } from '@nextcloud/l10n'
-import { mapState } from 'pinia'
+import { mapState, mapStores } from 'pinia'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcDialog from '@nextcloud/vue/components/NcDialog'
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
@@ -159,6 +159,7 @@ export default {
 	},
 
 	computed: {
+		...mapStores(useMainStore),
 		...mapState(useMainStore, {
 			availableInputLanguages: 'translationInputLanguages',
 			availableOutputLanguages: 'translationOutputLanguages',
@@ -200,6 +201,9 @@ export default {
 		},
 
 		async translateMessage() {
+			if (!this.mainStore.isAiEnabled()) {
+				return
+			}
 			try {
 				this.isLoading = true
 				const response = await translateText(this.message.trim(), this.selectedFrom.value, this.selectedTo.value)

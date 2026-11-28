@@ -126,6 +126,9 @@ final class MessagesControllerTest extends TestCase {
 	private $userPreferences;
 	private SnoozeService $snoozeService;
 
+	/** @var array<string, bool> */
+	private array $aiDisabledFor = [];
+	private ?string $messageOwner = null;
 	/** @var MockObject|AiIntegrationsService */
 	private $aiIntegrationsService;
 
@@ -161,13 +164,15 @@ final class MessagesControllerTest extends TestCase {
 		$this->userPreferences = $this->createMock(IUserPreferences::class);
 		$this->snoozeService = $this->createMock(SnoozeService::class);
 		$this->aiIntegrationsService = $this->createMock(AiIntegrationsService::class);
+		$this->aiIntegrationsService->method('isLlmProcessingEnabledForUser')
+			->willReturnCallback(fn (string $userId): bool => !($this->aiDisabledFor[$userId] ?? false));
 		$this->cacheFactory = $this->createMock(ICacheFactory::class);
 
 		$this->cacheFactory->method('createDistributed')
 			->willReturn(new NullCache());
 
 		$this->delegationService = $this->createMock(DelegationService::class);
-		$this->delegationService->method('resolveMessageUserId')->willReturn($this->userId);
+		$this->delegationService->method('resolveMessageUserId')->willReturnCallback(fn (): string => $this->messageOwner ?? $this->userId);
 		$this->delegationService->method('resolveMailboxUserId')->willReturn($this->userId);
 
 		$this->appManager = $this->createMock(IAppManager::class);
@@ -1424,6 +1429,38 @@ final class MessagesControllerTest extends TestCase {
 		$actualResponse = $controller->smartReply(100);
 		$expectedResponse = new JSONResponse([], Http::STATUS_UNAUTHORIZED);
 		$this->assertEquals($expectedResponse, $actualResponse);
+	}
+
+	public function testSmartReplyWhenUserTurnedAiOff(): void {
+		$this->aiDisabledFor[$this->userId] = true;
+		$this->aiIntegrationsService->expects($this->never())
+			->method('getSmartReply');
+
+		$actualResponse = $this->controller->smartReply(100);
+
+		$this->assertEquals(new JSONResponse([], Http::STATUS_NO_CONTENT), $actualResponse);
+	}
+
+	public function testSmartReplyDelegatedMessageWhenOwnerTurnedAiOff(): void {
+		$this->messageOwner = 'owner';
+		$this->aiDisabledFor['owner'] = true;
+		$message = new DbMessage();
+		$message->setMailboxId(20);
+		$this->mailManager->method('getMessage')
+			->with('owner', 100)
+			->willReturn($message);
+		$mailbox = new Mailbox();
+		$mailbox->setAccountId(1);
+		$this->mailManager->method('getMailbox')
+			->willReturn($mailbox);
+		$this->accountService->method('find')
+			->willReturn($this->createStub(Account::class));
+		$this->aiIntegrationsService->expects($this->never())
+			->method('getSmartReply');
+
+		$actualResponse = $this->controller->smartReply(100);
+
+		$this->assertEquals(new JSONResponse([], Http::STATUS_NO_CONTENT), $actualResponse);
 	}
 
 	public function testSmartReplyNoMessage(): void {

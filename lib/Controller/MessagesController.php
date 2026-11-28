@@ -1028,6 +1028,9 @@ class MessagesController extends Controller {
 		if ($this->userId === null) {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
 		}
+		if (!$this->aiIntegrationService->isLlmProcessingEnabledForUser($this->userId)) {
+			return new JSONResponse([], Http::STATUS_NO_CONTENT);
+		}
 		try {
 			$effectiveUserId = $this->delegationService->resolveMessageUserId($messageId, $this->userId);
 			$message = $this->mailManager->getMessage($effectiveUserId, $messageId);
@@ -1035,6 +1038,9 @@ class MessagesController extends Controller {
 			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		if ($effectiveUserId !== $this->userId && !$this->aiIntegrationService->isLlmProcessingEnabledForUser($effectiveUserId)) {
+			return new JSONResponse([], Http::STATUS_NO_CONTENT);
 		}
 		try {
 			$replies = array_values($this->aiIntegrationService->getSmartReply($account, $mailbox, $message, $effectiveUserId) ?? []);

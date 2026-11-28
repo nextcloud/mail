@@ -143,6 +143,9 @@ class ThreadController extends Controller {
 	 */
 	#[NoAdminRequired]
 	public function summarize(int $id): JSONResponse {
+		if (!$this->aiIntergrationsService->isLlmProcessingEnabledForUser($this->userId)) {
+			return new JSONResponse([], Http::STATUS_NO_CONTENT);
+		}
 		try {
 			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
 			$message = $this->mailManager->getMessage($effectiveUserId, $id);
@@ -150,6 +153,9 @@ class ThreadController extends Controller {
 			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		if ($effectiveUserId !== $this->userId && !$this->aiIntergrationsService->isLlmProcessingEnabledForUser($effectiveUserId)) {
+			return new JSONResponse([], Http::STATUS_NO_CONTENT);
 		}
 		$threadRootId = $message->getThreadRootId();
 		if ($threadRootId === null || $threadRootId === '') {
@@ -175,6 +181,9 @@ class ThreadController extends Controller {
 
 	#[NoAdminRequired]
 	public function generateEventData(int $id): JSONResponse {
+		if (!$this->aiIntergrationsService->isLlmProcessingEnabledForUser($this->userId)) {
+			return new JSONResponse([], Http::STATUS_NO_CONTENT);
+		}
 		try {
 			$effectiveUserId = $this->delegationService->resolveMessageUserId($id, $this->userId);
 			$message = $this->mailManager->getMessage($effectiveUserId, $id);
@@ -182,6 +191,9 @@ class ThreadController extends Controller {
 			$account = $this->accountService->find($effectiveUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		if ($effectiveUserId !== $this->userId && !$this->aiIntergrationsService->isLlmProcessingEnabledForUser($effectiveUserId)) {
+			return new JSONResponse([], Http::STATUS_NO_CONTENT);
 		}
 		$threadRootId = $message->getThreadRootId();
 		if ($threadRootId === null || $threadRootId === '') {

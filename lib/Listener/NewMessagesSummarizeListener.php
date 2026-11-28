@@ -58,6 +58,9 @@ class NewMessagesSummarizeListener implements IEventListener {
 		if (!($event instanceof NewMessagesSynchronized)) {
 			return;
 		}
+		if (!$this->aiService->isLlmProcessingEnabledForUser($event->getAccount()->getUserId())) {
+			return;
+		}
 		if ($this->isSkippedMailbox($event->getAccount(), $event->getMailbox())) {
 			return;
 		}

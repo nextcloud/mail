@@ -15,6 +15,7 @@ use OCA\Mail\Address;
 use OCA\Mail\AddressList;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\ConfigLexicon;
+use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
@@ -48,6 +49,7 @@ final class AiIntegrationsServiceTest extends TestCase {
 	private TaskProcessingProvider|MockObject $taskProcessingProvider;
 	private IFactory|MockObject $l10nFactory;
 	private IUserManager|MockObject $userManager;
+	private IUserPreferences&MockObject $preferences;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -59,6 +61,7 @@ final class AiIntegrationsServiceTest extends TestCase {
 		$this->taskProcessingManager = $this->createMock(TaskProcessingManager::class);
 		$this->l10nFactory = $this->createMock(IFactory::class);
 		$this->userManager = $this->createMock(IUserManager::class);
+		$this->preferences = $this->createMock(IUserPreferences::class);
 		$this->aiIntegrationsService = new AiIntegrationsService(
 			$this->logger,
 			$this->cache,
@@ -67,6 +70,7 @@ final class AiIntegrationsServiceTest extends TestCase {
 			$this->l10nFactory,
 			$this->userManager,
 			$this->appConfig,
+			$this->preferences,
 		);
 
 		$this->taskProcessingProvider = $this->createMock(TaskProcessingProvider::class);
@@ -297,6 +301,34 @@ final class AiIntegrationsServiceTest extends TestCase {
 			->willReturn($appConfigValue);
 
 		$this->assertEquals($expected, $this->aiIntegrationsService->isLlmProcessingEnabled());
+	}
+
+	public static function provideUserPreferences(): \Iterator {
+		yield 'admin off' => [false, 'true', 'true', false, false];
+		yield 'all on' => [true, 'true', 'true', true, true];
+		yield 'ai off' => [true, 'false', 'true', false, false];
+		yield 'follow-up off' => [true, 'true', 'false', true, false];
+	}
+
+	/**
+	 * @dataProvider provideUserPreferences
+	 */
+	public function testIsEnabledForUser(bool $adminEnabled, string $aiFeatures, string $followUp, bool $expectedAi, bool $expectedFollowUp): void {
+		$this->appConfig->method('getValueBool')
+			->with(Application::APP_ID, ConfigLexicon::LLM_PROCESSING, false)
+			->willReturn($adminEnabled);
+		$this->preferences->method('getPreference')
+			->willReturnCallback(static fn (string $userId, string $key, ?string $default) => match ($key) {
+				AiIntegrationsService::PREFERENCE_AI_FEATURES => $aiFeatures,
+				AiIntegrationsService::PREFERENCE_FOLLOW_UP_REMINDERS => $followUp,
+				default => $default,
+			});
+
+		$ai = $this->aiIntegrationsService->isLlmProcessingEnabledForUser('user');
+		$followUpEnabled = $this->aiIntegrationsService->isFollowUpEnabledForUser('user');
+
+		$this->assertSame($expectedAi, $ai);
+		$this->assertSame($expectedFollowUp, $followUpEnabled);
 	}
 
 	public function testCached(): void {

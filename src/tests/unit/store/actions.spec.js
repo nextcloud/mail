@@ -614,6 +614,16 @@ describe('Vuex store actions', () => {
 			.toEqual(msgs2.map(mockEnvelope(21)).map((e) => e.databaseId).toSorted())
 	})
 
+	describe('ai features preference', () => {
+		it('uses AI features unless the user turned them off', () => {
+			const before = store.isAiEnabled()
+			store.savePreferenceMutation({ key: 'ai-features', value: 'false' })
+
+			expect(before).toBe(true)
+			expect(store.isAiEnabled()).toBe(false)
+		})
+	})
+
 	describe('inbox sync', () => {
 		it('fetches the inbox first', async () => {
 			const account13 = {
