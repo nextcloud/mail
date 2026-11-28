@@ -5,6 +5,7 @@
 
 import { shallowMount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
+import { ref } from 'vue'
 import Envelope from '../../../components/Envelope.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 import useMainStore from '../../../store/mainStore.js'
@@ -13,6 +14,11 @@ vi.mock('@nextcloud/dialogs', async (importOriginal) => ({
 	...(await importOriginal()),
 	showSuccess: vi.fn(),
 	showWarning: vi.fn(),
+}))
+
+const isDarkTheme = ref(false)
+vi.mock('@nextcloud/vue/composables/useIsDarkTheme', () => ({
+	useIsDarkTheme: () => isDarkTheme,
 }))
 
 const $route = {
@@ -26,6 +32,7 @@ describe('Envelope', () => {
 
 	beforeEach(() => {
 		setActivePinia(createPinia())
+		isDarkTheme.value = false
 
 		store = useMainStore()
 
@@ -556,6 +563,92 @@ describe('Envelope', () => {
 			await view.vm.onToggleJunk()
 
 			expect(store.toggleEnvelopeJunk).toHaveBeenCalledWith({ envelope: view.props('data'), removeEnvelope: false })
+		})
+	})
+
+	describe('account label', () => {
+		const mountEnvelope = (mailbox) => shallowMount(Envelope, {
+			global: {
+				mixins: [Nextcloud],
+				mocks: {
+					$route,
+				},
+			},
+			props: {
+				data: {
+					accountId: 123,
+					from: [{ email: 'info@test.com' }],
+					flags: { seen: false, flagged: false, $junk: false, answered: false, hasAttachments: false, draft: false },
+				},
+				account: { sentMailboxId: '1' },
+				mailbox: {
+					databaseId: '3',
+					specialRole: '',
+					...mailbox,
+				},
+			},
+		})
+
+		it('shows the label of the account in a combined mailbox', () => {
+			store.accountsUnmapped[123] = { sentMailboxId: '1', emailAddress: 'jane@example.com', unifiedLabel: 'Work', unifiedLabelColor: '#0082c9' }
+
+			const view = mountEnvelope({ isUnified: true })
+
+			expect(view.vm.accountLabel).toMatchObject({ text: 'Work', color: '#0082c9', textColor: '#0082c9', description: 'Received in jane@example.com' })
+		})
+
+		it('lightens the label text in the dark theme', () => {
+			store.accountsUnmapped[123] = { sentMailboxId: '1', emailAddress: 'jane@example.com', unifiedLabel: 'Work', unifiedLabelColor: '#0082c9' }
+			isDarkTheme.value = true
+
+			const view = mountEnvelope({ isUnified: true })
+
+			expect(view.vm.accountLabel.textColor).toContain('#0082c9')
+			expect(view.vm.accountLabel.textColor).toContain('white')
+		})
+
+		it('shows the label of the account in the priority inbox', () => {
+			store.accountsUnmapped[123] = { sentMailboxId: '1', emailAddress: 'jane@example.com', unifiedLabel: 'Work', unifiedLabelColor: '#0082c9' }
+
+			const view = mountEnvelope({ isPriorityInbox: true })
+
+			expect(view.vm.accountLabel).toMatchObject({ text: 'Work' })
+		})
+
+		it('updates the label when the account label changes', async () => {
+			store.addAccountMutation({ id: 123, accountId: 123, sentMailboxId: '1', emailAddress: 'jane@example.com', mailboxes: [], aliases: [] })
+			const view = mountEnvelope({ isUnified: true })
+			const before = view.vm.accountLabel
+
+			store.accountsUnmapped[123].unifiedLabel = 'Work'
+			await view.vm.$nextTick()
+
+			expect(before).toBeNull()
+			expect(view.vm.accountLabel).toMatchObject({ text: 'Work' })
+		})
+
+		it('does not show the label outside combined mailboxes', () => {
+			store.accountsUnmapped[123] = { sentMailboxId: '1', emailAddress: 'jane@example.com', unifiedLabel: 'Work', unifiedLabelColor: '#0082c9' }
+
+			const view = mountEnvelope({ isUnified: false })
+
+			expect(view.vm.accountLabel).toBeNull()
+		})
+
+		it('shows nothing when the account has no label and no color', () => {
+			store.accountsUnmapped[123] = { sentMailboxId: '1', emailAddress: 'jane@example.com', unifiedLabel: '', unifiedLabelColor: '' }
+
+			const view = mountEnvelope({ isUnified: true })
+
+			expect(view.vm.accountLabel).toBeNull()
+		})
+
+		it('keeps the color without a label, shown as a dot', () => {
+			store.accountsUnmapped[123] = { sentMailboxId: '1', emailAddress: 'jane@example.com', unifiedLabel: '', unifiedLabelColor: '#0082c9' }
+
+			const view = mountEnvelope({ isUnified: true })
+
+			expect(view.vm.accountLabel).toMatchObject({ text: '', color: '#0082c9' })
 		})
 	})
 })
