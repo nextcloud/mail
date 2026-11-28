@@ -10,10 +10,13 @@ declare(strict_types=1);
 namespace OCA\Mail\Html;
 
 use DOMDocument;
+use DOMProcessingInstruction;
 use function libxml_clear_errors;
 use function libxml_use_internal_errors;
 
 class Parser {
+
+	private const UTF8_PROCESSING_INSTRUCTION = '<?xml encoding="UTF-8"?>';
 
 	/**
 	 * Parse a DOM document from a string
@@ -28,7 +31,13 @@ class Parser {
 	public static function parseToDomDocument(string $html): DOMDocument {
 		$document = new DOMDocument();
 		$previousLibxmlErrorsState = libxml_use_internal_errors(true);
-		$document->loadHTML($html, LIBXML_NONET | LIBXML_HTML_NODEFDTD | LIBXML_HTML_NOIMPLIED);
+		$document->loadHTML(self::UTF8_PROCESSING_INSTRUCTION . $html, LIBXML_NONET | LIBXML_HTML_NODEFDTD | LIBXML_HTML_NOIMPLIED);
+		foreach ($document->childNodes as $child) {
+			if ($child instanceof DOMProcessingInstruction && $child->target === 'xml') {
+				$document->removeChild($child);
+				break;
+			}
+		}
 		libxml_clear_errors();
 		libxml_use_internal_errors($previousLibxmlErrorsState);
 		return $document;
