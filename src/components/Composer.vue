@@ -323,7 +323,8 @@
 			:bus="bus"
 			:account-id="selectedAlias.id"
 			:upload-size-limit="attachmentSizeLimit"
-			@upload="$emit('upload-attachment', $event, getMessageData())" />
+			@upload="$emit('upload-attachment', $event, getMessageData())"
+			@update:sharingLinks="sharingLinks = $event" />
 		<div class="composer-actions-right composer-actions">
 			<div class="composer-actions--primary-actions">
 				<p class="composer-actions-draft-status">
@@ -375,7 +376,8 @@
 
 				<NcActions :open.sync="isAddAttachmentsOpen">
 					<template #icon>
-						<Paperclip :size="20" />
+						<NcLoadingIcon v-if="sharingLinks" :size="20" />
+						<Paperclip v-else :size="20" />
 					</template>
 					<NcActionButton :close-after-click="true" @click="onAddLocalAttachment">
 						<template #icon>
@@ -551,7 +553,7 @@
 import { showError, showWarning } from '@nextcloud/dialogs'
 import { getCanonicalLocale, getFirstDay, getLocale, t } from '@nextcloud/l10n'
 import moment from '@nextcloud/moment'
-import { NcActionButton, NcActionCheckbox, NcActionInput, NcActionRadio, NcActions, NcButton, NcIconSvgWrapper, NcListItemIcon, NcSelect } from '@nextcloud/vue'
+import { NcActionButton, NcActionCheckbox, NcActionInput, NcActionRadio, NcActions, NcButton, NcIconSvgWrapper, NcListItemIcon, NcLoadingIcon, NcSelect } from '@nextcloud/vue'
 import debouncePromise from 'debounce-promise'
 import debounce from 'lodash/fp/debounce.js'
 import trimStart from 'lodash/fp/trimCharsStart.js'
@@ -612,6 +614,7 @@ export default {
 		IconLinkPicker,
 		NcSelect,
 		NcIconSvgWrapper,
+		NcLoadingIcon,
 		Paperclip,
 		TextEditor,
 		NcListItemIcon,
@@ -771,6 +774,7 @@ export default {
 
 		return {
 			sending: false,
+			sharingLinks: false,
 			textBlockSvg,
 			showCC: this.cc.length > 0,
 			showBCC: this.bcc.length > 0,
