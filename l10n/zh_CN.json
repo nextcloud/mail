@@ -498,6 +498,7 @@
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "{email}和缓存的电子邮箱数据将从 Nextcloud 账号中删除，但不会从你的电子邮箱提供商那里删除。",
     "Remove {email}" : "移除 {email}",
     "could not delete account" : "无法删除账号",
+    "Actions for {email}" : "{email} 的操作",
     "Provisioned account is disabled" : "预配账号已禁用",
     "Please login using a password to enable this account. The current session is using passwordless authentication, e.g. SSO or WebAuthn." : "请使用密码登录以启用此账号。当前会话正在使用无密码身份验证，例如 SSO 或 WebAuthn。",
     "Delegate account" : "委派账号",
